@@ -496,7 +496,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         })
 
         with self.assertRaises(AccessError, msg="The user should not have access to the SOL"):
-            so_line_deliver_timesheet.with_user(self.user_employee_without_sales_access).read(['name'])
+            so_line_deliver_timesheet.with_user(self.user_employee_without_sales_access).fetch(['name'])
 
         # invalidate cache to make sure the SOL set on the timesheet is not in the cache since the user
         # should not be able to access on the SOL.

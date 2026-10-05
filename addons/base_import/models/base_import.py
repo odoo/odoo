@@ -1034,8 +1034,8 @@ class Base_ImportImport(models.TransientModel):
                     }
         """
         mapping_suggestions = {}
-        mapping_records = self.env['base_import.mapping'].search_read([('res_model', '=', self.res_model)], ['column_name', 'field_name'])
-        mapping_fields = {rec['column_name']: rec['field_name'] for rec in mapping_records}
+        mapping_records = self.env['base_import.mapping'].search_fetch([('res_model', '=', self.res_model)], ['column_name', 'field_name'])
+        mapping_fields = {rec.column_name: rec.field_name for rec in mapping_records}
         for index, header in enumerate(headers):
             match_field = self._get_mapping_suggestion(header, fields_tree, header_types[(index, header)], mapping_fields)
             mapping_suggestions[(index, header)] = match_field or None

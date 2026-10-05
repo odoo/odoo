@@ -249,13 +249,13 @@ class HrAttendance(http.Controller):
             return request.not_found()
         else:
             department_list = [
-                {"id": dep["id"], "name": dep["name"], "count": dep["total_employee"]}
+                {"id": dep.id, "name": dep.name, "count": dep.total_employee}
                 for dep in request.env["hr.department"]
                 .with_context(allowed_company_ids=[company.id])
                 .sudo()
-                .search_read(
+                .search_fetch(
                     domain=[("company_id", "=", company.id)],
-                    fields=["id", "name", "total_employee"],
+                    field_names=["id", "name", "total_employee"],
                 )
             ]
             has_password = self.has_password()

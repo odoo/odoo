@@ -9,7 +9,7 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     def unlink(self):
-        move_line_read_group = self.env['account.move.line'].search_read([
+        move_line_read_group = self.env['account.move.line'].search_fetch([
             ('move_id.move_type', '=', 'out_invoice'),
             ('move_id.state', '=', 'draft'),
             ('sale_line_ids.product_id.invoice_policy', '=', 'delivery'),
@@ -19,7 +19,7 @@ class AccountMoveLine(models.Model):
 
         sale_line_ids_per_move = defaultdict(lambda: self.env['sale.order.line'])
         for move_line in move_line_read_group:
-            sale_line_ids_per_move[move_line['move_id'][0]] += self.env['sale.order.line'].browse(move_line['sale_line_ids'])
+            sale_line_ids_per_move[move_line.move_id.id] += self.env['sale.order.line'].browse(move_line.sale_line_ids.ids)
 
         timesheet_read_group = self.sudo().env['account.analytic.line']._read_group([
             ('reinvoice_move_id.move_type', '=', 'out_invoice'),

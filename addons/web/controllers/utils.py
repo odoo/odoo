@@ -196,7 +196,7 @@ def get_action(env, path_part):
         action = Actions.sudo().search([('path', '=', path_part)])
 
     if action and action._name == 'ir.actions.actions':
-        action_type = action.read(['type'])[0]['type']
+        action_type = action.type
         action = env[action_type].browse(action.id)
 
     return action

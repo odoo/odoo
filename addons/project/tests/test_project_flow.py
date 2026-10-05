@@ -226,9 +226,9 @@ class TestProjectFlow(TestProjectCommon, MailCase):
 
         # tasks with no project set should only be visible to the users assigned to them
         task_without_project.user_ids = [Command.link(self.user_projectuser.id)]
-        task_without_project.with_user(self.user_projectuser).read(['name'])
+        task_without_project.with_user(self.user_projectuser).fetch(['name'])
         with self.assertRaises(AccessError):
-            task_without_project.with_user(self.user_projectmanager).read(['name'])
+            task_without_project.with_user(self.user_projectmanager).fetch(['name'])
 
         # Tests that tasks assigned to the current user should be in the right default stage
         task = self.env['project.task'].create({

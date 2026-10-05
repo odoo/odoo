@@ -16,67 +16,67 @@ class TestAccess(common.SlidesCase):
         """ Invite channels don't give enroll if not member """
         self.channel.write({'enroll': 'invite'})
 
-        self.channel.with_user(self.user_officer).read(['name'])
-        self.channel.with_user(self.user_manager).read(['name'])
-        self.channel.with_user(self.user_emp).read(['name'])
-        self.channel.with_user(self.user_portal).read(['name'])
-        self.channel.with_user(self.user_public).read(['name'])
+        self.channel.with_user(self.user_officer).fetch(['name'])
+        self.channel.with_user(self.user_manager).fetch(['name'])
+        self.channel.with_user(self.user_emp).fetch(['name'])
+        self.channel.with_user(self.user_portal).fetch(['name'])
+        self.channel.with_user(self.user_public).fetch(['name'])
 
-        self.slide.with_user(self.user_officer).read(['name'])
-        self.slide.with_user(self.user_manager).read(['name'])
+        self.slide.with_user(self.user_officer).fetch(['name'])
+        self.slide.with_user(self.user_manager).fetch(['name'])
 
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).fetch(['name'])
 
         # if member -> can read
         membership = self.env['slide.channel.partner'].create({
             'channel_id': self.channel.id,
             'partner_id': self.user_emp.partner_id.id,
         })
-        self.channel.with_user(self.user_emp).read(['name'])
-        self.slide.with_user(self.user_emp).read(['name'])
+        self.channel.with_user(self.user_emp).fetch(['name'])
+        self.slide.with_user(self.user_emp).fetch(['name'])
 
         # not member anymore -> cannot read
         membership.action_archive()
-        self.channel.with_user(self.user_emp).read(['name'])
+        self.channel.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).fetch(['name'])
 
         # re-activate member -> can read again
         membership.action_unarchive()
-        self.channel.with_user(self.user_emp).read(['name'])
-        self.slide.with_user(self.user_emp).read(['name'])
+        self.channel.with_user(self.user_emp).fetch(['name'])
+        self.slide.with_user(self.user_emp).fetch(['name'])
 
         # unlink membership -> cannot read
         membership.unlink()
-        self.channel.with_user(self.user_emp).read(['name'])
+        self.channel.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_channel_public(self):
         """ Public channels don't give enroll if not member """
         self.channel.write({'enroll': 'public'})
 
-        self.channel.with_user(self.user_officer).read(['name'])
-        self.channel.with_user(self.user_manager).read(['name'])
-        self.channel.with_user(self.user_emp).read(['name'])
-        self.channel.with_user(self.user_portal).read(['name'])
-        self.channel.with_user(self.user_public).read(['name'])
+        self.channel.with_user(self.user_officer).fetch(['name'])
+        self.channel.with_user(self.user_manager).fetch(['name'])
+        self.channel.with_user(self.user_emp).fetch(['name'])
+        self.channel.with_user(self.user_portal).fetch(['name'])
+        self.channel.with_user(self.user_public).fetch(['name'])
 
-        self.slide.with_user(self.user_officer).read(['name'])
-        self.slide.with_user(self.user_manager).read(['name'])
+        self.slide.with_user(self.user_officer).fetch(['name'])
+        self.slide.with_user(self.user_manager).fetch(['name'])
 
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_public).read(['name'])
+            self.slide.with_user(self.user_public).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_channel_publish(self):
@@ -86,33 +86,33 @@ class TestAccess(common.SlidesCase):
 
         # channel available only to eLearning
         self.channel.invalidate_model(['name'])
-        self.channel.with_user(self.user_officer).read(['name'])
+        self.channel.with_user(self.user_officer).fetch(['name'])
         self.channel.invalidate_model(['name'])
-        self.channel.with_user(self.user_manager).read(['name'])
+        self.channel.with_user(self.user_manager).fetch(['name'])
         with self.assertRaises(AccessError):
             self.channel.invalidate_model(['name'])
-            self.channel.with_user(self.user_emp).read(['name'])
+            self.channel.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
             self.channel.invalidate_model(['name'])
-            self.channel.with_user(self.user_portal).read(['name'])
+            self.channel.with_user(self.user_portal).fetch(['name'])
         with self.assertRaises(AccessError):
             self.channel.invalidate_model(['name'])
-            self.channel.with_user(self.user_public).read(['name'])
+            self.channel.with_user(self.user_public).fetch(['name'])
 
         # slide available only to eLearning
         self.channel.invalidate_model(['name'])
-        self.slide.with_user(self.user_officer).read(['name'])
+        self.slide.with_user(self.user_officer).fetch(['name'])
         self.channel.invalidate_model(['name'])
-        self.slide.with_user(self.user_manager).read(['name'])
+        self.slide.with_user(self.user_manager).fetch(['name'])
         with self.assertRaises(AccessError):
             self.slide.invalidate_model(['name'])
-            self.slide.with_user(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
             self.slide.invalidate_model(['name'])
-            self.slide.with_user(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).fetch(['name'])
         with self.assertRaises(AccessError):
             self.slide.invalidate_model(['name'])
-            self.slide.with_user(self.user_public).read(['name'])
+            self.slide.with_user(self.user_public).fetch(['name'])
 
         # even members cannot see unpublished content
         self.env['slide.channel.partner'].create({
@@ -121,10 +121,10 @@ class TestAccess(common.SlidesCase):
         })
         with self.assertRaises(AccessError):
             self.channel.invalidate_model(['name'])
-            self.channel.with_user(self.user_emp).read(['name'])
+            self.channel.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
             self.slide.invalidate_model(['name'])
-            self.slide.with_user(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).fetch(['name'])
 
         # publish channel but content unpublished (even if can be previewed) still unavailable
         self.channel.write({'is_published': True})
@@ -136,18 +136,18 @@ class TestAccess(common.SlidesCase):
         self.slide.flush_model()
 
         self.slide.invalidate_model(['name'])
-        self.slide.with_user(self.user_officer).read(['name'])
+        self.slide.with_user(self.user_officer).fetch(['name'])
         self.slide.invalidate_model(['name'])
-        self.slide.with_user(self.user_manager).read(['name'])
+        self.slide.with_user(self.user_manager).fetch(['name'])
         with self.assertRaises(AccessError):
             self.slide.invalidate_model(['name'])
-            self.slide.with_user(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
             self.slide.invalidate_model(['name'])
-            self.slide.with_user(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).fetch(['name'])
         with self.assertRaises(AccessError):
             self.slide.invalidate_model(['name'])
-            self.slide.with_user(self.user_public).read(['name'])
+            self.slide.with_user(self.user_public).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_slide_preview(self):
@@ -156,11 +156,11 @@ class TestAccess(common.SlidesCase):
         self.slide.write({'is_preview': True})
         self.slide.flush_model()
 
-        self.slide.with_user(self.user_officer).read(['name'])
-        self.slide.with_user(self.user_manager).read(['name'])
-        self.slide.with_user(self.user_emp).read(['name'])
-        self.slide.with_user(self.user_portal).read(['name'])
-        self.slide.with_user(self.user_public).read(['name'])
+        self.slide.with_user(self.user_officer).fetch(['name'])
+        self.slide.with_user(self.user_manager).fetch(['name'])
+        self.slide.with_user(self.user_emp).fetch(['name'])
+        self.slide.with_user(self.user_portal).fetch(['name'])
+        self.slide.with_user(self.user_public).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_channel_visibility_public(self):
@@ -168,39 +168,39 @@ class TestAccess(common.SlidesCase):
         self.slide.write({'is_preview': True})
         self.slide.flush_model()
 
-        self.channel.with_user(self.user_officer).read(['name'])
-        self.channel.with_user(self.user_manager).read(['name'])
-        self.channel.with_user(self.user_emp).read(['name'])
-        self.channel.with_user(self.user_portal).read(['name'])
-        self.channel.with_user(self.user_public).read(['name'])
+        self.channel.with_user(self.user_officer).fetch(['name'])
+        self.channel.with_user(self.user_manager).fetch(['name'])
+        self.channel.with_user(self.user_emp).fetch(['name'])
+        self.channel.with_user(self.user_portal).fetch(['name'])
+        self.channel.with_user(self.user_public).fetch(['name'])
 
-        self.slide.with_user(self.user_officer).read(['name'])
-        self.slide.with_user(self.user_manager).read(['name'])
-        self.slide.with_user(self.user_emp).read(['name'])
-        self.slide.with_user(self.user_portal).read(['name'])
-        self.slide.with_user(self.user_public).read(['name'])
+        self.slide.with_user(self.user_officer).fetch(['name'])
+        self.slide.with_user(self.user_manager).fetch(['name'])
+        self.slide.with_user(self.user_emp).fetch(['name'])
+        self.slide.with_user(self.user_portal).fetch(['name'])
+        self.slide.with_user(self.user_public).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_channel_public_with_website_published(self):
         self.channel.write({'visibility': 'public', 'website_published': False})
 
-        self.channel.with_user(self.user_officer).read(['name'])
-        self.channel.with_user(self.user_manager).read(['name'])
+        self.channel.with_user(self.user_officer).fetch(['name'])
+        self.channel.with_user(self.user_manager).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_emp).read(['name'])
+            self.channel.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_portal).read(['name'])
+            self.channel.with_user(self.user_portal).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_public).read(['name'])
+            self.channel.with_user(self.user_public).fetch(['name'])
 
-        self.slide.with_user(self.user_officer).read(['name'])
-        self.slide.with_user(self.user_manager).read(['name'])
+        self.slide.with_user(self.user_officer).fetch(['name'])
+        self.slide.with_user(self.user_manager).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_public).read(['name'])
+            self.slide.with_user(self.user_public).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_channel_visibility_members(self):
@@ -211,19 +211,19 @@ class TestAccess(common.SlidesCase):
             'partner_id': self.user_emp.partner_id.id,
         })
 
-        self.channel.with_user(self.user_emp).read(['name'])
+        self.channel.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_portal).read(['name'])
+            self.channel.with_user(self.user_portal).fetch(['name'])
 
         user_emp_membership.action_archive()
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_emp).read(['name'])
+            self.channel.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).fetch(['name'])
 
         user_emp_membership.unlink()
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_emp).read(['name'])
+            self.channel.with_user(self.user_emp).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_channel_visiblilty_members_as_invited(self):
@@ -231,18 +231,18 @@ class TestAccess(common.SlidesCase):
         self.channel.flush_recordset()
 
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_portal).read(['name'])
+            self.channel.with_user(self.user_portal).fetch(['name'])
 
         user_portal_membership = self.env['slide.channel.partner'].create({
             'channel_id': self.channel.id,
             'partner_id': self.user_portal.partner_id.id,
             'member_status': 'invited'
         })
-        self.channel.with_user(self.user_portal).read(['name'])
+        self.channel.with_user(self.user_portal).fetch(['name'])
 
         user_portal_membership.action_archive()
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_portal).read(['name'])
+            self.channel.with_user(self.user_portal).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_channel_members_with_website_published(self):
@@ -250,30 +250,30 @@ class TestAccess(common.SlidesCase):
         self.channel.flush_model()
 
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_emp).read(['name'])
+            self.channel.with_user(self.user_emp).fetch(['name'])
 
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_portal).read(['name'])
+            self.channel.with_user(self.user_portal).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_channel_visibility_connected(self):
         self.channel.write({'visibility': 'connected'})
 
-        self.channel.with_user(self.user_officer).read(['name'])
-        self.channel.with_user(self.user_manager).read(['name'])
-        self.channel.with_user(self.user_emp).read(['name'])
-        self.channel.with_user(self.user_portal).read(['name'])
+        self.channel.with_user(self.user_officer).fetch(['name'])
+        self.channel.with_user(self.user_manager).fetch(['name'])
+        self.channel.with_user(self.user_emp).fetch(['name'])
+        self.channel.with_user(self.user_portal).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.channel.with_user(self.user_public).read(['name'])
+            self.channel.with_user(self.user_public).fetch(['name'])
 
-        self.slide.with_user(self.user_officer).read(['name'])
-        self.slide.with_user(self.user_manager).read(['name'])
+        self.slide.with_user(self.user_officer).fetch(['name'])
+        self.slide.with_user(self.user_manager).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_emp).read(['name'])
+            self.slide.with_user(self.user_emp).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).fetch(['name'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_public).read(['name'])
+            self.slide.with_user(self.user_public).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_channel_visiblilty_connected_as_invited(self):
@@ -285,7 +285,7 @@ class TestAccess(common.SlidesCase):
             'partner_id': self.user_emp.partner_id.id,
             'member_status': 'invited'
         })
-        self.channel.with_user(self.user_emp).read(['name'])
+        self.channel.with_user(self.user_emp).fetch(['name'])
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_slide_slide_as_invited(self):
@@ -296,23 +296,23 @@ class TestAccess(common.SlidesCase):
             'member_status': 'invited'
         })
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).fetch(['name'])
 
         self.slide.is_preview = True
-        self.slide.with_user(self.user_portal).read(['name'])
+        self.slide.with_user(self.user_portal).fetch(['name'])
 
         self.channel.visibility = 'connected'
         self.channel.flush_recordset()
-        self.slide.with_user(self.user_portal).read(['name'])
+        self.slide.with_user(self.user_portal).fetch(['name'])
 
         self.channel.visibility = 'members'
         self.channel.flush_recordset()
-        self.slide.with_user(self.user_portal).read(['name'])
+        self.slide.with_user(self.user_portal).fetch(['name'])
 
         self.slide.is_published = False
         self.slide.flush_recordset(['is_published'])
         with self.assertRaises(AccessError):
-            self.slide.with_user(self.user_portal).read(['name'])
+            self.slide.with_user(self.user_portal).fetch(['name'])
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
@@ -587,8 +587,8 @@ class TestAccessFeatures(common.SlidesCase):
         ])
         # No public access to resources
         with self.assertRaises(AccessError):
-            resource1.with_user(self.user_public).read(['name'])
-            resource3.with_user(self.user_public).read(['name'])
+            resource1.with_user(self.user_public).fetch(['name'])
+            resource3.with_user(self.user_public).fetch(['name'])
 
         with self.assertRaises(AccessError):
             resource1.with_user(self.user_public).write({'name': 'other name'})
@@ -599,14 +599,14 @@ class TestAccessFeatures(common.SlidesCase):
 
         # No random portal access
         with self.assertRaises(AccessError):
-            resource1.with_user(self.user_portal).read(['name'])
+            resource1.with_user(self.user_portal).fetch(['name'])
 
         # Members can only read
         self.env['slide.channel.partner'].create({
             'channel_id': self.channel.id,
             'partner_id': self.user_portal.partner_id.id,
         })
-        resource1.with_user(self.user_portal).read(['name'])
+        resource1.with_user(self.user_portal).fetch(['name'])
         with self.assertRaises(AccessError):
             resource1.with_user(self.user_portal).write({'name': 'other name'})
 
@@ -615,7 +615,7 @@ class TestAccessFeatures(common.SlidesCase):
             self.env, name='Ornella Officer', login='user_officer_2', email='officer2@example.com',
             groups='base.group_user,website_slides.group_website_slides_officer'
         )
-        resource1.with_user(user_officer_other).read(['name'])
+        resource1.with_user(user_officer_other).fetch(['name'])
         with self.assertRaises(AccessError):
             resource1.with_user(user_officer_other).write({'name': 'Another name'})
 

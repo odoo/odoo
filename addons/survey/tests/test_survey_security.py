@@ -36,7 +36,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.env['survey.survey'].search([('title', 'ilike', 'Test')])
         with self.assertRaises(AccessError):
-            self.survey.with_user(self.env.user).read(['title'])
+            self.survey.with_user(self.env.user).fetch(['title'])
 
         # Write: nope
         with self.assertRaises(AccessError):
@@ -69,7 +69,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.env['survey.survey'].search([('title', 'ilike', 'Test')])
         with self.assertRaises(AccessError):
-            self.survey.with_user(self.env.user).read(['title'])
+            self.survey.with_user(self.env.user).fetch(['title'])
 
         # Write: nope
         with self.assertRaises(AccessError):
@@ -102,7 +102,7 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.env['survey.survey'].search([('title', 'ilike', 'Test')])
         with self.assertRaises(AccessError):
-            self.survey.with_user(self.env.user).read(['title'])
+            self.survey.with_user(self.env.user).fetch(['title'])
 
         # Write: nope
         with self.assertRaises(AccessError):
@@ -130,7 +130,7 @@ class TestAccess(common.TestSurveyCommon):
         # Read: all
         surveys = self.env['survey.survey'].search([('title', 'ilike', 'Test')])
         self.assertEqual(surveys, self.survey | survey)
-        surveys.read(['title'])
+        surveys.fetch(['title'])
 
         # Write: all
         (self.survey | survey).write({'title': 'New Title'})
@@ -158,7 +158,7 @@ class TestAccess(common.TestSurveyCommon):
         # Read: restricted to self or no one
         surveys = self.env['survey.survey'].search([('title', 'ilike', 'Test')])
         self.assertEqual(surveys, restricted_to_self_survey | unrestricted_survey)
-        surveys.read(['title'])
+        surveys.fetch(['title'])
 
         # Write: restricted to self or no one
         (unrestricted_survey + restricted_to_self_survey).write({'title': 'New Title'})
@@ -185,9 +185,9 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.env['survey.user_input.line'].search([('survey_id', 'in', [self.survey.id])])
         with self.assertRaises(AccessError):
-            self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
+            self.env['survey.user_input'].browse(self.answer_0.ids).fetch(['state'])
         with self.assertRaises(AccessError):
-            self.env['survey.user_input.line'].browse(self.answer_0_0.ids).read(['value_numerical_box'])
+            self.env['survey.user_input.line'].browse(self.answer_0_0.ids).fetch(['value_numerical_box'])
 
         # Write: nope
         with self.assertRaises(AccessError):
@@ -214,9 +214,9 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.env['survey.user_input.line'].search([('survey_id', 'in', [self.survey.id])])
         with self.assertRaises(AccessError):
-            self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
+            self.env['survey.user_input'].browse(self.answer_0.ids).fetch(['state'])
         with self.assertRaises(AccessError):
-            self.env['survey.user_input.line'].browse(self.answer_0_0.ids).read(['value_numerical_box'])
+            self.env['survey.user_input.line'].browse(self.answer_0_0.ids).fetch(['value_numerical_box'])
 
         # Write: nope
         with self.assertRaises(AccessError):
@@ -243,9 +243,9 @@ class TestAccess(common.TestSurveyCommon):
         with self.assertRaises(AccessError):
             self.env['survey.user_input.line'].search([('survey_id', 'in', [self.survey.id])])
         with self.assertRaises(AccessError):
-            self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
+            self.env['survey.user_input'].browse(self.answer_0.ids).fetch(['state'])
         with self.assertRaises(AccessError):
-            self.env['survey.user_input.line'].browse(self.answer_0_0.ids).read(['value_numerical_box'])
+            self.env['survey.user_input.line'].browse(self.answer_0_0.ids).fetch(['value_numerical_box'])
 
         # Write: nope
         with self.assertRaises(AccessError):
@@ -276,15 +276,15 @@ class TestAccess(common.TestSurveyCommon):
         answer_lines = self.env['survey.user_input.line'].search([('survey_id', 'in', [survey_own.id, self.survey.id])])
         self.assertEqual(answer_lines, self.answer_0_0 | self.answer_0_1)
 
-        self.env['survey.user_input'].browse(answer_own.ids).read(['state'])
-        self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
-        self.env['survey.user_input.line'].browse(self.answer_0_0.ids).read(['value_numerical_box'])
+        self.env['survey.user_input'].browse(answer_own.ids).fetch(['state'])
+        self.env['survey.user_input'].browse(self.answer_0.ids).fetch(['state'])
+        self.env['survey.user_input.line'].browse(self.answer_0_0.ids).fetch(['value_numerical_box'])
 
         self.survey.write({'restrict_user_ids': [[4, self.survey.user_id.id]]})
         with self.assertRaises(AccessError):
-            self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
+            self.env['survey.user_input'].browse(self.answer_0.ids).fetch(['state'])
         with self.assertRaises(AccessError):
-            self.env['survey.user_input.line'].browse(self.answer_0_0.ids).read(['value_numerical_box'])
+            self.env['survey.user_input.line'].browse(self.answer_0_0.ids).fetch(['value_numerical_box'])
 
         # Create: in restricted users survey (moved after read because DB not correctly rollbacked with assertRaises)
         self.survey.write({'restrict_user_ids': [[4, self.survey.user_id.id]]})
@@ -328,11 +328,11 @@ class TestAccess(common.TestSurveyCommon):
         answer_lines = self.env['survey.user_input.line'].search([('survey_id', 'in', [survey_other.id, self.survey.id])])
         self.assertEqual(answer_lines, answer_line_own | answer_line_other | self.answer_0_0 | self.answer_0_1)
 
-        self.env['survey.user_input'].browse(answer_own.ids).read(['state'])
-        self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
+        self.env['survey.user_input'].browse(answer_own.ids).fetch(['state'])
+        self.env['survey.user_input'].browse(self.answer_0.ids).fetch(['state'])
 
-        self.env['survey.user_input.line'].browse(answer_line_own.ids).read(['value_numerical_box'])
-        self.env['survey.user_input.line'].browse(self.answer_0_0.ids).read(['value_numerical_box'])
+        self.env['survey.user_input.line'].browse(answer_line_own.ids).fetch(['value_numerical_box'])
+        self.env['survey.user_input.line'].browse(self.answer_0_0.ids).fetch(['value_numerical_box'])
 
         # Write: always
         answer_own.write({'state': 'done'})

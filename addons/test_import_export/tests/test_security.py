@@ -26,6 +26,6 @@ class TestImportSecurity(TransactionCase):
             ])
         )
         with self.assertRaises(AccessError):
-            import_record.with_user(self.user_b).read(['file'])
+            import_record.with_user(self.user_b).fetch(['file'])
         with self.assertRaises(AccessError):
             import_record.with_user(self.user_b).write({'file_name': 'stolen.csv'})

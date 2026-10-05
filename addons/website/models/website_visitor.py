@@ -103,14 +103,14 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('partner_id.email_normalized', 'partner_id.phone')
     def _compute_email_phone(self):
-        results = self.env['res.partner'].search_read(
+        results = self.env['res.partner'].search_fetch(
             [('id', 'in', self.partner_id.ids)],
             ['id', 'email_normalized', 'phone'],
         )
         mapped_data = {
-            result['id']: {
-                'email_normalized': result['email_normalized'],
-                'phone': result['phone']
+            result.id: {
+                'email_normalized': result.email_normalized,
+                'phone': result.phone
             } for result in results
         }
 

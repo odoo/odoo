@@ -42,7 +42,7 @@ class Publisher_WarrantyContract(AbstractModel):
         ])
         user = self.env.user
         domain = [('application', '=', True), ('state', 'in', ['installed', 'to upgrade', 'to remove'])]
-        apps = self.env['ir.module.module'].sudo().search_read(domain, ['name'])
+        apps = self.env['ir.module.module'].sudo().search_fetch(domain, ['name'])
 
         enterprise_code = IrParamSudo.get_str('database.enterprise_code')
 
@@ -60,7 +60,7 @@ class Publisher_WarrantyContract(AbstractModel):
             "version": release.version,
             "language": user.lang,
             "web_base_url": web_base_url,
-            "apps": [app['name'] for app in apps],
+            "apps": [app.name for app in apps],
             "enterprise_code": enterprise_code,
         }
         if user.partner_id.company_id:

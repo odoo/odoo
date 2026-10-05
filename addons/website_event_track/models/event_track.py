@@ -344,17 +344,17 @@ class EventTrack(models.Model):
             else:
                 domain = [('partner_id', '=', self.env.user.partner_id.id)]
 
-            event_track_visitors = self.env['event.track.visitor'].sudo().search_read(
+            event_track_visitors = self.env['event.track.visitor'].sudo().search_fetch(
                 Domain.AND([
                     domain,
                     [('track_id', 'in', self.ids)]
-                ]), fields=['track_id', 'is_wishlisted', 'is_blacklisted']
+                ]), field_names=['track_id', 'is_wishlisted', 'is_blacklisted']
             )
 
             wishlist_map = {
-                track_visitor['track_id'][0]: {
-                    'is_wishlisted': track_visitor['is_wishlisted'],
-                    'is_blacklisted': track_visitor['is_blacklisted']
+                track_visitor.track_id.id: {
+                    'is_wishlisted': track_visitor.is_wishlisted,
+                    'is_blacklisted': track_visitor.is_blacklisted
                 } for track_visitor in event_track_visitors
             }
             for track in self:
