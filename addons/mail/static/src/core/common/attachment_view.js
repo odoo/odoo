@@ -12,6 +12,8 @@ import {
 import { useService } from "@web/core/utils/hooks";
 import { deepEqual } from "@web/core/utils/objects";
 import { hidePDFJSButtons } from "@web/libs/pdfjs";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+import { _t } from "@web/core/l10n/translation";
 
 class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";
@@ -23,6 +25,7 @@ class AbstractAttachmentView extends Component {
         this.store = useState(useService("mail.store"));
         this.uiService = useService("ui");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
+        this.isMobileOS = isMobileOS();
         this.state = useState({
             /** @type {import("models").Thread|undefined} */
             thread: undefined,
@@ -65,6 +68,10 @@ class AbstractAttachmentView extends Component {
         return this.state.thread.mainAttachment.filename;
     }
 
+    get showsPopoutControl() {
+        return !this.isMobileOS;
+    }
+
     onClickPopout() {}
 }
 
@@ -77,6 +84,7 @@ export class PopoutAttachmentView extends AbstractAttachmentView {
 }
 
 export function usePopoutAttachment() {
+    const notification = useService("notification");
     const component = useComponent();
     const uiService = useService("ui");
     const mailPopoutService = useService("mail.popout");
@@ -114,6 +122,9 @@ export function usePopoutAttachment() {
     }
 
     function popout() {
+        if (isMobileOS()) {
+            return notification.add(_t("Pop out is not supported on mobile."), { type: "warning" });
+        }
         mailPopoutService.addHooks(
             () => {
                 hideAttachmentView();

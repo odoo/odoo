@@ -334,20 +334,6 @@ async function dispatchPointerEvent(target, eventType, eventInit, { mouse, touch
 }
 
 /**
- * @param {Iterable<Event>} events
- * @param {EventType} eventType
- * @param {EventInit} eventInit
- */
-async function dispatchRelatedEvents(events, eventType, eventInit) {
-    for (const event of events) {
-        if (!event.target || isPrevented(event)) {
-            break;
-        }
-        await _dispatch(event.target, eventType, eventInit);
-    }
-}
-
-/**
  * @template T, [R=T]
  * @param {MaybeIterable<T>} value
  * @param {(item: T) => R} [mapFn]
@@ -1327,14 +1313,14 @@ async function _hover(target, options, hoverOptions) {
             await dispatchPointerEvent(previousPT, "pointerout", leaveEventInit, {
                 mouse: ["mouseout"],
             });
-            const leaveEvents = await Promise.all(
-                getDifferentParents(pointerTarget, previousPT).map((element) =>
-                    _dispatch(element, "pointerleave", leaveEventInit)
-                )
+            await Promise.all(
+                getDifferentParents(pointerTarget, previousPT).map(async (element) => {
+                    const event = await _dispatch(element, "pointerleave", leaveEventInit);
+                    if (!hasTouch() && !isPrevented(event)) {
+                        await _dispatch(element, "mouseleave", leaveEventInit);
+                    }
+                })
             );
-            if (!hasTouch()) {
-                await dispatchRelatedEvents(leaveEvents, "mouseleave", leaveEventInit);
-            }
         }
     }
 
@@ -1366,14 +1352,14 @@ async function _hover(target, options, hoverOptions) {
             await dispatchPointerEvent(pointerTarget, "pointerover", enterEventInit, {
                 mouse: ["mouseover"],
             });
-            const enterEvents = await Promise.all(
-                getDifferentParents(previousPT, pointerTarget).map((element) =>
-                    _dispatch(element, "pointerenter", enterEventInit)
-                )
+            await Promise.all(
+                getDifferentParents(previousPT, pointerTarget).map(async (element) => {
+                    const event = await _dispatch(element, "pointerenter", enterEventInit);
+                    if (!hasTouch() && !isPrevented(event)) {
+                        await _dispatch(element, "mouseenter", enterEventInit);
+                    }
+                })
             );
-            if (!hasTouch()) {
-                await dispatchRelatedEvents(enterEvents, "mouseenter", enterEventInit);
-            }
         }
         await dispatchPointerEvent(pointerTarget, "pointermove", enterEventInit, {
             mouse: ["mousemove"],
