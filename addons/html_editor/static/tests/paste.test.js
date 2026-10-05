@@ -2627,6 +2627,53 @@ describe("Special cases", () => {
             });
         });
 
+        test("should paste a nested list into another list (3)", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>Alpha</li><li>Beta[]</li></ul>",
+                stepFunction: async (editor) => {
+                    pasteHtml(
+                        editor,
+                        unformat(`
+                            <ol>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li class="oe-nested">
+                                            <ol>
+                                                <li class="oe-nested">
+                                                    <ul class="o_checklist">
+                                                        <li>abc</li>
+                                                    </ul>
+                                                </li>
+                                                <li>def</li>
+                                            </ol>
+                                        </li>
+                                        <li>ghi</li>
+                                    </ul>
+                                </li>
+                                <li>jkl</li>
+                            </ol>
+                        `)
+                    );
+                },
+                contentAfter: unformat(`
+                    <ul>
+                        <li>Alpha</li>
+                        <li><p>Betaabc</p>
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li>def</li>
+                                    </ul>
+                                </li>
+                                <li>ghi</li>
+                            </ul>
+                        </li>
+                        <li>jkl[]</li>
+                    </ul>
+                `),
+            });
+        });
+
         test("should convert a mixed list into a ordered list", async () => {
             await testEditor({
                 contentBefore: "<ol><li>[]<br></li></ol>",

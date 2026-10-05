@@ -116,7 +116,6 @@ const getNodesFromNodesAndFragments = (nodes) =>
  *
  * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
- * @typedef {((element: HTMLElement, isFirst: boolean) => Element)[]} edge_block_to_unwrap_processors
  * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
  *
  * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
@@ -376,12 +375,9 @@ export class DomPlugin extends Plugin {
                     isSelectionAtEdge
                 );
             }
-            if (shouldUnwrap) {
-                this.processThrough("edge_block_to_unwrap_processors", node, index === 0);
-            }
             // 2. Unwrap blocks if we're trying to insert in a context that
             // doesn't allow them.
-            else if (wasBlock && !isEditableBlock) {
+            if (!shouldUnwrap && wasBlock && !isEditableBlock) {
                 if (this.isUnsplittable(node)) {
                     shouldSkip = true;
                 } else {

@@ -21,6 +21,7 @@ import {
     isVisible,
     isVisibleTextNode,
     listElementSelector,
+    listItemElementSelector,
 } from "@html_editor/utils/dom_info";
 import {
     closestElement,
@@ -194,7 +195,6 @@ export class ListPlugin extends Plugin {
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         fragment_to_insert_within_pre_processors: this.processFragmentToInsertWithinPre.bind(this),
         fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
-        edge_block_to_unwrap_processors: this.processEdgeNodeToUnwrap.bind(this),
 
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -1413,6 +1413,24 @@ export class ListPlugin extends Plugin {
         const listRef = closestElement(selection.anchorNode, listElementSelector);
         if (listRef) {
             const mode = this.getListMode(listRef);
+            const firstNode = fragment.firstChild;
+            // Outdent a nested list item when inserted as first element in a
+            // non-empty list.
+            if (
+                isListItemElement(firstNode) &&
+                firstNode.querySelector(listItemElementSelector) &&
+                !isEmptyBlock(closestElement(selection.anchorNode, listItemElementSelector))
+            ) {
+                const deepestFirstLi = firstLeaf(firstNode, {
+                    stopTraverseFunction: (leaf) =>
+                        isListItemElement(leaf) && !leaf.querySelector(listItemElementSelector),
+                });
+                const result = this.dependencies.split.splitAroundUntil(deepestFirstLi, firstNode);
+                if (result) {
+                    result.after(deepestFirstLi);
+                    result.remove();
+                }
+            }
             for (const node of childNodes(fragment)) {
                 if (isParagraphRelatedElement(node)) {
                     this.dependencies.dom.setTagName(node, "LI", true);
@@ -1424,23 +1442,5 @@ export class ListPlugin extends Plugin {
             }
         }
         return fragment;
-    }
-
-    /**
-     * Unwrap the deepest nested first <li> element in the container to extract
-     * and paste the text content of the list.
-     *
-     * @param {Element} element
-     * @param {boolean} isFirst
-     * @returns {Element}
-     */
-    processEdgeNodeToUnwrap(element, isFirst) {
-        if (isListItemElement(element)) {
-            const leaf = isFirst ? firstLeaf(element) : lastLeaf(element);
-            const deepestBlock = closestBlock(leaf);
-            this.dependencies.split.splitAroundUntil(deepestBlock, element);
-            element.replaceChildren(...childNodes(deepestBlock));
-        }
-        return element;
     }
 }
