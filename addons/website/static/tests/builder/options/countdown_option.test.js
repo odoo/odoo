@@ -51,6 +51,33 @@ test("save end message when switching layouts, forget when switching snippets", 
     );
 });
 
+test("end message preview stays visible when the end action changes", async () => {
+    await setupWebsiteBuilderWithSnippet("s_countdown", {
+        loadIframeBuilderTemplates: true,
+        loadIframeBundles: true,
+        interactions: ["website.countdown"],
+    });
+    await contains(":iframe .s_countdown").click();
+    await setLayout("message");
+    await contains("[data-action-id='previewEndMessage']").click();
+    expect(":iframe .s_countdown .s_countdown_wrapper").toBeVisible();
+    expect(":iframe .s_countdown .s_countdown_end_message").toBeVisible();
+
+    await contains("[data-action-param='o_three_quarter_height']").hover();
+    await waitFor(":iframe .s_countdown.o_three_quarter_height");
+    expect(":iframe .s_countdown .s_countdown_end_message").toBeVisible({
+        message: "The picture should still be visible while previewing another option"
+    });
+
+    // Leave the option preview
+    await contains(":iframe").hover();
+    await waitFor(":iframe .s_countdown:not(.o_three_quarter_height)");
+
+    await setLayout("message_no_countdown");
+    expect(":iframe .s_countdown .s_countdown_wrapper").not.toBeVisible();
+    expect(":iframe .s_countdown .s_countdown_end_message").toBeVisible();
+});
+
 test("cloned countdown starts its interaction", async () => {
     await setupWebsiteBuilderWithSnippet("s_countdown", { interactions: ["website.countdown"] });
     await contains(":iframe .s_countdown").click();
