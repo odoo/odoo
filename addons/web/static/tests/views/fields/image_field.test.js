@@ -18,11 +18,13 @@ import {
     mountView,
     onRpc,
     pagerNext,
+    patchWithCleanup,
     contains,
     webModels,
 } from "@web/../tests/web_test_helpers";
 
 import { getOrigin } from "@web/core/utils/urls";
+import { ImageField } from "@web/views/fields/image/image_field";
 
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -909,6 +911,25 @@ test("unique in url does not change on record change if reload option is set to 
 });
 
 test("convert image to webp", async () => {
+    const webpData = "UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAUAmJaQAA3AA/vz0AAA=";
+    patchWithCleanup(HTMLCanvasElement.prototype, {
+        toDataURL(type, ...args) {
+            if (type === "image/webp") {
+                expect.step("convert to webp");
+                return `data:image/webp;base64,${webpData}`;
+            }
+            return super.toDataURL(type, ...args);
+        },
+    });
+    let uploadedInfo;
+    let record;
+    patchWithCleanup(ImageField.prototype, {
+        onFileUploaded(info) {
+            uploadedInfo = info;
+            record = this.props.record;
+            return super.onFileUploaded(info);
+        },
+    });
     onRpc("ir.attachment", "web_create_image_variants", ({ args }) => {
         const variants = args[0];
         const attachments = variants.flatMap((variant) => variant.images);
@@ -918,11 +939,18 @@ test("convert image to webp", async () => {
         expect(jpegAttachments.length).toBeGreaterThan(0);
         for (const att of attachments) {
             expect(att.raw).not.toBe(imageData);
+            expect.step(att.mimetype);
+            if (att.mimetype === "image/webp") {
+                expect(att.raw).toBe(webpData);
+                expect(att.name).toBe("fake_file.webp");
+            } else {
+                expect(att.name).toBe("fake_file.jpg");
+            }
         }
         return attachments.map((_, i) => i + 1);
     });
 
-    const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));
+    const imageData = Uint8Array.from(atob(MY_IMAGE), (c) => c.charCodeAt(0));
     await mountView({
         type: "form",
         resModel: "partner",
@@ -933,13 +961,19 @@ test("convert image to webp", async () => {
         `,
     });
 
-    const imageFile = new File([imageData], "fake_file.jpeg", { type: "image/jpeg" });
+    const imageFile = new File([imageData], "fake_file.png", { type: "image/png" });
     expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
         { message: "image field should not be set" }
     );
     await setFiles(imageFile);
+
+    expect(uploadedInfo.data).toBe(webpData);
+    expect(uploadedInfo.name).toBe("fake_file.webp");
+    expect(uploadedInfo.type).toBe("image/webp");
+    expect(record.data.document).toEqual({ filename: "fake_file.webp", content: webpData });
+    expect.verifySteps(["convert to webp", "image/webp", "image/jpeg"]);
 });
 
 test("ImageField: syncs filename when uploading/removing", async () => {
@@ -995,6 +1029,60 @@ test("ImageField: syncs filename when uploading/removing", async () => {
     expect("div[name='foo'] input").toHaveValue("", {
         message: "The filename field should be cleared when the image is removed",
     });
+});
+
+async function checkOriginalUploadWhenWebpFallsBackToPng(type) {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 1;
+    const originalData = canvas.toDataURL(type).split(",")[1];
+    const name = type === "image/png" ? "image.png" : "image.jpg";
+    patchWithCleanup(HTMLCanvasElement.prototype, {
+        toDataURL(type, ...args) {
+            if (type === "image/webp") {
+                expect.step("convert to webp");
+                return `data:image/png;base64,${MY_IMAGE}`;
+            }
+            return super.toDataURL(type, ...args);
+        },
+    });
+    onRpc("ir.attachment", "web_create_image_variants", () => {
+        expect.step("unexpected attachment");
+        return [1];
+    });
+    let uploadedInfo;
+    let record;
+    patchWithCleanup(ImageField.prototype, {
+        onFileUploaded(info) {
+            uploadedInfo = info;
+            record = this.props.record;
+            return super.onFileUploaded(info);
+        },
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="document" widget="image" options="{'convert_to_webp': True}"/>
+            </form>
+        `,
+    });
+    const imageData = Uint8Array.from(atob(originalData), (c) => c.charCodeAt(0));
+    await setFiles(new File([imageData], name, { type }));
+
+    expect(uploadedInfo.data).toBe(originalData);
+    expect(uploadedInfo.name).toBe(name);
+    expect(uploadedInfo.type).toBe(type);
+    expect(record.data.document).toEqual({ filename: name, content: originalData });
+    expect.verifySteps(["convert to webp"]);
+}
+
+test("keep original image/png upload when WebP encoding falls back to PNG", async () => {
+    await checkOriginalUploadWhenWebpFallsBackToPng("image/png");
+});
+
+test("keep original image/jpeg upload when WebP encoding falls back to PNG", async () => {
+    await checkOriginalUploadWhenWebpFallsBackToPng("image/jpeg");
 });
 
 test.tags("desktop");
