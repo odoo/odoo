@@ -224,6 +224,13 @@ class AccountMove(models.Model):
         internal_types += ['all']
         return [('internal_type', 'in', internal_types), ('country_id', '=', self.company_id.account_fiscal_country_id.id)]
 
+    def _inter_company_prepare_invoice_data(self, invoice_type):
+        invoice_vals = super()._inter_company_prepare_invoice_data(invoice_type)
+        destination_journal = self.env['account.journal'].browse(invoice_vals.get('journal_id'))
+        if self.l10n_latam_document_number and destination_journal.l10n_latam_use_documents:
+            invoice_vals['l10n_latam_document_number'] = self.l10n_latam_document_number
+        return invoice_vals
+
     @api.depends('journal_id', 'partner_id', 'company_id', 'move_type', 'debit_origin_id')
     def _compute_l10n_latam_available_document_types(self):
         self.l10n_latam_available_document_type_ids = False
