@@ -595,7 +595,7 @@ export class DomPlugin extends Plugin {
         const systemNode = this.getResource("system_node_selectors").join(",");
         if (isBlock(target)) {
             const leaf = lastLeaf(target, {
-                skipFunction: (child) => !isVisible(child) || child.matches?.(systemNode),
+                predicate: (child) => isVisible(child) && !child.matches?.(systemNode),
             });
             const parent = leaf.parentElement;
             if (
