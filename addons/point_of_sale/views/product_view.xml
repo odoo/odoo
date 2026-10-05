@@ -183,8 +183,8 @@
                             </div>
                             <field name="list_price" widget="monetary"
                                     options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                            <label for="taxes_id"/>
-                            <div name="tax_info" class="o_row">
+                            <label for="taxes_id" invisible="type == 'combo'"/>
+                            <div name="tax_info" class="o_row" invisible="type == 'combo'">
                                 <field name="taxes_id" widget="many2many_tags"
                                     readonly="context.get('taxes_readonly', False)"
                                     context="{'search_default_sale': 1}"
