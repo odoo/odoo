@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
-from odoo.tools import SQL
+from odoo.tools import format_list, SQL
 
 
 class AccountMove(models.Model):
@@ -35,6 +37,34 @@ class AccountMove(models.Model):
         for log_service_id, log in zip(log_service_ids, log_list):
             log_service_id.message_post(body=log)
         return posted
+
+    def _link_bill_origin_to_purchase_orders(self, timeout=10):
+        # Read the values beforehand: the bill lines replaced by purchase order lines are deleted during the matching.
+        values_before = {
+            line.id: (line.move_id, line.product_id, line.vehicle_id)
+            for line in self.invoice_line_ids if line.display_type == 'product'
+        }
+        res = super()._link_bill_origin_to_purchase_orders(timeout=timeout)
+        # The bill lines matched with a purchase order were replaced by its lines: give their vehicle to the new lines.
+        vehicles_per_product_per_move = defaultdict(lambda: defaultdict(set))
+        for line_id in values_before.keys() - set(self.invoice_line_ids.ids):
+            move, product, vehicle = values_before[line_id]
+            # Empty vehicles are kept too: a product whose lines don't all share the same vehicle is ambiguous.
+            vehicles_per_product_per_move[move][product].add(vehicle)
+        for move, vehicles_per_product in vehicles_per_product_per_move.items():
+            if not any(all_vehicles := set().union(*vehicles_per_product.values())):
+                continue
+            new_lines = move.invoice_line_ids.filtered(lambda l: l.display_type == 'product' and l.id not in values_before)
+            for line in new_lines:
+                vehicles = vehicles_per_product.get(line.product_id) or all_vehicles
+                if len(vehicles) == 1:  # If all lines with the same product also had the same vehicle we add it
+                    line.vehicle_id = next(iter(vehicles))
+            if lost_vehicles := self.env['fleet.vehicle'].union(all_vehicles) - new_lines.vehicle_id:
+                move._message_log(body=self.env._(
+                    "Some vehicles could not be matched when updating the bill from the matched purchase order: %s",
+                    format_list(self.env, lost_vehicles.sudo().mapped('display_name')),
+                ))
+        return res
 
     def action_show_services(self):
         self.ensure_one()
