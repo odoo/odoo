@@ -377,3 +377,37 @@ class TestProjectMilestone(TestProjectCommon):
         self.assertFalse(self.project_pigs.is_milestone_deadline_exceeded, "Expected project_pigs to not have exceeded the milestone deadline.")
         self.assertTrue(self.project_pigs.can_mark_milestone_as_done, "Expected project_pigs to be able to mark the milestone as done.")
         self.assertFalse(self.project_goats.can_mark_milestone_as_done, "Expected project_goats to not be able to mark the milestone as done.")
+
+    def test_set_milestone_on_tasks_from_different_projects(self):
+        """ Setting a milestone on several tasks at once (e.g. list multi-edit) where some tasks
+            belong to another project than the milestone should not crash and should propagate the
+            milestone to the sub-tasks of the valid tasks, as when writing on a single task.
+        """
+        extra_milestone_pigs = self.env['project.milestone'].create({
+            'name': 'Extra Milestone Pigs',
+            'project_id': self.project_pigs.id,
+        })
+        self.task_1.milestone_id = extra_milestone_pigs
+        task_goats = self.env['project.task'].create({
+            'name': 'Goats Task',
+            'project_id': self.project_goats.id,
+        })
+        subtask_without_milestone, subtask_same_milestone = self.env['project.task'].create([{
+            'name': 'Sub-task without milestone',
+            'project_id': self.project_pigs.id,
+            'parent_id': self.task_1.id,
+        }, {
+            'name': 'Sub-task with the parent milestone',
+            'project_id': self.project_pigs.id,
+            'parent_id': self.task_1.id,
+            'milestone_id': extra_milestone_pigs.id,
+        }])
+
+        (self.task_1 + task_goats).write({'milestone_id': self.milestone_pigs.id})
+
+        self.assertEqual(self.task_1.milestone_id, self.milestone_pigs)
+        self.assertFalse(task_goats.milestone_id, "The milestone belongs to another project, it should be reset.")
+        self.assertEqual(subtask_without_milestone.milestone_id, self.milestone_pigs,
+                         "The milestone of the parent task should be set on its sub-tasks without milestone.")
+        self.assertEqual(subtask_same_milestone.milestone_id, self.milestone_pigs,
+                         "The sub-task sharing the previous milestone of its parent should follow the parent.")
