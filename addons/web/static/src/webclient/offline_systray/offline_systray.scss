@@ -4,7 +4,7 @@ $o-offline-separator-color: invert($popover-bg, 10%) !default;
     .spinner-border {
         --spinner-height: 0.8em;
         --spinner-width: 0.8em;
-        --spinner-border-width: #{$border-width * 2};
+        --spinner-border-width: calc(var(--o-bs-border-width) * 2);
         --spinner-animation-speed: 1.25s;
     }
 }

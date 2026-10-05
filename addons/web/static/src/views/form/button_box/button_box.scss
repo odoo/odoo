@@ -134,7 +134,7 @@
     }
 
     &:not(.o-form-buttonbox-small, .o_dropdown_more) > * + * {
-        margin-left: -$border-width;
+        margin-left: calc(var(--o-bs-border-width) * -1);
     }
 
     @media screen and (min-width: 768px), print and (min-width: 188mm) {

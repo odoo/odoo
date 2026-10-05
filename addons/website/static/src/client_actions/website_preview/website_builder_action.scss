@@ -6,7 +6,7 @@
 
     &.o_builder_sidebar_open {
         /* Keep the sidebar below 289px to avoid mobile view at 150% zoom. */
-        width: $o-we-sidebar-width - $border-width;
+        width: calc(var(--o-we-sidebar-width) - var(--o-bs-border-width));
         transition-delay: 200ms;
         box-sizing: content-box;
 

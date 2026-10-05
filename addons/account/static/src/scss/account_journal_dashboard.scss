@@ -50,7 +50,7 @@
     }
 
     &.o_kanban_ungrouped {
-        --KanbanRecord-width: calc(50% - #{$o-kanban-record-margin * 2});
+        --KanbanRecord-width: calc(50% - (var(--o-kanban-record-margin) * 2));
 
         > .o_kanban_record {
             flex-basis: var(--KanbanRecord-width);

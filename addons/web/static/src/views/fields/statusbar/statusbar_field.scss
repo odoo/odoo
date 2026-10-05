@@ -19,9 +19,9 @@
         --o-statusbar-caret-width: var(--o-statusbar-arrow-width);
         --o-statusbar-caret-gap: 2px;
         --o-statusbar-border-width: #{$btn-border-width};
-        --o-statusbar-padding: #{$border-width * 2};
+        --o-statusbar-padding: calc(var(--o-bs-border-width) * 2);
         --o-statusbar-button-padding-x: calc(var(--o-statusbar-caret-width) * 1.25);
-        --o-statusbar-button-padding-y: calc(var(--o-bs-btn-padding-y) - #{$border-width * 2});
+        --o-statusbar-button-padding-y: calc(var(--o-bs-btn-padding-y) - (var(--o-bs-border-width) * 2));
         --o-statusbar-point-top-left: var(--o-statusbar-caret-gap) 0;
         --o-statusbar-point-top-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-caret-gap)) 0;
         --o-statusbar-point-middle-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-caret-gap)) 50%;

@@ -45,7 +45,7 @@
     .o_kanban_record_colored:after {
         position: absolute;
         top: 0;
-        left: -$border-width;
+        left: calc(var(--o-bs-border-width) * -1);
         bottom: 0;
         right: auto;
         content: "";
@@ -57,7 +57,7 @@
             $-color: nth($o-colors, $size);
 
             border-left: var(--border-width) solid rgba($-color, 0.5);
-            border-right: ($border-width * 2) solid $-color;
+            border-right: calc(var(--o-bs-border-width) * 2) solid $-color;
         }
     }
 }

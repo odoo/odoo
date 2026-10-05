@@ -7,7 +7,7 @@
     }
 
     @at-root .rightpane .product {
-        border-bottom: $border-width * 6 solid var(--border-color);
+        border-bottom: calc(var(--o-bs-border-width) * 6) solid var(--border-color);
 
         &:where(.product:not(:has(.product-img))) {
             min-height: 6rem;

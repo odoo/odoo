@@ -43,7 +43,7 @@
         }
 
         .row.o_kanban_card_manage_settings {
-            padding-top: $o-kanban-dashboard-dropdown-complex-gap*3;
+            padding-top: calc(var(--o-kanban-dashboard-dropdown-complex-gap) * 3);
 
             &:not(:first-child) {
                 border-top: 1px solid $dropdown-divider-bg;
@@ -371,7 +371,7 @@
             margin: var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h);
 
             @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
-                margin: 0 0 #{-$border-width};
+                margin: 0 0 calc(var(--o-bs-border-width) * -1);
                 flex-basis: 100%;
             }
 

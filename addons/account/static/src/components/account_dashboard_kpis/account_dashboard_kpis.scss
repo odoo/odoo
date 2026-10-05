@@ -35,7 +35,7 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     container-type: inline-size;
 
     @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
-        margin: 0 0 (1px + $border-width); /* 1px offsets .o_kanban_record:first-of-type's hardcoded margin-top */
+        margin: 0 0 calc(1px + var(--o-bs-border-width)); /* 1px offsets .o_kanban_record:first-of-type's hardcoded margin-top */
     }
 }
 
