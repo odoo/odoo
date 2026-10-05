@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 
 
@@ -34,6 +36,31 @@ class AccountMove(models.Model):
         for log_service_id, log in zip(log_service_ids, log_list):
             log_service_id.message_post(body=log)
         return posted
+
+    def _link_bill_origin_to_purchase_orders(self, timeout=10):
+        lines_before = self.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        values_before = {line: (line.move_id, line.product_id, line.vehicle_id) for line in lines_before}
+        res = super()._link_bill_origin_to_purchase_orders(timeout=timeout)
+        # The bill lines matched with a purchase order were replaced by its lines: give their vehicle to the new lines.
+        vehicles_per_product_per_move = defaultdict(lambda: defaultdict(set))
+        for line in lines_before - self.invoice_line_ids:
+            move, product, vehicle = values_before[line]
+            vehicles_per_product_per_move[move][product].add(vehicle)
+        for move, vehicles_per_product in vehicles_per_product_per_move.items():
+            all_vehicles = set().union(*vehicles_per_product.values())
+            if not any(all_vehicles):
+                continue
+            new_lines = (move.invoice_line_ids - lines_before).filtered(lambda l: l.display_type == 'product')
+            for line in new_lines:
+                vehicles = vehicles_per_product.get(line.product_id) or all_vehicles
+                if len(vehicles) == 1:
+                    line.vehicle_id = next(iter(vehicles))
+            if lost_vehicles := self.env['fleet.vehicle'].union(*all_vehicles) - new_lines.vehicle_id:
+                move._message_log(body=_(
+                    "The vehicles %s of the bill lines replaced by the purchase order lines could not be kept.",
+                    ", ".join(lost_vehicles.sudo().mapped('display_name')),
+                ))
+        return res
 
     def action_show_services(self):
         self.ensure_one()
