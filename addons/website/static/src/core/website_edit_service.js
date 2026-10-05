@@ -1,3 +1,4 @@
+import { onWillDestroy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { Colibri } from "@web/public/colibri";
 import { Interaction } from "@web/public/interaction";
@@ -339,13 +340,15 @@ export const websiteEditService = {
 
         // Clean up parent document listeners when iframe unloads to prevent
         // stale handlers from serving an outdated service to new plugins.
-        window.addEventListener("beforeunload", () => {
+        const removeParentListeners = () => {
             window.parent.document.removeEventListener("edit_page", handleEditPage);
             window.parent.document.removeEventListener(
                 "edit_interaction_plugin_loaded",
                 handlePluginLoaded
             );
-        });
+        };
+        window.addEventListener("beforeunload", removeParentListeners);
+        onWillDestroy(removeParentListeners);
 
         return websiteEditService;
     },
