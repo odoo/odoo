@@ -4001,3 +4001,33 @@ class TestComposerResultsMassStatus(TestMailComposer):
                     }
                 )
         self.assertEqual(len(self._mails), 2, 'Should have sent 2 emails, even to excluded email.')
+
+    @users('employee')
+    def test_mail_composer_nothread_layout(self):
+        """ Test sending an email with layout on a model without mail.thread. """
+
+        record = self.env['mail.test.nothread'].sudo().create({
+            'name': 'Test Model Missing Method',
+            'customer_id': self.partner_1.id,
+        })
+
+        template = self.env['mail.template'].sudo().create({
+            'name': 'TestTemplate Layout',
+            'model_id': self.env['ir.model']._get_id('mail.test.nothread'),
+            'subject': 'Test Subject',
+            'body_html': '<p>Test Message</p>',
+            'email_layout_xmlid': 'mail.mail_notification_light',
+        })
+
+        mail_compose_message = self.env['mail.compose.message'].create({
+            'model': 'mail.test.nothread',
+            'template_id': template.id,
+            'res_ids': record.ids,
+        })
+
+        with self.mock_mail_gateway():
+            mail_compose_message.action_send_mail()
+
+        self.assertEqual(len(self._new_mails), 1, 'The mail should have been sent successfully with layout')
+        self.assertIn(template.body_html, self._new_mails[0].body_html, 'Body of posted message should be present')
+        self.assertEqual(template.subject, self._new_mails[0].subject, 'The mail response should contain the subject')
