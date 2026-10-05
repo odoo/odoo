@@ -5,6 +5,8 @@ from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import json
 
+from pytz import timezone
+
 from odoo import api, fields, models, _
 from odoo.addons.resource.models.utils import Intervals, sum_intervals
 from odoo.exceptions import UserError, ValidationError
@@ -441,7 +443,9 @@ class MrpWorkorder(models.Model):
         domain = [('time_type', 'in', ['leave', 'other'])]
         if self.leave_id:
             domain.append(('id', '!=', self.leave_id.id))
-        return workcenter.resource_calendar_id.plan_hours(
+        return workcenter.resource_calendar_id.with_context(
+            employee_timezone=timezone(workcenter.resource_calendar_id.tz),
+        ).plan_hours(
             self.duration_expected / 60.0, date_start or self.date_start,
             compute_leaves=True, domain=domain,
             resource=workcenter.resource_id,
