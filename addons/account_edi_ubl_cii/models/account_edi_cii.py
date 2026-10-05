@@ -528,10 +528,10 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_partner_trade_party_node(self, vals, partner_values):
         return {
-            'ram:GlobalID': {
+            'ram:GlobalID': [{
                 'schemeID': '0088',
                 '_text': partner_values['gln'],
-            } if partner_values['gln'] else None,
+            }] if partner_values['gln'] else [],
             'ram:Name': {'_text': partner_values['name']},
             'ram:SpecifiedLegalOrganization': {
                 'ram:ID': {
