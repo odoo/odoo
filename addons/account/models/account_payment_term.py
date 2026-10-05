@@ -122,7 +122,7 @@ class AccountPaymentTerm(models.Model):
                     amount = info_by_dates['amount']
                     example_preview += "<div>"
                     example_preview += _(
-                        "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b style='color: #704A66;'>%(date)s</b>",
+                        "<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: #704A66;'>%(date)s</b>",
                         count=i+1,
                         amount=formatLang(self.env, amount, currency_obj=currency),
                         date=date,
