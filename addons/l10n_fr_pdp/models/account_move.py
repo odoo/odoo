@@ -588,21 +588,25 @@ class AccountMove(models.Model):
                 if not move.name or not G1_05_RE.match(move.name):
                     yield _("Move name is not valid%s.", ref_move)
                 for tax in move.invoice_line_ids.tax_ids.flatten_taxes_hierarchy():
-                    is_valid_oss_rate = (
-                        tax._l10n_fr_pdp_is_oss()
-                        and tax.amount_type == 'percent'
+                    is_valid_foreign_rate = (
+                        tax.amount_type == 'percent'
                         and 0 <= tax.amount <= 100
+                        and (
+                            tax._l10n_fr_pdp_is_oss()
+                            or move._l10n_fr_pdp_uses_foreign_vat()
+                        )
                     )
-                    if tax.amount not in VALID_PDP_TAX_RATES and not is_valid_oss_rate:
+                    if (
+                        tax.amount not in VALID_PDP_TAX_RATES
+                        and not is_valid_foreign_rate
+                    ):
                         yield _(
                             "Tax %(tax)s is not supported by French e-reporting%(ref_move)s.",
                             tax=tax.display_name,
                             ref_move=ref_move,
                         )
                 if transaction_type == 'b2bi':
-                    partner_country_code = drom_com_territories.map_country_code_for_ppf(
-                        move.commercial_partner_id.country_id.code
-                    )
+                    partner_country_code = move.commercial_partner_id.country_id.code
                     if not partner_country_code or len(partner_country_code) != 2 or not partner_country_code.isalpha():
                         yield _("Partner country code must contain two letters%s.", ref_move)
 
@@ -617,9 +621,7 @@ class AccountMove(models.Model):
                     if not move.partner_shipping_id.country_id:
                         yield _("Missing address country%s.", ref_move)
                     else:
-                        country_code = drom_com_territories.map_country_code_for_ppf(
-                            move.partner_shipping_id.country_id.code
-                        )
+                        country_code = move.partner_shipping_id.country_id.code
                         if not country_code or len(country_code) != 2 or not country_code.isalpha():
                             yield _("Address country code must contain two letters%s.", ref_move)
 
@@ -635,6 +637,15 @@ class AccountMove(models.Model):
         if 'debit_origin_id' in self._fields:
             referenced += self.debit_origin_id
         return referenced
+
+    def _l10n_fr_pdp_uses_foreign_vat(self):
+        """Return whether this move uses the company's foreign tax registration."""
+        self.ensure_one()
+        return (
+            self._l10n_fr_pdp_is_sale()
+            and bool(self.fiscal_position_id.foreign_vat)
+            and self.tax_country_id != self.company_id.account_fiscal_country_id
+        )
 
     def _l10n_fr_pdp_get_transaction_type(self):
         """Classify invoice for PDP reporting: b2c, b2bi, or False (domestic B2B)."""
