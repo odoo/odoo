@@ -94,7 +94,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         })
         partner_model = self.env.ref('base.model_res_partner')
         partner = self.env['res.partner'].search([], limit=1)
-        with self.assertQueryCount(__system__=526):
+        with self.assertQueryCount(__system__=128):
             events = self.env['calendar.event'].create([{
                 'name': "Event %s" % (i),
                 'start': datetime(2020, 1, 15, 8, 0),
@@ -109,7 +109,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
 
             events._sync_odoo2google(self.google_service)
 
-        with self.assertQueryCount(__system__=27):
+        with self.assertQueryCount(__system__=25):
             events.unlink()
 
     @patch_api
@@ -123,7 +123,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'duration': 18,
         })
         partner_model = self.env.ref('base.model_res_partner')
-        with self.assertQueryCount(__system__=105):
+        with self.assertQueryCount(__system__=95):
             event = self.env['calendar.event'].create({
                 'name': "Event",
                 'start': datetime(2020, 1, 15, 8, 0),

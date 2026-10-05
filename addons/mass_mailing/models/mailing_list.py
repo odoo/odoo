@@ -386,14 +386,12 @@ class MailingList(models.Model):
             # do not log if no opt-out / opt-in was actually done
             if opt_out:
                 updated = current_opt_in.filtered(lambda sub: sub.contact_id == contact).list_id
-            else:
-                updated = current_opt_out.filtered(lambda sub: sub.contact_id == contact).list_id + missing_lists
-            if not updated:
-                continue
-            if opt_out:
                 contacts_to_unsubscribe |= contact
             else:
+                updated = current_opt_out.filtered(lambda sub: sub.contact_id == contact).list_id + missing_lists
                 contacts_to_subscribe |= contact
+            if not updated:
+                continue
             if force_message is False:
                 continue
             if force_message:
