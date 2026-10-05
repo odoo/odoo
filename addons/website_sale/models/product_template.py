@@ -1008,6 +1008,7 @@ class ProductTemplate(models.Model):
             "has_discounted_price": has_discounted_price,
             "discount_start_date": pricelist_item.date_start,
             "discount_end_date": pricelist_item.date_end,
+            "show_extra_price": True,  # kept for stable compatibility
         }
 
         if (
