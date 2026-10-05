@@ -101,7 +101,10 @@ export class PosOrder extends Base {
     }
 
     get canBeRemovedFromIndexedDB() {
-        return (this.finalized && typeof this.id === "number") || this.state === "cancel";
+        return (
+            (this.finalized && typeof this.id === "number" && !this.uiState?.finalizedNotSynced) ||
+            this.state === "cancel"
+        );
     }
 
     get totalQuantity() {
@@ -109,7 +112,12 @@ export class PosOrder extends Base {
     }
 
     get isUnsyncedPaid() {
-        return this.finalized && typeof this.id === "string";
+        // An order can already have a server id (e.g. a restaurant draft synced before the
+        // payment) while its finalization has not reached the server yet.
+        return (
+            this.finalized &&
+            (typeof this.id === "string" || Boolean(this.uiState?.finalizedNotSynced))
+        );
     }
 
     get originalSplittedOrder() {
