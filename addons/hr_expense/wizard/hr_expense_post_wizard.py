@@ -1,5 +1,5 @@
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 
 class HrExpensePostWizard(models.TransientModel):
@@ -43,6 +43,8 @@ class HrExpensePostWizard(models.TransientModel):
 
     def action_post_entry(self):
         expenses = self.env['hr.expense'].browse(self.env.context['active_ids'])
+        if not expenses.has_access('write'):
+            raise AccessError(self.env._("You don't have the access rights to modify this expense."))
         if not self.env['account.move'].has_access('create'):
             raise UserError(_("You don't have the rights to create accounting entries."))
         expense_receipt_vals_list = [
