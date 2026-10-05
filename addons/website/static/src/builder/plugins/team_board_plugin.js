@@ -6,6 +6,7 @@ import { localeCompare } from "@web/core/l10n/utils";
 
 export class TeamBoardPlugin extends Plugin {
     static id = "teamBoard";
+    static dependencies = ["builderOptions"];
     resources = {
         builder_actions: { SortTeamBoardMembersAction },
         remove_disabled_reason_providers: (el) => {
@@ -20,7 +21,30 @@ export class TeamBoardPlugin extends Plugin {
             selector: ".s_team_board",
             excludeAncestor: ".s_team_board, .s_popup, .s_table_of_content",
         },
+        options_container_top_buttons_providers: this.getOptionsContainerTopButtons.bind(this),
     };
+
+    getOptionsContainerTopButtons(el) {
+        if (!el.matches(".s_team_board")) {
+            return [];
+        }
+
+        return [{
+            class: "oi oi-fw btn o-hb-btn btn-accent-color-hover",
+            icon: "add",
+            title: _t("Add new"),
+            handler: () => {
+                const snippet = this.config.snippetModel.getOriginalSnippet("s_team_board");
+                const clonedEl = snippet.content.cloneNode(true);
+
+                el.after(clonedEl);
+
+                this.dependencies.builderOptions.setNextTarget(clonedEl);
+                const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                clonedEl.scrollIntoView({ behavior: prefersReducedMotion ? "instant" : "smooth" });
+            },
+        }];
+    }
 }
 
 export class SortTeamBoardMembersAction extends BuilderAction {
