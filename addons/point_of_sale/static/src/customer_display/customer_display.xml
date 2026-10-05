@@ -22,7 +22,7 @@
             </div>
         </div>
         <div t-elif="orderData?.state == 'paid' and orderPrices?.total_amount" class="h-100 d-flex flex-column">
-            <FeedbackPaymentSummary formattedAmount="orderPrices.total_amount" class="'h-100'" loading="this.order.processingValidation"/>
+            <FeedbackPaymentSummary formattedAmount="this.order.paymentAmountInCurrency" class="'h-100'" loading="this.order.processingValidation"/>
             <div class="d-flex justify-content-center mb-4">
                 <t t-call="point_of_sale.CustomerDisplayFooter"/>
             </div>

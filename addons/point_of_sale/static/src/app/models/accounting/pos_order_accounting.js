@@ -36,19 +36,19 @@ export class PosOrderAccounting extends Base {
     }
 
     get paymentAmountInCurrency() {
-        const otherCurrencyPayments = this.payment_ids.filter(
-            (payment) => payment.foreign_currency_id
-        );
-        if (!otherCurrencyPayments.length) {
-            return formatCurrency(this.totalDue, this.config.currency_id.id);
-        }
+        return this.formatAmountInCurrency(this.totalDue, this.orderCurrency);
+    }
 
-        const currency = otherCurrencyPayments[0].currency;
-        const totalOtherCurrencyAmount = otherCurrencyPayments.reduce(
-            (total, payment) => total + payment.amount_currency,
-            0
-        );
-        return formatCurrency(totalOtherCurrencyAmount, currency.id);
+    convertAmountToCurrency(amount, currency) {
+        if (currency.id === this.currency.id) {
+            return amount;
+        }
+        const amountInCompanyCurrency = this.currency.convertToDefaultCurrency(amount);
+        return currency.convert(amountInCompanyCurrency);
+    }
+
+    formatAmountInCurrency(amount, currency) {
+        return formatCurrency(this.convertAmountToCurrency(amount, currency), currency.id);
     }
 
     /**
