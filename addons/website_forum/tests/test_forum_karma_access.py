@@ -126,12 +126,12 @@ class TestForumCRUD(TestForumCommon):
 
         # One should not be able to access a vote from someone else
         with self.assertRaises(AccessError):
-            new_employee_vote.with_user(self.user_portal).read(['vote'])
+            new_employee_vote.with_user(self.user_portal).fetch(['vote'])
         with self.assertRaises(AccessError):
-            new_portal_vote.with_user(self.user_employee).read(['vote'])
+            new_portal_vote.with_user(self.user_employee).fetch(['vote'])
 
         # Admins should be able to access all votes
-        (new_employee_vote + new_portal_vote).with_user(self.user_admin).read(['vote'])
+        (new_employee_vote + new_portal_vote).with_user(self.user_admin).fetch(['vote'])
 
 
 class TestForumKarma(TestForumCommon):

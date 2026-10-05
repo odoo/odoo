@@ -282,16 +282,16 @@ class TestPortalProject(TestProjectPortalCommon):
 
         pigs.write({'privacy_visibility': 'employees'})
         # Do: Alfred reads project -> ok (employee ok employee)
-        pigs.with_user(self.user_projectuser).read(['user_id'])
+        pigs.with_user(self.user_projectuser).fetch(['user_id'])
         # Test: all project tasks visible
         tasks = self.env['project.task'].with_user(self.user_projectuser).search([('project_id', '=', pigs.id)])
         test_task_ids = set([self.task_1.id, self.task_2.id, self.task_3.id, self.task_4.id, self.task_5.id, self.task_6.id])
         self.assertEqual(set(tasks.ids), test_task_ids,
                          'access rights: project user cannot see all tasks of an employees project')
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(AccessError, pigs.with_user(self.user_noone).read, ['user_id'])
+        self.assertRaises(AccessError, pigs.with_user(self.user_noone).fetch, ['user_id'])
         # Do: Donovan reads project -> ko (public ko employee)
-        self.assertRaises(AccessError, pigs.with_user(self.user_public).read, ['user_id'])
+        self.assertRaises(AccessError, pigs.with_user(self.user_public).fetch, ['user_id'])
         # Do: project user is employee and can create a task
         tmp_task = self.env['project.task'].with_user(self.user_projectuser).with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs task',
@@ -312,27 +312,27 @@ class TestPortalProject(TestProjectPortalCommon):
         pigs = self.project_pigs
         pigs.write({'privacy_visibility': 'followers'})
         # Do: Alfred reads project -> ko (employee ko followers)
-        self.assertRaises(AccessError, pigs.with_user(self.user_projectuser).read, ['user_id'])
+        self.assertRaises(AccessError, pigs.with_user(self.user_projectuser).fetch, ['user_id'])
         # Test: no project task visible
         tasks = self.env['project.task'].with_user(self.user_projectuser).search([('project_id', '=', pigs.id)])
         self.assertEqual(tasks, self.task_1,
                          'access rights: employee user should not see tasks of a not-followed followers project, only assigned')
 
         # Do: Bert reads project -> crash, no group
-        self.assertRaises(AccessError, pigs.with_user(self.user_noone).read, ['user_id'])
+        self.assertRaises(AccessError, pigs.with_user(self.user_noone).fetch, ['user_id'])
 
         # Do: Donovan reads project -> ko (public ko employee)
-        self.assertRaises(AccessError, pigs.with_user(self.user_public).read, ['user_id'])
+        self.assertRaises(AccessError, pigs.with_user(self.user_public).fetch, ['user_id'])
 
         pigs.write({'allowed_internal_user_ids': [(4, self.user_projectuser.id)]})
 
         # Do: Alfred reads project -> ok (follower ok followers)
         donkey = pigs.with_user(self.user_projectuser)
         donkey.invalidate_model()
-        donkey.read(['user_id'])
+        donkey.fetch(['user_id'])
 
         # Do: Donovan reads project -> ko (public ko follower even if follower)
-        self.assertRaises(AccessError, pigs.with_user(self.user_public).read, ['user_id'])
+        self.assertRaises(AccessError, pigs.with_user(self.user_public).fetch, ['user_id'])
         # Do: project user is follower of the project and can create a task
         self.env['project.task'].with_user(self.user_projectuser).with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs task', 'project_id': pigs.id
@@ -374,7 +374,7 @@ class TestAccessRightsPrivateTask(TestAccessRights):
             self.private_task.with_user(self.env.user).unlink()
 
         with self.assertRaises(AccessError):
-            self.private_task.with_user(self.env.user).read(['name'])
+            self.private_task.with_user(self.env.user).fetch(['name'])
 
     @users('Project user')
     def test_project_user_crud_own_private_task(self):
@@ -426,7 +426,7 @@ class TestAccessRightsPrivateTask(TestAccessRights):
     @users('Project user')
     def test_project_user_cannot_read_private_task_of_another_user(self):
         with self.assertRaises(AccessError):
-            self.private_task.with_user(self.env.user).read(['name'])
+            self.private_task.with_user(self.env.user).fetch(['name'])
 
     @users('Project user')
     def test_project_user_cannot_unlink_private_task_of_another_user(self):

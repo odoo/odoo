@@ -557,11 +557,8 @@ Please change the quantity done or the rounding precision in your settings.""",
             elif move.picking_type_id.code == 'incoming':
                 prefetch_virtual_available[key_virtual_available(move, incoming=True)].add(move.product_id.id)
         for key_context, product_ids in prefetch_virtual_available.items():
-            read_res = self.env['product.product'].browse(product_ids).with_context(warehouse_id=key_context[0], to_date=key_context[1]).read([
-                'virtual_available',
-                'free_qty',
-            ])
-            virtual_available_dict[key_context] = {res['id']: (res['virtual_available'], res['free_qty']) for res in read_res}
+            products = self.env['product.product'].browse(product_ids).with_context(warehouse_id=key_context[0], to_date=key_context[1])
+            virtual_available_dict[key_context] = {res.id: (res.virtual_available, res.free_qty) for res in products}
 
         for move in product_moves:
             if key_virtual_available(move) in virtual_available_dict and move.product_id.id in virtual_available_dict[key_virtual_available(move)]:
@@ -1544,7 +1541,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             self.update({'quantity': quantity})
             return
         base_location = self.picking_id.location_id or self.location_id
-        extra_lot_ids = {rec['id'] for rec in self.env['stock.lot'].sudo().search_read([('product_id', '=', self.product_id.id), ('name', 'in', extra_lot_names)], ['id'])}
+        extra_lot_ids = {rec.id for rec in self.env['stock.lot'].sudo().search_fetch([('product_id', '=', self.product_id.id), ('name', 'in', extra_lot_names)], ['id'])}
         quant_domain = Domain([
             ('product_id', '=', self.product_id.id),
             ('lot_id', 'in', extra_lot_ids),

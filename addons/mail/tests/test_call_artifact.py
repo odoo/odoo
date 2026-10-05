@@ -68,7 +68,7 @@ class TestMailCallArtifact(MailCommon):
         """Verify that a non-member of the channel cannot read the artifact"""
         artifact = self.artifact.with_user(self.user_employee_c2)
         with self.assertRaises(AccessError, msg="Non-members should not have read access to artifacts"):
-            artifact.read(["start_ms"])
+            artifact.fetch(["start_ms"])
         search_res = self.env["mail.call.artifact"].with_user(self.user_employee_c2).search([("id", "=", self.artifact.id)])
         self.assertEqual(len(search_res), 0, "Non-member should not find artifact")
 

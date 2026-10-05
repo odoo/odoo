@@ -349,8 +349,8 @@ class MrpProduction(models.Model):
             ('code', '=', 'mrp_operation'),
             ('warehouse_id.company_id', 'in', self.company_id.ids),
         ]
-        picking_types = self.env['stock.picking.type'].search_read(domain, ['company_id'], load=False, limit=1)
-        picking_type_by_company = {pt['company_id']: pt['id'] for pt in picking_types}
+        picking_types = self.env['stock.picking.type'].search_fetch(domain, ['company_id'], limit=1)
+        picking_type_by_company = {pt.company_id.id: pt.id for pt in picking_types}
         default_picking_type_id = self.env.context.get('default_picking_type_id')
         default_picking_type = default_picking_type_id and self.env['stock.picking.type'].browse(default_picking_type_id)
         if not default_picking_type:

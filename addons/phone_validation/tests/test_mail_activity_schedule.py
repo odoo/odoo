@@ -122,7 +122,7 @@ class TestMailActivitySchedule(ActivityScheduleCase):
                 "res_model": target._name,
                 "res_ids": str(target.ids),
                 "activity_type_id": self.activity_type_call.id,
-            }).read(["phone"])
+            }).phone
 
     def test_activity_schedule_formats_prefilled_phone(self):
         """The scheduling wizard displays a localized phone number."""

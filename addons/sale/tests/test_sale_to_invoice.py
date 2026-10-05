@@ -1208,7 +1208,7 @@ class TestSaleToInvoice(TestSaleCommon):
         """
         self.sale_order.order_line.product_uom_qty = 2.0
         # TODO?: validate invoice and register payments
-        self.sale_order.order_line.read(["name", "price_unit", "product_uom_qty", "price_total"])
+        self.sale_order.order_line.fetch(["name", "price_unit", "product_uom_qty", "price_total"])
 
         self.assertEqual(self.sale_order.amount_total, 1240.0, "Sale: total amount is wrong")
         self.sale_order.order_line._compute_product_updatable()

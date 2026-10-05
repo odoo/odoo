@@ -85,7 +85,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             cat.search([], order='zzz')
 
         with self.assertRaisesRegex(ValueError, 'Invalid field'):
-            cat.read(['zzz'])
+            cat.fetch(['zzz'])
 
         with self.assertRaisesRegex(ValueError, 'Invalid field'):
             cat.create({'name': 'Foo', 'zzz': 42})
@@ -3063,7 +3063,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # prep the following query count by caching access check related data
         record_user.invalidate_recordset(['tags'])
-        record_user.read(['tags'])
+        record_user.fetch(['tags'])
 
         # only one query as user: reading pivot table
         with self.assertQueryCount(1):
@@ -3081,7 +3081,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # prep the following query count by caching access check related data
         record_user.invalidate_recordset(['tags'])
-        record_user.read(['tags'])
+        record_user.fetch(['tags'])
 
         # still only 1 query: reading pivot table
         # access rules are checked in python in this case
@@ -3100,7 +3100,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # ensure ir.access is applied even when reading m2m
         with self.assertRaises(AccessError):
-            record_user.read(['tags'])
+            record_user.fetch(['tags'])
 
     def test_98_prefetch_translate(self):
         Model = self.registry['test_orm.prefetch']

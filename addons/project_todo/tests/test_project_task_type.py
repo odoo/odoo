@@ -14,12 +14,12 @@ class TestProjectTodoTaskTypeSecurity(TestProjectTaskTypeSecurity):
         _logger.info("Testing access for employee specific to project_todo")
         # Can read/create/write/unlink personal stage
         stage = self.env["project.task.type"].with_user(self.user_employee).create({"name": "foo"})
-        stage.with_user(self.user_employee).read(["name"])
+        stage.with_user(self.user_employee).fetch(["name"])
         stage.with_user(self.user_employee).write({"name": "foo"})
         stage.with_user(self.user_employee).unlink()
 
         # Can read a project stage
-        self.stage_project.with_user(self.user_employee).read(["name"])
+        self.stage_project.with_user(self.user_employee).fetch(["name"])
         # Cannot create/write/unlink project stage
         with self.assertRaises(AccessError):
             self.env["project.task.type"].with_user(self.user_employee).create(
@@ -32,7 +32,7 @@ class TestProjectTodoTaskTypeSecurity(TestProjectTaskTypeSecurity):
 
         # Cannot read/create/write/unlink other user stages
         with self.assertRaises(AccessError):
-            self.stage_user.with_user(self.user_employee).read(["name"])
+            self.stage_user.with_user(self.user_employee).fetch(["name"])
         with self.assertRaises(AccessError):
             self.env["project.task.type"].with_user(self.user_employee).create(
                 {"name": "foo", "user_id": self.user_projectuser.id}

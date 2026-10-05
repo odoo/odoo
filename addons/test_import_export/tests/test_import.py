@@ -351,12 +351,12 @@ class TestColumnMapping(TransactionCase):
             {'quoting': '"', 'separator': ',', 'has_headers': True},
             True
         )
-        fields = self.env['base_import.mapping'].search_read(
+        fields = self.env['base_import.mapping'].search_fetch(
             [('res_model', '=', 'import.preview')],
             ['column_name', 'field_name']
         )
-        self.assertItemsEqual([f['column_name'] for f in fields], ['Name', 'Some Value', 'value'])
-        self.assertItemsEqual([f['field_name'] for f in fields], ['somevalue', 'name', 'othervalue'])
+        self.assertItemsEqual([f.column_name for f in fields], ['Name', 'Some Value', 'value'])
+        self.assertItemsEqual([f.field_name for f in fields], ['somevalue', 'name', 'othervalue'])
 
     def test_fuzzy_match_distance(self):
         values_to_test = [

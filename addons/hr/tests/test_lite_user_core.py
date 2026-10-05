@@ -79,4 +79,4 @@ class TestLiteUserCore(TransactionCase):
         # the real path the web client uses to render the menu tree
         self.env['ir.ui.menu'].with_user(light_user).load_menus(False)
         # reading own user record with its groups (user preferences)
-        light_user.with_user(light_user).read(['name', 'login', 'group_ids'])
+        light_user.with_user(light_user).fetch(['name', 'login', 'group_ids'])

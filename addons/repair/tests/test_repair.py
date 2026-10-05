@@ -197,7 +197,7 @@ class TestRepair(TestRepairCommon):
             'group_ids': [Command.set([self.env.ref('stock.group_stock_user').id])],
         })
         self.repair0.invalidate_recordset()
-        self.repair0.with_user(stock_user).read(['invoice_count', 'can_create_sale_or_invoice'])
+        self.repair0.with_user(stock_user).fetch(['invoice_count', 'can_create_sale_or_invoice'])
 
     def test_01_repair_states_transition(self):
         repair = self._create_simple_repair_order()

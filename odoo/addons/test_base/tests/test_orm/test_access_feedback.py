@@ -154,7 +154,7 @@ Contact your administrator to request access if necessary."""
             r.val
         self.assertEqual(ctx.exception.args[0], expected)
         with self.assertRaises(AccessError) as ctx:
-            r.read(['val'])
+            r.fetch(['val'])
         self.assertEqual(ctx.exception.args[0], expected)
 
 

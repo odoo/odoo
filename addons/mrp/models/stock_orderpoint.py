@@ -81,8 +81,8 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('effective_route_id')
     def _compute_show_bom(self):
         manufacture_route = []
-        for res in self.env['stock.rule'].search_read([('action', '=', 'manufacture')], ['route_id']):
-            manufacture_route.append(res['route_id'][0])
+        for res in self.env['stock.rule'].search_fetch([('action', '=', 'manufacture')], ['route_id']):
+            manufacture_route.append(res.route_id.id)
         for orderpoint in self:
             orderpoint.show_bom = orderpoint.effective_route_id.id in manufacture_route
 

@@ -96,35 +96,35 @@ class TestMailMessageAccess(MessageAccessCommon):
 
         # public user access check
         for allowed in self.record_public:
-            allowed.with_user(self.user_public).read(['name'])
+            allowed.with_user(self.user_public).fetch(['name'])
         for forbidden in self.record_portal + self.record_portal_ro + self.record_followers + self.record_internal + self.record_internal_ro + self.record_admin:
             with self.assertRaises(AccessError):
-                forbidden.with_user(self.user_public).read(['name'])
+                forbidden.with_user(self.user_public).fetch(['name'])
         for forbidden in self.record_public + self.record_portal + self.record_portal_ro + self.record_followers + self.record_internal + self.record_internal_ro + self.record_admin:
             with self.assertRaises(AccessError):
                 forbidden.with_user(self.user_public).write({'name': 'Update'})
 
         # portal user access check
         for allowed in self.record_public + self.record_portal + self.record_portal_ro:
-            allowed.with_user(self.user_portal).read(['name'])
+            allowed.with_user(self.user_portal).fetch(['name'])
         for forbidden in self.record_internal + self.record_internal_ro + self.record_admin:
             with self.assertRaises(AccessError):
-                forbidden.with_user(self.user_portal).read(['name'])
+                forbidden.with_user(self.user_portal).fetch(['name'])
         for allowed in self.record_portal:
             allowed.with_user(self.user_portal).write({'name': 'Update'})
         for forbidden in self.record_public + self.record_portal_ro + self.record_followers + self.record_internal + self.record_internal_ro + self.record_admin:
             with self.assertRaises(AccessError):
                 forbidden.with_user(self.user_portal).write({'name': 'Update'})
         self.record_followers.message_subscribe(self.user_portal.partner_id.ids)
-        self.record_followers.with_user(self.user_portal).read(['name'])
+        self.record_followers.with_user(self.user_portal).fetch(['name'])
         self.record_followers.with_user(self.user_portal).write({'name': 'Update'})
 
         # internal user access check
         for allowed in self.record_public + self.record_portal + self.record_portal_ro + self.record_followers + self.record_internal + self.record_internal_ro:
-            allowed.with_user(self.user_employee).read(['name'])
+            allowed.with_user(self.user_employee).fetch(['name'])
         for forbidden in self.record_admin:
             with self.assertRaises(AccessError):
-                forbidden.with_user(self.user_employee).read(['name'])
+                forbidden.with_user(self.user_employee).fetch(['name'])
         for allowed in self.record_public + self.record_portal + self.record_portal_ro + self.record_followers + self.record_internal:
             allowed.with_user(self.user_employee).write({'name': 'Update'})
         for forbidden in self.record_internal_ro + self.record_admin:
@@ -133,7 +133,7 @@ class TestMailMessageAccess(MessageAccessCommon):
 
         # elevated user access check
         for allowed in self.record_public + self.record_portal + self.record_portal_ro + self.record_followers + self.record_internal + self.record_internal_ro + self.record_admin:
-            allowed.with_user(self.user_admin).read(['name'])
+            allowed.with_user(self.user_admin).fetch(['name'])
 
     # ------------------------------------------------------------
     # CREATE
@@ -394,11 +394,11 @@ class TestMailMessageAccess(MessageAccessCommon):
         )
         # portal user have no rights to read the message
         with self.assertRaises(AccessError):
-            message.with_user(self.user_portal).read(['subject', 'body'])
+            message.with_user(self.user_portal).fetch(['subject', 'body'])
 
         with patch.object(MailTestSimple, '_access_domain', return_value=Domain.TRUE):
             with self.assertRaises(AccessError):
-                message.with_user(self.user_portal).read(['subject', 'body'])
+                message.with_user(self.user_portal).fetch(['subject', 'body'])
 
             # parent message is accessible to references notification mail values
             # for _notify method and portal user have no rights to send the message for this model
@@ -486,9 +486,9 @@ class TestMailMessageAccess(MessageAccessCommon):
                     msg.write(msg_vals)
                 if should_crash:
                     with self.assertRaises(AccessError):
-                        msg.with_user(self.user_employee).read(['body'])
+                        msg.with_user(self.user_employee).fetch(['body'])
                 else:
-                    msg.with_user(self.user_employee).read(['body'])
+                    msg.with_user(self.user_employee).fetch(['body'])
                 if msg_vals:
                     msg.write(original_vals)
 
@@ -508,18 +508,18 @@ class TestMailMessageAccess(MessageAccessCommon):
         # lock -> see '_get_mail_message_access', cannot read locked message
         # without write access, with is not granted for employees
         with self.assertRaises(AccessError):  # write access not granted on locked -> cannot read message
-            messages_all[2].with_user(self.user_employee).read(['subject'])
+            messages_all[2].with_user(self.user_employee).fetch(['subject'])
         with self.assertRaises(AccessError):  # also working in case of batch ok / not ok
-            messages_all.with_user(self.user_employee).read(['subject'])
-        messages_all[0].with_user(self.user_employee).read(['subject'])
-        messages_all[1].with_user(self.user_employee).read(['subject'])  # can read message of readonly
+            messages_all.with_user(self.user_employee).fetch(['subject'])
+        messages_all[0].with_user(self.user_employee).fetch(['subject'])
+        messages_all[1].with_user(self.user_employee).fetch(['subject'])  # can read message of readonly
 
         with self.assertRaises(AccessError):  # fetch should be symmetric to read
             _message = messages_all[2].with_user(self.user_employee).copy_data()
 
         with self.assertRaises(AccessError):  # no write access at all
-            messages_all.with_user(self.user_portal).read(['subject'])
-        messages_all.with_user(self.user_admin).read(['subject'])
+            messages_all.with_user(self.user_portal).fetch(['subject'])
+        messages_all.with_user(self.user_admin).fetch(['subject'])
 
     def test_access_read_portal(self):
         """ Read access check for portal users """
@@ -642,9 +642,9 @@ class TestMailMessageAccess(MessageAccessCommon):
                 self.env.invalidate_all()
                 if should_crash:
                     with self.assertRaises(AccessError):
-                        msg.with_user(self.user_public).read(['body'])
+                        msg.with_user(self.user_public).fetch(['body'])
                 else:
-                    msg.with_user(self.user_public).read(['body'])
+                    msg.with_user(self.user_public).fetch(['body'])
                 if msg_vals:
                     msg.write(original_vals)
                     self.env.invalidate_all()
@@ -769,13 +769,13 @@ class TestMailMessageAccess(MessageAccessCommon):
         """ Test updating message notification content as portal user """
         self.record_followers.message_subscribe(self.user_portal.partner_id.ids)
         test_record = self.record_followers.with_user(self.user_portal)
-        test_record.read(['name'])
+        test_record.fetch(['name'])
         with self.assertRaises(AccessError):
-            test_record.with_user(self.user_portal_2).read(['name'])
+            test_record.with_user(self.user_portal_2).fetch(['name'])
         message = test_record.message_ids[0].with_user(self.user_portal)
         message.write({'body': 'Updated'})
         with self.assertRaises(AccessError):
-            message.with_user(self.user_portal_2).read(['subject'])
+            message.with_user(self.user_portal_2).fetch(['subject'])
 
     # ------------------------------------------------------------
     # SEARCH
@@ -945,7 +945,7 @@ class TestMessageSubModelAccess(MessageAccessCommon):
         message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
         message.with_user(self.user_employee).read()
         # Test: Employee has access to attachment, ok because they can read message
-        attachment.with_user(self.user_employee).read(['name', 'raw'])
+        attachment.with_user(self.user_employee).fetch(['name', 'raw'])
 
     @mute_logger('odoo.addons.base.models.ir_access')
     def test_mail_follower(self):
@@ -961,7 +961,7 @@ class TestMessageSubModelAccess(MessageAccessCommon):
         )
         self.assertTrue(follower)
         with self.assertRaises(AccessError):
-            follower.with_user(self.user_portal).read(['partner_id'])
+            follower.with_user(self.user_portal).fetch(['partner_id'])
 
         # employee cannot update
         with self.assertRaises(AccessError):
@@ -1024,4 +1024,4 @@ class TestMessageSubModelAccess(MessageAccessCommon):
             AccessError,
             msg="Portal cannot read notifications unless they are the recipient or the author"
         ):
-            notifications.read(['is_read'])
+            notifications.fetch(['is_read'])

@@ -1335,7 +1335,7 @@ class TestDiscuss(HttpCase, MailCommon, TestRecipients):
 
         with patch.object(MailTestSimple, '_access_domain', autospec=True, side_effect=_employee_crash):
             with self.assertRaises(exceptions.AccessError):
-                self.env['mail.test.simple'].with_user(self.user_employee).browse(self.test_record.ids).read(['name'])
+                self.env['mail.test.simple'].with_user(self.user_employee).browse(self.test_record.ids).fetch(['name'])
 
             employee_partner = self.env['res.partner'].with_user(self.user_employee).browse(self.partner_employee.ids)
 

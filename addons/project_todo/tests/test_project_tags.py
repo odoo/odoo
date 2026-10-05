@@ -13,7 +13,7 @@ class TestProjectTodoTagsSecurity(TestProjectTagsSecurity):
         which become common with this module"""
 
         # Can read any tag
-        (self.tag_project | self.tag_admin).with_user(user).read(["name"])
+        (self.tag_project | self.tag_admin).with_user(user).fetch(["name"])
 
         # Can create/write/unlink own tags
         tag = self.env["project.tags"].with_user(user).create({"name": "Employee tag"})

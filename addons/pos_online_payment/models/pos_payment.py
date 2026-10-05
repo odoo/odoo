@@ -22,8 +22,8 @@ class PosPayment(models.Model):
                 online_account_payments_by_pm[pm_id] = set()
             online_account_payments_by_pm[pm_id].add(vals.get('online_account_payment_id') or None)
 
-        opms_read_id = self.env['pos.payment.method'].search_read(['&', ('id', 'in', list(online_account_payments_by_pm.keys())), ('type', '=', 'online')], ["id"])
-        opms_id = {opm_read_id['id'] for opm_read_id in opms_read_id}
+        opms_read_id = self.env['pos.payment.method'].search_fetch(['&', ('id', 'in', list(online_account_payments_by_pm.keys())), ('type', '=', 'online')], ["id"])
+        opms_id = {opm_read_id.id for opm_read_id in opms_read_id}
         online_account_payments_to_check_id = set()
 
         for pm_id, oaps_id in online_account_payments_by_pm.items():

@@ -1057,8 +1057,8 @@ class MailingMailing(models.Model):
             trace_domain &= Domain('mass_mailing_id', 'in', self._get_ab_testing_siblings_mailings().ids)
         else:
             trace_domain &= Domain('res_id', 'in', res_ids) & Domain('mass_mailing_id', '=', self.id)
-        already_mailed = self.env['mailing.trace'].search_read(trace_domain, ['res_id'])
-        done_res_ids = {record['res_id'] for record in already_mailed}
+        already_mailed = self.env['mailing.trace'].search_fetch(trace_domain, ['res_id'])
+        done_res_ids = {record.res_id for record in already_mailed}
         return [rid for rid in res_ids if rid not in done_res_ids]
 
     def _get_recipient_base_url(self):

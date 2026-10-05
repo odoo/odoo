@@ -116,7 +116,7 @@ class TestACL(TransactionCaseWithUserDemo):
         with self.assertRaises(AccessError):
             partner.fetch(['bank_ids'])
         with self.assertRaises(AccessError):
-            partner.read(['bank_ids'])
+            partner.fetch(['bank_ids'])
         with self.assertRaises(AccessError):
             partner.write({'bank_ids': []})
         with self.assertRaises(AccessError):
