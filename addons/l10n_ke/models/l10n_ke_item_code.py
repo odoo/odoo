@@ -11,7 +11,13 @@ class L10n_KeItemCode(models.Model):
 
     code = fields.Char(string='KRA Item Code')
     description = fields.Char(string='Description')
-    tax_rate = fields.Selection([('C', 'Zero Rated'), ('E', 'Exempted'), ('B', 'Taxable at 8%')])
+    tax_rate = fields.Selection([
+        ('A', 'Exempt'),
+        ('B', 'Taxable at 16%'),
+        ('C', 'Zero Rated'),
+        ('D', 'Non-VAT'),
+        ('E', 'Taxable at 8%'),
+    ])
 
     @api.depends('code', 'description')
     def _compute_display_name(self):
