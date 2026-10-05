@@ -1273,6 +1273,7 @@ class TestTimesheet(TestCommonTimesheet):
         past_timesheet, departure_day_timesheet, today_timesheet, future_timesheet, future_timesheet_no_wizard = timesheets
         self.env['hr.employee.departure'].with_context(employee_termination=True).create({
             'employee_id': self.empl_employee.id,
+            'dismissal_date': yesterday,
             'departure_date': yesterday,
         }).action_register()
         employee_no_wizard.action_archive()

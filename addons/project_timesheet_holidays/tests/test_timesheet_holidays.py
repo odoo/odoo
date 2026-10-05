@@ -636,6 +636,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
         self.env['hr.employee.departure'].with_context(employee_termination=True).create({
             'employee_id': self.empl_employee.id,
+            'dismissal_date': yesterday,
             'departure_date': yesterday,
         }).action_register()
 
