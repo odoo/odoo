@@ -105,6 +105,12 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
             data["res.partner"][1]["mention_token"],
             self.user_portal.partner_id._get_mention_token(),
         )
+        data = (
+            self.task_portal.with_user(self.user_portal)
+            .get_mention_suggestions(search="xxx")
+            ._build_result()
+        )
+        self.assertEqual(data, {})
         # remove portal user from the project collaborators
         self.project_portal.collaborator_ids.filtered(
             lambda rec: rec.partner_id == self.user_portal.partner_id
