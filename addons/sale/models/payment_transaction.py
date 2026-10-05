@@ -226,6 +226,21 @@ class PaymentTransaction(models.Model):
                 if invoices:
                     tx.invoice_ids = [Command.set(invoices.ids)]
 
+    def _invoice_post_processed_sale_orders(self):
+        """ Invoice the sales orders that were not confirmed yet when their transactions were
+        post-processed, if automatic invoicing is enabled.
+
+        :return: None
+        """
+        if not str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice')):
+            return
+
+        txs_to_invoice = self.filtered(
+            lambda tx: tx.state == 'done' and tx.is_post_processed and not tx.invoice_ids
+        )
+        txs_to_invoice._invoice_sale_orders()
+        txs_to_invoice.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+
     @api.model
     def _compute_reference_prefix(self, separator, **values):
         """ Override of payment to compute the reference prefix based on Sales-specific values.

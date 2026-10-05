@@ -1298,6 +1298,7 @@ class SaleOrder(models.Model):
         :return: None
         """
         self.with_context(send_email=True).action_confirm()
+        self.transaction_ids._invoice_post_processed_sale_orders()
 
     @api.model
     def _cron_send_pending_emails(self):
