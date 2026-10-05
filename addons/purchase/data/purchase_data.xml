@@ -2,16 +2,24 @@
 <odoo>
     <data noupdate="1">
         <!-- Purchase-related subtypes for messaging / Chatter -->
+        <record id="mt_rfq_created" model="mail.message.subtype">
+            <field name="name">RFQ Created</field>
+            <field name="default" eval="False"/>
+            <field name="res_model">purchase.order</field>
+        </record>
+
         <record id="mt_rfq_confirmed" model="mail.message.subtype">
             <field name="name">RFQ Confirmed</field>
             <field name="default" eval="False"/>
             <field name="res_model">purchase.order</field>
         </record>
+
         <record id="mt_rfq_approved" model="mail.message.subtype">
             <field name="name">RFQ Approved</field>
             <field name="default" eval="False"/>
             <field name="res_model">purchase.order</field>
         </record>
+
         <record id="mt_rfq_sent" model="mail.message.subtype">
             <field name="name">RFQ Sent</field>
             <field name="default" eval="False"/>
