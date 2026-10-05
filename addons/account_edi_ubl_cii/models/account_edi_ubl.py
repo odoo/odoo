@@ -2192,7 +2192,7 @@ class AccountEdiUBL(models.AbstractModel):
         tree = collected_values['tree']
         due_date_str = tree.findtext('./{*}DueDate')
         if not due_date_str:
-            due_date_str = tree.findtext('./{*}PaymentDueDate')
+            due_date_str = tree.findtext('./{*}PaymentMeans/{*}PaymentDueDate')
         if due_date_str:
             collected_values['to_write']['invoice_date_due'] = fields.Date.from_string(due_date_str)
 
