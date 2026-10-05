@@ -778,7 +778,9 @@ class AccountMoveLine(models.Model):
     @api.depends('currency_id', 'company_id', 'move_id.invoice_currency_rate', 'move_id.date')
     def _compute_currency_rate(self):
         for line in self:
-            if line.move_id.is_invoice(include_receipts=True):
+            if line.display_type == 'cogs':
+                line.currency_rate = 1.0
+            elif line.move_id.is_invoice(include_receipts=True):
                 line.currency_rate = line.move_id.invoice_currency_rate or 1.0
             elif line.currency_id:
                 line.currency_rate = self.env['res.currency']._get_conversion_rate(
