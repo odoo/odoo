@@ -1,6 +1,6 @@
 .o_card {
     --Card-border-width: 0;
-    --Card-min-width: 240px;
+    --Card-min-width: min(var(--KanbanRecord-width, #{$o-kanban-default-record-width}), 100%);
     --Card-padding-v: 0;
     --Card-padding-h: 0;
     --Card__image-width: #{$o-kanban-image-width};
