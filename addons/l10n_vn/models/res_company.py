@@ -10,5 +10,5 @@ class ResCompany(models.Model):
         comodel_name='l10n_vn.symbol',
         string='Default Invoice Symbol',
         help='If set, this symbol will be used as the default symbol for all invoices of this company.',
-        domain="[('company_id', '=', id), ('usage', '=', 'invoice')]",
+        ui_domain="[('company_id', '=', id), ('usage', '=', 'invoice')]",
     )

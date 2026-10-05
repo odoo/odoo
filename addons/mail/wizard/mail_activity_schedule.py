@@ -52,7 +52,7 @@ class MailActivitySchedule(models.TransientModel):
     # plan-based
     plan_available_ids = fields.Many2many('mail.activity.plan', compute='_compute_plan_available_ids',
                                           store=True, compute_sudo=True)
-    plan_id = fields.Many2one('mail.activity.plan', domain="[('id', 'in', plan_available_ids)]",
+    plan_id = fields.Many2one('mail.activity.plan', ui_domain="[('id', 'in', plan_available_ids)]",
                               compute='_compute_plan_id', store=True, readonly=False)
     plan_has_user_on_demand = fields.Boolean(related="plan_id.has_user_on_demand")
     plan_schedule_line_ids = fields.One2many('mail.activity.schedule.line', 'activity_schedule_id',
@@ -75,7 +75,7 @@ class MailActivitySchedule(models.TransientModel):
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
         compute='_compute_activity_type_id', store=True, readonly=False,
-        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]", ondelete='set null')
+        ui_domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]", ondelete='set null')
     activity_category = fields.Selection(related='activity_type_id.category', readonly=True)
     date_deadline = fields.Date(
         'Due Date', compute="_compute_date_deadline",

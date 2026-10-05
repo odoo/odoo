@@ -163,7 +163,7 @@ class SaleOrderLine(models.Model):
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids or mandatory_product else []",
+        ui_domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids or mandatory_product else []",
         compute="_compute_product_uom_id",
         store=True,
         readonly=False,
@@ -180,7 +180,7 @@ class SaleOrderLine(models.Model):
         string="Linked Order Line",
         comodel_name="sale.order.line",
         ondelete="cascade",
-        domain="[('order_id', '=', order_id)]",
+        ui_domain="[('order_id', '=', order_id)]",
         copy=False,
         index=True,
     )

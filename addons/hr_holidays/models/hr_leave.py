@@ -167,7 +167,7 @@ class HrLeave(models.Model):
     work_entry_type_id = fields.Many2one(
         "hr.work.entry.type", string="Time Type",
         required=True, index=True,
-        domain="""[
+        ui_domain="""[
             [('id', 'in', allowed_work_entry_type_ids)],
             ('time_off_selectable', '=', True),
             '|',

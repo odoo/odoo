@@ -461,7 +461,7 @@ class ServerActionHistoryWizard(models.TransientModel):
     code_diff = fields.Html(compute='_compute_code_diff', sanitize_tags=False)
     current_code = fields.Text(related='action_id.code', readonly=True)
     revision = fields.Many2one("ir.actions.server.history",
-        domain="[('action_id', '=', action_id), ('code', '!=', current_code)]",
+        ui_domain="[('action_id', '=', action_id), ('code', '!=', current_code)]",
         default=_default_revision,
         required=True,
     )
@@ -674,7 +674,7 @@ class IrActionsServer(models.Model):
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
     selection_value = fields.Many2one('ir.model.fields.selection', string="Custom Value", ondelete='cascade',
-                                      domain='[("field_id", "=", update_field_id)]', inverse='_set_selection_value')
+                                      ui_domain='[("field_id", "=", update_field_id)]', inverse='_set_selection_value')
     property_selection = fields.Char()
 
     value_field_to_show = fields.Selection([

@@ -30,7 +30,7 @@ class ProductFeed(models.Model):
         help="Specify a pricelist to localize the feed with a specific currency."
         " If not set, the default website pricelist will be used."
         "\nNote that the pricelist must be selectable on the website.",
-        domain="[('website_id', 'in', (False, website_id)), ('selectable', '=', True)]",
+        ui_domain="[('website_id', 'in', (False, website_id)), ('selectable', '=', True)]",
     )
     lang_id = fields.Many2one(
         "res.lang",

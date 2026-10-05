@@ -11,5 +11,5 @@ class HrApplicantRefuseReason(models.Model):
 
     sequence = fields.Integer(copy=False, default=10)
     name = fields.Char('Description', required=True, translate=True)
-    template_id = fields.Many2one('mail.template', string='Email Template', domain="[('model', '=', 'hr.applicant')]")
+    template_id = fields.Many2one('mail.template', string='Email Template', ui_domain="[('model', '=', 'hr.applicant')]")
     active = fields.Boolean('Active', default=True)

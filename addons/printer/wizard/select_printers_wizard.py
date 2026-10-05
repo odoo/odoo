@@ -9,7 +9,7 @@ class SelectPrintersWizard(models.TransientModel):
 
     printer_ids = fields.Many2many(
         "printer.printer",
-        domain="[('id', 'in', context.get('available_printer_ids', []))]",
+        ui_domain="[('id', 'in', context.get('available_printer_ids', []))]",
     )
     do_not_ask_again = fields.Boolean(
         "Do not ask me again",

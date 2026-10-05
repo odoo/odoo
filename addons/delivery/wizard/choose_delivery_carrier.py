@@ -18,7 +18,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     carrier_id = fields.Many2one(
         string="Delivery Method",
         comodel_name="delivery.carrier",
-        domain="[('id', 'in', available_carrier_ids)]",
+        ui_domain="[('id', 'in', available_carrier_ids)]",
         required=True,
     )
     carrier_prices = fields.Json()

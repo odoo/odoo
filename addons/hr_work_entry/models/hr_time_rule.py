@@ -192,14 +192,14 @@ class HrTimeRule(models.Model):
         'hr_time_rule_condition_work_entry_type_rel',
         string="Time Type",
         required=True,
-        domain="[('id', 'in', country_work_entry_type_ids)]",
+        ui_domain="[('id', 'in', country_work_entry_type_ids)]",
         help="If set, only the selected types will be considered by this rule.",
     )
 
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Set Excess to",
-        domain="[('id', 'in', country_work_entry_type_ids)]",
+        ui_domain="[('id', 'in', country_work_entry_type_ids)]",
         help="Define a time type that will be created to count the amount of time in excess or missing.",
         index="btree_not_null",
     )

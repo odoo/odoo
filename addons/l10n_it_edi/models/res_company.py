@@ -51,7 +51,7 @@ class ResCompany(models.Model):
         help="The seller/provider is a company listed on the register of companies and as\
         such must also indicate the registration data on all documents (art. 2250, Italian\
         Civil Code)")
-    l10n_it_eco_index_office = fields.Many2one('res.country.state', domain="[('country_id','=','IT')]",
+    l10n_it_eco_index_office = fields.Many2one('res.country.state', ui_domain="[('country_id','=','IT')]",
         string="Province of the register-of-companies office")
     l10n_it_eco_index_number = fields.Char(string="Number in register of companies", size=20,
         help="This field must contain the number under which the\

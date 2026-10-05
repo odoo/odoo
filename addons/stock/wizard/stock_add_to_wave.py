@@ -26,7 +26,7 @@ class StockAddToWave(models.TransientModel):
             raise UserError(_("The selected transfers should belong to the same operation type"))
         return res
 
-    wave_id = fields.Many2one('stock.picking.batch', string='Batch Transfer', domain="[('state', 'in', ('draft', 'in_progress'))]")
+    wave_id = fields.Many2one('stock.picking.batch', string='Batch Transfer', ui_domain="[('state', 'in', ('draft', 'in_progress'))]")
     picking_ids = fields.Many2many('stock.picking')
     line_ids = fields.Many2many('stock.move.line')
     mode = fields.Selection([('existing', 'an existing batch transfer'), ('new', 'a new batch transfer')], default='existing')

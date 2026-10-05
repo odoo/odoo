@@ -46,7 +46,7 @@ class CrmIapLeadMiningRequest(models.Model):
     lead_type = fields.Selection([('lead', 'Leads'), ('opportunity', 'Opportunities')], string='Type', required=True, default=_default_lead_type)
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', ondelete="set null",
-        domain="[('use_opportunities', '=', True)]", readonly=False, compute='_compute_team_id', store=True)
+        ui_domain="[('use_opportunities', '=', True)]", readonly=False, compute='_compute_team_id', store=True)
     user_id = fields.Many2one('res.users', string='Salesperson', default=lambda self: self.env.user)
     tag_ids = fields.Many2many('crm.tag', string='Tags')
     lead_ids = fields.One2many('crm.lead', 'lead_mining_request_id', string='Generated Lead / Opportunity')

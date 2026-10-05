@@ -12,7 +12,7 @@ class ResCompany(models.Model):
         related='partner_id.l10n_ar_gross_income_type', string='Gross Income', readonly=False,
         help="This field is required in order to print the invoice report properly")
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
-        domain="[('code', 'in', [1, 4, 6])]", related='partner_id.l10n_ar_afip_responsibility_type_id', readonly=False)
+        ui_domain="[('code', 'in', [1, 4, 6])]", related='partner_id.l10n_ar_afip_responsibility_type_id', readonly=False)
     l10n_ar_company_requires_vat = fields.Boolean(compute='_compute_l10n_ar_company_requires_vat', string='Company Requires Vat?')
     l10n_ar_afip_start_date = fields.Date('Activities Start')
     l10n_ar_arca_activity_id = fields.Many2one(

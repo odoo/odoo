@@ -67,7 +67,7 @@ class StockPickingType(models.Model):
         help="This is the default destination location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.")
     allocated_location_id = fields.Many2one(
         'stock.location', 'Location for allocation', check_company=True,
-        domain="[('usage', '=', 'internal')]",
+        ui_domain="[('usage', '=', 'internal')]",
         help="Allow to define the location where allocated products should be sent."
     )
     code = fields.Selection([
@@ -248,7 +248,7 @@ class StockPickingType(models.Model):
     wave_location_ids = fields.Many2many('stock.location',
         string='Wave Locations',
         help="Locations to consider when grouping waves.",
-        domain="[('usage', '=', 'internal')]")
+        ui_domain="[('usage', '=', 'internal')]")
     wave_group_by_date = fields.Boolean('Group by Date',
         help="Split transfers by their date.")
     wave_date_granularity = fields.Selection([('day', 'Day'), ('week', 'Week')],

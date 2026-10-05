@@ -178,7 +178,7 @@ class MailingMailing(models.Model):
     # Mailing Filter
     mailing_filter_ids = fields.Many2many(
         'mailing.filter', 'mail_mass_mailing_filter_rel', 'mailing_mailing_id', 'mailing_filter_id', compute='_compute_mailing_filter_ids',
-        readonly=False, store=True, string="Dynamic Lists", domain="[('mailing_model_name', '=', mailing_model_name)]")
+        readonly=False, store=True, string="Dynamic Lists", ui_domain="[('mailing_model_name', '=', mailing_model_name)]")
     # A/B Testing
     ab_testing_completed = fields.Boolean(related='campaign_id.ab_testing_completed')
     ab_testing_description = fields.Html('A/B Testing Description', compute="_compute_ab_testing_description")

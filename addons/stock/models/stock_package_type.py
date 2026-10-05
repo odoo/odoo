@@ -36,7 +36,7 @@ class StockPackageType(models.Model):
         Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer.""")
     has_quants = fields.Boolean('Has Contents', compute='_compute_has_quants')
     storage_category_capacity_ids = fields.One2many('stock.storage.category.capacity', 'package_type_id', 'Storage Category Capacity', copy=True)
-    route_ids = fields.Many2many('stock.route', string='Routes', domain="[('package_type_selectable', '=', True)]")
+    route_ids = fields.Many2many('stock.route', string='Routes', ui_domain="[('package_type_selectable', '=', True)]")
 
     _barcode_uniq = models.Constraint(
         'unique(barcode)',

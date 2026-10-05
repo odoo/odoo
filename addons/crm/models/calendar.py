@@ -24,7 +24,7 @@ class CalendarEvent(models.Model):
         return defaults
 
     opportunity_id = fields.Many2one(
-        'crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]",
+        'crm.lead', 'Opportunity', ui_domain="[('type', '=', 'opportunity')]",
         index=True, ondelete='set null')
 
     def _compute_is_highlighted(self):

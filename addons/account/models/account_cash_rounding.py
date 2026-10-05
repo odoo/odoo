@@ -55,7 +55,7 @@ class AccountCashRounding(models.Model):
         'account.account',
         string="Profit Account",
         company_dependent=True,
-        domain="[('internal_group', '=', 'income')]",
+        ui_domain="[('internal_group', '=', 'income')]",
         ondelete='restrict',
         inverse='_inverse_profit_account_id',
     )
@@ -63,7 +63,7 @@ class AccountCashRounding(models.Model):
         'account.account',
         string="Loss Account",
         company_dependent=True,
-        domain="[('internal_group', '=', 'expense')]",
+        ui_domain="[('internal_group', '=', 'expense')]",
         ondelete='restrict',
         inverse='_inverse_loss_account_id',
     )

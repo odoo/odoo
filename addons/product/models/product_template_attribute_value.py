@@ -54,7 +54,7 @@ class ProductTemplateAttributeValue(models.Model):
         relation='product_template_attribute_excluded_value_ids_rel',
         column1='product_template_attribute_value_id',
         column2='excluded_product_template_attribute_value_id',
-        domain="[('product_tmpl_id', '=', product_tmpl_id), ('attribute_line_id', '!=', attribute_line_id), ('ptav_active', '=', True)]",
+        ui_domain="[('product_tmpl_id', '=', product_tmpl_id), ('attribute_line_id', '!=', attribute_line_id), ('ptav_active', '=', True)]",
     )
 
     # related fields: product template and product attribute

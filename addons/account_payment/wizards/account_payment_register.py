@@ -11,7 +11,7 @@ class AccountPaymentRegister(models.TransientModel):
         string="Saved payment token",
         store=True, readonly=False,
         compute='_compute_payment_token_id',
-        domain='''[
+        ui_domain='''[
             ('id', 'in', suitable_payment_token_ids),
         ]''',
         help="Note that tokens from providers set to only authorize transactions (instead of capturing the amount) are "

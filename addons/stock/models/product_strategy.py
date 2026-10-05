@@ -44,17 +44,17 @@ class StockPutawayRule(models.Model):
         'product.product', 'Product', check_company=True,
         default=_default_product_id,
         index='btree_not_null',
-        domain="[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else [('type', '!=', 'service')]",
+        ui_domain="[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else [('type', '!=', 'service')]",
         ondelete='cascade')
     category_id = fields.Many2one('product.category', 'Product Category', index='btree_not_null',
         default=_default_category_id, domain=[('filter_for_stock_putaway_rule', '=', True)], ondelete='cascade')
     location_in_id = fields.Many2one(
         'stock.location', 'When product arrives in', check_company=True,
-        domain="[('child_ids', '!=', False)]",
+        ui_domain="[('child_ids', '!=', False)]",
         default=_default_location_id, required=True, ondelete='cascade', index=True)
     location_out_id = fields.Many2one(
         'stock.location', 'Store to sublocation', check_company=True,
-        domain="[('id', 'child_of', location_in_id)]",
+        ui_domain="[('id', 'child_of', location_in_id)]",
         required=True, ondelete='cascade')
     sequence = fields.Integer('Priority', help="Give to the more specialized category, a higher priority to have them in top of the list.")
     company_id = fields.Many2one(

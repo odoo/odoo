@@ -34,7 +34,7 @@ class L10n_InBoeWizard(models.TransientModel):
         compute="_compute_picking_ids",
         readonly=False,
         store=True,
-        domain="[('state', '=', 'done'), ('picking_type_id.code', '=', 'incoming'), ('partner_id.commercial_partner_id', '=', source_partner_id)]",
+        ui_domain="[('state', '=', 'done'), ('picking_type_id.code', '=', 'incoming'), ('partner_id.commercial_partner_id', '=', source_partner_id)]",
     )
 
     line_ids = fields.One2many(
@@ -293,7 +293,7 @@ class BillOfEntryLine(models.TransientModel):
     quantity = fields.Float(string="Quantity", related='stock_move_id.quantity')
     assessable_value = fields.Monetary()
     custom_duty = fields.Monetary()
-    tax_ids = fields.Many2many("account.tax", domain="[('type_tax_use', '=', 'purchase')]")
+    tax_ids = fields.Many2many("account.tax", ui_domain="[('type_tax_use', '=', 'purchase')]")
     taxable_amount = fields.Monetary(compute="_compute_amounts")
     tax_amount = fields.Monetary(compute="_compute_amounts")
     currency_id = fields.Many2one(related='wizard_id.company_currency_id')

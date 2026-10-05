@@ -20,7 +20,7 @@ class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
     work_entry_type_id = fields.Many2one(
-        domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False)]",
+        ui_domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False)]",
     )
 
     leave_compensation_rate = fields.Float(
@@ -31,7 +31,7 @@ class HrTimeRule(models.Model):
     allocation_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Allocate to",
-        domain="[('requires_allocation', '=', True), ('time_off_selectable', '=', True), ('id', 'in', country_work_entry_type_ids)]",
+        ui_domain="[('requires_allocation', '=', True), ('time_off_selectable', '=', True), ('id', 'in', country_work_entry_type_ids)]",
     )
 
     def _resolve_output_intervals(self, intervals):

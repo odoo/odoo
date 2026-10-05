@@ -40,7 +40,7 @@ class StockMove(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product',
         check_company=True,
-        domain="[('type', '=', 'consu')]", index=True, required=True, ondelete='cascade')
+        ui_domain="[('type', '=', 'consu')]", index=True, required=True, ondelete='cascade')
     product_category_id = fields.Many2one(
         'product.category', 'Product Category',
         related='product_id.categ_id')
@@ -66,7 +66,7 @@ class StockMove(models.Model):
              "the product reservation, and should be done with care.")
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one(
-        'uom.uom', "Unit", required=True, domain="[('id', 'in', allowed_uom_ids)]",
+        'uom.uom', "Unit", required=True, ui_domain="[('id', 'in', allowed_uom_ids)]",
         compute="_compute_uom_id", store=True, readonly=False, precompute=True,
     )
     # TDE FIXME: make it stored, otherwise group will not work
@@ -193,7 +193,7 @@ class StockMove(models.Model):
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', index=True)
     forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit', compute_sudo=True)
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
-    lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', domain="[('product_id', '=', product_id)]", string='Serial Numbers', readonly=False)
+    lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', ui_domain="[('product_id', '=', product_id)]", string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True, help="Computes when a move should be reserved")
     packaging_uom_id = fields.Many2one('uom.uom', 'Packaging', help="Packaging unit from sale or purchase orders", compute='_compute_packaging_uom_id', precompute=True, store=True)
     packaging_uom_qty = fields.Float('Packaging Quantity', help="Quantity in the packaging unit", compute='_compute_packaging_uom_qty', store=True)

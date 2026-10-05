@@ -104,7 +104,7 @@ class AccountPaymentMethodLine(models.Model):
     payment_method_id = fields.Many2one(
         string='Payment Method',
         comodel_name='account.payment.method',
-        domain="[('payment_type', '=?', payment_type), ('id', 'in', available_payment_method_ids)]",
+        ui_domain="[('payment_type', '=?', payment_type), ('id', 'in', available_payment_method_ids)]",
         required=True,
         index=True,
     )
@@ -113,7 +113,7 @@ class AccountPaymentMethodLine(models.Model):
         check_company=True,
         copy=False,
         ondelete='restrict',
-        domain="['|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', default_account_id)]"
+        ui_domain="['|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', default_account_id)]"
     )
     journal_id = fields.Many2one(
         comodel_name='account.journal',

@@ -56,11 +56,11 @@ class StockLot(models.Model):
     company_id = fields.Many2one('res.company', 'Company', index=True, store=True, readonly=False, compute='_compute_company_id')
     delivery_ids = fields.Many2many('stock.picking', compute='_compute_delivery_ids', string='Transfers')
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
-    partner_ids = fields.Many2many('res.partner', domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]")
+    partner_ids = fields.Many2many('res.partner', ui_domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]")
     lot_properties = fields.Properties('Properties', definition='product_id.lot_properties_definition', copy=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False,
-        inverse='_set_single_location', domain="[('usage', '!=', 'view')]", group_expand='_read_group_location_id')
+        inverse='_set_single_location', ui_domain="[('usage', '!=', 'view')]", group_expand='_read_group_location_id')
     is_scrap = fields.Boolean('Is Scrapped', compute='_compute_is_scrap')
 
     @api.depends('product_id')

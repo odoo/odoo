@@ -190,7 +190,7 @@ class ProjectTask(models.Model):
         help="Date on which the state of your task has last been modified.\n"
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
-    project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
+    project_id = fields.Many2one('project.project', string='Project', ui_domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
                                  compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=4, change_default=True)
     display_in_project = fields.Boolean(compute='_compute_display_in_project', store=True, export_string_translation=False)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
@@ -205,14 +205,14 @@ class ProjectTask(models.Model):
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
         string='Assignees', context={'active_test': False}, tracking=3, default=_default_user_ids,
-        domain="['|', ('share', '=', False), ('id', 'in', project_sharing_portal_user_ids), ('active', '=', True), '|', ('company_id', '=?', company_id), ('company_ids', 'in', company_id)]", falsy_value_label=_lt("👤 Unassigned"))
+        ui_domain="['|', ('share', '=', False), ('id', 'in', project_sharing_portal_user_ids), ('active', '=', True), '|', ('company_id', '=?', company_id), ('company_ids', 'in', company_id)]", falsy_value_label=_lt("👤 Unassigned"))
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names', export_string_translation=False)
     # Second Many2many containing the actual personal stage for the current user
     # See project_task_stage_personal.py for the model defininition
     personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_user_rel', column1='task_id', column2='stage_id',
         ondelete='restrict', group_expand='_read_group_personal_stage_type_ids', copy=False,
-        domain="[('user_id', '=', uid)]", string='Personal Stages', export_string_translation=False)
+        ui_domain="[('user_id', '=', uid)]", string='Personal Stages', export_string_translation=False)
     # Personal Stage computed from the user
     personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
         compute='_compute_personal_stage_id',
@@ -222,11 +222,11 @@ class ProjectTask(models.Model):
     personal_stage_type_id = fields.Many2one('project.task.type', string='Personal Stage',
         related='personal_stage_id.stage_id',
         readonly=False, store=False,
-        domain="[('user_id', '=', uid)]",
+        ui_domain="[('user_id', '=', uid)]",
         group_expand='_read_group_personal_stage_type_ids')
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=10, compute='_compute_partner_id', store=True, readonly=False, index='btree_not_null',
-        domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
+        ui_domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Contact Number", readonly=False, store=True, copy=False
@@ -244,9 +244,9 @@ class ProjectTask(models.Model):
         help="Attachments that don't come from a message",
     )
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
-    displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
+    displayed_image_id = fields.Many2one('ir.attachment', ui_domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
-    parent_id = fields.Many2one('project.task', string='Parent Task', inverse="_inverse_parent_id", index=True, domain="['!', ('id', 'child_of', id), '|', ('project_id', '!=', False), ('is_template', '=' , True)]", tracking=20)
+    parent_id = fields.Many2one('project.task', string='Parent Task', inverse="_inverse_parent_id", index=True, ui_domain="['!', ('id', 'child_of', id), '|', ('project_id', '!=', False), ('is_template', '=' , True)]", tracking=20)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain=[('recurring_task', '=', False), '|', ('parent_id.is_template', '=', True), ('is_template', '=', False)], export_string_translation=False)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count', export_string_translation=False)
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count', export_string_translation=False)
@@ -261,7 +261,7 @@ class ProjectTask(models.Model):
     milestone_id = fields.Many2one(
         'project.milestone',
         'Milestone',
-        domain="[('project_id', '=', project_id)]",
+        ui_domain="[('project_id', '=', project_id)]",
         compute='_compute_milestone_id',
         readonly=False,
         store=True,
@@ -279,12 +279,12 @@ class ProjectTask(models.Model):
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
                                      column2="depends_on_id", string="Blocked By", tracking=22, copy=False,
-                                     domain="[('project_id', '!=', False), ('id', '!=', id), ('is_template', '=', False)]")
+                                     ui_domain="[('project_id', '!=', False), ('id', '!=', id), ('is_template', '=', False)]")
     depend_on_count = fields.Integer(string="Depending on Tasks", compute='_compute_depend_on_count', compute_sudo=True)
     closed_depend_on_count = fields.Integer(string="Closed Depending on Tasks", compute='_compute_depend_on_count', compute_sudo=True)
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
                                      column2="task_id", string="Block", copy=False,
-                                     domain="[('project_id', '!=', False), ('id', '!=', id), ('is_template', '=', False)]", export_string_translation=False)
+                                     ui_domain="[('project_id', '!=', False), ('id', '!=', id), ('is_template', '=', False)]", export_string_translation=False)
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count', export_string_translation=False)
 
     # Project sharing fields

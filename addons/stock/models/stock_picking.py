@@ -92,7 +92,7 @@ class StockPicking(models.Model):
         check_company=True, required=True)
     location_dest_id = fields.Many2one(
         'stock.location', "Destination Location",
-        compute="_compute_location_dest_id", store=True, precompute=True, readonly=False, domain="[('usage','!=','view')]",
+        compute="_compute_location_dest_id", store=True, precompute=True, readonly=False, ui_domain="[('usage','!=','view')]",
         check_company=True, required=True)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", domain=[('is_scrap', '=', False)], copy=True)
     has_scrap_move = fields.Boolean(

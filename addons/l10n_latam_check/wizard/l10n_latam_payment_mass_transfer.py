@@ -19,7 +19,7 @@ class L10n_LatamPaymentMassTransfer(models.TransientModel):
     to_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Destination Journal',
-        domain="[('type', 'in', ('bank', 'cash')), ('id', '!=', from_journal_id), ('currency_id', '=', from_journal_currency_id)]",
+        ui_domain="[('type', 'in', ('bank', 'cash')), ('id', '!=', from_journal_id), ('currency_id', '=', from_journal_currency_id)]",
         check_company=True,
         required=True,
     )

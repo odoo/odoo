@@ -102,7 +102,7 @@ class ProductTemplate(models.Model):
     account_tag_ids = fields.Many2many(
         string="Account Tags",
         comodel_name='account.account.tag',
-        domain="[('applicability', '=', 'products')]",
+        ui_domain="[('applicability', '=', 'products')]",
         help="Tags to be set on the base and tax journal items created for this product.")
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     valuation = fields.Selection(

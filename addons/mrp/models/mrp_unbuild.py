@@ -17,7 +17,7 @@ class MrpUnbuild(models.Model):
     name = fields.Char('Reference', copy=False, readonly=True, default=lambda s: s.env._('New'))
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
-        domain="[('type', '=', 'consu')]",
+        ui_domain="[('type', '=', 'consu')]",
         compute='_compute_product_id', store=True, precompute=True, readonly=False,
         required=True)
     company_id = fields.Many2one(
@@ -35,7 +35,7 @@ class MrpUnbuild(models.Model):
         required=True)
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
-        domain="""[
+        ui_domain="""[
         '|',
             ('product_id', '=', product_id),
             '&',
@@ -50,23 +50,23 @@ class MrpUnbuild(models.Model):
         check_company=True)
     mo_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        domain="[('state', '=', 'done'), ('product_id', '=?', product_id), ('bom_id', '=?', bom_id)]",
+        ui_domain="[('state', '=', 'done'), ('product_id', '=?', product_id), ('bom_id', '=?', bom_id)]",
         check_company=True, index='btree_not_null')
     mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
     lot_producing_ids = fields.Many2many('stock.lot', string='Lot/Serial Numbers', related='mo_id.lot_producing_ids')
     lot_ids = fields.Many2many(
         'stock.lot', string='Lot/Serial Number',
-        domain="[('product_id', '=', product_id),('id', 'in', lot_producing_ids)]", check_company=True)
+        ui_domain="[('product_id', '=', product_id),('id', 'in', lot_producing_ids)]", check_company=True)
     has_tracking = fields.Selection(related='product_id.tracking', readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
-        domain="[('usage','=','internal')]",
+        ui_domain="[('usage','=','internal')]",
         check_company=True,
         compute='_compute_location_id', store=True, readonly=False, precompute=True,
         required=True, help="Location where the product you want to unbuild is.")
     location_dest_id = fields.Many2one(
         'stock.location', 'Destination Location',
-        domain="[('usage','=','internal')]",
+        ui_domain="[('usage','=','internal')]",
         check_company=True,
         compute='_compute_location_dest_id', store=True, readonly=False, precompute=True,
         required=True, help="Location where you want to send the components resulting from the unbuild order.")

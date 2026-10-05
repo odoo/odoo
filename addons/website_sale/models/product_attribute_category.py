@@ -15,5 +15,5 @@ class ProductAttributeCategory(models.Model):
         "product.attribute",
         "category_id",
         string="Related Attributes",
-        domain="[('category_id', '=', False)]",
+        ui_domain="[('category_id', '=', False)]",
     )

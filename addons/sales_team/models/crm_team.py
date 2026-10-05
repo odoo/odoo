@@ -99,7 +99,7 @@ class CrmTeam(models.Model):
         help='If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team.')
     member_ids = fields.Many2many(
         'res.users', string='Salespersons',
-        domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
+        ui_domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
         compute='_compute_member_ids', inverse='_inverse_member_ids', search='_search_member_ids',
         help="Users assigned to this team.")
     member_company_ids = fields.Many2many(

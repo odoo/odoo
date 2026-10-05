@@ -42,7 +42,7 @@ class ProductSupplierinfo(models.Model):
     date_end = fields.Date('End Date', help="End date for this vendor price")
     product_id = fields.Many2one(
         'product.product', 'Product Variant', check_company=True,
-        domain="[('product_tmpl_id', '=', product_tmpl_id)] if product_tmpl_id else []",
+        ui_domain="[('product_tmpl_id', '=', product_tmpl_id)] if product_tmpl_id else []",
         compute='_compute_product_id', store=True, readonly=False, precompute=True,
         help="If not set, the vendor price will apply to all variants of this product.")
     product_tmpl_id = fields.Many2one(

@@ -1750,7 +1750,7 @@ class TestOrmModel2Some_Access(models.Model):
     _name = 'test_orm.model2.some_access'
     _description = 'Testing Utilities attrs and groups sub'
 
-    g_id = fields.Many2one('test_orm.model.some_access', domain='[("a", "=", g_d)]')
+    g_id = fields.Many2one('test_orm.model.some_access', ui_domain='[("a", "=", g_d)]')
     g_d = fields.Integer(related='g_id.d')
 
 
