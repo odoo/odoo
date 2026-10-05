@@ -287,8 +287,8 @@ class StockQuant(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """ Override to handle the "inventory mode" and create a quant as
-        superuser the conditions are met.
+        """ Override to handle the "inventory mode" and create a quant if
+        the conditions are met.
         """
         def _add_to_cache(quant):
             if 'quants_cache' in self.env.context:
@@ -327,9 +327,9 @@ class StockQuant(models.Model):
                         vals['lot_id'] = lot_id.id
                     quant = quant.filtered(lambda q: q.lot_id)
                 if quant:
-                    quant = quant[0].sudo()
+                    quant = quant[0]
                 else:
-                    quant = self.sudo().create(vals)
+                    quant = self.create(vals)
                     _add_to_cache(quant)
                 # mimicking the behavior in `_set_inventory_quantity` to prevent empty moves from being generated
                 if auto_apply and quant.quantity != inventory_quantity:
