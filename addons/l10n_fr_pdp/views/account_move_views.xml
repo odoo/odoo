@@ -67,6 +67,48 @@
         <field name="priority">30</field>
         <field name="inherit_id" ref="account_peppol.account_peppol_view_move_form"/>
         <field name="arch" type="xml">
+<<<<<<< 7f0af28ba10a064db7fb32a8aaa06d1e73b39775
+||||||| 2cc17f730296a44ca29980bde7c2fd76e3dae508
+            <button name="action_cancel_peppol_documents" position="attributes">
+                <attribute name="invisible" add="country_code in ('FR', 'GP', 'MQ', 'RE')" separator="or"/>
+            </button>
+            <button name="action_cancel_peppol_documents" position="after">
+                <button name="action_cancel_peppol_documents"
+                        type="object"
+                        class="btn btn-secondary"
+                        string="Cancel E-Invoice Sending"
+                        invisible="peppol_move_state != 'to_send' or state == 'draft' or country_code not in ('FR', 'GP', 'MQ', 'RE')"/>
+            </button>
+            <xpath expr="//div[contains(text(), 'There was an error while sending this invoice via Peppol.')]" position="attributes">
+                <attribute name="invisible" add="country_code in ('FR', 'GP', 'MQ', 'RE')" separator="or"/>
+            </xpath>
+            <xpath expr="//div[contains(text(), 'There was an error while sending this invoice via Peppol.')]" position="after">
+                <div class="alert alert-danger" role="alert"
+                     invisible="peppol_move_state != 'error' or country_code not in ('FR', 'GP', 'MQ', 'RE')">
+                    There was an error while sending this invoice via the Approved Platform.
+                </div>
+            </xpath>
+=======
+            <button name="action_cancel_peppol_documents" position="attributes">
+                <attribute name="invisible" add="country_code in ('FR', 'GP', 'MQ', 'RE')" separator="or"/>
+            </button>
+            <button name="action_cancel_peppol_documents" position="after">
+                <button name="action_cancel_peppol_documents"
+                        type="object"
+                        class="btn btn-secondary"
+                        string="Cancel E-Invoice Sending"
+                        invisible="peppol_move_state != 'to_send' or state == 'draft' or country_code not in ('FR', 'GP', 'MQ', 'RE')"/>
+            </button>
+            <xpath expr="//div[hasclass('alert-danger')][contains(@invisible, 'peppol_move_state')]" position="attributes">
+                <attribute name="invisible" add="country_code in ('FR', 'GP', 'MQ', 'RE')" separator="or"/>
+            </xpath>
+            <xpath expr="//div[hasclass('alert-danger')][contains(@invisible, 'peppol_move_state')]" position="after">
+                <div class="alert alert-danger" role="alert"
+                     invisible="peppol_move_state != 'error' or country_code not in ('FR', 'GP', 'MQ', 'RE')">
+                    There was an error while sending this invoice via the Approved Platform.
+                </div>
+            </xpath>
+>>>>>>> 8e1985080b989981a5a83331363a511c0e549491
             <!-- We do not show the "Reset to draft" but stil need to be able to cancel-->
             <button name="button_cancel" position="after">
                 <button name="button_cancel" type="object" groups="account.group_account_invoice" data-hotkey="x"
