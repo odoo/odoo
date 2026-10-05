@@ -1,9 +1,10 @@
 import base64
+import json
 from unittest.mock import MagicMock, patch
 
 from lxml import etree
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import freeze_time, tagged
 
@@ -213,3 +214,33 @@ class TestEInvoo(AccountTestInvoicingCommon):
         with freeze_time('2024-01-01 22:01:00'):
             errors = invoice._l10n_gr_edi_get_pre_error_dict()
             self.assertIn('l10n_gr_edi_invalid_issue_date', errors)
+
+    def test_invoice_business_data_payload(self):
+        """
+        Test that the proxy payload correctly includes the UBL/EN16931
+        JSON business data required by e-invoo.
+        """
+        invoice = self._create_invoice()
+        test_datetime = fields.Datetime.from_string('2024-01-01 10:00:00')
+
+        payload = invoice._l10n_gr_edi_prepare_invoice_proxy_request(test_datetime)
+
+        self.assertIn(
+            'invoice_business_data',
+            payload,
+            "The key 'invoice_business_data' should be in the proxy payload."
+        )
+
+        business_data = json.loads(payload['invoice_business_data'])
+
+        self.assertEqual(business_data.get('version'), 2)
+        self.assertEqual(business_data.get('invoice_type_ubl'), '380', "out_invoice should map to UBL code 380")
+        self.assertEqual(business_data.get('due_date'), '2024-01-01')
+
+        self.assertIn('lines', business_data)
+        self.assertEqual(len(business_data['lines']), 1, "There should be exactly one commercial line.")
+
+        line_data = business_data['lines'][0]
+
+        self.assertTrue(line_data.get('measurement_unit_ubl'))
+        self.assertEqual(line_data.get('vat_category_ubl'), 'S')
