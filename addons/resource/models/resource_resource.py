@@ -227,18 +227,23 @@ class ResourceResource(models.Model):
         for calendar in (calendars or []):
             calendar_resources[calendar] |= self.env['resource.resource']
         for calendar, resources in calendar_resources.items():
-            # for fully flexible resource, return the whole interval
+            # Fully flexible resources (no calendar, no hours defined), return the whole interval
             if not calendar:
-                for resource in resources:
+                fully_flexible_resources = resources.filtered(lambda r: r._is_fully_flexible())
+                for resource in fully_flexible_resources:
                     resource_work_intervals[resource.id] |= Intervals([(start, end, self.env['resource.calendar.attendance'])])
-                continue
+                resources -= fully_flexible_resources
+                if not resources:
+                    continue
             # For each calendar used by the resources, retrieve the work intervals for every resources using it
             resources_per_tz = resources._get_resources_per_tz()
             work_intervals_batch = calendar._work_intervals_batch(start, end, resources_per_tz=resources_per_tz, compute_leaves=compute_leaves)
             for resource in resources:
                 # Make the conjunction between work intervals and calendar validity
                 resource_work_intervals[resource.id] |= work_intervals_batch[resource.id] & resource_calendar_validity_intervals[resource.id][calendar]
-            calendar_work_intervals[calendar.id] = work_intervals_batch[False]
+            if calendar:
+                # An empty calendar has no "no resource" entry in the batch result
+                calendar_work_intervals[calendar.id] = work_intervals_batch[False]
 
         return resource_work_intervals, calendar_work_intervals
 
