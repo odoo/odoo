@@ -408,7 +408,9 @@ class TestVariantAvailability(HttpCase, WebsiteSaleCommon):
                     ptal.product_template_value_ids.filtered(
                         lambda ptav: ptav.ptav_active and ptav.name in requested_names
                     )[:1]
-                    or ptal.product_template_value_ids.filtered("ptav_active")[:1]
+                    or ptal.product_template_value_ids.filtered(
+                        lambda ptav: ptav.ptav_active and ptal.attribute_id.display_type != "multi"
+                    )[:1]
                 )
             )
             necessary_values = combination.filtered(lambda ptav: ptav.name in requested_names)
@@ -422,46 +424,46 @@ class TestVariantAvailability(HttpCase, WebsiteSaleCommon):
     def test_default_completion_kept_when_it_can_be_bought(self):
         """Nothing to fix: the first value of each unasked line is buyable."""
         with self._patch_availability(self.sold_out_variant):
-            self.assertEqual(self._resolve_combination("Black"), {"Wood", "Black", "Drawers"})
+            self.assertEqual(self._resolve_combination("Black"), {"Wood", "Black"})
 
     def test_completion_moves_to_a_variant_that_can_be_bought(self):
         """(White, Wood) is the default completion of White but is sold out, so White
         lands on (White, Steel) instead."""
         with self._patch_availability(self._get_variant("Wood", "White")):
-            self.assertEqual(self._resolve_combination("White"), {"Steel", "White", "Drawers"})
+            self.assertEqual(self._resolve_combination("White"), {"Steel", "White"})
 
     def test_requested_values_are_never_moved(self):
         """Only the completed values move: asking for Steel keeps Steel and changes the
         color instead."""
         with self._patch_availability(self._get_variant("Steel", "White")):
-            self.assertEqual(self._resolve_combination("Steel"), {"Steel", "Black", "Drawers"})
+            self.assertEqual(self._resolve_combination("Steel"), {"Steel", "Black"})
 
     def test_completion_kept_when_nothing_can_be_bought(self):
         """With every White variant sold out, the default completion is kept so the
         customer still gets the out-of-stock message and its notification form."""
         white_variants = self._get_variant("Wood", "White") + self._get_variant("Steel", "White")
         with self._patch_availability(white_variants):
-            self.assertEqual(self._resolve_combination("White"), {"Wood", "White", "Drawers"})
+            self.assertEqual(self._resolve_combination("White"), {"Wood", "White"})
 
     def test_completion_moves_when_the_default_variant_is_archived(self):
         self._get_variant("Wood", "White").sudo().active = False
         with self._patch_availability(self.env["product.product"]):
-            self.assertEqual(self._resolve_combination("White"), {"Steel", "White", "Drawers"})
+            self.assertEqual(self._resolve_combination("White"), {"Steel", "White"})
 
     def test_completion_moves_when_the_default_variant_is_deleted(self):
         self._get_variant("Wood", "White").sudo().unlink()
         with self._patch_availability(self.env["product.product"]):
-            self.assertEqual(self._resolve_combination("White"), {"Steel", "White", "Drawers"})
+            self.assertEqual(self._resolve_combination("White"), {"Steel", "White"})
 
     def test_completion_untouched_when_selling_out_of_stock(self):
         self.sofa.sudo().allow_out_of_stock_order = True
         with self._patch_availability(self.sofa.product_variant_ids):
-            self.assertEqual(self._resolve_combination("White"), {"Wood", "White", "Drawers"})
+            self.assertEqual(self._resolve_combination("White"), {"Wood", "White"})
 
     def test_completion_untouched_when_not_storable(self):
         self.sofa.sudo().is_storable = False
         with self._patch_availability(self.sofa.product_variant_ids):
-            self.assertEqual(self._resolve_combination("White"), {"Wood", "White", "Drawers"})
+            self.assertEqual(self._resolve_combination("White"), {"Wood", "White"})
 
     def test_default_moves_without_requested_values(self):
         """Opening the product straight from the tile pins nothing, so the whole default
@@ -479,9 +481,9 @@ class TestVariantAvailability(HttpCase, WebsiteSaleCommon):
             self.assertEqual(self._resolve_combination(), {"Wood", "White"})
 
     def test_no_variant_values_survive_the_move(self):
-        """no_variant values belong to no variant, so they are carried over as they are."""
+        """Ticked no_variant values belong to no variant, so they are carried over as they are."""
         with self._patch_availability(self._get_variant("Wood", "White")):
-            self.assertIn("Drawers", self._resolve_combination("White"))
+            self.assertIn("Drawers", self._resolve_combination("White", "Drawers"))
 
     # === Shop page preview image ===
 
@@ -590,18 +592,13 @@ class TestVariantAvailability(HttpCase, WebsiteSaleCommon):
         ribbon = self._out_of_stock_ribbon()
         sofa = self.sofa.with_context(website_id=self.website.id)
         with self._patch_availability(sofa.product_variant_id):
-            self.assertFalse(
-                sofa._get_ribbon(auto_assign_ribbons=ribbon)
-            )
+            self.assertFalse(sofa._get_ribbon(auto_assign_ribbons=ribbon))
 
     def test_out_of_stock_ribbon_shown_when_no_variant_is_left(self):
         ribbon = self._out_of_stock_ribbon()
         sofa = self.sofa.with_context(website_id=self.website.id)
         with self._patch_availability(sofa.product_variant_ids):
-            self.assertEqual(
-                sofa._get_ribbon(auto_assign_ribbons=ribbon),
-                ribbon,
-            )
+            self.assertEqual(sofa._get_ribbon(auto_assign_ribbons=ribbon), ribbon)
 
     def test_out_of_stock_ribbon_describes_the_displayed_variant_on_the_product_page(self):
         """The product page shows one combination, so its ribbon keeps describing it,

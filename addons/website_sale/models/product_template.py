@@ -60,7 +60,9 @@ class ProductTemplate(models.Model):
         """
         start_sequence = 10000
         # Schema initialization may evaluate the default before adding the column.
-        if self.env.context.get('module') and not column_exists(self.env.cr, self._table, 'website_sequence'):
+        if self.env.context.get("module") and not column_exists(
+            self.env.cr, self._table, "website_sequence"
+        ):
             return start_sequence
         self.env.cr.execute(
             SQL("SELECT MAX(website_sequence) FROM %s", SQL.identifier(self._table))
@@ -760,17 +762,18 @@ class ProductTemplate(models.Model):
                 if len(previewed_ptavs) > 1:
                     previewed_ptavs_per_template[template] = previewed_ptavs
 
-        sold_out_variant_ids = self._get_sold_out_previewed_variant_ids({
-            template: ptavs[:show_count] for template, ptavs in previewed_ptavs_per_template.items()
-        })
+        previewed_variants = self.env["product.product"].union([
+            ptav.ptav_product_variant_ids
+            for ptavs in previewed_ptavs_per_template.values()
+            for ptav in ptavs[:show_count]
+        ])
+        sold_out_variants = previewed_variants.sudo()._filter_sold_out()
 
         for template, previewed_ptavs in previewed_ptavs_per_template.items():
             previewed_ptavs_data = []
             for ptav in previewed_ptavs[:show_count]:
                 variants = ptav.ptav_product_variant_ids
-                available_variants = variants.filtered(
-                    lambda variant: variant.id not in sold_out_variant_ids
-                )
+                available_variants = variants - sold_out_variants
                 # Preview the variant the value now links to: clicking it lands on the
                 # first variant that can be bought (see `_get_available_combination`)
                 matching_variant = min(available_variants or variants, key=lambda p: p.id)
@@ -792,38 +795,6 @@ class ProductTemplate(models.Model):
                 "hidden_ptavs_count": max(0, len(previewed_ptavs) - show_count),
             }
         return res
-
-    def _get_sold_out_previewed_variant_ids(self, previewed_ptavs_per_template):
-        """Return the variants behind the previewed attribute values that are sold out.
-
-        A previewed value has nothing purchasable behind it when all of its variants are
-        in the returned set. With a single attribute a value is one variant, so this
-        amounts to that variant being sold out; with several attributes, every combination
-        of the value must be gone.
-
-        Combinations that the attribute configuration excludes need no handling here:
-        their variants are archived when the exclusion is set, and only active variants
-        are previewed.
-
-        Availability is computed for the whole recordset at once: rendering a shop page
-        costs one batch of quantity queries instead of one per product.
-
-        :param dict previewed_ptavs_per_template: the previewed
-            `product.template.attribute.value` records, per `product.template` record.
-        :return: the ids of the previewed variants that can't be bought.
-        :rtype: set(int)
-        """
-        if not self.env.website:
-            return set()
-
-        stock_tracking_variants = []
-        for template, ptavs in previewed_ptavs_per_template.items():
-            if template.is_storable and not template.allow_out_of_stock_order:
-                stock_tracking_variants += [ptav.ptav_product_variant_ids for ptav in ptavs]
-
-        return set(
-            self.env["product.product"].union(stock_tracking_variants).sudo()._filter_sold_out().ids
-        )
 
     def _get_sales_prices(self, pricelist_sudo, fiscal_position_sudo, website):
         if not self:
@@ -2025,6 +1996,13 @@ class ProductTemplate(models.Model):
         variants = self.sudo().product_variant_ids
         return not variants or variants._filter_sold_out() == variants
 
+    def _combination_ids(self, variants):
+        return [
+            tuple(variant.product_template_attribute_value_ids.ids)
+            for variant in variants
+            if variant.product_template_attribute_value_ids
+        ]
+
     def _get_existing_combination_ids(self):
         """Return the combinations for which a variant record exists.
 
@@ -2035,16 +2013,10 @@ class ProductTemplate(models.Model):
         therefore don't invalidate it.
         """
         self.ensure_one()
-        if any(
-            line.attribute_id.create_variant == "dynamic"
-            for line in self.valid_product_template_attribute_line_ids
-        ):
+        if self.has_dynamic_attributes():
             return None
-        return [
-            tuple(variant.product_template_attribute_value_ids.ids)
-            for variant in self.sudo().product_variant_ids
-            if variant.product_template_attribute_value_ids
-        ]
+        variants = self.sudo().product_variant_ids
+        return self._combination_ids(variants)
 
     def _get_sold_out_combination_ids(self):
         """
@@ -2067,11 +2039,7 @@ class ProductTemplate(models.Model):
             return []
 
         sold_out_variants = self.sudo().product_variant_ids._filter_sold_out()
-        return [
-            tuple(variant.product_template_attribute_value_ids.ids)
-            for variant in sold_out_variants
-            if variant.product_template_attribute_value_ids
-        ]
+        return self._combination_ids(sold_out_variants)
 
     def _get_available_combination(self, combination, necessary_values):
         """Return `combination`, or a buyable one carrying `necessary_values` if it can't be bought.
@@ -2089,9 +2057,7 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
         variant = self._get_variant_for_combination(combination)
-        if self._is_combination_possible(combination) and not (
-            variant and variant._is_sold_out()
-        ):
+        if self._is_combination_possible(combination) and not (variant and variant._is_sold_out()):
             return combination
         return self._get_first_available_combination(necessary_values) or combination
 
@@ -2109,7 +2075,7 @@ class ProductTemplate(models.Model):
         res["no_variant_ptav_ids"] = (
             self.valid_product_template_attribute_line_ids
             .filtered(lambda line: line.attribute_id.create_variant == "no_variant")
-            .product_template_value_ids.filtered("ptav_active")
+            .product_template_value_ids._only_active()
             .ids
         )
         return res
