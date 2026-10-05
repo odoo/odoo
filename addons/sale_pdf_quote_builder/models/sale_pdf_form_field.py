@@ -23,7 +23,7 @@ class SalePdfFormField(models.Model):
     document_type = fields.Selection(
         string="Document Type",
         selection=[
-            ("quotation_document", "Header/Footer"),
+            ("quotation_document", "Additional Pages"),
             ("product_document", "Product Document"),
         ],
         readonly=True,
