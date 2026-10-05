@@ -66,8 +66,12 @@ class OAuthLogin(Home):
                 redirect_uri=return_url,
                 scope=provider['scope'],
                 state=json.dumps(state),
-                # nonce=base64.urlsafe_b64encode(os.urandom(16)),
             )
+            # Okta is the only provider that requires nonce. We cannot add it
+            # for all providers because some throw an error if nonce is present.
+            if '.okta.com/' in provider['auth_endpoint']:
+                params['nonce'] = base64.urlsafe_b64encode(os.urandom(16))
+
             provider['auth_link'] = "%s?%s" % (provider['auth_endpoint'], werkzeug.urls.url_encode(params))
         return providers
 
