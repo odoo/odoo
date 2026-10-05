@@ -453,6 +453,7 @@ class PurchaseOrderLine(models.Model):
                             line.name = display_names[vendors.ids.index(line.selected_seller_id.id)] + line.name[len(display_name):]
                         break
 
+            supplier_taxes = line.product_id.supplier_taxes_id._filter_taxes_by_company(line.company_id)
             # If not seller, use the standard price. It needs a proper currency conversion.
             if not line.selected_seller_id:
                 unavailable_seller = line.product_id.seller_ids.filtered(
@@ -465,7 +466,7 @@ class PurchaseOrderLine(models.Model):
                 po_line_uom = line.product_uom_id or line.product_id.uom_id
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(
                     line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
-                    line.product_id.supplier_taxes_id,
+                    supplier_taxes,
                     line.tax_ids,
                     line.company_id,
                 )
@@ -480,7 +481,7 @@ class PurchaseOrderLine(models.Model):
                 )
 
             elif line.selected_seller_id:
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(line.selected_seller_id.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if line.selected_seller_id else 0.0
+                price_unit = line.env['account.tax']._fix_tax_included_price_company(line.selected_seller_id.price, supplier_taxes, line.tax_ids, line.company_id) if line.selected_seller_id else 0.0
                 price_unit = line.selected_seller_id.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
                 line._reset_price_unit(line.selected_seller_id.product_uom_id._compute_price(price_unit, line.product_uom_id))
                 line.discount = line.selected_seller_id.discount or 0.0

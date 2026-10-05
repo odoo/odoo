@@ -548,6 +548,71 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
         self.assertEqual(product.seller_ids[0].company_id, company_a)
 
+    def test_price_include_price_exclude_with_multicompany(self):
+        """
+        Check that price tax included and price tax excluded are computed correctly in a multicompany context.
+        """
+        company_tax_excluded = self.company_data['company']
+        company_tax_included = self.company_data_2['company']
+        company_tax_included.account_price_include = 'tax_included'
+        product = self.env['product.product'].create({
+            'name': 'product_test',
+            'standard_price': 100.0,
+        })
+        product.with_company(company_tax_included).standard_price = 100.0
+
+        po_form = Form(self.env['purchase.order'].with_company(company_tax_included))
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_qty = 1
+        po_tax_included = po_form.save()
+        po_tax_included.button_confirm()
+
+        self.assertRecordValues(po_tax_included, [{
+            'amount_tax': 13.04,
+            'amount_untaxed': 86.96,
+            'amount_total': 100.00,
+        }])
+
+        po_form = Form(self.env['purchase.order'].with_company(company_tax_excluded))
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = product
+            po_line.product_qty = 1
+        po_tax_excluded = po_form.save()
+        po_tax_excluded.button_confirm()
+
+        self.assertRecordValues(po_tax_excluded, [{
+            'amount_tax': 15.00,
+            'amount_untaxed': 100.00,
+            'amount_total': 115.00,
+        }])
+
+    def test_price_include_tax_mapped_by_fiscal_position_on_branch(self):
+        """Check that a branch using its parent company's taxes removes a price-included tax replaced by
+        the fiscal position from the product cost, like its parent company does."""
+        company = self.env.company
+        branch = self.env['res.company'].create({
+            'name': 'Branch',
+            'country_id': company.country_id.id,
+            'parent_id': company.id,
+        })
+        self.tax_purchase_a.price_include_override = 'tax_included'
+        self.product_a.with_company(branch).standard_price = 800.0
+
+        po_parent, po_branch = self.env['purchase.order'].create([{
+            'partner_id': self.partner_a.id,
+            'company_id': po_company.id,
+            'fiscal_position_id': self.fiscal_pos_a.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        } for po_company in (company, branch)])
+
+        self.assertRecordValues((po_parent + po_branch).order_line, [
+            {'price_unit': 695.65, 'tax_ids': self.tax_purchase_b.ids, 'price_total': 800.0},
+            {'price_unit': 695.65, 'tax_ids': self.tax_purchase_b.ids, 'price_total': 800.0},
+        ])
+
     def test_discount_po_line_vendorpricelist(self):
         """ Set a discount in VendorPriceList and check if that discount comes in po line and if vendor select
             a product which is not present in vendorPriceList then it should be created.

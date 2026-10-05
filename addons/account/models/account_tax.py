@@ -5118,8 +5118,8 @@ class AccountTax(models.Model):
     def _fix_tax_included_price_company(self, price, prod_taxes, line_taxes, company_id):
         if company_id:
             #To keep the same behavior as in _compute_tax_id
-            prod_taxes = prod_taxes.filtered(lambda tax: tax.company_id == company_id)
-            line_taxes = line_taxes.filtered(lambda tax: tax.company_id == company_id)
+            prod_taxes = prod_taxes._filter_taxes_by_company(company_id)
+            line_taxes = line_taxes._filter_taxes_by_company(company_id)
         return self._fix_tax_included_price(price, prod_taxes, line_taxes)
 
     def _get_description_plaintext(self):
