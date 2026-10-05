@@ -76,11 +76,40 @@ const discussChannelPatch = {
         });
         /** @type {import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined} */
         this.chatbotTriggerFailedError = undefined;
+        // REVIEW [4/5, correctness]: moved from embed to core without a visitor guard. The server
+        // sends `chatbot` for every livechat channel to every reader, so this now runs
+        // `chatbot.start()` in the backend for operators/managers too.
+        //
+        // Scenario: a visitor closes the tab mid-script (current step is a text step, or they
+        // answered and left). A livechat manager opens the session from Sessions.
+        // `start()` → `_runUntilUserInputStep()` → `/chatbot/step/trigger` (only needs channel
+        // access) advances the visitor's script server-side: it posts bot messages, can run
+        // `forward_operator` (assigning an agent to an abandoned visitor), or sets
+        // `livechat_end_dt`. The new `isLastCommentFromVisitor` (persona-based instead of
+        // `isSelfAuthored`) is also true on the manager's client, so `processAnswer` runs there too.
+        //
+        // Fix direction: only drive the chatbot for `isTransient ||
+        // self_member_id?.livechat_member_type === "visitor"` (same for `Thread.post` /
+        // `computeComposerDisabled`).
+        this.onChange(
+            () => [this.hasActiveChatbot],
+            function onChangeHasActiveChatbot(hasActiveChatbot) {
+                if (!hasActiveChatbot) {
+                    return;
+                }
+                this.isLoadedPromise.then(() => this.channel.chatbot.start());
+                return () => this.isLoadedPromise.then(() => this.channel?.chatbot?.stop());
+            },
+            { immediate: true }
+        );
     },
     get allowDescriptionTypes() {
         return [...super.allowDescriptionTypes, "livechat"];
     },
     get allowEditDescription() {
+        if (this.self_member_id?.livechat_member_type === "visitor") {
+            return false;
+        }
         return (
             super.allowEditDescription ||
             (this.channel_type === "livechat" && this.store.has_access_livechat)
@@ -88,6 +117,37 @@ const discussChannelPatch = {
     },
     get allowedToLeaveChannelTypes() {
         return [...super.allowedToLeaveChannelTypes, "livechat"];
+    },
+    get avatarUrl() {
+        if (
+            this.channel_type === "livechat" &&
+            (this.isTransient || this.self_member_id?.livechat_member_type === "visitor")
+        ) {
+            let bestScore = -1;
+            let bestMemberHistory;
+            // Agents are preferred over bots, current members over former members, and higher IDs over lower IDs
+            // REVIEW [2/5, correctness]: the `[...]` copy from the embed version was dropped.
+            // `RecordList.sort` is a store update (`MAKE_UPDATE` + `data.set`), so this getter now
+            // reorders the shared relational field during render whenever new history records
+            // arrive. Other readers (e.g. `livechat_service` `.find(agent)`) then see an order that
+            // depends on whether the avatar was rendered. Restore `[...this.livechat_channel_member_history_ids]`.
+            for (const memberHistory of this.livechat_channel_member_history_ids.sort(
+                (a, b) => b.id - a.id
+            )) {
+                if (memberHistory.livechat_member_type === "visitor") {
+                    continue;
+                }
+                const score =
+                    (memberHistory.livechat_member_type === "agent" ? 4 : 0) +
+                    (memberHistory.member_id ? 2 : 0);
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMemberHistory = memberHistory;
+                }
+            }
+            return bestMemberHistory?.partner_id?.avatarUrl || super.avatarUrl;
+        }
+        return super.avatarUrl;
     },
     /** @override */
     _computeCanHide() {
@@ -128,11 +188,23 @@ const discussChannelPatch = {
             ? formatList(memberNames, { style: "standard-narrow" })
             : super.computedDisplayName;
     },
+    get hasActiveChatbot() {
+        return Boolean(
+            this.channel?.chatbot &&
+                !this.channel.chatbot.completed &&
+                !this.channel.livechat_end_dt
+        );
+    },
     get isHideUntilNewMessageSupported() {
         if (this.livechat_end_dt) {
             return false;
         }
         return super.isHideUntilNewMessageSupported;
+    },
+    get isLastCommentFromVisitor() {
+        return this.newestPersistentCommentOfAllMessages?.author?.eq(
+            this.livechatVisitorMember?.persona
+        );
     },
     get livechatShouldAskLeaveConfirmation() {
         if (
@@ -179,10 +251,17 @@ const discussChannelPatch = {
         return this.channel_type === "livechat" || super.allow_invite_by_email;
     },
     get composerHidden() {
-        if (this.channel?.channel_type === "livechat") {
-            return !!this.livechat_end_dt;
+        if (this.channel_type !== "livechat") {
+            return super.composerHidden;
         }
-        return super.composerHidden;
+        if (this.self_member_id?.livechat_member_type === "visitor") {
+            return (
+                super.composerHidden ||
+                this.livechat_end_dt ||
+                (this.chatbot?.completed && !this.livechat_agent_history_ids.length)
+            );
+        }
+        return !!this.livechat_end_dt;
     },
 
     get composerHiddenText() {
@@ -193,6 +272,12 @@ const discussChannelPatch = {
     },
     get transcriptUrl() {
         return url(`/im_livechat/download_transcript/${this.id}`);
+    },
+    shouldNotifyMessageToUser() {
+        if (this.self_member_id?.livechat_member_type === "visitor") {
+            return true;
+        }
+        return super.shouldNotifyMessageToUser(...arguments);
     },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);
