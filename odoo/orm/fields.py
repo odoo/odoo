@@ -102,7 +102,13 @@ class Field[T, C]:
         This only has an impact on the UI. Any field assignation in code will work
         (if the field is a stored field or an inversable one).
 
+    :param bool ui_readonly: whether the field is readonly in the UI
+
     :param bool required: whether the value of the field is required (default: ``False``)
+
+    :param bool ui_required: whether the value of the field is required in the UI
+
+        Defaults to ``required``.
 
     :param str index: whether the field is indexed in database, and the kind of index.
         Note: this has no effect on non-stored and virtual fields.
@@ -308,7 +314,9 @@ class Field[T, C]:
     export_string_translation: bool = True  # whether the field label translations are exported
     help: str | None = None             # field tooltip
     readonly: bool = False              # whether the field is readonly
+    ui_readonly: bool | None = None     # whether the field is readonly in the UI
     required: bool = False              # whether the field is required (NOT NULL in database)
+    ui_required: bool | None = None     # whether the field is required in the UI
     groups: str | None = None           # csv list of group xml ids
     change_default = False              # whether the field may trigger a "user-onchange"
 
@@ -1013,12 +1021,18 @@ class Field[T, C]:
     _description_manual = property(attrgetter('manual'))
     _description_related = property(attrgetter('related'))
     _description_company_dependent = property(attrgetter('company_dependent'))
-    _description_readonly = property(attrgetter('readonly'))
-    _description_required = property(attrgetter('required'))
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
     _description_default_export_compatible = property(attrgetter('default_export_compatible'))
     _description_exportable = property(attrgetter('exportable'))
+
+    @property
+    def _description_readonly(self):
+        return self.readonly if self.ui_readonly is None else self.ui_readonly
+
+    @property
+    def _description_required(self):
+        return self.required if self.ui_required is None else self.ui_required
 
     def _description_depends(self, env: Environment):
         return env.registry.field_depends[self]
@@ -1108,7 +1122,7 @@ class Field[T, C]:
 
     def is_editable(self) -> bool:
         """ Return whether the field can be editable in a view. """
-        return not self.readonly
+        return not self._description_readonly
 
     ############################################################################
     #
