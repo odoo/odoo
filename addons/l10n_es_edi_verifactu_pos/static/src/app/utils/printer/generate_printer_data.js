@@ -8,11 +8,17 @@ patch(GeneratePrinterData.prototype, {
     generateReceiptData() {
         const data = super.generateReceiptData(...arguments);
 
+        if (this.company.l10n_es_edi_verifactu_required) {
+            data.conditions.display_vat = !this.order.account_move;
+        }
+
         if (this.order.l10n_es_edi_verifactu_qr_code) {
-            const baseUrl = this.order.config._base_url;
             data.image.l10n_es_edi_verifactu_qr_code = this.generateQrCode(
-                `${baseUrl}${this.order.l10n_es_edi_verifactu_qr_code}`
+                this.order.l10n_es_edi_verifactu_qr_code
             );
+            data.conditions.l10n_es_edi_verifactu_pos = true;
+            data.conditions.has_account_move = Boolean(this.order.account_move);
+            data.extra_data.invoice_name = this.order.account_move?.name || "";
         }
 
         return data;
