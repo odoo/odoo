@@ -833,10 +833,11 @@ describe("Collaboration with embedded components", () => {
         // selection is not yet updated because it requires us to wait for the
         // `selectionchange` event to resolve.
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-            `<p data-selection-placeholder=""><br></p><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div>[]<p><br></p>`
+            `<p data-selection-placeholder=""><br></p><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div>[]<p data-selection-placeholder=""><br></p>`
         );
         await animationFrame();
         cleanHints(e1);
+        await animationFrame();
         cleanHints(e2);
         expect(getContent(e1.editable, { sortAttrs: true })).toBe(
             unformat(`

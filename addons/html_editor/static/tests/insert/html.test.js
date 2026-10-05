@@ -1,5 +1,5 @@
 import { parseHTML } from "@html_editor/utils/html";
-import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
@@ -194,7 +194,6 @@ describe("collapsed selection", () => {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
             const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
             insertHTML(table, [normalizedTable])(editor);
-            await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p>cont</p><table><tbody><tr><td><br></td></tr></tbody></table><p>[]ent</p>`
             );
@@ -208,7 +207,6 @@ describe("collapsed selection", () => {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
             const { editor } = await setupEditor(`<p>[]<br></p>`, {});
             insertHTML(table, [normalizedTable])(editor);
-            await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><table><tbody><tr><td>[]<br></td></tr></tbody></table><p data-selection-placeholder=""><br></p>`
             );
@@ -222,7 +220,6 @@ describe("collapsed selection", () => {
             // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
             const { editor } = await setupEditor(`<p class="oe_unbreakable">cont[]ent</p>`, {});
             insertHTML(table, [])(editor);
-            await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">cont[]ent</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
@@ -231,7 +228,6 @@ describe("collapsed selection", () => {
         test("should not unwrap table in unsplittable paragraph: find a suitable spot to insert table element (at start)", async () => {
             const { editor } = await setupEditor(`<p class="oe_unbreakable">[]content</p>`, {});
             insertHTML(table, [normalizedTable])(editor);
-            await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
@@ -243,7 +239,6 @@ describe("collapsed selection", () => {
                 {}
             );
             insertHTML(table, [normalizedTable])(editor);
-            await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p><p class="oe_unbreakable">\u200bcontent</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
@@ -252,7 +247,6 @@ describe("collapsed selection", () => {
         test("should not unwrap table in unsplittable paragraph: find a suitable spot to insert table element (at end)", async () => {
             const { editor } = await setupEditor(`<p class="oe_unbreakable">content[]</p>`, {});
             insertHTML(table, [normalizedTable])(editor);
-            await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><table><tbody><tr><td>[]<br></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
@@ -264,7 +258,6 @@ describe("collapsed selection", () => {
                 {}
             );
             insertHTML(table, [normalizedTable])(editor);
-            await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content\u200B</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><table><tbody><tr><td>[]<br></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
@@ -273,7 +266,6 @@ describe("collapsed selection", () => {
         test("should not unwrap table in unsplittable empty paragraph: replace the paragraph", async () => {
             const { editor } = await setupEditor(`<p class="oe_unbreakable">[]<br></p>`, {});
             insertHTML(table, [normalizedTable])(editor);
-            await tick();
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><table><tbody><tr><td>[]<br></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             );
@@ -289,7 +281,6 @@ describe("collapsed selection", () => {
             );
 
             insertHTML(table, [])(editor);
-            await tick();
             expect(getContent(editor.editable)).toBe(
                 '<p data-selection-placeholder=""><br></p>' +
                     `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">cont[]ent</b></p></div>` +
@@ -388,6 +379,7 @@ describe("collapsed selection", () => {
         // into it and triggers another `selectionchange` that removes the
         // selection placeholder. So we must wait for the `.o-we-hint`.
         await waitFor(".o-we-hint");
+        await animationFrame();
         cleanHints(editor);
         expect(getContent(editor.editable, { sortAttrs: true })).toBe(
             unformat(`
