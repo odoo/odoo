@@ -679,4 +679,28 @@ class DeliveryCarrier(models.Model):
                 continue
 
             delivery_vals = carrier_prices.get(str(carrier.id), {})
-            carrier.delivery_cost = delivery_vals.get("display_price", 0.0)
+            carrier.delivery_cost = delivery_vals.get("display_price", None)
+
+    @api.model
+    def _get_delivery_cost_sort_key(self, carrier_id, carrier_prices):
+        delivery_vals = carrier_prices.get(str(carrier_id), {})
+        cost = delivery_vals.get("display_price", None)
+        return (cost is None, cost or 0)
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        carrier_prices_dumped = self.env.context.get("carrier_prices_dumped", False)
+        if carrier_prices_dumped:
+            carrier_prices = json.loads(carrier_prices_dumped)
+            records = self.search(domain).sorted(lambda a: self._get_delivery_cost_sort_key(a.id, carrier_prices))[:limit]
+            return [(r.id, r.display_name) for r in records]
+        return super().name_search(name=name, domain=domain if domain else None, operator=operator, limit=limit)
+
+    @api.model
+    def web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+        carrier_prices_dumped = self.env.context.get("carrier_prices_dumped", False)
+        res = super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
+        if carrier_prices_dumped and "records" in res and not order:
+            carrier_prices = json.loads(carrier_prices_dumped)
+            res["records"].sort(key=lambda a: self._get_delivery_cost_sort_key(a.get('id'), carrier_prices))
+        return res
