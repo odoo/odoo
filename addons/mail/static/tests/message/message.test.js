@@ -23,6 +23,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
+import { mail_store } from "@mail/../tests/mock_server/mail_mock_server";
 import { MailMessage } from "@mail/../tests/mock_server/mock_models/mail_message";
 import { Message } from "@mail/core/common/message";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
@@ -40,6 +41,7 @@ import { advanceTime, mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoo
 import {
     contains as webContains,
     Command,
+    MockServer,
     mockService,
     serverState,
     withUser,
@@ -1277,11 +1279,24 @@ test("pending message is squashed while it is being sent", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
+    const { promise: loadPromise, resolve: loadResolve } = Promise.withResolvers();
+    // Simulate the answer reaching the client after the post.
+    listenStoreFetch("/discuss/channel/messages", {
+        async onRpc(request) {
+            const res = await mail_store.bind(MockServer.current)(request);
+            await loadPromise;
+            return res;
+        },
+    });
     onRpcBefore("/mail/message/post", () => new Promise(() => {}));
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-Thread-empty");
     await insertText(".o-mail-Composer-input", "second");
     await click("button[title='Send']:enabled");
+    await contains(".o-mail-Thread-empty", { count: 0 }); // wait for the pending message
+    loadResolve();
+    await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-mail-Message.o-squashed:has(:text('second'))");
 });
 
