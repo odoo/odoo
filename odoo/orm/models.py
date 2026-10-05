@@ -3628,7 +3628,8 @@ class BaseModel(metaclass=MetaModel):
         todo = explicit_deletions.copy()
         done = defaultdict(set)
         env = self.with_context(active_test=False).sudo().env
-        many2one_targeting = self.env.transaction.registry.many2one_targeting
+        many2one_targeting = env.registry.many2one_targeting
+        many2many_targeting = env.registry.many2many_targeting
 
         while todo:
             model_name, ids = todo.popitem()
@@ -3698,7 +3699,6 @@ class BaseModel(metaclass=MetaModel):
                     cascade_many2one.append((field, corecords))
 
         # collect all the many2many fields that contain deleted records
-        many2many_targeting = self.env.transaction.registry.many2many_targeting
         cascade_many2many: list[tuple[Field, BaseModel]] = []
         for records in all_deleted_records:
             for field in many2many_targeting.get(records._name, ()):
@@ -3794,10 +3794,11 @@ class BaseModel(metaclass=MetaModel):
         assert field.type in ('many2one', 'many2many')
         env = self.with_context(active_test=False).sudo().env
         # use an inverse field to avoid a search query when possible
-        for invf in self.pool.field_inverses[field]:
-            if invf.type in ('one2many', 'many2many') and invf.domain:
-                continue
-            return self.with_env(env)[invf.name]
+        if not self.env.registry.uninstalling_modules:
+            for invf in self.env.registry.field_inverses[field]:
+                if invf.type in ('one2many', 'many2many') and invf.domain:
+                    continue
+                return self.with_env(env)[invf.name]
         return env[field.model_name].search(Domain(field.name, 'in', self.ids), order='id')
 
     @api.ondelete(at_uninstall=False)
