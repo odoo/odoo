@@ -1,6 +1,31 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { BuilderAction } from "@html_builder/core/builder_action";
+
+export class TeamBoardAlphabeticSortAction extends BuilderAction {
+    static id = "TeamBoardAlphabeticSort";
+    apply({ editingElement }) {
+        const row = editingElement.querySelector(" .container .row");
+        const cards = Array.from(row.querySelectorAll(".o_team_board_card"));
+        cards.sort((a, b) => {
+            const titleA = a.querySelector(".card-title")?.textContent.trim().toLowerCase();
+            const titleB = b.querySelector(".card-title")?.textContent.trim().toLowerCase();
+            return titleA.localeCompare(titleB);
+        });
+        cards.forEach((card) => row.appendChild(card));
+    }
+}
+
+export class TeamBoardAddMemberAction extends BuilderAction {
+    static id = "TeamBoardAddMember";
+    apply({ editingElement }) {
+        const row = editingElement.querySelector(" .container .row");
+        const lastCard = editingElement.querySelector(".o_team_board_card:last-child");
+        const clone = lastCard.cloneNode(true);
+        row.appendChild(clone);
+    }
+}
 
 export class TeamBoardPlugin extends Plugin {
     static id = "teamBoardPlugin";
@@ -22,6 +47,10 @@ export class TeamBoardPlugin extends Plugin {
                 accept: ".s_team_board_card",
             },
         ],
+        builder_actions: {
+            TeamBoardAlphabeticSortAction,
+            TeamBoardAddMemberAction,
+        },
     };
 }
 

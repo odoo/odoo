@@ -61,15 +61,6 @@ export class TeamBoard extends Interaction {
         this.modalDesc.textContent = data.description;
     }
 
-    _onClickCard(ev) {
-        const card = ev.target.closest(".o_team_board_card");
-        if (!card) {
-            return;
-        }
-        this._updateModal(card);
-        this.modalInstance.show();
-    }
-
     // handle modal action button
     async onSendMessage() {
         const btnLabel = this.modalButton.textContent;
