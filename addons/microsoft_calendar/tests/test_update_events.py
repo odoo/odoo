@@ -1208,12 +1208,11 @@ class TestUpdateEvents(TestCommon):
             self.assertEqual(e.name, ms_events_to_update[e.microsoft_id])
             self.assertEqual(e.follow_recurrence, True)
 
-    def _prepare_outlook_events_for_all_events_start_date_update(self, nb_of_events):
+    def _prepare_outlook_events_for_all_events_start_date_update(self, nb_of_events, new_start_date=datetime(2021, 9, 21, 10, 0, 0)):
         """
         Utility method to avoid repeating data preparation for all tests
         about updating the start date of all events of a recurrence
         """
-        new_start_date = datetime(2021, 9, 21, 10, 0, 0)
         new_end_date = new_start_date + timedelta(hours=1)
 
         # prepare recurrence based on self.recurrent_event_from_outlook_organizer[0] which is the Outlook recurrence
@@ -1294,6 +1293,27 @@ class TestUpdateEvents(TestCommon):
                 e.start.strftime("%Y-%m-%dT%H:%M:%S.0000000"),
                 ms_events_to_update[e.microsoft_id]["dateTime"]
             )
+
+    @freeze_time('2021-09-01')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_update_start_of_all_events_of_recurrence_from_outlook_no_mail(self, mock_get_events):
+        """
+        Moving a recurrence in Outlook does not notify the attendees.
+        """
+        events = self._prepare_outlook_events_for_all_events_start_date_update(
+            self.recurrent_events_count, new_start_date=datetime(2021, 9, 23, 10, 0, 0),
+        )
+        mock_get_events.return_value = (MicrosoftEvent(events), None)
+
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        recurrence_events = self.env['calendar.event'].search([('recurrence_id', '=', self.recurrence.id)])
+        self.assertEqual(min(recurrence_events.mapped('start')), datetime(2021, 9, 23, 10, 0))
+        self.assertFalse(self.env['mail.message'].search([
+            ('model', '=', 'calendar.event'),
+            ('res_id', 'in', recurrence_events.ids),
+            ('message_type', '=', 'user_notification'),
+        ]))
 
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_start_of_all_events_of_recurrence_with_more_events(self, mock_get_events):
