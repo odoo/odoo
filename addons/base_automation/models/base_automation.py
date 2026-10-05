@@ -869,8 +869,12 @@ class BaseAutomation(models.Model):
                 automations = self.env['base.automation']._get_actions(self, CREATE_TRIGGERS)
                 if not automations:
                     return create.origin(self, vals_list, **kw)
-                # call original method
-                records = create.origin(self.with_env(automations.env), vals_list, **kw)
+                # call original method; mark create so write-side compute hooks
+                # do not evaluate Before Update Domain during record creation
+                create_self = self.with_env(automations.env).with_context(__base_automation_create=True)
+                records = create.origin(create_self, vals_list, **kw)
+                records.with_context(__base_automation_create=True).flush_recordset()
+                records = records.with_env(automations.env)
                 # check postconditions, and execute actions on the records that satisfy them
                 for automation in automations.with_context(old_values=None):
                     _logger.debug(
@@ -923,7 +927,7 @@ class BaseAutomation(models.Model):
             def _compute_field_value(self, field):
                 # determine fields that may trigger an automation
                 stored_fnames = [f.name for f in self.pool.field_computed[field] if f.store]
-                if not stored_fnames:
+                if not stored_fnames or self.env.context.get('__base_automation_create'):
                     return _compute_field_value.origin(self, field)
                 # retrieve the action rules to possibly execute
                 automations = self.env['base.automation']._get_actions(self, WRITE_TRIGGERS)
