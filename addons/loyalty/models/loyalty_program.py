@@ -48,7 +48,7 @@ class LoyaltyProgram(models.Model):
         string="Pricelist",
         help="This program is specific to this pricelist set.",
         comodel_name="product.pricelist",
-        domain="[('currency_id', '=', currency_id)]",
+        ui_domain="[('currency_id', '=', currency_id)]",
     )
 
     total_order_count = fields.Integer(

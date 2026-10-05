@@ -49,7 +49,7 @@ class AccountWithholdingLine(models.AbstractModel):
         check_company=True,
         required=True,
         index=True,
-        domain="[('type_tax_use', '=', type_tax_use), ('is_withholding_tax', '=', True)]",
+        ui_domain="[('type_tax_use', '=', type_tax_use), ('is_withholding_tax', '=', True)]",
     )
     withholding_sequence_id = fields.Many2one(related='tax_id.withholding_sequence_id')
     source_base_amount_currency = fields.Monetary(currency_field='source_currency_id')

@@ -52,7 +52,7 @@ class ResourceResource(models.Model):
     calendar_id = fields.Many2one(
         "resource.calendar", string='Working Time', required=True,
         default=lambda self: self.env.company.resource_calendar_id,
-        domain="[('company_id', '=', company_id)]",
+        ui_domain="[('company_id', '=', company_id)]",
         help="Define the working schedule of the resource. Assign a flexible calendar for fully "
              "flexible working hours.")
     # readonly: several resources can share the same calendar, writing through would silently

@@ -24,7 +24,7 @@ class CouponShare(models.TransientModel):
         return (len(websites) == 1 and websites) or Website
 
     website_id = fields.Many2one("website", required=True, default=_get_default_website_id)
-    coupon_id = fields.Many2one("loyalty.card", domain="[('program_id', '=', program_id)]")
+    coupon_id = fields.Many2one("loyalty.card", ui_domain="[('program_id', '=', program_id)]")
     program_id = fields.Many2one(
         "loyalty.program",
         required=True,
