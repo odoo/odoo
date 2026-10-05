@@ -38,3 +38,4 @@ Justine Doutreloux justine.doutreloux@acsone.eu https://github.com/jdoutreloux
 Laurent Stukkens laurent.stukkens@acsone.eu https://github.com/it-ideas
 Tobias Zehntner tobias.zehntner@acsone.eu https://github.com/tobiaszehntner
 Yannick Payot yannick.payot@acsone.eu https://github.com/yvaucher
+Camille Spiritus camille.spiritus@acsone.eu https://github.com/camille-spiritus-acs
