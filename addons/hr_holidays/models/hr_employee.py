@@ -760,7 +760,7 @@ class HrEmployee(models.Model):
                 if version.is_flexible:
                     hours_day = version.hours_per_day
                 else:
-                    hours_day = self.resource_calendar_id._get_duration_based_work_hours_on_date(target_date)
+                    hours_day = version.resource_calendar_id._get_duration_based_work_hours_on_date(target_date)
                 datetimes = [12.0 - hours_day / 2.0, 12.0, 12.0 + hours_day / 2.0]
                 if day_period:
                     return (datetimes[0], datetimes[1]) if day_period == 'morning' else (datetimes[1], datetimes[2])
