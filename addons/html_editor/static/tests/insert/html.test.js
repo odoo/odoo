@@ -911,7 +911,7 @@ test("Should create a list element around `li`", async () => {
     });
 });
 
-test("Should return converted elements", async () => {
+test("Should return converted elements (1)", async () => {
     const { editor } = await setupEditor(`<ul><li>[]</li></ul>`);
     const insertedNodes = editor.shared.dom.insert(
         parseHTML(editor.document, "<span>first</span><p>second</p>")
@@ -922,5 +922,35 @@ test("Should return converted elements", async () => {
     expect(insertedNodes[1].outerHTML).toBe("<li>second</li>");
     expect(getContent(editor.editable)).toBe(
         "<ul><li><span>first</span></li><li>second[]</li></ul>"
+    );
+});
+
+test("Should return converted elements (2)", async () => {
+    const { editor } = await setupEditor(`<ul><li>ab[]cd</li></ul>`);
+    const insertedNodes = editor.shared.dom.insert(
+        parseHTML(editor.document, "<span>first</span><p>second</p>")
+    );
+    cleanHints(editor);
+    expect(insertedNodes.length).toBe(2);
+    expect(insertedNodes[0].outerHTML).toBe("<span>first</span>");
+    expect(insertedNodes[1].nodeType).toBe(Node.TEXT_NODE);
+    expect(insertedNodes[1].textContent).toBe("second");
+    expect(getContent(editor.editable)).toBe(
+        "<ul><li>ab<span>first</span></li><li>second[]cd</li></ul>"
+    );
+});
+
+test("Should return converted elements (3)", async () => {
+    const { editor } = await setupEditor(`<ul><li>[]</li></ul>`);
+    const insertedNodes = editor.shared.dom.insert(
+        parseHTML(editor.document, "<span>first</span><p><br></p><p>second</p>")
+    );
+    cleanHints(editor);
+    expect(insertedNodes.length).toBe(3);
+    expect(insertedNodes[0].outerHTML).toBe("<span>first</span>");
+    expect(insertedNodes[1].outerHTML).toBe("<li><br></li>");
+    expect(insertedNodes[2].outerHTML).toBe("<li>second</li>");
+    expect(getContent(editor.editable)).toBe(
+        "<ul><li><span>first</span></li><li><br></li><li>second[]</li></ul>"
     );
 });

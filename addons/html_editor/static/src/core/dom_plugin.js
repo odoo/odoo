@@ -489,7 +489,13 @@ export class DomPlugin extends Plugin {
             const previousItem = index > 0 && nodes[index - 1];
             const itemNodes = isFragment(item) ? childNodes(item) : [item];
             for (const [nodeIndex, node] of itemNodes.entries()) {
-                if (!nodeIndex && isFragment(previousItem) && !isBlock(item) && isVisible(item)) {
+                if (
+                    !nodeIndex &&
+                    previousItem &&
+                    ((isFragment(previousItem) && !isBlock(item)) ||
+                        (isFragment(item) && !isBlock(previousItem))) &&
+                    isVisible(item)
+                ) {
                     // Restore a lost split before an item that was unwrapped.
                     const position = leftPos(marker);
                     const { lineBreaks } = this.dependencies.split.splitBlockNode(...position);
