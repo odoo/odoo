@@ -140,12 +140,9 @@ class MailAliasMixinOptional(models.AbstractModel):
 
         return True
 
-    def unlink(self):
-        """ Delete the given records, and cascade-delete their corresponding alias. """
-        aliases = self.mapped('alias_id')
-        res = super().unlink()
-        aliases.sudo().unlink()
-        return res
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self.alias_id
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
