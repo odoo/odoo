@@ -208,7 +208,7 @@ export class ToolbarPlugin extends Plugin {
             groupId: "expand_toolbar",
             commandId: "expandToolbar",
             description: _t("Expand toolbar"),
-            icon: "more_vert",
+            icon: "expand_content",
         },
         toolbar_namespace_providers: [
             withSequence(100, (targetedNodes, editableSelection) =>
