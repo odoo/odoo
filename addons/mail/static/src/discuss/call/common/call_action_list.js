@@ -195,6 +195,12 @@ export class CallActionList extends Component {
                         },
                         "call-layout"
                     );
+                    // REVIEW [2/5, maintainability]: setting a signal from inside the lazy `actions`
+                    // computed is a side effect: `callLayoutMoreAction` only updates when something
+                    // reads `actions()` (the effect below must call it first just for that), and the
+                    // small-screen branch returns before either `set`, keeping a stale action from the
+                    // last wide layout. Derive the "call-layout" action from the `actions()` result in
+                    // the effect instead and drop the signal.
                     this.callLayoutMoreAction.set(moreAction);
                     const layoutGroup = [moreAction];
                     group2.splice(
@@ -210,6 +216,15 @@ export class CallActionList extends Component {
             { equals: nestedShallowEqual }
         );
 
+        // REVIEW [2/5, correctness]: every CallActionList opens its own hint, including the Meeting
+        // rendered in the PiP window (`env.pipWindow`), whose "call-layout" More has no fullscreen
+        // action (fullscreen/wide view are hidden there; only "record-call" remains).
+        //
+        // Scenario: in PiP mode with recording rights and the chat window open, "Switch to
+        // fullscreen mode" shows in the PiP window on a menu that cannot do it, and again on the
+        // chat window's PiP banner.
+        //
+        // Only open the hint when the More menu actually contains the fullscreen action.
         useEffect(() => {
             this.actions();
             const moreAction = this.callLayoutMoreAction();

@@ -507,6 +507,16 @@ export class Rtc extends Record {
         return Boolean(audio || transcription || video);
     }
 
+    // REVIEW [3/5, correctness]: the fullscreen hint now hides both microphone warnings (permission
+    // and silent track: mute button badge, disabled state and warning popover), and the hint stays
+    // until dismissed or fullscreen is entered.
+    //
+    // Scenario: in a chat window call, a remote participant turns their camera on while the mic
+    // permission is denied, or the OS mutes the mic track: the user keeps talking without being
+    // heard and gets no warning.
+    //
+    // A tip should not outrank functional warnings: hide the hint while a mic warning is active
+    // (check the warnings in `showFullscreenHint`) instead of the other way around.
     get showMicrophonePermissionWarning() {
         return (
             !this.isCallPermissionDialogOpen &&
