@@ -5,3 +5,4 @@ from . import test_stockvaluation
 from . import test_stockvaluationlayer
 from . import test_multicompany_lot_valuation
 from . import test_multicompany_valuation_cache
+from . import test_product_category
