@@ -55,7 +55,7 @@ class CardCampaign(models.Model):
     target_url_click_count = fields.Integer(related="link_tracker_id.count")
     target_url_placeholder = fields.Char(compute='_compute_target_url_placeholder')
 
-    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user, domain="[('share', '=', False)]")
+    user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.user, ui_domain="[('share', '=', False)]")
 
     reward_message = fields.Html(string='Thank You Message', translate=True)
     reward_target_url = fields.Char(string='Reward Link')

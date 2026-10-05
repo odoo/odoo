@@ -92,7 +92,7 @@ class HrAttendance(models.Model):
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', string="Time Type", index=True, required=True,
         default=lambda self: self.env.company.sudo().attendance_work_entry_type_id,
-        domain="[('id', 'in', allowed_work_entry_type_ids)]",
+        ui_domain="[('id', 'in', allowed_work_entry_type_ids)]",
     )
     wet_display_code = fields.Char(related='work_entry_type_id.display_code', export_string_translation=False)
     # color index of the linked work entry type, used by calendar/gantt views

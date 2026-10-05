@@ -50,11 +50,11 @@ class MailActivityType(models.Model):
              ' and not available when managing activities for other models.')
     suggested_next_type_id = fields.Many2one(
         'mail.activity.type', string='Suggest Next Activity',
-        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
+        ui_domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
         help="Suggest this activity once the current one is marked as done.")
     previous_type_ids = fields.Many2many(
         'mail.activity.type', 'mail_activity_rel', 'recommended_id', 'activity_id',
-        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
+        ui_domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
         string='Preceding Activities')
     category = fields.Selection([
         ('default', 'None'),

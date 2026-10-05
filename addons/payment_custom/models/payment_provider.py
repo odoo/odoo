@@ -31,7 +31,7 @@ class PaymentProvider(models.Model):
     partner_bank_id = fields.Many2one(
         string="Bank Account",
         comodel_name="res.partner.bank",
-        domain='[("partner_id", "=", company_partner_id)]',
+        ui_domain='[("partner_id", "=", company_partner_id)]',
         compute="_compute_partner_bank_id",
         store=True,
         readonly=False,

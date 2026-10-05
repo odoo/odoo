@@ -12,5 +12,5 @@ class L10nUsResCounty(models.Model):
     state_id = fields.Many2one(
         comodel_name='res.country.state',
         required=True,
-        domain="[('country_id.code', '=', 'US')]",
+        ui_domain="[('country_id.code', '=', 'US')]",
     )

@@ -19,7 +19,7 @@ class CrmTeamMember(models.Model):
     user_id = fields.Many2one(
         'res.users', string='Salesperson',  # TDE FIXME check responsible field
         check_company=True, index=True, ondelete='cascade', required=True,
-        domain="[('share', '=', False), ('id', 'not in', user_in_teams_ids), ('company_ids', 'in', user_company_ids)]")
+        ui_domain="[('share', '=', False), ('id', 'not in', user_in_teams_ids), ('company_ids', 'in', user_company_ids)]")
     user_in_teams_ids = fields.Many2many(
         'res.users', compute='_compute_user_in_teams_ids',
         help='UX: Give users not to add in the currently chosen team to avoid duplicates')

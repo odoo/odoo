@@ -64,7 +64,7 @@ class AccountPayment(models.Model):
     partner_bank_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account",
         readonly=False, store=True, tracking=True,
         compute='_compute_partner_bank_id',
-        domain="[('id', 'in', available_partner_bank_ids)]",
+        ui_domain="[('id', 'in', available_partner_bank_ids)]",
         check_company=True,
         ondelete='restrict',
     )
@@ -73,7 +73,7 @@ class AccountPayment(models.Model):
         string="Returns Bank Account",
         compute='_compute_return_partner_bank_id',
         readonly=False, store=True,
-        domain="[('id', 'in', available_return_partner_bank_ids)]",
+        ui_domain="[('id', 'in', available_return_partner_bank_ids)]",
         check_company=True,
         ondelete='restrict',
     )
@@ -96,7 +96,7 @@ class AccountPayment(models.Model):
     payment_method_line_id = fields.Many2one('account.payment.method.line', string='Payment Method',
         readonly=False, store=True, copy=False,
         compute='_compute_payment_method_line_id',
-        domain="[('id', 'in', available_payment_method_line_ids)]",
+        ui_domain="[('id', 'in', available_payment_method_line_ids)]",
         help="Manual: Pay or Get paid by any method outside of Odoo.\n"
         "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
         "Check: Pay bills by check and print it from Odoo.\n"
@@ -166,7 +166,7 @@ class AccountPayment(models.Model):
         string='Destination Account',
         store=True, readonly=False,
         compute='_compute_destination_account_id',
-        domain="[('account_type', 'in', ('asset_receivable', 'liability_payable'))]",
+        ui_domain="[('account_type', 'in', ('asset_receivable', 'liability_payable'))]",
         index='btree_not_null',
         check_company=True)
 

@@ -24,7 +24,7 @@ class HrTalentPool(models.Model):
         "res.users",
         "Pool Manager",
         default=lambda self: self.env.user,
-        domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
+        ui_domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         tracking=True,
         store=True,
         readonly=False,
