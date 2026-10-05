@@ -603,6 +603,7 @@ export class Composer extends Component {
         const props = {
             anchorRef: this.inputContainerRef,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
+            onClose: () => this.suggestion.dismiss(),
             onSelect: (ev, option) => {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
