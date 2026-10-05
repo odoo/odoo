@@ -524,6 +524,12 @@ class Many2one(_Relational):
                     sql = SQL("(%s IS NOT NULL AND %s IS NOT NULL AND %s)", sql_field, cotable.id, sql)
                 else:
                     sql = SQL("(%s IS NULL OR %s)", sql_field, sql)
+            elif positive and table._query._joins[cotable._alias][0]._sql_tuple[0] == 'LEFT JOIN':
+                # PERF: The field is required, but the join could not be turned
+                # into a JOIN because the left table is itself LEFT JOINed.
+                # PostgreSQL does not infer non-nullability from the foreign
+                # key, so reject NULLs on the joined primary key explicitly.
+                sql = SQL("(%s IS NOT NULL AND %s)", cotable.id, sql)
             return sql
 
         if isinstance(value, Domain):
