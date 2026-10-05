@@ -905,15 +905,20 @@ class ProductTemplate(models.Model):
             else:
                 template.lot_sequence_id = self.env.ref('stock.sequence_production_lots', raise_if_not_found=False)
 
+    @api.depends_context('complete_next_serial')
     @api.depends('lot_sequence_id.number_next_actual')
     def _compute_next_serial(self):
         for template in self:
-            if template.lot_sequence_id:
-                template.next_serial = '{:0{}d}{}'.format(
-                    template.lot_sequence_id.number_next_actual,
-                    template.lot_sequence_id.padding,
-                    template.lot_sequence_id.suffix or ""
-                )
+            sequence = template.lot_sequence_id
+            if sequence:
+                if self.env.context.get('complete_next_serial'):
+                    template.next_serial = sequence.get_next_char(sequence.number_next_actual)
+                else:
+                    template.next_serial = '{:0{}d}{}'.format(
+                        sequence.number_next_actual,
+                        sequence.padding,
+                        sequence.suffix or ""
+                    )
             else:
                 template.next_serial = '0000001'
 
