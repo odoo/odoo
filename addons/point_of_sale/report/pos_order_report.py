@@ -41,19 +41,7 @@ class ReportPosOrder(models.Model):
 
     def _select(self):
         return """
-            -- The purpose of this CTE is to map each "pos_order_line" to the "payment_method_id" corresponding to its "pos_order"
-            -- considering we always show the first "payment_method_id"
-            WITH payment_method_by_order_line AS (
-                SELECT
-                    pol.id AS pos_order_line_id,
-                    pm.pos_order_id as pos_order_id,
-                    (array_agg(pm.payment_method_id ORDER BY pm.id ASC))[1] AS payment_method_id
-                FROM pos_order_line pol
-                LEFT JOIN pos_order po ON (po.id = pol.order_id)
-                LEFT JOIN pos_payment pm ON (pm.pos_order_id=po.id)
-                GROUP BY pol.id, pm.pos_order_id
-            ),
-            first_pos_category AS (
+            WITH first_pos_category AS (
                 SELECT
                     pt.id AS product_template_id,
                     (array_agg(pc.id))[1] AS id
@@ -90,7 +78,13 @@ class ReportPosOrder(models.Model):
                 s.session_id,
                 s.account_move IS NOT NULL AS invoiced,
                 ((SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal)) - COALESCE(l.total_cost,0)) / COALESCE(NULLIF(s.currency_rate, 0), 1.0) AS margin,
-                pm.payment_method_id AS payment_method_id,
+                (
+                    SELECT pp.payment_method_id
+                    FROM pos_payment pp
+                    WHERE pp.pos_order_id = s.id
+                    ORDER BY pp.id
+                    LIMIT 1
+                ) AS payment_method_id,
                 fpc.id AS pos_categ_id
 
         """
@@ -105,8 +99,6 @@ class ReportPosOrder(models.Model):
                 LEFT JOIN pos_session ps ON (s.session_id=ps.id)
                 LEFT JOIN res_company co ON (s.company_id=co.id)
                 LEFT JOIN res_currency cu ON (co.currency_id=cu.id)
-                LEFT JOIN payment_method_by_order_line pm ON (pm.pos_order_line_id=l.id)
-                LEFT JOIN pos_payment_method ppm ON (pm.payment_method_id=ppm.id)
                 LEFT JOIN first_pos_category fpc ON (pt.id = fpc.product_template_id)
         """
 
