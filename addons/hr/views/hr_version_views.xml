@@ -4,7 +4,7 @@
         <field name="name">hr.version.list</field>
         <field name="model">hr.version</field>
         <field name="arch" type="xml">
-            <list string="Records" multi_edit="1" default_order='date_version DESC' create="0" action="action_open_version" type="object" class="o_hr_version_list_view">
+            <list string="Records" multi_edit="1" default_order='date_version DESC' js_class="no_new_list" action="action_open_version" type="object" class="o_hr_version_list_view">
                 <field name="date_version" readonly="False" string="Effective Date"/>
                 <field name="contract_date_start" string="Start"/>
                 <field name="contract_date_end" string="End"/>
