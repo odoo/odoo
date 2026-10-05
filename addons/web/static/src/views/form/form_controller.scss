@@ -46,7 +46,7 @@
 
 @mixin editable-form-break-table() {
     .o_address_type, .o_address_format {
-        --fieldWidget-margin-bottom: #{$o-form-spacing-unit * 2};
+        --fieldWidget-margin-bottom: calc(var(--o-form-spacing-unit) * 2);
     }
 }
 
@@ -82,13 +82,13 @@
 
         align-items: baseline;
         min-width: 50px;
-        margin: 0 (-$o-form-spacing-unit/2);
+        margin: 0 calc(var(--o-form-spacing-unit) * -1 / 2);
 
         > div, > span, > button, > label, > a, > input, > select { /* > * did not add a level of priority to the rule */
             flex: 0 1 auto;
             width: auto!important;
-            margin-right: $o-form-spacing-unit/2;
-            margin-left: $o-form-spacing-unit/2;
+            margin-right: calc(var(--o-form-spacing-unit) / 2);
+            margin-left: calc(var(--o-form-spacing-unit) / 2);
         }
 
         > .o_row {
@@ -485,7 +485,7 @@
         }
 
         &:empty {
-            height: $o-form-spacing-unit * 2;
+            height: calc(var(--o-form-spacing-unit) * 2);
         }
     }
 
@@ -507,7 +507,7 @@
         --Notebook-padding-x: var(--formView-sheet-padding-x);
 
         clear: both; /* For the notebook not to have alongside floating elements */
-        margin-top: $o-form-spacing-unit * 2;
+        margin-top: calc(var(--o-form-spacing-unit) * 2);
 
         > .tab-content {
             border-bottom: 1px solid var(--border-color);
@@ -546,7 +546,7 @@
                         /* If immediatly followed by an .clearfix element, the note-editor it's the 'only' */
                         /* tab's element. Reset margins to push the bar at the bottom. */
                         + .clearfix:last-child {
-                            margin-bottom: -$o-horizontal-padding - $o-sheet-vpadding - $o-form-spacing-unit;
+                            margin-bottom: calc(var(--o-horizontal-padding) * -1 - var(--o-sheet-vpadding) - var(--o-form-spacing-unit));
                         }
                     }
 
@@ -842,7 +842,7 @@
 
     /* Boolean */
     .o_field_boolean + .o_form_label {
-        margin-right: $o-form-spacing-unit * 3;
+        margin-right: calc(var(--o-form-spacing-unit) * 3);
     }
 
     /* Timezone widget warning */

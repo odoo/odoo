@@ -98,9 +98,9 @@
 
   .arrow {
     border: solid var(--border-color);
-    border-width: 0 $border-width*2 $border-width*2 0;
+    border-width: 0 calc(var(--o-bs-border-width) * 2) calc(var(--o-bs-border-width) * 2) 0;
     padding: 5px;
-    margin-top: -10px - $border-width*2;
+    margin-top: calc(-10px - var(--o-bs-border-width) * 2);
     transform: rotate(45deg);
   }
 

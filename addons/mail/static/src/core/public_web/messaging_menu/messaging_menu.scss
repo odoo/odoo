@@ -83,7 +83,7 @@
             background: var(--o-component-active-bg);
             color: var(--o-enterprise-action-color);
             outline: var(--border-width) solid color-mix(in srgb, var(--o-enterprise-action-color) 15%, transparent);
-            outline-offset: -$border-width;
+            outline-offset: calc(var(--o-bs-border-width) * -1);
         }
     }
 
