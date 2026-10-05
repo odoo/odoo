@@ -19,6 +19,39 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         self._send_patched(invoice)
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice")
 
+    def test_export_invoice_partner_fr_tax_unit(self):
+        """
+        Under French Single Taxpayer Group rules (Assujetti Unique, CGI art. 256 C):
+        - BT-29 (Seller identifier): The Single Taxpayer Group's 9-digit SIREN must appear
+          under cac:PartyIdentification with schemeID "0231" (BR-FR-32).
+        - BT-21/BT-22: Mandatory note #TXD#MEMBRE_ASSUJETTI_UNIQUE must appear (BR-FR-CO-14).
+        - BG-11 (Tax Representative): cac:TaxRepresentativeParty must be present and contain
+          the Single Taxpayer Group's VAT under BT-63 (BR-FR-CO-15), along with name (BT-62)
+          and postal address (BG-12).
+        - BT-31: The member company's own VAT remains under cac:AccountingSupplierParty.
+        """
+        # 'account.tax.unit' is defined in enterprise ('account_reports').
+        # Patch to simulate a company belonging to a tax unit.
+        class MockTaxUnit:
+            def __init__(self, vat, name, main_company_id):
+                self.vat = vat
+                self.name = name
+                self.main_company_id = main_company_id
+
+        def patched_ubl_get_company_tax_unit(self, company):
+            return MockTaxUnit(
+                vat='FR05677404089',
+                name='company_1_data',
+                main_company_id=company,
+            )
+
+        self.patch(self.env.registry['account.edi.xml.ubl_21_fr'], '_ubl_get_company_tax_unit', patched_ubl_get_company_tax_unit)
+
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+        self._send_patched(invoice)
+        self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_tax_unit")
+
     def test_export_invoice_partner_fr_without_pdp(self):
         """
         A French Peppol proxy user must have the BR-FR-05 mandatory notes
