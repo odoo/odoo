@@ -1,12 +1,23 @@
 from odoo import models
 from odoo.tools import html2plaintext
 
+from odoo.addons.l10n_fr.models.res_partner import VAT_SIREN_RE
 
 PAID_STATES = frozenset({'paid', 'in_payment', 'reversed'})
 
 
 class AccountEdiCommon(models.AbstractModel):
     _inherit = "account.edi.common"
+
+    def _l10n_fr_pdp_get_company_tax_unit(self, company):
+        if 'account_tax_unit_ids' in company._fields:
+            return company.account_tax_unit_ids
+        return False
+
+    def _l10n_fr_pdp_get_siren_from_vat(self, vat):
+        vat = (vat or '').replace(' ', '')
+        match = VAT_SIREN_RE.fullmatch(vat)
+        return match and match.group(1)
 
     def _get_default_notes(self, vals):
         invoice = vals['invoice']
@@ -16,7 +27,7 @@ class AccountEdiCommon(models.AbstractModel):
         if not company._peppol_is_french_company():
             return {}
         payment_term = invoice.invoice_payment_term_id
-        return {
+        notes = {
             'PMT': self.env._
                 ("In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce)."),
             'PMD': self.env._
@@ -24,6 +35,10 @@ class AccountEdiCommon(models.AbstractModel):
             'AAB': html2plaintext(payment_term.note) if payment_term.early_discount else self.env._
                 ("No discount for early payment."),
         }
+        # [BR-FR-CO-14] Add MEMBRE_ASSUJETTI_UNIQUE note for Single Taxpayer Groups
+        if self._l10n_fr_pdp_get_company_tax_unit(company):
+            notes['TXD'] = 'MEMBRE_ASSUJETTI_UNIQUE'
+        return notes
 
     def _l10n_fr_pdp_get_profile_id(self, vals):
         invoice = vals['invoice']
