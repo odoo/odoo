@@ -562,13 +562,18 @@ class TestQwebDataSnippet(TransactionCase):
         # nb_snippets = 156
         first_search = 1  # for key & website
         t_call_snippets = 2  # number of nested t-calls (t-call > view > t-call > other views...)
-        # website blog adds 2 more t-calls
-        if self.env['ir.module.module']._get("website_blog").state == 'installed':
+
+        def is_module_installed(name):
+            return self.env['ir.module.module']._get(name).state == 'installed'
+
+        # website_blog/event add 2 more t-calls.
+        if is_module_installed('website_blog') or is_module_installed('website_event'):
             t_call_snippets += 2
+
         fetch_snippets = 0  # number of fetches (normally performed with the previous search)
         get_root_view = 1  # determine the root views
         # website sale adds one more root view
-        if self.env['ir.module.module']._get("website_sale").state == 'installed':
+        if is_module_installed('website_sale'):
             get_root_view += 1
         combine_views = 3  # Queries performed to execute the read combine
 
