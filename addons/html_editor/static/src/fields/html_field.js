@@ -248,10 +248,12 @@ export class HtmlField extends Component {
             }
             const changeId = this.lastChangeId;
             const el = await this.getEditorContent();
-            this.pendingAttachmentsService.addPendingAttachments(
-                this.props.record?.resId,
-                this.editor?.shared?.media?.extractUnmappedAttachmentsIds(this.editor.editable)
-            );
+            if (!this.editor.isDestroyed) {
+                this.pendingAttachmentsService.addPendingAttachments(
+                    this.props.record?.resId,
+                    this.editor?.shared?.media?.extractUnmappedAttachmentsIds(this.editor.editable)
+                );
+            }
             const content = el.innerHTML;
             this.clearElementToCompare(el);
             const comparisonValue = el.innerHTML;
