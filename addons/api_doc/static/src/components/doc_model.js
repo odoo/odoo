@@ -100,6 +100,10 @@ export class DocModel extends Component {
         );
     }
 
+    get showDescription() {
+        return !!this.state.model?.doc && this.state.model.doc != "false";
+    }
+
     get modelName() {
         return this.state.model?.name ?? "";
     }
