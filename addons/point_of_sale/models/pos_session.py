@@ -71,7 +71,7 @@ class PosSession(models.Model):
     bank_statement_line_ids = fields.One2many(
         'account.bank.statement.line',
         related='bank_statement_id.line_ids',
-        string='Bank Statement Lines',
+        string="Bank Transactions",
         readonly=True)
     opening_balance = fields.Monetary(
         string='Opening Balance',
