@@ -1,5 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { getColorOrClass } from "@html_editor/utils/color";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import { getFontSizeOrClass } from "@html_editor/utils/formatting";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { proxy } from "@odoo/owl";
@@ -82,6 +84,9 @@ export class DatePlugin extends Plugin {
         /** Overrides */
         apply_color_overrides: this.applyColorToDateNodes.bind(this),
 
+        /** Handlers */
+        on_format_applied_handlers: this.onFormatApplied.bind(this),
+
         /** Predicates */
         is_formattable_node_predicates: (node) => {
             if (node.matches?.(EMBEDDED_DATE_SELECTOR)) {
@@ -139,8 +144,33 @@ export class DatePlugin extends Plugin {
             })
         );
 
+        this.unsetDateStyles(dateEl.firstChild);
         this.dependencies.dom.insert(dateEl);
         this.dependencies.history.commit();
+    }
+
+    /**
+     * Unsets the date element's color and font size to inherit them from
+     * its parent list item.
+     *
+     * @param {HTMLElement} dateNode
+     */
+    unsetDateStyles(dateNode) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const listItem = closestElement(selection?.anchorNode, "li");
+        if (!listItem) {
+            return;
+        }
+
+        const hasColor = getColorOrClass(listItem, "color");
+        if (hasColor) {
+            dateNode.style.color = "unset";
+        }
+
+        const hasFontSize = getFontSizeOrClass(listItem);
+        if (hasFontSize) {
+            dateNode.style.fontSize = "unset";
+        }
     }
 
     applyColorToDateNodes(color, mode, coloredNodes) {
@@ -151,8 +181,23 @@ export class DatePlugin extends Plugin {
                 .filter(Boolean)
         );
         for (const dateNode of dateNodes) {
-            this.dependencies.color.colorElement(dateNode, color, mode);
-            coloredNodes.add(dateNode);
+            if (color && coloredNodes.has(dateNode)) {
+                dateNode.style.color = "unset";
+            } else {
+                this.dependencies.color.colorElement(dateNode, color, mode);
+                coloredNodes.add(dateNode);
+            }
+        }
+    }
+
+    onFormatApplied(node, formatSpec, applyStyle) {
+        if (formatSpec.id !== "fontSize" || node.nodeType !== Node.ELEMENT_NODE || !applyStyle) {
+            return;
+        }
+        for (const dateNode of selectElements(node, EMBEDDED_DATE_SELECTOR)) {
+            if (dateNode !== node) {
+                dateNode.style.fontSize = "unset";
+            }
         }
     }
 }
