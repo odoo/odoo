@@ -292,7 +292,6 @@ class ResourceResource(models.Model):
         assert all(record._is_flexible() for record in self)
         assert start.tzinfo and end.tzinfo
 
-        start_day, end_day = start.date(), end.date()
         locale = babel_locale_parse(get_lang(self.env).code)
 
         week_start_day = int(get_lang(self.env).week_start) - 1
@@ -316,6 +315,11 @@ class ResourceResource(models.Model):
                 resource_work_intervals[resource.id] |= work_intervals
 
         resource_by_id = {resource.id: resource for resource in self}
+        # the days of the period must be computed in the timezone of the resource
+        period_days_per_resource = {}
+        for resource in self:
+            tz = timezone(resource.tz or self.env.user.tz)
+            period_days_per_resource[resource.id] = (start.astimezone(tz).date(), end.astimezone(tz).date())
 
         resource_hours_per_day = defaultdict(lambda: defaultdict(float))
         resource_hours_per_week = defaultdict(lambda: defaultdict(float))
@@ -332,6 +336,7 @@ class ResourceResource(models.Model):
                 # custom timeoff can divide a day to > 1 intervals
                 duration_per_day[day] += (interval_end - interval_start).total_seconds() / 3600
 
+            start_day, end_day = period_days_per_resource[resource.id]
             for day, hours in duration_per_day.items():
                 day_working_hours = min(hours, resource.calendar_id.hours_per_day)
                 # only days inside the original period
@@ -355,6 +360,7 @@ class ResourceResource(models.Model):
                     continue
 
                 ranges_to_remove = []
+                start_day, end_day = period_days_per_resource[resource_id]
                 for leave in leaves._items:
                     resource_by_id[resource_id]._format_leave(leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale)
 
