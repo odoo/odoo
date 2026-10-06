@@ -19,6 +19,21 @@
                             <button name="%(action_pos_bancontact_product)d" type="action" string="Bancontact Products" icon="east" class="btn-link"/>
                         </div>
                     </setting>
+                    <setting id="bancontact_pay_jwks_setting" string="JWKS" company_dependent="1" invisible="not bancontact_merchant_id"
+                        help="Only needed for refunds. Send the JWKS URL and the product IDs to Bancontact support (info@bancontact.com) to activate them.">
+                        <div class="content-group">
+                            <div class="row mt-2">
+                                <label for="bancontact_jwks_url" string="URL" class="col-lg-3 o_light_label"/>
+                                <field name="bancontact_jwks_url" widget="CopyClipboardChar" class="flex-grow-1"/>
+                            </div>
+                        </div>
+                        <div class="mt-2" groups="base.group_no_one">
+                            <button name="action_bancontact_regenerate_signing_key" type="object" string="Regenerate key" icon="east" class="btn-link"
+                                confirm="The current key will stop working right away. Refunds may fail until Bancontact fetches the new key from your JWKS URL. Do you want to continue?"
+                                confirm-title="Regenerate the signing key?"
+                                confirm-label="Regenerate"/>
+                        </div>
+                    </setting>
                 </block>
             </xpath>
         </field>

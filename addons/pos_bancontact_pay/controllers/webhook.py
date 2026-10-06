@@ -63,6 +63,12 @@ class BancontactPayController(http.Controller):
 
         return request.make_response(content, headers)
 
+    @http.route('/bancontact_pay/jwks', type='http', auth='public', methods=['GET'], readonly=True)
+    def bancontact_pay_jwks(self):
+        """Publish the public keys Bancontact uses to verify the requests signed by Odoo (one per company)."""
+        companies = request.env['res.company'].sudo().search([('bancontact_signing_key', '!=', False)])
+        return request.make_json_response({'keys': [company._bancontact_get_public_jwk() for company in companies]})
+
     @http.route(["/bancontact_pay/webhook"], type="http", auth="public", methods=["POST"], csrf=False)
     def bancontact_pay_webhook(self, config_id=None, payment_method_id=None):
         log_prefix = f"{const.LOG_PREFIX} - {uuid.uuid4().hex[:8]}"
