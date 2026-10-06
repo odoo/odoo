@@ -1057,15 +1057,23 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
         self.assertEqual(converted_line['product_uom_qty'], 12.0, "quantity should be 12.0")
         self.assertEqual(round(converted_line['price_unit'], 2), 0.83, "price of product should be 0.83")
 
-        self._sync_paid_pos_order([{
+        pos_order_id = self._sync_paid_pos_order([{
             'product': product_a,
             'qty': converted_line['product_uom_qty'],
-            'price_unit': 0.83,
+            'price_unit': converted_line['price_unit'],
             'extra_values': {
                 'sale_order_line_id': sale_order.order_line.id,
                 'sale_order_origin_id': sale_order.id,
             },
         }], partner=test_partner)
+        pos_order = self.env['pos.order'].browse(pos_order_id)
+
+        self.assertEqual(pos_order.lines[0].price_unit, sale_order.order_line.price_unit / 12)
+        self.assertEqual(pos_order.amount_total, sale_order.amount_total)
+
+        session = self.main_pos_config.current_session_id
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
 
         # The quantity sold in the PoS is converted back in the unit of the sale order line.
         self.assertEqual(sale_order.order_line.qty_invoiced, 1.0, "1 dozen should be invoiced")
