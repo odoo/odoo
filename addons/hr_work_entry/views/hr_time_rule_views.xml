@@ -104,7 +104,7 @@
                                 <span class="o_form_label" invisible="threshold_operator == 'less_than'">Set Excess to <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can define a time type that will be created to count the amount of time in excess.">?</sup></span>
                                 <span class="o_form_label" invisible="threshold_operator != 'less_than'">Set Deficit to <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can define a time type that will be created to count the amount of time missing to fullfill the condition.">?</sup></span>
                                 <div>
-                                    <field name="work_entry_type_id" nolabel="1"
+                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" nolabel="1"
                                         options="{'no_create': True}"
                                         placeholder="Leave as it is"/>
                                     <field name="country_work_entry_type_ids" invisible="1"/>

@@ -21,7 +21,7 @@
                         <field name="name"/>
                         <field name="start_date"/>
                         <field name="allowed_work_entry_type_ids" column_invisible="1"/>
-                        <field name="work_entry_type_id" options="{'no_open': True, 'no_create': True}"/>
+                        <field name="work_entry_type_id" widget="many2one_work_entry_type" options="{'no_open': True, 'no_create': True}"/>
                         <field name="company_id" options="{'no_open': True, 'no_create': True}"/>
                     </list>
                 </field>

@@ -147,7 +147,7 @@
                                  invisible="id or not date_to or date_to &gt;= context_today().strftime('%Y-%m-%d')">
                                 <span>The allocated days cannot be used, because the allocation is set to finish in the past.</span>
                             </div>
-                            <field name="work_entry_type_id"
+                            <field name="work_entry_type_id" widget="many2one_work_entry_type"
                                 context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
                                 domain="[
                                     ('id','in', allowed_work_entry_type_ids),
@@ -316,7 +316,7 @@
                 </header>
                 <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_employee" readonly="state in ['refuse', 'validate']"/>
                 <field name="department_id" optional="hide" readonly="state not in ['confirm']"/>
-                <field name="work_entry_type_id" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']"/>
+                <field name="work_entry_type_id" widget="many2one_work_entry_type" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']"/>
                 <field name="name" string="Title" optional="hide"/>
                 <field name="duration_display" string="Amount"/>
                 <field name="date_from" string="Validity Start" optional="hide"/>
@@ -440,7 +440,7 @@
                                             </div>
                                             <div class="col-2 o_hr_holidays_name">
                                                 <div class="o_hr_holidays_card">
-                                                    <field name="work_entry_type_id" class="fw-bold me-1"/>
+                                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" class="fw-bold me-1"/>
                                                     <div class="text-muted" t-if="record.accrual_plan_id.raw_value">
                                                         <field name="accrual_plan_id"/>
                                                     </div>
@@ -492,7 +492,7 @@
                             <main class="d-flex flex-column lh-sm">
                                 <field class="fw-bold" name="employee_id"/>
                                 <div class="content d-flex flex-column">
-                                    <field name="work_entry_type_id" class="text-muted"/>
+                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" class="text-muted"/>
                                     <div class="text-muted">(<field name="duration_display"/>)</div>
                                 </div>
                             </main>
@@ -537,7 +537,7 @@
                         <img class="rounded" t-att-src="activity_image('hr.employee', 'avatar_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value"/>
                         <div class="ms-2">
                             <field name="employee_id" class="o_text_block o_text_bold"/> <span class="text-muted">(<field name="number_of_days"/> days)</span>
-                            <field name="work_entry_type_id" muted="1" display="full"/>
+                            <field name="work_entry_type_id" widget="many2one_work_entry_type" muted="1" display="full"/>
                         </div>
                     </div>
                 </templates>
