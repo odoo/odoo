@@ -1704,7 +1704,27 @@ class MailThread(models.AbstractModel):
                     part.set_charset('utf-8')
                 encoding = part.get_content_charset()  # None if attachment
 
+<<<<<<< fb7006ef5232870507a4104ebc4c8a8bc36c5c46
                 content = part.get_content()
+||||||| 2d9fd5562a0ef1f7f587eb393cc3bd293b047cca
+                # Correcting MIME type for PDF files
+                if part.get('Content-Type', '').startswith('pdf;'):
+                    part.replace_header('Content-Type', 'application/pdf' + part.get('Content-Type', '')[3:])
+
+                content = part.get_content()
+=======
+                # Correcting MIME type for PDF files
+                if part.get('Content-Type', '').startswith('pdf;'):
+                    part.replace_header('Content-Type', 'application/pdf' + part.get('Content-Type', '')[3:])
+
+                is_attachment = bool(filename) or part.get('content-disposition', '').strip().startswith('attachment')
+                content = None
+                if is_attachment:
+                    content = part.get_payload(decode=True)
+                if content is None:
+                    # Parts holding a message, such as a forwarded eml, decode to no payload
+                    content = part.get_content()
+>>>>>>> 52432e8b97f366461b9e7a84a0637c9f65d2fced
                 info = {'encoding': encoding}
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
@@ -1712,7 +1732,7 @@ class MailThread(models.AbstractModel):
                     attachments.append(self._Attachment(filename, content, info))
                     continue
                 # 1) Explicit Attachments -> attachments
-                if filename or part.get('content-disposition', '').strip().startswith('attachment'):
+                if is_attachment:
                     attachments.append(self._Attachment(filename or 'attachment', content, info))
                     continue
                 # 2) text/plain -> <pre/>
