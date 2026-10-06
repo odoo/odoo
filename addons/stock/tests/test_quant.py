@@ -1432,24 +1432,60 @@ class TestStockQuant(TestStockCommon):
         self.assertEqual(quant.inventory_diff_quantity, 0)
 
     def test_reserve_fractional_qty(self):
-        lot1 = self.env['stock.lot'].create({'name': 'lot1', 'product_id': self.product_serial.id})
-        lot2 = self.env['stock.lot'].create({'name': 'lot2', 'product_id': self.product_serial.id})
-        for lot in (lot1, lot2):
-            self.env['stock.quant']._update_available_quantity(
-                product_id=self.product_serial,
-                location_id=self.stock_location,
-                quantity=1,
-                lot_id=lot,
-            )
-        move = self.env['stock.move'].create({
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.shelf_2.id,
-            'product_id': self.product_serial.id,
-            'product_uom_qty': 1.1,
-        })
-        move._action_confirm()
-        move._action_assign()
-        self.assertFalse(move.quantity)
+        """Test the reservation of products tracked with a serial
+        number with different quantity vs demand inequalities."""
+
+        # (stock, demand, supply)
+        cases = [
+            # demand > stock | floor(demand) = floor(stock)
+            # => supply = floor(stock)
+            (1.3, 1.4, 1.0),
+            # demand > stock | floor(demand) ≠ floor(stock)
+            # => supply = floor(stock)
+            (1.3, 2.1, 1.0),
+            # demand > stock + 1
+            # => supply = floor(stock)
+            (1.3, 5.4, 1.0),
+            # stock > demand | floor(demand) = floor(stock)
+            # => supply = floor(demand)
+            (1.4, 1.3, 1.0),
+            # stock > demand | floor(demand) ≠ floor(stock)
+            # => supply = ceiling(demand)
+            (2.1, 1.4, 2.0),
+            # stock > demand + 1
+            # => supply = ceiling(demand)
+            (5.4, 1.3, 2.0),
+        ]
+
+        # Since serial numbers can only be assigned to 1 product each, we cannot reserve products tracked with a
+        # serial number in fractional quantities. If we have enough stock, we always round up to make sure we provide
+        # enough to adequately cover the demand. (eg 3,1 becomes 4,0) If we don't have enough stock, we just reserve
+        # whatever whole number we can. (eg if stock is 3,9 and demand is 3,7, then 3,0 gets reserved instead of 4,0)
+        for stock, demand, supply in cases:
+            with self.subTest(stock=stock, demand=demand):
+                self.env['stock.quant']._update_available_quantity(
+                    product_id=self.product_serial,
+                    location_id=self.stock_location,
+                    quantity=stock,
+                )
+                move = self.env['stock.move'].create({
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.shelf_2.id,
+                    'product_id': self.product_serial.id,
+                    'product_uom_qty': demand,
+                })
+                move._action_confirm()
+                move._action_assign()
+                self.assertEqual(move.quantity, supply)
+
+                # Reset state
+                move._do_unreserve()
+                move._action_cancel()
+                self.env['stock.quant']._update_available_quantity(
+                    product_id=self.product_serial,
+                    location_id=self.stock_location,
+                    quantity=-stock,
+                )
 
     def test_lot_of_product_different_from_quant(self):
         """

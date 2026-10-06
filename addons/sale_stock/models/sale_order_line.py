@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
-from odoo.tools import float_compare, float_is_zero
+from odoo.tools import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
 
@@ -261,6 +261,25 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.move_ids.filtered(lambda m: m.state != 'cancel'):
                 line.product_updatable = False
+
+    @api.onchange('product_uom_qty', 'product_uom_id')
+    def _onchange_product_uom_qty_warning(self):
+        if self.product_id.tracking != 'serial':
+            return
+        product_uom = self.product_id.uom_id
+        quantity = self.product_uom_id._compute_quantity(self.product_uom_qty, product_uom)
+        rounded_quantity = float_round(quantity, precision_digits=0, rounding_method='UP')
+        if not product_uom.compare(quantity, rounded_quantity):
+            return
+        self.product_uom_qty = product_uom._compute_quantity(
+            rounded_quantity, self.product_uom_id, rounding_method='UP')
+        return {
+            'warning': {
+                'title': self.env._("Fractional quantity"),
+                'message': self.env._("Products tracked by serial numbers cannot be sold in fractional amounts."
+                                      " The quantity has been rounded up."),
+            }
+        }
 
     def _inverse_customer_lead(self):
         for line in self:
