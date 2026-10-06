@@ -92,6 +92,7 @@
             'web/static/src/libs/bootstrap.js',
 
             ('include', 'web._assets_bootstrap'),
+            'web/static/src/scss/css_variables.scss',
 
             'base/static/src/css/modules.css',
 
