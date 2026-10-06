@@ -12,13 +12,11 @@ from odoo.exceptions import (
     MissingError,
     UserError,
 )
-from odoo.http import request, route
+from odoo.http import Controller, request, route
 from odoo.http.session import logout
 from odoo.http.stream import content_disposition
 from odoo.tools import consteq
 from odoo.tools.translate import LazyTranslate
-
-from odoo.addons.portal.controllers.address import Address
 
 _lt = LazyTranslate(__name__)
 
@@ -146,7 +144,7 @@ def _build_url_w_params(url_string, query_params, remove_duplicates=True):
     return url.replace(query=urls.url_encode(url_params)).to_url()
 
 
-class CustomerPortal(Address):
+class CustomerPortal(Controller):
 
     _items_per_page = 80
 
@@ -229,35 +227,6 @@ class CustomerPortal(Address):
         values = self._prepare_portal_layout_values()
         values.update(self.counters({}))
         return request.render("portal.portal_my_home", values)
-
-    @route(['/my/account'], type='http', auth='user', website=True)
-    def account(self, **kwargs):
-        response = request.render(
-            'portal.portal_my_details',
-            self._prepare_my_account_rendering_values(**kwargs),
-        )
-        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
-        return response
-
-    def _prepare_my_account_rendering_values(self, redirect='/my', **kwargs):
-        """ Prepare the rendering values for the /my/account route template.
-
-        :param str redirect: route to redirect to after the address update
-        :param dict kwargs: unused parameters available for overrides
-        :return: The rendering values
-        :rtype: dict
-        """
-        return {
-            **self._prepare_portal_layout_values(),
-            **self._prepare_address_form_values(
-                partner_sudo=request.env.user.partner_id,
-                # Main address should always have delivery & billing information set
-                use_delivery_as_billing=True,
-                callback=redirect,
-            ),
-            'page_name': 'my_details',
-        }
 
     # Security
 

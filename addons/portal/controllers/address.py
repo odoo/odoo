@@ -6,12 +6,43 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.exceptions import UserError, ValidationError
-from odoo.http import Controller, request, route
+from odoo.http import request, route
 from odoo.tools import clean_context, single_email_re, str2bool
 from odoo.tools.partner_identifiers import validation_error_message
 
+from odoo.addons.portal.controllers.portal import CustomerPortal
 
-class Address(Controller):
+
+class Address(CustomerPortal):
+
+    @route(['/my/account'], type='http', auth='user', website=True)
+    def account(self, **kwargs):
+        response = request.render(
+            'portal.portal_my_details',
+            self._prepare_my_account_rendering_values(**kwargs),
+        )
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
+        return response
+
+    def _prepare_my_account_rendering_values(self, redirect='/my', **kwargs):
+        """ Prepare the rendering values for the /my/account route template.
+
+        :param str redirect: route to redirect to after the address update
+        :param dict kwargs: unused parameters available for overrides
+        :return: The rendering values
+        :rtype: dict
+        """
+        return {
+            **self._prepare_portal_layout_values(),
+            **self._prepare_address_form_values(
+                partner_sudo=request.env.user.partner_id,
+                # Main address should always have delivery & billing information set
+                use_delivery_as_billing=True,
+                callback=redirect,
+            ),
+            'page_name': 'my_details',
+        }
 
     @route('/my/addresses', type='http', auth='user', readonly=True, website=True)
     def my_addresses(self, **query_params):
