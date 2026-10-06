@@ -10,7 +10,12 @@ import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { unwrapContents, splitTextNode } from "../utils/dom";
 import { fillHtmlTransferData } from "../utils/clipboard";
-import { childNodes, closestElement, getTextNodesIterator } from "../utils/dom_traversal";
+import {
+    childNodes,
+    closestElement,
+    getNodesInRange,
+    getTextNodesIterator,
+} from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { DIRECTIONS } from "../utils/position";
@@ -255,8 +260,8 @@ export class ClipboardPlugin extends Plugin {
         }
 
         // Rich-text destination, but the clipboard only contains text/plain.
-        const inserted = this.dependencies.dom.insert(this.document.createTextNode(text));
-        const textNodes = inserted.flatMap((node) =>
+        const insertedRange = this.dependencies.dom.insert(this.document.createTextNode(text));
+        const textNodes = getNodesInRange(insertedRange).flatMap((node) =>
             isTextNode(node) ? node : [...getTextNodesIterator(node)]
         );
         for (const node of textNodes) {

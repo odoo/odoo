@@ -1,5 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    closestElement,
+    descendants,
+    getPathInRange,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
@@ -404,11 +409,18 @@ export class LinkPlugin extends Plugin {
             }
             return node;
         },
-        position_after_insertion_processors: (position, insertedNodes) => {
+        position_after_insertion_processors: (position, insertedRange) => {
             const closestLink = closestElement(position[0], "a");
-            if (closestLink && insertedNodes.some((node) => node.contains(closestLink))) {
-                // We never want to continue writing in a link we just inserted.
-                return [closestLink.parentElement, childNodeIndex(closestLink) + 1];
+            if (closestLink) {
+                const linkWasFullyInserted = !!getPathInRange(insertedRange, {
+                    whatToShow: NodeFilter.SHOW_ELEMENT,
+                    filter: (node) =>
+                        NodeFilter[`FILTER_${node.contains(closestLink) ? "ACCEPT" : "REJECT"}`],
+                }).next().value;
+                if (linkWasFullyInserted) {
+                    // We never want to continue writing in a link we just inserted.
+                    return [closestLink.parentElement, childNodeIndex(closestLink) + 1];
+                }
             }
             return position;
         },
@@ -1469,17 +1481,15 @@ export class LinkPlugin extends Plugin {
         return true;
     }
 
-    processInsertedContent(insertedNodes) {
-        for (const node of insertedNodes) {
-            if (node.nodeType === Node.ELEMENT_NODE) {
-                for (const link of selectElements(node, "A")) {
-                    if (link.getAttribute("href") === link.textContent && !this.isImage) {
-                        this.newlyInsertedLinks.add(link);
-                    }
+    processInsertedContent(insertedRange) {
+        for (const node of getPathInRange(insertedRange, { whatToShow: NodeFilter.SHOW_ELEMENT })) {
+            for (const link of selectElements(node, "A")) {
+                if (link.getAttribute("href") === link.textContent && !this.isImage) {
+                    this.newlyInsertedLinks.add(link);
                 }
             }
         }
-        return insertedNodes;
+        return insertedRange;
     }
 
     initializePopovers() {
