@@ -433,11 +433,9 @@ class HolidaysRequest(models.Model):
                 result[leave.id] = (0, 0)
                 continue
             if leave.employee_id:
-                # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
-                if leave.employee_id.is_flexible and leave.request_date_to == leave.request_date_from:
-                    # Only subtract public holidays if the leave type does NOT include public holidays in duration.
-                    # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
-                    # the leave should count the full day even if it falls on a public holiday.
+                # For flexible employees, we calculate the duration using raw calendar days insted of virtual intervals, which often create decimal mismatch on custom schedules.
+                # We subtract public holidays dynamically and limit the requested days against the calendar's max days per week to ensure full week do not overcharge the leave duration.
+                if leave.employee_id.is_flexible:
                     resource_calendar_leaves = self.env['resource.calendar.leaves']
                     public_holidays = resource_calendar_leaves.search([
                         ('resource_id', '=', False),
@@ -446,19 +444,35 @@ class HolidaysRequest(models.Model):
                         ('calendar_id', 'in', [False, calendar.id]),
                         ('company_id', '=', leave.company_id.id)
                     ]) if not leave.holiday_status_id.include_public_holidays_in_duration else resource_calendar_leaves
+
+                    leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
                     if public_holidays:
                         public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
-                        leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
                         real_leave_intervals = leave_intervals - public_holidays_intervals
-                        hours = 0
-                        for start, stop, meta in real_leave_intervals:
-                            hours += (stop - start).total_seconds() / 3600
                     else:
-                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
-                    if not leave.request_unit_hours and not public_holidays:
-                        days = 1 if not leave.request_unit_half else 0.5
-                    else:
+                        real_leave_intervals = leave_intervals
+                    real_hours = sum((stop - start).total_seconds() / 3600 for start, stop, meta in real_leave_intervals)
+                    total_hours = sum((stop - start).total_seconds() / 3600 for start, stop, meta in leave_intervals)
+
+                    if leave.request_unit_hours:
+                        hours = real_hours
                         days = hours / 24
+                    else:
+                        requested_days = (leave.request_date_to - leave.request_date_from).days + 1
+                        if leave.request_unit_half:
+                            requested_days -= 0.5
+
+                        if calendar and calendar.hours_per_day and calendar.full_time_required_hours:
+                            max_days_weekly = calendar.full_time_required_hours / calendar.hours_per_day
+                            weeks = int(requested_days // 7)
+                            extra_days = requested_days % 7
+                            extra_days = min(extra_days, max_days_weekly)
+                            requested_days = weeks * max_days_weekly + extra_days
+                        ratio = (real_hours / total_hours) if total_hours > 0 else 0
+                        days = requested_days * ratio
+
+                        standard_hours = calendar.hours_per_day if calendar else HOURS_PER_DAY
+                        hours = days * standard_hours
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
                     # list of tuples (day, hours)
                     work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
