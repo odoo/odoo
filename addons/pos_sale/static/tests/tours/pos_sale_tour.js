@@ -265,6 +265,20 @@ registry.category("web_tour.tours").add("test_settle_so_with_non_pos_groupable_u
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_settle_so_price_unit_not_rounded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Cable", "100", "16,54"),
+            ProductScreen.totalAmountIs("16,54"),
+            ProductScreen.clickNumpad("Price", "0", ",", "2", "5"),
+            ProductScreen.selectedOrderlineHas("Cable", "100", "22,50"),
+            ProductScreen.totalAmountIs("22,50"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
     steps: () =>
         [
