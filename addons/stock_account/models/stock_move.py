@@ -333,8 +333,10 @@ class StockMove(models.Model):
             if not product:
                 raise ValidationError(self.env._('Product should be passed as an argument in order to get the unit price for moves in a kit.'))
             return product.standard_price
-        total_value = sum(m._get_value() if include_consumable else m.value for m in self)
+        total_value = sum(self.mapped('value'))
         if include_consumable:
+            # only consumables lack a stored value; storable moves keep the cost they were valued at
+            total_value = sum(abs(m.value) if m.product_id.is_storable else m._get_value() for m in self)
             total_qty = sum(m.uom_id._compute_quantity(m.quantity, m.product_id.uom_id) for m in self)
         elif include_consigned:
             total_qty = sum(m.uom_id._compute_quantity(m.quantity, m.product_id.uom_id) * (-1 if m.is_out else 1) for m in self)
