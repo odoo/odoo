@@ -88,7 +88,11 @@ export class CustomizeMailingPlugin extends Plugin {
                     ".o_snippet_preview_wrap > div > [data-snippet]"
                 );
             }
-            newStyleSheet.insertRule(previewRule);
+            const ruleIndex = newStyleSheet.insertRule(previewRule);
+            if (cssRule.selectorText === this.cssPrefix) {
+                const newCssRule = newStyleSheet.cssRules[ruleIndex];
+                this.filterNonVariableProperties(newCssRule);
+            }
         }
         return newStyleSheet;
     }
@@ -195,6 +199,22 @@ export class CustomizeMailingPlugin extends Plugin {
             ruleStyle.getPropertyValue(property),
             ruleStyle.getPropertyPriority(property)
         );
+    }
+
+    filterNonVariableProperties(cssRule) {
+        if (!cssRule) {
+            return;
+        }
+        const style = cssRule.style;
+        if (!style) {
+            return;
+        }
+        for (const propertyName of [...style]) {
+            const isVariable = propertyName.startsWith("--");
+            if (!isVariable) {
+                style.removeProperty(propertyName);
+            }
+        }
     }
 }
 
