@@ -1,12 +1,12 @@
 .o-mail-MessagingMenuInDropdown {
     width: 475px;
     height: Min(calc(var(--o-dropdown-max-height) - 5px), 630px); /* -5px for borders */
-    background-color: var(--mail-MessagingMenu-bg, $o-webclient-background-color);
+    background-color: var(--mail-MessagingMenu-bg, var(--o-webclient-background-color));
 }
 
 .o-mail-MessagingMenuInDropdown-list {
-    background-color: var(--mail-MessagingMenu-bg, $o-view-background-color);
-    --list-group-border-color: #{var(--mail-MessagingMenu-tabContentBorderColor, rgba($gray-200, .5))};
+    background-color: var(--mail-MessagingMenu-bg, var(--o-view-background-color));
+    --list-group-border-color: var(--mail-MessagingMenu-tabContentBorderColor, color-mix(in srgb, var(--gray-200) 50%, transparent));
 }
 
 .o-mail-MessagingMenuInDropdown-headerFilter {
