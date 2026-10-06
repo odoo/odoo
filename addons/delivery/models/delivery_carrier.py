@@ -397,6 +397,11 @@ class DeliveryCarrier(models.Model):
         )
         return float(price) * (1.0 + self.margin) + fixed_margin_in_sale_currency
 
+    def _is_rate_product_dependent(self):
+        """Return whether the shipping rate depends on the products of the order."""
+        self.ensure_one()
+        return self.delivery_type != "fixed"
+
     # -------------------------- #
     # API for external providers #
     # -------------------------- #
@@ -446,6 +451,19 @@ class DeliveryCarrier(models.Model):
                     "The shipping is free since the order amount exceeds %.2f.", self.amount
                 )
                 res["price"] = 0.0
+            elif self._is_rate_product_dependent() and (
+                productless_lines := order.order_line._get_productless_order_lines()
+            ):
+                warning = self.env._(
+                    "The shipping cost does not take into account the lines without a product"
+                    " (%(lines)s). Select a product on them to consider them properly.",
+                    lines=", ".join(
+                        productless_lines.mapped(lambda line: line.name.partition("\n")[0])
+                    ),
+                )
+                res["warning_message"] = "\n".join(
+                    filter(None, [res.get("warning_message"), warning])
+                )
             return res
         return {
             "success": False,
