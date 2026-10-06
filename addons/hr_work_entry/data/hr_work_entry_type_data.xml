@@ -3594,6 +3594,157 @@
         <field name="country_id" ref="base.ma"/>
     </record>
 
+<!-- MM : Myanmar -->
+
+    <record id="mm_work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="name">Work</field>
+        <field name="color">0</field>
+        <field name="display_code">A</field>
+        <field name="code">002.00</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="mm_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="name">Overtime</field>
+        <field name="color">4</field>
+        <field name="display_code">OT</field>
+        <field name="code">040.00</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="mm_hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field name="name">Out Of Contract</field>
+        <field name="color">0</field>
+        <field name="display_code">OoC</field>
+        <field name="code">000.00</field>
+        <field name="country_id" ref="base.mm"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="mm_work_entry_type_leave" model="hr.work.entry.type">
+        <field name="name">Generic Time Off</field>
+        <field name="color">3</field>
+        <field name="display_code">GTO</field>
+        <field name="code">LEAVE100</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="mm_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="name">Compensatory Time Off</field>
+        <field name="color">3</field>
+        <field name="display_code">CTO</field>
+        <field name="code">LEAVE105</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="mm_work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="name">Work from home</field>
+        <field name="color">2</field>
+        <field name="display_code">HW</field>
+        <field name="code">002.08</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="mm_work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="name">Leave without pay</field>
+        <field name="color">5</field>
+        <field name="display_code">UN</field>
+        <field name="code">158.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="mm_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Medical Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">ML</field>
+        <field name="code">013.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="mm_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="name">Earned Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">EL</field>
+        <field name="code">016.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="mm_work_entry_type_public_holiday" model="hr.work.entry.type">
+        <field name="name">Public Holiday</field>
+        <field name="color">3</field>
+        <field name="display_code">PH</field>
+        <field name="code">006.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="l10n_mm_work_entry_type_casual_leave" model="hr.work.entry.type">
+        <field name="name">Casual Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">CL</field>
+        <field name="code">MMLEAVE100</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="l10n_mm_work_entry_type_medical_waiting_days" model="hr.work.entry.type">
+        <field name="name">Medical Leave - Waiting Days (Half Pay)</field>
+        <field name="color">5</field>
+        <field name="display_code">MLW</field>
+        <field name="code">MMLEAVE105</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+        <field name="amount_rate">0.5</field>
+    </record>
+
+    <record id="l10n_mm_work_entry_type_funeral_leave" model="hr.work.entry.type">
+        <field name="name">Funeral Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">FL</field>
+        <field name="code">MMLEAVE110</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="l10n_mm_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="name">Maternity Leave (Social Security)</field>
+        <field name="color">5</field>
+        <field name="display_code">MAT</field>
+        <field name="code">MMLEAVE120</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_mm_work_entry_type_paternity_leave" model="hr.work.entry.type">
+        <field name="name">Paternity Leave (Social Security)</field>
+        <field name="color">5</field>
+        <field name="display_code">PAT</field>
+        <field name="code">MMLEAVE130</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_mm_work_entry_type_ssb_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Leave (Social Security)</field>
+        <field name="color">5</field>
+        <field name="display_code">SSL</field>
+        <field name="code">MMLEAVE140</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.mm"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
 <!-- MX : Mexico -->
 
     <record id="mx_work_entry_type_attendance" model="hr.work.entry.type">

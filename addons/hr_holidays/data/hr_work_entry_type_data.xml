@@ -995,6 +995,86 @@
         <field name="country_id" ref="base.lu"/>
     </record>
 
+<!-- MM : Myanmar -->
+    <!-- Overtime is encoded by HR, not requested by the employees -->
+    <record id="hr_work_entry.mm_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <!-- Earned leave: 10 days after 12 months of service (Leave and Holidays Act, s.4) -->
+    <record id="hr_work_entry.mm_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <!-- Casual leave: 6 days a year, at most 3 at a time (Leave and Holidays Act, s.5) -->
+    <record id="hr_work_entry.l10n_mm_work_entry_type_casual_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="leave_validation_type">both</field>
+        <field name="allocation_validation_type">hr</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="allocation_notif_subtype_id" ref="hr_holidays.mt_leave_allocation"/>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <!-- Medical leave: up to 30 days a year on a medical certificate, the first 3 days at half pay (Leave and Holidays Act, s.6) -->
+    <record id="hr_work_entry.mm_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_mm_work_entry_type_medical_waiting_days" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_sick"/>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_mm_work_entry_type_funeral_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <!-- Leaves compensated by the Social Security Board for the insured workers -->
+    <record id="hr_work_entry.l10n_mm_work_entry_type_ssb_sick_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_sick"/>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_mm_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_mm_work_entry_type_paternity_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.mm"/>
+    </record>
+
 <!-- MX : Mexico -->
     <record id="hr_work_entry.l10n_mx_work_entry_type_work_risk_imss" model="hr.work.entry.type">
         <field name="requires_allocation">False</field>
