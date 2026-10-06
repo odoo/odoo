@@ -1531,6 +1531,22 @@ class HrExpense(models.Model):
             expenses += expense
         return expenses.ids
 
+    @api.model
+    def action_create_from_uploads(self, attachment_ids):
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        if attachments.filtered(lambda a: a.create_uid != self.env.user or a.res_model or a.res_id):
+            raise UserError(_("Invalid attachments!"))
+        attachments.write({'res_model': 'hr.expense', 'res_id': 0})
+        expenses = self.browse(self.create_expense_from_attachments(attachment_ids))
+        return {
+            'name': _("Generate Expenses"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.expense',
+            'views': [(False, 'list'), (False, 'kanban'), (False, 'form')],
+            'domain': [('id', 'in', expenses.ids)],
+            'context': self.env.context,
+        }
+
     def action_show_same_receipt_expense_ids(self):
         self.ensure_one()
         return self.same_receipt_expense_ids._get_records_action(

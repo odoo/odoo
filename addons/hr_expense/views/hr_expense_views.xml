@@ -5,6 +5,12 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <list string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'">
+                    <header>
+                        <button type="upload" name="action_create_from_uploads" string="Upload"
+                            class="o_button_upload_expense btn-primary d-none d-md-block"/>
+                        <button type="upload" name="action_create_from_uploads" string="Scan"
+                            class="o_button_upload_expense btn-primary d-md-none"/>
+                    </header>
                     <field name="is_editable" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="company_currency_id" column_invisible="True"/>
@@ -396,6 +402,12 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" sample="1" js_class="hr_expense_kanban" quick_create="false">
+                    <header>
+                        <button type="upload" name="action_create_from_uploads" string="Upload"
+                            class="o_button_upload_expense btn-primary d-none d-md-block"/>
+                        <button type="upload" name="action_create_from_uploads" string="Scan"
+                            class="o_button_upload_expense btn-primary d-md-none"/>
+                    </header>
                     <field name="currency_id"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
