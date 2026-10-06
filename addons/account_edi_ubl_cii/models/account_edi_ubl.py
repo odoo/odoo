@@ -2134,8 +2134,13 @@ class AccountEdiUBL(models.AbstractModel):
         if party_node is None:
             return
 
+        # Only take the CompanyID of a PartyTaxScheme using a VAT scheme (e.g. not the Peppol endpoint with its EAS)
+        customer_values['vat'] = next((
+            node.findtext('./{*}CompanyID')
+            for node in party_node.iterfind('./{*}PartyTaxScheme')
+            if (node.findtext('./{*}TaxScheme/{*}ID') or '').upper() in ('VAT', 'GST', 'NOT_EU_VAT', '63')
+        ), None)
         for key, xpaths in (
-            ('vat', [".//{*}CompanyID"]),
             ('phone', [".//{*}Telephone"]),
             ('name', [
                 ".//{*}RegistrationName",
