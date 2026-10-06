@@ -187,13 +187,21 @@ defineActions([
             [false, "form"],
         ],
     },
+    {
+        id: 2,
+        name: "Leads",
+        res_model: "crm.lead",
+        type: "ir.actions.act_window",
+        views: [[false, "list"]],
+    },
 ]);
 
 test.tags("desktop");
 test("crm team switcher rendering", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    // Team switcher should default on "All Teams", all records and stages should be visible
+    // Team switcher should replace the breadcrumbs and default on "All Teams", all records and stages should be visible
+    expect(".o_breadcrumb").toHaveCount(0);
     expect(".o_cp_team_switcher:contains('All Teams')").toHaveCount(1);
     expect(".o_kanban_record").toHaveCount(8);
     expect(".o_kanban_group").toHaveCount(4);
@@ -222,4 +230,19 @@ test("crm team switcher rendering", async () => {
     await contains(".o_list_button_add").click();
     expect(".o_field_many2one[name='team_id'] input").toHaveValue("Hyrule");
     await contains(".o_form_button_cancel").click();
+});
+
+test.tags("desktop");
+test("crm team switcher keeps previous breadcrumbs", async () => {
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(2);
+    await getService("action").doAction(1);
+    // Previous breadcrumbs should be kept, with the team switcher displayed after them
+    expect(".o_control_panel .breadcrumb-item").toHaveText("Leads");
+    expect(".o_last_breadcrumb_item").toHaveText("Pipeline");
+    expect(".o_cp_team_switcher:contains('All Teams')").toHaveCount(1);
+    // Previous breadcrumbs should still allow going back
+    await contains(".o_control_panel .breadcrumb-item a").click();
+    expect(".o_last_breadcrumb_item").toHaveText("Leads");
+    expect(".o_cp_team_switcher").toHaveCount(0);
 });
