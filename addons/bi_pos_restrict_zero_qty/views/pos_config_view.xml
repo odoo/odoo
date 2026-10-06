@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="custom_pos_config_extended_form_view">
+            <field name="name">res.config.settings.form.extended.view</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//block[@id='pos_interface_section']" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="pos_restrict_zero_qty"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="pos_restrict_zero_qty" string="Restrict Zero Quantity"/>
+                            <div class="text-muted">
+                                Zero Quantity Product Validation
+                            </div>
+                        </div>
+                    </div>
+                </xpath>    
+            </field>
+        </record>
+    </data>
+</odoo>

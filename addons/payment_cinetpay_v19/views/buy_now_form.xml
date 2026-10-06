@@ -1,0 +1,94 @@
+<odoo>
+  <template id="buy_now_form" name="Formulaire CinetPay">
+    <t t-call="website.layout">
+
+      <!-- Chargement des clés site_id et apikey -->
+      <t t-set="cinetpay_site_id" t-value="env['ir.config_parameter'].sudo().get_param('cinetpay.site_id')"/>
+      <t t-set="cinetpay_apikey" t-value="env['ir.config_parameter'].sudo().get_param('cinetpay.apikey')"/>
+      <t t-set="user" t-value="request.env.user"/>
+      <t t-set="is_public" t-value="user.id == request.website.user_id.id"/>
+
+      <!-- Injection des données cachées pour JS -->
+      <div id="cinetpay_data"
+           t-att-data-site_id="cinetpay_site_id"
+           t-att-data-apikey="cinetpay_apikey"
+           style="display:none;">
+      </div>
+
+      <!-- Ajout du SDK -->
+      <t t-jquery="head" t-operation="prepend">
+        <script src="https://cdn.cinetpay.com/seamless/main.js"></script>
+      </t>
+      <script src="/payment_cinetpay_v19/static/src/js/buy_now.js"></script>
+
+      <div class="container mt-5">
+        <h2>Formulaire de Paiement</h2>
+
+        <!-- Message pour utilisateur public -->
+        <t t-if="is_public">
+          <div class="alert alert-info">
+            Connectez-vous pour que vos informations soient enregistrées pour vos prochains achats. (Facultatif)
+          </div>
+        </t>
+
+        <form id="paymentForm">
+
+          <!-- Champs cachés -->
+          <input type="hidden" id="amount" t-att-value="amount_total"/>
+          <input type="hidden" id="order_reference" t-att-value="order.name"/>
+          <input type="hidden" id="order_id" t-att-value="order.id"/>
+
+          <!-- Champs client visibles -->
+          <div class="form-group">
+            <label>Nom :</label>
+            <input class="form-control" id="customer_name" name="customer_name" type="text"
+                   t-att-value="user.name.split(' ')[0] if not is_public else ''" required="required"/>
+          </div>
+
+          <div class="form-group">
+            <label>Prénom :</label>
+            <input class="form-control" id="customer_surname" name="customer_surname" type="text"
+                   t-att-value="user.name.split(' ')[1] if not is_public and len(user.name.split(' ')) > 1 else ''" required="required"/>
+          </div>
+
+          <div class="form-group">
+            <label>Email :</label>
+            <input class="form-control" id="customer_email" name="customer_email" type="email"
+                   t-att-value="user.email if not is_public else ''" required="required"/>
+          </div>
+
+          <div class="form-group">
+            <label>Téléphone :</label>
+            <input class="form-control" id="customer_phone_number" name="customer_phone_number" type="text"
+                   t-att-value="user.partner_id.phone if not is_public else ''" required="required"/>
+          </div>
+
+          <div class="form-group">
+            <label>Adresse :</label>
+            <input class="form-control" id="customer_address" name="customer_address" type="text"
+                   t-att-value="user.partner_id.street if not is_public else ''" required="required"/>
+          </div>
+
+          <!-- Champs cachés secondaires -->
+          <input type="hidden" id="customer_city" t-att-value="user.partner_id.city if not is_public else 'Ouagadougou'"/>
+          <input type="hidden" id="customer_country" t-att-value="user.partner_id.country_id.code if not is_public else 'BF'"/>
+          <input type="hidden" id="customer_state" t-att-value="user.partner_id.state_id.code if not is_public else 'KAD'"/>
+          <input type="hidden" id="customer_zip" t-att-value="user.partner_id.zip if not is_public else '0001'"/>
+
+          <!-- Résumé -->
+          <div class="form-group">
+            <label>Commande :</label>
+            <input class="form-control" readonly="readonly" t-att-value="order.name"/>
+          </div>
+
+          <div class="form-group">
+            <label>Montant à payer :</label>
+            <input class="form-control" readonly="readonly" t-att-value="str(amount_total) + ' CFA'"/>
+          </div>
+
+          <button class="btn btn-primary mt-3" type="submit">Payer</button>
+        </form>
+      </div>
+    </t>
+  </template>
+</odoo>
