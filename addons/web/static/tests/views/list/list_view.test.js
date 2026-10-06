@@ -1713,7 +1713,8 @@ test(`basic grouped list rendering with a date field between two fields with a a
     expect(queryAllTexts(`thead th`)).toEqual(["", "Int field", "Date", "Int field"]);
     expect(`tr.o_group_header`).toHaveCount(2);
     expect(`th.o_group_name`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_header:eq(0) td`)).toEqual(["-4", "", "-4"]);
+    expect(`.o_group_header:eq(0) th:eq(0) .o_list_number`).toHaveText("-4");
+    expect(queryAllTexts(`.o_group_header:eq(0) td`)).toEqual(["", "-4"]);
 });
 
 test(`basic grouped list rendering 1 col without selector`, async () => {
@@ -1878,6 +1879,76 @@ test(`basic grouped list rendering 4 cols with aggregates, selector, optional an
     });
     expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2");
     expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "1");
+});
+
+test(`basic grouped list rendering with aggregate on the first column`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="int_field" sum="Sum1"/>
+                <field name="foo"/>
+                <field name="qux" sum="Sum2"/>
+                <field name="date"/>
+                <field name="text"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+    });
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2", {
+        message: "group name should span on the selector and the first column",
+    });
+    expect(`.o_group_header:eq(0) th:eq(0) .o_list_number`).toHaveText("-4", {
+        message: "aggregate of the first column should be displayed in the group name cell",
+    });
+    expect(queryAllTexts(`.o_group_header:eq(0) td`)).toEqual(["", "9.00"]);
+    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "2");
+});
+
+test(`basic grouped list rendering with only aggregate on the first column`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="int_field" sum="Sum1"/>
+                <field name="foo"/>
+                <field name="date"/>
+                <field name="text"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+    });
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "2", {
+        message: "group name should span on the selector and the first column",
+    });
+    expect(`.o_group_header:eq(0) th:eq(0) .o_list_number`).toHaveText("-4");
+    expect(`.o_group_header:eq(0) td`).toHaveCount(0);
+    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "3", {
+        message: "last cell should span on all the columns after the first one",
+    });
+});
+
+test(`basic grouped list rendering with aggregate on the first column, no selector`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="int_field" sum="Sum1"/>
+                <field name="foo"/>
+                <field name="date"/>
+                <field name="text"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+        allowSelectors: false,
+    });
+    expect(`.o_group_header th:eq(0)`).toHaveAttribute("colspan", "1");
+    expect(`.o_group_header:eq(0) th:eq(0) .o_list_number`).toHaveText("-4");
+    expect(`.o_group_header:eq(0) td`).toHaveCount(0);
+    expect(`.o_group_header th:eq(-1)`).toHaveAttribute("colspan", "3");
 });
 
 test(`group a list view with the aggregable field 'value'`, async () => {
@@ -7624,7 +7695,7 @@ test(`list view with nested groups`, async () => {
 
     // basic rendering tests
     expect(`.o_group_header`).toHaveCount(2);
-    expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (4)", "Value 2 (2)"]);
+    expect(queryAllTexts(`.o_group_name .text-truncate`)).toEqual(["Value 1 (4)", "Value 2 (2)"]);
     expect(`.o_group_name .fa-caret-right`).toHaveCount(2);
     expect(`.o_group_header:eq(0) span`).toHaveStyle({ "--o-list-group-level": "0" });
     expect(queryAllTexts(`.o_group_header .o_list_number`)).toEqual(["13", "16", "8", "14"]);
@@ -7632,7 +7703,7 @@ test(`list view with nested groups`, async () => {
     // open the first group
     await contains(`.o_group_header:eq(0)`).click();
     expect.verifySteps(["web_read_group"]);
-    expect(queryAllTexts(`.o_group_name`)).toEqual([
+    expect(queryAllTexts(`.o_group_name .text-truncate`)).toEqual([
         "Value 1 (4)",
         "blip (2)",
         "gnap (1)",
@@ -7717,7 +7788,7 @@ test(`grouped list on selection field at level 2`, async () => {
     expect(`.o_group_header`).toHaveCount(5, {
         message: "should contain 2 groups at first level and 3 groups at second level",
     });
-    expect(queryAllTexts(`.o_group_header .o_group_name`)).toEqual([
+    expect(queryAllTexts(`.o_group_header .o_group_name .text-truncate`)).toEqual([
         "Value 1 (5)",
         "Low (3)",
         "Medium (1)",
@@ -14920,8 +14991,8 @@ test(`Formatted group operator`, async () => {
         arch: `<list><field name="qux" widget="percentage"/></list>`,
         groupBy: ["bar"],
     });
-    expect(`td.o_list_number:eq(0)`).toHaveText("48%");
-    expect(`td.o_list_number:eq(1)`).toHaveText("61%");
+    expect(`.o_group_header .o_list_number:eq(0)`).toHaveText("48%");
+    expect(`.o_group_header .o_list_number:eq(1)`).toHaveText("61%");
 });
 
 test(`Formatted group operator with digit precision on the field definition`, async () => {
@@ -14932,8 +15003,8 @@ test(`Formatted group operator with digit precision on the field definition`, as
         arch: `<list><field name="qux"/></list>`,
         groupBy: ["bar"],
     });
-    expect(`td.o_list_number:eq(0)`).toHaveText("9.000");
-    expect(`td.o_list_number:eq(1)`).toHaveText("10.400");
+    expect(`.o_group_header .o_list_number:eq(0)`).toHaveText("9.000");
+    expect(`.o_group_header .o_list_number:eq(1)`).toHaveText("10.400");
 });
 
 test(`list view does not crash when clicked button cell`, async () => {

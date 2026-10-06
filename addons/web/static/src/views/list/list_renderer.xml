@@ -185,10 +185,11 @@
                 tabindex="-1"
                 t-attf-class="o_group_name fs-6 fw-bold {{!group.isFolded ? 'text-900' : 'text-700'}}"
                 t-att-colspan="getGroupNameCellColSpan(group)">
+                <t t-set="groupNameAggregateColumn" t-value="getGroupNameCellAggregateColumn(group)"/>
                 <div class="d-flex align-items-center">
                     <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
                         t-attf-style="--o-list-group-level: {{getGroupLevel(group)}}"/>
-                    <t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)
+                    <div class="text-truncate" t-att-title="groupNameAggregateColumn ? getGroupDisplayName(group) : undefined"><t t-esc="getGroupDisplayName(group)"/> (<t t-esc="group.count"/>)</div>
                     <div t-if="(groupByButtons[group.groupByField.name] and !group.isFolded and group.record.resId)" class="o_group_buttons">
                         <t t-foreach="groupByButtons[group.groupByField.name]" t-as="button" t-key="button.id">
                             <t t-if="!evalInvisible(button.invisible, group.record)">
@@ -214,6 +215,7 @@
                     <div t-if="showGroupPager(group)" t-on-click.stop="" class="ms-auto">
                         <Pager t-props="getGroupPagerProps(group)"/>
                     </div>
+                    <div t-if="groupNameAggregateColumn" class="o_list_number flex-shrink-0 ms-auto ps-2 fw-normal" t-esc="formatAggregateValue(group, groupNameAggregateColumn)"/>
                 </div>
             </th>
             <td t-on-keydown="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">

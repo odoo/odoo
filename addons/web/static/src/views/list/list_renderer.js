@@ -891,6 +891,10 @@ export class ListRenderer extends Component {
     // [    TH 5    ][TH][TH][TH][TH][TH][ TH 3 ]
     // [ group name ][ aggregate cells  ][ pager]
     // TODO: move this somewhere, compute this only once (same result for each groups actually) ?
+    // If the first column is aggregated, the group name cell spans the selector
+    // and the first column, and renders that aggregate itself (see
+    // getGroupNameCellAggregateColumn), otherwise the group name would be squeezed
+    // in the record selector column (or have no room at all).
     getFirstAggregateIndex(group) {
         return this.columns.findIndex((col) => col.name in group.aggregates);
     }
@@ -899,10 +903,13 @@ export class ListRenderer extends Component {
         const index = reversedColumns.findIndex((col) => col.name in group.aggregates);
         return index > -1 ? this.columns.length - index - 1 : -1;
     }
+    getGroupNameCellAggregateColumn(group) {
+        return this.getFirstAggregateIndex(group) === 0 ? this.columns[0] : null;
+    }
     getAggregateColumns(group) {
         const firstIndex = this.getFirstAggregateIndex(group);
         const lastIndex = this.getLastAggregateIndex(group);
-        return this.columns.slice(firstIndex, lastIndex + 1);
+        return this.columns.slice(Math.max(firstIndex, 1), lastIndex + 1);
     }
     getGroupNameCellColSpan(group) {
         // if there are aggregates, the first th spans until the first
@@ -910,7 +917,7 @@ export class ListRenderer extends Component {
         const firstAggregateIndex = this.getFirstAggregateIndex(group);
         let colspan;
         if (firstAggregateIndex > -1) {
-            colspan = firstAggregateIndex;
+            colspan = Math.max(firstAggregateIndex, 1);
         } else {
             colspan = Math.max(1, this.columns.length - DEFAULT_GROUP_PAGER_COLSPAN);
             if (this.displayOptionalFields) {
