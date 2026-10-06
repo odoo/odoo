@@ -41,3 +41,14 @@ export class TaskWithHours extends Component {
 registry.category("fields").add("task_with_hours", {
     ...buildM2OFieldDescription(TaskWithHours),
 });
+
+export class ListTaskWithHours extends TaskWithHours {
+    get m2oProps() {
+        const props = super.m2oProps;
+        return { ...props, canOpen: props.canOpen && !this.props.readonly };
+    }
+}
+
+registry.category("fields").add("list.task_with_hours", {
+    ...buildM2OFieldDescription(ListTaskWithHours),
+});
