@@ -32,14 +32,18 @@ export const TRANSLATABLE_ATTRIBUTES = [
         attribute: "value",
         name: _t("Value"),
     },
+    {
+        // This is a "fake attribute": it is present in the translation info
+        // from the translation plugin, but it corresponds to the `textContent`
+        // property of the element (not an attribute)
+        attribute: "textContent",
+        name: _t("Value"),
+    },
 ];
 
-export const translatableAttributesSelectors = [
-    ".o_translatable_text",
-    `.o_translatable_attribute:where(${TRANSLATABLE_ATTRIBUTES.map(
-        (attr) => `[${attr.attribute}]`
-    ).join(",")})`,
-];
+const translatableAttributesSelector = TRANSLATABLE_ATTRIBUTES.map(({ attribute }) =>
+    attribute === "textContent" ? ".o_translatable_text" : `.o_translatable_attribute[${attribute}]`
+).join(",");
 
 export class AttributeTranslationPlugin extends Plugin {
     static id = "attributeTranslation";
@@ -48,7 +52,7 @@ export class AttributeTranslationPlugin extends Plugin {
     resources = {
         builder_actions: { TranslateAttributeAction },
         builder_options_render_context: {
-            translateAttributeOptionSelector: translatableAttributesSelectors.join(", "),
+            translateAttributeOptionSelector: translatableAttributesSelector,
         },
     };
 }
@@ -62,27 +66,26 @@ export class TranslateAttributeAction extends BuilderAction {
     static dependencies = ["domObserver", "translation", "valueHistory"];
 
     getValue({ editingElement, params: { mainParam: attr } }) {
-        if (attr === "value" && editingElement.tagName === "TEXTAREA") {
-            return editingElement.value;
-        }
-        return editingElement.getAttribute(attr);
+        return attr === "textContent"
+            ? editingElement.textContent
+            : editingElement.getAttribute(attr);
     }
 
     apply({ editingElement, params: { mainParam: attr }, value }) {
-        const isTextarea = editingElement.tagName === "TEXTAREA";
         const oldValue =
-            attr === "value" ? editingElement.value : editingElement.getAttribute(attr);
-        if (!isTextarea || attr !== "value") {
+            attr === "textContent" ? editingElement.textContent : editingElement.getAttribute(attr);
+        if (attr === "textContent") {
+            editingElement.textContent = value;
+        } else {
             editingElement.setAttribute(attr, value);
         }
-        if (attr === "value") {
+        if (attr === "textContent" || attr === "value") {
             this.dependencies.valueHistory.setValue(editingElement, value);
         }
         editingElement.classList.add("oe_translated");
 
         const setCustomHistory = (value) => {
-            const attrKey = attr === "value" && isTextarea ? "textContent" : attr;
-            this.dependencies.translation.updateTranslationMap(editingElement, value, attrKey);
+            this.dependencies.translation.updateTranslationMap(editingElement, value, attr);
         };
 
         this.dependencies.domObserver.applyCustomMutation({

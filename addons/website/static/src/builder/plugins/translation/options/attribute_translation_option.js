@@ -14,12 +14,9 @@ export class TranslateAttributeOption extends BaseOptionComponent {
             const elTranslationInfo =
                 this.dependencies.translation.getTranslationInfo(editingElement);
             return {
-                availableAttributes: TRANSLATABLE_ATTRIBUTES.filter((attr) => {
-                    if (attr.attribute === "value" && editingElement.tagName === "TEXTAREA") {
-                        return !!elTranslationInfo.textContent;
-                    }
-                    return !!elTranslationInfo[attr.attribute];
-                }),
+                availableAttributes: TRANSLATABLE_ATTRIBUTES.filter(
+                    (attr) => !!elTranslationInfo[attr.attribute]
+                ),
             };
         });
     }
