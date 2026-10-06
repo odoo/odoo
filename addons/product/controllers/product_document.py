@@ -12,8 +12,12 @@ logger = logging.getLogger(__name__)
 class ProductDocumentController(Controller):
 
     @route('/product/document/upload', type='http', methods=['POST'], auth='user')
-    def upload_document(self, ufile, res_model, res_id, **kwargs):
-        if not self.is_model_valid(res_model):
+    def upload_document(self, context='{}', **kwargs):
+        # the document is attached to the record the kanban view is opened for
+        context = json.loads(context)
+        res_model = context.get('default_res_model')
+        res_id = context.get('default_res_id')
+        if not res_id or not self.is_model_valid(res_model):
             return
 
         record = request.env[res_model].browse(int(res_id)).exists()
@@ -36,7 +40,7 @@ class ProductDocumentController(Controller):
                 })
             except Exception as e:
                 logger.exception("Failed to upload document %s", ufile.filename)
-                result = {'error': str(e)}
+                result = {'error': {'message': str(e)}}
         return json.dumps(result)
 
     # eco hook

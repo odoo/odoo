@@ -74,6 +74,10 @@
         <field name="model">quotation.document</field>
         <field name="arch" type="xml">
             <kanban js_class="quotation_document_kanban">
+                <header>
+                    <button type="upload" string="Upload" class="btn-primary"
+                        options="{'route': '/sale_pdf_quote_builder/quotation_document/upload', 'accept': 'application/pdf'}"/>
+                </header>
                 <field name="sequence" widget="handle"/>
                 <field name="ir_attachment_id"/>
                 <field name="mimetype"/>
