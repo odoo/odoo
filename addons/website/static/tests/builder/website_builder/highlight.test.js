@@ -1,8 +1,8 @@
 import { expect, test } from "@odoo/hoot";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { HighlightPlugin } from "@website/builder/plugins/highlight/highlight_plugin";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -11,8 +11,12 @@ import { Plugin } from "@html_editor/plugin";
 import { highlightIdToName } from "@website/builder/plugins/highlight/highlight_configurator";
 import { textHighlightFactory } from "@website/js/highlight_utils";
 import { unformat } from "@html_editor/../tests/_helpers/format";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
-defineMailModels();
+defineWebsiteModels();
 
 class FakeEditInteractionPlugin extends Plugin {
     static id = "edit_interaction";
@@ -255,4 +259,47 @@ test("Should override existing highlight", async () => {
             </p>`
         )
     );
+});
+
+test("Highlight wraps each line of a multi-line text", async () => {
+    const { el } = await setupEditor(
+        "<p>[<strong>Text content line A</strong><br><i>Text content line B</i>]</p>",
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
+    );
+    await expandToolbar();
+    await contains(".o-we-toolbar .o_hb_select_highlight").click();
+    await contains(".o_popover .o_text_highlight_underline").click();
+    expect("span:contains(Text content line A)").toHaveClass("o_text_highlight_underline");
+    expect("span:contains(Text content line B)").toHaveClass("o_text_highlight_underline");
+
+    await contains("#highlightPicker").click();
+    await contains(".o_popover .o_text_highlight_jagged").click();
+    expect("span:contains(Text content line A)").toHaveClass("o_text_highlight_jagged");
+    expect("span:contains(Text content line B)").toHaveClass("o_text_highlight_jagged");
+
+    await contains("button[title='Reset']").click();
+    expect(el.querySelector("p")).toHaveInnerHTML(
+        "<strong>Text content line A</strong><br><i>Text content line B</i>"
+    );
+});
+
+test("Edit mode interaction draws, redraws and removes the highlight svgs", async () => {
+    await setupWebsiteBuilder("<h1>Catchy Headline</h1>", {
+        loadIframeBundles: true,
+        interactions: ["website.text_highlight"],
+    });
+    const h1 = queryOne(":iframe h1");
+    setSelection({ anchorNode: h1, anchorOffset: 0, focusNode: h1, focusOffset: 1 });
+    await expandToolbar();
+    await contains(".o-we-toolbar button[title='Apply highlight']").click();
+    await contains(".o_popover .o_text_highlight_underline").click();
+    await waitFor(":iframe h1 span.o_text_highlight_underline svg.o_text_highlight_svg");
+
+    await contains(".o_popover #highlightPicker").click();
+    await contains(".o_popover .o_text_highlight_jagged").click();
+    await waitFor(":iframe h1 span.o_text_highlight_jagged svg.o_text_highlight_svg");
+
+    await contains(".o_popover button[title='Reset']").click();
+    await waitForNone(":iframe h1 svg");
+    expect(":iframe h1").toHaveInnerHTML("Catchy Headline");
 });
