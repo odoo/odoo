@@ -2,6 +2,7 @@ from odoo import fields, http
 from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 from odoo.tools.mail import email_normalize
 from odoo.exceptions import UserError
+from odoo.addons.pos_self_order_loyalty.models.res_partner import SelfOrderIdentificationExpired
 import re
 
 
@@ -17,7 +18,7 @@ class PosSelfOrderControllerLoyalty(PosSelfOrderController):
         if len(partner):
             return {
                 **product_read,
-                'res.partner': pos_config.env['res.partner']._load_pos_self_data_read(partner, pos_config),
+                'res.partner': pos_config.env['res.partner']._load_pos_self_data_read_with_token(partner, pos_config),
                 'loyalty.card': pos_config.env['loyalty.card']._load_pos_self_data_read(loyalty_cards, pos_config),
                 'loyalty.rule': pos_config.env['loyalty.rule']._load_pos_self_data_read(loyalty_cards.program_id.rule_ids, pos_config),
                 'loyalty.reward': pos_config.env['loyalty.reward']._load_pos_self_data_read(reward_ids, pos_config),
@@ -31,6 +32,39 @@ class PosSelfOrderControllerLoyalty(PosSelfOrderController):
             'loyalty.reward': [],
             'loyalty.program': [],
         }
+
+    @http.route()
+    def process_order(self, order, access_token, table_identifier, device_type):
+        result = super().process_order(order, access_token, table_identifier, device_type)
+        # Slide the identification: the partner was verified by pos.order._check_pos_order
+        pos_config = self._verify_pos_config(access_token)
+        partner = pos_config.env['res.partner']._get_partner_from_self_order_token(
+            pos_config, order.get('partner_id'), order.get('partner_token'),
+        )
+        if partner:
+            result['res.partner'] = pos_config.env['res.partner']._load_pos_self_data_read_with_token(partner, pos_config)
+        return result
+
+    @http.route()
+    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None, preset_id=None):
+        result = super().validate_partner(
+            access_token, name, phone, street, zip, city, country_id,
+            state_id=state_id, partner_id=partner_id, email=email, preset_id=preset_id,
+        )
+        # Only a partner created by this very call is proven to belong to the client;
+        # an existing partner_id is just a number the client sent
+        if not partner_id and result.get('res.partner'):
+            pos_config = self._verify_pos_config(access_token)
+            partner = pos_config.env['res.partner'].browse(result['res.partner'][0]['id'])
+            result['res.partner'][0]['_self_order_token'] = partner._get_self_order_token(pos_config)
+        return result
+
+    @http.route('/pos-self-order/refresh-partner-token', auth='public', type='jsonrpc', website=True)
+    def refresh_partner_token(self, access_token, partner_id, partner_token):
+        """Renew a stored identification, along with the partner's up-to-date loyalty data."""
+        pos_config = self._verify_pos_config(access_token)
+        partner = pos_config.env['res.partner']._get_partner_from_self_order_token(pos_config, partner_id, partner_token)
+        return self._get_partner_information(pos_config, partner)  # 'res.partner': [] when invalid
 
     @http.route('/pos-self-order/get-partner-by-barcode', auth='public', type='jsonrpc', website=True)
     def get_partner(self, access_token, partner_barcode):
@@ -61,7 +95,7 @@ class PosSelfOrderControllerLoyalty(PosSelfOrderController):
         return {
             'new': new,
             'data': {
-                'res.partner': pos_config.env['res.partner']._load_pos_self_data_read(partner, pos_config) if partner else [],
+                'res.partner': pos_config.env['res.partner']._load_pos_self_data_read_with_token(partner, pos_config) if partner else [],
             },
         }
 
@@ -79,14 +113,18 @@ class PosSelfOrderControllerLoyalty(PosSelfOrderController):
         return {'res.partner': []}
 
     @http.route('/pos-self-order/check-card-code', auth='public', type='jsonrpc', website=True)
-    def check_card_code(self, access_token, code, partner_id=None, order_uuid=None):
+    def check_card_code(self, access_token, code, partner_id=None, partner_token=None, order_uuid=None):
         # The card can either be a loyalty card or a loyalty rule with code
         # We first check the loyalty rule with code, if it exists we create a loyalty card for it
         # We then check all the loyalty cards and return the corresponding ones
         pos_config = self._verify_pos_config(access_token)
 
-        # Get partner
-        partner = pos_config.env['res.partner'].browse(partner_id).exists() if partner_id else None
+        # Get partner, only trusted when backed by its identification token
+        partner = None
+        if partner_id:
+            partner = pos_config.env['res.partner']._get_partner_from_self_order_token(pos_config, partner_id, partner_token)
+            if not partner:
+                raise SelfOrderIdentificationExpired(self.env._("Your identification has expired, please identify yourself again."))
 
         # Check loyalty rules
         program_ids = pos_config._get_program_ids()

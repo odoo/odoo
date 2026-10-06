@@ -7,8 +7,6 @@ class PosConfig(models.Model):
 
     def _load_self_data_models(self):
         return super()._load_self_data_models() + [
-            'barcode.nomenclature',
-            'barcode.rule',
             'loyalty.program',
             'loyalty.rule',
             'loyalty.reward',
