@@ -7,7 +7,7 @@
                 <t t-foreach="this.data" t-as="summary_entry" t-key="summary_entry">
                     <li class="mb-2">
                         <details class="cursor-pointer">
-                            <summary class="fw-bold user-select-none">
+                            <summary class="fw-bold user-select-none" t-att-class="{'text-danger': summary_entry_value.is_error}">
                                 <span t-out="summary_entry_value.count"/> invoice(s)
                                 <span t-out="summary_entry_value.label" class="fw-normal"/>
                             </summary>
