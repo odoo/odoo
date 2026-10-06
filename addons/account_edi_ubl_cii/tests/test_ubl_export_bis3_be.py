@@ -815,7 +815,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
         # No VAT, no ref, only EAS/Endpoint.
         # PartyIdentification is not there.
-        # PartyTaxScheme is filled using EAS/Endpoint.
+        # PartyTaxScheme is not there.
         # PartyLegalEntity is filled using the Endpoint only.
         self.partner_be.vat = None
         self.partner_be.ref = None
@@ -855,11 +855,35 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
                 test_file='test_invoice_customer_party_identifiers_partner_be_vat_and_company_registry',
             )
 
+    def test_invoice_customer_without_vat_endpoint_not_used_as_vat(self):
+        """ The Peppol endpoint of a customer without VAT must not be exported as its VAT (PartyTaxScheme),
+        nor be imported back as the VAT of the partner (shown on the PDF generated at import). """
+        # The VAT is removed, the endpoint '0477472701' derived from it is kept.
+        self.partner_be.write({'vat': False, 'company_registry': False})
+        invoice = self._create_invoice_one_line(
+            product_id=self.product_a,
+            partner_id=self.partner_be,
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+
+        xml_tree = etree.fromstring(invoice.ubl_cii_xml_id.raw)
+        self.assertFalse(xml_tree.findall('./{*}AccountingCustomerParty/{*}Party/{*}PartyTaxScheme'))
+
+        # Import the XML back with the partner archived, so that it can't be retrieved by its endpoint.
+        # The endpoint must not be read as a VAT to create a new partner.
+        self.partner_be.action_archive()
+        self._import_invoice_as_attachment_on(
+            attachment=invoice.ubl_cii_xml_id,
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertFalse(self.env['res.partner'].search([('vat', 'ilike', '0477472701')]))
+
     def test_invoice_customer_party_identifiers_partner_lu(self):
         # Both VAT and company registry are not set.
         # PartyIdentification is not there.
-        # PartyTaxScheme is filled using EAS/Endpoint.
-        # PartyTaxScheme is filled using the Endpoint only.
+        # PartyTaxScheme is not there.
+        # PartyLegalEntity is filled using the Endpoint only.
         self._assert_invoice_partner_party_identifiers(
             partner=self.partner_lu_dig,
             test_file='test_invoice_customer_party_identifiers_partner_lu_only_eas_endpoint',
@@ -867,7 +891,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
         # Company registry is set.
         # PartyIdentification is not there.
-        # PartyTaxScheme is filled using EAS/Endpoint.
+        # PartyTaxScheme is not there.
         # PartyLegalEntity is filled using the company registry.
         self.partner_lu_dig.company_registry = "123456789"
         self._assert_invoice_partner_party_identifiers(

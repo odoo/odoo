@@ -2550,7 +2550,7 @@ class AccountEdiUBL(models.AbstractModel):
             return
 
         for key, xpaths in (
-            ('vat', [".//{*}CompanyID"]),
+            ('vat', ["./{*}PartyTaxScheme/{*}CompanyID"]),
             ('phone', [".//{*}Telephone"]),
             ('name', [
                 ".//{*}RegistrationName",

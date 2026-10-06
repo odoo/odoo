@@ -828,7 +828,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _import_retrieve_partner_vals(self, tree, role):
         """ Returns a dict of values that will be used to retrieve the partner """
-        vat = self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree)
+        vat = self._find_value(f'.//cac:{role}Party/cac:Party/cac:PartyTaxScheme/cbc:CompanyID[string-length(text()) > 5]', tree)
         country_code = self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree)
         if not vat and country_code:
             for scheme_id, field in EAS_MAPPING.get(country_code, {}).items():
