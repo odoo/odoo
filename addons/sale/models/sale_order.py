@@ -444,13 +444,16 @@ class SaleOrder(models.Model):
             ("started", "Started"),
             ("partial", "Partially Delivered"),
             ("full", "Fully Delivered"),
+            ("cancel", "Cancelled"),
         ],
         string="Delivery Status",
         compute="_compute_delivery_status",
         store=True,
         help="Blue: Not Delivered/Started\n\
             Orange: Partially Delivered\n\
-            Green: Fully Delivered",
+            Green: Fully Delivered\n\
+            Red: Cancelled",
+
     )
     duplicated_order_ids = fields.Many2many(
         comodel_name="sale.order", compute="_compute_duplicated_order_ids"
