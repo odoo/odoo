@@ -6,6 +6,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { GoogleTranslator, ChatGPTTranslator } from "./translator";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { user } from "@web/core/user";
 
 const RTL_LANGUAGES = new Set(["ar", "he", "fa", "ur", "yi", "ps", "ku", "sd", "ug", "dv", "ha"]);
 
@@ -79,7 +80,7 @@ export class TranslateDialog extends Component {
         const google_translate = new GoogleTranslator("translate_google", "Google Translate");
         this.translators = [google_translate];
 
-        if (this.debugMode.isActive()) {
+        if (this.debugMode.isActive() && user.isInternalUser) {
             const chatgpt_translate = new ChatGPTTranslator("translate_gpt", "ChatGPT");
             this.translators.push(chatgpt_translate);
         }
