@@ -9,6 +9,7 @@ describe.current.tags("interaction_dev");
 const template = `
     <div class="input-group">
         <input type="password" id="password" class="form-control" required="required" name="visibility_password" />
+        <div class="o_show_password_status visually-hidden" aria-live="polite"></div>
         <button class="btn border border-start-0 o_show_password" type="button">
             <i class="oi" data-icon="visibility"></i>
         </button>
@@ -39,4 +40,14 @@ test("the eye button is named after the action it performs", async () => {
     await click(showEl);
     expect(showEl).toHaveAttribute("aria-label", "Show password");
     expect(showEl).not.toHaveAttribute("aria-pressed");
+});
+
+test("the live region announces when the password is shown", async () => {
+    await startInteractions(template);
+    const showEl = queryOne(".o_show_password");
+    expect(".o_show_password_status").toHaveText("");
+    await click(showEl);
+    expect(".o_show_password_status").toHaveText("Your password is shown.");
+    await click(showEl);
+    expect(".o_show_password_status").toHaveText("");
 });
