@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, UTC
 from unittest.mock import patch
 
 from dateutil.relativedelta import relativedelta
@@ -36,7 +36,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        now = datetime.utcnow()
+        now = datetime.now(UTC).replace(tzinfo=None)
         cls.customer = cls.env["res.partner"].create({"name": "a", "email": "a@example.com"})
         cls.public_partner = cls.env["res.partner"].create({
             "name": "public",
@@ -160,7 +160,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
         website.send_abandoned_cart_followup = True
         website.write({
             "send_abandoned_cart_email_activation_time": (
-                datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay)
+                datetime.now(UTC).replace(tzinfo=None) - relativedelta(hours=website.cart_abandoned_delay)
             )
             - relativedelta(minutes=10)
         })
@@ -173,7 +173,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "partner_id": self.customer.id,
             "website_id": website.id,
             "state": "draft",
-            "date_order": (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            "date_order": (datetime.now(UTC).replace(tzinfo=None) - relativedelta(hours=website.cart_abandoned_delay))
             - relativedelta(minutes=1),
             "order_line": order_line,
         })
@@ -207,7 +207,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "partner_id": self.customer.id,
             "website_id": website.id,
             "state": "draft",
-            "date_order": (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            "date_order": (datetime.now(UTC).replace(tzinfo=None) - relativedelta(hours=website.cart_abandoned_delay))
             - relativedelta(minutes=1),
             "order_line": order_line,
         })
@@ -218,7 +218,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "partner_id": self.customer.id,
             "website_id": website.id,
             "state": "draft",
-            "date_order": (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            "date_order": (datetime.now(UTC).replace(tzinfo=None) - relativedelta(hours=website.cart_abandoned_delay))
             - relativedelta(minutes=1),
             "order_line": order_line,
             "cart_recovery_email_sent": True,
@@ -246,7 +246,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "partner_id": self.customer.id,
             "website_id": website.id,
             "state": "draft",
-            "date_order": (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            "date_order": (datetime.now(UTC).replace(tzinfo=None) - relativedelta(hours=website.cart_abandoned_delay))
             - relativedelta(minutes=1),
             "order_line": order_line,
         })
@@ -257,7 +257,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "partner_id": self.customer.id,
             "website_id": website.id,
             "state": "draft",
-            "date_order": (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            "date_order": (datetime.now(UTC).replace(tzinfo=None) - relativedelta(hours=website.cart_abandoned_delay))
             - relativedelta(minutes=1),
             "order_line": order_line,
         })
@@ -279,7 +279,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "partner_id": self.customer.id,
             "website_id": website.id,
             "state": "draft",
-            "date_order": (datetime.utcnow() - relativedelta(hours=website.cart_abandoned_delay))
+            "date_order": (datetime.now(UTC).replace(tzinfo=None) - relativedelta(hours=website.cart_abandoned_delay))
             - relativedelta(minutes=1),
             "order_line": order_line,
         })
@@ -287,7 +287,7 @@ class TestWebsiteSaleCartAbandoned(TestWebsiteSaleCartAbandonedCommon):
             "partner_id": self.customer.id,
             "website_id": website.id,
             "state": "draft",
-            "date_order": datetime.utcnow(),
+            "date_order": datetime.now(UTC).replace(tzinfo=None),
             "order_line": order_line,
         })
         self.assertFalse(self.send_mail_patched(abandoned_sale_order.id))

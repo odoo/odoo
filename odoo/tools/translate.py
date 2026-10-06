@@ -23,7 +23,7 @@ import typing
 from collections import defaultdict, namedtuple
 from collections.abc import Iterable, Iterator
 from contextlib import suppress
-from datetime import datetime
+from datetime import datetime, UTC
 from difflib import get_close_matches
 from os.path import join
 from pathlib import Path
@@ -1523,7 +1523,7 @@ class PoFileWriter:
         self.po.header = "Translation of %s.\n" \
                     "This file contains the translation of the following modules:\n" \
                     "%s" % (release.description, ''.join("\t* %s\n" % m for m in modules))
-        now = datetime.utcnow().strftime('%Y-%m-%d %H:%M+0000')
+        now = datetime.now(UTC).isoformat(sep=' ', timespec='minutes')
         self.po.metadata = {
             'Project-Id-Version': "%s %s" % (release.description, release.version),
             'Report-Msgid-Bugs-To': '',

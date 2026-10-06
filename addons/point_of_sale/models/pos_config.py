@@ -459,7 +459,7 @@ class PosConfig(models.Model):
         for config_id, order_date, total in self.env.cr.fetchall():
             rows.setdefault(config_id, {})[order_date] = total
 
-        today = datetime.utcnow().date()
+        today = fields.Date.today()
         result = {}
         for config in self:
             currency = config.currency_id

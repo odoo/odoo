@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from odoo import models, api, fields
 
 
@@ -27,7 +25,7 @@ class MySubscription(models.AbstractModel):
         if not enterprise_code or not expiration_date:
             return False
         expiration_datetime = fields.Datetime.from_string(expiration_date)
-        return bool(expiration_datetime) and expiration_datetime > datetime.utcnow()
+        return bool(expiration_datetime) and expiration_datetime > fields.Datetime.now()
 
     @api.model
     def get_iap_data(self):

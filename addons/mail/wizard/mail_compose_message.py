@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import datetime
 import json
 
 from markupsafe import Markup
@@ -954,7 +953,7 @@ class MailComposeMessage(models.TransientModel):
                 iter_mails_sudo_tosend = iter_mails_sudo.filtered(
                     lambda mail: (
                         not mail.scheduled_date or
-                        mail.scheduled_date <= datetime.datetime.utcnow()
+                        mail.scheduled_date <= fields.Datetime.now()
                     )
                 )
                 if iter_mails_sudo_tosend:
