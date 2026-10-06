@@ -38,7 +38,7 @@
                                 <t t-set="product_variant" t-value="wish.product_id"/>
                                 <t t-set="product" t-value="product_variant.product_tmpl_id"/>
                                 <t t-set="product_href" t-value="product_variant.website_url"/>
-                                <t t-set="combination_info" t-value="product_variant._get_combination_info_variant()"/>
+                                <t t-set="price_info" t-value="product_variant._get_default_price_info()"/>
                                 <div
                                     class="o_wishlist_item"
                                     name="wishlist_item"
@@ -46,7 +46,7 @@
                                     t-att-data-product-id="product_variant.id"
                                 >
                                     <t t-set="product_price">
-                                        <br t-if="combination_info['hide_price']"/>
+                                        <br t-if="price_info['hide_price']"/>
                                         <div t-else="" class="align-middle o_wish_price">
                                             <t t-call="website_sale.price_and_base_unit"/>
                                         </div>
@@ -54,8 +54,8 @@
                                     <t t-set="product_actions">
                                         <div class="o_wsale_product_action_row">
                                             <a
-                                                t-if="combination_info['prevent_sale']"
-                                                t-att-href="website._get_contact_us_url(combination_info['display_name'])"
+                                                t-if="website._prevent_product_sale(product, price_info['hide_price'])"
+                                                t-att-href="website._get_contact_us_url(product_variant.display_name)"
                                                 class="o_wsale_product_btn_primary btn btn-primary"
                                             >
                                                 <span class="d-inline-flex align-items-baseline">

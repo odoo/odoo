@@ -1594,15 +1594,15 @@ class ProductTemplate(models.Model):
         website_domain = self.env.website.website_domain()
 
         for product, data in zip(self, results_data):
-            combination_info = product._get_combination_info(only_template=True)
             values = product.attribute_line_ids.value_ids
             tags = product.product_tag_ids.filtered("visible_to_customers").read(["name"])
             categories = product.public_categ_ids.filtered_domain(website_domain).read(["name"])
             data["badges"] = tags + categories + values.read(["name"])
 
-            if not combination_info["hide_price"]:
+            price_info = product._get_default_price_info()
+            if not price_info["hide_price"]:
                 data["price"] = self.env.website._render_template(
-                    "website_sale.price", values={"price_info": combination_info}
+                    "website_sale.price", values={"price_info": price_info}
                 )
             data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
 

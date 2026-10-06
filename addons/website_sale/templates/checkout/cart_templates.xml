@@ -272,7 +272,7 @@
             <t t-set="product" t-value="line.product_id"/>
             <t
                 t-call="website_sale.base_unit_price"
-                combination_info="{
+                price_info="{
                     'hide_price': False,
                     'base_unit_price': product._get_base_unit_price(product_price / line.product_qty),
                     'base_unit_name': product.base_unit_name,
@@ -456,14 +456,17 @@
                         </div>
                         <div class="d-flex align-items-center ms-auto gap-2">
                             <t
-                                t-set="combination_info"
-                                t-value="order_line.product_id._get_combination_info_variant()"
+                                t-set="price_info"
+                                t-value="order_line.product_id._get_default_price_info(
+                                    quantity=order_line.product_uom_qty,
+                                    uom=order_line.product_uom_id,
+                                )"
                             />
                             <small
-                                t-out="combination_info['price'] * order_line.product_uom_qty"
+                                t-out="price_info['price'] * order_line.product_uom_qty"
                                 t-options="{
                                     'widget': 'monetary',
-                                    'display_currency': website.currency_id,
+                                    'display_currency': price_info['currency'],
                                 }"
                                 class="o_wsale_quick_reorder_product_price"
                                 style="white-space: nowrap;"
@@ -472,8 +475,8 @@
                                 type="text"
                                 t-att-value="int(order_line.product_uom_qty)"
                                 class="o_wsale_quick_reorder_qty_input form-control text-center"
-                                t-att-data-price-unit="combination_info['price']"
-                                t-att-data-currency-digits="combination_info['currency'].decimal_places"
+                                t-att-data-price-unit="price_info['price']"
+                                t-att-data-currency-digits="price_info['currency'].decimal_places"
                             />
                             <button
                                 type="button"
@@ -525,7 +528,7 @@
                             />
                         </div>
                         <div class="d-flex flex-column gap-2 align-items-end">
-                            <t t-set="combination_info" t-value="product._get_combination_info_variant()"/>
+                            <t t-set="price_info" t-value="product._get_default_price_info()"/>
                             <h6
                                 name="suggested_product_price_container"
                                 class="d-flex flex-row-reverse gap-2 mb-0 text-end"

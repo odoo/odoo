@@ -26,23 +26,18 @@ class ProductComparison(Controller):
         product_data = []
 
         for product in products:
-            combination_info = product._get_combination_info_variant()
+            price_info = product._get_default_price_info()
             product_data_item = {
                 "id": product.id,
-                "display_name": combination_info["display_name"],
+                "display_name": product.with_context(display_default_code=False).display_name,
                 "website_url": product.website_url,
                 "image_url": product._get_image_1024_url(),
-                "price": combination_info["price"],
-                "hide_price": combination_info["hide_price"],
-                "currency_id": combination_info["currency"].id,
+                "hide_price": price_info["hide_price"],
+                "price": price_info.get("price", 0),
+                "currency_id": price_info.get("currency", self.env["res.currency"]).id,
             }
-            if combination_info["has_discounted_price"]:
-                product_data_item["strikethrough_price"] = combination_info["list_price"]
-            elif (
-                combination_info.get("compare_list_price")
-                and combination_info["compare_list_price"] > combination_info["price"]
-            ):
-                product_data_item["strikethrough_price"] = combination_info["compare_list_price"]
+            if list_price := price_info.get("list_price"):
+                product_data_item["list_price"] = list_price
             product_data.append(product_data_item)
 
         return product_data

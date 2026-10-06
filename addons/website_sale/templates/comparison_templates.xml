@@ -7,6 +7,10 @@
                 <div class="oe_structure oe_empty" id="oe_structure_website_sale_comparison_product_compare_1"/>
                 <div t-attf-class="oe_website_sale pb-5 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
                     <h1 class="h4 mt-4 mb-3">Compare Products</h1>
+                    <t
+                        t-set="prices_info"
+                        t-value="{product: product._get_default_price_info() for product in products}"
+                    />
 
                     <!-- Mini sticky product overview (initially hidden) -->
                     <div
@@ -21,30 +25,24 @@
                                         t-as="product"
                                         class="o_wsale_compare_table_column flex-shrink-0"
                                     >
+                                       <t t-set="price_info" t-value="prices_info[product]"/>
                                         <a
                                             t-att-href="product.website_url"
                                             class="d-flex align-items-center gap-2 text-decoration-none text-truncate"
                                         >
-                                            <t
-                                                t-set="combination_info"
-                                                t-value="product._get_combination_info_variant()"
-                                            />
                                             <div class="o_mini_product_img_container flex-shrink-0">
                                                 <img
                                                     t-att-src="product._get_image_1024_url()"
                                                     class="img-fluid flex-shrink-0 w-100 h-100 rounded border object-fit-cover"
-                                                    t-att-alt="combination_info['display_name']"
+                                                    t-att-alt="product.display_name"
                                                 />
                                             </div>
                                             <div class="text-truncate">
                                                 <h6
                                                     class="flex-grow-1 text-truncate mb-0 small"
-                                                    t-out="combination_info['display_name']"
+                                                    t-out="product.display_name"
                                                 />
-                                                <div
-                                                    t-if="not combination_info['hide_price']"
-                                                    class="text-wrap"
-                                                >
+                                                <div t-if="not price_info['hide_price']" class="text-wrap">
                                                     <t t-call="website_sale.price"/>
                                                 </div>
                                             </div>
@@ -66,10 +64,6 @@
                                     t-as="product"
                                     class="o_wsale_compare_table_column position-relative d-flex flex-column flex-shrink-0"
                                 >
-                                    <t
-                                        t-set="combination_info"
-                                        t-value="product._get_combination_info_variant()"
-                                    />
                                     <a t-att-href="product.website_url">
                                         <img
                                             t-att-src="product._get_image_1024_url()"
@@ -92,10 +86,7 @@
                                     t-as="product"
                                     class="o_wsale_compare_table_column position-relative d-flex flex-column flex-shrink-0"
                                 >
-                                    <t
-                                        t-set="combination_info"
-                                        t-value="product._get_combination_info_variant()"
-                                    />
+                                    <t t-set="price_info" t-value="prices_info[product]"/>
                                     <div
                                         id="o_comparelist_product_name"
                                         class="product_summary d-flex flex-column h-100"
@@ -110,13 +101,13 @@
                                             <i class="oi oi-filled me-2 text-danger" data-icon="circle" aria-hidden="true"/>
                                             Out of stock
                                         </span>
-                                        <span t-if="not combination_info['hide_price']">
+                                        <span t-if="not price_info['hide_price']">
                                             <t t-call="website_sale.price_and_base_unit"/>
                                         </span>
                                         <div class="mt-auto pt-3">
                                             <a
-                                                t-if="combination_info['prevent_sale']"
-                                                t-att-href="website._get_contact_us_url(combination_info['display_name'])"
+                                                t-if="website._prevent_product_sale(product, price_info['hide_price'])"
+                                                t-att-href="website._get_contact_us_url(product_variant.display_name)"
                                                 class="btn btn-primary btn_cta"
                                             >
                                                Contact Us

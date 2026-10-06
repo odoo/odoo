@@ -177,7 +177,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, website_id=self.website.id
             )._get_products("latest_sold")
-        self.assertEqual(products[0]["product_id"], self.pink_case_M.id)
+        self.assertEqual(products[0]["_record"], self.pink_case_M)
 
         self.assert_snippet_filters_route_public_access(dyn_filter, self.pink_case_M + computer)
 
@@ -194,7 +194,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, website_id=self.website.id, limit=2
             )._get_products("latest_sold")
-        product_ids = {p["product_id"] for p in products}
+        product_ids = {p["_record"].id for p in products}
         self.assertSetEqual(product_ids, {self.pink_case_M.id, self.pink_case_L.id})
 
         self.assert_snippet_filters_route_public_access(
@@ -214,8 +214,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, hide_variants=True, website_id=self.website.id
             )._get_products("latest_sold")
-        product_ids = {p["product_id"] for p in products}
-        self.assertSetEqual(product_ids, {self.computer_case.product_variant_id.id})
+        product_ids = {p["_record"].id for p in products}
+        self.assertSetEqual(product_ids, {self.computer_case.id})
 
         self.assert_snippet_filters_route_public_access(
             dyn_filter, self.pink_case_M + self.pink_case_L
@@ -263,7 +263,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 website_id=self.ref('base.default_website'),
             )._get_products("latest_viewed")
             self.assertSetEqual(
-                {p["product_id"] for p in with_variants},
+                {p["_record"].id for p in with_variants},
                 set(viewed_products.ids),
                 'When showing variants, "Latest viewed" filter should return viewed variants',
             )
@@ -273,8 +273,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 website_id=self.ref('base.default_website'),
             )._get_products("latest_viewed")
             self.assertSetEqual(
-                {p["product_id"] for p in no_variants},
-                {self.computer_case.product_variant_id.id, self.computer.product_variant_id.id},
+                {p["_record"].id for p in no_variants},
+                {self.computer_case.id, self.computer.id},
                 'When hiding variants, "Latest viewed" filter should return 1 variant per template',
             )
 
@@ -310,7 +310,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 dynamic_filter=dyn_filter, hide_variants=False, website_id=self.website.id
             )._get_products("recently_sold_with", product_template_id=str(self.computer.id))
             self.assertSetEqual(
-                {p["product_id"] for p in with_variants},
+                {p["_record"].id for p in with_variants},
                 {self.monitor.product_variant_id.id, self.pink_case_L.id},
                 '"Recently sold with" filter should return sold variants when showing variants',
             )
@@ -319,8 +319,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 dynamic_filter=dyn_filter, hide_variants=True, website_id=self.website.id
             )._get_products("recently_sold_with", product_template_id=str(self.computer.id))
             self.assertSetEqual(
-                {p["product_id"] for p in no_variants},
-                {self.monitor.product_variant_id.id, self.computer_case.product_variant_id.id},
+                {p["_record"].id for p in no_variants},
+                {self.monitor.product_variant_id.id, self.computer_case.id},
                 '"Recently sold with" filter should return generic variants when hiding variants',
             )
 
@@ -341,7 +341,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 website_id=self.ref('base.default_website'),
             )._get_products("accessories", product_template_id=str(self.computer.id))
             self.assertListEqual(
-                [p["product_id"] for p in with_variants],
+                [p["_record"].id for p in with_variants],
                 self.computer_case.product_variant_ids.ids[:16],
                 "Accessories filter should return 16 results when showing variants",
             )
@@ -351,8 +351,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 website_id=self.ref('base.default_website'),
             )._get_products("accessories", product_template_id=str(self.computer.id))
             self.assertListEqual(
-                [p["product_id"] for p in no_variants],
-                self.accessories.product_variant_id.ids,
+                [p["_record"].id for p in no_variants],
+                [self.computer_case.id, self.monitor.product_variant_id.id],
                 "Accessories filter should return 2 results when hiding variants",
             )
 
@@ -375,7 +375,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 website_id=self.ref('base.default_website'),
             )._get_products("alternative_products", product_template_id=str(self.mac.id))
             self.assertListEqual(
-                [p["product_id"] for p in with_variants],
+                [p["_record"].id for p in with_variants],
                 self.mac.alternative_product_ids.product_variant_ids.ids[:16],
                 "Alternative products filter should return 16 results when showing variants",
             )
@@ -385,8 +385,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 website_id=self.ref('base.default_website'),
             )._get_products("alternative_products", product_template_id=str(self.mac.id))
             self.assertListEqual(
-                [p["product_id"] for p in no_variants],
-                [self.computer.product_variant_id.id, self.windows_pc.product_variant_id.id],
+                [p["_record"].id for p in no_variants],
+                [self.computer.id, self.windows_pc.product_variant_id.id],
                 "Alternative products filter should return 2 results when hiding variants",
             )
 
@@ -421,7 +421,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 "When displaying newest variants, 16 records should be shown",
             )
             self.assertLess(
-                len({p["product_template_id"] for p in with_variants}),
+                len({p["_record"].product_tmpl_id.id for p in with_variants}),
                 16,
                 "When displaying newest variants, some product templates should be repeating",
             )
@@ -429,7 +429,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             no_variants = dyn_filter._prepare_values(search_domain=["hide_variants"])
             self.assertEqual(len(no_variants), 16)
             self.assertEqual(
-                len({p["product_template_id"] for p in no_variants}),
+                len({p["_record"].id for p in no_variants}),
                 16,
                 "When displaying newest product templates, 16 unique templates should be shown",
             )

@@ -25,7 +25,7 @@ class WebsiteSaleSlides(WebsiteSlides):
             # search the product to apply ACLs, notably on published status, to avoid access errors
             product = request.env['product.product'].search([('id', '=', channel.product_id.id)]) if channel.product_id else request.env['product.product']
             if product:
-                values['product_info'] = product._get_combination_info_variant()
+                values['price_info'] = product._get_default_price_info()
             else:
-                values['product_info'] = False
+                values['price_info'] = {'hide_price': True}
         return values
