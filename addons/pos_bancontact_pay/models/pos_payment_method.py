@@ -8,7 +8,13 @@ from odoo.exceptions import ValidationError
 from odoo.tools import float_compare
 
 from odoo.addons.pos_bancontact_pay import const
-from odoo.addons.pos_bancontact_pay.errors.http import HTTP_ERRORS, REFUND_ERRORS
+from odoo.addons.pos_bancontact_pay.errors.http import (
+    CANCEL_PAYMENT_ERRORS,
+    CREATE_PAYMENT_ERRORS,
+    CREATE_REFUND_ERRORS,
+    DEFAULT_ERROR,
+    FETCH_REFUND_ERRORS,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -131,7 +137,7 @@ class PosPaymentMethod(models.Model):
         response = None
         try:
             response = requests.post(url, json=payload, headers=headers, timeout=5)
-            self._assert_bancontact_http_success(response)
+            self._assert_bancontact_success(response, CREATE_PAYMENT_ERRORS)
             bancontact_data = response.json()
         except Exception as e:
             reason = response.text if response is not None else str(e)
@@ -162,9 +168,7 @@ class PosPaymentMethod(models.Model):
         response = None
         try:
             response = requests.delete(url, headers=headers, timeout=5)
-            self._assert_bancontact_http_success(response,
-                {422: (_("Unable to cancel payment. The payment may not be in a cancellable state."), ValidationError)},
-            )
+            self._assert_bancontact_success(response, CANCEL_PAYMENT_ERRORS)
         except Exception as e:
             reason = response.text if response is not None else str(e)
             _logger.warning("%s payment cancellation failed: ppid=%s, bancontact_id=%s, reason=%s", const.LOG_PREFIX, self.bancontact_product_id.ppid, bancontact_id, reason)
@@ -219,20 +223,23 @@ class PosPaymentMethod(models.Model):
         """Return the Bancontact endpoint URL for the current environment."""
         return self.bancontact_product_id._get_bancontact_api_url(target)
 
-    def _assert_bancontact_http_success(self, response, extra_errors=None):
-        errors = {**HTTP_ERRORS, **(extra_errors or {})}
-        if response.status_code in errors:
-            error_message, exception_class = errors[response.status_code]
-            try:
-                error_data = response.json()
-            except JSONDecodeError:
-                error_data = {}
-            code = error_data.get("code", "")
+    def _assert_bancontact_success(self, response, errors):
+        """Raise a UserError when the Bancontact request failed.
 
-            exception_msg = f"{error_message} (ERR: {response.status_code}"
-            if code:
-                exception_msg += f" - {code}"
-            exception_msg += ")"
-            raise exception_class(exception_msg)
+        :param requests.Response response: the response of the Bancontact request.
+        :param dict errors: message per Bancontact error code that the endpoint can return.
+        """
+        if response.ok:
+            return
 
-        response.raise_for_status()
+        try:
+            code = response.json().get("code", "")
+        except JSONDecodeError:
+            code = ""
+        message = errors.get(code, DEFAULT_ERROR)
+
+        exception_msg = f"{message} (ERR: {response.status_code}"
+        if code:
+            exception_msg += f" - {code}"
+        exception_msg += ")"
+        raise UserError(exception_msg)
