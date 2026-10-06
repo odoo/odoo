@@ -1287,6 +1287,10 @@ class ResCompany(models.Model):
         accrual_moves = self.env['account.move']
         accrual_data = {}
         if include_accruals:
+            for accrual_type, candidate_lines in self._get_accrual_candidate_lines(date=at_date).items():
+                wizard = self._get_accrual_wizard(candidate_lines, accrual_type, at_date)
+                if candidate_lines and wizard.duplicate_entry_id:
+                    return wizard._get_duplicate_action()
             accrual_data = self._get_accrual_data(date=at_date)
             for vals in accrual_data.values():
                 accrual_moves |= vals['move']
@@ -1336,6 +1340,18 @@ class ResCompany(models.Model):
         """
         return {}
 
+    def _get_accrual_wizard(self, candidate_lines, accrual_type, accrual_entry_date):
+        return self.env['account.accrued.orders.wizard'].with_context(
+            active_model=candidate_lines._name,
+            active_ids=candidate_lines.ids,
+            accrual_entry_date=fields.Date.to_string(accrual_entry_date),
+            accrual_allow_mixed_currencies=True,
+        ).new({
+            'company_id': self.id,
+            'date': accrual_entry_date,
+            'accrual_type': accrual_type,
+        })
+
     def _get_accrual_data(self, date=False, post=True):
         """ Create (and post unless `post` is False) the accrual entry for every accrual
         section with something to accrue as of `date`.
@@ -1348,16 +1364,7 @@ class ResCompany(models.Model):
         for accrual_type, candidate_lines in self._get_accrual_candidate_lines(date=date).items():
             if not candidate_lines:
                 continue
-            wizard = self.env['account.accrued.orders.wizard'].with_context(
-                active_model=candidate_lines._name,
-                active_ids=candidate_lines.ids,
-                accrual_entry_date=fields.Date.to_string(accrual_entry_date),
-                accrual_allow_mixed_currencies=True,
-            ).new({
-                'company_id': self.id,
-                'date': accrual_entry_date,
-                'accrual_type': accrual_type,
-            })
+            wizard = self._get_accrual_wizard(candidate_lines, accrual_type, accrual_entry_date)
             if post:
                 move_vals, __, __ = wizard._compute_move_vals()
                 all_line_ids = move_vals['line_ids']

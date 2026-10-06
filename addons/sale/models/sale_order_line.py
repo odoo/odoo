@@ -1598,18 +1598,19 @@ class SaleOrderLine(models.Model):
         settled (nothing left to accrue today). Extended by `sale_stock`, which can also detect
         a delivery-side mismatch via stock moves.
         """
+        standing_date = date or self.env.context.get("accrual_entry_date") or fields.Date.context_today(self)
         domain = Domain([
             ("state", "=", "sale"),
             ("display_type", "=", False),
             ("is_downpayment", "=", False),
             ("product_id.type", "!=", "combo"),
-            # Lines with an accrual entry that's still standing (posted, not yet reversed or
-            # cancelled) already have their accrual accounted for: excluded until it isn't.
-            (
-                "accrual_move_ids",
-                "not any",
-                [("state", "=", "posted"), ("reversal_move_ids", "=", False)],
-            ),
+            # Lines with an accrual entry posted as of standing_date (and reversal dated after it)
+            # already have their accrual accounted for.
+            ("accrual_move_ids", "not any", [
+                ("state", "=", "posted"),
+                ("date", "<=", standing_date),
+                ("reversal_move_ids", "not any", [("state", "!=", "cancel"), ("date", "<=", standing_date)]),
+            ]),
         ])
         if date:
             domain &= Domain.OR([

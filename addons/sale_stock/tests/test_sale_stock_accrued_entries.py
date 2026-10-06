@@ -593,6 +593,10 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
             {'account_id': self.account_expense.id, 'debit': 0, 'credit': 240},
         ])
 
+        # Cancel the standing accrual to generate a new one as of the same date
+        account_move.filtered(lambda m: m.state == 'posted').button_draft()
+        account_move.button_cancel()
+
         # Delivery 3 more units (20 / 20 units.)
         backorder_delivery = sale_order_1.picking_ids.filtered(lambda pick: pick.state == 'assigned')
         backorder_delivery.button_validate()

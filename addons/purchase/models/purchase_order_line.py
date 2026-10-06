@@ -361,11 +361,18 @@ class PurchaseOrderLine(models.Model):
         settled (nothing left to accrue today). Extended by `purchase_stock`, which can also
         detect a receipt-side mismatch via stock moves.
         """
+        standing_date = date or self.env.context.get('accrual_entry_date') or fields.Date.context_today(self)
         domain = Domain([
             ('state', '=', 'purchase'),
             ('display_type', '=', False),
             ('is_downpayment', '=', False),
-            ('accrual_move_ids', 'not any', [('state', '=', 'posted'), ('reversal_move_ids', '=', False)]),
+            # Lines with an accrual entry posted as of standing_date (and reversal dated after it)
+            # already have their accrual accounted for.
+            ('accrual_move_ids', 'not any', [
+                ('state', '=', 'posted'),
+                ('date', '<=', standing_date),
+                ('reversal_move_ids', 'not any', [('state', '!=', 'cancel'), ('date', '<=', standing_date)]),
+            ]),
         ])
         if date:
             domain &= Domain.OR([

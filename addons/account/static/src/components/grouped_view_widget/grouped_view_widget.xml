@@ -20,7 +20,11 @@
     <tbody t-name="account.GroupedItemsTemplate">
         <tr style="background-color: #dee2e6;">
             <td t-attf-colspan="{{this.props.options.columns.length}}">
-                <t t-out="this.props.group_vals.group_name"/>
+                <a t-if="this.props.group_vals.res_id"
+                   t-attf-href="/odoo/{{this.props.group_vals.res_model}}/{{this.props.group_vals.res_id}}"
+                   target="_blank"
+                   t-out="this.props.group_vals.group_name"/>
+                <t t-else="" t-out="this.props.group_vals.group_name"/>
             </td>
         </tr>
         <t t-foreach="this.props.group_vals.items_vals" t-as="item_vals" t-key="item_vals_index">
