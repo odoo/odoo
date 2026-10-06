@@ -272,6 +272,39 @@ class TestAccountMove(TestStockValuationCommon):
             {'analytic_distribution': {str(analytic_account.id): 100}, 'credit': 0, 'debit': 10},
         ])
 
+    def test_validate_receipts_from_different_partners_together(self):
+        """
+        Validating together receipts from different partners must create one
+        valuation entry per partner instead of failing.
+        """
+        product = self.product_standard_auto
+        self.stock_location.valuation_account_id = self.env['account.account'].create({
+            'name': 'STCK Test Account',
+            'code': '100119',
+            'account_type': 'asset_current',
+        })
+        partners = self.partner + self.vendor
+        receipts = self.env['stock.picking'].create([{
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'partner_id': partner.id,
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom_qty': 1.0,
+            })],
+        } for partner in partners])
+        receipts.button_validate()
+
+        self.assertEqual(receipts.mapped('state'), ['done', 'done'])
+        for receipt in receipts:
+            account_move = receipt.move_ids.account_move_id
+            self.assertEqual(len(account_move), 1)
+            self.assertEqual(account_move.partner_id, receipt.partner_id)
+            self.assertEqual(account_move.ref, receipt.name)
+
     def test_cogs_account_branch_company(self):
         """Check branch company accounts are selected"""
         product = self.product_standard_auto
