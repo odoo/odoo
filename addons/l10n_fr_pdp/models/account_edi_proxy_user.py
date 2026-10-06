@@ -471,6 +471,9 @@ class AccountEdiProxyClientUser(models.Model):
             origin_move = uuid_to_move_map.get(origin_uuid)
             if not origin_move:
                 _logger.warning('The French e-invoicing response with UUID %s could not be imported: Original journal entry (UUID %s) not found.', uid, origin_uuid)
+                if origin_uuid == uid:
+                    # The proxy could not link the response to any document: it will never be importable
+                    processed_uuids.append(uid)
                 continue
             try:
                 self._pdp_import_incoming_response(uid, content, origin_move[:1])
