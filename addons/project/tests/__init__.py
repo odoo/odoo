@@ -32,6 +32,7 @@ from . import test_task_templates
 from . import test_task_templates_ui
 from . import test_task_tracking
 from . import test_project_report
+from . import test_project_time_by_stage_report
 from . import test_project_task_quick_create
 from . import test_task_state
 from . import test_project_task_mail_tracking_duration
