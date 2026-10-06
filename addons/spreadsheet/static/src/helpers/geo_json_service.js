@@ -157,6 +157,10 @@ export const geoJsonService = {
                 const mapping = region === "usa" ? usaStatesMapping : countriesMapping;
                 return mapping?.[name];
             },
+            isRegionAvailable(region) {
+                const mapping = region === "usa" ? usaStatesMapping : countriesMapping;
+                return mapping ? Object.keys(mapping).length > 0 : true;
+            },
         };
     },
 };
