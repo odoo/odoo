@@ -470,13 +470,17 @@ export class Record {
                     return;
                 }
                 const effectFn = immediate ? immediateEffect : effect;
-                const { isUpdateInProgress } = record._rawStore._;
+                const { isDrainingQueues, isUpdateInProgress } = record._rawStore._;
                 const disposeFn = untrack(() =>
                     effectFn(function runOnChange() {
                         const values = deps() ?? [];
-                        if (immediate && untrack(isUpdateInProgress)) {
+                        if (
+                            immediate &&
+                            (untrack(isUpdateInProgress) || untrack(isDrainingQueues))
+                        ) {
                             // Wait for the applied write, subscribed only meanwhile.
                             void isUpdateInProgress();
+                            void isDrainingQueues();
                             firstValues ??= values;
                             return;
                         }
@@ -515,6 +519,73 @@ export class Record {
                     cleanup = undefined;
                 });
             })
+        );
+    }
+
+    /**
+     * Run `callback` once per value that enters the array returned by
+     * `dependencies`, the falsy ones ignored, synchronously like an immediate
+     * `onChange`.
+     *
+     * @template {any[]} T
+     * @param {(this: this) => T} dependencies
+     * @param {(this: this, item: T[number]) => (() => void)|void} callback may
+     *  return an `onLeave` function, invoked when that item leaves or when the
+     *  record is deleted
+     */
+    onEnter(dependencies, callback) {
+        const record = this;
+        if (!record._) {
+            return;
+        }
+        const getItems = () => [...new Set(dependencies.call(record).filter(Boolean))];
+        let previous = [];
+        /** @type {Map<any, () => void>} */
+        const onLeaveByItem = new Map();
+        function getChanges(items) {
+            const added = items.filter((item) => !previous.includes(item));
+            const removed = previous.filter((item) => !items.includes(item));
+            previous = items;
+            return added.length || removed.length ? { added, removed } : undefined;
+        }
+        // Keep going on the other items, the update throws the error once done.
+        function tryCall(fn) {
+            try {
+                return fn();
+            } catch (error) {
+                record._rawStore.handleError(error);
+            }
+        }
+        record._.ensureScope().onDestroy(() => {
+            if (!record.exists()) {
+                // Undo only for a deleted record: the app teardown
+                // disposes live ones too.
+                untrack(() => onLeaveByItem.forEach((onLeave) => tryCall(onLeave)));
+            }
+            onLeaveByItem.clear();
+        });
+        record.onChange(
+            getItems,
+            (...items) => {
+                // Loop over what the callbacks change themselves, as the effect
+                // subscribed to the items they read before running.
+                let changes = getChanges(items);
+                while (changes) {
+                    for (const item of changes.removed) {
+                        const onLeave = onLeaveByItem.get(item);
+                        onLeaveByItem.delete(item);
+                        tryCall(() => onLeave?.());
+                    }
+                    for (const item of changes.added) {
+                        const onLeave = tryCall(() => callback.call(record._proxy, item));
+                        if (typeof onLeave === "function") {
+                            onLeaveByItem.set(item, onLeave);
+                        }
+                    }
+                    changes = getChanges(getItems());
+                }
+            },
+            { immediate: true }
         );
     }
 

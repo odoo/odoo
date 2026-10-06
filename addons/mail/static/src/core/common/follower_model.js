@@ -5,6 +5,19 @@ import { _t } from "@web/core/l10n/translation";
 export class Follower extends Record {
     static _name = "mail.followers";
 
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.thread],
+            (thread) => {
+                if (!thread) {
+                    this.delete();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+    }
+
     thread = fields.One("mail.thread");
     /** @type {string} */
     display_name;

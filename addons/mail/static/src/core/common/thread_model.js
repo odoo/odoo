@@ -34,6 +34,28 @@ export class Thread extends Record {
 
     setup() {
         super.setup(...arguments);
+        this.onEnter(
+            () => [this.composer],
+            (composer) => () => composer.delete()
+        );
+        this.onEnter(
+            () => this.activities,
+            (activity) => () => activity.remove()
+        );
+        this.onEnter(
+            () => this.followers,
+            (follower) => {
+                follower.thread = this;
+                return () => follower.delete();
+            }
+        );
+        this.onEnter(
+            () => [this.selfFollower],
+            (follower) => {
+                follower.thread = this;
+                return () => follower.delete();
+            }
+        );
         this.onChange(
             () => [this.composerDisabled],
             () => this.composerDisabledonUpdate(),
@@ -110,7 +132,7 @@ export class Thread extends Record {
     }
 
     autofocus = 0;
-    activities = fields.Many("mail.activity", { onDelete: (r) => r?.remove() });
+    activities = fields.Many("mail.activity");
     sortedActivities = this.computed(
         () =>
             [...this.activities].sort(
@@ -146,7 +168,6 @@ export class Thread extends Record {
     composer = fields.One("Composer", {
         compute: () => ({}),
         inverse: "thread",
-        onDelete: (r) => r?.delete(),
     });
     counter = 0;
     /** @type {string} */
@@ -155,20 +176,8 @@ export class Thread extends Record {
     description;
     /** @type {string} */
     display_name;
-    followers = fields.Many("mail.followers", {
-        /** @this {import("models").Thread} */
-        onAdd(r) {
-            r.thread = this;
-        },
-        onDelete: (r) => r?.delete(),
-    });
-    selfFollower = fields.One("mail.followers", {
-        /** @this {import("models").Thread} */
-        onAdd(r) {
-            r.thread = this;
-        },
-        onDelete: (r) => r?.delete(),
-    });
+    followers = fields.Many("mail.followers");
+    selfFollower = fields.One("mail.followers");
     /** @type {integer|undefined} */
     followersCount;
     loadOlder = false;

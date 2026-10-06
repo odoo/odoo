@@ -14,6 +14,24 @@ export class ChannelMember extends Record {
     setup() {
         super.setup(...arguments);
         this.onChange(
+            () => [this.channel_id],
+            (channel_id) => {
+                if (!channel_id) {
+                    this.delete();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
+            () => [this.channelAsTyping],
+            (channelAsTyping) => {
+                if (!channelAsTyping) {
+                    clearTimeout(this.typingTimeoutId);
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
             () => [this.is_pinned],
             () => {
                 // The channel pin state follows self member only: reacting to the other
@@ -142,9 +160,6 @@ export class ChannelMember extends Record {
             return this.isTyping ? this.channel_id : undefined;
         },
         eager: true,
-        onDelete() {
-            window.clearTimeout(this.typingTimeoutId);
-        },
     });
     /** @type {number} */
     typingTimeoutId;

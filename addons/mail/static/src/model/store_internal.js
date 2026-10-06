@@ -1,5 +1,6 @@
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
+/** @typedef {import("./store").Store} Store */
 
 import { ManyFieldVersion, SingleFieldVersion, SKIP_REVISION } from "@mail/model/field_version";
 import { isCommandList, isMany, normalizeManyCommands, untrackFunctions } from "@mail/model/misc";
@@ -15,15 +16,19 @@ const Markup = markup().constructor;
 /** @typedef {string} FieldName */
 
 export class StoreInternal extends RecordInternal {
-    /** @type {Map<import("./record").Record, Map<string, true>>} */
+    /**
+     * See {@link Store#MAKE_UPDATE}.
+     * @type {Map<import("./record").Record, Map<string, true>>}
+     */
     FC_QUEUE = new Map(); // field-computes
-    /** @type {Map<import("./record").Record, Map<string, Map<import("./record").Record, true>>>} */
-    FA_QUEUE = new Map(); // field-onadds
-    /** @type {Map<import("./record").Record, Map<string, Map<import("./record").Record, true>>>} */
-    FD_QUEUE = new Map(); // field-ondeletes
-    /** @type {Map<Record, true>} */
+    /**
+     * See {@link Store#MAKE_UPDATE}.
+     * @type {Map<Record, true>}
+     */
     RD_QUEUE = new Map(); // record-deletes
+    /** See {@link Store#MAKE_UPDATE}. */
     ERRORS = [];
+    /** See {@link Store#MAKE_UPDATE}. */
     UPDATE = 0;
     /**
      * The owl app this store belongs to, needed by the scope of each of its
@@ -32,20 +37,17 @@ export class StoreInternal extends RecordInternal {
      * @type {import("@odoo/owl").App}
      */
     app;
-    /**
-     * Number of update functions currently running, nested included. An owl
-     * computed() field holds its last value while one runs, as the relations
-     * it reads are written one by one. onAdd and onDelete run outside of
-     * them, at depth 0, so they read fresh values.
-     */
+    /** See {@link Store#MAKE_UPDATE}. */
     updateDepth = signal(0);
     raiseUpdateDepth = incrementFn(this.updateDepth);
     lowerUpdateDepth = incrementFn(this.updateDepth, -1);
     /**
-     * Whether an update function is being run. A computed of the depth, so a
-     * held field only recomputes when this flips, not on every nested raise.
+     * A computed of the depth, so a held field only recomputes when this
+     * flips, not on every nested raise. See {@link Store#MAKE_UPDATE}.
      */
     isUpdateInProgress = computed(() => this.updateDepth() > 0);
+    /** See {@link Store#MAKE_UPDATE}. */
+    isDrainingQueues = signal(false);
     /**
      * Current version context used in the current store insert operation.
      *
@@ -65,7 +67,7 @@ export class StoreInternal extends RecordInternal {
     }
 
     /**
-     * @param {"compute"|"onAdd"|"onDelete"} type
+     * @param {"compute"|"delete"} type
      * @param {...any} params
      */
     ADD_QUEUE(type, ...params) {
@@ -87,46 +89,6 @@ export class StoreInternal extends RecordInternal {
                     this.FC_QUEUE.set(record, recMap);
                 }
                 recMap.set(fieldName, true);
-                break;
-            }
-            case "onAdd": {
-                /** @type {[import("./record").Record, string, import("./record").Record]} */
-                const [record, fieldName, addedRec] = params;
-                const Model = record.Model;
-                if (!Model._.fieldsOnAdd.get(fieldName)) {
-                    return;
-                }
-                let recMap = this.FA_QUEUE.get(record);
-                if (!recMap) {
-                    recMap = new Map();
-                    this.FA_QUEUE.set(record, recMap);
-                }
-                let fieldMap = recMap.get(fieldName);
-                if (!fieldMap) {
-                    fieldMap = new Map();
-                    recMap.set(fieldName, fieldMap);
-                }
-                fieldMap.set(addedRec, true);
-                break;
-            }
-            case "onDelete": {
-                /** @type {[import("./record").Record, string, import("./record").Record]} */
-                const [record, fieldName, removedRec] = params;
-                const Model = record.Model;
-                if (!Model._.fieldsOnDelete.get(fieldName)) {
-                    return;
-                }
-                let recMap = this.FD_QUEUE.get(record);
-                if (!recMap) {
-                    recMap = new Map();
-                    this.FD_QUEUE.set(record, recMap);
-                }
-                let fieldMap = recMap.get(fieldName);
-                if (!fieldMap) {
-                    fieldMap = new Map();
-                    recMap.set(fieldName, fieldMap);
-                }
-                fieldMap.set(removedRec, true);
                 break;
             }
         }
