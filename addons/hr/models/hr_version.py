@@ -444,11 +444,11 @@ class HrVersion(models.Model):
 
     def _is_flexible(self):
         self.ensure_one()
-        return self.resource_calendar_id._is_flexible()
+        return bool(self.resource_calendar_id) and self.resource_calendar_id._is_flexible()
 
     def _is_fully_flexible(self):
         self.ensure_one()
-        return self.resource_calendar_id._is_fully_flexible()
+        return bool(self.resource_calendar_id) and self.resource_calendar_id._is_fully_flexible()
 
     def _is_overlapping_period(self, date_from, date_to):
         """
