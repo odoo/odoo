@@ -636,7 +636,6 @@ export function useSequential() {
         const resolve = nextResolve;
         const reject = nextReject;
         const func = nextFunction;
-        nextResolve = undefined;
         nextReject = undefined;
         nextFunction = undefined;
         inProgress = true;

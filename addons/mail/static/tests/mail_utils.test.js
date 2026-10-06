@@ -238,8 +238,26 @@ test("isSequential doesn't execute intermediate call.", async () => {
         });
     };
     const result = await Promise.all([sequence(), sequence(), sequence(), sequence(), sequence()]);
-    expect(result).toEqual([1, undefined, undefined, undefined, 5]);
+    expect(result).toEqual([undefined, undefined, undefined, undefined, 5]);
     expect.verifySteps(["1", "5"]);
+});
+
+test("useSequential cancels the call in progress but waits for it before the next one", async () => {
+    const sequential = useSequential();
+    const first = Promise.withResolvers();
+    const firstCall = sequential(() => {
+        expect.step("first start");
+        return first.promise;
+    });
+    const secondCall = sequential(() => {
+        expect.step("second start");
+        return "second";
+    });
+    expect(await firstCall).toBe(undefined);
+    expect.verifySteps(["first start"]);
+    first.resolve("first");
+    expect(await secondCall).toBe("second");
+    expect.verifySteps(["second start"]);
 });
 
 function inlineHtml(content) {
