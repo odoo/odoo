@@ -30,6 +30,14 @@ export class AlignSelector extends Component {
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
     }
 
+    /**
+     * The button is active when the text has another alignment than the
+     * default one ("left" stands for the start of the text).
+     */
+    get isActive() {
+        return !!this.state.displayName && this.state.displayName !== "left";
+    }
+
     onSelected(item) {
         this.props.onSelected(item);
         this.props.focusEditable();

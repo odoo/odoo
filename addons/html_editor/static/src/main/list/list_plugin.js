@@ -253,8 +253,8 @@ export class ListPlugin extends Plugin {
         this.addDomListener(this.editable, "touchstart", this.onPointerdown);
         this.addDomListener(this.editable, "mousedown", this.onPointerdown);
         this.listSelectorButtons = this.getListSelectorButtons();
-        // Icon of the list button: the type of the list of the selection.
-        this.listDisplay = proxy({ icon: "format_list_bulleted" });
+        // Icon and active state of the list button: the list of the selection.
+        this.listDisplay = proxy({ icon: "format_list_bulleted", isActive: false });
         this.canToggleListMemoized = weakMemoize(
             (selection) =>
                 isHtmlContentSupported(selection) && this.getBlocksToToggleList().length > 0
@@ -267,6 +267,7 @@ export class ListPlugin extends Plugin {
         const mode = li && this.getListMode(li.parentElement);
         const button = mode && this.listSelectorButtons.find((button) => button.mode === mode);
         this.listDisplay.icon = button?.icon || "format_list_bulleted";
+        this.listDisplay.isActive = !!button;
     }
 
     toggleListCommand({ mode, listStyle } = {}) {

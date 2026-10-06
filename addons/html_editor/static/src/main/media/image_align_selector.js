@@ -29,6 +29,15 @@ export class ImageAlignSelector extends Component {
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
     }
 
+    /**
+     * The button is active when the image is not inline (the item without a
+     * class).
+     */
+    get isActive() {
+        const inlineItem = this.props.items.find((item) => !item.value);
+        return this.state.displayIcon !== inlineItem?.icon;
+    }
+
     onSelected(item) {
         this.props.onSelected(item);
         this.props.focusEditable();
