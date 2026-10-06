@@ -1,54 +1,6 @@
-import { proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
-import { useBus, useService } from '@web/core/utils/hooks';
-
-export const ExpenseDocumentDropZone = (T, parentProps) => class ExpenseDocumentDropZone extends T {
-    props = useProps({
-        ...parentProps,
-        uploadDocument: t.function(),
-    });
-
-    setup() {
-        super.setup();
-        this.dragState = proxy({
-            showDragZone: false,
-        });
-
-        // The drop zone is the whole content area the renderer is displayed in.
-        const contentEl = () => this.rootRef()?.closest(".o_content");
-        useListener(contentEl, "dragover", this.highlight.bind(this));
-        useListener(contentEl, "dragleave", this.unhighlight.bind(this));
-        useListener(contentEl, "drop", this.onDrop.bind(this));
-
-        useListener(this.rootRef, 'click', (ev) => {
-            let targetElement = ev.target;
-            if (targetElement.closest('.o_view_nocontent_expense_receipt')) {
-                this.props.uploadDocument();
-            }
-        });
-    }
-
-    highlight(ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        this.dragState.showDragZone = true;
-    }
-
-    unhighlight(ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        this.dragState.showDragZone = false;
-    }
-
-    async onDrop(ev) {
-        ev.preventDefault();
-        await this.env.bus.trigger("change_file_input", {
-            files: ev.dataTransfer.files,
-        });        
-        this.dragState.showDragZone = false;
-    }
-};
+import { useService } from '@web/core/utils/hooks';
 
 export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumentUpload extends T {
 
@@ -132,42 +84,3 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
         return "hr.expense";
     }
 }
-
-export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends AbstractExpenseDocumentUpload(T) {
-    fileInput = signal.ref();
-
-    setup() {
-        super.setup();
-        this.uploadsProcessing = 0;
-
-        useBus(this.env.bus, "change_file_input", async (ev) => {
-            this.fileInput().files = ev.detail.files;
-            this.uploadsProcessing++;
-            await this.onChangeFileInput();
-        });
-    }
-
-    uploadDocument() {
-        this.uploadsProcessing++;
-        this.fileInput().click();
-    }
-
-    async onChangeFileInput() {
-        try {
-            await this._onChangeFileInput([...this.fileInput().files]);
-            if (this.uploadsProcessing === 1) {
-                await this.generateOpenExpensesAction(this.actionService.currentController.action);
-            }
-        } finally {
-            this.uploadsProcessing--;
-        }
-    }
-
-    get viewType() {
-        return this.env.config.viewType;
-    }
-
-    get context() {
-        return this.props.context;
-    }
-};
