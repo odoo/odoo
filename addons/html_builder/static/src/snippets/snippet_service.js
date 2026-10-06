@@ -411,8 +411,6 @@ export class SnippetModel {
         for (const snippetEl of snippetsDocument.body.querySelectorAll("snippets > *")) {
             if (snippetEl.children[0].classList.contains("s_custom_snippet")) {
                 snippetEl.children[0].dataset.customName = snippetEl.getAttribute("name");
-            } else {
-                snippetEl.children[0].dataset.name = snippetEl.getAttribute("name");
             }
         }
     }
@@ -490,6 +488,18 @@ export class SnippetModel {
         if (snippetEl.dataset.name) {
             return snippetEl.dataset.name;
         }
+        const nameFromSnippet = this.getOriginalSnippet(snippetEl.dataset.snippet)?.title;
+        if (nameFromSnippet) {
+            return nameFromSnippet;
+        }
+        for (const c of snippetEl.classList) {
+            if (c.startsWith("s_")) {
+                const nameFromSnippet = this.getOriginalSnippet(c)?.title;
+                if (nameFromSnippet) {
+                    return nameFromSnippet;
+                }
+            }
+        }
         const snippetNameRules = [
             { selector: "img", name: _t("Image") },
             { selector: ".oi", name: _t("Icon") },
@@ -497,7 +507,6 @@ export class SnippetModel {
             { selector: ".row > *", name: _t("Column") },
             { selector: "#wrapwrap > main", name: _t("Page Options") },
             { selector: ".btn", name: _t("Button") },
-            { selector: "[data-snippet=s_website_form]", name: _t("Form") },
             { selector: "#wrapwrap", name: _t("Website") },
         ];
         for (const { selector, name } of snippetNameRules) {
