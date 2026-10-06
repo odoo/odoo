@@ -206,11 +206,11 @@ class AccountMoveLine(models.Model):
         help="The payment that created this entry")
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
-        string="Originator Statement Line",
+        string="Originator Bank Transaction",
         related='move_id.statement_line_id', store=True,
         bypass_search_access=True,
         index='btree_not_null',
-        help="The statement line that created this entry")
+        help="The bank transaction that created this entry")
     statement_id = fields.Many2one(
         related='statement_line_id.statement_id', store=True,
         bypass_search_access=True,
