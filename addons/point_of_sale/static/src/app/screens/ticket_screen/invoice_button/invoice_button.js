@@ -116,4 +116,7 @@ export class InvoiceButton extends Component {
             this.lock = false;
         }
     }
+    shouldDisableInvoice() {
+        return false;
+    }
 }
