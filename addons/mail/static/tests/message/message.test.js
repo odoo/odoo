@@ -1876,6 +1876,38 @@ test("not highlighting the message if not mentioning the current user inside the
     await contains(".o-mail-Message-bubble:not(.o-orange)");
 });
 
+test("compact message layout in discuss but not in chatter", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (const body of ["Hello", "World"]) {
+        pyEnv["mail.message"].create({
+            author_id: partnerId,
+            body,
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "On record",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    getService("mail.store").settings.messageLayout = "compact";
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message.o-compact", { count: 2 });
+    await contains(".o-mail-Message.o-compact .o-mail-Message-author", { count: 2 });
+    await contains(".o-mail-Message.o-squashed", { count: 0 });
+    await contains(".o-mail-Message-bubble", { count: 0 });
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Chatter .o-mail-Message:not(.o-compact)", { text: "On record" });
+    await contains(".o-mail-Message-bubble");
+});
+
 test("allow attachment delete on authored message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });

@@ -632,7 +632,12 @@ export class Thread extends Component {
     }
 
     isSquashed(msg, prevMsg) {
-        if (!prevMsg || prevMsg.message_type === "notification" || this.ancestors.inChatter) {
+        if (
+            !prevMsg ||
+            prevMsg.message_type === "notification" ||
+            this.ancestors.inChatter ||
+            this.store.settings.useCompactMessageLayout
+        ) {
             return false;
         }
 

@@ -348,7 +348,12 @@ export class Message extends Component {
                 this.props.message.composerAsReplyToMessage?.thread.eq(this.props.thread) ||
                 this.props.messageSelection?.isSelected(this.props.message),
             "o-squashed": this.props.squashed,
-            "mt-2": !this.props.squashed && this.props.thread && !this.ancestors.inMessageCardList,
+            "o-compact": this.isCompact,
+            "mt-2":
+                !this.props.squashed &&
+                !this.isCompact &&
+                this.props.thread &&
+                !this.ancestors.inMessageCardList,
             "px-1": this.ancestors.inChatWindow,
             "o-actionMenuMobileOpen": this.ui.isSmall && this.optionsDropdown.isOpen,
             "o-editing": this.isEditing,
@@ -395,7 +400,7 @@ export class Message extends Component {
             "p-1": isNoteVisual,
             "fs-1": !this.isEditing && !this.ancestors.inChatter && this.message.onlyEmojis,
             "mb-0": !isNoteVisual,
-            "py-2": !isNoteVisual && !this.isEditing && this.showTextVisually,
+            "py-2": !isNoteVisual && !this.isEditing && this.showTextVisually && !this.isCompact,
             "pt-2 pb-1": !isNoteVisual && this.isEditing,
             "o-note": isNoteVisual,
             "o-rounded-bubble": this.props.squashed,
@@ -455,8 +460,23 @@ export class Message extends Component {
         return Boolean(
             this.ancestors.inChatWindow &&
                 this.props.message.isSelfAuthored &&
+                !this.ancestors.inMessageCardList &&
+                !this.isCompact
+        );
+    }
+
+    /** Whether this message is displayed with the IRC-like compact layout. */
+    get isCompact() {
+        return Boolean(
+            this.store.settings.useCompactMessageLayout &&
+                !this.ancestors.inChatter &&
                 !this.ancestors.inMessageCardList
         );
+    }
+
+    /** Bubble color of the message in the current layout, if any. */
+    get bubbleColor() {
+        return this.isCompact ? undefined : this.message.bubbleColor;
     }
 
     get isMobileOS() {
@@ -484,6 +504,9 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get shouldDisplayAuthorName() {
+        if (this.isCompact) {
+            return true;
+        }
         if (!this.ancestors.inChatWindow || this.ancestors.inMessageCardList) {
             return true;
         }
@@ -627,7 +650,7 @@ export class Message extends Component {
     }
 
     getCoreAttClass() {
-        return {};
+        return { "align-items-baseline": this.isCompact };
     }
 
     getSidebarAttClass() {
@@ -638,7 +661,10 @@ export class Message extends Component {
     }
 
     getContentAttClass() {
-        return { "flex-grow-1": this.isEditing };
+        return {
+            "flex-grow-1": this.isEditing,
+            "o-mail-Message-compactContent": this.isCompact,
+        };
     }
 
     exitEditMode() {
