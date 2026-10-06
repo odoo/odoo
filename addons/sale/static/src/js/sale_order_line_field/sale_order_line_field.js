@@ -180,6 +180,14 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         );
     }
 
+    isColumnGroupFieldVisible(column, fieldInfo, record) {
+        return super.isColumnGroupFieldVisible(column, fieldInfo, record) && (
+            !this.isCombo(record)
+                || this.comboColumns.includes(column.name)
+                || this.comboColumns.includes(fieldInfo.name)
+        );
+    }
+
     async onDeleteRecord(record) {
         if (this.isCombo(record)) {
             await clearSelectedComboItems(record);
