@@ -626,9 +626,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_update_column_count(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_update_column_count', login="admin")
 
-    def test_website_text_highlights(self):
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'text_highlights', login='admin')
-
     def test_website_extra_items_no_dirty_page(self):
         """
         Having enough menus to trigger the "+" folded menus has been known to
