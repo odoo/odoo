@@ -80,10 +80,10 @@ class _Relational(Field[BaseModel]):
         """
         raise NotImplementedError
 
-    def setup_nonrelated(self, model):
-        super().setup_nonrelated(model)
-        assert self.comodel_name in model.pool, \
-            f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}"
+    def _setup(self, model):
+        super()._setup(model)
+        if self.comodel_name not in model.pool:
+            raise ValueError(f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}")
 
     def setup_inverses(self, registry: Registry, inverses: Collector[Field, Field]):
         """ Populate ``inverses`` with ``self`` and its inverse fields. """
@@ -114,9 +114,7 @@ class _Relational(Field[BaseModel]):
         else:
             return validated(self.domain)
 
-    # property used by setup_related() to copy values from related field
     _related_comodel_name = property(attrgetter('comodel_name'))
-
     _related_context = property(attrgetter('context'))
 
     _description_relation = property(attrgetter('comodel_name'))
@@ -139,11 +137,10 @@ class _Relational(Field[BaseModel]):
                 cids = 'company_ids'
                 field_to_check = 'company_ids'
             else:
-                _logger.warning(env._(
-                    "Couldn't generate a company-dependent domain for field %s. "
-                    "The model doesn't have a 'company_id' or 'company_ids' field, and isn't company-dependent either.",
-                    self.model_name + '.' + self.name,
-                ))
+                self._setup_warning(
+                    "Couldn't generate a company-dependent domain for field. "
+                    "The model doesn't have a 'company_id' or 'company_ids' field, and isn't company-dependent either."
+                )
                 return domain
             company_domain = env[self.comodel_name]._check_company_domain(companies=unquote(cids))
             if not field_to_check:
@@ -259,8 +256,10 @@ class Many2one(_Relational):
                 f"_inherits = {{{comodel_name!r}: {name!r}}}"
             )
 
-    def setup_nonrelated(self, model):
-        super().setup_nonrelated(model)
+    def _setup(self, model):
+        super()._setup(model)
+        if self.related:
+            return
         # 3 cases:
         # 1) The ondelete attribute is not defined, we assign it a sensible default
         # 2) The ondelete attribute is defined and its definition makes sense
@@ -929,9 +928,9 @@ class One2many(_RelationalMulti):
             **kwargs
         )
 
-    def setup_nonrelated(self, model):
-        super().setup_nonrelated(model)
-        if self.inverse_name:
+    def _setup(self, model):
+        super()._setup(model)
+        if self.inverse_name and not self.related:
             # link self to its inverse field and vice-versa
             comodel = model.env[self.comodel_name]
             try:
@@ -946,7 +945,7 @@ class One2many(_RelationalMulti):
             if self.manual and self.inverse_name not in registry[self.comodel_name]._fields:
                 # ignore manual fields (e.g. from Studio) that may reference a
                 # non-existent inverse field in the registry to avoid crashing
-                _logger.warning("%s: ignoring manual field with invalid inverse name %r", self, self.inverse_name)
+                self._setup_warning(f"ignoring manual field with invalid inverse name {self.inverse_name!r}")
                 return
             invf = registry[self.comodel_name]._fields[self.inverse_name]
             if isinstance(invf, (Many2one, Many2oneReference)):
@@ -1296,15 +1295,9 @@ class Many2many(_RelationalMulti):
             **kwargs
         )
 
-    def setup_related(self, model):
-        super().setup_related(model)
-        self._setup_relation(model)
+    def _setup(self, model):
+        super()._setup(model)
 
-    def setup_nonrelated(self, model):
-        super().setup_nonrelated(model)
-        self._setup_relation(model)
-
-    def _setup_relation(self, model: BaseModel):
         # 2 cases:
         # 1) The ondelete attribute is defined and its definition makes sense
         # 2) The ondelete attribute is explicitly defined as 'set null' for a m2m,
@@ -1323,10 +1316,11 @@ class Many2many(_RelationalMulti):
                 comodel = model.env[self.comodel_name]
                 if not self.relation:
                     tables = sorted([model._table, comodel._table])
-                    assert tables[0] != tables[1], \
-                        "%s: Implicit/canonical naming of many2many relationship " \
-                        "table is not possible when source and destination models " \
-                        "are the same" % self
+                    if tables[0] == tables[1]:
+                        raise Exception(
+                            f"{self}: implicit/canonical naming of many2many relationship "
+                            "table is not possible when source and destination models are the same"
+                        )
                     self.relation = '%s_%s_rel' % tuple(tables)
                 # Safe to update shared fields' attributes
                 # because _check_model_extension guarantees model_cls._table is not overridable.

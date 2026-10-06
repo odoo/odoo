@@ -467,15 +467,15 @@ class Field[T]:
             # by default, `state` fields should be reset on copy
             attrs['copy'] = attrs.get('copy', False)
         if attrs.get('_shareable'):
-            warnings.warn(f"_shareable attribute shouldn't be set to True on field {self}")
+            self._setup_warning("_shareable attribute shouldn't be set to True")
         if attrs.get('compute_sql'):
             if not attrs.get('compute'):
-                warnings.warn(f"compute_sql attribute makes sense only if {self} is a computed field")
+                self._setup_warning("compute_sql attribute makes sense only for a computed field")
             if 'compute_sudo' not in attrs:
-                warnings.warn(f"compute_sql requires an explicit compute_sudo parameter on {self}")
+                self._setup_warning("compute_sql requires an explicit compute_sudo parameter")
         if attrs.get('related'):
             if attrs.pop('compute', None):
-                warnings.warn(f"Field {self} is both compute and related. Set one of them to None.")
+                self._setup_warning("both compute and related are defined, set one of them to None")
             # by default, related fields are not stored, computed in superuser
             # mode, not copied and readonly
             attrs['store'] = store = attrs.get('store', False)
@@ -493,18 +493,18 @@ class Field[T]:
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
         if attrs.get('precompute'):
             if not attrs.get('compute') and not attrs.get('related'):
-                warnings.warn(f"precompute attribute doesn't make any sense on non computed field {self}", stacklevel=1)
+                self._setup_warning("precompute attribute doesn't make any sense on non computed field")
                 attrs['precompute'] = False
             elif not attrs.get('store'):
-                warnings.warn(f"precompute attribute has no impact on non stored field {self}", stacklevel=1)
+                self._setup_warning("precompute attribute has no impact on non stored field")
                 attrs['precompute'] = False
         if attrs.get('company_dependent'):
             if attrs.get('required'):
-                warnings.warn(f"company_dependent field {self} cannot be required", stacklevel=1)
+                self._setup_warning("company_dependent field cannot be required")
             if attrs.get('translate'):
-                warnings.warn(f"company_dependent field {self} cannot be translated", stacklevel=1)
+                self._setup_warning("company_dependent field cannot be translated")
             if self.type not in COMPANY_DEPENDENT_FIELDS:
-                warnings.warn(f"company_dependent field {self} is not one of the allowed types {COMPANY_DEPENDENT_FIELDS}", stacklevel=1)
+                self._setup_warning(f"company_dependent field is not one of the allowed types {COMPANY_DEPENDENT_FIELDS}")
             attrs['copy'] = attrs.get('copy', False)
             # speed up search and on delete
             attrs['index'] = attrs.get('index', 'btree_not_null')
@@ -560,41 +560,38 @@ class Field[T]:
             # validate field params
             for key in self._extra_keys__:
                 if not model._valid_field_parameter(self, key):
-                    _logger.warning(
-                        "Field %s: unknown parameter %r, if this is an actual"
+                    self._setup_warning(
+                        f"unknown parameter {key!r}, if this is an actual"
                         " parameter you may want to override the method"
                         " _valid_field_parameter on the relevant model in order to"
-                        " allow it",
-                        self, key
+                        " allow it"
                     )
-            if self.related:
-                self.setup_related(model)
-            else:
-                self.setup_nonrelated(model)
+
+            try:
+                self._setup(model)
+            except Exception as e:
+                e.add_note(f"Field setup failed: {self}")
+                raise
 
             if not isinstance(self.required, bool):
-                warnings.warn(f'Property {self}.required should be a boolean ({self.required}).', stacklevel=1)
+                self._setup_warning(f'property required should be a boolean ({self.required})')
 
             if not isinstance(self.readonly, bool):
-                warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).', stacklevel=1)
+                self._setup_warning(f'property readonly should be a boolean ({self.readonly})')
 
             if self.store and self._depends_context and not all(
                 (self.translate and c == 'lang')
                 or (self.company_dependent and c == 'company')
                 for c in self._depends_context
             ):
-                warnings.warn(f'Stored field {self} should not depend on context ({self._depends_context}).', stacklevel=1)
+                self._setup_warning(f'stored field should not depend on context ({self._depends_context})')
 
             self._setup_done = True
             # column_type might be changed during Field.setup
             reset_cached_properties(self)
-    #
-    # Setup of non-related fields
-    #
 
-    def setup_nonrelated(self, model: BaseModel) -> None:
-        """ Determine the dependencies and inverse field(s) of ``self``. """
-        pass
+    def _setup_warning(self, message: str):
+        warnings.warn(f"{self}: {message}", stacklevel=2)
 
     def get_depends(self, model: BaseModel) -> tuple[Iterable[str], Iterable[str]]:
         """ Return the field's dependencies and cache dependencies. """
@@ -635,13 +632,14 @@ class Field[T]:
 
         return depends, depends_context
 
-    #
-    # Setup of related fields
-    #
+    def _setup(self, model: BaseModel) -> None:
+        """Implementation of the setup of the field."""
+        if not self.related:
+            return
 
-    def setup_related(self, model: BaseModel) -> None:
         """ Setup the attributes of a related field. """
-        assert isinstance(self.related, str), self.related
+        if not isinstance(self.related, str):
+            raise TypeError(f"{self}: related field must be a string, got {self.related!r}")
 
         # determine the chain of fields, and make sure they are all set up
         field_seq = []
@@ -694,7 +692,7 @@ class Field[T]:
         # A readonly related field without an inverse method should not have a
         # default value, as it does not make sense.
         if self.default and self.readonly and not self.inverse:
-            _logger.warning("Redundant default on %s", self)
+            self._setup_warning("redundant default")
 
         # copy attributes from field to self (string, help, etc.)
         for attr, prop in self.related_attrs:
@@ -879,7 +877,7 @@ class Field[T]:
             join_field=SQL.identifier(join_field),
         ))
 
-    # properties used by setup_related() to copy values from related field
+    # properties used by _setup() to copy values from related field
     _related_string = property(attrgetter('string'))
     _related_help = property(attrgetter('help'))
     _related_groups = property(attrgetter('groups'))
@@ -953,22 +951,21 @@ class Field[T]:
                     ) from None
                 if field is self and index and not self.recursive:
                     self.recursive = True
-                    warnings.warn(f"Field {self} should be declared with recursive=True", stacklevel=1)
+                    self._setup_warning("should be declared with recursive=True")
 
                 # precomputed fields can depend on non-precomputed ones, as long
                 # as they are reachable through at least one many2one field
                 if check_precompute and field.store and field.compute and not field.precompute:
-                    warnings.warn(f"Field {self} cannot be precomputed as it depends on non-precomputed field {field}", stacklevel=1)
+                    self._setup_warning(f"cannot be precomputed as it depends on non-precomputed field {field}")
                     self.precompute = False
 
                 if field_seq and not field_seq[-1]._description_searchable:
                     # the field before this one is not searchable, so there is
                     # no way to know which on records to recompute self
-                    warnings.warn(
-                        f"Field {field_seq[-1]!r} in dependency of {self} should be searchable. "
+                    self._setup_warning(
+                        f"Field {field_seq[-1]!r} in dependency should be searchable. "
                         f"This is necessary to determine which records to recompute when {field} is modified. "
                         f"You should either make the field searchable, or simplify the field dependency.",
-                        stacklevel=1,
                     )
 
                 field_seq.append(field)

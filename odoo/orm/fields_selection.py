@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo.tools.misc import SENTINEL, Sentinel, merge_sequences
 
-from .fields import Field, _logger, determine, resolve_mro
+from .fields import Field, determine, resolve_mro
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
@@ -72,16 +72,16 @@ class Selection(Field[str | typing.Literal[False]]):
             selection = tuple(selection)
         super().__init__(selection=selection, string=string, **kwargs)
 
-    def setup_nonrelated(self, model):
-        super().setup_nonrelated(model)
-        assert self.selection is not None, "Field %s without selection" % self
-
-    def setup_related(self, model):
-        super().setup_related(model)
-        # selection must be computed on related field
-        field = self.related_field
-        self.selection = lambda model: field._description_selection(model.env)
-        self._selection = None
+    def _setup(self, model):
+        super()._setup(model)
+        if not self.related:
+            if self.selection is None:
+                raise Exception(f"{self}.selection is missing")
+        else:
+            # selection must be computed on related field
+            field = self.related_field
+            self.selection = lambda model: field._description_selection(model.env)
+            self._selection = None
 
     def _get_attrs(self, model_class, name):
         attrs = super()._get_attrs(model_class, name)
@@ -104,12 +104,12 @@ class Selection(Field[str | typing.Literal[False]]):
             # because those attributes are overridden by ``_setup_attrs__``.
             if 'selection' in field._args__:
                 if self.related:
-                    _logger.warning("%s: selection attribute will be ignored as the field is related", self)
+                    self._setup_warning("selection attribute will be ignored as the field is related")
                     continue
                 selection = field._args__['selection']
                 if isinstance(selection, (list, tuple)):
                     if values is not None and list(values) != [kv[0] for kv in selection]:
-                        _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
+                        self._setup_warning(f"selection={selection!r} overrides existing selection; use selection_add instead")
                     values = dict(selection)
                     self.ondelete = {}
                 elif callable(selection) or isinstance(selection, str):
@@ -117,17 +117,17 @@ class Selection(Field[str | typing.Literal[False]]):
                     self.selection = selection
                     values = None
                 else:
-                    raise ValueError(f"{self!r}: selection={selection!r} should be a list, a callable or a method name")
+                    raise ValueError(f"{self}: selection={selection!r} should be a list, a callable or a method name")
 
             if self._base_fields__ and 'selection_add' in field._args__:
                 if self.related:
-                    _logger.warning("%s: selection_add attribute will be ignored as the field is related", self)
+                    self._setup_warning("selection_add attribute will be ignored as the field is related")
                     continue
                 selection_add = field._args__['selection_add']
-                assert isinstance(selection_add, (list, tuple)), \
-                    "%s: selection_add=%r must be a list or tuple" % (self, selection_add)
-                assert values is not None, \
-                    "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
+                if not isinstance(selection_add, (list, tuple)):
+                    raise TypeError(f"{self}: selection_add={selection_add!r} must be a list or tuple")
+                if values is None:
+                    raise TypeError(f"{self}: selection_add={selection_add!r} on non-list selection {self.selection}")
 
                 values_add = {kv[0]: (kv[1] if len(kv) > 1 else values[kv[0]]) for kv in selection_add}
                 ondelete = field._args__.get('ondelete') or {}
@@ -149,6 +149,7 @@ class Selection(Field[str | typing.Literal[False]]):
                     if callable(val) or val in ('set null', 'cascade'):
                         continue
                     if val == 'set default':
+                        # XXX raise here and below
                         assert self.default is not None, (
                             "%r: ondelete policy of type 'set default' is invalid for this field "
                             "as it does not define a default! Either define one in the base "
@@ -174,8 +175,8 @@ class Selection(Field[str | typing.Literal[False]]):
 
         if values is not None:
             self.selection = tuple(values.items())
-            assert all(isinstance(key, str) and isinstance(val, str) for key, val in values.items()), \
-                "Field %s with non-str key or value in selection" % self
+            if not all(isinstance(key, str) and isinstance(val, str) for key, val in values.items()):
+                raise TypeError(f"{self} with non-str key or value in selection")
 
         self._selection = values
 
