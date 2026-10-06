@@ -249,6 +249,17 @@ class TestPaymentTransaction(PaymentCommon):
         tx._set_done()
         self.assertFalse(tx.is_post_processed)
 
+    def test_processing_values_start_online_payment(self):
+        for operation in ('online_redirect', 'online_direct', 'online_token', 'validation', 'refund'):
+            with self.subTest(operation=operation):
+                tx = self._create_transaction('redirect', operation=operation, reference=operation)
+                self.assertEqual(tx.state, 'draft')
+                tx._get_processing_values()
+                expected_state = (
+                    'pending' if operation in ('online_redirect', 'online_direct') else 'draft'
+                )
+                self.assertEqual(tx.state, expected_state)
+
     def test_log_processing_values(self):
         PaymentTransaction = self.env.registry['payment.transaction']
         tx = self._create_transaction('redirect', state='done', reference='TX-12345')

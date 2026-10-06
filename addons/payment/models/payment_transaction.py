@@ -455,6 +455,10 @@ class PaymentTransaction(models.Model):
                 redirect_form_html = self.env['ir.qweb']._render(redirect_form_view.id, rendering_values)
                 processing_values.update(redirect_form_html=redirect_form_html)
 
+        # Activate existing cart protections before returning control to the payment form.
+        if self.state == 'draft' and self.operation in ('online_redirect', 'online_direct'):
+            self._set_pending()
+
         return processing_values
 
     def _get_specific_processing_values(self, processing_values):
