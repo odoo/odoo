@@ -33,6 +33,9 @@
             <field name="commitment_date" position="after">
                 <field string=" " name="json_popover" widget="stock_rescheduling_popover" invisible="not show_json_popover"/>
             </field>
+            <xpath expr="//div[@name='commitment_date_div']/field[@name='delivery_status']" position="attributes">
+                <attribute name="decoration-danger">delivery_status == 'cancel'</attribute>
+            </xpath>
             <xpath expr="//field[@name='order_line']//form//field[@name='analytic_distribution']" position="before">
                 <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location" options="{'no_create': True}"/>
             </xpath>
