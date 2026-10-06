@@ -216,7 +216,35 @@
                     <filter name="my_projects_and_tasks" string="My Projects/Tasks" domain="['|', ('project_id.user_id', '=', uid), ('task_id.user_ids', 'in', uid)]" context="{'group_expand': False}"/>
                     <separator/>
                 </xpath>
+<<<<<<< ff333da20f9a42f70b52d1af97a5d08ac50c3cc5:addons/hr_timesheet/views/account_analytic_line_views.xml
                 <xpath expr="//field[@name='name']" position="before">
+||||||| c76ed0e8b98ca3a63b84f53546a44c634f80f538:addons/hr_timesheet/views/hr_timesheet_views.xml
+                <filter name="month" position="inside">
+                    <filter name="date_this_week" string="This Week" domain="[
+                        ('date', '&gt;=', '=week_start'),
+                        ('date', '&lt;', '=week_start +1w'),
+                    ]"/>
+                    <filter name="date_today" string="Today" domain="[('date', '&gt;=', 'today'), ('date', '&lt;', 'today +1d')]"/>
+                    <filter name="date_last_week" string="Last Week" domain="[
+                        ('date', '&gt;=', '=week_start -1w'),
+                        ('date', '&lt;', '=week_start'),
+                    ]"/>
+                </filter>
+                <xpath expr="//group[@name='groupby']" position="before">
+=======
+                <filter name="month" position="inside">
+                    <filter name="date_this_week" string="This Week" domain="[
+                        ('date', '&gt;=', 'today =week_start'),
+                        ('date', '&lt;', 'today =week_start +1w'),
+                    ]"/>
+                    <filter name="date_today" string="Today" domain="[('date', '&gt;=', 'today'), ('date', '&lt;', 'today +1d')]"/>
+                    <filter name="date_last_week" string="Last Week" domain="[
+                        ('date', '&gt;=', 'today =week_start -1w'),
+                        ('date', '&lt;', 'today =week_start'),
+                    ]"/>
+                </filter>
+                <xpath expr="//group[@name='groupby']" position="before">
+>>>>>>> 71c7d4289918fc7b5606f9a908420a1371a4b426:addons/hr_timesheet/views/hr_timesheet_views.xml
                     <field name="employee_id"/>
                     <field name="project_id"/>
                     <field name="task_id"/>
