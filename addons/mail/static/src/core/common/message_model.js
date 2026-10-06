@@ -39,6 +39,14 @@ const { DateTime } = luxon;
 export class Message extends Record {
     static _name = "mail.message";
 
+    setup() {
+        super.setup(...arguments);
+        this.onEnter(
+            () => [this.composer],
+            (composer) => () => composer.delete()
+        );
+    }
+
     attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
     author_id = fields.One("res.partner");
     author_guest_id = fields.One("mail.guest");
@@ -63,7 +71,7 @@ export class Message extends Record {
         }
         return getInnerHtml(decorateEmojis(createElementFromContent(this.translationValue)));
     });
-    composer = fields.One("Composer", { inverse: "message", onDelete: (r) => r?.delete() });
+    composer = fields.One("Composer", { inverse: "message" });
     composerAsReplyToMessage = fields.One("Composer", { inverse: "replyToMessage" });
     date = fields.Datetime();
     /** @type {string} */

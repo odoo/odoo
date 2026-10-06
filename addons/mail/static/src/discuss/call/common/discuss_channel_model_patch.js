@@ -24,9 +24,11 @@ const DiscussChannelPatch = {
         this.lastSessionIds = new Set();
         /** @type {number|undefined} */
         this.cancelRtcInvitationTimeout = undefined;
-        this.rtc_session_ids = fields.Many("discuss.channel.rtc.session", {
-            onDelete: (r) => r?.delete(),
-        });
+        this.rtc_session_ids = fields.Many("discuss.channel.rtc.session");
+        this.onEnter(
+            () => this.rtc_session_ids,
+            (session) => () => session.delete()
+        );
         this.onChange(
             () => [...this.rtc_session_ids],
             function onChangeRtcSessionIds(...rtcSessions) {
