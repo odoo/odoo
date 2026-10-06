@@ -866,6 +866,35 @@ test("an onChange keeps running after its callback writes a dependency", async (
     expect.verifySteps(["count:7"]);
 });
 
+test("an immediate onChange that throws does not stop the other observers", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        count = 0;
+    }).register(localRegistry);
+    const store = await start();
+    store.warnErrors = false;
+    const general = store.Thread.insert("General");
+    general.onChange(
+        () => [general.count],
+        (count) => {
+            if (count === 1) {
+                throw new Error("boom");
+            }
+        },
+        { immediate: true, initialRun: false }
+    );
+    general.onChange(
+        () => [general.count],
+        (count) => expect.step(`count:${count}`),
+        { immediate: true, initialRun: false }
+    );
+    expect(() => (general.count = 1)).toThrow("boom");
+    expect.verifySteps(["count:1"]);
+    general.count = 2;
+    expect.verifySteps(["count:2"]);
+});
+
 test("attr that are default [] should be isolated per record", async () => {
     // If the default value is stored and reused for all records,
     // this could lead to mistakenly sharing the default value among records
