@@ -15,6 +15,5 @@ from . import res_partner
 from . import uom_uom
 from . import account_account
 from . import l10n_in_pan_entity
-from . import l10n_in_report_handler
 
 from . import res_groups
