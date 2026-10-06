@@ -551,6 +551,8 @@ class HTML_Editor(http.Controller):
 
     @http.route(["/web_editor/generate_text", "/html_editor/generate_text"], type="json", auth="user")
     def generate_text(self, prompt, conversation_history):
+        if not request.env.user._is_internal():
+            raise AccessError(_("Only internal users can use AI text generation."))
         try:
             IrConfigParameter = request.env['ir.config_parameter'].sudo()
             olg_api_endpoint = IrConfigParameter.get_param('web_editor.olg_api_endpoint', DEFAULT_OLG_ENDPOINT)

@@ -2017,6 +2017,9 @@ export class Wysiwyg extends Component {
         if (!options.snippets) {
             $toolbar.find('#justify, #media-insert').remove();
         }
+        if (!user.isInternalUser) {
+            $toolbar.find('#chatgpt').remove();
+        }
         $toolbar.find('#image-fullscreen').click(() => {
             if (!this.lastMediaClicked?.src) {
                 return;
@@ -2647,7 +2650,9 @@ export class Wysiwyg extends Component {
                     }
                 },
             },
-            {
+        ];
+        if (user.isInternalUser) {
+            commands.push({
                 category: _t('AI Tools'),
                 name: _t('ChatGPT'),
                 description: _t('Generate or transform content with AI.'),
@@ -2655,8 +2660,8 @@ export class Wysiwyg extends Component {
                 priority: 1,
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: async () => this.openChatGPTDialog(),
-            },
-        ];
+            });
+        }
         if (!editorOptions.inlineStyle) {
             commands.push(
                 {

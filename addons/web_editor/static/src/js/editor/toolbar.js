@@ -108,8 +108,9 @@ export class Toolbar extends Component {
         });
         onWillStart(() => {
             this.state.isPublicUser = !user.userId;
+            this.state.isInternalUser = user.isInternalUser;
 
-            if (!this.state.isPublicUser) {
+            if (this.state.isInternalUser) {
                 loadLanguages(this.orm).then((res) => {
                     this.state.languages = res;
                 });
