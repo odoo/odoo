@@ -378,6 +378,7 @@ export function checkTicketData(data, basic = false) {
     };
 
     return [
+        ...isContinueEnabled(),
         {
             trigger: "body",
             run: async () => await check(data, basic),
