@@ -151,6 +151,39 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
 
         self.assertEqual(request.cart.order_line.product_no_variant_attribute_value_ids, ptav)
 
+    def test_add_to_cart_combo_product_with_prevent_zero_price_sale(self):
+        """Ensure that a public user can add a non-zero-priced combo product to cart when the sale
+        of zero-priced products is prevented.
+        """
+        self.website.write({"prevent_sale": True, "prevent_sale_for": "zero_price"})
+        combo_item = self._create_product(name="Combo item")
+        combo = self.env["product.combo"].create({
+            "name": "Test combo",
+            "combo_item_ids": [Command.create({"product_id": combo_item.id})],
+        })
+        combo_product = self._create_product(
+            name="Combo product", type="combo", combo_ids=[Command.link(combo.id)]
+        )
+        website = self.website.with_user(self.public_user)
+
+        with self.mock_request(website=website) as request:
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=combo_product.product_tmpl_id.id,
+                product_id=combo_product.id,
+                quantity=1,
+                linked_products=[{
+                    "product_template_id": combo_item.product_tmpl_id.id,
+                    "parent_product_template_id": combo_product.product_tmpl_id.id,
+                    "product_id": combo_item.id,
+                    "combo_item_id": combo.combo_item_ids.id,
+                    "product_custom_attribute_values": [],
+                    "no_variant_attribute_value_ids": [],
+                    "quantity": 1,
+                }],
+            )
+
+        self.assertEqual(request.cart.order_line.product_id, combo_product + combo_item)
+
     def test_zero_price_after_pricelist_recompute_blocks_payment(self):
         """
         A cart line whose price becomes 0 after a pricelist recompute (e.g. the customer's country
