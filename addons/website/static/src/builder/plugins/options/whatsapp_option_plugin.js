@@ -58,7 +58,7 @@ export class ShowChatBoxAction extends BuilderAction {
 
 export class ReplaceAgentAvatarAction extends ShowChatBoxAction {
     static id = "replaceAgentAvatar";
-    static dependencies = ["media"];
+    static dependencies = ["media", "imageSave"];
 
     setup() {
         super.setup();
@@ -72,7 +72,14 @@ export class ReplaceAgentAvatarAction extends ShowChatBoxAction {
         // That’s why we didn’t use the standard replaceMedia action.
         await this.dependencies.media.openMediaDialog({
             onlyImages: true,
-            save: (newMediaEl) => {
+            node: editingElement.querySelector(".s_whatsapp_header img"),
+            save: async (newMediaEl) => {
+                // Save the image as an attachment so that the snippet only
+                // keeps its URL. The image save plugin only processes the
+                // descendants of the node it is given.
+                const fragment = this.document.createDocumentFragment();
+                fragment.append(newMediaEl);
+                await this.dependencies.imageSave.savePendingImages(fragment);
                 const src = newMediaEl.getAttribute("src");
                 if (src) {
                     editingElement.dataset.agentAvatarSrc = src;
