@@ -26,6 +26,7 @@ test("compile form with modifiers", async () => {
     };
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         resId: 1,
@@ -48,6 +49,7 @@ test("compile notebook with modifiers", async () => {
     };
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         resId: 1,
@@ -67,6 +69,7 @@ test("compile header and buttons", async () => {
     };
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         resId: 1,
@@ -158,6 +161,7 @@ test("compile a button with disabled", async () => {
     };
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         resId: 1,
@@ -182,6 +186,7 @@ test("statusbar stay visible when scrolling (sticky)", async () => {
     };
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         resId: 1,
@@ -213,6 +218,7 @@ test("statusbar is non-sticky on mobile", async () => {
     };
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         resId: 1,

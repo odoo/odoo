@@ -216,6 +216,7 @@ before(() => {
 
 test(`simple form rendering`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -265,6 +266,7 @@ test(`simple form rendering`, async () => {
 test(`[Offline] form switches to readonly in offline mode`, async () => {
     const setOffline = mockOffline();
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -540,6 +542,7 @@ test(`button box rendering on big screen`, async () => {
 
 test(`button box rendering invisible`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `<form><div name="button_box" invisible="1"><button id="btn1">MyButton</button></div></form>`,
@@ -704,6 +707,7 @@ test(`attributes are transferred on async widgets`, async () => {
 
 test(`placeholder attribute on input`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `<form><input placeholder="chimay"/></form>`,
@@ -1000,6 +1004,7 @@ test(`only necessary fields are fetched`, async () => {
         );
     });
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `<form><field name="foo"/></form>`,
@@ -1010,6 +1015,7 @@ test(`only necessary fields are fetched`, async () => {
 
 test(`group rendering`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -1028,6 +1034,7 @@ test(`group rendering`, async () => {
 
 test(`group with formLabel`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -1399,6 +1406,7 @@ test(`invisible fields are properly hidden`, async () => {
 
 test(`correctly copy attributes to compiled labels`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -1416,6 +1424,7 @@ test(`correctly copy attributes to compiled labels`, async () => {
 
 test(`invisible fields are not used for the label generation`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -1558,6 +1567,7 @@ test(`properly handle modifiers and attributes on notebook tags`, async () => {
 
 test(`empty notebook`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -1574,6 +1584,7 @@ test(`empty notebook`, async () => {
 
 test(`notebook page name and class transferred to DOM`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -2214,6 +2225,7 @@ test(`readonly stat buttons stays disabled on mobile`, async () => {
 
 test(`label with no string attribute gets the default label for the corresponding field`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -2236,6 +2248,7 @@ test(`label with no string attribute gets the default label for the correspondin
 
 test(`label uses the string attribute when present`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -2258,6 +2271,7 @@ test(`label uses the string attribute when present`, async () => {
 
 test(`label ignores the content of the label when present`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -2280,6 +2294,7 @@ test(`label ignores the content of the label when present`, async () => {
 
 test(`label with empty string attribute renders to an empty label`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -2302,6 +2317,7 @@ test(`label with empty string attribute renders to an empty label`, async () => 
 
 test(`two mutually exclusive labels with a dynamic invisible attribute`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -2324,6 +2340,7 @@ test(`two mutually exclusive labels with a dynamic invisible attribute`, async (
 
 test(`label is not rendered when invisible and not at top-level in a group`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -2968,6 +2985,7 @@ test(`label tag added for fields have o_form_empty class in readonly mode if fie
 
 test(`required attrs on fields are re-evaluated on field change`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -3040,6 +3058,7 @@ test(`required float fields works as expected`, async () => {
 
 test(`separators`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -3059,6 +3078,7 @@ test(`separators`, async () => {
 
 test(`invisible attrs on separators`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -3350,6 +3370,7 @@ test(`buttons in form view`, async () => {
 test.tags("desktop");
 test(`buttons classes in form view`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -4111,6 +4132,7 @@ test(`basic default record`, async () => {
 
     onRpc(({ method }) => expect.step(method));
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `<form><field name="foo"/></form>`,
@@ -4561,6 +4583,7 @@ test(`can duplicate a record`, async () => {
         }
     });
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `<form><field name="foo"/></form>`,
@@ -4973,6 +4996,7 @@ test(`missing widgets do not crash`, async () => {
     Partner._fields.foo = fields.Generic({ type: "new field type without widget" });
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `<form><field name="foo"/></form>`,
@@ -4983,6 +5007,7 @@ test(`missing widgets do not crash`, async () => {
 
 test(`nolabel`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -7615,6 +7640,7 @@ test(`invisible fields are not considered as visible in a buttonbox on desktop`,
 test.tags("mobile");
 test(`invisible fields are not considered as visible in a buttonbox on mobile`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -7655,6 +7681,7 @@ test(`display correctly buttonbox, in large size class`, async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -8124,6 +8151,7 @@ test(`open one2many form containing one2many`, async () => {
 
 test(`no field should be focused`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `<form><field name="foo"/><field name="bar"/></form>`,
@@ -8135,6 +8163,7 @@ test(`no field should be focused`, async () => {
 test.tags("desktop");
 test(`in create mode, first field is focused`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `<form><field name="foo"/><field name="bar"/></form>`,
@@ -8212,6 +8241,7 @@ test(`no autofocus with disable_autofocus option`, async () => {
 test.tags("desktop");
 test(`In READ mode, focus the first primary button of the form`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -8701,6 +8731,7 @@ test(`do not perform extra RPC to read invisible many2one fields`, async () => {
         });
     });
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `<form><field name="parent_id" invisible="1"/></form>`,
@@ -8925,6 +8956,7 @@ test(`form rendering with groups with col/colspan`, async () => {
 
 test(`form rendering innergroup: separator should take one line`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -9007,6 +9039,7 @@ test(`inner group with invisible cells`, async () => {
 
 test(`form group with newline tag inside`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -9672,6 +9705,7 @@ test(`delete a duplicated record`, async () => {
 test.tags("desktop");
 test(`display tooltips for buttons (debug = false)`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -9779,6 +9813,7 @@ test(`process the context for inline subview`, async () => {
     Partner._records[0].child_ids = [2];
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -10105,6 +10140,7 @@ test(`proper stringification in debug mode tooltip`, async () => {
     serverState.debug = "1";
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -10957,6 +10993,7 @@ test(`company_dependent field in form view, in multi company group`, async () =>
         { id: 3, name: "Company 3", sequence: 3, parent_id: false, child_ids: [] },
     ];
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `
@@ -11174,6 +11211,7 @@ test(`fieldDependencies support for fields`, async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         resId: 1,
@@ -13933,6 +13971,7 @@ test("related field tooltip in debug mode", async () => {
     Partner._fields.related_product_name = fields.Char({ related: "product_id.name" });
 
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `

@@ -20,6 +20,7 @@ defineModels([Product]);
 test("human readable format 1", async () => {
     Product._records = [{ id: 1, price: 3.756754e6 }];
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "product",
         resId: 1,

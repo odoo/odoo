@@ -43,6 +43,7 @@ test("JsonCheckBoxesField", async () => {
         expect(args.args[1].json_checkboxes_field).toEqual(commands.shift());
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -79,6 +80,7 @@ test("JsonCheckBoxesField", async () => {
 
 test("JsonCheckBoxesField (readonly field)", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -109,6 +111,7 @@ test("JsonCheckBoxesField (some readonly)", async () => {
         key2: { checked: false, readonly: true, label: "Second Key" },
     };
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -142,6 +145,7 @@ test("JsonCheckBoxesField (question circle)", async () => {
         key2: { checked: false, label: "Second Key", question_circle: "Some info about this" },
     };
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -165,6 +169,7 @@ test("JsonCheckBoxesField (question circle)", async () => {
 
 test("JsonCheckBoxesField (implicit inline mode)", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -183,6 +188,7 @@ test("JsonCheckBoxesField (implicit inline mode)", async () => {
 
 test("JsonCheckBoxesField (explicit inline mode)", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -201,6 +207,7 @@ test("JsonCheckBoxesField (explicit inline mode)", async () => {
 
 test("JsonCheckBoxesField (stacked mode)", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,

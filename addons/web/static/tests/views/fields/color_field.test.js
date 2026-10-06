@@ -85,6 +85,7 @@ test("color field in editable list view", async () => {
 
 test("read-only color field in editable list view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "color",
         arch: `
@@ -109,6 +110,7 @@ test("color field change via anoter field's onchange", async () => {
     };
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "color",
         resId: 1,
@@ -143,6 +145,7 @@ test.tags("desktop");
 test(`color field in form view => no automatic save by default`, async () => {
     stepAllNetworkCalls();
     await mountView({
+        noMainContainer: true,
         resModel: "color",
         type: "form",
     });
@@ -161,6 +164,7 @@ test.tags("desktop");
 test(`color field in list view => automatic save by default`, async () => {
     stepAllNetworkCalls();
     await mountView({
+        noMainContainer: true,
         resModel: "color",
         type: "list",
         arch: `

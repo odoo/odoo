@@ -385,6 +385,7 @@ test("Pivot with integer row group by with 0 as header", async () => {
     Partner._records[3].foo = 0;
 
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `
@@ -401,6 +402,7 @@ test("Pivot with integer row group by with 0 as header", async () => {
 
 test("pivot groupby id shows label, not empty cell", async () => {
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `
@@ -1147,6 +1149,7 @@ test("no content helper when no active measure", async () => {
 
 test("no content helper when no data", async () => {
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `<pivot/>`,
@@ -1222,6 +1225,7 @@ test("tries to restore previous state after domain change", async () => {
         rpcCount++;
     });
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `
@@ -2124,6 +2128,7 @@ test("correctly uses pivot_ keys from the context (at reload)", async () => {
     Partner._fields.amount = fields.Float();
 
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `
@@ -2160,6 +2165,7 @@ test("correctly uses pivot_ keys from the context (at reload)", async () => {
 
 test("correctly use group_by key from the context", async () => {
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `
@@ -2690,6 +2696,7 @@ test("Server order is kept by default", async () => {
         ],
     ]);
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `
@@ -2717,6 +2724,7 @@ test("pivot rendering with boolean field", async () => {
     ];
 
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `
@@ -2744,6 +2752,7 @@ test("empty pivot view with action helper", async () => {
 	</search>`;
 
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         context: { search_default_small_than_0: true },
@@ -2771,6 +2780,7 @@ test("empty pivot view with sample data", async () => {
 	</search>`;
 
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         context: { search_default_small_than_0: true },
@@ -3213,6 +3223,7 @@ test("concurrent reloads: add a filter, and directly toggle a measure", async ()
     let def;
     onRpc("formatted_read_grouping_sets", () => def?.promise);
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `
@@ -3378,6 +3389,7 @@ test("pivot_row_groupby should be also used after first load", async () => {
 
 test("pivot_row_groupby should be also used after first load (2)", async () => {
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         groupBy: ["product_id"],
@@ -3412,6 +3424,7 @@ test("pivot_row_groupby should be also used after first load (2)", async () => {
 
 test("specific pivot keys in action context must have less importance than in favorite context", async () => {
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
 
@@ -3555,6 +3568,7 @@ test("filter -> sort -> unfilter should not crash", async () => {
 test("no class 'o_view_sample_data' when real data are presented", async () => {
     Partner._records = [];
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `
@@ -3754,6 +3768,7 @@ test("missing property field definition is fetched", async function () {
         }
     });
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `<pivot/>`,
@@ -3804,6 +3819,7 @@ test("missing deleted property field definition is created", async function (ass
         }
     });
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `<pivot/>`,
@@ -3887,6 +3903,7 @@ test("display '0' for false group, when grouped by int field", async () => {
     Partner._records[0].foo = false;
 
     await mountView({
+        noMainContainer: true,
         type: "pivot",
         resModel: "partner",
         arch: `

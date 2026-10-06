@@ -673,6 +673,7 @@ test("list datetime: column widths (show_time=false)", async () => {
     after(resetDateFieldWidths);
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `
@@ -693,6 +694,7 @@ test("list datetime: column widths (numeric format)", async () => {
     after(resetDateFieldWidths);
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `

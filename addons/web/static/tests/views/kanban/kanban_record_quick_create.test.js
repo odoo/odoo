@@ -185,6 +185,7 @@ beforeEach(() => {
 test.tags("desktop");
 test("create in grouped on m2o", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -212,6 +213,7 @@ test("create in grouped on m2o", async () => {
 
 test("create in grouped on char", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -289,6 +291,7 @@ test("quick create record without quick_create_view", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -468,6 +471,7 @@ test("quick create record flickering (load more)", async () => {
     onRpc("read", () => def?.promise);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -606,6 +610,7 @@ test("quick create record in grouped on m2o (no quick_create_view)", async () =>
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -814,6 +819,7 @@ test("quick create record in grouped on m2m (field not in template)", async () =
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -867,6 +873,7 @@ test("quick create record in grouped on m2m (field in the form view)", async () 
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1014,6 +1021,7 @@ test("quick create record with quick_create_view: modifiers", async () => {
         </form>`;
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1060,6 +1068,7 @@ test("quick create record with onchange of field marked readonly", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1317,6 +1326,7 @@ test("quick create record: prevent multiple adds with Add clicked", async () => 
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1362,6 +1372,7 @@ test("save a quick create record and create a new one simultaneously", async () 
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1507,6 +1518,7 @@ test("quick create record: click Add to create, with delayed onchange", async ()
     let shouldDelayOnchange = false;
     const def = Promise.withResolvers();
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1559,6 +1571,7 @@ test("quick create record: click Add to create, with delayed onchange", async ()
 test.tags("desktop");
 test("quick create when first column is folded", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1940,6 +1953,7 @@ test("quick create record and edit in grouped mode", async () => {
 
     let newRecordID;
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -1977,6 +1991,7 @@ test("quick create record and edit in grouped mode", async () => {
 test.tags("desktop");
 test("quick create several records in a row", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2029,6 +2044,7 @@ test("quick create is re-enabled directly after the validation", async () => {
     onRpc("web_read", () => webReadDef?.promise);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2343,6 +2359,7 @@ test("quick create record in empty grouped kanban", async () => {
     );
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2369,6 +2386,7 @@ test("quick create record in empty grouped kanban", async () => {
 test.tags("desktop");
 test("quick create record in grouped on date(time) field", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2417,6 +2435,7 @@ test("quick create record in grouped on date(time) field", async () => {
 
 test("quick create record feature is properly enabled/disabled at reload", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2463,6 +2482,7 @@ test("quick create record in grouped by char field", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2494,6 +2514,7 @@ test("quick create record in grouped by boolean field", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2525,6 +2546,7 @@ test("quick create record in grouped on selection field", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2676,6 +2698,7 @@ test("quick create record while adding a new column", async () => {
     onRpc("product", "name_create", () => def?.promise);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2737,6 +2760,7 @@ test("close a column while quick creating a record", async () => {
         }
     });
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2784,6 +2808,7 @@ test("close a column while quick creating a record", async () => {
 
 test("quick create record: open on a column while another column has already one", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2829,6 +2854,7 @@ test("remove nocontent helper after adding a record", async () => {
     }));
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -2946,6 +2972,7 @@ test("empty grouped kanban with sample data and click quick create", async () =>
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3044,6 +3071,7 @@ test("quick create record in grouped kanban with sample data", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3078,6 +3106,7 @@ test("quickcreate in first column after moving a record from it", async () => {
     onRpc("web_resequence", () => []);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3373,6 +3402,7 @@ test("quick create record in grouped kanban in a form view dialog", async () => 
     stepAllNetworkCalls();
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3429,6 +3459,7 @@ test("quick create record in grouped kanban in a form view dialog", async () => 
 test("click on New while kanban is loading (with quick create)", async () => {
     onRpc("web_read_group", () => new Promise(() => {}));
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create">
                 <templates>
@@ -3454,6 +3485,7 @@ test("click on New while kanban is loading (with quick create)", async () => {
 test.tags("desktop");
 test("grouped kanban with quick_create attrs set to false", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -3646,6 +3678,7 @@ test("quick create record and leave before validating (dirty and invalid)", asyn
 
 test("click on New while quick create is open (in first column)", async () => {
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create">
                 <templates>
@@ -3675,6 +3708,7 @@ test("click on New while quick create is open (in first column)", async () => {
 test("click on New while quick create is open (first column, quick create view)", async () => {
     Partner._views["form,form_view_ref"] = `<form><field name="foo"/></form>`;
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create" quick_create_view="form_view_ref">
                 <templates>
@@ -3703,6 +3737,7 @@ test("click on New while quick create is open (first column, quick create view)"
 
 test("click on New while quick create is open (not in first column)", async () => {
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create">
                 <templates>
@@ -3736,6 +3771,7 @@ test("click on New while quick create is open (invalid)", async () => {
             <field name="date" required="1"/>
         </form>`;
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create" quick_create_view="quick_create_ref">
                 <templates>
@@ -3766,6 +3802,7 @@ test("click on New while quick create is open (invalid)", async () => {
 
 test("click on '+' while quick create is open (in same column)", async () => {
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban>
                 <templates>
@@ -3794,6 +3831,7 @@ test("click on '+' while quick create is open (in same column)", async () => {
 
 test("click on '+' while quick create is open (in another column)", async () => {
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban>
                 <templates>
@@ -3827,6 +3865,7 @@ test("click on '+' while quick create is open (invalid)", async () => {
             <field name="date" required="1"/>
         </form>`;
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create" quick_create_view="quick_create_ref">
                 <templates>
@@ -3862,6 +3901,7 @@ test("click on '+' while quick create is open (not dirty)", async () => {
             <field name="date" required="1"/>
         </form>`;
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create" quick_create_view="quick_create_ref">
                 <templates>
@@ -3894,6 +3934,7 @@ test("Auto save on closing tab/browser (no quick create view)", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban>
                 <templates>
@@ -3936,6 +3977,7 @@ test("Auto save on closing tab/browser (quick create view)", async () => {
         return true;
     });
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create" quick_create_view="quick_create_ref">
                 <templates>
@@ -3970,6 +4012,7 @@ test("Auto save on closing tab/browser (invalid)", async () => {
     mockSendBeacon(() => expect.step("sendBeacon"));
 
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create" quick_create_view="quick_create_ref">
                 <templates>
@@ -4002,6 +4045,7 @@ test("Auto save on hiding tab (no quick create view)", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban>
                 <templates>
@@ -4037,6 +4081,7 @@ test("Auto save on hiding tab (quick create view)", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create" quick_create_view="quick_create_ref">
                 <templates>
@@ -4072,6 +4117,7 @@ test("Auto save on hiding tab (invalid)", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         arch: `
             <kanban on_create="quick_create" quick_create_view="quick_create_ref">
                 <templates>
