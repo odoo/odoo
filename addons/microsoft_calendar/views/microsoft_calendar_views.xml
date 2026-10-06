@@ -16,6 +16,19 @@
         <field name="model">calendar.event</field>
         <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_confirm']" position="after">
+                <field name="recurrency" invisible="1"/> <!-- used in invisible of the banner message -->
+                <field name="microsoft_id" invisible="1"/> <!-- used in invisible of the banner message -->
+                <field name="is_organizer_microsoft_synced" invisible="1"/> <!-- used in invisible of the banner message -->
+                <div class="alert alert-info mb-0"
+                     role="status"
+                     invisible="not (recurrency and microsoft_id and is_organizer_microsoft_synced)">
+                    Editing recurring events is not supported in Microsoft Calendar -
+                    <a href="https://www.odoo.com/documentation/master/applications/productivity/calendar/outlook.html#sync-with-outlook"
+                       target="_blank">Learn more</a>
+                </div>
+            </xpath>
+
             <xpath
                 expr="//div[./field[@name='recurrence_update']][@role='status']"
                 position="attributes">
