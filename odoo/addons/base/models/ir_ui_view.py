@@ -2145,6 +2145,13 @@ actual arch.
                         method=name, model=name_manager.model._name,
                     )
                     self._raise_view_error(msg, node)
+                if getattr(func, '_api_model', False):
+                    # buttons always pass record ids (possibly an empty list) as first argument
+                    msg = _(
+                        "%(method)s on %(model)s is decorated with @api.model and cannot be called from a button",
+                        method=name, model=name_manager.model._name,
+                    )
+                    self._raise_view_error(msg, node)
                 try:
                     inspect.signature(func).bind()
                 except TypeError:
