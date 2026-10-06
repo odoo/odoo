@@ -21,6 +21,7 @@ import {
     underline,
     strikeThrough,
     setColor,
+    setFontSizeClassName,
 } from "./_helpers/user_actions";
 import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
@@ -50,6 +51,40 @@ describe("date command", () => {
         expect('[data-embedded="date"]').toHaveCount(1);
         await animationFrame();
         expect('[data-embedded="date"] span').toHaveText("April 5, 2026");
+        expect('[data-embedded="date"]').toHaveStyle({ fontSize: "13px", color: "rgb(0, 0, 0)" });
+    });
+
+    test("should inherit formatting when inserting a date in a list", async () => {
+        const { el, editor } = await setupEditor(
+            '<ul><li style="color: rgb(255, 0, 0)" class="h3-fs">abc[]</li></ul>',
+            {
+                config: configWithEmbeddings,
+            }
+        );
+        execCommand(editor, "insertDateToday");
+        await animationFrame();
+        const li = el.querySelector("li");
+        const date = el.querySelector('[data-embedded="date"]');
+
+        expect(li).toHaveClass("h3-fs");
+        expect(li).toHaveStyle({ color: "rgb(255, 0, 0)" });
+        expect(date).toHaveText("April 5, 2026");
+        expect(date.style.fontSize).toBe("");
+        expect(date.style.color).toBe("");
+        expect(date).toHaveStyle({ color: "rgb(255, 0, 0)" });
+    });
+
+    test("should inherit formatting when inserting a date inside a formatted span", async () => {
+        const { el, editor } = await setupEditor(
+            '<p><span style="font-size: 24px; color: rgb(255, 0, 0);">abc[]def</span></p>',
+            { config: configWithEmbeddings }
+        );
+        execCommand(editor, "insertDateToday");
+        await animationFrame();
+        const date = el.querySelector('[data-embedded="date"]');
+        expect(date.style.fontSize).toBe("");
+        expect(date.style.color).toBe("");
+        expect(date).toHaveStyle({ fontSize: "24px", color: "rgb(255, 0, 0)" });
     });
 
     test.tags("desktop");
@@ -323,7 +358,7 @@ describe("date command", () => {
             );
             execCommand(editor, "removeFormat");
             expect(getContent(el)).toBe(
-                `<p>\ufeff[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</p>`
+                `<p>\ufeff[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false" style="font-size: 13px; color: black;"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</p>`
             );
         });
         test("should be able to apply and remove colors on date nodes", async () => {
@@ -340,7 +375,40 @@ describe("date command", () => {
             );
             execCommand(editor, "removeFormat");
             expect(getContent(el)).toBe(
-                `<p>\ufeff[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</p>`
+                `<p>\ufeff[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false" style="font-size: 13px; color: black;"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</p>`
+            );
+        });
+        test("remove format restores only selected dates to their default styles", async () => {
+            const date = `<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' style="font-size: 24px; color: red;"></span>`;
+            const { el, editor } = await setupEditor(`<p>[${date}]</p><p>${date}</p>`, {
+                config: configWithEmbeddings,
+            });
+            execCommand(editor, "removeFormat");
+            const dates = el.querySelectorAll('[data-embedded="date"]');
+            expect(dates[0].style.fontSize).toBe("13px");
+            expect(dates[0].style.color).toBe("black");
+            expect(dates[1].style.fontSize).toBe("24px");
+            expect(dates[1].style.color).toBe("red");
+        });
+        test("should be able to apply and remove color and font-size on date nodes inside a list", async () => {
+            const { el, editor } = await setupEditor(
+                `<ul><li><span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' style="font-size: 13px; color: black;"></span></li>[]</ul>`,
+                {
+                    config: configWithEmbeddings,
+                }
+            );
+            await press(["ctrl", "a"]);
+            await animationFrame();
+            setColor("rgb(255, 0, 0)", "color")(editor);
+            setFontSizeClassName("h3-fs")(editor);
+            const date = el.querySelector('[data-embedded="date"]');
+            expect(el.querySelector("li")).toHaveClass("h3-fs");
+            expect(date.style.fontSize).toBe("");
+            expect(date.style.color).toBe("rgb(255, 0, 0)");
+            expect(date).toHaveStyle({ color: "rgb(255, 0, 0)" });
+            execCommand(editor, "removeFormat");
+            expect(getContent(el)).toBe(
+                `<ul><li>[\ufeff<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false" style="font-size: 13px; color: black;"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</li></ul>`
             );
         });
     });
