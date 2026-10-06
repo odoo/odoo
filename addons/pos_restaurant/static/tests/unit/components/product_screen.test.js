@@ -1,10 +1,18 @@
-import { test, expect } from "@odoo/hoot";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { test, expect, advanceTime } from "@odoo/hoot";
+import { click, waitFor, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup, contains } from "@web/../tests/web_test_helpers";
-import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
+import {
+    setupPosEnv,
+    getFilledOrder,
+    setupAndMountPosApp,
+} from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { patch } from "@web/core/utils/patch";
+import * as PosUiUtils from "@point_of_sale/../tests/unit/ui_utils";
+import * as ResUiUtils from "@pos_restaurant/../tests/unit/ui_utils";
+const Utils = { ...PosUiUtils, ...ResUiUtils };
 
 definePosModels();
 
@@ -107,6 +115,27 @@ test("select existing order when preset requires order name", async () => {
     expect(currentOrder.id).toBe(order.id);
     expect(currentOrder.preset_id.id).toBe(2);
     expect(currentOrder.getName()).toBe("The Other Order");
+});
+
+test("reprint button visibility on md size", async () => {
+    await resize({ width: 820 });
+    const store = await setupAndMountPosApp();
+    patch(store, {
+        async printOrderChanges(data, printer) {
+            return {
+                successful: true,
+            };
+        },
+    });
+    await Utils.clickTable("1");
+    Utils.clickDisplayedProduct("Steel desk");
+    await Utils.clickOrderButton();
+    await animationFrame();
+    await Utils.clickPlanButton();
+    await advanceTime(300);
+    await Utils.clickTable("1");
+    await Utils.clickReprintButton();
+    await waitFor(".floor-screen");
 });
 
 test("breakCombo with course allocation", async () => {
