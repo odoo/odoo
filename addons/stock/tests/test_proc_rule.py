@@ -651,6 +651,10 @@ class TestProcRule(TransactionCase):
         })
         stock_move._action_confirm()
         self.assertEqual(orderpoint.qty_to_order, 6)
+        orderpoint.active = False
+        self.assertEqual(orderpoint.qty_to_order_computed, 0)
+        orderpoint.active = True
+        self.assertEqual(orderpoint.qty_to_order, 6)
 
     def test_compute_qty_to_order_after_receipt_line_deletion(self):
         """Test that deleting a confirmed incoming receipt move updates the orderpoint."""
