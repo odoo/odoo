@@ -16,7 +16,7 @@ export class TranslationButton extends Component {
         fieldName: types.string(),
         fieldType: types.string().optional(),
         resModel: types.string().optional(),
-        resId: types.number().optional(),
+        resId: types.or([types.number(), types.literal(false)]).optional(),
         record: types
             .object({
                 resModel: types.string(),
