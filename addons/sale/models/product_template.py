@@ -190,8 +190,9 @@ class ProductTemplate(models.Model):
             res["warning"] = {
                 "title": _("Warning"),
                 "message": _(
-                    "You cannot change the product's type because it is already used in sales"
-                    " orders."
+                    "You should not change the product type because this product is already"
+                    " used in sales orders. Changing it may affect how the related order lines"
+                    " are delivered."
                 ),
             }
         return res
