@@ -10,16 +10,22 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 from html import escape
 from lxml import html
+from markupsafe import Markup
 from typing import Self
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
-from odoo.tools import clean_context, groupby, SQL
+from odoo.tools import clean_context, groupby, html2plaintext, split_every, SQL
 from odoo.tools.constants import IN_MAX
 from odoo.tools.misc import OrderedSet
 from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
+
+try:
+    from odoo.addons.mail.tools.Opian import Opian
+except ImportError:  # python3-xapian is not installed: fall back on SQL search
+    Opian = None
 
 if typing.TYPE_CHECKING:
     from odoo.addons.mail.models.mail_followers import MailFollowers
@@ -154,6 +160,15 @@ class MailMessage(models.Model):
     _description = 'Message'
     _order = 'id desc'
     _rec_name = 'subject'
+    # paths of the fields indexed in Xapian, used by the message search
+    _opian_index_fields = [
+        "attachment_ids.name",
+        "author_id.name",
+        "author_guest_id.name",
+        "body",
+        "subject",
+        "subtype_id.description",
+    ]
     _access_domain_heavy = True
 
     @api.model
@@ -852,6 +867,7 @@ class MailMessage(models.Model):
             attachments_tocheck.check_access('read')
 
         messages.filtered(lambda msg: msg._is_thread_message() and msg.message_type != 'user_notification')._invalidate_documents()
+        messages._opian_index()
 
         return messages
 
@@ -869,6 +885,8 @@ class MailMessage(models.Model):
             self.attachment_ids.check_access('read')
         if 'notification_ids' in vals or record_changed:
             self._invalidate_documents()
+        if record_changed or any(path.split(".")[0] in vals for path in self._opian_index_fields):
+            self._opian_index()
         return res
 
     def unlink(self):
@@ -882,7 +900,58 @@ class MailMessage(models.Model):
         # Notify front-end of messages deletion for partners having a user
         for partner, messages in messages_by_partner.items():
             partner._bus_send("mail.message/delete", {"message_ids": messages.ids})
+        self._opian_index(delete=True)
         return super().unlink()
+
+    def _opian_index(self, delete=False):
+        """Update the Xapian index of the messages, removing them with ``delete``."""
+        if not Opian:
+            return
+        values = {}
+        # sudo: mail.message - reading the indexed fields, access is checked when searching
+        for message in self.sudo():
+            if delete:
+                values[message.id] = None
+                continue
+            texts = []
+            for path in self._opian_index_fields:
+                for value in message.mapped(path):
+                    if isinstance(value, Markup):
+                        value = html2plaintext(value)
+                    texts.append(value)
+            # the thread of the message, to restrict the search to it
+            scope = f"{message.model},{message.res_id}" if message.model and message.res_id else None
+            values[message.id] = ("\n".join(filter(None, texts)), scope)
+        Opian(self.env.cr.dbname, self._table).index(values)
+
+    def _register_hook(self):
+        super()._register_hook()
+        # build the index on the first server start, the hooks keep it up to date afterwards
+        if not Opian or Opian(self.env.cr.dbname, self._table).exists():
+            return
+        _logger.info("Building the Xapian index of the messages")
+        try:
+            self._opian_reindex()
+        except Exception:
+            # e.g. another worker is building it at the same time: don't prevent the server from starting
+            _logger.exception("Failed to build the Xapian index of the messages")
+
+    @api.model
+    def _opian_reindex(self):
+        """Index all the messages, e.g. from an odoo shell on an existing database."""
+        messages = self.sudo().search([], order="id")
+        total = len(messages)
+        indexed = 0
+        next_log = total // 10
+        for ids in split_every(1000, messages.ids):
+            messages.browse(ids)._opian_index()
+            # free the cache of the indexed batch, to keep the memory usage low
+            self.env.invalidate_all()
+            indexed += len(ids)
+            # log the progression every 10%
+            if indexed >= next_log:
+                _logger.info("Xapian index of the messages: %s/%s (%s%%)", indexed, total, indexed * 100 // total)
+                next_log += total // 10
 
     def _delete_extra(self):
         # cascade-delete attachments that are directly attached to the message (should only happen
@@ -1007,7 +1076,12 @@ class MailMessage(models.Model):
                 domain &= subtype_domain("mail.mt_activities")
             else:  # changes
                 domain &= Domain("message_type", "=", "tracking")
-        if search_term:
+        # Opian = False
+        if search_term and Opian:
+            scope = f"{thread._name},{thread.id}" if thread else None
+            xapian_ids = Opian(self.env.cr.dbname, self._table).query(search_term, scope)
+            domain &= Domain("id", "in", xapian_ids)
+        elif search_term:
             # we replace every space by a % to avoid hard spacing matching
             search_term = search_term.replace(" ", "%")
             message_domain = Domain.OR([
