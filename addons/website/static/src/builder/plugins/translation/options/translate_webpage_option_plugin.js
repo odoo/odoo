@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef { Object } TranslateWebpageOptionShared
@@ -156,7 +157,10 @@ export class TranslateToAction extends BuilderAction {
                 while (walker.nextNode()) {
                     const node = walker.currentNode;
                     const text = node.textContent;
-                    enqueueTranslation(node, uniqueId("t_"), text);
+                    // o_translatable_text is handled above
+                    if (!closestElement(node, "textarea.o_translatable_text")) {
+                        enqueueTranslation(node, uniqueId("t_"), text);
+                    }
                 }
             }
         }
@@ -274,7 +278,9 @@ export class TranslateToAction extends BuilderAction {
                         if (attribute === "textContent" || attribute === "value") {
                             this.dependencies.valueHistory.setValue(el, text);
                         }
-                        if (attribute !== "textContent") {
+                        if (attribute === "textContent") {
+                            el.textContent = text;
+                        } else {
                             el.setAttribute(attribute, text);
                         }
                     }
