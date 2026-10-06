@@ -577,3 +577,15 @@ class TestAccountMoveTaxMode(TestDocumentTaxModeCommon):
         }]
         self.assertEqual(line.price_unit, 1000)
         self.assertRecordValues(invoice, invoice_expected_values)
+
+    def test_account_move_tax_mode_change_before_saving(self):
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.partner_id = self.partner_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.test_product_a
+
+        move_form.document_tax_mode = 'tax_included'
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            self.assertEqual(line_form.price_unit, 1000)
+            self.assertEqual(line_form.price_subtotal, 909.09)
+            self.assertEqual(line_form.price_total, 1000)
