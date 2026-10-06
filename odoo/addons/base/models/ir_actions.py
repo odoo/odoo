@@ -548,7 +548,7 @@ class IrActionsServer(models.Model):
     def _run_action_multi(self, eval_context=None):
         res = False
         for act in self.child_ids.sorted():
-            res = act.run() or res
+            res = act.with_env(eval_context['env']).run() or res
         return res
 
     def _run_action_object_write(self, eval_context=None):
@@ -657,8 +657,15 @@ class IrActionsServer(models.Model):
                     raise
 
             eval_context = self._get_eval_context(action)
+
+            active_id = self._context.get('active_id')
+            if not active_id and self._context.get('onchange_self'):
+                active_id = self._context['onchange_self']._origin.id
+            active_ids = self._context.get('active_ids', [active_id] if active_id else [])
+
             records = eval_context.get('record') or eval_context['model']
             records |= eval_context.get('records') or eval_context['model']
+            records |= self.env[action.model_name].browse(active_ids)
             if records:
                 try:
                     records.check_access_rule('write')
@@ -674,12 +681,8 @@ class IrActionsServer(models.Model):
                 run_self = action.with_context(eval_context['env'].context)
                 res = runner(run_self, eval_context=eval_context)
             elif runner:
-                active_id = self._context.get('active_id')
-                if not active_id and self._context.get('onchange_self'):
-                    active_id = self._context['onchange_self']._origin.id
-                    if not active_id:  # onchange on new record
-                        res = runner(action, eval_context=eval_context)
-                active_ids = self._context.get('active_ids', [active_id] if active_id else [])
+                if not active_id and self._context.get('onchange_self'):  # onchange on new record
+                    res = runner(action, eval_context=eval_context)
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_self = action.with_context(active_ids=[active_id], active_id=active_id)
