@@ -16,17 +16,18 @@ function span(text) {
     return span;
 }
 
-const insertHTML = (content, expectedResult) => (editor) => {
+const insertHTML = (content, expectedRange) => (editor) => {
     const isHTML = typeof content === "string";
     const domContent = isHTML ? parseHTML(editor.document, content) : content;
-    expectedResult ??= [isHTML ? content : domContent.outerHTML];
-    const insertedNodes = editor.shared.dom.insert(domContent);
-    expect(insertedNodes.length).toBe(expectedResult.length);
-    for (let i = 0; i < insertedNodes.length; i++) {
-        expect(
-            isTextNode(insertedNodes[i]) ? insertedNodes[i].textContent : insertedNodes[i].outerHTML
-        ).toBe(expectedResult[i]);
-    }
+    expectedRange ??= [isHTML ? content : domContent.outerHTML];
+    const expectedStart = expectedRange[0];
+    const expectedEnd = expectedRange[1] || expectedRange[0];
+    const insertedRange = editor.shared.dom.insert(domContent);
+    const [startValue, endValue] = insertedRange.map(
+        (node) => node && (isTextNode(node) ? node.textContent : node.outerHTML)
+    );
+    expect(startValue).toBe(expectedStart);
+    expect(endValue).toBe(expectedEnd);
     editor.shared.history.commit();
 };
 
@@ -74,7 +75,7 @@ describe("collapsed selection", () => {
     test("should insert several html nodes in between naked text in the editable", async () => {
         await testEditor({
             contentBefore: "<p>a[]e<br></p>",
-            stepFunction: insertHTML("<p>b</p><p>c</p><p>d</p>", ["b", "<p>c</p>", "d"]),
+            stepFunction: insertHTML("<p>b</p><p>c</p><p>d</p>", ["b", "d"]),
             contentAfter: "<p>ab</p><p>c</p><p>d[]e</p>",
         });
     });
@@ -102,12 +103,7 @@ describe("collapsed selection", () => {
             contentBefore: "<p>content[]</p>",
             stepFunction: insertHTML(
                 '<p>unwrapped</p><div><i class="oi" data-icon="autorenew"></i></div><p>culprit</p><p>after</p>',
-                [
-                    "unwrapped",
-                    '<div class="o-paragraph"><i class="oi" data-icon="autorenew" contenteditable="false">\u200B</i></div>',
-                    "<p>culprit</p>",
-                    "<p>after</p>",
-                ]
+                ["unwrapped", "<p>after</p>"]
             ),
             contentAfter:
                 '<p>contentunwrapped</p><div><i class="oi" data-icon="autorenew"></i></div><p>culprit</p><p>after[]</p>',
@@ -366,13 +362,13 @@ describe("collapsed selection", () => {
 
     test("should normalize the parent when inserting a single element", async () => {
         const { editor } = await setupEditor(`<p>[]<br></p>`, {});
-        const insertedNodes = editor.shared.dom.insert(
+        const insertedRange = editor.shared.dom.insert(
             parseHTML(editor.document, `<p data-oe-protected="true">in</p>`).firstElementChild
         );
-        expect(insertedNodes.length).toBe(1);
-        expect(insertedNodes[0].outerHTML).toBe(
+        expect(insertedRange[0].outerHTML).toBe(
             `<p data-oe-protected="true" contenteditable="false">in</p>`
         );
+        expect(insertedRange[1]).toBe(insertedRange[0]);
         editor.shared.history.commit();
         // Insertion triggers `selectionchange` and `commit` creates a selection
         // placeholder. `fixSelectionInsideEditableRoot` moves the selection
@@ -497,7 +493,7 @@ describe("collapsed selection", () => {
             "<i>d</i>",
             `<p class="oe_unbreakable">e</p>`,
         ];
-        insertHTML(nodes.join(""), nodes)(editor);
+        insertHTML(nodes.join(""), [nodes[0], nodes[2]])(editor);
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -584,7 +580,7 @@ describe("collapsed selection", () => {
             "<i>c</i>",
             `<p class="oe_unbreakable">d</p>`,
         ];
-        insertHTML(nodes.join(""), nodes)(editor);
+        insertHTML(nodes.join(""), [nodes[0], nodes[2]])(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
@@ -854,13 +850,11 @@ describe("not collapsed selection", () => {
             </p>`,
             {}
         );
-        const insertedNodes = editor.shared.dom.insert(
+        const insertedRange = editor.shared.dom.insert(
             parseHTML(editor.document, "<div>123</div><div><br></div><div>456</div>")
         );
-        expect(insertedNodes.length).toBe(3);
-        expect(insertedNodes[0].outerHTML).toBe('<div class="o-paragraph">123</div>');
-        expect(insertedNodes[1].outerHTML).toBe('<div class="o-paragraph"><br></div>');
-        expect(insertedNodes[2].outerHTML).toBe('<div class="o-paragraph">456</div>');
+        expect(insertedRange[0].outerHTML).toBe('<div class="o-paragraph">123</div>');
+        expect(insertedRange[1].outerHTML).toBe('<div class="o-paragraph">456</div>');
         expect(getContent(el)).toBe(
             `<div class="o-paragraph">123</div><div class="o-paragraph"><br></div><div class="o-paragraph">456[]</div>`
         );
@@ -886,11 +880,11 @@ test("Should create a list element around `li`", async () => {
             </div>
         `),
         stepFunction: async (editor) => {
-            const insertedNodes = editor.shared.dom.insert(
+            const insertedRange = editor.shared.dom.insert(
                 parseHTML(editor.document, "<ul><li>abc</li></ul>")
             );
-            expect(insertedNodes.length).toBe(1);
-            expect(insertedNodes[0].outerHTML).toBe("<ul><li>abc</li></ul>");
+            expect(insertedRange[0].outerHTML).toBe("<ul><li>abc</li></ul>");
+            expect(insertedRange[1]).toBe(insertedRange[0]);
         },
         contentAfter: unformat(`
             <div id="wrapwrap">
@@ -913,13 +907,12 @@ test("Should create a list element around `li`", async () => {
 
 test("Should return converted elements (1)", async () => {
     const { editor } = await setupEditor(`<ul><li>[]</li></ul>`);
-    const insertedNodes = editor.shared.dom.insert(
+    const insertedRange = editor.shared.dom.insert(
         parseHTML(editor.document, "<span>first</span><p>second</p>")
     );
     cleanHints(editor);
-    expect(insertedNodes.length).toBe(2);
-    expect(insertedNodes[0].outerHTML).toBe("<span>first</span>");
-    expect(insertedNodes[1].outerHTML).toBe("<li>second</li>");
+    expect(insertedRange[0].outerHTML).toBe("<span>first</span>");
+    expect(insertedRange[1].outerHTML).toBe("<li>second</li>");
     expect(getContent(editor.editable)).toBe(
         "<ul><li><span>first</span></li><li>second[]</li></ul>"
     );
@@ -927,14 +920,13 @@ test("Should return converted elements (1)", async () => {
 
 test("Should return converted elements (2)", async () => {
     const { editor } = await setupEditor(`<ul><li>ab[]cd</li></ul>`);
-    const insertedNodes = editor.shared.dom.insert(
+    const insertedRange = editor.shared.dom.insert(
         parseHTML(editor.document, "<span>first</span><p>second</p>")
     );
     cleanHints(editor);
-    expect(insertedNodes.length).toBe(2);
-    expect(insertedNodes[0].outerHTML).toBe("<span>first</span>");
-    expect(insertedNodes[1].nodeType).toBe(Node.TEXT_NODE);
-    expect(insertedNodes[1].textContent).toBe("second");
+    expect(insertedRange[0].outerHTML).toBe("<span>first</span>");
+    expect(insertedRange[1].nodeType).toBe(Node.TEXT_NODE);
+    expect(insertedRange[1].textContent).toBe("second");
     expect(getContent(editor.editable)).toBe(
         "<ul><li>ab<span>first</span></li><li>second[]cd</li></ul>"
     );
@@ -942,14 +934,12 @@ test("Should return converted elements (2)", async () => {
 
 test("Should return converted elements (3)", async () => {
     const { editor } = await setupEditor(`<ul><li>[]</li></ul>`);
-    const insertedNodes = editor.shared.dom.insert(
+    const insertedRange = editor.shared.dom.insert(
         parseHTML(editor.document, "<span>first</span><p><br></p><p>second</p>")
     );
     cleanHints(editor);
-    expect(insertedNodes.length).toBe(3);
-    expect(insertedNodes[0].outerHTML).toBe("<span>first</span>");
-    expect(insertedNodes[1].outerHTML).toBe("<li><br></li>");
-    expect(insertedNodes[2].outerHTML).toBe("<li>second</li>");
+    expect(insertedRange[0].outerHTML).toBe("<span>first</span>");
+    expect(insertedRange[1].outerHTML).toBe("<li>second</li>");
     expect(getContent(editor.editable)).toBe(
         "<ul><li><span>first</span></li><li><br></li><li>second[]</li></ul>"
     );

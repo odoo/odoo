@@ -31,6 +31,7 @@ import {
     lastLeaf,
     findUpTo,
     getConnectedParents,
+    getPathBetweenTwoNodes,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { childNodeIndex, nodeSize, leftPos, rightPos, DIRECTIONS } from "../utils/position";
@@ -128,8 +129,8 @@ const nodeToText = (node, isMultiline, doc) => {
  * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_as_text_processors
- * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
- * @typedef {((position: [node: Node, offset: number]) => void)[]} position_after_insertion_processors
+ * @typedef {((insertedRange: [Node, Node]) => void)[]} inserted_content_processors
+ * @typedef {((position: [node: Node, offset: number], insertedRange: [Node, Node]) => void)[]} position_after_insertion_processors
  *
  * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
  * @typedef {((block: HTMLElement, parent: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
@@ -169,7 +170,8 @@ export class DomPlugin extends Plugin {
         /** Handlers */
         on_editor_started_handlers: withSequence(0, this.normalize.bind(this)),
         /** Processors */
-        inserted_content_processors: (insertedContent) => {
+        inserted_content_processors: (insertedRange) => {
+            let insertedContent = [...getPathBetweenTwoNodes(...insertedRange)];
             // Remove trailing line breaks.
             getConnectedParents(insertedContent).forEach((node) => cleanTrailingBR(node));
             insertedContent = insertedContent.filter((node) => node.isConnected);
@@ -180,7 +182,7 @@ export class DomPlugin extends Plugin {
             [firstLeaf(insertedContent[0]), lastLeaf(insertedContent.at(-1))]
                 .filter(shouldFillEmpty)
                 .forEach(fillEmpty);
-            return insertedContent;
+            return [insertedContent.at(0), insertedContent.at(-1)];
         },
         clean_for_save_processors: (root) => {
             this.removeEmptyClassAndStyleAttributes(root);
@@ -247,7 +249,6 @@ export class DomPlugin extends Plugin {
         element,
         { baseContainerNodeName = "P", cursors = { update: () => {} } } = {}
     ) {
-        const nodesToResults = new Map();
         // Helpers to manipulate preserving selection.
         const wrapInBlock = (node, cursors) => {
             const nextSibling = node.nextSibling;
@@ -263,7 +264,6 @@ export class DomPlugin extends Plugin {
             cursors.update(callbacksForCursorUpdate.append(block, node));
             cursors.update(callbacksForCursorUpdate.before(node, block));
             nextSibling ? nextSibling.before(block) : parent.append(block);
-            nodesToResults.set(node, block);
             return block;
         };
         const appendToCurrentBlock = (currentBlock, node, cursors) => {
@@ -281,13 +281,11 @@ export class DomPlugin extends Plugin {
             }
             cursors.update(callbacksForCursorUpdate.append(currentBlock, node));
             currentBlock.append(node);
-            nodesToResults.set(node, currentBlock);
             return currentBlock;
         };
         const removeNode = (node, cursors) => {
             cursors.update(callbacksForCursorUpdate.remove(node));
             node.remove();
-            nodesToResults.set(node, null);
         };
 
         const children = childNodes(element);
@@ -298,7 +296,6 @@ export class DomPlugin extends Plugin {
         for (const node of children) {
             if (isBlock(node)) {
                 shouldBreakLine = true;
-                nodesToResults.set(node, node);
             } else if (
                 !visibleNodes.has(node) &&
                 (this.checkPredicates("is_node_removable_predicates", node) ?? true)
@@ -320,14 +317,13 @@ export class DomPlugin extends Plugin {
                 currentBlock = appendToCurrentBlock(currentBlock, node, cursors);
             }
         }
-        return nodesToResults;
     }
 
     /**
      * @param {string | DocumentFragment | Element | null} content
      * @param {object} [options]
      * @param {keyof typeof PLAIN_TEXT_MODES} [options.plainTextMode] if truthy, insert as plain text.
-     * @returns {Node[]} the inserted nodes
+     * @returns {[Node, Node]} the first and last inserted nodes, in traversal order
      */
     insert(content, { plainTextMode = this.shouldInsertAsPlainText() } = {}) {
         if (typeof content === "string") {
@@ -343,11 +339,11 @@ export class DomPlugin extends Plugin {
 
         this.trigger("on_will_insert_handlers", getNodesFromNodesAndFragments(nodes));
         const { focusNode, focusOffset } = this.dependencies.selection.getEditableSelection();
-        let insertedContent = this.insertNodesAt(nodes, focusNode, focusOffset);
-        insertedContent = this.processThrough("inserted_content_processors", insertedContent);
+        let insertedRange = this.insertNodesAt(nodes, focusNode, focusOffset);
+        insertedRange = this.processThrough("inserted_content_processors", insertedRange);
 
-        this.moveSelectionAfterInsertion(insertedContent);
-        return insertedContent;
+        this.moveSelectionAfterInsertion(insertedRange);
+        return insertedRange;
     }
 
     /**
@@ -523,10 +519,11 @@ export class DomPlugin extends Plugin {
      * @param {(Node | DocumentFragment)[]} nodes
      * @param {Node} targetNode
      * @param {number} targetOffset
-     * @returns {Node[]}
+     * @returns {[Node, Node]} the range of insertion
      */
     insertNodesAt(nodes, targetNode, targetOffset) {
         const marker = createMarkerNode(targetNode, targetOffset);
+        // TODO AGE: no need to record everything, just take the first and last.
         const insertedContent = [];
         for (const [index, item] of nodes.entries()) {
             const previousItem = index > 0 && nodes[index - 1];
@@ -571,7 +568,7 @@ export class DomPlugin extends Plugin {
         }
         marker.remove();
 
-        return insertedContent;
+        return [insertedContent[0], insertedContent.at(-1)];
     }
 
     /**
@@ -628,13 +625,13 @@ export class DomPlugin extends Plugin {
      * Move the selection after insertion.
      *
      * @see insert
-     * @param {Node[]} insertedNodes
+     * @param {Node[]} insertedRange
      */
-    moveSelectionAfterInsertion(insertedNodes) {
-        if (!insertedNodes.length) {
+    moveSelectionAfterInsertion(insertedRange) {
+        if (!insertedRange[1]) {
             return;
         }
-        let target = insertedNodes.at(-1);
+        let target = insertedRange[1];
         const systemNode = this.getResource("system_node_selectors").join(",");
         if (isBlock(target)) {
             const leaf = lastLeaf(target, {
@@ -657,7 +654,7 @@ export class DomPlugin extends Plugin {
         position = this.processThrough(
             "position_after_insertion_processors",
             position,
-            insertedNodes
+            insertedRange
         );
         this.dependencies.selection.setSelection(
             { anchorNode: position[0], anchorOffset: position[1] },

@@ -8,7 +8,11 @@ import {
 import { Plugin } from "../plugin";
 import { isNotAllowedContent } from "./selection_plugin";
 import { endPos, startPos } from "@html_editor/utils/position";
-import { childNodes, getConnectedParents } from "@html_editor/utils/dom_traversal";
+import {
+    childNodes,
+    getConnectedParents,
+    getPathBetweenTwoNodes,
+} from "@html_editor/utils/dom_traversal";
 
 // These elements should only have inline content (even if they have a `block`
 // display style, for example if they are in a flex)
@@ -128,9 +132,20 @@ export class NoInlineRootPlugin extends Plugin {
      * When insertion produced inline siblings in places where inline content is
      * not allowed, wrap them into base containers.
      *
-     * @param {Node[]} insertedNodes
+     * @param {[Node, Node]} insertedRange
      */
-    processInsertedContent(insertedNodes) {
+    processInsertedContent(insertedRange) {
+        const rangeParents = insertedRange.map((node) => node?.parentElement);
+        const insertedNodes = [];
+        const path = getPathBetweenTwoNodes(...insertedRange, NodeFilter.SHOW_ALL, (node) =>
+            insertedNodes.some((el) => el.contains?.(node))
+                ? NodeFilter.FILTER_REJECT
+                : NodeFilter.FILTER_ACCEPT
+        );
+        let current;
+        while ((current = path.next().value)) {
+            insertedNodes.push(current);
+        }
         for (const parent of getConnectedParents(insertedNodes)) {
             if (
                 !this.areInlinesAllowedAtRoot(parent) &&
@@ -139,17 +154,13 @@ export class NoInlineRootPlugin extends Plugin {
                 !isPhrasingContent(parent)
             ) {
                 // Ensure that edition boundaries do not have inline content.
-                const map = this.dependencies.dom.wrapInlinesInBlocks(parent, {
+                this.dependencies.dom.wrapInlinesInBlocks(parent, {
                     baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
                 });
-                for (const [node, result] of map.entries()) {
-                    const index = insertedNodes.indexOf(node);
-                    if (index !== -1) {
-                        insertedNodes.splice(...[index, 1, result].filter((item) => item !== null));
-                    }
-                }
             }
         }
-        return insertedNodes;
+        return insertedRange.map((node, index) =>
+            node?.parentElement === rangeParents[index] ? node : node?.parentElement
+        );
     }
 }

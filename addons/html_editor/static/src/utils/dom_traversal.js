@@ -401,6 +401,39 @@ export function traverseNode(node, traverseChildrenPredicate) {
     }
 }
 
+// TODO AGE: test!
+export const getPathBetweenTwoNodes = function* (start, end, whatToShow, filter) {
+    if (!start) {
+        return;
+    }
+    const root = start === end ? start : getCommonAncestor([start, end]);
+    const walker = document.createTreeWalker(root, whatToShow, filter);
+    walker.currentNode = start;
+
+    // Yield `start` if it passes the filters.
+    const nodeTypeFlag = 2 ** (start.nodeType - 1); // Convert `NodeType` into matching `NodeFilter`
+    if (!whatToShow || (whatToShow & nodeTypeFlag) !== 0) {
+        if (!filter) {
+            yield start;
+        } else {
+            const filterFunction = typeof filter === "function" ? filter : filter.acceptNode;
+            const isRejected = (node) => filterFunction(node) === NodeFilter.FILTER_REJECT;
+            if (
+                filterFunction(start) === NodeFilter.FILTER_ACCEPT &&
+                !ancestors(start, root).some(isRejected)
+            ) {
+                yield start;
+            }
+        }
+    }
+
+    let node = walker.nextNode();
+    while (node && !(end.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)) {
+        yield node;
+        node = walker.nextNode();
+    }
+};
+
 /**
  * Moves keyboard focus to the next or previous focusable
  * element in the given list of elements.
