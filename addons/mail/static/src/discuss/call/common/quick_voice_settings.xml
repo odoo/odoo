@@ -2,39 +2,37 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.QuickVoiceSettings">
-        <div class="o-discuss-QuickVoiceSettings d-flex flex-column">
-            <DeviceSelect label.translate="Microphone" kind="'audioinput'" menuClass="this.store.discussDropdownMenuClass(this.ancestors) + (this.ancestors.inMeetingView ? ' o-discuss-CallActionList-menu o-discuss-CallActionList-submenu' : '')"/>
+        <t t-set="rowClass" t-value="this.ancestors.inMeetingView ? 'o-gap-2_5 o-px-2_5 py-2 rounded-4 fs-6' : 'gap-2 px-2 o-py-1_5 rounded-3 o-fs-small'"/>
+        <t t-set="iconClass" t-value="this.ancestors.inMeetingView ? 'fs-3' : 'o-fs-small'"/>
+        <t t-set="dividerClass" t-value="this.ancestors.inMeetingView ? 'o-mx-2_5 my-2' : 'mx-2 my-1'"/>
+        <div class="o-discuss-QuickVoiceSettings d-flex flex-column" t-att-class="{ 'gap-1': this.ancestors.inMeetingView }">
+            <DeviceSelect icon="'mic'" kind="'audioinput'" label.translate="Microphone" menuClass="this.store.discussDropdownMenuClass(this.ancestors) + ' o-discuss-CallActionList-menu border-0 shadow' + (this.ancestors.inMeetingView ? ' o-inMeetingView mx-3' : ' mx-2')"/>
             <t t-if="!this.isMobile()">
-                <hr class="mx-2 my-1 o-discuss-separator opacity-0"/>
-                <button class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="() => this.store.settings.usePushToTalk = !this.store.settings.usePushToTalk">
-                    <label class="d-flex align-items-center flex-wrap mw-100 cursor-pointer gap-2">
-                        <span class="text-truncate text-wrap">Push-to-Talk</span>
-                        <span t-if="this.store.settings.pushToTalkKey" class="o-fs-small opacity-50" t-out="this.pttKeyDisplayText"/>
-                    </label>
-                    <div class="flex-grow-1"/>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input mx-0" type="checkbox" role="switch" t-att-checked="this.store.settings.usePushToTalk ? 'checked' : ''"/>
+                <button class="btn d-flex align-items-center border-0 lh-sm text-start" t-att-class="rowClass" t-on-click="() => this.store.settings.usePushToTalk = !this.store.settings.usePushToTalk">
+                    <i class="oi opacity-75" t-att-class="iconClass" data-icon="keyboard"/>
+                    <span class="d-flex flex-column flex-grow-1 min-w-0 o-gap-0_5">
+                        <span class="fw-medium">Push-to-Talk</span>
+                        <span t-if="this.store.settings.pushToTalkKey" class="fw-normal opacity-75 text-truncate" t-att-class="this.ancestors.inMeetingView ? 'o-fs-small' : 'smaller'" t-out="this.pttKeyDisplayText"/>
+                    </span>
+                    <div class="form-check form-switch d-flex align-items-center mb-0 ps-0">
+                        <input class="form-check-input mx-0 mt-0" type="checkbox" role="switch" t-att-checked="this.store.settings.usePushToTalk ? 'checked' : ''"/>
                     </div>
                 </button>
+                <hr t-att-class="dividerClass"/>
             </t>
-            <hr class="mx-2 my-1 o-discuss-separator opacity-0"/>
-            <DeviceSelect label.translate="Speakers" kind="'audiooutput'" menuClass="this.store.discussDropdownMenuClass(this.ancestors) + (this.ancestors.inMeetingView ? ' o-discuss-CallActionList-menu o-discuss-CallActionList-submenu' : '')"/>
-            <t t-if="this.store.rtc.selfSession">
-                <hr class="mx-2 my-1 o-discuss-separator opacity-0"/>
-                <button class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="() => this.store.rtc.toggleDeafen()">
-                    <span class="text-truncate text-wrap">Deafen</span>
-                    <div class="flex-grow-1"/>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input mx-0" type="checkbox" role="switch" t-att-checked="this.store.rtc.selfSession?.is_deaf ? 'checked' : ''"/>
-                    </div>
-                </button>
-            </t>
+            <DeviceSelect icon="'volume_up'" kind="'audiooutput'" label.translate="Speakers" menuClass="this.store.discussDropdownMenuClass(this.ancestors) + ' o-discuss-CallActionList-menu border-0 shadow' + (this.ancestors.inMeetingView ? ' o-inMeetingView mx-3' : ' mx-2')"/>
+            <button t-if="this.store.rtc.selfSession" class="btn d-flex align-items-center border-0 lh-sm text-start" t-att-class="rowClass" t-on-click="() => this.store.rtc.toggleDeafen()">
+                <i class="oi opacity-75" t-att-class="iconClass" data-icon="hearing_disabled"/>
+                <span class="fw-medium flex-grow-1">Deafen</span>
+                <div class="form-check form-switch d-flex align-items-center mb-0 ps-0">
+                    <input class="form-check-input mx-0 mt-0" type="checkbox" role="switch" t-att-checked="this.store.rtc.selfSession.is_deaf ? 'checked' : ''"/>
+                </div>
+            </button>
             <t t-if="!this.env.pipWindow">
-                <hr class="mx-2 my-1 o-discuss-separator opacity-0"/>
-                <button class="btn border-transparent d-flex align-items-center px-2 py-1" t-on-click="this.onClickVoiceSettings">
-                    <span>Advanced Settings</span>
-                    <div class="flex-grow-1"/>
-                    <i class="oi oi-fw oi-filled o-fs-small opacity-75" data-icon="settings"/>
+                <hr t-att-class="dividerClass"/>
+                <button class="btn d-flex align-items-center border-0 lh-sm text-start" t-att-class="rowClass" t-on-click="this.onClickVoiceSettings">
+                    <i class="oi opacity-75" t-att-class="iconClass" data-icon="settings"/>
+                    <span class="fw-medium flex-grow-1">Advanced Settings</span>
                 </button>
             </t>
         </div>

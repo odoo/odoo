@@ -5,6 +5,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { isBrowserChrome } from "@web/core/browser/feature_detection";
+import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 export class DeviceSelect extends Component {
     static components = { Dropdown, DropdownItem };
@@ -14,6 +15,7 @@ export class DeviceSelect extends Component {
 
     setup() {
         super.setup();
+        this.ancestors = useAncestors();
         this.props = useProps({
             icon: t.string().optional(),
             iconClass: t.string().optional(),

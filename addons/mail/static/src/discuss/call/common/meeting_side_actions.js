@@ -1,6 +1,6 @@
 import { ActionList } from "@mail/core/common/action_list";
 import { UseThreadActions } from "@mail/core/common/thread_actions";
-import { MeetingInlineAction } from "@mail/discuss/call/common/call_action_list";
+import { getCallControlComponent } from "@mail/discuss/call/common/call_action_list";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
@@ -46,7 +46,7 @@ export class MeetingSideActions extends Component {
     }
 
     get actionComponent() {
-        return MeetingInlineAction;
+        return getCallControlComponent;
     }
 
     get callActionsParams() {
@@ -69,7 +69,9 @@ export class MeetingSideActions extends Component {
                 threadActions.more(this.callActionsParams, {
                     actions: meetingMoreActionGroups(threadActions, QUICK_ACTION_IDS),
                     dropdownMenuClass: attClassObjectToString({
-                        "o-discuss-CallActionList-menu": Boolean(this.ancestors.inMeetingView),
+                        "o-discuss-CallActionList-menu o-inMeetingView border-0 shadow": Boolean(
+                            this.ancestors.inMeetingView
+                        ),
                     }),
                 })
             );
