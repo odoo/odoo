@@ -103,7 +103,7 @@ class EventTrack(models.Model):
         readonly=False, store=True)
     partner_tag_line = fields.Char(
         'Tag Line', compute='_compute_partner_tag_line',
-        help='Description of the partner (name, function and company name)')
+        help='Description of the partner (name, job title and company name)')
     image = fields.Image(
         string="Speaker Photo", compute="_compute_partner_image",
         readonly=False, store=True,

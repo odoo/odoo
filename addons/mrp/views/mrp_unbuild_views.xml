@@ -3,7 +3,7 @@
     <!--  Unbuild and scrap menu -->
 
    <record id="action_mrp_unbuild_moves" model="ir.actions.act_window">
-        <field name="name">Stock Moves</field>
+        <field name="name">Inventory Moves</field>
         <field name="res_model">stock.move.line</field>
         <field name="view_mode">list,form</field>
         <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
