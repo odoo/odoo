@@ -3,7 +3,6 @@
 import logging
 import re
 import traceback
-import typing
 import urllib.parse
 
 import werkzeug.exceptions
@@ -13,7 +12,6 @@ from werkzeug.exceptions import HTTPException, NotFound
 
 from odoo import api, exceptions, models, tools
 from odoo.exceptions import AccessError, MissingError
-from odoo.fields import Domain
 from odoo.http import Response, request
 from odoo.http.router import root
 
@@ -282,33 +280,9 @@ class IrHttp(models.AbstractModel):
         """ Return the hash of the translations served by /website/translations
         for ``lang`` if it is cached, an empty string otherwise. """
         return self._get_cached_web_translations_hash(
-            self.get_translation_frontend_modules(),
+            self._get_translation_frontend_modules_name(),
             self._get_web_translations_lang(lang),
         )
-
-    @api.model
-    def get_translation_frontend_modules(self) -> list[str]:
-        Modules = request.env['ir.module.module'].sudo()
-        extra_modules_name = self._get_translation_frontend_modules_name()
-        extra_modules_domain = Domain(self._get_translation_frontend_modules_domain())
-        if not extra_modules_domain.is_true():
-            new = Modules.search(extra_modules_domain & Domain('state', '=', 'installed')).mapped('name')
-            extra_modules_name += new
-        return extra_modules_name
-
-    @classmethod
-    def _get_translation_frontend_modules_domain(cls) -> list[tuple[str, str, typing.Any]]:
-        """ Return a domain to list the domain adding web-translations and
-            dynamic resources that may be used frontend views
-        """
-        return []
-
-    @classmethod
-    def _get_translation_frontend_modules_name(cls) -> list[str]:
-        """ Return a list of module name where web-translations and
-            dynamic resources may be used in frontend views
-        """
-        return ['web']
 
     @api.model
     def get_nearest_lang(self, lang_code: str) -> str:
