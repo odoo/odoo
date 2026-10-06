@@ -247,6 +247,9 @@ export class AttendeeCalendarModel extends CalendarModel {
                         ? eventData.partner_ids
                         : [eventData.partner_id[0]];
                 let duplicatedRecords = 0;
+                const isInternalUserAttending = data.attendees.some(
+                    (a) => a.event_id === event.id && a.is_internal
+                );
                 for (const attendee of attendees) {
                     if (!activeAttendeeIds.has(attendee)) {
                         continue;
@@ -256,6 +259,11 @@ export class AttendeeCalendarModel extends CalendarModel {
                     const attendeeInfo = data.attendees.find(
                         (a) => a.id === attendee && a.event_id === event.id
                     );
+                    // External attendees don't get their own duplicate when the current
+                    // user is attending: the current user's version represents the event.
+                    if (isInternalUserAttending && attendeeInfo && !attendeeInfo.is_internal) {
+                        continue;
+                    }
                     record.attendeeId = attendee;
                     // Records which are fetched based on the calendar filters should match calendar colors
                     if (attendee !== user.partnerId) {
