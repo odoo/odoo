@@ -12,7 +12,7 @@ import {
     onRpc,
     saveFavorite,
     saveAndEditFavorite,
-    toggleSaveFavorite,
+    waitForSaveFavorite,
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
@@ -48,7 +48,7 @@ test("simple rendering", async () => {
     );
 
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     expect(`.o_custom_favorite_item input[type="text"]`).toHaveValue("Action Name");
     expect(`.o_custom_favorite_item input[type="checkbox"]`).toHaveCount(1);
     expect(`.o_custom_favorite_item .form-check label`).toHaveText("Default filter");
@@ -82,7 +82,7 @@ test("save filter", async () => {
     expect.verifySteps([]);
 
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("aaa");
     await saveFavorite();
     expect.verifySteps(["/web/dataset/call_kw/ir.filters/create_filter", "CLEAR-CACHES"]);
@@ -130,7 +130,7 @@ test("save and edit filter", async () => {
     expect.verifySteps([]);
 
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("aaa");
     await saveAndEditFavorite();
     expect.verifySteps([
@@ -164,7 +164,7 @@ test("dynamic filters are saved dynamic", async () => {
     expect(getFacetTexts()).toEqual(["Filter"]);
 
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("My favorite");
     await saveFavorite();
     expect(getFacetTexts()).toEqual(["My favorite"]);
@@ -192,7 +192,7 @@ test("save filters created via autocompletion works", async () => {
     expect(getFacetTexts()).toEqual(["Foo\na"]);
 
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("My favorite");
     await saveFavorite();
     expect(getFacetTexts()).toEqual(["My favorite"]);
@@ -216,7 +216,7 @@ test("undefined name for filter shows notification and not error", async () => {
     });
 
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await saveFavorite();
     expect.verifySteps(["notification"]);
 });
@@ -252,7 +252,7 @@ test("save custom favorite filter on enter", async () => {
     });
 
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
 
     await editFavoriteName("aaa");
     await press("Enter");

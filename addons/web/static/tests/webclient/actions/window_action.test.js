@@ -31,7 +31,7 @@ import {
     stepAllNetworkCalls,
     switchView,
     toggleMenuItem,
-    toggleSaveFavorite,
+    waitForSaveFavorite,
     toggleSearchBarMenu,
     validateSearch,
     webModels,
@@ -1753,7 +1753,7 @@ test("save current search", async () => {
     expect(".o_data_row").toHaveCount(3);
 
     // save filter
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("some name");
     await saveFavorite();
 });

@@ -71,7 +71,7 @@ import {
     switchView,
     toggleActionMenu,
     toggleMenuItem,
-    toggleSaveFavorite,
+    waitForSaveFavorite,
     toggleSearchBarMenu,
     validateSearch,
     webModels,
@@ -3506,7 +3506,7 @@ test(`ordered target, sort attribute in context`, async () => {
     // Ascending order on Date
     await contains(`th.o_column_sortable[data-name=date]`).click();
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("My favorite");
     await saveFavorite();
     expect.verifySteps([`["date","foo desc"]`]);
@@ -22361,7 +22361,7 @@ test("save filter with list_optional_show, untoggle, and reapply", async () => {
     expect("th[data-name='bar']").toHaveCount(1);
 
     await toggleSearchBarMenu();
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("My favorite");
     await saveFavorite();
 

@@ -135,7 +135,7 @@ export {
     toggleMenu,
     toggleMenuItem,
     toggleMenuItemOption,
-    toggleSaveFavorite,
+    waitForSaveFavorite,
     toggleSearchBarMenu,
     validateSearch,
 } from "./_framework/search_test_helpers";

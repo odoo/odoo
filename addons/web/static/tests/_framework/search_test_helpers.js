@@ -185,7 +185,7 @@ export async function editFavorite(text) {
     }).click();
 }
 
-export async function toggleSaveFavorite() {
+export async function waitForSaveFavorite() {
     await ensureSearchBarMenu();
     await waitFor(`.o_favorite_menu .o_custom_favorite_item`);
 }
