@@ -26,7 +26,7 @@
                     t-if="this.loader.getActiveDashboard()"
                     title="Toggle favorite"
                     t-on-click="this.toggleFavorite"
-                    t-attf-class="oi oi-lg o_dashboard_star align-middle lh-base {{this.loader.getActiveDashboard().data.is_favorite ? 'oi-filled' : ''}}"
+                    t-attf-class="oi oi-lg o_dashboard_star o_favorite_star align-middle lh-base {{this.loader.getActiveDashboard().data.is_favorite ? 'oi-filled' : ''}}"
                     data-icon="star"
                 />
                 <div class="ms-1 o_search_toggler" t-if="this.uiService.isSmall">
