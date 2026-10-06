@@ -26,18 +26,10 @@ class TestCarrierPropagation(TransactionCase):
             'name': 'My Carrier Propagation Customer'})
 
         cls.product_uom_unit = cls.env.ref('uom.product_uom_unit')
-        cls.product_delivery_normal = cls.env['product.product'].create({
-            'name': 'Normal Delivery Charges',
-            'invoice_policy': 'order',
-            'type': 'service',
-            'list_price': 10.0,
-            'categ_id': cls.env.ref('delivery.product_category_deliveries').id,
-        })
         cls.normal_delivery = cls.env['delivery.carrier'].create({
             'name': 'Normal Delivery Charges',
             'fixed_price': 10,
             'delivery_type': 'fixed',
-            'product_id': cls.product_delivery_normal.id,
         })
         cls.customer_location = cls.env.ref("stock.stock_location_customers")
         cls.output_location = cls.env.ref("stock.stock_location_output")

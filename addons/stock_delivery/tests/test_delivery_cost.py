@@ -11,19 +11,12 @@ class TestDeliveryCost(common.TransactionCase):
         super().setUpClass()
         cls.partner_18 = cls.env['res.partner'].create({'name': 'My Test Customer'})
         cls.product_4 = cls.env['product.product'].create({'name': 'A product to deliver', 'weight': 1.0})
-        cls.product_delivery = cls.env['product.product'].create({
-            'name': 'Delivery Charges',
-            'type': 'service',
-            'list_price': 40.0,
-            'categ_id': cls.env.ref('delivery.product_category_deliveries').id,
-        })
         cls.delivery_carrier = cls.env['delivery.carrier'].create({
             'name': 'Delivery Now Free Over 100',
             'fixed_price': 40,
             'margin': 50,
             'delivery_type': 'fixed',
             'invoice_policy': 'real',
-            'product_id': cls.product_delivery.id,
             'free_over': False,
         })
 

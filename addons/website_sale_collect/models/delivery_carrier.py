@@ -68,10 +68,8 @@ class DeliveryCarrier(models.Model):
                 if "company_id" in vals:
                     company_id = vals.get("company_id")
                 else:
-                    company_id = (
-                        self.env["product.product"].browse(vals.get("product_id")).company_id.id
-                        or self.env.company.id
-                    )
+                    company_id = self.env.company.id
+
                 warehouses = self.env["stock.warehouse"].search([("company_id", "in", company_id)])
                 vals.update({
                     "warehouse_ids": [Command.set(warehouses.ids)],
@@ -208,7 +206,7 @@ class DeliveryCarrier(models.Model):
     def in_store_rate_shipment(self, *_args):
         return {
             "success": True,
-            "price": self.product_id.list_price,
+            "price": self.fixed_price,
             "error_message": False,
             "warning_message": False,
         }

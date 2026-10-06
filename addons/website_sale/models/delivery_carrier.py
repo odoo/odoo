@@ -14,11 +14,7 @@ class DeliveryCarrier(models.Model):
     _name = "delivery.carrier"
     _inherit = ["delivery.carrier", "website.published.multi.mixin"]
 
-    website_description = fields.Text(
-        string="Description for Online Quotations",
-        related="product_id.description_sale",
-        readonly=False,
-    )
+    website_description = fields.Text(string="Description for Online Quotations", translate=True)
     delivery_estimate_mode = fields.Selection(
         string="Estimated Delivery",
         help="Display an estimated date to your customer. With 'User Choice', the customer picks a"

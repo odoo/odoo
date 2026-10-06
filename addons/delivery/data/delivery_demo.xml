@@ -2,31 +2,14 @@
 <odoo noupdate="1">
 
         <!-- Carrier -->
-
-        <record id="product_product_delivery_poste" model="product.product">
-            <field name="name">The Poste</field>
-            <field name="default_code">Delivery_009</field>
-            <field name="type">service</field>
-            <field name="categ_id" ref="delivery.product_category_deliveries"/>
-            <field name="sale_ok" eval="False"/>
-            <field name="purchase_ok" eval="False"/>
-            <field name="list_price">20.0</field>
-            <field name="invoice_policy">order</field>
-        </record>
-
         <record id="delivery_carrier" model="delivery.carrier">
             <field name="name">The Poste</field>
             <field name="fixed_price">20.0</field>
             <field name="sequence">2</field>
             <field name="delivery_type">base_on_rule</field>
-            <field name="product_id" ref="delivery.product_product_delivery_poste"/>
         </record>
 
         <!-- Local Delivery -->
-        <record id="product.product_product_local_delivery" model="product.product">
-            <field name="categ_id" ref="delivery.product_category_deliveries"/>
-        </record>
-
         <record id="delivery_local_delivery" model="delivery.carrier">
             <field name="name">Local Delivery</field>
             <field name="fixed_price">5.0</field>
@@ -34,7 +17,6 @@
             <field name="amount">50</field>
             <field name="sequence">4</field>
             <field name="delivery_type">fixed</field>
-            <field name="product_id" ref="product.product_product_local_delivery"/>
         </record>
 
         <record id="delivery_price_rule1" model="delivery.price.rule">

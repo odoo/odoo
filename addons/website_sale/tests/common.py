@@ -118,9 +118,9 @@ class WebsiteSaleCommon(DeliveryCommon):
         return super()._create_so(**values)
 
     @classmethod
-    def _prepare_carrier(cls, product, website_published=True, **values):
+    def _prepare_carrier(cls, website_published=True, **values):
         """Override of `delivery` to auto-publish test delivery methods."""
-        return super()._prepare_carrier(product, website_published=website_published, **values)
+        return super()._prepare_carrier(website_published=website_published, **values)
 
     @classmethod
     def _create_public_category(cls, list_vals):

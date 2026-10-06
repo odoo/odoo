@@ -13,12 +13,12 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 @tagged("post_install", "-at_install")
 class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     def test_prevent_publishing_when_no_warehouse(self):
         self.in_store_dm.is_published = False
@@ -37,7 +37,6 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
         new_in_store_carrier = self.env["delivery.carrier"].create({
             "name": "Test Carrier",
             "delivery_type": "in_store",
-            "product_id": self.dm_product.id,
         })
         self.assertEqual(new_in_store_carrier.integration_level, "rate")
 
@@ -51,20 +50,23 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
             "partner_longitude": 2.0,
         })
         self.warehouse.sudo().partner_id = wh_address_partner.id
-        self.warehouse.sudo().opening_hours = self.env["resource.calendar"].sudo().create({
-            "name": "Opening hours",
-            "attendance_ids": [
-                Command.create({"dayofweek": "0", "hour_from": 8, "hour_to": 12}),
-                Command.create({"dayofweek": "0", "hour_from": 13, "hour_to": 17}),
-            ],
-        })
+        self.warehouse.sudo().opening_hours = (
+            self
+            .env["resource.calendar"]
+            .sudo()
+            .create({
+                "name": "Opening hours",
+                "attendance_ids": [
+                    Command.create({"dayofweek": "0", "hour_from": 8, "hour_to": 12}),
+                    Command.create({"dayofweek": "0", "hour_from": 13, "hour_to": 17}),
+                ],
+            })
+        )
 
         with (
             patch.object(self.registry["res.partner"], "geo_localize", return_value=True),
             patch.object(
-                self.registry["stock.warehouse"],
-                "_get_pickup_next_open_date",
-                return_value="",
+                self.registry["stock.warehouse"], "_get_pickup_next_open_date", return_value=""
             ),
             self.mock_request(sale_order_id=so.id),
         ):

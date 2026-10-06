@@ -143,12 +143,7 @@
                                         invisible="not free_over"
                                         required="free_over"/>
                             </div>
-                            <field name="product_id" context="{
-                                'default_type': 'service',
-                                'default_sale_ok': False,
-                                'default_purchase_ok': False,
-                                'default_invoice_policy': 'order',
-                            }"/>
+                            <field name="tax_ids" widget="many2many_tags"/>
                             <field name="tracking_url" placeholder="i.e. https://ekartlogistics.com/shipmenttrack/&lt;shipmenttrackingnumber&gt;" invisible="delivery_type not in ('fixed', 'base_on_rule')"/>
                             <field name="invoice_policy" widget="radio" invisible="delivery_type in ('fixed', 'base_on_rule') or integration_level == 'rate'"/>
                             <field name="supports_shipping_insurance" invisible="1"/>
@@ -185,6 +180,12 @@
                                                 readonly="not country_ids"
                                                 force_save="1"
                                                 options="{'no_create_edit': True}"/>
+                                        <field
+                                            name="pricelist_ids"
+                                            widget="many2many_tags"
+                                            options="{'no_open': True, 'no_create': True}"
+                                            placeholder="All pricelists"
+                                        />
                                     </group>
                                     <group name="content" string="Content">
                                         <label for="max_weight"/>

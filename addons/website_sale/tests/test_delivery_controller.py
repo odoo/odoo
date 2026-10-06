@@ -46,19 +46,10 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
 
     def test_available_methods(self):
         self.env["delivery.carrier"].search([]).action_archive()
-        self.product_delivery_poste = self.env["product.product"].create({
-            "name": "The Poste",
-            "type": "service",
-            "categ_id": self.env.ref("delivery.product_category_deliveries").id,
-            "sale_ok": False,
-            "purchase_ok": False,
-            "list_price": 20.0,
-        })
         self.env["delivery.carrier"].create([
             {
                 "name": "Over 300",
                 "delivery_type": "base_on_rule",
-                "product_id": self.product_delivery_poste.id,
                 "website_published": True,
                 "price_rule_ids": [
                     Command.create({"operator": ">=", "max_value": 300, "variable": "price"})
@@ -67,23 +58,13 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
             {
                 "name": "Under 300",
                 "delivery_type": "base_on_rule",
-                "product_id": self.product_delivery_poste.id,
                 "website_published": True,
                 "price_rule_ids": [
                     Command.create({"operator": "<", "max_value": 300, "variable": "price"})
                 ],
             },
-            {
-                "name": "No rules",
-                "delivery_type": "base_on_rule",
-                "product_id": self.product_delivery_poste.id,
-                "website_published": True,
-            },
-            {
-                "name": "Fixed",
-                "product_id": self.product_delivery_poste.id,
-                "website_published": True,
-            },
+            {"name": "No rules", "delivery_type": "base_on_rule", "website_published": True},
+            {"name": "Fixed", "website_published": True},
         ])
 
         self.assertEqual(
@@ -91,16 +72,9 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
         )
 
     def test_recompute_cart_recomputes_delivery_rate(self):
-        delivery_product = self.env["product.product"].create({
-            "name": "Delivery Fee",
-            "type": "service",
-            "sale_ok": False,
-            "purchase_ok": False,
-        })
         carrier = self.env["delivery.carrier"].create({
             "name": "Free over 15",
             "delivery_type": "base_on_rule",
-            "product_id": delivery_product.id,
             "website_published": True,
             "price_rule_ids": [
                 Command.create({
