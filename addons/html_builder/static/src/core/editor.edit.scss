@@ -16,7 +16,9 @@
         }
     }
 
-    &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty, &.o_drop_inner_empty {
+    &.oe_structure.oe_empty,
+    &[data-oe-type=html]:not(.o_drop_inner_empty),
+    .oe_structure.oe_empty {
 
         /* Base case (website.page (#wrap), t-field (product description), ...) */
         > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone) {
@@ -24,14 +26,36 @@
             height: auto;
 
             /* Empty editable element during drag & drop */
-            &:only-child {
+            &:only-child:not(:where(.oe_structure_not_nearest > *)) {
                 width: 100% - 2 * $-editor-messages-margin-x;
                 padding: 12px 0;
                 margin: 20px $-editor-messages-margin-x;
             }
 
-            &:not(:only-child) {
-                &[data-editor-message-default]::before {
+            &:not(:only-child),
+            &:where(.oe_structure_not_nearest > *) {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 0;
+                outline: 0;
+                border-radius: 0;
+                background:
+                    linear-gradient(var(--o-we-handles-accent-color) 0 0)
+                    center / 100% var(--o-we-handle-border-width) no-repeat;
+
+                &::before {
+                    content: "+\00a0" attr(data-add-block-message);
+                    border-radius: var(--o-we-item-border-radius);
+                    padding: 0 calc(var(--o-we-item-spacing) * 1.5);
+                    background-color: var(--o-we-handles-accent-color);
+                    font-family: var(--o-we-font-family);
+                    font-size: var(--o-we-font-size-lg);
+                    line-height: 24px;
+                    text-shadow: 0 0 8px rgba(9, 89, 97, .6);
+                }
+
+                &::after {
                     content: none;
                 }
             }
@@ -49,6 +73,96 @@
         &.oe_wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone):only-child
         {
             padding: 112px 0px;
+        }
+
+        /* Empty page box (also for empty HTML fields and areas with a custom
+           message) */
+        &#wrap:empty,
+        .oe_wrap:empty,
+        &:is(#wrap, .oe_wrap) > .oe_drop_zone.oe_insert:only-child:not(
+            .oe_vertical,
+            .oe_sanitized_drop_zone
+        ),
+        &:where([data-oe-type=html], :not(
+            [data-editor-message-default],
+            .oe_structure_not_nearest,
+            #wrap,
+            .oe_wrap
+        )) > .oe_drop_zone.oe_insert:only-child:not(
+            .oe_vertical,
+            .oe_sanitized_drop_zone
+        ) {
+            border: 0;
+            outline: 1px solid var(--o-we-handles-accent-color);
+            outline-offset: -1px;
+            border-radius: calc(var(--o-we-item-border-radius) * 2);
+            background: color-mix(
+                in srgb, var(--o-we-handles-accent-color) 10%, transparent
+            );
+            transition: background-color .2s;
+
+            &, &.text-muted {
+                color: color-mix(
+                    in srgb,
+                    var(--o-we-handles-accent-color),
+                    contrast-color(contrast-color(currentColor)) 40%
+                ) !important;
+            }
+
+            &::before {
+                margin-bottom: calc(var(--o-we-item-spacing) * 0.5);
+                padding-top: 60px;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='23' fill='none' stroke='%2301bad2' stroke-width='2'/%3E%3Cpath d='M24 16v16M16 24h16' stroke='%2301bad2' stroke-width='2'/%3E%3C/svg%3E");
+                background-position: top center;
+                background-size: 48px;
+                background-repeat: no-repeat;
+                font-weight: 500;
+                transition: background-image .2s;
+            }
+
+            &.o_dropzone_highlighted {
+                background: color-mix(
+                    in srgb, var(--o-we-handles-accent-color) 20%, transparent
+                );
+                filter: none;
+
+                &::before {
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='23' fill='%2301bad2' stroke='%2301bad2' stroke-width='2'/%3E%3Cpath d='M24 16v16M16 24h16' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E");
+                }
+            }
+        }
+
+        /* Empty HTML field or area with a custom message: icon and text on
+           one line */
+        &:where([data-oe-type=html], :not(
+            [data-editor-message-default],
+            .oe_structure_not_nearest,
+            #wrap,
+            .oe_wrap
+        )) > .oe_drop_zone.oe_insert:only-child:not(
+            .oe_vertical,
+            .oe_sanitized_drop_zone
+        ) {
+            &::before {
+                display: inline-block;
+                margin-bottom: 0;
+                padding-top: 0;
+                padding-inline-start: 28px;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='22' fill='none' stroke='%2301bad2' stroke-width='4'/%3E%3Cpath d='M24 16v16M16 24h16' stroke='%2301bad2' stroke-width='4'/%3E%3C/svg%3E");
+                background-position: left center;
+                background-size: 20px;
+                font-size: calc(var(--o-we-dropzone-font-size) - 2px);
+                font-weight: normal;
+                line-height: 24px;
+            }
+
+            &.o_dropzone_highlighted::before {
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='22' fill='%2301bad2' stroke='%2301bad2' stroke-width='4'/%3E%3Cpath d='M24 16v16M16 24h16' stroke='%23fff' stroke-width='4'/%3E%3C/svg%3E");
+            }
+
+            &::after {
+                content: none;
+            }
         }
     }
 

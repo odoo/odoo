@@ -78,17 +78,17 @@ test("undo and redo buttons", async () => {
     setContent(editableContent, "<p> Text[] </p>");
     await insertText(editor, "a");
     expect(editor.editable).toHaveInnerHTML(
-        '<div id="wrap" class="oe_structure oe_empty o_savable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here" contenteditable="true"> <p> Texta </p> </div>'
+        '<div id="wrap" class="oe_structure oe_empty o_savable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here" data-editor-sub-message="Choose a block in the sidebar" contenteditable="true"> <p> Texta </p> </div>'
     );
     await animationFrame();
     await click(".o_hb_snippets_menu button[data-icon='undo']");
     await animationFrame();
     expect(editor.editable).toHaveInnerHTML(
-        '<div id="wrap" class="oe_structure oe_empty o_savable" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here" contenteditable="true"> <p> Text </p> </div>'
+        '<div id="wrap" class="oe_structure oe_empty o_savable" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here" data-editor-sub-message="Choose a block in the sidebar" contenteditable="true"> <p> Text </p> </div>'
     );
     await click(".o_hb_snippets_menu button[data-icon='redo']");
     expect(editor.editable).toHaveInnerHTML(
-        '<div id="wrap" class="oe_structure oe_empty o_savable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here" contenteditable="true"> <p> Texta </p> </div>'
+        '<div id="wrap" class="oe_structure oe_empty o_savable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here" data-editor-sub-message="Choose a block in the sidebar" contenteditable="true"> <p> Texta </p> </div>'
     );
 });
 

@@ -77,11 +77,13 @@ test("Toggle the overlays when clicking on an option element", async () => {
     await contains(":iframe section").click();
     expect(".oe_overlay").toHaveCount(1);
     expect(".oe_overlay").toHaveRect(":iframe section");
+    expect(".oe_overlay.oe_active .o_hb_overlay_name").toHaveText("Block");
 
     await contains(":iframe .col-lg-3").click();
     expect(".oe_overlay").toHaveCount(2);
     expect(".oe_overlay.oe_active").toHaveCount(1);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-3");
+    expect(".oe_overlay.oe_active .o_hb_overlay_name").toHaveText("Column");
 });
 
 test("Refresh the overlays when their target size changes", async () => {

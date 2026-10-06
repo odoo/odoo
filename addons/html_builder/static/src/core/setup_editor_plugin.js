@@ -62,6 +62,12 @@ export class SetupEditorPlugin extends Plugin {
                 el.setAttribute("data-editor-message-default", true);
                 el.setAttribute("data-editor-message", _t("Drag blocks here"));
             }
+            if (
+                el.hasAttribute("data-editor-message-default") &&
+                !el.hasAttribute("data-editor-sub-message")
+            ) {
+                el.setAttribute("data-editor-sub-message", _t("Choose a block in the sidebar"));
+            }
         }
     }
 
