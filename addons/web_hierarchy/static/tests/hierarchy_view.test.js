@@ -1574,3 +1574,26 @@ test("Open record on new window", async () => {
     ]);
 });
 
+test("Display warning when record count limit is exceeded and check number of records abide", async () => {
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 2 });
+    Employee._records.push(
+        { id: 5, name: "Harrison" },
+        { id: 6, name: "Tyler" },
+    )
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+
+    expect(".o_notification_content").toHaveText(/hierarchy cannot display more than/);  // check if it's the specific warning
+    expect(".o_hierarchy_node_container").toHaveCount(2);
+})
+
+test("No warning when record count limit is not exceeded", async () => {
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 20 });
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+    expect(".o_notification").toHaveCount(0);
+})

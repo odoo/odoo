@@ -10,7 +10,9 @@ class Base(models.AbstractModel):
     def hierarchy_read(self, domain, specification, parent_field, child_field=None, order=None):
         if parent_field not in specification:
             specification[parent_field] = {"fields": {"display_name": {}}}
-        records = self.search(domain, order=order)
+        # +1 for quick indication to frontend that we exceeded the record limit
+        record_limit = self.env.context.get("record_limit") and self.env.context.get("record_limit") + 1
+        records = self.search(domain, order=order, limit=record_limit)
         fetch_child_ids_for_all_records = False
         if not records:
             return []
