@@ -118,6 +118,28 @@ test("parseFloat", () => {
     expect(() => parseFloat("abbc")).toThrow();
     expect(() => parseFloat("-")).toThrow();
     expect(() => parseFloat("12e22222")).toThrow(); // Too big
+
+    // Mathematical expression with arithmetic operation
+    let operation = parseFloat("+=5", { allowOperation: true });
+    expect(operation.operator).toBe("+");
+    expect(operation.operand).toBe(5);
+    expect(operation.compute(10)).toBe(15);
+
+    // the operand can be a formula
+    operation = parseFloat("*=2*3", { allowOperation: true });
+    expect(operation.operator).toBe("*");
+    expect(operation.operand).toBe(6);
+    expect(operation.compute(10)).toBe(60);
+
+    operation = parseFloat("/ = (1+1)", { allowOperation: true });
+    expect(operation.operator).toBe("/");
+    expect(operation.operand).toBe(2);
+    expect(operation.compute(10)).toBe(5);
+
+    patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
+    operation = parseFloat("-=1,5+0,5", { allowOperation: true });
+    expect(operation.operator).toBe("-");
+    expect(operation.operand).toBe(2);
 });
 
 test("parseFloatTime", () => {
