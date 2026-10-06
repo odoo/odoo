@@ -329,10 +329,7 @@ export class PosOrderline extends PosOrderlineAccounting {
     }
 
     canBeMergedWith(orderline) {
-        const ProductPrice = this.models["decimal.precision"].find(
-            (dp) => dp.name === "Product Price"
-        );
-        const price = ProductPrice.round(this.price_unit || 0);
+        const price = this.price_unit || 0;
         const product = orderline.getProduct();
         const order_line_price = product.getPrice(
             orderline.order_id.pricelist_id,
@@ -390,15 +387,15 @@ export class PosOrderline extends PosOrderlineAccounting {
     }
 
     setUnitPrice(price) {
-        const ProductPrice = this.models["decimal.precision"].find(
-            (dp) => dp.name === "Product Price"
-        );
-        const parsed_price = !isNaN(price)
-            ? price
-            : isNaN(parseFloat(price))
-            ? 0
-            : parseFloat("" + price);
-        this.price_unit = ProductPrice.round(parsed_price || 0);
+        let parsed_price = Number(price);
+        if (isNaN(parsed_price)) {
+            try {
+                parsed_price = parseFloat("" + price);
+            } catch {
+                parsed_price = 0;
+            }
+        }
+        this.price_unit = parsed_price || 0;
     }
 
     displayDiscountPolicy() {
