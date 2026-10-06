@@ -41,6 +41,7 @@ export class PartnerList extends Component {
             bypassEditableProtection: true,
         });
         this.onScroll = debounce(this.onScroll.bind(this), 200);
+        this.env.dialogData.dismiss = () => this.clickPartner(this.props.partner);
 
         useListener(this.modalContent, "scroll", this.onScroll);
     }
