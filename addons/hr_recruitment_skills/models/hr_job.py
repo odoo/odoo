@@ -20,7 +20,30 @@ class HrJob(models.Model):
         active_applicant_id = self.env.context.get("active_applicant_id", [])
 
         applicant = self.env["hr.applicant"].browse(active_applicant_id)
+<<<<<<< 08a353c0ca1daa5ac133ff8141a20c67928e5679
         applicant_skill_map = {a.skill_id.id: a.level_progress for a in applicant.current_applicant_skill_ids}
+||||||| 007ec7858eae8edbdf02d56ebbebbadeb822d1b0
+        for job in self:
+            if not job.job_skill_ids:
+                job.applicant_matching_score = False
+                continue
+            job_skills = job.job_skill_ids
+            job_degree = job.expected_degree.score * 100
+            job_total = sum(job.job_skill_ids.mapped("level_progress")) + job_degree
+            job_skill_map = {js.skill_id.id: js.level_progress for js in job_skills}
+=======
+        for job in self:
+            if not job.job_skill_ids:
+                job.applicant_matching_score = False
+                continue
+            job_skills = job.job_skill_ids
+            job_degree = job.expected_degree.score * 100
+            job_total = sum(job.job_skill_ids.mapped("level_progress")) + job_degree
+            if not job_total:
+                job.applicant_matching_score = False
+                continue
+            job_skill_map = {js.skill_id.id: js.level_progress for js in job_skills}
+>>>>>>> 0d80d3c94eb674042bd1d2a541a841fb6a47de9d
 
         for job in self:
             if not active_applicant_id or not job.job_skill_ids:
