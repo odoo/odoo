@@ -149,19 +149,22 @@
                     </t>
                     <t t-name="card">
                         <main t-att-class="['done', 'cancelled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
-                            <field name="name" class="fw-bold fs-5"/>
+                            <div class="d-flex align-items-baseline gap-2 w-100">
+                                <field name="name" class="fw-bold fs-5"/>
+                                <div class="d-flex gap-1 ms-auto">
+                                    <t t-call="menu"/>
+                                    <field name="state" widget="maintenance_request_state_selection"/>
+                                </div>
+                            </div>
                             <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id"/></span>
                             <span t-if="record.equipment_id.raw_value"><field name="equipment_id"/><span t-if="record.category_id.raw_value"> (<field name="category_id"/>)</span></span>
                             <field name="schedule_date"/>
                             <footer>
-                                <div class="d-flex">
+                                <div class="d-flex align-items-center gap-1">
                                     <field name="priority" widget="priority"/>
-                                    <field name="activity_ids" widget="kanban_activity" class="ms-3"/>
+                                    <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
-                                <div class="d-flex ms-auto align-items-center">
-                                    <field name="user_ids" widget="many2many_avatar_user" class="me-1"/>
-                                    <field name="state" widget="maintenance_request_state_selection"/>
-                                </div>
+                                <field name="user_ids" widget="many2many_avatar_user" class="ms-auto"/>
                             </footer>
                         </main>
                     </t>
