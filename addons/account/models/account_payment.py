@@ -221,26 +221,26 @@ class AccountPayment(models.Model):
         '''
         self.ensure_one()
 
-        # liquidity_lines, counterpart_lines, writeoff_lines
-        lines = [self.env['account.move.line'] for _dummy in range(3)]
-        valid_account_types = self._get_valid_payment_account_types()
-        for line in self.move_id.line_ids:
-            if line.account_id in self._get_valid_liquidity_accounts():
-                lines[0] += line  # liquidity_lines
-            elif line.account_id.account_type in valid_account_types or line.account_id == line.company_id.transfer_account_id:
-                lines[1] += line  # counterpart_lines
-            else:
-                lines[2] += line  # writeoff_lines
+        valid_account_types = set(self._get_valid_payment_account_types())
+        valid_liquidity_accounts = set(self._get_valid_liquidity_accounts())
+
+        def categorize(line):
+            if line.account_id in valid_liquidity_accounts:
+                return 'liquidity'
+            if line.account_id.account_type in valid_account_types or line.account_id == line.company_id.transfer_account_id:
+                return 'counterpart'
+            return 'writeoff'
+        groups = self.move_id.line_ids.grouped(categorize)
+        liquidity, counterpart, writeoff = (groups.get(key, self.env['account.move.line']) for key in ('liquidity', 'counterpart', 'writeoff'))
 
         # In some case, there is no liquidity or counterpart line (after changing an outstanding account on the journal for example)
         # In that case, and if there is one writeoff line, we take this line and set it as liquidity/counterpart line
-        if len(lines[2]) == 1:
-            for i in (0, 1):
-                if not lines[i]:
-                    lines[i] = lines[2]
-                    lines[2] -= lines[2]
-
-        return lines
+        if len(writeoff) == 1:
+            if not liquidity:
+                liquidity, writeoff = writeoff, liquidity
+            elif not counterpart:
+                counterpart, writeoff = writeoff, counterpart
+        return liquidity, counterpart, writeoff
 
     def _get_valid_liquidity_accounts(self):
         self.ensure_one()
