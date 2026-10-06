@@ -213,15 +213,12 @@ export class DomPlugin extends Plugin {
         };
 
         const children = childNodes(element);
-        const visibleNodes = new Set(children.filter(isVisible));
 
         let currentBlock;
         let shouldBreakLine = true;
         for (const node of children) {
             if (isBlock(node)) {
                 shouldBreakLine = true;
-            } else if (!visibleNodes.has(node) && !this.dependencies.delete.isUnremovable(node)) {
-                removeNode(node, cursors);
             } else if (node.nodeName === "BR") {
                 if (shouldBreakLine) {
                     wrapInBlock(node, cursors);
