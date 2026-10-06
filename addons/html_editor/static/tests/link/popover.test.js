@@ -307,9 +307,11 @@ describe("popover should edit,copy,remove the link", () => {
         await press("Tab");
         await animationFrame();
         expect("button:has(i[data-icon='upload'])").toBeFocused();
-        await press("Tab");
-        await animationFrame();
-        expect("button[name='link_type']").toBeFocused();
+        for (const type of ["link", "primary", "secondary"]) {
+            await press("Tab");
+            await animationFrame();
+            expect(`.o_we_link_type [data-link-type='${type}']`).toBeFocused();
+        }
         await press("Tab");
         await animationFrame();
         expect(".form-check-input").toBeFocused();

@@ -34,42 +34,175 @@
         box-shadow: 0 0 0 $focus-ring-width rgba($input-focus-border-color, $focus-ring-opacity);
     }
 
+    // Controls concentric with the popover: its radius minus the 8px around them.
     .o_link_popover_container {
-        min-width: 300px;
-    }
+        min-width: 284px;
+        --btn-border-radius: calc(#{$popover-border-radius} - #{map-get($spacers, 2)});
 
-    .o_we_link_preview {
-        width: 300px;
-
-        .btn {
-            white-space: nowrap;
+        .form-control, .form-select {
+            border-radius: calc(#{$popover-border-radius} - #{map-get($spacers, 2)});
         }
     }
 
-    .o_we_input_label {
+    // A field with its icon inside, at its start.
+    .o_we_link_field {
+        position: relative;
         display: flex;
+        align-items: center;
+
+        > div:has(> input), > .o-autocomplete {
+            flex-grow: 1;
+        }
+
+        input.form-control {
+            min-height: 30px;
+            padding-inline-start: 30px;
+        }
+
+        .o_we_input_label {
+            position: absolute;
+            inset-block: 0;
+            inset-inline-start: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            color: $text-muted;
+        }
+    }
+
+    // Uploading a file is offered in words under the URL field, close to it.
+    .o_we_upload_link_row {
+        margin-top: calc(-1 * #{map-get($spacers, 1)});
+        font-size: $font-size-sm;
+        color: $text-muted;
+
+        .o_we_upload_link {
+            --btn-padding-x: 0;
+            --btn-padding-y: 0;
+            --btn-font-size: 1em;
+            --btn-border-width: 0;
+        }
+    }
+
+    // Link style: a segmented control, as tall and as wide as the fields.
+    .o_we_link_type {
+        display: flex;
+
+        .btn {
+            flex: 1 1 0;
+            min-width: 0;
+            min-height: 30px;
+            --btn-padding-x: #{map-get($spacers, 1)};
+        }
+    }
+
+    // Preview: what the link is, on the whole width, with Edit and Unlink
+    // shown above it, at the top right, where a thumbnail cannot push them.
+    // They stay last in the document: keyboard users read the link first.
+    .o_we_link_preview {
+        width: 320px;
+        max-width: 100%;
+        --btn-border-radius: calc(#{$popover-border-radius} - #{map-get($spacers, 1)});
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: map-get($spacers, 1);
+            white-space: nowrap;
+            --btn-padding-x: #{map-get($spacers, 2) * .75};
+
+            // Square, as the icon buttons of the toolbar.
+            &:has(> .oi-fw:only-child) {
+                --btn-padding-x: 0;
+                flex: none;
+                width: calc(var(--btn-font-size) * var(--btn-line-height) + 2 * (var(--btn-padding-y) + var(--btn-border-width)));
+                aspect-ratio: 1;
+            }
+        }
+    }
+
+    // A header row, the site on the left and the actions on the right, where
+    // a thumbnail cannot push them, then what the link is, on the whole
+    // width. The actions come last in the document: keyboard users read the
+    // link first.
+    .o_we_link_preview_body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "site actions"
+            "text text"
+            "description description"
+            "image image";
+        row-gap: map-get($spacers, 1);
+        column-gap: map-get($spacers, 2);
+        padding: map-get($spacers, 1) map-get($spacers, 1) map-get($spacers, 2);
+
+        // The content 8px from the edge, the buttons 4px (concentric).
+        > :not(.o_we_link_preview_actions) {
+            padding-inline: map-get($spacers, 1);
+        }
+    }
+
+    .o_we_link_preview_site {
+        grid-area: site;
+        min-width: 0;
+        font-size: $font-size-sm;
+        color: $text-muted;
+    }
+
+    .o_we_link_preview_actions {
+        grid-area: actions;
+        min-height: 28px;
+    }
+
+    .o_we_link_preview_text {
+        grid-area: text;
+    }
+
+    .o_we_description_link_preview {
+        grid-area: description;
+    }
+
+    .o_extra_info_card {
+        grid-area: image;
+    }
+
+    // What the page says, in the text color: the muted line above it is the
+    // address.
+    .o_we_description_link_preview {
+        font-size: $font-size-sm;
+        line-height: 1.4;
+        color: $body-color;
+    }
+
+    .o_extra_info_card img {
+        display: block;
+        max-height: 160px;
+        border-radius: $border-radius;
+    }
+
+    .o_we_link_preview_text {
+        min-width: 0;
+        line-height: 1.25;
+
+        .o_we_url_link {
+            font-weight: $font-weight-medium;
+        }
+
+        .o_we_full_url {
+            font-size: $font-size-sm;
+        }
+    }
+
+    .o_we_preview_favicon {
+        display: flex;
+        align-items: center;
         justify-content: center;
-        align-items: center;
-        color: rgba($body-color, 0.7);
-        border: var(--border-width) solid var(--dark-border-subtle);
-        border-radius: var(--border-radius) 0 0 var(--border-radius);
-        width: 35px !important;
-    }
-
-    .oe_link_label_icon {
-        fill: rgba($body-color, 0.7);
-    }
-
-    .o_we_label_link,
-    .o_we_href_input_link {
-        height: 100%;
-    }
-
-    .o_we_preview_favicon, .o_we_url_link, .o_we_replace_title_btn:has(i.oi[data-icon="wand_stars"]) {
-        min-width: 24px;
-        min-height: 24px;
-        display: flex;
-        align-items: center;
+        width: 16px;
+        height: 16px;
     }
 }
 
