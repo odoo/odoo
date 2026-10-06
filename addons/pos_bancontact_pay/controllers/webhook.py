@@ -6,6 +6,7 @@ from PIL import Image
 
 from odoo import http
 from odoo.http import request
+from odoo.http.stream import content_disposition
 from odoo.tools.misc import file_path
 
 from odoo.addons.pos_bancontact_pay import const
@@ -21,9 +22,11 @@ _logger = logging.getLogger(__name__)
 
 class BancontactPayController(http.Controller):
 
-    @http.route('/bancontact_pay/sticker/<int:payment_method_id>', type='http', auth='user')
-    def download_sticker(self, payment_method_id):
-        payment_method = request.env['pos.payment.method'].browse(payment_method_id)
+    @http.route('/bancontact_pay/sticker/<string:identifier>', type='http', auth='user')
+    def download_sticker(self, identifier):
+        sticker = request.env['pos.bancontact.sticker'].search([('identifier', '=', identifier), ('product_id.usage', '=', 'sticker')], limit=1)
+        if not sticker:
+            raise request.not_found()
 
         lang = request.env.context.get('lang')
         frame_lang = lang.split('_')[0] if lang else 'fr'
@@ -36,7 +39,7 @@ class BancontactPayController(http.Controller):
         frame = Image.open(frame_path).convert("RGBA")
 
         # fetch qr code
-        qr_bytes = payment_method._fetch_bancontact_sticker_image()
+        qr_bytes = sticker._fetch_sticker_image()
         qr = Image.open(io.BytesIO(qr_bytes)).convert("RGBA")
 
         # resize QR
@@ -52,10 +55,9 @@ class BancontactPayController(http.Controller):
         frame.save(buffer, format="PNG")
         content = buffer.getvalue()
 
-        filename = f"{payment_method.name}.png"
         headers = [
             ('Content-Type', 'image/png'),
-            ('Content-Disposition', f'attachment; filename="{filename}"'),
+            ('Content-Disposition', content_disposition(f"{sticker.name}.png")),
             ('Cache-Control', 'no-cache'),
         ]
 
@@ -70,9 +72,9 @@ class BancontactPayController(http.Controller):
             _logger.error("%s webhook rejected: invalid payment_method_id=%s", log_prefix, payment_method_id)
             return http.Response("Invalid POS configuration", status=400)
 
-        bancontact_signature_validation = BancontactSignatureValidation(request.httprequest, payment_method.bancontact_test_mode)
+        bancontact_signature_validation = BancontactSignatureValidation(request.httprequest, payment_method.bancontact_product_id.preprod)
         try:
-            bancontact_signature_validation.verify_signature(payment_method.bancontact_ppid)
+            bancontact_signature_validation.verify_signature(payment_method.bancontact_product_id.ppid)
         except BancontactSignatureValidationError as e:
             _logger.warning("%s webhook rejected: %s", log_prefix, e)
             return http.Response("Invalid signature", status=403)

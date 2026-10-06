@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_bancontact_product_view_form" model="ir.ui.view">
+        <field name="name">pos.bancontact.product.form</field>
+        <field name="model">pos.bancontact.product</field>
+        <field name="arch" type="xml">
+            <form string="Bancontact Product" duplicate="0">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Shop Brussels"/></h1>
+                    </div>
+                    <group>
+                        <group string="Credentials">
+                            <field name="ppid"/>
+                            <field name="api_key" password="True"/>
+                            <field name="preprod"/>
+                        </group>
+                        <group string="Configuration">
+                            <field name="usage" widget="radio" readonly="payment_method_ids"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info" role="status" invisible="usage != 'display'">
+                        <strong>Display</strong>: provide a modern checkout experience by showing a dynamic QR code directly on your customer-facing screen for instant scanning.
+                    </div>
+                    <div class="alert alert-info" role="status" invisible="usage != 'sticker'">
+                        <strong>Static QR</strong>: link your till to a dedicated QR sticker placed conveniently at your checkout area for a low-profile, integrated payment solution.
+                    </div>
+                    <notebook>
+                        <page name="stickers" string="Stickers" invisible="usage != 'sticker'">
+                            <field name="sticker_ids">
+                                <list editable="bottom" decoration-muted="payment_method_id and not payment_method_active">
+                                    <field name="payment_method_active" column_invisible="1"/>
+                                    <field name="name" placeholder="Sticker"/>
+                                    <field name="identifier" force_save="1"/>
+                                    <field name="payment_method_id" readonly="1" optional="show"/>
+                                    <button name="download_sticker" type="object" string="Download" icon="fa-download" class="btn-link"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="payment_methods" string="Payment Methods" invisible="usage == 'sticker'">
+                            <field name="payment_method_ids" readonly="1">
+                                <list decoration-muted="not active">
+                                    <field name="active" column_invisible="1"/>
+                                    <field name="name"/>
+                                    <field name="config_ids" widget="many2many_tags"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pos_bancontact_sticker_view_form" model="ir.ui.view">
+        <field name="name">pos.bancontact.sticker.form</field>
+        <field name="model">pos.bancontact.sticker</field>
+        <field name="arch" type="xml">
+            <form string="Bancontact Sticker">
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="Sticker"/>
+                        <field name="payment_method_id" invisible="1"/>
+                        <field name="product_id" force_save="1" readonly="payment_method_id"/>
+                        <field name="identifier" force_save="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pos_bancontact_product_view_list" model="ir.ui.view">
+        <field name="name">pos.bancontact.product.list</field>
+        <field name="model">pos.bancontact.product</field>
+        <field name="arch" type="xml">
+            <list string="Bancontact Products" duplicate="0">
+                <field name="name"/>
+                <field name="ppid"/>
+                <field name="preprod"/>
+                <field name="usage"/>
+                <field name="payment_method_ids" widget="many2many_tags" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="pos_bancontact_product_view_kanban" model="ir.ui.view">
+        <field name="name">pos.bancontact.product.kanban</field>
+        <field name="model">pos.bancontact.product</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="preprod"/>
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" type="open" class="dropdown-item">Edit</a>
+                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                    </t>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold fs-4 mb-2"/>
+                        <div class="row g-1">
+                            <div class="col-5 fw-semibold text-dark">Environment:</div>
+                            <div class="col-7">
+                                <span t-if="record.preprod.raw_value" class="badge rounded-pill text-bg-warning">Preprod</span>
+                                <span t-else="" class="badge rounded-pill text-bg-success">Production</span>
+                            </div>
+                            <div class="col-5 fw-semibold text-dark">Product ID:</div>
+                            <div class="col-7 text-muted text-truncate"><field name="ppid"/></div>
+                            <div class="col-5 fw-semibold text-dark">QR Usage:</div>
+                            <div class="col-7 text-muted"><field name="usage"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="pos_bancontact_product_view_search" model="ir.ui.view">
+        <field name="name">pos.bancontact.product.search</field>
+        <field name="model">pos.bancontact.product</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="ppid"/>
+                <filter name="production" string="Production" domain="[('preprod', '=', False)]"/>
+                <filter name="preprod" string="Preprod" domain="[('preprod', '=', True)]"/>
+                <separator/>
+                <filter name="display" string="Display" domain="[('usage', '=', 'display')]"/>
+                <filter name="sticker" string="Static QR" domain="[('usage', '=', 'sticker')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pos_bancontact_product" model="ir.actions.act_window">
+        <field name="name">Bancontact Products</field>
+        <field name="res_model">pos.bancontact.product</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Bancontact product
+            </p>
+            <p>
+                Register each product from your Bancontact Pro Portal once,
+                then link it to as many payment methods as needed.
+            </p>
+        </field>
+    </record>
+</odoo>

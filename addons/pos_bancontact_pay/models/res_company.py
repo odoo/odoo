@@ -7,6 +7,8 @@ from odoo.addons.pos_bancontact_pay import const
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
+    bancontact_merchant_id = fields.Char("Bancontact Merchant ID", copy=False)
+
     @api.constrains('currency_id')
     def _check_currency(self):
         """Prevent setting an unsupported company currency when Bancontact Pay relies on it."""

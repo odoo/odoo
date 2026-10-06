@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_bancontact_pay</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='pos_payment_terminals_section']" position="after">
+                <block title="Bancontact Pay" id="pos_bancontact_pay_section">
+                    <setting id="bancontact_pay_merchant_setting" string="Merchant Account" company_dependent="1"
+                        help="Your Bancontact merchant and the products used by your payment methods.">
+                        <div class="content-group">
+                            <div class="row mt-2">
+                                <label for="bancontact_merchant_id" string="Merchant ID" class="col-lg-3 o_light_label"/>
+                                <field name="bancontact_merchant_id" class="flex-grow-1"/>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button name="%(action_pos_bancontact_product)d" type="action" string="Bancontact Products" icon="east" class="btn-link"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
