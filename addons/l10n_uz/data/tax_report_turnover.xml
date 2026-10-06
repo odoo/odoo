@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_uz_tax_report_turnover" model="account.report">
+        <field name="name">Turnover Tax</field>
+        <field name="name@uz">Aylanmadan olinadigan soliq</field>
+        <field name="name@ru">Налог с оборота</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.uz"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_uz_tr_turnover_column_base" model="account.report.column">
+                <field name="name">Taxable Turnover excl. VAT</field>
+                <field name="name@uz">QQSsiz soliq solinadigan aylanma</field>
+                <field name="name@ru">Облагаемый оборот без НДС</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="l10n_uz_tr_turnover_column_tax" model="account.report.column">
+                <field name="name">Tax Amount</field>
+                <field name="name@uz">Soliq summasi</field>
+                <field name="name@ru">Сумма налога</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_uz_tr_turnover_uz_sv001" model="account.report.line">
+                <field name="name">[010] Total income</field>
+                <field name="name@uz">[010] Jami daromad</field>
+                <field name="name@ru">[010] Общая сумма дохода</field>
+                <field name="code">uz_sv001</field>
+                <field name="expression_ids">
+                    <record id="l10n_uz_tr_turnover_uz_sv001_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">uz_sv1.base + uz_sv2.base + uz_sv3.base + uz_sv4.base + uz_sv5.base + uz_sv6.base</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_uz_tr_turnover_uz_sv002" model="account.report.line">
+                <field name="name">[020] Other income</field>
+                <field name="name@uz">[020] Boshqa daromadlar</field>
+                <field name="name@ru">[020] Прочие доходы</field>
+                <field name="code">uz_sv002</field>
+                <field name="expression_ids">
+                    <record id="l10n_uz_tr_turnover_uz_sv002_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">domain</field>
+                        <field name="formula">[('account_id.account_type', '=', 'income_other')]</field>
+                        <field name="subformula">-sum</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_uz_tr_turnover_uz_sv003" model="account.report.line">
+                <field name="name">[030] Total taxable income</field>
+                <field name="name@uz">[030] Soliq solinadigan jami daromad</field>
+                <field name="name@ru">[030] Совокупный налогооблагаемый доход</field>
+                <field name="code">uz_sv003</field>
+                <field name="expression_ids">
+                    <record id="l10n_uz_tr_turnover_uz_sv003_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">uz_sv001.base + uz_sv002.base - uz_sv7.base</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_uz_tr_turnover_uz_sv004" model="account.report.line">
+                <field name="name">[060] Rate</field>
+                <field name="name@uz">[060] Soliq stavkasi</field>
+                <field name="name@ru">[060] Ставка</field>
+                <field name="code">uz_sv004</field>
+                <field name="expression_ids">
+                    <record id="l10n_uz_tr_turnover_uz_sv004_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_engine_l10n_uz_turnover_rate</field>
+                        <field name="figure_type">percentage</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_uz_tr_turnover_uz_sv005" model="account.report.line">
+                <field name="name">[070] Tax payable</field>
+                <field name="name@uz">[070] To'lanadigan soliq summasi</field>
+                <field name="name@ru">[070] Сумма налога к уплате</field>
+                <field name="code">uz_sv005</field>
+                <field name="expression_ids">
+                    <record id="l10n_uz_tr_turnover_uz_sv005_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">uz_sv003.base * uz_sv004.base / 100</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_uz_tr_turnover_title_attachment_1" model="account.report.line">
+                <field name="name">Attachment 1 - Total Income</field>
+                <field name="name@uz">1-Ilova - Jami daromad</field>
+                <field name="name@ru">Приложение 1 - Общий доход</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_uz_tr_turnover_uz_sv1" model="account.report.line">
+                        <field name="name">[0101] Sales via electronic invoices</field>
+                        <field name="name@uz">[0101] EHF orqali olingan daromad</field>
+                        <field name="name@ru">[0101] Доход от электронных счетов-фактур</field>
+                        <field name="code">uz_sv1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_uz_tr_turnover_uz_sv1_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-SV1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_uz_tr_turnover_uz_sv2" model="account.report.line">
+                        <field name="name">[0102] Sales via online cash registers</field>
+                        <field name="name@uz">[0102] Onlayn-NKM orqali olingan daromad</field>
+                        <field name="name@ru">[0102] Доход от онлайн-ККМ</field>
+                        <field name="code">uz_sv2</field>
+                        <field name="expression_ids">
+                            <record id="l10n_uz_tr_turnover_uz_sv2_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-SV2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_uz_tr_turnover_uz_sv3" model="account.report.line">
+                        <field name="name">[0103] Export sales</field>
+                        <field name="name@uz">[0103] Eksportdan olingan daromad</field>
+                        <field name="name@ru">[0103] Доходы от экспорта</field>
+                        <field name="code">uz_sv3</field>
+                        <field name="expression_ids">
+                            <record id="l10n_uz_tr_turnover_uz_sv3_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-SV3</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_uz_tr_turnover_uz_sv4" model="account.report.line">
+                        <field name="name">[0104] Sales via online marketplaces</field>
+                        <field name="name@uz">[0104] Onlayn savdo maydonchalari orqali savdo</field>
+                        <field name="name@ru">[0104] Доход от реализации товаров (услуг) через Marketplace</field>
+                        <field name="code">uz_sv4</field>
+                        <field name="expression_ids">
+                            <record id="l10n_uz_tr_turnover_uz_sv4_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-SV4</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_uz_tr_turnover_uz_sv5" model="account.report.line">
+                        <field name="name">[0105] Other taxable sales</field>
+                        <field name="name@uz">[0105] Boshqa daromadlar</field>
+                        <field name="name@ru">[0105] Прочие доходы</field>
+                        <field name="code">uz_sv5</field>
+                        <field name="expression_ids">
+                            <record id="l10n_uz_tr_turnover_uz_sv5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-SV5</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_uz_tr_turnover_uz_sv6" model="account.report.line">
+                        <field name="name">[0301-0306] Deemed-sale income</field>
+                        <field name="name@uz">[0301-0306] Realizatsiya sifatida qaraladigan daromadlar</field>
+                        <field name="name@ru">[0301-0306] Доходы, рассматриваемые в качестве реализации</field>
+                        <field name="code">uz_sv6</field>
+                        <field name="expression_ids">
+                            <record id="l10n_uz_tr_turnover_uz_sv6_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-SV6</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_uz_tr_turnover_title_attachment_2" model="account.report.line">
+                <field name="name">Attachment 2 - Reductions of Taxable Base</field>
+                <field name="name@uz">2-Ilova - Soliq bazasini kamaytirish</field>
+                <field name="name@ru">Приложение 2 - Уменьшение налоговой базы</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_uz_tr_turnover_uz_sv7" model="account.report.line">
+                        <field name="name">[040] Deductions and benefits, reducing the taxable base</field>
+                        <field name="name@uz">[040] Soliq bazasini kamaytiradigan chegirmalar va imtiyozlar</field>
+                        <field name="name@ru">[040] Вычеты и льготы, уменьшающие налоговую базу</field>
+                        <field name="code">uz_sv7</field>
+                        <field name="expression_ids">
+                            <record id="l10n_uz_tr_turnover_uz_sv7_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SV7</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
