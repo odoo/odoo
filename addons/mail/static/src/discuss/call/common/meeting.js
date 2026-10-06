@@ -13,8 +13,13 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { MeetingReadyBanner } from "./meeting_ready_banner";
 import { meetingMoreActionGroups, MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
+<<<<<<< af9acc756d38694a8d2fbb91bbf2a4188768fd27
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { assignGetter } from "@mail/utils/common/misc";
+||||||| 12cad5c5fbdeb22d499cf5389c194d6902a9ef76
+import { useMessageSearch } from "@mail/core/common/message_search_hook";
+=======
+>>>>>>> c01ffb1af46821f2fa52d0c5efa8bec76583ebb8
 
 const { DateTime } = luxon;
 const PIP_EXTRA_ACTION_IDS = ["copy-invite-link", "meeting-chat"];
@@ -55,7 +60,23 @@ export class Meeting extends Component {
             ),
         });
         this.threadActions = useThreadActions({ thread: () => this.channel.thread });
+<<<<<<< af9acc756d38694a8d2fbb91bbf2a4188768fd27
         providePlugins([MessageHighlightPlugin], { thread: () => this.channel.thread });
+||||||| 12cad5c5fbdeb22d499cf5389c194d6902a9ef76
+        this.messageHighlight = useMessageScrolling({ thread: () => this.channel.thread });
+        this.messageSearch = useMessageSearch(this.channel.thread);
+        useSubEnv({
+            hasPreviousActionPanel: () => this.threadActions.actionStack.length > 0,
+            messageHighlight: this.messageHighlight,
+            messageSearch: this.messageSearch,
+        });
+=======
+        this.messageHighlight = useMessageScrolling({ thread: () => this.channel.thread });
+        useSubEnv({
+            hasPreviousActionPanel: () => this.threadActions.actionStack.length > 0,
+            messageHighlight: this.messageHighlight,
+        });
+>>>>>>> c01ffb1af46821f2fa52d0c5efa8bec76583ebb8
         onMounted(() => (this.store.meetingViewOpened = true));
         onWillUnmount(() => (this.store.meetingViewOpened = false));
         useHotkey("escape", () => this.onEscape());
