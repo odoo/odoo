@@ -11,9 +11,13 @@ export class MultiRecordViewButton extends ViewButton {
 
     handleViewButton = useViewButtonHandler();
 
-    async onClick(ev, newWindow) {
+    async onClick(ev, newWindow, files) {
         const { clickParams, list } = this.props;
-        const resIds = await list.getResIds(true);
+        // an upload is about the selected records, if any
+        const resIds =
+            clickParams.type === "upload" && !list.selection.length
+                ? []
+                : await list.getResIds(true);
         clickParams.buttonContext = {
             active_domain: this.props.domain,
             active_ids: resIds,
@@ -29,6 +33,7 @@ export class MultiRecordViewButton extends ViewButton {
                 resIds,
             }),
             newWindow,
+            files,
         });
     }
 }

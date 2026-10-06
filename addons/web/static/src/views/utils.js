@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { unique } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
@@ -38,6 +39,9 @@ export const BUTTON_CLICK_PARAMS = [
     // WOWL JPP: is adding the support for not oppening the dialog of confirmation in the settings view
     // This should be refactor someday
     "noSaveDialog",
+    // options of the `upload` buttons (accepted types, route...)
+    "options",
+    "dropzone-label",
 ];
 
 /**
@@ -220,6 +224,13 @@ export function processButton(node) {
             attrs[name] = value;
         }
     }
+    const options = evaluateExpr(node.getAttribute("options") || "{}");
+    const isUpload = node.getAttribute("type") === "upload";
+    // an upload button is only useful when it is always there, or when only its dropzone is
+    let display = node.getAttribute("display") || (isUpload ? "always" : "selection");
+    if (isUpload && options.dropzone_only) {
+        display = "dropzone";
+    }
     return {
         className: node.getAttribute("class") || "",
         disabled: !!node.getAttribute("disabled") || false,
@@ -227,8 +238,8 @@ export function processButton(node) {
         iconClass: node.getAttribute("icon_class") || "",
         title: node.getAttribute("title") || undefined,
         string: node.getAttribute("string") || undefined,
-        options: JSON.parse(node.getAttribute("options") || "{}"),
-        display: node.getAttribute("display") || "selection",
+        options,
+        display,
         clickParams,
         column_invisible: node.getAttribute("column_invisible"),
         invisible: combineModifiers(

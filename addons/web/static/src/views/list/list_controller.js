@@ -31,6 +31,7 @@ import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { useUploadDropzone } from "@web/views/view_button/upload_dropzone_hook";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useDeleteRecords, useExportRecords } from "@web/views/view_hook";
@@ -113,10 +114,23 @@ export class ListController extends Component {
                 ? !this.props.fields.x_active.readonly
                 : false;
         useSubEnv({ model: this.model }); // do this in useModelWithSampleData?
-        useViewButtons(this.rootRef, {
+        const handleViewButton = useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
             reload: () => this.model.load(),
+        });
+        useUploadDropzone({
+            // the records, not the search panel next to them (the content until the renderer is there)
+            getTargetEl: () =>
+                this.rootRef()?.querySelector(".o_content .o_list_renderer") ||
+                this.rootRef()?.querySelector(".o_content"),
+            getButtons: () => this.archInfo.headerButtons,
+            isInvisible: (modifier) => this.evalViewModifier(modifier),
+            getResParams: () => {
+                const { context, evalContext, resModel } = this.model.root;
+                return { context, evalContext, resModel, resIds: [] };
+            },
+            handleViewButton,
         });
         const { setScrollFromState } = useSetupAction({
             rootRef: this.rootRef,
