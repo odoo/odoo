@@ -4133,6 +4133,20 @@ class TestHelpViews(ViewCase):
         with self.assertNoLogs('odoo.addons.base.models.ir_ui_view', level='WARNING'):
             self._create_view('<help><button name="write" type="object" args="[{}]"/></help>')
 
+    def test_button_api_model(self):
+        # buttons always pass record ids as first argument, so they can't call
+        # @api.model methods (their first argument would be the ids)
+        self.assertInvalid(
+            '<list><field name="name"/><header><button name="get_empty_list_help" type="object" args="[\'\']" display="always"/></header></list>',
+            "get_empty_list_help on res.partner is decorated with @api.model and cannot be called from a button",
+            model='res.partner',
+        )
+        self.assertInvalid(
+            '<help><button name="get_empty_list_help" type="object" args="[\'\']"/></help>',
+            "get_empty_list_help on res.partner is decorated with @api.model and cannot be called from a button",
+            model='res.partner',
+        )
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class ViewModeField(ViewCase):
