@@ -339,6 +339,8 @@ $o-btn-outline-border-width-defaults: () !default;
         ));
     }
 }
+// Their style switches at runtime (see `o-button-style-gate`).
+$o-btn-style-gated-colors: ('primary', 'secondary');
 
 // Increase default navbar pills padding for 'pills' mode and add big radius
 $o-navbar-nav-pills-link-padding-x: if(o-website-value('header-links-style') == 'pills', 1rem * 1.5, null) !default;
@@ -483,24 +485,20 @@ $--enable-no-overflow-of-text-columns: false !default;
     }
 }
 
-// The primary and secondary buttons' style, Fill, Outline or Flat (see web's
-// `bootstrap_review_frontend.scss`): each one is compiled, behind a theme
-// gate, so that the builder previews it. The other colors are filled.
-@mixin o-button-style($color) {
-    @if index(('primary', 'secondary'), $color) {
+// The primary and secondary buttons' style, Fill (also under Flat), Outline
+// or Flat: each one's rules are compiled for them too, behind a theme gate, so
+// that the builder previews it (see web's `o-button-style-rule`).
+@mixin o-button-style-gate($color, $style) {
+    @if index($o-btn-style-gated-colors, $color) {
         $-outline: index($o-btn-outline-defaults, $color) != null;
-        @include o-theme-gate('btn-#{$color}-outline', $-outline) {
-            @extend .btn-outline-#{$color};
-            border-width: o-website-value('btn-#{$color}-outline-border-width');
+        $-default: map-get((
+            'fill': not $-outline,
+            'outline': $-outline,
+            'flat': index($o-btn-flat-defaults, $color) != null,
+        ), $style);
+        @include o-theme-gate('btn-#{$color}-#{$style}', $-default) {
+            @content;
         }
-        @include o-theme-gate('btn-#{$color}-fill', not $-outline) {
-            @extend .btn-fill-#{$color};
-        }
-        @include o-theme-gate('btn-#{$color}-flat', index($o-btn-flat-defaults, $color) != null) {
-            @extend .btn.flat !optional;
-        }
-    } @else {
-        @extend .btn-fill-#{$color};
     }
 }
 

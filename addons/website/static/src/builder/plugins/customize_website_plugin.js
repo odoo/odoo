@@ -434,8 +434,8 @@ export class CustomizeWebsitePlugin extends Plugin {
      * `var()`. The SCSS customization is only written on save.
      *
      * A reset (empty value, or `nullValue`) previews the default, if printed
-     * (see `getWebsiteVariableDefault`), else removes the override: the last
-     * saved value shows until save.
+     * (see `getWebsiteVariableDefault`), else the value unset (`initial`), as
+     * the compile doesn't print a null value.
      *
      * @param {Object<string, string>} variables
      * @param {string} [nullValue="null"]
@@ -454,7 +454,8 @@ export class CustomizeWebsitePlugin extends Plugin {
             const value = variables[name] === nullValue ? "" : variables[name];
             step.next[name] = {
                 pending: name in variables ? value || nullValue : this.pendingVariables[name],
-                inline: previewValues[name] ?? (value || this.getDefaultInlineValue(name)),
+                inline:
+                    previewValues[name] ?? (value || this.getDefaultInlineValue(name) || "initial"),
             };
         }
         // The root is outside the observed editable: the step goes to the
@@ -475,7 +476,7 @@ export class CustomizeWebsitePlugin extends Plugin {
      * Same as `previewWebsiteVariables`, for colors (written in their own
      * files). A color given as another one's name follows it. A reset
      * previews what the color falls back to: the palette's, else the one
-     * it reads when not set (see `getColorFallback`).
+     * it reads when not set (see `getColorFallback`), else none.
      *
      * The colors computed from them follow, see `updateComputedColors`.
      *
@@ -502,7 +503,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 pending: value || nullValue,
                 inline: value
                     ? value.replace(/^'(.*)'$/, "var(--$1)")
-                    : this.getDefaultInlineValue(name) || getColorFallback(name),
+                    : this.getDefaultInlineValue(name) || getColorFallback(name) || "initial",
             };
         }
         this.setPreviewState(step.next);
@@ -540,13 +541,13 @@ export class CustomizeWebsitePlugin extends Plugin {
         add("color-palettes-name", USER_VALUES_URL, `'${paletteName}'`, `'${paletteName}'`);
         // Reset by the server too.
         for (let i = 1; i <= 5; i++) {
-            add(`o-cc${i}-bg-gradient`, USER_VALUES_URL, "null", "");
+            add(`o-cc${i}-bg-gradient`, USER_VALUES_URL, "null", "initial");
         }
         for (const key of [
             ...["menu-gradient", "menu-secondary-gradient", "footer-gradient"],
             ...["copyright-gradient", "breadcrumb-gradient"],
         ]) {
-            add(key, USER_VALUES_URL, "null", "");
+            add(key, USER_VALUES_URL, "null", "initial");
         }
         // No user color anymore: a color is the palette's (its default).
         add("o-user-color-keys", USER_VALUES_URL, undefined, '""');

@@ -72,26 +72,26 @@ $o-btn-border-colors: () !default;
 @each $color, $value in $theme-colors {
     $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
     $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
-    .btn-fill-#{$color} {
+    @include o-button-style-rule('fill', $color) {
         @include o-button-variant-var('o-btn-fill-#{$color}', $-bg-color, $-border-color);
     }
 }
 @each $color, $value in $theme-colors {
     $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
     $-border-color: increase-contrast(map-get($o-btn-border-colors, $color) or $-bg-color, $body-bg);
-    .btn-outline-#{$color} {
+    @include o-button-style-rule('outline', $color) {
         @include o-button-outline-variant-var('o-btn-outline-#{$color}', $-border-color);
     }
 }
 $o-btn-flat-defaults: () !default;
 $o-btn-outline-defaults: () !default;
 $o-btn-outline-border-width-defaults: () !default;
-@each $color, $value in $theme-colors {
+// The colors whose style a module switches at runtime get the styles' rules
+// instead (see `o-button-style-rule`).
+$o-btn-style-gated-colors: () !default;
+@each $color, $value in map-remove($theme-colors, $o-btn-style-gated-colors...) {
     .btn-#{$color} {
-        @if mixin-exists(o-button-style) {
-            // A module that switches the styles at runtime (website).
-            @include o-button-style($color);
-        } @else if index($o-btn-outline-defaults, $color) {
+        @if index($o-btn-outline-defaults, $color) {
             @extend .btn-outline-#{$color};
             border-width: map-get($o-btn-outline-border-width-defaults, $color);
         } @else {

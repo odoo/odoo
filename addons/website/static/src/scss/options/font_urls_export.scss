@@ -99,7 +99,7 @@ $black: o-color('black') !default;
             $-gates: append($-gates, 'o-cc#{$index}-bg-gradient');
         }
     }
-    // The primary and secondary buttons' style (see `o-button-style`).
+    // The primary and secondary buttons' style (see `o-button-style-gate`).
     @each $color in ('primary', 'secondary') {
         @if o-website-value('btn-#{$color}-flat') or not o-website-value('btn-#{$color}-outline') {
             $-gates: append($-gates, 'btn-#{$color}-fill');

@@ -111,6 +111,22 @@ $enable-deprecation-messages: false !default;
     --#{$prefix}btn-disabled-border-color: #{$-color};
     --#{$prefix}gradient: none;
 }
+// A button style's rule (`.btn-fill-<color>`, `.btn-outline-<color>`). A
+// module that switches the style of `.btn-<color>` at runtime (website, see
+// `$o-btn-style-gated-colors`) gets the rule for it too, behind its gate
+// (`o-button-style-gate`), instead of `.btn-<color>` extending the style.
+@mixin o-button-style-rule($style, $color) {
+    .btn-#{$style}-#{$color} {
+        @content;
+    }
+    @if mixin-exists(o-button-style-gate) {
+        @include o-button-style-gate($color, $style) {
+            .btn-#{$color} {
+                @content;
+            }
+        }
+    }
+}
 
 // This placeholder regroups the rules that will apply on all elements with a
 // bg-* class (see o-bg-color, bg-variant). The optimized-css way would be to
