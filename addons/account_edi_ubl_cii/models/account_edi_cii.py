@@ -44,6 +44,13 @@ class AccountEdiCii(models.AbstractModel):
         self._cii_extract_cash_rounding_lines(vals)
         self._cii_extract_early_pay_discount_lines(vals)
 
+        # Manage taxes for emptying.
+        vals['base_lines'] = self._cii_turn_emptying_taxes_as_new_base_lines(
+            base_lines=vals['base_lines'],
+            company=invoice.company_id,
+            vals=vals,
+        )
+
         AccountTax = self.env['account.tax']
         AccountTax._round_raw_total_excluded(vals['base_lines'], invoice.company_id)
         AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], invoice.company_id)
@@ -158,6 +165,54 @@ class AccountEdiCii(models.AbstractModel):
         vals['base_lines'] = [base_line for base_line in base_lines if base_line['special_type'] != 'early_payment']
         vals['early_payment_discount_lines'] = [base_line for base_line in base_lines if base_line['special_type'] == 'early_payment']
 
+    def _cii_turn_emptying_taxes_as_new_base_lines(self, base_lines, company, vals):
+        """ Extract emptying taxes such as "Vidanges" on bottles from the current base lines and turn them into
+        additional base lines.
+
+        :param base_lines:  The original 'base_lines' of the document.
+        :param company:     The company owning the 'base_lines'.
+        :param vals:        Some custom data.
+        """
+        AccountTax = self.env['account.tax']
+
+        def exclude_function(base_line, tax_data):
+            if not tax_data:
+                return
+
+            tax = tax_data['tax']
+            return tax.amount_type in ('fixed', 'code') and not tax.include_base_amount
+
+        new_base_lines = AccountTax._dispatch_taxes_into_new_base_lines(base_lines, company, exclude_function)
+
+        # fixed tax are not affected by discount, so the removed_tax_data_base_lines should get their discount remove
+        # to have the total equal to the fixed tax
+        for new_base_line in new_base_lines:
+            for removed_taxes_data_base_line in new_base_line['removed_taxes_data_base_lines']:
+                removed_taxes_data_base_line['discount'] = 0
+
+        def aggregate_function(target_base_line, base_line):
+            target_base_line.setdefault('_aggregated_quantity', 0.0)
+            target_base_line['_aggregated_quantity'] += base_line['quantity']
+
+        def grouping_function(base_line):
+            return {'tax': base_line['_removed_tax_data']['tax']}
+
+        extra_base_lines = AccountTax._turn_removed_taxes_into_new_base_lines(
+            base_lines=new_base_lines,
+            company=company,
+            grouping_function=grouping_function,
+            aggregate_function=aggregate_function,
+        )
+
+        # Restore back the values per quantity.
+        for base_line in extra_base_lines:
+            base_line['quantity'] = base_line['_aggregated_quantity']
+            if base_line['_aggregated_quantity']:
+                base_line['price_unit'] /= base_line['_aggregated_quantity']
+            base_line['product_id'] = self.env['product.product']
+
+        return new_base_lines + extra_base_lines
+
     # ----------------------------------------------------------------------------
     # EXPORT : build nodes
     # ----------------------------------------------------------------------------
@@ -271,13 +326,17 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_line_specified_trade_product_node(self, vals, base_line):
         product = base_line['product_id']
+        if base_line.get('_removed_tax_data'):
+            name = base_line['_removed_tax_data']['tax'].name
+        else:
+            name = base_line.get('name') or product.display_name
         return {
             'ram:GlobalID': {
                 '_text': product.barcode,
                 'schemeID': "0160",
             } if product.barcode else None,
             'ram:SellerAssignedID': {'_text': product.default_code} if product.default_code else None,
-            'ram:Name': {'_text': base_line['name']},
+            'ram:Name': {'_text': name},
             'ram:Description': {
                 '_text': html2plaintext(product.description),
             } if product.description else None,

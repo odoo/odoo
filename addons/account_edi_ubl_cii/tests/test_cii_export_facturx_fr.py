@@ -322,6 +322,36 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_with_fixed_tax_on_negative_line')
 
+    def test_invoice_fixed_tax_emptying_turned_as_extra_invoice_lines(self):
+        """ Ensure that fixed taxes not affecting the base of the subsequent taxes are turned into
+        extra invoice lines
+        """
+        tax_emptying = self.fixed_tax(0.10, name="Vidange")
+        tax_20 = self.percent_tax(20.0)
+
+        invoice = self._create_invoice(
+            partner_id=self.partner_fr,
+            partner_bank_id=self.recipient_bank,
+            invoice_line_ids=[
+                self._prepare_invoice_line(
+                    product_id=self.product,
+                    price_unit=100.0,
+                    quantity=4.0,
+                    tax_ids=tax_emptying + tax_20,
+                ),
+                self._prepare_invoice_line(
+                    product_id=self.product,
+                    price_unit=100.0,
+                    quantity=1.0,
+                    tax_ids=tax_emptying + tax_20,
+                ),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_fixed_tax_emptying_turned_as_extra_invoice_lines')
+
     def test_invoice_immediate_payment_term(self):
         invoice = self._create_invoice(
             partner_id=self.partner_fr,
