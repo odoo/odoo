@@ -560,10 +560,13 @@ patch(MockServer.prototype, {
         const [session] = this.pyEnv["discuss.channel.rtc.session"].search_read([
             ["id", "=", session_id],
         ]);
+        if (!session) {
+            return;
+        }
         const [currentChannelMember] = this.pyEnv["discuss.channel.member"].search_read([
             ["id", "=", session.channel_member_id[0]],
         ]);
-        if (session && currentChannelMember.partner_id[0] === this.pyEnv.currentPartnerId) {
+        if (currentChannelMember.partner_id[0] === this.pyEnv.currentPartnerId) {
             this._mockDiscussChannelRtcSession__updateAndBroadcast(session.id, values);
         }
     },
