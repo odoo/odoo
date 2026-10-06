@@ -36,13 +36,13 @@
                     <t t-if="!this.props.node.nodes.length">
                         <span style="grid-column: 2;">
                             <i class="oi oi-fw" data-icon="arrow_right"/>
-                            <t t-out="this.props.node.childResIds.length + ' ' + (this.props.archInfo.label || 'Unfold')"/>
+                            <t t-out="this.props.node.getChildCountInc() + ' ' + (this.props.archInfo.label || 'Unfold')"/>
                         </span>
                     </t>
                     <t t-else="">
                         <span style="grid-column: 2;">
                             <i class="oi oi-fw" data-icon="arrow_drop_down"/>
-                            <t t-out="this.props.node.childResIds.length + ' ' + (this.props.archInfo.label || 'Fold')"/>
+                            <t t-out="this.props.node.getChildCountInc() + ' ' + (this.props.archInfo.label || 'Fold')"/>
                         </span>
                     </t>
                 </button>
