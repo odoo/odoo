@@ -46,6 +46,10 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 seller_info = bom.product_tmpl_id.seller_ids.filtered(lambda s: s.partner_id in bom.subcontractor_ids)[:1]._get_seller_info()
             elif bom.type == 'subcontract':
                 seller_info = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+                if not seller_info:
+                    # If no vendor found for the right quantity, we still want to display the vendor in red
+                    seller_info = res['product']._select_seller(quantity=None, uom_id=bom.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+                    res['text_danger'] = True
             if seller_info:
                 res['subcontracting'] = self._get_subcontracting_line(bom, seller_info, level + 1, res['quantity'])
                 if not self.env.context.get('minimized', False):
@@ -140,14 +144,12 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             # for subcontracting, we can't decide the lead time without component's resupply availability
             # we only return necessary info and calculate the lead time late when we have component's data
             if seller_info:
-                qty_supplier_uom = product.uom_id._compute_quantity(quantity, seller_info['uom_id'])
                 return {
                     'route_type': 'subcontract',
                     'route_name': subcontract_rules[0].route_id.display_name,
                     'route_detail': seller_info['partner_id'].display_name,
                     'lead_time': rules_delay,
                     'supplier': seller_info['supplierinfo'],
-                    'route_alert': product.uom_id.compare(qty_supplier_uom, seller_info['min_qty']) < 0,
                     'qty_checked': quantity,
                     'bom': bom,
                 }
