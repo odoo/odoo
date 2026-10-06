@@ -2,7 +2,8 @@ import { SelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { patch } from "@web/core/utils/patch";
 import { InvalidDomainError } from "@web/core/domain";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { rpc } from "@web/core/network/rpc";
+import { rpc, RPCError } from "@web/core/network/rpc";
+import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { SelectProductPopup } from "@pos_self_order_loyalty/app/components/popup/select_product_popup/select_product_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -15,7 +16,7 @@ patch(SelfOrder.prototype, {
     createNewOrder() {
         const order = super.createNewOrder();
         if (this.config.self_ordering_mode == "mobile") {
-            const partner = this.models["res.partner"].getFirst();
+            const partner = this.identifiedPartner;
             if (partner) {
                 order.setPartner(partner);
             }
@@ -65,7 +66,11 @@ patch(SelfOrder.prototype, {
             .forEach((line) => {
                 line.delete();
             });
-        return super.initMobileData(...arguments);
+        const result = await super.initMobileData(...arguments);
+        if (this.config.self_ordering_mode === "mobile") {
+            await this.refreshPartnerIdentification();
+        }
+        return result;
     },
     _isSnapshotLine(line) {
         // Reward lines are derived from the order by recomputeRewards, they're not a server-side change
@@ -113,6 +118,7 @@ patch(SelfOrder.prototype, {
                 .filter((card) => card.partner_id)
                 .forEach((card) => card.delete());
             this.models["res.partner"].deleteMany(this.models["res.partner"].getAll());
+            this.setIdentifiedPartner(false);
         }
     },
     async addToCart(
@@ -157,6 +163,7 @@ patch(SelfOrder.prototype, {
             });
             return;
         }
+        this.setIdentifiedPartner(partner);
         if (this.currentOrder.getPartner() !== partner) {
             this.currentOrder.setPartner(partner);
             await this.currentOrder.recomputeRewards();
@@ -316,6 +323,7 @@ patch(SelfOrder.prototype, {
                 access_token: this.access_token,
                 code: code,
                 partner_id: this.currentOrder.getPartner()?.id || null,
+                partner_token: this.currentOrder.getPartner()?._self_order_token || null,
                 order_uuid: this.currentOrder.uuid,
             });
             if (!data["status"]) {
@@ -347,7 +355,11 @@ patch(SelfOrder.prototype, {
             }
             this.currentOrder.recomputeRewards();
             return result.success;
-        } catch {
+        } catch (error) {
+            if (this.isIdentificationExpiredError(error)) {
+                this.expireIdentification();
+                return false;
+            }
             this.notification.add(
                 _t("An error occurred while applying the code. Try again later."),
                 {
@@ -427,6 +439,7 @@ patch(SelfOrder.prototype, {
             });
             return;
         }
+        this.setIdentifiedPartner(partner);
         if (this.currentOrder.getPartner() !== partner) {
             this.currentOrder.setPartner(partner);
             this.currentOrder.recomputeRewards();
@@ -435,5 +448,114 @@ patch(SelfOrder.prototype, {
             });
             this.dialog.closeAll();
         }
+    },
+    //#region Identification token
+    get identifiedPartnerStorageKey() {
+        return `pos_self_order_loyalty.identified_partner_id.${this.config.id}`;
+    },
+    /**
+     * The partner the customer identified as (barcode, email code...), as opposed to other
+     * partners the device may hold (e.g. one created by the delivery address form).
+     * Remembered across reloads in mobile only: a kiosk is a shared device.
+     */
+    get identifiedPartner() {
+        if (this._identifiedPartnerId === undefined) {
+            this._identifiedPartnerId = null;
+            if (this.config.self_ordering_mode === "mobile") {
+                try {
+                    this._identifiedPartnerId =
+                        parseInt(browser.localStorage.getItem(this.identifiedPartnerStorageKey)) ||
+                        null;
+                } catch {
+                    // storage unavailable (private browsing...): identification isn't remembered
+                }
+            }
+        }
+        return this._identifiedPartnerId
+            ? this.models["res.partner"].get(this._identifiedPartnerId)
+            : undefined;
+    },
+    setIdentifiedPartner(partner) {
+        this._identifiedPartnerId = partner?.id || null;
+        if (this.config.self_ordering_mode !== "mobile") {
+            return;
+        }
+        try {
+            if (this._identifiedPartnerId) {
+                browser.localStorage.setItem(
+                    this.identifiedPartnerStorageKey,
+                    String(this._identifiedPartnerId)
+                );
+            } else {
+                browser.localStorage.removeItem(this.identifiedPartnerStorageKey);
+            }
+        } catch {
+            // storage unavailable (private browsing...): identification isn't remembered
+        }
+    },
+    /** Renew the stored identification (sliding expiry), or ask to log in again if it expired. */
+    async refreshPartnerIdentification() {
+        const partner = this.identifiedPartner;
+        if (!partner) {
+            return;
+        }
+        let data;
+        try {
+            data = await rpc(`/pos-self-order/refresh-partner-token`, {
+                access_token: this.access_token,
+                partner_id: partner.id,
+                partner_token: partner._self_order_token || null,
+            });
+        } catch {
+            return; // offline or server error: keep the identification, the next order will tell
+        }
+        if (data["res.partner"].length === 0) {
+            this.expireIdentification(partner);
+            return;
+        }
+        this.models.connectNewData(data);
+        this.data.debouncedSynchronizeLocalDataInIndexedDB();
+    },
+    /** Forget the identified partner on this device, e.g. on log out. */
+    logoutPartner() {
+        const partner = this.identifiedPartner || this.currentOrder.getPartner();
+        this.setIdentifiedPartner(false);
+        if (!partner) {
+            return;
+        }
+        if (this.currentOrder.getPartner() === partner) {
+            this.currentOrder.setPartner(false); // also drops the partner and its cards locally
+            this.currentOrder.recomputeRewards();
+        } else {
+            this.models["loyalty.card"]
+                .filter((card) => card.partner_id?.id === partner.id)
+                .forEach((card) => card.delete());
+            partner.delete();
+        }
+        this.data.debouncedSynchronizeLocalDataInIndexedDB();
+    },
+    expireIdentification(partner = this.currentOrder.getPartner()) {
+        if (partner && partner !== this.identifiedPartner) {
+            // The rejected partner isn't the identified one (e.g. created by the address form)
+            this.currentOrder.setPartner(false);
+            this.currentOrder.recomputeRewards();
+        } else {
+            this.logoutPartner();
+        }
+        this.identifyCustomer(_t("Your identification has expired, please identify yourself again."));
+    },
+    isIdentificationExpiredError(error) {
+        return (
+            error instanceof RPCError &&
+            Boolean(error.data?.name?.endsWith(".SelfOrderIdentificationExpired"))
+        );
+    },
+    handleErrorNotification(error) {
+        if (this.isIdentificationExpiredError(error)) {
+            this.rpcLoading = false;
+            this.expireIdentification();
+            return;
+        }
+        return super.handleErrorNotification(...arguments);
     },
 });

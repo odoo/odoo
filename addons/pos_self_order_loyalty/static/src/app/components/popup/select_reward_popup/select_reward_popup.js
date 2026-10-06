@@ -96,7 +96,7 @@ export class SelectRewardPopup extends Component {
     }
 
     logout() {
-        this.selfOrder.currentOrder.setPartner(false);
+        this.selfOrder.logoutPartner();
         this.dialog.closeAll();
         this.router.navigate("default");
     }

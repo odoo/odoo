@@ -190,6 +190,7 @@ export class SelfOrder extends Reactive {
     startOrder() {
         if (this.hasPresets() && !this.currentOrder.preset_id) {
             this.router.navigate("location");
+            return;
         }
         this.router.navigate("product_list");
     }

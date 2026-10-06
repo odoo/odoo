@@ -9,6 +9,15 @@ patch(PosOrder.prototype, {
             askedRewards: this.uiState.askedRewards || new Set(),
         };
     },
+    serializeForORM(opts = {}) {
+        const data = super.serializeForORM(...arguments);
+        // Proof that the client identified as the order's partner, see pos.order._check_pos_order
+        const token = this.partner_id?._self_order_token;
+        if (token) {
+            data.partner_token = token;
+        }
+        return data;
+    },
     setPartner(partner) {
         let partnerToRemove = false;
         if (this.config._self_order_pos && partner != this.partner_id) {

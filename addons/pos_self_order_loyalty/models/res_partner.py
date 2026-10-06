@@ -2,9 +2,11 @@
 
 import secrets
 import string
+import time
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools import hmac, consteq
 
 # Google wallet
@@ -19,6 +21,16 @@ CODE_LENGTH = 6
 VALIDITY = timedelta(minutes=10)
 RESEND_COOLDOWN = timedelta(seconds=60)
 MAX_ATTEMPTS = 5
+
+SELF_ORDER_TOKEN_SCOPE = 'pos-self-order-partner'
+SELF_ORDER_TOKEN_VALIDITY = {
+    'mobile': timedelta(days=90),
+    'kiosk': timedelta(minutes=30),
+}
+
+
+class SelfOrderIdentificationExpired(UserError):
+    """The partner sent by a self-order client isn't backed by a valid identification token."""
 
 
 class ResPartner(models.Model):
@@ -111,6 +123,44 @@ class ResPartner(models.Model):
             ("self_otp_expires_at", "<", fields.Datetime.now()),
         ])
         stale._otp_clear()
+
+    # ------------------------------------------------------------------
+    # Self-order identification token
+    # ------------------------------------------------------------------
+
+    def _get_self_order_token(self, pos_config):
+        """Proof, for the self-order client of `pos_config`, that it identified as this partner."""
+        self.ensure_one()
+        # Anything but mobile is a shared device (kiosk): keep it short
+        validity = SELF_ORDER_TOKEN_VALIDITY.get(pos_config.self_ordering_mode, SELF_ORDER_TOKEN_VALIDITY['kiosk'])
+        expiration = int(time.time() + validity.total_seconds())
+        signature = hmac(self.env(su=True), SELF_ORDER_TOKEN_SCOPE, (self.id, pos_config.id, expiration))
+        return f"{expiration}.{signature}"
+
+    @api.model
+    def _get_partner_from_self_order_token(self, pos_config, partner_id, token):
+        """:return: the partner `token` proves the client identified as, or an empty recordset."""
+        if isinstance(partner_id, bool) or not isinstance(partner_id, int) or not isinstance(token, str):
+            return self.browse()
+        expiration, _sep, signature = token.partition('.')
+        if not expiration.isdigit() or int(expiration) < time.time():
+            return self.browse()
+        expected = hmac(self.env(su=True), SELF_ORDER_TOKEN_SCOPE, (partner_id, pos_config.id, int(expiration)))
+        if not consteq(signature, expected):
+            return self.browse()
+        return self.browse(partner_id).exists()
+
+    @api.model
+    def _load_pos_self_data_read_with_token(self, partners, pos_config):
+        """Partner data for a client that just proved its identity, with a fresh token.
+
+        The token is deliberately not added by _load_pos_self_data_read: it also serves
+        responses where the client proved nothing.
+        """
+        records = self._load_pos_self_data_read(partners, pos_config)
+        for record in records:
+            record['_self_order_token'] = self.browse(record['id'])._get_self_order_token(pos_config)
+        return records
 
     # ------------------------------------------------------------------
     # Google Wallet (POC)
