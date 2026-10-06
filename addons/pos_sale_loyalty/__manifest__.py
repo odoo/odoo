@@ -2,7 +2,7 @@
 
 
 {
-    'name': 'POS - Sales Loyality',
+    'name': 'POS - Sales Loyalty',
     'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Link module between pos_sale and pos_loyalty',
