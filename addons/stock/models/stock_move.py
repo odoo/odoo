@@ -2839,6 +2839,16 @@ Please change the quantity done or the rounding precision in your settings.""",
         self.ensure_one()
         return self.quantity
 
+    def _is_return(self):
+        """ A return of a return is a new shipment, so only odd positions in a return chain are returns """
+        self.ensure_one()
+        seen = set()
+        move = self
+        while move.origin_returned_move_id and move.id not in seen:
+            seen.add(move.id)
+            move = move.origin_returned_move_id
+        return len(seen) % 2 == 1
+
     def _is_incoming(self):
         self.ensure_one()
         return self.location_id.usage in ('customer', 'supplier') or (
