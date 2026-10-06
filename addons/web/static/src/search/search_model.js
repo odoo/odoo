@@ -1061,7 +1061,7 @@ export class SearchModel extends EventBus {
         if (searchItem.type !== "dateFilter" && searchItem.type !== "parentFilter") {
             return;
         }
-        const generatorIds = generatorId ? [generatorId] : searchItem.defaultGeneratorIds;
+        const generatorIds = generatorId ? [generatorId] : searchItem.defaultGeneratorIds || [];
         for (const generatorId of generatorIds) {
             const index = this.query.findIndex(
                 (queryElem) =>
