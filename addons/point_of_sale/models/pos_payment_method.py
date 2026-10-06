@@ -58,11 +58,11 @@ class PosPaymentMethod(models.Model):
         ondelete='restrict',
         index='btree_not_null',
         check_company=True,
-        help='Leave empty to use the receivable account of customer.\n'
-             'Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n'
-             'For cash journal, we directly write to the default account in the journal via statement lines.\n'
-             'For bank journal, we write to the outstanding account specified in this payment method.\n'
-             'Only cash and bank journals are allowed.')
+        help="Leave empty to use the receivable account of customer.\n"
+             "Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n"
+             "For cash journal, we directly write to the default account in the journal via bank transactions.\n"
+             "For bank journal, we write to the outstanding account specified in this payment method.\n"
+             "Only cash and bank journals are allowed.")
     account_bank_statement_id = fields.Many2one(
         'account.bank.statement',
         string='Cash Lines',

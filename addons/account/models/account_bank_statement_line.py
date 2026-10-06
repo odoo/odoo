@@ -10,7 +10,7 @@ from odoo.tools import SQL
 class AccountBankStatementLine(models.Model):
     _name = 'account.bank.statement.line'
     _inherits = {'account.move': 'move_id'}
-    _description = "Bank Statement Line"
+    _description = "Bank Transaction"
     _order = "internal_index desc"
     _check_company_auto = True
 
@@ -669,7 +669,7 @@ class AccountBankStatementLine(models.Model):
 
         if not counterpart_account_id:
             raise UserError(_(
-                "You can't create a new statement line without a suspense account set on the %s journal.",
+                "You can't create a new bank transaction without a suspense account set on the %s journal.",
                 self.journal_id.display_name,
             ))
 
@@ -761,7 +761,7 @@ class AccountBankStatementLine(models.Model):
 
                 if len(liquidity_lines) != 1:
                     raise UserError(_(
-                        "The journal entry %s reached an invalid state regarding its related statement line.\n"
+                        "The journal entry %s reached an invalid state regarding its related bank transaction.\n"
                         "To be consistent, the journal entry must always have exactly one journal item involving the "
                         "bank/cash account.",
                         st_line.move_id.display_name))
@@ -784,7 +784,7 @@ class AccountBankStatementLine(models.Model):
 
                 if len(suspense_lines) > 1:
                     raise UserError(_(
-                        "%(move)s reached an invalid state regarding its related statement line.\n"
+                        "%(move)s reached an invalid state regarding its related bank transaction.\n"
                         "To be consistent, the journal entry must always have exactly one suspense line.",
                         move=st_line.move_id.display_name,
                     ))

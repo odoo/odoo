@@ -741,10 +741,10 @@ class ResCompany(models.Model):
                 self._get_unreconciled_statement_lines_domain(fiscal_lock_date)
             )
             if unreconciled_statement_lines:
-                error_msg = _("There are still unreconciled bank statement lines in the period you want to lock."
-                            "You should either reconcile or delete them.")
+                error_msg = self.env._("There are still unreconciled bank transactions in the period you want to lock. "
+                                     "You should either reconcile or delete them.")
                 action_error = self._get_unreconciled_statement_lines_redirect_action(unreconciled_statement_lines)
-                raise RedirectWarning(error_msg, action_error, _('Show Unreconciled Bank Statement Line'))
+                raise RedirectWarning(error_msg, action_error, self.env._("Show Unreconciled Bank Transactions"))
 
     def _get_user_lock_date(self, soft_lock_date_field, ignore_exceptions=False):
         """Get the lock date called `soft_lock_date_field` for this company depending on the user.

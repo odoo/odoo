@@ -198,12 +198,12 @@ class AccountPayment(models.Model):
         compute="_compute_stat_buttons_from_reconciliation")
     reconciled_statement_line_ids = fields.Many2many(
         comodel_name='account.bank.statement.line',
-        string="Reconciled Statement Lines",
+        string="Reconciled Bank Transactions",
         compute='_compute_stat_buttons_from_reconciliation',
-        help="Statements lines matched to this payment",
+        help="Bank transactions matched to this payment",
     )
     reconciled_statement_lines_count = fields.Integer(
-        string="# Reconciled Statement Lines",
+        string="# Reconciled Bank Transactions",
         compute="_compute_stat_buttons_from_reconciliation",
     )
 
