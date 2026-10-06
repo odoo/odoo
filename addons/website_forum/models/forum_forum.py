@@ -65,11 +65,11 @@ class ForumForum(models.Model):
         default='public')
     authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
     active = fields.Boolean(default=True)
-    faq = fields.Html(
+    faq = fields.Qweb(
         'Guidelines', translate=html_translate,
         sanitize=True, sanitize_overridable=True)
     description = fields.Text('Description', translate=True)
-    welcome_message = fields.Html(
+    welcome_message = fields.Qweb(
         'Welcome Message', translate=html_translate,
         default=_get_default_welcome_message,
         sanitize_attributes=False, sanitize_form=False)

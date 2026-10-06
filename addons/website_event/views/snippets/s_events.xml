@@ -6,9 +6,12 @@
         snippet_name.f="s_events"
         snippet_classes="'s_event_upcoming_snippet %s' % snippet_extra_classes"
         main_page_url.f="/event"
-        custom_template_data.f='{"events_event_time_active":true, "events_event_location_active":true}'
         snippet_title.f="Upcoming Events"
-        snippet_description.f="Explore what’s happening next and join the moments that matter.">
+        snippet_description.f="Explore what’s happening next and join the moments that matter."
+        filter_param="dict(
+            content_data=dict(events_event_time_active=True, events_event_location_active=True),
+        )"
+    >
         <t t-out="0"/>
     </t>
 </template>

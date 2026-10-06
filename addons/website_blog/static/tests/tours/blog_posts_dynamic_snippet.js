@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import {
     changeOptionInPopover,
+    clickOnSave,
     clickOnSnippet,
     insertSnippet,
     goBackToBlocks,
@@ -47,6 +48,16 @@ registry.category("web_tour.tours").add("blog_posts_dynamic_snippet_options", {
         {
             content: "Check That the `Template` option is visible",
             trigger: `.options-container [data-label="Template"]`,
+        },
+        ...changeOptionInPopover("Dynamic Snippet", "Fetched Elements", `4`),
+        {
+            content: "Check the blog post appears on the page (in edit)",
+            trigger: `:iframe .s_blog_post_big_picture_title:contains("Post Test")`,
+        },
+        ...clickOnSave(),
+        {
+            content: "Check the blog post appears on the page (out of edit)",
+            trigger: `:iframe .s_blog_post_big_picture_title:contains("Post Test")`,
         },
     ],
 });

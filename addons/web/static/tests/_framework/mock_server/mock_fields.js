@@ -156,6 +156,7 @@ export const DEFAULT_STANDARD_FIELD_VALUES = {
     datetime: () => false,
     float: () => 0,
     html: () => false,
+    qweb_content: () => false,
     number: () => 0,
     image: () => false,
     integer: () => 0,
@@ -205,6 +206,8 @@ export const Generic = makeFieldGenerator("generic", {
 });
 
 export const Html = makeFieldGenerator("html");
+
+export const Qweb = makeFieldGenerator("qweb_content");
 
 export const Image = makeFieldGenerator("image");
 
