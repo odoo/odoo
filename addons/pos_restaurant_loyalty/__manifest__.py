@@ -2,7 +2,7 @@
 
 
 {
-    'name': 'POS - Restaurant Loyality',
+    'name': 'POS - Restaurant Loyalty',
     'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Link module between pos_restaurant and pos_loyalty',
