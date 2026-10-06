@@ -4133,6 +4133,39 @@ class TestHelpViews(ViewCase):
         with self.assertNoLogs('odoo.addons.base.models.ir_ui_view', level='WARNING'):
             self._create_view('<help><button name="write" type="object" args="[{}]"/></help>')
 
+    def test_action_help_view(self):
+        action_help = self._create_view("""
+            <help>
+                <p>Action help</p>
+                <p groups="base.group_system">Admins only</p>
+            </help>
+        """)
+        list_view = self._create_view('<list><field name="name"/></list>')
+        action = self.env['ir.actions.act_window'].create({
+            'name': 'Partners', 'res_model': 'res.partner', 'help_view_id': action_help.id,
+        })
+        other_action = self.env['ir.actions.act_window'].create({'name': 'Partners', 'res_model': 'res.partner'})
+
+        # the postprocessed arch of the help view is sent with the action (groups are applied)
+        self.assertIn('help_view_arch', action._get_action_dict())
+        arch = etree.fromstring(action._get_action_dict()['help_view_arch'])
+        self.assertEqual(arch.tag, 'help')
+        self.assertEqual([p.text for p in arch], ['Action help', 'Admins only'])
+        arch = etree.fromstring(action.with_user(self.user_demo)._get_action_dict()['help_view_arch'])
+        self.assertEqual([p.text for p in arch], ['Action help'])
+        self.assertFalse(other_action._get_action_dict()['help_view_arch'])
+
+        # it isn't inlined in the views (the web client uses it as fallback)
+        arch = etree.fromstring(self.env['res.partner'].get_view(list_view.id, action_id=action.id)['arch'])
+        self.assertIsNone(arch.find('help'))
+
+        # the action's help view must be a help view of the action's model
+        user_help = self._create_view('<help><p>No user</p></help>', model='res.users')
+        with self.assertRaises(ValidationError):
+            action.help_view_id = user_help
+        with self.assertRaises(ValidationError):
+            action.help_view_id = list_view
+
     def test_button_api_model(self):
         # buttons always pass record ids as first argument, so they can't call
         # @api.model methods (their first argument would be the ids)

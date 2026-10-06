@@ -162,3 +162,25 @@ test(`help view: widgets are rendered without record`, async () => {
     });
     expect(`.o_view_nocontent .o_widget_my_help_widget .o_my_widget`).toHaveText("Hello");
 });
+
+test(`help view of the action: used if the view has no help view`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/></list>`,
+        noContentHelpArch: `<help><p class="o_action_help_view">From the action</p></help>`,
+        noContentHelp: "<p>Action help (html)</p>",
+    });
+    expect(`.o_view_nocontent .o_action_help_view`).toHaveText("From the action");
+});
+
+test(`help view of the action: the view's help view takes precedence`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/>${HELP}</list>`,
+        noContentHelpArch: `<help><p class="o_action_help_view">From the action</p></help>`,
+    });
+    expect(`.o_view_nocontent .o_help_title`).toHaveText("No foo yet");
+    expect(`.o_view_nocontent .o_action_help_view`).toHaveCount(0);
+});
