@@ -35,9 +35,9 @@ export class BuilderMany2Many extends Component {
             this.callApply.bind(this)
         );
         const getAction = this.env.editor.shared.builderActions.getAction;
-        const actionWithGetValue = getAllActions().find(
-            ({ actionId }) => getAction(actionId).getValue
-        );
+        const actionWithGetValue =
+            getAllActions().find(({ actionId }) => getAction(actionId).has("getValue")) ??
+            getAllActions()[0];
         const { actionId, actionParam } = actionWithGetValue;
         const getValue = (el) =>
             getAction(actionId).getValue({ editingElement: el, params: actionParam });
