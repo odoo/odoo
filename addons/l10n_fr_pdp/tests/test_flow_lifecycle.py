@@ -1079,13 +1079,14 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         }])
 
     def test_credit_note_creates_transaction_flow_payload(self):
-        refund = self._create_reporting_move(
-            'out_refund',
-            self.b2bi_customer,
+        # Keep the original invoice outside the refund's period to isolate its payload.
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
             amount=100.0,
-            invoice_date='2025-09-03',
+            invoice_date='2025-08-03',
             tax_ids=self._get_tax_on_payment(),
         )
+        refund = self._create_reporting_credit_note(invoice, '2025-09-03')
 
         self.assertRecordValues(refund, [{
             'l10n_fr_pdp_flow_10_report_type': 'transaction',
@@ -1104,6 +1105,24 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(len(invoices), 1)
         self.assertEqual(invoices[0].findtext('ID'), refund.name)
         self.assertEqual(invoices[0].findtext('TypeCode'), '381')
+        self.assertEqual(invoices[0].findtext('ReferencedDocument/ID'), invoice.name)
+
+    def test_b2c_standalone_credit_note_requires_reference(self):
+        refund = self._create_reporting_move(
+            'out_refund',
+            self.b2c_customer,
+            invoice_date='2025-09-03',
+            tax_ids=self._get_tax_on_payment(),
+        )
+
+        self.assertRecordValues(refund, [{
+            'l10n_fr_pdp_flow_10_report_type': 'transaction',
+            'l10n_fr_pdp_status': 'error',
+        }])
+        self.assertTrue(any(
+            'x_studio_peppol_invoice_previous_date' in error
+            for error in refund._get_l10n_fr_pdp_errors()
+        ))
 
     def test_foreign_currency_invoice_reports_invoice_currency_amounts(self):
         invoice_currency = self.setup_other_currency('USD', rates=[('2025-09-01', 2.0)])
