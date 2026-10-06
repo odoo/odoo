@@ -973,6 +973,60 @@
         <field name="country_id" ref="base.kw"/>
     </record>
 
+<!-- LK : Sri Lanka -->
+    <!-- Overtime is encoded by HR, not requested by the employees -->
+    <record id="hr_work_entry.lk_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <!-- Annual leave: 14 days from the second year, 14/10/7/4 days for the first year depending on the quarter of
+         the start (Shop and Office Employees Act, s. 6(1)) -->
+    <record id="hr_work_entry.lk_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.lk"/>
+    </record>
+
+    <!-- Casual leave: 7 days a year, for private business or ill health (Shop and Office Employees Act, s. 6(3)) -->
+    <record id="hr_work_entry.l10n_lk_work_entry_type_casual_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.lk"/>
+    </record>
+
+    <!-- Maternity leave: 14 days before and 70 days after the confinement on full pay in shops and offices
+         (Shop and Office Employees Act, s. 18B), 12 weeks at 6/7 of the wage for the other women workers
+         (Maternity Benefits Ordinance, s. 3) -->
+    <record id="hr_work_entry.l10n_lk_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.lk"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_lk_work_entry_type_maternity_leave_mbo" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.lk"/>
+    </record>
+
+    <!-- Substitute holiday for the work on a mercantile holiday, to be taken by 31 December
+         (Shop and Office Employees Act, s. 7(2)) -->
+    <record id="hr_work_entry.lk_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.lk"/>
+    </record>
+
 <!-- LU : Luxemburg -->
     <record id="hr_work_entry.l10n_lu_work_entry_type_situational_unemployment" model="hr.work.entry.type">
         <field name="requires_allocation">False</field>
