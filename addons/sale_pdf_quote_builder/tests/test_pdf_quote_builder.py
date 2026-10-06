@@ -1,21 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 from functools import partial
-from unittest.mock import patch
 
-from werkzeug.datastructures import FileStorage
-
+from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.http import Response
 from odoo.tests import Form, tagged
 from odoo.tools.misc import file_open
 
 from .files import forms_pdf, plain_pdf
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
-from odoo.addons.sale_pdf_quote_builder.controllers.quotation_document import (
-    QuotationDocumentController,
-)
 
 
 @tagged("-at_install", "post_install")
@@ -25,8 +18,6 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        cls.QuotationDocumentController = QuotationDocumentController()
 
         cls.sale_order.validity_date = "2020-11-04"
         cls.sale_order.partner_id.tz = "Europe/Brussels"
@@ -280,31 +271,18 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             product_template_document2,
         )
 
+    def _upload_attachment(self, path):
+        with file_open(path, "rb") as file:
+            return self.env["ir.attachment"].create({
+                "name": path, "raw": file.read(), "mimetype": "application/pdf",
+            })
+
     def test_quotation_document_upload_no_template(self):
         """Check that uploading quotation documents get assigned the active company."""
-        if "website" not in self.env:
-            self.skipTest("Module `website` not found")
-        else:
-            from odoo.addons.http_routing.tests.common import MockRequest  # noqa: PLC0415
-
-        # Upload document without Sale Order Template
-        with (
-            MockRequest(self.env) as request,
-            file_open(plain_pdf, "rb") as file,
-            patch.object(request.httprequest.files, "getlist", lambda _key: [FileStorage(file)]),
-            patch.object(
-                request,
-                "make_json_response",
-                lambda data, status=200, headers=None: Response(
-                    json.dumps(data), status=status, headers=headers, mimetype="application/json"
-                ),
-            ),
-        ):
-            res = self.QuotationDocumentController.upload_document(
-                ufile=FileStorage(file),
-                allowed_company_ids=json.dumps([self.alt_company.id, self.env.company.id]),
-            )
-            self.assertEqual(res.status_code, 200, "Upload should be successful")
+        attachment = self._upload_attachment(plain_pdf)
+        self.env["quotation.document"].with_context(
+            allowed_company_ids=[self.alt_company.id, self.env.company.id],
+        ).action_create_from_uploads([attachment.id])
 
         quotation_document = self.env["quotation.document"].search(
             [("name", "=", plain_pdf)], limit=1
@@ -315,34 +293,17 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             self.alt_company,
             "Quotation document company should be the currently active company",
         )
+        self.assertFalse(attachment.exists())
 
     def test_quotation_document_upload_for_template(self):
         """Check that uploading quotation documents get assigned the the quotation company."""
-        if "website" not in self.env:
-            self.skipTest("Module `website` not found")
-        else:
-            from odoo.addons.http_routing.tests.common import MockRequest  # noqa: PLC0415
-
-        # Upload a document for a Sale Order Template without company id
         self.empty_order_template.company_id = False
-        with (
-            MockRequest(self.env) as request,
-            file_open(forms_pdf, "rb") as file,
-            patch.object(request.httprequest.files, "getlist", lambda _key: [FileStorage(file)]),
-            patch.object(
-                request,
-                "make_json_response",
-                lambda data, status=200, headers=None: Response(
-                    json.dumps(data), status=status, headers=headers, mimetype="application/json"
-                ),
-            ),
-        ):
-            res = self.QuotationDocumentController.upload_document(
-                ufile=FileStorage(file),
-                sale_order_template_id=str(self.empty_order_template.id),
-                allowed_company_ids=json.dumps([self.alt_company.id, self.env.company.id]),
-            )
-            self.assertEqual(res.status_code, 200, "Upload should be successful")
+        attachment = self._upload_attachment(forms_pdf)
+        self.env["quotation.document"].with_context(
+            allowed_company_ids=[self.alt_company.id, self.env.company.id],
+            active_model="sale.order.template",
+            active_id=self.empty_order_template.id,
+        ).action_create_from_uploads([attachment.id])
 
         quotation_document = self.env["quotation.document"].search(
             [("name", "=", forms_pdf)], limit=1
@@ -351,6 +312,15 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         self.assertFalse(
             quotation_document.company_id, "Quotation document shouldn't have a company id"
         )
+        self.assertEqual(quotation_document.quotation_template_ids, self.empty_order_template)
+
+    def test_quotation_document_upload_encrypted_pdf(self):
+        with file_open("sale_pdf_quote_builder/tests/files/test_AES.pdf", "rb") as file:
+            attachment = self.env["ir.attachment"].create({
+                "name": "test_AES.pdf", "raw": file.read(), "mimetype": "application/pdf",
+            })
+        with self.assertRaisesRegex(UserError, "It seems that we're not able to process this pdf"):
+            self.env["quotation.document"].action_create_from_uploads([attachment.id])
 
     def _test_custom_content_kanban_like(self):
         # TODO VCR finish tour and uncomment

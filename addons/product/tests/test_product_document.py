@@ -42,3 +42,14 @@ class TestProductDocument(TransactionCase):
             # because computing access for `documents` (a small, known set of ids)
             # fell back to scanning every ir.attachment with a res_model set.
             self.assertEqual(documents.name, "doc.pdf")
+
+    def test_create_from_uploads(self):
+        """ The files of the upload button become documents of the product the view is opened for. """
+        template = self.env["product.template"].create({"name": "Test Product"})
+        attachment = self.env["ir.attachment"].create({"name": "spec.pdf", "raw": b"spec"})
+        self.env["product.document"].with_context(
+            default_res_model="product.template",
+            default_res_id=template.id,
+        ).action_create_from_uploads([attachment.id])
+        self.assertEqual(template.product_document_ids.ir_attachment_id, attachment)
+        self.assertEqual(template.product_document_ids.name, "spec.pdf")

@@ -84,6 +84,22 @@ class QuotationDocument(models.Model):
 
     # === ACTION METHODS ===#
 
+    @api.model
+    def action_create_from_uploads(self, attachment_ids):
+        template = self.env["sale.order.template"]
+        if self.env.context.get("active_model") == "sale.order.template":
+            template = template.browse(self.env.context["active_id"])
+            template.check_access("write")
+        attachments = self.env["ir.attachment"].browse(attachment_ids)
+        self.create([{
+            "name": attachment.name,
+            "mimetype": attachment.mimetype,
+            "raw": attachment.raw,
+            "company_id": template.company_id.id if template else self.env.company.id,
+            "quotation_template_ids": template.ids,
+        } for attachment in attachments]).flush_recordset()
+        attachments.unlink()
+
     def action_open_pdf_form_fields(self):
         self.ensure_one()
         return {
