@@ -4,10 +4,10 @@ import {
     onWillUnmount,
     proxy,
     signal,
-    status,
     types,
     useOnChange,
     useProps,
+    useScope,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -52,6 +52,8 @@ export class VoicePlayer extends Component {
     drawerRef = signal.ref();
     waveRef = signal.ref();
     progressRef = signal.ref();
+
+    scope = useScope();
 
     setup() {
         super.setup();
@@ -293,7 +295,7 @@ export class VoicePlayer extends Component {
     }
 
     addOnAudioProcess() {
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return;
         }
         const time = this.getCurrentTime();

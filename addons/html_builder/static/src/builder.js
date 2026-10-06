@@ -9,10 +9,10 @@ import {
     onWillUnmount,
     providePlugins,
     signal,
-    status,
     proxy,
     useProps,
     t,
+    useScope,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -41,6 +41,8 @@ const TAB_TRANSITION_FALLBACK_DELAY = 400;
 export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };
+
+    scope = useScope();
     props = useProps({
         closeEditor: t.function().optional(),
         reloadEditor: t.function().optional(() => () => {}),
@@ -225,7 +227,7 @@ export class Builder extends Component {
             // instantiating the sub components that potentially need the
             // editor.
             const iframeEl = await this.props.iframeLoaded;
-            if (status(this) === "destroyed") {
+            if (this.scope.isDestroyed()) {
                 return;
             }
             this.editableEl = iframeEl.contentDocument.body.querySelector(

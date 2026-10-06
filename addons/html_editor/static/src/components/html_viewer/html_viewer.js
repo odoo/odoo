@@ -11,12 +11,12 @@ import {
     onWillUnmount,
     proxy,
     signal,
-    status,
     t,
     untrack,
     useApp,
     useEffect,
     useProps,
+    useScope,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { location } from "@web/core/browser/browser";
@@ -33,6 +33,8 @@ export class HtmlViewer extends Component {
         config: t.object(),
         migrateHTML: t.boolean().optional(true),
     });
+
+    scope = useScope();
 
     setup() {
         this._cleanups = [];
@@ -299,7 +301,7 @@ export class HtmlViewer extends Component {
         });
         const { root, mountPromise } = mountComponent(this.app, Component, host, props, env, {
             onBeforeComplete: () => {
-                if (status(this) === "destroyed") {
+                if (this.scope.isDestroyed()) {
                     return false;
                 }
             },

@@ -21,11 +21,11 @@ import {
     proxy,
     shallowEqual,
     signal,
-    status,
     t,
     untrack,
     useApp,
     useProps,
+    useScope,
 } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
@@ -89,6 +89,8 @@ export class Message extends Component {
     static template = "mail.Message";
 
     app = useApp();
+
+    scope = useScope();
 
     setup() {
         super.setup();
@@ -597,7 +599,7 @@ export class Message extends Component {
                 this.env,
                 {
                     onBeforeComplete: () => {
-                        if (status(this) === "destroyed") {
+                        if (this.scope.isDestroyed()) {
                             return false;
                         }
                         if (!el.isConnected) {

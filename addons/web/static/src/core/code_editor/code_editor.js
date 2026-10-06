@@ -3,12 +3,12 @@ import {
     onWillStart,
     markRaw,
     useProps,
-    status,
     t,
     proxy,
     signal,
     useEffect,
     untrack,
+    useScope,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { isMarkup } from "@web/core/utils/html";
@@ -75,6 +75,8 @@ export class CodeEditor extends Component {
 
     editorRef = signal.ref();
     _aceEditor = signal(null);
+
+    scope = useScope();
 
     setup() {
         this.props = useProps({
@@ -164,7 +166,7 @@ export class CodeEditor extends Component {
 
                 // Wait for ace to be fully operational
                 window.requestAnimationFrame(() => {
-                    if (status(this) != "destroyed") {
+                    if (!this.scope.isDestroyed()) {
                         this.setCursorPosition(cursorPositions[this.props.sessionId]);
                     }
                 });

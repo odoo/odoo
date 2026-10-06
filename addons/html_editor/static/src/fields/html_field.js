@@ -24,11 +24,11 @@ import {
     markup,
     proxy,
     signal,
-    status,
     t,
     useApp,
     useEffect,
     useProps,
+    useScope,
 } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
@@ -87,6 +87,8 @@ export class HtmlField extends Component {
     get classList() {
         return ["o-html-field"];
     }
+
+    scope = useScope();
 
     setup() {
         this.htmlUpgradeManager = new HtmlUpgradeManager();
@@ -244,7 +246,7 @@ export class HtmlField extends Component {
     }
 
     async _commitChanges({ urgent }) {
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return;
         }
         if (this.isDirty) {

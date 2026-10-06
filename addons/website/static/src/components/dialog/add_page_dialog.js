@@ -7,9 +7,9 @@ import {
     useProps,
     proxy,
     signal,
-    status,
     t,
     useListener,
+    useScope,
 } from "@odoo/owl";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
@@ -87,6 +87,8 @@ class AddPageTemplatePreview extends Component {
     previewRef = signal.ref();
     holderRef = signal.ref();
 
+    scope = useScope();
+
     setup() {
         super.setup();
         this.resizeObserver = new ResizeObserver((entries) => {
@@ -117,7 +119,7 @@ class AddPageTemplatePreview extends Component {
             }
             // Apply styles.
             const cssLinkEls = await this.env.getCssLinkEls();
-            if (status(this) === "destroyed") {
+            if (this.scope.isDestroyed()) {
                 return;
             }
             const cssLoadPromises = [];
@@ -372,6 +374,8 @@ class AddPageTemplates extends Component {
     autofocusRef = signal.ref();
     inactiveTabRef = signal.ref();
 
+    scope = useScope();
+
     setup() {
         super.setup();
         this.website = useService("website");
@@ -439,7 +443,7 @@ class AddPageTemplates extends Component {
         // Displaying the correct images in the previews also relies on the
         // website id having been forced.
         await this.env.getCssLinkEls();
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return new Promise(() => {});
         }
 
