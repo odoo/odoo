@@ -2038,7 +2038,6 @@ class MailCommon(MailCase):
 
         cls.company_3.write({
             'country_id': cls.env.ref('base.be').id,
-            'currency_id': cls.env.ref('base.EUR').id,
             'email': 'company_3@test.example.com',
             'name': 'Company 3',
         })
