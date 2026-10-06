@@ -995,6 +995,87 @@
         <field name="country_id" ref="base.lu"/>
     </record>
 
+<!-- MN : Mongolia -->
+    <!-- Overtime is encoded by HR, not requested by the employees -->
+    <record id="hr_work_entry.mn_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <!-- Annual leave: 15 working days and more with the seniority, after 6 months of service (Labour Law, art. 99) -->
+    <record id="hr_work_entry.mn_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.mn"/>
+    </record>
+
+    <!-- Sick leave: the employer pays the first 5 working days, the social insurance fund the following ones
+         (Law on Benefits from the Social Insurance Fund, art. 5.1) -->
+    <record id="hr_work_entry.mn_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.mn"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_mn_work_entry_type_sick_leave_fund" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_sick"/>
+        <field name="country_id" ref="base.mn"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_mn_work_entry_type_work_accident_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_sick"/>
+        <field name="country_id" ref="base.mn"/>
+    </record>
+
+    <!-- Pregnancy and maternity leave: 120 days, 140 for twins (Labour Law, art. 137.1) -->
+    <record id="hr_work_entry.l10n_mn_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.mn"/>
+    </record>
+
+    <!-- Paternity leave: at least 10 working days paid by the employer (Labour Law, art. 137.5) -->
+    <record id="hr_work_entry.l10n_mn_work_entry_type_paternity_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.mn"/>
+    </record>
+
+    <!-- Childcare leave: until the child is 3, on request (Labour Law, art. 139) -->
+    <record id="hr_work_entry.l10n_mn_work_entry_type_childcare_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.mn"/>
+    </record>
+
+    <!-- Idle time is decided by the employer, not requested by the employees -->
+    <record id="hr_work_entry.l10n_mn_work_entry_type_idle_time" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="time_off_selectable">False</field>
+        <field name="country_id" ref="base.mn"/>
+    </record>
+
 <!-- MX : Mexico -->
     <record id="hr_work_entry.l10n_mx_work_entry_type_work_risk_imss" model="hr.work.entry.type">
         <field name="requires_allocation">False</field>
