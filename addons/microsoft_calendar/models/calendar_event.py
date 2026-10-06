@@ -3,6 +3,7 @@
 import logging
 import re
 from datetime import datetime, UTC
+from markupsafe import Markup
 from zoneinfo import ZoneInfo
 
 from dateutil.parser import parse
@@ -41,6 +42,7 @@ class CalendarEvent(models.Model):
 
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
     microsoft_sync_active = fields.Boolean('Microsoft Sync Active', compute='_compute_microsoft_sync_active')
+    microsoft_calendar_alert_message = fields.Html(compute='_compute_microsoft_calendar_alert_message', sanitize=False)
 
     @api.depends('user_id.microsoft_calendar_rtoken', 'user_id.microsoft_synchronization_stopped')
     def _compute_microsoft_sync_active(self):
@@ -57,6 +59,27 @@ class CalendarEvent(models.Model):
     def _compute_user_can_edit(self):
         super()._compute_user_can_edit()
         self.filtered(lambda e: e.microsoft_sync_active and e.recurrency).user_can_edit = False
+
+    @api.depends_context('uid')
+    @api.depends('user_id', 'recurrency')
+    def _compute_microsoft_calendar_alert_message(self):
+        for event in self:
+            # replace token check with _get_microsoft_sync_status() == 'sync_active' after task 6620119 is merged
+            if (self.env.user.microsoft_calendar_token
+                and event.user_id
+                and not event.user_id.sudo().microsoft_calendar_token):
+                event.microsoft_calendar_alert_message = Markup("%s") % _(
+                    "%s is not synchronized with Microsoft Outlook. This event is only visible in Odoo.",
+                    event.user_id.name,
+                )
+            elif event.recurrency and event.microsoft_id and event.user_id._get_microsoft_calendar_token():
+                event.microsoft_calendar_alert_message = Markup('%s <a href="%s" target="_blank">%s</a>') % (
+                    _("Editing recurring events is not supported in Microsoft Calendar - "),
+                    "https://www.odoo.com/documentation/master/applications/productivity/calendar/outlook.html#sync-with-outlook",
+                    _("Learn more"),
+                )
+            else:
+                event.microsoft_calendar_alert_message = False
 
     def _get_organizer(self):
         return self.user_id
