@@ -96,7 +96,16 @@
         </field>
     </record>
 
-    <menuitem id="menu_hr_attendance_employee" name="Employees" parent="hr_attendance.menu_hr_attendance_view_attendances_management" action="hr_employee_attendance_action_kanban" groups="hr_attendance.group_hr_attendance_officer" sequence="2"/>
+    <record id="action_attendance_employee_view_access" model="ir.actions.server">
+        <field name="name">Employees</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="state">code</field>
+        <field name="code">
+action = env['hr.attendance'].get_record_default_action()
+        </field>
+    </record>
+
+    <menuitem id="menu_hr_attendance_employee" name="Employees" parent="hr_attendance.menu_hr_attendance_view_attendances_management" action="action_attendance_employee_view_access" groups="hr_attendance.group_hr_attendance_officer" sequence="2"/>
 
     <record id="view_employee_tree_inherit_leave" model="ir.ui.view">
         <field name="name">hr.employee.list.leave</field>
