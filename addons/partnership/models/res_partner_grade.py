@@ -12,7 +12,7 @@ class ResPartnerGrade(models.Model):
     active = fields.Boolean(default=True)
     name = fields.Char('Level Name', translate=True)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
-    default_pricelist_id = fields.Many2one('product.pricelist')
+    default_pricelist_id = fields.Many2one('product.pricelist', 'Pricelist')
     partners_count = fields.Integer(compute='_compute_partners_count')
     partners_label = fields.Char(related='company_id.partnership_label')
 
