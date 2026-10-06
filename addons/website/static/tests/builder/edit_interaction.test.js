@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
 import {
     addActionOption,
@@ -20,7 +21,7 @@ defineWebsiteModels();
 
 test("dropping a new snippet starts its interaction", async () => {
     const { openBuilderSidebar } = await setupWebsiteBuilder("", { openEditor: false });
-    patchWithCleanup(EditInteractionPlugin.prototype, {
+    patch(EditInteractionPlugin.prototype, {
         setup() {
             super.setup();
             this.websiteEditService.refresh = () => expect.step("refresh");
@@ -54,7 +55,7 @@ test("ensure order of operations when hovering an option", async () => {
         selector: ".test-options-target",
         template: xml`<BuilderButton action="'customAction'"/>`,
     });
-    patchWithCleanup(EditInteractionPlugin.prototype, {
+    patch(EditInteractionPlugin.prototype, {
         refreshInteractions(element) {
             expect.step("refreshInteractions");
             return element;
@@ -72,7 +73,7 @@ describe("exit builder", () => {
         const { openBuilderSidebar } = await setupWebsiteBuilderWithSnippet("s_text_block", {
             openEditor: false,
         });
-        patchWithCleanup(EditInteractionPlugin.prototype, {
+        patch(EditInteractionPlugin.prototype, {
             setup() {
                 super.setup();
                 this.websiteEditService.stop = () => expect.step("stop");

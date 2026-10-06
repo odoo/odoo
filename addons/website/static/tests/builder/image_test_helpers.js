@@ -1,5 +1,6 @@
 import { before, globals } from "@odoo/hoot";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 
@@ -95,7 +96,7 @@ export function mockImageRequests() {
 }
 
 export function patchDragImage(el, from, to) {
-    patchWithCleanup(ImagePositionOverlay.prototype, {
+    patch(ImagePositionOverlay.prototype, {
         onDragMove(ev) {
             // Mock the movementX and movementY readonly property
             super.onDragMove({

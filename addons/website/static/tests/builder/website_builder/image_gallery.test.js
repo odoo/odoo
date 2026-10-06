@@ -6,8 +6,9 @@ import {
 } from "@html_builder/../tests/helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
-import { contains, dataURItoBlob, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, dataURItoBlob, onRpc } from "@web/../tests/web_test_helpers";
 import { uniqueId } from "@web/core/utils/functions";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -246,7 +247,7 @@ test("Change gallery layout when images have a link", async () => {
 
 test("Dropping multiple image galleries should produce unique IDs", async () => {
     await setupWebsiteBuilder("");
-    patchWithCleanup(uniqueId, { nextId: 0 });
+    patch(uniqueId, { nextId: 0 });
 
     const imageSnippetButtonSelector =
         ".o-website-builder_sidebar  #snippet_groups .o_snippet[name='Images'] button";
@@ -263,7 +264,7 @@ test("Dropping multiple image galleries should produce unique IDs", async () => 
 
 test("Cloning an image gallery should produce a unique ID", async () => {
     await setupWebsiteBuilder("");
-    patchWithCleanup(uniqueId, { nextId: 0 });
+    patch(uniqueId, { nextId: 0 });
 
     const imageSnippetButtonSelector =
         ".o-website-builder_sidebar  #snippet_groups .o_snippet[name='Images'] button";

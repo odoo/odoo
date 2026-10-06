@@ -1,7 +1,8 @@
 import { before, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, queryOne, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -38,7 +39,7 @@ describe("website loader", () => {
     };
 
     before(() => {
-        patchWithCleanup(WebsiteLoader.prototype, {
+        patch(WebsiteLoader.prototype, {
             setup() {
                 super.setup();
                 this.stopProgressStepDelay = 0;
@@ -261,12 +262,12 @@ describe("website loader", () => {
     });
 
     test("should fallback to internal progress when external getProgress fails", async () => {
-        patchWithCleanup(console, {
+        patch(console, {
             warn: () => {
                 expect.step("external_progress_failed");
             },
         });
-        patchWithCleanup(WebsiteLoader.prototype, {
+        patch(WebsiteLoader.prototype, {
             calculateInternalProgress() {
                 expect.step("internal_progress");
                 return super.calculateInternalProgress(...arguments);

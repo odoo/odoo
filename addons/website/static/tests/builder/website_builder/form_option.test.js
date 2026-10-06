@@ -25,7 +25,6 @@ import {
     MockServer,
     models,
     onRpc,
-    patchWithCleanup,
     webModels,
 } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -1329,7 +1328,7 @@ test("img in label should not have the option for link of click", async () => {
 
 test("builderList re-renders when the field type changes (custom fields)", async () => {
     onRpc("get_authorized_fields", () => ({}));
-    patchWithCleanup(BuilderList.prototype, {
+    patch(BuilderList.prototype, {
         setup() {
             super.setup();
             expect.step("setup");
@@ -1370,7 +1369,7 @@ test("builderList re-renders when the field type changes (existing fields)", asy
             type: "many2one",
         },
     }));
-    patchWithCleanup(BuilderList.prototype, {
+    patch(BuilderList.prototype, {
         setup() {
             super.setup();
             expect.step("setup");
@@ -1607,7 +1606,7 @@ test("only known model fields are whitelisted on save", async () => {
 });
 
 test("change action of form to a model without registered fields adds the model's required fields", async () => {
-    patchWithCleanup(webModels.IrModel.prototype, {
+    patch(webModels.IrModel.prototype, {
         get_compatible_form_models() {
             return [
                 {

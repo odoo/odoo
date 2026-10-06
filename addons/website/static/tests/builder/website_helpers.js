@@ -19,7 +19,6 @@ import {
     models,
     mountWithCleanup,
     onRpc,
-    patchWithCleanup,
     waitUntilIdle,
 } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
@@ -40,6 +39,7 @@ import { session } from "@web/session";
 import { getTranslatedElements } from "./translated_elements_getter.hoot";
 import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_option/background_shape_option_plugin";
 import { _t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
 
 class Website extends models.Model {
     _name = "website";
@@ -167,7 +167,7 @@ export async function setupWebsiteBuilder(
 
     onRpc("/website/get_translated_elements", () => getTranslatedElements());
 
-    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
+    patch(WebsiteBuilderClientAction.prototype, {
         setIframeLoaded() {
             super.setIframeLoaded();
             this.publicRootReady.resolve();
@@ -214,7 +214,7 @@ export async function setupWebsiteBuilder(
             this.websiteContent().contentDocument.body.innerHTML = bodyHTML;
         },
     });
-    patchWithCleanup(WebsiteSystrayItem.prototype, {
+    patch(WebsiteSystrayItem.prototype, {
         get isRestrictedEditor() {
             return true;
         },
@@ -228,7 +228,7 @@ export async function setupWebsiteBuilder(
         type: "ir.actions.client",
     });
 
-    patchWithCleanup(EditInteractionPlugin.prototype, {
+    patch(EditInteractionPlugin.prototype, {
         setup() {
             super.setup();
             // See loadAssetsEditBundle override in WebsiteBuilderClientAction
@@ -251,10 +251,10 @@ export async function setupWebsiteBuilder(
         await animationFrame();
         await waitUntilIdle(comp);
     };
-    patchWithCleanup(Builder.prototype, {
+    patch(Builder.prototype, {
         setup() {
             super.setup();
-            patchWithCleanup(this.env.editorBus, {
+            patch(this.env.editorBus, {
                 trigger(eventName, detail) {
                     if (eventName === "DOM_UPDATED") {
                         lastUpdatePromise = detail.updatePromise;
@@ -266,7 +266,7 @@ export async function setupWebsiteBuilder(
         },
     });
 
-    patchWithCleanup(SetupEditorPlugin.prototype, {
+    patch(SetupEditorPlugin.prototype, {
         setup() {
             super.setup();
             editableContent = this.editable.querySelector(
@@ -275,7 +275,7 @@ export async function setupWebsiteBuilder(
         },
     });
 
-    patchWithCleanup(WebsiteBridgePlugin.prototype, {
+    patch(WebsiteBridgePlugin.prototype, {
         getSession() {
             return {};
         },
@@ -291,7 +291,7 @@ export async function setupWebsiteBuilder(
 
     // Remove as soon as the background shape are not always instantiated when
     // entering in edit mode.
-    patchWithCleanup(BackgroundShapeOptionPlugin.prototype, {
+    patch(BackgroundShapeOptionPlugin.prototype, {
         getShapeStylePosition(shapeId, flip) {
             if (!this.shapeStyles[this.convertShapeIdForStyleSearch(shapeId)]) {
                 return [50, 50];
@@ -307,7 +307,7 @@ export async function setupWebsiteBuilder(
     });
 
     if (snippets) {
-        patchWithCleanup(IrUiView.prototype, {
+        patch(IrUiView.prototype, {
             render_public_asset: () => getSnippetView(snippets),
         });
     }
@@ -373,7 +373,7 @@ async function openBuilderSidebar(editAssetsLoaded) {
 }
 
 export function addPlugin(...Plugin) {
-    patchWithCleanup(WebsiteBuilder.prototype, {
+    patch(WebsiteBuilder.prototype, {
         get builderProps() {
             const props = super.builderProps;
             return { ...props, Plugins: [...props.Plugins, ...Plugin] };
@@ -507,7 +507,7 @@ export async function setupSidebarBuilderForTranslation(options) {
     // on the "Edit" button of the systray. The goal of this hack is to avoid
     // the handling of an extra reload of the action to arrive in translate
     // mode.
-    patchWithCleanup(WebsiteBuilder.prototype, {
+    patch(WebsiteBuilder.prototype, {
         setup() {
             super.setup();
             this.env.services.website = websiteServiceInTranslateMode;

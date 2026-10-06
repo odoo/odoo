@@ -1,5 +1,6 @@
 import { expect, test } from "@odoo/hoot";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -94,7 +95,7 @@ test("Check that all the `on_snippet_dropped_handlers` work with the correct sni
             }),
         };
     }
-    patchWithCleanup(BlockTabPlugin.prototype, {
+    patch(BlockTabPlugin.prototype, {
         async processDroppedSnippet(snippetEl, cancelInsertion, dragState) {
             await super.processDroppedSnippet(snippetEl, cancelInsertion, dragState);
             expect.step(

@@ -8,7 +8,8 @@ import { unformat } from "@html_editor/../tests/_helpers/format";
 import { describe, expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     addDropZoneSelector,
     defineWebsiteModels,
@@ -158,7 +159,7 @@ test("keep the option container of a visible snippet even if there are hidden sn
 });
 
 test("invisible elements efficiency", async () => {
-    patchWithCleanup(InvisibleElementsPanel.prototype, {
+    patch(InvisibleElementsPanel.prototype, {
         updateInvisibleElementsPanel(invisibleEls) {
             if (invisibleEls.length) {
                 expect.step("update invisible panel");

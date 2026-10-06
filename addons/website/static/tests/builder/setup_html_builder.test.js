@@ -1,7 +1,8 @@
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { describe, expect, test, beforeEach } from "@odoo/hoot";
 import { animationFrame, waitFor, click } from "@odoo/hoot-dom";
-import { patchWithCleanup, contains } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { WebsiteBuilder } from "@website/builder/website_builder";
 import { modifyText, exampleContent } from "@html_builder/../tests/helpers";
 
@@ -17,7 +18,7 @@ describe("history back", () => {
 
     beforeEach(() => {
         // Patch to get the builder sidebar instance
-        patchWithCleanup(WebsiteBuilder.prototype, {
+        patch(WebsiteBuilder.prototype, {
             setup() {
                 super.setup(...arguments);
                 builder = this;

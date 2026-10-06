@@ -1,10 +1,11 @@
 import { describe, expect, test, getFixture } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
-import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
 import { AutoCompleteWithPages } from "@website/components/autocomplete_with_pages/autocomplete_with_pages";
 import { render } from "@web/owl2/utils";
+import { patch } from "@web/core/utils/patch";
 
 defineMailModels();
 
@@ -21,7 +22,7 @@ test("event on targetDropdown does not crash when the inner input ref is gone", 
     getFixture().appendChild(targetDropdown);
 
     let component;
-    patchWithCleanup(AutoCompleteWithPages.prototype, {
+    patch(AutoCompleteWithPages.prototype, {
         setup() {
             super.setup();
             component = this;

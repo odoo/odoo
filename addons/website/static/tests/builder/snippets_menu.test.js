@@ -3,7 +3,8 @@ import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -14,7 +15,7 @@ defineWebsiteModels();
 
 test("open BuilderSidebar and discard", async () => {
     let websiteBuilder;
-    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
+    patch(WebsiteBuilderClientAction.prototype, {
         setup() {
             websiteBuilder = this;
             super.setup();
