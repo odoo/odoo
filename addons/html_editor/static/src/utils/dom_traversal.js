@@ -402,6 +402,61 @@ export function traverseNode(node, traverseChildrenPredicate) {
 }
 
 /**
+ * Yield the nodes in the given range (both ends included). If provided, apply
+ * the filter arguments from @see {Document.createTreeWalker} to the traversal.
+ *
+ * @param {[Node, Node]} range
+ * @param {object} treeWalkerFilters
+ * @param {number} [treeWalkerFilters.whatToShow] a constant from `NodeFilter` named `^SHOW_*`.
+ * @param {NodeFilter} [treeWalkerFilters.filter]
+ * @yields {Node} the next node in depth-first traversal order
+ */
+export const getPathInRange = function* (range = [], { whatToShow, filter } = {}) {
+    let [start, end] = range;
+    if (!start) {
+        return;
+    }
+    if (start.compareDocumentPosition(end) & Node.DOCUMENT_POSITION_PRECEDING) {
+        [start, end] = [end, start];
+    }
+    const root = start === end ? start : getCommonAncestor([start, end]);
+    const walker = document.createTreeWalker(root, whatToShow, filter);
+    walker.currentNode = start;
+
+    // Yield `start` if it passes the filters.
+    const nodeTypeFlag = 2 ** (start.nodeType - 1); // Convert `NodeType` into matching `NodeFilter`
+    let areStartDescendantsRejected = false;
+    if (!whatToShow || (whatToShow & nodeTypeFlag) !== 0) {
+        if (!filter) {
+            yield start;
+        } else {
+            const filterFunction = typeof filter === "function" ? filter : filter.acceptNode;
+            const isRejected = (node) => filterFunction(node) === NodeFilter.FILTER_REJECT;
+            areStartDescendantsRejected = findUpTo(start, root, isRejected);
+            if (
+                filterFunction(start) === NodeFilter.FILTER_ACCEPT &&
+                !areStartDescendantsRejected
+            ) {
+                yield start;
+            }
+        }
+    }
+
+    let node = walker.nextNode();
+    while (node && !(end.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)) {
+        if (!(areStartDescendantsRejected && start.contains(node))) {
+            yield node;
+        }
+        node = walker.nextNode();
+    }
+};
+
+/** @see {getPathInRange} */
+export const getNodesInRange = function (range = [], { whatToShow, filter } = {}) {
+    return [...getPathInRange(range, { whatToShow, filter })];
+};
+
+/**
  * Moves keyboard focus to the next or previous focusable
  * element in the given list of elements.
  * Loops focus when reaching the start or end of the list.

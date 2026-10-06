@@ -10,11 +10,12 @@ import {
     lastLeaf,
     getCommonAncestor,
     traverseNode,
+    getNodesInRange,
 } from "@html_editor/utils/dom_traversal";
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { insertTestHtml } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { isTextNode, isVisible, isVisibleTextNode } from "@html_editor/utils/dom_info";
+import { isElement, isTextNode, isVisible, isVisibleTextNode } from "@html_editor/utils/dom_info";
 
 describe("closestElement", () => {
     test("should find the closest element to a text node", () => {
@@ -401,5 +402,381 @@ describe("traverseNode", () => {
             return !node.classList.contains("skip");
         });
         expect.verifySteps(["a", "b", "e", "f", "g", "j"]);
+    });
+});
+
+describe("getNodesInRange", () => {
+    describe("basic", () => {
+        describe("unfiltered", () => {
+            test("should return the nodes between two blocks", () => {
+                const [p1, p2, p3] = insertTestHtml(`<p>a</p><p>b</p><p>c</p>`);
+                const nodes = getNodesInRange([p1, p3]);
+                expect(nodes).toEqual([p1, p1.firstChild, p2, p2.firstChild, p3]);
+            });
+            test("should return the nodes between two empty blocks", () => {
+                const [p1, p2, p3] = insertTestHtml(`<p><br></p><p><br></p><p><br></p>`);
+                const nodes = getNodesInRange([p1, p3]);
+                expect(nodes).toEqual([p1, p1.firstChild, p2, p2.firstChild, p3]);
+            });
+            test("should return the nodes between two text nodes in different blocks", () => {
+                const [p1, p2, p3] = insertTestHtml(`<p>a</p><p>b</p><p>c</p>`);
+                // From "a" to p3:
+                const nodes = getNodesInRange([p1.firstChild, p3.firstChild]);
+                expect(nodes).toEqual([p1.firstChild, p2, p2.firstChild, p3, p3.firstChild]);
+            });
+            test("should return the nodes between two text nodes in different blocks, with text node siblings", () => {
+                const [p1, p2, p3] = insertTestHtml(`<p>a</p><p>c</p><p>d</p>`);
+                const b = p1.ownerDocument.createTextNode("b");
+                const e = p1.ownerDocument.createTextNode("e");
+                p1.append(b); // <p>"a""b"</p>
+                p3.append(e); // <p>"d""e"</p>
+                // From "b" to "d" in `<p>ab</p><p>c</p><p>de</p>`:
+                const nodes = getNodesInRange([b, p3.firstChild]);
+                expect(nodes).toEqual([b, p2, p2.firstChild, p3, p3.firstChild]);
+            });
+            test("should return the nodes between a text node and a different block", () => {
+                const [p1, p2, p3] = insertTestHtml(`<p>a</p><p>b</p><p>c</p>`);
+                // From "a" to p3:
+                const nodes = getNodesInRange([p1.firstChild, p3]);
+                expect(nodes).toEqual([p1.firstChild, p2, p2.firstChild, p3]);
+            });
+            test("should return the start node when the range is collapsed", () => {
+                const [, p2] = insertTestHtml(`<p>a</p><p>b</p><p>c</p>`);
+                const nodes = getNodesInRange([p2, p2]);
+                expect(nodes).toEqual([p2]);
+            });
+            test("should reverse the range if it's backwards", () => {
+                const [p1, p2] = insertTestHtml(`<p>a</p><p>b</p><p>c</p>`);
+                const nodes = getNodesInRange([p2, p1]);
+                expect(nodes).toEqual([p1, p1.firstChild, p2]);
+            });
+        });
+        describe("filtered", () => {
+            describe("whatToShow", () => {
+                test("should return only text nodes", () => {
+                    const [p1, p2, p3] = insertTestHtml(`<p>a</p><p>c</p><p>d</p>`);
+                    const b = p1.ownerDocument.createTextNode("b");
+                    const e = p1.ownerDocument.createTextNode("e");
+                    p1.append(b); // <p>"a""b"</p>
+                    p3.append(e); // <p>"d""e"</p>
+                    // From "b" to "d" in `<p>ab</p><p>c</p><p>de</p>`:
+                    const nodes = getNodesInRange([b, p3.firstChild], {
+                        whatToShow: NodeFilter.SHOW_TEXT,
+                    });
+                    expect(nodes).toEqual([b, p2.firstChild, p3.firstChild]);
+                });
+                test("should return only elements nodes", () => {
+                    const [, p2, p3] = insertTestHtml(`<p>a</p><p>b</p><p>c</p>`);
+                    const nodes = getNodesInRange([p2, p3], {
+                        whatToShow: NodeFilter.SHOW_ELEMENT,
+                    });
+                    expect(nodes).toEqual([p2, p3]);
+                });
+                test("should return everything", () => {
+                    const [p1, p2, p3] = insertTestHtml(`<p>a</p><p>c</p><p>d</p>`);
+                    const b = p1.ownerDocument.createTextNode("b");
+                    const e = p1.ownerDocument.createTextNode("e");
+                    p1.append(b); // <p>"a""b"</p>
+                    p3.append(e); // <p>"d""e"</p>
+                    // From "b" to "d" in `<p>ab</p><p>c</p><p>de</p>`:
+                    const nodes = getNodesInRange([b, p3.firstChild], {
+                        whatToShow: NodeFilter.SHOW_ALL,
+                    });
+                    expect(nodes).toEqual([b, p2, p2.firstChild, p3, p3.firstChild]);
+                });
+                test("should not return the start node if it doesn't match whatToShow", () => {
+                    const [p1, p2, p3] = insertTestHtml(`<p>a</p><p>b</p><p>c</p>`);
+                    const d = p1.ownerDocument.createTextNode("d");
+                    p3.append(d); // <p>"c""d"</p>
+                    // From p2 to "c" in `<p>a</p><p>b</p><p>cd</p>`:
+                    const nodes = getNodesInRange([p2, p3.firstChild], {
+                        whatToShow: NodeFilter.SHOW_TEXT,
+                    });
+                    expect(nodes).toEqual([p2.firstChild, p3.firstChild]);
+                });
+                test("should not return the end node if it doesn't match whatToShow", () => {
+                    const [p1, p2] = insertTestHtml(`<p>a</p><p>b</p><p>c</p>`);
+                    const nodes = getNodesInRange([p1, p2], { whatToShow: NodeFilter.SHOW_TEXT });
+                    expect(nodes).toEqual([p1.firstChild]);
+                });
+                test("should return nothing", () => {
+                    const [p1, , p3] = insertTestHtml(`<p><br></p><p><br></p><p><br></p>`);
+                    // From p1 to p3 > br:
+                    const nodes = getNodesInRange([p1, p3.firstChild], {
+                        whatToShow: NodeFilter.SHOW_TEXT,
+                    });
+                    expect(nodes).toEqual([]);
+                });
+            });
+            const filterTests = [
+                {
+                    name: "should return only paragraphs and text nodes (filter skip)",
+                    content: (filter) => () => {
+                        const [h1, p, h2] = insertTestHtml(`<h1>a</h1><p>b</p><h2>c</h2>`);
+                        // From h1 to "c":
+                        const nodes = getNodesInRange([h1, h2.firstChild], { filter });
+                        expect(nodes).toEqual([h1.firstChild, p, p.firstChild, h2.firstChild]);
+                    },
+                    filter: (node) =>
+                        isTextNode(node) || node.nodeName === "P"
+                            ? NodeFilter.FILTER_ACCEPT
+                            : NodeFilter.FILTER_SKIP,
+                },
+                {
+                    name: "should return only paragraphs and their text children (filter reject)",
+                    content: (filter) => () => {
+                        const [p1, , p2] = insertTestHtml(`<p>a</p><h1>b</h1><p>c</p>`);
+                        // From p1 to "c":
+                        const nodes = getNodesInRange([p1, p2.firstChild], { filter });
+                        expect(nodes).toEqual([p1, p1.firstChild, p2, p2.firstChild]);
+                    },
+                    filter: (node) =>
+                        isTextNode(node) || node.nodeName === "P"
+                            ? NodeFilter.FILTER_ACCEPT
+                            : NodeFilter.FILTER_REJECT,
+                },
+                {
+                    name: "should not return the start node if it doesn't match the filter (filter skip)",
+                    content: (filter) => () => {
+                        const [h1, p, h2] = insertTestHtml(`<h1>a</h1><p>b</p><h2>c</h2>`);
+                        // From h1 to "c":
+                        const nodes = getNodesInRange([h1, h2.firstChild], { filter });
+                        expect(nodes).toEqual([h1.firstChild, p, p.firstChild, h2, h2.firstChild]);
+                    },
+                    filter: (node) =>
+                        node.nodeName === "H1" ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT,
+                },
+                {
+                    name: "should not return the end node if it doesn't match the filter (filter skip)",
+                    content: (filter) => () => {
+                        const [h1, p, h2] = insertTestHtml(`<h1>a</h1><p>b</p><h2>c</h2>`);
+                        const nodes = getNodesInRange([h1, h2], { filter });
+                        expect(nodes).toEqual([h1, h1.firstChild, p, p.firstChild]);
+                    },
+                    filter: (node) =>
+                        node.nodeName === "H2" ? NodeFilter.FILTER_SKIP : NodeFilter.FILTER_ACCEPT,
+                },
+                {
+                    name: "should not return the start node's children if start rejects the filter (filter reject)",
+                    content: (filter) => () => {
+                        const [h1, p, h2] = insertTestHtml(`<h1>a</h1><p>b</p><h2>c</h2>`);
+                        // From h1 to "c":
+                        const nodes = getNodesInRange([h1, h2.firstChild], { filter });
+                        expect(nodes).toEqual([p, p.firstChild, h2, h2.firstChild]);
+                    },
+                    filter: (node) =>
+                        node.nodeName === "H1"
+                            ? NodeFilter.FILTER_REJECT
+                            : NodeFilter.FILTER_ACCEPT,
+                },
+                {
+                    name: "should return nothing (filter skip)",
+                    content: (filter) => () => {
+                        const [h1, , h2] = insertTestHtml(`<h1>a</h1><p>b</p><h2>c</h2>`);
+                        // From h1 to "c":
+                        const nodes = getNodesInRange([h1, h2.firstChild], { filter });
+                        expect(nodes).toEqual([]);
+                    },
+                    filter: () => NodeFilter.FILTER_SKIP,
+                },
+                {
+                    name: "should return nothing (filter reject)",
+                    content: (filter) => () => {
+                        const [h1, , h2] = insertTestHtml(`<h1>a</h1><p>b</p><h2>c</h2>`);
+                        // From h1 to "c":
+                        const nodes = getNodesInRange([h1, h2.firstChild], { filter });
+                        expect(nodes).toEqual([]);
+                    },
+                    filter: (node) =>
+                        isElement(node) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT,
+                },
+            ];
+            for (const { name, content, filter } of filterTests) {
+                test(name + " (as function)", content(filter));
+            }
+            for (const { name, content, filter } of filterTests) {
+                test(name + " (as acceptNode)", content({ acceptNode: filter }));
+            }
+            test("should return only text nodes with more than one character (whatToShow + filter", () => {
+                const [h1, p1, , h2] = insertTestHtml(`<h1>ab</h1><p>cd</p><p>e</p><h2>fg</h2>`);
+                // From h1 to "fg":
+                const nodes = getNodesInRange([h1, h2.firstChild], {
+                    whatToShow: NodeFilter.SHOW_TEXT,
+                    filter: (node) =>
+                        node.textContent.length > 1
+                            ? NodeFilter.FILTER_ACCEPT
+                            : NodeFilter.FILTER_SKIP,
+                });
+                expect(nodes).toEqual([h1.firstChild, p1.firstChild, h2.firstChild]);
+            });
+        });
+    });
+    describe("complex html", () => {
+        const complexHtml = unformat(
+            `<div>
+                <p>ab
+                    <span>c<i>d</i><span>e</span></span>
+                    <span>f</span>g
+                </p>
+                <h1>h</h1>
+                <a href="#">i<span>j</span></a>
+            </div>
+            <p>k</p>
+            <ul>
+                <li>l</li>
+                <li>
+                    <p>m</p>
+                    <p>n</p>
+                </li>
+                <li>
+                    <ul>
+                        <li class="oe-nested">
+                            <ol>
+                                <li class="oe-nested">
+                                    <ul class="o_checklist">
+                                        <li>opq</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </li>
+                    </ul>
+                </li>
+                <li>rs<i>tu</i>vw</li>
+            </ul>
+            <p>xy</p>`
+        );
+        const getNodeKey = (node, object) => {
+            let key;
+            if (isTextNode(node)) {
+                key = node.textContent;
+            } else {
+                key = node.nodeName.toLowerCase();
+                if (key in object) {
+                    let i = 2;
+                    while (key + i in object) {
+                        i += 1;
+                    }
+                    key = key + i;
+                }
+            }
+            return key;
+        };
+        const representNodeChildren = (node) =>
+            [...node.childNodes].reduce((accumulator, child) => {
+                const key = getNodeKey(child, accumulator);
+                accumulator[key] = { node: child, ...representNodeChildren(child) };
+                return accumulator;
+            }, {});
+        const insertAndGetComplexHtml = () => {
+            const p2 = insertTestHtml(complexHtml)[3];
+            p2.append(p2.ownerDocument.createTextNode("z"));
+            return representNodeChildren(p2.parentElement);
+        };
+        const toNodes = (...nodeReprs) => nodeReprs.map((nodeRepr) => nodeRepr.node);
+        test("should return the nodes between a block and a text node", () => {
+            const { div, p, ul, p2 } = insertAndGetComplexHtml();
+            // From "div" to "z":
+            const nodes = getNodesInRange(toNodes(div, p2.z));
+            // prettier-ignore
+            expect(nodes).toEqual(toNodes(
+                div,
+                    div.p, div.p.ab,
+                        div.p.span,
+                        div.p.span.c, div.p.span.i, div.p.span.i.d, div.p.span.span, div.p.span.span.e,
+                        div.p.span2, div.p.span2.f, div.p.g,
+                    div.h1, div.h1.h,
+                    div.a, div.a.i, div.a.span, div.a.span.j,
+                p, p.k,
+                ul,
+                    ul.li, ul.li.l,
+                    ul.li2, ul.li2.p, ul.li2.p.m, ul.li2.p2, ul.li2.p2.n,
+                    ul.li3, ul.li3.ul,
+                        ul.li3.ul.li, ul.li3.ul.li.ol,
+                            ul.li3.ul.li.ol.li, ul.li3.ul.li.ol.li.ul,
+                                ul.li3.ul.li.ol.li.ul.li, ul.li3.ul.li.ol.li.ul.li.opq,
+                    ul.li4, ul.li4.rs, ul.li4.i, ul.li4.i.tu, ul.li4.vw,
+                p2, p2.xy, p2.z
+            ));
+        });
+        test("should return the nodes between two blocks", () => {
+            const { div, p, ul, p2 } = insertAndGetComplexHtml();
+            // From div to p2:
+            const nodes = getNodesInRange(toNodes(div, p2));
+            // prettier-ignore
+            expect(nodes).toEqual(toNodes(
+                div,
+                    div.p, div.p.ab,
+                        div.p.span,
+                        div.p.span.c, div.p.span.i, div.p.span.i.d, div.p.span.span, div.p.span.span.e,
+                        div.p.span2, div.p.span2.f, div.p.g,
+                    div.h1, div.h1.h,
+                    div.a, div.a.i, div.a.span, div.a.span.j,
+                p, p.k,
+                ul,
+                    ul.li, ul.li.l,
+                    ul.li2, ul.li2.p, ul.li2.p.m, ul.li2.p2, ul.li2.p2.n,
+                    ul.li3, ul.li3.ul,
+                        ul.li3.ul.li, ul.li3.ul.li.ol,
+                            ul.li3.ul.li.ol.li, ul.li3.ul.li.ol.li.ul,
+                                ul.li3.ul.li.ol.li.ul.li, ul.li3.ul.li.ol.li.ul.li.opq,
+                    ul.li4, ul.li4.rs, ul.li4.i, ul.li4.i.tu, ul.li4.vw,
+                p2
+            ));
+        });
+        test("should return the nodes between two nested elements", () => {
+            const { div, p, ul } = insertAndGetComplexHtml();
+            // From div > p > span > i to ul > li3 > ul > li > ol > li > ul > li > opq:
+            const nodes = getNodesInRange(toNodes(div.p.span.i, ul.li3.ul.li.ol.li.ul.li.opq));
+            // prettier-ignore
+            expect(nodes).toEqual(toNodes(
+                        div.p.span.i, div.p.span.i.d, div.p.span.span, div.p.span.span.e,
+                        div.p.span2, div.p.span2.f, div.p.g,
+                    div.h1, div.h1.h,
+                    div.a, div.a.i, div.a.span, div.a.span.j,
+                p, p.k,
+                ul,
+                    ul.li, ul.li.l,
+                    ul.li2, ul.li2.p, ul.li2.p.m, ul.li2.p2, ul.li2.p2.n,
+                    ul.li3, ul.li3.ul,
+                        ul.li3.ul.li, ul.li3.ul.li.ol,
+                            ul.li3.ul.li.ol.li, ul.li3.ul.li.ol.li.ul,
+                                ul.li3.ul.li.ol.li.ul.li, ul.li3.ul.li.ol.li.ul.li.opq,
+            ));
+        });
+        test("should return the nodes between a nested text node and a nested block", () => {
+            const { div, p, ul } = insertAndGetComplexHtml();
+            // From "g" to ul:
+            const nodes = getNodesInRange(toNodes(div.p.g, ul));
+            // prettier-ignore
+            expect(nodes).toEqual(toNodes(
+                        div.p.g,
+                    div.h1, div.h1.h,
+                    div.a, div.a.i, div.a.span, div.a.span.j,
+                p, p.k,
+                ul
+            ));
+        });
+        test("should return the nodes between two nested text nodes", () => {
+            const { div, p, ul, p2 } = insertAndGetComplexHtml();
+            // From "c" to "xy":
+            const nodes = getNodesInRange(toNodes(div.p.span.c, p2.xy));
+            // prettier-ignore
+            expect(nodes).toEqual(toNodes(
+                        div.p.span.c, div.p.span.i, div.p.span.i.d, div.p.span.span, div.p.span.span.e,
+                        div.p.span2, div.p.span2.f, div.p.g,
+                    div.h1, div.h1.h,
+                    div.a, div.a.i, div.a.span, div.a.span.j,
+                p, p.k,
+                ul,
+                    ul.li, ul.li.l,
+                    ul.li2, ul.li2.p, ul.li2.p.m, ul.li2.p2, ul.li2.p2.n,
+                    ul.li3, ul.li3.ul,
+                        ul.li3.ul.li, ul.li3.ul.li.ol,
+                            ul.li3.ul.li.ol.li, ul.li3.ul.li.ol.li.ul,
+                                ul.li3.ul.li.ol.li.ul.li, ul.li3.ul.li.ol.li.ul.li.opq,
+                    ul.li4, ul.li4.rs, ul.li4.i, ul.li4.i.tu, ul.li4.vw,
+                p2, p2.xy
+            ));
+        });
     });
 });

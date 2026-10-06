@@ -50,14 +50,11 @@ export class TranslatePlugin extends Plugin {
         const selection = this.dependencies.selection.getEditableSelection();
         const dialogParams = {
             insert: (content) => {
-                const insertedNodes = this.dependencies.dom.insert(content);
+                const insertedRange = this.dependencies.dom.insert(content);
                 this.dependencies.history.commit();
                 // Add a frame around the inserted content to highlight it for 2
                 // seconds.
-                const start = insertedNodes?.length && closestElement(insertedNodes[0]);
-                const end =
-                    insertedNodes?.length &&
-                    closestElement(insertedNodes[insertedNodes.length - 1]);
+                const [start, end] = insertedRange.map((node) => closestElement(node));
                 if (start && end) {
                     const divContainer = this.editable.parentElement;
                     let [parent, left, top] = [
