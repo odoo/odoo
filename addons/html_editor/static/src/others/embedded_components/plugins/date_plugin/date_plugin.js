@@ -1,5 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
+import { getColorOrClass } from "@html_editor/utils/color";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { getFontSizeOrClass } from "@html_editor/utils/formatting";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { proxy } from "@odoo/owl";
@@ -82,6 +84,9 @@ export class DatePlugin extends Plugin {
         /** Overrides */
         apply_color_overrides: this.applyColorToDateNodes.bind(this),
 
+        /** Handlers */
+        on_all_formats_removed_handlers: withSequence(20, this.restoreDefaultDateStyles.bind(this)),
+
         /** Predicates */
         is_formattable_node_predicates: (node) => {
             if (node.matches?.(EMBEDDED_DATE_SELECTOR)) {
@@ -139,8 +144,25 @@ export class DatePlugin extends Plugin {
             })
         );
 
+        this.inheritDateFormatting(dateEl.firstChild);
         this.dependencies.dom.insert(dateEl);
         this.dependencies.history.commit();
+    }
+
+    /**
+     * Remove default date styles when its parent already has explicit formatting,
+     * allowing the date to inherit it.
+     *
+     * @param {HTMLElement} dateNode
+     */
+    inheritDateFormatting(dateNode) {
+        const { anchorNode } = this.dependencies.selection.getEditableSelection();
+        if (closestElement(anchorNode, (node) => getColorOrClass(node, "color"))) {
+            dateNode.style.removeProperty("color");
+        }
+        if (closestElement(anchorNode, getFontSizeOrClass)) {
+            dateNode.style.removeProperty("font-size");
+        }
     }
 
     applyColorToDateNodes(color, mode, coloredNodes) {
@@ -153,6 +175,19 @@ export class DatePlugin extends Plugin {
         for (const dateNode of dateNodes) {
             this.dependencies.color.colorElement(dateNode, color, mode);
             coloredNodes.add(dateNode);
+        }
+    }
+
+    restoreDefaultDateStyles() {
+        const dateNodes = new Set(
+            this.dependencies.selection
+                .getTargetedNodes()
+                .map((node) => closestElement(node, EMBEDDED_DATE_SELECTOR))
+                .filter(Boolean)
+        );
+        for (const dateNode of dateNodes) {
+            dateNode.style.fontSize = "13px";
+            dateNode.style.color = "black";
         }
     }
 }
