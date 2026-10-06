@@ -275,6 +275,28 @@ class TestMailgateway(MailGatewayCommon):
         self.assertEqual(msg.subtype_id, self.env.ref('mail.mt_comment'))
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_attachment_charset(self):
+        """Attachment bytes must be stored unchanged, whatever charset the part declares."""
+        test_cases = [
+            ('Período', 'utf-8', 'us-ascii'),
+            ('Período', 'utf-8', 'iso-8859-1'),
+            ('Período', 'utf-8', 'utf-8'),
+            ('請求書', 'shift_jis', 'utf-8'),
+        ]
+        for content_string, content_charset, charset in test_cases:
+            with self.subTest(content_charset=content_charset, charset=charset):
+                content = f'<?xml version="1.0" encoding="{content_charset}"?><r>{content_string}</r>'.encode(content_charset)
+                record = self.format_and_process(
+                    test_mail_data.MAIL_ATTACHMENT_CHARSET_TEMPLATE, self.email_from,
+                    f'groups@{self.alias_domain}', subject=f'Charset {content_charset} as {charset}', charset=charset,
+                    content=base64.b64encode(content).decode('ascii'),
+                )
+                self.assertEqual(
+                    record.message_ids.attachment_ids.raw, content,
+                    'The attachment must keep the bytes that were sent',
+                )
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_cid(self):
         origin_message_parse_extract_payload = MailThread._message_parse_extract_payload
 
@@ -1959,15 +1981,9 @@ class TestMailgateway(MailGatewayCommon):
         record = self.format_and_process(test_mail_data.MAIL_MULTIPART_INVALID_ENCODING, self.email_from, f'groups@{self.alias_domain}')
 
         self.assertEqual(record.message_ids.attachment_ids.name, 'bis3_with_error_encoding_address.xml')
-        # NB: the xml received by email contains b"Chauss\xef\xbf\xbd\xef\xbf\xbde" with "\xef\xbf\xbd" being the
-        # replacement character � in UTF-8.
-        # When calling `_message_parse_extract_payload`, `part.get_content()` will be called on the attachment part of
-        # the email, triggering the decoding of the base64 attachment, so b"Chauss\xef\xbf\xbd\xef\xbf\xbde" is
-        # first retrieved. Then, `get_text_content` in `email` tries to decode this using the charset of the email
-        # part, i.e: `content.decode('us-ascii', errors='replace')`. So the errors are replaced using the Unicode
-        # replacement marker and the string "Chauss������e" is used to create the attachment.
-        # This explains the multiple "�" in the attachment.
-        self.assertIn("Chauss������e de Bruxelles", record.message_ids.attachment_ids.raw.decode())
+        # The sender already built a broken file, its xml holds b"Chauss\xef\xbf\xbd\xef\xbf\xbde" where
+        # "\xef\xbf\xbd" is the replacement character � in UTF-8, and the attachment keeps those bytes.
+        self.assertIn("Chauss��e de Bruxelles", record.message_ids.attachment_ids.raw.decode())
 
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_message_process_file_omitted_charset_xml(self):
