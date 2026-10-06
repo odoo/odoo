@@ -224,6 +224,29 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             self.assertEqual(line.qty_to_invoice, 0.0)
             self.assertEqual(line.qty_invoiced, 10)
 
+    def test_price_subtotal_to_invoice_with_zero_quantity(self):
+        """The amount to invoice of a billed line whose quantity is set to 0
+        afterwards must be 0 instead of raising a ZeroDivisionError."""
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.service_order.id,
+                'product_qty': 5.0,
+                'price_unit': 10.0,
+                'tax_ids': False,
+            })],
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        purchase_order.invoice_ids.invoice_date = fields.Date.today()
+        purchase_order.invoice_ids.action_post()
+
+        line = purchase_order.order_line
+        self.assertEqual(line.price_subtotal_to_invoice, 0.0)
+
+        line.product_qty = 0.0
+        self.assertEqual(line.price_subtotal_to_invoice, 0.0)
+
     def test_vendor_bill_delivered_return(self):
         """Test when return product, a order of product invoiced by delivered
         quantity can be correctly invoiced."""
