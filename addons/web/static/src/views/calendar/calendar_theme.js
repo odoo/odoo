@@ -87,7 +87,7 @@ export const odooCalendarTheme = {
         multiMonth: {
             singleMonthClass: (info) =>
                 joinClasses(
-                    "o_calendar_month px-2 py-3",
+                    "o_calendar_month p-2",
                     info.multiMonthColumns === 1 && "o_calendar_month_sticky"
                 ),
             singleMonthHeaderClass: "o_calendar_month_header",

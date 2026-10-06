@@ -96,7 +96,7 @@ export class CalendarYearRenderer extends Component {
             showNonCurrentDates: false,
             timeZone: getFullCalendarTimeZone(),
             multiMonthMaxColumns: 12,
-            singleMonthMinWidth: 336,
+            singleMonthMinWidth: 352,
             singleMonthTitleFormat: { month: "long", year: "numeric" },
             viewDidMount: this.viewDidMount.bind(this),
             weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,

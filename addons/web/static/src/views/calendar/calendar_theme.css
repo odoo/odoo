@@ -347,10 +347,18 @@
         cursor: default;
     }
 
-    .o_calendar_month {
-        @media screen and (min-width: 768px), print and (min-width: 188mm) {
-            max-width: 21rem;
-            margin-inline: auto;
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
+        /* FullCalendar sizes each month as a column (inline width), spread them evenly instead */
+        [role="list"] {
+            justify-content: space-evenly;
+        }
+
+        [role="listitem"] {
+            width: auto !important;
+        }
+
+        .o_calendar_month {
+            width: 22rem;
         }
     }
 
