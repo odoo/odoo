@@ -1110,9 +1110,9 @@ export function useInputBuilderComponent(
      * @param {Element} editingElement
      */
     function getValueFromDom(editingElement) {
-        const actionWithGetValue = getAllActions().find(
-            ({ actionId }) => getAction(actionId).getValue
-        );
+        const actionWithGetValue =
+            getAllActions().find(({ actionId }) => getAction(actionId).has("getValue")) ??
+            getAllActions()[0];
         const { actionId, actionParam } = actionWithGetValue;
         try {
             const actionValue = getAction(actionId).getValue({
