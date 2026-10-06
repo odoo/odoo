@@ -416,6 +416,42 @@ class TestAccountPayment(AccountPaymentCommon):
         tx._post_process()
         self.assertEqual(tx.payment_id.state, 'in_process')
 
+    def test_post_process_only_posts_invoices_of_done_transactions(self):
+        """ When several transactions are post-processed together, only the draft invoices of the
+            confirmed transactions must be posted.
+        """
+        invoice_done, invoice_error = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'price_unit': 100.0,
+                }),
+            ],
+        } for _i in range(2)])
+        tx_done = self._create_transaction(
+            flow='direct',
+            state='pending',
+            reference='tx_done',
+            invoice_ids=[invoice_done.id],
+        )
+        tx_error = self._create_transaction(
+            flow='direct',
+            state='pending',
+            reference='tx_error',
+            invoice_ids=[invoice_error.id],
+        )
+        tx_done._set_done()
+        tx_error._set_error("Payment failed")
+        (tx_done | tx_error)._post_process()
+        self.assertEqual(invoice_done.state, 'posted')
+        self.assertEqual(
+            invoice_error.state,
+            'draft',
+            msg="The invoice of a failed transaction should not be posted.",
+        )
+
     def test_payment_token_for_invoice_partner_is_available(self):
         """Test that the payment token of the invoice partner is available"""
         Wizard = self.env['account.payment.register'].with_context(active_model='account.move')
