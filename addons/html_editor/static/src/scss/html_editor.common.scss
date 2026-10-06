@@ -677,10 +677,10 @@ pre {
                 $-btn-color: if($-btn, o-color($-btn), map-get($theme-colors, $type));
                 $-border: map-get($colors, '#{$-name}-border');
                 $-border-color: if($-border, o-color($-border), $-btn-color);
-                .btn-fill-#{$type} {
+                @include o-button-style-rule('fill', $type) {
                     @include o-button-variant-var($-name, $-btn-color, $-border-color);
                 }
-                .btn-outline-#{$type} {
+                @include o-button-style-rule('outline', $type) {
                     @include o-button-outline-variant-var('#{$-name}-outline', if($-btn, $-btn-color, increase-contrast($-border-color, $-bg-color)));
                 }
             }

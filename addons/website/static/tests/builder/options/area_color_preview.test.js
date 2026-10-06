@@ -25,9 +25,9 @@ function mockThemeRpcs() {
 }
 
 // A page breadcrumb as the server renders it: its color preset as a class.
-async function setupBreadcrumb() {
+async function setupBreadcrumb(styleContent = ":root { --breadcrumb: 1; }") {
     await setupWebsiteBuilder("", {
-        styleContent: ":root { --breadcrumb: 1; }",
+        styleContent,
         onIframeLoaded: (iframe) => {
             const doc = iframe.contentDocument;
             const main = doc.createElement("main");
@@ -78,4 +78,23 @@ test("an area's custom color and gradient switch their rules on", async () => {
     expect(gates()).toInclude("breadcrumb-gradient");
     expect(gates()).not.toInclude("breadcrumb-custom");
     expect.verifySteps([]);
+});
+
+test("resetting a saved area color previews it unset", async () => {
+    mockThemeRpcs();
+    await setupBreadcrumb(":root { --breadcrumb: 1; --breadcrumb-custom: #FF0000; }");
+    const htmlEl = queryFirst(":iframe html");
+    await contains(".o_popover .o_color_picker_reset").click();
+    // Unset, as the compile leaves a null value: not the saved one.
+    expect(htmlEl.style.getPropertyValue("--breadcrumb-custom")).toBe("initial");
+    expect(getComputedStyle(htmlEl).getPropertyValue("--breadcrumb-custom")).toBe("");
+    expect("[data-label='Background Color'] button.o_we_color_preview").not.toHaveAttribute(
+        "style",
+        /255, 0, 0/
+    );
+    await save();
+    expect.verifySteps([
+        `${USER_VALUES} {"breadcrumb-gradient":"NULL"}`,
+        `${PALETTE} {"breadcrumb-custom":"NULL","breadcrumb":"NULL"}`,
+    ]);
 });

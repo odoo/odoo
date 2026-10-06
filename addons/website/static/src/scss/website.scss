@@ -892,11 +892,11 @@ $-btn-font-weight-fallback: $btn-font-weight;
     }
 }
 // The border width of the button styles set to "Outline" (see
-// `o-button-style`).
-@each $color in ('primary', 'secondary') {
+// `o-button-style-gate`).
+@each $color in $o-btn-style-gated-colors {
     $-width: o-website-value('btn-#{$color}-outline-border-width');
     @if $-width {
-        @include o-theme-gate('btn-#{$color}-outline', index($o-btn-outline-defaults, $color) != null) {
+        @include o-button-style-gate($color, 'outline') {
             .btn-#{$color} {
                 border-width: var(--btn-#{$color}-outline-border-width, #{$-width});
             }
@@ -975,16 +975,26 @@ font[class*='bg-'] {
 }
 
 // Buttons
-.btn {
-    &.flat {
-        border: 0;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), 0);
-        &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), 0); }
-        &.btn-sm { @include button-size(.5rem, 1rem, ($font-size-sm * .75), 0); }
-        &.btn-xs { @include button-size(.25rem, .5rem, ($font-size-base * .5), 0); }
+@mixin o-btn-flat() {
+    border: 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    @include button-size(0.75rem, 1.5rem, ($font-size-base * .75), 0);
+    &.btn-lg { @include button-size(1rem, 2rem, ($font-size-lg * .75), 0); }
+    &.btn-sm { @include button-size(.5rem, 1rem, ($font-size-sm * .75), 0); }
+    &.btn-xs { @include button-size(.25rem, .5rem, ($font-size-base * .5), 0); }
+}
+.btn.flat {
+    @include o-btn-flat();
+}
+@each $color in $o-btn-style-gated-colors {
+    @include o-button-style-gate($color, 'flat') {
+        .btn-#{$color} {
+            @include o-btn-flat();
+        }
     }
+}
+.btn {
     &.rounded-circle {
         border-radius: 100px !important;
         @include button-size(0.45rem, 1.35rem, $font-size-base, 30px);
