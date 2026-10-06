@@ -47,7 +47,11 @@ class ProductProduct(models.Model):
         if self._origin and self.sales_count > 0:
             return {'warning': {
                 'title': _("Warning"),
-                'message': _("You cannot change the product's type because it is already used in sales orders.")
+                'message': _(
+                    "You should not change the product type because this product is already"
+                    " used in sales orders. Changing it may affect how the related order lines"
+                    " are delivered."
+                ),
             }}
 
     @api.depends_context('order_id')
