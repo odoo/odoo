@@ -231,7 +231,7 @@ class AccountMove(models.Model):
     # === Statement fields === #
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
-        string="Statement Line",
+        string="Bank Transaction",
         copy=False,
         check_company=True,
         index='btree_not_null',
