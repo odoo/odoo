@@ -801,3 +801,40 @@ export async function closeNotifications() {
     }
     await animationFrame();
 }
+
+export async function clickPricelist(name) {
+    await ensurePane("left");
+    let button = document.querySelector(".o_pricelist_button");
+    if (!button) {
+        await contains(
+            isMobile() ? ".product-screen .mobile-more-button" : ".product-screen .more-btn"
+        ).click();
+        await animationFrame();
+        button = document.querySelector(".o_pricelist_button");
+    }
+    await contains(button).click();
+    await animationFrame();
+    await waitFor(".selection-item");
+    await contains(`.selection-item:contains("${name}")`).click();
+    await animationFrame();
+}
+
+export function createFixedPricelist(store, { id, name, productId, price }) {
+    const pricelist = store.models["product.pricelist"].create({
+        id,
+        name,
+        display_name: `${name} (USD)`,
+        item_ids: [],
+    });
+    const item = store.models["product.pricelist.item"].create({
+        id,
+        pricelist_id: pricelist.id,
+        product_id: store.models["product.product"].get(productId),
+        compute_price: "fixed",
+        fixed_price: price,
+        base: "list_price",
+        min_quantity: 0,
+    });
+    pricelist.item_ids = [item];
+    return pricelist;
+}
