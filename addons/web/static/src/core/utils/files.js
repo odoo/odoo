@@ -6,13 +6,16 @@ import { _t } from "@web/core/l10n/translation";
 export const DEFAULT_MAX_FILE_SIZE = 128 * 1024 * 1024;
 
 /**
+ * @param {Number} fileSize
  * @param {Services["notification"]} notificationService
- * @param {File} file
- * @param {Number} maxUploadSize
+ * @param {Number} [maxUploadSize] default: the upload limit of the server
  * @returns {boolean}
  */
-export function checkFileSize(fileSize, notificationService) {
-    const maxUploadSize = session.max_file_upload_size || DEFAULT_MAX_FILE_SIZE;
+export function checkFileSize(
+    fileSize,
+    notificationService,
+    maxUploadSize = session.max_file_upload_size || DEFAULT_MAX_FILE_SIZE
+) {
     if (fileSize > maxUploadSize) {
         notificationService.add(
             _t(
