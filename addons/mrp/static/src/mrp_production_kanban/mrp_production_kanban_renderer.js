@@ -6,4 +6,5 @@ export class MrpProductionKanbanRenderer extends KanbanRenderer {
         ...KanbanRenderer.components,
         KanbanHeader: MrpProductionKanbanHeader,
     };
+
 }
