@@ -70,6 +70,50 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
         self.assertEqual(current_session.state, 'closed')
 
+    def test_load_archived_product_with_orderline(self):
+        archived_product = self.env['product.product'].create({
+            'name': 'Archived Flow Product',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'active': False,
+        })
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+        order = self.env['pos.order'].create({
+            'config_id': self.pos_config_usd.id,
+            'session_id': session.id,
+            'company_id': self.pos_config_usd.company_id.id,
+            'amount_total': 10.0,
+            'amount_paid': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'lines': [Command.create({
+                'name': 'Line 1',
+                'product_id': archived_product.id,
+                'price_unit': 10.0,
+                'qty': 1,
+                'price_subtotal': 10.0,
+                'price_subtotal_incl': 10.0,
+            })],
+        })
+
+        session_data = session.load_data()
+        self.assertIn(order.lines.id, [line['id'] for line in session_data['pos.order.line']['records']])
+        self.assertIn(archived_product.id, [product['id'] for product in session_data['product.product']['records']])
+        self.assertIn(archived_product.product_tmpl_id.id, [product['id'] for product in session_data['product.template']['records']])
+
+        cached_data = session.load_data({
+            'models': ['product.product', 'product.template'],
+            'records': {
+                'product.product': {str(archived_product.id): int(archived_product.write_date.timestamp())},
+                'product.template': {str(archived_product.product_tmpl_id.id): int(archived_product.product_tmpl_id.write_date.timestamp())},
+            },
+        })
+        self.assertNotIn(archived_product.id, [product['id'] for product in cached_data['product.product']['records']])
+        self.assertNotIn(archived_product.product_tmpl_id.id, [product['id'] for product in cached_data['product.template']['records']])
+        self.assertNotIn(archived_product.id, cached_data['product.product'].get('to_remove', []))
+        self.assertNotIn(archived_product.product_tmpl_id.id, cached_data['product.template'].get('to_remove', []))
+
     def test_refund_multiple_payment_rounding(self):
         """
             This test makes sure that the refund amount always correspond to what
