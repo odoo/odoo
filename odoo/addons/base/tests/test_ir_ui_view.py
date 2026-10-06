@@ -3445,6 +3445,15 @@ class TestViews(ViewCase):
         self.assertInvalid('<form><button special="dummy"/></form>', "Invalid special 'dummy' in button")
         self.assertInvalid(arch % 'base.partner_root', "base.partner_root is of type res.partner, expected a subclass of ir.actions.actions")
 
+    def test_button_api_model(self):
+        # buttons always pass record ids as first argument, so they can't call
+        # @api.model methods (their first argument would be the ids)
+        self.assertInvalid(
+            '<list><field name="name"/><header><button name="get_empty_list_help" type="object" args="[\'\']" display="always"/></header></list>',
+            "get_empty_list_help on res.partner is decorated with @api.model and cannot be called from a button",
+            model='res.partner',
+        )
+
     def test_tree(self):
         arch = """
             <list>
