@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import time
 from html.parser import HTMLParser
 
 import geoip2.errors
@@ -123,3 +124,18 @@ class HtmlTokenizer(HTMLParser):
         tokenizer = cls()
         tokenizer.feed(source_str)
         return tokenizer.tokens
+
+
+def wait_for_http_server_log(log_capturer, *, min_count=1, timeout=.2):
+    for _ in range(5):
+        time.sleep(timeout / 5)
+        matches = [
+            output
+            for output
+            in log_capturer.output
+            if output.split(':', 2)[1] == 'odoo.http.server'
+        ]
+        if len(matches) >= min_count:
+            return
+    e = f"found only {len(matches)}/{min_count} odoo.http.server logs in {timeout} seconds"
+    raise TimeoutError(e)
