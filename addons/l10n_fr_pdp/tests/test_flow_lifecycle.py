@@ -1496,6 +1496,9 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
 
         # The initial reports already reached the administration. Create their RE while the old
         # scopes are still known, then remove both the e-invoice and its cash-accounting payment.
+        # Invalidate the cache to ensure the non-stored pdp_is_sent dependency also triggers the
+        # payment recomputation when it has not been read beforehand.
+        self.env.invalidate_all()
         invoice.peppol_move_state = 'done'
         self.env.flush_all()
         (transaction_flow | payment_flow).invalidate_recordset(['rectificative_flow_ids'])
@@ -1523,6 +1526,17 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         # RE flows are full replacements: neither the e-invoice nor its payment remains in scope.
         self.assertNotIn(invoice, transaction_rectificative._get_moves())
         self.assertNotIn(payment_move, payment_rectificative._get_moves())
+
+        # Reconciliation can recompute these moves after their report types have been cleared.
+        # A second pass must keep the existing RE flows instead of creating flows without a type.
+        invoice._compute_l10n_fr_pdp_flow_10_report_type()
+        payment_move._compute_l10n_fr_pdp_flow_10_report_type()
+        self.env.flush_all()
+        (transaction_flow | payment_flow).invalidate_recordset(['rectificative_flow_ids'])
+        self.assertFalse(invoice.l10n_fr_pdp_flow_10_report_type)
+        self.assertFalse(payment_move.l10n_fr_pdp_flow_10_report_type)
+        self.assertEqual(transaction_flow.rectificative_flow_ids, transaction_rectificative)
+        self.assertEqual(payment_flow.rectificative_flow_ids, payment_rectificative)
 
         # Rectificative flows have no deadline window: the cron must transmit both removals now.
         self._run_send_cron('2025-10-10', identifier='REMOVE-E-INVOICE-FROM-FLOW-10')
