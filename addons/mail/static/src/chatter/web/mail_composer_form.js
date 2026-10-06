@@ -5,6 +5,7 @@ import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
+import { useMailComposerAttachmentsUploader } from "@mail/core/web/mail_composer_attachment_hook";
 
 export class MailComposerFormController extends formView.Controller {
     static props = {
@@ -46,18 +47,22 @@ export class MailComposerFormRenderer extends formView.Renderer {
             return this.props.record.data["attachment_ids"];
         }, true);
 
+        const doUpload = useMailComposerAttachmentsUploader();
         useCustomDropzone(this.root, MailAttachmentDropzone, {
             /** @param {Event} event */
             onDrop: async event => {
                 const resIds = JSON.parse(this.props.record.data.res_ids);
-                const thread = await this.mailStore.Thread.insert({
-                    model: this.props.record.data.model,
-                    id: resIds[0],
-                });
-                for (const file of event.dataTransfer.files) {
-                    const attachment = await this.attachmentUploadService.upload(thread, thread.composer, file);
-                    await this.operations.saveRecord([attachment.id]);
-                }
+                const uploadFile = async () => {
+                    const thread = await this.mailStore.Thread.insert({
+                        model: this.props.record.data.model,
+                        id: resIds[0],
+                    });
+                    for (const file of event.dataTransfer.files) {
+                        const attachment = await this.attachmentUploadService.upload(thread, thread.composer, file);
+                        await this.operations.saveRecord([attachment.id]);
+                    }
+                };
+                await doUpload(uploadFile());
             }
         });
     }
