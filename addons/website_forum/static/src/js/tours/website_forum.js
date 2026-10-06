@@ -4,26 +4,13 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add("question_tour", {
     steps: () => [
         {
-            isActive: ["auto", "#o_wforum_forums_index_list"],
-            trigger: "#o_wforum_forums_index_list a.card:first",
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            isActive: ["manual", "#o_wforum_forums_index_list"],
+            isActive: ["#o_wforum_forums_index_list"],
             trigger: "#o_wforum_forums_index_list a.card:first",
             tooltipPosition: "bottom",
             content: _t("Select a forum to post your question in."),
             run: "click",
         },
         {
-            isActive: ["auto"],
-            trigger: 'a[href$="/ask"]',
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            isActive: ["manual"],
             trigger: 'a[href$="/ask"]',
             tooltipPosition: "left",
             content: _t("Create a new post in this forum by clicking on the button."),
@@ -63,14 +50,6 @@ registry.category("web_tour.tours").add("question_tour", {
             run: "click",
         },
         {
-            isActive: ["auto"],
-            trigger: "button:contains(/^Post/)",
-            content: _t("Click to post your question."),
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            isActive: ["manual"],
             trigger: "button:contains(/^Post/)",
             content: _t("Click to post your question."),
             run: "click",
@@ -97,14 +76,6 @@ registry.category("web_tour.tours").add("question_tour", {
             trigger: `.note-editable p:not(:text(<br>))`,
         },
         {
-            isActive: ["auto"],
-            trigger: 'button:contains("Post Answer")',
-            content: _t("Click to post your answer."),
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            isActive: ["manual"],
             trigger: 'button:contains("Post Answer")',
             content: _t("Click to post your answer."),
             run: "click",
