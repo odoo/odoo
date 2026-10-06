@@ -213,11 +213,128 @@
         </field>
     </record>
 
+    <record id="loyalty_program_view_help" model="ir.ui.view">
+        <field name="name">loyalty.program.view.help</field>
+        <field name="model">loyalty.program</field>
+        <field name="arch" type="xml">
+            <help>
+                <div class="container mt-5 my-lg-auto">
+                    <t t-out="action_help"/>
+                    <div class="o_loyalty_templates row g-2 g-md-3 mx-auto mt-2 justify-content-center"
+                         invisible="context.get('menu_type') == 'gift_ewallet'">
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <a name="create_from_template" type="object" args="['promotion']" role="button"
+                               class="loyalty-template o_loyalty_template_promotion card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                               aria-label="Select Promotional Program template">
+                                <img class="o_image_64_contain mx-auto" src="/loyalty/static/img/promotional_program.svg" alt="Promotional Program"/>
+                                <div class="card-body p-0 text-start text-md-center">
+                                    <h3 class="card-title">Promotional Program</h3>
+                                    <p class="card-text">Automatic promo: 10% off on orders higher than $50</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <a name="create_from_template" type="object" args="['promo_code']" role="button"
+                               class="loyalty-template o_loyalty_template_promo_code card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                               aria-label="Select Promo Code template">
+                                <img class="o_image_64_contain mx-auto" src="/loyalty/static/img/promo_code.svg" alt="Promo Code"/>
+                                <div class="card-body p-0 text-start text-md-center">
+                                    <h3 class="card-title">Promo Code</h3>
+                                    <p class="card-text">Get 10% off on some products, with a code</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <a name="create_from_template" type="object" args="['buy_x_get_y']" role="button"
+                               class="loyalty-template o_loyalty_template_buy_x_get_y card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                               aria-label="Select Buy X Get Y template">
+                                <img class="o_image_64_contain mx-auto" src="/loyalty/static/img/2_plus_1.svg" alt="Buy X Get Y"/>
+                                <div class="card-body p-0 text-start text-md-center">
+                                    <h3 class="card-title">Buy X Get Y</h3>
+                                    <p class="card-text">Buy 2 products and get a third one for free</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <a name="create_from_template" type="object" args="['next_order_coupons']" role="button"
+                               class="loyalty-template o_loyalty_template_next_order_coupons card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                               aria-label="Select Next Order Coupon template">
+                                <img class="o_image_64_contain mx-auto" src="/loyalty/static/img/coupons.svg" alt="Next Order Coupon"/>
+                                <div class="card-body p-0 text-start text-md-center">
+                                    <h3 class="card-title">Next Order Coupon</h3>
+                                    <p class="card-text">Send a coupon after an order, valid for next purchase</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <a name="create_from_template" type="object" args="['loyalty']" role="button"
+                               class="loyalty-template o_loyalty_template_loyalty card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                               aria-label="Select Loyalty Card template">
+                                <img class="o_image_64_contain mx-auto" src="/loyalty/static/img/loyalty_cards.svg" alt="Loyalty Card"/>
+                                <div class="card-body p-0 text-start text-md-center">
+                                    <h3 class="card-title">Loyalty Card</h3>
+                                    <p class="card-text">Win points with each purchase, and claim gifts</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <a name="create_from_template" type="object" args="['coupons']" role="button"
+                               class="loyalty-template o_loyalty_template_coupons card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                               aria-label="Select Coupon template">
+                                <img class="o_image_64_contain mx-auto" src="/loyalty/static/img/coupons.svg" alt="Coupon"/>
+                                <div class="card-body p-0 text-start text-md-center">
+                                    <h3 class="card-title">Coupon</h3>
+                                    <p class="card-text">Generate and share unique coupons with your customers</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <a name="create_from_template" type="object" args="['fidelity']" role="button"
+                               class="loyalty-template o_loyalty_template_fidelity card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                               aria-label="Select Fidelity Card template">
+                                <img class="o_image_64_contain mx-auto" src="/loyalty/static/img/fidelity_cards.svg" alt="Fidelity Card"/>
+                                <div class="card-body p-0 text-start text-md-center">
+                                    <h3 class="card-title">Fidelity Card</h3>
+                                    <p class="card-text">Buy 10 products to get 10$ off on the 11th one</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="o_loyalty_templates row g-2 g-md-3 mx-auto mt-2 justify-content-center"
+                         invisible="context.get('menu_type') != 'gift_ewallet'">
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <a name="create_from_template" type="object" args="['gift_card']" role="button"
+                               class="loyalty-template o_loyalty_template_gift_card card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                               aria-label="Select Gift Card template">
+                                <img class="o_image_64_contain mx-auto" src="/loyalty/static/img/gift_card.svg" alt="Gift Card"/>
+                                <div class="card-body p-0 text-start text-md-center">
+                                    <h3 class="card-title">Gift Card</h3>
+                                    <p class="card-text">Sell gift cards that people can use to buy products.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-12 col-md-4 col-xl-3">
+                            <a name="create_from_template" type="object" args="['ewallet']" role="button"
+                               class="loyalty-template o_loyalty_template_ewallet card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                               aria-label="Select eWallet template">
+                                <img class="o_image_64_contain mx-auto" src="/loyalty/static/img/ewallet.svg" alt="eWallet"/>
+                                <div class="card-body p-0 text-start text-md-center">
+                                    <h3 class="card-title">eWallet</h3>
+                                    <p class="card-text">Add money to your eWallet to pay for future orders.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </help>
+        </field>
+    </record>
+
     <record id="loyalty_program_view_tree" model="ir.ui.view">
         <field name="name">loyalty.program.view.list</field>
         <field name="model">loyalty.program</field>
         <field name="arch" type="xml">
-            <list js_class="loyalty_program_list_view">
+            <list class="o_loyalty_program_list" help_id="%(loyalty.loyalty_program_view_help)d">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="program_type"/>

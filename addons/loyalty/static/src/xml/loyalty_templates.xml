@@ -1,34 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <t t-name="loyalty.LoyaltyListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
-        <ActionHelper position="replace">
-            <t t-if="this.showNoContentHelper">
-                <LoyaltyActionHelper noContentHelp="this.props.noContentHelp"/>
-            </t>
-        </ActionHelper>
-    </t>
-
-    <t t-name="loyalty.LoyaltyActionHelper">
-        <div class="o_view_nocontent">
-            <div class="o_nocontent_help container mt-5 my-lg-auto">
-                <t t-out="this.props.noContentHelp"/>
-                <div class="row g-2 g-md-3 mx-auto mt-2 justify-content-center">
-                    <div class="col-12 col-md-4 col-xl-3" t-foreach="Object.entries(this.loyaltyTemplateData)" t-as="data" t-key="data[0]">
-                        <t t-set="loyalty_el_icon" t-value="data[1].icon"/>
-                        <t t-set="loyalty_el_title" t-value="data[1].title"/>
-                        <button type="button" class="loyalty-template card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded" t-on-click.stop.prevent="() => this.onTemplateClick(data[0])" t-attf-aria-label="Select {{loyalty_el_title}} template">
-                            <img class="o_image_64_contain mx-auto" t-attf-src="/loyalty/static/img/{{loyalty_el_icon}}.svg" t-attf-alt="{{loyalty_el_title}}"/>
-                            <div class="card-body p-0 text-start text-md-center">
-                                <h3 class="card-title" t-out="loyalty_el_title"/>
-                                <p class="card-text" t-out="data[1].description"/>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </t>
-
     <t t-name="loyalty.LoyaltyX2ManyField" t-inherit-mode="primary" t-inherit="web.X2ManyField">
         <t t-if="this.displayControlPanelButtons" position="replace">
             <h4 t-out="this.field.string or ''"/>
