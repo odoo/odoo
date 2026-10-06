@@ -9,10 +9,10 @@ import {
     onWillUnmount,
     useProps,
     signal,
-    status,
     proxy,
     t,
     useEffect,
+    useScope,
 } from "@odoo/owl";
 import { LazyComponent } from "@web/core/lazy_component";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -54,6 +54,8 @@ export class MassMailingIframe extends Component {
     sidebarRef = signal.ref();
     iframeRef = useProps.static("iframeRef", t.signal(t.ref()));
     iframeWrapperRef = useProps.static("iframeWrapperRef", t.signal(t.ref()));
+
+    scope = useScope();
 
     setup() {
         this.ui = useService("ui");
@@ -168,7 +170,7 @@ export class MassMailingIframe extends Component {
             }
         };
         this.throttledResize = useThrottleForAnimation(() => {
-            if (status(this) === "destroyed") {
+            if (this.scope.isDestroyed()) {
                 return;
             }
             iframeResize();
@@ -177,7 +179,7 @@ export class MassMailingIframe extends Component {
         useLayoutEffect(
             () => {
                 this.iframeLoaded.promise.then(() => {
-                    if (status(this) === "destroyed") {
+                    if (this.scope.isDestroyed()) {
                         return;
                     }
                     this.iframeRef().contentDocument.body.classList[
@@ -192,7 +194,7 @@ export class MassMailingIframe extends Component {
         useLayoutEffect(
             () => {
                 this.iframeLoaded.promise.then(() => {
-                    if (status(this) === "destroyed") {
+                    if (this.scope.isDestroyed()) {
                         return;
                     }
                     this.iframeRef().contentDocument.body.classList[
@@ -228,7 +230,7 @@ export class MassMailingIframe extends Component {
         } catch (error) {
             loadingError = error;
         }
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return;
         } else if (loadingError) {
             throw loadingError;
@@ -286,7 +288,7 @@ export class MassMailingIframe extends Component {
 
     async setupBasicEditor() {
         await this.iframeLoaded.promise;
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return;
         }
         this.editor.config.localOverlayContainers = {

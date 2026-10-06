@@ -9,7 +9,6 @@ import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
 import {
     signal,
-    status,
     t,
     toRaw,
     useEffect,
@@ -103,7 +102,7 @@ export class MassMailingHtmlField extends HtmlField {
 
         let currentKey = this.state.key;
         useEffect(() => {
-            if (status(this) === "destroyed") {
+            if (this.scope.isDestroyed()) {
                 return;
             }
             if (this.state.key !== currentKey) {
@@ -449,7 +448,7 @@ export class MassMailingHtmlField extends HtmlField {
                 preProcessCallbacks: [this.preprocessFilterDomains.bind(this)],
             });
         } catch (error) {
-            if (status(this) !== "destroyed") {
+            if (!this.scope.isDestroyed()) {
                 throw error;
             }
             inlineValue = null;

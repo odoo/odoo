@@ -1,10 +1,12 @@
-import { Component, signal, status, t, useEffect, useListener, useProps } from "@odoo/owl";
+import { Component, signal, t, useEffect, useListener, useProps, useScope } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallParticipantVideo extends Component {
     static template = "discuss.CallParticipantVideo";
 
     root = signal.ref();
+
+    scope = useScope();
 
     setup() {
         super.setup();
@@ -38,7 +40,7 @@ export class CallParticipantVideo extends Component {
             await this.root()?.play?.();
             this.props.session.videoError = undefined;
         } catch (error) {
-            if (status(this) === "destroyed") {
+            if (this.scope.isDestroyed()) {
                 return;
             }
             this.props.session.videoError = error.name;

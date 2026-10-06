@@ -19,10 +19,10 @@ import {
     onWillDestroy,
     proxy,
     signal,
-    status,
     types,
     useOnChange,
     useProps,
+    useScope,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -34,6 +34,8 @@ export class CallPreview extends Component {
 
     audioRef = signal.ref();
     videoRef = signal.ref();
+
+    scope = useScope();
 
     setup() {
         this.ancestors = useAncestors();
@@ -272,7 +274,7 @@ export class CallPreview extends Component {
         this.state.audioStream = await navigator.mediaDevices.getUserMedia({
             audio: this.store.settings.audioConstraints,
         });
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             closeStream(this.state.audioStream);
             return;
         }
@@ -317,7 +319,7 @@ export class CallPreview extends Component {
         this.state.videoStream = await navigator.mediaDevices.getUserMedia({
             video: this.store.settings.cameraConstraints,
         });
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             closeStream(this.state.videoStream);
             return;
         }

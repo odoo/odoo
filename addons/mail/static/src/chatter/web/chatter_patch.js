@@ -14,7 +14,7 @@ import { FollowerList } from "@mail/core/web/follower_list";
 import { groupAttachments } from "@mail/utils/common/attachments";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 
-import { status, t, untrack, useEffect, useOnChange, useProps } from "@odoo/owl";
+import { t, untrack, useEffect, useOnChange, useProps, useScope } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -56,6 +56,7 @@ Object.assign(Chatter.components, {
 const chatterPatch = {
     setup() {
         super.setup(...arguments);
+        this.scope = useScope();
         // bind once so the references stay stable across renders
         this.onActivityChanged = this.onActivityChanged.bind(this);
         this.reloadParentView = this.reloadParentView.bind(this);
@@ -201,7 +202,7 @@ const chatterPatch = {
                 email = value;
             }
         }
-        if ((!partnerIds.length && !email) || mode !== "message" || status(this) === "destroyed") {
+        if ((!partnerIds.length && !email) || mode !== "message" || this.scope.isDestroyed()) {
             return;
         }
         const recipients = await this.keepLastSuggestedRecipientsUpdate.add(
@@ -212,7 +213,7 @@ const chatterPatch = {
                 main_email: email,
             })
         );
-        if (status(this) === "destroyed" && !this.state.thread) {
+        if (this.scope.isDestroyed() && !this.state.thread) {
             return;
         }
         this.state.thread.suggestedRecipients = recipients.map((result) => ({
@@ -494,7 +495,7 @@ const chatterPatch = {
     },
 
     async reloadParentView() {
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return;
         }
         if (this.webChatterProps.saveRecord && !(await this.webChatterProps.saveRecord())) {

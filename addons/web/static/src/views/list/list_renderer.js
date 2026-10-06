@@ -37,11 +37,11 @@ import {
     onWillUnmount,
     proxy,
     signal,
-    status,
     t,
     useListener,
     usePlugin,
     useProps,
+    useScope,
 } from "@odoo/owl";
 import { getCurrencyRates } from "@web/core/currency";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
@@ -187,6 +187,8 @@ export class ListRenderer extends Component {
     optionalActiveFields = proxy(this.props.optionalActiveFields || {});
 
     debugMode = usePlugin(DebugModePlugin);
+
+    scope = useScope();
 
     setup() {
         this.uiService = useService("ui");
@@ -384,7 +386,7 @@ export class ListRenderer extends Component {
             // HACK: we need to wait for the next tick to be sure that the Field components are patched.
             // OWL don't wait the patch for the children components if the children trigger a patch by himself.
             await Promise.resolve();
-            if (status(this) === "destroyed") {
+            if (this.scope.isDestroyed()) {
                 return;
             }
             if (this.activeElement !== this.uiService.activeElement) {

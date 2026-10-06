@@ -12,9 +12,9 @@ import {
     onWillUnmount,
     proxy,
     signal,
-    status,
     t,
     useProps,
+    useScope,
 } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
@@ -35,6 +35,8 @@ export class BarcodeVideoScanner extends Component {
         delayBetweenScan: t.number().optional(),
     });
     videoPreviewRef = signal.ref();
+
+    scope = useScope();
 
     /**
      * @override
@@ -137,7 +139,7 @@ export class BarcodeVideoScanner extends Component {
         // FIXME: even if it shouldn't happened, a timeout could be useful here.
         while (!isVideoElementReady(this.videoPreviewRef())) {
             await delay(10);
-            if (status(this) === "destroyed") {
+            if (this.scope.isDestroyed()) {
                 return false;
             }
         }

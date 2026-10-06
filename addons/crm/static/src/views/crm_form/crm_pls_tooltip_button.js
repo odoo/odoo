@@ -1,4 +1,4 @@
-import { Component, status, t, useProps } from "@odoo/owl";
+import { Component, t, useProps, useScope } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from '@web/core/registry';
@@ -24,6 +24,7 @@ export class CrmPlsTooltipButton extends Component {
     static template = "crm.PlsTooltipButton";
 
     props = useProps(standardWidgetProps);
+    scope = useScope();
 
     setup() {
         super.setup();
@@ -43,7 +44,7 @@ export class CrmPlsTooltipButton extends Component {
         } else {
             // Apply pending changes. They may change probability
             await this.props.record.save();
-            if (status(this) === "destroyed" || !this.props.record.resId) {
+            if (this.scope.isDestroyed() || !this.props.record.resId) {
                 return;
             }
 

@@ -4,7 +4,7 @@ import {
     getAllActionsAndOperations,
     useDomState,
 } from "@html_builder/core/utils";
-import { Component, onWillStart, proxy, status, t, useEffect, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useEffect, useProps, useScope } from "@odoo/owl";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { BasicMany2Many } from "./basic_many2many";
@@ -25,6 +25,8 @@ export class ModelMany2Many extends Component {
         recordId: t.number(),
         // currently always allowDelete
     });
+
+    scope = useScope();
 
     setup() {
         this.fields = useService("field");
@@ -61,7 +63,7 @@ export class ModelMany2Many extends Component {
             [props.m2oField]
         );
 
-        if (status(this) === "destroyed") {
+        if (this.scope.isDestroyed()) {
             return;
         }
 
