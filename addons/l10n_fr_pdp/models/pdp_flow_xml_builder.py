@@ -336,10 +336,24 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _invoice_add_referenced_documents(self, invoice, move):
-        invoice['ReferencedDocument'] = [{
+        referenced_documents = [{
             'ID': {'_text': ref_doc.name},
-            'IssueDate': {'_text': self._format_date(ref_doc.date)}
+            'IssueDate': {'_text': self._format_date(ref_doc.invoice_date or ref_doc.date)}
         } for ref_doc in move._l10n_fr_pdp_get_referenced_documents()]
+        if move.move_type in ('out_refund', 'in_refund') and not move.reversed_entry_id:
+            reference_data = move._l10n_fr_pdp_get_credit_note_reference_data()
+            if reference_data['type'] == 'historical':
+                referenced_documents.append({
+                    'ID': {'_text': reference_data['reference']},
+                    'IssueDate': {'_text': self._format_date(reference_data['invoice_previous_date'])},
+                })
+            elif reference_data['type'] == 'global_discount':
+                # Flow 10 maps UBL 262 to 381: the contract and period start become TT-30/TT-31.
+                referenced_documents.append({
+                    'ID': {'_text': reference_data['reference']},
+                    'IssueDate': {'_text': self._format_date(reference_data['period_start'])},
+                })
+        invoice['ReferencedDocument'] = referenced_documents
 
     @api.model
     def _invoice_add_partner_vals(self, invoice, partner, tag):
@@ -386,6 +400,15 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _invoice_add_invoice_period(self, invoice, move, flow):
+        if move.move_type in ('out_refund', 'in_refund') and not move.reversed_entry_id:
+            reference_data = move._l10n_fr_pdp_get_credit_note_reference_data()
+            if reference_data['type'] == 'global_discount':
+                # TT-42/TT-43 describe the discount period, not the reporting period.
+                invoice['InvoicePeriod'] = {
+                    'StartDate': {'_text': self._format_date(reference_data['period_start'])},
+                    'EndDate': {'_text': self._format_date(reference_data['period_end'])},
+                }
+                return
         invoice['InvoicePeriod'] = {
             'StartDate': {'_text': self._format_date(flow.period_start or move.date)},
             'EndDate': {'_text': self._format_date(flow.period_end or move.invoice_date_due or move.date)},
@@ -598,7 +621,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                     for previous_move in sale_line.invoice_lines.move_id:
                         if not previous_move or previous_move == move or previous_move.state != 'posted':
                             continue
-                        refs.append((previous_move.name, previous_move.date))
+                        refs.append((previous_move.name, previous_move.invoice_date or previous_move.date))
                 if refs:
                     ref_id, ref_date = sorted(refs, key=lambda vals: (vals[1] or fields.Date.today(), vals[0]))[0]
                     res['ReferencedDocument'] = {
