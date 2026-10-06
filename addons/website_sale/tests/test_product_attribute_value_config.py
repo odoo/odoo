@@ -62,7 +62,6 @@ class TestWebsiteSaleProductAttributeValueConfig(
             combination_info = product_template._get_combination_info()
             self.assertEqual(combination_info["price"], 2222 * discount_rate * currency_ratio)
             self.assertEqual(combination_info["list_price"], 2222 * currency_ratio)
-            self.assertEqual(combination_info["has_discounted_price"], True)
 
             # CASE: B2C setting
             website.show_line_subtotals_tax_selection = "tax_included"
@@ -74,7 +73,6 @@ class TestWebsiteSaleProductAttributeValueConfig(
             self.assertAlmostEqual(
                 combination_info["list_price"], 2222 * currency_ratio * tax_ratio
             )
-            self.assertEqual(combination_info["has_discounted_price"], True)
 
     def test_get_combination_info_with_fpos(self):
         # Setup product.

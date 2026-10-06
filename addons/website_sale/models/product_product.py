@@ -149,15 +149,6 @@ class ProductProduct(models.Model):
             extra_images = first_image + (extra_images - first_image)
         return extra_images or self
 
-    def _get_combination_info_variant(self, **kwargs):
-        """Return the variant info based on its combination.
-        See `_get_combination_info` for more information.
-        """
-        self.ensure_one()
-        return self.product_tmpl_id._get_combination_info(
-            combination=self.product_template_attribute_value_ids, product_id=self.id, **kwargs
-        )
-
     def _website_show_quick_add(self):
         self.ensure_one()
         return self.product_tmpl_id._website_show_quick_add(self)

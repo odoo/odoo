@@ -86,9 +86,9 @@ class SlideChannel(models.Model):
         product = self.product_id
         if not product:
             return None
-        product_info = product._get_combination_info_variant()
+        price_info = product._get_default_price_info()
         return {
             '@type': 'Offer',
-            'price': product_info.get('price', 0),
-            'priceCurrency': product.currency_id.name,
+            'price': price_info.get('price', 0),
+            'priceCurrency': price_info.get('currency', product.currency_id).name,
         }
