@@ -7,6 +7,7 @@ import { loadJS } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
 import { CropOverlay } from "./crop_overlay";
 import { Component, onMounted, onWillStart, onWillUnmount, status } from "@odoo/owl";
+import { isIOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 
@@ -85,6 +86,15 @@ export class BarcodeVideoScanner extends Component {
                 const errorMessage = _t("Barcode Video Scanner could not be mounted properly.");
                 this.props.onError(new Error(errorMessage));
                 return;
+            }
+            if (isIOS()) {
+                // Since iOS 27, WebKit doesn't paint a MediaStream in a <video> created by
+                // cloning a <template> (which is how Owl renders blocks): re-import the node
+                // into the main document. See https://bugs.webkit.org/show_bug.cgi?id=320979
+                // TODO: remove once the WebKit fix is shipped.
+                const videoEl = document.importNode(this.videoPreviewRef.el);
+                this.videoPreviewRef.el.replaceWith(videoEl);
+                this.videoPreviewRef = { el: videoEl };
             }
             this.videoPreviewRef.el.srcObject = this.stream;
             const ready = await this.isVideoReady();
