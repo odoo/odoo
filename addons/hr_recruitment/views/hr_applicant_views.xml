@@ -61,59 +61,6 @@
         </field>
     </record>
 
-    <record id="crm_case_tree_view_inherit_hr_recruitment_skills" model="ir.ui.view">
-        <field name="name">hr.applicant.view.tree.inherit.skills</field>
-        <field name="model">hr.applicant</field>
-        <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job"/>
-        <field name="mode">primary</field>
-        <field name="arch" type="xml">
-            <xpath expr="//list" position="attributes">
-                <attribute name="class" add="o_search_matching_applicant" separator=" "/>
-                <attribute name="default_order">sequence</attribute>
-            </xpath>
-            <xpath expr="//list" position="inside">
-                <header>
-                    <button name="action_add_to_job" string="Move to this Job Position" type="object" class="btn-secondary"/>
-                </header>
-            </xpath>
-            <field name="application_status" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </field>
-            <field name="create_date" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </field>
-            <field name="job_id" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </field>
-            <field name="stage_id" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </field>
-            <field name="email_from" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </field>
-            <field name="priority" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </field>
-            <field name="partner_phone" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </field>
-            <field name="categ_ids" position="attributes">
-                <attribute name="optional">hide</attribute>
-            </field>
-            <field name="kanban_state" position="attributes">
-                <attribute name="optional">show</attribute>
-            </field>
-            <field name="partner_name" position="after">
-                <xpath expr="//field[@name='matching_score']" position="move"/>
-                <field name="matching_skill_ids" widget="many2many_tags"/>
-                <field name="missing_skill_ids" widget="many2many_tags"/>
-            </field>
-            <field name="recruiter_id" position="after">
-                <xpath expr="//field[@name='kanban_state']" position="move"/>
-            </field>
-        </field>
-    </record>
-
     <record id="hr_applicant_view_tree_activity" model="ir.ui.view">
         <field name="name">hr.applicant.view.list.activity</field>
         <field name="model">hr.applicant</field>
