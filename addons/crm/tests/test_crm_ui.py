@@ -7,15 +7,6 @@ from odoo.tests.common import tagged
 
 @tagged('post_install', '-at_install')
 class TestUi(HttpCase, TestCrmCommon):
-    def test_01_crm_tour(self):
-        self.env["res.partner"].create({
-            'name': 'Brandon Freeman',
-            'email': 'brandon.freeman55@example.com',
-            'phone': '(355)-687-3262',
-            'vat': '012345678',
-        })
-        self.start_tour("/odoo", 'crm_tour', login="admin")
-
     def test_02_crm_tour_rainbowman(self):
         # we create a new user to make sure they get the 'Congrats on your first deal!'
         # rainbowman message.

@@ -29,37 +29,13 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: ".o_kanban_mobile",
         },
         {
-            isActive: ["auto", "desktop"],
-            trigger: "button.o_list_button_add",
-            content: _t("Build your first quotation right here!"),
-            run: async function ({ anchor, waitFor }) {
-                // sale_management turns this button into a dropdown when
-                // quotation templates exist. Keep this in one step: split
-                // across two steps, the popover closes itself before the
-                // second step's click can land.
-                if (anchor.classList.contains("dropdown")) {
-                    anchor.click();
-                    const newQuotationButton = await waitFor(
-                        "div.o_popover:has(.o_sale_management_template) > button.o-dropdown-item:not(.o_sale_management_template)"
-                    );
-                    newQuotationButton.click();
-                } else {
-                    anchor.click();
-                }
-            },
-        },
-        {
-            isActive: ["manual", "desktop"],
+            isActive: ["desktop"],
             trigger: "button.o_list_button_add",
             content: _t("Build your first quotation right here!"),
             run: "click",
         },
         {
-            isActive: [
-                "manual",
-                "desktop",
-                "div.o_popover:has(.o_sale_management_template)",
-            ],
+            isActive: ["desktop", "div.o_popover:has(.o_sale_management_template)"],
             trigger: "div.o_popover:has(.o_sale_management_template) > button.o-dropdown-item:not(.o_sale_management_template)",
             content: _t("Select New Quotation."),
             run: "click",

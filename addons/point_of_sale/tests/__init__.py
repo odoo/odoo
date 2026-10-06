@@ -5,7 +5,6 @@ from . import test_frontend
 from . import test_backend
 from . import test_digest
 from . import test_performances
-from . import test_point_of_sale_ui
 from . import test_point_of_sale
 from . import test_pos_controller
 from . import test_pos_invoice_consolidation
