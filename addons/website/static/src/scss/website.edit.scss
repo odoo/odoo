@@ -24,3 +24,9 @@ header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
         }
     }
 }
+
+// While theme values are previewed, the page shows them at once rather than
+// animating to them (see `customizeWebsite`'s `setPreviewState`).
+html.o_we_theme_previewing * {
+    transition: none !important;
+}

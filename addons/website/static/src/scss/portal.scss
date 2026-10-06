@@ -14,7 +14,7 @@
 
     @include o-theme-gate('portal-card-border-width') {
         border-style: var(--portal-card-border-style) !important;
-        border-color: o-color('portal-card-border-color') or currentColor !important;
+        border-color: var(--portal-card-border-color, currentColor) !important;
         border-width: var(--portal-card-border-width) !important;
     }
     @include o-theme-gate('portal-card-border-radius') {

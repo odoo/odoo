@@ -24,7 +24,7 @@ function mockThemeRpcs() {
     onRpc("/website/theme_computed_colors", () => ({ values: {}, gates: {} }));
 }
 
-// A page breadcrumb as the server renders it: its color preset as a class.
+// A page breadcrumb (its color preset is compiled in).
 async function setupBreadcrumb(styleContent = ":root { --breadcrumb: 1; }") {
     await setupWebsiteBuilder("", {
         styleContent,
@@ -32,7 +32,7 @@ async function setupBreadcrumb(styleContent = ":root { --breadcrumb: 1; }") {
             const doc = iframe.contentDocument;
             const main = doc.createElement("main");
             main.innerHTML = `<div class="o_page_breadcrumb" data-name="Breadcrumb">
-                <nav class="o_cc1" data-o-cc-area="breadcrumb">Breadcrumb</nav></div>`;
+                <nav>Breadcrumb</nav></div>`;
             doc.querySelector("#wrap").before(main);
         },
     });
@@ -50,7 +50,12 @@ test("an area's color preset is previewed as its class, written on save", async 
     await setupBreadcrumb();
     await contains(".o_popover [data-color='o_cc3']").click();
     expect(":iframe .o_page_breadcrumb nav").toHaveClass("o_cc3");
-    expect(":iframe .o_page_breadcrumb nav").not.toHaveClass("o_cc1");
+    expect(":iframe .o_page_breadcrumb nav").toHaveAttribute("data-o-cc-area", "breadcrumb");
+    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    expect(":iframe .o_page_breadcrumb nav").not.toHaveClass("o_cc3");
+    expect(":iframe .o_page_breadcrumb nav").not.toHaveAttribute("data-o-cc-area");
+    await contains(".o-snippets-top-actions button[data-icon='redo']").click();
+    expect(":iframe .o_page_breadcrumb nav").toHaveClass("o_cc3");
     expect.verifySteps([]);
     await save();
     expect.verifySteps([
@@ -96,5 +101,27 @@ test("resetting a saved area color previews it unset", async () => {
     expect.verifySteps([
         `${USER_VALUES} {"breadcrumb-gradient":"NULL"}`,
         `${PALETTE} {"breadcrumb-custom":"NULL","breadcrumb":"NULL"}`,
+    ]);
+});
+
+test("the portal cards' color preset is previewed as their class", async () => {
+    mockThemeRpcs();
+    await setupWebsiteBuilder("", {
+        styleContent: ":root { --portal-card: 1; }",
+        onIframeLoaded: (iframe) => {
+            const main = iframe.contentDocument.createElement("main");
+            main.innerHTML = `<div class="o_portal_index_card"><a href="#">Card</a></div>`;
+            iframe.contentDocument.querySelector("#wrap").before(main);
+        },
+    });
+    await contains(":iframe .o_portal_index_card > a").click();
+    await contains("[data-label='Background Color'] button.o_we_color_preview").click();
+    await contains(".o_popover [data-color='o_cc4']").click();
+    expect(":iframe .o_portal_index_card > a").toHaveClass("o_cc4");
+    expect(":iframe .o_portal_index_card > a").toHaveAttribute("data-o-cc-area", "portal-card");
+    await save();
+    expect.verifySteps([
+        `${USER_VALUES} {"portal-gradient":"NULL"}`,
+        `${PALETTE} {"portal-card-custom":"NULL","portal-card":"4"}`,
     ]);
 });

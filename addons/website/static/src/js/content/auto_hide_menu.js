@@ -343,7 +343,7 @@ async function autoHideMenu(el, options) {
 /**
  * Auto adapt the header layout so that elements are not wrapped on a new line.
  */
-document.addEventListener("DOMContentLoaded", async () => {
+async function adaptHeaderMenu() {
     const header = document.querySelector("header#top");
     if (header) {
         const topMenu = header.querySelector(".top_menu");
@@ -375,5 +375,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             // menu content...
             autoClose: () => !document.body.classList.contains("editor_enable"),
         });
+    }
+}
+document.addEventListener("DOMContentLoaded", adaptHeaderMenu);
+// The website builder renders the header again to preview a views switch (see
+// `customizeWebsite`'s `updateChrome`): a menu not adapted yet is adapted too.
+document.addEventListener("o_header_rendered", () => {
+    if (document.querySelector("header#top .top_menu")?.classList.contains("o_menu_loading")) {
+        adaptHeaderMenu();
     }
 });

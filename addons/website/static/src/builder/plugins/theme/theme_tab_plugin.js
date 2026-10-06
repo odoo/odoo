@@ -424,12 +424,11 @@ export class PreviewColorPaletteAction extends CustomizeWebsiteVariableAction {
             return;
         }
         customizeWebsite.previewColorPalette(value.replace(/^'(.*)'$/, "$1"));
-        if (isPreviewing) {
-            return;
-        }
         await Promise.allSettled(
             this.getResource("on_website_color_updated_handlers").map((handler) =>
-                handler(["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"])
+                handler(["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"], {
+                    isPreviewing,
+                })
             )
         );
     }

@@ -454,10 +454,9 @@ $--enable-no-overflow-of-text-columns: false !default;
     }
 }
 
-// An area's colors (header, footer...). Its color preset: the server renders
-// it as a class (`o_cc<N>`) on the elements it marks with `data-o-cc-area`
-// (see `website._get_theme_area_classes`), which the builder swaps while
-// previewing; the other elements of the area's selector get it compiled in.
+// An area's colors (header, footer...). Its color preset is compiled in, except
+// for the elements the builder marks with `data-o-cc-area` while it previews
+// the preset: they get it as a class (`o_cc<N>`), like a snippet.
 // Its custom color: a theme gate, compiled even when not set, so that it
 // previews from there.
 @mixin o-area-colors($area, $background: $body-bg) {

@@ -11,7 +11,7 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 
 // The header's shadow per shadow class (`--o-menu-box-shadow` in the SCSS).
-const MENU_BOX_SHADOWS = {
+export const MENU_BOX_SHADOWS = {
     shadow: "var(--box-shadow)",
     "shadow-sm": "var(--box-shadow-sm)",
     "shadow-lg": "var(--box-shadow-lg)",
@@ -60,18 +60,12 @@ export class StyleActionHeaderAction extends StyleAction {
     }
 }
 
-// The color is written right away, until colors are previewed too.
 export class StyleActionHeaderColorAction extends StyleAction {
     static id = "styleActionHeaderColor";
     static dependencies = ["customizeWebsite", "color"];
-    setup() {
-        this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
-    }
-    async apply({ value }) {
-        return this.dependencies.customizeWebsite.customizeWebsiteColors({
-            "menu-border-color": value,
-        });
+    setup() {}
+    apply({ value }) {
+        this.dependencies.customizeWebsite.previewWebsiteColors({ "menu-border-color": value });
     }
 }
 

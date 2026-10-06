@@ -79,7 +79,7 @@
         ]"/>
         <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Content Width" level="1">
             <BuilderButtonGroup applyTo="'#o_main_nav'"
-                    action="this.hasSomeOptions(noPreviewOptionsContentWidth) and 'websiteConfig' or 'previewableWebsiteConfig'">
+                    action="this.hasSomeOptions(noPreviewOptionsContentWidth) and 'previewWebsiteConfig' or 'previewableWebsiteConfig'">
                 <BuilderButton
                     title.translate="Small"
                     iconImg="'/website/static/src/img/snippets_options/content_width_small.svg'"
@@ -105,7 +105,7 @@
         </BuilderRow>
 
         <BuilderRow label.translate="Scroll Effect" t-if="!this.isActiveItem('header_sidebar_opt')" level="1">
-            <BuilderSelect action="'websiteConfig'" className="'o_scroll_effects_selector'">
+            <BuilderSelect action="'previewWebsiteConfig'" className="'o_scroll_effects_selector'">
                 <BuilderSelectItem
                     id="'header_visibility_standard_opt'"
                     label.translate="Standard"
@@ -159,7 +159,7 @@
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Show Disclaimer">
-            <BuilderCheckbox action="'websiteConfig'" actionParam="{ views: ['website.option_header_disclaimer'] }"/>
+            <BuilderCheckbox action="'previewWebsiteConfig'" actionParam="{ views: ['website.option_header_disclaimer'] }"/>
         </BuilderRow>
     </t>
 

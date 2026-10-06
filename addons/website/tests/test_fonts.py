@@ -290,14 +290,22 @@ class TestWebsiteThemeGates(odoo.tests.HttpCase):
             'link-underline-always', 'layout-boxed', 'layout-postcard',
         ])
 
-    def test_area_classes(self):
-        # The header and footer color presets are rendered as classes (the
-        # CSS doesn't compile them in for those elements).
-        classes = self.website.with_context(website_id=self.website.id)._get_theme_area_classes()
-        self.assertEqual((classes['menu'], classes['footer']), ('o_cc1', 'o_cc2'))
-        page = self.url_open('/').text
-        self.assertRegex(page, r'<nav data-name="Navbar"[^>]*class="[^"]* o_cc1 [^"]*" data-o-cc-area="menu"')
-        self.assertRegex(page, r'<footer [^>]*class="[^"]* o_cc2 [^"]*" data-o-cc-area="footer"')
-        self.env['website.assets'].with_context(website_id=self.website.id).make_scss_customization(
-            '/website/static/src/scss/options/colors/user_color_palette.scss', {'menu': '4'})
-        self.assertRegex(self.url_open('/').text, r'<nav data-name="Navbar"[^>]*class="[^"]* o_cc4 [^"]*" data-o-cc-area="menu"')
+
+@odoo.tests.common.tagged('post_install', '-at_install')
+class TestWebsiteThemePreviewViews(odoo.tests.HttpCase):
+    """
+    Tests for `?theme_preview_views`: a page rendered as if some views were
+    toggled, for the builder to preview them before they are saved.
+    """
+
+    def test_preview_views(self):
+        header = '<header id="top"'
+        hide_header = 'theme_preview_views={"website.option_layout_hide_header": true}'
+        # Visitors: the parameter is ignored.
+        self.assertIn(header, self.url_open(f'/?{hide_header}').text)
+        self.authenticate('admin', 'admin')
+        self.assertNotIn(header, self.url_open(f'/?{hide_header}').text)
+        # Nothing written, and the preview isn't cached for the normal render.
+        self.assertFalse(self.env['website'].with_context(website_id=1).is_view_active('website.option_layout_hide_header'))
+        self.assertIn(header, self.url_open('/').text)
+        self.assertIn(header, self.url_open('/?theme_preview_views=nonsense').text)

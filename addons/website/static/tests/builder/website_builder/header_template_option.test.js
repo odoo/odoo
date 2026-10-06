@@ -86,7 +86,9 @@ describe("header width option", () => {
         await setupWebsiteBuilder("", { headerContent });
         await contains(":iframe #wrapwrap > header").click();
         await waitFor("[data-label='Content Width']");
-        expect("[data-label='Content Width'] [data-action-id='websiteConfig']").toHaveCount(3);
+        expect("[data-label='Content Width'] [data-action-id='previewWebsiteConfig']").toHaveCount(
+            3
+        );
         expect(
             "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
         ).toHaveCount(0);
@@ -99,6 +101,8 @@ describe("header width option", () => {
         expect(
             "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
         ).toHaveCount(3);
-        expect("[data-label='Content Width'] [data-action-id='websiteConfig']").toHaveCount(0);
+        expect("[data-label='Content Width'] [data-action-id='previewWebsiteConfig']").toHaveCount(
+            0
+        );
     });
 });

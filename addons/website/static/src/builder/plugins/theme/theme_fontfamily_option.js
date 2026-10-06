@@ -5,6 +5,7 @@ import { BuilderButton } from "@html_builder/core/building_blocks/builder_button
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 import { FONT_VARIABLES_TO_RESET } from "../font/font_plugin";
+import { getParsedWeight } from "./theme_font_weight_option";
 import { useProps, t } from "@odoo/owl";
 
 export class ThemeFontFamilyOption extends BaseOptionComponent {
@@ -63,6 +64,7 @@ function getFamilyVariable(fontVariable) {
 
 export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteVariableAction {
     static id = "previewWebsiteFontFamily";
+    static dependencies = ["customizeWebsite", "themeTab"];
     // Drop the parent's `preview = false` and blocking `withCustomHistory`.
     setup() {}
     /**
@@ -70,7 +72,7 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteVariableActi
      * it renders and its weights are known. A reset previews the font the
      * setting then follows.
      *
-     * @returns {Promise<{ name: string, family: string }>}
+     * @returns {Promise<{ name: string, family: string, weights?: Object[] }>}
      */
     async load({ params: { mainParam: variable }, value }) {
         const customizeWebsite = this.dependencies.customizeWebsite;
@@ -105,7 +107,11 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteVariableActi
                 this.document.head.append(linkEl);
                 await promise;
             }
-            return { name, family: style.getPropertyValue(`--font-family-${i}`) };
+            return {
+                name,
+                family: style.getPropertyValue(`--font-family-${i}`),
+                weights: await this.dependencies.themeTab.getFontWeights(name),
+            };
         }
         return { name, family: "" };
     }
@@ -118,10 +124,23 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteVariableActi
         if (variable !== "font") {
             previewValues[`set-${variable}`] = value ? loadResult.family : "initial";
         }
-        // The weights go back to "Auto", the font's weights may differ.
+        // A weight the new font doesn't have moves to its nearest one. Unknown
+        // weights (e.g. a system font): back to "Auto".
+        const weights = (loadResult.weights || []).map(({ value }) => value);
         for (const weightVariable of FONT_VARIABLES_TO_RESET[variable] || []) {
-            variables[weightVariable] = nullValue;
-            previewValues[weightVariable] = "initial";
+            if (!weights.length) {
+                variables[weightVariable] = nullValue;
+                previewValues[weightVariable] = "initial";
+                continue;
+            }
+            const weight = getParsedWeight(
+                this.dependencies.customizeWebsite.getWebsiteVariableValue(weightVariable)
+            );
+            if (weight && !weights.includes(weight)) {
+                variables[weightVariable] = `${weights.reduce((nearest, candidate) =>
+                    Math.abs(candidate - weight) < Math.abs(nearest - weight) ? candidate : nearest
+                )}`;
+            }
         }
         this.dependencies.customizeWebsite.previewWebsiteVariables(
             variables,

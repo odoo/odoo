@@ -228,13 +228,17 @@ export class BackgroundShapeOptionPlugin extends Plugin {
      *
      * @param {String[]} updatedColorVariables - Updated theme color variables.
      */
-    syncBackgroundShapeColorsWithTheme(updatedColorVariables) {
+    syncBackgroundShapeColorsWithTheme(updatedColorVariables, { isPreviewing = false } = {}) {
         for (const colorVar of updatedColorVariables) {
             if (!colorVar.startsWith("o-color-")) {
                 continue;
             }
             const selector = `[data-oe-shape-data*='"${colorVar}"'] .o_we_shape[style*="background-image"]`;
             this.refreshBgShapes([...this.document.querySelectorAll(selector)]);
+            if (isPreviewing) {
+                // The page's shapes only: the preview's revert restores them.
+                continue;
+            }
             this.config.snippetModel.updateContent("snippet_custom", (snippetContent) => {
                 this.refreshBgShapes([...snippetContent.querySelectorAll(selector)]);
             });

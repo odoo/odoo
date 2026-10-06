@@ -124,12 +124,9 @@ export class SetStylePortalCardAction extends StyleAction {
 export class SetStylePortalCardColorAction extends StyleAction {
     static id = "setStylePortalCardColor";
     static dependencies = ["customizeWebsite", "color"];
-    setup() {
-        this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
-    }
-    async apply({ value }) {
-        return this.dependencies.customizeWebsite.customizeWebsiteColors({
+    setup() {}
+    apply({ value }) {
+        this.dependencies.customizeWebsite.previewWebsiteColors({
             "portal-card-border-color": value,
         });
     }
