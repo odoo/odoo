@@ -842,6 +842,30 @@ test("immediate onChange runs once the write is applied", async () => {
     expect.verifySteps(["General:3"]);
 });
 
+test("an onChange keeps running after its callback writes a dependency", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        count = 0;
+    }).register(localRegistry);
+    const store = await start();
+    const general = store.Thread.insert("General");
+    general.onChange(
+        () => [general.count],
+        (count) => {
+            expect.step(`count:${count}`);
+            if (count > 5) {
+                general.count = 5;
+            }
+        },
+        { immediate: true, initialRun: false }
+    );
+    general.count = 10;
+    expect.verifySteps(["count:10"]);
+    general.count = 7;
+    expect.verifySteps(["count:7"]);
+});
+
 test("attr that are default [] should be isolated per record", async () => {
     // If the default value is stored and reused for all records,
     // this could lead to mistakenly sharing the default value among records
