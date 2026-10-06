@@ -2414,7 +2414,7 @@ class MrpProduction(models.Model):
 
         self.workorder_ids.button_finish()
         for production in self.filtered(lambda p: not p.uom_id.is_zero(p.qty_producing)):
-            production.move_raw_ids.filtered(lambda m: not m.picked).picked = True
+            production.move_raw_ids.filtered(lambda m: not m.picked and not m._should_bypass_set_qty_producing()).picked = True
         productions_not_to_backorder._post_inventory(cancel_backorder=True)
         productions_to_backorder._post_inventory(cancel_backorder=True)
 
