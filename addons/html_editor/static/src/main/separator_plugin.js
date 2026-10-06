@@ -47,6 +47,7 @@ export class SeparatorPlugin extends Plugin {
         clean_for_save_handlers: ({ root }) => {
             this.deselectHR(root);
         },
+        clipboard_content_processors: this.deselectHR.bind(this),
     };
 
     insertSeparator() {
