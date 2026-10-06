@@ -630,7 +630,7 @@ export class ProductPage extends Interaction {
         const pricePerUom = parent.querySelector('.o_base_unit_price')
             ?.querySelector('.oe_currency_value');
         if (pricePerUom) {
-            const hasPrice = isCombinationPossible && combination.base_unit_price !== 0;
+            const hasPrice = this._hasUomPrice(combination);
             pricePerUom.closest('.o_base_unit_price_wrapper').classList.toggle('d-none', !hasPrice);
             if (hasPrice) {
                 pricePerUom.textContent = this._priceToStr(combination.base_unit_price, precision);
@@ -840,6 +840,10 @@ export class ProductPage extends Interaction {
 
             el.dataset.packagingPrice = price;
         });
+    }
+
+    _hasUomPrice(combination) {
+        return !!combination.is_combination_possible && combination.base_unit_price !== 0;
     }
 
     /**
