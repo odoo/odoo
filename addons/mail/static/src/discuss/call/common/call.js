@@ -132,6 +132,7 @@ export class Call extends Component {
             hasOverlay: t.boolean().optional(true),
             isPip: t.boolean().optional(),
         });
+        this.rtc.callViews.use(() => this.isActiveCall);
         /** @type {SurfaceManager<CallSurfaceData>} */
         this.surfaceManager = new SurfaceManager();
         this.geometryRenderer = new GeometryRenderer();

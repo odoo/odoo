@@ -11,7 +11,7 @@
                         </span>
                         <span class="text-truncate small" t-out="this.rtc.channel.displayName"/>
                     </div>
-                    <Dropdown state="this.dropdownState">
+                    <Dropdown state="this.dropdownState" menuRef="this.menuRef">
                         <button class="o-discuss-CallMenu-actionsButton btn border-0 text-body rounded-4 rounded-start-0 m-0 o-pe-0_5" t-att-class="{ 'o-dropdown-open': this.dropdownState.isOpen }" title="Select Actions">
                             <i class="oi o-fs-small" t-att-data-icon="this.icon" t-att-class="this.lastSelfActionAttClass"/>
                             <div class="o-discuss-CallMenu-actionsControl position-relative d-flex align-items-center justify-content-center">

@@ -11,7 +11,7 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream } from "@mail/utils/common/misc";
 
-import { markup, proxy, toRaw, usePlugin } from "@odoo/owl";
+import { markup, proxy, Resource, toRaw, usePlugin } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
@@ -30,6 +30,7 @@ import { MailFullscreenPlugin } from "@mail/core/common/mail_fullscreen";
 import { PttExtensionPlugin } from "@mail/discuss/call/common/ptt_extension_plugin";
 import { PipPlugin } from "@mail/discuss/call/common/pip_plugin";
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/connection_types";
+import { TalkingDetector } from "@mail/discuss/call/common/talking_detector";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -63,6 +64,8 @@ const getSequence = () => sequence++;
  * @property {boolean} [is_deaf]
  * @property {boolean} [raisingHand]
  * @property {boolean} [pip]
+ * @property {boolean} [isTalkWhileMutedSuggestionDisabled]
+ * @property {boolean} [isTalkWhileMutedSuggestionDismissed]
  */
 
 /**
@@ -123,6 +126,7 @@ export const CROSS_TAB_HOST_MESSAGE = {
     UPDATE_REMOTE: "UPDATE_REMOTE", // sent with updated state of the remote rtc sessions of the call
     CLOSE: "CLOSE", // sent when the host ends the call
     PIP_CHANGE: "PIP_CHANGE", // sent when the host changes the pip mode
+    TALK_WHILE_MUTED_SUGGESTION_CHANGE: "TALK_WHILE_MUTED_SUGGESTION_CHANGE", // sent when the host shows or hides the "talk while muted" suggestion
 };
 export const CROSS_TAB_CLIENT_MESSAGE = {
     INIT: "INIT", // sent by a tab to signal its presence and receive a state update
@@ -399,6 +403,14 @@ export class Rtc extends Record {
     isFullscreenHintDismissed = false;
     /** Whether a media permission dialog is currently shown, it already conveys the permission warning. */
     isCallPermissionDialogOpen = false;
+    /** Whether the "talk while muted" suggestion is shown. */
+    showTalkWhileMutedSuggestion = false;
+    /** Whether the "talk while muted" suggestion was dismissed, until the next unmute. */
+    isTalkWhileMutedSuggestionDismissed = false;
+    /** Whether the "talk while muted" suggestion was disabled, until the next call. */
+    isTalkWhileMutedSuggestionDisabled = false;
+    /** Per mounted call view, a function returning whether it shows the call the user is in. */
+    callViews = new Resource();
     /** @type {"granted" | "denied" | "prompt" | undefined} */
     cameraPermission;
     /**
@@ -519,6 +531,11 @@ export class Rtc extends Record {
         return !this.selfSession?.isMute && this.isMicAudioTrackMuted;
     }
 
+    /** Whether a mounted call view shows the call the user is in. */
+    isSelfCallViewOpen = this.computed(() =>
+        this.callViews.items().some((isSelfCall) => isSelfCall())
+    );
+
     /**
      * Warnings take priority over the hint, and it is hidden in PiP since the main
      * window still offers Fullscreen there but has no video to show.
@@ -530,6 +547,7 @@ export class Rtc extends Record {
             this.channel?.isFullscreenPromotable &&
             !this.isPipMode &&
             !this.isCallPermissionDialogOpen &&
+            !this.showTalkWhileMutedSuggestion &&
             !this.showMicrophonePermissionWarning &&
             !this.showMicrophoneSilentWarning
     );
@@ -550,6 +568,26 @@ export class Rtc extends Record {
         this.onEnter(
             () => [this.channel],
             (channel) => () => channel.clearActiveSpeakers()
+        );
+        this.onEnter(
+            () => [this.localSession],
+            (session) => {
+                const talkingDetector = new TalkingDetector(this, session);
+                this.isTalkWhileMutedSuggestionDisabled = false;
+                return () => talkingDetector.stop();
+            }
+        );
+        this.onChange(
+            () => [this.showTalkWhileMutedSuggestion],
+            (showTalkWhileMutedSuggestion) => {
+                if (this.isHost) {
+                    this._postToTabs({
+                        type: CROSS_TAB_HOST_MESSAGE.TALK_WHILE_MUTED_SUGGESTION_CHANGE,
+                        changes: { showTalkWhileMutedSuggestion },
+                    });
+                }
+            },
+            { initialRun: false }
         );
         // the services and the dialog the record holds, assigned when the service starts or
         // when a call runs
@@ -945,6 +983,24 @@ export class Rtc extends Record {
         }
         await this.setDeaf(true);
         this.soundEffects.play("earphone-off");
+    }
+
+    disableTalkWhileMutedSuggestion() {
+        if (this.isRemote) {
+            this._remoteAction({ isTalkWhileMutedSuggestionDisabled: true });
+            return;
+        }
+        this.isTalkWhileMutedSuggestionDisabled = true;
+        this.showTalkWhileMutedSuggestion = false;
+    }
+
+    dismissTalkWhileMutedSuggestion() {
+        if (this.isRemote) {
+            this._remoteAction({ isTalkWhileMutedSuggestionDismissed: true });
+            return;
+        }
+        this.isTalkWhileMutedSuggestionDismissed = true;
+        this.showTalkWhileMutedSuggestion = false;
     }
 
     /**
@@ -1606,6 +1662,13 @@ export class Rtc extends Record {
                 this.isPipMode = changes.isPipMode;
                 return;
             }
+            case CROSS_TAB_HOST_MESSAGE.TALK_WHILE_MUTED_SUGGESTION_CHANGE: {
+                if (this.isHost) {
+                    return;
+                }
+                this.showTalkWhileMutedSuggestion = changes.showTalkWhileMutedSuggestion;
+                return;
+            }
             case CROSS_TAB_HOST_MESSAGE.PING: {
                 this._refreshCrossTabTimeout();
                 return;
@@ -1618,6 +1681,10 @@ export class Rtc extends Record {
                 this._postToTabs({
                     type: CROSS_TAB_HOST_MESSAGE.PIP_CHANGE,
                     changes: { isPipMode: this.isPipMode },
+                });
+                this._postToTabs({
+                    type: CROSS_TAB_HOST_MESSAGE.TALK_WHILE_MUTED_SUGGESTION_CHANGE,
+                    changes: { showTalkWhileMutedSuggestion: this.showTalkWhileMutedSuggestion },
                 });
                 return;
             }
@@ -1679,6 +1746,12 @@ export class Rtc extends Record {
                     } else {
                         this.closePip();
                     }
+                    break;
+                case "isTalkWhileMutedSuggestionDisabled":
+                    this.disableTalkWhileMutedSuggestion();
+                    break;
+                case "isTalkWhileMutedSuggestionDismissed":
+                    this.dismissTalkWhileMutedSuggestion();
                     break;
             }
         }
@@ -2311,6 +2384,7 @@ export class Rtc extends Record {
             screenAudioTrack: undefined,
             screenTrack: undefined,
             serverInfo: undefined,
+            showTalkWhileMutedSuggestion: false,
             updateAndBroadcastDebounce: undefined,
         });
         this.pip?.close();
