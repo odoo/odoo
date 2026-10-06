@@ -613,6 +613,18 @@ class StockMove(models.Model):
         return (self.location_id.usage == 'customer' or (self.location_id.usage == 'transit' and not self.location_id.company_id)) \
            and (self.location_dest_id.usage == 'supplier' or (self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id))
 
+    def _is_return(self):
+        """ A return of a return is a new shipment, so only every other move in a return chain is a return """
+        self.ensure_one()
+        is_return = False
+        seen = set()
+        move = self
+        while move.origin_returned_move_id and move.id not in seen:
+            seen.add(move.id)
+            is_return = not is_return
+            move = move.origin_returned_move_id
+        return is_return
+
     def _is_incoming(self):
         return super()._is_incoming() and not self._is_dropshipped()
 
