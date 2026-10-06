@@ -153,6 +153,7 @@ export class Wysiwyg extends Component {
         this.getColorPickerTemplateService = useService('get_color_picker_template');
         this.notification = useService("notification");
         this.popover = useService("popover");
+        this.userService = useService("user");
         this.busService = this.env.services.bus_service;
 
         const getColorPickedHandler = (colorType) => {
@@ -216,7 +217,8 @@ export class Wysiwyg extends Component {
                 }).flat();
             },
         };
-        onWillStart(() => {
+        onWillStart(async () => {
+            this.isInternalUser = await this.userService.hasGroup("base.group_user");
             this.init();
 
             Object.assign(this.colorPalettesProps.text, colorPaletteCommonOptions, {
@@ -1971,6 +1973,9 @@ export class Wysiwyg extends Component {
         if (!options.snippets) {
             $toolbar.find('#justify, #media-insert').remove();
         }
+        if (!this.isInternalUser) {
+            $toolbar.find('#chatgpt').remove();
+        }
         $toolbar.find('#image-fullscreen').click(() => {
             if (!this.lastMediaClicked?.src) {
                 return;
@@ -2588,7 +2593,9 @@ export class Wysiwyg extends Component {
                     }
                 },
             },
-            {
+        ];
+        if (this.isInternalUser) {
+            commands.push({
                 category: _t('AI Tools'),
                 name: _t('ChatGPT'),
                 description: _t('Generate or transform content with AI.'),
@@ -2596,8 +2603,8 @@ export class Wysiwyg extends Component {
                 priority: 1,
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: async () => this.openChatGPTDialog(),
-            },
-        ];
+            });
+        }
         if (!editorOptions.inlineStyle) {
             commands.push(
                 {
