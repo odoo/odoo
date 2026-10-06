@@ -190,6 +190,49 @@ class AccountPayment(models.Model):
             split_move_counterpart_line = move_id.line_ids.filtered(lambda x: x.amount_currency == -payment_liquidity_line.amount_currency)
             (split_move_counterpart_line + payment_liquidity_line).reconcile()
 
+    def _get_l10n_latam_split_check_lines(self):
+        """ Return the check lines of an own checks payment with a split move. In that case the payment
+        liquidity line is reconciled against the split move, so the payment status must rely on these lines. """
+        self.ensure_one()
+        check_lines = self.l10n_latam_new_check_ids.outstanding_line_id
+        if (
+            self.payment_method_code != 'own_checks'
+            or self.payment_type != 'outbound'
+            or not check_lines
+            or check_lines.move_id == self.move_id
+            or self.journal_id.default_account_id in check_lines.account_id
+        ):
+            return self.env['account.move.line']
+        return check_lines
+
+    def _l10n_latam_are_check_lines_cleared(self, check_lines):
+        return (
+            not any(check_lines.account_id.mapped('reconcile'))
+            or self.company_id.currency_id.is_zero(sum(check_lines.mapped('amount_residual')))
+        )
+
+    @api.depends('l10n_latam_new_check_ids.outstanding_line_id.amount_residual')
+    def _compute_state(self):
+        super()._compute_state()
+        for payment in self.filtered(lambda p: p.state in ('in_process', 'paid')):
+            if check_lines := payment._get_l10n_latam_split_check_lines():
+                state = 'paid' if payment._l10n_latam_are_check_lines_cleared(check_lines) else 'in_process'
+                if (
+                    state == 'in_process' and (
+                        payment.reconciled_invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.reconciled_invoice_ids)
+                        or payment.reconciled_bill_ids and all(bill.payment_state == 'paid' for bill in payment.reconciled_bill_ids)
+                    )
+                ):
+                    state = 'paid'
+                payment.state = state
+
+    @api.depends('l10n_latam_new_check_ids.outstanding_line_id.amount_residual')
+    def _compute_reconciliation_status(self):
+        super()._compute_reconciliation_status()
+        for payment in self.filtered(lambda p: p.outstanding_account_id and p.move_id):
+            if check_lines := payment._get_l10n_latam_split_check_lines():
+                payment.is_matched = payment._l10n_latam_are_check_lines_cleared(check_lines)
+
     def _l10n_latam_check_unlink_split_move(self):
         self.ensure_one()
         for check in self.l10n_latam_new_check_ids:
