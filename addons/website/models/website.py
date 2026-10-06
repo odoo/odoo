@@ -891,6 +891,8 @@ class Website(models.CachedModel):
         self._check_configurator_access()
         website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         website.ensure_one()
+        if website.configurator_done:
+            return website.button_go_website()
         theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
         website.configurator_done = True
         return theme.with_context(website_id=website.id).button_choose_theme()
