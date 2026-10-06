@@ -149,7 +149,6 @@ export const stepUtils = {
     discardForm() {
         return [
             {
-                isActive: ["auto"],
                 content: "discard the form",
                 trigger: ".o_form_button_cancel",
                 run: "click",
@@ -164,7 +163,6 @@ export const stepUtils = {
 
     goToUrl(url) {
         return {
-            isActive: ["auto"],
             content: `Navigate to ${url}`,
             trigger: "body",
             run: `goToUrl ${url}`,

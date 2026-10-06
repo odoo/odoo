@@ -122,7 +122,6 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     run: "fill marc",
 },
 {
-    isActive: ["auto"],
     trigger: ".ui-autocomplete > li > a:not(:has(i.oi))",
     run: "click",
 }, {
