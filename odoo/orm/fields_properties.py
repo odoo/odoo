@@ -111,9 +111,9 @@ class Properties(Field):
             definition_record_field.properties_fields += (self,)
         return super().setup(model)
 
-    def setup_related(self, model):
-        super().setup_related(model)
-        if self.inherited_field and not self.definition:
+    def _setup(self, model):
+        super()._setup(model)
+        if self.related and self.inherited_field and not self.definition:
             self.definition = self.inherited_field.definition
             self._setup_definition_attrs(model)
 

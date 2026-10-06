@@ -47,16 +47,16 @@ class BaseString(Field[str | typing.Literal[False]]):
     def _description_translate(self, env):
         return bool(self.translate)
 
-    def setup_related(self, model):
-        super().setup_related(model)
-        if self.store and self.translate:
-            _logger.warning("Translated stored related field (%s) will not be computed correctly in all languages", self)
+    def _setup(self, model):
+        super()._setup(model)
+        if self.related and self.store and self.translate:
+            self._setup_warning("translated stored related field  will not be computed correctly in all languages")
 
     def get_depends(self, model):
         if self.translate and self.store:
             dep, dep_ctx = super().get_depends(model)
             if dep_ctx:
-                _logger.warning("Translated stored fields (%s) cannot depend on context", self)
+                self._setup_warning("translated stored fields cannot depend on context")
             return dep, ()
         return super().get_depends(model)
 
@@ -523,8 +523,8 @@ class Char(BaseString):
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
-        assert self.size is None or isinstance(self.size, int), \
-            "Char field %s with non-integer size %r" % (self, self.size)
+        if self.size is not None and not isinstance(self.size, int):
+            raise TypeError(f"{self}: non-integer size {self.size!r}")
 
     def _get_attrs(self, model_class, name):
         attrs = super()._get_attrs(model_class, name)

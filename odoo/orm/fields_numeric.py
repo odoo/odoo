@@ -232,17 +232,13 @@ class Monetary(Field[float]):
             None
         )
 
-    def setup_nonrelated(self, model):
-        super().setup_nonrelated(model)
-        assert self.get_currency_field(model) in model._fields, \
-            "Field %s with unknown currency_field %r" % (self, self.get_currency_field(model))
-
-    def setup_related(self, model):
-        super().setup_related(model)
-        if self.inherited:
+    def _setup(self, model):
+        super()._setup(model)
+        if self.related and self.inherited:
             self.currency_field = self.related_field.get_currency_field(model.env[self.related_field.model_name])
-        assert self.get_currency_field(model) in model._fields, \
-            "Field %s with unknown currency_field %r" % (self, self.get_currency_field(model))
+
+        if (cur_field := self.get_currency_field(model)) not in model._fields:
+            raise Exception(f"{self}: unknown currency_field {cur_field!r}")
 
     def convert_to_column_insert(self, value, record, values=None, validate=True):
         # retrieve currency from values or record

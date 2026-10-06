@@ -4284,7 +4284,7 @@ class TestParentStore(TransactionCaseWithUserDemo):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRequiredMany2one(TransactionCase):
 
     def test_explicit_ondelete(self):
@@ -4304,10 +4304,10 @@ class TestRequiredMany2one(TransactionCase):
         self.patch(field, 'ondelete', 'set null')
 
         with self.assertRaises(ValueError):
-            field.setup_nonrelated(Model)
+            field._setup(Model)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRequiredMany2oneTransient(TransactionCase):
 
     def test_explicit_ondelete(self):
@@ -4327,7 +4327,7 @@ class TestRequiredMany2oneTransient(TransactionCase):
         self.patch(field, 'ondelete', 'set null')
 
         with self.assertRaises(ValueError):
-            field.setup_nonrelated(Model)
+            field._setup(Model)
 
 
 @tagged('post_install', '-at_install')
@@ -4362,7 +4362,8 @@ class TestOne2manyInvalidInverse(TransactionCase):
         self.assertEqual(o2m.inverse_name, 'invalid key example')
 
         self.registry.__dict__.pop('field_inverses', None)
-        self.assertFalse(self.registry.field_inverses[o2m])
+        with self.assertWarnsRegex(UserWarning, 'ignoring manual field with invalid inverse name'):
+            self.assertFalse(self.registry.field_inverses[o2m])
 
 
 @tagged('m2oref')
@@ -4811,7 +4812,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestFieldParametersValidation(TransactionCase):
     def test_invalid_parameter(self):
         from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
@@ -4825,13 +4826,8 @@ class TestFieldParametersValidation(TransactionCase):
         add_to_registry(self.registry, Foo)
         self.addCleanup(self.registry.__delitem__, Foo._name)
 
-        with self.assertLogs('odoo.fields', level='WARNING') as cm:
+        with self.assertWarnsRegex(UserWarning, "unknown parameter 'invalid_parameter'"):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
-
-        self.assertTrue(cm.output[0].startswith(
-            "WARNING:odoo.fields:Field test_orm.field_parameter_validation.name: "
-            "unknown parameter 'invalid_parameter'",
-        ))
 
 
 def select(model, *fnames):
