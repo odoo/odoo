@@ -118,7 +118,7 @@ class Binary(Controller):
                 rw_env = api.Environment(rw_cr, env.user.id, request.env.context)
                 try:
                     if filename.endswith('.map'):
-                        _logger.error(".map should have been generated through debug assets, (version %s most likely outdated)", unique)
+                        _logger.warning(".map should have been generated through debug assets, (version %s most likely outdated)", unique)
                         raise request.not_found()
                     bundle_name, rtl, asset_type, autoprefix = rw_env['ir.asset']._parse_bundle_name(filename, debug_assets)
                     css = asset_type == 'css'
