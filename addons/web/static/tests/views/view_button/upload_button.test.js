@@ -20,13 +20,17 @@ import { session } from "@web/session";
 
 class Foo extends models.Model {
     foo = fields.Char();
+    line_ids = fields.One2many({ relation: "line" });
     _records = [
         { id: 1, foo: "yop" },
         { id: 2, foo: "blip" },
     ];
 }
+class Line extends models.Model {
+    name = fields.Char();
+}
 const { ResCompany, ResPartner, ResUsers } = webModels;
-defineModels([Foo, ResCompany, ResPartner, ResUsers]);
+defineModels([Foo, Line, ResCompany, ResPartner, ResUsers]);
 
 /**
  * @param {Object|false|((params: Object) => any)} [result] the action returned
@@ -523,6 +527,39 @@ test.todo("form view: the edits made during the upload are saved", async () => {
     expect.verifySteps(['web_save {"foo":"edited during the upload"}']);
     expect(".o_field_widget[name=foo] input").toHaveValue("edited during the upload");
     expect(".o_form_status_indicator_buttons").not.toBeVisible();
+});
+
+test("form view: an upload button in the header of an x2many saves the parent and calls the comodel", async () => {
+    const uploads = mockFileUpload();
+    onRpc("web_save", () => expect.step("web_save"));
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="foo"/>
+                <field name="line_ids">
+                    <list>
+                        <header>
+                            <button type="upload" name="upload_lines" string="Upload lines"/>
+                        </header>
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+    await contains(".o_field_widget[name=foo] input").edit("new");
+    await contains(".o_field_x2many .o_cp_buttons button[name=upload_lines]").click();
+    await setInputFiles([pdf()]);
+    await animationFrame();
+    expect.verifySteps(["web_save"]);
+    expect(uploads[0].route).toBe("/web/dataset/call_upload/line/upload_lines");
+    expect(uploads[0].res_ids).toBe("[]");
+    expect(JSON.parse(uploads[0].context)).toMatchObject({
+        active_model: "foo",
+        active_id: 1,
+    });
 });
 
 test.tags("desktop");

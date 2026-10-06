@@ -23,7 +23,7 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, computed, t, useProps } from "@odoo/owl";
 
 export const x2ManyFieldProps = {
     ...standardFieldProps,
@@ -43,6 +43,16 @@ export class X2ManyField extends Component {
     static template = "web.X2ManyField";
     static components = { Pager, KanbanRenderer, ListRenderer, ViewButton };
     props = useProps(x2ManyFieldProps);
+    displayUploadButtons = computed(() => this.uploadButtons.length > 0 && !this.props.readonly);
+    uploadRecord = computed(() => {
+        const { list } = this;
+        const parent = this.props.record;
+        return {
+            resModel: list.resModel,
+            context: { ...list.context, active_model: parent.resModel, active_id: parent.resId },
+            evalContext: list.evalContext,
+        };
+    });
 
     setup() {
         this.field = this.props.record.fields[this.props.name];
@@ -57,10 +67,13 @@ export class X2ManyField extends Component {
             : ["o_field_x2many"];
         this.className = computeViewClassName(this.props.viewMode, this.archInfo.xmlDoc, classes);
 
-        const { activeActions, controls } = this.archInfo;
+        const { activeActions, controls, headerButtons } = this.archInfo;
         if (this.props.viewMode === "kanban") {
             this.controls = controls || [];
         }
+        this.uploadButtons = (headerButtons || []).filter(
+            (button) => button.clickParams.type === "upload"
+        );
         const subViewActiveActions = activeActions;
         this.activeActions = useActiveActions({
             crudOptions: Object.assign({}, this.props.crudOptions, {

@@ -3,6 +3,7 @@
 from unittest.mock import patch
 
 from odoo.addons.base.models import ir_attachment
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged, TransactionCase
 
 
@@ -42,3 +43,36 @@ class TestProductDocument(TransactionCase):
             # because computing access for `documents` (a small, known set of ids)
             # fell back to scanning every ir.attachment with a res_model set.
             self.assertEqual(documents.name, "doc.pdf")
+
+    def test_create_from_uploads(self):
+        """ The files of the upload button become documents of the product the view is opened for. """
+        template = self.env["product.template"].create({"name": "Test Product"})
+        attachment = self.env["ir.attachment"].create({"name": "spec.pdf", "raw": b"spec"})
+        self.env["product.document"].with_context(
+            default_res_model="product.template",
+            default_res_id=template.id,
+        ).action_create_from_uploads([attachment.id])
+        self.assertEqual(template.product_document_ids.ir_attachment_id, attachment)
+        self.assertEqual(template.product_document_ids.name, "spec.pdf")
+
+    def test_create_from_uploads_needs_a_writable_record(self):
+        attachment = self.env["ir.attachment"].create({"name": "spec.pdf", "raw": b"spec"})
+        documents = self.env["product.document"]
+        with self.assertRaises(UserError):
+            documents.action_create_from_uploads([attachment.id])
+        with self.assertRaises(UserError):
+            documents.with_context(
+                default_res_model="product.template",
+                default_res_id=0,
+            ).action_create_from_uploads([attachment.id])
+        template = self.env["product.template"].create({"name": "Test Product"})
+        user = self.env["res.users"].create({
+            "name": "Reader",
+            "login": "document_reader",
+            "group_ids": [(6, 0, self.env.ref("base.group_user").ids)],
+        })
+        with self.assertRaises(AccessError):
+            documents.with_user(user).with_context(
+                default_res_model="product.template",
+                default_res_id=template.id,
+            ).action_create_from_uploads([attachment.id])
