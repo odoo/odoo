@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
 import functools
+import json
 import logging
 import unittest
 from zoneinfo import ZoneInfoNotFoundError, ZoneInfo
@@ -233,6 +234,18 @@ class IrHttp(models.AbstractModel):
         ctx = super()._get_editor_context()
         if request.is_frontend_multilang and request.lang == request.env['ir.http']._get_default_lang():
             ctx['edit_translations'] = False
+        # The page as if some views were toggled, for the builder to preview
+        # them before they are saved: `{view key: active}`. Nothing is written.
+        # A tuple of pairs, as context values are part of the template cache
+        # keys (see `website_preview_views` in `ir.qweb`).
+        if (
+            (views := request.httprequest.args.get('theme_preview_views'))
+            and request.env.user.has_group('website.group_website_designer')
+        ):
+            with contextlib.suppress(ValueError, AttributeError):
+                ctx['website_preview_views'] = tuple(sorted(
+                    (str(key), bool(active)) for key, active in json.loads(views).items()
+                ))
         return ctx
 
     @classmethod

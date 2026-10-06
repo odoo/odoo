@@ -18,6 +18,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { CompositeAction } from "@html_builder/core/composite_action_plugin";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 import { loadImage } from "@html_editor/utils/image_processing";
+import { loadBundle } from "@web/core/assets";
 
 /**
  * @typedef { Object } CustomizeWebsiteShared
@@ -26,6 +27,9 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @property { CustomizeWebsitePlugin['previewWebsiteVariables'] } previewWebsiteVariables
  * @property { CustomizeWebsitePlugin['previewWebsiteColors'] } previewWebsiteColors
  * @property { CustomizeWebsitePlugin['previewColorPalette'] } previewColorPalette
+ * @property { CustomizeWebsitePlugin['previewViews'] } previewViews
+ * @property { CustomizeWebsitePlugin['getPendingViews'] } getPendingViews
+ * @property { CustomizeWebsitePlugin['getSCSSColorValue'] } getSCSSColorValue
  * @property { CustomizeWebsitePlugin['hasCustomizedColors'] } hasCustomizedColors
  * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
  * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
@@ -45,7 +49,7 @@ import { loadImage } from "@html_editor/utils/image_processing";
  */
 
 /**
- * @typedef {((colors: string[]) => void)[]} on_website_color_updated_handlers
+ * @typedef {((colors: string[], options?: { isPreviewing?: boolean }) => void)[]} on_website_color_updated_handlers
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
@@ -110,6 +114,7 @@ for (const key of [
 }
 THEME_GATES["header-bg-blur"] = { set: "header-bg-blur", isOn: (value) => value !== "0" };
 THEME_GATES["navbar-font"] = { apart: ["navbar-font", "font"] };
+THEME_GATES["header-text-color"] = { set: "header-text-color" };
 // The button styles: Fill (also under Flat), Outline, Flat.
 for (const which of ["primary", "secondary"]) {
     THEME_GATES[`btn-${which}-fill`] = {
@@ -150,6 +155,21 @@ for (const gradient of [
 ]) {
     THEME_GATES[gradient] = { set: gradient };
 }
+// The elements of each area, as `o-area-colors` gets them in the SCSS: the
+// builder marks them with `data-o-cc-area` while it previews the area's color
+// preset, which they then get as a class (see `updateAreaClasses`).
+const AREA_SELECTORS = {
+    menu: "#wrapwrap > header .navbar-light",
+    "header-sales_one": "#wrapwrap .o_header_sales_one_bot",
+    "header-sales_two": "#wrapwrap .o_header_sales_two_top",
+    "header-sales_three": "#wrapwrap .o_header_sales_three_top",
+    "header-sales_four": "#wrapwrap .o_header_sales_four_bot",
+    footer: ".o_footer",
+    copyright: ".o_footer .o_footer_copyright",
+    breadcrumb: "#wrapwrap > main:not(.o_breadcrumb_overlay) div.o_page_breadcrumb nav",
+    "portal-card": ".o_portal_index_card > a:not(.alert)",
+};
+const PRESET_CLASSES = ["o_cc1", "o_cc2", "o_cc3", "o_cc4", "o_cc5"];
 const COLOR_FILES_URL = "/website/static/src/scss/options/colors/";
 const PALETTE_URL = `${COLOR_FILES_URL}user_color_palette.scss`;
 const THEME_PALETTE_URL = `${COLOR_FILES_URL}user_theme_color_palette.scss`;
@@ -191,17 +211,26 @@ function getColorFallback(name) {
     return fallback ? `var(--${fallback})` : "";
 }
 const THEME_GATES_ATTRIBUTE = "data-o-theme-gates";
+// The pending views and assets, in the preview steps, as if they were files.
+const VIEWS = "views";
+const ASSETS = "assets";
 const NULL_VALUES = ["null", "NULL", "''"];
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"];
+    static dependencies = [
+        ...["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"],
+        ...["dom", "setup_editor_plugin", "builderOptions"],
+    ];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
         "previewWebsiteVariables",
         "previewWebsiteColors",
         "previewColorPalette",
+        "previewViews",
+        "getPendingViews",
+        "getSCSSColorValue",
         "hasCustomizedColors",
         "loadTemplateKey",
         "makeSCSSCusto",
@@ -235,8 +264,11 @@ export class CustomizeWebsitePlugin extends Plugin {
             CustomizeButtonStyleAction,
             PreviewButtonStyleAction,
             PreviewLinkStyleAction,
+            PreviewIconFontAction,
+            PreviewColorVariableAction,
             PreviewAreaColorAction,
             WebsiteConfigAction,
+            PreviewWebsiteConfigAction,
             PreviewableWebsiteConfigAction,
             TemplatePreviewableWebsiteConfigAction,
             SelectTemplateAction,
@@ -253,6 +285,10 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
+        clean_for_save_processors: (root) => {
+            this.cleanAreaClasses(root);
+            return root;
+        },
 
         // Previewed values (see `previewWebsiteVariables`) are history commit
         // data: each step holds the previous and next state to apply.
@@ -310,12 +346,39 @@ export class CustomizeWebsitePlugin extends Plugin {
     };
 
     async onSave() {
-        if (this.viewsToEnableOnSave.size || this.viewsToDisableOnSave.size) {
+        const enable = new Set(this.viewsToEnableOnSave);
+        const disable = new Set(this.viewsToDisableOnSave);
+        const disableAndReset = new Set();
+        for (const [view, pending] of Object.entries(this.pendingViews)) {
+            enable.delete(view);
+            disable.delete(view);
+            if (pending === "reset") {
+                disableAndReset.add(view);
+            } else {
+                (pending ? enable : disable).add(view);
+            }
+        }
+        if (enable.size || disable.size) {
             await rpc("/website/theme_customize_data", {
                 is_view_data: true,
-                enable: [...this.viewsToEnableOnSave],
-                disable: [...this.viewsToDisableOnSave],
+                enable: [...enable],
+                disable: [...disable],
                 reset_view_arch: false,
+            });
+        }
+        if (disableAndReset.size) {
+            await rpc("/website/theme_customize_data", {
+                is_view_data: true,
+                disable: [...disableAndReset],
+                reset_view_arch: true,
+            });
+        }
+        const assets = Object.entries(this.pendingAssets);
+        if (assets.length) {
+            await rpc("/website/theme_customize_data", {
+                is_view_data: false,
+                enable: assets.filter(([, active]) => active).map(([asset]) => asset),
+                disable: assets.filter(([, active]) => !active).map(([asset]) => asset),
             });
         }
         // No bundle reload: the iframe is reloaded after save.
@@ -351,6 +414,17 @@ export class CustomizeWebsitePlugin extends Plugin {
     pendingVariables = {};
     /** @type {Object<string, Object<string, string>>} colors to write on save, by file */
     pendingColors = {};
+    /** @type {Object<string, boolean|"reset">} views to enable or disable on save */
+    pendingViews = {};
+    /** @type {Object<string, boolean>} assets to enable or disable on save */
+    pendingAssets = {};
+    /** @type {Object<string, Promise>} the page's renders, by previewed views */
+    chromeRenders = {};
+    /** @type {Object<string, HTMLElement>} the elements a views switch took out, by render */
+    chromeElements = {};
+    /** The previewed views the page shows (see `updateChrome`). */
+    chromeKey = "{}";
+    chromeRequestId = 0;
     /** Preview steps not committed to the history yet. */
     pendingPreviewSteps = [];
     /** @type {Set<string>} the theme gates of the saved values */
@@ -623,16 +697,27 @@ export class CustomizeWebsitePlugin extends Plugin {
         if (file === USER_VALUES_URL) {
             return this.pendingVariables;
         }
+        if (file === VIEWS) {
+            return this.pendingViews;
+        }
+        if (file === ASSETS) {
+            return this.pendingAssets;
+        }
         return (this.pendingColors[file] ??= {});
     }
     setPreviewState(state) {
         const style = this.document.documentElement.style;
+        this.document.documentElement.classList.add("o_we_theme_previewing");
+        this.endThemePreviewing();
         for (const [name, { pending, inline, file = USER_VALUES_URL }] of Object.entries(state)) {
             const pendingValues = this.getPendingValues(file);
             if (pending === undefined) {
                 delete pendingValues[name];
             } else {
                 pendingValues[name] = pending;
+            }
+            if (file === VIEWS || file === ASSETS) {
+                continue;
             }
             const printedName = PRINTED_NAMES[name] || name;
             if (inline) {
@@ -645,22 +730,174 @@ export class CustomizeWebsitePlugin extends Plugin {
         this.updateAreaClasses();
         this.updatePreviewCopies();
         this.updateComputedColors();
+        this.updateChrome();
+    }
+    /** No transitions while values are previewed (e.g. dragging a color). */
+    endThemePreviewing = debounce(() => {
+        this.document.documentElement.classList.remove("o_we_theme_previewing");
+    }, 300);
+    /**
+     * Previews views switched on or off, written on save: the page shows them
+     * meanwhile (see `updateChrome`).
+     *
+     * @param {Object<string, boolean|"reset">} views by key, whether it is
+     *        active ("reset": disabled, its arch reset on save)
+     * @param {boolean} [areAssets] assets instead (nothing to show: they
+     *        apply after save)
+     */
+    previewViews(views, areAssets = false) {
+        const file = areAssets ? ASSETS : VIEWS;
+        const pendingValues = this.getPendingValues(file);
+        const step = { previous: {}, next: {} };
+        for (const [view, active] of Object.entries(views)) {
+            step.previous[view] = { file, pending: pendingValues[view] };
+            step.next[view] = { file, pending: active };
+        }
+        this.setPreviewState(step.next);
+        this.pendingPreviewSteps.push(step);
     }
     /**
-     * Sets the areas' color preset classes (`o_cc<N>`, rendered by the server
-     * on the elements marked `data-o-cc-area`) to their previewed presets.
-     * Not edits of the page: not recorded.
+     * @returns {Object<string, boolean|"reset">} the views switched on save
+     */
+    getPendingViews() {
+        return { ...this.pendingViews };
+    }
+    /**
+     * Shows the page's header and footer as the server renders them with the
+     * previewed views (`?theme_preview_views`, nothing is written), so that a
+     * views switch needs no reload. The renders are cached by views; the
+     * elements a switch takes out are kept, and come back on undo as they
+     * were (unsaved edits included). Not part of the history: follows the
+     * previewed views.
+     */
+    updateChrome = debounce(this._updateChrome.bind(this), 0);
+    async _updateChrome() {
+        const views = Object.entries(this.pendingViews)
+            .map(([view, pending]) => [view, pending === true])
+            // Unknown saved state: kept, the server knows.
+            .filter(
+                ([view, active]) =>
+                    !(view in this.activeRecords) || active !== this.activeRecords[view]
+            );
+        const key = JSON.stringify(Object.fromEntries(views.sort()));
+        const requestId = ++this.chromeRequestId;
+        if (key === this.chromeKey) {
+            return;
+        }
+        const [from, to] = await Promise.all(
+            [this.chromeKey, key].map((viewsKey) => this.getChromeRender(viewsKey))
+        );
+        if (requestId !== this.chromeRequestId || this.isDestroyed) {
+            return;
+        }
+        const wrapwrapEl = this.document.getElementById("wrapwrap");
+        const mainEl = wrapwrapEl.querySelector(":scope > main");
+        const targetEl = this.dependencies.builderOptions.getTarget();
+        let newTargetEl;
+        this.dependencies.domObserver.ignore(() => {
+            for (const [part, insert] of [
+                ["header#top", (el) => mainEl.before(el)],
+                ["footer#bottom", (el) => mainEl.after(el)],
+            ]) {
+                // Only a part rendered differently is replaced, and the live
+                // element is kept for when that render shows again.
+                const [fromHTML, toHTML] = [from[part]?.outerHTML || "", to[part]?.outerHTML || ""];
+                if (fromHTML === toHTML) {
+                    continue;
+                }
+                const currentEl = wrapwrapEl.querySelector(`:scope > ${part}`);
+                currentEl?.remove();
+                const nextEl =
+                    this.chromeElements[toHTML] ||
+                    (to[part] && this.document.importNode(to[part], true));
+                this.chromeElements[fromHTML] = currentEl;
+                delete this.chromeElements[toHTML];
+                if (currentEl?.contains(targetEl)) {
+                    newTargetEl = nextEl;
+                }
+                if (nextEl) {
+                    insert(nextEl);
+                    this.dependencies.setup_editor_plugin.markSavableAreas(nextEl);
+                    this.dependencies.dom.normalize(nextEl);
+                }
+            }
+            // Some views set classes on the page's root elements.
+            for (const selector of ["html", "body", "#wrapwrap"]) {
+                const [fromClasses, toClasses] = [from.classes[selector], to.classes[selector]];
+                const el = this.document.querySelector(selector);
+                el.classList.remove(...fromClasses.filter((c) => !toClasses.includes(c)));
+                el.classList.add(...toClasses.filter((c) => !fromClasses.includes(c)));
+            }
+        });
+        this.chromeKey = key;
+        if (newTargetEl) {
+            // The options were on the part taken out: on the new one.
+            this.dependencies.builderOptions.updateContainers(newTargetEl);
+        }
+        this.dependencies.edit_interaction.restartInteractions();
+        // The page adapts a new header's menu (see `auto_hide_menu.js`).
+        this.document.dispatchEvent(new Event("o_header_rendered"));
+        this.trigger("on_dom_updated_handlers");
+    }
+    /**
+     * @param {string} key the previewed views, as JSON
+     * @returns {Promise<Object>} the page's header, footer and root classes,
+     *          as rendered with them
+     */
+    getChromeRender(key) {
+        this.chromeRenders[key] ??= (async () => {
+            const { pathname, search } = this.document.defaultView.location;
+            const url = new URL(pathname + search, window.location.origin);
+            url.searchParams.set("theme_preview_views", key);
+            const response = await fetch(url);
+            const doc = new DOMParser().parseFromString(await response.text(), "text/html");
+            const classes = {};
+            for (const selector of ["html", "body", "#wrapwrap"]) {
+                classes[selector] = [...(doc.querySelector(selector)?.classList || [])];
+            }
+            return {
+                "header#top": doc.querySelector("#wrapwrap > header#top"),
+                "footer#bottom": doc.querySelector("#wrapwrap > footer#bottom"),
+                classes,
+            };
+        })();
+        return this.chromeRenders[key];
+    }
+    /**
+     * Previews the areas' color presets (header, footer...): their elements get
+     * the preset as a class, marked `data-o-cc-area` so that the compiled
+     * preset stops applying to them (see `o-area-colors`), while the preset is
+     * previewed (or a palette switch). Not edits of the page: not recorded.
      */
     updateAreaClasses() {
+        const pendingPalette = this.getPendingValues(PALETTE_URL);
+        const isPaletteSwitched = "color-palettes-name" in this.pendingVariables;
         this.dependencies.domObserver.ignore(() => {
-            for (const el of this.document.querySelectorAll("[data-o-cc-area]")) {
-                const preset = this.getWebsiteVariableValue(el.dataset.oCcArea);
-                if (/^[1-5]$/.test(preset)) {
-                    el.classList.remove("o_cc1", "o_cc2", "o_cc3", "o_cc4", "o_cc5");
-                    el.classList.add(`o_cc${preset}`);
+            for (const [area, selector] of Object.entries(AREA_SELECTORS)) {
+                const preset =
+                    (area in pendingPalette || isPaletteSwitched) &&
+                    this.getWebsiteVariableValue(area);
+                for (const el of this.document.querySelectorAll(selector)) {
+                    if (el.dataset.oCcArea) {
+                        el.classList.remove(...PRESET_CLASSES);
+                        delete el.dataset.oCcArea;
+                    }
+                    if (/^[1-5]$/.test(preset)) {
+                        el.classList.add(`o_cc${preset}`);
+                        el.dataset.oCcArea = area;
+                    }
                 }
             }
         });
+    }
+    /**
+     * @param {HTMLElement} root
+     */
+    cleanAreaClasses(root) {
+        for (const el of root.querySelectorAll("[data-o-cc-area]")) {
+            el.classList.remove(...PRESET_CLASSES);
+            delete el.dataset.oCcArea;
+        }
     }
     /**
      * Turns the theme gates of the previewed settings on or off (the others
@@ -974,10 +1211,10 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
 
     getConfigKey(key) {
-        if (key.startsWith("!")) {
-            return !this.activeRecords[key.substring(1)];
-        }
-        return this.activeRecords[key];
+        const view = key.replace(/^!/, "");
+        const pending = this.pendingViews[view] ?? this.pendingAssets[view];
+        const isActive = pending === undefined ? this.activeRecords[view] : pending === true;
+        return key.startsWith("!") ? !isActive : isActive;
     }
 
     withCustomHistory(action) {
@@ -1335,22 +1572,26 @@ export class WebsiteConfigAction extends BuilderAction {
         // step 2: customize vars
         const updateVars =
             !apply && action.params.varsOnClean
-                ? this.dependencies.customizeWebsite.customizeWebsiteVariables(
-                      action.params.varsOnClean,
-                      "null",
-                      apply
-                  )
+                ? this._customizeVariables(action.params.varsOnClean, apply)
                 : action.params.vars
-                ? this.dependencies.customizeWebsite.customizeWebsiteVariables(
-                      action.params.vars,
-                      "null",
-                      !apply
-                  )
+                ? this._customizeVariables(action.params.vars, !apply)
                 : Promise.resolve();
         await Promise.all([updateViews, updateAssets, updateVars]);
         if (this.dependencies.customizeWebsite.isPluginDestroyed()) {
             return true;
         }
+    }
+
+    /**
+     * @param {Object<string, string>} variables
+     * @param {boolean} clean whether to reset them instead
+     */
+    _customizeVariables(variables, clean) {
+        return this.dependencies.customizeWebsite.customizeWebsiteVariables(
+            variables,
+            "null",
+            clean
+        );
     }
 
     async _toggleTheme(action, paramName, apply) {
@@ -1469,6 +1710,36 @@ export class WebsiteConfigAction extends BuilderAction {
             }
         }, 0);
         return def.promise;
+    }
+}
+
+/**
+ * Same as `websiteConfig`, without the reload: the views and the variables
+ * are previewed (see `previewViews`) and written on save.
+ */
+export class PreviewWebsiteConfigAction extends WebsiteConfigAction {
+    static id = "previewWebsiteConfig";
+    // Drop the parent's reload.
+    setup() {}
+    _customizeVariables(variables, clean, previewValues) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            Object.fromEntries(
+                Object.entries(variables).map(([name, value]) => [name, clean ? "" : value ?? ""])
+            ),
+            "null",
+            previewValues
+        );
+    }
+    _customizeThemeData(isViewData, shouldReset, toEnable, toDisable) {
+        this.dependencies.customizeWebsite.previewViews(
+            {
+                ...Object.fromEntries([...toEnable].map((view) => [view, true])),
+                ...Object.fromEntries(
+                    [...toDisable].map((view) => [view, shouldReset ? "reset" : false])
+                ),
+            },
+            !isViewData
+        );
     }
 }
 
@@ -1871,6 +2142,39 @@ export class PreviewAreaColorAction extends CustomizeWebsiteColorAction {
             { [gradientColor]: gradient || nullValue },
             nullValue
         );
+    }
+}
+
+/**
+ * A color saved in the website values (not in a colors file), e.g. the header
+ * text color: the CSS reads it as `--o-<name>`, where a color's name refers to
+ * that color.
+ */
+export class PreviewColorVariableAction extends PreviewWebsiteVariableAction {
+    static id = "previewColorVariable";
+    apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
+        const color = value && this.dependencies.customizeWebsite.getSCSSColorValue(value);
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            { [variable]: color || "" },
+            nullValue,
+            { [`o-${variable}`]: color ? color.replace(/^'(.*)'$/, "var(--$1)") : "initial" }
+        );
+    }
+}
+
+/**
+ * The icons' font: the page only loads the one it uses, so the previewed one
+ * is loaded first.
+ */
+export class PreviewIconFontAction extends PreviewWebsiteVariableAction {
+    static id = "previewIconFont";
+    async load({ value }) {
+        const bundle =
+            {
+                "Material Symbols Rounded": "web.material_symbols_rounded",
+                "Material Symbols Sharp": "web.material_symbols_sharp",
+            }[value] || "web.material_symbols_outlined";
+        await loadBundle(bundle, { targetDoc: this.document, js: false });
     }
 }
 

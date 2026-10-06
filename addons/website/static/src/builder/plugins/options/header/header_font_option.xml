@@ -3,7 +3,7 @@
 
 <t t-name="website.HeaderFontOption">
     <BuilderRow label.translate="Accent Color" tooltip.translate="Apply a light contrast on dropdown buttons">
-        <BuilderSelect action="'websiteConfig'">
+        <BuilderSelect action="'previewWebsiteConfig'">
             <BuilderSelectItem
                 label.translate="Default"
                 actionParam="{views: []}"
@@ -28,15 +28,17 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Format" tooltip.translate="Default Text Size and Color">
-        <BuilderNumberInput
+        <BuilderRange
             action="'previewWebsiteVariable'"
             actionParam="'header-font-size'"
-            default="null" 
-            unit="'px'" 
+            unit="'px'"
             saveUnit="'rem'"
+            min="10"
+            max="32"
+            withNumberInput="true"
         />
-        <BuilderColorPicker 
-            action="'customizeWebsiteVariable'"     
+        <BuilderColorPicker
+            action="'previewColorVariable'"
             actionParam="'header-text-color'"
             enabledTabs="['solid', 'custom']"
         />

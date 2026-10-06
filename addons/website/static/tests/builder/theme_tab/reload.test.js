@@ -1,8 +1,21 @@
 import { expect, queryOne, test, waitFor } from "@odoo/hoot";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { PreviewWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
 defineWebsiteModels();
+
+// An option of the Theme tab that reloads the editor: none does any more,
+// "Show Header" does here, as before it was previewed.
+function patchShowHeaderReload() {
+    patchWithCleanup(PreviewWebsiteConfigAction.prototype, {
+        setup() {
+            this.reload = {};
+            this.preview = false;
+        },
+        _customizeThemeData() {},
+    });
+}
 
 test("reload from 'theme' tab should stay on 'theme'", async () => {
     onRpc("ir.ui.view", "save", () => {
@@ -10,6 +23,7 @@ test("reload from 'theme' tab should stay on 'theme'", async () => {
         return true;
     });
     onRpc("/website/theme_customize_data", () => {});
+    patchShowHeaderReload();
     await setupWebsiteBuilder(`<div class="test">b</div>`);
     queryOne(":iframe .test").dataset.applied = "1";
     expect(":iframe .test").toHaveAttribute("data-applied");
@@ -35,6 +49,7 @@ test("hide invisible element after reload from 'theme' tab should stay on 'theme
         return true;
     });
     onRpc("/website/theme_customize_data", () => {});
+    patchShowHeaderReload();
     await setupWebsiteBuilder(
         `<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element"></div>`
     );

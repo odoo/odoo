@@ -1,6 +1,13 @@
 import { expect, queryFirst, test } from "@odoo/hoot";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
-import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    models,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { assets } from "@web/core/assets";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -374,4 +381,49 @@ test("theme tab: hovering a color previews it, leaving the picker reverts it", a
 
     await save();
     expect.verifySteps([]);
+});
+
+test("theme tab: a font change moves a weight the new font lacks to its nearest", async () => {
+    mockThemeRpcs();
+    await setupWebsiteBuilder(`<h2>H2</h2>`, {
+        loadIframeBundles: true,
+        // The new font only has Regular and Bold.
+        styleContent: `
+            @font-face { font-family: "Inter Tight"; font-weight: 100 900; src: local("Arial"); }
+            @font-face { font-family: "Inter"; font-weight: 400; src: local("Arial"); }
+            @font-face { font-family: "Inter"; font-weight: 700; src: local("Arial"); }`,
+    });
+    await contains("#theme-tab").click();
+    await contains(`${HEADINGS} [data-label='Font Weight'] .o-hb-select-toggle`).click();
+    await contains(`.o-dropdown--menu [data-action-value="300"]`).click();
+    expect(":iframe h2").toHaveStyle({ "font-weight": "300" });
+    await contains(`${HEADINGS} [data-label='Font Family'] .o-hb-select-toggle`).click();
+    await contains(`.o-dropdown--menu [data-action-value="'Inter'"]`).click();
+    expect(":iframe h2").toHaveStyle({ "font-weight": "400" });
+    await save();
+    expect.verifySteps([
+        // The headings' weight picker sets the display weight too.
+        `${USER_VALUES} {"headings-font-weight":"400","display-font-weight":"400","headings-font":"'Inter'"}`,
+    ]);
+});
+
+test("theme tab: the icons' font is loaded, then previewed", async () => {
+    mockThemeRpcs();
+    patchWithCleanup(assets, {
+        loadBundle(bundle) {
+            if (!bundle.startsWith("web.material_symbols")) {
+                return super.loadBundle(...arguments);
+            }
+            expect.step(`load ${bundle}`);
+        },
+    });
+    await setupWebsiteBuilder("");
+    await contains("#theme-tab").click();
+    await contains("[data-label='Icons'] button:contains('Rounded')").click();
+    expect.verifySteps(["load web.material_symbols_rounded"]);
+    expect(websiteRootStyle().getPropertyValue("--icon-font-family")).toBe(
+        "Material Symbols Rounded"
+    );
+    await save();
+    expect.verifySteps([`${USER_VALUES} {"icon-font-family":"Material Symbols Rounded"}`]);
 });

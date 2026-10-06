@@ -11,7 +11,7 @@
             website.template_header_hamburger => Hamburger Icon Position
             website.template_header_sidebar => Sidebar Position
         -->
-        <BuilderButtonGroup action="'websiteConfig'" t-if="this.hasSomeViews(['website.template_header_hamburger', 'website.template_header_sidebar'])">
+        <BuilderButtonGroup action="'previewWebsiteConfig'" t-if="this.hasSomeViews(['website.template_header_hamburger', 'website.template_header_sidebar'])">
             <BuilderButton ltrRtlMapping="'position'"
                 title.translate="Left"
                 icon="'west'"
@@ -28,7 +28,7 @@
                 }"/>
         </BuilderButtonGroup>
 
-        <BuilderSelect action="'websiteConfig'">
+        <BuilderSelect action="'previewWebsiteConfig'">
             <BuilderSelectItem ltrRtlMapping="'align'" actionParam="{ views: this.getAlignmentViews('left') }">
                 <div title="Align Left">
                     <i class="oi oi-fw" data-icon="format_align_left" role="img" aria-hidden="true"/>
@@ -51,7 +51,7 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Mobile Menu">
-        <BuilderButtonGroup action="'websiteConfig'">
+        <BuilderButtonGroup action="'previewWebsiteConfig'">
             <BuilderButton ltrRtlMapping="'position'"
                 title.translate="Left"
                 icon="'west'"
@@ -65,7 +65,7 @@
                 actionParam="{ views: [], vars: { 'hamburger-position-mobile': 'right' } }"/>
         </BuilderButtonGroup>
 
-        <BuilderSelect action="'websiteConfig'">
+        <BuilderSelect action="'previewWebsiteConfig'">
             <BuilderSelectItem ltrRtlMapping="'align'" actionParam="{ views: [] }">
                 <div title="Align Left">
                     <i class="oi oi-fw" data-icon="format_align_left" role="img" aria-hidden="true"/>
@@ -105,7 +105,7 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Link Style" tooltip.translate="Style of menu items">
-        <BuilderSelect action="'websiteConfig'">
+        <BuilderSelect action="'previewWebsiteConfig'">
             <BuilderSelectItem
                 id="'option_header_navbar_links_default'"
                 label.translate="Default"

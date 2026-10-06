@@ -62,7 +62,7 @@ $black: o-color('black') !default;
         }
     }
     // Header and portal cards.
-    @each $key in ('header-font-size', 'menu-border-width', 'menu-border-radius', 'portal-card-border-width', 'portal-card-border-radius') {
+    @each $key in ('header-font-size', 'header-text-color', 'menu-border-width', 'menu-border-radius', 'portal-card-border-width', 'portal-card-border-radius') {
         @if o-website-value($key) {
             $-gates: append($-gates, $key);
         }
@@ -132,14 +132,4 @@ $black: o-color('black') !default;
         $-gates: append($-gates, 'layout-#{$-layout}');
     }
     --o-theme-gates: "#{$-gates}";
-    // The color presets of the areas the templates render as a class (see
-    // `o-area-colors`).
-    $-presets: ();
-    @each $area in ('menu', 'footer', 'breadcrumb') {
-        $-preset: o-related-color($area, $max-recursions: 10);
-        @if type-of($-preset) == 'number' {
-            $-presets: append($-presets, '#{$area}:#{$-preset}');
-        }
-    }
-    --o-theme-area-presets: "#{$-presets}";
 }

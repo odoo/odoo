@@ -14,6 +14,8 @@ export class BorderConfigurator extends BaseOptionComponent {
         action: t.string().optional("styleAction"),
         // The color's action, when it differs.
         colorAction: t.string().optional(),
+        // Sliders for the width and the radius, one value each (no sides).
+        withSliders: t.boolean().optional(false),
         level: t.number().optional(),
     });
 
