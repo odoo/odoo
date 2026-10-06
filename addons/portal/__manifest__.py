@@ -104,6 +104,7 @@ a dependency towards website editing and customization capabilities.""",
             "portal/static/src/chatter/portal/**/*",
             "portal/static/src/chatter/portal_project/**/*",
             ("remove", "mail/static/src/**/*.scss"),
+            ("remove", "mail/static/src/**/*.css"),
         ],
         "portal.assets_chatter_style": [
             ("include", "web._assets_helpers"),

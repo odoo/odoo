@@ -77,7 +77,7 @@
         /*rtl:begin:ignore*/
         left: 100%;
         transform: rotate(-90deg);
-        transform-origin: calc((1em + #{map-get($spacers, 1)} + #{$border-width}) * -1) center;
+        transform-origin: calc((1em + var(--o-bs-spacer-1) + var(--o-bs-border-width)) * -1) center;
         direction: ltr;
         /*rtl:end:ignore*/
         display: var(--CallDebriefMediaControls__volumeRange-display, none);
