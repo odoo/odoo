@@ -6,6 +6,7 @@ import {
     resizeGrid,
     setElementToMaxZindex,
 } from "@html_builder/utils/grid_layout_utils";
+import { getSnippetName } from "@html_builder/utils/utils";
 
 // TODO move them elsewhere.
 export const sizingY = {
@@ -60,6 +61,8 @@ export class BuilderOverlay {
         this.isRtl = isRtl;
 
         this.overlayElement.classList.toggle("o_hover_overlay", isHoverOverlay);
+        this.nameEl = this.overlayElement.querySelector(".o_hb_overlay_name");
+        this.nameEl.textContent = getSnippetName(overlayTarget);
         this.initHandles();
         this.initSizing();
         this.refreshHandles();
@@ -110,6 +113,11 @@ export class BuilderOverlay {
             }px`,
         });
         this.handlesWrapperEl.style.height = `${targetRect.height * iframeScaleY}px`;
+        // Show the name inside the element when there is no room above it.
+        this.overlayElement.classList.toggle(
+            "o_hb_overlay_name_inside",
+            targetRect.top * iframeScaleY < this.nameEl.offsetHeight
+        );
     }
 
     refreshHandles() {

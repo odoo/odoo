@@ -10,7 +10,7 @@ describe.current.tags("desktop");
 
 const dropzone = (hovered = false) => {
     const highlightClass = hovered ? " o_dropzone_highlighted" : "";
-    return `<div class="oe_drop_zone oe_insert${highlightClass}" data-editor-message-default="true" data-editor-message="Drag blocks here"></div>`;
+    return `<div class="oe_drop_zone oe_insert${highlightClass}" data-editor-message-default="true" data-editor-message="Drag blocks here" data-editor-sub-message="Choose a block in the sidebar" data-add-block-message="Add a block"></div>`;
 };
 
 test("wrapper element has the 'Drag blocks here' message", async () => {
