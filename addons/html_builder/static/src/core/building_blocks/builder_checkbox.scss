@@ -1,6 +1,15 @@
 .o-hb-checkbox.form-switch {
     margin-bottom: 0;
 
+    .popover & {
+        --o-hb-form-switch-color-active: #{$o-we-sidebar-content-field-progress-active-color};
+        --o-hb-form-check-input-checked-border-color: #{$o-we-sidebar-content-field-progress-active-color};
+
+        .form-check-input:checked {
+            --form-switch-bg: #{escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#ffffff'/></svg>"))};
+        }
+    }
+
     .form-check-input {
         --form-switch-bg: #{escape-svg($o-hb-form-switch-bg-image)};
 
