@@ -1,13 +1,18 @@
 import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { convertRecordToEvent, getColor } from "@web/views/calendar/utils";
+import {
+    convertRecordToEvent,
+    getColor,
+    getFullCalendarTimeZone,
+    joinClasses,
+} from "@web/views/calendar/utils";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
-import { Component, onMounted, onPatched, signal, t, useProps } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
@@ -29,20 +34,15 @@ export class CalendarYearRenderer extends Component {
     static template = "web.CalendarYearRenderer";
     props = useProps(calendarYearRendererProps);
 
-    setup() {
-        this.months = luxon.Info.months();
-        this.fcs = {};
-        this.fcRefs = {};
-        for (const month of this.months) {
-            this.fcRefs[month] = signal.ref();
-            this.fcs[month] = useFullCalendar(this.fcRefs[month], this.getOptionsForMonth(month));
-        }
-        this.popover = useCalendarPopover(this.constructor.components.Popover);
-        this.rootRef = signal.ref();
-        this.uiService = useService("ui");
+    fcRef = signal.ref();
 
-        onMounted(() => this.updateSize());
-        onPatched(() => this.updateSize());
+    setup() {
+        this.fc = useFullCalendar(
+            this.fcRef,
+            this.props.isDisabled ? this.disabledOptions : this.interactiveOptions
+        );
+        this.popover = useCalendarPopover(this.constructor.components.Popover);
+        this.uiService = useService("ui");
     }
 
     get disabledOptions() {
@@ -63,8 +63,8 @@ export class CalendarYearRenderer extends Component {
             dayMaxEventRows: this.props.model.eventLimit,
             droppable: true,
             editable: this.props.model.canEdit,
-            eventClassNames: this.eventClassNames.bind(this),
-            eventDidMount: this.onEventDidMount.bind(this),
+            backgroundEventClass: (info) => joinClasses(this.eventClassNames(info)),
+            backgroundEventDidMount: this.onEventDidMount.bind(this),
             eventReceive: this.onEventScheduled.bind(this),
             eventResizableFromStart: true,
             longPressDelay: TOUCH_SELECTION_THRESHOLD,
@@ -73,32 +73,36 @@ export class CalendarYearRenderer extends Component {
             selectMirror: true,
             selectable: this.props.model.canCreate,
             unselectAuto: false,
-            windowResize: this.onWindowResize.bind(this),
-            eventContent: this.onEventContent.bind(this),
+            backgroundEventContent: "",
             weekends: this.props.isWeekendVisible,
         };
     }
 
     get options() {
         return {
-            dayHeaderFormat: "EEEEE",
-            dayCellClassNames: this.getDayCellClassNames.bind(this),
+            dayHeaderAlign: "center",
+            dayHeaderFormat: { weekday: "narrow" },
+            dayCellClass: (info) => joinClasses(this.getDayCellClassNames(info)),
             initialDate: this.props.initialDate.toISO(),
-            initialView: "dayGridMonth",
+            initialView: "multiMonthYear",
             direction: localization.direction,
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
             firstDay: this.props.model.firstDayOfWeek,
-            headerToolbar: { start: false, center: "title", end: false },
-            height: "auto",
+            headerToolbar: false,
+            height: "100%",
             locale: luxon.Settings.defaultLocale,
             navLinks: false,
             nowIndicator: true,
             showNonCurrentDates: false,
-            timeZone: luxon.Settings.defaultZone.name,
-            titleFormat: { month: "long", year: "numeric" },
+            timeZone: getFullCalendarTimeZone(),
+            multiMonthMaxColumns: 12,
+            singleMonthMinWidth: 336,
+            singleMonthTitleFormat: { month: "long", year: "numeric" },
             viewDidMount: this.viewDidMount.bind(this),
             weekNumberCalculation: (date) => getLocalYearAndWeek(date).week,
             weekNumbers: false,
+            // the week column replaces the week numbers rendered in the days
+            inlineWeekNumberClass: !this.customOptions.weekNumbersWithinDays && "d-none",
             weekNumberFormat: { week: "numeric" },
             fixedWeekCount: false,
         };
@@ -111,8 +115,8 @@ export class CalendarYearRenderer extends Component {
     }
 
     viewDidMount({ el, view }) {
-        const showWeek = view.calendar.currentData.options.weekNumbers;
-        const weekText = view.calendar.currentData.options.weekText;
+        const showWeek = view.calendar.getOption("weekNumbers");
+        const weekText = view.calendar.getOption("weekTextShort");
         const weekColumn = !this.customOptions.weekNumbersWithinDays;
         if (showWeek && weekColumn) {
             makeWeekColumn({ el, weekText });
@@ -128,16 +132,6 @@ export class CalendarYearRenderer extends Component {
             display: "background",
         };
     }
-    getDateWithMonth(month) {
-        return this.props.initialDate.set({ month: this.months.indexOf(month) + 1 }).toISO();
-    }
-    getOptionsForMonth(month) {
-        const options = this.props.isDisabled ? this.disabledOptions : this.interactiveOptions;
-        return {
-            ...options,
-            initialDate: this.getDateWithMonth(month),
-        };
-    }
     getPopoverProps(date, records) {
         return {
             date,
@@ -149,24 +143,18 @@ export class CalendarYearRenderer extends Component {
         };
     }
     handleDateClick(info) {
-        if (!info.jsEvent || info.jsEvent.defaultPrevented) {
-            // The event might be fired after a touch pointerup without any jsEvent
+        // The event might be fired after a touch pointerup without any jsEvent, or after a touch
+        // taken over by another gesture (e.g. the swiper)
+        if (!info.jsEvent || info.jsEvent.defaultPrevented || info.jsEvent.type === "touchcancel") {
             return;
         }
         this.onDateClick(info);
     }
     openPopover(target, date, records) {
-        this.popover.open(target, this.getPopoverProps(date, records), "o_cw_popover");
+        this.popover.open(target, this.getPopoverProps(date, records), "o_calendar_popover");
     }
     unselect() {
-        for (const fc of Object.values(this.fcs)) {
-            fc().unselect();
-        }
-    }
-    updateSize() {
-        const rootEl = this.rootRef();
-        const height = window.innerHeight - rootEl.getBoundingClientRect().top;
-        rootEl.style.height = `${height}px`;
+        this.fc().unselect();
     }
 
     onDateClick(info) {
@@ -203,9 +191,15 @@ export class CalendarYearRenderer extends Component {
         }
         return [];
     }
-    eventClassNames({ event }) {
+    eventClassNames({ event, isStart, isEnd }) {
         const classesToAdd = [];
         classesToAdd.push("o_event");
+        if (isStart) {
+            classesToAdd.push("o_calendar_event_start");
+        }
+        if (isEnd) {
+            classesToAdd.push("o_calendar_event_end");
+        }
         const record = this.props.model.records[event.id];
         if (record) {
             const color = getColor(record.colorIndex);
@@ -224,16 +218,8 @@ export class CalendarYearRenderer extends Component {
         }
         return classesToAdd;
     }
-    onEventDidMount(info) {
-        const { el, event } = info;
+    onEventDidMount({ el, event }) {
         el.dataset.eventId = event.id;
-        const record = this.props.model.records[event.id];
-        if (record) {
-            const color = getColor(record.colorIndex);
-            if (typeof color === "string") {
-                el.style.backgroundColor = color;
-            }
-        }
     }
     async onEventScheduled(info) {
         const original = info.event;
@@ -251,15 +237,5 @@ export class CalendarYearRenderer extends Component {
             isAllDay: true,
         });
         this.unselect();
-    }
-    onWindowResize() {
-        this.updateSize();
-    }
-
-    onEventContent(info) {
-        // Remove the title on the background event like in FCv4
-        if (info.event.display?.includes("background")) {
-            return null;
-        }
     }
 }

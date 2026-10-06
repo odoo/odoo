@@ -64,7 +64,9 @@ export class CalendarFilterSection extends Component {
     }
 
     getFilterColor(filter) {
-        return filter.colorIndex !== null ? "o_cw_filter_color_" + getColor(filter.colorIndex) : "";
+        return filter.colorIndex !== null
+            ? "o_calendar_filter_color_" + getColor(filter.colorIndex)
+            : "";
     }
 
     getSortedFilters() {

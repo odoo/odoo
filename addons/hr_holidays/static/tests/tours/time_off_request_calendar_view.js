@@ -11,8 +11,19 @@ registry.category("web_tour.tours").add("time_off_request_calendar_view", {
         },
         {
             content: "Click on the first Thursday of the year",
-            trigger: ".fc-daygrid-day.fc-day-thu:not(.fc-day-disabled)",
-            run: "click",
+            trigger: ".o_calendar_day[data-date]",
+            async run({ click }) {
+                let date = luxon.DateTime.local().startOf("year");
+                while (date.weekday !== 4) {
+                    date = date.plus({ days: 1 });
+                }
+                const cell = document.querySelector(
+                    `.o_calendar_day[data-date="${date.toISODate()}"]`
+                );
+                // the year view is scrolled to the current month
+                cell.scrollIntoView({ block: "center" });
+                await click(cell);
+            },
         },
         {
             content: "Save the leave",

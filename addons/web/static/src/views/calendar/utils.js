@@ -5,13 +5,18 @@ export function convertRecordToEvent(record, forceAllDay = false) {
     if (record.isAllDay || (allDay && end.toMillis() !== end.startOf("day").toMillis())) {
         end = end.plus({ days: 1 });
     }
-    return {
+    const event = {
         id: record.id,
         title: record.title,
         start: record.start.toISO(),
         end: end.toISO(),
         allDay,
     };
+    const color = getColor(record.colorIndex);
+    if (typeof color === "string") {
+        event.color = color;
+    }
+    return event;
 }
 
 const CSS_COLOR_REGEX =
@@ -56,4 +61,19 @@ export function getFormattedDateSpan(start, end, options = {}) {
             ? start.toFormat(options.sameDayFormat ?? "DDD")
             : start.toFormat("DDD") + " - " + end.toFormat("DDD");
     }
+}
+
+export function joinClasses(...classes) {
+    return classes.flat().filter(Boolean).join(" ");
+}
+
+/**
+ * FullCalendar resolves the time zones with Temporal, which doesn't know the luxon fixed-offset
+ * zones names (e.g. "UTC+1").
+ *
+ * @returns {string}
+ */
+export function getFullCalendarTimeZone() {
+    const zone = luxon.Settings.defaultZone;
+    return zone.isUniversal ? zone.formatOffset(0, "short") : zone.name;
 }

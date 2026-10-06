@@ -14,7 +14,7 @@ test(`render filter panel`, async () => {
         },
     });
     expect(`.o_calendar_filter`).toHaveCount(1);
-    expect(`.o_calendar_filter .o_cw_filter_label`).toHaveText("Attendees");
+    expect(`.o_calendar_filter .o_calendar_filter_label`).toHaveText("Attendees");
     expect(`.o_calendar_filter .o_calendar_filter_item`).toHaveCount(3);
 });
 
@@ -39,14 +39,14 @@ test(`section can collapse`, async () => {
             section: FAKE_FILTER_SECTIONS[0],
         },
     });
-    expect(`.o_calendar_filter .o_cw_filter_collapse_icon`).toHaveCount(1);
+    expect(`.o_calendar_filter .o_calendar_filter_collapse_icon`).toHaveCount(1);
     expect(`.o_calendar_filter .o_calendar_filter_item`).toHaveCount(3);
 
-    await contains(`.o_calendar_filter .o_cw_filter_label`).click();
+    await contains(`.o_calendar_filter .o_calendar_filter_label`).click();
     await runAllTimers();
     expect(`.o_calendar_filter .o_calendar_filter_item`).toHaveCount(0);
 
-    await contains(`.o_calendar_filter .o_cw_filter_label`).click();
+    await contains(`.o_calendar_filter .o_calendar_filter_label`).click();
     await runAllTimers();
     expect(`.o_calendar_filter .o_calendar_filter_item`).toHaveCount(3);
 });
@@ -58,20 +58,17 @@ test(`filters can have avatar`, async () => {
             section: FAKE_FILTER_SECTIONS[0],
         },
     });
-    expect(`.o_calendar_filter .o_cw_filter_avatar`).toHaveCount(3);
-    expect(`.o_calendar_filter img.o_cw_filter_avatar`).toHaveCount(3);
-    expect(`.o_calendar_filter .o_calendar_filter_item:eq(0) .o_cw_filter_avatar`).toHaveAttribute(
-        "data-src",
-        "/web/image/res.partner/3/avatar_128"
-    );
-    expect(`.o_calendar_filter .o_calendar_filter_item:eq(1) .o_cw_filter_avatar`).toHaveAttribute(
-        "data-src",
-        "/web/image/res.partner/4/avatar_128"
-    );
-    expect(`.o_calendar_filter .o_calendar_filter_item:eq(2) .o_cw_filter_avatar`).toHaveAttribute(
-        "data-src",
-        "/web/image/res.partner/6/avatar_128"
-    );
+    expect(`.o_calendar_filter .o_calendar_filter_avatar`).toHaveCount(3);
+    expect(`.o_calendar_filter img.o_calendar_filter_avatar`).toHaveCount(3);
+    expect(
+        `.o_calendar_filter .o_calendar_filter_item:eq(0) .o_calendar_filter_avatar`
+    ).toHaveAttribute("data-src", "/web/image/res.partner/3/avatar_128");
+    expect(
+        `.o_calendar_filter .o_calendar_filter_item:eq(1) .o_calendar_filter_avatar`
+    ).toHaveAttribute("data-src", "/web/image/res.partner/4/avatar_128");
+    expect(
+        `.o_calendar_filter .o_calendar_filter_item:eq(2) .o_calendar_filter_avatar`
+    ).toHaveAttribute("data-src", "/web/image/res.partner/6/avatar_128");
 });
 
 test(`filters with no avatar`, async () => {
@@ -82,7 +79,7 @@ test(`filters with no avatar`, async () => {
         },
     });
     expect(`.o_calendar_filter .o_calendar_filter_item`).toHaveCount(2);
-    expect(`.o_calendar_filter .o_cw_filter_avatar`).toHaveCount(0);
+    expect(`.o_calendar_filter .o_calendar_filter_avatar`).toHaveCount(0);
 });
 
 test(`filters with placeholder`, async () => {

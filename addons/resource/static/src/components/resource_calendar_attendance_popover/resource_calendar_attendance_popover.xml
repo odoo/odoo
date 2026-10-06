@@ -4,7 +4,7 @@
         <div t-ref="this.popoverRef">
             <Record t-props="this.currentRecordProps" t-slot-scope="currentRecord">
                 <t t-set="record" t-value="currentRecord.record"/>
-                <div class="o_cw_popover card w-auto">
+                <div class="o_calendar_popover card w-auto">
                     <div class="card-header popover-header d-flex align-items-baseline py-1 px-2">
                         <h4 class="m-0 me-auto" t-out="record.data.display_name"/>
                         <span class="cursor-pointer" t-on-click.stop="this.props.close">
