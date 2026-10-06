@@ -15,14 +15,9 @@ export class FileUploadProgressBar extends Component {
     }
 
     onCancel() {
-        if (!this.props.fileUpload.xhr) {
-            return;
-        }
         this.dialogService.add(ConfirmationDialog, {
             body: _t("Do you really want to cancel the upload of %s?", this.props.fileUpload.title),
-            confirm: () => {
-                this.props.fileUpload.xhr.abort();
-            },
+            confirm: () => this.props.fileUpload.abort(),
         });
     }
 }

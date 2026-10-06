@@ -61,6 +61,7 @@ export {
     waitUntilIdle,
 } from "./_framework/component_test_helpers";
 export { contains, defineStyle, editAce, sortableDrag } from "./_framework/dom_test_helpers";
+export { mockUpload } from "./_framework/file_upload_test_helpers";
 export {
     clickKanbanLoadMore,
     clickKanbanRecord,

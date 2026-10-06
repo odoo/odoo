@@ -1046,6 +1046,24 @@ class IrAttachment(models.Model):
         # TODO master: rename to _post_upload, better indicating its usage
         pass
 
+    @api.model
+    def _browse_uploads(self, attachment_ids, mimetypes=()):
+        """ The attachments given to the method of ``<button type="upload"/>``.
+
+        The method is public, so it can be called with any ids: they must be
+        attachments uploaded by the user and not attached to a record yet.
+
+        :param mimetypes: the accepted mimetypes, or their prefixes (``"image/"``)
+        :raise UserError: if an attachment is not an upload of the user, or of
+            a type that is not accepted
+        """
+        attachments = self.browse(attachment_ids)
+        if attachments.filtered(lambda a: a.create_uid != self.env.user or a.res_model or a.res_id):
+            raise UserError(_("Invalid attachments!"))
+        if mimetypes and (invalid := attachments.filtered(lambda a: not (a.mimetype or '').startswith(tuple(mimetypes)))):
+            raise UserError(_("These files have an invalid type: %s", ", ".join(invalid.mapped('name'))))
+        return attachments
+
     def generate_access_token(self):
         tokens = []
         for attachment in self:

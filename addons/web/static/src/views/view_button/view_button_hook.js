@@ -1,5 +1,6 @@
 import { Plugin, providePlugins, useConfig, usePlugin, useScope } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { FileUploadPlugin } from "@web/core/file_upload/file_upload_plugin";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
 import { useEnv } from "@web/owl2/utils";
@@ -79,6 +80,7 @@ export function useViewButtonHandler() {
 export function useViewButtons(ref, options = {}) {
     const action = useService("action");
     const dialog = useService("dialog");
+    const fileUpload = usePlugin(FileUploadPlugin);
     const scope = useScope();
     const env = useEnv();
 
@@ -90,6 +92,14 @@ export function useViewButtons(ref, options = {}) {
         beforeExecute,
         newWindow,
     }) {
+        const actionOptions = { newWindow };
+        if (clickParams.type === "upload") {
+            // before anything else: the browser only opens the file picker during the click
+            actionOptions.files = await fileUpload.pickFiles(clickParams.options);
+            if (!actionOptions.files.length) {
+                return;
+            }
+        }
         async function execute() {
             let _continue = true;
             if (beforeExecute) {
@@ -128,7 +138,7 @@ export function useViewButtons(ref, options = {}) {
             });
             let error;
             try {
-                await action.doActionButton(doActionParams, { newWindow });
+                await action.doActionButton(doActionParams, actionOptions);
             } catch (_e) {
                 error = _e;
             }

@@ -11,14 +11,24 @@ export class MultiRecordViewButton extends ViewButton {
 
     handleViewButton = useViewButtonHandler();
 
+    get uploadParams() {
+        return this.getUploadParams(this.props.list);
+    }
+
     async onClick(ev, newWindow) {
         const { clickParams, list } = this.props;
-        const resIds = await list.getResIds(true);
-        clickParams.buttonContext = {
-            active_domain: this.props.domain,
-            active_ids: resIds,
-            active_model: list.resModel,
-        };
+        // the files are uploaded, not given to the selected records, unless the
+        // button is only shown for a selection (e.g. a bill for the selected orders)
+        const ignoresSelection =
+            clickParams.type === "upload" && this.props.attrs?.display !== "selection";
+        const resIds = ignoresSelection ? [] : await list.getResIds(true);
+        if (!ignoresSelection) {
+            clickParams.buttonContext = {
+                active_domain: this.props.domain,
+                active_ids: resIds,
+                active_model: list.resModel,
+            };
+        }
 
         this.handleViewButton({
             clickParams,

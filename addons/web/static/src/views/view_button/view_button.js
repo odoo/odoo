@@ -1,7 +1,8 @@
-import { Component, t, usePlugin, useProps } from "@odoo/owl";
+import { Component, onMounted, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 import { useViewButtonHandler } from "@web/views/view_button/view_button_hook";
@@ -29,6 +30,12 @@ function iconFromString(iconString) {
     return icon;
 }
 
+/**
+ * The rendered upload buttons (`<button type="upload"/>`) and their component:
+ * a dropzone uploads the dropped files with the params of the button.
+ */
+export const uploadButtons = new WeakMap();
+
 export const viewButtonProps = {
     id: t.any().optional(),
     tag: t.any().optional("button"),
@@ -55,8 +62,12 @@ export class ViewButton extends Component {
 
     debugMode = usePlugin(DebugModePlugin);
     handleViewButton = useViewButtonHandler();
+    root = signal.ref();
 
     setup() {
+        if (this.clickParams.type === "upload") {
+            onMounted(() => uploadButtons.set(this.root(), this));
+        }
         if (this.props.icon) {
             this.icon = iconFromString(this.props.icon);
         }
@@ -135,6 +146,30 @@ export class ViewButton extends Component {
             beforeExecute: () => this.dropdownControl.close(),
             newWindow,
         });
+    }
+
+    /**
+     * The params of an upload button, for a dropzone that uploads the dropped
+     * files as a click would.
+     */
+    get uploadParams() {
+        return this.getUploadParams(this.props.record);
+    }
+
+    getUploadParams({ context, evalContext, resModel, resId } = {}) {
+        const { name, options, context: buttonContext = {} } = this.clickParams;
+        return {
+            method: name,
+            options,
+            resModel,
+            resIds: resId ? [resId] : [],
+            context: {
+                ...context,
+                ...(typeof buttonContext === "string"
+                    ? evaluateExpr(buttonContext, evalContext)
+                    : buttonContext),
+            },
+        };
     }
 
     getClassName() {

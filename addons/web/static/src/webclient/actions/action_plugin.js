@@ -23,6 +23,7 @@ import { useDebugCategory } from "@web/core/debug/debug_context";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
+import { FileUploadPlugin } from "@web/core/file_upload/file_upload_plugin";
 import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc, rpcBus } from "@web/core/network/rpc";
@@ -162,6 +163,7 @@ export class ActionPlugin extends Plugin {
     #bus = usePlugin(GlobalBusPlugin).bus;
     #dialogPlugin = usePlugin(DialogPlugin);
     #effect = usePlugin(EffectPlugin);
+    #fileUpload = usePlugin(FileUploadPlugin);
     #notification = usePlugin(NotificationPlugin);
     #title = usePlugin(TitlePlugin);
     #ui = usePlugin(UIPlugin);
@@ -1648,6 +1650,15 @@ export class ActionPlugin extends Plugin {
         }
     }
 
+    #notifyUploadDone(action) {
+        const canOpen = action && action.type !== "ir.actions.act_window_close";
+        this.#notification.add(_t("The files were uploaded."), {
+            type: "success",
+            sticky: true,
+            buttons: canOpen ? [{ name: _t("Open"), onClick: () => this.doAction(action) }] : [],
+        });
+    }
+
     /**
      * Executes an action on top of the current one (typically, when a button in a
      * view is clicked). The button may be of type 'object' (call a given method
@@ -1661,9 +1672,10 @@ export class ActionPlugin extends Plugin {
      *  embedded action. This allows to do the necessary context cleanup and avoid infinite
      *  recursion.
      * @params {boolean} [options.newWindow] set to true to open the action in a new tab/window.
+     * @params {File[]} [options.files] the files of an upload button
      * @returns {Promise<void>}
      */
-    async #doActionButton(params, { isEmbeddedAction, newWindow } = {}) {
+    async #doActionButton(params, { isEmbeddedAction, newWindow, files } = {}) {
         if (!params.name && !params.special) {
             return;
         }
@@ -1709,6 +1721,28 @@ export class ActionPlugin extends Plugin {
             if (action.help) {
                 action.help = markup(action.help);
             }
+        } else if (params.type === "upload") {
+            const controller = this.currentController;
+            const resIds = params.resId ? [params.resId] : params.resIds || [];
+            const response = await this.#fileUpload.sendFiles(
+                `/web/dataset/call_upload/${params.resModel}/${params.name}`,
+                { ufile: files, res_ids: JSON.stringify(resIds), context: JSON.stringify(context) },
+                params.options
+            );
+            // the uploaded records are shown, so the help of an empty view is never displayed
+            delete response?.result?.help;
+            // the user left the view during the upload: its result is not imposed
+            const hasLeft = this.currentController !== controller;
+            if (response === null || hasLeft) {
+                if (blockUi) {
+                    this.#ui.unblock();
+                }
+                if (hasLeft && response !== null) {
+                    this.#notifyUploadDone(response.result);
+                }
+                return;
+            }
+            action = response.result || { type: "ir.actions.act_window_close" };
         } else if (params.type === "action") {
             // execute a given action, so load it first
             context.active_id = params.resId || null;
@@ -1871,7 +1905,6 @@ export class ActionPlugin extends Plugin {
         }
         await this.#updateUI(newController, { newWindow, index });
     }
-
 
     /**
      * @param {string} jsId

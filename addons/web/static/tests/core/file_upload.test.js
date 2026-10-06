@@ -1,172 +1,122 @@
-import { expect, test, waitFor } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
+import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
     getService,
     mockService,
+    mockUpload,
     mountWithCleanup,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { FileUploadPlugin } from "@web/core/file_upload/file_upload_plugin";
+import { UploadProgress } from "@web/core/file_upload/upload_progress";
+import { session } from "@web/session";
 
-import { animationFrame } from "@odoo/hoot-mock";
-import { FileUploadProgressContainer } from "@web/core/file_upload/file_upload_progress_container";
-import { FileUploadProgressRecord } from "@web/core/file_upload/file_upload_progress_record";
-import { useService } from "@web/core/utils/hooks";
+const file = (name = "a.txt") => new File(["x"], name);
 
-import { Component, useProps, xml } from "@odoo/owl";
+test("sendFiles: the upload is shown until a while after it ends", async () => {
+    const { promise, resolve } = Promise.withResolvers();
+    onRpc("/test/", () => promise);
+    await mountWithCleanup(UploadProgress);
+    const done = getService(FileUploadPlugin).sendFiles("/test/", { ufile: [file()], foo: "bar" });
+    await animationFrame();
+    expect(".o_upload_progress").toHaveText("Uploading a.txt");
 
-class FileUploadProgressTestRecord extends FileUploadProgressRecord {
-    static template = xml`
-        <t t-set="progressTexts" t-value="this.getProgressTexts()"/>
-        <div class="file_upload">
-            <div class="file_upload_progress_text_left" t-out="progressTexts.left"/>
-            <div class="file_upload_progress_text_right" t-out="progressTexts.right"/>
-            <FileUploadProgressBar fileUpload="this.props.fileUpload"/>
-        </div>
-    `;
-}
-class Parent extends Component {
-    static components = {
-        FileUploadProgressContainer,
-    };
-    static template = xml`
-        <div class="parent">
-            <FileUploadProgressContainer fileUploads="this.fileUploadService.uploads" shouldDisplay="this.props.shouldDisplay" Component="this.FileUploadProgressTestRecord"/>
-        </div>
-    `;
-    props = useProps();
-    setup() {
-        this.fileUploadService = useService("file_upload");
-        this.FileUploadProgressTestRecord = FileUploadProgressTestRecord;
-    }
-}
+    resolve({ ok: true });
+    expect(await done).toEqual({ ok: true });
+    await animationFrame();
+    expect(".o_upload_progress").toHaveText("Uploaded a.txt");
 
-onRpc("/test/", () => new Promise(() => {}));
-
-test("can be rendered", async () => {
-    await mountWithCleanup(Parent);
-    expect(".parent").toHaveCount(1);
-    expect(".file_upload").toHaveCount(0);
+    await advanceTime(3000);
+    expect(".o_upload_progress").toHaveCount(0);
 });
 
-test("upload renders new component(s)", async () => {
-    await mountWithCleanup(Parent);
-    const fileUploadService = await getService("file_upload");
-    fileUploadService.upload("/test/", []);
-    await animationFrame();
-    expect(".file_upload").toHaveCount(1);
-    fileUploadService.upload("/test/", []);
-    await animationFrame();
-    expect(".file_upload").toHaveCount(2);
+test("sendFiles: the fields are posted with the files", async () => {
+    await mountWithCleanup(UploadProgress);
+    onRpc("/test/", async (request) => {
+        const body = await request.formData();
+        expect.step(`${body.getAll("ufile").map((f) => f.name)} ${body.get("foo")}`);
+        return {};
+    });
+    await getService(FileUploadPlugin).sendFiles("/test/", {
+        ufile: [file("a.txt"), file("b.txt")],
+        foo: "bar",
+    });
+    expect.verifySteps(["a.txt,b.txt bar"]);
 });
 
-test("upload end removes component", async () => {
-    await mountWithCleanup(Parent);
-    onRpc("/test/", () => true);
-    const fileUploadService = await getService("file_upload");
-    fileUploadService.upload("/test/", []);
-    await animationFrame();
-    expect(".file_upload").toHaveCount(0);
-    expect(".o_notification").toHaveCount(0);
+test("sendFiles: only the files of the accepted types are sent", async () => {
+    mockUpload((route, { ufile }) => {
+        expect.step(ufile.map((f) => f.name).join(","));
+        return {};
+    });
+    await mountWithCleanup(UploadProgress);
+    const pdf = new File(["x"], "a.PDF", { type: "application/pdf" });
+    const png = new File(["x"], "b.png", { type: "image/png" });
+    const xml = new File(["x"], "c.xml", { type: "text/xml" });
+    const fileUpload = getService(FileUploadPlugin);
+    await fileUpload.sendFiles("/test/", { ufile: [pdf, png, xml] }, { accept: ".pdf, .xml" });
+    await fileUpload.sendFiles("/test/", { ufile: [pdf, png, xml] }, { accept: "image/*" });
+    await fileUpload.sendFiles("/test/", { ufile: [pdf, png, xml] }, { accept: "application/pdf" });
+    expect.verifySteps(["a.PDF,c.xml", "b.png", "a.PDF"]);
 });
 
-test("upload error removes component", async () => {
-    await mountWithCleanup(Parent);
-
-    const fileUploadService = await getService("file_upload");
-    fileUploadService.upload("/test/", []);
-    await animationFrame();
-    fileUploadService.uploads[1].xhr.dispatchEvent(new Event("error"));
-    await animationFrame();
-    expect(".file_upload").toHaveCount(0);
-});
-
-test("upload abort removes component", async () => {
-    await mountWithCleanup(Parent);
-
-    const fileUploadService = await getService("file_upload");
-    fileUploadService.upload("/test/", []);
-    await animationFrame();
-    fileUploadService.uploads[1].xhr.dispatchEvent(new Event("abort"));
-    await animationFrame();
-    expect(".file_upload").toHaveCount(0);
-});
-
-test("upload can be aborted by clicking on cross", async () => {
+test("sendFiles: the upload can be cancelled from its card", async () => {
+    mockUpload(() => new Promise(() => {}));
     mockService("dialog", {
-        add() {
-            fileUploadService.uploads[1].xhr.dispatchEvent(new Event("abort"));
+        add(Component, { confirm }) {
+            confirm();
         },
     });
-    await mountWithCleanup(Parent);
-    const fileUploadService = await getService("file_upload");
-    fileUploadService.upload("/test/", []);
+    await mountWithCleanup(UploadProgress);
+    const done = getService(FileUploadPlugin).sendFiles("/test/", { ufile: [file()] });
     await animationFrame();
     await contains(".o-file-upload-progress-bar-abort", { visible: false }).click();
+    expect(await done).toBe(null);
     await animationFrame();
-    expect(".file_upload").toHaveCount(0);
+    expect(".o_upload_progress").toHaveCount(0);
 });
 
-test("upload updates on progress", async () => {
-    await mountWithCleanup(Parent);
-
-    const fileUploadService = await getService("file_upload");
-    fileUploadService.upload("/test/", []);
-    await animationFrame();
-
-    const progressEvent = new Event("progress", { bubbles: true });
-    progressEvent.loaded = 250000000;
-    progressEvent.total = 500000000;
-    fileUploadService.uploads[1].xhr.upload.dispatchEvent(progressEvent);
-    await animationFrame();
-    expect(".file_upload_progress_text_left").toHaveText("Uploading... (50%)");
-    progressEvent.loaded = 350000000;
-    fileUploadService.uploads[1].xhr.upload.dispatchEvent(progressEvent);
-    await animationFrame();
-    expect(".file_upload_progress_text_right").toHaveText("(350/500MB)");
-});
-
-test("handles error", async () => {
-    await mountWithCleanup(Parent);
-    onRpc("/test/", () => {
-        throw new Error("Boom");
+test("sendFiles: nothing is sent when the files together are too large", async () => {
+    await mountWithCleanup(UploadProgress);
+    patchWithCleanup(session, { max_file_upload_size: 1 });
+    onRpc("/test/", () => expect.step("sent"));
+    mockService("notification", {
+        add(message) {
+            expect.step(message);
+        },
     });
-    const fileUploadService = await getService("file_upload");
-    fileUploadService.upload("/test/", []);
-    await waitFor(".o_notification:has(.bg-danger):contains(An error occurred while uploading)");
+    const result = await getService(FileUploadPlugin).sendFiles("/test/", {
+        ufile: [file("a.txt"), file("b.txt")],
+    });
+    expect(result).toBe(null);
+    expect.verifySteps(["The selected files (2B) are larger than the maximum upload size (1B)."]);
 });
 
-test("handles http not success", async () => {
-    await mountWithCleanup(Parent);
+test("sendFiles: an error page of the server is thrown", async () => {
+    await mountWithCleanup(UploadProgress);
     onRpc("/test/", () => new Response("<p>Boom HTML</p>", { status: 500 }));
-    const fileUploadService = await getService("file_upload");
-    fileUploadService.upload("/test/", []);
-    await waitFor(".o_notification:has(.bg-danger):contains(Boom HTML)");
+    await expect(
+        getService(FileUploadPlugin).sendFiles("/test/", { ufile: [file()] })
+    ).rejects.toThrow("Boom HTML");
 });
 
-test("handles jsonrpc error", async () => {
-    // https://www.jsonrpc.org/specification#error_object
-    await mountWithCleanup(Parent);
+test("sendFiles: an error of the server is thrown as an RPC error", async () => {
+    await mountWithCleanup(UploadProgress);
     onRpc("/test/", () => ({
         error: {
-            message: "Boom JSON",
+            code: 0,
+            message: "Odoo Server Error",
+            data: { name: "odoo.exceptions.ValidationError", message: "Boom Odoo" },
         },
     }));
-    const fileUploadService = await getService("file_upload");
-    fileUploadService.upload("/test/", []);
-    await waitFor(".o_notification:has(.bg-danger):contains(Boom JSON)");
-});
-
-test("handles Odoo's jsonrpc error", async () => {
-    await mountWithCleanup(Parent);
-    onRpc("/test/", () => ({
-        error: {
-            data: {
-                name: "ValidationError",
-                message: "Boom Odoo",
-            },
-        },
-    }));
-    const fileUploadService = await getService("file_upload");
-    fileUploadService.upload("/test/", []);
-    await waitFor(".o_notification:has(.bg-danger):contains(ValidationError: Boom Odoo)");
+    let error;
+    try {
+        await getService(FileUploadPlugin).sendFiles("/test/", { ufile: [file()] });
+    } catch (e) {
+        error = e;
+    }
+    expect(error.exceptionName).toBe("odoo.exceptions.ValidationError");
+    expect(error.data.message).toBe("Boom Odoo");
 });
