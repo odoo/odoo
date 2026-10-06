@@ -353,6 +353,7 @@ export async function setupWebsiteBuilder(
         });
     }
     await resolveIframeLoaded(iframe);
+    await loadBundle("website.website_builder_assets");
     await animationFrame();
     if (openEditor) {
         await openBuilderSidebar(editAssetsLoaded);
@@ -374,7 +375,6 @@ async function openBuilderSidebar(editAssetsLoaded) {
     // The next line allow us to await asynchronous fetches and cache them before it is used
     await Promise.all([
         getWebsiteSnippets(),
-        loadBundle("website.website_builder_assets"),
         loadBundle("html_editor.assets_image_cropper"),
     ]);
 
