@@ -619,3 +619,14 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
             target_factors=[],
         )
         self.assertEqual(result, [])
+
+    def test_quick_create_purchase_tax(self):
+        """ Test that quick-creating a tax preserves the default purchase type. """
+        tax_id, _ = self.env['account.tax'].with_context(
+            default_type_tax_use='purchase',
+        ).name_create('New Purchase Tax')
+        tax = self.env['account.tax'].browse(tax_id)
+
+        self.assertEqual(tax.type_tax_use, 'purchase')
+        self.product.supplier_taxes_id = tax
+        self.assertEqual(self.product.supplier_taxes_id, tax)
