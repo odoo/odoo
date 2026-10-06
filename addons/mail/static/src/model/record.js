@@ -494,6 +494,9 @@ export class Record {
                             cleanup?.();
                             const result = boundCallback(...values);
                             cleanup = typeof result === "function" ? result : undefined;
+                            // Read again, as owl stops notifying through a computed
+                            // left stale by a write of the callback.
+                            void deps();
                         });
                     })
                 );
