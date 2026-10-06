@@ -52,13 +52,16 @@
                 <button name="action_remove_manual_qty_to_order" type="object" icon="undo" title="-" class="disabled opacity-0" invisible="qty_to_order_manual"/>
                 <field name="product_uom_name" string="Unit" groups="uom.group_uom"/>
                 <field name="deadline_date" string="Deadline" optional="hide" decoration-danger="deadline_date &lt; current_date"/>
+                <field name="snooze_info" string="Snooze Info" readonly="1" optional="hide"/>
                 <field name="company_id" optional="hide" readonly="1" groups="base.group_multi_company"/>
                 <button name="action_replenish" string="Order" type="object" class="o_replenish_buttons" icon="local_shipping"
                     invisible="qty_to_order &lt;= 0.0"/>
                 <button name="action_replenish_auto" string="Automate" type="object" class="o_replenish_buttons" icon="cached"
                     invisible="qty_to_order &lt;= 0.0 or trigger == 'auto'"/>
-                <button name="%(action_orderpoint_snooze)d" string="Snooze" type="action" class="text-warning" icon="notifications_off" icon_class="oi-filled"
-                    invisible="trigger != 'manual'" context="{'default_orderpoint_ids': [id]}"/>
+                <button name="action_unsnooze" string="Unsnooze" type="object" class="text-success" icon="notifications_off" icon_class="oi-filled"
+                    invisible="not is_snoozed" context="{'default_orderpoint_ids': [id]}"/>
+                <button name="%(action_orderpoint_snooze)d" string="Snooze" type="action" class="text-warning" icon="notifications_on" icon_class="oi-filled"
+                    invisible="trigger != 'manual' or is_snoozed" context="{'default_orderpoint_ids': [id]}"/>
             </list>
         </field>
     </record>
