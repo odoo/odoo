@@ -245,7 +245,7 @@ class Cart(PaymentPortal):
 
         # The validity of a combo product line can only be checked after creating all of its combo
         # item lines.
-        main_product_line = request.env["sale.order.line"].browse(values["line_id"])
+        main_product_line = request.env["sale.order.line"].sudo().browse(values["line_id"])
         if main_product_line.product_type == "combo":
             main_product_line._check_validity()
 
