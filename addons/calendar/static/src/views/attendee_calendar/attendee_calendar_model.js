@@ -242,25 +242,33 @@ export class AttendeeCalendarModel extends CalendarModel {
             let duplicatedRecordIdx = -1;
             for (const event of Object.values(data.records)) {
                 const eventData = event.rawRecord;
-                const attendees =
+                const eventAttendeeIds =
                     eventData.partner_ids && eventData.partner_ids.length
                         ? eventData.partner_ids
                         : [eventData.partner_id[0]];
                 let duplicatedRecords = 0;
-                for (const attendee of attendees) {
-                    if (!activeAttendeeIds.has(attendee)) {
+                const isInternalUserAttending = data.attendees.some(
+                    (a) => a.event_id === event.id && a.is_internal
+                );
+                for (const eventAttendeeId of eventAttendeeIds) {
+                    if (!activeAttendeeIds.has(eventAttendeeId)) {
                         continue;
                     }
                     // Records will share the same rawRecord.
                     const record = { ...event };
                     const attendeeInfo = data.attendees.find(
-                        (a) => a.id === attendee && a.event_id === event.id
+                        (a) => a.id === eventAttendeeId && a.event_id === event.id
                     );
-                    record.attendeeId = attendee;
+                    // External attendees don't get their own duplicate when the current
+                    // user is attending: the current user's version represents the event.
+                    if (isInternalUserAttending && attendeeInfo && !attendeeInfo.is_internal) {
+                        continue;
+                    }
+                    record.attendeeId = eventAttendeeId;
                     // Records which are fetched based on the calendar filters should match calendar colors
-                    if (attendee !== user.partnerId) {
+                    if (eventAttendeeId !== user.partnerId) {
                         // If a color doesn't belong to the user's calendar, it is instead based on the attendeeId
-                        record.colorIndex = attendee;
+                        record.colorIndex = eventAttendeeId;
                     }
                     if (attendeeInfo) {
                         record.attendeeStatus = attendeeInfo.status;
