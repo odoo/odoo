@@ -301,10 +301,16 @@ export function useMessageHighlight(duration = 2000) {
             const scrollPromise = new Deferred();
             state.scrollPromise = scrollPromise;
             if ("onscrollend" in window) {
-                document.addEventListener("scrollend", scrollPromise.resolve, {
-                    capture: true,
-                    once: true,
-                });
+                const { top } = el.getBoundingClientRect();
+                const onScrollEnd = () => {
+                    if (el.getBoundingClientRect().top !== top) {
+                        scrollPromise.resolve();
+                    }
+                };
+                document.addEventListener("scrollend", onScrollEnd, { capture: true });
+                scrollPromise.then(() =>
+                    document.removeEventListener("scrollend", onScrollEnd, { capture: true })
+                );
             } else {
                 // To remove when safari will support the "scrollend" event.
                 setTimeout(scrollPromise.resolve, 250);
