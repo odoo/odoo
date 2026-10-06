@@ -12,7 +12,6 @@ export function addMedia() {
 }
 export function assertCssVariable(variableName, variableValue, trigger = ":iframe body") {
     return {
-        isActive: ["auto"],
         content: `Check CSS variable ${variableName}=${variableValue}`,
         trigger: trigger,
         run() {
