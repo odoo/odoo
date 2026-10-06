@@ -1999,6 +1999,39 @@ class TestDatePartNumber(TransactionExpressionCase):
         Person = self.env["test_orm.person"].with_context(active_test=False)
         self.assertEqual(self._search(Person, [('birthday.month_number', '=', 2)]), self.person)
 
+    def test_quarter_number_filtered(self):
+        Model = self.env['test_orm.mixed'].with_context(tz='UTC')
+        records = Model.create([
+            {'date': f'2026-{month:02d}-15', 'moment': f'2026-{month:02d}-15 12:00:00'}
+            for month in range(1, 13)
+        ])
+        empty = Model.create({})
+        for field_name in ('date', 'moment'):
+            for quarter in range(1, 5):
+                with self.subTest(field=field_name, quarter=quarter):
+                    domain = [
+                        ('id', 'in', (records + empty).ids),
+                        (f'{field_name}.quarter_number', '=', quarter),
+                    ]
+                    self.assertEqual(self._search(Model, domain), records[(quarter - 1) * 3:quarter * 3])
+
+    def test_day_of_week_filtered(self):
+        Model = self.env['test_orm.mixed'].with_context(tz='UTC')
+        records = Model.create([
+            {'date': f'2026-07-{day}', 'moment': f'2026-07-{day} 12:00:00'}
+            for day in range(12, 19)
+        ])
+        empty = Model.create({})
+        for field_name in ('date', 'moment'):
+            for weekday in range(7):
+                with self.subTest(field=field_name, weekday=weekday):
+                    domain = [
+                        ('id', 'in', (records + empty).ids),
+                        (field_name, '!=', False),
+                        (f'{field_name}.day_of_week', '=', weekday),
+                    ]
+                    self.assertEqual(self._search(Model, domain), records[weekday])
+
     def test_many2one(self):
         result = self._search(self.env["test_orm.lesson"], [('teacher_id.birthday.month_number', '=', 2)])
         self.assertEqual(result, self.lesson)
