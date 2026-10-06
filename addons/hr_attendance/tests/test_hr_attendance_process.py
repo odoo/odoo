@@ -378,14 +378,22 @@ class TestHrAttendance(HttpCase, TransactionCase):
         initial_checkout = already_checked.check_out
         self.assertEqual(night_shift.check_out, False)
         self.env['hr.attendance']._cron_auto_check_out_specific_time()
-        self.assertEqual(night_shift.check_out, datetime(2026, 2, 26, 6, 0))
-        self.assertEqual(night_shift.out_mode, 'auto_check_out')
+        # Checked out at 06:00 the next day, the night shifts are split at midnight (UTC employees): the checked out
+        # attendance ends at midnight, and the next day is a new attendance, checked out at 06:00.
+        for night_attendance in (night_shift, just_after_midnight):
+            day1, day2 = self.env['hr.attendance'].search(
+                [('employee_id', '=', night_attendance.employee_id.id)], order='check_in',
+            )
+            self.assertEqual(day1, night_attendance)
+            self.assertRecordValues(day1 | day2, [
+                {'check_in': night_attendance.check_in, 'check_out': datetime(2026, 2, 26, 0, 0), 'out_mode': 'auto_check_out'},
+                {'check_in': datetime(2026, 2, 26, 0, 0), 'check_out': datetime(2026, 2, 26, 6, 0), 'out_mode': 'auto_check_out'},
+            ])
         self.assertEqual(before_cutoff.check_out, datetime(2026, 2, 26, 6, 0))
         # 06:00 JST = 21:00 UTC previous day (JST = UTC+09:00)
         self.assertEqual(one_min_before.check_out, datetime(2026, 2, 25, 21, 0))
         # 06:00 HST = 16:00 UTC (HST = UTC-10:00)
         self.assertEqual(midnight.check_out, datetime(2026, 2, 25, 16, 0))
-        self.assertEqual(just_after_midnight.check_out, datetime(2026, 2, 26, 6, 0))
         self.assertEqual(already_checked.check_out, initial_checkout)
         self.assertEqual(flexible.check_out, datetime(2026, 2, 26, 6, 0))
 
@@ -1099,9 +1107,18 @@ class TestAttendanceValidationTimeRules(TransactionCase):
             'in_mode': 'kiosk',
             'out_mode': 'kiosk',
         } for day, check_out_hour in ((1, 6), (2, 9))])
-        self.assertRecordValues(night | long_night, [
-            {'is_late_check_in': False, 'is_early_check_out': False, 'is_overtime': False},
-            {'is_late_check_in': False, 'is_early_check_out': False, 'is_overtime': True},
+        night_end, long_night_end = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.employee.id),
+            ('check_in', 'in', [datetime(2024, 1, 2, 0, 0), datetime(2024, 1, 3, 0, 0)]),
+        ], order='check_in')
+        # The attendances are split at midnight, and the issues are computed per calendar day, while the night shift
+        # belongs to the day it starts: the part before midnight ends before the shift, the part after it is
+        # compared with the shift of the next night.
+        self.assertRecordValues(night | night_end | long_night | long_night_end, [
+            {'check_out': datetime(2024, 1, 2, 0, 0), 'is_late_check_in': False, 'is_early_check_out': True, 'is_overtime': False, 'is_undertime': True},
+            {'check_out': datetime(2024, 1, 2, 6, 0), 'is_late_check_in': False, 'is_early_check_out': False, 'is_overtime': False, 'is_undertime': False},
+            {'check_out': datetime(2024, 1, 3, 0, 0), 'is_late_check_in': False, 'is_early_check_out': True, 'is_overtime': False, 'is_undertime': False},
+            {'check_out': datetime(2024, 1, 3, 9, 0), 'is_late_check_in': False, 'is_early_check_out': True, 'is_overtime': False, 'is_undertime': True},
         ])
 
     @freeze_time('2024-01-03 06:00:00')
