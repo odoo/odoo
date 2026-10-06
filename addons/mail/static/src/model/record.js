@@ -491,9 +491,18 @@ export class Record {
                             }
                         }
                         untrack(() => {
-                            cleanup?.();
-                            const result = boundCallback(...values);
-                            cleanup = typeof result === "function" ? result : undefined;
+                            try {
+                                cleanup?.();
+                                const result = boundCallback(...values);
+                                cleanup = typeof result === "function" ? result : undefined;
+                            } catch (error) {
+                                // Leave the error to the update, as a throw here stops the other
+                                // observers. A batched run comes after the update and throws.
+                                if (!immediate) {
+                                    throw error;
+                                }
+                                record._rawStore.handleError(error);
+                            }
                             // Read again, as owl stops notifying through a computed
                             // left stale by a write of the callback.
                             void deps();
