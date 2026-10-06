@@ -2,7 +2,6 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.DiscussContent">
-    <t t-set="partitionedActions" t-value="this.threadActions.partition"/>
     <div class="o-mail-DiscussContent d-flex flex-column h-100 flex-grow-1 overflow-auto o-scrollbar-thin" t-ref="this.rootRef">
         <div t-if="this.thread" class="o-mail-DiscussContent-header d-flex flex-shrink-0 align-items-center gap-1 z-1 flex-grow-0">
             <div class="o-mail-DiscussContent-headerInfo flex-grow-1 min-w-0 d-flex">
