@@ -95,6 +95,14 @@ class CompanyLDAP(models.Model):
         ], order='sequence')
         return res
 
+    def _get_ldap_timeout(self):
+        param = self.env['ir.config_parameter'].sudo().get_param('auth_ldap.timeout', '5.0')
+        try:
+            val = float(param)
+            return max(1.0, min(val, 15.0))
+        except (ValueError, TypeError):
+            return 5.0
+
     def _connect(self, conf):
         """
         Connect to an LDAP server specified by an ldap
@@ -107,7 +115,11 @@ class CompanyLDAP(models.Model):
         uri = 'ldap://%s:%d' % (conf['ldap_server'], conf['ldap_server_port'])
 
         connection = ldap.initialize(uri)
-        ldap_chase_ref_disabled = self.env['ir.config_parameter'].sudo().get_param('auth_ldap.disable_chase_ref')
+        timeout = self._get_ldap_timeout()
+        connection.set_option(ldap.OPT_NETWORK_TIMEOUT, timeout)
+        connection.set_option(ldap.OPT_TIMEOUT, timeout)
+
+        ldap_chase_ref_disabled = self.env['ir.config_parameter'].sudo().get_param('auth_ldap.disable_chase_ref', 'True')
         if str2bool(ldap_chase_ref_disabled):
             connection.set_option(ldap.OPT_REFERRALS, ldap.OPT_OFF)
         if conf['ldap_tls']:
@@ -191,7 +203,8 @@ class CompanyLDAP(models.Model):
             ldap_password = conf['ldap_password'] or ''
             ldap_binddn = conf['ldap_binddn'] or ''
             conn.simple_bind_s(to_text(ldap_binddn), to_text(ldap_password))
-            results = conn.search_st(to_text(conf['ldap_base']), ldap.SCOPE_SUBTREE, filter, retrieve_attributes, timeout=60)
+            timeout = self._get_ldap_timeout()
+            results = conn.search_st(to_text(conf['ldap_base']), ldap.SCOPE_SUBTREE, filter, retrieve_attributes, timeout=timeout)
             conn.unbind()
         except ldap.INVALID_CREDENTIALS:
             _logger.error('LDAP bind failed.')
