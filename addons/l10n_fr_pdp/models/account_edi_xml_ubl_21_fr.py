@@ -51,8 +51,11 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             if not commercial_partner.vat or commercial_partner.vat == '/':
                 constraints[f"ubl_21_fr_{partner_type}_vat_required"] = _("The following partner's VAT is missing: %s", commercial_partner.display_name)
 
-        if vals['document_type'] == 'credit_note' and not (invoice.reversed_entry_id.name or invoice.reversed_entry_id.invoice_date):
-            constraints[f"ubl_21_fr_{partner_type}_refund_invoice_reference"] = _("The original journal entry's name or issue date are missing: %s", vals['invoice'].name)
+        if vals['document_type'] == 'credit_note':
+            if invoice.reversed_entry_id and not (invoice.reversed_entry_id.name or invoice.reversed_entry_id.invoice_date):
+                constraints["ubl_21_fr_refund_invoice_reference"] = _("The original journal entry's name or issue date are missing: %s", vals['invoice'].name)
+            elif reference_error := invoice._l10n_fr_pdp_get_credit_note_reference_error():
+                constraints["ubl_21_fr_refund_invoice_reference"] = reference_error
 
         customer = vals['customer'].commercial_partner_id
         if self._pdp_is_b2g(customer) and not self._pdp_can_invoice_b2g(customer):
@@ -108,6 +111,23 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             },
         })
 
+        if vals['document_type'] == 'credit_note' and not invoice.reversed_entry_id:
+            reference_data = invoice._l10n_fr_pdp_get_credit_note_reference_data()
+            # The Studio reference identifies an invoice for 381, but a contract for 262.
+            if reference_data['type'] == 'historical':
+                vals['vals'].update({
+                    'contract_document_reference_id': None,
+                    'billing_reference_vals': {
+                        'id': reference_data['reference'],
+                        'issue_date': reference_data['invoice_previous_date'],
+                    },
+                })
+            elif reference_data['type'] == 'global_discount':
+                vals['vals'].update({
+                    'document_type_code': 262,
+                    'billing_reference_vals': {},
+                })
+
         # [BR-FR-CO-09/BT-23] : Si le cadre de facturation (BT-23) est B2, S2 ou M2, alors la date d'échéance (BT-9) doit être renseignée et correspondre à la date de paiement.
         if profile_id in ('B2', 'S2', 'M2'):
             payment_date = invoice._pdp_get_payment_date() or invoice.invoice_date
@@ -139,6 +159,40 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                     })
 
         return vals
+
+    def _import_fill_invoice_form(self, invoice, tree, qty_factor):
+        logs = super()._import_fill_invoice_form(invoice, tree, qty_factor)
+        document_type_code = tree.findtext('./{*}CreditNoteTypeCode')
+
+        invoice._l10n_fr_pdp_set_studio_field_value(
+            'x_studio_peppol_contract_document_reference_id',
+            {'char', 'text'},
+            tree.findtext('./{*}ContractDocumentReference/{*}ID'),
+        )
+        invoice._l10n_fr_pdp_set_studio_field_value(
+            'x_studio_peppol_invoice_period_start_date',
+            {'date'},
+            tree.findtext('./{*}InvoicePeriod/{*}StartDate'),
+        )
+        invoice._l10n_fr_pdp_set_studio_field_value(
+            'x_studio_peppol_invoice_period_end_date',
+            {'date'},
+            tree.findtext('./{*}InvoicePeriod/{*}EndDate'),
+        )
+
+        if document_type_code == '381':
+            invoice._l10n_fr_pdp_set_studio_field_value(
+                'x_studio_peppol_contract_document_reference_id',
+                {'char', 'text'},
+                tree.findtext('./{*}BillingReference/{*}InvoiceDocumentReference/{*}ID'),
+            )
+            invoice._l10n_fr_pdp_set_studio_field_value(
+                'x_studio_peppol_invoice_previous_date',
+                {'date'},
+                tree.findtext('./{*}BillingReference/{*}InvoiceDocumentReference/{*}IssueDate'),
+            )
+
+        return logs
 
     def _get_note_vals_list(self, invoice):
         # EXTENDS account.edi.xml.ubl_20
