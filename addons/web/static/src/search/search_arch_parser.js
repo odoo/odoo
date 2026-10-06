@@ -237,6 +237,7 @@ export class SearchArchParser {
             this.pushGroup(reduceType(preSearchItem.type));
         }
         if (preSearchItem.type === "filter") {
+            let optionsParams;
             if (node.hasAttribute("date")) {
                 const fieldName = node.getAttribute("date");
                 preSearchItem.type = "dateFilter";
@@ -248,7 +249,7 @@ export class SearchArchParser {
                     preSearchItem.endFieldName = node.getAttribute("end_date");
                     preSearchItem.endFieldType = this.fields[preSearchItem.endFieldName].type;
                 }
-                const optionsParams = {
+                optionsParams = {
                     customOptions: [],
                 };
                 preSearchItem.defaultGeneratorIds = ["month"];
@@ -257,16 +258,20 @@ export class SearchArchParser {
                         .getAttribute("default_period")
                         .split(",");
                 }
+            } else if (node.childElementCount) {
+                preSearchItem.type = "parentFilter";
+                optionsParams = { customOptions: [] };
+            }
+            if (optionsParams) {
                 this.optionsParams = optionsParams;
                 visitChildren();
+                if (optionsParams.defaultGeneratorIds) {
+                    preSearchItem.defaultGeneratorIds = optionsParams.defaultGeneratorIds;
+                    preSearchItem.isDefault = true;
+                    preSearchItem.defaultRank = -5;
+                    delete optionsParams.defaultGeneratorIds;
+                }
                 preSearchItem.optionsParams = optionsParams;
-                this.optionsParams = null;
-            }
-            if (!node.hasAttribute("date") && !!node.childElementCount) {
-                preSearchItem.type = "parentFilter";
-                this.optionsParams = { customOptions: [] };
-                visitChildren();
-                preSearchItem.optionsParams = this.optionsParams;
                 this.optionsParams = null;
             }
 
@@ -337,6 +342,10 @@ export class SearchArchParser {
         preInnerFilterOption.description = node.getAttribute("string");
         preInnerFilterOption.domain = node.getAttribute("domain");
         this.optionsParams.customOptions.push(preInnerFilterOption);
+        if (node.getAttribute("name") in this.searchDefaults) {
+            this.optionsParams.defaultGeneratorIds ||= [];
+            this.optionsParams.defaultGeneratorIds.push(preInnerFilterOption.id);
+        }
     }
 
     visitInnerField(node) {
