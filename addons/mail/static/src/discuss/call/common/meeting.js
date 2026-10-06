@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
 import { Call } from "@mail/discuss/call/common/call";
@@ -14,7 +13,6 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { MeetingReadyBanner } from "./meeting_ready_banner";
 import { meetingMoreActionGroups, MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
-import { useMessageSearch } from "@mail/core/common/message_search_hook";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { assignGetter } from "@mail/utils/common/misc";
 
@@ -58,10 +56,6 @@ export class Meeting extends Component {
         });
         this.threadActions = useThreadActions({ thread: () => this.channel.thread });
         providePlugins([MessageHighlightPlugin], { thread: () => this.channel.thread });
-        this.messageSearch = useMessageSearch(this.channel.thread);
-        useSubEnv({
-            messageSearch: this.messageSearch,
-        });
         onMounted(() => (this.store.meetingViewOpened = true));
         onWillUnmount(() => (this.store.meetingViewOpened = false));
         useHotkey("escape", () => this.onEscape());
