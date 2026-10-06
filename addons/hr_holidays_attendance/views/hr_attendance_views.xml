@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
         <field name="arch" type="xml">
             <field name="worked_hours" position="after">
-                <field name="work_entry_type_id" optional="show" string="Type"/>
+                <field name="work_entry_type_id" widget="many2one_work_entry_type" optional="show" string="Type"/>
             </field>
         </field>
     </record>

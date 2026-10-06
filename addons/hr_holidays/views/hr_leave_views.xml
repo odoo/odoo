@@ -193,7 +193,7 @@
                                                         <field name="request_hour_to" widget="float_time_selection"/>
                                                     </t>
                                                 </div>
-                                                <field name="work_entry_type_id" class="text-muted"/>
+                                                <field name="work_entry_type_id" widget="many2one_work_entry_type" class="text-muted"/>
                                             </div>
                                             <div class="col-2 o_hr_holidays_card ps-3">
                                                 <div class="fw-bold d-flex me-1">
@@ -288,7 +288,7 @@
                                             </t>
                                     </div>
                                 </div>
-                                <field name="work_entry_type_id" class="text-muted"/>
+                                <field name="work_entry_type_id" widget="many2one_work_entry_type" class="text-muted"/>
                                 <span class="text-muted">
                                     (<field name="duration_display"/>)
                                 </span>
@@ -338,7 +338,7 @@
                                 <div class="text-muted text-nowrap">(<field name="number_of_days"/> days)</div>
                             </div>
                             <div class="text-muted">
-                                <field name="work_entry_type_id" display="full"/>
+                                <field name="work_entry_type_id" widget="many2one_work_entry_type" display="full"/>
                                 <field name="date_from"/> <i class="oi" data-icon="east" title="to" /> <field name="date_to"/>
                             </div>
                         </div>
