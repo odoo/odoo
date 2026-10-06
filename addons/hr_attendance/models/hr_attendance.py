@@ -710,6 +710,28 @@ class HrAttendance(models.Model):
     def action_reset_to_draft(self):
         self.write({'state': 'draft'})
 
+    def get_record_default_action(self, access_uid=None):
+        """This method redirects to the suitable employee view in action menuitem according to the user access rights"""
+        res = {}
+        if self.env.user.has_group('hr.group_hr_user'):
+            res.update({
+                'name': self.env._('Employees'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'hr.employee',
+                'view_mode': 'kanban, form',
+                'views': [[False, 'kanban'], [False, 'form']],
+            })
+
+        else:
+            res.update({
+                'name': self.env._('Employees'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'hr.employee.public',
+                'view_mode': 'kanban,form',
+                'views': [[False, 'kanban'], [False, 'form']],
+            })
+        return res
+
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
         employee_id = self.env.context.get('employee_id', False)
