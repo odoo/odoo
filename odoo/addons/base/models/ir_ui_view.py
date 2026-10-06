@@ -2071,30 +2071,35 @@ actual arch.
             if special not in ('cancel', 'save', 'add'):
                 self._raise_view_error(_("Invalid special '%(value)s' in button", value=special), node)
         elif type_:
-            if type_ != 'action' and type_ != 'object':
+            if type_ not in ('action', 'object', 'upload') or not name:
                 return
-            elif not name:
-                return
-            elif type_ == 'object':
-                func = getattr(name_manager.model, name, None)
+            elif type_ in ('object', 'upload'):
+                model = name_manager.model
+                if type_ == 'upload':
+                    model_name = ast.literal_eval(node.get('options') or '{}').get('model')
+                    if model_name:
+                        if model_name not in self.env:
+                            self._raise_view_error(_("Model not found: %(model)s", model=model_name), node)
+                        model = self.env[model_name]
+                func = getattr(model, name, None)
                 if not func:
                     msg = _(
                         "%(action_name)s is not a valid action on %(model_name)s",
-                        action_name=name, model_name=name_manager.model._name,
+                        action_name=name, model_name=model._name,
                     )
                     self._raise_view_error(msg, node)
-                # get_public_method(name_manager.model, name) is too slow for this validation, a more naive check is acceptable.
+                # get_public_method(model, name) is too slow for this validation, a more naive check is acceptable.
                 if name.startswith('_') or (hasattr(func, '_api_private') and func._api_private):
                     msg = _(
                         "%(method)s on %(model)s is private and cannot be called from a button",
-                        method=name, model=name_manager.model._name,
+                        method=name, model=model._name,
                     )
                     self._raise_view_error(msg, node)
                 try:
-                    inspect.signature(func).bind()
+                    inspect.signature(func).bind(**({'attachment_ids': []} if type_ == 'upload' else {}))
                 except TypeError:
                     msg = "%s on %s has parameters and cannot be called from a button"
-                    self._log_view_warning(msg % (name, name_manager.model._name), node)
+                    self._log_view_warning(msg % (name, model._name), node)
             elif type_ == 'action':
                 name_manager.must_exist_action(name, node)
 

@@ -21,6 +21,7 @@ import { CardCompiler } from "@web/views/card/card_compiler";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { computeViewClassName } from "@web/views/utils";
+import { getUploadOptions } from "@web/views/view_button/upload_button";
 import { ViewButton } from "@web/views/view_button/view_button";
 
 import { Component, t, useProps } from "@odoo/owl";
@@ -57,10 +58,25 @@ export class X2ManyField extends Component {
             : ["o_field_x2many"];
         this.className = computeViewClassName(this.props.viewMode, this.archInfo.xmlDoc, classes);
 
-        const { activeActions, controls } = this.archInfo;
+        const { activeActions, controls, headerButtons } = this.archInfo;
         if (this.props.viewMode === "kanban") {
             this.controls = controls || [];
         }
+        // the method of the comodel is called on no record: the parent is not saved
+        this.uploadButtons = (headerButtons || [])
+            .filter(
+                (button) => button.clickParams.type === "upload" && button.display !== "dropzone"
+            )
+            .map((button) => ({
+                ...button,
+                clickParams: {
+                    ...button.clickParams,
+                    options: {
+                        ...getUploadOptions(button.clickParams),
+                        model: this.field.relation,
+                    },
+                },
+            }));
         const subViewActiveActions = activeActions;
         this.activeActions = useActiveActions({
             crudOptions: Object.assign({}, this.props.crudOptions, {
@@ -136,6 +152,24 @@ export class X2ManyField extends Component {
 
     get displayControlPanelButtons() {
         return this.props.viewMode === "kanban" && this.canCreate && this.controls.length > 0;
+    }
+
+    get displayUploadButtons() {
+        return this.uploadButtons.length > 0 && !this.props.readonly;
+    }
+
+    get uploadRecord() {
+        const { list } = this;
+        const parent = this.props.record;
+        return {
+            resModel: list.resModel,
+            get context() {
+                return { ...list.context, active_model: parent.resModel, active_id: parent.resId };
+            },
+            get evalContext() {
+                return list.evalContext;
+            },
+        };
     }
 
     get canCreate() {

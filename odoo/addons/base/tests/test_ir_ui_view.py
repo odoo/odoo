@@ -3412,6 +3412,32 @@ class TestViews(ViewCase):
         self.assertInvalid('<form><button special="dummy"/></form>', "Invalid special 'dummy' in button")
         self.assertInvalid(arch % 'base.partner_root', "base.partner_root is of type res.partner, expected a subclass of ir.actions.actions")
 
+        arch = """
+            <form>
+                <button type="upload" name="%s" options="%s"/>
+            </form>
+        """
+        self.assertInvalid(
+            arch % ('_check_xml', "{'accept': '.pdf'}"),
+            '_check_xml on ir.ui.view is private and cannot be called from a button',
+            name='upload button name is a private method',
+        )
+        self.assertInvalid(
+            arch % ('not_a_method', "{}"),
+            'not_a_method is not a valid action on ir.ui.view',
+            name='upload button name is not a method',
+        )
+        self.assertInvalid(
+            arch % ('not_a_method', "{'model': 'res.partner'}"),
+            'not_a_method is not a valid action on res.partner',
+            name='upload button name is checked on the model of its options',
+        )
+        self.assertInvalid(
+            arch % ('name_create', "{'model': 'not.a.model'}"),
+            'Model not found: not.a.model',
+            name='upload button model of its options does not exist',
+        )
+
     def test_tree(self):
         arch = """
             <list>

@@ -4,6 +4,7 @@ import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
+import { getUploadOptions } from "@web/views/view_button/upload_button";
 import { useViewButtonHandler } from "@web/views/view_button/view_button_hook";
 
 const explicitRankClasses = [
@@ -96,6 +97,12 @@ export class ViewButton extends Component {
         return { context: this.props.context, ...this.props.clickParams };
     }
 
+    get isDropzoneOnly() {
+        return (
+            this.clickParams.type === "upload" && !!getUploadOptions(this.clickParams).dropzone_only
+        );
+    }
+
     get hasBigTooltip() {
         return this.debugMode.isActive() || this.clickParams.help;
     }
@@ -112,7 +119,7 @@ export class ViewButton extends Component {
     /**
      * @param {MouseEvent} ev
      */
-    onClick(ev, newWindow) {
+    onClick(ev, newWindow, files) {
         if (this.props.tag === "a") {
             ev.preventDefault();
         }
@@ -134,7 +141,12 @@ export class ViewButton extends Component {
                 ),
             beforeExecute: () => this.dropdownControl.close(),
             newWindow,
+            files,
         });
+    }
+
+    onUploadFiles(ev) {
+        this.onClick(ev, false, ev.detail.files);
     }
 
     getClassName() {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="web.UploadDropzone">
+    <div class="o-UploadDropzone position-fixed d-flex align-items-end justify-content-center pb-4"
+        t-on-dragover.prevent=""
+        t-on-drop="this.onDrop"
+        t-ref="this.root"
+    >
+        <div class="o-UploadDropzone-hint d-flex flex-column align-items-center gap-1 px-5 py-3 text-center">
+            <i class="oi oi-fw fs-1" data-icon="cloud_upload"/>
+            <span>Drop files to upload them to</span>
+            <strong t-if="this.props.label" class="fs-5" t-out="this.props.label"/>
+        </div>
+    </div>
+</t>
+
+</templates>

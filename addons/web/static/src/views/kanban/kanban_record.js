@@ -12,6 +12,7 @@ import {
     getRawValue,
 } from "@web/views/card/card_renderer";
 import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
+import { useRecordUploadDropzone } from "@web/views/view_button/upload_dropzone_hook";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
@@ -86,6 +87,13 @@ export class KanbanRecord extends CardRenderer {
         this.longTouchTimer = null;
         this.touchStartMs = 0;
         this.showMenu = this.constructor.MENU_ATTRIBUTE in this.templates;
+        const templateDocs = Object.values(this.props.archInfo.templateDocs || {});
+        if (templateDocs.some((doc) => doc.querySelector('button[type="upload"]'))) {
+            useRecordUploadDropzone(
+                this.rootRef,
+                () => this.props.record.data.display_name || this.props.record.data.name
+            );
+        }
     }
 
     get renderingContext() {
@@ -145,7 +153,11 @@ export class KanbanRecord extends CardRenderer {
         }
         if (cardColorField) {
             const value = record.data[cardColorField];
-            classes.push(`o_kanban_record_colored ${this.constructor.HIGHLIGHT_COLOR_PREFIX}${getColorIndex(value)}`);
+            classes.push(
+                `o_kanban_record_colored ${this.constructor.HIGHLIGHT_COLOR_PREFIX}${getColorIndex(
+                    value
+                )}`
+            );
         }
         if (!this.props.groupByField) {
             classes.push("flex-grow-1 flex-md-shrink-1 flex-shrink-0");

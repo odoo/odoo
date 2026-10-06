@@ -40,7 +40,7 @@
                         <t t-foreach="this.archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!this.evalViewModifier(button.invisible)">
                             <DropdownItem class="'o-dropdown-item-unstyled-button'">
                                 <MultiRecordViewButton
-                                    t-if="button.display !== 'always'"
+                                    t-if="button.display === 'selection'"
                                     list="this.model.root"
                                     className="button.className"
                                     clickParams="button.clickParams"
@@ -62,7 +62,7 @@
                         <t t-if="!this.uiService.isSmall">
                             <t t-foreach="this.archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!this.evalViewModifier(button.invisible)">
                                 <MultiRecordViewButton
-                                    t-if="button.display !== 'always'"
+                                    t-if="button.display === 'selection'"
                                     list="this.model.root"
                                     className="button.className"
                                     clickParams="button.clickParams"

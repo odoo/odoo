@@ -21,6 +21,7 @@ import { Field } from "@web/views/fields/field";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { isX2Many } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { getUploadOptions } from "@web/views/view_button/upload_button";
 import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { useDeleteRecords } from "@web/views/view_hook";
@@ -721,6 +722,10 @@ export class FormController extends Component {
 
     async beforeExecuteActionButton(clickParams) {
         const record = this.model.root;
+        if (clickParams.type === "upload" && getUploadOptions(clickParams).model) {
+            // the record is not sent to the method of another model: no need to save it
+            return;
+        }
         if (clickParams.special !== "cancel") {
             let saved = false;
             if (clickParams.special === "save" && this.props.saveRecord) {
