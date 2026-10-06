@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { waitFor } from "@odoo/hoot-dom";
-import { MockServer } from "@web/../tests/web_test_helpers";
+import { MockServer, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { localization } from "@web/core/l10n/localization";
 import { setupAndMountPosApp } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import * as PosUiUtils from "@point_of_sale/../tests/unit/ui_utils";
@@ -88,6 +89,32 @@ test("test_settle_so_with_non_pos_groupable_uom: quantity is converted back to t
     expect(order.lines[0].qty).toBe(0.5);
     expect(order.lines[0].price_unit).toBe(10);
     expect(Utils.hasOrderline({ productName: "Pomme de Terre", quantity: "0.5" })).toBe(true);
+});
+
+test("test_settle_so_price_unit_not_rounded: the sale order line unit price is kept", async () => {
+    const store = await setupAndMountPosApp();
+    patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
+
+    // The sale order doesn't round its unit prices to the Product Price precision.
+    MockServer.env["sale.order.line"].write([8], {
+        product_uom_qty: 100,
+        price_unit: 0.1838,
+        discount: 10,
+    });
+
+    await Utils.settleSaleOrder("S00005");
+
+    const order = store.getOrder();
+    expect(order.lines[0].price_unit).toBe(0.1838);
+    // 100 * 0.1838 * 90%, the 16.54 of the sale order total
+    expect(Utils.hasOrderline({ productName: "TEST", quantity: "100", price: "16,54" })).toBe(true);
+    expect(Utils.getOrderTotal()).toInclude("16,54");
+
+    await Utils.clickNumpad("Price");
+    await Utils.sendBufferKeys("0", ",", "2", "5");
+    expect(order.lines[0].price_unit).toBe(0.25);
+    expect(Utils.hasOrderline({ productName: "TEST", quantity: "100", price: "22,50" })).toBe(true);
+    expect(Utils.getOrderTotal()).toInclude("22,50");
 });
 
 test("test_quantity_updated_settle: settling twice only loads the remaining quantity", async () => {
