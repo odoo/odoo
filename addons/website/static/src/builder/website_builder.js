@@ -2,7 +2,7 @@ import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS, MAIN_PLUGINS } from "@html_builder/core/core_plugins";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillStart, onWillUnmount, useProps, t } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, proxy, useProps, t } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -19,6 +19,10 @@ import {
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
 import { router } from "@web/core/browser/router";
+import {
+    clearPageAccessibilityHighlights,
+    highlightPageTextContrastIssues,
+} from "./page_accessibility";
 
 // Other Plugins depend on those 2 plugins, but they are not used in translation
 // mode.
@@ -41,6 +45,8 @@ export class WebsiteBuilder extends Component {
     setup() {
         this.websiteService = useService("website");
         this.dialog = useService("dialog");
+        this.notification = useService("notification");
+        this.pageAccessibilityState = proxy({ active: false, issueCount: 0 });
         this.websiteEditService =
             this.websiteService.websiteRootInstance?.env.services["website_edit"];
         useSetupAction({
@@ -62,6 +68,9 @@ export class WebsiteBuilder extends Component {
             this.pushHistoryState();
         });
         onWillUnmount(() => {
+            if (this.editor) {
+                clearPageAccessibilityHighlights(this.editor.document);
+            }
             // If the guard entry is still on top (e.g. save path).
             if (this.isGuardActive) {
                 this.pendingHistoryCleanup = true;
@@ -106,6 +115,22 @@ export class WebsiteBuilder extends Component {
             this.props.builderProps.closeEditor();
         }
         this.reloadAfterTimeout();
+    }
+
+    checkPageAccessibility() {
+        if (this.pageAccessibilityState.active) {
+            clearPageAccessibilityHighlights(this.editor.document);
+            this.pageAccessibilityState.active = false;
+            this.pageAccessibilityState.issueCount = 0;
+            return;
+        }
+        this.pageAccessibilityState.issueCount = highlightPageTextContrastIssues(
+            this.editor.document
+        );
+        this.pageAccessibilityState.active = this.pageAccessibilityState.issueCount > 0;
+        if (!this.pageAccessibilityState.active) {
+            this.notification.add(_t("No text contrast issue found"), { type: "success" });
+        }
     }
 
     onBeforeUnload(event) {
@@ -182,6 +207,10 @@ export class WebsiteBuilder extends Component {
                 return;
             }
         }
+
+        clearPageAccessibilityHighlights(this.editor.document);
+        this.pageAccessibilityState.active = false;
+        this.pageAccessibilityState.issueCount = 0;
 
         // TODO: handle the urgent save and the fail of the save operation
         await this.editor.shared.operation.next(

@@ -1,3 +1,16 @@
+body {
+    overflow: hidden;
+}
+
 .o_website_theme_colors_preview_label {
     font-family: $o-system-fonts;
+
+    &[data-wcag-preset-filter] {
+        cursor: pointer;
+
+        &.active {
+            outline: 2px solid var(--primary, #714b67);
+            outline-offset: 2px;
+        }
+    }
 }

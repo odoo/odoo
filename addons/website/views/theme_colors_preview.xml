@@ -10,28 +10,29 @@
     </xpath>
     <xpath expr="//body" position="inside">
         <section class="o_colored_level d-flex align-items-center min-vh-100">
-            <div class="container py-4 mb-5">
+            <div class="container py-3 mb-3">
                 <div class="row g-3">
                     <t t-foreach="range(1, 6)" t-as="preset_id">
-                        <div class="col-lg-4">
-                            <span class="badge o_website_theme_colors_preview_label mb-2" style="--badge-border-color: #cccccc; --badge-bg: white; --badge-color: black;">
+                        <div class="col-12 col-sm-6" t-att-data-color-preset="preset_id">
+                            <button type="button" class="badge o_website_theme_colors_preview_label mb-2" data-wcag-preset-filter="" t-att-data-preset="preset_id" aria-pressed="false" style="--badge-border-color: #cccccc; --badge-bg: white; --badge-color: black;">
                                 Color preset #<t t-out="preset_id"/>
-                            </span>
+                                <i class="oi text-danger ms-1" data-icon="warning" data-wcag-warning="" title="Accessibility issues" hidden=""/>
+                            </button>
                             <div t-attf-class="o_colored_level o_cc o_cc#{preset_id} p-4 pb-3 border rounded-1 shadow-sm">
-                                <h4>Title</h4>
-                                <p>This is how text and <a href="#">links</a> will look with this color preset.</p>
+                                <h4 data-wcag-text="" data-wcag-role="title">Title</h4>
+                                <p data-wcag-text="" data-wcag-role="body">This is how text and <a href="#" data-wcag-text="" data-wcag-role="link">links</a> will look with this color preset.</p>
                                 <p class="mb-0">
-                                    <a class="btn btn-primary mb-2" href="#">Primary</a>
-                                    <a class="btn btn-secondary mb-2" href="#">Secondary</a>
+                                    <a class="btn btn-primary mb-2" href="#" data-wcag-text="" data-wcag-role="primary_button" data-wcag-button="">Primary</a>
+                                    <a class="btn btn-secondary mb-2" href="#" data-wcag-text="" data-wcag-role="secondary_button" data-wcag-button="">Secondary</a>
                                 </p>
                                 <p class="mb-0">
-                                    <a class="btn btn-outline-primary mb-2" href="#">Primary</a>
-                                    <a class="btn btn-outline-secondary mb-2" href="#">Secondary</a>
+                                    <a class="btn btn-outline-primary mb-2" href="#" data-wcag-text="" data-wcag-role="primary_outline_button" data-wcag-button="">Primary</a>
+                                    <a class="btn btn-outline-secondary mb-2" href="#" data-wcag-text="" data-wcag-role="secondary_outline_button" data-wcag-button="">Secondary</a>
                                 </p>
                             </div>
                         </div>
                     </t>
-                    <div class="col-lg-4 d-flex flex-column">
+                    <div class="col-12 col-sm-6 d-flex flex-column">
                         <span class="badge o_website_theme_colors_preview_label align-self-start mb-2" style="--badge-border-color: #cccccc; --badge-bg: white; --badge-color: black;">
                             UI elements
                         </span>

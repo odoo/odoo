@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ThemeAccessibilityDialog">
+    <Dialog title="'Accessibility: ' + this.props.title" footer="false">
+        <div class="o_theme_accessibility_dialog" aria-live="polite">
+            <t t-if="this.state.isChecking">
+                <div t-if="this.state.showLoading" class="text-center py-4">
+                    <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"/>
+                    Analyzing theme options...
+                </div>
+            </t>
+            <t t-else="">
+                <div t-if="this.check" class="alert alert-info d-flex gap-2">
+                    <i class="oi flex-shrink-0 mt-1" data-icon="info" aria-hidden="true"/>
+                    <div>
+                        <p class="mb-2" t-out="this.check.description"/>
+                        <span t-foreach="this.check.links" t-as="link" t-key="link[0]">
+                            <a class="me-3" t-att-href="'https://www.w3.org/WAI/WCAG22/Understanding/' + link[2]"
+                                target="_blank" rel="noopener noreferrer">
+                                <t t-out="link[0]"/> <t t-out="link[1]"/>
+                                <i class="oi ms-1" data-icon="open_in_new" aria-hidden="true"/>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <div t-if="!this.state.issues.length &amp;&amp; !this.check" class="alert alert-success mb-0">
+                    <i class="oi me-2" data-icon="check" aria-hidden="true"/>No issue found
+                </div>
+                <ul t-else="" class="list-unstyled d-flex flex-column gap-2 mb-0">
+                    <li t-foreach="this.state.issues" t-as="issue" t-key="issue_index"
+                        class="border rounded p-3">
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="oi text-danger mt-1" data-icon="warning" aria-hidden="true"/>
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <strong t-out="issue.title"/>
+                                    <a class="btn btn-sm btn-outline-secondary flex-shrink-0"
+                                        t-att-href="issue.url" target="_blank" rel="noopener noreferrer"
+                                        t-att-title="'WCAG ' + issue.criterion"
+                                        t-att-aria-label="'Open WCAG ' + issue.criterion">
+                                        <i class="oi me-1" data-icon="info" aria-hidden="true"/>
+                                        WCAG <t t-out="issue.criterion"/>
+                                    </a>
+                                </div>
+                                <p class="mb-1 mt-1" t-out="issue.diagnosis"/>
+                                <p class="mb-0 text-success"><i class="oi me-1" data-icon="arrow_right" aria-hidden="true"/><t t-out="issue.solution"/></p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </t>
+        </div>
+    </Dialog>
+</t>
+
+</templates>
