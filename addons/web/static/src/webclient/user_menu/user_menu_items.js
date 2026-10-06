@@ -38,14 +38,14 @@ class ShortcutsFooterComponent extends Component {
 function shortCutsItem() {
     const command = useService("command");
     const ui = useService("ui");
-
+    const label = _t("Shortcuts");
     return {
         type: "item",
         id: "shortcuts",
         hide: ui.isSmall,
         description: markup`
             <div class="d-flex align-items-center justify-content-between p-0 w-100">
-                <span>${_t("Shortcuts")}</span>
+                <span>${label}</span>
                 <span class="fw-bold">${isMacOS() ? "CMD" : "CTRL"}+K</span>
             </div>`,
         callback: () => {
