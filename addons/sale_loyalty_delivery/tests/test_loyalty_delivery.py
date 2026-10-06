@@ -19,17 +19,10 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             "list_price": 200.0,
         })
         cls.product_uom_unit = cls.env.ref("uom.product_uom_unit")
-        cls.product_delivery = cls.env["product.product"].create({
-            "name": "Delivery Charges",
-            "type": "service",
-            "list_price": 40.0,
-            "categ_id": cls.env.ref("delivery.product_category_deliveries").id,
-        })
         cls.delivery_carrier = cls.env["delivery.carrier"].create({
             "name": "Delivery Now Free Over 100",
             "fixed_price": 40,
             "delivery_type": "fixed",
-            "product_id": cls.product_delivery.id,
             "free_over": True,
             "amount": 100,
         })
@@ -170,7 +163,7 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         delivery_wizard.save().button_confirm()
 
         self.assertEqual(
-            order.order_line.filtered("is_delivery").price_unit, self.product_delivery.list_price
+            order.order_line.filtered("is_delivery").price_unit, self.delivery_carrier.fixed_price
         )
 
     def test_discount_percentage_ignores_delivery_lines(self):

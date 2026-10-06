@@ -195,7 +195,6 @@ class StockPicking(models.Model):
         return self.sale_id.order_line.filtered(
             lambda l: l.is_delivery
             and l.currency_id.is_zero(l.price_unit)
-            and l.product_id == self.carrier_id.product_id
         )
 
     def _prepare_sale_delivery_line_vals(self):

@@ -64,6 +64,9 @@
             <button name="toggle_debug" position="attributes">
                 <attribute name="invisible" add="delivery_type == 'in_store'" separator=" or "/>
             </button>
+            <field name="fixed_price" position="attributes">
+                <attribute name="invisible" add="delivery_type != 'in_store'" separator=" and "/>
+            </field>
         </field>
     </record>
 

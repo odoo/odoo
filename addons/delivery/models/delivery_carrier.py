@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
 import json
+import re
 
 import psycopg2
 
@@ -9,6 +9,7 @@ from odoo import SUPERUSER_ID, Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import expr_eval
+from odoo.tools.sql import SQL
 
 
 class DeliveryCarrier(models.Model):
@@ -53,28 +54,40 @@ class DeliveryCarrier(models.Model):
         default="rate_and_ship",
     )
     prod_environment = fields.Boolean(
-        string="Environment", help="Set to True if your credentials are certified for production.",
-        compute="_compute_prod_environment", store=True
+        string="Environment",
+        help="Set to True if your credentials are certified for production.",
+        compute="_compute_prod_environment",
+        store=True,
     )
-    support_test_environment = fields.Boolean(string="Test Environment", compute="_compute_support_test_environment")
+    support_test_environment = fields.Boolean(
+        string="Test Environment", compute="_compute_support_test_environment"
+    )
     debug_logging = fields.Boolean(
         string="Debug logging", help="Log requests in order to ease debugging"
     )
-    company_id = fields.Many2one(
-        comodel_name="res.company", related="product_id.company_id", store=True, readonly=False
-    )
-    product_id = fields.Many2one(
-        string="Delivery Product",
-        comodel_name="product.product",
-        ondelete="restrict",
-        required=True,
+    company_id = fields.Many2one(comodel_name="res.company", string="Company")
+    tax_ids = fields.Many2many(
+        string="Sales Tax",
+        comodel_name="account.tax",
+        relation="delivery_carrier_account_tax_rel",
+        domain=[("type_tax_use", "=", "sale")],
+        default=lambda self: (
+            self.env.companies.account_sale_tax_id
+            or self.env.companies.root_id.sudo().account_sale_tax_id
+        ),
+        check_company=True,
     )
     tracking_url = fields.Char(
         string="Tracking Link",
         help="This option adds a link for the customer in the portal to track their package easily."
         " Use <shipmenttrackingnumber> as a placeholder in your URL.",
     )
-    currency_id = fields.Many2one(related="product_id.currency_id")
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        compute="_compute_currency_id",
+        compute_sql="_compute_sql_currency_id",
+        compute_sudo=True,
+    )
 
     invoice_policy = fields.Selection(
         string="Invoicing Policy",
@@ -182,6 +195,7 @@ class DeliveryCarrier(models.Model):
         inverse_name="carrier_id",
         copy=True,
     )
+    pricelist_ids = fields.Many2many(string="Pricelist", comodel_name="product.pricelist")
 
     _margin_not_under_100_percent = models.Constraint(
         "CHECK (margin >= -1)", "Margin cannot be lower than -100%"
@@ -190,8 +204,15 @@ class DeliveryCarrier(models.Model):
         "CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)",
         "The shipping insurance must be a percentage between 0 and 100.",
     )
-    delivery_cost = fields.Monetary(string="Cost", readonly=True, compute="_compute_delivery_cost", currency_field="delivery_currency_id")
-    delivery_currency_id = fields.Many2one(comodel_name="res.currency", compute="_compute_delivery_currency_id")
+    delivery_cost = fields.Monetary(
+        string="Cost",
+        readonly=True,
+        compute="_compute_delivery_cost",
+        currency_field="delivery_currency_id",
+    )
+    delivery_currency_id = fields.Many2one(
+        comodel_name="res.currency", compute="_compute_delivery_currency_id"
+    )
 
     @api.constrains("must_have_tag_ids", "excluded_tag_ids")
     def _check_tags(self):
@@ -208,7 +229,10 @@ class DeliveryCarrier(models.Model):
     @api.depends("delivery_type")
     def _compute_support_test_environment(self):
         for carrier in self:
-            carrier.support_test_environment = carrier.delivery_type not in ['fixed', 'base_on_rule']
+            carrier.support_test_environment = carrier.delivery_type not in [
+                "fixed",
+                "base_on_rule",
+            ]
 
     @api.depends("support_test_environment")
     def _compute_prod_environment(self):
@@ -224,6 +248,16 @@ class DeliveryCarrier(models.Model):
         self.volume_uom_name = self.env[
             "product.template"
         ]._get_volume_uom_name_from_ir_config_parameter()
+
+    @api.depends("company_id")
+    def _compute_currency_id(self):
+        main_company = self.env["res.company"]._get_main_company()
+        for carrier in self:
+            carrier.currency_id = carrier.company_id.sudo().currency_id or main_company.currency_id
+
+    def _compute_sql_currency_id(self, table):
+        main_company = self.env["res.company"]._get_main_company()
+        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, main_company.currency_id.id)
 
     @api.depends("delivery_type")
     def _compute_can_generate_return(self):
@@ -289,6 +323,7 @@ class DeliveryCarrier(models.Model):
             and self._match_excluded_tags(source)
             and self._match_weight(source)
             and self._match_volume(source)
+            and self._match_pricelist(source)
         )
 
     def _match_address(self, partner):
@@ -359,6 +394,14 @@ class DeliveryCarrier(models.Model):
             raise UserError(self.env._("Invalid source document type"))
         return total_volume <= self.max_volume
 
+    def _match_pricelist(self, source):
+        self.ensure_one()
+        return (
+            source._name != "sale.order"
+            or not self.pricelist_ids
+            or source.pricelist_id in self.pricelist_ids
+        )
+
     @api.onchange("integration_level")
     def _onchange_integration_level(self):
         if self.integration_level == "rate":
@@ -407,6 +450,19 @@ class DeliveryCarrier(models.Model):
         )
         return float(price) * (1.0 + self.margin) + fixed_margin_in_sale_currency
 
+    def _adapt_price_unit_to_mapped_taxes(self, price_unit, order):
+        self.ensure_one()
+        taxes = self.tax_ids._filter_taxes_by_company(order.company_id)
+        if not taxes or not order.fiscal_position_id:
+            return price_unit
+        return taxes._adapt_price_unit_to_another_taxes(
+            price_unit,
+            product=False,
+            original_taxes=taxes,
+            new_taxes=order.fiscal_position_id.map_tax(taxes),
+            document_tax_mode=order.document_tax_mode,
+        )
+
     # -------------------------- #
     # API for external providers #
     # -------------------------- #
@@ -429,16 +485,7 @@ class DeliveryCarrier(models.Model):
         if hasattr(self, "%s_rate_shipment" % self.delivery_type):
             res = getattr(self, "%s_rate_shipment" % self.delivery_type)(order)
             # apply fiscal position
-            company = self.company_id or order.company_id or self.env.company
-            res["price"] = self.product_id._get_tax_included_unit_price(
-                company,
-                company.currency_id,
-                order.date_order,
-                "sale",
-                fiscal_position=order.fiscal_position_id,
-                product_price_unit=res["price"],
-                product_currency=company.currency_id,
-            )
+            res["price"] = self._adapt_price_unit_to_mapped_taxes(res["price"], order)
             # apply margin on computed price
             res["price"] = order.currency_id.round(self._apply_margins(res["price"], order))
             # save the real price in case a free_over rule overide it to 0
@@ -494,21 +541,7 @@ class DeliveryCarrier(models.Model):
     # Fixed price shipping, aka a very simple provider #
     # ------------------------------------------------ #
 
-    fixed_price = fields.Float(
-        string="Fixed Price",
-        compute="_compute_fixed_price",
-        inverse="_set_product_fixed_price",
-        store=True,
-    )
-
-    @api.depends("product_id.list_price", "product_id.product_tmpl_id.list_price")
-    def _compute_fixed_price(self):
-        for carrier in self:
-            carrier.fixed_price = carrier.product_id.list_price
-
-    def _set_product_fixed_price(self):
-        for carrier in self:
-            carrier.product_id.list_price = carrier.fixed_price
+    fixed_price = fields.Float(string="Fixed Price", min_display_digits="Product Price")
 
     def fixed_rate_shipment(self, order):
         carrier = self._match_address(order.partner_shipping_id)
@@ -521,7 +554,7 @@ class DeliveryCarrier(models.Model):
                 ),
                 "warning_message": False,
             }
-        price = order.pricelist_id._get_product_price(self.product_id, 1.0)
+        price = self._compute_currency(order, self.fixed_price, "company_to_pricelist")
         return {"success": True, "price": price, "error_message": False, "warning_message": False}
 
     # ----------------------------------- #
@@ -646,7 +679,7 @@ class DeliveryCarrier(models.Model):
     def _compute_display_name(self):
         """Change display name for the carrier selection in SO"""
         carrier_prices_dumped = self.env.context.get("carrier_prices_dumped")
-        formatted_display_name = self.env.context.get('formatted_display_name')
+        formatted_display_name = self.env.context.get("formatted_display_name")
 
         super()._compute_display_name()
 
@@ -662,7 +695,9 @@ class DeliveryCarrier(models.Model):
             delivery_vals = carrier_prices.get(str(carrier.id), {})
 
             if delivery_vals and "display_price" in delivery_vals:
-                formatted_price = carrier.delivery_currency_id.format(delivery_vals.get("display_price", 0.0))
+                formatted_price = carrier.delivery_currency_id.format(
+                    delivery_vals.get("display_price", 0.0)
+                )
                 carrier.display_name = f"{carrier.display_name}\t--{formatted_price}--"
 
     @api.depends("delivery_currency_id")

@@ -9,12 +9,12 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 @tagged("post_install", "-at_install")
 class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -59,7 +59,6 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
             "name": "Test Carrier",
             "allow_cash_on_delivery": True,
             "delivery_type": "fixed",
-            "product_id": self.storable_product.id,
         })
         carrier.delivery_type = "in_store"
         self.assertEqual(carrier.allow_cash_on_delivery, False)

@@ -125,25 +125,18 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         })
         cls.ewallet._adjust_points(1000000, "Initial balance")
 
-        delivery_product1, delivery_product2 = cls.env["product.product"].create([
-            {"name": "Delivery 1", "invoice_policy": "order", "type": "service"},
-            {"name": "Delivery 2", "invoice_policy": "order", "type": "service"},
-        ])
-
         cls.normal_delivery, cls.normal_delivery2 = cls.env["delivery.carrier"].create([
             {
                 "name": "delivery1",
                 "fixed_price": 5,
                 "delivery_type": "fixed",
                 "website_published": True,
-                "product_id": delivery_product1.id,
             },
             {
                 "name": "delivery2",
                 "fixed_price": 10,
                 "delivery_type": "fixed",
                 "website_published": True,
-                "product_id": delivery_product2.id,
             },
         ])
 

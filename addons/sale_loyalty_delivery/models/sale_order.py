@@ -29,7 +29,7 @@ class SaleOrder(models.Model):
 
     def _get_reward_values_free_shipping(self, reward, coupon, **_kwargs):
         delivery_line = self.order_line.filtered(lambda line: line.is_delivery)[:1]
-        taxes = delivery_line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
+        taxes = self.carrier_id.tax_ids._filter_taxes_by_company(self.company_id)
         taxes = self.fiscal_position_id.map_tax(taxes)
         max_discount = reward.discount_max_amount or float("inf")
         return [

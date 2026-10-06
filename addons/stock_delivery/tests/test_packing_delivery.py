@@ -37,14 +37,9 @@ class TestPackingDelivery(TestPackingCommon):
             'weight': 0.3,
             'uom_id': cls.uom_kg.id,
         })
-        test_carrier_product = cls.env['product.product'].create({
-            'name': 'Test carrier product',
-            'type': 'service',
-        })
         cls.test_carrier = cls.env['delivery.carrier'].create({
             'name': 'Test carrier',
             'delivery_type': 'fixed',
-            'product_id': test_carrier_product.id,
         })
 
     def test_put_in_pack_weight_wizard(self):
@@ -259,14 +254,9 @@ class TestPackingDelivery(TestPackingCommon):
              - Different delivery carriers = UserError
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 4.0)
-        another_test_carrier_product = self.env['product.product'].create({
-            'name': 'Another test carrier product',
-            'type': 'service',
-        })
         test_carrier = self.env['delivery.carrier'].create({
             'name': 'Another Test carrier',
             'delivery_type': 'fixed',
-            'product_id': another_test_carrier_product.id,
         })
 
         delivery_1 = self.env['stock.picking'].create({
