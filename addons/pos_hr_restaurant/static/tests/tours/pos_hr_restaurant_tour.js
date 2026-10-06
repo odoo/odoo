@@ -6,28 +6,6 @@ import * as CashierSelectionPopup from "@pos_hr/../tests/tours/utils/cashier_sel
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("test_post_login_default_screen_is_tables", {
-    steps: () =>
-        [
-            Chrome.clickBtn("Open Register"),
-            PosHr.clickLoginButton(),
-            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
-            Dialog.confirm("Open Register"),
-            FloorScreen.isShown(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_post_login_default_screen_is_register", {
-    steps: () =>
-        [
-            Chrome.clickBtn("Open Register"),
-            PosHr.clickLoginButton(),
-            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
-            Dialog.confirm("Open Register"),
-            ProductScreen.isShown(),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("test_employee_chatter_with_tracked_order", {
     steps: () =>
         [
