@@ -333,6 +333,7 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _ubl_add_values_company(self, vals, company):
         vals['company'] = company
+        vals['company_currency'] = company.currency_id
 
     def _ubl_add_values_currency(self, vals, currency):
         vals['currency'] = currency
@@ -1166,7 +1167,7 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _ubl_add_tax_currency_code_node_company_currency_if_foreign_currency(self, vals):
         company = vals['company']
-        currency = vals['currency_id']
+        currency = vals['currency']
         vals['document_node']['cbc:TaxCurrencyCode'] = {'_text': None if currency == company.currency_id else company.currency_id.name}
 
     def _ubl_add_tax_currency_code_node_company_currency(self, vals):
@@ -1537,7 +1538,7 @@ class AccountEdiUBL(models.AbstractModel):
         base_lines = vals['base_lines']
         company = vals['company']
         company_currency = company.currency_id
-        currency = vals['currency_id']
+        currency = vals['currency']
 
         iter_currency = [(currency, '_currency')]
         if currency != company_currency:
@@ -1659,7 +1660,7 @@ class AccountEdiUBL(models.AbstractModel):
                 nodes.append(tax_total_node)
 
     def _ubl_add_legal_monetary_total_line_extension_amount_node(self, vals, in_foreign_currency=True):
-        currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
+        currency = vals['currency'] if in_foreign_currency else vals['company_currency']
 
         line_extension_amount = sum(
             line_node['cbc:LineExtensionAmount']['_text']
@@ -1676,7 +1677,7 @@ class AccountEdiUBL(models.AbstractModel):
             minus sum of allowance amount on document level
             plus sum of charges on document level.
         """
-        currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
+        currency = vals['currency'] if in_foreign_currency else vals['company_currency']
         node = vals['legal_monetary_total_node']
 
         tax_exlusive_amount = node['cbc:LineExtensionAmount']['_text']
@@ -1694,7 +1695,7 @@ class AccountEdiUBL(models.AbstractModel):
         }
 
     def _ubl_add_legal_monetary_total_tax_inclusive_amount_node(self, vals, in_foreign_currency=True):
-        currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
+        currency = vals['currency'] if in_foreign_currency else vals['company_currency']
         document_node = vals['document_node']
         node = vals['legal_monetary_total_node']
 
@@ -1717,7 +1718,7 @@ class AccountEdiUBL(models.AbstractModel):
         }
 
     def _ubl_add_legal_monetary_total_allowance_charge_total_amount_node(self, vals, in_foreign_currency=True):
-        currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
+        currency = vals['currency'] if in_foreign_currency else vals['company_currency']
         node = vals['legal_monetary_total_node']
 
         total_allowance = sum(
@@ -1743,7 +1744,7 @@ class AccountEdiUBL(models.AbstractModel):
         })
 
     def _ubl_add_legal_monetary_total_prepaid_payable_amount_node(self, vals, in_foreign_currency=True):
-        currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
+        currency = vals['currency'] if in_foreign_currency else vals['company_currency']
         node = vals['legal_monetary_total_node']
 
         payable_rounding_amount = (node['cbc:PayableRoundingAmount'] or {}).get('_text') or 0.0
@@ -1801,7 +1802,7 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_add_legal_monetary_total_payable_rounding_amount_node(self, vals):
         AccountTax = self.env['account.tax']
         base_lines = vals['base_lines']
-        currency = vals['currency_id']
+        currency = vals['currency']
         node = vals['legal_monetary_total_node']
         tax_inclusive_amount = node['cbc:TaxInclusiveAmount']['_text']
 
@@ -1980,6 +1981,34 @@ class AccountEdiUBL(models.AbstractModel):
 
         self._define_document_type(vals, document_type)
 
+    def _ubl_setup_base_lines(self, vals):
+        """ Prepare vals['base_lines'] for the builders of the nodes.
+
+        :param vals: Some custom data.
+        """
+        AccountTax = self.env['account.tax']
+        company = vals['company']
+
+        # Manage taxes for emptying.
+        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(
+            base_lines=vals['base_lines'],
+            company=company,
+            vals=vals,
+        )
+
+        # Sub-dictionaries to store UBL-related values along the whole process.
+        vals['_ubl_values'] = {}
+        for base_line in vals['base_lines']:
+            base_line['_ubl_values'] = {}
+
+        # Global rounding of tax_details using 6 digits.
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
+        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
+        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
+
     def _init_invoice_export_values(self, invoice):
         vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
 
@@ -2000,6 +2029,7 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_values_delivery(vals, delivery)
 
         vals['base_lines'], vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
+        self._ubl_setup_base_lines(vals)
         return vals
 
     def _export_invoice(self, invoice):
