@@ -3167,6 +3167,17 @@ export class PosStore extends WithLazyGetterTrap {
             orderUuid: this.getOrder().uuid,
             fastPaymentMethod: paymentMethod,
         });
+        if (paymentMethod.payment_method_type === "qr_code") {
+            const qrPaymentLines = this.getOrder().payment_ids.filter(
+                (l) => l.payment_method_id.id === paymentMethod.id
+            );
+            const line = qrPaymentLines[qrPaymentLines.length - 1];
+            const resp = await this.showQR(line);
+            if (!line.handlePaymentResponse(resp)) {
+                line.delete();
+                return;
+            }
+        }
         await validation.validateOrder(false);
     }
 
