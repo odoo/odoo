@@ -7,13 +7,35 @@ patch(TicketScreen.prototype, {
     async onDoRefund() {
         await super.onDoRefund(...arguments);
         const order = this.getSelectedOrder();
-        const discountLines = order.discountLines;
         const destinationOrder = this.pos.getOrder();
-
-        if (discountLines?.length && destinationOrder) {
-            const { value, type } = order.globalDiscountPc;
-            this.pos.applyDiscount(value, type, destinationOrder);
+        if (!order?.discountLines?.length || !destinationOrder) {
+            return;
         }
+        const { value, type } = this.getRefundDiscount(order, destinationOrder);
+        if (value) {
+            await this.pos.applyDiscount(value, type, destinationOrder);
+        }
+    },
+
+    getRefundDiscount(order, destinationOrder) {
+        const { value, type } = order.globalDiscountPc;
+        if (type === "percent") {
+            return { value, type };
+        }
+        const totalIncl = (lines) =>
+            lines.reduce((total, line) => total + line.prices.total_included, 0);
+        const base = totalIncl(order.lines.filter((line) => line.isGlobalDiscountApplicable()));
+        if (!base) {
+            return { value: 0, type: "fixed" };
+        }
+        const refundBase = -totalIncl(
+            destinationOrder.lines.filter((line) => line.isGlobalDiscountApplicable())
+        );
+        const discountAmount = -totalIncl(order.discountLines);
+        return {
+            value: this.pos.currency.round((discountAmount * refundBase) / base),
+            type: "fixed",
+        };
     },
 
     _onUpdateSelectedOrderline() {
@@ -21,7 +43,8 @@ patch(TicketScreen.prototype, {
         const orderline = this.getSelectedOrder().lines.find(
             (line) => line.id == selectedOrderlineId
         );
-        if (orderline && orderline.product_id.id === this.pos.config.discount_product_id?.id) {
+
+        if (orderline && orderline.isDiscountLine) {
             return this.dialog.add(AlertDialog, {
                 title: _t("Oh snap !"),
                 body: _t("You cannot edit a discount line."),
@@ -34,7 +57,7 @@ patch(TicketScreen.prototype, {
         if (
             this.getSelectedOrder()?.finalized &&
             this.getSelectedOrderlineId() == orderline.id &&
-            orderline.product_id.id === this.pos.config.discount_product_id?.id
+            orderline.isDiscountLine
         ) {
             {
                 return this.dialog.add(AlertDialog, {
