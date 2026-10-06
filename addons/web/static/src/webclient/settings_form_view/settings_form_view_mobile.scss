@@ -4,7 +4,10 @@
         flex-flow: column nowrap;
 
         > .o_control_panel {
-            @include o-webclient-padding($top: 10px, $bottom: 10px);
+            padding-top: 10px;
+            padding-right: var(--o-horizontal-padding);
+            padding-bottom: 10px;
+            padding-left: var(--o-horizontal-padding);
         }
 
         .o_setting_container {
