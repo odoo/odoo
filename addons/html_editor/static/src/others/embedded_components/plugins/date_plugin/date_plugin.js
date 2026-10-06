@@ -1,5 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { getColorOrClass } from "@html_editor/utils/color";
+import { removeClass } from "@html_editor/utils/dom";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
+import { FONT_SIZE_CLASSES, getFontSizeOrClass, removeStyle } from "@html_editor/utils/formatting";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { proxy } from "@odoo/owl";
@@ -82,6 +85,9 @@ export class DatePlugin extends Plugin {
         /** Overrides */
         apply_color_overrides: this.applyColorToDateNodes.bind(this),
 
+        /** Handlers */
+        on_format_applied_handlers: this.onFormatApplied.bind(this),
+
         /** Predicates */
         is_formattable_node_predicates: (node) => {
             if (node.matches?.(EMBEDDED_DATE_SELECTOR)) {
@@ -139,8 +145,37 @@ export class DatePlugin extends Plugin {
             })
         );
 
+        this.inheritListItemStyle(dateEl.firstChild);
         this.dependencies.dom.insert(dateEl);
         this.dependencies.history.commit();
+    }
+
+    /**
+     * Copies the color and font size of the list item containing the
+     * selection (if any) onto the given date element.
+     *
+     * @param {HTMLElement} dateNode
+     */
+    inheritListItemStyle(dateNode) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const listItem = closestElement(selection?.anchorNode, "li");
+        if (!listItem) {
+            return;
+        }
+
+        const color = getColorOrClass(listItem, "color");
+        if (color) {
+            this.dependencies.color.colorElement(dateNode, color.value, "color");
+        }
+
+        const fontSize = getFontSizeOrClass(listItem);
+        if (fontSize) {
+            if (fontSize.type === "class") {
+                dateNode.classList.add(fontSize.value);
+            } else {
+                dateNode.style.fontSize = fontSize.value;
+            }
+        }
     }
 
     applyColorToDateNodes(color, mode, coloredNodes) {
@@ -153,6 +188,26 @@ export class DatePlugin extends Plugin {
         for (const dateNode of dateNodes) {
             this.dependencies.color.colorElement(dateNode, color, mode);
             coloredNodes.add(dateNode);
+        }
+    }
+
+    onFormatApplied(node, formatSpec, applyStyle) {
+        if (formatSpec.id !== "fontSize" || node.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+        for (const dateNode of selectElements(node, EMBEDDED_DATE_SELECTOR)) {
+            // Always clear first so a stale inline size can't override a new class.
+            removeStyle(dateNode, "font-size");
+            removeClass(dateNode, ...FONT_SIZE_CLASSES);
+            if (!applyStyle) {
+                continue;
+            }
+            if (node.style.fontSize) {
+                dateNode.style.fontSize = node.style.fontSize;
+            }
+            dateNode.classList.add(
+                ...[...node.classList].filter((cls) => FONT_SIZE_CLASSES.includes(cls))
+            );
         }
     }
 }
