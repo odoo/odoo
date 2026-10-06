@@ -1166,16 +1166,12 @@ class MyInvoisDocument(models.Model):
         builder = self.env['account.edi.xml.ubl_myinvois_my']
         # 1. Validate the structure of the taxes
         self._validate_taxes()
-        # 2. Export the file data
-        vals = {'myinvois_document': self.with_context(lang=self.env.company.partner_id.lang)}
-        document_node = builder._get_myinvois_document_node(vals)
-        vals['document_node'] = document_node
-        # 3. Check for any issue with the data
-        errors = [constraint for constraint in builder._export_myinvois_document_constraints(vals).values() if constraint]
-        # 4. Generate the xml file
-        template = builder._get_document_template(vals)
-        nsmap = builder._get_document_nsmap(vals)
-        xml_content = dict_to_xml(document_node, nsmap=nsmap, template=template)
+        # 2. Export the file data, and check for any issue with the data
+        vals = builder._export_myinvois_document(self.with_context(lang=self.env.company.partner_id.lang))
+        errors = [constraint for constraint in vals['constraints'].values() if constraint]
+        # 3. Generate the xml file
+        document_node = vals['document_node']
+        xml_content = dict_to_xml(document_node, nsmap=document_node['_nsmap'], template=document_node['_template'])
         return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8'), set(errors)
 
     def _submit_to_myinvois(self, allow_raising=True):
