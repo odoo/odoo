@@ -66,7 +66,7 @@ export class InvisibleElementsPanel extends Component {
                 // more invisible descendants but is not a descendant.
                 const invisibleElement = {
                     snippetEl: snippetEl,
-                    name: getSnippetName(snippetEl),
+                    name: getSnippetName(snippetEl, this.env.editor.config.snippetModel),
                     isRootParent: !parentEl && !!descendantSnippetEls,
                     isDescendant: !!parentEl,
                     isVisible: snippetEl.dataset.invisible !== "1",

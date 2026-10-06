@@ -106,7 +106,9 @@ export class AnchorPlugin extends Plugin {
     }
 
     createAnchor(element) {
-        const title = element.querySelector(TITLE_SELECTOR)?.innerText || getSnippetName(element);
+        const title =
+            element.querySelector(TITLE_SELECTOR)?.innerText ||
+            getSnippetName(element, this.config.snippetModel);
         const anchorName = this.formatAnchor(title);
 
         let n = "";

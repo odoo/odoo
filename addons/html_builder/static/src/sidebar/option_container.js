@@ -97,7 +97,10 @@ export class OptionsContainer extends BaseOptionComponent {
             ? this.props.containerTitle.getTitleExtraInfo(this.props.editingElement)
             : "";
 
-        return (title || getSnippetName(this.env.getEditingElement())) + titleExtraInfo;
+        return (
+            (title || getSnippetName(this.env.getEditingElement(), this.env.editor.config.snippetModel)) +
+            titleExtraInfo
+        );
     }
 
     /** @param {PointerEvent | FocusEvent} ev */

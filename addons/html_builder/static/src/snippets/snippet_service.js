@@ -412,10 +412,12 @@ export class SnippetModel {
         for (const snippetEl of snippetsDocument.body.querySelectorAll("snippets > *")) {
             if (snippetEl.children[0].classList.contains("s_custom_snippet")) {
                 snippetEl.children[0].dataset.customName = snippetEl.getAttribute("name");
-            } else {
-                snippetEl.children[0].dataset.name = snippetEl.getAttribute("name");
             }
         }
+    }
+
+    getSnippetNameByKey(snippetKey) {
+        return this.getOriginalSnippet(snippetKey)?.title;
     }
 
     /**
