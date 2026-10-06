@@ -17,6 +17,7 @@ import { useModelWithSampleData } from "@web/model/model";
 import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
+import { useUploadDropzone } from "@web/views/view_button/upload_dropzone_hook";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
@@ -136,10 +137,23 @@ export class KanbanController extends Component {
             }
         });
 
-        useViewButtons(this.rootRef, {
+        this.handleViewButton = useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
             reload: () => this.model.load(),
+        });
+        useUploadDropzone({
+            // the records, not the search panel; the content until the renderer is mounted
+            getTargetEl: () =>
+                this.rootRef()?.querySelector(".o_content .o_kanban_renderer") ||
+                this.rootRef()?.querySelector(".o_content"),
+            getButtons: () => this.headerButtons,
+            isInvisible: (modifier) => this.evalViewModifier(modifier),
+            getResParams: () => {
+                const { context, evalContext, resModel } = this.model.root;
+                return { context, evalContext, resModel, resIds: [] };
+            },
+            handleViewButton: this.handleViewButton,
         });
         const { setScrollFromState } = useSetupAction({
             rootRef: this.rootRef,
