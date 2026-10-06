@@ -20,6 +20,9 @@ export class DiscountMenuWidget extends Component {
     }
 
     async doActionButton(type, name) {
+        if (this.props.record.isNew) {
+            await this.props.record.save({ reload: false });
+        }
         await this.actionService.doActionButton({
             type,
             name,
