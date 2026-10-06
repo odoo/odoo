@@ -248,9 +248,6 @@ class MaintenanceRequest(models.Model):
     def _default_stage(self):
         return self.env['maintenance.stage'].search([], limit=1)
 
-    def _creation_subtype(self):
-        return self.env.ref('maintenance.mt_req_created')
-
     def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if 'stage_id' in track_init_values:
@@ -327,6 +324,10 @@ class MaintenanceRequest(models.Model):
             copy=True,
             precompute=False
         )
+    is_overdue = fields.Boolean(
+        compute='_compute_is_overdue',
+        help="True if maintenance is overdue"
+    )
 
     def cancel_equipment_request(self):
         self.write({'state': 'cancelled', 'recurring_maintenance': False})
@@ -427,6 +428,16 @@ class MaintenanceRequest(models.Model):
         for request in self:
             if request.maintenance_type != 'preventive':
                 request.recurring_maintenance = False
+
+    @api.depends('schedule_date', 'state')
+    def _compute_is_overdue(self):
+        for request in self:
+            schedule_date = fields.Date.to_date(request.schedule_date)
+            request.is_overdue = (
+                    request.state not in ('done', 'cancelled')
+                    and schedule_date
+                    and schedule_date < fields.Date.today()
+            )
 
     def _read_group_equipment_id(self, records, domain):
         """ Read group customization in order to display all the equipment in
