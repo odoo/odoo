@@ -28,7 +28,7 @@ export class ChatGPTTranslatePlugin extends Plugin {
                 id: "translate",
                 groupId: "ai",
                 description: _t("Translate with AI"),
-                isAvailable: (selection) => !selection.isCollapsed && user.userId,
+                isAvailable: (selection) => !selection.isCollapsed && user.isInternalUser,
                 isDisabled: this.isNotReplaceableByAI.bind(this),
                 Component: LanguageSelector,
                 props: {
