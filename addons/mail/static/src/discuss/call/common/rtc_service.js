@@ -27,6 +27,7 @@ import { CallAction } from "@mail/discuss/call/common/call_actions";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { MailFullscreenPlugin } from "@mail/core/common/mail_fullscreen";
 import { PttExtensionPlugin } from "@mail/discuss/call/common/ptt_extension_plugin";
+import { TalkingDetector } from "@mail/discuss/call/common/talking_detector";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -400,6 +401,12 @@ export class Rtc extends Record {
     isFullscreenHintDismissed = false;
     /** Whether a media permission dialog is currently shown, it already conveys the permission warning. */
     isCallPermissionDialogOpen = false;
+    /** Whether to show the "talk while muted" suggestion, which is shown when the user is talking while muted. */
+    showTalkWhileMutedSuggestion = false;
+    /** Whether the "talk while muted" suggestion has been dismissed by the user. */
+    isTalkWhileMutedSuggestionDismissed = false;
+    /** Whether the "talk while muted" suggestion is disabled. */
+    isTalkWhileMutedSuggestionDisabled = false;
     /** @type {"granted" | "denied" | "prompt" | undefined} */
     cameraPermission;
     /**
@@ -550,6 +557,15 @@ export class Rtc extends Record {
         this.onEnter(
             () => [this.channel],
             (channel) => () => channel.clearActiveSpeakers()
+        );
+        this.onEnter(
+            () => [this.selfSession],
+            () => {
+                this.isTalkWhileMutedSuggestionDisabled = false;
+                this.talkingDetector ??= new TalkingDetector(this);
+                this.talkingDetector.start();
+                return () => this.talkingDetector?.stop();
+            }
         );
         // the services and the dialog the record holds, assigned when the service starts or
         // when a call runs
