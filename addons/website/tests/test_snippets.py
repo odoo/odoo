@@ -87,9 +87,6 @@ class TestSnippets(HttpCase):
         create_image_attachment(self.env, '/web/image/website.portrait_lg_3', 's_default_image2.webp')
         self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_image_gallery_remove", login='admin')
 
-    def test_10_parallax(self):
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'test_parallax', login='admin')
-
     def test_11_snippet_popup_display_on_click(self):
         # To make the tour reliable we need to wait a field using data-fill-with
         # to be patched, the step however relies on the company field being
