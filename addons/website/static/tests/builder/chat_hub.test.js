@@ -9,7 +9,8 @@ import { ChatHub } from "@mail/core/common/chat_hub";
 import { CHAT_HUB_DEFAULT_BUBBLE_START } from "@mail/core/common/chat_hub_model";
 import { animationFrame, describe, expect, queryFirst, test } from "@odoo/hoot";
 import { onPatched } from "@odoo/owl";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { CHAT_HUB_WE_SIDEBAR_WIDTH } from "@website/mail/core/common/chat_hub_model_patch";
 
 describe.current.tags("desktop");
@@ -26,7 +27,7 @@ test("chat hub offsets when website in edition mode", async () => {
         model: "discuss.channel",
     });
     setupChatHub({ opened: [channelId] });
-    patchWithCleanup(ChatHub.prototype, {
+    patch(ChatHub.prototype, {
         setup() {
             super.setup();
 

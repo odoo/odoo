@@ -19,8 +19,9 @@ import {
     waitFor,
     waitForNone,
 } from "@odoo/hoot";
-import { contains, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { browser, location } from "@web/core/browser/browser";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -162,7 +163,7 @@ test("LinkPopover opens in full composer", async () => {
             <field name="body" type="html" widget="html_composer_message"/>
         </form>`,
     };
-    patchWithCleanup(HtmlField.prototype, {
+    patch(HtmlField.prototype, {
         onEditorLoad(editor) {
             htmlEditor = editor;
             return super.onEditorLoad(...arguments);
@@ -184,7 +185,7 @@ test("LinkPopover opens in full composer", async () => {
 });
 
 test("link redirection should be prefixed for url of website pages only", async () => {
-    patchWithCleanup(browser, {
+    patch(browser, {
         open(url) {
             expect.step("website page url prefixed");
             expect(url.pathname.startsWith("/@")).toBe(true);
@@ -225,13 +226,13 @@ test("link redirection should be prefixed for url of website pages only", async 
 });
 
 test("link redirection should not be prefixed when the current page is not a website page", async () => {
-    patchWithCleanup(browser, {
+    patch(browser, {
         open(url) {
             expect.step("website page url prefixed");
             expect(url.pathname.startsWith("/@")).toBe(true);
         },
     });
-    patchWithCleanup(location, {
+    patch(location, {
         // simulating being on a non-website page (eg. backend) by using /odoo/ URL
         href: location.origin + "/odoo/contactus",
         hostname: location.hostname,

@@ -3,7 +3,8 @@ import { setContent, setSelection } from "@html_editor/../tests/_helpers/selecti
 import { insertText, pasteHtml, pasteText } from "@html_editor/../tests/_helpers/user_actions";
 import { beforeEach, delay, describe, expect, globals, press, test } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
-import { contains, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mockService, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     invisibleEl,
@@ -201,7 +202,7 @@ test("cascade of [data-oe-model] in translation", async () => {
 });
 
 test("404 page in translate mode", async () => {
-    patchWithCleanup(EditWebsiteSystrayItem.prototype, {
+    patch(EditWebsiteSystrayItem.prototype, {
         setup() {
             websiteServiceInTranslateMode.is404 = () => true;
             this.websiteService = websiteServiceInTranslateMode;
@@ -589,7 +590,7 @@ test("'Translate to' works with partial request failure", async () => {
     });
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
     expectElementCount("button[data-action-id='translateWebpageAI']", 1);
-    patchWithCleanup(console, {
+    patch(console, {
         warn: (msg, error) => expect.step(msg),
     });
     await contains("button[data-action-id='translateWebpageAI']").click();
@@ -868,7 +869,7 @@ test("placeholders aren't translated on elements that aren't input or textarea",
 });
 
 test("Ensure the contenteditable attributes have been set before the TranslationPlugin checks for the node to be translated", async () => {
-    patchWithCleanup(TranslationPlugin.prototype, {
+    patch(TranslationPlugin.prototype, {
         prepareTranslation() {
             expect(":iframe .translate_branding").toHaveAttribute("contenteditable", "true");
             super.prepareTranslation();
@@ -882,7 +883,7 @@ test("Ensure the contenteditable attributes have been set before the Translation
 test("sidebar should open even when translated elements fetch is slow", async () => {
     const originalFetch = globals.fetch;
 
-    patchWithCleanup(globals, {
+    patch(globals, {
         async fetch(url, options) {
             if (url === "/website/get_translated_elements") {
                 await delay(100);

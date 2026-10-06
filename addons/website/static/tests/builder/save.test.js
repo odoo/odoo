@@ -8,7 +8,6 @@ import {
     defineModels,
     models,
     onRpc,
-    patchWithCleanup,
     makeServerError,
 } from "@web/../tests/web_test_helpers";
 import { WebsiteBuilderClientAction } from "@website/client_actions/website_preview/website_builder_action";
@@ -32,6 +31,7 @@ import { Component, xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 import { WebsiteBuilder } from "@website/builder/website_builder";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
@@ -105,7 +105,7 @@ test("discard modified elements", async () => {
 });
 
 test("discard without any modifications", async () => {
-    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
+    patch(WebsiteBuilderClientAction.prototype, {
         async closeEditor() {
             this.websiteContent().contentDocument.body.innerHTML = wrapExample;
         },
@@ -460,7 +460,7 @@ function setupSaveAndReloadIframe() {
         resultSave.push(args[1]);
         return true;
     });
-    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
+    patch(WebsiteBuilderClientAction.prototype, {
         async closeEditor() {
             this.websiteContent().contentDocument.body.innerHTML = resultSave.at(-1) || wrapExample;
         },
@@ -555,7 +555,7 @@ describe("Add Language", () => {
 });
 
 test("attempt to prevent closing window with unsaved changes", async () => {
-    patchWithCleanup(WebsiteBuilder.prototype, {
+    patch(WebsiteBuilder.prototype, {
         setup() {
             expect.step("setup WebsiteBuilder - start");
             super.setup();
@@ -574,7 +574,7 @@ test("attempt to prevent closing window with unsaved changes", async () => {
     });
     function dispatchBeforeUnloadEvent(tag) {
         const event = new Event("beforeunload", { cancelable: true });
-        patchWithCleanup(event, {
+        patch(event, {
             preventDefault() {
                 expect.step(`preventDefault ${tag}`);
                 super.preventDefault();

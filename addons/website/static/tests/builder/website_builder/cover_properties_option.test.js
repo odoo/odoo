@@ -7,8 +7,8 @@ import {
     defineModels,
     models,
     onRpc,
-    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -36,7 +36,7 @@ const websiteServiceWithUserModelName = {
 };
 
 test("Add image as cover", async () => {
-    patchWithCleanup(Builder.prototype, {
+    patch(Builder.prototype, {
         setup() {
             super.setup();
             this.env.services.website = websiteServiceWithUserModelName;

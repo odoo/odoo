@@ -11,14 +11,8 @@ import {
     waitForEndOfOperation,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import {
-    contains,
-    defineModels,
-    fields,
-    models,
-    onRpc,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
+import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     addPlugin,
     defineWebsiteModels,
@@ -38,7 +32,7 @@ test("trigger mobile view", async () => {
 
 test("top window url in action context parameter", async () => {
     let websiteBuilder;
-    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
+    patch(WebsiteBuilderClientAction.prototype, {
         setup() {
             websiteBuilder = this;
             this.props.action.context = {
@@ -97,7 +91,7 @@ test("getRecordInfo retrieves the info from the #wrap element", async () => {
 
 test("elements within iframe can't be clicked while the builder is being set up", async () => {
     const def = Promise.withResolvers();
-    patchWithCleanup(WebsiteBuilderClientAction.prototype, {
+    patch(WebsiteBuilderClientAction.prototype, {
         async loadIframeAndBundles(isEditing) {
             super.loadIframeAndBundles(isEditing);
             await def.promise;
@@ -220,7 +214,7 @@ test("Builder is disabled when reloading", async () => {
         `<section class="target">Section</section>`
     );
     const builderStart = Promise.withResolvers();
-    patchWithCleanup(Builder.prototype, {
+    patch(Builder.prototype, {
         setup() {
             super.setup();
             onWillStart(async () => {

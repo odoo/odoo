@@ -3,7 +3,8 @@ import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { expect, test } from "@odoo/hoot";
 import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -13,7 +14,7 @@ defineWebsiteModels();
 
 test("empty border input is treated as 0", async () => {
     let expectBorder = false;
-    patchWithCleanup(BorderConfigurator.prototype, {
+    patch(BorderConfigurator.prototype, {
         hasBorder(editingElement) {
             const styleActionValue = this.env.editor.shared.builderActions
                 .getAction("styleAction")

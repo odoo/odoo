@@ -1,10 +1,11 @@
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryOne, waitFor } from "@odoo/hoot-dom";
-import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { Builder } from "@html_builder/builder";
 import { useService } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 
 defineWebsiteModels();
 
@@ -82,7 +83,7 @@ test("undo/redo Breadcrumb visibility options", async () => {
 
 describe("save breadcrumb visibility", () => {
     beforeEach(async () => {
-        patchWithCleanup(Builder.prototype, {
+        patch(Builder.prototype, {
             setup() {
                 super.setup();
                 const metadata = useService("website").currentWebsite.metadata;

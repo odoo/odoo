@@ -1,6 +1,7 @@
 import { test } from "@odoo/hoot";
 import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { ImageCrop } from "@html_editor/main/media/image_crop";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { testBase64Img } from "./image_test_helpers";
@@ -14,7 +15,7 @@ test("Image cropper Enter saves and Escape closes in website builder", async () 
         new Promise((resolve) => {
             resolveCropperReady = resolve;
         });
-    patchWithCleanup(ImageCrop.prototype, {
+    patch(ImageCrop.prototype, {
         async show(...args) {
             const res = await superShow.apply(this, args);
             resolveCropperReady?.();

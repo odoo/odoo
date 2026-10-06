@@ -7,9 +7,9 @@ import {
     onRpc,
     models,
     defineModels,
-    patchWithCleanup,
     registerTemplate,
 } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -440,7 +440,7 @@ test("theme background image is properly set", async () => {
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
         "A".repeat(1000);
 
-    patchWithCleanup(ToggleBodyBgImageAction.prototype, {
+    patch(ToggleBodyBgImageAction.prototype, {
         async apply(params) {
             const { type: currentType, image: currentImage } = this.getCurrentConfig();
             const oldConfig = { type: currentType, image: currentImage };
