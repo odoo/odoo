@@ -176,6 +176,16 @@ export async function clickOrderButton() {
     await contains(".actionpad .submit-order").click();
     await animationFrame();
 }
+export async function clickBackButton() {
+    await ensurePane("left");
+    await contains(".actionpad .back-button").click();
+}
+
+export async function checkNoOrderButton() {
+    await ensurePane("left");
+    await waitFor(".actionpad:not(:has(.submit-order))");
+    await animationFrame();
+}
 
 export async function clickPayButton() {
     await ensurePane("left");
