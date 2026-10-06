@@ -629,7 +629,7 @@ class TestTraceability(TestMrpCommon):
             # generate serial lot_3 from the MO (next from sequence)
             mo.lot_producing_ids = self.env['stock.lot']
             mo.action_generate_serial()
-            self.assertIn(datetime.now(self.env.tz).strftime('%j'), mo.lot_producing_ids.name)
+            self.assertIn(datetime.now(mo.env.tz).strftime('%j'), mo.lot_producing_ids.name)
 
     def test_use_customized_serial_sequence(self):
         """
