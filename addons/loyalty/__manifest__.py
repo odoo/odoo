@@ -26,7 +26,6 @@
     "assets": {
         "web.assets_backend": [
             "loyalty/static/src/js/**/*.js",
-            "loyalty/static/src/scss/*.scss",
             "loyalty/static/src/scss/*.css",
             "loyalty/static/src/xml/*.xml",
             ("remove", "loyalty/static/src/js/portal/**/*"),
