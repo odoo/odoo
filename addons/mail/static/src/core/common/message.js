@@ -55,6 +55,7 @@ import { useLayoutEffect } from "@web/owl2/utils";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { computedShallowEqual } from "@mail/utils/common/signal";
+import { QuickReactionAction } from "@mail/core/common/quick_reaction_menu";
 
 /** Button of the dropdown of the actions that do not fit in the quick actions of a message. */
 class MoreMessageInlineAction extends CircleInlineAction {
@@ -272,6 +273,9 @@ export class Message extends Component {
     getActionComponent({ action, inline }) {
         if (!inline) {
             return undefined;
+        }
+        if (action.id === "reaction" && !isMobileOS()) {
+            return QuickReactionAction;
         }
         return action.definition.isMoreAction ? MoreMessageInlineAction : CircleInlineAction;
     }
