@@ -18,6 +18,9 @@ VALID_TAX_CODES = {
     'Z',   # Zero VAT rate (see G1.47) (Taux de TVA égal à 0 (cf. G1.47))
 }
 
+# Distinguish fixed charges from the existing None key for lines without VAT.
+FIXED_CHARGE_SUBTOTAL = 'fixed_charge'
+
 
 class PdpFlow10XMLBuilder(models.AbstractModel):
     """Build Flow 10 XML for a flow"""
@@ -105,7 +108,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             }
             for tax_subtotal in subtotals:
                 node['Payment']['SubTotals'].append({
-                    'TaxPercent': {'_text': tax_subtotal['tax'].amount},
+                    'TaxPercent': {'_text': tax_subtotal['tax'].amount if tax_subtotal['tax'] else 0},
                     'CurrencyCode': {'_text': currency_code},
                     'Amount': {'_text': float_round(tax_subtotal['tax_amount'], 6)},  # G1.16
                 })
@@ -169,7 +172,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             partial_to_move_ratio = partial_amount / move_amount_total if move_amount_total else 0
             for tax, subtotal in tax_summary['subtotals'].items():
                 subtotals.append({
-                    'tax': tax,
+                    'tax': None if isinstance(tax, str) and tax == FIXED_CHARGE_SUBTOTAL else tax,
                     'tax_amount': (subtotal['tax_amount'] + subtotal['taxable_amount']) * partial_to_move_ratio,
                 })
             summary[payment] = (subtotals, transaction)
@@ -244,6 +247,9 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         # _get_tax_summary() preserves the invoice's OSS VAT. Convert each aggregate
         # to Flow 10 by moving OSS bases to the zero-rate subtotal and excluding their VAT.
         for taxes in summary.values():
+            # B2C groups fixed charges with other amounts reported at a 0% VAT rate.
+            if fixed_subtotal := taxes['subtotals'].pop(FIXED_CHARGE_SUBTOTAL, None):
+                taxes['subtotals'][None]['taxable_amount'] += fixed_subtotal['taxable_amount']
             for tax in list(taxes['subtotals']):
                 if not tax or not tax._l10n_fr_pdp_is_oss():
                     continue
@@ -278,7 +284,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         has_oss_tax = any(tax._l10n_fr_pdp_is_oss() for tax in line.tax_ids)
         has_only_zero_rate_taxes = all(
             float_is_zero(tax.amount, tax.fields_get('amount')['amount']['digits'][1])
-            for tax in line.tax_ids
+            for tax in line.tax_ids.flatten_taxes_hierarchy() if tax.amount_type != 'fixed'
         )
         if has_oss_tax or has_only_zero_rate_taxes:
             return 'TNT1'
@@ -430,7 +436,9 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 continue
             base_amount = line.price_unit * line.quantity
             amount = float_round(abs(base_amount * (line.discount / 100.0)), 2)  # G1.14
-            for tax in line.tax_ids or [False]:
+            vat_taxes = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda tax: tax.amount_type != 'fixed')
+            # A line without a VAT tax still needs a 0% discount entry.
+            for tax in vat_taxes or [False]:
                 tax_code, _exemption_reason_code, _exemption_reason = self._get_tax_codes_and_exemption(buyer, seller, tax)
                 invoice['AllowanceCharge'].append({
                     'Amount': {'_text': amount},
@@ -441,10 +449,17 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _invoice_add_monetary_total(self, invoice, move):
+        fixed_tax_lines = move.line_ids.filtered(
+            lambda line: line.tax_line_id and line.tax_line_id.amount_type == 'fixed'
+        )
         invoice['MonetaryTotal'] = {
-            'TaxExclusiveAmount': {'_text': move.amount_untaxed},  # invoice currency
+            'TaxExclusiveAmount': {
+                '_text': move.amount_untaxed + abs(sum(fixed_tax_lines.mapped('amount_currency'))),
+            },  # invoice currency, including fixed charges
             'TaxAmount': {
-                '_text': float_round(abs(move.amount_tax_signed), 2),  # G1.14
+                '_text': float_round(
+                    abs(move.amount_tax_signed) - abs(sum(fixed_tax_lines.mapped('balance'))), 2,
+                ),  # G1.14: only VAT, in company currency
                 'CurrencyCode': 'EUR',
             },
         }
@@ -477,41 +492,62 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
             summary = summaries[agregation_function(line) if agregation_function else None]
 
-            if line.move_id.move_type == 'entry':
-                price_unit = abs(line.amount_currency)
-                quantity = 1.0
-            else:
-                price_unit = line.price_unit * (1 - line.discount / 100.0)
-                quantity = line.quantity
-            taxes_res = line.tax_ids.compute_all(
-                price_unit=price_unit,
-                currency=line.currency_id,
-                quantity=quantity,
-                product=line.product_id,
-                partner=line.partner_id,
-                is_refund=line.is_refund,
-            )
+            taxes_res = self._get_line_taxes_result(line)
             tax_items = taxes_res['taxes']
-            if not tax_items:
+            taxes_by_id = {}
+            vat_tax_ids = set()
+            for tax in self.env['account.tax'].browse([tax_item['id'] for tax_item in tax_items]):
+                taxes_by_id[tax.id] = tax
+                if tax.amount_type != 'fixed':
+                    vat_tax_ids.add(tax.id)
+            if not vat_tax_ids:
                 base_amount = line.currency_id.round(taxes_res['total_excluded'])
-                summary['subtotals'][None]['taxable_amount'] += base_amount
+                subtotal_key = FIXED_CHARGE_SUBTOTAL if tax_items else None
+                summary['subtotals'][subtotal_key]['taxable_amount'] += base_amount
                 summary['taxable_amount_total'] += base_amount
             for tax_item in tax_items:
-                base_amount = line.currency_id.round(tax_item['base'])
+                tax = taxes_by_id[tax_item['id']]
                 tax_amount = tax_item['amount']
-                subtotal = summary['subtotals'][self.env['account.tax'].browse(tax_item['id'])]
+                if tax.amount_type == 'fixed':
+                    # Odoo has already added this charge to an affected VAT tax's base.
+                    if not vat_tax_ids.intersection(tax_item['tax_ids']):
+                        summary['subtotals'][FIXED_CHARGE_SUBTOTAL]['taxable_amount'] += tax_amount
+                        summary['taxable_amount_total'] += tax_amount
+                    continue
+                base_amount = line.currency_id.round(tax_item['base'])
+                subtotal = summary['subtotals'][tax]
                 subtotal['taxable_amount'] += base_amount
                 subtotal['tax_amount'] += tax_amount
                 summary['taxable_amount_total'] += base_amount
                 summary['tax_total'] += tax_amount
             if buyer and seller:
                 for tax, values in summary['subtotals'].items():
+                    if isinstance(tax, str) and tax == FIXED_CHARGE_SUBTOTAL:
+                        values['tax_category_code'] = 'O'
+                        continue
                     tax_code, exemption_code, exemption_reason = self._get_tax_codes_and_exemption(buyer, seller, tax)
                     values['tax_category_code'] = tax_code
                     values['exemption_code'] = exemption_code
                     values['exemption_reason'] = exemption_reason
 
         return summaries if agregation_function else summaries[None]
+
+    @api.model
+    def _get_line_taxes_result(self, line):
+        if line.move_id.move_type == 'entry':
+            price_unit = abs(line.amount_currency)
+            quantity = 1.0
+        else:
+            price_unit = line.price_unit * (1 - line.discount / 100.0)
+            quantity = line.quantity
+        return line.tax_ids.compute_all(
+            price_unit=price_unit,
+            currency=line.currency_id,
+            quantity=quantity,
+            product=line.product_id,
+            partner=line.partner_id,
+            is_refund=line.is_refund,
+        )
 
     @api.model
     def _is_line_for_payment_reporting(self, line):
@@ -527,7 +563,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 'TaxAmount': {'_text': float_round(tax_sub_total['tax_amount'], 2)},  # G1.14
                 'TaxCategory': {
                     'Code': {'_text': tax_sub_total['tax_category_code']},
-                    'Percent': {'_text': tax.amount if tax else 0},
+                    'Percent': {'_text': tax.amount if tax and not isinstance(tax, str) else 0},
                     **({
                         'TaxExemptionReason': {'_text': tax_sub_total['exemption_reason']},
                         'TaxExemptionReasonCode': {'_text': tax_sub_total['exemption_code']},
@@ -561,6 +597,17 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                         'ID': {'_text': ref_id},
                         'IssueDate': {'_text': self._format_date(ref_date)},
                     }
+
+            fixed_tax_ids = {
+                tax.id for tax in line.tax_ids.flatten_taxes_hierarchy() if tax.amount_type == 'fixed'
+            }
+            fixed_charges = [
+                {'Amount': {'_text': abs(tax_item['amount'])}, 'ChargeIndicator': 'true'}
+                for tax_item in self._get_line_taxes_result(line)['taxes']
+                if tax_item['id'] in fixed_tax_ids
+            ]
+            if fixed_charges:
+                res['AllowanceCharge'] = fixed_charges
 
             allowance_charge = float_round(line.price_unit * line.discount / 100.0, 6)  # G1.16
             allowance_charge_base = float_round(line.price_unit, 6)  # G1.16

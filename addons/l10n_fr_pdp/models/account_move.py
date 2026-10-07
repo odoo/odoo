@@ -101,7 +101,6 @@ class AccountMove(models.Model):
         selection=[('transaction', 'Transaction'), ('payment', 'Payment')],
         compute='_compute_l10n_fr_pdp_flow_10_report_type',
         store=True,
-        recursive=True,
         copy=False,
     )
     l10n_fr_pdp_flow_10_operation_type = fields.Selection(
@@ -494,9 +493,9 @@ class AccountMove(models.Model):
         'commercial_partner_id',
         'l10n_fr_pdp_flow_10_operation_type',
         'line_ids.matched_credit_ids.credit_move_id',
-        'line_ids.matched_credit_ids.credit_move_id.move_id.l10n_fr_pdp_flow_10_report_type',
+        'line_ids.matched_credit_ids.credit_move_id.move_id.pdp_is_sent',
         'line_ids.matched_debit_ids.debit_move_id',
-        'line_ids.matched_debit_ids.debit_move_id.move_id.l10n_fr_pdp_flow_10_report_type',
+        'line_ids.matched_debit_ids.debit_move_id.move_id.pdp_is_sent',
         'move_type',
         'pdp_is_sent',
         'state',
@@ -504,7 +503,7 @@ class AccountMove(models.Model):
     def _compute_l10n_fr_pdp_flow_10_report_type(self):
         for move in self:
             if move.pdp_is_sent:
-                if move.l10n_fr_pdp_sent_in_flow_ids:
+                if move.l10n_fr_pdp_sent_in_flow_ids and move.l10n_fr_pdp_flow_10_report_type:
                     # The previous e-report must be rectified before clearing its scope.
                     self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
                 move.l10n_fr_pdp_flow_10_report_type = None
@@ -526,7 +525,7 @@ class AccountMove(models.Model):
                 if move._l10n_fr_pdp_get_matched_transactions():
                     move.l10n_fr_pdp_flow_10_report_type = 'payment'
                 else:
-                    if move.l10n_fr_pdp_sent_in_flow_ids:
+                    if move.l10n_fr_pdp_sent_in_flow_ids and move.l10n_fr_pdp_flow_10_report_type:
                         # payment was sent but is not linked to an invoice anymore, must create rectificative flow
                         self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
                     move.l10n_fr_pdp_flow_10_report_type = None
@@ -553,7 +552,7 @@ class AccountMove(models.Model):
             return
 
         return self._get_reconciled_amls().move_id.filtered(
-            lambda move: move.l10n_fr_pdp_flow_10_report_type == 'transaction' and (
+            lambda move: not move.pdp_is_sent and move.l10n_fr_pdp_flow_10_report_type == 'transaction' and (
                 move._is_downpayment()
                 or any(tax.tax_exigibility == 'on_payment' for tax in move.invoice_line_ids.tax_ids)
             )
@@ -597,12 +596,15 @@ class AccountMove(models.Model):
                 if not move.name or not G1_05_RE.match(move.name):
                     yield self.env._("Move name is not valid%s.", ref_move)
                 for tax in move.invoice_line_ids.tax_ids.flatten_taxes_hierarchy():
+                    if tax.amount_type == 'fixed' and tax.amount >= 0 and not tax.price_include:
+                        continue  # An additional fixed charge is an amount, not a VAT percentage.
                     is_valid_oss_rate = (
                         tax._l10n_fr_pdp_is_oss()
                         and tax.amount_type == 'percent'
                         and 0 <= tax.amount <= 100
                     )
-                    if not is_valid_oss_rate and tax.amount not in VALID_PDP_TAX_RATES:
+                    # Reject other fixed taxes even if their amount matches an allowed VAT rate.
+                    if tax.amount_type == 'fixed' or (tax.amount not in VALID_PDP_TAX_RATES and not is_valid_oss_rate):
                         yield self.env._(
                             "Tax %(tax)s is not supported by French e-reporting%(ref_move)s.",
                             tax=tax.display_name,
