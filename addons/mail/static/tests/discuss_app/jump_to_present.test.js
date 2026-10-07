@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, press, queryFirst, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { contains, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 import {
@@ -43,7 +43,7 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
         PRESENT_VIEWPORT_THRESHOLD * document.querySelector(".o-mail-Thread").clientHeight,
         { message: "should have enough scroll height to trigger jump to present" }
     );
-    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']:count(1)").click();
     await waitForNone("[title='Jump to Present']");
     await mailContains(".o-mail-Thread", { scroll: "bottom" });
 });
@@ -71,7 +71,7 @@ test("Basic jump to present when scrolling to outdated messages (DESC, chatter a
     await mailContains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", "bottom");
     await isInViewportOf("[title='Jump to Present']", ".o-mail-Thread");
-    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']:count(1)").click();
     await waitForNone("[title='Jump to Present']");
     await mailContains(".o-mail-Chatter", { scroll: 0 });
 });
@@ -100,7 +100,7 @@ test.skip("Basic jump to present when scrolling to outdated messages (DESC, chat
     await mailContains(".o_content", { scroll: 0 });
     await scroll(".o_content", "bottom");
     await isInViewportOf("[title='Jump to Present']", ".o_content");
-    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']:count(1)").click();
     await waitForNone("[title='Jump to Present']");
     await mailContains(".o_content", { scroll: 0 });
 });
@@ -144,10 +144,10 @@ test("Jump to old reply should prompt jump to present", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(30)");
-    await click(".o-mail-MessageInReply .cursor-pointer");
+    await contains(".o-mail-MessageInReply .cursor-pointer:count(1)").click();
     await waitFor(".o-mail-Message:eq(0):has(:text('Hello world!')):count(1)");
     await waitFor(".o-mail-Message:count(31)");
-    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']:count(1)").click();
     await waitForNone("[title='Jump to Present']");
     await waitFor(".o-mail-Message:count(30)");
     await mailContains(".o-mail-Thread", { scroll: "bottom" });
@@ -205,10 +205,10 @@ test("Jump to old reply should prompt jump to present (RPC small delay)", async 
         ],
     ]);
     await waitFor(".o-mail-Message:count(30)");
-    await click(".o-mail-MessageInReply .cursor-pointer");
+    await contains(".o-mail-MessageInReply .cursor-pointer:count(1)").click();
     await waitFor(".o-mail-Message:eq(0):has(:text('Hello world!')):count(1)");
     await waitFor(".o-mail-Message:count(31)");
-    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']:count(1)").click();
     await waitForNone("[title='Jump to Present']");
     await mailContains(".o-mail-Thread", { scroll: "bottom" });
     await waitStoreFetch([
@@ -252,7 +252,7 @@ test("Post message when seeing old message should jump to present", async () => 
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(30)");
-    await click(".o-mail-MessageInReply .cursor-pointer");
+    await contains(".o-mail-MessageInReply .cursor-pointer:count(1)").click();
     await waitFor("[title='Jump to Present']:count(1)");
     await insertText(".o-mail-Composer-input", "Newly posted");
     await press("Enter");
@@ -328,6 +328,6 @@ test("focus composer after jump to present", async () => {
     await waitFor(".o-mail-Composer.o-focused:count(1)");
     queryFirst(".o-mail-Composer-input").blur();
     await waitForNone(".o-mail-Composer.o-focused");
-    await click("[title='Jump to Present']");
+    await contains("[title='Jump to Present']:count(1)").click();
     await waitFor(".o-mail-Composer.o-focused:count(1)");
 });

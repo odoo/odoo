@@ -1,12 +1,17 @@
 import {
-    click,
     defineMailModels,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
-import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    contains,
+    getService,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -20,9 +25,9 @@ test("Add member to channel", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await waitFor(".o-discuss-ChannelMember:text('Mitchell Admin'):count(1)");
-    await click("[title='Add People']");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('Harry'))");
-    await click(".o-discuss-ChannelInvitation button:text('Invite'):enabled");
+    await contains("[title='Add People']:count(1)").click();
+    await contains(".o-discuss-ChannelInvitation-selectable:has(:text('Harry')):count(1)").click();
+    await contains(".o-discuss-ChannelInvitation button:text('Invite'):enabled:count(1)").click();
     await waitForNone(".o-discuss-ChannelInvitation");
     await waitFor(".o-discuss-ChannelMember:text('Harry'):count(1)");
 });

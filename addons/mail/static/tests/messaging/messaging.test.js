@@ -1,5 +1,4 @@
 import {
-    click,
     defineMailModels,
     insertText,
     listenStoreFetch,
@@ -13,7 +12,13 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
 
-import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    contains,
+    getService,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -80,11 +85,11 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
     );
     await expect.waitForSteps(["discuss.channel/new_message"]);
     await waitFor(".o-mail-ChatBubble .badge:contains(1):count(1)");
-    await click(".o-mail-ChatBubble[name='Dumbledore']");
+    await contains(".o-mail-ChatBubble[name='Dumbledore']:count(1)").click();
     await waitFor(".o-mail-ChatWindow-header:contains('Dumbledore'):count(1)");
     await waitFor(".o-mail-Message:contains('Chat Message 1'):count(1)");
     await waitForNone(".badge");
-    await click(".o-mail-ChatWindow [title*='Close Chat Window']");
+    await contains(".o-mail-ChatWindow [title*='Close Chat Window']:count(1)").click();
     // simulate receiving new message (group chat, outside discuss app)
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -109,9 +114,9 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
         })
     );
     await expect.waitForSteps(["discuss.channel/new_message"]);
-    await click(
-        ".o-mail-MessagingMenuItem:has(.o-mail-NotificationItem-name:text(Dumbledore)) .badge:text(1)"
-    );
+    await contains(
+        ".o-mail-MessagingMenuItem:has(.o-mail-NotificationItem-name:text(Dumbledore)) .badge:text(1):count(1)"
+    ).click();
     await waitFor(".o-mail-Message:contains('Tricky'):count(1)");
     // check no new chat window/bubble while in discuss app
     await openFormView("res.partner", partnerId);

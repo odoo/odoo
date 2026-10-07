@@ -8,7 +8,7 @@ import {
     waitFor,
     waitForNone,
 } from "@odoo/hoot-dom";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, contains, serverState, withUser } from "@web/../tests/web_test_helpers";
 import {
     assertChatHub,
     click,
@@ -66,12 +66,12 @@ test("No duplicated chat bubbles", async () => {
     await waitFor(".o_command_name:count(2)");
     await waitFor(".o_command:eq(0):text(John):count(1)");
     await waitFor(".o_command:eq(1):has(:text(Create Channel)):count(1)");
-    await click(".o_command_name:text('John')");
+    await contains(".o_command_name:text('John'):count(1)").click();
     await waitFor(".o-mail-ChatWindow-displayName:text('John'):count(1)");
     await waitFor(
         ".o-mail-ChatWindow .o-mail-Thread-empty:has(:text('This is the start of your direct chat with John')):count(1)"
     );
-    await click("button[title='Fold']");
+    await contains("button[title='Fold']:count(1)").click();
     await waitFor(".o-mail-ChatBubble[name='John']:count(1)");
     // Make bubble of "John" chat again
     triggerHotkey("control+k");
@@ -81,13 +81,13 @@ test("No duplicated chat bubbles", async () => {
     await waitFor(".o_command_name:count(2)");
     await waitFor(".o_command:eq(0):text(John):count(1)");
     await waitFor(".o_command:eq(1):has(:text(Create Channel)):count(1)");
-    await click(".o_command_name:text('John')");
+    await contains(".o_command_name:text('John'):count(1)").click();
     await waitForNone(".o-mail-ChatBubble[name='John']");
     await waitFor(".o-mail-ChatWindow .o-mail-ChatWindow-header:has(:text('John')):count(1)");
-    await click(".o-mail-ChatWindow-header [title='Fold']");
+    await contains(".o-mail-ChatWindow-header [title='Fold']:count(1)").click();
     // Make again from click messaging menu item
     await openMessagingMenu();
-    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:count(1)").click();
     await waitForNone(".o-mail-ChatBubble[name='John']");
     await waitFor(".o-mail-ChatWindow .o-mail-ChatWindow-header:has(:text('John')):count(1)");
 });
@@ -108,7 +108,7 @@ test("Up to 7 chat bubbles", async () => {
     await hover(".o-mail-ChatHub-hiddenBtn");
     await waitFor(".o-mail-ChatHub-hiddenItem[name='1']:count(1)");
     await waitForNone(".o-mail-ChatWindow");
-    await click(".o-mail-ChatHub-hiddenItem");
+    await contains(".o-mail-ChatHub-hiddenItem:count(1)").click();
     await waitFor(".o-mail-ChatWindow:count(1)");
     await waitForNone(".o-mail-ChatHub-hiddenBtn");
 });
@@ -140,17 +140,17 @@ test("Ordering of chat bubbles is consistent and seems logical.", async () => {
     await waitFor(":nth-child(7 of .o-mail-ChatBubble)[name='1']");
     await waitForNone(".o-mail-ChatBubble[name='Demo']");
     await waitForNone(".o-mail-ChatWindow");
-    await click(".o-mail-ChatBubble[name='3']");
+    await contains(".o-mail-ChatBubble[name='3']:count(1)").click();
     await waitFor(".o-mail-ChatWindow-displayName:text('3'):count(1)");
     await waitFor(":nth-child(7 of .o-mail-ChatBubble)[name='Demo']");
-    await click(".o-mail-ChatWindow-header [title='Fold']");
+    await contains(".o-mail-ChatWindow-header [title='Fold']:count(1)").click();
     await waitForNone(".o-mail-ChatBubble[name='Demo']");
-    await click(".o-mail-ChatBubble[name='4']");
+    await contains(".o-mail-ChatBubble[name='4']:count(1)").click();
     await waitFor(":nth-child(1 of .o-mail-ChatBubble)[name='3']");
     await waitFor(":nth-child(2 of .o-mail-ChatBubble)[name='7']");
     await waitFor(":nth-child(3 of .o-mail-ChatBubble)[name='6']");
     await waitFor(":nth-child(7 of .o-mail-ChatBubble)[name='Demo']");
-    await click(".o-mail-ChatWindow-header [title='Fold']");
+    await contains(".o-mail-ChatWindow-header [title='Fold']:count(1)").click();
     await waitForNone(".o-mail-ChatWindow");
     // no reorder on receiving new message
     withUser(userId, () =>
@@ -281,8 +281,8 @@ test("Chat bubble preview works on author as email address", async () => {
     });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await click(".o-mail-NotificationItem");
-    await click(".o-mail-ChatWindow [title='Fold']");
+    await contains(".o-mail-NotificationItem:count(1)").click();
+    await contains(".o-mail-ChatWindow [title='Fold']:count(1)").click();
     await hover(".o-mail-ChatBubble");
     await waitFor(
         ".o-mail-ChatBubble-preview:has(:text('md@oilcompany.fr: Some email message')):count(1)"
@@ -338,7 +338,7 @@ test("Chat bubbles do not fetch messages until becoming open", async () => {
     await start();
     await waitFor(".o-mail-ChatBubble[name='Orange']:count(1)");
     await waitStoreFetch();
-    await click(".o-mail-ChatBubble[name='Orange']");
+    await contains(".o-mail-ChatBubble[name='Orange']:count(1)").click();
     await waitFor(".o-mail-ChatWindow:count(1)");
     await waitFor(".o-mail-Message-content:text('Orange'):count(1)");
     await waitForNone(".o-mail-Message-content:text('Apple')");
@@ -385,8 +385,8 @@ test("Can close all chat windows at once", async () => {
     await waitFor(".o-mail-ChatBubble:count(8)"); // max reached
     await waitFor(".o-mail-ChatBubble:text('+13'):count(1)");
     await hover(".o-mail-ChatHub-hiddenBtn");
-    await click("button[title='Chat Options']");
-    await click(".o-dropdown-item:text('Close all conversations')");
+    await contains("button[title='Chat Options']:count(1)").click();
+    await contains(".o-dropdown-item:text('Close all conversations'):count(1)").click();
     await waitForNone(".o-mail-ChatBubble");
     assertChatHub({});
 });
@@ -414,13 +414,13 @@ test("Can compact chat hub", async () => {
     await waitFor(".o-mail-ChatBubble:count(8)"); // max reached
     await waitFor(".o-mail-ChatBubble:text('+13'):count(1)");
     await hover(".o-mail-ChatHub-hiddenBtn");
-    await click("button[title='Chat Options']");
-    await click(".o-dropdown-item:text('Hide all conversations')");
+    await contains("button[title='Chat Options']:count(1)").click();
+    await contains(".o-dropdown-item:text('Hide all conversations'):count(1)").click();
     await waitFor(".o-mail-ChatBubble i.oi[data-icon='forum']:count(1)");
-    await click(".o-mail-ChatBubble i.oi[data-icon='forum']");
+    await contains(".o-mail-ChatBubble i.oi[data-icon='forum']:count(1)").click();
     await waitFor(".o-mail-ChatBubble:count(8)");
     // alternative compact: click hidden button
-    await click(".o-mail-ChatBubble:text('+13')");
+    await contains(".o-mail-ChatBubble:text('+13'):count(1)").click();
     await waitFor(".o-mail-ChatBubble i.oi[data-icon='forum']:count(1)");
     // don't show compact button in discuss app
     await openDiscuss();
@@ -437,8 +437,10 @@ test("Compact chat hub is crosstab synced", async () => {
     await waitFor(`${env1.selector} .o-mail-ChatBubble:count(2)`);
     await waitFor(`${env2.selector} .o-mail-ChatBubble:count(2)`);
     await hover(`${env1.selector} .o-mail-ChatBubble:eq(0)`);
-    await click(`${env1.selector} button[title='Chat Options']`);
-    await click(`${env1.selector} .o-dropdown-item:text('Hide all conversations')`);
+    await contains(`${env1.selector} button[title='Chat Options']:count(1)`).click();
+    await contains(
+        `${env1.selector} .o-dropdown-item:text('Hide all conversations'):count(1)`
+    ).click();
     await waitFor(`${env1.selector} .o-mail-ChatBubble .oi[data-icon='forum']:count(1)`);
     await waitFor(`${env2.selector} .o-mail-ChatBubble .oi[data-icon='forum']:count(1)`);
 });
@@ -470,7 +472,7 @@ test("Compacted chat hub shows badge with amount of hidden chats with important 
     await start();
     await waitFor(".o-mail-ChatBubble:count(8)"); // max reached
     await waitFor(".o-mail-ChatBubble .o-mail-ChatHub-hiddenBtnIcon:text('+13'):count(1)");
-    await click(".o-mail-ChatHub-hiddenBtn");
+    await contains(".o-mail-ChatHub-hiddenBtn:count(1)").click();
     await waitFor(".o-mail-ChatBubble i.oi[data-icon='forum']:count(1)");
     await waitFor(".o-mail-ChatBubble .o-discuss-badge:text('9'):count(1)");
 });

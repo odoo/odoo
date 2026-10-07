@@ -176,13 +176,13 @@ test("Can only edit one message at a time", async () => {
     await click(".o-mail-Message [title='Expand']", {
         parent: [".o-mail-Message:has(:text('Goodbye!'))"],
     });
-    await click(".o-dropdown-item:text('Edit')");
+    await contains(".o-dropdown-item:text('Edit'):count(1)").click();
     await mailContains(".o-mail-Composer-input", { value: "Goodbye!" });
     await hover(".o-mail-Message:has(:text('Hello!'))");
     await click(".o-mail-Message [title='Expand']", {
         parent: [".o-mail-Message:has(:text('Hello!'))"],
     });
-    await click(".o-dropdown-item:text('Edit')");
+    await contains(".o-dropdown-item:text('Edit'):count(1)").click();
     await waitFor(".o-mail-Message .o-mail-Composer-input:count(1)");
     await mailContains(".o-mail-Composer-input", { value: "Hello!" });
     await focus(".o-mail-Composer-input", { value: "" });
@@ -954,7 +954,7 @@ test("Parent message body is displayed on replies", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(1)");
     await rightClick(".o-mail-Message");
-    await click(".o-dropdown-item:contains('Reply')");
+    await contains(".o-dropdown-item:contains('Reply'):count(1)").click();
     await insertText(".o-mail-Composer-input", "FooBarFoo");
     await press("Enter");
     await waitFor(".o-mail-MessageInReply-message:text('Hello world'):count(1)");
@@ -1132,8 +1132,8 @@ test("Two users reacting with the same emoji", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-MessageReaction:text('😅 2')");
-    await click(".o-mail-MessageReaction:text('😅 1')");
+    await contains(".o-mail-MessageReaction:text('😅 2'):count(1)").click();
+    await contains(".o-mail-MessageReaction:text('😅 1'):count(1)").click();
     await waitFor(".o-mail-MessageReaction:text('😅 2'):count(1)");
 });
 
@@ -1247,7 +1247,7 @@ test("should not be able to reply to temporary/transient messages", async () => 
     await openDiscuss(channelId);
     // these user interactions is to forge a transient message response from channel command "/who"
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer button[title='Send']:enabled");
+    await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await waitForNone(".o-mail-Message [title='Reply']");
 });
 
@@ -1270,14 +1270,14 @@ test.skip("squashed transient message should not have date in the sidebar", asyn
     ]);
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Message.o-squashed");
+    await contains(".o-mail-Message.o-squashed:count(1)").click();
     await waitFor(".o-mail-Message.o-squashed .o-mail-Message-sidebar:text('11:00'):count(1)"); // FIXME: should be 10:00
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer button[title='Send']:enabled");
+    await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await waitFor(".o-mail-Message:has(:text('You are alone in this channel.')):count(1)");
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer button[title='Send']:enabled");
-    await click(":nth-child(2 of .o-mail-Message.o-squashed");
+    await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
+    await contains(":nth-child(2 of .o-mail-Message.o-squashed)").click();
     await tick();
     await waitFor(
         ".o-mail-Message.o-squashed:eq(1) .o-mail-Message-sidebar:text('11:00'):count(1)"
@@ -1331,7 +1331,7 @@ test("message comment of same author within 5min. should be squashed", async () 
             [".o-mail-Message-sidebar", { contains: [".o-mail-Message-date", { count: 0 }] }],
         ],
     });
-    await click(".o-mail-Message:has(:text('body2'))");
+    await contains(".o-mail-Message:has(:text('body2')):count(1)").click();
     await mailContains(".o-mail-Message", {
         contains: [
             [".o-mail-Message-content:text('body2')"],
@@ -1366,7 +1366,7 @@ test("pending message is squashed while it is being sent", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Thread-empty:count(1)");
     await insertText(".o-mail-Composer-input", "second");
-    await click("button[title='Send']:enabled");
+    await contains("button[title='Send']:enabled:count(1)").click();
     await waitForNone(".o-mail-Thread-empty"); // wait for the pending message
     loadResolve();
     await waitStoreFetch("/discuss/channel/messages");
@@ -1404,7 +1404,7 @@ test("open author avatar card", async () => {
     await openDiscuss(channelId_1);
     await waitFor(".o-mail-NotificationItem.o-active:has(:text('General')):count(1)");
     await waitFor(".o-mail-DiscussContent .o-mail-Message-avatarContainer img:count(1)");
-    await click(".o-mail-DiscussContent .o-mail-Message-avatarContainer img");
+    await contains(".o-mail-DiscussContent .o-mail-Message-avatarContainer img:count(1)").click();
     await waitFor(".o_avatar_card:count(1)");
     await waitFor(".o-mail-avatar-card-name:text('Demo'):count(1)");
     await waitFor(".o_card_user_infos > a:text('demo@example.com'):count(1)");
@@ -1427,7 +1427,7 @@ test("add message to bookmark", async () => {
     await waitFor(".o-dropdown-item:text('Bookmark'):count(1)");
     await waitFor(".o-dropdown-item:text('Bookmark') i[data-icon='bookmark']:count(1)");
     await waitForNone("button:has(:text('Bookmarks'))");
-    await click(".o-dropdown-item:text('Bookmark')");
+    await contains(".o-dropdown-item:text('Bookmark'):count(1)").click();
     await mailContains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     await waitStoreFetch([["add_bookmark", { message_id: messageId }]]);
     await waitFor(".o-mail-Message [title='Bookmarked']:count(1)");
@@ -1452,7 +1452,7 @@ test("remove message from bookmarks", async () => {
     await waitFor(
         ".o-dropdown-item:text('Remove from Bookmarks') i[data-icon='bookmark']:count(1)"
     );
-    await click(".o-dropdown-item:text('Remove from Bookmarks')");
+    await contains(".o-dropdown-item:text('Remove from Bookmarks'):count(1)").click();
     await waitForNone("button:has(:text('Bookmarks'))");
     await waitStoreFetch([["remove_bookmark", { message_id: messageId }]]);
     await waitFor(".o-mail-Message:not(:has([title='Bookmarked'])):count(1)");
@@ -1503,7 +1503,7 @@ test("Name of message author is only displayed in chat window for partners other
     ]);
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:count(1)").click();
     await waitFor(".o-mail-Message-author:text('Not the current user'):count(1)");
 });
 
@@ -1526,7 +1526,7 @@ test("Name of message author is not displayed in chat window for channel of type
     ]);
     await start();
     await openMessagingMenu();
-    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:count(1)").click();
     await waitForNone(".o-mail-Message-author");
 });
 
@@ -1577,7 +1577,7 @@ test("Notification Sent", async () => {
     await waitFor(".o-mail-Message-notification:count(1)");
     await waitFor(".o-mail-Message-notification i:count(1)");
     expect(".o-mail-Message-notification i:first").toHaveAttribute("data-icon", "mail");
-    await click(".o-mail-Message-notification");
+    await contains(".o-mail-Message-notification:count(1)").click();
     await waitFor(".o-mail-MessageNotificationPopover:count(1)");
     await waitFor(".o-mail-MessageNotificationPopover i:count(2)");
     expect(".o-mail-MessageNotificationPopover i:first[data-icon='check']").toHaveAttribute(
@@ -1689,7 +1689,9 @@ test("Notification Error", async () => {
     await waitFor(".o-mail-Message-notification:count(1)");
     await waitFor(".o-mail-Message-notification i:count(1)");
     expect(".o-mail-Message-notification i:first").toHaveAttribute("data-icon", "cancel");
-    await click(".o-mail-Message-notification").then(() => {});
+    await contains(".o-mail-Message-notification:count(1)")
+        .click()
+        .then(() => {});
     await waitFor(".o-mail-MessageNotificationPopover:count(1)");
     expect(".o-mail-MessageNotificationPopover i[data-icon='cancel'].text-danger").toHaveCount(1);
 });
@@ -1710,7 +1712,7 @@ test("click on notification icon opens recipients list when no recipient", async
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-notification");
+    await contains(".o-mail-Message-notification:count(1)").click();
     await waitFor(".o-mail-MessageNotificationPopover:text('(Exception)'):count(1)");
 });
 
@@ -2152,7 +2154,7 @@ test("avatar card from author should be opened after clicking on their avatar", 
     await openFormView("res.partner", partnerId_1);
     await waitFor(".o-mail-Message-avatar:count(1)");
     expect(".o-mail-Message-avatarContainer:first").toHaveClass("cursor-pointer");
-    await click(".o-mail-Message-avatar");
+    await contains(".o-mail-Message-avatar:count(1)").click();
     await waitFor(".o_avatar_card:count(1)");
     await waitFor(".o-mail-avatar-card-name:text('Partner_2'):count(1)");
     await waitFor(".o_card_user_infos > a:text('partner2@mail.com'):count(1)");
@@ -2178,7 +2180,7 @@ test("avatar card from author should be opened after clicking on their name", as
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-author:text('Demo')");
+    await contains(".o-mail-Message-author:text('Demo'):count(1)").click();
     await waitFor(".o_avatar_card:count(1)");
     await waitFor(".o-mail-avatar-card-name:text('Demo'):count(1)");
     await waitFor(".o_card_user_infos > a:text('demo@example.com'):count(1)");
@@ -2236,7 +2238,7 @@ test("data-oe-id & data-oe-model link redirection on click", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Message-body a");
+    await contains(".o-mail-Message-body a:count(1)").click();
     await expect.waitForSteps(["do-action:openFormView_some.model_250"]);
 });
 
@@ -2622,7 +2624,7 @@ test("Click on view reactions from right-click on message shows the reactions", 
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(1)");
     await rightClick(".o-mail-Message");
-    await click(".o-dropdown-item:contains('View Reactions')");
+    await contains(".o-dropdown-item:contains('View Reactions'):count(1)").click();
     await waitFor(".o-mail-MessageReactionMenu:has(:text('😅 1')):count(1)");
 });
 
@@ -2861,7 +2863,7 @@ test("Clicking message link does not open a new tab", async () => {
     await waitFor(".o-mail-DiscussContent-threadName[title='Channel']:count(1)");
     await insertText(".o-mail-Composer-input", `${url(`/mail/message/${messageId}`)}`);
     await press("Enter");
-    await click(".o-mail-Message .o_message_redirect");
+    await contains(".o-mail-Message .o_message_redirect:count(1)").click();
     await waitFor(".o-mail-DiscussContent-threadName[title='Other Channel']:count(1)");
     await waitFor(".o-mail-Message:has(:text('Message on other channel')):count(1)");
 });
@@ -2916,7 +2918,7 @@ test("context menu should not open on right-click when editing a message", async
     await waitFor(".o-mail-Message:count(1)");
     await rightClick(".o-mail-Message");
     await expect.waitForSteps(["Message.onContextMenu", "Message.onOpenRightClickMenu"]);
-    await click(".o-dropdown-item:contains('Edit')");
+    await contains(".o-dropdown-item:contains('Edit'):count(1)").click();
     await mailContains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Batman" });
     await rightClick(".o-mail-Message");
     await expect.waitForSteps(["Message.onContextMenu"]);

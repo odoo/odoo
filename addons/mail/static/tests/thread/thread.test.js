@@ -36,6 +36,7 @@ import {
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
     Command,
+    contains,
     getService,
     MockServer,
     onRpc,
@@ -400,7 +401,7 @@ test("should scroll to bottom on receiving new message if the list is initially 
     }
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:count(1)").click();
     await waitFor(".o-mail-Message:count(11)");
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", "bottom");
@@ -467,7 +468,7 @@ test("should scroll to top of new very long message rendered after the scroll is
     });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:count(1)").click();
     await waitFor(".o-mail-Message:count(11)");
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", "bottom");
@@ -517,7 +518,7 @@ test("should not scroll on receiving new message if the list is initially scroll
     }
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:count(1)").click();
     await waitFor(".o-mail-Message:count(21)");
     await mailContains(".o-mail-Thread", { scroll: 0 });
     // simulate receiving a message
@@ -549,7 +550,7 @@ test("Mention a partner with special character (e.g. apostrophe ')", async () =>
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Pyn");
-    await click('.o-mail-Composer-suggestion:has(:text("Pynya\'s spokesman"))');
+    await contains('.o-mail-Composer-suggestion:has(:text("Pynya\'s spokesman")):count(1)').click();
     await mailContains(".o-mail-Composer-input", { value: "@Pynya's spokesman " });
     await press("Enter");
     await waitFor(
@@ -580,10 +581,10 @@ test("mention 2 different partners that have the same name", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@Te");
-    await click(":nth-child(1 of .o-mail-Composer-suggestion");
+    await contains(":nth-child(1 of .o-mail-Composer-suggestion)").click();
     await mailContains(".o-mail-Composer-input", { value: "@TestPartner " });
     await insertText(".o-mail-Composer-input", "@Te");
-    await click(":nth-child(2 of .o-mail-Composer-suggestion");
+    await contains(":nth-child(2 of .o-mail-Composer-suggestion)").click();
     await mailContains(".o-mail-Composer-input", { value: "@TestPartner @TestPartner " });
     await press("Enter");
     await waitFor(
@@ -610,7 +611,7 @@ test("Post a message containing an email address followed by a mention on anothe
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "email@odoo.com\n@Te");
-    await click(".o-mail-Composer-suggestion");
+    await contains(".o-mail-Composer-suggestion:count(1)").click();
     await mailContains(".o-mail-Composer-input", { value: "email@odoo.com\n@TestPartner " });
     await press("Enter");
     await waitFor(
@@ -638,7 +639,7 @@ test("basic rendering of canceled notification", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message-notification [data-icon='mail']:count(1)");
-    await click(".o-mail-Message-notification");
+    await contains(".o-mail-Message-notification:count(1)").click();
     await waitFor(".o-mail-MessageNotificationPopover:count(1)");
     await waitFor(".o-mail-MessageNotificationPopover [data-icon='delete']:count(1)");
     await waitFor(".o-mail-MessageNotificationPopover:text('ToSomeone(test@test.be)'):count(1)");
@@ -671,7 +672,7 @@ test("first unseen message should be directly preceded by the new message separa
     await waitFor(".o-mail-Message:has(:text('not empty')):count(1)");
     // send a command that leads to receiving a transient message
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer button[title='Send']:enabled");
+    await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await waitFor(".o-mail-Message:count(2)");
     // composer is focused by default, we remove that focus
     queryFirst(".o-mail-Composer-input").blur();
@@ -718,7 +719,7 @@ test("chat window header should not have unread counter for non-channel thread",
     });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.NOTIFICATION);
-    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:count(1)").click();
     await waitForNone(".o-mail-ChatWindow-counter:text('1')");
 });
 
@@ -744,7 +745,7 @@ test("Thread messages are only loaded once", async () => {
         },
     ]);
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click("button:has(:text('General'))");
+    await contains("button:has(:text('General')):count(1)").click();
     await waitStoreFetch([
         [
             "/discuss/channel/messages",
@@ -752,7 +753,7 @@ test("Thread messages are only loaded once", async () => {
         ],
     ]);
     await waitFor(".o-mail-Message-content:text('Message on channel1'):count(1)");
-    await click("button:has(:text('Sales'))");
+    await contains("button:has(:text('Sales')):count(1)").click();
     await waitStoreFetch([
         [
             "/discuss/channel/messages",
@@ -760,7 +761,7 @@ test("Thread messages are only loaded once", async () => {
         ],
     ]);
     await waitFor(".o-mail-Message-content:text('Message on channel2'):count(1)");
-    await click("button:has(:text('General'))");
+    await contains("button:has(:text('General')):count(1)").click();
     await waitStoreFetch();
     await waitFor(".o-mail-Message-content:text('Message on channel1'):count(1)");
 });
@@ -788,7 +789,7 @@ test("opening a thread with failed prefetch retries the load", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await click(".o-mail-NotificationItem:contains(General)");
+    await contains(".o-mail-NotificationItem:contains(General):count(1)").click();
     await expect.waitForSteps(["fetch messages"]);
     await mailContains(".o-mail-DiscussContent-threadName", { value: "General" });
     prefetchDeferred.resolve();
@@ -826,7 +827,7 @@ test("[text composer] Opening thread with needaction messages should mark all me
         `store fetch: /discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
     await waitFor(".o-mail-Message:count(2)");
-    await click("button:has(:text('Sales'))");
+    await contains("button:has(:text('Sales')):count(1)").click();
     await expect.waitForSteps([
         `store fetch: /discuss/channel/messages - {"channel_id":${salesId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
@@ -853,7 +854,7 @@ test("[text composer] Opening thread with needaction messages should mark all me
             })
             .as_dict(),
     });
-    await click("button:has(:text('General')):has(.badge:text(1))");
+    await contains("button:has(:text('General')):has(.badge:text(1)):count(1)").click();
     await expect.waitForSteps(["mark-all-messages-as-read"]);
 });
 
@@ -889,7 +890,7 @@ test("Opening thread with needaction messages should mark all messages of thread
         `store fetch: /discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
     await waitFor(".o-mail-Message:count(2)");
-    await click("button:has(:text('Sales'))");
+    await contains("button:has(:text('Sales')):count(1)").click();
     await expect.waitForSteps([
         `store fetch: /discuss/channel/messages - {"channel_id":${salesId},"fetch_params":{"limit":60,"around":0}}`,
     ]);
@@ -915,7 +916,7 @@ test("Opening thread with needaction messages should mark all messages of thread
             })
             .as_dict(),
     });
-    await click("button:has(:text('General')):has(.badge:text(1))");
+    await contains("button:has(:text('General')):has(.badge:text(1)):count(1)").click();
     await expect.waitForSteps(["mark-all-messages-as-read"]);
 });
 
@@ -933,7 +934,7 @@ test("[technical] Opening thread without needaction messages should not mark all
     onRpc("mail.message", "mark_all_as_read", () => expect.step("mark-all-messages-as-read"));
     await start();
     await openDiscuss(salesChannelId);
-    await click("button:has(:text('General'))");
+    await contains("button:has(:text('General')):count(1)").click();
     await waitFor(".o-mail-Message:count(1)");
     await tick();
     await expect.waitForSteps([]);
@@ -965,7 +966,7 @@ test("can be marked as read while loading", async () => {
     await start();
     await openDiscuss();
     await waitFor(".o-mail-NotificationItem .o-discuss-badge:text('1'):count(1)");
-    await click(".o-mail-NotificationItem:has(:text('Demo'))");
+    await contains(".o-mail-NotificationItem:has(:text('Demo')):count(1)").click();
     loadDeferred.resolve();
     await waitStoreFetch("/discuss/channel/messages");
     await waitForNone(".o-discuss-badge");
@@ -1086,7 +1087,7 @@ test("New message separator not appearing after showing composer on thread", asy
     await openFormView("res.partner", serverState.partnerId);
     await waitFor("button:text('Log note'):count(1)");
     await waitForNone(".o-mail-Thread-newMessage");
-    await click("button:text('Log note')");
+    await contains("button:text('Log note'):enabled:count(1)").click();
     await waitForNone(".o-mail-Thread-newMessage");
 });
 
@@ -1099,7 +1100,7 @@ test("Transient messages are added at the end of the thread", async () => {
     await press("Enter");
     await waitFor(".o-mail-Message:count(1)");
     await insertText(".o-mail-Composer-input", "/help");
-    await click(".o-mail-Composer button[title='Send']:enabled");
+    await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await waitFor(".o-mail-Message:count(2)");
     await waitFor(".o-mail-Message:eq(0):has(:text('Mitchell Admin')):count(1)");
     await waitFor(".o-mail-Message:eq(1):has(:text('OdooBot')):count(1)");

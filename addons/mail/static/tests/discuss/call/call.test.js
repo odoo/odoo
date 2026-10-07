@@ -52,6 +52,7 @@ import {
 import { press, waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
 import {
     Command,
+    contains,
     getService,
     mockService,
     onRpc,
@@ -77,7 +78,7 @@ test("basic rendering", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)");
     await waitFor(".o-discuss-CallActionList:count(1)");
@@ -104,7 +105,7 @@ test("basic rendering", async () => {
     await waitFor(".o-discuss-CallActionList button[aria-label='Share Screen']:count(1)");
     await waitFor("button[aria-label='Raise Hand']:count(1)");
     await waitFor(".o-discuss-CallActionList button[aria-label='Disconnect']:count(1)");
-    await click(".o-discuss-CallActionList button[title='More']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
     await waitFor("[name='fullscreen']:count(1)");
     await waitFor("[name='change-layout']:count(1)");
     await waitFor("[name='picture-in-picture']:count(1)");
@@ -116,7 +117,7 @@ test("show the recording indicator to all and the stop control to recorders", as
     await start();
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     rtc.recordingState = {
         audio: true,
@@ -134,15 +135,17 @@ test("show the recording indicator to all and the stop control to recorders", as
             expect.step("stop recording");
         },
     });
-    await click(".o-discuss-CallRecordingIndicator button:text('Stop recording')");
+    await contains(
+        ".o-discuss-CallRecordingIndicator button:text('Stop recording'):count(1)"
+    ).click();
     expect.verifySteps(["stop recording"]);
 });
 
 test("recording is in the extended action menu", async () => {
     await startCallWithRecordingPermissions();
     await waitForNone(".o-discuss-CallActionList [name='record-call']");
-    await click(".o-discuss-CallActionList [name='more-action:call-layout']");
-    await click(".o-dropdown-item[name='record-call']");
+    await contains(".o-discuss-CallActionList [name='more-action:call-layout']:count(1)").click();
+    await contains(".o-dropdown-item[name='record-call']:count(1)").click();
     await waitFor(".o-discuss-RecordingDialog:count(1)");
 });
 
@@ -171,8 +174,8 @@ test("a small screen keeps the microphone, the camera and a way out in its bar",
     await openDiscuss(channelId);
     // The dropdown registers its click handler in a useEffect, so wait for it before clicking.
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Start Call')");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Start Call'):count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     await waitFor(".o-discuss-CallActionList button[name='mute']:count(1)");
     await waitFor(".o-discuss-CallActionList button[name='quick-voice-settings']:count(1)");
@@ -181,7 +184,7 @@ test("a small screen keeps the microphone, the camera and a way out in its bar",
     await waitFor(".o-discuss-CallActionList button[title='More']:count(1)");
     await waitFor(".o-discuss-CallActionList button[name='disconnect']:count(1)");
     // Everything the wide bar spread across its own row and two separate menus is in this one.
-    await click(".o-discuss-CallActionList button[title='More']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
     await waitFor("[name='share-screen']:count(1)");
     await waitFor("[name='raise-hand']:count(1)");
     await waitFor("[name='fullscreen']:count(1)");
@@ -196,10 +199,10 @@ test("a small screen meeting has one More menu, not one per cluster", async () =
     await start();
     await openDiscuss(channelId);
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Start Call')");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Start Call'):count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     // No side actions cluster beside the call bar, hence no second "More" next to its own.
     await waitForNone(".o-mail-MeetingSideActions");
@@ -209,7 +212,7 @@ test("a small screen meeting has one More menu, not one per cluster", async () =
     expect(bar.scrollWidth).toBeLessThan(bar.clientWidth + 1);
     expect(getComputedStyle(bar).overflowX).toBe("visible");
     // The call actions and the thread actions are both behind it.
-    await click(".o-mail-Meeting button[title='More']");
+    await contains(".o-mail-Meeting button[title='More']:count(1)").click();
     await waitFor("[name='share-screen']:count(1)");
     await waitFor("[name='member-list']:count(1)");
 });
@@ -219,7 +222,7 @@ test("start a recording alone in a call", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard:count(1)");
     const rtc = getService("discuss.rtc");
     rtc.can_record_audio = true;
@@ -235,9 +238,9 @@ test("start a recording alone in a call", async () => {
             },
         },
     });
-    await click(".o-discuss-CallActionList [name='more-action:call-layout']");
-    await click(".o-dropdown-item[name='record-call']");
-    await click(".o-discuss-RecordingDialog button:text('Start recording')");
+    await contains(".o-discuss-CallActionList [name='more-action:call-layout']:count(1)").click();
+    await contains(".o-dropdown-item[name='record-call']:count(1)").click();
+    await contains(".o-discuss-RecordingDialog button:text('Start recording'):count(1)").click();
     expect.verifySteps(["start recording"]);
 });
 
@@ -250,14 +253,16 @@ test("keep failed start and stop recording notifications distinct", async () => 
             setRecording: () => false,
         },
     });
-    await click(".o-discuss-CallActionList [name='more-action:call-layout']");
-    await click(".o-dropdown-item[name='record-call']");
-    await click(".o-discuss-RecordingDialog button:text('Start recording')");
+    await contains(".o-discuss-CallActionList [name='more-action:call-layout']:count(1)").click();
+    await contains(".o-dropdown-item[name='record-call']:count(1)").click();
+    await contains(".o-discuss-RecordingDialog button:text('Start recording'):count(1)").click();
     await waitFor(".o-discuss-Call-notification:text('Recording is not allowed'):count(1)");
     rtc.recordingState = { audio: true, transcription: false, video: true };
     await waitFor(".o-discuss-CallRecordingIndicator:count(1)");
     await hover(".o-discuss-CallRecordingIndicator");
-    await click(".o-discuss-CallRecordingIndicator button:text('Stop recording')");
+    await contains(
+        ".o-discuss-CallRecordingIndicator button:text('Stop recording'):count(1)"
+    ).click();
     await waitFor(".o-discuss-Call-notification:text('Recording is not allowed'):count(1)");
     await waitFor(
         ".o-discuss-Call-notification:text('You are not allowed to stop the recording'):count(1)"
@@ -276,7 +281,9 @@ test("show a failure notification when stopping a recording request rejects", as
     });
     await waitFor(".o-discuss-CallRecordingIndicator:count(1)");
     await hover(".o-discuss-CallRecordingIndicator");
-    await click(".o-discuss-CallRecordingIndicator button:text('Stop recording')");
+    await contains(
+        ".o-discuss-CallRecordingIndicator button:text('Stop recording'):count(1)"
+    ).click();
     await waitFor(".o-discuss-Call-notification:text('Could not stop the recording'):count(1)");
 });
 
@@ -289,9 +296,9 @@ test("show a failure notification when starting a recording request rejects", as
             setRecording: () => Promise.reject(new Error("transport failure")),
         },
     });
-    await click(".o-discuss-CallActionList [name='more-action:call-layout']");
-    await click(".o-dropdown-item[name='record-call']");
-    await click(".o-discuss-RecordingDialog button:text('Start recording')");
+    await contains(".o-discuss-CallActionList [name='more-action:call-layout']:count(1)").click();
+    await contains(".o-dropdown-item[name='record-call']:count(1)").click();
+    await contains(".o-discuss-RecordingDialog button:text('Start recording'):count(1)").click();
     await waitFor(".o-discuss-Call-notification:text('Could not start the recording'):count(1)");
 });
 
@@ -310,7 +317,7 @@ test("recording stop notification persists until dismissed", async () => {
     await waitFor(`${notification} .o_notification_bar.bg-warning:count(1)`);
     await advanceTime(10_000);
     await waitFor(`${notification}:count(1)`);
-    await click(`${notification} .o_notification_close`);
+    await contains(`${notification} .o_notification_close:count(1)`).click();
     await waitForNone(notification);
 });
 
@@ -436,7 +443,7 @@ async function startCallWithRecordingPermissions() {
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)");
     const rtc = getService("discuss.rtc");
     rtc.can_record_audio = true;
@@ -450,7 +457,7 @@ test("mobile UI", async () => {
     mockUserAgent("android");
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     expect(isMobileOS()).toBe(true);
     await waitForNone("[title='Share Screen']");
@@ -461,10 +468,10 @@ test("keep the `more` popover active when hovering it", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     await waitFor(".o-discuss-CallActionList:count(1)");
-    await click(".o-discuss-CallActionList button[title='More']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
     const enterFullScreenSelector = "[name='fullscreen']";
     await waitFor(`${enterFullScreenSelector}:count(1)`);
     await hover(queryFirst(enterFullScreenSelector));
@@ -491,9 +498,9 @@ test("should not display call UI when no more members (self disconnect)", async 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
-    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await contains(".o-discuss-CallActionList button[aria-label='Disconnect']:count(1)").click();
     await waitForNone(".o-discuss-Call");
 });
 
@@ -502,10 +509,10 @@ test("show call UI in chat window when in call", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await click(".o-mail-NotificationItem-name:text('General')");
+    await contains(".o-mail-NotificationItem-name:text('General'):count(1)").click();
     await waitFor(".o-mail-ChatWindow:count(1)");
     await waitForNone(".o-discuss-Call");
-    await click(".o-mail-ChatWindow-header [title='Start Call']");
+    await contains(".o-mail-ChatWindow-header [title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     await waitForNone(".o-mail-ChatWindow-header [title='Start Call']");
 });
@@ -532,10 +539,10 @@ test("joining a video call from a chat window opens the wide meeting view", asyn
         channel_member_id: memberId,
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem-name:text('Partner 2')");
+    await contains(".o_menu_systray i[aria-label='Messages']:count(1)").click();
+    await contains(".o-mail-NotificationItem-name:text('Partner 2'):count(1)").click();
     await waitFor(".o-mail-ChatWindow:count(1)");
-    await click(".o-mail-ChatWindow button[title='Join Video Call']");
+    await contains(".o-mail-ChatWindow button[title='Join Video Call']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await waitFor(".o-discuss-Call:count(1)");
     await waitFor(".o-mail-Meeting:has(.o-discuss-Call):count(1)");
@@ -559,10 +566,10 @@ test("starting a video call from a chat window opens the wide meeting view", asy
         ],
     });
     await start();
-    await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem-name:text('Partner 2')");
+    await contains(".o_menu_systray i[aria-label='Messages']:count(1)").click();
+    await contains(".o-mail-NotificationItem-name:text('Partner 2'):count(1)").click();
     await waitFor(".o-mail-ChatWindow:count(1)");
-    await click(".o-mail-ChatWindow button[title='Start Video Call']");
+    await contains(".o-mail-ChatWindow button[title='Start Video Call']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await waitFor(".o-discuss-Call:count(1)");
     await waitFor(".o-mail-Meeting:has(.o-discuss-Call):count(1)");
@@ -579,7 +586,7 @@ test("starting a video call from the Discuss app opens the wide meeting view", a
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Video Call']");
+    await contains("[title='Start Video Call']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)"); // opens wide, like in a chat window
     // "To minimize, press ESC" hint shown at the top of the call view
     await waitFor(
@@ -600,7 +607,7 @@ test("starting a plain call from the Discuss app stays inline (no meeting view)"
     });
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     await expect.waitForSteps(["play - call-join"]); // call is fully joined, meeting-view decision is settled
     expect(rtc.isFullscreen).toBe(false); // stayed inline: no wide meeting view for a camera-less call
@@ -619,7 +626,7 @@ test("should disconnect when closing page while in call", async () => {
         }
     });
 
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     // simulate page close
     await manuallyDispatchProgrammaticEvent(window, "pagehide");
@@ -688,11 +695,11 @@ test("can share screen", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Share Screen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Share Screen']:count(1)").click();
     await waitFor("video:count(1)");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click("[title='Stop Sharing Screen']");
+    await contains("[title='Stop Sharing Screen']:count(1)").click();
     await waitForNone("video");
 });
 
@@ -701,10 +708,10 @@ test("can share user camera", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Turn camera on']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor("video:count(1)");
-    await click("[title='Turn camera off']");
+    await contains("[title='Turn camera off']:count(1)").click();
     await waitForNone("video");
 });
 
@@ -713,8 +720,8 @@ test("switching camera device updates the video element stream", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const env = await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Turn camera on']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor("video[type='camera']:count(1)");
     const videoEl = queryFirst("video[type='camera']");
     const initialStream = videoEl.srcObject;
@@ -738,13 +745,15 @@ test("switch front/back camera in mobile", async () => {
     expect(isMobileOS()).toBe(true);
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Turn camera on']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor("video[data-facing-mode='user']:count(1)");
     // A camera setting, so it lives with the camera settings rather than in the bar.
     await waitForNone(".o-discuss-CallActionList button[name='switch-camera']");
-    await click("button[aria-label='Video Settings']");
-    await click(".o-discuss-QuickVideoSettings button[aria-label='Switch Camera']");
+    await contains("button[aria-label='Video Settings']:count(1)").click();
+    await contains(
+        ".o-discuss-QuickVideoSettings button[aria-label='Switch Camera']:count(1)"
+    ).click();
     await waitFor("video[data-facing-mode='environment']:count(1)");
 });
 
@@ -753,16 +762,16 @@ test("Camera video stream stays in focus when on/off", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Turn camera on']");
-    await click("[title='Turn camera off']");
-    await click("[title='Turn camera on']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Turn camera on']:count(1)").click();
+    await contains("[title='Turn camera off']:count(1)").click();
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor("video[type='camera']:not(.o-inset):count(1)");
     // test screen sharing then camera on to check camera aside
-    await click("[title='Turn camera off']");
-    await click("[title='Share Screen']");
+    await contains("[title='Turn camera off']:count(1)").click();
+    await contains("[title='Share Screen']:count(1)").click();
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click("[title='Turn camera on']");
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor("video[type='screen']:not(.o-inset):count(1)");
     await waitFor("video[type='camera'].o-inset:count(1)");
 });
@@ -783,9 +792,9 @@ test("Create a direct message channel when clicking on start a meeting", async (
     await openDiscuss(channelId);
     await waitFor(".o-mail-Thread:contains('Welcome to #Slytherin!'):count(1)");
     await waitFor(".o-mail-Message:count(1)");
-    await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
-    await click("button:text('Meeting')");
-    await click(".o-dropdown-item:text('Start Now')");
+    await contains(".o-mail-MessagingMenu-tab[data-id='meeting']:count(1)").click();
+    await contains("button:text('Meeting'):count(1)").click();
+    await contains(".o-dropdown-item:text('Start Now'):count(1)").click();
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Meeting, Jan 1')):count(1)");
     await waitFor(".o-discuss-Call:count(1)");
     await waitFor(".o-mail-MeetingReadyBanner:count(1)");
@@ -794,7 +803,7 @@ test("Create a direct message channel when clicking on start a meeting", async (
     await waitFor(".o-mail-MeetingSideActions button[title='Members']:count(1)");
     await waitFor(".o-mail-MeetingSideActions button[title='Chat']:count(1)");
     await waitFor(".o-discuss-CallActionList button[title='More']:count(1)");
-    await click(".o-discuss-CallActionList button[title='More']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
     await waitFor("[name='fullscreen']:count(1)");
     await waitFor("[name='change-layout']:count(1)");
     await waitFor("[name='picture-in-picture']:count(1)");
@@ -805,9 +814,9 @@ test("Can share user camera and screen together", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Share Screen']");
-    await click("[title='Turn camera on']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Share Screen']:count(1)").click();
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor("video:count(2)");
 });
 
@@ -816,11 +825,11 @@ test("Click on inset card should replace the inset and active stream together", 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Share Screen']");
-    await click("[title='Turn camera on']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Share Screen']:count(1)").click();
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor("video[type='screen']:not(.o-inset):count(1)");
-    await click("video[type='camera'].o-inset");
+    await contains("video[type='camera'].o-inset:count(1)").click();
     await waitFor("video[type='screen'].o-inset:count(1)");
     await waitFor("video[type='camera']:not(.o-inset):count(1)");
 });
@@ -882,11 +891,11 @@ test("join/leave sounds are only played on main tab", async () => {
     await waitStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
     await openDiscuss(channelId, { target: env2 });
     await waitStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
-    await click(`${env1.selector} [title='Start Call']`);
+    await contains(`${env1.selector} [title='Start Call']:count(1)`).click();
     await waitFor(`${env1.selector} .o-discuss-Call:count(1)`);
     await waitFor(`${env2.selector} .o-discuss-Call:count(1)`);
     await expect.waitForSteps(["tab1 - play - call-join"]);
-    await click(`${env1.selector} [title='Disconnect']:not([disabled])`);
+    await contains(`${env1.selector} [title='Disconnect']:not([disabled]):count(1)`).click();
     await waitForNone(`${env1.selector} .o-discuss-Call`);
     await waitForNone(`${env2.selector} .o-discuss-Call`);
     await expect.waitForSteps(["tab1 - play - call-leave"]);
@@ -946,11 +955,11 @@ test("Dropzones below fullscreen meeting view are disabled", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(2)");
-    await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
-    await click("button:text('Meeting')");
-    await click(".o-dropdown-item:text('Start Now')");
+    await contains(".o-mail-MessagingMenu-tab[data-id='meeting']:count(1)").click();
+    await contains("button:text('Meeting'):count(1)").click();
+    await contains(".o-dropdown-item:text('Start Now'):count(1)").click();
     await waitFor(".o-mail-Meeting.o-fullscreen:count(1)");
-    await click(".o-mail-Meeting button[title='Chat']");
+    await contains(".o-mail-Meeting button[title='Chat']:count(1)").click();
     await waitFor(".o-mail-Meeting.o-fullscreen .o-mail-ActionPanel .o-mail-Thread:count(1)");
     const textFile_1 = new File(["hello, world"], "text-1.txt", { type: "text/plain" });
     await dragenterFiles(".o-mail-Meeting.o-fullscreen .o-mail-Thread", [textFile_1]);
@@ -958,8 +967,8 @@ test("Dropzones below fullscreen meeting view are disabled", async () => {
     await dropFiles(".o-Dropzone", [textFile_1]);
     await waitFor(".o-mail-Meeting .o-mail-AttachmentContainer:not(.o-isUploading):count(1)");
     // check picture-in-picture still enables dropzone
-    await click(".o-mail-Meeting [title='More']");
-    await click("[name='picture-in-picture']");
+    await contains(".o-mail-Meeting [title='More']:count(1)").click();
+    await contains("[name='picture-in-picture']:count(1)").click();
     await mailContains(".o-mail-Meeting:not(.o-fullscreen)", {
         target: popoutIframe.contentDocument,
     });
@@ -977,27 +986,27 @@ test("Fullscreen button enters browser fullscreen; the menu then offers Wide Vie
     await start();
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList button[title='More']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
     await waitFor("[name='fullscreen'][aria-label='Fullscreen']:count(1)");
     await waitFor("[name='wide-view'][aria-label='Wide View']:count(1)");
     await waitForNone("[name='minimize']");
-    await click("[name='fullscreen']");
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting.o-fullscreen:count(1)");
     expect(fullscreen.isBrowserFullscreen()).toBe(true);
     expect(rtc.isBrowserFullscreen).toBe(true);
-    await click(".o-mail-Meeting [title='More']");
+    await contains(".o-mail-Meeting [title='More']:count(1)").click();
     await waitForNone("[name='fullscreen']");
     await waitFor("[name='wide-view'][aria-label='Wide View']:count(1)");
     await waitFor("[name='minimize'][aria-label='Minimize']:count(1)");
-    await click("[name='wide-view']");
+    await contains("[name='wide-view']:count(1)").click();
     await waitFor(".o-mail-Meeting.o-fullscreen:count(1)");
     expect(fullscreen.isBrowserFullscreen()).toBe(false);
     expect(rtc.isBrowserFullscreen).toBe(false);
     await waitFor(
         ".o-discuss-Call-topNotifications .o-discuss-Call-notification:text('To minimize, press ESC'):count(1)"
     );
-    await click(".o-mail-Meeting [title='More']");
+    await contains(".o-mail-Meeting [title='More']:count(1)").click();
     await waitFor("[name='fullscreen'][aria-label='Fullscreen']:count(1)");
     await waitForNone("[name='wide-view']");
     await waitFor("[name='minimize'][aria-label='Minimize']:count(1)");
@@ -1010,15 +1019,15 @@ test("Fullscreen button label reflects a denied browser fullscreen request", asy
     await start();
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     // The meeting still opens as the windowed overlay, but browser fullscreen was denied.
     await waitFor(".o-mail-Meeting.o-fullscreen:count(1)");
     expect(fullscreen.isBrowserFullscreen()).toBe(false);
     expect(rtc.isBrowserFullscreen).toBe(false);
     // The action keeps offering "Fullscreen" instead of wrongly showing "Exit Fullscreen".
-    await click(".o-mail-Meeting [title='More']");
+    await contains(".o-mail-Meeting [title='More']:count(1)").click();
     await waitFor("[name='fullscreen'][aria-label='Fullscreen']:count(1)");
 });
 
@@ -1029,9 +1038,9 @@ test("Leaving browser fullscreen externally (e.g. Escape) closes the meeting vie
     await start();
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting.o-fullscreen:count(1)");
     expect(rtc.isBrowserFullscreen).toBe(true);
     // The browser leaving fullscreen on its own is reflected declaratively and tears down the view.
@@ -1048,15 +1057,15 @@ test("Closing picture-in-picture from browser fullscreen restores the windowed m
     await start();
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting.o-fullscreen:count(1)");
     expect(fullscreen.isBrowserFullscreen()).toBe(true);
     expect(rtc.isBrowserFullscreen).toBe(true);
     // Opening PiP leaves browser fullscreen and closes the meeting view in the main window.
-    await click(".o-mail-Meeting [title='More']");
-    await click("[name='picture-in-picture']");
+    await contains(".o-mail-Meeting [title='More']:count(1)").click();
+    await contains("[name='picture-in-picture']:count(1)").click();
     await waitForNone(".o-mail-Meeting");
     expect(fullscreen.isBrowserFullscreen()).toBe(false);
     // Closing PiP restores the meeting as the windowed overlay rather than re-entering browser
@@ -1074,20 +1083,20 @@ test("Minimize button leaves the meeting view like pressing Escape", async () =>
     await start();
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting.o-fullscreen:count(1)");
     expect(rtc.isBrowserFullscreen).toBe(true);
-    await click(".o-mail-Meeting [title='More']");
-    await click("[name='minimize'][aria-label='Minimize']");
+    await contains(".o-mail-Meeting [title='More']:count(1)").click();
+    await contains("[name='minimize'][aria-label='Minimize']:count(1)").click();
     await waitFor(".o-mail-Discuss .o-discuss-Call:count(1)");
     await waitForNone(".o-mail-Meeting");
     expect(fullscreen.isBrowserFullscreen()).toBe(false);
     expect(rtc.isBrowserFullscreen).toBe(false);
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='wide-view']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='wide-view']:count(1)").click();
     await waitFor(".o-mail-Meeting.o-fullscreen:count(1)");
     expect(rtc.isFullscreen).toBe(true);
     expect(rtc.isBrowserFullscreen).toBe(false);
@@ -1116,8 +1125,8 @@ function createCallParticipant(pyEnv, channelId, name) {
 
 async function openMeetingView() {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='wide-view']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='wide-view']:count(1)").click();
     await waitFor(".o-mail-Meeting.o-fullscreen:count(1)");
 }
 
@@ -1130,7 +1139,7 @@ test("Leaving the meeting view brings the Discuss call back to its tiles", async
     const store = getService("mail.store");
     store.settings.callLayout = CALL_GRID_LAYOUT.SPOTLIGHT;
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard:count(3)");
     await openMeetingView();
     await waitFor(".o-mail-Meeting .o-discuss-CallParticipantCard:count(1)");
@@ -1149,7 +1158,7 @@ test("Leaving the meeting view keeps the pinned participant focused", async () =
     const store = getService("mail.store");
     store.settings.callLayout = CALL_GRID_LAYOUT.SPOTLIGHT;
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard:count(3)");
     await openMeetingView();
     const channel = store.rtc.channel;
@@ -1174,7 +1183,7 @@ test("Leaving the meeting view keeps a shared screen focused", async () => {
     const network = await makeMockRtcNetwork({ env, channelId });
     const streamerRemote = network.makeMockRemote(channelMemberId);
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await streamerRemote.updateConnectionState("connected");
     await waitFor(".o-discuss-CallParticipantCard:count(3)");
     await openMeetingView();
@@ -1206,7 +1215,7 @@ test("Leaving the meeting view auto-focuses the participant video in a chat wind
     const env = await start();
     const network = await makeMockRtcNetwork({ env, channelId });
     const mockedRemote = network.makeMockRemote(channelMemberId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard:count(2)");
     await mockedRemote.updateConnectionState("connected");
     await openMeetingView();
@@ -1308,22 +1317,22 @@ test("Systray icon keeps track of earlier actions", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-CallMenu-buttonContent [data-icon='mic']:count(1)");
-    await click("[title='Share Screen']");
+    await contains("[title='Share Screen']:count(1)").click();
     // stack: ["share-screen"]
     await waitFor(".o-discuss-CallMenu-buttonContent [data-icon='desktop_windows']:count(1)");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click("[title='Turn camera on']");
+    await contains("[title='Turn camera on']:count(1)").click();
     // stack: ["video", "share-screen"]
     await waitFor(".o-discuss-CallMenu-buttonContent [data-icon='videocam']:count(1)");
-    await click("[title='Mute']");
+    await contains("[title='Mute']:count(1)").click();
     // stack: ["mute", "video", "share-screen"]
     await waitFor(".o-discuss-CallMenu-buttonContent [data-icon='mic_off']:count(1)");
-    await click("[title='Unmute']");
+    await contains("[title='Unmute']:count(1)").click();
     // stack: ["video", "share-screen"]
     await waitFor(".o-discuss-CallMenu-buttonContent [data-icon='videocam']:count(1)");
-    await click("[title='Turn camera off']");
+    await contains("[title='Turn camera off']:count(1)").click();
     // stack: ["share-screen"]
     await waitFor(".o-discuss-CallMenu-buttonContent [data-icon='desktop_windows']:count(1)");
 });
@@ -1333,7 +1342,7 @@ test("show call participants in discuss sidebar", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(
         ".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-MessagingMenuCallParticipants img[title='Mitchell Admin']:count(1)"
     );
@@ -1367,7 +1376,7 @@ test("Sort call participants by name", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await click("[title='Expand participants'][data-icon='chevron_forward']");
+    await contains("[title='Expand participants'][data-icon='chevron_forward']:count(1)").click();
     await mailContains(".o-mail-MessagingMenuCallParticipants", {
         contains: [
             ".o-mail-MessagingMenuCallParticipants-participant:nth-child(1):contains('AAA')",
@@ -1426,7 +1435,7 @@ test("expand call participants when joining a call", async () => {
     await waitFor("img[title='Ivy']:count(1)");
     await waitFor("img[title='Jack']:count(1)");
     await waitFor(".o-mail-AvatarStack-remainingCount:text('+2'):count(1)");
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-mail-MessagingMenuCallParticipants img:count(13)");
     await waitFor("img[title='Alice']:count(1)");
     await waitFor("img[title='Bob']:count(1)");
@@ -1448,8 +1457,10 @@ test("Clicking call participant opens avatar card", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click(".o-mail-MessagingMenuCallParticipants-participant:text('Mitchell Admin')");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(
+        ".o-mail-MessagingMenuCallParticipants-participant:text('Mitchell Admin'):count(1)"
+    ).click();
     await waitFor(".o-mail-avatar-card-name:text('Mitchell Admin'):count(1)");
 });
 
@@ -1464,10 +1475,10 @@ test("call participant shows appropriate status icon", async () => {
     const network = await makeMockRtcNetwork({ env, channelId });
     const bobRemote = network.makeMockRemote(bobMemberId);
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await bobRemote.updateConnectionState("connected");
     await waitFor(".o-discuss-Call:count(1)");
-    await click("button[title='Mute']");
+    await contains("button[title='Mute']:count(1)").click();
     await waitFor(
         ".o-discuss-CallParticipantCard[aria-label='Mitchell Admin'] [data-icon='mic_off']:count(1)"
     );
@@ -1475,8 +1486,8 @@ test("call participant shows appropriate status icon", async () => {
         ".o-mail-MessagingMenuCallParticipants:contains('Mitchell Admin') [data-icon='mic_off']:count(1)"
     );
     await waitFor("button[title='Unmute']:count(1)");
-    await click("button[title='Voice Settings']");
-    await click(".dropdown-menu button:contains('Deafen')");
+    await contains("button[title='Voice Settings']:count(1)").click();
+    await contains(".dropdown-menu button:contains('Deafen'):count(1)").click();
     await waitFor(
         ".o-discuss-CallParticipantCard[aria-label='Mitchell Admin'] [data-icon='hearing_disabled']:count(1)"
     );
@@ -1489,7 +1500,7 @@ test("call participant shows appropriate status icon", async () => {
     await waitForNone(
         ".o-mail-MessagingMenuCallParticipants:contains('Mitchell Admin') [data-icon='mic_off']"
     );
-    await click("button[title='Undeafen']");
+    await contains("button[title='Undeafen']:count(1)").click();
     await waitForNone(
         ".o-discuss-CallParticipantCard[aria-label='Mitchell Admin'] [data-icon='hearing_disabled']"
     );
@@ -1513,8 +1524,8 @@ test("deafen and undeafen from the bar of a small screen", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Start Call')");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Start Call'):count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     await waitFor(".o-discuss-CallActionList button[name='mute'][aria-label='Mute']:count(1)");
     await waitFor(".o-discuss-CallActionList button[name='quick-voice-settings']:count(1)");
@@ -1524,8 +1535,10 @@ test("deafen and undeafen from the bar of a small screen", async () => {
     await waitFor(".o-discuss-CallActionList button[name='disconnect']:count(1)");
 
     // Deafening hides the microphone toggle, so the bar needs "deafen" to keep an audio control.
-    await click(".o-discuss-CallActionList button[aria-label='Voice Settings']");
-    await click(".dropdown-menu button:contains('Deafen')");
+    await contains(
+        ".o-discuss-CallActionList button[aria-label='Voice Settings']:count(1)"
+    ).click();
+    await contains(".dropdown-menu button:contains('Deafen'):count(1)").click();
     await waitFor(
         ".o-discuss-CallActionList button[name='deafen'][aria-label='Undeafen']:count(1)"
     );
@@ -1535,7 +1548,7 @@ test("deafen and undeafen from the bar of a small screen", async () => {
     await waitFor(".o-discuss-CallActionList button[title='More']:count(1)");
     await waitFor(".o-discuss-CallActionList button[name='disconnect']:count(1)");
 
-    await click(".o-discuss-CallActionList button[name='deafen']");
+    await contains(".o-discuss-CallActionList button[name='deafen']:count(1)").click();
     await waitFor(".o-discuss-CallActionList button[name='mute'][aria-label='Mute']:count(1)");
     await waitFor(".o-discuss-CallActionList button[name='quick-voice-settings']:count(1)");
     await waitFor(".o-discuss-CallActionList button[name='camera-on']:count(1)");
@@ -1555,9 +1568,9 @@ test("collapsed call participants show who is talking", async () => {
     const network = await makeMockRtcNetwork({ env, channelId });
     const bobRemote = network.makeMockRemote(bobMemberId);
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await bobRemote.updateConnectionState("connected");
-    await click("[title='Collapse participants']");
+    await contains("[title='Collapse participants']:count(1)").click();
     await bobRemote.updateInfo({ isTalking: true });
     await waitFor(".o-mail-MessagingMenuCallParticipants img[title='bob'].o-isTalking:count(1)");
     await bobRemote.updateInfo({ isTalking: false });
@@ -1604,18 +1617,18 @@ test("Use saved volume settings", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Join the Call']");
+    await contains("[title='Join the Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     await waitFor(
         `.o-discuss-CallParticipantCard[aria-label='${partnerName}'][data-is-context-menu-available]:count(1)`
     );
     await hover(`.o-discuss-CallParticipantCard[aria-label='${partnerName}']`);
-    await click("button[title='Participant options']");
+    await contains("button[title='Participant options']:count(1)").click();
     await waitFor(".o-discuss-CallContextMenu:count(1)");
     const rangeInput = queryFirst(".o-discuss-CallContextMenu input[type='range']");
     expect(rangeInput.value).toBe(expectedVolume.toString());
     rangeInput.dispatchEvent(new Event("change")); // to trigger the volume change
-    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await contains(".o-discuss-CallActionList button[aria-label='Disconnect']:count(1)").click();
 });
 
 test("show call participants after stopping screen share", async () => {
@@ -1623,11 +1636,11 @@ test("show call participants after stopping screen share", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Share Screen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Share Screen']:count(1)").click();
     await waitFor("video:count(1)");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click("[title='Stop Sharing Screen']");
+    await contains("[title='Stop Sharing Screen']:count(1)").click();
     await waitForNone("video");
     // when all participant cards are shown they are minimized
     await waitFor(
@@ -1640,10 +1653,10 @@ test("show call participants after stopping camera share", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Turn camera on']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor("video:count(1)");
-    await click("[title='Turn camera off']");
+    await contains("[title='Turn camera off']:count(1)").click();
     await waitForNone("video");
     // when all participant cards are shown they are minimized
     await waitFor(
@@ -1685,7 +1698,7 @@ test("Cross tab calls: tabs can interact with calls remotely", async () => {
             expect.step(`is_muted:${event.data.changes["is_muted"]}`);
         }
     };
-    await click("[title='Mute']");
+    await contains("[title='Mute']:count(1)").click();
     await expect.waitForSteps(["is_muted:true"]);
 });
 
@@ -1719,10 +1732,10 @@ test("Should not auto-cancel incoming call when camera preview is open", async (
     await waitFor(".o-discuss-CallInvitation:count(1)");
     await advanceTime(ChannelMember.CANCEL_CALL_INVITE_DELAY - 5000);
     await waitFor(".o-discuss-CallInvitation:count(1)");
-    await click(".o-mail-ActionList-button[title='Show camera preview']");
+    await contains(".o-mail-ActionList-button[title='Show camera preview']:count(1)").click();
     await advanceTime(ChannelMember.CANCEL_CALL_INVITE_DELAY - 5000); // Call should not auto-cancel while preview is open
     await waitFor(".o-discuss-CallInvitation:count(1)");
-    await click(".o-mail-ActionList-button[title='Hide camera preview']");
+    await contains(".o-mail-ActionList-button[title='Hide camera preview']:count(1)").click();
     await advanceTime(ChannelMember.CANCEL_CALL_INVITE_DELAY); // Timer restarts when the preview closes, and the call should auto-cancel after 30s.
     await waitForNone(".o-discuss-CallInvitation");
 });
@@ -1741,14 +1754,16 @@ test("should also invite to the call when inviting to the channel", async () => 
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
-    await click("button[title='Add People']");
+    await contains("button[title='Add People']:count(1)").click();
     await waitFor(
         ".o-discuss-ChannelInvitation:has(:text('Invite people to the channel \"TestChanel\"')):count(1)"
     );
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
-    await click("button:text('Invite'):enabled");
+    await contains(
+        ".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner')):count(1)"
+    ).click();
+    await contains("button:text('Invite'):enabled:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard.o-isInvitation:count(1)");
 });
 
@@ -1805,9 +1820,9 @@ test("single 'join' (without camera) button when last call was audio-only", asyn
     });
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Join Call']");
+    await contains("button[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-Call.o-selfInCall:count(1)");
-    await click("button[title='Disconnect']");
+    await contains("button[title='Disconnect']:count(1)").click();
     await click("button[title='Join Call']:text('Join')", { contains: ["[data-icon='phone_f']"] });
 });
 
@@ -1832,9 +1847,9 @@ test("single 'join' (with camera) button when last call had camera on", async ()
     });
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Join Video Call']");
+    await contains("button[title='Join Video Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin'] video:count(1)");
-    await click("button[title='Disconnect']");
+    await contains("button[title='Disconnect']:count(1)").click();
     await click("button[title='Join Video Call']:text('Join')", {
         contains: ["[data-icon='videocam_f']"],
     });
@@ -1861,7 +1876,7 @@ test("dynamic focus switches to talking participant", async () => {
     await start();
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)");
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob']:count(1)");
     rtc.channel.activeRtcSession = rtc.channel.rtc_session_ids.find(
@@ -1877,12 +1892,14 @@ test("dynamic focus switches to talking participant", async () => {
     rtc.updateSessionInfo({ [aliceSessionId]: { isTalking: false } });
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob']:count(1)");
     await hover(".o-discuss-CallParticipantCard[aria-label='Bob']");
-    await click("button[aria-label='Video Settings']");
-    await click(".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings'))");
+    await contains("button[aria-label='Video Settings']:count(1)").click();
+    await contains(
+        ".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings')):count(1)"
+    ).click();
     await waitFor(
         ".o-discuss-CallSettings .o-mail-TabHeader.o-active:has(:text('Video')):count(1)"
     );
-    await click("input[title='Auto-focus speaker']:checked");
+    await contains("input[title='Auto-focus speaker']:checked:count(1)").click();
 });
 
 test("Shows warning badge on mic/camera on non-granted permission in meeting conversations", async () => {
@@ -1901,25 +1918,25 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     rtc.cameraPermission = "denied";
     await openDiscuss(channelId);
     await waitFor(".o-mail-DiscussContent-threadName[title='General']:count(1)");
-    await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
-    await click("button:text('Meeting')");
-    await click(".o-dropdown-item:text('Start Now')");
+    await contains(".o-mail-MessagingMenu-tab[data-id='meeting']:count(1)").click();
+    await contains("button:text('Meeting'):count(1)").click();
+    await contains(".o-dropdown-item:text('Start Now'):count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await waitFor("button[title='Turn camera off']:count(1)");
     await waitFor("button[title='Turn camera off'].o-tag-DANGER:count(1)");
     await waitFor("button[title='Turn camera off'].o-tag-WARNING_BADGE:count(1)");
     await rtc.exitFullscreen();
-    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await click(".o-mail-NotificationItem:has(:text('General'))");
-    await click("[title='Join Call']");
+    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('General')):count(1)").click();
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(
         ".modal:has(:text('Switch to the other call? This will disconnect you from your ongoing call.')):count(1)"
     );
-    await click(".modal-footer button:text('Switch')");
+    await contains(".modal-footer button:text('Switch'):count(1)").click();
     await waitFor("button[title='Turn camera on']:count(1)");
     await waitForNone("button[title='Turn camera on'].o-tag-DANGER");
     await waitForNone("button[title='Turn camera on'].o-tag-WARNING_BADGE");
-    await click("button[title='Disconnect']");
+    await contains("button[title='Disconnect']:count(1)").click();
     await waitNotifications(["discuss.channel.rtc.session/ended"]);
 });
 
@@ -1934,19 +1951,19 @@ test("only notified of a call disconnection when the server ends the session", a
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     // Delay the response so that the session removal broadcast by the server is processed
     // before the client knows that the leave request succeeded.
     let respondToLeave;
     onRpcAfter("/mail/rtc/channel/leave_call", () => new Promise((res) => (respondToLeave = res)));
-    await click("[title='Disconnect']");
+    await contains("[title='Disconnect']:count(1)").click();
     await waitNotifications(["discuss.channel.rtc.session/ended"]);
     respondToLeave();
     await waitForNone(".o-discuss-Call");
     await expect.waitForSteps([]);
     // A session removal that does not come from leaving locally is a server disconnection.
-    await click("[title='Start Call']:enabled");
+    await contains("[title='Start Call']:enabled:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     pyEnv["discuss.channel.rtc.session"].unlink([getService("discuss.rtc").selfSession.id]);
     await waitForNone(".o-discuss-Call");
@@ -1976,14 +1993,14 @@ test("should not show context menu on participant card when not in a call", asyn
     await waitForNone(
         ".o-discuss-CallParticipantCard[aria-label='Awesome Partner'][data-is-context-menu-available]"
     );
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(
         ".o-discuss-CallParticipantCard[aria-label='Awesome Partner'][data-is-context-menu-available]:count(1)"
     );
     await hover(".o-discuss-CallParticipantCard[aria-label='Awesome Partner']");
-    await click(
-        ".o-discuss-CallParticipantCard[aria-label='Awesome Partner'] .o-discuss-CallParticipantCard-contextButton"
-    );
+    await contains(
+        ".o-discuss-CallParticipantCard[aria-label='Awesome Partner'] .o-discuss-CallParticipantCard-contextButton:count(1)"
+    ).click();
     await waitFor(".o-discuss-CallContextMenu:count(1)");
 });
 
@@ -1993,15 +2010,15 @@ test("all streams are properly closed when abruptly disconnected", async () => {
     await start();
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     const audioStream = streams.at(-1);
     expect(audioStream.getTracks()[0].readyState).toBe("live");
-    await click("[title='Turn camera on']");
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard video:count(1)");
     const cameraStream = streams.at(-1);
     expect(cameraStream.getTracks()[0].readyState).toBe("live");
-    await click("[title='Share Screen']");
+    await contains("[title='Share Screen']:count(1)").click();
     await waitFor("[title='You are presenting']:count(1)");
     const screenStream = streams.at(-1);
     expect(screenStream.getTracks()[0].readyState).toBe("live");
@@ -2018,18 +2035,18 @@ test("Leaving a call should close all the streams", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
-    await click("[title='Turn camera on']");
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard video:count(1)");
-    await click("[title='Share Screen']");
+    await contains("[title='Share Screen']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard.o-inset:count(1)");
     expect(streams.length).toBe(3);
     expect(streams[0].getTracks()[0].readyState).toBe("live");
     expect(streams[1].getTracks()[0].readyState).toBe("live");
     expect(streams[2].getTracks()[0].readyState).toBe("live");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await contains(".o-discuss-CallActionList button[aria-label='Disconnect']:count(1)").click();
     await waitForNone(".o-discuss-Call");
     expect(streams[0].getTracks()[0].readyState).toBe("ended");
     expect(streams[1].getTracks()[0].readyState).toBe("ended");
@@ -2041,30 +2058,30 @@ test("all streams are properly closed when requesting new ones and tuning the fe
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     const audioStream = streams.at(-1);
     expect(audioStream.getTracks()[0].readyState).toBe("live");
-    await click("[title='Turn camera on']");
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard video:count(1)");
     const cameraStream1 = streams.at(-1);
     expect(cameraStream1.getTracks()[0].readyState).toBe("live");
-    await click("[title='Turn camera off']");
+    await contains("[title='Turn camera off']:count(1)").click();
     await waitForNone(".o-discuss-CallParticipantCard video");
-    await click("[title='Turn camera on']");
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard video:count(1)");
     const cameraStream2 = streams.at(-1);
     expect(cameraStream1.getTracks()[0].readyState).toBe("ended");
     expect(cameraStream2.getTracks()[0].readyState).toBe("live");
-    await click("[title='Turn camera off']");
+    await contains("[title='Turn camera off']:count(1)").click();
     await waitForNone(".o-discuss-CallParticipantCard video");
-    await click("[title='Share Screen']");
+    await contains("[title='Share Screen']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard video:count(1)");
     await waitFor(".o-discuss-CallPresentationBar:count(1)");
     const screenStream = streams.at(-1);
     expect(screenStream.getTracks()[0].readyState).toBe("live");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click("[title='Stop Sharing Screen']");
+    await contains("[title='Stop Sharing Screen']:count(1)").click();
     expect(screenStream.getTracks()[0].readyState).toBe("ended");
 });
 
@@ -2079,7 +2096,7 @@ test("Show connecting state on cards", async () => {
     const network = await makeMockRtcNetwork({ env, channelId });
     const bobRemote = network.makeMockRemote(channelMemberId);
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob']:count(1)");
     await bobRemote.updateConnectionState("connecting");
     await waitFor(
@@ -2100,7 +2117,7 @@ test("Can see raised hands from other call participants", async () => {
     const network = await makeMockRtcNetwork({ env, channelId });
     const bobRemote = network.makeMockRemote(channelMemberId);
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob']:count(1)");
     await bobRemote.updateConnectionState("connected");
     await bobRemote.updateInfo({ isRaisingHand: true });
@@ -2121,7 +2138,7 @@ test("Can see videos from other call participants", async () => {
     const network = await makeMockRtcNetwork({ env, channelId });
     const bobRemote = network.makeMockRemote(channelMemberId);
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob']:count(1)");
     await bobRemote.updateConnectionState("connected");
     await bobRemote.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
@@ -2139,13 +2156,13 @@ test("show all participants on other user stops screen share", async () => {
     const network = await makeMockRtcNetwork({ env, channelId });
     const streamerRemote = network.makeMockRemote(channelMemberId);
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await streamerRemote.updateConnectionState("connected");
     await waitFor(".o-discuss-CallParticipantCard-avatar:count(2)");
     await streamerRemote.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
     await waitFor(".o-discuss-CallParticipantCard-avatar:count(2)");
     await waitFor(".o-discuss-CallParticipantCard video:count(1)");
-    await click(".o-discuss-CallParticipantCard[aria-label='Streamer'] video");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Streamer'] video:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard-avatar:count(1)");
     await waitFor(".o-discuss-CallParticipantCard video:count(1)");
     await streamerRemote.updateUpload("screen", null);
@@ -2167,7 +2184,7 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
     const env = await start();
     const network = await makeMockRtcNetwork({ env, channelId });
     const mockedRemote = network.makeMockRemote(channelMemberId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-CallParticipantCard:count(2)");
     await mockedRemote.updateConnectionState("connected");
     await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
@@ -2175,8 +2192,8 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
     await waitFor(".o-discuss-CallParticipantCard:count(1)");
     await mockedRemote.updateUpload("camera", null);
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting[data-active]:count(1)");
     await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Batman'] video:count(1)");
@@ -2195,12 +2212,12 @@ test("open conversation from call invitation (chat window)", async () => {
     pyEnv["discuss.channel.member"].write([memberId], { rtc_inviting_session_id: rtcSessionId });
     await start();
     await waitFor(".o-discuss-CallInvitation:count(1)");
-    await click(".o-mail-CallInvitation-avatar");
+    await contains(".o-mail-CallInvitation-avatar:count(1)").click();
     await waitFor(".o-mail-ChatWindow .o-mail-Composer.o-focused:count(1)");
     triggerHotkey("Escape");
     await waitForNone(".o-mail-ChatWindow");
     await waitFor(".o-discuss-CallInvitation:count(1)");
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-mail-ChatWindow .o-mail-Composer.o-focused:count(1)");
 });
 
@@ -2221,11 +2238,11 @@ test("open conversation from call invitation (discuss app)", async () => {
     await openDiscuss(channelId2);
     await waitFor(".o-mail-DiscussContent-threadName[title='Test']:count(1)");
     await waitFor(".o-discuss-CallInvitation:count(1)");
-    await click(".o-mail-CallInvitation-avatar");
+    await contains(".o-mail-CallInvitation-avatar:count(1)").click();
     await waitFor(".o-mail-DiscussContent-threadName[title=General]:count(1)");
-    await click(".o-mail-NotificationItem:has(:text('Test'))");
+    await contains(".o-mail-NotificationItem:has(:text('Test')):count(1)").click();
     await waitFor(".o-discuss-CallInvitation:count(1)");
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-mail-DiscussContent-threadName[title=General]:count(1)");
 });
 
@@ -2235,8 +2252,8 @@ test("Meeting chat panel excludes call notifications for 'New Meeting' channels"
     await start();
     const rtc = getService("discuss.rtc");
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
-    await click("[title='New Meeting']");
-    await click(".o-dropdown-item:text('Start Now')");
+    await contains("[title='New Meeting']:count(1)").click();
+    await contains(".o-dropdown-item:text('Start Now'):count(1)").click();
     await waitFor(".o-mail-MeetingReadyBanner:count(1)");
     await press("escape");
     await waitFor(".o-mail-Thread:has(:text('Meeting, Jan 1')):count(1)");
@@ -2250,7 +2267,7 @@ test("Meeting chat panel excludes call notifications for 'New Meeting' channels"
     );
     await rtc.enterFullscreen();
     await waitFor(".o-mail-Meeting:count(1)");
-    await click("[title='Chat']");
+    await contains("[title='Chat']:count(1)").click();
     await waitFor(".o-mail-ActionPanel-header:text('In call messages'):count(1)");
     await waitFor(".o-mail-Meeting .o-mail-Thread:has(:text('Meeting, Jan 1')):count(1)");
     await waitForNone(`.o-mail-NotificationMessage:text('Mitchell Admin started a call.${time}')`);
@@ -2296,9 +2313,9 @@ test("active call with a recording shows a processing link", async () => {
     await waitFor(
         ".o-mail-NotificationMessage div:text('A recording is being processed and will be available here.'):count(1)"
     );
-    await click(
-        `.o-mail-NotificationMessage a[href='/odoo/discuss.call.history/${callHistoryId}']:text('here')`
-    );
+    await contains(
+        `.o-mail-NotificationMessage a[href='/odoo/discuss.call.history/${callHistoryId}']:text('here'):count(1)`
+    ).click();
     await expect.waitForSteps(["open recording"]);
 });
 
@@ -2314,13 +2331,13 @@ test("shows a presenter bar when screen-sharing in discuss calls and meetings", 
     const network = await makeMockRtcNetwork({ env, channelId });
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     const remotes = memberIds.map((memberId) => network.makeMockRemote(memberId));
     for (const remote of remotes) {
         await remote.updateConnectionState("connected");
     }
-    await click("button[title='Share Screen']");
+    await contains("button[title='Share Screen']:count(1)").click();
     rtc.screenAudioTrack = streams.at(-1).getTracks()[0];
     await waitFor(".o-discuss-CallPresentationBar:count(1)");
     await waitFor(
@@ -2337,7 +2354,7 @@ test("shows a presenter bar when screen-sharing in discuss calls and meetings", 
     await waitFor(
         ".o-discuss-CallPresentationBar-presenterLabel:text('You, Mario and 1 more are presenting'):count(1)"
     );
-    await click("button[aria-label='Stop presenting']");
+    await contains("button[aria-label='Stop presenting']:count(1)").click();
     await waitFor(
         ".o-discuss-CallPresentationBar-presenterLabel:text('Mario and John are presenting'):count(1)"
     );
@@ -2357,14 +2374,14 @@ test("Escape closes meeting UI layers sequentially", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
-    await click("[title='Chat']");
+    await contains("[title='Chat']:count(1)").click();
     await waitFor(".o-mail-ActionPanel-header:text('In call messages'):count(1)");
-    await click(".o-mail-DiscussContent-panelContainer [title='Add Emojis']");
+    await contains(".o-mail-DiscussContent-panelContainer [title='Add Emojis']:count(1)").click();
     await waitFor(".o-EmojiPicker:count(1)");
     triggerHotkey("Escape");
     await waitForNone(".o-EmojiPicker ");
@@ -2464,9 +2481,9 @@ test("Change layout dialog closes when the call is removed by the server", async
     await start();
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='change-layout']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='change-layout']:count(1)").click();
     await waitFor(".o-discuss-ChangeLayoutDialog:count(1)");
     // Server ends the call while the dialog is still open: it must close itself, otherwise its
     // layout actions would operate on the now-gone call and crash on the next click.
@@ -2503,9 +2520,9 @@ test("Adjust view: sidebar layout always shows the sidebar, even alone", async (
     const store = getService("mail.store");
     store.settings.callLayout = "sidebar";
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     // Sidebar mode always shows the sidebar column, even with a single participant.
     await waitFor(".o-discuss-Call-sidebar:count(1)");
@@ -2518,9 +2535,9 @@ test("Auto layout spotlights whoever joins a call, when self was alone in the ca
     const store = getService("mail.store");
     store.settings.callLayout = "auto";
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     // Alone, self is the spotlight.
     await waitFor(
@@ -2545,22 +2562,22 @@ test("confirm before switching calls", async () => {
     const channelIds = pyEnv["discuss.channel"].create([{ name: "channel" }, { name: "channel2" }]);
     await start();
     await openDiscuss(channelIds[0]);
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(".o-discuss-CallMenu-channelInfo:text('channel'):count(1)");
-    await click(".o-mail-NotificationItem-name:text('channel2')");
+    await contains(".o-mail-NotificationItem-name:text('channel2'):count(1)").click();
     await waitFor(".o-mail-AutoresizeInput[title='channel2']:count(1)");
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(
         ".modal:has(:text('Switch to the other call? This will disconnect you from your ongoing call.')):count(1)"
     );
-    await click(".modal-footer button:text('Cancel')");
+    await contains(".modal-footer button:text('Cancel'):count(1)").click();
     await waitForNone(".modal");
     await waitFor(".o-discuss-CallMenu-channelInfo:text('channel'):count(1)");
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await waitFor(
         ".modal:has(:text('Switch to the other call? This will disconnect you from your ongoing call.')):count(1)"
     );
-    await click(".modal-footer button:text('Switch')");
+    await contains(".modal-footer button:text('Switch'):count(1)").click();
     await waitFor(".o-discuss-CallMenu-channelInfo:text('channel2'):count(1)");
 });
 
@@ -2585,19 +2602,19 @@ test("meeting ready banner is hidden in chat but shown in channel", async () => 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(chatId);
-    await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await waitUntil(() => meeting?.channel?.id === chatId);
     expect(meeting.showInviteBanner).toBe(false);
     await waitForNone(".o-mail-MeetingReadyBanner");
-    await click(".o-mail-Meeting [title='Disconnect']");
-    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await click(".o-mail-NotificationItem-name:text('General')");
-    await click("[title='Start Call']");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-mail-Meeting [title='Disconnect']:count(1)").click();
+    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
+    await contains(".o-mail-NotificationItem-name:text('General'):count(1)").click();
+    await contains("[title='Start Call']:count(1)").click();
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await waitUntil(() => meeting?.channel?.id === channelId);
     expect(meeting.showInviteBanner).toBe(true);

@@ -1,13 +1,17 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
-    click,
     defineMailModels,
     insertText,
     openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { clickFieldDropdown, clickFieldDropdownItem, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    clickFieldDropdown,
+    clickFieldDropdownItem,
+    contains,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import { queryAll, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { ResPartner } from "../../mock_server/mock_models/res_partner";
 
@@ -60,7 +64,7 @@ test("fieldmany2many tags email (edition)", async () => {
     await waitFor(".o-mail-RecipientsInputTagsListPopover:count(1)");
     // set the email
     await insertText(".o-mail-RecipientsInputTagsListPopover input", "coucou@petite.perruche");
-    await click(".o-mail-RecipientsInputTagsListPopover .btn-primary");
+    await contains(".o-mail-RecipientsInputTagsListPopover .btn-primary:count(1)").click();
     await waitFor(
         '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0:count(2)'
     );
@@ -93,7 +97,7 @@ test("fieldmany2many tags email popup close without filling", async () => {
     // set the email
     await insertText(".o-mail-RecipientsInputTagsListPopover input", "coucou@petite.perruche");
     // Close the modal dialog without saving (should remove partner from invalid records)
-    await click(".o-mail-RecipientsInputTagsListPopover .btn-secondary");
+    await contains(".o-mail-RecipientsInputTagsListPopover .btn-secondary:count(1)").click();
     // Selecting a partner with a valid email shouldn't open the modal dialog for the previous partner
     await waitForNone(".o_field_widget[name='partner_ids'] .badge");
     await clickFieldDropdown("partner_ids");
@@ -119,7 +123,9 @@ test("many2many_tags_email expands to show all tags when focused", async () => {
         `,
     });
     await waitFor(".o_field_widget[name='partner_ids'] .badge:count(2)");
-    await click(".o_field_widget[name='partner_ids'] .o_field_many2many_selection input"); // Editing tags should show all
+    await contains(
+        ".o_field_widget[name='partner_ids'] .o_field_many2many_selection input:count(1)"
+    ).click(); // Editing tags should show all
     await waitFor(".o_field_widget[name='partner_ids'] .badge:count(3)");
 
     // Adding tags should also keep showing all tags even if the mail popover appears
@@ -128,11 +134,11 @@ test("many2many_tags_email expands to show all tags when focused", async () => {
     await waitFor(".o_field_widget[name='partner_ids'] .badge:count(4)"); // 1 new record, even if not valid email yet
 
     await insertText(".o-mail-RecipientsInputTagsListPopover input", "coucou@petite.perruche");
-    await click(".o-mail-RecipientsInputTagsListPopover .btn-primary");
+    await contains(".o-mail-RecipientsInputTagsListPopover .btn-primary:count(1)").click();
     await waitFor(".o_field_widget[name='partner_ids'] .badge:count(4)"); // 1 new record, email validated
 
     // Deleting tags should also keep showing all tags
-    await click(".o_tags_input .o_tag:first-child .o_delete");
+    await contains(".o_tags_input .o_tag:first-child .o_delete:count(1)").click();
     await waitFor(".o_field_widget[name='partner_ids'] .badge:count(3)");
 });
 

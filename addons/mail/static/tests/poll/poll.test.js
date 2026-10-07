@@ -7,6 +7,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
+import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -16,16 +17,18 @@ test("can add, replace, and remove emojis to a poll option", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Composer button[title='More Actions']");
-    await click(".o-dropdown-item:text('Create Poll')");
+    await contains(".o-mail-Composer button[title='More Actions']:count(1)").click();
+    await contains(".o-dropdown-item:text('Create Poll'):count(1)").click();
     await waitFor(".modal-header:text('Create Poll'):count(1)");
-    await click(".o-mail-CreatePollOptionDialog:first [data-icon='sentiment_satisfied']");
-    await click(".o-Emoji:text('😀')");
-    await click(".o-mail-CreatePollOptionDialog:first span:text('😀')");
-    await click(".o-dropdown-item:text('Replace Emoji')");
-    await click(".o-Emoji:text('😁')");
-    await click(".o-mail-CreatePollOptionDialog:first span:text('😁')");
-    await click(".o-dropdown-item:text('Remove Emoji')");
+    await contains(
+        ".o-mail-CreatePollOptionDialog:first [data-icon='sentiment_satisfied']:count(1)"
+    ).click();
+    await contains(".o-Emoji:text('😀'):count(1)").click();
+    await contains(".o-mail-CreatePollOptionDialog:first span:text('😀'):count(1)").click();
+    await contains(".o-dropdown-item:text('Replace Emoji'):count(1)").click();
+    await contains(".o-Emoji:text('😁'):count(1)").click();
+    await contains(".o-mail-CreatePollOptionDialog:first span:text('😁'):count(1)").click();
+    await contains(".o-dropdown-item:text('Remove Emoji'):count(1)").click();
     await waitFor(
         ".o-mail-CreatePollOptionDialog:first [data-icon='sentiment_satisfied']:count(1)"
     );
@@ -58,10 +61,10 @@ test("autofocus question on poll opening and user-added options", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Composer button[title='More Actions']");
-    await click(".o-dropdown-item:text('Create Poll')");
+    await contains(".o-mail-Composer button[title='More Actions']:count(1)").click();
+    await contains(".o-dropdown-item:text('Create Poll'):count(1)").click();
     await waitFor(".modal-header:text('Create Poll'):count(1)");
     await waitFor("input[name='poll_question']:focus:count(1)");
-    await click("button:text('Add another option')");
+    await contains("button:text('Add another option'):count(1)").click();
     await waitFor(".o-mail-CreatePollOptionDialog:eq(2) input:focus:count(1)");
 });

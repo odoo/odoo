@@ -7,7 +7,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD } from "@mail/chatter/web/scheduled_message";
-import { mockService, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, mockService, onRpc } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -53,7 +53,7 @@ test("Scheduled messages basic layout", async () => {
     await waitFor(".o-mail-Message-bubble.bg-success-light:count(1)");
     await waitFor(".o-mail-Scheduled-Message-buttons [data-icon='edit']:count(1)");
     await waitFor(".o-mail-Scheduled-Message-buttons [data-icon='close']:count(1)");
-    await click(".o-mail-ScheduledMessagesList > .cursor-pointer");
+    await contains(".o-mail-ScheduledMessagesList > .cursor-pointer:count(1)").click();
     await waitForNone(".o-mail-Scheduled-Message");
     await waitFor(
         ".o-mail-ScheduledMessagesList [data-icon='arrow_right'] + span:text('1'):count(1)"
@@ -142,13 +142,15 @@ test("avatar card from author should be opened after clicking on their name or a
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Scheduled-Message .o-mail-Message-author:text('Demo')");
+    await contains(
+        ".o-mail-Scheduled-Message .o-mail-Message-author:text('Demo'):count(1)"
+    ).click();
     await waitFor(".o-mail-avatar-card-name:text('Demo'):count(1)");
     await waitFor(".o_card_user_infos > a:text('demo@example.com'):count(1)");
     await waitFor(".o_card_user_infos > a:text('+5646548'):count(1)");
-    await click(".o-mail-Message-date");
+    await contains(".o-mail-Message-date:count(1)").click();
     await waitForNone(".o_card_user_infos");
-    await click(".o-mail-Message-avatar");
+    await contains(".o-mail-Message-avatar:count(1)").click();
     await waitFor(".o-mail-avatar-card-name:text('Demo'):count(1)");
 });
 
@@ -168,13 +170,13 @@ test("Read more of a scheduled message", async () => {
             "a".repeat(SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD) +
             "...'):count(1)"
     );
-    await click(".o-mail-Message-body button:text('Read More')");
+    await contains(".o-mail-Message-body button:text('Read More'):count(1)").click();
     await waitFor(
         ".o-mail-Message-body p:text('" +
             "a".repeat(SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD + 1) +
             "'):count(1)"
     );
-    await click(".o-mail-Message-body button:text('Read Less')");
+    await contains(".o-mail-Message-body button:text('Read Less'):count(1)").click();
     await waitFor(
         ".o-mail-Message-body p:text('" +
             "a".repeat(SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD) +
@@ -206,7 +208,7 @@ test("Send a scheduled message", async () => {
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Scheduled-Message:count(1)");
     await waitForNone(".o-mail-Message");
-    await click(".o-mail-Scheduled-Message-buttons .btn:text('Send Now')");
+    await contains(".o-mail-Scheduled-Message-buttons .btn:text('Send Now'):count(1)").click();
     await waitForNone(".o-mail-Scheduled-Message");
     await waitFor(".o-mail-Message .o-mail-Message-body:text('Test Body'):count(1)");
 });
@@ -243,7 +245,7 @@ test("Edit a scheduled message", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Scheduled-Message:count(1)");
-    await click(".o-mail-Scheduled-Message-buttons .btn:text('Edit')");
+    await contains(".o-mail-Scheduled-Message-buttons .btn:text('Edit'):count(1)").click();
     await waitFor(".o-mail-Message-body em:text('Subject: Hi there'):count(1)");
     await waitFor(".o-mail-Message-body p:text('Rescheduled later'):count(1)");
     await waitFor(".o-mail-Message-date:text('in 2 hours'):count(1)");
@@ -261,8 +263,8 @@ test("Cancel a scheduled message", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-ScheduledMessagesList:count(1)");
-    await click(".o-mail-Scheduled-Message-buttons .btn:text('Cancel')");
-    await click(".modal-footer .btn-primary");
+    await contains(".o-mail-Scheduled-Message-buttons .btn:text('Cancel'):count(1)").click();
+    await contains(".modal-footer .btn-primary:count(1)").click();
     await waitForNone(".o-mail-ScheduledMessagesList");
     expect(pyEnv["mail.scheduled.message"].browse(scheduledMessageId)).toEqual([]);
 });
@@ -338,7 +340,7 @@ test("Scheduled messages are updated when switching records", async () => {
     await openFormView("res.partner", partnerId, { resIds: [partnerId, partnerId2] });
     await waitFor(".o-mail-Scheduled-Message:count(1)");
     await waitFor(".o-mail-Message-body:text('Scheduled record 1'):count(1)");
-    await click(".o_pager_next");
+    await contains(".o_pager_next:count(1)").click();
     await waitFor(".o-mail-Message-body:text('Scheduled record 2'):count(1)");
 });
 
@@ -369,7 +371,7 @@ test("Open avatar card when clicking on partner mention", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o_mail_redirect");
+    await contains(".o_mail_redirect:count(1)").click();
     await waitFor(".o_avatar_card:contains('Mitchell Admin'):count(1)");
 });
 
@@ -385,7 +387,7 @@ test("Open chat when clicking on channel mention", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o_channel_redirect");
+    await contains(".o_channel_redirect:count(1)").click();
     await waitFor(".o-mail-ChatWindow .o-mail-Thread:count(1)");
     await waitFor(".o-mail-ChatWindow-displayName:text('my-channel'):count(1)");
 });
