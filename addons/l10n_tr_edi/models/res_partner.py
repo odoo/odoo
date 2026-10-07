@@ -6,13 +6,13 @@ class ResPartner(models.Model):
     _inherit = ['res.partner']
 
     invoice_edi_format = fields.Selection(selection_add=[('ubl_tr', "Türkiye (UBL TR 1.2)")])
-    l10n_tr_nilvera_customer_status = fields.Selection(
+    l10n_tr_edi_customer_status = fields.Selection(
         selection=[
             ('not_checked', "Not Verified"),
             ('earchive', "E-Archive"),
             ('einvoice', "E-Invoice"),
         ],
-        string="Nilvera Status",
+        string="E-Document Status",
         copy=False,
         default='not_checked',
         readonly=True,
@@ -21,8 +21,8 @@ class ResPartner(models.Model):
     )
 
     # This field is only used technically for optimisation purposes. It's needed for _check_nilvera_customer.
-    l10n_tr_nilvera_customer_alias_ids = fields.One2many(
-        comodel_name='l10n_tr.nilvera.alias',
+    l10n_tr_edi_alias_ids = fields.One2many(
+        comodel_name='l10n_tr_edi.alias',
         inverse_name="partner_id",
         help="Specifies the alias provided by Nilvera, used when sending electronic invoices. \n"
         "It helps make sure your customer is correctly recognized by the GİB when e-invoices are sent. \n"

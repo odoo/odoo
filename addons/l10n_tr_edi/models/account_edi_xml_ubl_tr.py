@@ -69,10 +69,10 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         invoice = vals['invoice']
 
         # Check the customer status if it hasn't been done before as it's needed for profile_id
-        if invoice.partner_id.l10n_tr_nilvera_customer_status == 'not_checked':
+        if invoice.partner_id.l10n_tr_edi_customer_status == 'not_checked':
             invoice.partner_id._check_nilvera_customer()
 
-        if invoice._l10n_tr_nilvera_einvoice_check_negative_lines():
+        if invoice._l10n_tr_edi_check_negative_lines():
             raise UserError(self.env._("Nilvera portal cannot process negative quantity nor negative price on invoice lines"))
 
         # Using _get_sequence_format_param to extract the invoice sequence components for various formats.
@@ -86,7 +86,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'cbc:ProfileID': {'_text': self._get_tr_profile_id(invoice)},
             'cbc:ID': {'_text': invoice_id},
             'cbc:CopyIndicator': {'_text': 'false'},
-            'cbc:UUID': {'_text': invoice.l10n_tr_nilvera_uuid},
+            'cbc:UUID': {'_text': invoice.l10n_tr_edi_uuid},
             'cbc:DueDate': None,
             'cbc:InvoiceTypeCode': {'_text': 'ISTISNA' if invoice.l10n_tr_is_export_invoice else invoice.l10n_tr_gib_invoice_type},
             'cbc:PricingCurrencyCode': {'_text': invoice.currency_id.name.upper()}
@@ -101,7 +101,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         document_node['cac:OrderReference']['cbc:IssueDate'] = {'_text': invoice.invoice_date}
 
         if invoice.state == 'draft' and (not invoice.name or invoice.name == '/'):
-            prefix = invoice._l10n_tr_nilvera_get_series_prefix()
+            prefix = invoice._l10n_tr_edi_get_series_prefix()
             document_node['cac:OrderReference']['cbc:ID'] = {'_text': prefix}
             document_node['cbc:ID'] = {'_text': prefix}
 
@@ -119,7 +119,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             self._l10n_tr_add_billing_reference_node(document_node, vals)
 
     def _get_additional_document_reference_vals(self, invoice):
-        if invoice.partner_id.l10n_tr_nilvera_customer_status != 'earchive':
+        if invoice.partner_id.l10n_tr_edi_customer_status != 'earchive':
             return []
 
         additional_document_vals = []
@@ -869,7 +869,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         if invoice.l10n_tr_gib_invoice_type == 'SATIS' and (exemption_reason := vals.get('grouping_key')['tax_exemption_reason']):
             return exemption_reason
         if invoice.l10n_tr_gib_invoice_type in {'TEVKIFAT', 'TEVKIFATIADE'}:
-            return self.env['l10n_tr_nilvera_einvoice.account.tax.code']
+            return self.env['l10n_tr_edi.tax.code']
         return invoice.l10n_tr_exemption_code_id
 
     def _get_tax_exemption_reason(self, customer, supplier, tax):
@@ -884,7 +884,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         :param tax: Tax record being exported.
         :return: Dict with the exemption code and record, or the default result.
         """
-        if tax == self.env['account.chart.template'].ref('tr_s_0_ex', raise_if_not_found=False) and (exemption_351 := self.env.ref("l10n_tr_nilvera_einvoice.account_tax_code_351", raise_if_not_found=False)):
+        if tax == self.env['account.chart.template'].ref('tr_s_0_ex', raise_if_not_found=False) and (exemption_351 := self.env.ref("l10n_tr_edi.tax_code_351", raise_if_not_found=False)):
             return {
                 'tax_exemption_reason_code': exemption_351.code,
                 'tax_exemption_reason': exemption_351,
@@ -913,7 +913,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         """
         if invoice.l10n_tr_is_export_invoice:
             return 'IHRACAT'
-        if (is_einvoice := invoice.l10n_tr_nilvera_customer_status == 'einvoice') and invoice.l10n_tr_gib_invoice_scenario:
+        if (is_einvoice := invoice.l10n_tr_edi_customer_status == 'einvoice') and invoice.l10n_tr_gib_invoice_scenario:
             return invoice.l10n_tr_gib_invoice_scenario
         return 'TEMELFATURA' if is_einvoice else 'EARSIVFATURA'
 
@@ -1146,7 +1146,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             invoice_type = False
 
         invoice.write({
-            'l10n_tr_nilvera_uuid': self._find_value('./cbc:UUID', tree),
+            'l10n_tr_edi_uuid': self._find_value('./cbc:UUID', tree),
             'l10n_tr_gib_invoice_scenario': scenario,
             'l10n_tr_gib_invoice_type': invoice_type,
         })

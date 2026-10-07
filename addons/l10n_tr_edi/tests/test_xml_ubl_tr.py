@@ -24,19 +24,19 @@ class TestUBLTR(TestUBLTRCommon):
         cls.fiscal_position_withholding = cls.env['account.chart.template'].ref('tr_fp_wh_9_10')
 
         # Withholding Reason (9/10 - Private Security Service)
-        cls.reason_607 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_607')
+        cls.reason_607 = cls.env['account.chart.template'].ref('l10n_tr_edi.tax_code_607')
         # Registered for Export Reason
-        cls.reason_701 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_701')
-        cls.reason_702 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_702')
+        cls.reason_701 = cls.env['account.chart.template'].ref('l10n_tr_edi.tax_code_701')
+        cls.reason_702 = cls.env['account.chart.template'].ref('l10n_tr_edi.tax_code_702')
 
         # Tax Exemption Reason
-        cls.reason_212 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_212')
+        cls.reason_212 = cls.env['account.chart.template'].ref('l10n_tr_edi.tax_code_212')
 
         # Export Reason
-        cls.reason_301 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_301')
+        cls.reason_301 = cls.env['account.chart.template'].ref('l10n_tr_edi.tax_code_301')
 
         # Line Level Zero Tax Exemption Reason
-        cls.reason_351 = cls.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_351')
+        cls.reason_351 = cls.env['account.chart.template'].ref('l10n_tr_edi.tax_code_351')
         cls.incoterm = cls.env['account.chart.template'].ref('l10n_tr_edi.incoterm_DAF')
 
     def test_xml_invoice_basic_export_registered_einvoice(self):
