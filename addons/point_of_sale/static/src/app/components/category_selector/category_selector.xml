@@ -7,18 +7,17 @@
                     t-attf-class="o_colorlist_item_color_{{category.color or 'none'}}"
                     t-att-class="{
                         'border-0': category.isChildren and !this.isAncestorOrSelected(category), 
-                        'opacity-75 border-0': !category.isChildren and !category.isSelected,
-                        'justify-content-center': this.ui.isSmall
+                        'opacity-75 border-0': !category.isChildren and !category.isSelected
                     }"
-                    class="category-button p-1 btn btn-light d-flex justify-content-around align-items-center rounded-3 gap-1">
-                    <div t-if="this.showCategoryImg(category)" class="overflow-hidden flex-shrink-0 ratio ratio-1x1" style="width:40%;">
+                    class="category-button p-1 btn btn-light d-flex align-items-center rounded-3 gap-1">
+                    <div t-if="this.showCategoryImg(category)" class="overflow-hidden flex-shrink-0 ratio ratio-1x1" style="width: min(40%, 3rem);">
                         <img t-if="category.imgSrc and !this.ui.isSmall" t-att-src="category.imgSrc"
                             class="category-img-thumb h-100 rounded-3 object-fit-cover pe-none"
                             alt="Category"
                         />
                     </div>
-                    <div class="line-clamp-3" t-att-class="{'w-100': !this.showCategoryImg(category)}" t-att-style="{'width: 60%;': this.showCategoryImg(category)}">
-                        <span t-if="category.name" class="text-center" t-out="category.name" />
+                    <div class="line-clamp-3 flex-grow-1 text-center">
+                        <span t-if="category.name" t-out="category.name" />
                     </div>
                 </button>
             </t>
