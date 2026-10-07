@@ -149,7 +149,7 @@
     gap: var(--Kanban-gap);
 
     @include media-only(print) {
-        --Kanban-gap: #{map-get($spacers, 2)};
+        --Kanban-gap: var(--o-bs-spacer-2);
         --KanbanGroup-padding-h: 0;
         --KanbanRecord-margin-h: 0;
     }
@@ -171,7 +171,7 @@
         border: var(--border-width) solid var(--border-color);
         border-radius: var(--border-radius-lg);
         background-color: var(--o-view-background-color);
-        margin-bottom: map-get($spacers, 3);
+        margin-bottom: var(--o-bs-spacer-3);
         /* TODO: Use variables from card.scss. */
         /* We may need to define the card variables on o_kanban_renderer parent so it's accessible from this element. */
         padding: 14px;
@@ -283,7 +283,7 @@
         }
         .o_quick_create_title {
             position: absolute;
-            inset: map-get($spacers, 4) auto auto;
+            inset: var(--o-bs-spacer-4) auto auto;
             transform-origin: left bottom 0;
             transform: rotate(90deg);
             overflow: visible;
@@ -342,7 +342,7 @@
 
             .o_column_title {
                 position: absolute;
-                inset: map-get($spacers, 3) auto auto;
+                inset: var(--o-bs-spacer-3) auto auto;
                 transform-origin: left bottom 0;
                 transform: rotate(90deg);
                 overflow: visible;

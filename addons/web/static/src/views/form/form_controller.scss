@@ -215,7 +215,7 @@
     /* Sheet BG */
     .o_form_sheet_bg {
         @include media-only(screen) {
-            --formView-sheetBg-padding-x: #{map-get($spacers, 3)};
+            --formView-sheetBg-padding-x: var(--o-bs-spacer-3);
         }
 
         padding-left: var(--formView-sheetBg-padding-x);
@@ -225,14 +225,14 @@
         margin-right: auto; /* Always align to the left */
 
         &:not(:has(.o_form_statusbar)) {
-            padding-top: var(--formView-sheetBg-padding-top, #{map-get($spacers, 2)});
+            padding-top: var(--formView-sheetBg-padding-top, var(--o-bs-spacer-2));
         }
     }
 
     /* Sheet */
     .o_form_sheet {
         margin: 0 var(--formView-sheet-margin-x, calc(var(--formView-sheetBg-padding-x) * -1));
-        padding: var(--formView-sheet-padding-y, #{map-get($spacers, 3)}) var(--formView-sheet-padding-x, #{map-get($spacers, 3)});
+        padding: var(--formView-sheet-padding-y, var(--o-bs-spacer-3)) var(--formView-sheet-padding-x, var(--o-bs-spacer-3));
 
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
             border-style: solid;
@@ -241,27 +241,27 @@
             border-radius: var(--formView-sheet-border-radius, 0);
             background-color: var(--o-view-background-color);
 
-            --formView-sheet-padding-y: var(--formView-sheet-padding-y-md, #{map-get($spacers, 3)});
+            --formView-sheet-padding-y: var(--formView-sheet-padding-y-md, var(--o-bs-spacer-3));
             --formView-sheet-margin-x: var(--formView-sheet-margin-x-md, 0);
             --formView-sheet-border-width: var(--formView-sheet-border-width-md, var(--border-width));
             --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, var(--border-radius-lg));
         }
 
         @media screen and (min-width: 992px), print and (min-width: 190mm) {
-            --formView-sheet-padding-y: var(--formView-sheet-padding-y-lg, #{map-get($spacers, 4)});
-            --formView-sheet-padding-x: var(--formView-sheet-padding-x-lg, #{map-get($spacers, 4)});
+            --formView-sheet-padding-y: var(--formView-sheet-padding-y-lg, var(--o-bs-spacer-4));
+            --formView-sheet-padding-x: var(--formView-sheet-padding-x-lg, var(--o-bs-spacer-4));
         }
 
         @media screen and (min-width: 1400px), print and (min-width: 250mm) {
-            --formView-sheet-padding-y: var(--formView-sheet-padding-y-xxl, #{map-get($spacers, 4)});
-            --formView-sheet-padding-x: var(--formView-sheet-padding-x-xxl, #{map-get($spacers, 4)});
+            --formView-sheet-padding-y: var(--formView-sheet-padding-y-xxl, var(--o-bs-spacer-4));
+            --formView-sheet-padding-x: var(--formView-sheet-padding-x-xxl, var(--o-bs-spacer-4));
         }
 
     }
 
     /* Alerts */
     .alert {
-        --alert-padding-y: #{map-get($spacers, 2)};
+        --alert-padding-y: var(--o-bs-spacer-2);
 
         .o_field_widget, .o_field_widget p {
             margin-bottom: 0;
@@ -269,10 +269,10 @@
     }
 
     .o_form_sheet_bg > .alert {
-        --alert-margin-bottom: #{map-get($spacers, 1)};
+        --alert-margin-bottom: var(--o-bs-spacer-1);
 
         &:nth-last-child(1 of .alert) {
-            --alert-margin-bottom: #{map-get($spacers, 2)};
+            --alert-margin-bottom: var(--o-bs-spacer-2);
         }
     }
 
@@ -282,7 +282,7 @@
         z-index: 0;
         margin-inline: calc(-1 * var(--formView-sheetBg-padding-x)) calc(-1 * var(--formView-sheetBg-padding-right, --formView-sheetBg-padding-x));
         padding-inline: var(--formView-sheetBg-padding-x) var(--formView-sheetBg-padding-right, --formView-sheetBg-padding-x);
-        padding-top: var(--formView-statusbar-padding-top, #{map-get($spacers, 2)});
+        padding-top: var(--formView-statusbar-padding-top, var(--o-bs-spacer-2));
 
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
             position: sticky;
@@ -291,7 +291,7 @@
             background-color: var(--body-bg);
 
             .modal & {
-                --formView-statusbar-padding-top: #{map-get($spacers, 2)};
+                --formView-statusbar-padding-top: var(--o-bs-spacer-2);
 
                 background-color: var(--o-view-background-color);
             }
@@ -326,7 +326,7 @@
             > h1, > h2, > h3 {
                 width: 100%; /* Needed because inline-block when is a hx.o_row */
                 margin-top: 0;
-                margin-bottom: map-get($spacers, 3);
+                margin-bottom: var(--o-bs-spacer-3);
                 line-height: var(--o-bs-headings-line-height);
 
                 &.d-flex > .o_input {
@@ -409,7 +409,7 @@
             --inner-group-row-gap: 0;
         }
         gap: var(--inner-group-row-gap, map-get($spacers, 2)) var(--o-horizontal-padding);
-        margin-bottom: map-get($spacers, 2);
+        margin-bottom: var(--o-bs-spacer-2);
 
         span, .o_field_boolean, .oe_avatar, .o_form_uri {
             &.o_field_widget {
@@ -497,7 +497,7 @@
 
         &.o_kanban_ungrouped, &.o_kanban_grouped {
             --Kanban-padding: 0;
-            --Kanban-gap: #{map-get($spacers, 2)};
+            --Kanban-gap: var(--o-bs-spacer-2);
         }
     }
 
@@ -950,10 +950,10 @@
 
     .o_form_sheet {
         --formView-sheet-margin-x: 0;
-        --formView-sheet-padding-y: #{map-get($spacers, 2)};
-        --formView-sheet-padding-y-md: #{map-get($spacers, 2)};
-        --formView-sheet-padding-y-lg: #{map-get($spacers, 2)};
-        --formView-sheet-padding-y-xxl: #{map-get($spacers, 2)};
+        --formView-sheet-padding-y: var(--o-bs-spacer-2);
+        --formView-sheet-padding-y-md: var(--o-bs-spacer-2);
+        --formView-sheet-padding-y-lg: var(--o-bs-spacer-2);
+        --formView-sheet-padding-y-xxl: var(--o-bs-spacer-2);
         --formView-sheet-padding-x: 0;
         --formView-sheet-padding-x-md: 0;
         --formView-sheet-padding-x-lg: 0;
@@ -964,7 +964,7 @@
     }
 
     .o-form-buttonbox {
-        --ButtonBox-margin-bottom: #{map-get($spacers, 2)};
+        --ButtonBox-margin-bottom: var(--o-bs-spacer-2);
     }
 
     .o_notebook {

@@ -1,9 +1,9 @@
 .o_progressbar {
     --ProgressBarField-width: 150px;
     --ProgressBarField-min-width: 35px;
-    --ProgressBarField-height: #{map-get($spacers, 2)};
+    --ProgressBarField-height: var(--o-bs-spacer-2);
 
-    padding-inline: var(--ProgressBarField-padding-x, #{map-get($spacers, 2)});
+    padding-inline: var(--ProgressBarField-padding-x, var(--o-bs-spacer-2));
     color: var(--ProgressBarField-color, var(--body-color));
 
     .progress {

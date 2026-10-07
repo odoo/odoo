@@ -2,5 +2,5 @@
  * ribbons, but keep them behind the dialogs so that onboarding errors stay visible.
  */
 .isu-minibrowser-component {
-    z-index: $zindex-modal-backdrop - 1 !important;
+    z-index: calc(var(--o-bs-zindex-modal-backdrop) - 1) !important;
 }
