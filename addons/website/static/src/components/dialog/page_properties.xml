@@ -36,7 +36,6 @@
             </div>
         </t>
         <t t-else="">
-            <p class="text-warning">We found <t t-out="this.state.dependencyCount" /> occurrences linking to the selected page(s); before proceeding with deletion, make sure you update or remove all those links so your customers don't run into a 404 error page.</p>
             <div t-foreach="this.state.dependencies" t-as="dependency" t-key="dependency" class="ml16 mb16">
                 <a class="collapsed" data-bs-toggle="collapse"
                 t-attf-aria-controls="collapseDependencies{{ dependency_index }}"
@@ -80,6 +79,8 @@
 <t t-name="website.DeletePageDialog">
     <WebsiteDialog title.translate="Delete Page" close="this.props.close">
         <p>Ready to make these web page(s) disappear into thin air? Are you sure?<br/> They will be gone forever!</p>
+        <p t-if="this.props.resIds.length > 1" class="text-warning">But before deleting, make sure you update all links referring to them. That way, your customers won't bump into the not-so-famous 404 error page.</p>
+        <p t-else="" class="text-warning">But before deleting, make sure you update all links referring to it. That way, your customers won't bump into the not-so-famous 404 error page.</p>
         <PageDependencies resIds="this.props.resIds" resModel="this.props.resModel" mode="'collapse'" onDependenciesLoaded="this.onDependenciesLoaded"/>
         <t t-if="this.state.hasDependencies">
             <CheckBox value="this.state.confirm" onChange.bind="this.onConfirmCheckboxChange">
