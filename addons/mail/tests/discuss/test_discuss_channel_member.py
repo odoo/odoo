@@ -129,6 +129,10 @@ class TestDiscussChannelMember(MailCommon):
             1,  # channel 2 user 1: received 1 message (from message post)
             1,  # channel 2 user 3: received 1 message (from message post)
         ])
+        self.assertEqual(
+            self.env["discuss.channel.member"].search([("id", "in", members.ids), ("is_unread", "=", True)]),
+            members[2:],
+        )
 
     def test_new_member_lands_at_latest_message(self):
         channel = self.env['discuss.channel'].with_user(self.user_1)._create_channel(group_id=None, name='wololo channel')
