@@ -501,8 +501,8 @@ class MailTrackMixin(models.AbstractModel):
             values.update({
                 'old_value_float': initial_value,
                 'new_value_float': new_value,
-                'old_value': format_amount(self.env, initial_value or 0, currency) if currency else initial_value,
-                'new_value': format_amount(self.env, new_value or 0, currency) if currency else new_value,
+                'old_value': format_amount(self.env, initial_value or 0, currency) if currency else formatLang(self.env, initial_value or 0),
+                'new_value': format_amount(self.env, new_value or 0, currency) if currency else formatLang(self.env, new_value or 0),
             })
         elif col_info['type'] == 'datetime':
             values.update({
