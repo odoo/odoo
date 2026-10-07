@@ -10,11 +10,9 @@ from . import wizard
 
 def _update_demo_data(env):
     """
-        Tweak demo data to display additional mailing features such as:
-        - dynamic placeholders (can't be directly added in data because
-          qweb instructions must not be interpreted during module init)
-        - link trackers (need links in body_html, but body_html should be empty
-          to allow its value to be computed by convert_inline)
+        Tweak demo data to display dynamic placeholders (can't be directly
+        added in data because qweb instructions must not be interpreted during
+        module init).
     """
     module_mass_mailing = env['ir.module.module']._get('mass_mailing')
     if module_mass_mailing.demo:
@@ -39,7 +37,3 @@ def _update_demo_data(env):
         section.addprevious(header)
         section.addnext(footer)
         mass_mail_sale_order_0.body_arch = lxml.html.tostring(root, encoding='unicode')
-
-        # mass_mail_1
-        mass_mail_1 = env.ref('mass_mailing.mass_mail_1')
-        mass_mail_1.body_html = ""
