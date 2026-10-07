@@ -160,7 +160,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
             if pos == 'replace':
                 mode = spec.get('mode', 'outer')
                 if mode == "outer":
-                    for loc in spec.xpath(".//replace-target"):
+                    for loc in spec.xpath(".//replace-target | .//*[text()='$0'][not(child::replace-target)]"):
                         copied_node = copy.deepcopy(node)
                         # TODO: Remove 'inherit_branding' logic if possible;
                         # currently needed to track node removal for branding
@@ -168,8 +168,16 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                         # sibling branding issues.
                         if inherit_branding:
                             copied_node.set('data-oe-no-branding', '1')
-                        copied_node.tail = loc.tail
-                        loc.getparent().replace(loc, copied_node)
+                        if loc.tag == "replace-target":
+                            copied_node.tail = loc.tail
+                            loc.getparent().replace(loc, copied_node)
+                        else:
+                            _logger.warning(
+                                '$0 is deprecated: use a node with tag replace-target instead (in spec “%s”)',
+                                etree.tostring(spec, encoding='unicode')
+                            )
+                            loc.text = ''
+                            loc.append(copied_node)
                     if node.getparent() is None:
                         spec_content = None
                         comment = None

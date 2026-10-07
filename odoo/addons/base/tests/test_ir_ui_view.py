@@ -844,6 +844,39 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
             ))
         )
 
+    def test_replace_compatibility(self):
+        spec = E.xpath(
+            E.div("$0", {'class': "some"}),
+            expr="//p", position="replace")
+
+        with self.assertLogs('odoo.tools.template_inheritance', level="WARNING") as log_catcher:
+            self.apply_spec(spec)
+        self.assertEqual(
+            log_catcher.output,
+            ['WARNING:odoo.tools.template_inheritance:$0 is deprecated: use a node with tag replace-target instead (in spec “<xpath expr="//p" position="replace"><div class="some">$0</div></xpath>”)']
+        )
+
+        self.assertEqual(
+            self.base_arch,
+            E.template(E.div(
+                E.div(E.p('Content'), {'class': 'some'})
+            ))
+        )
+
+    def test_replace_compatibility_tail_migrated(self):
+        spec = E.xpath(
+            E.div(E.span("hello"), "$0", E('replace-target'), {'class': "some"}),
+            expr="//p", position="replace")
+
+        self.apply_spec(spec)
+
+        self.assertEqual(
+            self.base_arch,
+            E.template(E.div(
+                E.div(E.span("hello"), "$0", E.p('Content'), {'class': 'some'})
+            ))
+        )
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestApplyInheritanceMoveSpecs(ViewCase):
