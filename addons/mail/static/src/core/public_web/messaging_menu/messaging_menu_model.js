@@ -1,7 +1,5 @@
 import { fields, Record } from "@mail/model/export";
 
-import { shallowEqual } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 
 /** @type {import("menu_tabs").MenuTabs} */
@@ -10,9 +8,7 @@ export const MENU_TABS = { BOOKMARK: "bookmark", NOTIFICATION: "notification" };
 export class MessagingMenu extends Record {
     static singleton = true;
 
-    allTabs = this.computed(() => [...this.store.MessagingMenuTab.records.values()], {
-        equals: shallowEqual,
-    });
+    allTabs = this.computedShallowEqual(() => [...this.store.MessagingMenuTab.records.values()]);
     bookmarkTab = fields.One("MessagingMenuTab", {
         compute() {
             if (this.store.self_user?.share !== false) {
@@ -97,16 +93,14 @@ export class MessagingMenu extends Record {
         },
         eager: true,
     });
-    sortedVisibleTabs = this.computed(
-        () =>
-            [...this.visibleTabs].sort(
-                (t1, t2) => t1.sequence - t2.sequence || t1.id.localeCompare(t2.id)
-            ),
-        { equals: shallowEqual }
+    sortedVisibleTabs = this.computedShallowEqual(() =>
+        [...this.visibleTabs].sort(
+            (t1, t2) => t1.sequence - t2.sequence || t1.id.localeCompare(t2.id)
+        )
     );
-    visibleTabs = this.computed(() => this.allTabs.filter((tab) => tab.appWide && tab.canBeShown), {
-        equals: shallowEqual,
-    });
+    visibleTabs = this.computedShallowEqual(() =>
+        this.allTabs.filter((tab) => tab.appWide && tab.canBeShown)
+    );
 
     _computeGlobalCounter() {
         return this.visibleTabs.reduce((sum, t) => sum + (t.important ? t.counter ?? 0 : 0), 0);

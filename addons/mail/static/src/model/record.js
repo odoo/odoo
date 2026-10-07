@@ -23,6 +23,7 @@ import {
 import { localStorageField } from "@mail/model/local_storage_field";
 import { RecordInternal } from "./record_internal";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { nestedShallowEqual } from "@mail/utils/common/signal";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
 /** @typedef {import("./record_list").RecordList} RecordList */
@@ -321,6 +322,21 @@ export class Record {
      */
     computed(compute, options) {
         return { [COMPUTED_SYM]: true, compute, equals: options?.equals };
+    }
+
+    /**
+     * `computed` for an array or plain object value: a recomputation giving the same
+     * content is interpreted as the same value.
+     *
+     * @template T
+     * @param {() => T} compute
+     * @param {{ nested?: boolean }} [options] Whether to compare nested arrays/objects.
+     * @returns {T}
+     */
+    computedShallowEqual(compute, options) {
+        return this.computed(compute, {
+            equals: options?.nested ? nestedShallowEqual : shallowEqual,
+        });
     }
 
     /**

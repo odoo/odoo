@@ -67,6 +67,20 @@ export function nestedShallowEqual(a, b) {
 }
 
 /**
+ * A computed returning an array or a plain object: a recomputation giving the
+ * same content is interpreted as the same value.
+ *
+ * @template T
+ * @param {() => T} compute
+ * @param {{ nested?: boolean }} [options] `nested` also compares the nested plain
+ *  arrays/objects
+ * @returns {() => T}
+ */
+export function computedShallowEqual(compute, options) {
+    return computed(compute, { equals: options?.nested ? nestedShallowEqual : shallowEqual });
+}
+
+/**
  * Returns a function to increment the value of a number signal. The initial
  * state is taken when the resulting function is ran, not when incrementFn is
  * called. This ensures the increment is always applied even if the initial

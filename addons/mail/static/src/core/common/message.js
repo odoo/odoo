@@ -19,7 +19,6 @@ import {
     Component,
     computed,
     proxy,
-    shallowEqual,
     signal,
     t,
     untrack,
@@ -56,6 +55,7 @@ import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { useLayoutEffect } from "@web/owl2/utils";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
+import { computedShallowEqual } from "@mail/utils/common/signal";
 
 /** Button of the dropdown of the actions that do not fit in the quick actions of a message. */
 class MoreMessageInlineAction extends CircleInlineAction {
@@ -286,28 +286,22 @@ export class Message extends Component {
 
     // components have no getter memoization: explicit computeds, so each
     // piece re-runs only when its deps change and keeps a stable identity
-    quickActions = computed(
-        () => {
-            const allActions = this.messageActions.actions;
-            return allActions.slice(
-                0,
-                allActions.length > this.quickActionCount
-                    ? this.quickActionCount - 1
-                    : this.quickActionCount
-            );
-        },
-        { equals: shallowEqual }
-    );
+    quickActions = computedShallowEqual(() => {
+        const allActions = this.messageActions.actions;
+        return allActions.slice(
+            0,
+            allActions.length > this.quickActionCount
+                ? this.quickActionCount - 1
+                : this.quickActionCount
+        );
+    });
 
-    moreMenuActions = computed(
-        () => {
-            const allActions = this.messageActions.actions;
-            return allActions.length > this.quickActionCount
-                ? allActions.slice(this.quickActionCount - 1)
-                : false;
-        },
-        { equals: shallowEqual }
-    );
+    moreMenuActions = computedShallowEqual(() => {
+        const allActions = this.messageActions.actions;
+        return allActions.length > this.quickActionCount
+            ? allActions.slice(this.quickActionCount - 1)
+            : false;
+    });
 
     moreAction = computed(() => {
         const moreActions = this.moreMenuActions();
@@ -327,19 +321,16 @@ export class Message extends Component {
             : undefined;
     });
 
-    actions = computed(
-        () => {
-            const moreAction = this.moreAction();
-            const actions = moreAction
-                ? [...this.quickActions(), moreAction]
-                : [...this.quickActions()];
-            if (this.isAlignedRight) {
-                actions.reverse();
-            }
-            return actions;
-        },
-        { equals: shallowEqual }
-    );
+    actions = computedShallowEqual(() => {
+        const moreAction = this.moreAction();
+        const actions = moreAction
+            ? [...this.quickActions(), moreAction]
+            : [...this.quickActions()];
+        if (this.isAlignedRight) {
+            actions.reverse();
+        }
+        return actions;
+    });
 
     get attClass() {
         return {

@@ -1,11 +1,12 @@
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { propSignal } from "@mail/utils/common/hooks";
-import { Component, computed, onWillUnmount, shallowEqual, t, useProps, xml } from "@odoo/owl";
+import { Component, onWillUnmount, t, useProps, xml } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Action as ActionModel, ACTION_TAGS } from "@mail/core/common/action";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { useService } from "@web/core/utils/hooks";
+import { computedShallowEqual } from "@mail/utils/common/signal";
 
 /**
  * Params of an action, like in its definition, along with where it is rendered. `parentAction` is
@@ -347,17 +348,14 @@ export class ActionList extends Component {
         this.actionListProps = actionListProps;
     }
 
-    groups = computed(
-        () => {
-            const actions = this.actions();
-            let groups;
-            if (actions.find((i) => Array.isArray(i))) {
-                groups = actions;
-            } else {
-                groups = [actions];
-            }
-            return groups.filter((group) => group.length); // don't show empty groups
-        },
-        { equals: shallowEqual }
-    );
+    groups = computedShallowEqual(() => {
+        const actions = this.actions();
+        let groups;
+        if (actions.find((i) => Array.isArray(i))) {
+            groups = actions;
+        } else {
+            groups = [actions];
+        }
+        return groups.filter((group) => group.length); // don't show empty groups
+    });
 }

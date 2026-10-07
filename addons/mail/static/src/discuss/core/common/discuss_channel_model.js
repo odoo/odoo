@@ -2,8 +2,6 @@ import { MessagePinDialog } from "@mail/core/common/message_pin_dialog";
 import { fields, Record } from "@mail/model/export";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
-import { shallowEqual } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
@@ -254,9 +252,8 @@ export class DiscussChannel extends Record {
         return Boolean(this.self_member_id?.is_pinned);
     }
     channel_member_ids = fields.Many("discuss.channel.member", { inverse: "channel_id" });
-    sortedChannelMembers = this.computed(
-        () => [...this.channel_member_ids].sort((m1, m2) => m1.id - m2.id),
-        { equals: shallowEqual }
+    sortedChannelMembers = this.computedShallowEqual(() =>
+        [...this.channel_member_ids].sort((m1, m2) => m1.id - m2.id)
     );
     channel_name_member_ids = fields.Many("discuss.channel.member");
     /** @type {"chat"|"channel"|"group"|"livechat"|"whatsapp"|"ai_chat"|"ai_composer"} */
@@ -366,12 +363,10 @@ export class DiscussChannel extends Record {
             : this.last_interest_dt
     );
     markedAsUnread = false;
-    onlineMembers = this.computed(
-        () =>
-            this.channel_member_ids
-                .filter((member) => ["online", "away", "busy"].includes(member.imStatusUI))
-                .sort((m1, m2) => this.store.sortMembers(m1, m2)),
-        { equals: shallowEqual }
+    onlineMembers = this.computedShallowEqual(() =>
+        this.channel_member_ids
+            .filter((member) => ["online", "away", "busy"].includes(member.imStatusUI))
+            .sort((m1, m2) => this.store.sortMembers(m1, m2))
     );
     get hasAttachmentPanel() {
         return true;
@@ -522,16 +517,13 @@ export class DiscussChannel extends Record {
     get isUnread() {
         return Boolean(this.self_member_id?.message_unread_counter_ui || this.markedAsUnread);
     }
-    otherTypingMembers = this.computed(
-        () => this.typingMembers.filter((member) => !member.persona?.eq(this.store.self)),
-        { equals: shallowEqual }
+    otherTypingMembers = this.computedShallowEqual(() =>
+        this.typingMembers.filter((member) => !member.persona?.eq(this.store.self))
     );
-    offlineMembers = this.computed(
-        () =>
-            this.channel_member_ids
-                .filter((member) => member.imStatusUI === "offline")
-                .sort((m1, m2) => this.store.sortMembers(m1, m2)),
-        { equals: shallowEqual }
+    offlineMembers = this.computedShallowEqual(() =>
+        this.channel_member_ids
+            .filter((member) => member.imStatusUI === "offline")
+            .sort((m1, m2) => this.store.sortMembers(m1, m2))
     );
     /** @type {true|undefined} */
     open_chat_window;
@@ -565,12 +557,10 @@ export class DiscussChannel extends Record {
         return this.self_member_id?.message_unread_counter_ui > 0;
     }
     sub_channel_ids = fields.Many("discuss.channel", { inverse: "parent_channel_id" });
-    sortedSubChannels = this.computed(
-        () =>
-            [...this.sub_channel_ids].sort(
-                (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id
-            ),
-        { equals: shallowEqual }
+    sortedSubChannels = this.computedShallowEqual(() =>
+        [...this.sub_channel_ids].sort(
+            (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id
+        )
     );
     self_member_id = fields.One("discuss.channel.member", { inverse: "channelAsSelf" });
     storeAsFavoriteChannels = fields.One("Store", {
@@ -591,9 +581,8 @@ export class DiscussChannel extends Record {
     get unknownMembersCount() {
         return (this.member_count ?? 0) - (this.channel_member_ids.length ?? 0);
     }
-    unknownStatusMembers = this.computed(
-        () => this._computeUnknownStatusMembers().sort((m1, m2) => this.store.sortMembers(m1, m2)),
-        { equals: shallowEqual }
+    unknownStatusMembers = this.computedShallowEqual(() =>
+        this._computeUnknownStatusMembers().sort((m1, m2) => this.store.sortMembers(m1, m2))
     );
 
     _onDeleteChatWindow() {}

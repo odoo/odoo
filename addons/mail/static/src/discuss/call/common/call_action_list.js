@@ -1,4 +1,4 @@
-import { Component, computed, signal, toRaw, types, useProps } from "@odoo/owl";
+import { Component, signal, toRaw, types, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -13,7 +13,7 @@ import {
 } from "@mail/core/common/action_list";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { nestedShallowEqual } from "@mail/utils/common/signal";
+import { computedShallowEqual } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 /**
@@ -296,7 +296,7 @@ export class CallActionList extends Component {
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });
-        this.actions = computed(
+        this.actions = computedShallowEqual(
             () => {
                 const partition = toRaw(this.callActions).partition;
                 if (this.ui.isSmall) {
@@ -374,7 +374,7 @@ export class CallActionList extends Component {
                 }
                 return [...group2, other];
             },
-            { equals: nestedShallowEqual }
+            { nested: true }
         );
     }
 

@@ -2,9 +2,9 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 import { openChannelInvitationDialog } from "@mail/discuss/core/common/channel_invitation";
 import { SearchInput } from "@mail/core/common/search_input";
-import { nestedShallowEqual } from "@mail/utils/common/signal";
+import { computedShallowEqual } from "@mail/utils/common/signal";
 
-import { Component, computed, t, useOnChange, useProps } from "@odoo/owl";
+import { Component, t, useOnChange, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
@@ -65,9 +65,10 @@ export class ChannelMemberList extends Component {
                 return this.hasFilteredMembers(this.computeCategories(term));
             },
         });
-        this.categories = computed(() => this.computeCategories(this.search.searchTerm), {
-            equals: nestedShallowEqual,
-        });
+        this.categories = computedShallowEqual(
+            () => this.computeCategories(this.search.searchTerm),
+            { nested: true }
+        );
         useOnChange(
             () => [this.props.channel],
             (channel) => {
