@@ -37,6 +37,7 @@ import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 import { Record } from "@web/model/relational_model/record";
+import { useOpenX2ManyRecord, useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -9009,6 +9010,73 @@ test('add a line with a context depending on the parent record, created a second
 
     await contains(".modal .o_form_button_save").click();
     expect(queryAllTexts("[name='p'] .o_data_row")).toEqual(["Jack", "Jack"]);
+});
+
+test.tags("desktop");
+test('custom one2many with a context depending on the previous record on "Save & New"', async () => {
+    class CustomX2ManyField extends X2ManyField {
+        setup() {
+            super.setup();
+            const { saveRecord, updateRecord } = useX2ManyCrud(() => this.list, false);
+            this._openRecord = useOpenX2ManyRecord({
+                resModel: this.list.resModel,
+                activeField: this.activeField,
+                activeActions: this.activeActions,
+                getList: () => this.list,
+                saveRecord,
+                updateRecord,
+                getAddContext: (prevRecord) => {
+                    expect.step(`getAddContext: ${prevRecord.data.name}`);
+                    return { default_name: prevRecord.data.name };
+                },
+            });
+        }
+    }
+    registry.category("fields").add("custom_add_new_context", {
+        ...x2ManyField,
+        component: CustomX2ManyField,
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="turtles" widget="custom_add_new_context">
+                    <list>
+                        <field name="name"/>
+                    </list>
+                    <form>
+                        <field name="name"/>
+                    </form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(queryAllTexts("[name='turtles'] .o_data_row")).toEqual(["donatello"]);
+
+    await contains(".o_field_x2many_list_row_add button").click();
+    expect(".modal [name='name'] input").toHaveValue("");
+    await contains(".modal [name='name'] input").edit("april", { confirm: false });
+
+    await contains(".modal .o_form_button_save_new").click();
+    expect.verifySteps(["getAddContext: april"]);
+    expect(".modal [name='name'] input").toHaveValue("april");
+    expect(queryAllTexts("[name='turtles'] .o_data_row")).toEqual(["donatello", "april"]);
+
+    await contains(".modal [name='name'] input").edit("casey", { confirm: false });
+    await contains(".modal .o_form_button_save_new").click();
+    expect.verifySteps(["getAddContext: casey"]);
+    expect(".modal [name='name'] input").toHaveValue("casey");
+
+    await contains(".modal .o_form_button_save").click();
+    expect(queryAllTexts("[name='turtles'] .o_data_row")).toEqual([
+        "donatello",
+        "april",
+        "casey",
+        "casey",
+    ]);
 });
 
 test("o2m add a line custom control create editable", async () => {
