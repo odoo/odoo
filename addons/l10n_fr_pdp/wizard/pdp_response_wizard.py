@@ -139,15 +139,16 @@ class PdpResponseWizard(models.TransientModel):
         move.ensure_one()
         company = move.company_id
 
-        base_amls = move.line_ids.filtered(lambda x: x.display_type == 'product')
-        base_lines = [move._prepare_product_base_line_for_taxes_computation(aml) for aml in base_amls]
-        epd_amls = move.line_ids.filtered(lambda line: line.display_type == 'epd')
+        base_amls, epd_amls, cash_rounding_amls, tax_amls, _other_amls = move.line_ids.partitioned(
+            lambda line: line.display_type == 'product',
+            lambda line: line.display_type == 'epd',
+            lambda line: line.display_type == 'rounding' and not line.tax_repartition_line_id,
+            'tax_repartition_line_id',
+        )
+        base_lines = [move._prepare_product_base_line_for_taxes_computation(line) for line in base_amls]
         base_lines += [move._prepare_epd_base_line_for_taxes_computation(line) for line in epd_amls]
-        cash_rounding_amls = move.line_ids \
-            .filtered(lambda line: line.display_type == 'rounding' and not line.tax_repartition_line_id)
         base_lines += [move._prepare_cash_rounding_base_line_for_taxes_computation(line) for line in cash_rounding_amls]
-        tax_amls = move.line_ids.filtered('tax_repartition_line_id')
-        tax_lines = [move._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
+        tax_lines = [move._prepare_tax_line_for_taxes_computation(line) for line in tax_amls]
 
         AccountTax = self.env['account.tax']
         AccountTax._add_tax_details_in_base_lines(base_lines, company)
