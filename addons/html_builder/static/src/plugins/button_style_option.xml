@@ -33,12 +33,23 @@
 
     <t t-if="this.state.currentButtonType === 'custom'">
         <BuilderRow label.translate="Text" level="1">
-            <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom']" />
+            <BuilderColorPicker action="'buttonColorAction'" actionParam="{ mainParam: 'color' }" enabledTabs="['solid', 'custom']" />
         </BuilderRow>
         <BuilderRow label.translate="Fill" level="1">
             <BuilderColorPicker action="'buttonFillColorAction'" actionParam="{ mainParam: 'background-color', allowImportant: false }" enabledTabs="['solid', 'custom', 'gradient']" />
         </BuilderRow>
         <BorderConfigurator label.translate="Border" withRoundCorner="false" withBSClass="false" level="1"/>
+        <BuilderRow label.translate="Hover">
+            <BuilderCheckbox id="'custom_hover'" action="'customButtonHoverAction'" actionParam="'o_btn_custom_hover'"/>
+        </BuilderRow>
+        <t t-if="this.isActiveItem('custom_hover')">
+            <BuilderRow label.translate="Text" level="1">
+                <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'--custom-hover-color'"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Fill" level="1">
+                <BuilderColorPicker enabledTabs="['solid', 'custom']" styleAction="'--custom-hover-bg'"/>
+            </BuilderRow>
+        </t>
     </t>
 
     <BuilderRow label.translate="Size">
