@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
@@ -14,6 +14,12 @@ class AccountMove(models.Model):
         string="Company GİB Status",
         related='company_id.partner_id.l10n_tr_edi_customer_status',
     )
+    l10n_tr_edi_dispatch_enabled = fields.Boolean(compute='_compute_l10n_tr_edi_dispatch_enabled')
+
+    @api.depends('company_id.l10n_tr_edi_provider')
+    def _compute_l10n_tr_edi_dispatch_enabled(self):
+        for move in self:
+            move.l10n_tr_edi_dispatch_enabled = bool(move.company_id) and move.company_id._l10n_tr_edi_dispatch_enabled()
 
     def _l10n_tr_edi_prefill_edispatch_ids(self):
         for move in self:
@@ -24,13 +30,15 @@ class AccountMove(models.Model):
                 or not move.invoice_line_ids._fields.get("sale_line_ids")
             ):
                 continue
-            move.l10n_tr_edi_edispatch_ids = move.invoice_line_ids.sale_line_ids.order_id.picking_ids.filtered(
+            if pickings := move.invoice_line_ids.sale_line_ids.order_id.picking_ids.filtered(
                     lambda p: p.l10n_tr_edi_send_status == "succeed"
                     and p.state == "done"
                     and p.picking_type_code == "outgoing"
                     and p.partner_id == move.partner_id,
-                ).ids
+            ):
+                move.l10n_tr_edi_edispatch_ids = pickings
 
+    @api.model_create_multi
     def create(self, vals_list):
         moves = super().create(vals_list)
         moves._l10n_tr_edi_prefill_edispatch_ids()
