@@ -5,9 +5,12 @@ class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
     def _get_alerts(self, moves, moves_data):
+        # EXTENDS 'account'
         alerts = super()._get_alerts(moves, moves_data)
-        tr_nilvera_moves = moves.filtered(lambda m: 'tr_edi' in moves_data[m]['extra_edis'])
-        if moves_with_unlinked_dispatches := tr_nilvera_moves.filtered(lambda m: m._l10n_tr_edi_has_unlinked_dispatches()):
+        tr_edi_moves = moves.filtered(
+            lambda m: 'tr_edi' in moves_data[m]['extra_edis'] and m.company_id._l10n_tr_edi_dispatch_enabled(),
+        )
+        if moves_with_unlinked_dispatches := tr_edi_moves.filtered(lambda m: m._l10n_tr_edi_has_unlinked_dispatches()):
             if earchive_despatch_moves := moves_with_unlinked_dispatches.filtered(lambda m: m._l10n_tr_edi_has_earchive_despatch_moves()):
                 alerts['tr_earchive_despatch_moves'] = {
                     'level': 'info',
