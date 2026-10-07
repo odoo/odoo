@@ -457,3 +457,50 @@ class TestWorkEntry(TestWorkEntryBase):
 
         self.assertTrue(export['url'])
         self.assertEqual(export['name'], 'Download Export')
+
+    def test_attendance_display_name_mixed_time_types(self):
+        """
+        Test that computing display_name for a batch of attendances with and without
+        work_entry_type_id does not overwrite the custom names with the default 'A'.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Variable Calendar',
+            'calendar_type': 'variable',
+            'attendance_ids': False,
+        })
+
+        wfh_type = self.env.ref('hr_work_entry.generic_work_entry_type_home_working')
+
+        attendances = self.env['resource.calendar.attendance'].create([
+            {
+                'calendar_id': calendar.id,
+                'duration_hours': 8.0,
+                'duration_based': True,
+                'recurrency': False,
+                'date': date(2026, 10, 5),
+                'work_entry_type_id': wfh_type.id,
+            },
+            {
+                'calendar_id': calendar.id,
+                'duration_hours': 4.0,
+                'duration_based': True,
+                'recurrency': False,
+                'date': date(2026, 10, 6),
+                'work_entry_type_id': False,  # No Time Type
+            }
+        ])
+
+        att_wfh, att_empty = attendances[0], attendances[1]
+
+        self.assertIn(
+            "HW", att_wfh.display_name,
+            "The 'HW' display_code was lost in the display_name."
+        )
+        self.assertNotIn(
+            " A", att_wfh.display_name,
+            "The default 'A' overwrote the Time Type display."
+        )
+        self.assertTrue(
+            att_empty.display_name.endswith(" A"),
+            "The attendance without a Time Type should keep its default trailing 'A'."
+        )
