@@ -338,6 +338,28 @@ describe("inline code", () => {
         });
     });
 
+    test("should not restore deleted text when typing a backtick after deleting a selection", async () => {
+        await testEditor({
+            contentBefore: "<p>[abc]</p>",
+            stepFunction: async (editor) => {
+                await press("Backspace");
+                await insertText(editor, "`");
+            },
+            contentAfter: "<p>`[]</p>",
+        });
+    });
+
+    test("should not restore deleted inline code when typing a backtick after deleting it", async () => {
+        await testEditor({
+            contentBefore: '<p>[<code class="o_inline_code">abc</code>]</p>',
+            stepFunction: async (editor) => {
+                await press("Backspace");
+                await insertText(editor, "`");
+            },
+            contentAfter: "<p>`[]</p>",
+        });
+    });
+
     test("should not apply inline code when selection spans multiple block elements", async () => {
         await testEditor({
             contentBefore: "<p>a[b</p><p>cd</p><p>e]f</p>",
