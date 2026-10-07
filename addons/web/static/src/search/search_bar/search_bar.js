@@ -1,4 +1,4 @@
-import { Component, proxy, signal, status, t, usePlugin, useProps } from "@odoo/owl";
+import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Domain } from "@web/core/domain";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -693,7 +693,7 @@ export class SearchBar extends Component {
     }
 
     onInputDropdownChanged(isOpen) {
-        if (!isOpen && status(this) === "mounted") {
+        if (!isOpen && this.inputRef()) {
             this.resetState({ focus: false });
         } else if (this.navigator) {
             this.navigator.items[0]?.setActive();

@@ -4,7 +4,6 @@ import {
     onMounted,
     onWillDestroy,
     signal,
-    status,
     t,
     useEffect,
     useProps,
@@ -164,20 +163,23 @@ export class Dropdown extends Component {
         }
         this.popover = usePopover(DropdownPopover, options);
 
-        let mounted = false;
+        this.isMounted = false;
         onMounted(() => {
-            mounted = true;
+            this.isMounted = true;
             this.onStateChanged(this.state);
         });
         onWillDestroy(
             immediateEffect(() => {
-                if (!mounted) {
+                if (!this.isMounted) {
                     this.state.isOpen; // subscribe to signal
                     return;
                 }
                 this.onStateChanged(this.state);
             })
         );
+        onWillDestroy(() => {
+            this.isMounted = false;
+        });
 
         useLayoutEffect(
             (target) => this.setTargetElement(target),
@@ -205,7 +207,7 @@ export class Dropdown extends Component {
 
     /** @type {HTMLElement|null} */
     get target() {
-        if (status(this) !== "mounted") {
+        if (!this.isMounted) {
             return null;
         }
         const target = getFirstElementOfNode(this.__owl__.bdom);
@@ -342,7 +344,7 @@ export class Dropdown extends Component {
     }
 
     openPopover() {
-        if (this.popover.isOpen || status(this) !== "mounted") {
+        if (this.popover.isOpen || !this.isMounted) {
             return;
         }
         if (!this.target || !this.target.isConnected) {
