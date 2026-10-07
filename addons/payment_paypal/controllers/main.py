@@ -5,6 +5,7 @@ import pprint
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
+from odoo.exceptions import ValidationError
 from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
@@ -88,22 +89,24 @@ class PaypalController(http.Controller):
         )
         if not tx_sudo:
             return
-
-        if tx_sudo.operation == "validation":
-            if is_canceled:
-                normalized_data = {"id": tx_sudo.paypal_setup_token_ref}
+        try:
+            if tx_sudo.operation == "validation":
+                if is_canceled:
+                    normalized_data = {"id": tx_sudo.paypal_setup_token_ref}
+                else:
+                    normalized_data = self._paypal_exchange_setup_token(tx_sudo)
+                tx_sudo._record(normalized_data)
+            elif tx_sudo.payment_method_code in {"paypal", "card"}:
+                self._paypal_capture_order(tx_sudo)
             else:
-                normalized_data = self._paypal_exchange_setup_token(tx_sudo)
-            tx_sudo._record(normalized_data)
-        elif tx_sudo.payment_method_code in {"paypal", "card"}:
-            self._paypal_capture_order(tx_sudo)
-        else:
-            order_id = tx_sudo.provider_reference
-            order_details = tx_sudo._send_api_request("GET", f"/v2/checkout/orders/{order_id}")
-            normalized_data = paypal_utils.normalize_payment_data(order_details)
-            if is_canceled:
-                normalized_data["status"] = "CANCELED"
-            tx_sudo._record(normalized_data)
+                order_id = tx_sudo.provider_reference
+                order_details = tx_sudo._send_api_request("GET", f"/v2/checkout/orders/{order_id}")
+                normalized_data = paypal_utils.normalize_payment_data(order_details)
+                if is_canceled:
+                    normalized_data["status"] = "CANCELED"
+                tx_sudo._record(normalized_data)
+        except ValidationError:
+            _logger.error("Failed to process the return from PayPal.")
 
     def _paypal_exchange_setup_token(self, tx_sudo):
         """Exchange the approved setup token for a payment token .
