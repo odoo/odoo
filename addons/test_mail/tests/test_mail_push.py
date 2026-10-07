@@ -67,7 +67,7 @@ class TestWebPushNotification(SMSCommon):
         notification_count = self.env['mail.push'].search_count([])
         self.assertEqual(notification_count, number_of_notification)
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     @mute_logger('odoo.tests')
     def test_notify_by_push(self, push_to_end_point):
         """ When posting a comment, notify both inbox and people outside of Odoo
@@ -83,7 +83,7 @@ class TestWebPushNotification(SMSCommon):
         # two recipients, comment notifies both inbox and email people
         self.assertEqual(push_to_end_point.call_count, 2)
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     def test_notify_by_push_channel(self, push_to_end_point):
         """ Test various use case with discuss.channel. Chat and group channels
         sends push notifications, channel not. """
@@ -171,7 +171,7 @@ class TestWebPushNotification(SMSCommon):
         )
         push_to_end_point.assert_called_once()
 
-    @patch.object(odoo.addons.mail.models.mail_thread, "push_to_end_point")
+    @patch.object(odoo.addons.mail.models.mail_push_device, "push_to_end_point")
     def test_notify_by_push_channel_with_channel_notifications_settings(self, push_to_end_point):
         """ Test various use case with the channel notification settings."""
         all_test_user = mail_new_test_user(
@@ -342,7 +342,7 @@ class TestWebPushNotification(SMSCommon):
                 else:
                     self.assertNoPushNotification()
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     @mute_logger('odoo.tests')
     def test_notify_call_invitation(self, push_to_end_point):
         inviting_user = self.env.ref('base.test_user')
@@ -382,7 +382,7 @@ class TestWebPushNotification(SMSCommon):
         self.assertEqual(payload_value['options']['data']['type'], "CANCEL")
         push_to_end_point.reset_mock()
 
-    @patch.object(odoo.addons.mail.models.mail_thread, 'push_to_end_point')
+    @patch.object(odoo.addons.mail.models.mail_push_device, 'push_to_end_point')
     def test_notify_by_push_tracking(self, push_to_end_point):
         """ Test tracking message included in push notifications """
         container_update_subtype = self.env.ref('test_mail.st_mail_test_ticket_container_upd')
@@ -449,7 +449,7 @@ class TestWebPushNotification(SMSCommon):
         self._trigger_cron_job()
         self.assertEqual(push_to_end_point.call_count, 5)
 
-    @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post',
+    @patch.object(odoo.addons.mail.models.mail_push_device.Session, 'post',
                   return_value=SimpleNamespace(**{'status_code': 404, 'text': 'Device Unreachable'}))
     def test_push_notifications_error_device_unreachable(self, post):
         with mute_logger('odoo.addons.mail.tools.web_push'):
@@ -465,7 +465,7 @@ class TestWebPushNotification(SMSCommon):
         notification_count = self.env['mail.push.device'].search_count([('endpoint', '=', 'https://test.odoo.com/webpush/user2')])
         self.assertEqual(notification_count, 0)
 
-    @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post',
+    @patch.object(odoo.addons.mail.models.mail_push_device.Session, 'post',
                   return_value=SimpleNamespace(**{'status_code': 201, 'text': 'Ok'}))
     def test_push_notifications_error_encryption_simple(self, post):
         """ Test to see if all parameters sent to the endpoint are present.
@@ -488,7 +488,7 @@ class TestWebPushNotification(SMSCommon):
         self.assertIn('data', post.call_args.kwargs)
         self.assertIn('timeout', post.call_args.kwargs)
 
-    @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post',
+    @patch.object(odoo.addons.mail.models.mail_push_device.Session, 'post',
                   return_value=SimpleNamespace(status_code=201, text='Ok'))
     def test_push_notifications_device_invalid_tld_domain(self, post):
         self.env['mail.push.device'].sudo().create([{
@@ -516,7 +516,7 @@ class TestWebPushNotification(SMSCommon):
         device_count = self.env['mail.push.device'].search_count([('endpoint', '=', 'https://test.odoo.invalid/webpush/user')])
         self.assertEqual(device_count, 0)
 
-    @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post', side_effect=ConnectionError("Oops, network error"))
+    @patch.object(odoo.addons.mail.models.mail_push_device.Session, 'post', side_effect=ConnectionError("Oops, network error"))
     def test_push_notifications_device_raise_exception(self, post):
         # Add 4 more devices to force sending via cron queue
         for index in range(10, 14):
@@ -564,10 +564,10 @@ class TestWebPushNotification(SMSCommon):
             )
 
     @patch.object(
-        odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok')
+        odoo.addons.mail.models.mail_push_device.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok')
     )
     @patch.object(
-        odoo.addons.mail.models.mail_thread, 'push_to_end_point',
+        odoo.addons.mail.models.mail_push_device, 'push_to_end_point',
         wraps=odoo.addons.mail.tools.web_push.push_to_end_point,
     )
     def test_push_notifications_truncate_payload(self, thread_push_mock, session_post_mock):
@@ -576,7 +576,7 @@ class TestWebPushNotification(SMSCommon):
 
         This test checks the behavior for the current size limits and encryption overhead.
         See below test for a more illustrative example.
-        See MailThread._truncate_payload for a more thorough explanation.
+        See MailPushDevice._web_push_truncate_payload for a more thorough explanation.
 
         Test scenarios include:
         - ASCII characters (X)
@@ -591,7 +591,7 @@ class TestWebPushNotification(SMSCommon):
             subject='Test Payload',
         )
         base_payload_size = len(thread_push_mock.call_args.kwargs['payload'].encode())
-        effective_payload_size_limit = self.env['mail.thread']._truncate_payload_get_max_payload_length()
+        effective_payload_size_limit = self.env['mail.push.device']._truncate_payload_get_max_payload_length()
         # this is just a sanity check that the value makes sense, feel free to update as needed
         self.assertEqual(effective_payload_size_limit, 3993, "Payload limit should come out to 3990.")
         body_size_limit = effective_payload_size_limit - base_payload_size
@@ -637,10 +637,10 @@ class TestWebPushNotification(SMSCommon):
                 )
 
     @patch.object(
-        odoo.addons.mail.models.mail_thread.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok')
+        odoo.addons.mail.models.mail_push_device.Session, 'post', return_value=SimpleNamespace(status_code=201, text='Ok')
     )
     @patch.object(
-        odoo.addons.mail.models.mail_thread, 'push_to_end_point',
+        odoo.addons.mail.models.mail_push_device, 'push_to_end_point',
         wraps=odoo.addons.mail.tools.web_push.push_to_end_point,
     )
     @patch.object(
@@ -653,7 +653,7 @@ class TestWebPushNotification(SMSCommon):
         We want to ensure we truncate utf-8 values properly based on maximum payload size.
         Here max payload size is mocked, so that we can test on the same body each time to ease reading.
 
-        See MailThread._truncate_payload for a more thorough explanation.
+        See MailPushDevice._web_push_truncate_payload for a more thorough explanation.
         """
         self.record_simple.with_user(self.user_email).message_notify(
             partner_ids=self.user_inbox.partner_id.ids,
@@ -678,7 +678,7 @@ class TestWebPushNotification(SMSCommon):
             (base_payload_size + len(body_json) - 10, ""),  # should still work even if it would still be too big after truncate
         ]:
             with self.subTest(size_limit=size_limit), patch.object(
-                odoo.addons.mail.models.mail_thread.MailThread, '_truncate_payload_get_max_payload_length',
+                odoo.addons.mail.models.mail_push_device.MailPushDevice, '_truncate_payload_get_max_payload_length',
                 return_value=size_limit,
             ):
                 self.record_simple.with_user(self.user_email).message_notify(
