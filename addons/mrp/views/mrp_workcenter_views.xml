@@ -189,22 +189,28 @@
                             </div>
                         </t>
                         <t t-name="card">
-                            <div class="ms-1">
-                                <div style="display: inline-block" name="wc_stages">
-                                    <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status float-end"
+                            <div class="d-flex gap-2">
+                                <div name="wc_stages">
+                                    <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status oi btn btn-light d-flex p-1"
                                         title="No workorder currently in progress. Click to mark work center as blocked."
                                         aria-label="No workorder currently in progress. Click to mark work center as blocked."
-                                        invisible="working_state in ('blocked', 'done')"/>
-                                    <a name="unblock" type="object" class=" o_status o_status_danger float-end"
+                                        invisible="working_state in ('blocked', 'done')"
+                                        data-icon="circle"
+                                        role="button"/>
+                                    <a name="unblock" type="object" class="o_status oi oi-filled o_status_danger btn btn-light d-flex p-1"
                                         title="Workcenter blocked, click to unblock."
                                         aria-label="Workcenter blocked, click to unblock."
-                                        invisible="working_state in ('normal', 'done')"/>
-                                    <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status o_status_success float-end"
+                                        invisible="working_state in ('normal', 'done')"
+                                        data-icon="circle"
+                                        role="button"/>
+                                    <a name="%(act_mrp_block_workcenter)d" type="action" class="o_status oi oi-filled o_status_success btn btn-light d-flex p-1"
                                         title="Work orders in progress. Click to block work center."
                                         aria-label="Work orders in progress. Click to block work center."
-                                        invisible="working_state in ('normal', 'blocked')"/>
+                                        invisible="working_state in ('normal', 'blocked')"
+                                        data-icon="circle"
+                                        role="button"/>
                                 </div>
-                                <field name="name" class="fw-bold fs-4 ms-2"/>
+                                <field name="name" class="fw-bold fs-4"/>
                             </div>
                             <div class="row mt-3 pb-3">
                                 <div class="col-6">
