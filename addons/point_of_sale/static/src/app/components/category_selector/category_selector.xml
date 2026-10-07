@@ -8,18 +8,17 @@
                     t-att-style="this.pos.isSmallProductScreen ? 'width: 115px; height: 3rem;' : 'height: 4rem;'"
                     t-att-class="{
                         'border-0': category.isChildren and !this.isAncestorOrSelected(category), 
-                        'opacity-75 border-0': !category.isChildren and !category.isSelected,
-                        'justify-content-center': this.ui.isSmall
+                        'opacity-75 border-0': !category.isChildren and !category.isSelected
                     }"
-                    class="category-button p-1 btn btn-light d-flex justify-content-around align-items-center rounded-3 gap-1 flex-shrink-0">
-                    <div t-if="this.showCategoryImg(category)" class="overflow-hidden flex-shrink-0 ratio ratio-1x1" style="width:40%;">
+                    class="category-button p-1 btn btn-light d-flex align-items-center rounded-3 gap-1 flex-shrink-0">
+                    <div t-if="this.showCategoryImg(category)" class="overflow-hidden flex-shrink-0 ratio ratio-1x1" style="width: min(40%, 3rem);">
                         <img t-if="category.imgSrc and !this.ui.isSmall" t-att-src="category.imgSrc"
                             class="category-img-thumb h-100 rounded-3 object-fit-cover pe-none"
                             alt="Category"
                         />
                     </div>
-                    <div t-attf-class="o_line_clamp o_line_clamp_{{ this.ui.isSmall ? 2 : 3 }}">
-                        <span t-if="category.name" class="text-center" t-out="category.name" />
+                    <div t-attf-class="o_line_clamp o_line_clamp_{{ this.ui.isSmall ? 2 : 3 }} flex-grow-1 text-center">
+                        <span t-if="category.name" t-out="category.name" />
                     </div>
                 </button>
             </t>
