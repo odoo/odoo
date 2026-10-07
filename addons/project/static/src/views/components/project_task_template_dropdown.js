@@ -104,16 +104,20 @@ export class ProjectTaskTemplateDropdown extends Component {
         if (this.props.getAdditionalContext) {
             Object.assign(context, this.props.getAdditionalContext());
         }
-        this.action.switchView("form", {
-            resId: await this.orm.call(
-                "project.task",
-                "action_create_from_template",
-                [templateId],
-                {
-                    context: context,
-                }
-            ),
-            focusTitle: true,
+        const defaultContext = await this.orm.call(
+            "project.task",
+            "action_create_from_template",
+            [templateId],
+            {
+                context: context,
+            }
+        );
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "project.task",
+            views: [[false, "form"]],
+            target: "current",
+            context: { ...context, ...defaultContext },
         });
     }
 

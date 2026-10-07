@@ -2148,7 +2148,14 @@ class ProjectTask(models.Model):
                       field: False
                       for field in self._get_template_field_blacklist()
                   } | values
-        return self.with_context(copy_from_template=True).copy(default=default).id
+        data = {}
+        for key, value in self.with_context(copy_from_template=True).copy_data(default=default)[0].items():
+            if key == 'child_ids' and isinstance(value, list):
+                for cmd in value:
+                    if len(cmd) == 3 and isinstance(cmd[2], dict):
+                        cmd[2]['state'] = self.env['project.task'].default_get(['state']).get('state', '01_in_progress')
+            data[f'default_{key}'] = value
+        return data
 
     def action_archive(self):
         child_tasks = self.child_ids.filtered(lambda child_task: not child_task.display_in_project)
