@@ -56,12 +56,12 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
             <t t-if="thank_you_message" t-out="thank_you_message"/>
             <p t-else="" class="h4-fs text-center text-success"><i class="oi" data-icon="check_circle" role="img"/> Thanks for registering!</p>
         </div>
-        <div class="js_subscribe_wrap">
+        <form class="js_subscribe_wrap">
             <div t-attf-class="{{_wrap_classes or 'input-group'}}">
-                <input type="email" name="email" t-attf-class="s_newsletter_subscribe_form_input js_subscribe_value form-control #{_input_classes}" placeholder="Email Address"/>
-                <a role="button" href="#" t-attf-class="js_subscribe_btn o_submit {{_btn_classes or 'btn btn-primary'}}">Subscribe</a>
+                <input type="email" name="email" t-attf-class="s_newsletter_subscribe_form_input js_subscribe_value form-control #{_input_classes}" placeholder="Email Address" autocomplete="email" aria-label="Email address"/>
+                <button type="submit" t-attf-class="js_subscribe_btn o_submit {{_btn_classes or 'btn btn-primary'}}">Subscribe</button>
             </div>
-        </div>
+        </form>
     </div>
 </template>
 
