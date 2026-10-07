@@ -56,6 +56,8 @@ export class Dashboard extends Component {
 		onWillStart(async () => {
 			await this.loadDashboardData();
 		});
+
+		useBus(this.env.model.bus, "reload_ecommerce_dashboard", () => this.loadDashboardData());
 	}
 
 	async loadDashboardData(filter = false) {
