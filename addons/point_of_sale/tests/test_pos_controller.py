@@ -1,10 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+
 import odoo
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
+
+# TODO-PARP:
+#   - Use Common method to create pos order
+#   - Use partner/product record from setupclass
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSController(TestPointOfSaleHttpCommon):
     _test_user_groups = None  # FIXME list needed groups

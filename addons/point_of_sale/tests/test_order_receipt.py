@@ -20,6 +20,10 @@ from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCom
 _logger = logging.getLogger(__name__)
 
 
+# TODO-PARP:
+# - Separate Python tests from tour tests.
+# - Move receipt helpers to the common layer where appropriate.
+
 @tagged('post_install', '-at_install')
 class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
     _test_user_groups = None  # FIXME list needed groups

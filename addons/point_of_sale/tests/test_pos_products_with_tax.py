@@ -7,6 +7,8 @@ from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.tests import Form
 from odoo.exceptions import UserError
 
+# TODO-PARP: Move tests and remove File
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSProductsWithTax(TestPoSCommon):

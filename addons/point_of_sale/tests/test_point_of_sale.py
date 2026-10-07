@@ -5,6 +5,8 @@ from odoo.tests.common import tagged, TransactionCase
 from odoo.exceptions import UserError
 
 
+# TODO-PARP: Move tests and remove File
+
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPointOfSale(TransactionCase):
     @classmethod
