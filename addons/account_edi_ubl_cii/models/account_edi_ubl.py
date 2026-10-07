@@ -2902,6 +2902,18 @@ class AccountEdiUBL(models.AbstractModel):
             price_allowance_amount *= price_allowance_charge_indicator_sign
         subtotal = (line_extension_amount or 0.0) + total_allowances - total_charges
 
+        base_quantity_is_redundant = False
+        if (
+            base_quantity is not None
+            and invoiced_quantity
+            and float_compare(base_quantity, abs(invoiced_quantity), precision_digits=6) == 0
+        ):
+            if price_amount and line_extension_amount is not None:
+                expected_line_extension_amount = invoiced_quantity * (price_amount / base_quantity) + total_charges - total_allowances
+                base_quantity_is_redundant = abs(expected_line_extension_amount - line_extension_amount) > 0.02
+            else:
+                base_quantity_is_redundant = True
+
         # Price level.
         # Define at the product level the price for which quantity and how many discount you get
         # by buying it
@@ -2969,7 +2981,7 @@ class AccountEdiUBL(models.AbstractModel):
             # price_unit = 250.0
             # quantity = 6.0
             # discount_amount = 300.0
-            if not currency.is_zero(price_subtotal):
+            if not base_quantity_is_redundant and not currency.is_zero(price_subtotal):
                 price_unit = price_subtotal / price_quantity
                 discount_amount += price_discount_amount * quantity / price_quantity
         else:
