@@ -268,7 +268,8 @@ class AccountMove(models.Model):
 
     def _get_l10n_sa_totals(self):
         self.ensure_one()
-        invoice_node = self.env['account.edi.xml.ubl_21.zatca']._get_invoice_node({'invoice': self})
+        builder = self.env['account.edi.xml.ubl_21.zatca']
+        invoice_node = builder._export_document(builder._init_invoice_export_values(self))['document_node']
         return {
             'total_amount': invoice_node['cac:LegalMonetaryTotal']['cbc:TaxInclusiveAmount']['_text'],
             'total_tax': invoice_node['cac:TaxTotal'][-1]['cbc:TaxAmount']['_text'],

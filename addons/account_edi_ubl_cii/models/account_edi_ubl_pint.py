@@ -387,7 +387,7 @@ class AccountEdiUBLPint(models.AbstractModel):
 
     def _ubl_add_legal_monetary_total_prepaid_payable_amount_node(self, vals, in_foreign_currency=True):
         super()._ubl_add_legal_monetary_total_prepaid_payable_amount_node(vals, in_foreign_currency=in_foreign_currency)
-        currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
+        currency = vals['currency'] if in_foreign_currency else vals['company_currency']
         node = vals['legal_monetary_total_node']
 
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
@@ -401,33 +401,6 @@ class AccountEdiUBLPint(models.AbstractModel):
                 + vals['_ubl_values']['tax_withholding_amount'],
                 min_dp=currency.decimal_places,
             )
-
-    def _init_invoice_export_values(self, invoice):
-        vals = super()._init_invoice_export_values(invoice)
-        AccountTax = self.env['account.tax']
-        company = vals['company']
-
-        # Manage taxes for emptying.
-        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(
-            base_lines=vals['base_lines'],
-            company=company,
-            vals=vals,
-        )
-
-        # Sub-dictionaries to store UBL-related values along the whole process.
-        vals['_ubl_values'] = {}
-        for base_line in vals['base_lines']:
-            base_line['_ubl_values'] = {}
-
-        # Global rounding of tax_details using 6 digits.
-        AccountTax._round_raw_total_excluded(vals['base_lines'], company)
-        AccountTax._round_raw_total_excluded(vals['base_lines'], company, in_foreign_currency=False)
-        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
-        AccountTax._add_and_round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
-        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company)
-        AccountTax._round_raw_gross_total_excluded_and_discount(vals['base_lines'], company, in_foreign_currency=False)
-
-        return vals
 
     def _export_document_node_constraints(self, vals):
         """
