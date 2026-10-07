@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import contextlib
 import datetime
 import logging
 import json
@@ -8,7 +7,7 @@ from ast import literal_eval
 
 import requests
 
-from odoo import api, fields, release, SUPERUSER_ID
+from odoo import api, fields, release
 from odoo.exceptions import UserError
 from odoo.models import AbstractModel
 from odoo.tools.translate import _
@@ -82,6 +81,10 @@ class Publisher_WarrantyContract(AbstractModel):
         r.raise_for_status()
         return literal_eval(r.text)
 
+    @api.model
+    def _post_publisher_messages(self, messages):
+        pass
+
     def update_notification(self, cron_mode=True):
         """
         Send a message to Odoo's publisher warranty server to check the
@@ -98,12 +101,7 @@ class Publisher_WarrantyContract(AbstractModel):
                     return False
                 _logger.debug("Exception while sending a get logs messages", exc_info=1)
                 raise UserError(_("Error during communication with the publisher warranty server."))
-            # old behavior based on res.log; now on mail.message, that is not necessarily installed
-            user = self.env['res.users'].sudo().browse(SUPERUSER_ID)
-            if poster := self.sudo().env.ref('mail.channel_all_employees', raise_if_not_found=False):
-                for message in result["messages"]:
-                    with contextlib.suppress(Exception):
-                        poster.message_post(body=message, subtype_xmlid='mail.mt_comment', partner_ids=[user.partner_id.id])
+            self._post_publisher_messages(result["messages"])
             if result.get('enterprise_info'):
                 # Update expiration date
                 set_str = self.env['ir.config_parameter'].sudo().set_str

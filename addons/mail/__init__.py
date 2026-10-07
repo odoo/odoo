@@ -10,6 +10,10 @@ from . import controllers
 
 def _mail_post_init(env):
     env['mail.alias.domain']._migrate_icp_to_domain()
+    _discuss_post_init(env)
+
+
+def _discuss_post_init(env):
     admin_lang = env.ref("base.partner_admin").lang
     translate_env = env(context=dict(env.context, lang=admin_lang))
     env.ref("mail.channel_all_employees").write({

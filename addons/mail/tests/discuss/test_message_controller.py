@@ -363,7 +363,10 @@ class TestMessageLinks(MailCommon, HttpCase):
         ).id
         self.authenticate('employee', 'employee')
         with self.subTest(channel_message=channel_message):
-            expected_url = self.base_url() + f'/odoo/action-mail.action_discuss?active_id={channel_message.res_id}&highlight_message_id={channel_message.id}'
+            expected_url = (
+                self.base_url()
+                + f"/odoo/discuss?active_id={channel_message.res_id}&highlight_message_id={channel_message.id}"
+            )
             res = self.url_open(f'/mail/message/{channel_message.id}')
             self.assertEqual(res.url, expected_url)
         with self.subTest(private_message_id=private_message_id):
