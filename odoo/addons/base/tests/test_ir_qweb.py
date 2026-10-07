@@ -26,7 +26,7 @@ class TestQWebTField(TransactionCase):
 
     def test_trivial(self):
         field = etree.Element('span', {'t-field': 'company.name'})
-        company = self.env['res.company'].create({'name': "My Test Company"})
+        company = self.add_company('base.test_company', {'name': "My Test Company"})
 
         result = self.engine._render(field, {'company': company})
         self.assertEqual(
@@ -42,7 +42,7 @@ class TestQWebTField(TransactionCase):
     def test_i18n(self):
         field = etree.Element('span', {'t-field': 'company.name'})
         s = "Testing «ταБЬℓσ»: 1<2 & 4+1>3, now 20% off!"
-        company = self.env['res.company'].create({'name': s})
+        company = self.add_company('base.test_company', {'name': s})
 
         result = self.engine._render(field, {'company': company})
         self.assertEqual(

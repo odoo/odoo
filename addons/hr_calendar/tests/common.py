@@ -12,16 +12,14 @@ class TestHrContractCalendarCommon(common.TransactionCase):
         super().setUpClass()
         cls.env.user.tz = 'Europe/Brussels'
 
-        cls.company_A, cls.company_B = cls.env['res.company'].create([
-            {
-                'name': 'Test company A',
-                'tz': "Europe/Brussels",
-            },
-            {
-                'name': 'Test company B',
-                'tz': "Europe/Brussels",
-            },
-        ])
+        cls.company_A = cls.add_class_company('base.test_company', {
+            'name': 'Test company A',
+            'tz': "Europe/Brussels",
+        })
+        cls.company_B = cls.add_class_company('base.test_company_with_branch', {
+            'name': 'Test company B',
+            'tz': "Europe/Brussels",
+        })
         cls.env.user.company_id = cls.company_A
         cls.calendar_35h, cls.calendar_28h, cls.calendar_35h_night, cls.sunday_morning_calendar, cls.sunday_afternoon_calendar, cls.calendar_fully_flexible, cls.calendar_flexible = cls.env['resource.calendar'].create([
             {

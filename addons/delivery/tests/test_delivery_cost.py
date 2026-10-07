@@ -562,11 +562,10 @@ class TestDeliveryCost(DeliveryCommon):
         # Create a company that uses a different currency
         currency_bells = self.env["res.currency"].sudo().create({"name": "Bell", "symbol": "C"})
 
-        nook_inc = self.env["res.company"].sudo().create({
+        nook_inc = self.add_company('base.test_company_template', {
             "name": "Nook inc.",
             "currency_id": currency_bells.id,
         })
-        self.env.user.company_ids += nook_inc
 
         with freeze_time("2000-01-01"):  # Make sure the rate is in the past
             self.env["res.currency.rate"].sudo().with_company(nook_inc).create({

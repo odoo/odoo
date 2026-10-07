@@ -143,7 +143,7 @@ class TestRecruitmentProcess(TestHrCommon):
 
     def test_email_application_multi_company(self):
         """ Make sure that receiving emails for jobs in companies different from self.env.company work. """
-        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        other_company = self.add_company('base.test_company', {'name': 'Other Company'})
         job_developer = self.env['hr.job'].create({
             'name': 'Experienced Developer (Other Company)',
             'company_id': other_company.id,
@@ -162,7 +162,7 @@ class TestRecruitmentProcess(TestHrCommon):
         Test that applicants created from incoming emails are assigned the job's company when the job's department
         has no company set.
         """
-        mystery_company = self.env["res.company"].create({"name": "Mystery Company"})
+        mystery_company = self.add_company('base.test_company', {"name": "Mystery Company"})
         _mail_alias_domain = self.env["mail.alias.domain"].create(
             {
                 "company_ids": [(4, mystery_company.id)],

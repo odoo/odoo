@@ -446,8 +446,8 @@ class TestTimesheet(TestCommonTimesheet):
     def test_create_timesheet_employee_not_in_company(self):
         ''' ts.employee_id only if the user has an employee in the company or one employee for all companies.
         '''
-        company_2 = self.env['res.company'].create({'name': 'Company 2'})
-        company_3 = self.env['res.company'].create({'name': 'Company 3'})
+        company_2 = self.add_company('base.test_company')
+        company_3 = self.add_company('base.test_company_template')
 
         analytic_plan = self.env['account.analytic.plan'].create({
             'name': 'Plan Test',
@@ -495,7 +495,7 @@ class TestTimesheet(TestCommonTimesheet):
 
     def test_create_timesheet_with_multi_company(self):
         """ Always set the current company in the timesheet, not the employee company """
-        company_4 = self.env['res.company'].create({'name': 'Company 4'})
+        company_4 = self.add_company('base.test_company')
         empl_employee, archived_employee = self.env['hr.employee'].with_company(company_4).create([
             {'name': 'Employee 3'},
             {'name': 'Employee 4', 'active': False},
@@ -1051,7 +1051,7 @@ class TestTimesheet(TestCommonTimesheet):
         self.assertEqual(line.amount, -5)  # the line is split in 2
 
     def test_log_timesheet_with_user_has_two_employees_from_different_companies(self):
-        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        company_2 = self.add_company('base.test_company')
         self.env['hr.employee'].with_company(company_2).create({
             'name': 'Employee 2',
             'user_id': self.user_manager.id,

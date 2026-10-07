@@ -275,7 +275,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
         first_company = self.user.employee_id.company_id
         self.assertTrue(first_company)
 
-        other_company = self.env["res.company"].create({
+        other_company = self.add_company('base.test_company', {
             "name": "Test"
         })
         other_employee = self.env["hr.employee"].create({
