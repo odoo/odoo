@@ -369,6 +369,23 @@ class TestSoLineMilestones(TestSaleCommon):
         for sol in sale_order.order_line:
             self.assertEqual(sol.task_id.milestone_id.sale_line_id, sol)
 
+    def test_milestones_enabled_on_global_project(self):
+        """Test milestones are enabled on the global project in which the milestone of a SOL is created."""
+        global_project = self.env['project.project'].create({'name': 'Global Project', 'allow_milestones': False})
+        self.product_delivery_milestones1.write({
+            'service_tracking': 'task_global_project',
+            'project_id': global_project.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': self.product_delivery_milestones1.id, 'product_uom_qty': 10})],
+        })
+        sale_order.action_confirm()
+
+        self.assertEqual(global_project.milestone_ids.sale_line_id, sale_order.order_line)
+        self.assertTrue(global_project.allow_milestones)
+
     def test_milestone_handling_mixed_project_configuration(self):
         """Test milestone handling when product has no project (falls back to SO project)."""
         (self.product_delivery_milestones1 | self.product_delivery_milestones2).write({
