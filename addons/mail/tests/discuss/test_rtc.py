@@ -1454,6 +1454,13 @@ class TestChannelRTC(MailCommon, HttpCase):
         self._reset_bus()
         self.start_tour("/odoo", "discuss_call_invitation.js", login="test_user")
 
+    @users("employee")
+    def test_80_set_volume_setting_of_guest(self):
+        settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
+        settings.set_volume_setting(False, 0.7, guest_id=self.guest.id)
+        self.assertEqual(settings.volume_settings_ids.guest_id, self.guest)
+        self.assertEqual(settings.volume_settings_ids.volume, 0.7)
+
     def _res_for_guest(self, guest, common=True, internal=False):
         res = {"id": guest.id}
         if common:

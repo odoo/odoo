@@ -13,7 +13,7 @@ class ResUsersSettingsVolumes(models.Model):
 
     user_setting_id = fields.Many2one('res.users.settings', required=True, ondelete='cascade', index=True)
     partner_id = fields.Many2one('res.partner', ondelete='cascade', index=True)
-    guest_id = fields.Many2one('res.partner', ondelete='cascade', index=True)
+    guest_id = fields.Many2one('mail.guest', ondelete='cascade', index=True)
     volume = fields.Float(default=0.5, help="Ranges between 0.0 and 1.0, scale depends on the browser implementation")
 
     _partner_unique = models.UniqueIndex("(user_setting_id, partner_id) WHERE partner_id IS NOT NULL")
