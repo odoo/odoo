@@ -17,7 +17,7 @@
         background-position: 0 0, 12px 12px;
 
         .o_configurator_background_inner {
-            background: radial-gradient(ellipse 50vh 50vw, transparent 0%, $o-webclient-background-color 90%);
+            background: radial-gradient(ellipse 50vh 50vw, transparent 0%, var(--o-webclient-background-color) 90%);
             background-position: 70% 100%;
             background-size: 100% 100%;
         }
@@ -152,7 +152,7 @@
             &:before {
                 position: absolute;
                 inset: 0;
-                background: linear-gradient(to right, $o-webclient-background-color 50%, transparent);
+                background: linear-gradient(to right, var(--o-webclient-background-color) 50%, transparent);
                 content: '';
             }
 
