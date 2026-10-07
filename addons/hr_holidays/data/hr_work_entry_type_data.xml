@@ -973,6 +973,69 @@
         <field name="country_id" ref="base.kw"/>
     </record>
 
+<!-- LB : Lebanon -->
+    <!-- Overtime is encoded by HR, not requested by the employees -->
+    <record id="hr_work_entry.lb_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <!-- Annual leave: 15 days on full pay after one year of service, 21 days for the juveniles (Labour Code, art. 23
+         and 39) -->
+    <record id="hr_work_entry.lb_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.lb"/>
+    </record>
+
+    <!-- Sick leave on a medical certificate: full pay, then half pay, from half a month to two and a half months each
+         depending on the seniority (Labour Code, art. 40 and 41) -->
+    <record id="hr_work_entry.lb_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.lb"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_lb_work_entry_type_sick_leave_half" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.lb"/>
+    </record>
+
+    <!-- Maternity leave: 10 weeks on full pay, paid by the employer (Labour Code, art. 28 and 29) -->
+    <record id="hr_work_entry.l10n_lb_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.lb"/>
+    </record>
+
+    <!-- Bereavement leave: 2 days on full pay for the death of a parent, the spouse, a child, a grandchild or a
+         grandparent (Labour Code, art. 38) -->
+    <record id="hr_work_entry.l10n_lb_work_entry_type_bereavement_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.lb"/>
+    </record>
+
+    <!-- Compensatory rest for the work on the weekly rest day, at the choice of the employee (Labour Code, art. 37) -->
+    <record id="hr_work_entry.lb_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">hour</field>
+        <field name="unit_of_measure">hour</field>
+        <field name="country_id" ref="base.lb"/>
+    </record>
+
 <!-- LU : Luxemburg -->
     <record id="hr_work_entry.l10n_lu_work_entry_type_situational_unemployment" model="hr.work.entry.type">
         <field name="requires_allocation">False</field>
