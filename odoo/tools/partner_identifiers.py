@@ -771,7 +771,7 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
     'MY_EN': {
         'sequence': 10,
         'scheme': '0230',
-        'label': _lt('Company ID'),
+        'label': _lt('SSM No.'),
         'help': _lt('Malaysian company registration number.'),
         'category': 'EN',
         'countries': ['MY'],
