@@ -18,7 +18,7 @@
 
                 /* Temporary workaround: We replace the border with a box-shadow to simulate the border bottom so it keeps visible when scrolling. */
                 border: 0;
-                box-shadow: inset 0px calc(#{$table-border-width} * -1) 0 0 $table-border-color;
+                box-shadow: inset 0px calc(#{$table-border-width} * -1) 0 0 var(--o-bs-table-border-color);
 
                 /* Need to redefine it with background insead of background-color to ensure applying gradient. */
                 background: var(--table-bg);
