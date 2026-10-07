@@ -479,11 +479,10 @@ class DiscussChannel(models.Model):
     @api.depends("message_ids")
     def _compute_message_count(self):
         read_group_res = self.env["mail.message"]._read_group(
-            domain=[
-                ("model", "=", "discuss.channel"),
-                ("res_id", "in", self.ids),
-                ("message_type", "not in", ["user_notification", "notification"])
-            ], groupby=["res_id"], aggregates=["__count"]
+            domain=self._get_message_domain()
+            & Domain("message_type", "not in", ("user_notification", "notification")),
+            groupby=["res_id"],
+            aggregates=["__count"],
         )
         message_count_by_channel_id = dict(read_group_res)
         for channel in self:
@@ -1996,6 +1995,23 @@ class DiscussChannel(models.Model):
         )
         return sub_channel
 
+    def _get_message_domain(self):
+        return Domain("model", "=", self._name) & Domain("res_id", "in", self.ids)
+
+    def _get_correlated_message_domain(self, channel_id: SQL):
+        # mail.message._search reads the plain `model` leaf to pick its access path
+        return Domain("model", "=", self._name) & Domain.custom(
+            to_sql=lambda table: SQL("%s = %s", table.res_id, channel_id),
+        )
+
+    def _get_message_sql(self, alias: SQL, channel_id: SQL):
+        return SQL(
+            "%(alias)s.model = %(model)s AND %(alias)s.res_id = %(channel_id)s",
+            alias=alias,
+            channel_id=channel_id,
+            model=self._name,
+        )
+
     def _get_last_messages(self):
         """ Return the last message for each of the given channels."""
         messages = self.env["mail.message"]
@@ -2004,9 +2020,7 @@ class DiscussChannel(models.Model):
         # Build the subquery, we know the model and must inject the same
         # security rules as in the `_search` method. The search is optimized to
         # return a query without executing anything if the model is fixed.
-        domain = Domain('model', '=', self._name) & Domain.custom(
-            to_sql=lambda table: SQL("%s = discuss_channel.id", table.res_id),
-        )
+        domain = self._get_correlated_message_domain(SQL("discuss_channel.id"))
         messages_query = messages._search(domain, order='id desc', limit=1)
         sql = SQL(
             """
@@ -2028,11 +2042,8 @@ class DiscussChannel(models.Model):
         if not self.ids:
             return messages
         domain = (
-            Domain("model", "=", self._name)
+            self._get_correlated_message_domain(SQL("discuss_channel.id"))
             & Domain("needaction", "=", True)
-            & Domain.custom(
-                to_sql=lambda table: SQL("%s = discuss_channel.id", table.res_id),
-            )
         )
         messages_query = messages._search(domain, order="id desc", limit=1)
         sql = SQL(
