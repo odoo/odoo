@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="company_address_list" inherit_id="web.company_address_list">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-set="l10n_my_registration_number" t-value="company.country_code == 'MY' and company.partner_id._l10n_my_get_registration_number()"/>
+            <li t-if="l10n_my_registration_number">
+                SSM No.: <span t-out="l10n_my_registration_number"/>
+            </li>
+        </xpath>
+    </template>
+</odoo>
