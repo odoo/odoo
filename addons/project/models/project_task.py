@@ -2137,6 +2137,23 @@ class ProjectTask(models.Model):
             fields.extend(self._get_recurrence_fields() + ["recurrence_id", "recurring_task"])
         return fields
 
+    def get_template_context(self):
+        self.ensure_one()
+        default = {field: False for field in self._get_template_field_blacklist()}
+        data = {'default_is_template': False}
+        if self.depend_on_ids:
+            data['default_depend_on_ids'] = self.depend_on_ids.ids
+        for key, value in self.with_context(copy_from_template=True, copy_from_project_template=self.id).copy_data(default)[0].items():
+            if key == 'child_ids' and isinstance(value, list):
+                for cmd in value:
+                    if len(cmd) == 3 and isinstance(cmd[2], dict):
+                        cmd[2]['is_template'] = False
+                        cmd[2]['state'] = cmd[2].get('state', self.env['project.task'].default_get(['state']).get('state', '01_in_progress'))
+                data['default_child_ids'] = value
+            elif key not in ['is_template', 'depend_on_ids']:
+                data[f'default_{key}'] = value
+        return data
+
     def action_create_from_template(self, values=None):
         self.ensure_one()
         values = values or {}
