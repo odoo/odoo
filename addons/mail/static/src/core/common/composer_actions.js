@@ -125,7 +125,7 @@ registerComposerAction("open-full-composer", {
     condition: ({ ancestors, composer, owner }) =>
         owner.props.showFullComposer &&
         composer.targetThread &&
-        composer.targetThread.model !== "discuss.channel" &&
+        !composer.targetThread.channel &&
         !ancestors.inFrontendPortalChatter,
     hasBtnBg: ({ composer, owner }) =>
         (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,

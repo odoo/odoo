@@ -425,6 +425,27 @@ test("Basic list of edit message actions in chatter", async () => {
     await contains(".dropdown-menu .dropdown-item:has(:text('Edit in Full Composer'))");
 });
 
+test("Basic list of edit message actions in channel", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "original message",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
+    await contains(".o-mail-Message .o-mail-Composer.o-focused");
+    await click(".o-mail-Message .o-mail-Composer button[title='More Actions']");
+    await contains(".dropdown-menu .dropdown-item", { count: 2 });
+    await contains(".dropdown-menu .dropdown-item:has(:text('Attach Files'))");
+    await contains(".dropdown-menu .dropdown-item:has(:text('Voice Message'))");
+});
+
 test("Cursor is at end of composer input on edit", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({

@@ -44,8 +44,6 @@ patch(Thread.prototype, {
                 author_guest_id: authorModelName === "mail.guest" ? this.store.self : undefined,
                 body: await generateEmojisOnHtml(body, { allowEmojiLoading: false }),
                 id: this.store.getNextTemporaryId(),
-                model: "discuss.channel",
-                res_id: this.id,
                 thread: this,
             });
             this.messages.push(temporaryMsg);
