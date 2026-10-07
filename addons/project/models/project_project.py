@@ -1049,6 +1049,8 @@ class ProjectProject(models.Model):
         if self.is_template:
             action['context'].update({'template_project': True})
             action['views'] = [(view_id, view_type) for view_id, view_type in action['views'] if view_type not in ('pivot', 'graph')]
+            if tasks_with_deadline := self.task_ids.filtered('date_deadline'):
+                action['context']['initialDate'] = min(tasks_with_deadline.mapped('date_deadline'))
         return action
 
     def action_view_all_rating(self):
