@@ -179,6 +179,45 @@ class TestMailThreadRottingMixin(MailTrackingDurationMixinCase):
                     'Items that are not done, won, or in a disabled rotting stage are not rotting',
                 )
 
+    def test_resource_rotting_stage_change_not_saved(self):
+        with self.mock_datetime_and_now(datetime(2025, 1, 1)):
+            item = self.env['mail.test.rotting.resource'].create({
+                'name': 'item',
+                'stage_id': self.stage_new.id,
+            })
+            item.flush_recordset(['date_last_stage_update'])
+
+        with self.mock_datetime_and_now(datetime(2025, 1, 12)):
+            self.assertTrue(item.is_rotting)
+            moved_item = item.new({
+                'stage_id': self.stage_qualification.id,
+                'date_last_stage_update': item.date_last_stage_update,
+            }, origin=item)
+            self.assertFalse(
+                moved_item.is_rotting,
+                'An item moved to another stage should stop rotting, even before being saved',
+            )
+
+    def test_resource_not_rotting_stage_change_not_saved(self):
+        self.stage_new.rotting_threshold_days = 0
+        with self.mock_datetime_and_now(datetime(2025, 1, 1)):
+            item = self.env['mail.test.rotting.resource'].create({
+                'name': 'item',
+                'stage_id': self.stage_new.id,
+            })
+            item.flush_recordset(['date_last_stage_update'])
+
+        with self.mock_datetime_and_now(datetime(2025, 1, 12)):
+            self.assertFalse(item.is_rotting)
+            moved_item = item.new({
+                'stage_id': self.stage_qualification.id,
+                'date_last_stage_update': item.date_last_stage_update,
+            }, origin=item)
+            self.assertFalse(
+                moved_item.is_rotting,
+                'An item moved to another stage should not start rotting before being saved',
+            )
+
 
 @tagged('mail_thread', 'mail_blacklist')
 class TestMailThread(MailCommon, TestRecipients):
