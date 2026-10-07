@@ -15,26 +15,26 @@ registry.category("web_tour.tours").add('website_sale.archived_variant_multi', {
     steps: () => [
         {
             content: 'click on the first variant',
-            trigger: 'input[data-attribute-name="Size"][data-value-name="Small"]',
+            trigger: 'li.o_variant_pills label:contains("Small")',
             run: "click",
         },
         {
             content: "click on the second variant",
-            trigger: 'input[data-attribute-name="Color"][data-value-name="Black"]',
+            trigger: 'li.o_variant_pills label:contains("Black")',
             run: "click",
         },
         {
             content: "check that brand b is not available (but clickable)",
-            trigger: '.css_not_available input.css_not_available:not([disabled])',
+            trigger: 'li.o_variant_pills.css_not_available label:not([disabled])',
         },
         {
             content: "change second variant to make brand b available",
-            trigger: 'input[data-attribute-name="Color"][data-value-name="White"]',
+            trigger: 'li.o_variant_pills label:contains("White")',
             run: "click",
         },
         {
             content: "check if brand b is available again",
-            trigger: 'input[data-value-name="Brand B"]:not(:has(.css_not_available))',
+            trigger: 'li.o_variant_pills label:contains("Brand B"):not(:has(.css_not_available))',
             run: "click",
         },
     ]

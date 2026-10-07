@@ -15,6 +15,15 @@ export function selectedRadio(name) {
         },
     ];
 }
+export function pickPills(name) {
+    return [
+        {
+            content: `picking pills attribute with name ${name}`,
+            trigger: `.modal .attribute-name-cell:contains('${name}') label`,
+            run: "click",
+        },
+    ];
+}
 export function pickMulti(name) {
     return [
         {
