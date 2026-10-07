@@ -332,17 +332,28 @@ export class FormOptionPlugin extends Plugin {
     async prepareFormModel(el, activeForm) {
         const formEl = el.closest("form");
         const formKey = activeForm?.website_form_key;
+<<<<<<< d006337388ad287a2cbeacaabda95694c4c1ee31
         const formInfo = this.getRegistryFormInfo(formKey);
         if (formInfo.formFields) {
             const formatInfo = getDefaultFormat(el);
+||||||| 32c8687979f6144fd4ec6e0bb8d4beeb7c3760c5
+        const formInfo = registry.category("website.form_editor_actions").get(formKey, null);
+        if (formInfo) {
+            const formatInfo = getDefaultFormat(el);
+=======
+        const formInfo = registry.category("website.form_editor_actions").get(formKey, null);
+        if (formInfo) {
+>>>>>>> 0c22ffdc0f0b5b291049c13cc9f03100286c72fa
             await Promise.all(
-                formInfo.formFields.map((field) => {
-                    field.formatInfo = formatInfo;
-                    return this.fetchFieldRecords(field, formEl);
-                })
+                formInfo.formFields.map((field) => this.fetchFieldRecords(field, formEl))
             );
+<<<<<<< d006337388ad287a2cbeacaabda95694c4c1ee31
             await this.fetchFormInfoFields(formInfo);
             return formInfo;
+||||||| 32c8687979f6144fd4ec6e0bb8d4beeb7c3760c5
+            await this.fetchFormInfoFields(formInfo);
+=======
+>>>>>>> 0c22ffdc0f0b5b291049c13cc9f03100286c72fa
         }
         await this.fetchFormInfoFields(formInfo);
         return formInfo;
@@ -386,7 +397,7 @@ export class FormOptionPlugin extends Plugin {
     async applyFormModel(el, activeForm, modelId, formInfo) {
         let oldFormInfo;
         if (modelId) {
-            const oldFormKey = activeForm.website_form_key;
+            const oldFormKey = activeForm?.website_form_key;
             if (oldFormKey) {
                 oldFormInfo = this.getRegistryFormInfo(oldFormKey);
             }
@@ -461,15 +472,6 @@ export class FormOptionPlugin extends Plugin {
             }
         }
         await Promise.all(promises);
-    }
-    /**
-     * Ensures formInfo fields are fetched.
-     */
-    async fetchFormInfoFields(formInfo) {
-        if (formInfo.fields) {
-            const proms = formInfo.fields.map((field) => this.fetchFieldRecords(field));
-            await Promise.all(proms);
-        }
     }
     async fetchAuthorizedFields(formEl) {
         const { cacheKey, model, propertyOrigins } = getFormCacheKey(formEl);
@@ -1049,7 +1051,7 @@ export class SelectAction extends BuilderAction {
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
         const targetModelName = getModelName(el);
         const activeForm = models.find((m) => m.model === targetModelName);
-        return parseInt(modelId) === activeForm.id;
+        return parseInt(modelId) === activeForm?.id;
     }
 }
 // Select the value of a field (hidden) that will be used on the model as a preset.
@@ -1057,6 +1059,7 @@ export class SelectAction extends BuilderAction {
 export class AddActionFieldAction extends BuilderAction {
     static id = "addActionField";
     static dependencies = ["websiteFormOption"];
+    loadOnClean = true;
     async load({ editingElement: el }) {
         return this.dependencies.websiteFormOption.fetchAuthorizedFields(el);
     }
@@ -1070,8 +1073,8 @@ export class AddActionFieldAction extends BuilderAction {
             }
         }
         const fieldName = params.fieldName;
-        if (params.isSelect) {
-            value = parseInt(value);
+        if (value && params.isSelect) {
+            value = JSON.parse(value).id;
         }
         this.dependencies.websiteFormOption.addHiddenField(el, value, fieldName);
     }
@@ -1084,11 +1087,10 @@ export class AddActionFieldAction extends BuilderAction {
         if (dataForValue) {
             return value || dataForValue;
         }
-        if (value) {
-            return value;
-        } else {
-            return params.isSelect ? "0" : "";
+        if (!value) {
+            return "";
         }
+        return params.isSelect ? JSON.stringify({ id: parseInt(value) }) : value;
     }
     isApplied({ editingElement, params, value }) {
         const currentValue = this.getValue({
@@ -1096,6 +1098,9 @@ export class AddActionFieldAction extends BuilderAction {
             params,
         });
         return currentValue === value;
+    }
+    clean(context) {
+        this.apply(context);
     }
 }
 export class PromptSaveRedirectAction extends BuilderAction {
