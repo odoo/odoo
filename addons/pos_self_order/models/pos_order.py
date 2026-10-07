@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import math
+from itertools import zip_longest
 
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, LockError
@@ -411,6 +412,9 @@ class PosOrder(models.Model):
             return
 
         service_fee_product = preset.service_fee_product_id
+        existing_service_fee_lines = self.lines.filtered(
+            lambda line: line.product_id == service_fee_product,
+        )
         applicable_lines = self.lines.filtered(
             lambda line: line.product_id != service_fee_product
             and line.product_id != self.config_id.tip_product_id
@@ -418,6 +422,7 @@ class PosOrder(models.Model):
         )
 
         if not applicable_lines:
+            existing_service_fee_lines.unlink()
             return
 
         # Build base lines from applicable order lines to derive the correct taxes
@@ -435,10 +440,10 @@ class PosOrder(models.Model):
         if preset.service_fee_type == 'percent':
             amount *= 100
 
-        # Group base lines individually (line by line) so each produces its own
+        # Group base lines by tax so each tax group produces its own
         # service fee contribution with the correct tax breakdown
         def grouping_function(base_line):
-            return {'line_id': base_line['id']}
+            return {'product_id': service_fee_product}
 
         service_fee_base_lines = self.env['account.tax']._reduce_base_lines_to_target_amount(
             base_lines=base_lines,
@@ -448,25 +453,25 @@ class PosOrder(models.Model):
             grouping_function=grouping_function,
         )
 
-        # Update existing service fee lines: each gets the price_unit
-        # and tax_ids from its corresponding reduced base line
-        existing_service_fee_lines = self.lines.filtered(
-            lambda line: line.product_id == service_fee_product,
-        )
-        for service_fee_line, bl in zip(existing_service_fee_lines, service_fee_base_lines):
-            tax_ids = self.env['account.tax']
-            for tax_data in bl['tax_details']['taxes_data']:
-                tax_ids |= tax_data['tax']
-            tax_ids_after_fp = self.fiscal_position_id.map_tax(tax_ids)
-            taxes = tax_ids_after_fp.compute_all(
-                bl['price_unit'], self.currency_id, 1,
-                product=service_fee_product,
-                partner=self.partner_id,
-            )
+        surplus_lines = self.env['pos.order.line']
+        for bl, service_fee_line in zip_longest(service_fee_base_lines, existing_service_fee_lines):
+            if not bl:
+                surplus_lines |= service_fee_line
+                continue
+            if not service_fee_line:
+                service_fee_line = self.env['pos.order.line'].sudo().create({
+                    'order_id': self.id,
+                    'product_id': service_fee_product.id,
+                    'price_subtotal': 0.0,
+                    'price_subtotal_incl': 0.0,
+                    'full_product_name': service_fee_product.name,
+                })
+            service_fee_line.qty = 1
+            service_fee_line.price_type = 'automatic'
             service_fee_line.price_unit = bl['price_unit']
-            service_fee_line.tax_ids = tax_ids
-            service_fee_line.price_subtotal = taxes['total_excluded']
-            service_fee_line.price_subtotal_incl = taxes['total_included']
+            service_fee_line.tax_ids = bl['tax_ids']
+            self._compute_line_subtotals(service_fee_line)
+        surplus_lines.unlink()
 
     def _compute_combo_price(self, parent_line):
         """
