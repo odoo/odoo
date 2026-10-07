@@ -275,6 +275,19 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
+    def _get_amount_precision(self, currency, **kwargs):
+        """Override of `payment` to return the amount precision for Stripe.
+
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :return: The number of decimal places.
+        :rtype: int
+        """
+        precision = super()._get_amount_precision(currency, **kwargs)
+        if self.code != "stripe":
+            return precision
+
+        return const.CURRENCY_DECIMALS.get(currency.name, precision)
+
     def _stripe_acss_get_client_secret(self, values):
         """Return the `client_secret` of a Intent, created solely to satisfy ACSS's need for
         one upfront.
@@ -347,14 +360,7 @@ class PaymentProvider(models.Model):
         inline_form_values = {
             "publishable_key": self._stripe_get_publishable_key(),
             "currency_name": currency_name,
-            "minor_amount": (
-                amount
-                and payment_utils.to_minor_currency_units(
-                    amount,
-                    currency,
-                    arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(currency.name),
-                )
-            ),
+            "minor_amount": amount and self._to_minor_currency_units(amount, currency),
             "capture_method": "manual" if self.capture_manually else "automatic",
             "billing_details": {
                 "name": partner.name or "",
