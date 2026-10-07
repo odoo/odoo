@@ -1615,9 +1615,13 @@ class AccountEdiCommon(models.AbstractModel):
         AccountTax = self.env['account.tax']
         invoice = collected_values['invoice']
         tax_total_values = collected_values['tax_total_values']
-        tolerance = 0.03
         total_tax_amount = sum(x['tax_amount_currency'] for x in tax_total_values.values())
         currency = collected_values['currency_values']['currency']
+        number_of_lines = len(collected_values['lines_collected_values'])
+        tolerance = min(
+            1.0,  # worst case possible
+            max(0.03, currency.rounding * number_of_lines / 2),
+        )
 
         tax_to_taxes = {}
         taxes_to_tax_amount_currency = {}
