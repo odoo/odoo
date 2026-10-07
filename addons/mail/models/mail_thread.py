@@ -5068,15 +5068,6 @@ class MailThread(models.AbstractModel):
 
         return True
 
-    @api.readonly
-    def message_get_followers(self, after=None, limit=100, filter_recipients=False):
-        return Store().add(
-            self,
-            "_store_message_followers_fields",
-            fields_params={"after": after, "limit": limit, "filter_recipients": filter_recipients},
-            as_thread=True,
-        )
-
     def _store_message_followers_fields(
         self,
         res: Store.FieldList,
