@@ -177,6 +177,8 @@
                         <DesgloseIVA>
                             <DetalleIVA t-foreach="desglose['S2']" t-as="detalle">
                                 <BaseImponible t-out="format_float(detalle['BaseImponible'])"/>
+                                <TipoImpositivo t-out="format_float(detalle['TipoImpositivo'])"/>
+                                <CuotaImpuesto t-out="format_float(detalle['CuotaRepercutida'])"/>
                             </DetalleIVA>
                         </DesgloseIVA>
                     </DetalleNoExenta>
