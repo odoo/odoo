@@ -43,8 +43,16 @@ export class NoteButton extends Component {
         if (savedQuantity > 0 && qtyToAdd > 0) {
             await this.pos.addLineToCurrentOrder({
                 product_tmpl_id: selectedOrderline.product_id.product_tmpl_id,
+<<<<<<< 03da34ff9ac88d5e05ecf12a62da645afcf8f730
                 qty: qtyToAdd,
                 note: payload,
+||||||| 7e8e1b64328d566d09e102cad5abca63479b6531
+                qty: quantity_with_note,
+                note: payload,
+=======
+                qty: quantity_with_note,
+                [this.type === "internal" ? "note" : "customer_note"]: payload,
+>>>>>>> c9fb6449fa1ea2b965d9f88f881c27516d5dfc3a
             });
             selectedOrderline.qty = savedQuantity;
             for (const line of selectedOrderline.combo_line_ids) {

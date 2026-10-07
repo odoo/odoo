@@ -2031,7 +2031,29 @@ export class PosStore extends WithLazyGetterTrap {
             this.syncingOrders.add(order.uuid);
             if (this.config.printerCategories.size && !opts.byPassPrint) {
                 try {
+<<<<<<< 03da34ff9ac88d5e05ecf12a62da645afcf8f730
                     isPrinted = await this.ticketPrinter.printOrderChanges({ order, opts });
+||||||| 7e8e1b64328d566d09e102cad5abca63479b6531
+                    isPrinted = await this.ticketPrinter.printOrderChanges({ order, opts });
+                    if (isPrinted) {
+                        order.updateLastOrderChange();
+                    }
+=======
+                    isPrinted = await this.ticketPrinter.printOrderChanges({
+                        order,
+                        opts,
+                        onRetryPrinted: () => {
+                            // The changes printed with the "Retry" button are sent as well
+                            if (this.models["pos.order"].getBy("uuid", order.uuid)) {
+                                order.updateLastOrderChange();
+                                this.syncAllOrders({ orders: [order] });
+                            }
+                        },
+                    });
+                    if (isPrinted) {
+                        order.updateLastOrderChange();
+                    }
+>>>>>>> c9fb6449fa1ea2b965d9f88f881c27516d5dfc3a
                 } catch (e) {
                     logPosMessage(
                         "Store",
