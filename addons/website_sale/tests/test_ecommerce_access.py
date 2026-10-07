@@ -113,3 +113,45 @@ class TestEcommerceAccess(HttpCaseWithUserDemo, WebsiteSaleCommon):
         response = self.url_open(f"/shop/{product_slug}", allow_redirects=True)
         self.assertEqual(response.status_code, 200)
         self.assertURLEqual(response.url, f"/web/login?redirect=/shop/{product_slug}")
+
+    def test_ecommerce_category_visibility_with_search(self):
+        """
+        Ensures hidden categories and non matching ones are not returned on non-matching searches
+        """
+        parent_category = self.env['product.public.category'].create({
+            'name': 'Visible Parent Cat',
+        })
+        self.env['product.public.category'].create({
+            'name': 'Hidden Child Cat',
+            'parent_id': parent_category.id,
+        })
+
+        self.env['product.template'].create({
+            'name': 'Targeted Search Product',
+            'is_published': True,
+            'public_categ_ids': [(4, parent_category.id)],
+        })
+
+        self.env['product.template'].create({
+            'name': 'Unrelated Product',
+            'is_published': True,
+        })
+
+        response_plain = self.url_open('/shop')
+        self.assertEqual(response_plain.status_code, 200)
+        self.assertIn('Visible Parent Cat', response_plain.text,
+                      "Parent category with a published product should be visible.")
+        self.assertNotIn('Hidden Child Cat', response_plain.text,
+                         "Child category without published products should NOT be visible.")
+
+        response_search = self.url_open('/shop?search=Targeted')
+        self.assertEqual(response_search.status_code, 200)
+        self.assertIn('Visible Parent Cat', response_search.text,
+            "Categories containing matching products should remain visible during search.")
+        self.assertNotIn('Hidden Child Cat', response_search.text,
+                         "Hidden categories must remain hidden during search.")
+
+        response_no_match = self.url_open('/shop?search=Unrelated')
+        self.assertEqual(response_no_match.status_code, 200)
+        self.assertNotIn('Visible Parent Cat', response_no_match.text,
+                         "Category should not be shown if search doesn't match its products.")

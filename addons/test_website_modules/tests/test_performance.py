@@ -395,3 +395,29 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
 
         self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
         self._check_url_hot_query('/shop', query_count, queries)
+
+    def test_perf_sql_queries_categories_shop(self):
+        # create an unpublished child category
+        prodless_categ = self.env['product.public.category'].create([{
+            'name': 'Level 2.b',
+        }])
+        prodless_categ.parent_id = self.templateC.public_categ_ids[0].id
+
+        # set the categories as a sidebar instead of a top bar
+        self.env.ref('website_sale.products_categories_top').active = False
+        self.env.ref('website_sale.products_categories').active = True
+
+        query_count, queries = self._get_queries_shop()
+        query_count += 3
+        queries['account_tax'] += 1
+        queries['account_account_tag'] += 1
+        queries['product_public_category'] += 2
+        if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
+            query_count += 1
+            queries['uom_uom'] += 1
+
+        if self._has_demo_data():
+            query_count += 1
+            queries['product_template_attribute_value'] += 2
+
+        self._check_url_hot_query('/shop', query_count, queries)
