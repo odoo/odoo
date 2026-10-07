@@ -170,3 +170,29 @@ class TestDDT(TestSaleCommon):
             {'l10n_it_ddt_number': so.picking_ids[-1].l10n_it_ddt_number},
             {'l10n_it_ddt_number': so.picking_ids[-2].l10n_it_ddt_number},
         ])
+
+    def test_ddt_in_invoice_pdf(self):
+        """ The DDT numbers of the deliveries linked to the invoice should be printed on the invoice PDF. """
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_delivery_no'].id,
+                    'product_uom_qty': 2,
+                }),
+            ],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_ids.write({'quantity': 2, 'picked': True})
+        picking.button_validate()
+        self.assertTrue(picking.l10n_it_ddt_number, 'The outgoing picking should have a DDT number')
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+        self.assertFalse(invoice.l10n_it_ddt_id)
+        self.assertEqual(invoice.l10n_it_ddt_ids, picking)
+
+        html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice_with_payments', invoice.ids)[0]
+        self.assertIn(picking.l10n_it_ddt_number, str(html), 'The DDT number of the delivery should be printed on the invoice')
