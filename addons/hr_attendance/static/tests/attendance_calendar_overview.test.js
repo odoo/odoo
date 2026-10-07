@@ -1,7 +1,7 @@
 import { animationFrame, expect, test } from "@odoo/hoot";
 import { Component, signal, xml } from "@odoo/owl";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
-import { defineModels, models, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import { assignTestEnv, defineModels, models, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 import { AttendanceCalendarOverview } from "@hr_attendance/components/attendance_calendar/attendance_calendar_overview";
 
 class HrEmployee extends models.ServerModel {
@@ -34,11 +34,10 @@ test("worked hours display updates when dateRange prop changes", async () => {
         }
     }
 
-    await mountWithCleanup(Container, {
-        componentEnv: {
-            searchModel: { context: { active_id: 1 } },
-        },
+    assignTestEnv({
+        searchModel: { context: { active_id: 1 } },
     });
+    await mountWithCleanup(Container);
     await animationFrame();
     expect.verifySteps(["load:2024-01-01"]);
     const [durationEl1] = document.querySelectorAll(".o_attendance_entry_duration");
