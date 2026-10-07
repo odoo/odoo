@@ -19,7 +19,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'name': 'moon calendar',
         })
 
-        cls.company = cls.env['res.company'].create({
+        cls.company = cls.add_class_company('base.test_company', {
             'name': 'super company',
             'resource_calendar_id': cls.default_calendar.id,
         })

@@ -12,7 +12,7 @@ class TestRecruitment(MailCase, TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company = cls.env['res.company'].create({
+        cls.company = cls.add_class_company('base.test_company_template', {
             'name': 'Company Test',
             'country_id': cls.env.ref('base.us').id,
         })

@@ -28,7 +28,7 @@ class TestHrTimeRulePerformance(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company = cls.env['res.company'].create({'name': 'Flower Corporation', 'tz': 'Europe/Brussels'})
+        cls.company = cls.add_class_company('base.test_company', {'name': 'Flower Corporation', 'tz': 'Europe/Brussels'})
         cls.env.user.company_id = cls.company
 
         cls.calendar_38h = cls.env['resource.calendar'].create({

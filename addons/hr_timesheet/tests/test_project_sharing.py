@@ -12,7 +12,7 @@ class TestProjectSharingHrTimesheet(TestProjectSharingUi):
         (no company set) shared with them, even when a timesheet entry on that
         project was recorded under a different company (Company 2).
         """
-        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        company_2 = self.add_company('base.test_company')
         employee = self.env['hr.employee'].create({
             'name': 'Employee',
             'company_id': company_2.id,

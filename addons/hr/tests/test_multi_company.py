@@ -15,8 +15,8 @@ class TestMultiCompanyReport(TestHrCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_1 = cls.env['res.company'].create({'name': 'Opoo'})
-        cls.company_2 = cls.env['res.company'].create({'name': 'Otoo'})
+        cls.company_1 = cls.add_class_company('base.test_company', {'name': 'Opoo'})
+        cls.company_2 = cls.add_class_company('base.test_company_with_branch', {'name': 'Otoo'})
         cls.employees = cls.env['hr.employee'].create([
             {'name': 'Bidule', 'company_id': cls.company_1.id},
             {'name': 'Machin', 'company_id': cls.company_2.id},
@@ -50,8 +50,8 @@ class TestMultiCompany(TestHrCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company_a = cls.env['res.company'].create({'name': 'Company A'})
-        cls.company_b = cls.env['res.company'].create({'name': 'Company B'})
+        cls.company_a = cls.add_class_company('base.test_company', {'name': 'Company A'})
+        cls.company_b = cls.add_class_company('base.test_company_with_branch', {'name': 'Company B'})
 
         cls.user_a = mail_new_test_user(cls.env, login='user_a', company_id=cls.company_a.id, company_ids=(cls.company_a | cls.company_b).ids)
         cls.user_b = mail_new_test_user(cls.env, login='user_b', company_id=cls.company_b.id)
@@ -88,8 +88,8 @@ class TestMultiCompany(TestHrCommon):
         different company. Otherwise bugs may appear when accessing
         company-limited fields of the employee (e.g.: their resource)
         """
-        current_company = self.env['res.company'].create({'name': 'Scenic company'})
-        other_company = self.env['res.company'].create({'name': 'Cringe company'})
+        current_company = self.add_company('base.test_company_template', {'name': 'Scenic company'})
+        other_company = self.add_company('base.test_company_template2', {'name': 'Cringe company'})
 
         manager_user = mail_new_test_user(
             self.env, groups="hr.group_hr_user", login='manager_user',

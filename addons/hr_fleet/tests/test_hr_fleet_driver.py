@@ -66,7 +66,7 @@ class TestHrFleetDriver(common.TransactionCase):
         self.assertEqual(self.car2.driver_id.id, False)
 
     def test_driver_employee_multi_company(self):
-        other_company = self.env['res.company'].create({
+        other_company = self.add_company('base.test_company', {
             'name': 'Other Company'
         })
         test_employee2 = self.env['hr.employee'].with_company(other_company).create({

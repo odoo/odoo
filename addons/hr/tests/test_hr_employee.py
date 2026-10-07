@@ -930,8 +930,8 @@ class TestVersionCron(TransactionCase):
         super().setUpClass()
 
         # Will be used for default employee version address (contains phone)
-        cls.env.user.company_id = cls.env['res.company'].create(
-            {'name': 'Pokémon Center', 'phone': '+32404040404'}
+        cls.env.user.company_id = cls.add_class_company(
+            'base.test_company', {'name': 'Pokémon Center', 'phone': '+32404040404'}
         )
 
         # Employee has a default version that will be overridden

@@ -12,7 +12,7 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super(TestHrHolidaysAccessRightsCommon, cls).setUpClass()
-        cls.company_2 = cls.env['res.company'].create({'name': 'Test company 2'})
+        cls.company_2 = cls.add_class_company('base.test_company_with_branch', {'name': 'Test company 2'})
 
     def test_unrelated_public_leave(self):
         public_leave = self.env['resource.calendar.leaves'].create({

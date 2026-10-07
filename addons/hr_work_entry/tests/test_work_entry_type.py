@@ -162,7 +162,7 @@ class TestWorkEntryType(TransactionCase):
     def test_get_default_attendance_ids_transfers_work_entry_type(self):
         """ Calendar copies built from a company's calendar must carry over the
         attendances' work_entry_type_id, not just their hours. """
-        company = self.env['res.company'].create({'name': 'Test Co'})
+        company = self.add_company('base.test_company')
         work_entry_type = self.env['hr.work.entry.type'].create({
             'code': 'TESTATT',
             'name': 'Test Attendance',

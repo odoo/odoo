@@ -15,7 +15,7 @@ class TestCompanyLeave(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestCompanyLeave, cls).setUpClass()
-        cls.company = cls.env['res.company'].create({'name': 'A company'})
+        cls.company = cls.add_class_company('base.test_company', {'name': 'A company'})
         cls.company.tz = "Europe/Brussels"
         cls.company.resource_calendar_id = cls.env['resource.calendar'].create({
             'attendance_ids': [

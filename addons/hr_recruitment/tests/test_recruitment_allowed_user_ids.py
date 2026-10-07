@@ -9,8 +9,8 @@ class TestRecruitmentAllowedRecruiters(TransactionCase):
     def setUp(self):
         super().setUp()
 
-        self.company_a = self.env['res.company'].create({'name': 'Company A'})
-        self.company_b = self.env['res.company'].create({'name': 'Company BBS'})
+        self.company_a = self.add_company('base.test_company', {'name': 'Company A'})
+        self.company_b = self.add_company('base.test_company_template', {'name': 'Company BBS'})
 
         # Internal user + employee in company A
         self.user_a = self.env['res.users'].create({

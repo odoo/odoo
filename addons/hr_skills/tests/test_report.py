@@ -11,7 +11,7 @@ class SkillsTestReport(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.partner = cls.env["res.partner"].create({"name": "Partner Test"})
-        cls.company_A = cls.env["res.company"].create({"name": "company_A"})
+        cls.company_A = cls.add_class_company('base.test_company', {"name": "company_A"})
         cls.employee = cls.env["hr.employee"].create(
             {
                 "name": "employee_A",
