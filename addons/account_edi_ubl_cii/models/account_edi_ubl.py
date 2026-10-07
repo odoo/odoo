@@ -1049,7 +1049,7 @@ class AccountEdiUBL(models.AbstractModel):
             ),
         )
         for grouping_key, values in aggregated_values.items():
-            if not grouping_key:
+            if not grouping_key or (isinstance(grouping_key, dict) and grouping_key.get('is_allowance_charge')):
                 continue
 
             classified_tax_category_nodes.append(self._ubl_get_line_item_node_classified_tax_category_node(vals, {
@@ -2099,7 +2099,7 @@ class AccountEdiUBL(models.AbstractModel):
             )
             values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
             for grouping_key, values in values_per_grouping_key.items():
-                if not grouping_key:
+                if not grouping_key or (isinstance(grouping_key, dict) and grouping_key.get('is_allowance_charge')):
                     continue
 
                 if grouping_key['is_withholding']:
@@ -2127,7 +2127,7 @@ class AccountEdiUBL(models.AbstractModel):
             )
             values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
             for grouping_key, values in values_per_grouping_key.items():
-                if not grouping_key:
+                if not grouping_key or any(key.get('is_allowance_charge') for key in grouping_key.values() if isinstance(key, dict)):
                     continue
                 tax_total_key = grouping_key['tax_total_key']
                 tax_subtotal_key = grouping_key['tax_subtotal_key']
@@ -2157,7 +2157,7 @@ class AccountEdiUBL(models.AbstractModel):
             )
             values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
             for grouping_key, values in values_per_grouping_key.items():
-                if not grouping_key:
+                if not grouping_key or any(key.get('is_allowance_charge') for key in grouping_key.values() if isinstance(key, dict)):
                     continue
                 tax_total_key = grouping_key['tax_total_key']
                 tax_subtotal_key = grouping_key['tax_subtotal_key']
@@ -2827,10 +2827,15 @@ class AccountEdiUBL(models.AbstractModel):
         if name:
             collected_values['to_write']['name'] = name
 
+    def _import_ubl_create_allowance_tax(self, allowance_charge_elem, company_id):
+        """To be overridden by other modules to deal with taxes defined as allowances charges."""
+        return False
+
     def _import_ubl_invoice_line_add_allowance_charges_values(self, collected_values):
         line_tree = collected_values['line_tree']
         allowances = collected_values['allowances'] = []
         charges = collected_values['charges'] = []
+        collected_values['charges_amount'] = 0
         for allowance_charge_elem in line_tree.iterfind('./{*}AllowanceCharge'):
             charge_indicator = allowance_charge_elem.findtext('.//{*}ChargeIndicator')
             amount_str = allowance_charge_elem.findtext('.//{*}Amount')
@@ -2841,6 +2846,11 @@ class AccountEdiUBL(models.AbstractModel):
             if amount_str:
                 amount = float(amount_str)
             else:
+                continue
+
+            if reason_code == 'ZZZ' and self._import_ubl_create_allowance_tax(allowance_charge_elem, collected_values['company'].id):
+                # Special case where the allowance charge is included in the taxable amount.
+                collected_values['charges_amount'] += amount
                 continue
 
             allowance_charge_values = {
@@ -3261,7 +3271,8 @@ class AccountEdiUBL(models.AbstractModel):
         payable_rounding_amount = file_document_sign * float(payable_rounding_amount_str or 0.0)
         expected_untaxed_amount = tax_exclusive_amount + payable_rounding_amount
         invoice = collected_values['invoice']
-        difference = currency.round(expected_untaxed_amount - invoice.amount_untaxed)
+        charges_amount = sum(line.get('charges_amount', 0) for line in collected_values['lines_collected_values'])
+        difference = currency.round(expected_untaxed_amount - invoice.amount_untaxed - charges_amount)
         for line_collected_values in collected_values['lines_collected_values']:
             for charge in line_collected_values['charges']:
                 attempt_tax_values = charge.get('attempt_tax_values')
