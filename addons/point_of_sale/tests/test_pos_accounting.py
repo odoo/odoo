@@ -266,6 +266,32 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertEqual(cash_details['amount'], 10.6)
         self.assertEqual(cash_details['payment_amount'], 0)
 
+    def test_closing_data_amounts_are_rounded(self):
+        """ The sum of the payment amounts must not carry float noise
+        (e.g. 25.810000000000002), otherwise the closing popup shows a
+        difference while the counted amount matches the expected one.
+        """
+        self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 3
+        products = self.env['product.product'].create([{
+            'name': f'Product {price}',
+            'list_price': price,
+            'taxes_id': False,
+            'available_in_pos': True,
+        } for price in [12.345, 4.987, 8.474]])
+        session = self.open_pos_session()
+        for pm in [self.bank_pm, self.cash_pm]:
+            for product, amount in zip(products, [12.35, 4.99, 8.47]):
+                self.create_pos_order(
+                    payment_method=[[pm, {'amount': amount}]],
+                    products=[[product, {}]],
+                )
+
+        closing_data = session.get_closing_control_data()
+        bank_details = next(pm for pm in closing_data['non_cash_payment_methods'] if pm['id'] == self.bank_pm.id)
+        self.assertEqual(bank_details['amount'], 25.81)
+        self.assertEqual(closing_data['default_cash_details']['amount'], 25.81)
+        self.assertEqual(closing_data['default_cash_details']['payment_amount'], 25.81)
+
     def test_invoiced_order_are_on_partner_receivable_account(self):
         session = self.open_pos_session()
         order = self.create_pos_order(
