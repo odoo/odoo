@@ -49,11 +49,11 @@ registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
             trigger: '#product_detail .o_add_wishlist_dyn:disabled',
         },
         {
-            trigger: "#product_detail label:contains(Aluminium) input",
+            trigger: "#product_detail label:contains(Aluminium)",
         },
         {
             content: "change variant",
-            trigger: 'label:contains(Aluminium) input',
+            trigger: 'label:contains(Aluminium)',
             run: "click",
         },
         {
