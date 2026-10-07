@@ -890,8 +890,7 @@ class MailActivity(models.Model):
             activity_domain.append(('res_id', 'in', DocModel._search(domain or [], offset, limit, DocModel._order) if is_filtered else []))
         all_activities = Activity.with_context(active_test=not fetch_done).search(
             activity_domain, order='date_done DESC, date_deadline ASC')
-        all_ongoing = all_activities.filtered('active')
-        all_completed = all_activities.filtered(lambda act: not act.active)
+        all_ongoing, all_completed = all_activities.partitioned('active')
 
         # 2. Get attachment of completed activities
         if all_completed:

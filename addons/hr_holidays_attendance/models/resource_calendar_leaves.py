@@ -13,8 +13,7 @@ class ResourceCalendarLeaves(models.Model):
         if not ph_leaves:
             return []
 
-        global_leaves = ph_leaves.filtered(lambda l: not l.calendar_id)
-        calendar_leaves = ph_leaves.filtered('calendar_id')
+        calendar_leaves, global_leaves = ph_leaves.partitioned('calendar_id')
 
         domains = []
         if global_leaves:
