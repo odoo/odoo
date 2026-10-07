@@ -25,7 +25,7 @@ patch(MockServer.prototype, {
                 ["id", "=", volumeSettingsRecord.partner_id],
             ]);
             return {
-                guest_id: relatedGuest ? { id: relatedGuest.id, name: relatedGuest.name } : false,
+                guest_id: relatedGuest ? { id: relatedGuest.id } : false,
                 id: volumeSettingsRecord.id,
                 partner_id: relatedPartner
                     ? { id: relatedPartner.id, name: relatedPartner.name }

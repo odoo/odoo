@@ -14,11 +14,9 @@ export class ResUsersSettingsVolumes extends models.ServerModel {
             const [relatedGuest] = MailGuest.browse(volumeSettingsRecord.guest_id);
             const [relatedPartner] = ResPartner.browse(volumeSettingsRecord.partner_id);
             return {
-                persona: {
-                    id: relatedPartner ? relatedPartner.id : relatedGuest.id,
-                    name: relatedPartner ? relatedPartner.name : relatedGuest.name,
-                    type: relatedPartner ? "partner" : "guest",
-                },
+                persona: relatedPartner
+                    ? { id: relatedPartner.id, name: relatedPartner.name, type: "partner" }
+                    : { id: relatedGuest.id, type: "guest" },
                 id: volumeSettingsRecord.id,
                 volume: volumeSettingsRecord.volume,
             };
