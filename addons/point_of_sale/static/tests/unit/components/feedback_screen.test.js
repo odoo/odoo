@@ -26,6 +26,29 @@ test("Total on receipt always incl with tax excluded", async () => {
     expect(".feedback-screen .amount-container .amount:only").toHaveText("$595.00");
 });
 
+test("Feedback total uses converted order amount, not payment amount", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const eur = store.models["res.currency"].get(125);
+    const payment = order.addPaymentline(store.config.payment_method_ids[0], {
+        currency: eur,
+    }).data;
+    payment.setAmount(3000, eur);
+
+    await mountWithCleanup(FeedbackScreen, {
+        props: { orderUuid: order.uuid },
+    });
+
+    const expectedAmount = store
+        .formatCurrency(
+            eur.convert(order.currency.convertToDefaultCurrency(order.totalDue)),
+            eur.id
+        )
+        .replace(/\u00a0/g, "");
+    expect(".feedback-screen .amount-container .amount:only").toHaveText(expectedAmount);
+    expect(payment.getAmount()).toBeGreaterThan(order.totalDue);
+});
+
 test("canEditPayment", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
