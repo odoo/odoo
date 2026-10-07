@@ -3,12 +3,9 @@
 from datetime import timedelta
 from unittest.mock import patch
 
-from psycopg2 import IntegrityError
-
 from odoo import Command, fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form, TransactionCase, tagged
-from odoo.tools import mute_logger
 
 
 @tagged("post_install", "-at_install")
@@ -65,12 +62,48 @@ class TestLoyalty(TransactionCase):
 
     def test_discount_product_unlink(self):
         # Test that we can not unlink discount line product id
-        with mute_logger("odoo.sql_db"), self.assertRaises(IntegrityError):
+        with self.assertRaises(UserError):
             self.program.reward_ids.discount_line_product_id.unlink()
 
+    def test_discount_rewards_of_different_programs_share_one_product(self):
+        """A discount reward carries its line with the generic product."""
+        other_program = self.env["loyalty.program"].create({
+            "name": "Other Program",
+            "program_type": "promotion",
+            "reward_ids": [Command.create({"reward_type": "discount", "discount": 25})],
+        })
+        self.assertEqual(
+            other_program.reward_ids.discount_line_product_id,
+            self.env.ref("loyalty.discount_product"),
+        )
+
+    def test_gift_card_reward_gets_a_product_of_its_own(self):
+        """A payment program owns its product, because its taxes apply to the reward line."""
+        programs = self.env["loyalty.program"].create([
+            {
+                "name": "Gift Cards %s" % index,
+                "program_type": "gift_card",
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount_mode": "per_point",
+                        "discount": 1,
+                        "discount_applicability": "order",
+                        "required_points": 1,
+                    })
+                ],
+            }
+            for index in (1, 2)
+        ])
+        self.assertEqual(
+            len(programs.reward_ids.discount_line_product_id),
+            2,
+            "Two gift card programs must not share one product",
+        )
+
     def test_discount_line_product_no_default_tax(self):
-        """The auto-created discount product should never pick up the company's default
-        sale tax, even if one is configured."""
+        """The generic discount product must never get the default sale tax of the company,
+        even if one is set."""
         default_tax = self.env["account.tax"].create({
             "name": "Test Default Sale Tax",
             "amount": 15,
@@ -337,31 +370,6 @@ class TestLoyalty(TransactionCase):
         past_date = fields.Date.today() - timedelta(days=1)
         with self.assertRaises(ValidationError):
             card.write({"expiration_date": past_date})
-
-    def test_discount_description_translation(self):
-        """A discount product's name field should automatically update for all languages for
-        which changes are made on the reward's description."""
-        self.env["res.lang"]._activate_lang("fr_FR")
-        program = self.env["loyalty.program"].create({
-            "name": "Test Program",
-            "reward_ids": [(0, 0, {})],
-        })
-        reward = (
-            self
-            .env["loyalty.reward"]
-            .with_context(lang="en_US")
-            .create({
-                "program_id": program.id,
-                "reward_type": "discount",
-                "description": "My Discount",
-            })
-        )
-        product = reward.discount_line_product_id
-        translations = {"en_US": "Test Discount EN", "fr_FR": "Test Discount FR"}
-        reward.update_field_translations("description", translations)
-        product.invalidate_recordset(["name"])
-        self.assertEqual(product.with_context(lang="en_US").name, "Test Discount EN")
-        self.assertEqual(product.with_context(lang="fr_FR").name, "Test Discount FR")
 
     def test_loyalty_program_reward_update(self):
         """Updating a reward from an already saved loyalty program should work."""
