@@ -37,6 +37,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_valuation_id': 'l10n_id_11300180',
                 'deferred_expense_account_id': 'l10n_id_11210040',
                 'deferred_revenue_account_id': 'l10n_id_28110030',
+                'account_bills_to_receive_id': 'l10n_id_25110120',
+                'account_billed_not_received_id': 'l10n_id_11210040',
+                'account_invoices_to_issue_id': 'l10n_id_11210050',
+                'account_invoiced_not_delivered_id': 'l10n_id_28110030',
             },
         }
 
