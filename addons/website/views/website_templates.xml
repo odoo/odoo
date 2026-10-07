@@ -171,8 +171,8 @@
             </t>
         </t>
         <t t-set="canonical_domain" t-value="website.get_base_url()"/>
-        <!-- no hreflang on non-canonical pages or if no alternate language -->
-        <t t-if="request.is_frontend_multilang and website._is_canonical_url() and len(frontend_languages) &gt; 1">
+        <!-- no hreflang on no-indexed page, non-canonical pages or if no alternate language -->
+        <t t-if="not no_index and request.is_frontend_multilang and website._is_canonical_url() and len(frontend_languages) &gt; 1">
             <t t-foreach="frontend_languages.values()" t-as="lg">
         <link rel="alternate" t-att-hreflang="lg.hreflang" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, canonical_domain=canonical_domain)"/>
             </t>
