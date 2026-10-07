@@ -1,5 +1,4 @@
 import {
-    click,
     contains as mailContains,
     defineMailModels,
     insertText,
@@ -10,7 +9,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, mockDate, test, waitFor, waitForNone } from "@odoo/hoot";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, contains, serverState } from "@web/../tests/web_test_helpers";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
@@ -27,7 +26,7 @@ test("can open DM from @username in command palette", async () => {
         ".o_command_palette_search input[placeholder='Search conversations']",
         "Mario"
     );
-    await click(".o_command.focused:has(:text('Mario'))");
+    await contains(".o_command.focused:has(:text('Mario')):count(1)").click();
     await waitFor(".o-mail-ChatWindow-displayName:text('Mario'):count(1)");
 });
 
@@ -58,7 +57,7 @@ test("can open channel from @channel_name in command palette", async () => {
     await waitFor(".o_command:eq(0):text('project'):count(1)");
     await waitFor(".o_command:eq(1):text('general'):count(1)");
     await waitFor(".o_command:eq(2):text('Mitchell Admin'):count(1)"); // self-conversation
-    await click(".o_command.focused:text('project')");
+    await contains(".o_command.focused:text('project'):count(1)").click();
     await waitFor(".o-mail-ChatWindow-displayName:text('project'):count(1)");
 });
 
@@ -98,7 +97,7 @@ test("Conversation mentions in the command palette with @", async () => {
     await mailContains(".o_command_palette .o_command_category", {
         contains: [[".o_command_name:text('Mitchell Admin')"]],
     });
-    await click(".o_command.focused");
+    await contains(".o_command.focused:count(1)").click();
     await waitFor(".o-mail-ChatWindow:has(:text('Mitchell Admin and Mario')):count(1)");
 });
 

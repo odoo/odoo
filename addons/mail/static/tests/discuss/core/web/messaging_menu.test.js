@@ -52,10 +52,10 @@ test("can make DM chat in mobile", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss();
-    await click("button:text('Chat')");
-    await click(".modal-title:text('New Chat')");
-    await click(".o-discuss-ChannelInvitation-selectable:text('Gandalf')");
-    await click("button:text('Create Chat'):enabled");
+    await contains("button:text('Chat'):count(1)").click();
+    await contains(".modal-title:text('New Chat'):count(1)").click();
+    await contains(".o-discuss-ChannelInvitation-selectable:text('Gandalf'):count(1)").click();
+    await contains("button:text('Create Chat'):enabled:count(1)").click();
     await waitFor(".o-mail-ChatWindow:text('Gandalf'):count(1)");
 });
 
@@ -111,8 +111,8 @@ test("deleted message should not show parent message reference and mentions", as
     await contains(
         ".o-mail-Message:has(.o-mail-Message-bubble.o-orange):contains('reply message') [title='Expand']"
     ).click();
-    await click(".o-mail-Message-moreMenu .o-dropdown-item:contains(Delete)");
-    await click(".o_dialog button:contains(Delete)");
+    await contains(".o-mail-Message-moreMenu .o-dropdown-item:contains(Delete):count(1)").click();
+    await contains(".o_dialog button:contains(Delete):count(1)").click();
     await waitFor(
         ".o-mail-Message:not(:has(.o-mail-Message-bubble.o-orange)):has(:text('This message has been removed')):count(1)"
     );
@@ -134,9 +134,11 @@ test("channel preview ignores transient message", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
-    await click(".o-mail-Composer button[title='Send']:enabled");
+    await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await waitFor(".o_mail_notification:text('You are alone in this channel.'):count(1)");
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(
+        ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages']):count(1)"
+    ).click();
     await waitFor(".o-mail-NotificationItem-text:text('Demo: test'):count(1)");
 });
 
@@ -177,11 +179,13 @@ test("channel preview ignores messages from the past", async () => {
     await waitFor(".o-mail-Message:count(30)");
     await waitFor(".o-mail-Message-content:has(:text('last message')):count(1)");
     await mailContains(".o-mail-Thread", { scroll: "bottom" });
-    await click(".o-mail-MessageInReply-content:has(:text('first message'))");
+    await contains(".o-mail-MessageInReply-content:has(:text('first message')):count(1)").click();
     await waitFor(".o-mail-Message:count(31)");
     await waitFor(".o-mail-Message-content:has(:text('first message')):count(1)");
     await waitForNone(".o-mail-Message-content:has(:text('last message'))");
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+    await contains(
+        ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages']):count(1)"
+    ).click();
     await waitFor(".o-mail-NotificationItem-text:text('You: last message'):count(1)");
     withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
@@ -348,7 +352,7 @@ test("clicking on a channel waits for the prefetch, up to a cap when it is slow"
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     freezeTime();
-    await click(".o-mail-NotificationItem:contains(General)");
+    await contains(".o-mail-NotificationItem:contains(General):count(1)").click();
     await advanceTime(PREFETCH_MAX_WAIT - 1);
     await mailContains(".o-mail-DiscussContent-threadName", { count: 0 });
     await advanceTime(1);

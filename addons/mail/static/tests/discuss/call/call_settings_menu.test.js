@@ -1,5 +1,4 @@
 import {
-    click,
     contains as mailContains,
     defineMailModels,
     editInput,
@@ -15,7 +14,7 @@ import { parseRawValue, toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, expect, keyDown, mockDate, test, waitFor, waitForNone } from "@odoo/hoot";
-import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 import { isBrowserChrome } from "@web/core/browser/feature_detection";
@@ -94,25 +93,29 @@ test("Renders the call settings", async () => {
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
     await waitFor(".o-discuss-CallSettings:count(1)");
     await waitFor("div[aria-label='Microphone']:count(1)");
     await waitFor("div[aria-label='Speakers']:count(1)");
     await waitFor(".o-mail-DeviceSelect-button:has(:text('Click to activate')):count(2)");
     rtc.microphonePermission = "granted";
     const browserDefaultLabel = isBrowserChrome() ? "Default" : "Browser Default";
-    await click(".o-mail-DeviceSelect-button[data-kind='audioinput']:has(:text('Default'))");
+    await contains(
+        ".o-mail-DeviceSelect-button[data-kind='audioinput']:has(:text('Default')):count(1)"
+    ).click();
     await waitFor(".o-dropdown-item:text('mockAudioDeviceLabel'):count(1)");
     await waitFor(`.o-dropdown-item:text(${browserDefaultLabel}):count(1)`);
     await waitFor("label[aria-label='Enable Push-to-talk']:count(1)");
     await waitFor("input[title='Voice detection sensitivity']:count(1)");
     await waitFor(".o-discuss-CallSettings button:text('Test'):count(1)");
-    await click("button[title='Video']");
+    await contains("button[title='Video']:count(1)").click();
     await waitFor("div[aria-label='Camera']:count(1)");
     await waitFor(".o-mail-DeviceSelect-button:has(:text('Click to activate')):count(1)");
     rtc.cameraPermission = "granted";
-    await click(".o-mail-DeviceSelect-button[data-kind='videoinput']:has(:text('Default'))");
+    await contains(
+        ".o-mail-DeviceSelect-button[data-kind='videoinput']:has(:text('Default')):count(1)"
+    ).click();
     await waitFor(".o-dropdown-item:text('mockVideoDeviceLabel'):count(1)");
     await waitFor(`.o-dropdown-item:text(${browserDefaultLabel}):count(1)`);
     await waitFor("label span:text('Auto-focus speaker'):count(1)");
@@ -127,14 +130,14 @@ test("activate push to talk", async () => {
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
     await waitFor("input[title='Voice detection sensitivity']:count(1)");
-    await click("label[aria-label='Enable Push-to-talk']");
+    await contains("label[aria-label='Enable Push-to-talk']:count(1)").click();
     await waitFor("input[title='Delay after releasing push-to-talk']:count(1)");
     await waitForNone("input[title='Voice detection sensitivity']");
     // ensure push to talk settings updates reflect in UI
-    await click("button[aria-label='Register new shortcut']");
+    await contains("button[aria-label='Register new shortcut']:count(1)").click();
     await keyDown("Ctrl+m");
     await waitFor("button[aria-label='Register new shortcut']:text('Ctrl+m'):count(1)");
     await waitFor(".o-discuss-CallSettings-voiceActiveDuration:text('200ms'):count(1)");
@@ -150,10 +153,10 @@ test("activate blur", async () => {
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await click("button[title='Video']");
-    await click("input[title='Blur video background']");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
+    await contains("button[title='Video']:count(1)").click();
+    await contains("input[title='Blur video background']:count(1)").click();
     await waitFor("div[title='Background blur intensity'] span:has(:text('Intensity')):count(1)");
     await waitFor("div[title='Edge blur intensity'] span:has(:text('Edge Softness')):count(1)");
 });
@@ -199,16 +202,16 @@ test("local storage for call settings", async () => {
     // testing load from local storage
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
     await waitFor("label[aria-label='Enable Push-to-talk']:count(1)");
     await editInput(document.body, "input[title='Voice detection sensitivity']", 0.3);
     await expect.waitForSteps([`${voiceActivationThresholdKey}: 0.3`]);
-    await click("button[title='Video']");
+    await contains("button[title='Video']:count(1)").click();
     await waitFor("input[title='Blur video background']:checked:count(1)");
     await waitFor("div[title='Background blur intensity']:has(:text('15%')):count(1)");
     await waitFor("div[title='Edge blur intensity']:has(:text('25%')):count(1)");
-    await click("input[title='Blur video background']");
+    await contains("input[title='Blur video background']:count(1)").click();
     expect(localStorage.getItem(useBlurLocalStorageKey)).toBe(null);
 });
 
@@ -220,35 +223,39 @@ test("Adjust view dialog: each layout option and the prioritize-video toggle per
     await start();
     const store = getService("mail.store");
     await openDiscuss(channelId);
-    await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
-    await click("button:text('Meeting')");
-    await click(".o-dropdown-item:text('Start Now')");
+    await contains(".o-mail-MessagingMenu-tab[data-id='meeting']:count(1)").click();
+    await contains("button:text('Meeting'):count(1)").click();
+    await contains(".o-dropdown-item:text('Start Now'):count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='change-layout']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='change-layout']:count(1)").click();
     await waitFor(".o-discuss-ChangeLayoutDialog:count(1)");
     await waitFor(".o-discuss-ChangeLayoutDialog-option:count(5)");
     // Each grid layout is persisted and reflected as the selected row.
-    await click(".o-discuss-ChangeLayoutDialog-option:contains('Tiled')");
+    await contains(".o-discuss-ChangeLayoutDialog-option:contains('Tiled'):count(1)").click();
     expect(store.settings.callLayout).toBe("tiled");
     await waitFor(".o-discuss-ChangeLayoutDialog-option.o-selected:contains('Tiled'):count(1)");
-    await click(".o-discuss-ChangeLayoutDialog-option:contains('Spotlight')");
+    await contains(".o-discuss-ChangeLayoutDialog-option:contains('Spotlight'):count(1)").click();
     expect(store.settings.callLayout).toBe("spotlight");
-    await click(".o-discuss-ChangeLayoutDialog-option:contains('Sidebar')");
+    await contains(".o-discuss-ChangeLayoutDialog-option:contains('Sidebar'):count(1)").click();
     expect(store.settings.callLayout).toBe("sidebar");
-    await click(".o-discuss-ChangeLayoutDialog-option:contains('Auto (dynamic)')");
+    await contains(
+        ".o-discuss-ChangeLayoutDialog-option:contains('Auto (dynamic)'):count(1)"
+    ).click();
     expect(store.settings.callLayout).toBe("auto");
     await waitFor(
         ".o-discuss-ChangeLayoutDialog-option.o-selected:contains('Auto (dynamic)'):count(1)"
     );
     // "Prioritize tiles with video" is only offered while the tiled layout is selected.
     await waitForNone(".o-discuss-ChangeLayoutDialog input[type='checkbox'][role='switch']");
-    await click(".o-discuss-ChangeLayoutDialog-option:contains('Tiled')");
+    await contains(".o-discuss-ChangeLayoutDialog-option:contains('Tiled'):count(1)").click();
     expect(store.settings.showOnlyVideo).toBe(false);
-    await click(".o-discuss-ChangeLayoutDialog input[type='checkbox'][role='switch']");
+    await contains(
+        ".o-discuss-ChangeLayoutDialog input[type='checkbox'][role='switch']:count(1)"
+    ).click();
     expect(store.settings.showOnlyVideo).toBe(true);
     // "Discuss" exits the fullscreen meeting view.
-    await click(".o-discuss-ChangeLayoutDialog-option:contains('Discuss')");
+    await contains(".o-discuss-ChangeLayoutDialog-option:contains('Discuss'):count(1)").click();
     await waitForNone(".o-mail-Meeting");
 });
 
@@ -280,11 +287,11 @@ test("Changing inputs in Call Settings should pre-ask for browser permission", a
     getService("discuss.rtc").microphonePermission = "granted";
     await openDiscuss(channelId);
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
     await waitFor(".o-discuss-CallSettings:count(1)");
-    await click(".o-mail-DeviceSelect-button[data-kind='audioinput']");
-    await click(".o-dropdown-item:text('mockAudioDeviceLabel2')");
+    await contains(".o-mail-DeviceSelect-button[data-kind='audioinput']:count(1)").click();
+    await contains(".o-dropdown-item:text('mockAudioDeviceLabel2'):count(1)").click();
     await waitFor(
         ".o-mail-DeviceSelect-button[data-kind='audioinput']:text('mockAudioDeviceLabel2'):count(1)"
     );

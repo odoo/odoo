@@ -5,7 +5,6 @@ import {
 import {
     SIZES,
     assertChatHub,
-    click,
     contains as mailContains,
     defineMailModels,
     insertText,
@@ -23,7 +22,7 @@ import { advanceTime, pointerDown, press, waitFor, waitForNone } from "@odoo/hoo
 import { mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
 import { location } from "@web/core/browser/browser";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { contains, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
 defineMailModels();
@@ -36,7 +35,7 @@ test("can leave channel in mobile", async () => {
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor(".o-mail-ChatWindow-moreActions:text('General'):count(1)");
-    await click(".o-mail-ChatWindow-moreActions:text('General')");
+    await contains(".o-mail-ChatWindow-moreActions:text('General'):count(1)").click();
     await waitFor(".o-dropdown-item:text('Leave Conversation'):count(1)");
 });
 
@@ -48,7 +47,7 @@ test("enter key should create a newline in composer", async () => {
     await insertText(".o-mail-Composer-input", "Test\n");
     await press("Enter");
     await insertText(".o-mail-Composer-input", "Other");
-    await click("[data-icon='send']");
+    await contains("[data-icon='send']:count(1)").click();
     await mailContains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
 });
 
@@ -74,14 +73,14 @@ test("Can edit message comment in chatter (mobile)", async () => {
     await waitFor(".o-mail-Message:has(:text('original message')):count(1)");
     await pointerDown(".o-mail-Message", { contains: "original message" });
     await advanceTime(LONG_PRESS_DELAY);
-    await click("button:text('Edit')");
-    await click("button:text('Discard editing')");
+    await contains("button:text('Edit'):count(1)").click();
+    await contains("button:text('Discard editing'):count(1)").click();
     await waitFor(".o-mail-Message:has(:text('original message')):count(1)");
     await pointerDown(".o-mail-Message", { contains: "original message" });
     await advanceTime(LONG_PRESS_DELAY);
-    await click("button:text('Edit')");
+    await contains("button:text('Edit'):count(1)").click();
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
-    await click("button[title='Save editing']");
+    await contains("button[title='Save editing']:count(1)").click();
     await waitFor(".o-mail-Message:has(:text('edited message (edited)')):count(1)");
 });
 
@@ -105,9 +104,11 @@ test("click on an odoo link should fold the chat window (mobile)", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", `http://${location.host}/odoo.com`);
-    await click(".o-mail-Composer button[title='Send']");
+    await contains(".o-mail-Composer button[title='Send']:count(1)").click();
     await waitFor(".o-mail-ChatWindow:count(1)");
-    await click(`.o-mail-Message-richBody a[href="http://${location.host}/odoo.com"]`);
+    await contains(
+        `.o-mail-Message-richBody a[href="http://${location.host}/odoo.com"]:count(1)`
+    ).click();
     await waitForNone(".o-mail-ChatWindow");
     await waitForNone(".o-mail-ChatBubble");
     await openListView("discuss.channel", { res_id: channelId });

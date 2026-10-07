@@ -1,8 +1,8 @@
-import { click, defineMailModels, start } from "@mail/../tests/mail_test_helpers";
+import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
 import { RecordingDialog } from "@mail/discuss/call/common/recording_dialog";
 
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
-import { getService } from "@web/../tests/web_test_helpers";
+import { contains, getService } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
@@ -40,7 +40,7 @@ test("video records audio and video", async () => {
     await waitFor(
         ".o-discuss-RecordingDialog .o-checkbox:has(:text('Record transcription')) input:not(:checked):count(1)"
     );
-    await click(".o-discuss-RecordingDialog button:text('Start recording')");
+    await contains(".o-discuss-RecordingDialog button:text('Start recording'):count(1)").click();
     expect.verifySteps(["start recording"]);
 });
 
@@ -55,16 +55,20 @@ test("transcription can be selected with or without video", async () => {
     });
 
     await openRecordingDialog();
-    await click(".o-discuss-RecordingDialog .o-checkbox:has(:text('Record transcription')) input");
+    await contains(
+        ".o-discuss-RecordingDialog .o-checkbox:has(:text('Record transcription')) input:count(1)"
+    ).click();
     await waitFor(".o-discuss-RecordingDialog .o-checkbox input:checked:count(2)");
-    await click(".o-discuss-RecordingDialog .o-checkbox:has(:text('Record video')) input");
+    await contains(
+        ".o-discuss-RecordingDialog .o-checkbox:has(:text('Record video')) input:count(1)"
+    ).click();
     await waitFor(
         ".o-discuss-RecordingDialog .o-checkbox:has(:text('Record transcription')) input:checked:count(1)"
     );
     await waitFor(
         ".o-discuss-RecordingDialog .o-checkbox:has(:text('Record video')) input:not(:checked):count(1)"
     );
-    await click(".o-discuss-RecordingDialog button:text('Start recording')");
+    await contains(".o-discuss-RecordingDialog button:text('Start recording'):count(1)").click();
     expect.verifySteps(["start transcription"]);
 });
 
@@ -73,7 +77,9 @@ test("start is disabled without a selected output", async () => {
     configureRecording();
 
     await openRecordingDialog();
-    await click(".o-discuss-RecordingDialog .o-checkbox:has(:text('Record video')) input");
+    await contains(
+        ".o-discuss-RecordingDialog .o-checkbox:has(:text('Record video')) input:count(1)"
+    ).click();
     await waitForNone(".o-discuss-RecordingDialog .o-checkbox input:checked");
     await waitFor(".o-discuss-RecordingDialog button:text('Start recording'):disabled:count(1)");
 });
@@ -111,15 +117,15 @@ test("active recording keeps video immutable and transcription reactive", async 
     await waitForNone(".o-discuss-RecordingDialog :text('Audio recording')");
     const videoOption = ".o-discuss-RecordingDialog .o-checkbox:has(:text('Record video'))";
     await waitFor(`${videoOption} input:disabled:not(:checked):count(1)`);
-    await click(videoOption);
+    await contains(videoOption).click();
     await waitFor(`${videoOption} input:disabled:not(:checked):count(1)`);
     rtc.recordingState = { ...rtc.recordingState, transcription: false };
     const transcriptionOption =
         ".o-discuss-RecordingDialog .o-checkbox:has(:text('Record transcription'))";
     await waitFor(`${transcriptionOption} input:not(:checked):not(:disabled):count(1)`);
-    await click(`${transcriptionOption} input`);
+    await contains(`${transcriptionOption} input:count(1)`).click();
     await waitFor(`${transcriptionOption} input:checked:count(1)`);
-    await click(".o-discuss-RecordingDialog button:text('Update')");
+    await contains(".o-discuss-RecordingDialog button:text('Update'):count(1)").click();
     expect.verifySteps(["update transcription"]);
 });
 
@@ -142,6 +148,6 @@ test("transcription-only recording must be stopped instead of updated", async ()
         ".o-discuss-RecordingDialog .o-checkbox:has(:text('Record transcription'))";
     await waitFor(`${transcriptionOption} input:checked:disabled:count(1)`);
     await waitForNone(".o-discuss-RecordingDialog button:text('Update')");
-    await click(".o-discuss-RecordingDialog button:text('Stop recording')");
+    await contains(".o-discuss-RecordingDialog button:text('Stop recording'):count(1)").click();
     expect.verifySteps(["stop recording"]);
 });

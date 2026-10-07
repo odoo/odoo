@@ -1,5 +1,4 @@
 import {
-    click,
     contains as mailContains,
     defineMailModels,
     openDiscuss,
@@ -9,7 +8,7 @@ import {
 import { Store } from "@mail/../tests/mock_server/store";
 
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { Command, contains, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -312,8 +311,8 @@ test("no seen indicator in 'channel' channels (with is_typing)", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:has(:text('channel-msg')):count(1)");
     await waitForNone(".o-mail-MessageSeenIndicator [data-icon='check']"); // none in channel
-    await click(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await click(".o-mail-NotificationItem:has(:text('Demo User'))");
+    await contains(".o-mail-MessagingMenu-tab[data-id='chat']:count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('Demo User')):count(1)").click();
     await waitFor(".o-mail-Message:has(:text('chat-msg')):count(1)");
     await waitForNone(".o-mail-MessageSeenIndicator [data-icon='check']"); // not seen in chat
     // simulate channel read by Demo User in both threads
@@ -343,8 +342,8 @@ test("no seen indicator in 'channel' channels (with is_typing)", async () => {
         })
     );
     await waitFor(".o-mail-Message .o-mail-MessageSeenIndicator [data-icon='check']:count(2)"); // seen in chat
-    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await click(".o-mail-NotificationItem:has(:text('test-channel'))");
+    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('test-channel')):count(1)").click();
     await waitFor(".o-mail-Message:has(:text('channel-msg')):count(1)");
     await waitForNone(".o-mail-MessageSeenIndicator [data-icon='check']"); // none in channel
 });
@@ -425,7 +424,7 @@ test("Title show some member seen info (partial seen), click show dialog with fu
     await start();
     await openDiscuss(channelId);
     await waitFor("[title='Seen by User 0, User 1, User 2 and 8 others']:count(1)");
-    await click(".o-mail-Message .o-mail-MessageSeenIndicator");
+    await contains(".o-mail-Message .o-mail-MessageSeenIndicator:count(1)").click();
     await waitFor("li:count(11)");
     for (let i = 0; i < 11; i++) {
         await waitFor(`li:text('User ${i}'):count(1)`); // Not checking datetime because HOOT mocking of tz do not work

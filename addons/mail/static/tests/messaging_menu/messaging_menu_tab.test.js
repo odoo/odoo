@@ -27,6 +27,7 @@ import { mockDate } from "@odoo/hoot-mock";
 
 import {
     Command,
+    contains,
     getService,
     mockService,
     serverState,
@@ -82,11 +83,11 @@ test("unread filter shows only unread chats", async () => {
     await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Alice')):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Bob')):count(1)");
-    await click("button:text(Unread)");
+    await contains("button:text(Unread):count(1)").click();
     await waitFor("button.o-active:text(Unread):count(1)");
     await waitFor(".o-mail-NotificationItem:count(1)");
     await waitFor(".o-mail-NotificationItem-name:text(Alice):count(1)");
-    await click("button:text(All)");
+    await contains("button:text(All):count(1)").click();
     await waitFor("button.o-active:text(All):count(1)");
     await waitFor(".o-mail-NotificationItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Alice')):count(1)");
@@ -131,11 +132,11 @@ test("unread filter shows only unread channels", async () => {
     await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Alpha')):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Beta')):count(1)");
-    await click("button:text(Unread)");
+    await contains("button:text(Unread):count(1)").click();
     await waitFor("button.o-active:text(Unread):count(1)");
     await waitFor(".o-mail-NotificationItem:count(1)");
     await waitFor(".o-mail-NotificationItem-name:text(Alpha):count(1)");
-    await click("button:text(All)");
+    await contains("button:text(All):count(1)").click();
     await waitFor("button.o-active:text(All):count(1)");
     await waitFor(".o-mail-NotificationItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Alpha')):count(1)");
@@ -168,11 +169,11 @@ test("group filter shows only group chats", async () => {
     await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Alice')):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Team')):count(1)");
-    await click("button:text(Group)");
+    await contains("button:text(Group):count(1)").click();
     await waitFor("button.o-active:text(Group):count(1)");
     await waitFor(".o-mail-NotificationItem:count(1)");
     await waitFor(".o-mail-NotificationItem-name:text(Team):count(1)");
-    await click("button:text(All)");
+    await contains("button:text(All):count(1)").click();
     await waitFor("button.o-active:text(All):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Alice')):count(1)");
@@ -200,11 +201,11 @@ test("thread filter shows only channel threads", async () => {
     await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('General')):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Bug thread')):count(1)");
-    await click("button:text(Thread)");
+    await contains("button:text(Thread):count(1)").click();
     await waitFor("button.o-active:text(Thread):count(1)");
     await waitFor(".o-mail-NotificationItem:count(1)");
     await waitFor(".o-mail-NotificationItem:has(:text('Bug thread')):count(1)");
-    await click("button:text(All)");
+    await contains("button:text(All):count(1)").click();
     await waitFor("button.o-active:text(All):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('General')):count(1)");
@@ -224,7 +225,7 @@ test("active filter with no match shows a neutral empty state, not the tab onboa
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await waitFor(".o-mail-MessagingMenuItem:count(1)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('General')):count(1)");
-    await click("button:text(Thread)");
+    await contains("button:text(Thread):count(1)").click();
     await waitFor("button.o-active:text(Thread):count(1)");
     await waitFor(
         ".o-mail-MessagingMenuEmpty:has(:text('No conversation matches this filter.')):count(1)"
@@ -272,7 +273,7 @@ test("plugin filter narrows a tab's content, ANDed with the chip filter", async 
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.NOTIFICATION);
     await waitFor("button.o-active:text(Unread):count(1)");
-    await click("button:text(All)");
+    await contains("button:text(All):count(1)").click();
     await waitFor("button.o-active:text(All):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:count(3)");
     getService("mail.store").messagingMenuSystrayState.setPluginFilter("test.author", {
@@ -282,7 +283,7 @@ test("plugin filter narrows a tab's content, ANDed with the chip filter", async 
     await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Alice: hello')):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Alice: old news')):count(1)");
-    await click("button:text(Unread)");
+    await contains("button:text(Unread):count(1)").click();
     await waitFor("button.o-active:text(Unread):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:count(1)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Alice: hello')):count(1)");
@@ -294,10 +295,12 @@ test("create new chat from chat tab", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openMessagingMenu();
-    await click("button:has([data-icon='add']):text(Chat)");
+    await contains("button:has([data-icon='add']):text(Chat):count(1)").click();
     await waitFor(".o-discuss-ChannelInvitation:count(1)");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
-    await click("button:text('Create Chat'):enabled");
+    await contains(
+        ".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner')):count(1)"
+    ).click();
+    await contains("button:text('Create Chat'):enabled:count(1)").click();
     await waitForNone(".o-discuss-ChannelInvitation");
     await waitFor(".o-mail-ChatWindow-displayName:text('TestPartner'):count(1)");
 });
@@ -312,11 +315,15 @@ test("create new group chat from chat tab", async () => {
     pyEnv["res.users"].create({ partner_id: partner2Id });
     await start();
     await openMessagingMenu();
-    await click("button:has([data-icon='add']):text(Chat)");
+    await contains("button:has([data-icon='add']):text(Chat):count(1)").click();
     await waitFor(".o-discuss-ChannelInvitation:count(1)");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner1'))");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
-    await click("button:text('Create Chat'):enabled");
+    await contains(
+        ".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner1')):count(1)"
+    ).click();
+    await contains(
+        ".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2')):count(1)"
+    ).click();
+    await contains("button:text('Create Chat'):enabled:count(1)").click();
     await waitForNone(".o-discuss-ChannelInvitation");
     await waitFor(
         ".o-mail-ChatWindow-displayName:text('Mitchell Admin, TestPartner1, and TestPartner2'):count(1)"
@@ -339,8 +346,8 @@ test("create new meeting from meeting tab", async () => {
     mockGetMedia();
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.MEETING);
-    await click("button:text(Meeting)");
-    await click(".o-dropdown-item:text('Start Now')");
+    await contains("button:text(Meeting):count(1)").click();
+    await contains(".o-dropdown-item:text('Start Now'):count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
 });
 
@@ -384,11 +391,11 @@ test("unread filter shows only unread meetings", async () => {
     await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Standup')):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Retro')):count(1)");
-    await click("button:text(Unread)");
+    await contains("button:text(Unread):count(1)").click();
     await waitFor("button.o-active:text(Unread):count(1)");
     await waitFor(".o-mail-NotificationItem:count(1)");
     await waitFor(".o-mail-NotificationItem:has(:text('Standup')):count(1)");
-    await click("button:text(All)");
+    await contains("button:text(All):count(1)").click();
     await waitFor("button.o-active:text(All):count(1)");
     await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Standup')):count(1)");
@@ -421,12 +428,12 @@ test("join most popular channel from empty channel tab", async () => {
     await waitFor(
         ".o-mail-MessagingMenuEmptyChannel-popularChannels :text('2 followers'):count(1)"
     );
-    await click("button:text('Find more channels')");
+    await contains("button:text('Find more channels'):count(1)").click();
     await expect.waitForSteps(["mail.discuss_channel_action"]);
     await waitForNone(".o-mail-MessagingMenu");
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await waitFor("button:text(Follow):count(1)");
-    await click("button:text(Follow)");
+    await contains("button:text(Follow):count(1)").click();
     await waitFor(".o-mail-NotificationItem-name:text(General):count(1)");
 });
 
@@ -759,7 +766,7 @@ test("can search messages", async () => {
         ".o-mail-MessagingMenuEmpty:text('No results for \"something different\".'):count(1)"
     );
     // Switching tabs clears the search.
-    await click(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHAT}']`);
+    await contains(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHAT}']:count(1)`).click();
     await mailContains(".o-mail-DiscussSearch input", { value: "" });
 });
 

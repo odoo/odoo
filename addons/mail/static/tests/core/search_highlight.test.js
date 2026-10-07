@@ -1,7 +1,6 @@
 import { HIGHLIGHT_CLASS, searchHighlight } from "@mail/core/common/message_search_hook";
 import {
     SIZES,
-    click,
     defineMailModels,
     insertText,
     openDiscuss,
@@ -14,7 +13,7 @@ import {
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { markup } from "@odoo/owl";
 
-import { serverState } from "@web/../tests/web_test_helpers";
+import { contains, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -130,7 +129,7 @@ test("Display highlighted search in chatter", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("[title='Search Messages']");
+    await contains("[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchInput input", "Groot");
     await waitFor(
@@ -152,7 +151,7 @@ test("Display multiple highlighted search in chatter", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("[title='Search Messages']");
+    await contains("[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchInput input", "not empty");
     await waitFor(`.o-mail-SearchMessageResult .o-mail-Message span.${HIGHLIGHT_CLASS}:count(2)`);
@@ -172,7 +171,7 @@ test("Display highlighted search in Discuss", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(1)");
-    await click("button[title='Search Messages']");
+    await contains("button[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "empty");
     await waitFor(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:count(1)`);
@@ -192,7 +191,7 @@ test("Display multiple highlighted search in Discuss", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(1)");
-    await click("button[title='Search Messages']");
+    await contains("button[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "not empty");
     await waitFor(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:count(2)`);
@@ -212,7 +211,7 @@ test("Search update keeps embedded code block rendering in Discuss", async () =>
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(1)");
-    await click("button[title='Search Messages']");
+    await contains("button[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "prefix");
     await waitFor(
@@ -241,7 +240,7 @@ test("Display highlighted with escaped character must ignore them", async () => 
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("[title='Search Messages']");
+    await contains("[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchInput input", "test hello");
     await waitFor(`.o-mail-SearchMessageResult .o-mail-Message span.${HIGHLIGHT_CLASS}:count(2)`);

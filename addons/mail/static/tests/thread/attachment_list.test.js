@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mockFetch, mockUserAgent } from "@odoo/hoot-mock";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { contains, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 import { downloadFile } from "@web/core/network/download";
@@ -190,7 +190,7 @@ test("view attachment", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-AttachmentImage:count(1)");
-    await click(".o-mail-AttachmentImage");
+    await contains(".o-mail-AttachmentImage:count(1)").click();
     await waitFor(".o-FileViewer:count(1)");
 });
 
@@ -248,7 +248,7 @@ test("can view pdf url", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-AttachmentCard-info:text('url.pdf.example')");
+    await contains(".o-mail-AttachmentCard-info:text('url.pdf.example'):count(1)").click();
     await waitFor(".o-FileViewer:count(1)");
     await waitFor(
         `iframe.o-FileViewer-view[data-src="/web/static/lib/pdfjs/web/viewer.html?file=${encodeURIComponent(
@@ -277,9 +277,9 @@ test("close attachment viewer", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-AttachmentImage:count(1)");
-    await click(".o-mail-AttachmentImage");
+    await contains(".o-mail-AttachmentImage:count(1)").click();
     await waitFor(".o-FileViewer:count(1)");
-    await click(".o-FileViewer div[aria-label='Close']");
+    await contains(".o-FileViewer div[aria-label='Close']:count(1)").click();
     await waitForNone(".o-FileViewer");
 });
 
@@ -437,10 +437,10 @@ test("should not view attachment from click on non-viewable attachment in list c
     await openDiscuss(channelId);
     await waitFor(".o-mail-AttachmentContainer[title='test.png'].o-viewable:count(1)");
     await waitFor(".o-mail-AttachmentContainer:not(.o-viewable):has(:text('test.odt')):count(1)");
-    await click(".o-mail-AttachmentContainer:has(:text('test.odt'))");
+    await contains(".o-mail-AttachmentContainer:has(:text('test.odt')):count(1)").click();
     // weak test, no guarantee that we waited long enough for the potential file viewer to show
     await waitForNone(".o-FileViewer");
-    await click(".o-mail-AttachmentContainer[title='test.png']");
+    await contains(".o-mail-AttachmentContainer[title='test.png']:count(1)").click();
     await waitFor(".o-FileViewer:count(1)");
 });
 
@@ -548,7 +548,7 @@ test("view and play audio attachment", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-AttachmentCard:count(1)");
-    await click(".o-mail-AttachmentCard");
+    await contains(".o-mail-AttachmentCard:count(1)").click();
     await waitFor(".o-FileViewer audio:count(1)");
 });
 

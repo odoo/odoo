@@ -11,7 +11,13 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    contains,
+    getService,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
 
@@ -36,7 +42,7 @@ test("Can invite people from member panel", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
-    await click("button[title='Add People']");
+    await contains("button[title='Add People']:count(1)").click();
 });
 
 test("can invite users in channel from chat window", async () => {
@@ -55,11 +61,13 @@ test("can invite users in channel from chat window", async () => {
     await start();
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Invite People')");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Invite People'):count(1)").click();
     await waitFor(".o-discuss-ChannelInvitation:count(1)");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
-    await click(".o-discuss-ChannelInvitation button:text('Invite'):enabled");
+    await contains(
+        ".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner')):count(1)"
+    ).click();
+    await contains(".o-discuss-ChannelInvitation button:text('Invite'):enabled:count(1)").click();
     await waitForNone(".o-discuss-ChannelInvitation");
     const [{ date }] = pyEnv["mail.message"].search_read([["res_id", "=", channelId]]);
     const time = deserializeDateTime(date).toLocaleString(luxon.DateTime.TIME_SIMPLE, {
@@ -93,7 +101,7 @@ test("should be able to search for a new user to invite from an existing chat", 
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
-    await click("button[title='Add People']");
+    await contains("button[title='Add People']:count(1)").click();
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await waitFor(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2')):count(1)");
 });
@@ -155,7 +163,7 @@ test("Invitation form should display channel group restriction", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
-    await click("button[title='Add People']");
+    await contains("button[title='Add People']:count(1)").click();
     await mailContains(
         ".o-discuss-ChannelInvitation div:text('Access restricted to group \"testGroup\"')",
         {
@@ -186,11 +194,13 @@ test("should be able to create a new group chat from an existing chat", async ()
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-DiscussContent-header button[title='Invite People']");
+    await contains(".o-mail-DiscussContent-header button[title='Invite People']:count(1)").click();
     await waitFor(".o-discuss-ChannelInvitation:count(1)");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
-    await click("button:text('Create Group Chat'):enabled");
+    await contains(
+        ".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2')):count(1)"
+    ).click();
+    await contains("button:text('Create Group Chat'):enabled:count(1)").click();
     await waitForNone(".o-discuss-ChannelInvitation");
     await waitFor(
         ".o-mail-NotificationItem:has(:text('Mitchell Admin, TestPartner, and TestPartner2')):count(1)"
@@ -214,7 +224,7 @@ test("unnamed group chat should display correct name just after being invited", 
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await waitFor(".o-mail-NotificationItem:has(:text('General')):count(1)");
-    await click(".o-mail-MessagingMenu-tab[data-id='chat']");
+    await contains(".o-mail-MessagingMenu-tab[data-id='chat']:count(1)").click();
     await waitFor(".o-mail-MessagingMenu-tab:has(:text('Chats')).active:count(1)");
     await waitForNone(".o-mail-NotificationItem:has(:text('Jane and Mitchell Admin'))");
     const currentUserId = serverState.userId;
@@ -269,10 +279,12 @@ test("invite user to self chat opens DM chat with user", async () => {
     await waitFor(".o-mail-NotificationItem:has(:text('TestPartner and Mitchell Admin')):count(1)");
     await waitFor(".o-mail-NotificationItem:has(:text('TestGuest and Mitchell Admin')):count(1)");
     await waitFor(".o-mail-NotificationItem:has(:text('TestPartner')):count(1)");
-    await click(".o-mail-DiscussContent-header button[title='Invite People']");
+    await contains(".o-mail-DiscussContent-header button[title='Invite People']:count(1)").click();
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
-    await click("button:contains('Go to Conversation'):enabled");
+    await contains(
+        ".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner')):count(1)"
+    ).click();
+    await contains("button:contains('Go to Conversation'):enabled:count(1)").click();
     await waitFor(".o-mail-NotificationItem.o-active:has(:text('TestPartner')):count(1)");
 });
 
