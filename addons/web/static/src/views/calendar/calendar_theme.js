@@ -39,7 +39,7 @@ export const odooCalendarTheme = {
             info.isStartResizable && `${resizerClass} o_calendar_resizer_start start-0 end-0`,
         columnEventAfterClass: (info) =>
             info.isEndResizable && `${resizerClass} o_calendar_resizer_end start-0 end-0`,
-        backgroundEventClass: "o_calendar_bg_event",
+        backgroundEventClass: "o_calendar_fill o_calendar_bg_event",
 
         /* More-link and its popover */
 
@@ -73,8 +73,8 @@ export const odooCalendarTheme = {
 
         /* Misc */
 
-        highlightClass: "o_calendar_highlight",
-        nonBusinessHoursClass: "o_calendar_non_business",
+        highlightClass: "o_calendar_fill o_calendar_highlight",
+        nonBusinessHoursClass: "o_calendar_fill o_calendar_non_business",
         nowIndicatorLineClass: "o_calendar_now_line pe-none",
         nowIndicatorHeaderClass: "d-none",
     },

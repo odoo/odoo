@@ -3607,7 +3607,7 @@ test(`single day event from midnight to midnight`, async () => {
 
     expect(`.o_event`).toHaveCount(1);
     let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
-    let cellWidth = queryFirst(`.o_calendar_day`).getBoundingClientRect().width;
+    let cellWidth = queryOne(`.o_event`).closest(`.o_calendar_day`).getBoundingClientRect().width;
     expect(eventWidth).toBeWithin(cellWidth - 1, cellWidth + 1); // over a single day
     await changeScale("month");
     expect(`.o_event`).toHaveCount(1);
@@ -3643,7 +3643,7 @@ test(`event over two days but lasting less than 24h`, async () => {
 
     expect(`.o_event`).toHaveCount(1);
     let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
-    let cellWidth = queryFirst(`.o_calendar_day`).getBoundingClientRect().width;
+    let cellWidth = queryOne(`.o_event`).closest(`.o_calendar_day`).getBoundingClientRect().width;
     expect(eventWidth).toBeWithin(2 * cellWidth - 1, 2 * cellWidth + 2); // over 2 days
     await changeScale("month");
     expect(`.o_event`).toHaveCount(1);
@@ -3678,7 +3678,7 @@ test(`event over two days lasting longer than 24h`, async () => {
 
     expect(`.o_event`).toHaveCount(1);
     let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
-    let cellWidth = queryFirst(`.o_calendar_day`).getBoundingClientRect().width;
+    let cellWidth = queryOne(`.o_event`).closest(`.o_calendar_day`).getBoundingClientRect().width;
     expect(eventWidth).toBeWithin(2 * cellWidth - 1, 2 * cellWidth + 2); // over 2 days
     await changeScale("month");
     expect(`.o_event`).toHaveCount(1);
@@ -3717,7 +3717,7 @@ test(`all day event lasting 2 days`, async () => {
 
     expect(`.o_event`).toHaveCount(1);
     let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
-    let cellWidth = queryFirst(`.o_calendar_day`).getBoundingClientRect().width;
+    let cellWidth = queryOne(`.o_event`).closest(`.o_calendar_day`).getBoundingClientRect().width;
     expect(eventWidth).toBeWithin(2 * cellWidth - 1, 2 * cellWidth + 2); // over 2 days
     await changeScale("month");
     expect(`.o_event`).toHaveCount(1);

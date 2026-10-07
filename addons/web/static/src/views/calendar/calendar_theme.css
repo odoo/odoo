@@ -337,6 +337,11 @@
         --border-color: transparent;
     }
 
+    /* The fills start after the border of their first day, cover it as the cells are borderless */
+    .o_calendar_day + .o_calendar_day .o_calendar_fill {
+        inset-inline-start: calc(-1 * var(--border-width)) !important;
+    }
+
     /* Keep the months height independent from the other months on the same line */
     [role="listitem"] {
         align-self: flex-start;
