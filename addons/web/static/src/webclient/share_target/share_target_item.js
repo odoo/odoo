@@ -1,4 +1,5 @@
-import { Component, onWillDestroy, proxy, t, useProps } from "@odoo/owl";
+import { Component, onWillDestroy, proxy, t, usePlugin, useProps } from "@odoo/owl";
+import { FileUploadPlugin } from "@web/core/file_upload/file_upload_plugin";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { checkFileSize } from "@web/core/utils/files";
@@ -22,6 +23,7 @@ export class ShareTargetItem extends Component {
         this.http = useService("http");
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.fileUpload = usePlugin(FileUploadPlugin);
 
         const shareTarget = useService("share_target");
         onWillDestroy(
