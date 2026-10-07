@@ -1,9 +1,11 @@
 .product {
     --btn-border-color: #{$o-gray-200};
 
-    &:hover {
-        border: $border-width solid $border-color;
-        --btn-hover-bg: #{$o-view-background-color};
+    @media (hover: hover) {
+        &:hover {
+            border: $border-width solid $border-color;
+            --btn-hover-bg: #{$o-view-background-color};
+        }
     }
 
     @at-root .rightpane .product {
