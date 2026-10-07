@@ -263,7 +263,7 @@
             <a t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
                 <span class="s_cta_badge o_cc o_cc1 d-inline-flex align-items-center justify-content-center flex-wrap gap-3 my-3 border rounded py-2 px-3 text-break" style="border-radius: 32px !important;" data-snippet="s_cta_badge">
                     <t t-if="events_event_location_active">
-                        <img t-if="record.country_id" t-att-src="record.country_id.image_url"/>
+                        <img t-if="record.country_id" t-att-src="record.country_id.image_url" t-att-alt="record.country_id.name"/>
                         <i t-else="" class="oi oi-filled text-primary" data-icon="calendar_today"/>
                     </t>
                     <strong class="text-nowrap" t-field="record.name"/>
