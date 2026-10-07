@@ -52,8 +52,8 @@
                                         <a id="filter_category_link" t-att-href="keep_partners_url(grade=grade['grade_id'][0])"
                                         class="text-reset" aria-label="See categories filters">
                                             <div class="form-check">
-                                                <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade}" t-attf-id="#{grade}" t-att-checked="bool(grade['active'])"/>
-                                                <label class="form-check-label" t-attf-for="#{grade}" t-out="grade"/>
+                                                <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label}" t-attf-id="grade_#{grade['grade_id'][0]}" t-att-checked="bool(grade['active'])"/>
+                                                <label class="form-check-label pe-none" t-attf-for="grade_#{grade['grade_id'][0]}" t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label"/>
                                             </div>
                                         </a>
                                     </li>
