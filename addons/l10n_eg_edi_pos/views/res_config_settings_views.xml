@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <block id="pos_bills_and_receipts_section" position="after">
                 <block title="Egypt E-Receipts (ETA)" id="l10n_eg_edi_pos_section" invisible="country_code != 'EG'">
-                    <setting id="l10n_eg_edi_pos_setting"
+                    <setting id="l10n_eg_edi_pos_setting" class="col-lg-12"
                              string="Submit POS receipts to ETA">
                         <field name="pos_l10n_eg_edi_pos_enable"/>
                         <div class="row" invisible="not pos_l10n_eg_edi_pos_enable">
@@ -27,9 +27,7 @@
                                 </ol>
                             </div>
                         </div>
-                    </setting>
-                    <setting invisible="not pos_l10n_eg_edi_pos_enable">
-                        <div class="content-group">
+                        <div class="content-group col-lg-6" invisible="not pos_l10n_eg_edi_pos_enable">
                             <div class="row">
                                 <label class="col-lg-4 o_light_label" for="pos_l10n_eg_edi_pos_client_id" string="Client ID"/>
                                 <field required="pos_l10n_eg_edi_pos_enable" name="pos_l10n_eg_edi_pos_client_id"/>
@@ -42,9 +40,9 @@
                                 <label class="col-lg-4 o_light_label" for="pos_l10n_eg_edi_pos_serial_number" string="Serial Number"/>
                                 <field required="pos_l10n_eg_edi_pos_enable" name="pos_l10n_eg_edi_pos_serial_number"/>
                             </div>
-                            <div class="row mt-16">
+                            <div class="mt16">
                                 <field required="pos_l10n_eg_edi_pos_enable" class="mx-0 oe_inline" name="pos_l10n_eg_edi_pos_preprod"/>
-                                <label class="col-lg-7 o_light_label" for="pos_l10n_eg_edi_pos_preprod"/>
+                                <label class="o_light_label" for="pos_l10n_eg_edi_pos_preprod"/>
                             </div>
                         </div>
                     </setting>
