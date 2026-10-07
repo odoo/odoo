@@ -2,6 +2,7 @@ from odoo import Command
 from odoo.addons.point_of_sale.tests.common import CommonPosTest, TestPoSCommon
 from odoo.tests.common import tagged
 
+# TODO-PARP: Move tests and remove File
 
 @tagged('post_install', '-at_install')
 class TestPosInvoiceConsolidation(TestPoSCommon, CommonPosTest):

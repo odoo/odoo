@@ -6,6 +6,8 @@ from odoo.addons.point_of_sale.models.pos_payment_method import PosPaymentMethod
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
+# TODO-PARP: Move tests and remove File
+
 @odoo.tests.tagged('post_install', '-at_install')
 class TestBackend(TestPoSCommon):
 

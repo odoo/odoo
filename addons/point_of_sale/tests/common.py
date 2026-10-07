@@ -15,6 +15,11 @@ def archive_products(env):
     all_pos_product = env['product.template'].search([('available_in_pos', '=', True)])
     all_pos_product._write({'active': False})
 
+# TODO-PARP:
+# - Merge CommonPosTest + TestPoSCommon.
+# - Move reusable accounting/session/order helpers here.
+# - Keep compatibility aliases temporarily.
+
 
 class CommonPosTest(AccountTestInvoicingCommon):
     _test_user_groups = None  # FIXME list needed groups

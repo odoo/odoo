@@ -7,6 +7,7 @@ from odoo import Command
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
+# TODO-PARP: Move to test_frontend.py
 @odoo.tests.tagged('post_install', '-at_install')
 class TestConfigureShops(TestPoSCommon):
     """ Shops are now configured from the general settings.

@@ -7,6 +7,8 @@ from odoo.tools import mute_logger
 from odoo.tests import tagged
 
 
+# TODO-PARP: Move tests and remove File
+
 @tagged('post_install', '-at_install')
 class TestAccountDigest(CommonPosTest):
 

@@ -6,6 +6,9 @@ import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 from odoo.exceptions import ValidationError
 
+
+# TODO-PARP: Move tests and remove File
+
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPoSSetup(TestPoSCommon):
     """ This group of tests is for sanity check in setting up global records which will be used

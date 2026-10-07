@@ -8,6 +8,11 @@ from odoo.tools import mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
+# TODO-PARP:
+# - Keep accounting test methods here.
+# - Move reusable setup/helpers to common.py.
+# - Stop using TestPosAccounting as a reusable base.
+
 
 class TestPosAccounting(AccountTestInvoicingCommon):
 

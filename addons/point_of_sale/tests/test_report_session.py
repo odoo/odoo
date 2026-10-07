@@ -6,6 +6,8 @@ import odoo
 from odoo import Command
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
+
+# TODO-PARP: Move/Rename to test_pos_report.py
 @odoo.tests.tagged('post_install', '-at_install')
 class TestReportSession(TestPoSCommon):
 

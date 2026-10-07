@@ -21,6 +21,10 @@ from freezegun import freeze_time
 
 _logger = logging.getLogger(__name__)
 
+# TODO-PARP:
+# - Move non-tour tests out of HttpCase classes.
+# - Move TestPointOfSaleHttpCommon to common.py.
+
 
 def _create_image(color: int | str = 0, dims=(1920, 1080), format='JPEG'):
     f = io.BytesIO()

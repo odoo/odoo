@@ -14,6 +14,8 @@ class TestPosAccountingHttp(HttpCase, TestPosAccounting):
     def start_pos_tour(self, tour_name, **kwargs):
         self.start_tour(self._get_url(pos_config=kwargs.get('pos_config')), tour_name, login=self.env.user.login, **kwargs)
 
+    # TODO-PARP: Move to test_frontend.py
+
     def test_baseline_between_frontend_and_backend(self):
         company = self.pos_config.company_id
         company.tax_calculation_rounding_method = 'round_globally'

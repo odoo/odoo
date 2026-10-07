@@ -1,6 +1,8 @@
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
+# TODO-PARP: Move tests and remove File
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosMargin(TestPoSCommon):

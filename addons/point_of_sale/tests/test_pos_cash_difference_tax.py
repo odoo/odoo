@@ -3,6 +3,8 @@ from odoo.tests import tagged
 
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
+# TODO-PARP: Remove File
+
 
 @tagged('post_install', '-at_install')
 class TestPosCashDifferenceTax(CommonPosTest):

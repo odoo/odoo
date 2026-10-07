@@ -9,12 +9,17 @@ from odoo.addons.point_of_sale.tests.common import CommonPosTest
 from odoo.exceptions import ValidationError
 from odoo.tests import Form
 
+# TODO-PARP:
+# - Merge tests into the final feature-oriented files.
+# - Remove duplicated session/order/payment helpers.
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(CommonPosTest):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    #  TODO-PARP: remove (no use)
     def setup_tags(self):
         tags = self.env['account.account.tag'].create([
             {
