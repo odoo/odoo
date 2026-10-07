@@ -16,7 +16,8 @@ class TestOnboardingTours(HttpCase):
         'frontdesk_tour', 'hr_expense_extract_tour', 'appointment_tour',
         'sale_subscription_tour', 'project_tour', 'helpdesk_tour',
         'rental_tour', 'web_studio_new_app_tour', 'question_tour',
-        'crm_tour', 'account_tour', 'point_of_sale_tour',
+        'crm_tour', 'account_tour', 'point_of_sale_tour', 'hr_expense_tour',
+        'payroll_tours',
     ]
 
     @classmethod

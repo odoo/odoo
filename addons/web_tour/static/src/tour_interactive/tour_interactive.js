@@ -435,6 +435,9 @@ export class TourInteractive {
                 this.anchorEl = tempAnchor;
                 this.setActionListeners();
             } else if (!tempAnchor && this.anchorEl) {
+                if (this.anchorEl.isConnected && this.anchorEl.disabled) {
+                    return;
+                }
                 if (
                     !hoot.queryFirst(".o_home_menu", { visible: true }) &&
                     !hoot.queryFirst(".dropdown-item.o_loading", { visible: true }) &&
