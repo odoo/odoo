@@ -232,6 +232,7 @@ class PosConfig(models.Model):
         string='Download Invoice',
         help="Automatically download the invoice PDF when an order is invoiced.",
     )
+    welcome_message = fields.Char(string='Customer Message', help="Set the message that will be displayed on the PoS customer display")
 
     def _get_next_order_refs(self, device_identifier='0'):
         next_number = self.order_backend_seq_id._next()
@@ -1147,6 +1148,7 @@ class PosConfig(models.Model):
             'access_token': self.access_token,
             'has_bg_img': bool(self.customer_display_bg_img),
             'company_id': self.company_id.id,
+            'welcome_message': self.welcome_message,
         }
 
     @api.model
