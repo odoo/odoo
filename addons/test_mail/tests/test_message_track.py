@@ -1633,3 +1633,20 @@ class TestTrackingInternals(TestTrackingCommon):
                 ('float_field', 'float', 1.0, False),
             ]}
         )
+
+    @users('employee')
+    def test_mail_track_monetary_no_currency(self):
+        """ Make sure monetary fields are tracked properly even without a currency set """
+        test_record = self.env['mail.test.track.all'].create({
+            'monetary_field': 1.0,
+            'company_id': False,
+        })
+        self.flush_tracking()
+        test_record.monetary_field = 2.0
+        self.flush_tracking()
+        with mute_logger('odoo.addons.mail.tests.common'):
+            self.assertMessageFields(
+                test_record.message_ids[0], {'tracking_values': [
+                    ('monetary_field', 'monetary', 1.0, 2.0, {'currency': self.env['res.currency']}),
+                ]}
+            )
