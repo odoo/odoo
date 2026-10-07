@@ -281,35 +281,35 @@ img.ms-auto, img.mx-auto {
 
 @for $index from 1 through 4 {
     .display-#{$index}-fs {
-        @include font-size(map-get($display-font-sizes, $index));
+        @include font-size(map-get($display-font-sizes, $index) !important);
     }
 }
 .h1-fs {
-    @include font-size($h1-font-size);
+    @include font-size($h1-font-size !important);
 }
 .h2-fs {
-    @include font-size($h2-font-size);
+    @include font-size($h2-font-size !important);
 }
 .h3-fs {
-    @include font-size($h3-font-size);
+    @include font-size($h3-font-size !important);
 }
 .h4-fs {
-    @include font-size($h4-font-size);
+    @include font-size($h4-font-size !important);
 }
 .h5-fs {
-    @include font-size($h5-font-size);
+    @include font-size($h5-font-size !important);
 }
 .h6-fs {
-    @include font-size($h6-font-size);
+    @include font-size($h6-font-size !important);
 }
 .base-fs {
-    @include font-size($font-size-base);
+    @include font-size($font-size-base !important);
 }
 // Equivalent "font-size" only for the Odoo own "o_small" class. Note that the
 // "o_small" class currently also changes the font-size only but this is to stay
 // consistent with the other classes which act that way (as display-x).
 .o_small-fs {
-    @include font-size($small-font-size);
+    @include font-size($small-font-size !important);
 }
 
 div.media_iframe_video {
