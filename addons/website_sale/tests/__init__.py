@@ -51,6 +51,7 @@ from . import (
     test_website_sale_checkout_steps,
     test_website_sale_comparison,
     test_website_sale_seo,
+    test_website_sale_stock_notification,
     test_website_sequence,
     test_website_visitor,
     test_wishlist_ui,

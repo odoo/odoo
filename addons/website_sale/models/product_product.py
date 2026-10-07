@@ -511,14 +511,13 @@ class ProductProduct(models.Model):
         grouped_notifications = self.env["product.stock.notification"]._read_group(
             [], groupby=["product_id", "website_id"], aggregates=["id:recordset"]
         )
-        notifications_to_send = [
-            notification
-            for product, website, notification in grouped_notifications
-            if not product
-            .with_company(website.company_id)
-            .with_context(website_id=website.id)
-            ._is_sold_out()
-        ]
+        notifications_to_send = self.env["product.stock.notification"]
+        for product, website, notifications in grouped_notifications:
+            if not product.with_company(website.company_id).with_context(
+                website_id=website.id
+            )._is_sold_out():
+                notifications_to_send |= notifications
+
         self.env["ir.cron"]._commit_progress(remaining=len(notifications_to_send))
         for notification in notifications_to_send:
             website = notification.website_id
