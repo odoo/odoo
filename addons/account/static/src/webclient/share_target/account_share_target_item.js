@@ -1,10 +1,10 @@
 import { ShareTargetItem } from "@web/webclient/share_target/share_target_item";
-import { AbstractDocumentFileUploader } from "@account/components/document_file_uploader/document_file_uploader";
 import { registry } from "@web/core/registry";
 import { onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { uploadFiles } from "@web/views/view_button/upload_button";
 
-export class AccountShareTargetItem extends AbstractDocumentFileUploader(ShareTargetItem) {
+export class AccountShareTargetItem extends ShareTargetItem {
     static template = "account.ShareTargetItem";
     static name = _t("Bill");
     static sequence = 2;
@@ -27,18 +27,22 @@ export class AccountShareTargetItem extends AbstractDocumentFileUploader(ShareTa
             : false;
     }
 
-    getResModel() {
-        return this.modelName;
-    }
-
     get modelName() {
         return "account.journal";
     }
 
     async process() {
-        const attachments = await this.uploadAttachments();
-        this.attachmentIdsToProcess = attachments.map(a => a.id);
-        await this.onUploadComplete();
+        const journal = this.state.selected_journal_id;
+        const action = await uploadFiles(this.env.services, {
+            clickParams: { name: "create_document_from_attachment" },
+            resModel: this.modelName,
+            resIds: journal ? [journal.id] : [],
+            context: { ...this.context, default_move_type: "in_invoice" },
+            files: this.getFiles(),
+        });
+        if (action) {
+            await this.action.doAction(action);
+        }
     }
 
     onCompanyChange(companyId) {
@@ -48,14 +52,6 @@ export class AccountShareTargetItem extends AbstractDocumentFileUploader(ShareTa
 
     get defaultState() {
         return { ...super.defaultState, journals: [], selected_journal_id: false };
-    }
-
-    get onUploadCompleteContext() {
-        return {
-            ...this.context,
-            default_move_type: "in_invoice",
-            default_journal_id: this.state.selected_journal_id && this.state.selected_journal_id.id,
-        };
     }
 
     get hasMultiJournals() {
@@ -71,7 +67,7 @@ export class AccountShareTargetItem extends AbstractDocumentFileUploader(ShareTa
                 journal: {
                     name: "journal",
                     type: "many2one",
-                    relation: this.getResModel(),
+                    relation: this.modelName,
                     domain: this.journals_domain,
                 },
             },
