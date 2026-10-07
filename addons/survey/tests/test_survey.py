@@ -693,6 +693,27 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         # Now it will also be always visible
         self.assertFalse(bool(not_veggie_question.triggering_answer_ids))
 
+    @users('survey_manager')
+    def test_can_go_back_answer_created_before_questions(self):
+        survey = self.env['survey.survey'].create({
+            'title': 'Empty Survey',
+            'questions_layout': 'page_per_question',
+            'users_can_go_back': True,
+        })
+        answer = survey._create_answer(user=self.survey_user)
+        self.assertFalse(answer.predefined_question_ids)
+
+        q1, q2 = self.env['survey.question'].create([{
+            'survey_id': survey.id,
+            'title': title,
+            'question_type': 'text_box',
+            'sequence': sequence,
+        } for sequence, title in enumerate(['Q1', 'Q2'], start=1)])
+        answer.state = 'in_progress'
+
+        self.assertFalse(survey._can_go_back(answer, q1))
+        self.assertTrue(survey._can_go_back(answer, q2))
+
     def test_get_correct_answers(self):
         questions = self._create_one_question_per_type_with_scoring()
         qtype_mapping = {q.question_type: q for q in questions}
