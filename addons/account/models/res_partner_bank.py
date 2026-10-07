@@ -22,7 +22,7 @@ class ResPartnerBank(models.Model):
     )
     partner_supplier_rank = fields.Integer(related='partner_id.supplier_rank')
     partner_customer_rank = fields.Integer(related='partner_id.customer_rank')
-    company_qr_code = fields.Boolean(related='company_id.qr_code')
+    company_qr_code = fields.Boolean(compute='_compute_company_qr_code')
     related_moves = fields.One2many('account.move', inverse_name='partner_bank_id')
     account_type = fields.Selection(selection_add=[('iban', 'IBAN'), ('clabe', 'CLABE')])
 
@@ -152,6 +152,17 @@ class ResPartnerBank(models.Model):
     def _compute_has_phishing_warnings(self):
         for account in self:
             account.has_phishing_warnings = bool(account.phishing_warnings)
+
+    @api.depends('partner_id')
+    def _compute_company_qr_code(self):
+        # Whether the bank account is held by a company that has enabled the QR codes on its invoices.
+        qr_code_by_partner = dict(self.env['res.company']._read_group(
+            domain=[('partner_id', 'in', self.partner_id.ids)],
+            groupby=['partner_id'],
+            aggregates=['qr_code:bool_or'],
+        ))
+        for bank in self:
+            bank.company_qr_code = qr_code_by_partner.get(bank.partner_id, False)
 
     def _get_money_transfer_services(self):
         return {
