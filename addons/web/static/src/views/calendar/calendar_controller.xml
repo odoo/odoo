@@ -35,10 +35,13 @@
                         <ViewScaleSelector scales="this.scales" currentScale="this.model.scale" isWeekendVisible="this.state.isWeekendVisible" setScale.bind="this.setScale" toggleWeekendVisibility.bind="this.toggleWeekendVisibility" dropdownClass="'d-print-none'"/>
                         <button
                             class="btn btn-secondary o_calendar_button_today d-print-none ms-md-0"
+                            aria-label="Today"
+                            title="Today"
                             t-on-click.stop="() => this.setDate('today')">
-                            Today
+                            <i t-if="this.uiService.isSmall" class="oi oi-fw" data-icon="today" aria-hidden="true"/>
+                            <t t-else="">Today</t>
                         </button>
-                        <h5 class="d-inline-flex ps-lg-2 ps-print-0 mb-0">
+                        <h5 class="d-inline-flex flex-column flex-md-row align-items-start align-items-md-baseline flex-md-wrap gap-md-1 ms-1 ms-md-0 mb-0 ps-lg-2 ps-print-0">
                             <t t-if="this.model.meta.scale === 'year'">
                                 <t t-out="this.currentYear"/>
                             </t>
@@ -53,6 +56,13 @@
                             </t>
                         </h5>
                         <MultiSelectionButtons reactive="this.multiSelectionButtonsReactive" />
+                        <button t-if="this.uiService.isSmall and this.showFiltersButton()"
+                            class="o_expand_filter_button btn btn-secondary ms-auto d-print-none"
+                            aria-label="Filters"
+                            title="Filters"
+                            t-on-click="(ev) => this.openFiltersBottomSheet(ev)">
+                            <i class="oi oi-filled oi-fw" data-icon="filter_alt" aria-hidden="true"/>
+                        </button>
                         <div t-if="this.hasSidePanel and !this.uiService.isSmall" class="o_calendar_sidebar_controller d-flex align-items-center gap-2 ms-auto d-print-none small">
                             <div t-if="!this.sidePanelExpanded" class="d-flex align-items-center gap-1">
                                 <i t-if="this.filters.length" class="oi" data-icon="filter_alt"/>
@@ -75,11 +85,11 @@
                             </button>
                         </div>
                     </div>
-                    <MobileFilterPanel t-if="this.uiService.isSmall and this.hasSidePanel" t-props="this.mobileFilterPanelProps" />
                     <div class="o_calendar_wrapper d-flex overflow-hidden">
-                        <t t-if="this.showCalendar" t-component="this.props.Renderer" t-props="this.rendererProps"/>
-                        <CalendarSidePanel t-if="this.hasSidePanel" t-props="this.sidePanelProps"/>
+                        <t t-component="this.props.Renderer" t-props="this.rendererProps"/>
+                        <CalendarSidePanel t-if="this.hasSidePanel and !this.uiService.isSmall" t-props="this.sidePanelProps"/>
                     </div>
+                    <MobileFilterPanel t-if="this.uiService.isSmall and this.filters.some((filter) => filter.active)" model="this.model" />
                 </div>
             </Layout>
         </div>

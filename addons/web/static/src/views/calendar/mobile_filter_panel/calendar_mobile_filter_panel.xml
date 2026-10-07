@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CalendarMobileFilterPanel">
-        <div class="o_other_calendar_panel d-flex align-items-center d-print-none" t-on-click="this.props.toggleSidePanel">
-            <div class="o_filter me-auto d-flex overflow-auto">
+        <div class="o_other_calendar_panel d-flex align-items-center d-print-none">
+            <div class="o_filter d-flex overflow-auto">
                 <t t-foreach="this.props.model.filterSections" t-as="section" t-key="section.fieldName">
                     <t t-if="section.filters.length gt 0">
                         <t t-foreach="this.getSortedFilters(section)" t-as="filter" t-key="filter.value">
@@ -12,6 +12,7 @@
                                     class="oi oi-fw"
                                     t-att-class="this.getFilterColor(filter) !== 'o_color_false' ? 'oi-filled ' + this.getFilterColor(filter) : ''"
                                     data-icon="circle"
+                                    aria-hidden="true"
                                 />
                                 <span name="filter_label" class="ms-1 fw-bold text-nowrap" t-out="filter.label" />
                             </span>
@@ -19,7 +20,6 @@
                     </t>
                 </t>
             </div>
-            <i class="oi oi-fw ms-2" t-attf-data-icon="{{this.caretDirection}}" name="expand_filter_button"/>
         </div>
     </t>
 

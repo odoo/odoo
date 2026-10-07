@@ -1,17 +1,18 @@
 @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
     .o_calendar_container {
         .o_other_calendar_panel {
-            grid-area: 2 / 1 / 2 / 4;
+            grid-area: 4 / 1 / 4 / 4;
             padding: var(--OtherCalendarPanel-padding, 0 var(--o-bs-spacer-2));
             min-height: 30px;
 
-            [data-icon="filter_alt"] {
-                min-height: 1.59rem;
-                line-height: 1.59rem;
-            }
-
             > .o_filter {
                 padding: var(--o-bs-spacer-2) 0;
+                overscroll-behavior-x: contain;
+                scrollbar-width: none;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
 
                 > span > span {
                     font-size: x-small;
@@ -28,13 +29,9 @@
                 }
             }
         }
+    }
 
-        .o_calendar_sidepanel_container {
-            height: 100%;
-
-            > .o_calendar_sidepanel {
-                width: auto;
-            }
-        }
+    .o_bottom_sheet .o_calendar_sidepanel {
+        width: auto;
     }
 }

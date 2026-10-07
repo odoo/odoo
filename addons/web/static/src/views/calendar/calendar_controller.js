@@ -4,6 +4,7 @@ import {
 } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { Layout } from "@web/search/layout";
 import { useModelWithSampleData } from "@web/model/model";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -86,10 +87,13 @@ export class CalendarController extends Component {
             sidePanelExpanded: Boolean(
                 localSidePanelExpanded != null ? JSON.parse(localSidePanelExpanded) : true
             ),
-            mobilePanelOpen: false,
         });
 
         this.searchBarToggler = useSearchBarToggler();
+        this.filtersBottomSheet = usePopover(this.constructor.components.CalendarSidePanel, {
+            useBottomSheet: true,
+            class: "px-0",
+        });
 
         this._baseRendererProps = {
             createRecord: this.createRecord.bind(this),
@@ -187,14 +191,12 @@ export class CalendarController extends Component {
         };
     }
 
-    get mobileFilterPanelProps() {
-        return {
-            model: this.model,
-            sidePanelShown: this.state.mobilePanelOpen,
-            toggleSidePanel: () => {
-                this.state.mobilePanelOpen = !this.state.mobilePanelOpen;
-            },
-        };
+    openFiltersBottomSheet(ev) {
+        this.filtersBottomSheet.open(ev.currentTarget, {
+            ...this.sidePanelProps,
+            sidePanelExpanded: true,
+            inBottomSheet: true,
+        });
     }
 
     get sidePanelProps() {
@@ -203,6 +205,7 @@ export class CalendarController extends Component {
             editRecord: this.editRecord.bind(this),
             sidePanelExpanded: this.sidePanelExpanded,
             toggleSidePanel: this.toggleSidePanel.bind(this),
+            inBottomSheet: false,
         };
     }
 
@@ -211,16 +214,18 @@ export class CalendarController extends Component {
         browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidePanelExpanded);
     }
 
-    get showCalendar() {
-        return !this.uiService.isSmall || !this.sidePanelExpanded;
-    }
-
     get hasSidePanel() {
         return this.model.showDatePicker || this.model.filterSections.length > 0;
     }
 
+    showFiltersButton() {
+        return this.model.filterSections.some(
+            (section) => section.filters.length || section.canAddFilter
+        );
+    }
+
     get sidePanelExpanded() {
-        return this.uiService.isSmall ? this.state.mobilePanelOpen : this.state.sidePanelExpanded;
+        return this.state.sidePanelExpanded;
     }
 
     get filters() {
