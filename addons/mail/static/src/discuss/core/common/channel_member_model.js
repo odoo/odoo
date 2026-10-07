@@ -6,10 +6,18 @@ import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
+/** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
+
 const { DateTime } = luxon;
 
 export class ChannelMember extends Record {
     static _name = "discuss.channel.member";
+    /**
+     * Delay after which the new message separator shown in a displayed channel
+     * no longer marks what is new to the user: a received message can move it,
+     * and leaving the page hides it once everything is read.
+     */
+    static NEW_MESSAGE_SEPARATOR_STALE_DELAY = 2 * 60 * 1000;
 
     setup() {
         super.setup(...arguments);
@@ -60,6 +68,15 @@ export class ChannelMember extends Record {
             function onChangeNewMessageSeparator(newMessageSeparator, isDisplayed) {
                 if (!isDisplayed) {
                     this.new_message_separator_ui = newMessageSeparator;
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.new_message_separator_ui, Boolean(this.channel_id?.isDisplayed)],
+            function onChangeNewMessageSeparatorUi(newMessageSeparatorUi, isDisplayed) {
+                if (isDisplayed) {
+                    this.newMessageSeparatorUiDt = DateTime.now();
                 }
             },
             { immediate: true }
@@ -140,6 +157,15 @@ export class ChannelMember extends Record {
     mute_until_dt = fields.Datetime();
     new_message_separator = null;
     new_message_separator_ui = null;
+    /**
+     * ⚠️ {@link AwaitChatHubInit}
+     *
+     * When the separator shown in the UI was last placed while its channel is
+     * displayed, or when its channel was last displayed.
+     *
+     * @type {luxon.DateTime|undefined}
+     */
+    newMessageSeparatorUiDt;
     isTyping = false;
     get isTypingUi() {
         if (this.channel_id.self_member_id?.mute_until_dt) {
@@ -258,6 +284,62 @@ export class ChannelMember extends Record {
 
     get isSelf() {
         return Boolean(this.store.self?.eq(this.persona));
+    }
+
+    /**
+     * ⚠️ {@link AwaitChatHubInit}
+     *
+     * Whether the new message separator shown in the UI should move above the
+     * given message, just received from someone else.
+     *
+     * The separator is kept after the channel is marked as read, so that new
+     * messages keep their context. Once everything is read, it moves when the
+     * user is away from Odoo, or when it has been shown for a while and the
+     * message is not seen right away or follows a silence.
+     *
+     * @param {import("models").Message} message
+     */
+    shouldMoveNewMessageSeparatorUi(message) {
+        const channel = this.channel_id;
+        if (!channel?.isDisplayed) {
+            return false;
+        }
+        if (this.new_message_separator_ui === 0) {
+            return true;
+        }
+        if (
+            channel.markedAsUnread ||
+            this.message_unread_counter > 0 ||
+            message.isNotification ||
+            message.id <= this.new_message_separator_ui
+        ) {
+            return false;
+        }
+        if (!this.store.env.services.presence.isOdooFocused()) {
+            return true;
+        }
+        const delay = ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY;
+        if (DateTime.now().diff(this.newMessageSeparatorUiDt).milliseconds < delay) {
+            return false;
+        }
+        if (!channel.isFocused || channel.scrollTop !== "bottom") {
+            return true;
+        }
+        const previousMessage = channel.messages.findLast((m) => m.persistent && m.id < message.id);
+        return (
+            !previousMessage ||
+            message.datetime.diff(previousMessage.datetime).milliseconds >= delay
+        );
+    }
+
+    /**
+     * Hide the new message separator shown in the UI when it only marks read
+     * messages. It is shown again above the next received message.
+     */
+    hideReadNewMessageSeparatorUi() {
+        if (this.message_unread_counter === 0 && !this.channel_id?.markedAsUnread) {
+            this.new_message_separator_ui = this.new_message_separator;
+        }
     }
 
     async resendInvitation() {
