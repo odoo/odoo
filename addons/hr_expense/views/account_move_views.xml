@@ -44,6 +44,10 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <list js_class="account_tree" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" sample="1">
+                    <header>
+                        <button type="upload" name="create_document_from_attachment" string="Upload" data-hotkey="shift+i"
+                            invisible="context.get('default_move_type') == 'entry' and not context.get('active_id')"/>
+                    </header>
                     <field name="made_sequence_gap" column_invisible="True"/>
                     <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field" placeholder="/"/>
                     <field name="partner_id" string="Partner" optional="show" readonly="True"/>

@@ -132,6 +132,9 @@ describe("AccountMoveUploadKanbanView", () => {
     test("can render AccountMoveUploadKanbanView", async () => {
         Partner._views.kanban = `
             <kanban js_class="account_documents_kanban">
+                <header>
+                    <button type="upload" name="create_document_from_attachment" string="Upload"/>
+                </header>
                 <templates>
                     <t t-name="card">
                         <field name="name"/>
@@ -145,7 +148,7 @@ describe("AccountMoveUploadKanbanView", () => {
             resModel: "partner",
         });
 
-        expect(".o_control_panel .o_button_upload_bill:visible").toHaveCount(1);
+        expect(".o_control_panel button[type=upload]:visible").toHaveCount(1);
         expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
     });
 });
