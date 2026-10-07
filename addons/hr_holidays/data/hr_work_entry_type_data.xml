@@ -709,6 +709,90 @@
         <field name="count_days_as">calendar</field>
     </record>
 
+<!-- GE : Georgia -->
+    <!-- Overtime is encoded by HR, not requested by the employees: work beyond the standard time and on the
+         public holidays, paid at the increased rate agreed in the contract (Labour Code, art. 27 and 30(4)) -->
+    <record id="hr_work_entry.ge_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <!-- Annual leave: at least 24 working days of paid leave a year (Labour Code, art. 31) -->
+    <record id="hr_work_entry.ge_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.ge"/>
+    </record>
+
+    <!-- Additional paid leave: 10 calendar days for the arduous, harmful or hazardous work, 15 after an
+         emergency service, 30 after a peacekeeping rotation (Labour Code, art. 31(3)) -->
+    <record id="hr_work_entry.l10n_ge_work_entry_type_additional_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.ge"/>
+    </record>
+
+    <!-- Temporary incapacity on a sick certificate, paid by the employer from the first day (MoH Order No.
+         87/ნ of 2009) -->
+    <record id="hr_work_entry.ge_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.ge"/>
+    </record>
+
+    <!-- Maternity leave: 126 calendar days, 143 for a complicated birth or twins, paid by the State through the
+         Social Service Agency (Labour Code, art. 37 and 39) -->
+    <record id="hr_work_entry.l10n_ge_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.ge"/>
+    </record>
+
+    <!-- Parental leave: up to 604 calendar days for either parent, the first 57 paid by the State (Labour
+         Code, art. 37(3)) -->
+    <record id="hr_work_entry.l10n_ge_work_entry_type_parental_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.ge"/>
+    </record>
+
+    <!-- Adoption of a child under 12 months: 550 calendar days, the first 90 paid by the State (Labour Code,
+         art. 38) -->
+    <record id="hr_work_entry.l10n_ge_work_entry_type_adoption_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.ge"/>
+    </record>
+
+    <!-- Additional parental leave: 12 weeks without pay until the child is 5 (Labour Code, art. 40) -->
+    <record id="hr_work_entry.l10n_ge_work_entry_type_additional_parental_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.ge"/>
+    </record>
+
+    <!-- Time off in lieu of the overtime, given within 4 weeks unless agreed otherwise (Labour Code, art.
+         27(3)) -->
+    <record id="hr_work_entry.ge_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">hour</field>
+        <field name="unit_of_measure">hour</field>
+        <field name="country_id" ref="base.ge"/>
+    </record>
+
 <!-- HK : Hong Kong -->
     <record id="hr_work_entry.l10n_hk_work_entry_type_annual_leave" model="hr.work.entry.type">
         <field name="requires_allocation">True</field>
