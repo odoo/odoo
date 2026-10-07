@@ -1,13 +1,32 @@
-import { closestElement } from "@html_editor/utils/dom_traversal";
-import { URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
+import { closestElement, getTextNodesIterator } from "@html_editor/utils/dom_traversal";
+import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
 import { isImageUrl } from "@html_editor/utils/url";
 import { Plugin } from "@html_editor/plugin";
-import { childNodeIndex } from "@html_editor/utils/position";
+import { childNodeIndex, DIRECTIONS } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
+import { splitTextNode } from "@html_editor/utils/dom";
 
-/**
- * @typedef {((text: string, url: string) => void | true)[]} paste_url_overrides
- */
+const nonCapturingEmailRegexSource = EMAIL_REGEX.source.replace("(mailto:)", "(?:mailto:)");
+const linkRegex = new RegExp(`${URL_REGEX.source}|${nonCapturingEmailRegexSource}`, "i");
+const splitTextAroundUrl = (text) => {
+    // todo: add placeholder plugin that prevent any other plugin
+    // Avoid transforming dynamic placeholder pattern to url.
+    if (!text.match(/\${.*}/gi)) {
+        // Remove 'http(s)://' capturing group from the result
+        // (indexes 2, 5, 8, ...).
+        return text.split(linkRegex).filter((_, index) => (index + 1) % 3);
+    }
+};
+export const isSingleUrl = (text) => {
+    const splitAroundUrl = Array.isArray(text) ? text : splitTextAroundUrl(text);
+    return (
+        hasUrls(splitAroundUrl) &&
+        splitAroundUrl.length === 3 &&
+        !splitAroundUrl[0] &&
+        !splitAroundUrl[2]
+    );
+};
+const hasUrls = (splitAroundUrl) => splitAroundUrl && splitAroundUrl.length >= 3;
 
 export class LinkPastePlugin extends Plugin {
     static id = "linkPaste";
@@ -15,106 +34,87 @@ export class LinkPastePlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_will_paste_handlers: this.selectFullySelectedLink.bind(this),
-        paste_text_overrides: this.handlePasteText.bind(this),
+        fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
     };
 
-    /**
-     * @param {EditorSelection} selection
-     * @param {string} text
-     */
-    handlePasteText(selection, text) {
-        let splitAroundUrl;
-        // todo: add placeholder plugin that prevent any other plugin
-        // Avoid transforming dynamic placeholder pattern to url.
-        if (!text.match(/\${.*}/gi)) {
-            splitAroundUrl = text.split(URL_REGEX);
-            // Remove 'http(s)://' capturing group from the result (indexes
-            // 2, 5, 8, ...).
-            splitAroundUrl = splitAroundUrl.filter((_, index) => (index + 1) % 3);
-        }
-        if (
-            !splitAroundUrl ||
-            splitAroundUrl.length < 3 ||
-            closestElement(selection.anchorNode, "pre")
-        ) {
-            // Let the default paste handle the text.
-            return false;
-        }
-        if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2]) {
-            // Pasted content is a single URL.
-            this.handlePasteTextUrl(selection, text);
-        } else {
-            this.handlePasteTextMultiUrl(selection, splitAroundUrl);
-        }
-        return true;
-    }
-    /**
-     * @param {EditorSelection} selection
-     * @param {string} text
-     */
-    handlePasteTextUrl(selection, text) {
-        const selectionIsInsideALink = !!closestElement(selection.anchorNode, "a");
-        const url = deduceURLfromText(text);
-        if (selectionIsInsideALink) {
-            this.handlePasteTextUrlInsideLink(text, url);
-            return;
-        }
-        if (this.delegateTo("paste_url_overrides", text, url)) {
-            return;
-        }
-        let label;
-        const selectedText = cleanZWChars(selection.toString());
-        if (!selection.isCollapsed && selectedText.length) {
-            // If the entire link is selected and its label matches the URL,
-            // replace the existing link with the new URL.
-            const link = findInSelection(selection, "a");
-            if (link) {
-                const linkLabel = cleanZWChars(link.textContent);
-                const href = link.getAttribute("href");
-                const labelMatchesHref =
-                    linkLabel === href || linkLabel + "/" === href || linkLabel === href + "/";
-                label = labelMatchesHref ? text : selectedText;
-            } else {
-                label = selectedText;
+    processFragmentToInsert(fragment) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const isSelectionInsideALink = !!closestElement(selection.anchorNode, "a");
+        const textNodes = [...getTextNodesIterator(fragment)];
+        let isInsertingOnlyUrls = true;
+        const urls = textNodes
+            .flatMap((node) => {
+                if (closestElement(node, "a")) {
+                    return;
+                }
+                const splitAroundUrl = splitTextAroundUrl(node.textContent);
+                if (hasUrls(splitAroundUrl)) {
+                    const urls = [];
+                    for (const [splitIndex, split] of splitAroundUrl.entries()) {
+                        let url = node;
+                        if (split.length < node.length) {
+                            splitTextNode(node, split.length, DIRECTIONS.RIGHT);
+                            url = node.previousSibling;
+                        }
+                        // Even indices will always be plain text, and odd
+                        // indices will always be URL.
+                        if (splitIndex % 2) {
+                            urls.push(url);
+                        } else if (split.length) {
+                            isInsertingOnlyUrls = false;
+                        }
+                    }
+                    return urls;
+                }
+                isInsertingOnlyUrls = false;
+            })
+            .filter(Boolean);
+        const isInsertingOneUrl = isInsertingOnlyUrls && urls.length === 1;
+        // Inserted content is a single URL.
+        if (isInsertingOneUrl) {
+            const node = urls[0];
+            const text = node.textContent;
+            const url = deduceURLfromText(text);
+            if (isSelectionInsideALink && isImageUrl(url)) {
+                const img = this.document.createElement("IMG");
+                img.setAttribute("src", url);
+                node.before(img);
+                node.remove();
+            } else if (!isSelectionInsideALink) {
+                let label;
+                const selectedText = cleanZWChars(selection.toString());
+                if (!selection.isCollapsed && selectedText.length) {
+                    // If the entire link is selected and its label matches the URL,
+                    // replace the existing link with the new URL.
+                    const link = findInSelection(selection, "a");
+                    if (link) {
+                        const linkLabel = cleanZWChars(link.textContent);
+                        const href = link.getAttribute("href");
+                        const labelMatchesHref =
+                            linkLabel === href ||
+                            linkLabel + "/" === href ||
+                            linkLabel === href + "/";
+                        label = labelMatchesHref ? text : selectedText;
+                    } else {
+                        label = selectedText;
+                    }
+                } else {
+                    label = text;
+                }
+                node.replaceWith(this.dependencies.link.createLink(url, label));
             }
-        } else {
-            label = text;
+            return fragment;
         }
-        this.dependencies.link.insertLink(url, label);
-    }
-    /**
-     * @param {string} text
-     * @param {string} url
-     */
-    handlePasteTextUrlInsideLink(text, url) {
-        // A url cannot be transformed inside an existing link.
-        // An image can be embedded inside an existing link, a video cannot.
-        if (isImageUrl(url)) {
-            const img = this.document.createElement("IMG");
-            img.setAttribute("src", url);
-            this.dependencies.dom.insert(img);
-        } else {
-            this.dependencies.dom.insert(text);
-        }
-    }
-    /**
-     * @param {EditorSelection} selection
-     * @param {string[]} splitAroundUrl
-     */
-    handlePasteTextMultiUrl(selection, splitAroundUrl) {
-        const selectionIsInsideALink = !!closestElement(selection.anchorNode, "a");
-        for (let i = 0; i < splitAroundUrl.length; i++) {
-            // Even indexes will always be plain text, and odd indexes will always be URL.
+        // Inserted content is multiple URLs.
+        for (const node of urls) {
             // A url cannot be transformed inside an existing link.
-            if (i % 2 && !selectionIsInsideALink) {
-                const url = deduceURLfromText(splitAroundUrl[i]);
-                this.dependencies.dom.insert(
-                    this.dependencies.link.createLink(url, splitAroundUrl[i])
-                );
-            } else if (splitAroundUrl[i] !== "") {
-                this.dependencies.clipboard.pasteText(splitAroundUrl[i]);
+            if (!isSelectionInsideALink) {
+                const text = node.textContent;
+                const url = deduceURLfromText(text);
+                node.replaceWith(this.dependencies.link.createLink(url, text));
             }
         }
+        return fragment;
     }
 
     /**

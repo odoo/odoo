@@ -14,6 +14,7 @@ import {
 import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { insertTestHtml } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
+import { isTextNode, isVisible, isVisibleTextNode } from "@html_editor/utils/dom_info";
 
 describe("closestElement", () => {
     test("should find the closest element to a text node", () => {
@@ -108,7 +109,7 @@ describe("lastLeaf", () => {
         const [div] = insertTestHtml(
             "<div><div><p>ab<span>cd</span><b><i><u>ef</u></i></b></p></div></div>"
         );
-        const result = lastLeaf(div, isBlock);
+        const result = lastLeaf(div, { stopTraverseFunction: isBlock });
         expect(result).toBe(div);
     });
 
@@ -118,8 +119,25 @@ describe("lastLeaf", () => {
         );
         const b = div.firstChild.firstChild.childNodes[2];
         const ef = b.firstChild.firstChild.firstChild;
-        const result = lastLeaf(b, isBlock);
+        const result = lastLeaf(b, { stopTraverseFunction: isBlock });
         expect(result).toBe(ef);
+    });
+
+    test("should find the deepest visible node", () => {
+        const [div] = insertTestHtml(
+            "<div><p><span>a</span>b<span><span>c</span>d<span><span>\uFEFF</span>\uFEFF</span>\uFEFF</span>\uFEFF</p>\uFEFF</div>"
+        );
+        const result = lastLeaf(div, { predicate: isVisible });
+        expect(result.nodeType).toBe(Node.TEXT_NODE);
+        expect(result.textContent).toBe("d");
+    });
+
+    test("should not return a skipped node", () => {
+        const [div] = insertTestHtml("<div><p><span>\uFEFF</span></p></div>");
+        const result = lastLeaf(div, {
+            predicate: (node) => !(isTextNode(node) && !isVisibleTextNode(node)),
+        });
+        expect(result).toBe(div.querySelector("span"));
     });
 });
 
@@ -138,7 +156,7 @@ describe("firstLeaf", () => {
         const [div] = insertTestHtml(
             "<div><div><p>ab<span>cd</span><b><i><u>ef</u></i></b></p></div></div>"
         );
-        const result = firstLeaf(div, isBlock);
+        const result = firstLeaf(div, { stopTraverseFunction: isBlock });
         expect(result).toBe(div);
     });
 
@@ -148,8 +166,25 @@ describe("firstLeaf", () => {
         );
         const b = div.firstChild.firstChild.firstChild;
         const ab = b.firstChild.firstChild.firstChild;
-        const result = firstLeaf(b, isBlock);
+        const result = firstLeaf(b, { stopTraverseFunction: isBlock });
         expect(result).toBe(ab);
+    });
+
+    test("should find the deepest first node that isn't the letter 'a'", () => {
+        const [div] = insertTestHtml(
+            "<div>\uFEFF<p>\uFEFF<span>\uFEFF<span>b</span></span>c<span><span>d</span>e<span><span>f</span></span></span></p></div>"
+        );
+        const result = firstLeaf(div, { predicate: isVisible });
+        expect(result.nodeType).toBe(Node.TEXT_NODE);
+        expect(result.textContent).toBe("b");
+    });
+
+    test("should not return a skipped node", () => {
+        const [div] = insertTestHtml("<div><p><span>\uFEFF</span></p></div>");
+        const result = firstLeaf(div, {
+            predicate: (node) => !(isTextNode(node) && !isVisibleTextNode(node)),
+        });
+        expect(result).toBe(div.querySelector("span"));
     });
 });
 

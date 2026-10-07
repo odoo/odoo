@@ -318,7 +318,7 @@ describe("Simple text", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "a\nb\nc\nd");
                 },
-                contentAfter: "<div>a</div>" + "<div>b</div>" + "<div>c</div>" + "<p>d[]</p>",
+                contentAfter: "<p>a</p>" + "<p>b</p>" + "<p>c</p>" + "<p>d[]</p>",
             });
         });
 
@@ -329,7 +329,7 @@ describe("Simple text", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "a\r\nb\r\nc\r\nd");
                 },
-                contentAfter: "<div>a</div>" + "<div>b</div>" + "<div>c</div>" + "<p>d[]</p>",
+                contentAfter: "<p>a</p>" + "<p>b</p>" + "<p>c</p>" + "<p>d[]</p>",
             });
         });
 
@@ -359,7 +359,7 @@ describe("Simple text", () => {
                 stepFunction: async (editor) => {
                     pasteText(editor, "a\nb\nc");
                 },
-                contentAfter: "<pre>a<br>b<br>c[]</pre>",
+                contentAfter: "<pre>a\nb\nc[]</pre>",
             });
         });
 
@@ -373,7 +373,7 @@ describe("Simple text", () => {
                     );
                 },
                 contentAfter:
-                    "<pre>function example() {<br>    console.log('Hello,    world!');<br>    // Indented    comment<br>}[]</pre>",
+                    "<pre>function example() {\n    console.log('Hello,    world!');\n    // Indented    comment\n}[]</pre>",
             });
         });
     });
@@ -1437,8 +1437,40 @@ describe("Unwrapping html element", () => {
 });
 
 describe("Complex html span", () => {
+    const spanStyle =
+        "font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, " +
+        "Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;" +
+        "Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;" +
+        "Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; " +
+        "letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; " +
+        "text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; " +
+        "-webkit-text-stroke-width: 0px; text-decoration-thickness: initial; " +
+        "text-decoration-style: initial; text-decoration-color: initial; " +
+        "display: inline !important; float: none;";
+    const bStyle =
+        "box-sizing: border-box; font-weight: bolder; font-family: -apple-system, " +
+        "BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, " +
+        "&quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, " +
+        "&quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; " +
+        "font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; " +
+        "orphans: 2; text-align: left; text-indent: 0px; text-transform: none; " +
+        "white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; " +
+        "text-decoration-thickness: initial; text-decoration-style: initial; " +
+        "text-decoration-color: initial";
+    const span2Style =
+        "font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, " +
+        "Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, " +
+        "&quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, " +
+        "&quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; " +
+        "letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; " +
+        "text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; " +
+        "-webkit-text-stroke-width: 0px; text-decoration-thickness: initial; " +
+        "text-decoration-style: initial; text-decoration-color: initial; " +
+        "display: inline !important; float: none";
     const complexHtmlData =
-        '<span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">1</span><b style="box-sizing: border-box; font-weight: bolder; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">23</b><span style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans&quot;, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;, &quot;Noto Color Emoji&quot;; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: left; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"><span> </span>4</span>';
+        `<span style="${spanStyle}">1</span>` +
+        `<b style="${bStyle}">23</b>` +
+        `<span style="${span2Style}"><span>\u00A0</span>4</span>`;
 
     describe("range collapsed", () => {
         test("should paste a text at the beginning of a p", async () => {
@@ -1913,7 +1945,7 @@ describe("Complex html 3 p", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c1<i>X</i>2</span><p>3<i>X</i>4</p><span class="a">5<i>X</i>6[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c1<i>X</i>2</span><p>3<i>X</i>4</p>5<i>X</i>6[]f</div>',
             });
         });
 
@@ -1968,7 +2000,7 @@ describe("Complex html 3 p", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div>2a<span class="a">b1<i>X</i>2</span><p>3<i>X</i>4</p><span class="a">5<i>X</i>6[]</span>e<br>f</div>',
+                    '<div>2a<span class="a">b1<i>X</i>2</span><p>3<i>X</i>4</p>5<i>X</i>6[]e<br>f</div>',
             });
         });
     });
@@ -2102,18 +2134,18 @@ describe("Complex html p+i", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c12<i><br>ii</i>[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c12<br><i>ii</i>[]</span>f</div>',
             });
         });
 
-        test("should paste a text when selection leave a spanunsplittable (2)", async () => {
+        test("should paste a text when selection leave a span unsplittable (2)", async () => {
             await testEditor({
                 contentBefore: '<div class="oe_unbreakable">2a[b<span class="a">c]d</span>ef</div>',
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">2a12<i><br>ii</i>[]<span class="a">d</span>ef</div>',
+                    '<div class="oe_unbreakable">2a12<br><i>ii</i>[]<span class="a">d</span>ef</div>',
             });
         });
 
@@ -2164,7 +2196,7 @@ describe("Complex html p+i", () => {
                 stepFunction: async (editor) => {
                     pasteHtml(editor, complexHtmlData);
                 },
-                contentAfter: `<div class="oe_unbreakable">2a<span class="a">b12<i><br>ii</i>[]</span>e<br>f</div>`,
+                contentAfter: `<div class="oe_unbreakable">2a<span class="a">b12<br><i>ii</i>[]</span>e<br>f</div>`,
             });
         });
     });
@@ -2297,7 +2329,7 @@ describe("Complex html 3p+b", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div class="oe_unbreakable">1ab<span class="a">c1<b>23</b></span><p>zzz</p><span class="a">45<b>6</b>7[]</span>f</div>',
+                    '<div class="oe_unbreakable">1ab<span class="a">c1<b>23</b></span><p>zzz</p>45<b>6</b>7[]f</div>',
             });
         });
 
@@ -2330,7 +2362,7 @@ describe("Complex html 3p+b", () => {
                     pasteHtml(editor, complexHtmlData);
                 },
                 contentAfter:
-                    '<div>2a<span class="a">b1<b>23</b></span><p>zzz</p><span class="a">45<b>6</b>7[]</span>e<br>f</div>',
+                    '<div>2a<span class="a">b1<b>23</b></span><p>zzz</p>45<b>6</b>7[]e<br>f</div>',
             });
         });
     });
@@ -2583,6 +2615,53 @@ describe("Special cases", () => {
                                                 <li>abc</li>
                                             </ul>
                                         </li>
+                                        <li>def</li>
+                                    </ul>
+                                </li>
+                                <li>ghi</li>
+                            </ul>
+                        </li>
+                        <li>jkl[]</li>
+                    </ul>
+                `),
+            });
+        });
+
+        test("should paste a nested list into another list (3)", async () => {
+            await testEditor({
+                contentBefore: "<ul><li>Alpha</li><li>Beta[]</li></ul>",
+                stepFunction: async (editor) => {
+                    pasteHtml(
+                        editor,
+                        unformat(`
+                            <ol>
+                                <li class="oe-nested">
+                                    <ul>
+                                        <li class="oe-nested">
+                                            <ol>
+                                                <li class="oe-nested">
+                                                    <ul class="o_checklist">
+                                                        <li>abc</li>
+                                                    </ul>
+                                                </li>
+                                                <li>def</li>
+                                            </ol>
+                                        </li>
+                                        <li>ghi</li>
+                                    </ul>
+                                </li>
+                                <li>jkl</li>
+                            </ol>
+                        `)
+                    );
+                },
+                contentAfter: unformat(`
+                    <ul>
+                        <li>Alpha</li>
+                        <li><p>Betaabc</p>
+                            <ul>
+                                <li class="oe-nested">
+                                    <ul>
                                         <li>def</li>
                                     </ul>
                                 </li>
@@ -3140,7 +3219,7 @@ describe("link", () => {
                     pasteText(editor, "odoo.com\ngoogle.com");
                 },
                 contentAfter:
-                    '<div><a href="https://odoo.com">odoo.com</a></div>' +
+                    '<p><a href="https://odoo.com">odoo.com</a></p>' +
                     '<p><a href="https://google.com">google.com</a>[]</p>',
             });
         });
@@ -3155,7 +3234,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com</a>[]</p>',
             });
         });
         test("should paste html content over an empty link (collapsed) (2)", async () => {
@@ -3168,7 +3247,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com</a>[]</p>',
             });
         });
 
@@ -3610,7 +3689,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://google.com">google.com</a>[]</p>',
             });
         });
         test("should paste html content over a link if all of its contents is selected (not collapsed) (2)", async () => {
@@ -3623,7 +3702,7 @@ describe("link", () => {
                     );
                 },
                 contentAfter:
-                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com[]</a></p>',
+                    '<p><a href="https://www.odoo.com">odoo.com</a></p><p><a href="https://www.google.com">google.com</a>[]</p>',
             });
         });
         test("should paste URL as label when link with same label and href is selected", async () => {
@@ -4937,9 +5016,9 @@ describe("paste table cells into an existing table", () => {
                                 <p>before</p>
                                 <table class="table table-bordered o_table">
                                     <tbody>
-                                        <tr><td><p>x</p></td></tr>
+                                        <tr><td><p>x[]</p></td></tr>
                                     </tbody>
-                                </table>[]
+                                </table>
                                 <p>a</p>
                             </td>
                             <td><p>b</p></td>

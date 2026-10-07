@@ -19,7 +19,7 @@ const CAPTION_SPAN_SELECTOR = "span.o_caption_editable";
 
 export class CaptionPlugin extends Plugin {
     static id = "caption";
-    static dependencies = ["image", "split", "history", "selection", "baseContainer", "clipboard"];
+    static dependencies = ["image", "split", "history", "selection", "baseContainer", "dom"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -62,6 +62,11 @@ export class CaptionPlugin extends Plugin {
                 return false;
             }
         },
+        can_hold_selection_after_insertion_predicates: (node) => {
+            if (closestElement(node, CAPTION_SPAN_SELECTOR)) {
+                return true;
+            }
+        },
         is_node_splittable_predicates: [
             (node) => {
                 // avoid merge
@@ -83,17 +88,15 @@ export class CaptionPlugin extends Plugin {
                 return DISABLED_NAMESPACE;
             }
         }),
-        html_drop_overrides: this.onDrop.bind(this),
-        paste_text_overrides: this.onPaste.bind(this),
-        paste_html_overrides: this.onPaste.bind(this),
-        paste_odoo_editor_html_overrides: this.onPaste.bind(this),
+        plain_text_container_selectors: CAPTION_SPAN_SELECTOR,
         normalize_processors: (root) => {
             let figures = [];
             if (root.matches(CAPTION_SPAN_SELECTOR)) {
                 figures = [closestElement(root, "figure")];
             } else {
-                figures = [...root.querySelectorAll("figure")]
-                    .filter(figure => figure.querySelectorAll("img").length === 1);
+                figures = [...root.querySelectorAll("figure")].filter(
+                    (figure) => figure.querySelectorAll("img").length === 1
+                );
             }
             figures.forEach((figure) => {
                 const captionSpan = figure.querySelector(CAPTION_SPAN_SELECTOR);
@@ -134,8 +137,9 @@ export class CaptionPlugin extends Plugin {
     };
 
     setup() {
-        const figures = [...this.editable.querySelectorAll("figure")]
-            .filter(figure => figure.querySelectorAll("img").length === 1);
+        const figures = [...this.editable.querySelectorAll("figure")].filter(
+            (figure) => figure.querySelectorAll("img").length === 1
+        );
         for (const figure of figures) {
             const image = figure.querySelector("img");
             figure.before(image);
@@ -146,24 +150,10 @@ export class CaptionPlugin extends Plugin {
         }
     }
 
-    onDrop(selection, text) {
-        if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
-            this.dependencies.clipboard.pasteText(text.replace(/\r?\n|\r/g, ""));
-            return true;
-        }
-    }
-
-    onPaste(selection, clipboardRoot) {
-        if (closestElement(selection.anchorNode, CAPTION_SPAN_SELECTOR)) {
-            const pastedTextContent = clipboardRoot.textContent;
-            this.dependencies.clipboard.pasteText(pastedTextContent.replace(/\r?\n|\r/g, ""));
-            return true;
-        }
-    }
-
     cleanForSave(root) {
-        const figures = [...root.querySelectorAll("figure")]
-            .filter(figure => figure.querySelectorAll("img").length === 1);
+        const figures = [...root.querySelectorAll("figure")].filter(
+            (figure) => figure.querySelectorAll("img").length === 1
+        );
         for (const figure of figures) {
             figure.removeAttribute("contenteditable");
             const image = figure.querySelector("img");

@@ -1,16 +1,34 @@
-import { getDeepestPosition, isParagraphRelatedElement } from "@html_editor/utils/dom_info";
+import {
+    allowsParagraphRelatedElements,
+    getDeepestPosition,
+    isEditionBoundary,
+    isParagraphRelatedElement,
+    isPhrasingContent,
+} from "@html_editor/utils/dom_info";
 import { Plugin } from "../plugin";
 import { isNotAllowedContent } from "./selection_plugin";
 import { endPos, startPos } from "@html_editor/utils/position";
-import { childNodes } from "@html_editor/utils/dom_traversal";
+import { childNodes, getConnectedParents } from "@html_editor/utils/dom_traversal";
 
+// These elements should only have inline content (even if they have a `block`
+// display style, for example if they are in a flex)
+// NOTE: h1, h2, ..., p, pre already prevents wrapping their children into block
+const ONLY_ALLOW_INLINE_TAGS = new Set([
+    ...["a", "em", "strong", "small", "s", "cite", "q", "abbr", "data", "time", "code"],
+    ...["samp", "sub", "sup", "i", "b", "u", "mark", "bdi", "span", "label", "button"],
+]);
+
+/**
+ * @typedef {((el: HTMLElement) => boolean | void)[]} are_inlines_allowed_at_root_predicates
+ */
 export class NoInlineRootPlugin extends Plugin {
     static id = "noInlineRoot";
-    static dependencies = ["baseContainer", "selection", "history"];
+    static dependencies = ["baseContainer", "selection", "history", "dom"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
         fix_selection_on_editable_root_overrides: this.fixSelectionOnEditableRoot.bind(this),
+        inserted_content_processors: this.processInsertedContent.bind(this),
     };
 
     setup() {
@@ -25,6 +43,22 @@ export class NoInlineRootPlugin extends Plugin {
         });
     }
 
+    /**
+     * Return true if inlines are allowed at root, false otherwise.
+     *
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    areInlinesAllowedAtRoot(node) {
+        if (ONLY_ALLOW_INLINE_TAGS.has(node.tagName.toLowerCase())) {
+            return true;
+        }
+        return (
+            ONLY_ALLOW_INLINE_TAGS.has(node.tagName.toLowerCase()) ||
+            (this.checkPredicates("are_inlines_allowed_at_root_predicates", node) ??
+                this.config.allowInlineAtRoot)
+        );
+    }
     /**
      * Places the cursor in a safe place (not the editable root).
      * Inserts an empty paragraph if selection results from mouse click and
@@ -89,5 +123,33 @@ export class NoInlineRootPlugin extends Plugin {
             return true;
         }
         return false;
+    }
+    /**
+     * When insertion produced inline siblings in places where inline content is
+     * not allowed, wrap them into base containers.
+     *
+     * @param {Node[]} insertedNodes
+     */
+    processInsertedContent(insertedNodes) {
+        for (const parent of getConnectedParents(insertedNodes)) {
+            if (
+                !this.areInlinesAllowedAtRoot(parent) &&
+                isEditionBoundary(parent, this.editable) &&
+                allowsParagraphRelatedElements(parent) &&
+                !isPhrasingContent(parent)
+            ) {
+                // Ensure that edition boundaries do not have inline content.
+                const map = this.dependencies.dom.wrapInlinesInBlocks(parent, {
+                    baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+                });
+                for (const [node, result] of map.entries()) {
+                    const index = insertedNodes.indexOf(node);
+                    if (index !== -1) {
+                        insertedNodes.splice(...[index, 1, result].filter((item) => item !== null));
+                    }
+                }
+            }
+        }
+        return insertedNodes;
     }
 }

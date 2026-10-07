@@ -202,7 +202,7 @@ export class TablePlugin extends Plugin {
         on_will_split_block_handlers: this.resetTableSelection.bind(this),
 
         /** Processors */
-        before_insert_processors: this.normalizeTableStructure.bind(this),
+        fragment_to_insert_processors: this.normalizeTableStructure.bind(this),
         clean_for_save_processors: (root) => {
             this.deselectTable(root);
             return root;
@@ -253,6 +253,18 @@ export class TablePlugin extends Plugin {
                 return false;
             } else if (["TD", "TH"].includes(container.nodeName) && container.closest(".o_table")) {
                 return true;
+            }
+        },
+        can_hold_selection_after_insertion_predicates: (container) => {
+            if (container.nodeName === "TD" || container.nodeName === "TH") {
+                let afterTable = closestElement(container, "table").nextElementSibling;
+                const systemNode = this.getResource("system_node_selectors").join(",");
+                while (afterTable?.matches(systemNode)) {
+                    afterTable = afterTable.nextElementSibling;
+                }
+                if (!afterTable) {
+                    return true;
+                }
             }
         },
 
