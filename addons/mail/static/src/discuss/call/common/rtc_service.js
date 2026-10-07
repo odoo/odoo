@@ -147,15 +147,12 @@ const VIEW_TO_RESTORE = Object.freeze({
 });
 
 /**
- * @param {Array<RTCIceServer>} iceServers
+ * @param {Array<RTCIceServer & { url?: string }>} iceServers
  * @returns {Boolean}
  */
 function hasTurn(iceServers) {
-    return iceServers.some(
-        (server) =>
-            server.url?.startsWith("turn:") ||
-            server.urls?.startsWith?.("turn:") ||
-            server.urls?.some?.((url) => url.startsWith("turn:"))
+    return iceServers.some((server) =>
+        [server.url, server.urls].flat().some((url) => url?.startsWith("turn:"))
     );
 }
 
@@ -382,9 +379,9 @@ export class Rtc extends Record {
     timeouts = new Map();
     /** @type {Map<number, number>} timeoutId by sessionId for download pausing delay */
     downloadTimeouts = new Map();
-    /** @type {{urls: string[]}[]} */
+    /** @type {RTCIceServer[]|false} */
     iceServers = undefined;
-    /** @returns {{urls: string[]}[]} */
+    /** @returns {RTCIceServer[]} */
     get effectiveIceServers() {
         return this.iceServers ? this.iceServers : GET_DEFAULT_ICE_SERVERS();
     }

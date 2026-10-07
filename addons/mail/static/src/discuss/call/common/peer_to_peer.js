@@ -208,7 +208,7 @@ export class PeerToPeer extends EventTarget {
         isCameraOn: false,
         isScreenSharingOn: false,
     });
-    /** @type {String[]} */
+    /** @type {RTCIceServer[]} */
     _iceServers;
     _isPendingNotify = false;
     _notificationsToSend = new Map();
@@ -272,7 +272,7 @@ export class PeerToPeer extends EventTarget {
      * @param {any} channelId
      * @param {object} [options]
      * @param {Info} [options.info={}]
-     * @param {array} [options.iceServers=DEFAULT_ICE_SERVERS]
+     * @param {RTCIceServer[]} [options.iceServers=DEFAULT_ICE_SERVERS]
      */
     connect(selfId, channelId, { info = {}, iceServers = DEFAULT_ICE_SERVERS } = {}) {
         if (!IS_CLIENT_RTC_COMPATIBLE) {
