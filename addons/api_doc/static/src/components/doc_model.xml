@@ -6,7 +6,6 @@
         <h2 class="w-100 mb-2 mt-2" t-out="this.modelName"></h2>
         <DocCopyablePre class="'o-doc-model-name mb-2'" value="this.modelTechnicalName"/>
         <p t-if="this.showDescription" title="Derived from _explanation attribute" t-out="this.state.model.doc"/>
-
         <h3 class="mt-3 mb-2" id="fields">Fields</h3>
         <DocLoadingIndicator
             isLoaded="this.isDocTableLoaded()"
