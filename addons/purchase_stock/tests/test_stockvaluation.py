@@ -3155,7 +3155,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         receipt_rate = 2.2
 
         self.env['res.currency.rate'].search([]).unlink()
-        self.env['res.currency.rate'].create([
+        rates = self.env['res.currency.rate'].create([
             {
                 'name': po_date,
                 'rate': po_rate,
@@ -3197,6 +3197,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             bill = po.invoice_ids
             bill.invoice_date = bill_date
             bill.action_post()
+            # the rate at the bill date changes after posting the bill
+            rates[1].rate = 1.6
 
         with freeze_time(receipt_date):
             receipt = po.picking_ids
@@ -3218,6 +3220,45 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 0,    'credit': 50.0, 'reconciled': True,  'amount_currency': -100.0, 'account_id': stock_in_id},
             {'debit': 50.0, 'credit': 0,    'reconciled': False, 'amount_currency': 100.0,  'account_id': stock_valuation},
         ])
+
+    def test_partial_receipts_with_bill_rate_different_from_rate_table(self):
+        """ When billed between two partial receipts at a rate that differs from the rate table,
+        the second receipt should take the remaining value of the bill at the bill rate """
+        self.product1.purchase_method = 'purchase'
+        self.product1.categ_id.property_cost_method = 'average'
+
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'rate': 1.0,
+            'currency_id': self.eur_currency.id,
+            'company_id': self.env.company.id,
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'currency_id': self.eur_currency.id,
+            'order_line': [Command.create({
+                'product_id': self.product1.id,
+                'product_qty': 10.0,
+                'price_unit': 50,
+                'taxes_id': False,
+            })],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids.write({'quantity': 4.0, 'picked': True})
+        receipt._action_done()  # Create Backorder
+
+        po.action_create_invoice()
+        bill = po.invoice_ids
+        bill.invoice_date = fields.Date.today()
+        bill.invoice_currency_rate = 0.8
+        bill.action_post()
+
+        backorder = po.picking_ids - receipt
+        backorder.button_validate()
+
+        # 500 EUR billed at rate 0.8 = 625, 250 already valued for the first 4 units
+        self.assertEqual(backorder.move_ids.stock_valuation_layer_ids.value, 375.0)
 
     def test_analytic_distribution_propagation_with_exchange_difference(self):
         # Create 2 rates in order to generate an exchange difference later.
