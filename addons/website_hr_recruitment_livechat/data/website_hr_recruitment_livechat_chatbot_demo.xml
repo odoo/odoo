@@ -105,7 +105,7 @@
         <record id="chatbot_script_website_hr_recruitment_sales_chat_hr_no" model="chatbot.script.answer">
             <field name="name">No I will discover by myself!</field>
             <field name="sequence">2</field>
-            <field name="redirect_link">/jobs/marketing-and-community-manager-6</field>
+            <field name="redirect_link" model="hr.job" eval="obj(ref('hr.job_marketing')).website_url"/>
             <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_sales_chat_hr"/>
         </record>
 
@@ -212,7 +212,7 @@
         <record id="chatbot_script_website_hr_recruitment_service_community_chat_hr_no" model="chatbot.script.answer">
             <field name="name">No I will discover by myself!</field>
             <field name="sequence">2</field>
-            <field name="redirect_link">/jobs/marketing-and-community-manager-6</field>
+            <field name="redirect_link" model="hr.job" eval="obj(ref('hr.job_marketing')).website_url"/>
             <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_service_community_chat_hr"/>
         </record>
 
@@ -301,7 +301,7 @@
         <record id="chatbot_script_website_hr_recruitment_services_consultant_chat_hr_no" model="chatbot.script.answer">
             <field name="name">No I will discover by myself!</field>
             <field name="sequence">2</field>
-            <field name="redirect_link">/jobs/consultant-3</field>
+            <field name="redirect_link" model="hr.job" eval="obj(ref('hr.job_consultant')).website_url"/>
             <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_services_consultant_chat_hr"/>
         </record>
 
@@ -392,7 +392,7 @@
         <record id="chatbot_script_website_hr_recruitment_rd_chat_hr_no" model="chatbot.script.answer">
             <field name="name">No I will discover by myself!</field>
             <field name="sequence">2</field>
-            <field name="redirect_link">/jobs/experienced-developer-4</field>
+            <field name="redirect_link" model="hr.job" eval="obj(ref('hr.job_developer')).website_url"/>
             <field name="script_step_id" ref="chatbot_script_website_hr_recruitment_rd_chat_hr"/>
         </record>
 
