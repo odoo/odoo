@@ -96,7 +96,7 @@ export class DocModel extends Component {
     }
 
     get showDescription() {
-        return !!this.state.model?.doc;
+        return !!this.state.model?.doc && this.state.model.doc != "false";
     }
 
     get modelName() {
