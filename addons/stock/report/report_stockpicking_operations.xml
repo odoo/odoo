@@ -6,7 +6,8 @@
             <t t-call="web.report_layout">
                 <div class="article o_report_layout_standard">
                     <t t-foreach="docs" t-as="o">
-                        <t t-set="address" t-value="None"/>
+                        <t t-set="moves" t-value="o.move_ids"/>
+                        <t t-set="move_lines" t-value="moves.move_line_ids"/>
                         <div class="page">
                             <div class="row justify-content-between">
                                 <div class="col-4">
@@ -25,7 +26,7 @@
                                 <div class="col-6" name="div_outgoing_address">
                                     <div t-if="o.should_print_delivery_address()">
                                         <strong>Delivery Address:</strong>
-                                        <div t-out="o.move_ids[0].partner_id or o.partner_id"
+                                        <div t-out="moves[0].partner_id or o.partner_id"
                                             t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'>
                                                 <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
                                                     <strong>Delivery address</strong>
@@ -104,9 +105,9 @@
                                 then we then loop over indvidual move lines and print a breakdown of them
                                 4. If a move contains only one move line, the move is summarized in the heading only
                             -->
-                            <table class="table o_main_table" t-if="o.move_line_ids and o.move_ids.move_line_ids.filtered(lambda ml: not ml.is_entire_pack)" style="table-layout: fixed; width: 100%">
-                                <t t-set="picking_has_barcode" t-value="any(move_line.product_id and move_line.product_id.barcode for move_line in o.move_line_ids)"/>
-                                <t t-set="picking_has_serial_number" t-value="any(move_line.lot_id or move_line.lot_name for move_line in o.move_line_ids)" groups="stock.group_production_lot"/>
+                            <table class="table o_main_table" t-if="any(not ml.is_entire_pack for ml in move_lines)" style="table-layout: fixed; width: 100%">
+                                <t t-set="picking_has_barcode" t-value="any(move_line.product_id and move_line.product_id.barcode for move_line in move_lines)"/>
+                                <t t-set="picking_has_serial_number" t-value="any(move_line.lot_id or move_line.lot_name for move_line in move_lines)" groups="stock.group_production_lot"/>
                                 <t t-set="barcode_col_exists" t-value="picking_has_barcode or picking_has_serial_number"/>
                                 <t t-set="from_col_exists" t-value="o.picking_type_id.code != 'incoming'"/>
                                 <t t-set="to_col_exists" t-value="o.picking_type_id.code != 'outgoing'"/>
@@ -130,7 +131,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="o.move_ids.filtered(lambda m: m.quantity and any(not ml.is_entire_pack for ml in m.move_line_ids)).sorted(key=lambda
+                                    <t t-foreach="moves.filtered(lambda m: m.quantity and any(not ml.is_entire_pack for ml in m.move_line_ids)).sorted(key=lambda
                                                   move: (move.move_line_ids and move.move_line_ids[0].location_id.complete_name,
                                                   move.move_line_ids and move.move_line_ids[0].location_dest_id.complete_name))" t-as="move">
                                         <t t-set="move_lines_without_entire_pack" t-value="move.move_line_ids.filtered(lambda ml: not ml.is_entire_pack)"/>
@@ -214,7 +215,7 @@
                                     </t>
                                     </tbody>
                             </table>
-                            <div t-if="not (any(ml.is_entire_pack for ml in o.move_line_ids) and o.state in ['assigned', 'done'])" class="oe_structure"></div>
+                            <div t-if="not (any(ml.is_entire_pack for ml in move_lines) and o.state in ['assigned', 'done'])" class="oe_structure"></div>
                             <table t-else="" class="table table-borderless">
                                 <thead>
                                     <tr>
@@ -225,7 +226,7 @@
                                 </thead>
                                 <tbody>
                                     <t t-if="o.state != 'done'">
-                                        <tr t-foreach="o.move_line_ids.filtered(lambda ml: ml.is_entire_pack).package_id.outermost_package_id.sorted(key=lambda p: p.name)" t-as="package">
+                                        <tr t-foreach="move_lines.filtered(lambda ml: ml.is_entire_pack).package_id.outermost_package_id.sorted(key=lambda p: p.name)" t-as="package">
                                             <td name="td_pk_barcode">
                                                 <t t-set="package" t-value="package.with_context(picking_id=o.id)" />
                                                 <div t-field="package.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;margin-left: -50px;'}">
@@ -269,8 +270,7 @@
                                 </tbody>
                             </table>
 
-                            <t t-set="no_reserved_product" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty &gt; x.quantity and x.move_line_ids and x.state!='done')"/>
-                            <p t-if="o.state in ['draft', 'waiting', 'confirmed'] or no_reserved_product"><i class="oi" data-icon="warning" />
+                            <p t-if="o.state not in ('done', 'cancel') and any(m.product_uom_qty &gt; m.quantity for m in moves)"><i class="oi" data-icon="warning"/>
                                 All products could not be reserved. Click on the "Reserve" button to try to reserve products.
                             </p>
                             <p t-else=""/>
