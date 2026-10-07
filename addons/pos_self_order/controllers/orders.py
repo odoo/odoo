@@ -10,6 +10,8 @@ class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
     def process_order(self, order, access_token, table_identifier, device_type):
         pos_config, table = self._verify_authorization(access_token, table_identifier, order)
+        if order.get('partner_id') and not self._is_session_partner(pos_config, order['partner_id']):
+            order['partner_id'] = False
 
         # Create a safe copy of the order with only the necessary fields for order creation to
         # avoid potential security issues and to reduce the payload size
@@ -66,8 +68,7 @@ class PosSelfOrderController(http.Controller):
     def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
         pos_config = self._verify_pos_config(access_token)
         POSOrder = pos_config.env['pos.order']
-        existing_partner = POSOrder._get_self_partner_from_token(pos_config, partner_id)
-        if existing_partner and existing_partner.exists():
+        if self._is_session_partner(pos_config, partner_id):
             return {
                 'res.partner': [{'id': partner_id}],
             }
@@ -85,10 +86,18 @@ class PosSelfOrderController(http.Controller):
             'state_id': state_id.id if state_id else False,
             'company_id': pos_config.company_id.id,
         })
+        # Only the last few partners are kept in the session
+        request.session['pos_self_order_partner_ids'] = [*request.session.get('pos_self_order_partner_ids', []), partner_sudo.id][-10:]
 
         return {
             'res.partner': [{'id': POSOrder._get_signed_self_partner_id(pos_config, partner_sudo.id)}],
         }
+
+    def _is_session_partner(self, pos_config, signed_partner):
+        """ A signed partner can be shared with other customers (e.g. the orders of a table), only
+        accept it from the session that created it. """
+        partner = pos_config.env['pos.order']._get_self_partner_from_token(pos_config, signed_partner)
+        return bool(partner) and partner.id in request.session.get('pos_self_order_partner_ids', [])
 
     @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
     def remove_order(self, access_token, order_id, order_access_token):
