@@ -17,6 +17,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { Thread } from "@mail/core/common/thread_model";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
+import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click as hootClick,
@@ -26,7 +27,7 @@ import {
     waitForNone,
     waitUntil,
 } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
+import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import {
     Command,
     contains,
@@ -522,4 +523,384 @@ test("mark as unread waits for the mark as read in flight", async () => {
                 .new_message_separator === messageId
     );
     await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+async function waitForChannelRead(channelId) {
+    const channel = getService("mail.store")["discuss.channel"].get(channelId);
+    await waitUntil(
+        () =>
+            channel.self_member_id.message_unread_counter === 0 &&
+            channel.self_member_id.new_message_separator > channel.newestPersistentMessage.id
+    );
+}
+
+function postMessageAs(userId, channelId, body) {
+    return withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body, message_type: "comment", subtype_xmlid: "mail.mt_comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+}
+
+test("keep new message separator when message is received while reading new messages", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [readMessageId] = pyEnv["mail.message"].create([
+        {
+            author_id: bobPartnerId,
+            body: "Message 0",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: bobPartnerId,
+            body: "Message 1",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: readMessageId + 1 });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitForChannelRead(channelId);
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Message:has(:text('Message 2')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+test("move new message separator to message received while away from the page", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [readMessageId] = pyEnv["mail.message"].create([
+        {
+            author_id: bobPartnerId,
+            body: "Message 0",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: bobPartnerId,
+            body: "Message 1",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: readMessageId + 1 });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitForChannelRead(channelId);
+    patch(parent.document, { hasFocus: () => false });
+    window.dispatchEvent(new Event("blur"));
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 2')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+test("move new message separator to important notification received while away from the page", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [readMessageId] = pyEnv["mail.message"].create([
+        {
+            author_id: bobPartnerId,
+            body: "Message 0",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: bobPartnerId,
+            body: "Message 1",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: readMessageId + 1 });
+    const importantSubtypeId = pyEnv["mail.message.subtype"].create({
+        name: "Important Notification",
+        subtype_xmlid: "mail.mt_important_notification",
+    });
+    // Send the important notification subtype, which the mock server lacks.
+    patch(pyEnv["res.users"], {
+        _init_store_data(store) {
+            super._init_store_data(...arguments);
+            store.add_global_values({ mt_important_notification: importantSubtypeId });
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitForChannelRead(channelId);
+    patch(parent.document, { hasFocus: () => false });
+    window.dispatchEvent(new Event("blur"));
+    await withUser(bobUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "Bob started a call",
+                message_type: "notification",
+                subtype_xmlid: "mail.mt_important_notification",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Message:has(:text('Message 2')):count(1)");
+    await waitFor(
+        ".o-mail-Thread-newMessage + .o-mail-NotificationMessage:has(:text('Bob started a call')):count(1)"
+    );
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+test("move new message separator to message received after a while, once silent", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [readMessageId] = pyEnv["mail.message"].create([
+        {
+            author_id: bobPartnerId,
+            body: "Message 0",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: bobPartnerId,
+            body: "Message 1",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: readMessageId + 1 });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitForChannelRead(channelId);
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY / 2);
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Message:has(:text('Message 2')):count(1)");
+    await waitForChannelRead(channelId);
+    // separator shown for a while, but the conversation was not silent
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY / 2);
+    await postMessageAs(bobUserId, channelId, "Message 3");
+    await waitFor(".o-mail-Message:has(:text('Message 3')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitForChannelRead(channelId);
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY);
+    await postMessageAs(bobUserId, channelId, "Message 4");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 4')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+test("move new message separator to message received after a while, when not focused", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [readMessageId] = pyEnv["mail.message"].create([
+        {
+            author_id: bobPartnerId,
+            body: "Message 0",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: bobPartnerId,
+            body: "Message 1",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: readMessageId + 1 });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitForChannelRead(channelId);
+    await waitFor(".o-mail-Composer-html:focus:count(1)"); // autofocus on mount
+    queryFirst(".o-mail-Composer-html").blur();
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Message:has(:text('Message 2')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await hootClick(".o-mail-Composer-html");
+    await waitForChannelRead(channelId);
+    await waitFor(".o-mail-Composer-html:focus:count(1)"); // focus from the click
+    queryFirst(".o-mail-Composer-html").blur();
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY);
+    await postMessageAs(bobUserId, channelId, "Message 3");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 3')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+test("keep new message separator shown above a reply for a while, when not focused", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [readMessageId] = pyEnv["mail.message"].create([
+        {
+            author_id: bobPartnerId,
+            body: "Message 0",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: bobPartnerId,
+            body: "Message 1",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: readMessageId + 1 });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitForChannelRead(channelId);
+    await insertTextInComposer(".o-mail-Composer", "Message 2");
+    await press("Enter");
+    await waitFor(".o-mail-Message:has(:text('Message 2')):count(1)");
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY / 2);
+    await postMessageAs(bobUserId, channelId, "Message 3");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 3')):count(1)");
+    await waitForChannelRead(channelId);
+    // separator shown above Message 3 for half the delay, but set past Message 2 for the full delay
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY / 2);
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
+    queryFirst(".o-mail-Composer-html").blur();
+    await postMessageAs(bobUserId, channelId, "Message 4");
+    await waitFor(".o-mail-Message:has(:text('Message 4')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 3')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+test("hide read new message separator after being away from the page for a while", async () => {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [readMessageId] = pyEnv["mail.message"].create([
+        {
+            author_id: bobPartnerId,
+            body: "Message 0",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: bobPartnerId,
+            body: "Message 1",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: readMessageId + 1 });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitForChannelRead(channelId);
+    let hasFocus = false;
+    patch(parent.document, { hasFocus: () => hasFocus });
+    window.dispatchEvent(new Event("blur"));
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY / 2);
+    hasFocus = true;
+    window.dispatchEvent(new Event("focus"));
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY);
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    hasFocus = false;
+    window.dispatchEvent(new Event("blur"));
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY);
+    await waitForNone(".o-mail-Thread-newMessage");
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 2')):count(1)");
 });
