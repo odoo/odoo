@@ -326,7 +326,7 @@ patch(PosOrder.prototype, {
         qty,
         reward_product_id,
         attribute_value_ids = [],
-        attribute_custom_values = []
+        attribute_custom_values = {}
     ) {
         const program = reward.program_id;
         if (!program) {
@@ -397,10 +397,17 @@ patch(PosOrder.prototype, {
             } of activeRewards) {
                 const reward = this.models["loyalty.reward"].get(reward_id);
                 if (reward) {
+                    // Stored as an id, as it is once the order went through JSON (IndexedDB,
+                    // server, another POS); older entries still hold the record itself
+                    const rewardProduct = reward_product_id
+                        ? this.models["product.product"].get(
+                              reward_product_id.id ?? reward_product_id
+                          )
+                        : undefined;
                     this.recomputeReward(
                         reward,
                         qty,
-                        reward_product_id,
+                        rewardProduct,
                         attribute_value_ids,
                         attribute_custom_values
                     );

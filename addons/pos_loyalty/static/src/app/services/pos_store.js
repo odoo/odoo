@@ -284,7 +284,7 @@ patch(PosStore.prototype, {
                 if (!reward_product_id) {
                     return "";
                 }
-                rewardEntry.reward_product_id = reward_product_id;
+                rewardEntry.reward_product_id = reward_product_id.id;
             }
             order.active_rewards.push(rewardEntry);
         }

@@ -87,7 +87,7 @@ patch(OrderSummary.prototype, {
                 (active_reward) => active_reward.reward_id === orderline.reward_id?.id
             );
             rewardObject.attribute_value_ids = attribute_value_ids.map((av) => av.id);
-            rewardObject.attribute_custom_values = [];
+            rewardObject.attribute_custom_values = {};
             custom_attribute_value_ids.forEach((cav) => {
                 rewardObject.attribute_custom_values[
                     cav.custom_product_template_attribute_value_id.id
