@@ -5113,7 +5113,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_sa_hr_payroll',
             'l10n_se',
             'l10n_se_sie4_import',
-            'l10n_tr_nilvera_edispatch',
             'l10n_uk_bacs',
             'l10n_uk_reports',
             'l10n_uk_reports_cis',

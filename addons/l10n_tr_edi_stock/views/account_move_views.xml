@@ -9,7 +9,7 @@
             <xpath expr="//group[@id='header_left_group']" position="inside">
                 <field 
                     name="l10n_tr_edi_edispatch_ids"
-                    invisible="country_code != 'TR' or move_type != 'out_invoice' or l10n_tr_edi_company_einvoice_status != 'einvoice'"
+                    invisible="country_code != 'TR' or move_type != 'out_invoice' or l10n_tr_edi_company_einvoice_status != 'einvoice' or not l10n_tr_edi_dispatch_enabled"
                     options="{'no_create': True}"
                     context="{'search_default_partner_id': partner_id}"
                     domain="[('picking_type_code', '=', 'outgoing'), ('state', '=', 'done'), ('l10n_tr_edi_send_status', '=', 'succeed')]"

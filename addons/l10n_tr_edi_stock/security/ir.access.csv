@@ -1,2 +1,3 @@
 id,name,model_id,group_id/id,operation,domain
 access_l10n_tr_edi_vehicle_plate,l10n_tr_edi.vehicle.plate,l10n_tr_edi.vehicle.plate,stock.group_stock_user,crud,
+access_l10n_tr_edi_document_stock_user,access_l10n_tr_edi_document_stock_user,l10n_tr_edi.document,stock.group_stock_user,crud,"[('picking_id', '!=', False), ('move_id', '=', False), ('document_type', 'in', ['edispatch', 'edispatch_response'])]"
