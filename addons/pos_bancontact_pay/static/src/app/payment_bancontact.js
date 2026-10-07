@@ -2,6 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { registry } from "@web/core/registry";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { uuidv4 } from "@point_of_sale/utils";
 
 export class PaymentBancontact extends PaymentInterface {
     setup() {
@@ -10,6 +11,9 @@ export class PaymentBancontact extends PaymentInterface {
     }
 
     async sendPaymentRequest(line) {
+        if (line.isBancontactRefund) {
+            return this.sendRefundRequest(line);
+        }
         if (
             !line.bancontact_id ||
             !line.qr_code ||
@@ -41,6 +45,53 @@ export class PaymentBancontact extends PaymentInterface {
             this.pos.displayQrCode(line);
         }
         return true;
+    }
+
+    async sendRefundRequest(line) {
+        line.uiState.bancontactIdempotencyKey ||= uuidv4();
+        const { bancontact_refund_id, bancontact_refund_status } = await this.callPaymentMethod(
+            "create_bancontact_refund",
+            [
+                line.payment_method_id.id,
+                {
+                    refunded_payment_id: line.bancontact_refunded_payment_id.id,
+                    amount: line.amount,
+                    idempotency_key: line.uiState.bancontactIdempotencyKey,
+                    description: _t(
+                        "Refund at %s\nPOS %s",
+                        this.pos.company.name,
+                        this.pos.config.name
+                    ),
+                },
+            ]
+        );
+        line.bancontact_refund_id = bancontact_refund_id;
+        return bancontact_refund_status;
+    }
+
+    refundToPaymentStatus(refundStatus) {
+        const paymentStatuses = {
+            PENDING: "waiting",
+            REFUNDED: "done",
+            FAILED: "retry",
+        };
+        return paymentStatuses[refundStatus] || "waiting";
+    }
+
+    async checkRefundStatus(lines) {
+        if (!lines.length) {
+            return;
+        }
+        const statuses = await this.callPaymentMethod("get_bancontact_refund_status", [
+            lines[0].payment_method_id.id,
+            lines.map((line) => [
+                line.bancontact_refunded_payment_id.bancontact_id,
+                line.bancontact_refund_id,
+            ]),
+        ]);
+        for (const line of lines) {
+            line.setBancontactRefundStatus(statuses[line.bancontact_refund_id]);
+        }
     }
 
     async sendPaymentCancel(line) {

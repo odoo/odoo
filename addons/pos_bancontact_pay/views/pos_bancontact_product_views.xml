@@ -19,6 +19,8 @@
                         <group string="Configuration">
                             <field name="usage" widget="radio" readonly="payment_method_ids"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="can_enable_refund" invisible="1"/>
+                            <field name="refund_enabled" readonly="not can_enable_refund and not refund_enabled"/>
                         </group>
                     </group>
                     <div class="alert alert-info" role="status" invisible="usage != 'display'">
@@ -80,6 +82,7 @@
                 <field name="ppid"/>
                 <field name="preprod"/>
                 <field name="usage"/>
+                <field name="refund_enabled" optional="hide"/>
                 <field name="payment_method_ids" widget="many2many_tags" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </list>

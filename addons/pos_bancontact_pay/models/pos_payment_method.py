@@ -4,7 +4,7 @@ from json import JSONDecodeError
 import requests
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
 
 from odoo.addons.pos_bancontact_pay import const
@@ -28,6 +28,7 @@ class PosPaymentMethod(models.Model):
 
     bancontact_product_id = fields.Many2one("pos.bancontact.product", string="Bancontact Product", ondelete="restrict", copy=False, check_company=True)
     bancontact_usage = fields.Selection(related="bancontact_product_id.usage")
+    bancontact_refund_enabled = fields.Boolean(related="bancontact_product_id.refund_enabled")
     bancontact_sticker_id = fields.Many2one(
         "pos.bancontact.sticker",
         string="Bancontact Sticker",
@@ -67,7 +68,7 @@ class PosPaymentMethod(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return super()._load_pos_data_fields(config) + ["bancontact_usage"]
+        return super()._load_pos_data_fields(config) + ["bancontact_usage", "bancontact_refund_enabled"]
 
     @api.constrains("payment_provider", "journal_id", "company_id")
     def _check_bancontact_currency(self):
@@ -174,7 +175,74 @@ class PosPaymentMethod(models.Model):
             _logger.warning("%s payment cancellation failed: ppid=%s, bancontact_id=%s, reason=%s", const.LOG_PREFIX, self.bancontact_product_id.ppid, bancontact_id, reason)
             raise
 
+    def create_bancontact_refund(self, data):
+        self.ensure_one()
+        self._validate_bancontact_setup()
+
+        refunded_payment = self.env["pos.payment"].browse(data.get("refunded_payment_id")).exists()
+        self._check_bancontact_refund(refunded_payment)
+
+        amount = refunded_payment.currency_id.round(abs(data.get("amount", 0.0)))
+        if float_compare(amount, 0, precision_rounding=refunded_payment.currency_id.rounding) <= 0:
+            raise ValidationError(_("The refund amount must be positive."))
+
+        product = self.bancontact_product_id
+        bancontact_id = refunded_payment.bancontact_id
+        payload = {
+            "amount": round(amount * 100),
+            "currency": refunded_payment.currency_id.name,
+        }
+        if data.get("description"):
+            payload["description"] = data["description"]
+
+        response = None
+        try:
+            response = product._send_bancontact_signed_request("POST", f"/v3/payments/{bancontact_id}/refunds", payload, idempotency_key=data.get("idempotency_key"))
+            self._assert_bancontact_success(response, CREATE_REFUND_ERRORS)
+            bancontact_data = response.json()
+        except Exception as e:
+            reason = response.text if response is not None else str(e)
+            _logger.warning("%s refund creation failed: ppid=%s, bancontact_id=%s, reason=%s, data=%s", const.LOG_PREFIX, product.ppid, bancontact_id, reason, data)
+            raise
+
+        refund_id = bancontact_data["refundId"]
+        _logger.info("%s refund creation succeeded: ppid=%s, bancontact_id=%s, refund_id=%s", const.LOG_PREFIX, product.ppid, bancontact_id, refund_id)
+        return {
+            "bancontact_refund_id": refund_id,
+            "bancontact_refund_status": bancontact_data.get("status", "PENDING"),
+        }
+
+    def get_bancontact_refund_status(self, refunds):
+        self.ensure_one()
+        refund_statuses = {}
+        for bancontact_id, refund_id in refunds:
+            refund_statuses[refund_id] = self._bancontact_fetch_refund_status(bancontact_id, refund_id)
+        return refund_statuses
+
+    def _bancontact_fetch_refund_status(self, bancontact_id, refund_id):
+        self.ensure_one()
+        self._validate_bancontact_setup()
+
+        product = self.bancontact_product_id
+        response = None
+        try:
+            response = product._send_bancontact_signed_request("GET", f"/v3/payments/{bancontact_id}/refunds/{refund_id}")
+            self._assert_bancontact_success(response, FETCH_REFUND_ERRORS)
+            status = response.json()["status"]
+        except Exception as e:
+            reason = response.text if response is not None else str(e)
+            _logger.warning("%s refund status fetch failed: ppid=%s, bancontact_id=%s, refund_id=%s, reason=%s", const.LOG_PREFIX, product.ppid, bancontact_id, refund_id, reason)
+            raise
+        return status
+
     # ----- Helpers ----- #
+    def _check_bancontact_refund(self, refunded_payment):
+        """Ensure the payment method can refund the given Bancontact payment."""
+        if not self.bancontact_product_id.refund_enabled:
+            raise ValidationError(_("Refunds are not enabled on the Bancontact product '%(product_name)s'.", product_name=self.bancontact_product_id.name))
+        if refunded_payment.payment_method_id != self or not refunded_payment._bancontact_is_refundable_payment():
+            raise ValidationError(_("This payment can't be refunded with this payment method."))
+
     def _get_callback_url(self, data):
         """Build the callback URL used by Bancontact Pay to notify payment status."""
         config_id = data.get("configId")

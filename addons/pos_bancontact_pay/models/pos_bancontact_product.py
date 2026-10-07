@@ -8,8 +8,8 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.asymmetric.utils import decode_dss_signature
 from cryptography.hazmat.primitives.hashes import SHA256
 
-from odoo import _, fields, models
-from odoo.exceptions import UserError
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.pos_bancontact_pay import const
 
@@ -32,8 +32,21 @@ class PosBancontactProduct(models.Model):
         required=True,
     )
     company_id = fields.Many2one("res.company", string="Company", required=True, default=lambda self: self.env.company)
+    refund_enabled = fields.Boolean("Refunds")
+    can_enable_refund = fields.Boolean(compute="_compute_can_enable_refund")
     payment_method_ids = fields.One2many("pos.payment.method", "bancontact_product_id", string="Payment Methods", context={"active_test": False})
     sticker_ids = fields.One2many("pos.bancontact.sticker", "product_id", string="Stickers")
+
+    @api.depends("company_id.bancontact_merchant_id", "company_id.bancontact_signing_kid")
+    def _compute_can_enable_refund(self):
+        for product in self:
+            product.can_enable_refund = product.company_id._bancontact_can_sign()
+
+    @api.constrains("refund_enabled", "company_id")
+    def _check_refund_enabled(self):
+        for product in self:
+            if product.refund_enabled and not product.company_id._bancontact_can_sign():
+                raise ValidationError(_("Set the Bancontact Merchant ID of %(company)s in the Point of Sale settings before enabling refunds.", company=product.company_id.name))
 
     def _get_bancontact_api_url(self, target):
         """Return the Bancontact endpoint URL for the product's environment."""

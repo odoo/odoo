@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_bancontact_pay.BancontactRefundPopup">
+        <Dialog title.translate="Bancontact Refund" size="'md'" backdrop="false">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Payment method</th>
+                        <th class="text-end">Amount</th>
+                        <th class="text-end">Amount left</th>
+                        <th class="text-end">Refund</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="this.rows" t-as="row" t-key="row.line.id" t-att-class="{ 'text-muted': row.line.fully_refunded }">
+                        <td t-out="row.line.payment_method_name"/>
+                        <td class="text-end" t-out="this.pos.formatCurrency(row.line.amount)"/>
+                        <td class="text-end" t-out="this.pos.formatCurrency(row.line.amount_left)"/>
+                        <td class="text-end" style="width: 9rem;">
+                            <input type="number" min="0" step="0.01" class="form-control text-end"
+                                t-att-class="{ 'is-invalid': row.isTooHigh() }"
+                                t-att-disabled="row.line.fully_refunded"
+                                t-model.number="row.input"/>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="fw-bold">
+                        <td>Total</td>
+                        <td class="text-end" t-out="this.pos.formatCurrency(this.totalAmount)"/>
+                        <td class="text-end" t-out="this.pos.formatCurrency(this.totalAmountLeft)"/>
+                        <td class="text-end" t-out="this.pos.formatCurrency(this.totalRefund())"/>
+                    </tr>
+                </tfoot>
+            </table>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-att-disabled="!this.canConfirm()" t-on-click="this.confirm">Confirm</button>
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

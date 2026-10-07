@@ -29,3 +29,26 @@ CANCEL_PAYMENT_ERRORS = {
     "PAYMENT_NOT_FOUND": _lt("Bancontact doesn't know this payment."),
     "PAYMENT_NOT_PENDING": _lt("This payment can't be cancelled anymore: it's no longer pending."),
 }
+
+# ----- Refund API (authenticated with the signature of the company) ----- #
+REFUND_API_ERRORS = {
+    "VALIDATION_ERROR": _lt("Bancontact rejected the refund request. Please try again or contact support."),
+    "UNAUTHORIZED": _lt("Bancontact couldn't verify the signature of the request. Please check that the JWKS URL of the Point of Sale settings is registered on the Bancontact Pro Portal."),
+    "ACCESS_DENIED": _lt("Bancontact doesn't allow refunds for this Merchant ID. Please check the Bancontact Merchant ID in the Point of Sale settings."),
+    "TECHNICAL_ERROR": _lt("Bancontact encountered a technical error. Please try again later."),
+}
+
+CREATE_REFUND_ERRORS = {
+    **REFUND_API_ERRORS,
+    "PAYMENT_FOR_REFUND_NOT_FOUND": _lt("Bancontact doesn't know the payment to refund."),
+    "INVALID_REFUND_AMOUNT": _lt("The refund amount is higher than the amount left to refund on this payment."),
+    "REFUND_NOT_ALLOWED": _lt("Refunds are not activated for this Bancontact product. Ask Bancontact support to activate them."),
+    "REFUND_NOT_POSSIBLE": _lt("This payment can't be refunded at the moment. Please try again later."),
+    "REFUND_REQUEST_CONFLICT": _lt("This refund was already sent to Bancontact with different details."),
+}
+
+FETCH_REFUND_ERRORS = {
+    **REFUND_API_ERRORS,
+    "PAYMENT_NOT_FOUND": _lt("Bancontact doesn't know the refunded payment."),
+    "REFUND_NOT_FOUND": _lt("Bancontact doesn't know this refund."),
+}

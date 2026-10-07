@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_bancontact_pay.PaymentScreenMethods" t-inherit="point_of_sale.PaymentScreenMethods" t-inherit-mode="extension">
+        <xpath expr="//t[@t-foreach='this.payment_methods_from_config']" position="after">
+            <div t-if="this.showBancontactRefund">
+                <div class="d-flex paymentmethod o_bancontact_refund justify-content-between align-items-center button btn btn-secondary btn-lg lh-lg flex-fill"
+                    t-on-click="() => this.onClickBancontactRefund()"
+                    role="button">
+                    <div class="payment-method-display d-flex align-items-center gap-2 text-wrap text-start lh-sm">
+                        <img class="payment-method-icon" t-att-src="this.paymentMethodImage(this.bancontactPaymentMethod)" />
+                        <span class="payment-name">Bancontact Refund</span>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
