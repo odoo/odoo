@@ -1,5 +1,6 @@
 import { expect, queryFirst, test } from "@odoo/hoot";
 import { waitForNone } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import { getIframeInput } from "@html_editor/../tests/_helpers/iframe_input";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
@@ -9,7 +10,7 @@ defineWebsiteModels();
 const PALETTE = "/website/static/src/scss/options/colors/user_color_palette.scss";
 const USER_VALUES = "/website/static/src/scss/options/user_values.scss";
 
-function mockThemeRpcs() {
+function mockThemeRpcs({ stepComputedColors = false } = {}) {
     class WebsiteAssets extends models.Model {
         _name = "website.assets";
         make_scss_customization(location, changes) {
@@ -21,7 +22,12 @@ function mockThemeRpcs() {
         expect.step("asset reload");
         return "";
     });
-    onRpc("/website/theme_computed_colors", () => ({ values: {}, gates: {} }));
+    onRpc("/website/theme_computed_colors", () => {
+        if (stepComputedColors) {
+            expect.step("computed colors");
+        }
+        return { values: {}, gates: {} };
+    });
 }
 
 // A page breadcrumb (its color preset is compiled in).
@@ -62,6 +68,22 @@ test("an area's color preset is previewed as its class, written on save", async 
         `${USER_VALUES} {"breadcrumb-gradient":"NULL"}`,
         `${PALETTE} {"breadcrumb-custom":"NULL","breadcrumb":"3"}`,
     ]);
+});
+
+test("hovering an area's color preset keeps the applied one selected", async () => {
+    mockThemeRpcs({ stepComputedColors: true });
+    await setupBreadcrumb();
+    expect(".o_popover [data-color='o_cc1']").toHaveClass("selected");
+    await contains(".o_popover [data-color='o_cc3']").hover();
+    // The computed colors arrive while previewing, and update the options.
+    await expect.waitForSteps(["computed colors"]);
+    await animationFrame();
+    expect(".o_popover [data-color='o_cc1']").toHaveClass("selected");
+    expect(".o_popover [data-color='o_cc3']").not.toHaveClass("selected");
+    // Back to the saved colors: nothing left to compute.
+    await contains(".o-snippets-top-actions").hover();
+    await animationFrame();
+    expect.verifySteps([]);
 });
 
 test("an area's custom color and gradient switch their rules on", async () => {

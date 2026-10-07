@@ -45,11 +45,11 @@ import { loadBundle } from "@web/core/assets";
  * @property { CustomizeWebsitePlugin['setPendingThemeRequests'] } setPendingThemeRequests
  * @property { CustomizeWebsitePlugin['isPluginDestroyed'] } isPluginDestroyed
  * @property { CustomizeWebsitePlugin['reloadBundles'] } reloadBundles
- * @property { CustomizeWebsitePlugin['setViewsOnSave'] } setViewsOnSave
  */
 
 /**
  * @typedef {((colors: string[], options?: { isPreviewing?: boolean }) => void)[]} on_website_color_updated_handlers
+ * @typedef {((parts: { oldEl: HTMLElement, newEl: HTMLElement }) => void)[]} on_chrome_replaced_handlers
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
@@ -246,7 +246,6 @@ export class CustomizeWebsitePlugin extends Plugin {
         "setPendingThemeRequests",
         "isPluginDestroyed",
         "reloadBundles",
-        "setViewsOnSave",
     ];
 
     /** @type {import("plugins").WebsiteResources} */
@@ -346,12 +345,10 @@ export class CustomizeWebsitePlugin extends Plugin {
     };
 
     async onSave() {
-        const enable = new Set(this.viewsToEnableOnSave);
-        const disable = new Set(this.viewsToDisableOnSave);
+        const enable = new Set();
+        const disable = new Set();
         const disableAndReset = new Set();
         for (const [view, pending] of Object.entries(this.pendingViews)) {
-            enable.delete(view);
-            disable.delete(view);
             if (pending === "reset") {
                 disableAndReset.add(view);
             } else {
@@ -392,8 +389,6 @@ export class CustomizeWebsitePlugin extends Plugin {
     cache = {};
     activeRecords = {};
     activeTemplateViews = {};
-    viewsToEnableOnSave = new Set();
-    viewsToDisableOnSave = new Set();
     pendingViewRequests = new Set();
     pendingAssetRequests = new Set();
     /**
@@ -425,6 +420,10 @@ export class CustomizeWebsitePlugin extends Plugin {
     /** The previewed views the page shows (see `updateChrome`). */
     chromeKey = "{}";
     chromeRequestId = 0;
+    /** @type {Promise|null} the scheduled `updateChrome` */
+    chromeUpdate = null;
+    /** @type {Set<string>} views the page shows by itself (see `previewViews`) */
+    shownViews = new Set();
     /** Preview steps not committed to the history yet. */
     pendingPreviewSteps = [];
     /** @type {Set<string>} the theme gates of the saved values */
@@ -742,11 +741,20 @@ export class CustomizeWebsitePlugin extends Plugin {
      *
      * @param {Object<string, boolean|"reset">} views by key, whether it is
      *        active ("reset": disabled, its arch reset on save)
-     * @param {boolean} [areAssets] assets instead (nothing to show: they
-     *        apply after save)
+     * @param {Object} [options]
+     * @param {boolean} [options.areAssets] assets instead (nothing to show:
+     *        they apply after save)
+     * @param {boolean} [options.areShown] the caller shows the views itself
+     *        (e.g. their class): no render needed for them
+     * @returns {Promise} resolved once the page shows the views
      */
-    previewViews(views, areAssets = false) {
+    previewViews(views, { areAssets = false, areShown = false } = {}) {
         const file = areAssets ? ASSETS : VIEWS;
+        if (areShown) {
+            for (const view of Object.keys(views)) {
+                this.shownViews.add(view);
+            }
+        }
         const pendingValues = this.getPendingValues(file);
         const step = { previous: {}, next: {} };
         for (const [view, active] of Object.entries(views)) {
@@ -755,6 +763,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         }
         this.setPreviewState(step.next);
         this.pendingPreviewSteps.push(step);
+        return this.updateChrome();
     }
     /**
      * @returns {Object<string, boolean|"reset">} the views switched on save
@@ -768,9 +777,18 @@ export class CustomizeWebsitePlugin extends Plugin {
      * views switch needs no reload. The renders are cached by views; the
      * elements a switch takes out are kept, and come back on undo as they
      * were (unsaved edits included). Not part of the history: follows the
-     * previewed views.
+     * previewed views. Scheduled once per tick.
+     *
+     * @returns {Promise} resolved once the page shows the previewed views
      */
-    updateChrome = debounce(this._updateChrome.bind(this), 0);
+    updateChrome() {
+        return (this.chromeUpdate ??= new Promise((resolve) =>
+            setTimeout(() => {
+                this.chromeUpdate = null;
+                resolve(this._updateChrome());
+            })
+        ));
+    }
     async _updateChrome() {
         const views = Object.entries(this.pendingViews)
             .map(([view, pending]) => [view, pending === true])
@@ -781,18 +799,43 @@ export class CustomizeWebsitePlugin extends Plugin {
             );
         const key = JSON.stringify(Object.fromEntries(views.sort()));
         const requestId = ++this.chromeRequestId;
-        if (key === this.chromeKey) {
-            return;
-        }
-        const [from, to] = await Promise.all(
-            [this.chromeKey, key].map((viewsKey) => this.getChromeRender(viewsKey))
-        );
-        if (requestId !== this.chromeRequestId || this.isDestroyed) {
+        // The views the page shows by itself need no render, but are part of
+        // the renders' key: a render shows them too.
+        const withoutShown = (viewsKey) =>
+            JSON.stringify(
+                Object.entries(JSON.parse(viewsKey)).filter(([view]) => !this.shownViews.has(view))
+            );
+        if (withoutShown(key) === withoutShown(this.chromeKey)) {
+            this.chromeKey = key;
             return;
         }
         const wrapwrapEl = this.document.getElementById("wrapwrap");
-        const mainEl = wrapwrapEl.querySelector(":scope > main");
+        const parts = ["header#top", "footer#bottom"];
         const targetEl = this.dependencies.builderOptions.getTarget();
+        let loadingEls = [];
+        if (!(this.chromeKey in this.chromeRenders && key in this.chromeRenders)) {
+            // The part being edited (else both) shows that it's on its way.
+            const partEls = parts.map((part) => wrapwrapEl.querySelector(`:scope > ${part}`));
+            loadingEls = partEls.filter((el) => el?.contains(targetEl));
+            loadingEls = loadingEls.length ? loadingEls : partEls.filter(Boolean);
+            this.dependencies.domObserver.ignore(() => {
+                loadingEls.forEach((el) => el.classList.add("o_we_chrome_loading"));
+            });
+        }
+        let from, to;
+        try {
+            [from, to] = await Promise.all(
+                [this.chromeKey, key].map((viewsKey) => this.getChromeRender(viewsKey))
+            );
+        } finally {
+            this.dependencies.domObserver.ignore(() => {
+                loadingEls.forEach((el) => el.classList.remove("o_we_chrome_loading"));
+            });
+        }
+        if (requestId !== this.chromeRequestId || this.isDestroyed) {
+            return;
+        }
+        const mainEl = wrapwrapEl.querySelector(":scope > main");
         let newTargetEl;
         this.dependencies.domObserver.ignore(() => {
             for (const [part, insert] of [
@@ -819,6 +862,12 @@ export class CustomizeWebsitePlugin extends Plugin {
                     insert(nextEl);
                     this.dependencies.setup_editor_plugin.markSavableAreas(nextEl);
                     this.dependencies.dom.normalize(nextEl);
+                    if (currentEl) {
+                        this.trigger("on_chrome_replaced_handlers", {
+                            oldEl: currentEl,
+                            newEl: nextEl,
+                        });
+                    }
                 }
             }
             // Some views set classes on the page's root elements.
@@ -830,6 +879,8 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         });
         this.chromeKey = key;
+        // A new part shows the previewed area presets too.
+        this.updateAreaClasses();
         if (newTargetEl) {
             // The options were on the part taken out: on the new one.
             this.dependencies.builderOptions.updateContainers(newTargetEl);
@@ -850,6 +901,9 @@ export class CustomizeWebsitePlugin extends Plugin {
             const url = new URL(pathname + search, window.location.origin);
             url.searchParams.set("theme_preview_views", key);
             const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`The page's render failed (${response.status})`);
+            }
             const doc = new DOMParser().parseFromString(await response.text(), "text/html");
             const classes = {};
             for (const selector of ["html", "body", "#wrapwrap"]) {
@@ -860,7 +914,10 @@ export class CustomizeWebsitePlugin extends Plugin {
                 "footer#bottom": doc.querySelector("#wrapwrap > footer#bottom"),
                 classes,
             };
-        })();
+        })().catch((error) => {
+            delete this.chromeRenders[key];
+            throw error;
+        });
         return this.chromeRenders[key];
     }
     /**
@@ -872,20 +929,32 @@ export class CustomizeWebsitePlugin extends Plugin {
     updateAreaClasses() {
         const pendingPalette = this.getPendingValues(PALETTE_URL);
         const isPaletteSwitched = "color-palettes-name" in this.pendingVariables;
+        const updates = [];
+        for (const [area, selector] of Object.entries(AREA_SELECTORS)) {
+            let preset =
+                (area in pendingPalette || isPaletteSwitched) && this.getWebsiteVariableValue(area);
+            preset = /^[1-5]$/.test(preset) && preset;
+            for (const el of this.document.querySelectorAll(selector)) {
+                const isMarked = !!el.dataset.oCcArea;
+                if (preset ? !isMarked || !el.classList.contains(`o_cc${preset}`) : isMarked) {
+                    updates.push([el, area, preset]);
+                }
+            }
+        }
+        if (!updates.length) {
+            // `ignore` also records the pending mutations: within an edit,
+            // marking its element dirty out of the history (see `SavePlugin`).
+            return;
+        }
         this.dependencies.domObserver.ignore(() => {
-            for (const [area, selector] of Object.entries(AREA_SELECTORS)) {
-                const preset =
-                    (area in pendingPalette || isPaletteSwitched) &&
-                    this.getWebsiteVariableValue(area);
-                for (const el of this.document.querySelectorAll(selector)) {
-                    if (el.dataset.oCcArea) {
-                        el.classList.remove(...PRESET_CLASSES);
-                        delete el.dataset.oCcArea;
-                    }
-                    if (/^[1-5]$/.test(preset)) {
-                        el.classList.add(`o_cc${preset}`);
-                        el.dataset.oCcArea = area;
-                    }
+            for (const [el, area, preset] of updates) {
+                if (el.dataset.oCcArea) {
+                    el.classList.remove(...PRESET_CLASSES);
+                    delete el.dataset.oCcArea;
+                }
+                if (preset) {
+                    el.classList.add(`o_cc${preset}`);
+                    el.dataset.oCcArea = area;
                 }
             }
         });
@@ -1282,26 +1351,6 @@ export class CustomizeWebsitePlugin extends Plugin {
         value.then((resolvedValue) => {
             this.activeRecords[record] = resolvedValue;
         });
-    }
-    setViewsOnSave(views, to_enable) {
-        const initialViewsToEnableOnSave = new Set(this.viewsToEnableOnSave);
-        const initialViewsToDisableOnSave = new Set(this.viewsToDisableOnSave);
-        for (let view of views) {
-            const toEnable = view.startsWith("!") ? !to_enable : to_enable;
-            view = view.startsWith("!") ? view.substring(1) : view;
-            if (toEnable) {
-                this.viewsToEnableOnSave.add(view);
-                this.viewsToDisableOnSave.delete(view);
-            } else {
-                this.viewsToDisableOnSave.add(view);
-                this.viewsToEnableOnSave.delete(view);
-            }
-        }
-        return () => {
-            // "Undo" callback
-            this.viewsToEnableOnSave = initialViewsToEnableOnSave;
-            this.viewsToDisableOnSave = initialViewsToDisableOnSave;
-        };
     }
     isPluginDestroyed() {
         return this.isDestroyed;
@@ -1719,8 +1768,11 @@ export class WebsiteConfigAction extends BuilderAction {
  */
 export class PreviewWebsiteConfigAction extends WebsiteConfigAction {
     static id = "previewWebsiteConfig";
-    // Drop the parent's reload.
-    setup() {}
+    // Drop the parent's reload. No hover preview: a switch shows once the
+    // server rendered it, which the apply waits for.
+    setup() {
+        this.preview = false;
+    }
     _customizeVariables(variables, clean, previewValues) {
         this.dependencies.customizeWebsite.previewWebsiteVariables(
             Object.fromEntries(
@@ -1731,14 +1783,14 @@ export class PreviewWebsiteConfigAction extends WebsiteConfigAction {
         );
     }
     _customizeThemeData(isViewData, shouldReset, toEnable, toDisable) {
-        this.dependencies.customizeWebsite.previewViews(
+        return this.dependencies.customizeWebsite.previewViews(
             {
                 ...Object.fromEntries([...toEnable].map((view) => [view, true])),
                 ...Object.fromEntries(
                     [...toDisable].map((view) => [view, shouldReset ? "reset" : false])
                 ),
             },
-            !isViewData
+            { areAssets: !isViewData }
         );
     }
 }
@@ -1760,19 +1812,10 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
             params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
         }
         if (!isPreviewing) {
-            const viewsToApply = params["views"] || [];
-            let undoApplyCallback;
-            this.dependencies.domObserver.applyCustomMutation({
-                apply: () => {
-                    undoApplyCallback = this.dependencies.customizeWebsite.setViewsOnSave(
-                        viewsToApply,
-                        true
-                    );
-                },
-                revert: () => {
-                    undoApplyCallback();
-                },
-            });
+            this.previewViews(params.views, true);
+            if (params.vars) {
+                this.dependencies.customizeWebsite.previewWebsiteVariables(params.vars);
+            }
         }
     }
     clean({ editingElement: el, isPreviewing, params }) {
@@ -1780,20 +1823,30 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
             params.previewClass.split(/\s+/).forEach((cls) => el.classList.remove(cls));
         }
         if (!isPreviewing) {
-            const viewsToClean = params["views"] || [];
-            let undoCleanCallback;
-            this.dependencies.domObserver.applyCustomMutation({
-                apply: () => {
-                    undoCleanCallback = this.dependencies.customizeWebsite.setViewsOnSave(
-                        viewsToClean,
-                        false
-                    );
-                },
-                revert: () => {
-                    undoCleanCallback();
-                },
-            });
+            this.previewViews(params.views, false);
+            if (params.vars) {
+                this.dependencies.customizeWebsite.previewWebsiteVariables(
+                    Object.fromEntries(Object.keys(params.vars).map((name) => [name, ""]))
+                );
+            }
         }
+    }
+    /**
+     * The class shows the views: they are written on save, and part of the
+     * page's renders (see `customizeWebsite.previewViews`).
+     *
+     * @param {string[]} views
+     * @param {boolean} active
+     */
+    previewViews(views = [], active) {
+        this.dependencies.customizeWebsite.previewViews(
+            Object.fromEntries(
+                views.map((view) =>
+                    view.startsWith("!") ? [view.slice(1), !active] : [view, active]
+                )
+            ),
+            { areShown: true }
+        );
     }
 }
 
@@ -1981,6 +2034,18 @@ export class PreviewWebsiteSubVariablesAction extends CustomizeWebsiteSubVariabl
 export class ResetWebsiteVariablesAction extends BuilderAction {
     static id = "resetWebsiteVariables";
     static dependencies = ["customizeWebsite"];
+    /**
+     * Nothing to reset (the button hides, see `website.ThemeResetButton`):
+     * the values are their defaults, or their default isn't known.
+     */
+    isApplied({ params: { mainParam: variables } }) {
+        const { getWebsiteVariableValue, getWebsiteVariableDefault } =
+            this.dependencies.customizeWebsite;
+        return variables.every((variable) => {
+            const defaultValue = getWebsiteVariableDefault(variable);
+            return defaultValue === undefined || getWebsiteVariableValue(variable) === defaultValue;
+        });
+    }
     apply({ params: { mainParam: variables } }) {
         this.dependencies.customizeWebsite.previewWebsiteVariables(
             Object.fromEntries(variables.map((variable) => [variable, ""]))

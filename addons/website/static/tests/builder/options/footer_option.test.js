@@ -47,3 +47,20 @@ test("skip saving page options when the relevant element is not in the DOM", asy
     await contains("[data-label='Page Visibility'] input").click();
     await contains(".o-snippets-top-actions [data-action='save']").click();
 });
+
+test("a footer hidden on the page stays selected and in view, to be shown again", async () => {
+    await setupWebsiteBuilder("", {
+        beforeWrapwrapContent: `
+            <input type="hidden" class="o_page_option_data" autocomplete="off" name="footer_visible">`,
+        footerContent: `
+            <footer data-name="Footer">Footer Content</footer>`,
+    });
+    await contains(":iframe #wrapwrap > footer").click();
+    await contains("[data-label='Page Visibility'] input").click();
+    expect(":iframe #wrapwrap > footer").toHaveClass("o_snippet_invisible");
+    expect(":iframe #wrapwrap > footer").not.toHaveClass("d-none");
+    expect("[data-label='Page Visibility'] input").not.toBeChecked();
+    await contains("[data-label='Page Visibility'] input").click();
+    expect(":iframe #wrapwrap > footer").not.toHaveClass("o_snippet_invisible");
+    expect("[data-label='Page Visibility'] input").toBeChecked();
+});

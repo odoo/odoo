@@ -78,7 +78,7 @@ describe("header blur option", () => {
 });
 
 describe("header width option", () => {
-    test("width preview is disabled on incompatible templates", async () => {
+    test("width preview is enabled on templates with several containers", async () => {
         onRpc("/website/theme_customize_data_get", async () => [
             "website.header_navbar_pills_style",
             "website.template_header_boxed",
@@ -86,12 +86,12 @@ describe("header width option", () => {
         await setupWebsiteBuilder("", { headerContent });
         await contains(":iframe #wrapwrap > header").click();
         await waitFor("[data-label='Content Width']");
-        expect("[data-label='Content Width'] [data-action-id='previewWebsiteConfig']").toHaveCount(
-            3
-        );
         expect(
             "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
-        ).toHaveCount(0);
+        ).toHaveCount(3);
+        expect("[data-label='Content Width'] [data-action-id='previewWebsiteConfig']").toHaveCount(
+            0
+        );
     });
 
     test("width preview is enabled by default", async () => {

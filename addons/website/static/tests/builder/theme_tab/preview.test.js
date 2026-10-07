@@ -99,6 +99,20 @@ test("theme tab: a reset previews the default and is written on save", async () 
     expect.verifySteps([`${USER_VALUES} {"body-line-height":"null"}`]);
 });
 
+test("theme tab: a reset button shows only while its value isn't the default", async () => {
+    mockThemeRpcs();
+    await setupWebsiteBuilder(`<p>Text</p>`, { loadIframeBundles: true });
+    await contains("#theme-tab").click();
+    const reset = `${PARAGRAPH} [data-label='Space Above'] button[title='Reset to default']`;
+    await waitFor(reset, { visible: false });
+    expect(reset).not.toBeVisible();
+    await contains(numberInput("paragraph-margin-top")).edit("12");
+    expect(reset).toBeVisible();
+    await contains(reset).click();
+    expect(reset).not.toBeVisible();
+    expect(":iframe p").toHaveStyle({ "margin-top": "0px" });
+});
+
 test("theme tab: a reset heading level follows the headings value", async () => {
     mockThemeRpcs();
     await setupWebsiteBuilder(`<h4 style="font-size: 20px">H4</h4>`, {

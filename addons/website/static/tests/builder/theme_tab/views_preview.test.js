@@ -1,5 +1,6 @@
 import { expect, queryFirst, test } from "@odoo/hoot";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
+import { runAllTimers } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
@@ -152,4 +153,84 @@ test("the click effect's assets are written on save, without a reload", async ()
         `write {"is_view_data":false,"enable":["website.ripple_effect_scss","website.ripple_effect_js"],"disable":[]}`,
         `scss {"btn-ripple":"true"}`,
     ]);
+});
+
+test("a views switch isn't previewed on hover, and the page shows it's loading", async () => {
+    const render = Promise.withResolvers();
+    onRpc("/blank", async (request) => {
+        const views = new URL(request.url).searchParams.get("theme_preview_views");
+        expect.step(`render ${views}`);
+        const isSwitched = JSON.parse(views).test_view;
+        if (isSwitched) {
+            await render.promise;
+        }
+        return new Response(
+            `<html><body><div id="wrapwrap"><header id="top">${
+                isSwitched ? "New" : "Header"
+            }</header><main></main></div></body></html>`
+        );
+    });
+    onRpc("/website/theme_customize_data_get", () => []);
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderCheckbox action="'previewWebsiteConfig'" actionParam="{views: ['test_view']}"/>
+        `,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
+        headerContent: `<header id="top">Header</header><main></main>`,
+    });
+    await contains(":iframe .test-options-target").click();
+    await contains(".o_customize_tab input[type='checkbox']").hover();
+    await runAllTimers();
+    expect.verifySteps([]);
+    await contains(".o_customize_tab input[type='checkbox']").click();
+    await expect.waitForSteps([`render {}`, `render {"test_view":true}`]);
+    expect(":iframe header#top").toHaveClass("o_we_chrome_loading");
+    render.resolve();
+    await waitFor(":iframe header#top:contains(New)");
+    expect(":iframe header#top").not.toHaveClass("o_we_chrome_loading");
+});
+
+test("a views switch shown by a class needs no render, and later renders show it", async () => {
+    onRpc("/blank", async (request) => {
+        expect.step(`render ${new URL(request.url).searchParams.get("theme_preview_views")}`);
+        return new Response(
+            `<html><body><div id="wrapwrap"><header id="top">Header</header><main></main></div></body></html>`
+        );
+    });
+    onRpc("/website/theme_customize_data_get", () => []);
+    onRpc("/website/theme_customize_data", async (request) => {
+        const { params } = await request.json();
+        expect.step(`write ${params.enable.join(",")}`);
+    });
+    // The class is an edit of the page.
+    onRpc("ir.ui.view", "save", () => true);
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderRow label="'Shown'">
+                <BuilderCheckbox action="'previewableWebsiteConfig'" actionParam="{views: ['shown_view'], previewClass: 'o_shown'}"/>
+            </BuilderRow>
+            <BuilderRow label="'Rendered'">
+                <BuilderCheckbox action="'previewWebsiteConfig'" actionParam="{views: ['rendered_view']}"/>
+            </BuilderRow>
+        `,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
+        headerContent: `<header id="top">Header</header><main></main>`,
+    });
+    await contains(":iframe .test-options-target").click();
+    await contains("[data-label='Shown'] input[type='checkbox']").click();
+    expect(":iframe .test-options-target").toHaveClass("o_shown");
+    await runAllTimers();
+    expect.verifySteps([]);
+    await contains("[data-label='Rendered'] input[type='checkbox']").click();
+    await expect.waitForSteps([
+        `render {"shown_view":true}`,
+        `render {"rendered_view":true,"shown_view":true}`,
+    ]);
+    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await waitForNone(".o-snippets-top-actions");
+    expect.verifySteps(["write shown_view,rendered_view"]);
 });

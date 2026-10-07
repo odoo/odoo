@@ -126,3 +126,23 @@ test("theme tab: after a palette switch, only colors changed since make it ask",
     await switchPalette("default-light-1");
     expect(".o_dialog").toHaveCount(1);
 });
+
+test("theme tab: a shape with its default colors follows a palette switch", async () => {
+    mockThemeRpcs();
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        expect.step(args[1].includes("background-image") ? "view with an image" : "view");
+        return true;
+    });
+    await setupWebsiteBuilder(`
+        <section data-oe-shape-data='{"shape":"html_builder/Connections/01","colors":{"c5":"o-color-5"}}'>
+            <div class="o_we_shape o_html_builder_Connections_01"/>
+        </section>`);
+    await contains(".o-snippets-tabs button[data-name=theme]").click();
+    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
+    await switchPalette();
+    // Its image comes from the compiled CSS until the palette is saved.
+    expect(queryFirst(":iframe .o_we_shape").style.backgroundImage).toInclude("c5=");
+    await save();
+    // Saved, it takes its image from the CSS again.
+    expect.verifySteps(["view", PALETTE_SAVED]);
+});
