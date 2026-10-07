@@ -3,47 +3,62 @@
 
     <t t-name="mrp.MOViewListDropdown" style="btn">
         <Dropdown t-if="this.props.record.data.production_state !== 'done'">
-            <button t-attf-class="btn btn-link d-flex p-0 {{!this.props.record.resId ? 'invisible': ''}}">
-                <div class="d-flex align-items-center">
-                    <span t-attf-class="o_wo_status o_wo_bubble {{this.statusColor}}" t-if="this.props.display === 'bubble'"/>
-                    <span t-out="this.formattedValue" class="o_wo_status badge rounded-pill" t-attf-class="{{this.statusColor}}" t-if="this.props.display === 'badge'"/>
-                </div>
+            <button
+                class="btn d-flex align-items-center gap-2 mw-100"
+                t-att-class="{
+                    'p-1': this.props.display != 'badge',
+                    'py-0 ps-1 pe-2': this.props.viewType == 'list' and this.props.display == 'badge',
+                    'btn-secondary rounded-pill': this.props.viewType == 'form',
+                    'btn-light': this.props.viewType != 'form',
+                    'invisible': !this.props.record.resId,
+                }"
+                t-att-data-tooltip="this.props.display == 'badge' ? '' : this.formattedValue">
+                <i t-attf-class="o_status {{this.statusColor}} oi {{this.props.record.data.state != 'ready' ? 'oi-filled' : ''}}" t-att-data-icon="this.statusIcon"/>
+                <span t-out="this.formattedValue" class="o_status_label text-truncate" t-if="this.props.display === 'badge'"/>
             </button>
             <t t-set-slot="content">
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('blocked')">
-                        <span class="oi oi-lg text-warning me-2" data-icon="error"/>
+                        <span class="o_status o_status_warning oi oi-filled me-2" data-icon="circle"/>
                         <span>Blocked</span>
                 </DropdownItem>
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('ready')">
-                        <span t-attf-class="oi oi-lg oi-filled text-muted me-2" data-icon="circle"/>
+                        <span t-attf-class="oi me-2" data-icon="circle"/>
                         <span>To Do</span>
                 </DropdownItem>
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('progress')">
-                        <span t-attf-class="oi oi-lg oi-filled text-info me-2" data-icon="play_circle"/>
+                        <span t-attf-class="o_status o_status_info oi oi-filled me-2" data-icon="play_circle"/>
                         <span>In Progress</span>
                 </DropdownItem>
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('cancel')">
-                        <span t-attf-class="oi oi-lg oi-filled text-danger me-2" data-icon="cancel"/>
+                        <span t-attf-class="o_status o_status_danger oi oi-filled me-2" data-icon="cancel"/>
                         <span>Cancelled</span>
                 </DropdownItem>
                 <DropdownItem
                     class="`d-flex align-items-center`"
                     onSelected="() => this.setState('done')">
-                        <span t-attf-class="oi oi-lg oi-filled text-success me-2" data-icon="check_circle"/>
+                        <span t-attf-class="o_status o_status_success oi oi-filled me-2" data-icon="check_circle"/>
                         <span>Done</span>
                 </DropdownItem>
             </t>
         </Dropdown>
-        <span t-attf-class="o_wo_status {{this.statusColor}}" t-elif="this.props.display === 'bubble'"/>
-        <span t-out="this.formattedValue" class="o_wo_status badge rounded-pill" t-attf-class="{{this.statusColor}}" t-elif="this.props.display === 'badge'"/>
+        <div
+            t-else=""
+            class="d-flex align-items-center gap-2 mw-100 p-1"
+            t-att-class="{
+                'invisible': !this.props.record.resId,
+            }"
+            t-att-data-tooltip="this.props.display == 'badge' ? '' : this.formattedValue">
+            <i t-attf-class="o_status {{this.statusColor}} oi {{this.props.record.data.state != 'ready' ? 'oi-filled' : ''}}" t-att-data-icon="this.statusIcon"/>
+            <span t-out="this.formattedValue" class="o_status_label text-truncate" t-if="this.props.display === 'badge'"/>
+        </div>
     </t>
 
 </templates>
