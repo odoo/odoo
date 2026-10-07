@@ -22,6 +22,7 @@ class TestModel(TransactionCase):
             'ttype': 'monetary',
             'currency_field': 'x_currency_id',
         })
+
         # Setup company currency by default
         cls.env.company.currency_id = cls.env.ref('base.EUR').id
 
@@ -68,9 +69,8 @@ class TestModel(TransactionCase):
         res = partner._find_value_from_field_path('x_test_amount')
         self.assertEqual(res, '0.000')
 
-    def test_monetary_missing_currency(self):
+    def test_find_value_from_field_path_monetary_missing_currency(self):
         """ Check default format is currency_id is not present on record"""
-        """ Vérifie le formatage par défaut si aucune devise n'est renseignée sur le record. """
         partner = self.env['res.partner'].create({
             'name': 'Partner No Currency',
             'x_currency_id': False,
@@ -78,3 +78,23 @@ class TestModel(TransactionCase):
         })
         res = partner._find_value_from_field_path('x_test_amount')
         self.assertEqual(res, '50.00')
+
+    def test_find_value_from_field_path_float(self):
+        """Check that a float is correctly formatted"""
+        partner = self.env['res.partner'].create({
+            'name': 'Float Partner',
+            'partner_latitude': '-71.94987', #Precision for this field is 7 decimals
+            'partner_longitude': '53',
+        })
+        paperformat = self.env['report.paperformat'].create({
+            'name': 'test_float',
+            'margin_top': 10,
+        })
+
+        res_lat = partner._find_value_from_field_path('partner_latitude')
+        res_long = partner._find_value_from_field_path('partner_longitude')
+        res_paperformat = paperformat._find_value_from_field_path('margin_top')
+        self.assertEqual(res_lat, '-71.9498700')
+        self.assertEqual(res_long, '53.0000000')
+        self.assertEqual(res_paperformat, '10.00')
+

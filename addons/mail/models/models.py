@@ -860,7 +860,7 @@ class Base(models.AbstractModel):
                 last_field.convert_to_export(value, last_model)
                 for value in field_value
             )
-        if last_field.type == 'monetary':
+        elif last_field.type == 'monetary':
             return ' '.join(
                 float_repr(float(value), precision_digits=(
                     record[last_field.currency_field].decimal_places)
@@ -868,6 +868,14 @@ class Base(models.AbstractModel):
                     else record.env.company.currency_id.decimal_places  # Fallback to 2 if the currency_field is not define
                     )
                 for record, value in zip(last_model, field_value)
+            )
+        elif last_field.type == 'float':
+            digits_info = last_field.get_digits(self.env)
+            min_digits_info = last_field.get_min_display_digits(self.env)
+            decimals = (min_digits_info or digits_info)[1] if digits_info else 2
+            return ' '.join(
+                float_repr(float(val), precision_digits=decimals)
+                for val in field_value
             )
         return ' '.join(str(value if value is not False and value is not None else '') for value in field_value)
 
