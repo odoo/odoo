@@ -23,14 +23,18 @@ export class PaymentPage extends Component {
         });
 
         onMounted(() => {
-            if (this.paymentMethods.length === 1) {
-                this.selectMethod(this.paymentMethods[0].id);
+            if (this.canAutoSelectFirstMethod()) {
+                this.selectMethod(this.selfOrder.models["pos.payment.method"].getFirst().id);
             }
         });
 
         onWillUnmount(() => {
             this.selfOrder.paymentError = false;
         });
+    }
+
+    canAutoSelectFirstMethod() {
+        return this.selfOrder.models["pos.payment.method"].length === 1;
     }
 
     async back() {
