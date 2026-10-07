@@ -44,14 +44,11 @@ class StockPicking(models.Model):
         """
         Create the delivery guide number and store CAI data for the selected stock pickings.
         """
-        already_generated = not_done = no_doc_type = self.env['stock.picking']
-        for picking in self:
-            if picking.l10n_ar_delivery_guide_number:
-                already_generated += picking
-            elif picking.state != 'done':
-                not_done += picking
-            elif not picking.picking_type_id.l10n_ar_document_type_id:
-                no_doc_type += picking
+        already_generated, not_done, no_doc_type, _valid = self.partitioned(
+            'l10n_ar_delivery_guide_number',
+            lambda picking: picking.state != 'done',
+            lambda picking: not picking.picking_type_id.l10n_ar_document_type_id,
+        )
         errors = []
         if already_generated:
             errors.append(self.env._("- %(names)s already have a delivery guide.", names=already_generated.mapped('name')))
@@ -106,16 +103,12 @@ class StockPicking(models.Model):
 
     def _l10n_ar_validate_send_delivery_guide(self, do_async=False):
         """ Validate that all pickings in self are eligible for sending delivery guides. """
-        no_doc_type = no_number = no_email = already_queued = self.env['stock.picking']
-        for picking in self:
-            if not picking.picking_type_id.l10n_ar_document_type_id:
-                no_doc_type += picking
-            elif not picking.l10n_ar_delivery_guide_number:
-                no_number += picking
-            elif not picking.partner_id.email:
-                no_email += picking
-            elif picking.l10n_ar_delivery_guide_cron_user_id:
-                already_queued += picking
+        no_doc_type, no_number, no_email, already_queued, _valid = self.partitioned(
+            lambda picking: not picking.picking_type_id.l10n_ar_document_type_id,
+            lambda picking: not picking.l10n_ar_delivery_guide_number,
+            lambda picking: not picking.partner_id.email,
+            'l10n_ar_delivery_guide_cron_user_id',
+        )
         if do_async:
             # We don't care about already_queued as this is call during the queued cron.
             return {
