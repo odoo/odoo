@@ -29,6 +29,9 @@ class PosSelfOrderController(http.Controller):
 
         if amount_total == 0:
             order_ids._process_saved_order(False)
+            # Renotify all devices with the new state.
+            order_ids._notify_update_to_all_pos_devices()
+            # Send the receipt email
             order_ids._send_self_order_receipt()
 
         return self._generate_return_values(order_ids, pos_config)
