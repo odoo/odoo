@@ -1,7 +1,7 @@
 import base64
 
 from odoo import api, models
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.l10n_gr_edi_e_invoo.lib import e_invoo_client
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -20,7 +20,7 @@ class AccountMoveSend(models.AbstractModel):
             return
 
         parent_token = document._l10n_gr_edi_get_provider_parent_token()
-        proxy_user = invoice.company_id._l10n_gr_edi_get_proxy_user()
+        api_token = invoice.company_id.sudo().l10n_gr_edi_methodoos_api_token
 
         pdf_values = invoice_data.get('pdf_attachment_values')
         pdf_content = pdf_values and pdf_values.get('raw')
@@ -31,23 +31,25 @@ class AccountMoveSend(models.AbstractModel):
 
         error_message = self.env._(
             "The invoice was issued, but the electronic invoicing process could not be completed. "
-            "Please retry Send & Print later."
+            "Please send it again."
         )
 
         upload_succeeded = False
-        if pdf_content and parent_token:
+        if not api_token:
+            error_message = self.env._("The Methodoos API token is not configured. Please configure it in the settings.")
+        elif pdf_content and parent_token:
             try:
-                result = proxy_user._l10n_gr_edi_proxy_request(
-                    'save_final_pdf',
-                    {
-                        'invoice_id': invoice._l10n_gr_edi_get_provider_invoice_id(),
-                        'parent_token': parent_token,
-                        'pdf_b64': base64.b64encode(pdf_content).decode(),
-                    },
+                result = e_invoo_client.upload_final_pdf(
+                    api_token,
+                    test_env=invoice.company_id.l10n_gr_edi_test_env,
+                    invoice_id=invoice._l10n_gr_edi_get_provider_invoice_id(),
+                    parent_token=parent_token,
+                    pdf_b64=base64.b64encode(pdf_content).decode(),
                 )
-            except AccountEdiProxyError as error:
-                if error.code in ('invalid_request', 'e_invoo_request_failed') and error.message:
-                    error_message = error.message
+            except e_invoo_client.EInvooAuthenticationError:
+                error_message = self.env._("The Methodoos API token is invalid. Please check it in the settings.")
+            except e_invoo_client.EInvooRequestError:
+                pass
             else:
                 upload_succeeded = 200 <= result.get('upstream_status', -1) < 300
 

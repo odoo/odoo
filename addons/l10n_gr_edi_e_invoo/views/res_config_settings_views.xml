@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_form_inherit_l10n_gr_edi_e_invoo" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_gr_edi_e_invoo</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_gr_edi.res_config_settings_form_inherit_l10n_gr_edi"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_gr_edi_aade_key']/.." position="after">
+                <div class="row">
+                    <label class="col-lg-6 o_light_label" for="l10n_gr_edi_methodoos_api_token"/>
+                    <field name="l10n_gr_edi_methodoos_api_token" password="True"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

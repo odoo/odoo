@@ -1,10 +1,11 @@
 import base64
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 from lxml import etree
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.l10n_gr_edi_e_invoo.lib import e_invoo_client
 from odoo.tests import freeze_time, tagged
 
 
@@ -23,6 +24,7 @@ class TestEInvoo(AccountTestInvoicingCommon):
             'l10n_gr_edi_test_env': True,
             'l10n_gr_edi_aade_id': 'test_user',
             'l10n_gr_edi_aade_key': 'test_key',
+            'l10n_gr_edi_methodoos_api_token': 'methodoos_test_token',
         })
         cls.partner_a.write({
             'country_id': cls.env.ref('base.gr').id,
@@ -64,28 +66,17 @@ class TestEInvoo(AccountTestInvoicingCommon):
             },
         }
 
-    def _patch_proxy_user(self, *results):
-        proxy_user = MagicMock()
-        proxy_user._l10n_gr_edi_proxy_request.side_effect = results
-        patcher = patch.object(
-            self.env.registry['res.company'],
-            '_l10n_gr_edi_get_proxy_user',
-            return_value=proxy_user,
-        )
-        return patcher, proxy_user
-
     def test_invoice_issuance_and_final_pdf_upload(self):
         invoice = self._create_invoice()
         pdf_content = b'%PDF-1.4 final invoice'
 
-        patcher, proxy_user = self._patch_proxy_user(
-            self._success_result(),
-            {
+        with (
+            patch.object(e_invoo_client, 'issue_invoice', return_value=self._success_result()) as issue_invoice,
+            patch.object(e_invoo_client, 'upload_final_pdf', return_value={
                 'upstream_status': 204,
                 'response': None,
-            },
-        )
-        with patcher:
+            }) as upload_final_pdf,
+        ):
             invoice.l10n_gr_edi_try_send_invoices()
 
             document = invoice.l10n_gr_edi_document_ids.filtered(
@@ -101,8 +92,9 @@ class TestEInvoo(AccountTestInvoicingCommon):
                 'provider_pdf_state': 'pending',
             }])
 
-            route, request_values = proxy_user._l10n_gr_edi_proxy_request.call_args_list[0].args
-            self.assertEqual(route, 'send_invoice')
+            self.assertEqual(issue_invoice.call_args.args, ('methodoos_test_token',))
+            request_values = issue_invoice.call_args.kwargs
+            self.assertIs(request_values['test_env'], True)
             self.assertEqual(
                 request_values['invoice_id'],
                 invoice._l10n_gr_edi_get_provider_invoice_id(),
@@ -123,8 +115,9 @@ class TestEInvoo(AccountTestInvoicingCommon):
             }
             self.env['account.move.send']._l10n_gr_edi_try_upload_final_pdf(invoice, invoice_data)
 
-        route, pdf_values = proxy_user._l10n_gr_edi_proxy_request.call_args_list[1].args
-        self.assertEqual(route, 'save_final_pdf')
+        self.assertEqual(upload_final_pdf.call_args.args, ('methodoos_test_token',))
+        pdf_values = upload_final_pdf.call_args.kwargs
+        self.assertIs(pdf_values['test_env'], True)
         self.assertEqual(
             pdf_values['invoice_id'],
             invoice._l10n_gr_edi_get_provider_invoice_id(),
@@ -138,8 +131,11 @@ class TestEInvoo(AccountTestInvoicingCommon):
     def test_unknown_result_reuses_pending_submission(self):
         invoice = self._create_invoice()
 
-        patcher, proxy_user = self._patch_proxy_user(None, self._success_result())
-        with patcher:
+        with patch.object(
+            e_invoo_client,
+            'issue_invoice',
+            side_effect=(None, self._success_result()),
+        ) as issue_invoice:
             with freeze_time('2024-01-01 12:00:00'):
                 invoice.l10n_gr_edi_try_send_invoices()
 
@@ -162,8 +158,8 @@ class TestEInvoo(AccountTestInvoicingCommon):
         self.assertEqual(sent_document.attachment_id.raw, original_xml)
         self.assertEqual(len(invoice.l10n_gr_edi_document_ids), 1)
 
-        first_request = proxy_user._l10n_gr_edi_proxy_request.call_args_list[0].args[1]
-        retry_request = proxy_user._l10n_gr_edi_proxy_request.call_args_list[1].args[1]
+        first_request = issue_invoice.call_args_list[0].kwargs
+        retry_request = issue_invoice.call_args_list[1].kwargs
         self.assertEqual(retry_request['invoice_id'], first_request['invoice_id'])
         self.assertEqual(retry_request['invoice_datetime'], first_request['invoice_datetime'])
         self.assertEqual(retry_request['xml'], first_request['xml'])
@@ -173,17 +169,20 @@ class TestEInvoo(AccountTestInvoicingCommon):
             with self.subTest(error_code=error_code):
                 invoice = self._create_invoice()
 
-                patcher, proxy_user = self._patch_proxy_user(
-                    {
-                        'upstream_status': 200,
-                        'response': {
-                            'success': False,
-                            'error': error_code,
+                with patch.object(
+                    e_invoo_client,
+                    'issue_invoice',
+                    side_effect=(
+                        {
+                            'upstream_status': 200,
+                            'response': {
+                                'success': False,
+                                'error': error_code,
+                            },
                         },
-                    },
-                    self._success_result(),
-                )
-                with patcher:
+                        self._success_result(),
+                    ),
+                ) as issue_invoice:
                     invoice.l10n_gr_edi_try_send_invoices()
 
                     error_document = invoice.l10n_gr_edi_document_ids.filtered(
@@ -199,7 +198,21 @@ class TestEInvoo(AccountTestInvoicingCommon):
                 )
                 self.assertEqual(len(sent_document), 1)
                 self.assertFalse(error_document.exists())
-                self.assertEqual(proxy_user._l10n_gr_edi_proxy_request.call_count, 2)
+                self.assertEqual(issue_invoice.call_count, 2)
+
+    def test_missing_methodoos_api_token(self):
+        invoice = self._create_invoice()
+        invoice.company_id.l10n_gr_edi_methodoos_api_token = False
+
+        with patch.object(e_invoo_client, 'issue_invoice') as issue_invoice:
+            invoice.l10n_gr_edi_try_send_invoices()
+
+        issue_invoice.assert_not_called()
+        document = invoice.l10n_gr_edi_document_ids.filtered(
+            lambda document: document.state == 'invoice_error'
+        )
+        self.assertEqual(len(document), 1)
+        self.assertIn('Methodoos API token is not configured', document.message)
 
     def test_issue_date_uses_current_date_in_greece(self):
         invoice = self._create_invoice()

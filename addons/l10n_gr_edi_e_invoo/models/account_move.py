@@ -3,7 +3,7 @@ import base64
 from lxml import etree
 
 from odoo import api, fields, models
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.l10n_gr_edi_e_invoo.lib import e_invoo_client
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node, float_repr
 from odoo.tools.image import image_data_uri
@@ -93,7 +93,7 @@ class AccountMove(models.Model):
         database_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         return f'{database_uuid}-{self.id}'
 
-    def _l10n_gr_edi_prepare_invoice_proxy_request(self, invoice_datetime):
+    def _l10n_gr_edi_prepare_invoice_provider_request(self, invoice_datetime):
         self.ensure_one()
 
         xml_vals = self._l10n_gr_edi_get_invoices_xml_vals()
@@ -140,7 +140,7 @@ class AccountMove(models.Model):
             })
             document_created = True
 
-        request_values = self._l10n_gr_edi_prepare_invoice_proxy_request(document.datetime)
+        request_values = self._l10n_gr_edi_prepare_invoice_provider_request(document.datetime)
         if document.attachment_id:
             request_values['xml'] = document.attachment_id.sudo().raw.decode('utf-8')
         else:
@@ -161,7 +161,7 @@ class AccountMove(models.Model):
 
         return document, request_values
 
-    def _l10n_gr_edi_handle_invoice_proxy_result(self, document, result):
+    def _l10n_gr_edi_handle_invoice_provider_result(self, document, result):
         unknown_result_message = self.env._(
             "The electronic invoice submission result could not be confirmed. "
             "Retry the submission to retrieve the existing result."
@@ -286,9 +286,16 @@ class AccountMove(models.Model):
 
     def _l10n_gr_edi_send_invoices(self):
         # EXTENDS 'l10n_gr_edi'
-        """Send customer invoices individually through the IAP proxy."""
+        """Send customer invoices individually through Methodoos."""
         for company, invoices in self.grouped('company_id').items():
-            proxy_user = company._l10n_gr_edi_get_proxy_user()
+            api_token = company.sudo().l10n_gr_edi_methodoos_api_token
+            if not api_token:
+                error_message = self.env._(
+                    "The Methodoos API token is not configured. Please configure it in the settings."
+                )
+                for invoice in invoices:
+                    invoice._l10n_gr_edi_create_error_document({'error': error_message})
+                continue
 
             for invoice in invoices:
                 submission = invoice._l10n_gr_edi_prepare_invoice_submission()
@@ -297,26 +304,25 @@ class AccountMove(models.Model):
 
                 document, request_values = submission
                 try:
-                    result = proxy_user._l10n_gr_edi_proxy_request('send_invoice', request_values)
-                except AccountEdiProxyError as error:
-                    unknown_result_message = self.env._(
+                    result = e_invoo_client.issue_invoice(
+                        api_token,
+                        test_env=company.l10n_gr_edi_test_env,
+                        **request_values,
+                    )
+                except e_invoo_client.EInvooAuthenticationError:
+                    document.write({
+                        'state': 'invoice_error',
+                        'message': self.env._(
+                            "The Methodoos API token is invalid. Please check it in the Accounting settings."
+                        ),
+                    })
+                except e_invoo_client.EInvooRequestError:
+                    document.message = self.env._(
                         "The electronic invoice submission result could not be confirmed. "
                         "Retry the submission to retrieve the existing result."
                     )
-                    if error.code == 'invalid_request':
-                        document.write({
-                            'state': 'invoice_error',
-                            'message': error.message or self.env._(
-                                "The electronic invoice request could not be processed. "
-                                "Please contact Odoo support if the problem persists."
-                            ),
-                        })
-                    elif error.code == 'e_invoo_request_failed':
-                        document.message = error.message or unknown_result_message
-                    else:
-                        document.message = unknown_result_message
                 else:
-                    invoice._l10n_gr_edi_handle_invoice_proxy_result(document, result)
+                    invoice._l10n_gr_edi_handle_invoice_provider_result(document, result)
 
                 if self._can_commit():
                     self.env.cr.commit()
