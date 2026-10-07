@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
@@ -8,70 +9,56 @@ import {
 
 defineWebsiteModels();
 
-// The scroll effect and the content width switch views that only set classes
-// of the header: the builder shows them by the class, without a render.
-// The content width's class is on the header's own containers, not on the
-// mobile header's nor on the header's editable content.
-const headerContent = `
-    <header id="top" class="o_header_standard" data-anchor="true" data-name="Header">
-        <nav class="navbar">
-            <div id="o_main_nav" class="container o_main_nav">
-                <div class="oe_structure">
-                    <section class="s_text_block" data-snippet="s_text_block">
-                        <div class="container">Call to action</div>
-                    </section>
-                </div>
-            </div>
-        </nav>
-        <nav class="navbar o_header_mobile">
-            <div class="o_main_nav container">Mobile</div>
-        </nav>
+// The header's scroll effect and content width switch views: the header is
+// rendered again by the server on click (not on hover), as with its other
+// view options.
+function header(views) {
+    const effect = views["website.header_visibility_fixed"]
+        ? "o_header_fixed"
+        : "o_header_standard";
+    const width = views["website.header_width_small"] ? "o_container_small" : "container";
+    return `<header id="top" class="${effect}" data-anchor="true" data-name="Header">
+        <nav class="navbar"><div id="o_main_nav" class="o_main_nav ${width}">Menu</div></nav>
     </header>`;
+}
 
-function mockViews() {
+function mockRenders() {
     onRpc("/website/theme_customize_data_get", () => ["website.header_visibility_standard"]);
-    onRpc("/blank", () => {
+    onRpc("/blank", (request) => {
+        const views = JSON.parse(new URL(request.url).searchParams.get("theme_preview_views"));
         expect.step("render");
-        return new Response(`<html><body><div id="wrapwrap"></div></body></html>`);
+        return new Response(
+            `<html><body><div id="wrapwrap">${header(views)}<main></main></div></body></html>`
+        );
     });
 }
 
-async function pickScrollEffect(label) {
-    await contains("[data-label='Scroll Effect'] .dropdown-toggle").click();
-    await contains(`.o_popover .dropdown-item:contains('${label}')`).click();
-}
-
-test("a scroll effect is the header's class, undone with it, without a render", async () => {
-    mockViews();
-    await setupWebsiteBuilder("", { headerContent });
-    await contains(":iframe #wrapwrap > header").click();
-    await pickScrollEffect("Fixed");
-    expect(":iframe header#top").toHaveClass("o_header_fixed");
-    expect(":iframe header#top").not.toHaveClass("o_header_standard");
-    await pickScrollEffect("Standard");
-    expect(":iframe header#top").toHaveClass("o_header_standard");
-    expect("[data-label='Scroll Effect'] .dropdown-toggle").toHaveText("Standard");
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
-    expect(":iframe header#top").toHaveClass("o_header_fixed");
-    expect("[data-label='Scroll Effect'] .dropdown-toggle").toHaveText("Fixed");
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
-    expect(":iframe header#top").toHaveClass("o_header_standard");
-    expect("[data-label='Scroll Effect'] .dropdown-toggle").toHaveText("Standard");
-    await runAllTimers();
-    expect.verifySteps([]);
-});
-
-test("the content width is the class of the header's own containers", async () => {
-    mockViews();
-    await setupWebsiteBuilder("", { headerContent });
+test("the header's content width renders on click, not on hover", async () => {
+    mockRenders();
+    await setupWebsiteBuilder("", { headerContent: `${header({})}<main></main>` });
     await contains(":iframe #wrapwrap > header").click();
     await contains("[data-label='Content Width'] button[title='Small']").hover();
-    expect(":iframe #o_main_nav").toHaveClass("o_container_small");
-    await contains("[data-label='Content Width'] button[title='Small']").click();
-    expect(":iframe #o_main_nav").toHaveClass("o_container_small");
-    expect(":iframe #o_main_nav").not.toHaveClass("container");
-    expect(":iframe .s_text_block > div").toHaveClass("container");
-    expect(":iframe .o_header_mobile .o_main_nav").toHaveClass("container");
     await runAllTimers();
     expect.verifySteps([]);
+    await contains("[data-label='Content Width'] button[title='Small']").click();
+    await waitFor(":iframe #o_main_nav.o_container_small");
+    await waitFor("[data-label='Content Width'] button[title='Small'].active");
+    expect.verifySteps(["render", "render"]);
+    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await waitFor(":iframe #o_main_nav.container");
+});
+
+test("the header's scroll effect renders on click, the header with its class", async () => {
+    mockRenders();
+    await setupWebsiteBuilder("", { headerContent: `${header({})}<main></main>` });
+    await contains(":iframe #wrapwrap > header").click();
+    await contains("[data-label='Scroll Effect'] .dropdown-toggle").click();
+    await contains(".o_popover .dropdown-item:contains('Fixed')").click();
+    await waitFor(":iframe header#top.o_header_fixed");
+    // Once rendered, the pick is committed.
+    await waitFor("[data-label='Scroll Effect'] .dropdown-toggle:contains('Fixed')");
+    expect.verifySteps(["render", "render"]);
+    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await waitFor(":iframe header#top.o_header_standard");
+    await waitFor("[data-label='Scroll Effect'] .dropdown-toggle:contains('Standard')");
 });

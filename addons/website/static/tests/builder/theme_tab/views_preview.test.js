@@ -40,6 +40,8 @@ test("a views switch is previewed without a reload, undone, and written on save"
     await contains("#theme-tab").click();
     await contains("[data-label='Show Header'] input[type='checkbox']").click();
     await waitForNone(":iframe header#top");
+    // Committed once rendered.
+    await waitFor("[data-label='Show Header'] input[type='checkbox']:not(:checked)");
     expect.verifySteps([`render {}`, `render {"${HIDE_HEADER}":true}`]);
 
     await contains(".o-snippets-top-actions button[data-icon='undo']").click();
@@ -233,4 +235,76 @@ test("a views switch shown by a class needs no render, and later renders show it
     await contains(".o-snippets-top-actions [data-action='save']").click();
     await waitForNone(".o-snippets-top-actions");
     expect.verifySteps(["write shown_view,rendered_view"]);
+});
+
+test("a view of the page's content renders it again, keeping its unsaved edits", async () => {
+    const page = (isOn) => `<main>
+        <div class="test-options-target">
+            <div class="o_savable" data-oe-model="ir.ui.view" data-oe-id="5" data-oe-field="arch">Text</div>
+            ${isOn ? `<p class="test-view-on">View</p>` : ""}
+        </div></main>`;
+    onRpc("/blank", async (request) => {
+        const views = JSON.parse(new URL(request.url).searchParams.get("theme_preview_views"));
+        expect.step("render");
+        return new Response(
+            `<html><body><div id="wrapwrap"><header id="top">Header</header>${page(
+                views.page_view
+            )}</div></body></html>`
+        );
+    });
+    onRpc("/website/theme_customize_data_get", () => []);
+    addBuilderOption({
+        selector: ".test-options-target",
+        editableOnly: false,
+        template: xml`
+            <BuilderCheckbox action="'previewPageConfig'" actionParam="{views: ['page_view']}"/>
+        `,
+    });
+    const { getEditor } = await setupWebsiteBuilder("", {
+        headerContent: `<header id="top">Header</header>${page(false)}`,
+    });
+    const savableEl = queryFirst(":iframe main .o_savable");
+    // An unsaved edit, a step of its own.
+    savableEl.textContent = "Edited";
+    savableEl.classList.add("o_dirty");
+    getEditor().shared.history.commit();
+    await contains(":iframe .test-options-target").click();
+    await contains(".o_customize_tab input[type='checkbox']").click();
+    await waitFor(":iframe main .test-view-on");
+    await expect.waitForSteps(["render", "render"]);
+    // The edited element itself, in the new content; the options on it.
+    expect(queryFirst(":iframe main .o_savable")).toBe(savableEl);
+    expect(":iframe main .o_savable").toHaveText("Edited");
+    expect(".o_customize_tab input[type='checkbox']").toBeChecked();
+    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await waitForNone(":iframe main .test-view-on");
+    expect(queryFirst(":iframe main .o_savable")).toBe(savableEl);
+});
+
+test("an edit in a part rendered for a views switch is recorded", async () => {
+    onRpc("/website/theme_customize_data_get", () => []);
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderCheckbox action="'previewWebsiteConfig'" actionParam="{views: ['other_view']}"/>
+        `,
+    });
+    onRpc("/blank", (request) => {
+        const views = JSON.parse(new URL(request.url).searchParams.get("theme_preview_views"));
+        const header = views.other_view ? `<p class="new">New</p>` : "Header";
+        return new Response(
+            `<html><body><div id="wrapwrap"><header id="top">${header}</header><main></main></div></body></html>`
+        );
+    });
+    const { getEditor } = await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
+        headerContent: `<header id="top">Header</header><main></main>`,
+    });
+    await contains(":iframe .test-options-target").click();
+    await contains(".o_customize_tab input[type='checkbox']").click();
+    await waitFor(":iframe header#top .new");
+    const newEl = queryFirst(":iframe header#top .new");
+    newEl.classList.add("edited");
+    getEditor().shared.history.commit();
+    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    expect(newEl).not.toHaveClass("edited");
 });

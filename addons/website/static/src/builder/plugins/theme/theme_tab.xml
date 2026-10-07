@@ -74,13 +74,13 @@
             <ImageSize/>
         </BuilderRow>
         <BuilderRow label.translate="Position" level="1" t-if="this.isActiveItem('body_bg_image_opt')">
-            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'body-image-type'" preview="false">
+            <BuilderSelect action="'previewBodyImage'" actionParam="'body-image-type'" preview="false">
                 <BuilderSelectItem actionValue="'image'">Cover</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'pattern'" id="'body_bg_repeat_opt'">Repeat pattern</BuilderSelectItem>
             </BuilderSelect>
             <BuilderButton icon="'my_location'" title.translate="Background Position" preview="false" action="'bodyBgPositionOverlay'"/>
         </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('body_bg_repeat_opt')" action="'customizeWebsiteVariable'">
+        <BuilderContext t-if="this.isActiveItem('body_bg_repeat_opt')" action="'previewBodyImage'">
             <BuilderRow label.translate="Width" level="2">
                 <BuilderNumberInput actionParam="'body-image-pattern-width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>

@@ -78,31 +78,18 @@ describe("header blur option", () => {
 });
 
 describe("header width option", () => {
-    test("width preview is enabled on templates with several containers", async () => {
-        onRpc("/website/theme_customize_data_get", async () => [
-            "website.header_navbar_pills_style",
-            "website.template_header_boxed",
-        ]);
-        await setupWebsiteBuilder("", { headerContent });
-        await contains(":iframe #wrapwrap > header").click();
-        await waitFor("[data-label='Content Width']");
-        expect(
-            "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
-        ).toHaveCount(3);
-        expect("[data-label='Content Width'] [data-action-id='previewWebsiteConfig']").toHaveCount(
-            0
-        );
-    });
-
-    test("width preview is enabled by default", async () => {
-        await setupWebsiteBuilder("", { headerContent });
-        await contains(":iframe #wrapwrap > header").click();
-        await waitFor("[data-label='Content Width']");
-        expect(
-            "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
-        ).toHaveCount(3);
-        expect("[data-label='Content Width'] [data-action-id='previewWebsiteConfig']").toHaveCount(
-            0
-        );
-    });
+    for (const [layout, views] of [
+        ["the default template", []],
+        ["templates with several containers", ["website.template_header_boxed"]],
+    ]) {
+        test(`the content width renders the header on ${layout}`, async () => {
+            onRpc("/website/theme_customize_data_get", async () => views);
+            await setupWebsiteBuilder("", { headerContent });
+            await contains(":iframe #wrapwrap > header").click();
+            await waitFor("[data-label='Content Width']");
+            expect(
+                "[data-label='Content Width'] [data-action-id='previewWebsiteConfig']"
+            ).toHaveCount(3);
+        });
+    }
 });

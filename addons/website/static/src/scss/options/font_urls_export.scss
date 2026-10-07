@@ -67,6 +67,9 @@ $black: o-color('black') !default;
             $-gates: append($-gates, $key);
         }
     }
+    @if o-website-value('body-image') {
+        $-gates: append($-gates, 'body-image');
+    }
     @if o-website-value('header-bg-blur') != 0 {
         $-gates: append($-gates, 'header-bg-blur');
     }
