@@ -1,6 +1,5 @@
 import {
     click,
-    contains,
     defineMailModels,
     inputFiles,
     openDiscuss,
@@ -10,7 +9,7 @@ import {
     startServer,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor } from "@odoo/hoot";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -36,13 +35,13 @@ test("no conflicts between file uploads", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     await inputFiles(".o-mail-ChatWindow .o-mail-Composer input[type=file]", [text2]);
-    await contains(".o-mail-Chatter .o-mail-AttachmentContainer");
-    await contains(".o-mail-ChatWindow .o-mail-AttachmentContainer");
-    await contains(
-        ".o-mail-Chatter .o-mail-AttachmentContainer:not(.o-isUploading):contains(text1.txt)"
+    await waitFor(".o-mail-Chatter .o-mail-AttachmentContainer:count(1)");
+    await waitFor(".o-mail-ChatWindow .o-mail-AttachmentContainer:count(1)");
+    await waitFor(
+        ".o-mail-Chatter .o-mail-AttachmentContainer:not(.o-isUploading):contains(text1.txt):count(1)"
     );
-    await contains(
-        ".o-mail-ChatWindow .o-mail-AttachmentContainer:not(.o-isUploading):contains(text2.txt)"
+    await waitFor(
+        ".o-mail-ChatWindow .o-mail-AttachmentContainer:not(.o-isUploading):contains(text2.txt):count(1)"
     );
 });
 
@@ -54,7 +53,7 @@ test("Attachment shows spinner during upload", async () => {
     await start();
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer input[type=file]", [text2]);
-    await contains(
-        ".o-mail-AttachmentContainer.o-isUploading:contains(text2.txt) [data-icon='autorenew']"
+    await waitFor(
+        ".o-mail-AttachmentContainer.o-isUploading:contains(text2.txt) [data-icon='autorenew']:count(1)"
     );
 });

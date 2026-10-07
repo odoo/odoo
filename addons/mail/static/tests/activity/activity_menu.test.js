@@ -1,6 +1,5 @@
 import {
     click,
-    contains,
     defineMailModels,
     start,
     startServer,
@@ -8,7 +7,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, queryText } from "@odoo/hoot-dom";
+import { animationFrame, queryText, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -17,15 +16,15 @@ defineMailModels();
 test("should update activities when opening the activity menu", async () => {
     const pyEnv = await startServer();
     await start();
-    await contains(".o_menu_systray i[aria-label='Activities']");
-    await contains(".o-mail-ActivityMenu-counter", { count: 0 });
+    await waitFor(".o_menu_systray i[aria-label='Activities']:count(1)");
+    await waitForNone(".o-mail-ActivityMenu-counter");
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
         res_id: partnerId,
         res_model: "res.partner",
     });
     await click(".o_menu_systray i[aria-label='Activities']");
-    await contains(".o-mail-ActivityMenu-counter:text('1')");
+    await waitFor(".o-mail-ActivityMenu-counter:text('1'):count(1)");
 });
 
 test("global shortcut", async () => {

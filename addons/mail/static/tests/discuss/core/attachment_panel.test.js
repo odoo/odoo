@@ -6,7 +6,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor } from "@odoo/hoot";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -17,7 +17,9 @@ test("Empty attachment panel", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-DiscussContent-header button[title='Attachments']");
-    await contains(".o-mail-ActionPanel:text('This channel doesn't have any attachments.')");
+    await waitFor(
+        `.o-mail-ActionPanel:contains("This channel doesn't have any attachments."):count(1)`
+    );
 });
 
 test("Attachment panel sort by date", async () => {
@@ -39,7 +41,7 @@ test("Attachment panel sort by date", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await click(".o-mail-DiscussContent-header button[title='Attachments']");
     await contains(".o-mail-AttachmentCard-info:text('file2.pdf')", {
         after: [".o-mail-DateSection:text('September, 2023')"],

@@ -1,12 +1,11 @@
 import {
     click,
-    contains,
     defineMailModels,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { mockService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -22,7 +21,7 @@ test("Channel subscription is renewed when channel is manually added", async () 
         },
     });
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await click("[title='Add People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Mitchell Admin'))");
     await click("button:text('Invite'):enabled");

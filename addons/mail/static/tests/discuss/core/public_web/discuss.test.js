@@ -1,13 +1,12 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 import { WebsocketWorker } from "@bus/workers/websocket_worker";
 import {
-    contains,
     defineMailModels,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -25,13 +24,13 @@ test("open channel in discuss from push notification", async () => {
     ]);
     await start();
     await openDiscuss(salesId);
-    await contains(".o-mail-DiscussContent-threadName[title='Sales']");
+    await waitFor(".o-mail-DiscussContent-threadName[title='Sales']:count(1)");
     navigator.serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: generalId } },
         })
     );
-    await contains(".o-mail-DiscussContent-threadName[title='General']");
+    await waitFor(".o-mail-DiscussContent-threadName[title='General']:count(1)");
 });
 
 test("notify message to user as non member", async () => {
@@ -64,7 +63,7 @@ test("notify message to user as non member", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-Message:has(:text('Hello!'))");
+    await waitFor(".o-mail-Message:has(:text('Hello!')):count(1)");
     expect.verifySteps(["push notification"]);
 });
 
@@ -82,5 +81,5 @@ test("show correspondent local time in DM header when timezones differ", async (
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header:has(:text('17:30 local time'))");
+    await waitFor(".o-mail-DiscussContent-header:has(:text('17:30 local time')):count(1)");
 });

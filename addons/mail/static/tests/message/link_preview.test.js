@@ -11,7 +11,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { press } from "@odoo/hoot-dom";
+import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -38,7 +38,7 @@ test("auto layout with link preview list", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message .o-mail-LinkPreviewList");
+    await waitFor(".o-mail-Message .o-mail-LinkPreviewList:count(1)");
 });
 
 test("auto layout with link preview as gif", async () => {
@@ -61,7 +61,7 @@ test("auto layout with link preview as gif", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-LinkPreviewImage");
+    await waitFor(".o-mail-LinkPreviewImage:count(1)");
 });
 
 test("simplest card layout", async () => {
@@ -82,9 +82,9 @@ test("simplest card layout", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-LinkPreviewCard");
-    await contains(".o-mail-LinkPreviewCard p:text('Article title')");
-    await contains(".o-mail-LinkPreviewCard p:text('Description')");
+    await waitFor(".o-mail-LinkPreviewCard:count(1)");
+    await waitFor(".o-mail-LinkPreviewCard p:text('Article title'):count(1)");
+    await waitFor(".o-mail-LinkPreviewCard p:text('Description'):count(1)");
 });
 
 test("simplest card layout with image", async () => {
@@ -106,10 +106,10 @@ test("simplest card layout with image", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-LinkPreviewCard");
-    await contains(".o-mail-LinkPreviewCard p:text('Article title')");
-    await contains(".o-mail-LinkPreviewCard p:text('Description')");
-    await contains(".o-mail-LinkPreviewCard img");
+    await waitFor(".o-mail-LinkPreviewCard:count(1)");
+    await waitFor(".o-mail-LinkPreviewCard p:text('Article title'):count(1)");
+    await waitFor(".o-mail-LinkPreviewCard p:text('Description'):count(1)");
+    await waitFor(".o-mail-LinkPreviewCard img:count(1)");
 });
 
 test("Link preview video layout", async () => {
@@ -131,10 +131,10 @@ test("Link preview video layout", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-LinkPreviewVideo");
-    await contains(".o-mail-LinkPreviewVideo h6:text('video title')");
-    await contains(".o-mail-LinkPreviewVideo p:text('Description')");
-    await contains(".o-mail-LinkPreviewVideo-overlay");
+    await waitFor(".o-mail-LinkPreviewVideo:count(1)");
+    await waitFor(".o-mail-LinkPreviewVideo h6:text('video title'):count(1)");
+    await waitFor(".o-mail-LinkPreviewVideo p:text('Description'):count(1)");
+    await waitFor(".o-mail-LinkPreviewVideo-overlay:count(1)");
 });
 
 test("Link preview image layout", async () => {
@@ -154,7 +154,7 @@ test("Link preview image layout", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-LinkPreviewImage");
+    await waitFor(".o-mail-LinkPreviewImage:count(1)");
 });
 
 test("Remove link preview Gif", async () => {
@@ -178,10 +178,10 @@ test("Remove link preview Gif", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
-    await contains("p:text('Do you really want to delete this preview?')");
-    await contains(".modal .o-mail-LinkPreviewImage button[aria-label='Remove']", { count: 0 });
+    await waitFor("p:text('Do you really want to delete this preview?'):count(1)");
+    await waitForNone(".modal .o-mail-LinkPreviewImage button[aria-label='Remove']");
     await click(".modal-footer button:text('Delete')");
-    await contains(".o-mail-LinkPreviewImage", { count: 0 });
+    await waitForNone(".o-mail-LinkPreviewImage");
 });
 
 test("Remove link preview card", async () => {
@@ -203,10 +203,10 @@ test("Remove link preview card", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
-    await contains("p:text('Do you really want to delete this preview?')");
-    await contains(".modal .o-mail-LinkPreviewCard button[aria-label='Remove']", { count: 0 });
+    await waitFor("p:text('Do you really want to delete this preview?'):count(1)");
+    await waitForNone(".modal .o-mail-LinkPreviewCard button[aria-label='Remove']");
     await click(".modal-footer button:text('Delete')");
-    await contains(".o-mail-LinkPreviewCard", { count: 0 });
+    await waitForNone(".o-mail-LinkPreviewCard");
 });
 
 test("Remove link preview video", async () => {
@@ -229,10 +229,10 @@ test("Remove link preview video", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewVideo button[aria-label='Remove']");
-    await contains("p:text('Do you really want to delete this preview?')");
-    await contains(".modal .o-mail-LinkPreviewVideo button[aria-label='Remove']", { count: 0 });
+    await waitFor("p:text('Do you really want to delete this preview?'):count(1)");
+    await waitForNone(".modal .o-mail-LinkPreviewVideo button[aria-label='Remove']");
     await click(".modal-footer button:text('Delete')");
-    await contains(".o-mail-LinkPreviewVideo", { count: 0 });
+    await waitForNone(".o-mail-LinkPreviewVideo");
 });
 
 test("Remove link preview image", async () => {
@@ -253,10 +253,10 @@ test("Remove link preview image", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewImage button[aria-label='Remove']");
-    await contains("p:text('Do you really want to delete this preview?')");
-    await contains(".modal .o-mail-LinkPreviewImage button[aria-label='Remove']", { count: 0 });
+    await waitFor("p:text('Do you really want to delete this preview?'):count(1)");
+    await waitForNone(".modal .o-mail-LinkPreviewImage button[aria-label='Remove']");
     await click(".modal-footer button:text('Delete')");
-    await contains(".o-mail-LinkPreviewImage", { count: 0 });
+    await waitForNone(".o-mail-LinkPreviewImage");
 });
 
 test("No crash on receiving link preview of non-known message", async () => {
@@ -302,8 +302,8 @@ test("Squash the message and the link preview when the link preview is an image 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-LinkPreviewImage");
-    await contains(".o-mail-Message-bubble", { count: 0 });
+    await waitFor(".o-mail-LinkPreviewImage:count(1)");
+    await waitForNone(".o-mail-Message-bubble");
 });
 
 test("Link preview and message should not be squashed when the link preview is not an image", async () => {
@@ -324,7 +324,7 @@ test("Link preview and message should not be squashed when the link preview is n
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message-bubble");
+    await waitFor(".o-mail-Message-bubble:count(1)");
 });
 
 test("Link preview and message should not be squashed when there is more than the link in the message", async () => {
@@ -344,7 +344,7 @@ test("Link preview and message should not be squashed when there is more than th
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message-bubble");
+    await waitFor(".o-mail-Message-bubble:count(1)");
 });
 
 test("Sending message with link preview URL should show a link preview card", async () => {
@@ -354,7 +354,7 @@ test("Sending message with link preview URL should show a link preview card", as
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "https://make-link-preview.com");
     await press("Enter");
-    await contains(".o-mail-LinkPreviewCard");
+    await waitFor(".o-mail-LinkPreviewCard:count(1)");
 });
 
 test("Delete all link previews at once", async () => {
@@ -387,8 +387,8 @@ test("Delete all link previews at once", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-LinkPreviewCard button[aria-label='Remove']");
     await click(".modal-footer button:text('Delete all previews')");
-    await contains(".o-mail-LinkPreviewCard", { count: 0 });
-    await contains(".o-mail-LinkPreviewImage", { count: 0 });
+    await waitForNone(".o-mail-LinkPreviewCard");
+    await waitForNone(".o-mail-LinkPreviewImage");
 });
 
 test("link preview request is only made when message contains URL", async () => {
@@ -399,7 +399,9 @@ test("link preview request is only made when message contains URL", async () => 
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello, this message does not contain any link");
     await press("Enter");
-    await contains(".o-mail-Message:has(:text('Hello, this message does not contain any link'))");
+    await waitFor(
+        ".o-mail-Message:has(:text('Hello, this message does not contain any link')):count(1)"
+    );
     await expect.waitForSteps([]);
     await insertText(".o-mail-Composer-input", "https://www.odoo.com");
     await press("Enter");
@@ -500,12 +502,11 @@ test("Internal user can't delete others preview", async () => {
     await start({ authenticateAs: pyEnv["res.users"].read(userId)[0] });
     await openDiscuss(channelId);
     await hover(".o-mail-Message:contains('msg-2') .o-mail-LinkPreviewCard");
-    await contains(
-        ".o-mail-Message:contains('msg-2') .o-mail-LinkPreviewCard button[aria-label='Remove']"
+    await waitFor(
+        ".o-mail-Message:contains('msg-2') .o-mail-LinkPreviewCard button[aria-label='Remove']:count(1)"
     );
     await hover(".o-mail-Message:contains('msg-1') .o-mail-LinkPreviewCard");
-    await contains(
-        ".o-mail-Message:contains('msg-1') .o-mail-LinkPreviewCard button[aria-label='Remove']",
-        { count: 0 }
+    await waitForNone(
+        ".o-mail-Message:contains('msg-1') .o-mail-LinkPreviewCard button[aria-label='Remove']"
     );
 });

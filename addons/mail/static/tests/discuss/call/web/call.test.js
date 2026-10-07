@@ -2,7 +2,6 @@ import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import {
     click,
-    contains,
     defineMailModels,
     insertText,
     mockGetMedia,
@@ -16,7 +15,7 @@ import { pttExtensionServiceInternal } from "@mail/discuss/call/common/ptt_exten
 import { PTT_RELEASE_DURATION } from "@mail/discuss/call/common/rtc_service";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
-import { advanceTime, freezeTime, keyDown, test } from "@odoo/hoot";
+import { advanceTime, freezeTime, keyDown, test, waitFor, waitForNone } from "@odoo/hoot";
 import { patch } from "@web/core/utils/patch";
 
 defineMailModels();
@@ -29,16 +28,16 @@ test("no auto-call on joining chat", async () => {
     await start();
     await openDiscuss();
     await triggerHotkey("control+k");
-    await contains(".o_command_name", { count: 2 });
+    await waitFor(".o_command_name:count(2)");
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
         "mario"
     );
-    await contains(".o_command_name", { count: 2 });
+    await waitFor(".o_command_name:count(2)");
     await click(".o_command_name:text('Mario')");
-    await contains(".o-mail-MessagingMenuItem:has(:text('Mario'))");
-    await contains(".o-mail-Message", { count: 0 });
-    await contains(".o-discuss-Call", { count: 0 });
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Mario')):count(1)");
+    await waitForNone(".o-mail-Message");
+    await waitForNone(".o-discuss-Call");
 });
 
 test.tags("desktop");
@@ -53,13 +52,15 @@ test("no auto-call on joining group chat", async () => {
     await openDiscuss();
     await triggerHotkey("control+k");
     await click(".o_command_name:text(Mario)");
-    await contains(".o-mail-DiscussContent-threadName[title='Mario']");
+    await waitFor(".o-mail-DiscussContent-threadName[title='Mario']:count(1)");
     await click("[title='Invite People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text(Luigi))");
     await click("button:text('Create Group Chat')");
-    await contains(".o-mail-MessagingMenuItem:has(:text('Mitchell Admin, Mario, and Luigi'))");
-    await contains(".o-mail-Message", { count: 0 });
-    await contains(".o-discuss-Call", { count: 0 });
+    await waitFor(
+        ".o-mail-MessagingMenuItem:has(:text('Mitchell Admin, Mario, and Luigi')):count(1)"
+    );
+    await waitForNone(".o-mail-Message");
+    await waitForNone(".o-discuss-Call");
 });
 
 test.tags("desktop");
@@ -95,19 +96,19 @@ test("Can push-to-talk", async () => {
     await subscribed;
     await click("[title='Start Call']");
     await advanceTime(1000);
-    await contains(".o-discuss-Call");
+    await waitFor(".o-discuss-Call:count(1)");
     await click(".o-discuss-Call");
     await advanceTime(1000);
     await keyDown("f");
     await advanceTime(PTT_RELEASE_DURATION);
-    await contains(".o-discuss-CallParticipantCard .o-isTalking");
+    await waitFor(".o-discuss-CallParticipantCard .o-isTalking:count(1)");
     // switching tab while PTT key still pressed then released on other tab should eventually release PTT
     window.dispatchEvent(new Event("blur"));
     await advanceTime(PTT_RELEASE_DURATION + 1000);
-    await contains(".o-discuss-CallParticipantCard:not(:has(.o-isTalking))");
+    await waitFor(".o-discuss-CallParticipantCard:not(:has(.o-isTalking)):count(1)");
     await click(".o-discuss-Call");
     await advanceTime(1000);
     await keyDown("f");
     await advanceTime(PTT_RELEASE_DURATION);
-    await contains(".o-discuss-CallParticipantCard .o-isTalking");
+    await waitFor(".o-discuss-CallParticipantCard .o-isTalking:count(1)");
 });

@@ -1,6 +1,6 @@
+import { waitFor } from "@odoo/hoot-dom";
 import {
     click,
-    contains,
     start,
     startServer,
     openDiscuss,
@@ -74,8 +74,8 @@ onlineTest("Can join a call in p2p", async (assert) => {
 
     await openDiscuss(channelId);
     await click("[title='Join Call']");
-    await contains(".o-discuss-Call");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Remote']");
+    await waitFor(".o-discuss-Call:count(1)");
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Remote']:count(1)");
     await Promise.all([localUserConnected, remoteUserConnected]);
-    await contains("span[data-connection-state='connected']");
+    await waitFor("span[data-connection-state='connected']:count(1)");
 });

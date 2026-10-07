@@ -1,6 +1,5 @@
 import {
     click,
-    contains,
     defineMailModels,
     MENU_ACTIVE_IDS,
     mockGetMedia,
@@ -11,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { getService } from "@web/../tests/web_test_helpers";
 
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -25,10 +24,10 @@ test("Starting a video call asks for permissions", async () => {
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
     await click("[title='Start Video Call']");
-    await contains(".modal[role='dialog']", { count: 1 });
+    await waitFor(".modal[role='dialog']:count(1)");
     rtc.cameraPermission = "granted";
     await click(".modal-footer button:text('Use camera')");
-    await contains(".o-discuss-CallActionList button[title='Turn camera off']");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
 });
 
 test("Starting a meeting asks for microphone permission", async () => {
@@ -40,13 +39,13 @@ test("Starting a meeting asks for microphone permission", async () => {
     await openDiscuss(MENU_ACTIVE_IDS.MEETING);
     await click("[title='New Meeting']");
     await click(".o-dropdown-item:text('Start Now')");
-    await contains(".modal-footer button", { count: 2 });
-    await contains(".modal-footer button:text('Use microphone and camera')");
-    await contains(".modal-footer button:text('Use microphone')");
+    await waitFor(".modal-footer button:count(2)");
+    await waitFor(".modal-footer button:text('Use microphone and camera'):count(1)");
+    await waitFor(".modal-footer button:text('Use microphone'):count(1)");
     rtc.microphonePermission = "granted";
     await click(".modal-footer button:text('Use microphone')");
-    await contains(".o-discuss-CallActionList button[title='Mute']");
-    await contains(".o-discuss-CallActionList button[title='Turn camera on']");
+    await waitFor(".o-discuss-CallActionList button[title='Mute']:count(1)");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera on']:count(1)");
 });
 
 test("Starting a meeting with camera granted asks for microphone permission", async () => {
@@ -59,9 +58,9 @@ test("Starting a meeting with camera granted asks for microphone permission", as
     rtc.cameraPermission = "granted";
     await click("[title='New Meeting']");
     await click(".o-dropdown-item:text('Start Now')");
-    await contains(".o-discuss-CallActionList button[title='Turn camera off']");
-    await contains(".modal-footer button");
-    await contains(".modal-footer button:text('Use microphone')");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
+    await waitFor(".modal-footer button:count(1)");
+    await waitFor(".modal-footer button:text('Use microphone'):count(1)");
 });
 
 test("Starting a meeting with microphone granted asks for camera permission", async () => {
@@ -74,8 +73,8 @@ test("Starting a meeting with microphone granted asks for camera permission", as
     rtc.microphonePermission = "granted";
     await click("[title='New Meeting']");
     await click(".o-dropdown-item:text('Start Now')");
-    await contains(".modal-footer button");
-    await contains(".modal-footer button:text('Use camera')");
+    await waitFor(".modal-footer button:count(1)");
+    await waitFor(".modal-footer button:text('Use camera'):count(1)");
 });
 
 test("Turning on the microphone asks for permissions", async () => {
@@ -87,13 +86,13 @@ test("Turning on the microphone asks for permissions", async () => {
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await contains(".o-discuss-CallActionList button[title='Turn camera on']");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera on']:count(1)");
     await click(".o-discuss-CallActionList button[title='Unmute']");
-    await contains(".modal[role='dialog']", { count: 1 });
+    await waitFor(".modal[role='dialog']:count(1)");
     rtc.microphonePermission = "granted";
     await click(".modal-footer button:text('Use microphone')");
-    await contains(".o-discuss-CallActionList button[title='Mute']");
-    await contains(".o-discuss-CallActionList button[title='Turn camera on']");
+    await waitFor(".o-discuss-CallActionList button[title='Mute']:count(1)");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera on']:count(1)");
 });
 
 test("Turning on the camera asks for permissions", async () => {
@@ -106,10 +105,10 @@ test("Turning on the camera asks for permissions", async () => {
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await click(".o-discuss-CallActionList button[title='Turn camera on']");
-    await contains(".modal[role='dialog']", { count: 1 });
+    await waitFor(".modal[role='dialog']:count(1)");
     rtc.cameraPermission = "granted";
     await click(".modal-footer button:text('Use camera')");
-    await contains(".o-discuss-CallActionList button[title='Turn camera off']");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
 });
 
 test("Turn on both microphone and camera from permission dialog", async () => {
@@ -121,14 +120,14 @@ test("Turn on both microphone and camera from permission dialog", async () => {
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await contains(".o-discuss-CallActionList button[title='Turn camera on']");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera on']:count(1)");
     await click(".o-discuss-CallActionList button[title='Turn camera on']");
-    await contains(".modal[role='dialog']", { count: 1 });
+    await waitFor(".modal[role='dialog']:count(1)");
     rtc.microphonePermission = "granted";
     rtc.cameraPermission = "granted";
     await click(".modal-footer button:text('Use microphone and camera')");
-    await contains(".o-discuss-CallActionList button[title='Turn camera off']");
-    await contains(".o-discuss-CallActionList button[title='Mute']");
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
+    await waitFor(".o-discuss-CallActionList button[title='Mute']:count(1)");
 });
 
 test("Combined mic+camera button only shown when both permissions not granted", async () => {
@@ -141,14 +140,14 @@ test("Combined mic+camera button only shown when both permissions not granted", 
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await click(".o-discuss-CallActionList button[title='Turn camera on']");
-    await contains(".modal-footer button", { count: 2 });
-    await contains(".modal-footer button:text('Use microphone and camera')");
-    await contains(".modal-footer button:text('Use camera')");
+    await waitFor(".modal-footer button:count(2)");
+    await waitFor(".modal-footer button:text('Use microphone and camera'):count(1)");
+    await waitFor(".modal-footer button:text('Use camera'):count(1)");
     rtc.cameraPermission = "granted";
     await click(".modal-footer button:text('Use camera')");
     await click(".o-discuss-CallActionList button[title='Unmute']");
-    await contains(".modal-footer button");
-    await contains(".modal-footer button:text('Use microphone')");
+    await waitFor(".modal-footer button:count(1)");
+    await waitFor(".modal-footer button:text('Use microphone'):count(1)");
 });
 
 test("Microphone permission warning is hidden while the permission dialog is open", async () => {
@@ -160,28 +159,28 @@ test("Microphone permission warning is hidden while the permission dialog is ope
     const rtc = getService("discuss.rtc");
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await contains(".o_popover:text('No microphone permissions')");
+    await waitFor(".o_popover:text('No microphone permissions'):count(1)");
     await click(".o-discuss-CallActionList button[title='Turn camera on']");
-    await contains(".modal:has(:text('Do you want people to see you in the meeting?'))");
-    await contains(".o_popover", { count: 0 });
+    await waitFor(".modal:has(:text('Do you want people to see you in the meeting?')):count(1)");
+    await waitForNone(".o_popover");
     // leaving the call closes the permission dialog, the warning comes back in the next call
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
-    await contains(".modal", { count: 0 });
+    await waitForNone(".modal");
     await click("[title='Start Call']");
-    await contains(".o_popover:text('No microphone permissions')");
+    await waitFor(".o_popover:text('No microphone permissions'):count(1)");
     // dismissing the dialog without granting the permission brings the warning back
     await click(".o-discuss-CallActionList button[title='Turn camera on']");
-    await contains(".modal:has(:text('Do you want people to see you in the meeting?'))");
-    await contains(".o_popover", { count: 0 });
+    await waitFor(".modal:has(:text('Do you want people to see you in the meeting?')):count(1)");
+    await waitForNone(".o_popover");
     await click(".modal .btn-close");
-    await contains(".modal", { count: 0 });
-    await contains(".o_popover:text('No microphone permissions')");
+    await waitForNone(".modal");
+    await waitFor(".o_popover:text('No microphone permissions'):count(1)");
     // granting the permissions from the dialog leaves no warning behind
     await click(".o-discuss-CallActionList button[title='Turn camera on']");
-    await contains(".modal:has(:text('Do you want people to see you in the meeting?'))");
+    await waitFor(".modal:has(:text('Do you want people to see you in the meeting?')):count(1)");
     rtc.cameraPermission = "granted";
     rtc.microphonePermission = "granted";
     await click(".modal-footer button:text('Use microphone and camera')");
-    await contains(".o-discuss-CallActionList button[title='Turn camera off']");
-    await contains(".o_popover", { count: 0 });
+    await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
+    await waitForNone(".o_popover");
 });

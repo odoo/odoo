@@ -1,12 +1,11 @@
 import {
     click,
-    contains,
     defineMailModels,
     openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
@@ -31,5 +30,5 @@ test("Manage messages", async () => {
     await click(".o_debug_manager .dropdown-toggle");
     await click(".dropdown-item:text('Messages')");
     await expect.waitForSteps(["message_read"]);
-    await contains(".o_breadcrumb .active > span:text('Messages')");
+    await waitFor(".o_breadcrumb .active > span:text('Messages'):count(1)");
 });

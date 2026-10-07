@@ -1,7 +1,6 @@
 import { waitForChannels } from "@bus/../tests/bus_test_helpers";
 import {
     click,
-    contains,
     defineMailModels,
     MENU_ACTIVE_IDS,
     openDiscuss,
@@ -10,7 +9,17 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, edit, expect, mockDate, press, runAllTimers, test } from "@odoo/hoot";
+import {
+    describe,
+    edit,
+    expect,
+    mockDate,
+    press,
+    runAllTimers,
+    test,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot";
 
 import { Command, getService } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -43,12 +52,12 @@ test("bus subscription updated when opening/closing chat window as a non member"
     });
     setupChatHub({ opened: [channelId] });
     await start();
-    await contains(".o-mail-ChatWindow:has(:text('Sales'))");
+    await waitFor(".o-mail-ChatWindow:has(:text('Sales')):count(1)");
     await waitForChannels([`discuss.channel_${channelId}`]);
     await click("[title*='Close Chat Window']", {
         parent: [".o-mail-ChatWindow:has(:text('Sales'))"],
     });
-    await contains(".o-mail-ChatWindow:has(:text('Sales'))", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow:has(:text('Sales'))");
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
     await press(["control", "k"]);
     await click(".o_command_palette_search input");
@@ -66,7 +75,7 @@ test("bus subscription updated when joining non-member thread open in discuss", 
     await start();
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
-    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await click("[title='Add People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Mitchell Admin'))");
     await click(".o-discuss-ChannelInvitation button:text('Invite'):enabled");
@@ -89,7 +98,7 @@ test("bus subscription is refreshed when channel is joined", async () => {
         updateBusSubscription: () => expect.step("update_bus_subscription"),
     });
     await click(".o-mail-DiscussCommand:has(:text('Sales'))");
-    await contains(".o-mail-DiscussContent-threadName[title='Sales']");
+    await waitFor(".o-mail-DiscussContent-threadName[title='Sales']:count(1)");
     await click("button:text('Add People')");
     await click("[name='selectablePartnerName']:text('Mitchell Admin')");
     await click("button:text('Invite')");
@@ -103,17 +112,17 @@ test("bus subscription is refreshed when channel is left", async () => {
     mockDate(later.toUTC().toFormat("yyyy-MM-dd HH:mm:ss"));
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-Discuss[data-active]");
+    await waitFor(".o-mail-Discuss[data-active]:count(1)");
     await runAllTimers(); // settle the bus subscriptions from start/openDiscuss
     await openDiscuss();
     patch(getService("mail.store"), {
         updateBusSubscription: () => expect.step("update_bus_subscription"),
     });
-    await contains(".o-mail-MessagingMenuItem");
-    await contains(".o-mail-MessagingMenuItem:has(:text('General'))");
+    await waitFor(".o-mail-MessagingMenuItem:count(1)");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('General')):count(1)");
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Conversation')");
     await click(".o_dialog button:text('Leave Conversation')");
-    await contains(".o-mail-MessagingMenuItem", { count: 0 });
+    await waitForNone(".o-mail-MessagingMenuItem");
     await expect.waitForSteps(["update_bus_subscription"]);
 });

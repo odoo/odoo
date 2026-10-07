@@ -1,5 +1,4 @@
 import {
-    contains,
     defineMailModels,
     mockGetMedia,
     openDiscuss,
@@ -13,7 +12,7 @@ import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { CALL_PROFILE_TYPE } from "@mail/discuss/call/common/call_profile";
 import { INSET_MARGIN } from "@mail/discuss/call/common/stage/layout_engine";
 
-import { beforeEach, describe, expect, mockUserAgent, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, mockUserAgent, test, waitFor } from "@odoo/hoot";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 /**
@@ -92,7 +91,7 @@ async function joinCall({
     // What the "Join Call" button of the channel does. Joining gives self a session too, so
     // `participantCount` is remotes + 1.
     await store.rtc.toggleCall(channel);
-    await contains(".o-discuss-Call");
+    await waitFor(".o-discuss-Call:count(1)");
     let other;
     if (otherChannelId) {
         other = await store["discuss.channel"].getOrFetch(otherChannelId);

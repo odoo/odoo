@@ -10,7 +10,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
 import { range } from "@web/core/utils/numbers";
@@ -51,15 +51,15 @@ test.skip("Form view not scrolled when switching record", async () => {
             </form>`,
         resIds: [partnerId_1, partnerId_2],
     });
-    await contains(".o-mail-Message", { count: 29 });
+    await waitFor(".o-mail-Message:count(29)");
     await contains(".o_content", { scroll: 0 });
     await scroll(".o_content", 150);
     await click(".o_pager_next");
-    await contains(".o-mail-Message", { count: 30 });
+    await waitFor(".o-mail-Message:count(30)");
     await contains(".o_content", { scroll: 150 });
     await scroll(".o_content", 0);
     await click(".o_pager_previous");
-    await contains(".o-mail-Message", { count: 29 });
+    await waitFor(".o-mail-Message:count(29)");
     await contains(".o_content", { scroll: 0 });
 });
 
@@ -96,15 +96,15 @@ test("Attachments that have been unlinked from server should be visually unlinke
         resId: partnerId_1,
         resIds: [partnerId_1, partnerId_2],
     });
-    await contains("button[aria-label='Attach files']:text('2')");
+    await waitFor("button[aria-label='Attach files']:text('2'):count(1)");
     // The attachment links are updated on (re)load,
     // so using pager is a way to reload the record "Partner1".
     await click(".o_pager_next");
-    await contains("button[aria-label='Attach files']:not(:has(sup))");
+    await waitFor("button[aria-label='Attach files']:not(:has(sup)):count(1)");
     // Simulate unlinking attachment 1 from Partner 1.
     pyEnv["ir.attachment"].write([attachmentId_1], { res_id: 0 });
     await click(".o_pager_previous");
-    await contains("button[aria-label='Attach files']:text('1')");
+    await waitFor("button[aria-label='Attach files']:text('1'):count(1)");
 });
 
 test("ellipsis button is not duplicated when switching from read to edit mode", async () => {
@@ -137,9 +137,9 @@ test("ellipsis button is not duplicated when switching from read to edit mode", 
                 <chatter/>
             </form>`,
     });
-    await contains(".o-mail-Chatter");
-    await contains(".o-mail-Message");
-    await contains(".o-mail-ellipsis");
+    await waitFor(".o-mail-Chatter:count(1)");
+    await waitFor(".o-mail-Message:count(1)");
+    await waitFor(".o-mail-ellipsis:count(1)");
 });
 
 test("[TECHNICAL] unfolded ellipsis button should not fold on message click besides that button", async () => {
@@ -218,7 +218,7 @@ test("ellipsis button on message of type notification", async () => {
                 <chatter/>
             </form>`,
     });
-    await contains(".o-mail-ellipsis");
+    await waitFor(".o-mail-ellipsis:count(1)");
 });
 
 test("read more/less should appear only once for the signature", async () => {
@@ -259,10 +259,10 @@ test("read more/less should appear only once for the signature", async () => {
 
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Chatter");
+    await waitFor(".o-mail-Chatter:count(1)");
     await click(".o-mail-Chatter-sendMessage");
     await insertText(".o-mail-Composer-input", "Example Body");
     await click("[name='open-full-composer']");
-    await contains(".o-mail-Message-body:has(:text('Example Body'))");
+    await waitFor(".o-mail-Message-body:has(:text('Example Body')):count(1)");
     expect(".o-mail-Message .o-signature-container button.o-mail-ellipsis").toHaveCount(1);
 });

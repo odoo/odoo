@@ -18,7 +18,7 @@ import { getService, onRpc, preloadBundle } from "@web/../tests/web_test_helpers
 import { patch } from "@web/core/utils/patch";
 
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, waitFor, waitForNone } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -94,7 +94,7 @@ test("composer should display a GIF button", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
     await openDiscuss(channelId);
-    await contains("button[title='Send GIF']");
+    await waitFor("button[title='Send GIF']:count(1)");
 });
 
 test("Composer GIF button should open the GIF picker (discuss app)", async () => {
@@ -103,11 +103,11 @@ test("Composer GIF button should open the GIF picker (discuss app)", async () =>
     await start();
     await openDiscuss(channelId);
     await click("button[title='Send GIF']");
-    await contains(".o-discuss-GifPicker");
+    await waitFor(".o-discuss-GifPicker:count(1)");
     await click(".o-mail-DiscussContent-header"); // ensure the picker reopens correctly
-    await contains(".o-discuss-GifPicker", { count: 0 });
+    await waitForNone(".o-discuss-GifPicker");
     await click("button[title='Send GIF']");
-    await contains(".o-discuss-GifPicker");
+    await waitFor(".o-discuss-GifPicker:count(1)");
 });
 
 test("Composer GIF button should open the GIF picker (chat window)", async () => {
@@ -118,7 +118,7 @@ test("Composer GIF button should open the GIF picker (chat window)", async () =>
     await click(".o-mail-NotificationItem:contains('General')");
     await click(".o-mail-ChatWindow .o-mail-Composer [title='More Actions']");
     await click(".o-dropdown-item:contains('Send GIF')");
-    await contains(".o-discuss-GifPicker");
+    await waitFor(".o-discuss-GifPicker:count(1)");
 });
 
 test("Not loading of GIF categories when feature is not available", async () => {
@@ -137,15 +137,15 @@ test("Not loading of GIF categories when feature is not available", async () => 
     store.hasGifPickerFeature = false;
     isFeatureEnabled = false;
     await click("button[title='Send GIF']");
-    await contains(".o-discuss-GifPicker");
+    await waitFor(".o-discuss-GifPicker:count(1)");
     await animationFrame();
     expect.verifySteps([]); // no "/discuss/gif/categories"
     await click("button[title='Send GIF']");
-    await contains(".o-discuss-GifPicker", { count: 0 });
+    await waitForNone(".o-discuss-GifPicker");
     store.hasGifPickerFeature = true;
     isFeatureEnabled = true;
     await click("button[title='Send GIF']");
-    await contains(".o-discuss-GifPicker");
+    await waitFor(".o-discuss-GifPicker:count(1)");
     await expect.waitForSteps(["/discuss/gif/categories"]);
 });
 
@@ -157,8 +157,8 @@ test("Searching for a GIF", async () => {
     await openDiscuss(channelId);
     await click("button[title='Send GIF']");
     await insertText("input[placeholder='Search Klipy']", "search");
-    await contains("i[aria-label='back']");
-    await contains(".o-discuss-Gif", { count: 2 });
+    await waitFor("i[aria-label='back']:count(1)");
+    await waitFor(".o-discuss-Gif:count(2)");
 });
 
 test("Open a GIF category trigger the search for the category", async () => {
@@ -170,7 +170,7 @@ test("Open a GIF category trigger the search for the category", async () => {
     await openDiscuss(channelId);
     await click("button[title='Send GIF']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
-    await contains(".o-discuss-Gif", { count: 2 });
+    await waitFor(".o-discuss-Gif:count(2)");
     await contains("input[placeholder='Search Klipy']", { value: "cry" });
 });
 
@@ -198,9 +198,9 @@ test("Can have GIF categories with same name", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Send GIF']");
-    await contains("img[data-src='https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif']", {
-        count: 2,
-    });
+    await waitFor(
+        "img[data-src='https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif']:count(2)"
+    );
 });
 
 test("Reopen GIF category list when going back", async () => {
@@ -213,7 +213,7 @@ test("Reopen GIF category list when going back", async () => {
     await click("button[title='Send GIF']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await click("i[aria-label='back']");
-    await contains(".o-discuss-GifPicker div[aria-label='list']");
+    await waitFor(".o-discuss-GifPicker div[aria-label='list']:count(1)");
 });
 
 test("Add GIF to favorite", async () => {
@@ -226,10 +226,10 @@ test("Add GIF to favorite", async () => {
     await click("button[title='Send GIF']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await click(":nth-child(1 of div) > .o-discuss-Gif [data-icon='star']");
-    await contains(".o-discuss-Gif [data-icon='star'].oi-filled");
+    await waitFor(".o-discuss-Gif [data-icon='star'].oi-filled:count(1)");
     await click("i[aria-label='back']");
     await click(".o-discuss-GifPicker div[aria-label='list-item']:text('Favorites')");
-    await contains(".o-discuss-Gif");
+    await waitFor(".o-discuss-Gif:count(1)");
 });
 
 test("Chatter should not have the GIF button", async () => {
@@ -238,7 +238,7 @@ test("Chatter should not have the GIF button", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("button:text('Log note')");
-    await contains("button[title='Send GIF']", { count: 0 });
+    await waitForNone("button[title='Send GIF']");
 });
 
 test("Composer GIF button should open the GIF picker keyboard in footer", async () => {
@@ -249,7 +249,7 @@ test("Composer GIF button should open the GIF picker keyboard in footer", async 
     await openDiscuss(channelId);
     await click("button[title='More Actions']");
     await click(".dropdown-item:contains('Send GIF')");
-    await contains(".o-mail-Composer-footer .o-discuss-GifPicker");
+    await waitFor(".o-mail-Composer-footer .o-discuss-GifPicker:count(1)");
 });
 
 test("Searching for a GIF with a failling RPC should display an error", async () => {
@@ -263,7 +263,7 @@ test("Searching for a GIF with a failling RPC should display an error", async ()
     await openDiscuss(channelId);
     await click("button[title='Send GIF']");
     await insertText("input[placeholder='Search Klipy']", "search");
-    await contains(".o-discuss-GifPicker-error");
+    await waitFor(".o-discuss-GifPicker-error:count(1)");
 });
 
 test("Scrolling at the bottom should trigger the search to load more gif, even after visiting the favorite.", async () => {
@@ -284,13 +284,13 @@ test("Scrolling at the bottom should trigger the search to load more gif, even a
     await openDiscuss(channelId);
     await click("button[title='Send GIF']");
     // gif picker quires extra delay before click (to give time to load initial state)
-    await contains(".o-discuss-GifPicker");
+    await waitFor(".o-discuss-GifPicker:count(1)");
     await click(".o-discuss-GifPicker div[aria-label='list-item']:text('Favorites')");
     await click("i[aria-label='back']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
-    await contains(".o-discuss-Gif", { count: 4 });
+    await waitFor(".o-discuss-Gif:count(4)");
     await scroll(".o-discuss-GifPicker-content", "bottom");
-    await contains(".o-discuss-Gif", { count: 8 });
+    await waitFor(".o-discuss-Gif:count(8)");
 });
 
 test("Pause GIF when thread is not focused", async () => {
@@ -303,11 +303,11 @@ test("Pause GIF when thread is not focused", async () => {
     await click("button[title='Send GIF']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await click("img[data-src='https://media.tenor.com/np49Y1vrJO8AAAAM/crying-cry.gif']:eq(0)");
-    await contains(".o-mail-LinkPreviewImage img:not([data-paused])");
+    await waitFor(".o-mail-LinkPreviewImage img:not([data-paused]):count(1)");
     await click("button[title='Send GIF']");
-    await contains(".o-mail-LinkPreviewImage img[data-paused]");
+    await waitFor(".o-mail-LinkPreviewImage img[data-paused]:count(1)");
     await click(".o-mail-Composer-input");
-    await contains(".o-mail-LinkPreviewImage img:not([data-paused])");
+    await waitFor(".o-mail-LinkPreviewImage img:not([data-paused]):count(1)");
 });
 
 test("Show help when no favorite GIF", async () => {
@@ -318,9 +318,9 @@ test("Show help when no favorite GIF", async () => {
     await openDiscuss(channelId);
     await click("button[title='Send GIF']");
     // gif picker quires extra delay before click (to give time to load initial state)
-    await contains(".o-discuss-GifPicker");
+    await waitFor(".o-discuss-GifPicker:count(1)");
     await click(".o-discuss-GifPicker div[aria-label='list-item']:text('Favorites')");
-    await contains("span:text('So uhh... maybe go favorite some GIFs?')");
+    await waitFor("span:text('So uhh... maybe go favorite some GIFs?'):count(1)");
 });
 
 test("Clicking GIF preview does not raise an error", async () => {
@@ -334,5 +334,5 @@ test("Clicking GIF preview does not raise an error", async () => {
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await click("img[data-src='https://media.tenor.com/np49Y1vrJO8AAAAM/crying-cry.gif']:eq(0)");
     await click(".o-mail-LinkPreviewImage img");
-    await contains(".o-mail-Message");
+    await waitFor(".o-mail-Message:count(1)");
 });

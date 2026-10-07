@@ -1,6 +1,5 @@
 import {
     click,
-    contains,
     defineMailModels,
     mockGetMedia,
     openDiscuss,
@@ -8,7 +7,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, globals, mockDate, test, waitFor } from "@odoo/hoot";
+import { describe, globals, mockDate, test, waitFor, waitForNone } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 import { Mp3Encoder } from "@mail/discuss/voice_message/common/mp3_encoder";
@@ -68,10 +67,10 @@ test("make voice message in chat", async () => {
     await openDiscuss(channelId);
     await loadLamejs(); // simulated AudioProcess.process() requires lamejs fully loaded
     await click(".o-mail-Composer button[title='More Actions']");
-    await contains(".dropdown-item:contains('Voice Message')");
+    await waitFor(".dropdown-item:contains('Voice Message'):count(1)");
     mockDate("2023-07-31 13:00:00");
     await click(".dropdown-item:contains('Voice Message')");
-    await contains(".o-mail-VoiceRecorder:text('00 : 00')");
+    await waitFor(".o-mail-VoiceRecorder:text('00 : 00'):count(1)");
     /**
      * Simulate 10 sec elapsed.
      * `patchDate` does not freeze the time, it merely changes the value of "now" at the time it was
@@ -91,13 +90,13 @@ test("make voice message in chat", async () => {
     resources.audioProcessor.process([[new Float32Array(128)]]);
     await waitFor(".o-mail-VoiceRecorder:text('00 : 10')");
     await click(".o-mail-Composer button[title='Stop Recording']");
-    await contains(".o-mail-VoicePlayer");
+    await waitFor(".o-mail-VoicePlayer:count(1)");
     // wait for audio stream decode + drawing of waves
     await voicePlayerDrawn;
-    await contains(".o-mail-VoicePlayer button[title='Play']");
-    await contains(".o-mail-VoicePlayer canvas", { count: 2 }); // 1 for global waveforms, 1 for played waveforms
-    await contains(".o-mail-VoicePlayer:text('00 : 03')"); // duration of call-invitation_.mp3
+    await waitFor(".o-mail-VoicePlayer button[title='Play']:count(1)");
+    await waitFor(".o-mail-VoicePlayer canvas:count(2)"); // 1 for global waveforms, 1 for played waveforms
+    await waitFor(".o-mail-VoicePlayer:text('00 : 03'):count(1)"); // duration of call-invitation_.mp3
     await click(".o-mail-Composer button[title='More Actions']");
-    await contains(".dropdown-item:contains('Attach Files')"); // check menu loaded
-    await contains(".dropdown-item:contains('Voice Message')", { count: 0 }); // only 1 voice message at a time
+    await waitFor(".dropdown-item:contains('Attach Files'):count(1)"); // check menu loaded
+    await waitForNone(".dropdown-item:contains('Voice Message')"); // only 1 voice message at a time
 });

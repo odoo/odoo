@@ -1,7 +1,6 @@
 import {
     SIZES,
     click,
-    contains,
     defineMailModels,
     editInput,
     insertText,
@@ -11,7 +10,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
@@ -25,7 +24,7 @@ test("Chatter should display search icon", async () => {
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    await contains("[title='Search Messages']");
+    await waitFor("[title='Search Messages']:count(1)");
 });
 
 test("Click on the search icon should open the search form", async () => {
@@ -35,8 +34,8 @@ test("Click on the search icon should open the search form", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await contains(".o-mail-SearchMessageInput");
-    await contains(".o-mail-SearchInput input");
+    await waitFor(".o-mail-SearchMessageInput:count(1)");
+    await waitFor(".o-mail-SearchInput input:count(1)");
 });
 
 test("Search in chatter", async () => {
@@ -51,11 +50,13 @@ test("Search in chatter", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input");
+    await waitFor(".o-mail-SearchMessageInput .o-mail-SearchInput input:count(1)");
     await editInput(document.body, ".o-mail-SearchInput input", "empty");
-    await contains(".o-mail-SearchMessageResult .o-mail-Message");
+    await waitFor(".o-mail-SearchMessageResult .o-mail-Message:count(1)");
     await click(".o-mail-MessageCard-jump");
-    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content:text('not empty')");
+    await waitFor(
+        ".o-mail-Message.o-highlighted .o-mail-Message-content:text('not empty'):count(1)"
+    );
 });
 
 test("Close button should close the search panel", async () => {
@@ -71,9 +72,9 @@ test("Close button should close the search panel", async () => {
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Chatter-topbar [title='Search Messages']");
     await insertText(".o-mail-SearchInput input", "empty");
-    await contains(".o-mail-SearchMessageResult .o-mail-Message");
+    await waitFor(".o-mail-SearchMessageResult .o-mail-Message:count(1)");
     await click(".o-mail-SearchMessageInput [title='Close']");
-    await contains(".o-mail-SearchMessageInput", { count: 0 });
+    await waitForNone(".o-mail-SearchMessageInput");
 });
 
 test("opening search in chatter hides files and pinned messages panels", async () => {
@@ -95,16 +96,16 @@ test("opening search in chatter hides files and pinned messages panels", async (
     await start();
     await openFormView("res.partner", partnerId);
     await click("button[aria-label='Attach files']:text('1')");
-    await contains(".o-mail-AttachmentBox");
+    await waitFor(".o-mail-AttachmentBox:count(1)");
     await click("[title='Search Messages']");
-    await contains(".o-mail-SearchMessageInput");
-    await contains(".o-mail-AttachmentBox", { count: 0 });
-    await contains("button[title='Attach files']:enabled:text('1')");
+    await waitFor(".o-mail-SearchMessageInput:count(1)");
+    await waitForNone(".o-mail-AttachmentBox");
+    await waitFor("button[title='Attach files']:enabled:text('1'):count(1)");
     await click("button[title='Pinned Messages']:enabled");
-    await contains(".o-mail-pinnedMessages");
+    await waitFor(".o-mail-pinnedMessages:count(1)");
     await click("[title='Search Messages']");
-    await contains(".o-mail-SearchMessageInput");
-    await contains(".o-mail-pinnedMessages", { count: 0 });
+    await waitFor(".o-mail-SearchMessageInput:count(1)");
+    await waitForNone(".o-mail-pinnedMessages");
 });
 
 test("Search in chatter should be hightligted", async () => {
@@ -120,7 +121,7 @@ test("Search in chatter should be hightligted", async () => {
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o-mail-SearchInput input", "empty");
-    await contains(`.o-mail-SearchMessageResult .o-mail-Message .${HIGHLIGHT_CLASS}`);
+    await waitFor(`.o-mail-SearchMessageResult .o-mail-Message .${HIGHLIGHT_CLASS}:count(1)`);
 });
 
 test("Scrolling bottom in non-aside chatter should load more searched message", async () => {
@@ -141,9 +142,9 @@ test("Scrolling bottom in non-aside chatter should load more searched message", 
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
     await insertText(".o-mail-SearchInput input", "message");
-    await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 30 });
+    await waitFor(".o-mail-SearchMessageResult .o-mail-Message:count(30)");
     await scroll(".o_content", "bottom");
-    await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 60 });
+    await waitFor(".o-mail-SearchMessageResult .o-mail-Message:count(60)");
 });
 
 test("Switching chatter filters after empty result should show messages", async () => {
@@ -162,8 +163,8 @@ test("Switching chatter filters after empty result should show messages", async 
     await click("[title='Search Messages']");
     await click("[title='Filter Messages']");
     await click(".o-dropdown-item:text('Changes')");
-    await contains(".o-mail-MessageCardList:text('No messages found')");
+    await waitFor(".o-mail-MessageCardList:text('No messages found'):count(1)");
     await click("[title='Filter Messages']");
     await click(".o-dropdown-item:text('Messages')");
-    await contains(".o-mail-SearchMessageResult .o-mail-Message-content:text('not empty')");
+    await waitFor(".o-mail-SearchMessageResult .o-mail-Message-content:text('not empty'):count(1)");
 });

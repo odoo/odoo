@@ -1,6 +1,5 @@
 import {
     click,
-    contains,
     createVideoStream,
     defineMailModels,
     makeMockRtcNetwork,
@@ -25,6 +24,8 @@ import {
     queryAll,
     queryFirst,
     resize,
+    waitFor,
+    waitForNone,
 } from "@odoo/hoot-dom";
 import { getService } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -79,7 +80,7 @@ async function openMeetingWithParticipants(names, layout = "auto") {
     }
     await openDiscuss(channelId);
     await click("[title='Join Call']");
-    await contains(".o-discuss-Call");
+    await waitFor(".o-discuss-Call:count(1)");
     for (const name of names) {
         await remotes[name].updateConnectionState("connected");
     }
@@ -91,11 +92,13 @@ test("pinning then unpinning a participant keeps every video element", async () 
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
     const aliceVideo = queryFirst(
         ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']"
     );
@@ -109,11 +112,11 @@ test("pinning then unpinning a participant keeps every video element", async () 
     // the one the pointer just left still renders its own for a frame.
     await hover(".o-discuss-CallParticipantCard[aria-label='Alice']");
     await click(".o-discuss-CallParticipantCard[aria-label='Alice'] [title='Participant options']");
-    await contains(".o-discuss-CallContextMenu");
+    await waitFor(".o-discuss-CallContextMenu:count(1)");
     await click(".o-discuss-CallContextMenu button:text('Pin')");
-    await contains(".o-discuss-Call-sidebar");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Bob']");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']");
+    await waitFor(".o-discuss-Call-sidebar:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Bob']:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']:count(1)");
     expect(
         queryFirst(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']")
     ).toBe(aliceVideo);
@@ -124,10 +127,10 @@ test("pinning then unpinning a participant keeps every video element", async () 
     // Unpinning does not switch the layout back by itself: the sidebar stays, elements stay.
     await hover(".o-discuss-CallParticipantCard[aria-label='Alice']");
     await click(".o-discuss-CallParticipantCard[aria-label='Alice'] [title='Participant options']");
-    await contains(".o-discuss-CallContextMenu");
+    await waitFor(".o-discuss-CallContextMenu:count(1)");
     await click(".o-discuss-CallContextMenu button:text('Unpin')");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Bob']");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Bob']:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']:count(1)");
     expect(
         queryFirst(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']")
     ).toBe(aliceVideo);
@@ -140,11 +143,15 @@ test("pinning then unpinning a participant keeps every video element", async () 
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='change-layout']");
     await click(".o-discuss-ChangeLayoutDialog-option:contains('Tiled')");
-    await contains(".o-discuss-Call-sidebar", { count: 0 });
-    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Alice']");
-    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Bob']");
-    await contains(
-        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']"
+    await waitForNone(".o-discuss-Call-sidebar");
+    await waitFor(
+        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Alice']:count(1)"
+    );
+    await waitFor(
+        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Bob']:count(1)"
+    );
+    await waitFor(
+        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)"
     );
     expect(
         queryFirst(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']")
@@ -159,17 +166,21 @@ test("switching focus in the sidebar keeps every video element", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Charlie.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']:count(1)"
+    );
     // Alice is the auto-focus target, so she takes the main window.
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Bob']");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Charlie']");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Bob']:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Charlie']:count(1)");
     const aliceVideo = queryFirst(
         ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']"
     );
@@ -186,12 +197,12 @@ test("switching focus in the sidebar keeps every video element", async () => {
     // Pinning Bob swaps him with Alice between the main window and the sidebar.
     await hover(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await click(".o-discuss-CallParticipantCard[aria-label='Bob'] [title='Participant options']");
-    await contains(".o-discuss-CallContextMenu");
+    await waitFor(".o-discuss-CallContextMenu:count(1)");
     await click(".o-discuss-CallContextMenu button:text('Pin')");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] [title='Pinned']");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Alice']");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Charlie']");
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] [title='Pinned']:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Alice']:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Charlie']:count(1)");
     expect(
         queryFirst(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']")
     ).toBe(bobVideo);
@@ -206,12 +217,12 @@ test("switching focus in the sidebar keeps every video element", async () => {
     // tells the unpin has rendered.
     await hover(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await click(".o-discuss-CallParticipantCard[aria-label='Bob'] [title='Participant options']");
-    await contains(".o-discuss-CallContextMenu");
+    await waitFor(".o-discuss-CallContextMenu:count(1)");
     await click(".o-discuss-CallContextMenu button:text('Unpin')");
-    await contains(".o-discuss-CallParticipantCard [title='Pinned']", { count: 0 });
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Alice']");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Charlie']");
+    await waitForNone(".o-discuss-CallParticipantCard [title='Pinned']");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Alice']:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Charlie']:count(1)");
     expect(
         queryFirst(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']")
     ).toBe(bobVideo);
@@ -228,14 +239,18 @@ test("switching between spotlight and tiled keeps the focused video element", as
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     // With 2 participants "auto" resolves to spotlight: Alice is the focus target and self is
     // shown as the bottom-right inset.
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Alice']");
-    await contains(
-        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']"
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(
+        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Alice']:count(1)"
+    );
+    await waitFor(
+        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)"
     );
     const aliceVideo = queryFirst(
         ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']"
@@ -246,9 +261,11 @@ test("switching between spotlight and tiled keeps the focused video element", as
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='change-layout']");
     await click(".o-discuss-ChangeLayoutDialog-option:contains('Tiled')");
-    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Alice']");
-    await contains(
-        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']"
+    await waitFor(
+        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Alice']:count(1)"
+    );
+    await waitFor(
+        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)"
     );
     expect(
         queryFirst(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']")
@@ -258,9 +275,11 @@ test("switching between spotlight and tiled keeps the focused video element", as
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='change-layout']");
     await click(".o-discuss-ChangeLayoutDialog-option:contains('Spotlight')");
-    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Alice']");
-    await contains(
-        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']"
+    await waitFor(
+        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Alice']:count(1)"
+    );
+    await waitFor(
+        ".o-discuss-Call-mainCards .o-discuss-CallParticipantCard[aria-label='Mitchell Admin']:count(1)"
     );
     expect(
         queryFirst(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']")
@@ -274,12 +293,12 @@ test("swapping the main and the inset stream keeps both video elements", async (
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await click("[title='Share Screen']");
-    await contains("video[type='screen']:not(.o-inset)");
+    await waitFor("video[type='screen']:not(.o-inset):count(1)");
     // Focusing the shared screen makes the controller float, i.e. hide until the pointer moves.
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click("[title='Turn camera on']");
-    await contains("video[type='screen']:not(.o-inset)");
-    await contains("video[type='camera'].o-inset");
+    await waitFor("video[type='screen']:not(.o-inset):count(1)");
+    await waitFor("video[type='camera'].o-inset:count(1)");
     const screenEl = queryFirst(
         ".o-discuss-CallParticipantCard[aria-label='Mitchell Admin'] video[type='screen']"
     );
@@ -292,8 +311,8 @@ test("swapping the main and the inset stream keeps both video elements", async (
     // Clicking the inset swaps which stream is main: the screen card goes to the inset and the
     // camera card takes the main window.
     await click("video[type='camera'].o-inset");
-    await contains("video[type='screen'].o-inset");
-    await contains("video[type='camera']:not(.o-inset)");
+    await waitFor("video[type='screen'].o-inset:count(1)");
+    await waitFor("video[type='camera']:not(.o-inset):count(1)");
     expect(
         queryFirst(
             ".o-discuss-CallParticipantCard[aria-label='Mitchell Admin'] video[type='screen']"
@@ -315,7 +334,7 @@ test("dragging the inset moves it to the corner it is dropped in", async () => {
     await click("[title='Share Screen']");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click("[title='Turn camera on']");
-    await contains("video[type='camera'].o-inset");
+    await waitFor("video[type='camera'].o-inset:count(1)");
     const insetEl = queryFirst(".o-discuss-CallParticipantCard.o-inset");
     const mainEl = queryFirst(".o-discuss-CallParticipantCard:has(video[type='screen'])");
     const insetVideo = queryFirst(
@@ -357,13 +376,17 @@ test("a participant joining mid-call keeps the video element of everyone else", 
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Charlie.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']:count(1)"
+    );
     const aliceVideo = queryFirst(
         ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']"
     );
@@ -385,10 +408,16 @@ test("a participant joining mid-call keeps the video element of everyone else", 
     const aaronRemote = network.makeMockRemote(aaronMemberId);
     await aaronRemote.updateConnectionState("connected");
     await aaronRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Aaron'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Aaron'] video[type='camera']:count(1)"
+    );
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']:count(1)"
+    );
     expect(
         queryFirst(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']")
     ).toBe(aliceVideo);
@@ -408,13 +437,17 @@ test("resize keeps every video element and only changes geometry", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Charlie.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']:count(1)"
+    );
     const aliceVideo = queryFirst(
         ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']"
     );
@@ -424,9 +457,13 @@ test("resize keeps every video element and only changes geometry", async () => {
     // Narrower than the baseline stage, so the layout really has to move the cards.
     await resize({ width: STAGE_SIZE.width - 280, height: STAGE_SIZE.height });
     await animationFrame();
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']:count(1)"
+    );
     expect(
         queryFirst(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']")
     ).toBe(aliceVideo);
@@ -441,13 +478,17 @@ test("several changes in the same task lay the stage out once", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Charlie.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Charlie'] video[type='camera']:count(1)"
+    );
     let computationCount = 0;
     patch(Call.prototype, {
         arrangeTiles() {
@@ -485,11 +526,13 @@ test("a card has its place on the very frame it appears", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
     const charlieMemberId = pyEnv["discuss.channel.member"].create({
         channel_id: channelId,
         partner_id: pyEnv["res.partner"].create({ name: "Charlie" }),
@@ -500,7 +543,7 @@ test("a card has its place on the very frame it appears", async () => {
     // that mount queues. Deferred to the next frame instead, every card would still be at the
     // origin here — which is what the browser would have painted.
     await animationFrame();
-    await contains(".o-discuss-CallParticipantCard[aria-label='Charlie']");
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Charlie']:count(1)");
     for (const card of queryAll(".o-discuss-CallParticipantCard")) {
         expect(card.style.transform).toInclude("translate3d");
     }
@@ -511,11 +554,13 @@ test("every card of a tiled grid stays inside the stage", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='change-layout']");
@@ -544,14 +589,16 @@ test("every card of a sidebar column stays inside the stage", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']");
+    await waitFor(
+        ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='camera']:count(1)"
+    );
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
     // Alice is the auto-focus target, so self and Bob line up in the sidebar column.
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']");
-    await contains(".o-discuss-Call-sidebarCard[aria-label='Bob']");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Mitchell Admin']:count(1)");
+    await waitFor(".o-discuss-Call-sidebarCard[aria-label='Bob']:count(1)");
     await animationFrame();
 
     // A card left in the flow stacks under its predecessors and then applies its transform on top,
@@ -579,14 +626,16 @@ test("recent speakers share the spotlight", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     // Start the cameras while the grid still shows everyone: the spotlight renders only whoever
     // holds the stage, so the others would have no card to give a stream to.
     for (const name of names) {
         await remotes[name].updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     }
     for (const name of names) {
-        await contains(`.o-discuss-CallParticipantCard[aria-label='${name}'] video[type='camera']`);
+        await waitFor(
+            `.o-discuss-CallParticipantCard[aria-label='${name}'] video[type='camera']:count(1)`
+        );
     }
     getService("mail.store").settings.callLayout = "spotlight";
     await animationFrame();
@@ -678,7 +727,7 @@ for (const layout of ["spotlight", "sidebar"]) {
         await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
         await click(".o-discuss-CallActionList button[title='More']");
         await click("[name='fullscreen']");
-        await contains(".o-mail-Meeting");
+        await waitFor(".o-mail-Meeting:count(1)");
         const channel = getService("discuss.rtc").channel;
         expect(channel.activeRtcSession).toBe(
             channel.rtc_session_ids.find((session) => session.id === remotes.Alice.sessionId)
@@ -703,9 +752,9 @@ for (const layout of ["spotlight", "sidebar"]) {
         await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
         await click(".o-discuss-CallActionList button[title='More']");
         await click("[name='fullscreen']");
-        await contains(".o-mail-Meeting");
+        await waitFor(".o-mail-Meeting:count(1)");
         await remotes.Alice.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
-        await contains("video[type='screen']:not(.o-inset)");
+        await waitFor("video[type='screen']:not(.o-inset):count(1)");
         const video = queryFirst(
             ".o-discuss-CallParticipantCard[aria-label='Alice'] video[type='screen']"
         );
@@ -734,7 +783,7 @@ test("a split spotlight follows its last remaining speaker", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     getService("discuss.rtc").updateSessionInfo({
         [remotes.Alice.sessionId]: { isTalking: true },
         [remotes.Bob.sessionId]: { isTalking: true },
@@ -788,13 +837,13 @@ test("a pinned participant keeps the whole stage until unpinned", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     // `pin` keeps an explicit spotlight, so this isolates the pin from the sidebar layout.
     await hover(".o-discuss-CallParticipantCard[aria-label='Alice']");
     await click(".o-discuss-CallParticipantCard[aria-label='Alice'] [title='Participant options']");
-    await contains(".o-discuss-CallContextMenu");
+    await waitFor(".o-discuss-CallContextMenu:count(1)");
     await click(".o-discuss-CallContextMenu button:text('Pin')");
-    await contains(".o-discuss-CallParticipantCard[aria-label='Alice'] [title='Pinned']");
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Alice'] [title='Pinned']:count(1)");
 
     getService("discuss.rtc").updateSessionInfo({
         [remotes.Bob.sessionId]: { isTalking: true },
@@ -810,7 +859,7 @@ test("a pinned participant keeps the whole stage until unpinned", async () => {
 
     await hover(".o-discuss-CallParticipantCard[aria-label='Alice']");
     await click(".o-discuss-CallParticipantCard[aria-label='Alice'] [title='Participant options']");
-    await contains(".o-discuss-CallContextMenu");
+    await waitFor(".o-discuss-CallContextMenu:count(1)");
     await click(".o-discuss-CallContextMenu button:text('Unpin')");
     await animationFrame();
     expect(
@@ -833,9 +882,9 @@ test("a small screen renders only the cards it has room for", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     // The rest collapse into the indicator the chat window already used, and get no surface at all.
-    await contains(".o-discuss-Call-moreIndicator");
+    await waitFor(".o-discuss-Call-moreIndicator:count(1)");
     // Self leads, then the participant order: Fay, Gus, Hal and Ivy are the ones the cap drops.
     expect(
         queryAll(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard").map((el) =>
@@ -851,8 +900,8 @@ test("the card cap never hides whoever is talking", async () => {
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
-    await contains(".o-discuss-Call-moreIndicator");
+    await waitFor(".o-mail-Meeting:count(1)");
+    await waitFor(".o-discuss-Call-moreIndicator:count(1)");
     expect(
         queryAll(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard").map((el) =>
             el.getAttribute("aria-label")
@@ -877,8 +926,8 @@ test("someone sharing their screen gets a card before their video arrives", asyn
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
-    await contains(".o-discuss-Call-moreIndicator");
+    await waitFor(".o-mail-Meeting:count(1)");
+    await waitFor(".o-discuss-Call-moreIndicator:count(1)");
     // Alice is the auto-focus target, so she holds the main window and the sidebar column takes
     // the cap: Fay, Gus, Hal and Ivy are the ones it drops.
     expect(
@@ -899,7 +948,7 @@ test("someone sharing their screen gets a card before their video arrives", asyn
 
     // The track arriving is then just a second card for the same participant.
     await remotes.Ivy.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-CallParticipantCard[aria-label='Ivy'] video[type='screen']");
+    await waitFor(".o-discuss-CallParticipantCard[aria-label='Ivy'] video[type='screen']:count(1)");
 });
 
 test("the overflow indicator takes a sidebar slot rather than half the main window", async () => {
@@ -909,9 +958,9 @@ test("the overflow indicator takes a sidebar slot rather than half the main wind
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click(".o-discuss-CallActionList button[title='More']");
     await click("[name='fullscreen']");
-    await contains(".o-mail-Meeting");
+    await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
-    await contains(".o-discuss-Call-moreIndicator");
+    await waitFor(".o-discuss-Call-moreIndicator:count(1)");
     // The indicator's own geometry lands on the layout that the frame after its render triggers.
     await animationFrame();
 

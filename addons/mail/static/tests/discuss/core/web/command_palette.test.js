@@ -9,7 +9,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, mockDate, test } from "@odoo/hoot";
+import { describe, mockDate, test, waitFor, waitForNone } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { range } from "@web/core/utils/numbers";
 
@@ -27,8 +27,8 @@ test("can open DM from @username in command palette", async () => {
         ".o_command_palette_search input[placeholder='Search conversations']",
         "Mario"
     );
-    await click(".o_command.focused:has(:text('Mario')");
-    await contains(".o-mail-ChatWindow-displayName:text('Mario')");
+    await click(".o_command.focused:has(:text('Mario'))");
+    await waitFor(".o-mail-ChatWindow-displayName:text('Mario'):count(1)");
 });
 
 test("can open channel from @channel_name in command palette", async () => {
@@ -54,12 +54,12 @@ test("can open channel from @channel_name in command palette", async () => {
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
-    await contains(".o_command", { count: 3 });
-    await contains(".o_command:eq(0):text('project')");
-    await contains(".o_command:eq(1):text('general')");
-    await contains(".o_command:eq(2):text('Mitchell Admin')"); // self-conversation
+    await waitFor(".o_command:count(3)");
+    await waitFor(".o_command:eq(0):text('project'):count(1)");
+    await waitFor(".o_command:eq(1):text('general'):count(1)");
+    await waitFor(".o_command:eq(2):text('Mitchell Admin'):count(1)"); // self-conversation
     await click(".o_command.focused:text('project')");
-    await contains(".o-mail-ChatWindow-displayName:text('project')");
+    await waitFor(".o-mail-ChatWindow-displayName:text('project'):count(1)");
 });
 
 test("Conversation mentions in the command palette with @", async () => {
@@ -99,7 +99,7 @@ test("Conversation mentions in the command palette with @", async () => {
         contains: [[".o_command_name:text('Mitchell Admin')"]],
     });
     await click(".o_command.focused");
-    await contains(".o-mail-ChatWindow:has(:text('Mitchell Admin and Mario'))");
+    await waitFor(".o-mail-ChatWindow:has(:text('Mitchell Admin and Mario')):count(1)");
 });
 
 test("Max 3 most recent conversations in command palette of Discuss", async () => {
@@ -124,10 +124,10 @@ test("only partners with dedicated users will be displayed in command palette", 
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
-    await contains(".o_command_name", { count: 2 });
-    await contains(".o_command_name:text('Demo')");
-    await contains(".o_command_name:text('Mitchell Admin')"); // self-conversation
-    await contains(".o_command_name:text('Portal')", { count: 0 });
+    await waitFor(".o_command_name:count(2)");
+    await waitFor(".o_command_name:text('Demo'):count(1)");
+    await waitFor(".o_command_name:text('Mitchell Admin'):count(1)"); // self-conversation
+    await waitForNone(".o_command_name:text('Portal')");
 });
 
 test("hide conversations in recent if they have mentions", async () => {
@@ -151,17 +151,17 @@ test("hide conversations in recent if they have mentions", async () => {
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@", { replace: true });
-    await contains(".o_command_category span.fw-bold:text('Mentions')");
-    await contains(".o_command_palette .o_command_category .o_command_name:text('OdooBot')", {
-        count: 1,
-    });
+    await waitFor(".o_command_category span.fw-bold:text('Mentions'):count(1)");
+    await waitFor(
+        ".o_command_palette .o_command_category .o_command_name:text('OdooBot'):count(1)"
+    );
 });
 
 test("Ctrl-K opens @ command palette in discuss app", async () => {
     await start();
     await openDiscuss();
     triggerHotkey("control+k");
-    await contains(".o_command_palette_search:text('@')");
+    await waitFor(".o_command_palette_search:text('@'):count(1)");
 });
 
 test("Favorite channels come first in default command palette category", async () => {
@@ -189,10 +189,10 @@ test("Favorite channels come first in default command palette category", async (
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@", { replace: true });
-    await contains(
-        ".o_command_category:not(:has(:text(Recent))) .o_command:eq(0):text(favorite_1)"
+    await waitFor(
+        ".o_command_category:not(:has(:text(Recent))) .o_command:eq(0):text(favorite_1):count(1)"
     );
-    await contains(
-        ".o_command_category:not(:has(:text(Recent))) .o_command:eq(1):text(favorite_2)"
+    await waitFor(
+        ".o_command_category:not(:has(:text(Recent))) .o_command:eq(1):text(favorite_2):count(1)"
     );
 });
