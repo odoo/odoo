@@ -53,7 +53,6 @@ export async function mountComponentWithStores(component, model, props = {}) {
             props,
             model,
         },
-        componentEnv: model.config.custom.env,
         noMainContainer: false,
     });
     await animationFrame();

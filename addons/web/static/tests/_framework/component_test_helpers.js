@@ -3,22 +3,14 @@ import { App, Component, onWillDestroy, xml } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
 import { patch } from "@web/core/utils/patch";
-import { getMockEnv, getTestApp, makeTestApp } from "./app_test_helpers";
-import { makeMockServer, MockServer } from "./mock_server/mock_server";
+import { getTestApp, makeTestApp } from "./app_test_helpers";
 import { isSmall } from "./ui_test_helpers";
 
 /**
  * @typedef {import("@odoo/hoot").Target} Target
  * @typedef {import("@odoo/owl").Component} Component
- * @typedef {import("@web/env").OdooEnv} OdooEnv
  *
  * @typedef {ConstructorParameters<typeof App>[1]} AppConfig
- */
-
-/**
- * @template [P=any]
- * @template [E=any]
- * @typedef {import("@odoo/owl").ComponentConstructor<P, E>} ComponentConstructor
  */
 
 patch(MainComponentsContainer.prototype, {
@@ -92,20 +84,16 @@ export function getDropdownMenu(togglerSelector) {
  * fixture if none is found in the component tree (this can be overridden by the
  * `noMainContainer` option).
  *
- * @template {ComponentConstructor<P, E>} C
- * @template [P={}]
- * @template [E=OdooEnv]
+ * @template {import("@odoo/owl").ComponentConstructor} C
  * @param {C | string} ComponentClass
  * @param {AppConfig & {
- *  componentEnv?: Partial<OdooEnv>;
- *  containerEnv?: Partial<OdooEnv>;
  *  noMainContainer?: boolean;
- *  props?: P;
+ *  props?: object;
  *  target?: Target;
  * }} [options]
  */
 export async function mountWithCleanup(ComponentClass, options) {
-    const { componentEnv, containerEnv, noMainContainer, props, target } = options || {};
+    const { noMainContainer, props, target } = options || {};
 
     // Fixture
     const fixture = getFixture();
@@ -120,27 +108,13 @@ export async function mountWithCleanup(ComponentClass, options) {
         };
     }
 
-    if (!MockServer.current) {
-        // need a mock server before starting app (which starts plugins which
-        // may need network)
-        await makeMockServer();
-    }
-
     const app = getTestApp() || (await makeTestApp());
-    const commonEnv = getMockEnv();
-
-    const componentRoot = app.createRoot(ComponentClass, {
-        env: Object.assign(Object.create(commonEnv), componentEnv),
-        props,
-    });
+    const componentRoot = app.createRoot(ComponentClass, { props });
     /** @type {InstanceType<C>} */
     const component = await componentRoot.mount(targetEl);
 
     if (!noMainContainer && !hasMainComponent) {
-        const mainContainerRoot = app.createRoot(MainComponentsContainer, {
-            env: Object.assign(Object.create(commonEnv), containerEnv),
-            props: {},
-        });
+        const mainContainerRoot = app.createRoot(MainComponentsContainer);
         await mainContainerRoot.mount(targetEl);
     }
 

@@ -15,7 +15,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSubEnv } from "@web/owl2/utils";
 import { View } from "@web/views/view";
-import { getService } from "./app_test_helpers";
+import { assignTestEnv, getService } from "./app_test_helpers";
 import { mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
 import { registerInlineViewArchs } from "./mock_server/mock_model";
@@ -237,8 +237,8 @@ export async function mountView(params) {
     const actionManagerEl = document.createElement("div");
     actionManagerEl.classList.add("o_action_manager");
     getFixture().appendChild(actionManagerEl);
+    assignTestEnv({ config: params.config });
     return mountWithCleanup(View, {
-        componentEnv: { config: params.config },
         props: parseViewProps(params),
         target: actionManagerEl,
     });
