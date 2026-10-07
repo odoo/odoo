@@ -11,7 +11,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
@@ -27,20 +27,20 @@ test("following internal link from chatter does not open chat window", async () 
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o_last_breadcrumb_item:has(:text('Jeanne'))");
+    await waitFor(".o_last_breadcrumb_item:has(:text('Jeanne')):count(1)");
     await click("a:text('Admin')");
-    await contains(".o_last_breadcrumb_item:has(:text('Mitchell Admin'))");
+    await waitFor(".o_last_breadcrumb_item:has(:text('Mitchell Admin')):count(1)");
     // Assert 0 chat windows not sufficient because not enough time for potential chat window opening.
     // Let's open another chat window to give some time and assert only manually open chat window opens.
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow");
     await openMessagingMenu();
     await triggerHotkey("control+k");
     await insertText(".o_command_palette_search input[placeholder='Search for a command...'", "@");
     await insertText(".o_command_palette_search input[placeholder='Search conversations'", "abc");
     await click("a:has(:text('Create Channel'))");
     await click("button:text(Create Channel)");
-    await contains(".o-mail-ChatWindow-header:text('abc')");
-    await contains(".o-mail-ChatWindow", { count: 1 });
+    await waitFor(".o-mail-ChatWindow-header:text('abc'):count(1)");
+    await waitFor(".o-mail-ChatWindow:count(1)");
 });
 
 test("message link shows error when the message is not known", async () => {
@@ -55,7 +55,7 @@ test("message link shows error when the message is not known", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click("a.o_message_redirect");
-    await contains(".o_notification:contains(This conversation isn’t available.)");
+    await waitFor(".o_notification:contains(This conversation isn’t available.):count(1)");
 });
 
 test("same-thread message link does not open the thread again but highlights the message", async () => {
@@ -86,12 +86,12 @@ test("same-thread message link does not open the thread again but highlights the
     await start();
     await openFormView("res.partner", aliceId);
     await click("a.o_message_redirect:contains(Alice)");
-    await contains(".o-mail-Message.o-highlighted:contains(Hello)");
+    await waitFor(".o-mail-Message.o-highlighted:contains(Hello):count(1)");
     await animationFrame(); // give enough time for the potential breadcrumb item to render
-    await contains(".breadcrumb-item", { count: 0 });
+    await waitForNone(".breadcrumb-item");
     await click("a.o_message_redirect:contains(Lena)");
-    await contains(".o-mail-Message.o-highlighted:contains(Hey)");
-    await contains(".breadcrumb-item:contains(Alice)");
+    await waitFor(".o-mail-Message.o-highlighted:contains(Hey):count(1)");
+    await waitFor(".breadcrumb-item:contains(Alice):count(1)");
 });
 
 test("code block embedded in an email message's body should be ignored", async () => {

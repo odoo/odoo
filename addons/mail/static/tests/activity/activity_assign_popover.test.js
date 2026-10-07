@@ -7,7 +7,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -30,12 +30,12 @@ test("activity assign popover simplest layout", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Activity-assign");
-    await contains(".o-mail-ActivityAssignPopover");
-    await contains(".o-mail-ActivityAssignPopover input[type='text']");
-    await contains(".o-mail-ActivityAssignPopover button[aria-label='Assign']");
-    await contains(".o-mail-ActivityAssignPopover button[aria-label='Discard']");
+    await waitFor(".o-mail-ActivityAssignPopover:count(1)");
+    await waitFor(".o-mail-ActivityAssignPopover input[type='text']:count(1)");
+    await waitFor(".o-mail-ActivityAssignPopover button[aria-label='Assign']:count(1)");
+    await waitFor(".o-mail-ActivityAssignPopover button[aria-label='Discard']:count(1)");
     await click(".o-mail-ActivityAssignPopover button[aria-label='Discard']");
-    await contains(".o-mail-ActivityAssignPopover", { count: 0 });
+    await waitForNone(".o-mail-ActivityAssignPopover");
 });
 
 test("activity assign popover assign user", async () => {
@@ -54,6 +54,6 @@ test("activity assign popover assign user", async () => {
     await insertText(".o-mail-ActivityAssignPopover input[type='text']", "Mitchell");
     await click(".ui-menu-item:text('Mitchell Admin')");
     await click(".o-mail-ActivityAssignPopover button[aria-label='Assign']");
-    await contains(".o-mail-ActivityAssignPopover", { count: 0 });
+    await waitForNone(".o-mail-ActivityAssignPopover");
     await contains(".o-mail-Activity-user", { text: "for Mitchell Admin" });
 });

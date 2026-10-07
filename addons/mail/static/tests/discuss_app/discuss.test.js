@@ -105,15 +105,15 @@ test("can change the thread name of #general", async () => {
 
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input:focus");
-    await contains("input.o-mail-DiscussContent-threadName:value(general)");
+    await waitFor(".o-mail-Composer-input:focus:count(1)");
+    await waitFor("input.o-mail-DiscussContent-threadName:value(general):count(1)");
     await insertText("input.o-mail-DiscussContent-threadName:enabled", "special", {
         replace: true,
     });
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
-    await contains(".o-mail-NotificationItem:has(:text('special'))");
-    await contains("input.o-mail-DiscussContent-threadName:value(special)");
+    await waitFor(".o-mail-NotificationItem:has(:text('special')):count(1)");
+    await waitFor("input.o-mail-DiscussContent-threadName:value(special):count(1)");
 });
 
 test.tags("focus required");
@@ -135,11 +135,11 @@ test("should log notification when channel/thread is renamed", async () => {
     await insertText(".o-mail-DiscussContent-threadName:enabled", "special", { replace: true });
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
-    await contains(".o-mail-DiscussContent-threadName:value(special)");
-    await contains(
+    await waitFor(".o-mail-DiscussContent-threadName:value(special):count(1)");
+    await waitFor(
         ".o-mail-NotificationMessage:has(:text('" +
             `${serverState.partnerName} changed the channel name to special` +
-            "'))"
+            "')):count(1)"
     );
 
     await click(".o-mail-NotificationItem:has(:text('test'))");
@@ -149,11 +149,11 @@ test("should log notification when channel/thread is renamed", async () => {
     });
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
-    await contains(".o-mail-DiscussContent-threadName:value(specialThread)");
-    await contains(
+    await waitFor(".o-mail-DiscussContent-threadName:value(specialThread):count(1)");
+    await waitFor(
         ".o-mail-NotificationMessage:has(:text('" +
             `${serverState.partnerName} changed the thread name to specialThread` +
-            "'))"
+            "')):count(1)"
     );
 });
 
@@ -165,12 +165,12 @@ test("can active change thread from messaging menu", async () => {
     ]);
     await start();
     await openDiscuss(teamId);
-    await contains(".o-mail-NotificationItem:has(:text('general'))");
-    await contains(".o-mail-NotificationItem.o-active:has(:text('team'))");
+    await waitFor(".o-mail-NotificationItem:has(:text('general')):count(1)");
+    await waitFor(".o-mail-NotificationItem.o-active:has(:text('team')):count(1)");
     await click(".o_main_navbar i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:has(:text('general'))");
-    await contains(".o-mail-NotificationItem.o-active:has(:text('general'))");
-    await contains(".o-mail-NotificationItem:has(:text('team'))");
+    await waitFor(".o-mail-NotificationItem.o-active:has(:text('general')):count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('team')):count(1)");
 });
 
 test.tags("focus required");
@@ -187,8 +187,10 @@ test("can change the thread description of #general", async () => {
 
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input:focus");
-    await contains("input.o-mail-DiscussContent-threadDescription:value(General announcements...)");
+    await waitFor(".o-mail-Composer-input:focus:count(1)");
+    await waitFor(
+        "input.o-mail-DiscussContent-threadDescription:value(General announcements...):count(1)"
+    );
     await insertText(
         "input.o-mail-DiscussContent-threadDescription:enabled",
         "I want a burger today!",
@@ -196,7 +198,9 @@ test("can change the thread description of #general", async () => {
     );
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
-    await contains("input.o-mail-DiscussContent-threadDescription:value(I want a burger today!)");
+    await waitFor(
+        "input.o-mail-DiscussContent-threadDescription:value(I want a burger today!):count(1)"
+    );
 });
 
 test("header card resizes to fit the thread description after switching channels", async () => {
@@ -209,13 +213,15 @@ test("header card resizes to fit the thread description after switching channels
     ]);
     await start();
     await openDiscuss(shortChannelId);
-    await contains("input.o-mail-DiscussContent-threadDescription:value(Hi)");
+    await waitFor("input.o-mail-DiscussContent-threadDescription:value(Hi):count(1)");
     const shortCardWidth = queryRect(".o-mail-DiscussContent-headerBox").width;
     // The box hugs the short description instead of spanning the whole header.
     expect(shortCardWidth).toBeLessThan(queryRect(".o-mail-DiscussContent-headerInfo").width);
 
     await click(".o-mail-NotificationItem:has(:text('Long'))");
-    await contains(`input.o-mail-DiscussContent-threadDescription:value(${longDescription})`);
+    await waitFor(
+        `input.o-mail-DiscussContent-threadDescription:value(${longDescription}):count(1)`
+    );
     const longCardWidth = queryRect(".o-mail-DiscussContent-headerBox").width;
     expect(longCardWidth).toBeGreaterThan(shortCardWidth);
 });
@@ -237,7 +243,7 @@ test("Message following a notification should not be squashed", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello world!");
     await press("Enter");
-    await contains(".o-mail-Message-sidebar .o-mail-Message-avatarContainer");
+    await waitFor(".o-mail-Message-sidebar .o-mail-Message-avatarContainer:count(1)");
 });
 
 test("Posting message should transform links.", async () => {
@@ -250,7 +256,7 @@ test("Posting message should transform links.", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
     await press("Enter");
-    await contains(".o-mail-Message a[href='https://www.odoo.com/']");
+    await waitFor(".o-mail-Message a[href='https://www.odoo.com/']:count(1)");
 });
 
 test("[text composer] Posting message should transform relevant data to emoji.", async () => {
@@ -264,7 +270,7 @@ test("[text composer] Posting message should transform relevant data to emoji.",
     // Type a trailing space to close the emoji suggestion, which Enter would pick.
     await insertText(".o-mail-Composer-input", "test :P :laughing: ");
     await press("Enter");
-    await contains(".o-mail-Message-body:text('test 😛 😆')");
+    await waitFor(".o-mail-Message-body:text('test 😛 😆'):count(1)");
 });
 
 test.tags("html composer");
@@ -285,7 +291,7 @@ test("Posting message should transform relevant data to emoji.", async () => {
     };
     await htmlInsertText(editor, "test :P :laughing:");
     await press("Enter");
-    await contains(".o-mail-Message-body:text('test 😛 😆')");
+    await waitFor(".o-mail-Message-body:text('test 😛 😆'):count(1)");
 });
 
 test("posting a message immediately after another one is displayed in 'simple' mode (squashed)", async () => {
@@ -298,11 +304,11 @@ test("posting a message immediately after another one is displayed in 'simple' m
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "abc");
     await press("Enter");
-    await contains(".o-mail-Message", { count: 1 });
+    await waitFor(".o-mail-Message:count(1)");
     await insertText(".o-mail-Composer-input", "def");
     await press("Enter");
-    await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-Message-header"); // just 1, because 2nd message is squashed
+    await waitFor(".o-mail-Message:count(2)");
+    await waitFor(".o-mail-Message-header:count(1)"); // just 1, because 2nd message is squashed
 });
 
 test("Message of type notification in chatter should not have inline display", async () => {
@@ -317,7 +323,7 @@ test("Message of type notification in chatter should not have inline display", a
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message-body");
+    await waitFor(".o-mail-Message-body:count(1)");
     expect(".o-mail-Message-body").not.toHaveStyle({ display: /inline/ });
 });
 
@@ -341,12 +347,12 @@ test("Click on avatar opens its partner chat window", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
+    await waitFor(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img:count(1)");
     await click(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img");
-    await contains(".o_avatar_card");
-    await contains(".o-mail-avatar-card-name:text('testPartner')");
-    await contains(".o_card_user_infos > a:text('test@partner.com')");
-    await contains(".o_card_user_infos > a:text('+45687468')");
+    await waitFor(".o_avatar_card:count(1)");
+    await waitFor(".o-mail-avatar-card-name:text('testPartner'):count(1)");
+    await waitFor(".o_card_user_infos > a:text('test@partner.com'):count(1)");
+    await waitFor(".o_card_user_infos > a:text('+45687468'):count(1)");
 });
 
 test("guests are not allowed to use commands", async () => {
@@ -395,7 +401,7 @@ test("sidebar: chat im_status rendering", async () => {
     ]);
     await start();
     await openDiscuss();
-    await contains(".o-mail-MessagingMenuItem .o-mail-ThreadIcon", { count: 3 });
+    await waitFor(".o-mail-MessagingMenuItem .o-mail-ThreadIcon:count(3)");
     await contains(".o-mail-MessagingMenuItem:has(:text('Partner1'))", {
         contains: [".o-mail-ThreadIcon[title='User is offline']"],
     });
@@ -430,8 +436,8 @@ test("No load more when fetch below fetch limit of 60", async () => {
             { channel_id: channelId, fetch_params: { limit: 60, around: 0 } },
         ],
     ]);
-    await contains(".o-mail-Message", { count: 29 });
-    await contains("button:text('Load More')", { count: 0 });
+    await waitFor(".o-mail-Message:count(29)");
+    await waitForNone("button:text('Load More')");
     await waitStoreFetch([]);
 });
 
@@ -463,8 +469,10 @@ test("receive new needaction messages", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.NOTIFICATION);
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Notifications')):not(:has(.badge))");
-    await contains(".o-mail-MessagingMenuItem", { count: 0 });
+    await waitFor(
+        ".o-mail-MessagingMenu-tab:has(:text('Notifications')):not(:has(.badge)):count(1)"
+    );
+    await waitForNone(".o-mail-MessagingMenuItem");
     // simulate receiving a new needaction message
     const messageId_1 = pyEnv["mail.message"].create({
         author_id: partnerId,
@@ -488,9 +496,11 @@ test("receive new needaction messages", async () => {
             })
             .as_dict(),
     });
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Notifications')):has(.badge:text(1))");
-    await contains(".o-mail-MessagingMenuItem");
-    await contains(".o-mail-MessagingMenuItem:has(:text('Frodo Baggins: not empty 1'))");
+    await waitFor(
+        ".o-mail-MessagingMenu-tab:has(:text('Notifications')):has(.badge:text(1)):count(1)"
+    );
+    await waitFor(".o-mail-MessagingMenuItem:count(1)");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Frodo Baggins: not empty 1')):count(1)");
     // simulate receiving a new needaction message
     const messageId_2 = pyEnv["mail.message"].create({
         author_id: partnerId,
@@ -513,10 +523,12 @@ test("receive new needaction messages", async () => {
             })
             .as_dict(),
     });
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Notifications')):has(.badge:text(2))");
-    await contains(".o-mail-MessagingMenuItem", { count: 2 });
-    await contains(".o-mail-MessagingMenuItem:has(:text('Frodo Baggins: not empty 1'))");
-    await contains(".o-mail-MessagingMenuItem:has(:text('Frodo Baggins: not empty 2'))");
+    await waitFor(
+        ".o-mail-MessagingMenu-tab:has(:text('Notifications')):has(.badge:text(2)):count(1)"
+    );
+    await waitFor(".o-mail-MessagingMenuItem:count(2)");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Frodo Baggins: not empty 1')):count(1)");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Frodo Baggins: not empty 2')):count(1)");
 });
 
 test("receive a message that is not linked to thread", async () => {
@@ -525,7 +537,7 @@ test("receive a message that is not linked to thread", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.NOTIFICATION);
-    await contains(".o-mail-MessagingMenuItem", { count: 0 });
+    await waitForNone(".o-mail-MessagingMenuItem");
     // simulate receiving a new needaction message that is not linked to thread
     const messageId_1 = pyEnv["mail.message"].create({
         author_id: partnerId,
@@ -548,8 +560,8 @@ test("receive a message that is not linked to thread", async () => {
             .as_dict(),
     });
     await contains("button:has(:text('Notifications'))", { contains: [".badge:text('1')"] });
-    await contains(".o-mail-MessagingMenuItem");
-    await contains(".o-mail-MessagingMenuItem:has(:text('needaction message'))");
+    await waitFor(".o-mail-MessagingMenuItem:count(1)");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('needaction message')):count(1)");
 });
 
 test("basic rendering: sidebar", async () => {
@@ -563,10 +575,10 @@ test("basic rendering: sidebar", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Notifications'))");
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Bookmarks'))");
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Channels'))");
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Chats'))");
+    await waitFor(".o-mail-MessagingMenu-tab:has(:text('Notifications')):count(1)");
+    await waitFor(".o-mail-MessagingMenu-tab:has(:text('Bookmarks')):count(1)");
+    await waitFor(".o-mail-MessagingMenu-tab:has(:text('Channels')):count(1)");
+    await waitFor(".o-mail-MessagingMenu-tab:has(:text('Chats')):count(1)");
 });
 
 test("last discuss conversation is remembered", async () => {
@@ -579,13 +591,13 @@ test("last discuss conversation is remembered", async () => {
     );
     await start();
     await openDiscuss();
-    await contains('[role="heading"]:text("Welcome to #General!")');
+    await waitFor('[role="heading"]:text("Welcome to #General!"):count(1)');
 });
 
 test("sidebar: default no conversation selected", async () => {
     await start();
     await openDiscuss();
-    await contains("h4:text('No conversation selected.')");
+    await waitFor("h4:text('No conversation selected.'):count(1)");
 });
 
 test("channel deletion fallbacks to no conversation selected", async () => {
@@ -593,9 +605,9 @@ test("channel deletion fallbacks to no conversation selected", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread:has(:text('Welcome to #General!'))");
+    await waitFor(".o-mail-Thread:has(:text('Welcome to #General!')):count(1)");
     pyEnv["discuss.channel"].unlink([channelId]);
-    await contains("h4:text('No conversation selected.')");
+    await waitFor("h4:text('No conversation selected.'):count(1)");
 });
 
 test("sidebar: change active", async () => {
@@ -609,11 +621,11 @@ test("sidebar: change active", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.NOTIFICATION);
-    await contains("button.active:text('Notifications')");
-    await contains("button:not(.active):has(:text('Bookmarks'))");
+    await waitFor("button.active:text('Notifications'):count(1)");
+    await waitFor("button:not(.active):has(:text('Bookmarks')):count(1)");
     await click("button:has(:text('Bookmarks'))");
-    await contains("button:not(.active):text('Notifications')");
-    await contains("button.active:has(:text('Bookmarks'))");
+    await waitFor("button:not(.active):text('Notifications'):count(1)");
+    await waitFor("button.active:has(:text('Bookmarks')):count(1)");
 });
 
 test("sidebar: basic channel rendering", async () => {
@@ -621,10 +633,10 @@ test("sidebar: basic channel rendering", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(".o-mail-MessagingMenuItem img[alt='Thread Image']");
+    await waitFor(".o-mail-NotificationItem:has(:text('General')):count(1)");
+    await waitFor(".o-mail-MessagingMenuItem img[alt='Thread Image']:count(1)");
     await click("[title='Channel Actions']");
-    await contains(".o-dropdown-item:contains('Leave Conversation')");
+    await waitFor(".o-dropdown-item:contains('Leave Conversation'):count(1)");
 });
 
 test("channel become active", async () => {
@@ -632,10 +644,10 @@ test("channel become active", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-NotificationItem");
-    await contains(".o-mail-NotificationItem.o-active", { count: 0 });
+    await waitFor(".o-mail-NotificationItem:count(1)");
+    await waitForNone(".o-mail-NotificationItem.o-active");
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-NotificationItem.o-active");
+    await waitFor(".o-mail-NotificationItem.o-active:count(1)");
 });
 
 test("channel become active - show composer in discuss content", async () => {
@@ -644,8 +656,8 @@ test("channel become active - show composer in discuss content", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-Thread");
-    await contains(".o-mail-Composer");
+    await waitFor(".o-mail-Thread:count(1)");
+    await waitFor(".o-mail-Composer:count(1)");
 });
 
 test("sidebar: channel rendering with needaction counter", async () => {
@@ -663,7 +675,7 @@ test("sidebar: channel rendering with needaction counter", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-MessagingMenuItem:has(:text('general')) .badge:text(1)");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('general')) .badge:text(1):count(1)");
 });
 
 test("basic top bar rendering", async () => {
@@ -679,15 +691,15 @@ test("basic top bar rendering", async () => {
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:has(:text('General'))");
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
-    await contains(".o-mail-DiscussContent-header button", { count: 8 });
-    await contains(".o-mail-DiscussContent-header button[title='Start Video Call']");
-    await contains(".o-mail-DiscussContent-header button[title='Start Call']");
-    await contains(".o-mail-DiscussContent-header button[title='Notification Settings']");
-    await contains(".o-mail-DiscussContent-header button[title='Search Messages']");
-    await contains(".o-mail-DiscussContent-header button[title='Threads']");
-    await contains(".o-mail-DiscussContent-header button[title='Attachments']");
-    await contains(".o-mail-DiscussContent-header button[title='Pinned Messages']");
-    await contains(".o-mail-DiscussContent-header button[title='Members']");
+    await waitFor(".o-mail-DiscussContent-header button:count(8)");
+    await waitFor(".o-mail-DiscussContent-header button[title='Start Video Call']:count(1)");
+    await waitFor(".o-mail-DiscussContent-header button[title='Start Call']:count(1)");
+    await waitFor(".o-mail-DiscussContent-header button[title='Notification Settings']:count(1)");
+    await waitFor(".o-mail-DiscussContent-header button[title='Search Messages']:count(1)");
+    await waitFor(".o-mail-DiscussContent-header button[title='Threads']:count(1)");
+    await waitFor(".o-mail-DiscussContent-header button[title='Attachments']:count(1)");
+    await waitFor(".o-mail-DiscussContent-header button[title='Pinned Messages']:count(1)");
+    await waitFor(".o-mail-DiscussContent-header button[title='Members']:count(1)");
 });
 
 test("Can right-click on message to opens message actions dropdown", async () => {
@@ -751,30 +763,30 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     ]);
     await start();
     await openDiscuss(testChannelId);
-    await contains(".o-mail-Message", { count: 3 });
+    await waitFor(".o-mail-Message:count(3)");
     await rightClick(".o-mail-Message:eq(0)");
     await animationFrame();
     await expect.waitForSteps(["Message.onContextMenu", "Message.onOpenRightClickMenu"]);
     expect(lastOnContextMenuEv.defaultPrevented).toBe(true);
-    await contains(".o-dropdown-item", { count: 7 });
-    await contains(".o-dropdown-item:contains('Add a Reaction')");
-    await contains(".o-dropdown-item:contains('Bookmark')");
-    await contains(".o-dropdown-item:contains('Mark as Unread')");
-    await contains(".o-dropdown-item:contains('Reply')");
-    await contains(".o-dropdown-item:contains('Reply')");
-    await contains(".o-dropdown-item:contains('Copy Text')");
-    await contains(".o-dropdown-item:contains('Pin')");
-    await contains(".o-mail-Message:eq(0).o-selected");
-    await contains(".o-mail-Message:eq(1):not(.o-selected)");
+    await waitFor(".o-dropdown-item:count(7)");
+    await waitFor(".o-dropdown-item:contains('Add a Reaction'):count(1)");
+    await waitFor(".o-dropdown-item:contains('Bookmark'):count(1)");
+    await waitFor(".o-dropdown-item:contains('Mark as Unread'):count(1)");
+    await waitFor(".o-dropdown-item:contains('Reply'):count(1)");
+    await waitFor(".o-dropdown-item:contains('Reply'):count(1)");
+    await waitFor(".o-dropdown-item:contains('Copy Text'):count(1)");
+    await waitFor(".o-dropdown-item:contains('Pin'):count(1)");
+    await waitFor(".o-mail-Message:eq(0).o-selected:count(1)");
+    await waitFor(".o-mail-Message:eq(1):not(.o-selected):count(1)");
     // Test right-click again doesn't show the menu (shows browser context menu instead)
     await rightClick(".o-mail-Message:eq(0)");
-    await contains(".o-dropdown-item", { count: 0 });
+    await waitForNone(".o-dropdown-item");
     await animationFrame();
     expect.verifySteps(["Message.onContextMenu"]);
     expect(lastOnContextMenuEv.defaultPrevented).toBe(false);
     // Test inner-link in body of message doesn't trigger showing of message actions
     await click(".o-mail-Thread");
-    await contains(".o-dropdown-item", { count: 0 });
+    await waitForNone(".o-dropdown-item");
     await rightClick(".o-mail-Message-body:eq(1) a:eq(0)");
     await expect.waitForSteps(["Message.onContextMenu"]);
     await animationFrame();
@@ -785,7 +797,7 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     expect.verifySteps([]);
     // ...also inside shadow DOM (messages of type 'email')
     await click(".o-mail-Thread");
-    await contains(".o-dropdown-item", { count: 0 });
+    await waitForNone(".o-dropdown-item");
     await rightClick(".o-mail-Message-body:eq(2) .o-mail-Message-shadowBody:shadow a:eq(0)");
     await expect.waitForSteps(["Message.onContextMenu"]);
     await animationFrame();
@@ -798,9 +810,9 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     // Test Pinned Panel right-click doesn't show message actions
     await click(".o-mail-MessagingMenu-tab[data-id='channel']");
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(".o-mail-DiscussContent-threadName:value('General')");
+    await waitFor(".o-mail-DiscussContent-threadName:value('General'):count(1)");
     await click("button[title='Pinned Messages']");
-    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
+    await waitFor(".o-discuss-PinnedMessagesPanel .o-mail-Message:count(1)");
     await rightClick(".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await expect.waitForSteps(["Message.onContextMenu"]);
     await animationFrame();
@@ -818,11 +830,11 @@ test("Can add reaction from right-click on message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message");
+    await waitFor(".o-mail-Message:count(1)");
     await rightClick(".o-mail-Message");
     await click(".o-dropdown-item:contains('Add a Reaction')");
     await click(".o-Emoji:contains(😊)");
-    await contains(".o-mail-MessageReaction:contains(😊)");
+    await waitFor(".o-mail-MessageReaction:contains(😊):count(1)");
 });
 
 test("Unfollow message", async function () {
@@ -856,29 +868,29 @@ test("Unfollow message", async function () {
     );
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.NOTIFICATION);
-    await contains(".o-mail-MessagingMenuItem", { count: 3 });
+    await waitFor(".o-mail-MessagingMenuItem:count(3)");
     await click(
         ".o-mail-MessagingMenuItem:has(:text('Thread followed')):eq(0) [title='Message Actions']"
     );
-    await contains(".o-dropdown-item:contains('Unfollow')");
+    await waitFor(".o-dropdown-item:contains('Unfollow'):count(1)");
     await click(
         ".o-mail-MessagingMenuItem:has(:text('Thread followed')):eq(1) [title='Message Actions']"
     );
-    await contains(".o-dropdown-item:contains('Unfollow')");
+    await waitFor(".o-dropdown-item:contains('Unfollow'):count(1)");
     await click(
         ".o-mail-MessagingMenuItem:has(:text('Thread not followed')) [title='Message Actions']"
     );
-    await contains(".o-dropdown-item:contains('Unfollow')", { count: 0 });
+    await waitForNone(".o-dropdown-item:contains('Unfollow')");
     await click(
         ".o-mail-MessagingMenuItem:has(:text('Thread followed')):eq(0) [title='Message Actions']"
     );
     await click(".o-dropdown-item:contains('Unfollow')");
     // Unfollowing message 0 marks all messages of the thread as read -> All messages on 'Thread followed' removed
-    await contains(".o-mail-MessagingMenuItem");
+    await waitFor(".o-mail-MessagingMenuItem:count(1)");
     await click(
         ".o-mail-MessagingMenuItem:has(:text('Thread not followed')) [title='Message Actions']"
     );
-    await contains(".o-dropdown-item:contains('Unfollow')", { count: 0 });
+    await waitForNone(".o-dropdown-item:contains('Unfollow')");
 });
 
 test("messages marked as read leave the unread filter but remain in the full inbox", async () => {
@@ -912,14 +924,14 @@ test("messages marked as read leave the unread filter but remain in the full inb
     ]);
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.NOTIFICATION);
-    await contains("button.active:has(:text('Notifications'))");
-    await contains("button.o-active:text('Unread')");
-    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await waitFor("button.active:has(:text('Notifications')):count(1)");
+    await waitFor("button.o-active:text('Unread'):count(1)");
+    await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await click("button:text('Mark all read')");
-    await contains("button.active:has(:text('Notifications'))");
-    await contains(".o-mail-MessagingMenuEmpty:has(:text('You\\'re all caught up!'))");
+    await waitFor("button.active:has(:text('Notifications')):count(1)");
+    await waitFor(`.o-mail-MessagingMenuEmpty:has(:text("You're all caught up!")):count(1)`);
     await click("button:text('All')");
-    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await waitFor(".o-mail-MessagingMenuItem:count(2)");
 });
 
 test("mark a single message as read removes it from the unread filter but keeps it in the full inbox", async () => {
@@ -949,18 +961,18 @@ test("mark a single message as read removes it from the unread filter but keeps 
     ]);
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.NOTIFICATION);
-    await contains("button.active:has(:text('Notifications'))");
-    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await waitFor("button.active:has(:text('Notifications')):count(1)");
+    await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await click(
         ".o-mail-MessagingMenuItem:has(:text('You: not empty 1')) [title='Message Actions']"
     );
     await click("button:text('Mark as Read')");
-    await contains(".o-mail-MessagingMenuItem", { count: 1 });
-    await contains(".o-mail-MessagingMenuItem:has(:text('You: not empty 2'))");
+    await waitFor(".o-mail-MessagingMenuItem:count(1)");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('You: not empty 2')):count(1)");
     await click("button:text('All')");
-    await contains(".o-mail-MessagingMenuItem", { count: 2 });
-    await contains(".o-mail-MessagingMenuItem:has(:text('You: not empty 1'))");
-    await contains(".o-mail-MessagingMenuItem:has(:text('You: not empty 2'))");
+    await waitFor(".o-mail-MessagingMenuItem:count(2)");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('You: not empty 1')):count(1)");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('You: not empty 2')):count(1)");
 });
 
 test("full inbox shows all messages after marking all as read and clearing the unread filter", async () => {
@@ -979,12 +991,12 @@ test("full inbox shows all messages after marking all as read and clearing the u
     }
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.NOTIFICATION);
-    await contains(".o-mail-MessagingMenuItem", { count: 20 });
+    await waitFor(".o-mail-MessagingMenuItem:count(20)");
     await click("button:text('Mark all read')");
-    await contains(".o-mail-MessagingMenuEmpty:has(:text('You\\'re all caught up!'))");
+    await waitFor(`.o-mail-MessagingMenuEmpty:has(:text("You're all caught up!")):count(1)`);
     await click("button:text('All')");
     await scroll(".o-mail-MessagingMenu-tabContent", "bottom");
-    await contains(".o-mail-MessagingMenuItem", { count: 40 });
+    await waitFor(".o-mail-MessagingMenuItem:count(40)");
 });
 
 test("post a simple message", async () => {
@@ -1002,21 +1014,21 @@ test("post a simple message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread:has(:text('Welcome to #general!'))");
-    await contains(".o-mail-Message", { count: 0 });
+    await waitFor(".o-mail-Thread:has(:text('Welcome to #general!')):count(1)");
+    await waitForNone(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "Test");
     await press("Enter");
     await expect.waitForSteps(["message_post"]);
     // optimistically show posted message
     await contains(".o-mail-Composer-input", { value: "" });
-    await contains(".o-mail-Message-author:text('Mitchell Admin')");
-    await contains(".o-mail-Message-content:text('Test')");
+    await waitFor(".o-mail-Message-author:text('Mitchell Admin'):count(1)");
+    await waitFor(".o-mail-Message-content:text('Test'):count(1)");
     expect(".o-mail-Message-content").toHaveStyle({ opacity: "0.5" });
-    await contains(".o-mail-Message-pendingProgress"); // visible after 0.5 sec. elapsed
+    await waitFor(".o-mail-Message-pendingProgress:count(1)"); // visible after 0.5 sec. elapsed
     // simulate message genuinely posted
     resolveMessagePost();
-    await contains(".o-mail-Message-pendingProgress", { count: 0 });
-    await contains(".o-mail-Message-content:text('Test')");
+    await waitForNone(".o-mail-Message-pendingProgress");
+    await waitFor(".o-mail-Message-content:text('Test'):count(1)");
     expect(".o-mail-Message-content").toHaveStyle({ opacity: "1" });
 });
 
@@ -1035,8 +1047,8 @@ test("post several messages with failures", async () => {
     await start();
     await openDiscuss(channelId);
     // post 3 messages
-    await contains(".o-mail-Thread:has(:text('Welcome to #general!'))");
-    await contains(".o-mail-Message", { count: 0 });
+    await waitFor(".o-mail-Thread:has(:text('Welcome to #general!')):count(1)");
+    await waitForNone(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "0");
     await press("Enter");
     await contains(".o-mail-Composer-input", { value: "" });
@@ -1046,7 +1058,7 @@ test("post several messages with failures", async () => {
     await insertText(".o-mail-Composer-input", "2");
     await press("Enter");
     await contains(".o-mail-Composer-input", { value: "" });
-    await contains(".o-mail-Message-author:text('Mitchell Admin')");
+    await waitFor(".o-mail-Message-author:text('Mitchell Admin'):count(1)");
     await contains(".o-mail-Thread", {
         contains: [
             [".o-mail-Message-content:text('0')"],
@@ -1058,12 +1070,12 @@ test("post several messages with failures", async () => {
     expect(".o-mail-Message-content:eq(0)").toHaveStyle({ opacity: "0.5" });
     expect(".o-mail-Message-content:eq(1)").toHaveStyle({ opacity: "0.5" });
     expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "0.5" });
-    await contains(".o-mail-Message-pendingProgress", { count: 3 }); // visible after 0.5 sec. elapsed
+    await waitFor(".o-mail-Message-pendingProgress:count(3)"); // visible after 0.5 sec. elapsed
     // simulate OK for 1, NOT-OK for 0, 2
     messagePostPromWithResolvers[0].reject();
     messagePostPromWithResolvers[1].resolve();
     messagePostPromWithResolvers[2].reject();
-    await contains(".o-mail-Message-pendingProgress", { count: 0 });
+    await waitForNone(".o-mail-Message-pendingProgress");
     expect(".o-mail-Message-content:eq(0)").toHaveStyle({ opacity: "0.5" });
     expect(".o-mail-Message-content:eq(1)").toHaveStyle({ opacity: "1" });
     expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "0.5" });
@@ -1099,8 +1111,8 @@ test("failed message tooltip includes the server error", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Test");
     await press("Enter");
-    await contains(
-        ".o-mail-Message button[title='Failed to post the message (Error message). Click to retry']"
+    await waitFor(
+        ".o-mail-Message button[title='Failed to post the message (Error message). Click to retry']:count(1)"
     );
 });
 
@@ -1112,11 +1124,11 @@ test("bookmarked: unbookmark all", async () => {
     ]);
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.BOOKMARK);
-    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await waitFor(".o-mail-MessagingMenuItem:count(2)");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('2')"] });
     await click("button:enabled:text('Remove all')");
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Bookmarks'))", { count: 0 });
-    await contains(".o-mail-MessagingMenuItem", { count: 0 });
+    await waitForNone(".o-mail-MessagingMenu-tab:has(:text('Bookmarks'))");
+    await waitForNone(".o-mail-MessagingMenuItem");
 });
 
 test.tags("focus required");
@@ -1136,14 +1148,14 @@ test("auto-focus composer on opening thread", async () => {
     ]);
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-Discuss:has(:text('No conversation selected.'))");
+    await waitFor(".o-mail-Discuss:has(:text('No conversation selected.')):count(1)");
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(".o-mail-NotificationItem.o-active:has(:text('General'))");
-    await contains(".o-mail-Composer-input:focus");
+    await waitFor(".o-mail-NotificationItem.o-active:has(:text('General')):count(1)");
+    await waitFor(".o-mail-Composer-input:focus:count(1)");
     await click(".o-mail-MessagingMenu-tab[data-id='chat']");
     await click(".o-mail-NotificationItem:has(:text('Demo User'))");
-    await contains(".o-mail-NotificationItem.o-active:has(:text('Demo User'))");
-    await contains(".o-mail-Composer-input:focus");
+    await waitFor(".o-mail-NotificationItem.o-active:has(:text('Demo User')):count(1)");
+    await waitFor(".o-mail-Composer-input:focus:count(1)");
 });
 
 test("no out-of-focus notification on receiving self messages in chat", async () => {
@@ -1158,8 +1170,8 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
         },
     });
     await start();
-    await contains(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitFor(".o_menu_systray i[aria-label='Messages']:count(1)");
+    await waitForNone(".o-mail-ChatWindow");
     // simulate receiving a new message of self with odoo out-of-focused
     withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
@@ -1172,8 +1184,8 @@ test("no out-of-focus notification on receiving self messages in chat", async ()
         })
     );
     await openMessagingMenu();
-    await contains(".o-mail-NotificationItem-text:text('You: New message')");
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitFor(".o-mail-NotificationItem-text:text('You: New message'):count(1)");
+    await waitForNone(".o-mail-ChatWindow");
     await expect.waitForSteps([]);
 });
 
@@ -1199,8 +1211,8 @@ test("out-of-focus notif on needaction message in channel", async () => {
     listenStoreFetch("init_messaging");
     await start();
     await waitStoreFetch("init_messaging");
-    await contains(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitFor(".o_menu_systray i[aria-label='Messages']:count(1)");
+    await waitForNone(".o-mail-ChatWindow");
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1214,7 +1226,7 @@ test("out-of-focus notif on needaction message in channel", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatBubble");
+    await waitFor(".o-mail-ChatBubble:count(1)");
     await expect.waitForSteps(["set_counters:discuss:1"]);
 });
 
@@ -1240,8 +1252,8 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
     listenStoreFetch("init_messaging");
     await start();
     await waitStoreFetch("init_messaging");
-    await contains(".o_menu_systray i[aria-label='Messages']");
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitFor(".o_menu_systray i[aria-label='Messages']:count(1)");
+    await waitForNone(".o-mail-ChatWindow");
     // simulate receiving a new message with odoo out-of-focused
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1253,7 +1265,7 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatBubble");
+    await waitFor(".o-mail-ChatBubble:count(1)");
     await expect.waitForSteps(["set_counters:discuss:1"]);
 });
 
@@ -1280,7 +1292,7 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
     await start();
     await waitStoreFetch("init_messaging");
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow");
     // simulate receving new message
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1290,8 +1302,8 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
         })
     );
     await openMessagingMenu();
-    await contains(".o-mail-NotificationItem-text:text('Dumbledore: New message')");
-    await contains(".o-mail-ChatWindow", { count: 0 });
+    await waitFor(".o-mail-NotificationItem-text:text('Dumbledore: New message'):count(1)");
+    await waitForNone(".o-mail-ChatWindow");
     await expect.waitForSteps([]);
 });
 
@@ -1337,7 +1349,7 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await waitFor(".o-mail-MessagingMenuItem:count(2)");
     // simulate receiving a new message in chat 1 with odoo out-of-focused
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
@@ -1513,7 +1525,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Chats')) .badge:text(1)");
+    await waitFor(".o-mail-MessagingMenu-tab:has(:text('Chats')) .badge:text(1):count(1)");
     await expect.waitForSteps(["(1) Odoo"]);
 });
 
@@ -1545,14 +1557,14 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
             thread_model: "res.partner",
         })
     );
-    await contains(".o-mail-MessagingMenuInDropdown-counter:text('1')");
+    await waitFor(".o-mail-MessagingMenuInDropdown-counter:text('1'):count(1)");
     // check no chat window nor chat bubble spawn: can be delayed, hence opening and folding chat by hand
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-MessagingMenu button:contains(general)");
-    await contains(".o-mail-ChatWindow:contains(general)");
-    await contains(".o-mail-ChatWindow", { count: 1 });
+    await waitFor(".o-mail-ChatWindow:contains(general):count(1)");
+    await waitFor(".o-mail-ChatWindow:count(1)");
     await click(".o-mail-ChatWindow button[title='Fold']");
-    await contains(".o-mail-ChatBubble", { count: 1 }); // no other chat bubble other than manually folded one
+    await waitFor(".o-mail-ChatBubble:count(1)"); // no other chat bubble other than manually folded one
     await expect.waitForSteps([]); // no sound alert whatsoever
 });
 
@@ -1576,7 +1588,7 @@ test("receive new message plays sound", async () => {
     listenStoreFetch("init_messaging");
     await start();
     await waitStoreFetch("init_messaging");
-    await contains(".o_menu_systray i[aria-label='Messages']");
+    await waitFor(".o_menu_systray i[aria-label='Messages']:count(1)");
     // simulate receiving a new message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1611,7 +1623,7 @@ test("message sound on receiving new message based on user preferences", async (
     listenStoreFetch("init_messaging");
     await start();
     await waitStoreFetch("init_messaging");
-    await contains(".o_menu_systray i[aria-label='Messages']");
+    await waitFor(".o_menu_systray i[aria-label='Messages']:count(1)");
     // simulate receiving a new message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1677,8 +1689,8 @@ test("should auto-pin chat when receiving a new DM", async () => {
     await start();
     await openDiscuss();
     await waitStoreFetch("init_messaging");
-    await contains(".o-mail-MessagingMenu-tab:has(:text('Chats'))");
-    await contains(".o-mail-MessagingMenuItem:has(:text('Demo'))", { count: 0 });
+    await waitFor(".o-mail-MessagingMenu-tab:has(:text('Chats')):count(1)");
+    await waitForNone(".o-mail-MessagingMenuItem:has(:text('Demo'))");
     // simulate receiving the first message on channel 11
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1687,7 +1699,7 @@ test("should auto-pin chat when receiving a new DM", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-MessagingMenuItem:has(:text('Demo'))");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Demo')):count(1)");
 });
 
 test("'Invite People' button should be displayed in the topbar of chats", async () => {
@@ -1702,7 +1714,7 @@ test("'Invite People' button should be displayed in the topbar of chats", async 
     });
     await start();
     await openDiscuss(channelId);
-    await contains("button[title='Invite People']");
+    await waitFor("button[title='Invite People']:count(1)");
 });
 
 test("Thread avatar image is displayed in top bar of channels of type 'channel' limited to a group", async () => {
@@ -1715,7 +1727,7 @@ test("Thread avatar image is displayed in top bar of channels of type 'channel' 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-DiscussContent-threadAvatar");
+    await waitFor(".o-mail-DiscussContent-header .o-mail-DiscussContent-threadAvatar:count(1)");
 });
 
 test("Thread avatar image is displayed in top bar of channels of type 'channel' not limited to any group", async () => {
@@ -1727,7 +1739,7 @@ test("Thread avatar image is displayed in top bar of channels of type 'channel' 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-DiscussContent-threadAvatar");
+    await waitFor(".o-mail-DiscussContent-header .o-mail-DiscussContent-threadAvatar:count(1)");
 });
 
 test("Partner IM status is displayed as thread icon in top bar of channels of type 'chat'", async () => {
@@ -1783,15 +1795,19 @@ test("Partner IM status is displayed as thread icon in top bar of channels of ty
     await start();
     await openDiscuss();
     await click(".o-mail-NotificationItem:has(:text('Michel Online'))");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']");
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']:count(1)"
+    );
     await click(".o-mail-NotificationItem:has(:text('Jacqueline Offline'))");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is offline']");
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is offline']:count(1)"
+    );
     await click(".o-mail-NotificationItem:has(:text('Nabuchodonosor Idle'))");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is idle']");
+    await waitFor(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is idle']:count(1)");
     await click(".o-mail-NotificationItem:has(:text('Robert Fired'))");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus", { count: 0 });
+    await waitForNone(".o-mail-DiscussContent-header .o-mail-ImStatus");
     await click(".o-mail-NotificationItem:has(:text('OdooBot'))");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is a bot']");
+    await waitFor(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is a bot']:count(1)");
 });
 
 test("Thread avatar image is displayed in top bar of channels of type 'group'", async () => {
@@ -1799,7 +1815,7 @@ test("Thread avatar image is displayed in top bar of channels of type 'group'", 
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "group" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-DiscussContent-threadAvatar");
+    await waitFor(".o-mail-DiscussContent-header .o-mail-DiscussContent-threadAvatar:count(1)");
 });
 
 test("Thread avatar is not editable in DM chat", async () => {
@@ -1818,11 +1834,11 @@ test("Thread avatar is not editable in DM chat", async () => {
     ]);
     await start();
     await openDiscuss(groupChatId);
-    await contains(".o-mail-DiscussContent-threadName[title='GroupChat']");
-    await contains(".o-mail-DiscussContent-threadAvatar [data-icon='edit']");
+    await waitFor(".o-mail-DiscussContent-threadName[title='GroupChat']:count(1)");
+    await waitFor(".o-mail-DiscussContent-threadAvatar [data-icon='edit']:count(1)");
     await click(".o-mail-NotificationItem:has(:text('Demo'))");
-    await contains(".o-mail-DiscussContent-threadName[title='Demo']");
-    await contains(".o-mail-DiscussContent-threadAvatar [data-icon='edit']", { count: 0 });
+    await waitFor(".o-mail-DiscussContent-threadName[title='Demo']:count(1)");
+    await waitForNone(".o-mail-DiscussContent-threadAvatar [data-icon='edit']");
 });
 
 test("Do not trigger channel name server update when it is unchanged", async () => {
@@ -1872,8 +1888,8 @@ test("Channel is added to discuss after invitation", async () => {
     ]);
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-MessagingMenuItem:has(:text('my channel'))");
-    await contains(".o-mail-MessagingMenuItem:has(:text('General'))", { count: 0 });
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('my channel')):count(1)");
+    await waitForNone(".o-mail-MessagingMenuItem:has(:text('General'))");
     const adminUserId = serverState.userId;
     await withUser(userId, () =>
         getService("mail.store").fetchStoreData("/discuss/channel/add_members", {
@@ -1881,7 +1897,7 @@ test("Channel is added to discuss after invitation", async () => {
             user_ids: [adminUserId],
         })
     );
-    await contains(".o-mail-MessagingMenuItem:has(:text('General'))");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('General')):count(1)");
 });
 
 test("select another mailbox", async () => {
@@ -1890,10 +1906,10 @@ test("select another mailbox", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.NOTIFICATION);
-    await contains(".o-mail-Discuss");
-    await contains(".o-mail-MessagingMenuEmpty:has(:text('You're all caught up!'))");
+    await waitFor(".o-mail-Discuss:count(1)");
+    await waitFor(`.o-mail-MessagingMenuEmpty:has(:text("You're all caught up!")):count(1)`);
     await click("button:text('Unread')");
-    await contains(".o-mail-MessagingMenuEmpty:has(:text('You're all caught up!'))");
+    await waitFor(`.o-mail-MessagingMenuEmpty:has(:text("You're all caught up!")):count(1)`);
 });
 
 test("composer should be focused automatically after clicking on the send button", async () => {
@@ -1957,16 +1973,16 @@ test("warning on send with shortcut when attempting to post message with still-u
     onRpcBefore("/mail/attachment/upload", () => new Promise(() => {})); // simulates an attachment upload that never completes
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer input[type=file]");
+    await waitFor(".o-mail-Composer input[type=file]:count(1)");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
-    await contains(
-        ".o-mail-AttachmentContainer.o-isUploading:contains(text.txt) [data-icon='autorenew']"
+    await waitFor(
+        ".o-mail-AttachmentContainer.o-isUploading:contains(text.txt) [data-icon='autorenew']:count(1)"
     );
-    await contains(".o-mail-Composer button[title='Send']:disabled");
+    await waitFor(".o-mail-Composer button[title='Send']:disabled:count(1)");
     await press("Enter"); // Try to send message
-    await contains(".o_notification:text('Please wait while the file is uploading.')");
+    await waitFor(".o_notification:text('Please wait while the file is uploading.'):count(1)");
 });
 
 test("[text composer] Can post message with only attachment", async () => {
@@ -1975,16 +1991,16 @@ test("[text composer] Can post message with only attachment", async () => {
     onRpcBefore("/mail/message/post", () => new Promise(() => {}));
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer input[type=file]");
+    await waitFor(".o-mail-Composer input[type=file]:count(1)");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
-    await contains(
-        ".o-mail-AttachmentContainer:not(.o-isUploading):contains('text.txt'):not(:has([data-icon='autorenew']))"
+    await waitFor(
+        ".o-mail-AttachmentContainer:not(.o-isUploading):contains('text.txt'):not(:has([data-icon='autorenew'])):count(1)"
     );
     await press("Enter");
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message .o-mail-AttachmentContainer:contains('text.txt')");
-    await contains(".o-mail-Message .o-mail-Message-bubble", { count: 0 });
+    await waitFor(".o-mail-Message:count(1)");
+    await waitFor(".o-mail-Message .o-mail-AttachmentContainer:contains('text.txt'):count(1)");
+    await waitForNone(".o-mail-Message .o-mail-Message-bubble");
 });
 
 test.tags("html composer");
@@ -1996,16 +2012,16 @@ test("Can post message with only attachment", async () => {
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer input[type=file]");
+    await waitFor(".o-mail-Composer input[type=file]:count(1)");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
-    await contains(
-        ".o-mail-AttachmentContainer:not(.o-isUploading):contains('text.txt'):not(:has([data-icon='autorenew']))"
+    await waitFor(
+        ".o-mail-AttachmentContainer:not(.o-isUploading):contains('text.txt'):not(:has([data-icon='autorenew'])):count(1)"
     );
     await press("Enter");
-    await contains(".o-mail-Message");
-    await contains(".o-mail-Message .o-mail-AttachmentContainer:contains('text.txt')");
-    await contains(".o-mail-Message .o-mail-Message-bubble", { count: 0 });
+    await waitFor(".o-mail-Message:count(1)");
+    await waitFor(".o-mail-Message .o-mail-AttachmentContainer:contains('text.txt'):count(1)");
+    await waitForNone(".o-mail-Message .o-mail-Message-bubble");
 });
 
 test("failure on loading messages should display error", async () => {
@@ -2036,7 +2052,9 @@ test("failure on loading messages should display error", async () => {
     await waitStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
     messageFetchShouldFail = true;
     await openDiscuss(chatId);
-    await contains(".o-mail-Thread:has(:text('An error occurred while loading messages.'))");
+    await waitFor(
+        ".o-mail-Thread:has(:text('An error occurred while loading messages.')):count(1)"
+    );
 });
 
 test("failure on loading messages should prompt retry button", async () => {
@@ -2067,7 +2085,7 @@ test("failure on loading messages should prompt retry button", async () => {
     await waitStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
     messageFetchShouldFail = true;
     await openDiscuss(chatId);
-    await contains("button:text('Try again')");
+    await waitFor("button:text('Try again'):count(1)");
 });
 
 test("Retry on failed initial load should load messages", async () => {
@@ -2112,12 +2130,12 @@ test("Retry on failed initial load should load messages", async () => {
     await waitStoreFetch("/mail/messaging_menu/discuss.channel/load_more");
     messageFetchShouldFail = true;
     await openDiscuss(chatId);
-    await contains("button:text('Try again')");
+    await waitFor("button:text('Try again'):count(1)");
     messageFetchShouldFail = false;
     await click("button:text('Try again')");
     await waitStoreFetch("/discuss/channel/messages");
-    await contains(".o-mail-Message", { count: 60 });
-    await contains(".o-mail-Thread-newMessage");
+    await waitFor(".o-mail-Message:count(60)");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
 });
 
 test("failure on loading more messages should display error and prompt retry button", async () => {
@@ -2154,12 +2172,14 @@ test("failure on loading more messages should display error and prompt retry but
     await start();
     await openDiscuss(channelId);
     await waitStoreFetch("/discuss/channel/messages");
-    await contains(".o-mail-Message", { count: 30 });
+    await waitFor(".o-mail-Message:count(30)");
     messageFetchShouldFail = true;
     await click("button:text('Load More')");
-    await contains(".o-mail-Thread:has(:text('An error occurred while loading messages.'))");
-    await contains("button:text('Try again')");
-    await contains("button:text('Load More')", { count: 0 });
+    await waitFor(
+        ".o-mail-Thread:has(:text('An error occurred while loading messages.')):count(1)"
+    );
+    await waitFor("button:text('Try again'):count(1)");
+    await waitForNone("button:text('Load More')");
 });
 
 test("Retry loading more messages on failed load more messages should load more messages", async () => {
@@ -2199,20 +2219,20 @@ test("Retry loading more messages on failed load more messages should load more 
     await start();
     await openDiscuss(channelId);
     await waitStoreFetch("/discuss/channel/messages");
-    await contains(".o-mail-Message", { count: 30 });
+    await waitFor(".o-mail-Message:count(30)");
     messageFetchDeferred = Promise.withResolvers();
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
     await expect.waitForSteps(["load more messages"]);
     messageFetchDeferred.reject(new Error("Simulated load more failure"));
-    await contains("button:text('Try again')");
+    await waitFor("button:text('Try again'):count(1)");
     messageFetchDeferred = undefined;
     await click("button:text('Try again')");
     await waitStoreFetch("/discuss/channel/messages");
-    await contains(".o-mail-Message", { count: 60 });
+    await waitFor(".o-mail-Message:count(60)");
     await scroll(".o-mail-Thread", 0);
     await waitStoreFetch("/discuss/channel/messages");
-    await contains(".o-mail-Message", { count: 90 });
+    await waitFor(".o-mail-Message:count(90)");
 });
 
 test("composer state: attachments save and restore", async () => {
@@ -2220,8 +2240,8 @@ test("composer state: attachments save and restore", async () => {
     const [channelId] = pyEnv["discuss.channel"].create([{ name: "General" }, { name: "Special" }]);
     await start();
     await openDiscuss(channelId);
-    await contains(
-        ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]"
+    await waitFor(
+        ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]:count(1)"
     );
     // Add attachment in a message for #general
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
@@ -2230,10 +2250,10 @@ test("composer state: attachments save and restore", async () => {
         ".o-mail-Composer:has(textarea[placeholder='Message #General…']) input[type=file]",
         [file]
     );
-    await contains(
-        ".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt)"
+    await waitFor(
+        ".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt):count(1)"
     );
-    await contains(".o-mail-Composer .o-mail-AttachmentContainer");
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer:count(1)");
     // Switch to #special
     await click(".o-mail-NotificationItem:has(:text('Special'))");
     // Attach files in a message for #special
@@ -2242,28 +2262,26 @@ test("composer state: attachments save and restore", async () => {
         new File(["hello3, world"], "text3.txt", { type: "text/plain" }),
         new File(["hello4, world"], "text4.txt", { type: "text/plain" }),
     ];
-    await contains(
-        ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]"
+    await waitFor(
+        ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]:count(1)"
     );
     await editInput(
         document.body,
         ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]",
         files
     );
-    await contains(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", {
-        count: 3,
-    });
-    await contains(".o-mail-Composer .o-mail-AttachmentContainer", { count: 3 });
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading):count(3)");
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer:count(3)");
     // Switch back to #general
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(".o-mail-Composer .o-mail-AttachmentContainer");
-    await contains(".o-mail-Composer .o-mail-AttachmentContainer:contains(text.txt)");
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer:count(1)");
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer:contains(text.txt):count(1)");
     // Switch back to #special
     await click(".o-mail-NotificationItem:has(:text('Special'))");
-    await contains(".o-mail-Composer .o-mail-AttachmentContainer", { count: 3 });
-    await contains(".o-mail-AttachmentCard-info:text('text2.txt')");
-    await contains(".o-mail-AttachmentCard-info:text('text3.txt')");
-    await contains(".o-mail-AttachmentCard-info:text('text4.txt')");
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer:count(3)");
+    await waitFor(".o-mail-AttachmentCard-info:text('text2.txt'):count(1)");
+    await waitFor(".o-mail-AttachmentCard-info:text('text3.txt'):count(1)");
+    await waitFor(".o-mail-AttachmentCard-info:text('text4.txt'):count(1)");
 });
 
 test("sidebar: cannot leave channel with group_ids", async () => {
@@ -2308,18 +2326,18 @@ test("restore thread scroll position", async () => {
     }
     await start();
     await openDiscuss(channelId_1);
-    await contains(".o-mail-Message", { count: 25 });
+    await waitFor(".o-mail-Message:count(25)");
     await contains(".o-mail-Thread", { scroll: 0 });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", "bottom");
     await click(".o-mail-NotificationItem:has(:text('Channel2'))");
-    await contains(".o-mail-Message", { count: 24 });
+    await waitFor(".o-mail-Message:count(24)");
     await contains(".o-mail-Thread", { scroll: 0 });
     await click(".o-mail-NotificationItem:has(:text('Channel1'))");
-    await contains(".o-mail-Message", { count: 25 });
+    await waitFor(".o-mail-Message:count(25)");
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await click(".o-mail-NotificationItem:has(:text('Channel2'))");
-    await contains(".o-mail-Message", { count: 24 });
+    await waitFor(".o-mail-Message:count(24)");
     await contains(".o-mail-Thread", { scroll: 0 });
 });
 
@@ -2327,7 +2345,7 @@ test("Message shows up even if channel data is incomplete", async () => {
     const pyEnv = await startServer();
     await start();
     await openDiscuss();
-    await contains(".o-mail-MessagingMenuEmpty");
+    await waitFor(".o-mail-MessagingMenuEmpty:count(1)");
     const correspondentUserId = pyEnv["res.users"].create({ name: "Albert" });
     const correspondentPartnerId = pyEnv["res.partner"].create({
         name: "Albert",
@@ -2360,7 +2378,7 @@ test("Message shows up even if channel data is incomplete", async () => {
         })
     );
     await click(".o-mail-NotificationItem:has(:text('Albert'))");
-    await contains(".o-mail-Message-content:text('hello world')");
+    await waitFor(".o-mail-Message-content:text('hello world'):count(1)");
 });
 
 test("Correct breadcrumb when open discuss from chat window then see settings as channel owner", async () => {
@@ -2375,15 +2393,15 @@ test("Correct breadcrumb when open discuss from chat window then see settings as
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:has(:text('General'))");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("[title='Open Actions Menu']");
+    await waitFor("[title='Open Actions Menu']:count(1)");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Open in Discuss')");
-    await contains(".o-mail-MessagingMenuItem:has(:text('General'))");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('General')):count(1)");
     await click("[title='Channel Actions']", {
         parent: [".o-mail-MessagingMenuItem:has(:text('General'))"],
     });
     await click(".o-dropdown-item:text('Advanced Settings')");
-    await contains(".o_breadcrumb:text('General General')");
+    await waitFor(".o_breadcrumb:text('General General'):count(1)");
 });
 
 test("Chatter notification in messaging menu should open the form view even when discuss app is open", async () => {
@@ -2407,11 +2425,11 @@ test("Chatter notification in messaging menu should open the form view even when
     await openDiscuss();
     await openMessagingMenu(MENU_ACTIVE_IDS.NOTIFICATION);
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-Discuss", { count: 0 });
-    await contains(".o_form_view .o-mail-Chatter");
-    await contains(".o_form_view .o_last_breadcrumb_item:text('TestPartner')");
-    await contains(
-        ".o-mail-Chatter .o-mail-Message:has(:text('A needaction message to have it in messaging menu'))"
+    await waitForNone(".o-mail-Discuss");
+    await waitFor(".o_form_view .o-mail-Chatter:count(1)");
+    await waitFor(".o_form_view .o_last_breadcrumb_item:text('TestPartner'):count(1)");
+    await waitFor(
+        ".o-mail-Chatter .o-mail-Message:has(:text('A needaction message to have it in messaging menu')):count(1)"
     );
 });
 
@@ -2423,7 +2441,7 @@ test("Escape key should focus the composer if it's not focused", async () => {
     await openDiscuss(channelId);
     await click("button[title='Pinned Messages']");
     triggerHotkey("escape");
-    await contains(".o-mail-Composer-input:focus");
+    await waitFor(".o-mail-Composer-input:focus:count(1)");
 });
 
 test("Notification settings: basic rendering", async () => {
@@ -2434,20 +2452,20 @@ test("Notification settings: basic rendering", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await click("[title='Notification Settings']");
-    await contains("button:text('All Messages')");
-    await contains("button:text('Mentions Only')");
-    await contains("button:text('Nothing')");
+    await waitFor("button:text('All Messages'):count(1)");
+    await waitFor("button:text('Mentions Only'):count(1)");
+    await waitFor("button:text('Nothing'):count(1)");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("button:text('Mute Conversation')");
+    await waitFor("button:text('Mute Conversation'):count(1)");
     await hover("button:has(:text('Mute Conversation'))");
-    await contains(".o-dropdown-item:text('For 15 minutes')");
-    await contains(".o-dropdown-item:text('For 1 hour')");
-    await contains(".o-dropdown-item:text('For 3 hours')");
-    await contains(".o-dropdown-item:text('For 8 hours')");
-    await contains(".o-dropdown-item:text('For 24 hours')");
-    await contains(".o-dropdown-item:text('Until I turn it back on')");
+    await waitFor(".o-dropdown-item:text('For 15 minutes'):count(1)");
+    await waitFor(".o-dropdown-item:text('For 1 hour'):count(1)");
+    await waitFor(".o-dropdown-item:text('For 3 hours'):count(1)");
+    await waitFor(".o-dropdown-item:text('For 8 hours'):count(1)");
+    await waitFor(".o-dropdown-item:text('For 24 hours'):count(1)");
+    await waitFor(".o-dropdown-item:text('Until I turn it back on'):count(1)");
 });
 
 test("Notification settings: mute conversation will change the style of sidebar", async () => {
@@ -2458,17 +2476,17 @@ test("Notification settings: mute conversation will change the style of sidebar"
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-NotificationItem:has(:text('Mario Party'))");
-    await contains(".o-mail-NotificationItem[class*='opacity-50']:text('Mario Party')", {
-        count: 0,
-    });
+    await waitFor(".o-mail-NotificationItem:has(:text('Mario Party')):count(1)");
+    await waitForNone(".o-mail-NotificationItem[class*='opacity-50']:text('Mario Party')");
     await click("[title='Notification Settings']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("button:text('Mute Conversation')");
+    await waitFor("button:text('Mute Conversation'):count(1)");
     await hover("button:has(:text('Mute Conversation'))");
     await click(".o-dropdown-item:text('For 15 minutes')");
-    await contains(".o-mail-NotificationItem:has(:text('Mario Party'))");
-    await contains(".o-mail-NotificationItem[class*='opacity-50']:has(:text('Mario Party'))");
+    await waitFor(".o-mail-NotificationItem:has(:text('Mario Party')):count(1)");
+    await waitFor(
+        ".o-mail-NotificationItem[class*='opacity-50']:has(:text('Mario Party')):count(1)"
+    );
 });
 
 test("Notification settings: change the mute duration of the conversation", async () => {
@@ -2479,20 +2497,18 @@ test("Notification settings: change the mute duration of the conversation", asyn
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-MessagingMenuItem:has(:text('Mario Party'))");
-    await contains(".o-mail-MessagingMenuItem[class*='opacity-50']:has(:text('Mario Party'))", {
-        count: 0,
-    });
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Mario Party')):count(1)");
+    await waitForNone(".o-mail-MessagingMenuItem[class*='opacity-50']:has(:text('Mario Party'))");
     await click("[title='Notification Settings']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("button:text('Mute Conversation')");
+    await waitFor("button:text('Mute Conversation'):count(1)");
     await hover("button:has(:text('Mute Conversation'))");
     await click(".o-dropdown-item:text('For 15 minutes')");
     await click("[title='Notification Settings']");
     await click(".o-discuss-NotificationSettings span:text('Unmute Conversation')");
     await click("[title='Notification Settings']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("button:text('Mute Conversation')");
+    await waitFor("button:text('Mute Conversation'):count(1)");
     await hover("button:has(:text('Mute Conversation'))");
     await click(".o-dropdown-item:text('For 1 hour')");
 });
@@ -2505,17 +2521,17 @@ test("Notification settings: mute/unmute conversation works correctly", async ()
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await click("[title='Notification Settings']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("button:text('Mute Conversation')");
+    await waitFor("button:text('Mute Conversation'):count(1)");
     await hover("button:has(:text('Mute Conversation'))");
     await click(".o-dropdown-item:text('For 15 minutes')");
     await click("[title='Notification Settings']");
-    await contains("button:has(:text('Unmute Conversation'))");
+    await waitFor("button:has(:text('Unmute Conversation')):count(1)");
     await click("button:has(:text('Unmute Conversation'))");
     await click("[title='Notification Settings']");
-    await contains("button:has(:text('Unmute Conversation'))");
+    await waitFor("button:has(:text('Unmute Conversation')):count(1)");
 });
 
 test("Newly created chat is at the top of the DM list", async () => {
@@ -2549,9 +2565,9 @@ test("Newly created chat is at the top of the DM list", async () => {
     await start();
     await openDiscuss();
     await triggerHotkey("control+k");
-    await contains(".o_command_name", { count: 3 });
+    await waitFor(".o_command_name:count(3)");
     await insertText(".o_command_palette_search input[placeholder='Search conversations']", "Jer");
-    await contains(".o_command_name", { count: 2 });
+    await waitFor(".o_command_name:count(2)");
     await click(".o_command_name:text('Jerry Golay')");
     await contains(".o-mail-MessagingMenuItem:has(:text('Jerry Golay'))", {
         before: [".o-mail-MessagingMenuItem:has(:text('Albert'))"],
@@ -2609,10 +2625,10 @@ test("do not show control panel without breadcrumbs", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
-    await contains(".o_control_panel", { count: 0 });
+    await waitForNone(".o_control_panel");
     await openFormView("res.partner", serverState.partnerId);
     await openDiscuss();
-    await contains(".o-mail-Discuss");
+    await waitFor(".o-mail-Discuss:count(1)");
     await contains(".o_control_panel .breadcrumb:has(:text('" + serverState.partnerName + "'))");
 });
 
@@ -2636,8 +2652,8 @@ test("Show typing icon on group chat in sidebar", async () => {
             channel_id: groupChatId,
         })
     );
-    await contains(
-        ".o-mail-MessagingMenuItem .o-discuss-Typing-icon[title='Marc Demo is typing...']"
+    await waitFor(
+        ".o-mail-MessagingMenuItem .o-discuss-Typing-icon[title='Marc Demo is typing...']:count(1)"
     );
 });
 
@@ -2668,20 +2684,18 @@ test("Read-only channel member has bottom banner instead of composer", async () 
         authenticateAs: { login: "test_member", password: "test_member" },
     });
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')");
-    await contains(".o-mail-Composer", { count: 0 });
+    await waitFor(".o-mail-DiscussContent-core span:text('This channel is read-only.'):count(1)");
+    await waitForNone(".o-mail-Composer");
     pyEnv["discuss.channel"].write([channelId], { is_readonly: false });
-    await contains(".o-mail-Composer");
-    await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')", {
-        count: 0,
-    });
+    await waitFor(".o-mail-Composer:count(1)");
+    await waitForNone(".o-mail-DiscussContent-core span:text('This channel is read-only.')");
     // reply to message composer should disappear when channel becomes read-only again
     await click(".o-mail-Message:has(:text('Welcome to the read-only channel!')) [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
-    await contains(".o-mail-Composer:has(:text('Replying to Mitchell Admin'))");
+    await waitFor(".o-mail-Composer:has(:text('Replying to Mitchell Admin')):count(1)");
     pyEnv["discuss.channel"].write([channelId], { is_readonly: true });
-    await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')");
-    await contains(".o-mail-Composer", { count: 0 });
+    await waitFor(".o-mail-DiscussContent-core span:text('This channel is read-only.'):count(1)");
+    await waitForNone(".o-mail-Composer");
 });
 
 test("Read-only channel info is only editable by channel admins", async () => {
@@ -2706,17 +2720,17 @@ test("Read-only channel info is only editable by channel admins", async () => {
         authenticateAs: { login: "test_member", password: "test_member" },
     });
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-threadName:enabled");
-    await contains(".o-mail-DiscussContent-threadDescription:enabled");
-    await contains(".o-mail-DiscussContent-header a[title='Change Picture']");
+    await waitFor(".o-mail-DiscussContent-threadName:enabled:count(1)");
+    await waitFor(".o-mail-DiscussContent-threadDescription:enabled:count(1)");
+    await waitFor(".o-mail-DiscussContent-header a[title='Change Picture']:count(1)");
     const memberId = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
         ["partner_id", "=", memberPartnerId],
     ])[0];
     pyEnv["discuss.channel.member"].write([memberId], { channel_role: false });
-    await contains(".o-mail-DiscussContent-threadName:disabled");
-    await contains(".o-mail-DiscussContent-threadDescription:disabled");
-    await contains(".o-mail-DiscussContent-header a[title='Change Picture']", { count: 0 });
+    await waitFor(".o-mail-DiscussContent-threadName:disabled:count(1)");
+    await waitFor(".o-mail-DiscussContent-threadDescription:disabled:count(1)");
+    await waitForNone(".o-mail-DiscussContent-header a[title='Change Picture']");
 });
 
 test("Read-only channel admin has composer", async () => {
@@ -2740,19 +2754,17 @@ test("Read-only channel admin has composer", async () => {
         authenticateAs: { login: "test_member", password: "test_member" },
     });
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer");
+    await waitFor(".o-mail-Composer:count(1)");
     const memberId = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
         ["partner_id", "=", adminPartnerId],
     ])[0];
     pyEnv["discuss.channel.member"].write([memberId], { channel_role: false });
-    await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')");
-    await contains(".o-mail-Composer", { count: 0 });
+    await waitFor(".o-mail-DiscussContent-core span:text('This channel is read-only.'):count(1)");
+    await waitForNone(".o-mail-Composer");
     pyEnv["discuss.channel.member"].write([memberId], { channel_role: "admin" });
-    await contains(".o-mail-Composer");
-    await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')", {
-        count: 0,
-    });
+    await waitFor(".o-mail-Composer:count(1)");
+    await waitForNone(".o-mail-DiscussContent-core span:text('This channel is read-only.')");
 });
 
 test("Read-only channel member cannot respond or create subthread", async () => {
@@ -2786,13 +2798,15 @@ test("Read-only channel member cannot respond or create subthread", async () => 
     });
     await openDiscuss(channelId);
     await hover(".o-mail-Message");
-    await contains(".o-mail-Message-actions button", { count: 2 });
-    await contains(".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']");
+    await waitFor(".o-mail-Message-actions button:count(2)");
+    await waitFor(
+        ".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']:count(1)"
+    );
     await click(".o-mail-Message .o-mail-ActionList-button[title='Expand']");
-    await contains(".o-dropdown-item", { count: 3 });
-    await contains(".o-dropdown-item:text('Mark as Unread')");
-    await contains(".o-dropdown-item:text('Bookmark')");
-    await contains(".o-dropdown-item:text('Copy Text')");
+    await waitFor(".o-dropdown-item:count(3)");
+    await waitFor(".o-dropdown-item:text('Mark as Unread'):count(1)");
+    await waitFor(".o-dropdown-item:text('Bookmark'):count(1)");
+    await waitFor(".o-dropdown-item:text('Copy Text'):count(1)");
 });
 
 test("Read-only channel have reactions for admin", async () => {
@@ -2819,16 +2833,18 @@ test("Read-only channel have reactions for admin", async () => {
     await start();
     await openDiscuss(channelId);
     await hover(".o-mail-Message");
-    await contains(".o-mail-Message .o-mail-ActionList-button");
-    await contains(".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']");
+    await waitFor(".o-mail-Message .o-mail-ActionList-button:count(1)");
+    await waitFor(
+        ".o-mail-Message .o-mail-QuickReactionMenu-toggler[title='Add a Reaction']:count(1)"
+    );
     await click(".o-mail-Message .o-mail-ActionList-button[title='Expand']");
-    await contains(".o-dropdown-item", { count: 6 });
-    await contains(".o-dropdown-item:text('Reply')");
-    await contains(".o-dropdown-item:text('Bookmark')");
-    await contains(".o-dropdown-item:text('Copy Text')");
-    await contains(".o-dropdown-item:text('Create Thread')");
-    await contains(".o-dropdown-item:text('Mark as Unread')");
-    await contains(".o-dropdown-item:text('Pin')");
+    await waitFor(".o-dropdown-item:count(6)");
+    await waitFor(".o-dropdown-item:text('Reply'):count(1)");
+    await waitFor(".o-dropdown-item:text('Bookmark'):count(1)");
+    await waitFor(".o-dropdown-item:text('Copy Text'):count(1)");
+    await waitFor(".o-dropdown-item:text('Create Thread'):count(1)");
+    await waitFor(".o-dropdown-item:text('Mark as Unread'):count(1)");
+    await waitFor(".o-dropdown-item:text('Pin'):count(1)");
 });
 
 test("Cannot call read-only channels", async () => {
@@ -2844,21 +2860,27 @@ test("Cannot call read-only channels", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Notification Settings']"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Notification Settings']:count(1)"
     );
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Search Messages']"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Search Messages']:count(1)"
     );
-    await contains(
-        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Pinned Messages']"
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Pinned Messages']:count(1)"
     );
-    await contains(".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Threads']");
-    await contains(".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Attachments']");
-    await contains(".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Members']");
-    await contains(".o-mail-DiscussContent-header .o-mail-ActionList .o-mail-ActionList-button", {
-        count: 6,
-    });
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Threads']:count(1)"
+    );
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Attachments']:count(1)"
+    );
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ActionList-button[title='Members']:count(1)"
+    );
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ActionList .o-mail-ActionList-button:count(6)"
+    );
 });
 
 test("Prevent link interactions in message preview", async () => {
@@ -2884,8 +2906,8 @@ test("Prevent link interactions in message preview", async () => {
     pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
     await start();
     await openDiscuss();
-    await contains("h4:text('No conversation selected.')");
+    await waitFor("h4:text('No conversation selected.'):count(1)");
     await click(".o-mail-NotificationItem-text a");
     expect(".o-mail-NotificationItem-text").toHaveStyle({ pointerEvents: "none" });
-    await contains(".o-mail-Message:has(:text('https://www.odoo.com'))");
+    await waitFor(".o-mail-Message:has(:text('https://www.odoo.com')):count(1)");
 });

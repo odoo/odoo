@@ -8,7 +8,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 
-import { beforeEach, test } from "@odoo/hoot";
+import { beforeEach, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { MailComposeMessage } from "../../mock_server/mock_models/mail_composer_message";
 
@@ -35,17 +35,17 @@ test("Text scheduled date field", async () => {
     await contains(".o_field_text_scheduled_date button", { textContent: "" });
     await click(".o_field_text_scheduled_date button");
     // should open the dialog to select the schedule date
-    await contains(".modal");
+    await waitFor(".modal:count(1)");
     // clear button should not be shown as no selected date is set on the record
-    await contains(".modal-footer button:text('Clear Time')", { count: 0 });
+    await waitForNone(".modal-footer button:text('Clear Time')");
     await click(".modal input[value='afternoon']");
-    await contains(".modal input[value='afternoon']:checked");
+    await waitFor(".modal input[value='afternoon']:checked:count(1)");
     await click(".modal-footer .btn-primary");
     // button should show the scheduled date
-    await contains(".o_field_text_scheduled_date button:text('Sending Oct 21, 1:00 PM')");
+    await waitFor(".o_field_text_scheduled_date button:text('Sending Oct 21, 1:00 PM'):count(1)");
     await click(".o_field_text_scheduled_date button");
     // previously selected datetime should be selected in the dialog
-    await contains(".modal input[value='afternoon']:checked");
+    await waitFor(".modal input[value='afternoon']:checked:count(1)");
     // should be able to clear the selected datetime
     await click(".modal-footer button:contains('Clear Time')");
     // button should be empty again
@@ -70,19 +70,23 @@ test("Datetime scheduled date field", async () => {
         views: [["mail.scheduled.message,false,form", "form"]],
     });
     // button should show the scheduled date
-    await contains(".o_field_datetime_scheduled_date button:text('Sending Oct 21, 1:00 PM')");
+    await waitFor(
+        ".o_field_datetime_scheduled_date button:text('Sending Oct 21, 1:00 PM'):count(1)"
+    );
     await click(".o_field_datetime_scheduled_date button");
     // should open the dialog to select the schedule date
-    await contains(".modal");
+    await waitFor(".modal:count(1)");
     // current scheduled datetime should be selected in the dialog
-    await contains(".modal input[value='afternoon']:checked");
+    await waitFor(".modal input[value='afternoon']:checked:count(1)");
     // clear button should not be shown (can't clear scheduled date of scheduled message)
-    await contains(".modal-footer button:text('Clear Time')", { count: 0 });
+    await waitForNone(".modal-footer button:text('Clear Time')");
     await click(".modal input[value='morning']");
-    await contains(".modal input[value='morning']:checked");
+    await waitFor(".modal input[value='morning']:checked:count(1)");
 
     await click(".modal-footer .btn-primary");
 
     // button should show the new scheduled date
-    await contains(".o_field_datetime_scheduled_date button:text('Sending Oct 21, 8:00 AM')");
+    await waitFor(
+        ".o_field_datetime_scheduled_date button:text('Sending Oct 21, 8:00 AM'):count(1)"
+    );
 });

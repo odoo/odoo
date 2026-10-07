@@ -1,6 +1,5 @@
 import {
     click,
-    contains,
     defineMailModels,
     insertText,
     openFormView,
@@ -9,7 +8,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { DiscussChannel } from "@mail/../tests/mock_server/mock_models/discuss_channel";
 import { describe, expect, test } from "@odoo/hoot";
-import { keyDown, runAllTimers } from "@odoo/hoot-dom";
+import { keyDown, runAllTimers, waitForNone } from "@odoo/hoot-dom";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
@@ -48,7 +47,7 @@ test("editing a text field with the onchange_on_keydown option disappearing shou
     await click("textarea#description_0");
     await keyDown("a");
     await insertText("[name=name] input", "yop", { replace: true });
-    await contains("textarea#description_0", { count: 0 });
+    await waitForNone("textarea#description_0");
     await runAllTimers();
     await expect.waitForSteps([]);
 });

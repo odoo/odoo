@@ -1,6 +1,5 @@
 import {
     click,
-    contains,
     defineMailModels,
     insertText,
     listenStoreFetch,
@@ -12,7 +11,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
+import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
 
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
@@ -43,7 +42,7 @@ test("Receiving a new message out of discuss app should open a chat bubble", asy
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-ChatBubble[name='Dumbledore']");
+    await waitFor(".o-mail-ChatBubble[name='Dumbledore']:count(1)");
 });
 
 test("Show conversations with new message in chat hub (outside of discuss app)", async () => {
@@ -80,11 +79,11 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
         })
     );
     await expect.waitForSteps(["discuss.channel/new_message"]);
-    await contains(".o-mail-ChatBubble .badge:contains(1)", { count: 1 });
+    await waitFor(".o-mail-ChatBubble .badge:contains(1):count(1)");
     await click(".o-mail-ChatBubble[name='Dumbledore']");
-    await contains(".o-mail-ChatWindow-header:contains('Dumbledore')");
-    await contains(".o-mail-Message:contains('Chat Message 1')");
-    await contains(".badge", { count: 0 });
+    await waitFor(".o-mail-ChatWindow-header:contains('Dumbledore'):count(1)");
+    await waitFor(".o-mail-Message:contains('Chat Message 1'):count(1)");
+    await waitForNone(".badge");
     await click(".o-mail-ChatWindow [title*='Close Chat Window']");
     // simulate receiving new message (group chat, outside discuss app)
     await withUser(userId, () =>
@@ -95,13 +94,12 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
         })
     );
     await expect.waitForSteps(["discuss.channel/new_message"]);
-    await contains(".o-mail-ChatBubble[name='GroupChat']");
+    await waitFor(".o-mail-ChatBubble[name='GroupChat']:count(1)");
     await openDiscuss();
-    await contains(".o-mail-Discuss[data-active]");
+    await waitFor(".o-mail-Discuss[data-active]:count(1)");
     // simulate receiving new message (chat, inside discuss app)
-    await contains(
-        ".o-mail-MessagingMenuItem:has(.o-mail-NotificationItem-name:text(Dumbledore)) .badge",
-        { count: 0 }
+    await waitForNone(
+        ".o-mail-MessagingMenuItem:has(.o-mail-NotificationItem-name:text(Dumbledore)) .badge"
     );
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -114,12 +112,12 @@ test("Show conversations with new message in chat hub (outside of discuss app)",
     await click(
         ".o-mail-MessagingMenuItem:has(.o-mail-NotificationItem-name:text(Dumbledore)) .badge:text(1)"
     );
-    await contains(".o-mail-Message:contains('Tricky')");
+    await waitFor(".o-mail-Message:contains('Tricky'):count(1)");
     // check no new chat window/bubble while in discuss app
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-ChatBubble[name='GroupChat']");
-    await contains(".o-mail-ChatBubble[name='Dumbledore']", { count: 0 });
-    await contains(".o-mail-ChatWindow-header:contains('Dumbledore')", { count: 0 });
+    await waitFor(".o-mail-ChatBubble[name='GroupChat']:count(1)");
+    await waitForNone(".o-mail-ChatBubble[name='Dumbledore']");
+    await waitForNone(".o-mail-ChatWindow-header:contains('Dumbledore')");
 });
 
 test("Posting a message in discuss app should not open a chat window after leaving discuss app", async () => {
@@ -139,5 +137,5 @@ test("Posting a message in discuss app should not open a chat window after leavi
     // leaving discuss.
     await openFormView("res.partner", partnerId);
     // weak test, no guarantee that we waited long enough for the potential chat window to open
-    await contains(".o-mail-ChatWindow-displayName:text('Dumbledore')", { count: 0 });
+    await waitForNone(".o-mail-ChatWindow-displayName:text('Dumbledore')");
 });

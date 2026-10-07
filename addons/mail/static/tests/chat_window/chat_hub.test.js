@@ -1,6 +1,5 @@
 import {
     click,
-    contains,
     defineMailModels,
     listenStoreFetch,
     patchUiSize,
@@ -9,7 +8,7 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -41,11 +40,11 @@ test("chat window does not fetch messages if hidden", async () => {
     listenStoreFetch("/discuss/channel/messages");
     setupChatHub({ opened: [channelId3, channelId2, channeId1] });
     await start();
-    await contains(".o-mail-ChatWindow", { count: 2 });
-    await contains(".o-mail-ChatBubble", { count: 1 });
-    await contains(".o-mail-Message-content:text('Banana')");
-    await contains(".o-mail-Message-content:text('Apple')");
-    await contains(".o-mail-Message-content:contains('Orange')", { count: 0 });
+    await waitFor(".o-mail-ChatWindow:count(2)");
+    await waitFor(".o-mail-ChatBubble:count(1)");
+    await waitFor(".o-mail-Message-content:text('Banana'):count(1)");
+    await waitFor(".o-mail-Message-content:text('Apple'):count(1)");
+    await waitForNone(".o-mail-Message-content:contains('Orange')");
     await waitStoreFetch(["/discuss/channel/messages", "/discuss/channel/messages"]);
 });
 
@@ -76,15 +75,15 @@ test("click on hidden chat window should fetch its messages", async () => {
     setupChatHub({ opened: [channelId3, channelId2, channeId1] });
     listenStoreFetch("/discuss/channel/messages");
     await start();
-    await contains(".o-mail-ChatWindow", { count: 2 });
-    await contains(".o-mail-ChatBubble", { count: 1 });
-    await contains(".o-mail-Message-content:text('Banana')");
-    await contains(".o-mail-Message-content:text('Apple')");
-    await contains(".o-mail-Message-content:contains('Orange')", { count: 0 });
+    await waitFor(".o-mail-ChatWindow:count(2)");
+    await waitFor(".o-mail-ChatBubble:count(1)");
+    await waitFor(".o-mail-Message-content:text('Banana'):count(1)");
+    await waitFor(".o-mail-Message-content:text('Apple'):count(1)");
+    await waitForNone(".o-mail-Message-content:contains('Orange')");
     await waitStoreFetch(["/discuss/channel/messages", "/discuss/channel/messages"]);
     await click(".o-mail-ChatBubble");
-    await contains(".o-mail-Message-content:text('Orange')");
-    await contains(".o-mail-Message-content:text('Banana')");
-    await contains(".o-mail-Message-content:contains('Apple')", { count: 0 });
+    await waitFor(".o-mail-Message-content:text('Orange'):count(1)");
+    await waitFor(".o-mail-Message-content:text('Banana'):count(1)");
+    await waitForNone(".o-mail-Message-content:contains('Apple')");
     await waitStoreFetch(["/discuss/channel/messages"]);
 });

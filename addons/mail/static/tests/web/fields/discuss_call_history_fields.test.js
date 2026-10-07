@@ -6,7 +6,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 
 describe.current.tags("desktop", "discuss_call_history");
 defineMailModels();
@@ -40,8 +40,8 @@ test("recording indicators prefer video over audio", async () => {
             </form>
         `,
     });
-    await contains("[data-icon='movie']");
-    await contains("[data-icon='volume_up']", { count: 0 });
+    await waitFor("[data-icon='movie']:count(1)");
+    await waitForNone("[data-icon='volume_up']");
 });
 
 test("recording indicators show audio when there is no video", async () => {
@@ -58,6 +58,6 @@ test("recording indicators show audio when there is no video", async () => {
             </form>
         `,
     });
-    await contains("[data-icon='volume_up']");
-    await contains("[data-icon='movie']", { count: 0 });
+    await waitFor("[data-icon='volume_up']:count(1)");
+    await waitForNone("[data-icon='movie']");
 });

@@ -16,7 +16,7 @@ import {
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread_model";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getService, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
@@ -47,7 +47,7 @@ test('do not send typing notification on typing "/" command', async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/");
-    await contains(".o-mail-Composer button[title='Send']:enabled");
+    await waitFor(".o-mail-Composer button[title='Send']:enabled:count(1)");
     await expect.waitForSteps([]); // No rpc done
     testEnded = true;
 });
@@ -65,7 +65,7 @@ test('do not send typing notification on typing after selecting suggestion from 
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/");
     await click(":nth-child(1 of .o-mail-Composer-suggestion)");
-    await contains(".o-mail-Composer-suggestion strong", { count: 0 });
+    await waitForNone(".o-mail-Composer-suggestion strong");
     await insertText(".o-mail-Composer-input", " is user?");
     await expect.waitForSteps([]); // No rpc done"
     testEnded = true;
@@ -124,7 +124,7 @@ test("html composer: send a message in a channel", async () => {
         editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
     };
     await htmlInsertText(editor, "Hello");
-    await contains(".o-mail-Composer-html.odoo-editor-editable:text('Hello')");
+    await waitFor(".o-mail-Composer-html.odoo-editor-editable:text('Hello'):count(1)");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await click(".o-mail-Message[data-persistent]:contains(Hello)");
     await contains(".o-mail-Composer-html.odoo-editor-editable", { textContent: "" });
@@ -135,20 +135,20 @@ test("Show self-avatar in composer of Discuss App", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-avatar");
+    await waitFor(".o-mail-Composer-avatar:count(1)");
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
-    await contains(
+    await waitFor(
         `img.o-mail-Composer-avatar[data-src='${getOrigin()}/web/image/res.partner/${
             serverState.partnerId
-        }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}']`
+        }/avatar_128?unique=${deserializeDateTime(partner.write_date).ts}']:count(1)`
     );
     // but not in chat window
     await openFormView("res.partner", serverState.partnerId);
-    await contains(".o-mail-Chatter");
+    await waitFor(".o-mail-Chatter:count(1)");
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow .o-mail-Composer");
-    await contains(".o-mail-ChatWindow .o-mail-Composer-avatar", { count: 0 });
+    await waitFor(".o-mail-ChatWindow .o-mail-Composer:count(1)");
+    await waitForNone(".o-mail-ChatWindow .o-mail-Composer-avatar");
 });
 
 test.tags("html composer");
@@ -179,7 +179,7 @@ test("html composer: trim boundary empty formatting on send", async () => {
     await expect.waitForSteps(["/mail/message/post"]);
     // Expected editor shape before trimming: '<div><br></div><div">Hello World<br/></div>'
     expect(body).toBe("<div>Hello World</div>");
-    await contains(".o-mail-Message[data-persistent]:contains(Hello)");
+    await waitFor(".o-mail-Message[data-persistent]:contains(Hello):count(1)");
 });
 
 test("keep mentions when channel post is deferred", async () => {
@@ -211,5 +211,5 @@ test("keep mentions when channel post is deferred", async () => {
     await animationFrame();
     resolve();
     await expect.waitForSteps(["/mail/message/post"]);
-    await contains(".o-mail-Message-bubble.o-orange");
+    await waitFor(".o-mail-Message-bubble.o-orange:count(1)");
 });

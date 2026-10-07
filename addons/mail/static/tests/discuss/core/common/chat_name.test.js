@@ -1,12 +1,11 @@
 import {
-    contains,
     defineMailModels,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
@@ -32,5 +31,5 @@ test("Chat name keeps both persons when a member is gone", async () => {
     );
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-threadName[title='Mitchell Admin, Alice']");
+    await waitFor(".o-mail-DiscussContent-threadName[title='Mitchell Admin, Alice']:count(1)");
 });

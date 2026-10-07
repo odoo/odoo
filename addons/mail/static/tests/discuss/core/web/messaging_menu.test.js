@@ -11,7 +11,16 @@ import {
     startServer,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, disableAnimations, expect, mockPermission, mockTouch, test } from "@odoo/hoot";
+import {
+    describe,
+    disableAnimations,
+    expect,
+    mockPermission,
+    mockTouch,
+    test,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot";
 import {
     Command,
     contains as webContains,
@@ -38,7 +47,7 @@ test("can make DM chat in mobile", async () => {
     await click(".modal-title:text('New Chat')");
     await click(".o-discuss-ChannelInvitation-selectable:text('Gandalf')");
     await click("button:text('Create Chat'):enabled");
-    await contains(".o-mail-ChatWindow:text('Gandalf')");
+    await waitFor(".o-mail-ChatWindow:text('Gandalf'):count(1)");
 });
 
 test("channel preview show deleted messages", async () => {
@@ -61,8 +70,10 @@ test("channel preview show deleted messages", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message:has(:text('before last'))");
-    await contains(".o-mail-NotificationItem-text:text('Demo: This message has been removed')");
+    await waitFor(".o-mail-Message:has(:text('before last')):count(1)");
+    await waitFor(
+        ".o-mail-NotificationItem-text:text('Demo: This message has been removed'):count(1)"
+    );
 });
 
 test("deleted message should not show parent message reference and mentions", async () => {
@@ -84,7 +95,7 @@ test("deleted message should not show parent message reference and mentions", as
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-MessageInReply:has(:text('Parent Message'))");
+    await waitFor(".o-mail-MessageInReply:has(:text('Parent Message')):count(1)");
     await webContains(
         ".o-mail-Message:has(.o-mail-Message-bubble.o-orange):contains('reply message')"
     ).hover();
@@ -93,10 +104,10 @@ test("deleted message should not show parent message reference and mentions", as
     ).click();
     await click(".o-mail-Message-moreMenu .o-dropdown-item:contains(Delete)");
     await click(".o_dialog button:contains(Delete)");
-    await contains(
-        ".o-mail-Message:not(:has(.o-mail-Message-bubble.o-orange)):has(:text('This message has been removed'))"
+    await waitFor(
+        ".o-mail-Message:not(:has(.o-mail-Message-bubble.o-orange)):has(:text('This message has been removed')):count(1)"
     );
-    await contains(".o-mail-MessageInReply", { count: 0 });
+    await waitForNone(".o-mail-MessageInReply");
 });
 
 test("channel preview ignores transient message", async () => {
@@ -115,9 +126,9 @@ test("channel preview ignores transient message", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
     await click(".o-mail-Composer button[title='Send']:enabled");
-    await contains(".o_mail_notification:text('You are alone in this channel.')");
+    await waitFor(".o_mail_notification:text('You are alone in this channel.'):count(1)");
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-NotificationItem-text:text('Demo: test')");
+    await waitFor(".o-mail-NotificationItem-text:text('Demo: test'):count(1)");
 });
 
 test("channel preview ignores messages from the past", async () => {
@@ -154,15 +165,15 @@ test("channel preview ignores messages from the past", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", { count: 30 });
-    await contains(".o-mail-Message-content:has(:text('last message'))");
+    await waitFor(".o-mail-Message:count(30)");
+    await waitFor(".o-mail-Message-content:has(:text('last message')):count(1)");
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await click(".o-mail-MessageInReply-content:has(:text('first message'))");
-    await contains(".o-mail-Message", { count: 31 });
-    await contains(".o-mail-Message-content:has(:text('first message'))");
-    await contains(".o-mail-Message-content:has(:text('last message'))", { count: 0 });
+    await waitFor(".o-mail-Message:count(31)");
+    await waitFor(".o-mail-Message-content:has(:text('first message')):count(1)");
+    await waitForNone(".o-mail-Message-content:has(:text('last message'))");
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(".o-mail-NotificationItem-text:text('You: last message')");
+    await waitFor(".o-mail-NotificationItem-text:text('You: last message'):count(1)");
     withUser(serverState.userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "it's a good idea", message_type: "comment" },
@@ -170,7 +181,7 @@ test("channel preview ignores messages from the past", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-NotificationItem-text:text('You: it's a good idea')");
+    await waitFor(`.o-mail-NotificationItem-text:text("You: it's a good idea"):count(1)`);
 });
 
 test("counter is taking into account non-fetched channels", async () => {
@@ -196,7 +207,7 @@ test("counter is taking into account non-fetched channels", async () => {
     // channel into the store.
     pyEnv["discuss.channel.member"]._compute_message_unread_counter();
     await start();
-    await contains(".o-mail-MessagingMenuInDropdown-counter:text('1')");
+    await waitFor(".o-mail-MessagingMenuInDropdown-counter:text('1'):count(1)");
     expect(
         Boolean(
             getService("mail.store")["mail.thread"].get({ model: "discuss.channel", id: channelId })
@@ -235,8 +246,8 @@ test("counter is updated on receiving message on non-fetched channels", async ()
     // channel into the store.
     pyEnv["discuss.channel.member"]._compute_message_unread_counter();
     await start();
-    await contains(".o_menu_systray .dropdown-toggle i[aria-label='Messages']");
-    await contains(".o-mail-MessagingMenuInDropdown-counter", { count: 0 });
+    await waitFor(".o_menu_systray .dropdown-toggle i[aria-label='Messages']:count(1)");
+    await waitForNone(".o-mail-MessagingMenuInDropdown-counter");
     expect(
         Boolean(
             getService("mail.store")["mail.thread"].get({ model: "discuss.channel", id: channelId })
@@ -249,7 +260,7 @@ test("counter is updated on receiving message on non-fetched channels", async ()
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-MessagingMenuInDropdown-counter:text('1')");
+    await waitFor(".o-mail-MessagingMenuInDropdown-counter:text('1'):count(1)");
 });
 
 test("can use notification item swipe actions", async () => {
@@ -273,11 +284,11 @@ test("can use notification item swipe actions", async () => {
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-NotificationItem .o-mail-NotificationItem-badge:contains(1)");
+    await waitFor(".o-mail-NotificationItem .o-mail-NotificationItem-badge:contains(1):count(1)");
     await swipeRight(".o_actionswiper"); // marks as read
-    await contains(".o-mail-NotificationItem-badge", { count: 0 });
+    await waitForNone(".o-mail-NotificationItem-badge");
     await swipeLeft(".o_actionswiper"); // unpins
-    await contains(".o-mail-NotificationItem", { count: 0 });
+    await waitForNone(".o-mail-NotificationItem");
 });
 
 test("counter does not double count channel needaction messages", async () => {
@@ -307,5 +318,5 @@ test("counter does not double count channel needaction messages", async () => {
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL); // fetch channels
     await contains(".o-mail-NotificationItem", { text: "General" }); // ensure channels fetched
-    await contains(".o-mail-MessagingMenuInDropdown-counter:text('1')");
+    await waitFor(".o-mail-MessagingMenuInDropdown-counter:text('1'):count(1)");
 });

@@ -1,7 +1,6 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
 import {
     click,
-    contains,
     defineMailModels,
     mockGetMedia,
     openDiscuss,
@@ -28,7 +27,7 @@ test("message sound is 'off'", async () => {
         tag: "mail.discuss_notification_settings_action",
         type: "ir.actions.client",
     });
-    await contains("label:has(h5:contains('Message sound')) input:not(:checked)");
+    await waitFor("label:has(h5:contains('Message sound')) input:not(:checked):count(1)");
     const messageSoundKey = makeRecordFieldLocalId(Settings.localId(), "messageSound");
     expect(localStorage.getItem(messageSoundKey)).toBe(toRawValue(false));
     expect(localStorage.getItem("mail.user_setting.message_sound")).toBe(null);
@@ -43,7 +42,7 @@ test("message sound is 'off' (serverVersion with 'saas~' prefix)", async () => {
         tag: "mail.discuss_notification_settings_action",
         type: "ir.actions.client",
     });
-    await contains("label:has(h5:contains('Message sound')) input:not(:checked)");
+    await waitFor("label:has(h5:contains('Message sound')) input:not(:checked):count(1)");
     const messageSoundKey = makeRecordFieldLocalId(Settings.localId(), "messageSound");
     expect(localStorage.getItem(messageSoundKey)).toBe(toRawValue(false));
     expect(localStorage.getItem("mail.user_setting.message_sound")).toBe(null);
@@ -59,17 +58,17 @@ test("use blur is 'on'", async () => {
     await start();
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("[title='Open Actions Menu']");
+    await waitFor("[title='Open Actions Menu']:count(1)");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await contains(".o-discuss-CallSettings");
+    await waitFor(".o-discuss-CallSettings:count(1)");
     await click("button[title='Video']");
-    await contains("input[title='Blur video background']:checked");
-    await contains(
-        "div[title='Background blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('10%')"
+    await waitFor("input[title='Blur video background']:checked:count(1)");
+    await waitFor(
+        "div[title='Background blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('10%'):count(1)"
     );
-    await contains(
-        "div[title='Edge blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('30%')"
+    await waitFor(
+        "div[title='Edge blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('30%'):count(1)"
     );
     const useBlurKey = makeRecordFieldLocalId(Settings.localId(), "useBlur");
     expect(localStorage.getItem(useBlurKey)).toBe(toRawValue(true));
@@ -106,11 +105,11 @@ test("voice activation threshold", async () => {
     await start();
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("[title='Open Actions Menu']");
+    await waitFor("[title='Open Actions Menu']:count(1)");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await contains(".o-discuss-CallSettings");
-    await contains(".o-Discuss-CallSettings-thresholdInput:value(0.3)");
+    await waitFor(".o-discuss-CallSettings:count(1)");
+    await waitFor(".o-Discuss-CallSettings-thresholdInput:value(0.3):count(1)");
     const voiceActivationThresholdKey = makeRecordFieldLocalId(
         Settings.localId(),
         "voiceActivationThreshold"
@@ -125,9 +124,9 @@ test("member default open is 'off'", async () => {
     localStorage.setItem("mail.user_setting.no_members_default_open", "true");
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread:contains('Welcome to #test')");
-    await contains(".o-mail-ActionList-button[title='Members']");
-    await contains(".o-mail-ActionList-button[title='Members']:not(.active)");
+    await waitFor(".o-mail-Thread:contains('Welcome to #test'):count(1)");
+    await waitFor(".o-mail-ActionList-button[title='Members']:count(1)");
+    await waitFor(".o-mail-ActionList-button[title='Members']:not(.active):count(1)");
     const isMemberPanelOpenByDefaultKey = makeRecordFieldLocalId(
         DiscussApp.localId(),
         "isMemberPanelOpenByDefault"
@@ -135,7 +134,7 @@ test("member default open is 'off'", async () => {
     expect(localStorage.getItem(isMemberPanelOpenByDefaultKey)).toBe(toRawValue(false));
     expect(localStorage.getItem("mail.user_setting.no_members_default_open")).toBe(null);
     await click(".o-mail-ActionList-button[title='Members']");
-    await contains(".o-mail-ActionList-button[title='Members'].active"); // just to validate .active is correct selector
+    await waitFor(".o-mail-ActionList-button[title='Members'].active:count(1)"); // just to validate .active is correct selector
     expect(localStorage.getItem(isMemberPanelOpenByDefaultKey)).toBe(null);
 });
 
@@ -148,7 +147,7 @@ test("last active id of discuss app", async () => {
     );
     await start();
     await openDiscuss();
-    await contains(".o-mail-Thread:contains('Welcome to #test')");
+    await waitFor(".o-mail-Thread:contains('Welcome to #test'):count(1)");
     const lastActiveId = makeRecordFieldLocalId(DiscussApp.localId(), "lastActiveId");
     expect(localStorage.getItem(lastActiveId)).toBe(toRawValue(`discuss.channel_${channelId}`));
     expect(localStorage.getItem("mail.user_setting.discuss_last_active_id")).toBe(null);
@@ -164,8 +163,10 @@ test("call auto focus is 'off", async () => {
     await click("[title='Start Call']");
     await click("button[aria-label='Video Settings']");
     await click(".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings'))");
-    await contains(".o-discuss-CallSettings .o-mail-TabHeader.o-active:has(:text('Video'))");
-    await contains("input[title='Auto-focus speaker']:not(:checked)");
+    await waitFor(
+        ".o-discuss-CallSettings .o-mail-TabHeader.o-active:has(:text('Video')):count(1)"
+    );
+    await waitFor("input[title='Auto-focus speaker']:not(:checked):count(1)");
     // correct local storage values
     const useCallAutoFocusKey = makeRecordFieldLocalId(Settings.localId(), "useCallAutoFocus");
     expect(localStorage.getItem(useCallAutoFocusKey)).toBe(toRawValue(false));
@@ -235,19 +236,19 @@ test("device input/output id", async () => {
     rtc.cameraPermission = "granted";
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("[title='Open Actions Menu']");
+    await waitFor("[title='Open Actions Menu']:count(1)");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await contains(".o-discuss-CallSettings");
-    await contains(
-        "div[aria-label='Microphone'] .o-mail-DeviceSelect-button[data-kind='audioinput']:text('audio_input_2_label')"
+    await waitFor(".o-discuss-CallSettings:count(1)");
+    await waitFor(
+        "div[aria-label='Microphone'] .o-mail-DeviceSelect-button[data-kind='audioinput']:text('audio_input_2_label'):count(1)"
     );
-    await contains(
-        "div[aria-label='Speakers'] .o-mail-DeviceSelect-button[data-kind='audiooutput']:text('audio_output_2_label')"
+    await waitFor(
+        "div[aria-label='Speakers'] .o-mail-DeviceSelect-button[data-kind='audiooutput']:text('audio_output_2_label'):count(1)"
     );
     await click("button[title='Video']");
-    await contains(
-        "div[aria-label='Camera'] .o-mail-DeviceSelect-button[data-kind='videoinput']:text('video_input_2_label')"
+    await waitFor(
+        "div[aria-label='Camera'] .o-mail-DeviceSelect-button[data-kind='videoinput']:text('video_input_2_label'):count(1)"
     );
     // correct local storage values
     const audioInputDeviceIdKey = makeRecordFieldLocalId(Settings.localId(), "audioInputDeviceId");

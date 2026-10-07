@@ -1,5 +1,5 @@
-import { click, contains, defineMailModels, start } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { click, defineMailModels, start } from "@mail/../tests/mail_test_helpers";
+import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
@@ -16,14 +16,14 @@ test("basic rendering", async () => {
             displayName: "User display name",
         },
     });
-    await contains(".o-mail-Avatar");
-    await contains(".o-mail-Avatar img");
-    await contains(".o-mail-Avatar img[data-src='/web/image/res.users/7/avatar_128']");
-    await contains(".o-mail-Avatar span");
-    await contains(".o-mail-Avatar span:text('User display name')");
-    await contains(".o_avatar_card", { count: 0 });
+    await waitFor(".o-mail-Avatar:count(1)");
+    await waitFor(".o-mail-Avatar img:count(1)");
+    await waitFor(".o-mail-Avatar img[data-src='/web/image/res.users/7/avatar_128']:count(1)");
+    await waitFor(".o-mail-Avatar span:count(1)");
+    await waitFor(".o-mail-Avatar span:text('User display name'):count(1)");
+    await waitForNone(".o_avatar_card");
     await click(".o-mail-Avatar img");
-    await contains(".o_avatar_card");
+    await waitFor(".o_avatar_card:count(1)");
 });
 
 test("avatar with uniqueId props", async () => {
@@ -36,7 +36,7 @@ test("avatar with uniqueId props", async () => {
             uniqueId: 123789,
         },
     });
-    await contains(
-        ".o-mail-Avatar img[data-src='/web/image/res.users/7/avatar_128?unique=123789']"
+    await waitFor(
+        ".o-mail-Avatar img[data-src='/web/image/res.users/7/avatar_128?unique=123789']:count(1)"
     );
 });

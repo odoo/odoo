@@ -1,13 +1,12 @@
 import {
     click,
-    contains,
     defineMailModels,
     insertText,
     openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { mockService, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -24,11 +23,13 @@ test("activity mark done popover simplest layout", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click(".btn:text('Done')");
-    await contains(".o-mail-ActivityMarkAsDone");
-    await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
-    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
-    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    await contains(".o-mail-ActivityMarkAsDone button:text('Discard')");
+    await waitFor(".o-mail-ActivityMarkAsDone:count(1)");
+    await waitFor(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']:count(1)");
+    await waitFor(
+        ".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']:count(1)"
+    );
+    await waitFor(".o-mail-ActivityMarkAsDone button[aria-label='Done']:count(1)");
+    await waitFor(".o-mail-ActivityMarkAsDone button:text('Discard'):count(1)");
 });
 
 test("activity mark done popover mark done without feedback", async () => {

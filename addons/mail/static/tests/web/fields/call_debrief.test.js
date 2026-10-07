@@ -2,14 +2,8 @@
 
 import { expect, describe, test } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { click, freezeTime, queryOne } from "@odoo/hoot-dom";
-import {
-    contains,
-    startServer,
-    start,
-    openFormView,
-    mailModels,
-} from "@mail/../tests/mail_test_helpers";
+import { click, freezeTime, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { startServer, start, openFormView, mailModels } from "@mail/../tests/mail_test_helpers";
 import { defineModels } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { CallDebrief } from "@mail/views/fields/call_debrief/call_debrief";
@@ -78,10 +72,10 @@ test("CallDebrief: basic render without artifacts", async () => {
     });
     await start();
     await _openDebriefView(pyEnv, discussCallHistoryId);
-    await contains(".o-CallDebrief");
+    await waitFor(".o-CallDebrief:count(1)");
     // No media artifacts, hence the timeline should not be rendered
-    await contains(".o-CallDebriefTimeline", { count: 0 });
-    await contains(".text-danger", { count: 0 });
+    await waitForNone(".o-CallDebriefTimeline");
+    await waitForNone(".text-danger");
 });
 
 test("CallDebrief: active call uses the current time", async () => {
@@ -98,8 +92,8 @@ test("CallDebrief: active call uses the current time", async () => {
     freezeTime();
     await _openDebriefView(pyEnv, discussCallHistoryId);
 
-    await contains(".o-CallDebriefTimeline-media-segment");
-    await contains(".text-danger", { count: 0 });
+    await waitFor(".o-CallDebriefTimeline-media-segment:count(1)");
+    await waitForNone(".text-danger");
     const segment = queryOne(".o-CallDebriefTimeline-media-segment");
     expect(parseFloat(segment.style.width)).toBeCloseTo(50, { margin: 0.1 });
 });
@@ -124,11 +118,11 @@ test("CallDebrief: pending uploads have no playback controls", async () => {
     await _openDebriefView(pyEnv, discussCallHistoryId);
     await expect.waitForSteps(["recordings loaded"]);
     await animationFrame();
-    await contains(".o-CallDebrief");
-    await contains(".o-CallDebrief video, .o-CallDebrief audio", { count: 0 });
-    await contains(".o-CallDebriefTimeline", { count: 0 });
-    await contains(".o-CallDebriefMediaControls", { count: 0 });
-    await contains(".text-danger", { count: 0 });
+    await waitFor(".o-CallDebrief:count(1)");
+    await waitForNone(".o-CallDebrief video, .o-CallDebrief audio");
+    await waitForNone(".o-CallDebriefTimeline");
+    await waitForNone(".o-CallDebriefMediaControls");
+    await waitForNone(".text-danger");
 });
 
 test("CallDebrief: renders video with playback", async () => {
@@ -147,8 +141,10 @@ test("CallDebrief: renders video with playback", async () => {
     await start();
     await _openDebriefView(pyEnv, discussCallHistoryId);
 
-    await contains(".o-CallDebrief-media-container:not(.o-CallDebrief-media-container--no-video)");
-    await contains(".o-CallDebrief-video video");
+    await waitFor(
+        ".o-CallDebrief-media-container:not(.o-CallDebrief-media-container--no-video):count(1)"
+    );
+    await waitFor(".o-CallDebrief-video video:count(1)");
 
     // Mute first to avoid noise
     await click("button.o-CallDebrief-muteBtn");
@@ -158,8 +154,8 @@ test("CallDebrief: renders video with playback", async () => {
     const playingPromise = new Promise((r) => video.addEventListener("playing", r, { once: true }));
     await click("[data-icon='play_arrow']");
     await animationFrame();
-    await contains("[data-icon='pause']");
-    await contains(".o_feedback_indicator [data-icon='play_arrow'].oi-stack");
+    await waitFor("[data-icon='pause']:count(1)");
+    await waitFor(".o_feedback_indicator [data-icon='play_arrow'].oi-stack:count(1)");
 
     // Wait for actual playback to start before pausing
     await playingPromise;
@@ -249,28 +245,36 @@ test("CallDebrief: generates silence gaps in timeline", async () => {
     await _openDebriefView(pyEnv, discussCallHistoryId);
 
     // Timeline track is rendered
-    await contains(".o-CallDebriefTimeline-track");
+    await waitFor(".o-CallDebriefTimeline-track:count(1)");
 
     // There should be 4 segments total:
     // 1. Media segment (0s to 60s) -> 25% width
     // 2. Silence segment (60s to 120s) -> 25% width
     // 3. Media segment (120s to 180s) -> 25% width
     // 4. Silence segment (180s to 240s) -> 25% width
-    await contains(".o-CallDebriefTimeline-segment", { count: 4 });
-    await contains(".o-CallDebriefTimeline-media-segment", { count: 2 });
-    await contains(".o-CallDebriefTimeline-silence-segment", { count: 2 });
+    await waitFor(".o-CallDebriefTimeline-segment:count(4)");
+    await waitFor(".o-CallDebriefTimeline-media-segment:count(2)");
+    await waitFor(".o-CallDebriefTimeline-silence-segment:count(2)");
 
     // Verify coordinates
     const segments = document.querySelectorAll(".o-CallDebriefTimeline-segment");
     expect(segments[0].style.width).toBe("25%");
-    await contains(".o-CallDebriefTimeline-segment:eq(0).o-CallDebriefTimeline-media-segment");
+    await waitFor(
+        ".o-CallDebriefTimeline-segment:eq(0).o-CallDebriefTimeline-media-segment:count(1)"
+    );
 
     expect(segments[1].style.width).toBe("25%");
-    await contains(".o-CallDebriefTimeline-segment:eq(1).o-CallDebriefTimeline-silence-segment");
+    await waitFor(
+        ".o-CallDebriefTimeline-segment:eq(1).o-CallDebriefTimeline-silence-segment:count(1)"
+    );
 
     expect(segments[2].style.width).toBe("25%");
-    await contains(".o-CallDebriefTimeline-segment:eq(2).o-CallDebriefTimeline-media-segment");
+    await waitFor(
+        ".o-CallDebriefTimeline-segment:eq(2).o-CallDebriefTimeline-media-segment:count(1)"
+    );
 
     expect(segments[3].style.width).toBe("25%");
-    await contains(".o-CallDebriefTimeline-segment:eq(3).o-CallDebriefTimeline-silence-segment");
+    await waitFor(
+        ".o-CallDebriefTimeline-segment:eq(3).o-CallDebriefTimeline-silence-segment:count(1)"
+    );
 });

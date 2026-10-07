@@ -8,7 +8,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { ImStatusMixin } from "@mail/core/common/im_status_mixin";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
@@ -28,7 +28,9 @@ test("initially online", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']");
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']:count(1)"
+    );
 });
 
 test("initially offline", async () => {
@@ -44,7 +46,9 @@ test("initially offline", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is offline']");
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is offline']:count(1)"
+    );
 });
 
 test("initially away", async () => {
@@ -60,7 +64,7 @@ test("initially away", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is idle']");
+    await waitFor(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is idle']:count(1)");
 });
 
 test("change icon on change partner im_status", async () => {
@@ -69,13 +73,19 @@ test("change icon on change partner im_status", async () => {
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']");
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']:count(1)"
+    );
     sendPresenceUpdate("res.users", serverState.userId, "offline");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is offline']");
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is offline']:count(1)"
+    );
     sendPresenceUpdate("res.users", serverState.userId, "away");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is idle']");
+    await waitFor(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is idle']:count(1)");
     sendPresenceUpdate("res.users", serverState.userId, "online");
-    await contains(".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']");
+    await waitFor(
+        ".o-mail-DiscussContent-header .o-mail-ImStatus[title='User is online']:count(1)"
+    );
 });
 
 test("show im status in messaging menu preview of chat", async () => {

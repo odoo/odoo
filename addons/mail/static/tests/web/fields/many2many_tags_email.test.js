@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
     click,
-    contains,
     defineMailModels,
     insertText,
     openFormView,
@@ -9,7 +8,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { clickFieldDropdown, clickFieldDropdownItem, onRpc } from "@web/../tests/web_test_helpers";
-import { queryAll } from "@odoo/hoot-dom";
+import { queryAll, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { ResPartner } from "../../mock_server/mock_models/res_partner";
 
 defineMailModels();
@@ -51,18 +50,20 @@ test("fieldmany2many tags email (edition)", async () => {
         `,
     });
     await expect.waitForSteps([]);
-    await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
+    await waitFor(
+        '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0:count(1)'
+    );
     await clickFieldDropdown("partner_ids");
     await clickFieldDropdownItem("partner_ids", "gold, Invoice");
     const tags = queryAll('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
     expect(tags[1].innerText).toBe("gold, Invoice");
-    await contains(".o-mail-RecipientsInputTagsListPopover");
+    await waitFor(".o-mail-RecipientsInputTagsListPopover:count(1)");
     // set the email
     await insertText(".o-mail-RecipientsInputTagsListPopover input", "coucou@petite.perruche");
     await click(".o-mail-RecipientsInputTagsListPopover .btn-primary");
-    await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0', {
-        count: 2,
-    });
+    await waitFor(
+        '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0:count(2)'
+    );
     expect(tags[0].innerText).toBe("gold");
     expect(tags[0]).toHaveAttribute("data-tooltip", "coucou@petite.perruche");
     // should have read Partner_2 2 times: when opening the dropdown and when saving the new email.
@@ -88,16 +89,16 @@ test("fieldmany2many tags email popup close without filling", async () => {
     // add an other existing tag
     await clickFieldDropdown("partner_ids");
     await clickFieldDropdownItem("partner_ids", "Deficient Denise");
-    await contains(".o-mail-RecipientsInputTagsListPopover");
+    await waitFor(".o-mail-RecipientsInputTagsListPopover:count(1)");
     // set the email
     await insertText(".o-mail-RecipientsInputTagsListPopover input", "coucou@petite.perruche");
     // Close the modal dialog without saving (should remove partner from invalid records)
     await click(".o-mail-RecipientsInputTagsListPopover .btn-secondary");
     // Selecting a partner with a valid email shouldn't open the modal dialog for the previous partner
-    await contains(".o_field_widget[name='partner_ids'] .badge", { count: 0 });
+    await waitForNone(".o_field_widget[name='partner_ids'] .badge");
     await clickFieldDropdown("partner_ids");
     await clickFieldDropdownItem("partner_ids", "Valid Valeria");
-    await contains(".o-mail-RecipientsInputTagsListPopover", { count: 0 });
+    await waitForNone(".o-mail-RecipientsInputTagsListPopover");
 });
 
 test("many2many_tags_email expands to show all tags when focused", async () => {
@@ -117,22 +118,22 @@ test("many2many_tags_email expands to show all tags when focused", async () => {
             </form>
         `,
     });
-    await contains(".o_field_widget[name='partner_ids'] .badge", { count: 2 });
+    await waitFor(".o_field_widget[name='partner_ids'] .badge:count(2)");
     await click(".o_field_widget[name='partner_ids'] .o_field_many2many_selection input"); // Editing tags should show all
-    await contains(".o_field_widget[name='partner_ids'] .badge", { count: 3 });
+    await waitFor(".o_field_widget[name='partner_ids'] .badge:count(3)");
 
     // Adding tags should also keep showing all tags even if the mail popover appears
     await clickFieldDropdownItem("partner_ids", "4");
-    await contains(".o-mail-RecipientsInputTagsListPopover");
-    await contains(".o_field_widget[name='partner_ids'] .badge", { count: 4 }); // 1 new record, even if not valid email yet
+    await waitFor(".o-mail-RecipientsInputTagsListPopover:count(1)");
+    await waitFor(".o_field_widget[name='partner_ids'] .badge:count(4)"); // 1 new record, even if not valid email yet
 
     await insertText(".o-mail-RecipientsInputTagsListPopover input", "coucou@petite.perruche");
     await click(".o-mail-RecipientsInputTagsListPopover .btn-primary");
-    await contains(".o_field_widget[name='partner_ids'] .badge", { count: 4 }); // 1 new record, email validated
+    await waitFor(".o_field_widget[name='partner_ids'] .badge:count(4)"); // 1 new record, email validated
 
     // Deleting tags should also keep showing all tags
     await click(".o_tags_input .o_tag:first-child .o_delete");
-    await contains(".o_field_widget[name='partner_ids'] .badge", { count: 3 });
+    await waitFor(".o_field_widget[name='partner_ids'] .badge:count(3)");
 });
 
 test("many2many_tags_email widget can load more than 40 records", async () => {
@@ -150,9 +151,9 @@ test("many2many_tags_email widget can load more than 40 records", async () => {
             <field name='partner_ids' widget='many2many_tags_email' options="{'tag_limit': 0}"/>
             </form>`,
     });
-    await contains('.o_field_widget[name="partner_ids"] .badge', { count: 100 });
-    await contains(".o_form_editable");
+    await waitFor('.o_field_widget[name="partner_ids"] .badge:count(100)');
+    await waitFor(".o_form_editable:count(1)");
     await clickFieldDropdown("partner_ids");
     await clickFieldDropdownItem("partner_ids", "Public user");
-    await contains('.o_field_widget[name="partner_ids"] .badge', { count: 101 });
+    await waitFor('.o_field_widget[name="partner_ids"] .badge:count(101)');
 });

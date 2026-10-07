@@ -1,12 +1,11 @@
 import {
     click,
-    contains,
     defineMailModels,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -35,9 +34,9 @@ test("Opening Pinned Messages Panel twice from notification only needs one click
     await start();
     await openDiscuss(channelId);
     await click("a[data-oe-type='pin-menu']");
-    await contains(".o-discuss-PinnedMessagesPanel");
+    await waitFor(".o-discuss-PinnedMessagesPanel:count(1)");
     await click("a[data-oe-type='pin-menu']");
-    await contains(".o-discuss-PinnedMessagesPanel");
+    await waitFor(".o-discuss-PinnedMessagesPanel:count(1)");
     await click("button[name='pinned-messages'].active");
-    await contains(".o-discuss-PinnedMessagesPanel", { count: 0 });
+    await waitForNone(".o-discuss-PinnedMessagesPanel");
 });

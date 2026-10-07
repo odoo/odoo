@@ -32,18 +32,18 @@ test("Toggle display of original/translated version of chatter message", async (
     await start();
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message [title='Expand']");
-    await contains(".o-dropdown-item:contains('Translate')");
-    await contains(".o-dropdown-item:contains('Initial Language')", { count: 0 });
+    await waitFor(".o-dropdown-item:contains('Translate'):count(1)");
+    await waitForNone(".o-dropdown-item:contains('Initial Language')");
     // Click acts as a toogle affecting its appearence and the actual message content displayed.
     await click(".o-dropdown-item:contains('Translate')");
-    await contains(
-        ".o-mail-Message-body:text('To bad weather, good face. (Translated from: Spanish)')"
+    await waitFor(
+        ".o-mail-Message-body:text('To bad weather, good face. (Translated from: Spanish)'):count(1)"
     );
     await click(".o-mail-Message [title='Expand']");
-    await contains(".o-dropdown-item:contains('Translate')", { count: 0 });
-    await contains(".o-dropdown-item:contains('Initial Language')");
+    await waitForNone(".o-dropdown-item:contains('Translate')");
+    await waitFor(".o-dropdown-item:contains('Initial Language'):count(1)");
     await click(".o-dropdown-item:contains('Initial Language')");
-    await contains(".o-mail-Message:has(:text('Al mal tiempo, buena cara.'))");
+    await waitFor(".o-mail-Message:has(:text('Al mal tiempo, buena cara.')):count(1)");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Translate')");
     // The translation button should not trigger more than one external request for a single message.
@@ -114,7 +114,7 @@ test("Do not show translate action if message body is empty", async () => {
     ]);
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message", { count: 3 });
+    await waitFor(".o-mail-Message:count(3)");
     await click(".o-mail-Message:eq(0) button[title='Expand']");
     await waitFor(".o-dropdown-item:text('Pin')");
     await waitFor(".o-dropdown-item:contains('Translate'):count(1)");
@@ -146,11 +146,11 @@ test("Toggle message translation on mobile", async () => {
     mockUserAgent("android");
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message");
+    await waitFor(".o-mail-Message:count(1)");
     await pointerDown(".o-mail-Message");
     await advanceTime(LONG_PRESS_DELAY);
     await click("button:contains('Translate')");
-    await contains(
-        ".o-mail-Message-body:text('To bad weather, good face. (Translated from: Spanish)')"
+    await waitFor(
+        ".o-mail-Message-body:text('To bad weather, good face. (Translated from: Spanish)'):count(1)"
     );
 });
