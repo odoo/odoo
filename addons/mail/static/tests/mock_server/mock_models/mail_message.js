@@ -12,6 +12,7 @@ export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
     author_id = fields.Many2one({ default: () => serverState.partnerId });
+    channel_id = fields.Many2one({ compute: "_compute_channel_id", relation: "discuss.channel" });
     date = fields.Datetime({ default: () => serializeDateTime(DateTime.now()) });
     pinned_at = fields.Datetime({ default: false });
 
@@ -25,6 +26,13 @@ export class MailMessage extends models.ServerModel {
             }
         }
         return super.create(vals);
+    }
+
+    _compute_channel_id() {
+        for (const message of this) {
+            message.channel_id =
+                message.model === "discuss.channel" && message.res_id ? message.res_id : false;
+        }
     }
 
     /** @param {DomainListRepr} [domain] */
@@ -272,7 +280,7 @@ export class MailMessage extends models.ServerModel {
             // discuss override: parent message of channel messages
             res.one("parent_id", "_store_message_fields", {
                 fields_params: { format_reply: false },
-                predicate: (m) => m.model === "discuss.channel",
+                predicate: (m) => m.channel_id,
                 sudo: true,
             });
         }
@@ -395,8 +403,8 @@ export class MailMessage extends models.ServerModel {
         const ResUsers = this.env["res.users"];
 
         const [message] = this.search_read([["id", "=", id]]);
-        if (message.model === "discuss.channel") {
-            return DiscussChannel.search_read([["id", "=", message.res_id]])[0];
+        if (message.channel_id) {
+            return DiscussChannel.search_read([["id", "=", message.channel_id]])[0];
         }
         if (ResUsers._is_public(this.env.uid)) {
             MailGuest._get_guest_from_context();
