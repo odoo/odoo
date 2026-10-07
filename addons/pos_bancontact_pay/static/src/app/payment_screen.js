@@ -43,10 +43,10 @@ patch(PaymentScreen.prototype, {
     },
 
     async refreshBancontactRefundStatus(payments) {
-        const pendingRefunds = payments
-            .flatMap((payment) => payment.bancontact_refund_ids)
-            .filter((refund) => refund.isBancontactRefundPending);
-        const refundsByMethod = Map.groupBy(pendingRefunds, (refund) => refund.payment_method_id);
+        const refundsByMethod = Map.groupBy(
+            payments.flatMap((payment) => payment.bancontact_refund_ids),
+            (refund) => refund.payment_method_id
+        );
         for (const [method, refunds] of refundsByMethod) {
             try {
                 await method.payment_interface.checkRefundStatus(refunds);
@@ -57,6 +57,18 @@ patch(PaymentScreen.prototype, {
                 );
             }
         }
+    },
+
+    deletePaymentLine(uuid) {
+        const line = this.paymentLines.find((line) => line.uuid === uuid);
+        if (line?.isBancontactRefundPending) {
+            this.notification.add(
+                _t("The refund is pending: check its status or force it done before removing it."),
+                { type: "warning" }
+            );
+            return;
+        }
+        return super.deletePaymentLine(...arguments);
     },
 
     getBancontactRefundLine(payment) {

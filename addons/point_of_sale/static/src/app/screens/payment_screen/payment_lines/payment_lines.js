@@ -61,6 +61,10 @@ export class PaymentScreenPaymentLines extends Component {
         this.pos.displayQrCode(line);
     }
 
+    canDeleteLine(line) {
+        return !line.isDone() || !line.payment_status;
+    }
+
     /**
      * Get the payment action state for the given payment line.
      * @returns {PaymentActionState}

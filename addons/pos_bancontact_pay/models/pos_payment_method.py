@@ -217,6 +217,7 @@ class PosPaymentMethod(models.Model):
         refund_statuses = {}
         for bancontact_id, refund_id in refunds:
             refund_statuses[refund_id] = self._bancontact_fetch_refund_status(bancontact_id, refund_id)
+        self._bancontact_update_refund_payments(refund_statuses)
         return refund_statuses
 
     def _bancontact_fetch_refund_status(self, bancontact_id, refund_id):
@@ -236,6 +237,19 @@ class PosPaymentMethod(models.Model):
         return status
 
     # ----- Helpers ----- #
+    def _bancontact_update_refund_payments(self, refund_statuses):
+        payment_statuses = {"REFUNDED": "done", "FAILED": False}
+        payments = self.env["pos.payment"].search([
+            ("bancontact_refund_id", "in", list(refund_statuses)),
+            ("payment_method_id", "=", self.id),
+            ("payment_status", "=", "waiting"),
+            ("pos_order_id.state", "=", "draft"),
+        ])
+        for payment in payments:
+            refund_status = refund_statuses[payment.bancontact_refund_id]
+            if refund_status in payment_statuses:
+                payment.payment_status = payment_statuses[refund_status]
+
     def _check_bancontact_refund(self, refunded_payment):
         """Ensure the payment method can refund the given Bancontact payment."""
         if not self.bancontact_product_id.refund_enabled:

@@ -27,7 +27,7 @@
                         class="payment-spinner mx-2 px-3">
                         <i class="oi oi-spin" data-icon="autorenew" role="img" />
                     </div>
-                    <button t-elif="(!line.isDone() or !line.payment_status)"
+                    <button t-elif="this.canDeleteLine(line)"
                             class="delete-button btn btn-link mx-2 px-3"
                             t-on-click="() => this.props.deleteLine(line.uuid)"
                             aria-label="Delete"
