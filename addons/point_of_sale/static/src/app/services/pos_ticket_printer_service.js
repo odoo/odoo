@@ -236,21 +236,29 @@ export class PosTicketPrinterService {
     /**
      * Changes use preparation printers via this.config.preparation_printer_ids
      */
-    async printOrderChanges({ order, opts = {}, printers = this.config.preparation_printer_ids }) {
+    async printOrderChanges({
+        order,
+        opts = {},
+        printers = this.config.preparation_printer_ids,
+        retryChanges = new Map(),
+        onRetryPrinted = () => {},
+    }) {
         let isPrinted = false;
         const unsuccessfulPrints = [];
-        const retryPrinters = new Set();
-        let rawChangeForRetry = null;
+        // Each printer has its own change (filtered on its categories) to print again on retry
+        const failedChanges = new Map();
 
         for (const printer of printers) {
             const template = "point_of_sale.pos_order_change_receipt";
             const generator = this.getGenerator({ models: this.data.models, order });
             const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
-            const changes = generator.generatePreparationData(categoryIds, opts);
+            const printerOpts = retryChanges.has(printer)
+                ? { ...opts, orderChange: retryChanges.get(printer) }
+                : opts;
+            const changes = generator.generatePreparationData(categoryIds, printerOpts);
             const orderChanges = changes.length ? changes[0]._rawChange : null;
 
             for (const ticket of changes) {
-                rawChangeForRetry = rawChangeForRetry || ticket._rawChange;
                 if (ticket.extra_data.reprint && !opts.explicitReprint) {
                     continue;
                 }
@@ -269,7 +277,7 @@ export class PosTicketPrinterService {
                 }
 
                 if (!result.successful) {
-                    retryPrinters.add(printer);
+                    failedChanges.set(printer, ticket._rawChange);
                     unsuccessfulPrints.push(printer.name + ": " + result.message.body);
                 } else if (result.warningCode) {
                     this.displayPrinterWarning(result, printer.name);
@@ -286,17 +294,20 @@ export class PosTicketPrinterService {
                 title: _t("Printing failed"),
                 body: unsuccessfulPrints.join("\n"),
             };
-            this.showPrinterErrorDialog(
-                message,
-                this.printOrderChanges.bind(this, {
+            // If something was printed, the caller already marked the changes as sent
+            const onPrinted = isPrinted ? () => {} : onRetryPrinted;
+            this.showPrinterErrorDialog(message, async () => {
+                const isRetryPrinted = await this.printOrderChanges({
                     order,
-                    opts: {
-                        ...opts,
-                        orderChange: rawChangeForRetry,
-                    },
-                    retryPrinters,
-                })
-            );
+                    opts,
+                    printers: [...failedChanges.keys()],
+                    retryChanges: failedChanges,
+                    onRetryPrinted: onPrinted,
+                });
+                if (isRetryPrinted) {
+                    onPrinted();
+                }
+            });
         }
 
         return isPrinted;
