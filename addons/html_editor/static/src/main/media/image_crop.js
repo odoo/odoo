@@ -10,7 +10,6 @@ import {
     onMounted,
     onWillDestroy,
     signal,
-    status,
     t,
     useListener,
     useProps,
@@ -160,7 +159,7 @@ export class ImageCrop extends Component {
         await this.scrollToInvisibleImage();
         // Replacing the src with the original's so that the layout is correct.
         await loadImage(this.originalSrc, this.media);
-        if (status(this) !== "mounted") {
+        if (!this.elRef()) {
             // Abort if the component has been destroyed in the meantime
             // since `this.imageRef()` is `null` when it is not mounted.
             return;
@@ -199,7 +198,7 @@ export class ImageCrop extends Component {
         this.cropperWrapperRef().style.top = `${offset.top}px`;
 
         await loadImage(this.originalSrc, cropperImage);
-        if (status(this) !== "mounted") {
+        if (!this.elRef()) {
             return;
         }
 
