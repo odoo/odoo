@@ -210,3 +210,8 @@ class IrHttp(models.AbstractModel):
         if request.session.debug:
             session_info['bundle_params']['debug'] = request.session.debug
         return session_info
+
+    @classmethod
+    def _get_translation_frontend_modules_name(cls) -> list[str]:
+        """ Return a list of module names whose JavaScript translations should be included in the frontend."""
+        return ['web']
