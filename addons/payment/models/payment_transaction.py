@@ -1212,11 +1212,10 @@ class PaymentTransaction(models.Model):
                      transactions `to process`, `processed`, and `in wrong state`.
             :rtype: tuple(recordset)
             """
-            txs_to_process_ = transactions_.filtered(lambda _tx: _tx.state in allowed_states)
-            txs_already_processed_ = transactions_.filtered(lambda _tx: _tx.state == target_state)
-            txs_wrong_state_ = transactions_ - txs_to_process_ - txs_already_processed_
-
-            return txs_to_process_, txs_already_processed_, txs_wrong_state_
+            return transactions_.partitioned(
+                lambda _tx: _tx.state in allowed_states,
+                lambda _tx: _tx.state == target_state,
+            )
 
         txs_to_process, txs_already_processed, txs_wrong_state = classify_by_state(self)
         for tx in txs_already_processed:

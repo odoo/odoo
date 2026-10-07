@@ -1270,14 +1270,11 @@ class AccountMove(models.Model):
                 or (move.state == 'draft' and not currency.is_zero(move.amount_total))
             )
 
-        groups = self.grouped(lambda move:
-            'legacy' if move.payment_state == 'invoicing_legacy' else
-            'blocked' if move.payment_state == 'blocked' else
-            'invoices' if _invoice_qualifies(move) else
-            'unpaid'
+        _skipped, invoices, unpaid = self.partitioned(
+            lambda move: move.payment_state in ('invoicing_legacy', 'blocked'),
+            _invoice_qualifies,
         )
-        groups.get('unpaid', self.browse()).payment_state = 'not_paid'
-        invoices = groups.get('invoices', self.browse())
+        unpaid.payment_state = 'not_paid'
 
         stored_ids = tuple(invoices.ids)
         if stored_ids:
