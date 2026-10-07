@@ -578,6 +578,7 @@ export class PosTicketPrinterPlugin extends Plugin {
             height: Math.ceil(sizes.height),
             width: Math.ceil(sizes.width),
             pixelRatio: 1,
+            inlineStyles: false,
         });
 
         logPosImage(image);

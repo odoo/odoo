@@ -29,8 +29,9 @@ function canvasToRaster(canvas) {
     const pixels = imageData.data;
     const width = imageData.width;
     const height = imageData.height;
-    const errors = Array.from(Array(width), (_) => Array(height).fill(0));
-    const rasterData = new Array(width * height).fill(0);
+    let errors = new Float64Array(width);
+    let nextErrors = new Float64Array(width);
+    const rasterData = new Uint8Array(width * height);
 
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
@@ -43,7 +44,7 @@ function canvasToRaster(canvas) {
             oldColor = pixels[idx] * 0.299 + pixels[idx + 1] * 0.587 + pixels[idx + 2] * 0.114;
 
             // Propagate the error from neighbor pixels
-            oldColor += errors[x][y];
+            oldColor += errors[x];
             oldColor = Math.min(255, Math.max(0, oldColor));
 
             if (oldColor < 128) {
@@ -62,35 +63,40 @@ function canvasToRaster(canvas) {
             if (error) {
                 if (x < width - 1) {
                     // Pixel on the right
-                    errors[x + 1][y] += (7 / 16) * error;
+                    errors[x + 1] += (7 / 16) * error;
                 }
                 if (x > 0 && y < height - 1) {
                     // Pixel on the bottom left
-                    errors[x - 1][y + 1] += (3 / 16) * error;
+                    nextErrors[x - 1] += (3 / 16) * error;
                 }
                 if (y < height - 1) {
                     // Pixel below
-                    errors[x][y + 1] += (5 / 16) * error;
+                    nextErrors[x] += (5 / 16) * error;
                 }
                 if (x < width - 1 && y < height - 1) {
                     // Pixel on the bottom right
-                    errors[x + 1][y + 1] += (1 / 16) * error;
+                    nextErrors[x + 1] += (1 / 16) * error;
                 }
             }
         }
+        [errors, nextErrors] = [nextErrors, errors];
+        nextErrors.fill(0);
     }
 
-    return rasterData.join("");
+    return rasterData;
 }
 
 /**
  * Base 64 encode a raster image
  */
 function encodeRaster(rasterData) {
+    const bytes = new Uint8Array(Math.ceil(rasterData.length / 8));
+    for (let i = 0; i < rasterData.length; i++) {
+        bytes[i >> 3] = (bytes[i >> 3] << 1) | rasterData[i];
+    }
     let encodedData = "";
-    for (let i = 0; i < rasterData.length; i += 8) {
-        const sub = rasterData.substr(i, 8);
-        encodedData += String.fromCharCode(parseInt(sub, 2));
+    for (let i = 0; i < bytes.length; i += 8192) {
+        encodedData += String.fromCharCode(...bytes.subarray(i, i + 8192));
     }
     return btoa(encodedData);
 }
