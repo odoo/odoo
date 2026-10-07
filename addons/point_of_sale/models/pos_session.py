@@ -1106,11 +1106,11 @@ class PosSession(models.Model):
 
         move_ctx.with_company(self.company_id)._post()
         partner = self.config_id.default_partner_id
-        payment_lines = self.env['account.move.line']
+        payment_lines = []
         for payment in payments:
             metadata = payment['metadata']
             pm = metadata['payment_method_id']
-            payment_lines |= pm._create_payment_line(
+            payment_lines.append(pm._create_payment_line(
                 self,
                 metadata['amount'],
                 partner.property_account_receivable_id,
@@ -1118,19 +1118,17 @@ class PosSession(models.Model):
                 partner,
                 metadata['foreign_currency_id'].id,
                 metadata['amount_currency'],
-            )
-
-        payment_lines = payment_lines.filtered(
-            lambda line: not line.reconciled,
-        )
-        payment_term_lines = payment_term_lines.filtered(
-            lambda line: not line.reconciled,
-        )
+            ))
 
         # We cannot reconcile automatically all lines together because
         # sometime it create weird reconciliation with multiple payments
-        for idx, term in enumerate(payment_term_lines):
-            payment_line = payment_lines[idx]
+        for payment_line, term in zip(payment_lines, payment_term_lines):
+            payment_line = payment_line.filtered(
+                lambda line: not line.reconciled,
+            )
+            # A customer account has no payment line to reconcile with
+            if not payment_line or term.reconciled:
+                continue
             (payment_line + term).with_context(
                 skip_invoice_sync=True,
                 no_cash_basis=True,
