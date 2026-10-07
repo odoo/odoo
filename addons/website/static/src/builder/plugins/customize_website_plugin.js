@@ -28,6 +28,7 @@ import { loadBundle } from "@web/core/assets";
  * @property { CustomizeWebsitePlugin['previewWebsiteColors'] } previewWebsiteColors
  * @property { CustomizeWebsitePlugin['previewColorPalette'] } previewColorPalette
  * @property { CustomizeWebsitePlugin['previewViews'] } previewViews
+ * @property { CustomizeWebsitePlugin['previewBodyImage'] } previewBodyImage
  * @property { CustomizeWebsitePlugin['getPendingViews'] } getPendingViews
  * @property { CustomizeWebsitePlugin['getSCSSColorValue'] } getSCSSColorValue
  * @property { CustomizeWebsitePlugin['hasCustomizedColors'] } hasCustomizedColors
@@ -115,6 +116,7 @@ for (const key of [
 THEME_GATES["header-bg-blur"] = { set: "header-bg-blur", isOn: (value) => value !== "0" };
 THEME_GATES["navbar-font"] = { apart: ["navbar-font", "font"] };
 THEME_GATES["header-text-color"] = { set: "header-text-color" };
+THEME_GATES["body-image"] = { set: "body-image" };
 // The button styles: Fill (also under Flat), Outline, Flat.
 for (const which of ["primary", "secondary"]) {
     THEME_GATES[`btn-${which}-fill`] = {
@@ -216,11 +218,32 @@ const VIEWS = "views";
 const ASSETS = "assets";
 const NULL_VALUES = ["null", "NULL", "''"];
 
+/**
+ * @param {HTMLElement} rootEl
+ * @param {HTMLElement} el an element in `rootEl`
+ * @returns {number[]} the child indexes from `rootEl` to `el`
+ */
+function getPath(rootEl, el) {
+    const path = [];
+    for (; el !== rootEl; el = el.parentElement) {
+        path.unshift([...el.parentElement.children].indexOf(el));
+    }
+    return path;
+}
+/**
+ * @param {HTMLElement} rootEl
+ * @param {number[]} path see `getPath`
+ * @returns {HTMLElement|undefined}
+ */
+function followPath(rootEl, path) {
+    return path.reduce((el, index) => el?.children[index], rootEl);
+}
+
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
     static dependencies = [
         ...["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"],
-        ...["dom", "setup_editor_plugin", "builderOptions"],
+        ...["dom", "setup_editor_plugin", "builderOptions", "domReferenceMap"],
     ];
     static shared = [
         "customizeWebsiteColors",
@@ -229,6 +252,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "previewWebsiteColors",
         "previewColorPalette",
         "previewViews",
+        "previewBodyImage",
         "getPendingViews",
         "getSCSSColorValue",
         "hasCustomizedColors",
@@ -268,11 +292,13 @@ export class CustomizeWebsitePlugin extends Plugin {
             PreviewAreaColorAction,
             WebsiteConfigAction,
             PreviewWebsiteConfigAction,
+            PreviewPageConfigAction,
             PreviewableWebsiteConfigAction,
             TemplatePreviewableWebsiteConfigAction,
             SelectTemplateAction,
             ToggleBodyBgImageAction,
             ReplaceBodyBgImageAction,
+            PreviewBodyImageAction,
             RemoveBodyBgImageAction,
             BodyBgPositionOverlayAction,
         },
@@ -424,6 +450,8 @@ export class CustomizeWebsitePlugin extends Plugin {
     chromeUpdate = null;
     /** @type {Set<string>} views the page shows by itself (see `previewViews`) */
     shownViews = new Set();
+    /** @type {Set<string>} views of the page's own content (see `previewViews`) */
+    pageViews = new Set();
     /** Preview steps not committed to the history yet. */
     pendingPreviewSteps = [];
     /** @type {Set<string>} the theme gates of the saved values */
@@ -746,13 +774,18 @@ export class CustomizeWebsitePlugin extends Plugin {
      *        they apply after save)
      * @param {boolean} [options.areShown] the caller shows the views itself
      *        (e.g. their class): no render needed for them
+     * @param {boolean} [options.arePage] the views change the page's own
+     *        content (its `main`), not only its header and footer
      * @returns {Promise} resolved once the page shows the views
      */
-    previewViews(views, { areAssets = false, areShown = false } = {}) {
+    previewViews(views, { areAssets = false, areShown = false, arePage = false } = {}) {
         const file = areAssets ? ASSETS : VIEWS;
-        if (areShown) {
-            for (const view of Object.keys(views)) {
+        for (const view of Object.keys(views)) {
+            if (areShown) {
                 this.shownViews.add(view);
+            }
+            if (arePage) {
+                this.pageViews.add(view);
             }
         }
         const pendingValues = this.getPendingValues(file);
@@ -766,18 +799,58 @@ export class CustomizeWebsitePlugin extends Plugin {
         return this.updateChrome();
     }
     /**
+     * Previews the page's background image settings: the values written on
+     * save, and the CSS the compile derives from them all (`--o-body-image*`,
+     * see `body-image-bg-style`).
+     *
+     * @param {Object<string, string>} changes website values by name, empty
+     *        to reset (image URL, type, pattern width and height, position)
+     */
+    previewBodyImage(changes) {
+        const value = (name) =>
+            unquote(name in changes ? changes[name] : this.getWebsiteVariableValue(name) || "");
+        const image = value("body-image");
+        const isPattern = value("body-image-type") === "pattern";
+        const [width, height] = [
+            value("body-image-pattern-width"),
+            value("body-image-pattern-height"),
+        ];
+        this.previewWebsiteVariables(
+            Object.fromEntries(
+                Object.entries(changes).map(([name, val]) => [
+                    name,
+                    val && ["body-image", "body-image-type"].includes(name)
+                        ? `'${unquote(val)}'`
+                        : val,
+                ])
+            ),
+            "null",
+            {
+                "o-body-image": image ? `url("${image}")` : "none",
+                "o-body-image-size": !isPattern
+                    ? "cover"
+                    : width || height
+                    ? `${width || "auto"} ${height || "auto"}`
+                    : "auto",
+                "o-body-image-repeat": isPattern ? "repeat" : "no-repeat",
+                "o-body-image-position": value("body-image-background-position") || "center",
+            }
+        );
+    }
+    /**
      * @returns {Object<string, boolean|"reset">} the views switched on save
      */
     getPendingViews() {
         return { ...this.pendingViews };
     }
     /**
-     * Shows the page's header and footer as the server renders them with the
-     * previewed views (`?theme_preview_views`, nothing is written), so that a
-     * views switch needs no reload. The renders are cached by views; the
-     * elements a switch takes out are kept, and come back on undo as they
-     * were (unsaved edits included). Not part of the history: follows the
-     * previewed views. Scheduled once per tick.
+     * Shows the page's header and footer (and its `main`, for the views of
+     * the page's content) as the server renders them with the previewed views
+     * (`?theme_preview_views`, nothing is written), so that a views switch
+     * needs no reload. The renders are cached by views; the elements a switch
+     * takes out are kept, and come back on undo as they were. Unsaved edits
+     * follow the live page (see `carryEdits`). Not part of the history:
+     * follows the previewed views. Scheduled once per tick.
      *
      * @returns {Promise} resolved once the page shows the previewed views
      */
@@ -809,8 +882,18 @@ export class CustomizeWebsitePlugin extends Plugin {
             this.chromeKey = key;
             return;
         }
+        // The page's content is only swapped for its own views: its render is
+        // never quite the same (tokens...).
+        const pageKey = (viewsKey) =>
+            JSON.stringify(
+                Object.entries(JSON.parse(viewsKey)).filter(([view]) => this.pageViews.has(view))
+            );
+        const [fromPageKey, toPageKey] = [pageKey(this.chromeKey), pageKey(key)];
         const wrapwrapEl = this.document.getElementById("wrapwrap");
         const parts = ["header#top", "footer#bottom"];
+        if (fromPageKey !== toPageKey) {
+            parts.push("main");
+        }
         const targetEl = this.dependencies.builderOptions.getTarget();
         let loadingEls = [];
         if (!(this.chromeKey in this.chromeRenders && key in this.chromeRenders)) {
@@ -835,31 +918,53 @@ export class CustomizeWebsitePlugin extends Plugin {
         if (requestId !== this.chromeRequestId || this.isDestroyed) {
             return;
         }
-        const mainEl = wrapwrapEl.querySelector(":scope > main");
+        let mainEl = wrapwrapEl.querySelector(":scope > main");
         let newTargetEl;
         this.dependencies.domObserver.ignore(() => {
             for (const [part, insert] of [
+                ["main", (el) => mainEl.replaceWith(el)],
                 ["header#top", (el) => mainEl.before(el)],
                 ["footer#bottom", (el) => mainEl.after(el)],
             ]) {
+                if (!parts.includes(part)) {
+                    continue;
+                }
                 // Only a part rendered differently is replaced, and the live
-                // element is kept for when that render shows again.
-                const [fromHTML, toHTML] = [from[part]?.outerHTML || "", to[part]?.outerHTML || ""];
-                if (fromHTML === toHTML) {
+                // element is kept for when that render shows again (the
+                // page's content: by its views).
+                let [fromKey, toKey] = [from[part]?.outerHTML || "", to[part]?.outerHTML || ""];
+                if (part === "main") {
+                    [fromKey, toKey] = [`main ${fromPageKey}`, `main ${toPageKey}`];
+                } else if (fromKey === toKey) {
                     continue;
                 }
                 const currentEl = wrapwrapEl.querySelector(`:scope > ${part}`);
-                currentEl?.remove();
                 const nextEl =
-                    this.chromeElements[toHTML] ||
+                    this.chromeElements[toKey] ||
                     (to[part] && this.document.importNode(to[part], true));
-                this.chromeElements[fromHTML] = currentEl;
-                delete this.chromeElements[toHTML];
-                if (currentEl?.contains(targetEl)) {
-                    newTargetEl = nextEl;
+                this.chromeElements[fromKey] = currentEl;
+                delete this.chromeElements[toKey];
+                const targetPath = currentEl?.contains(targetEl) && getPath(currentEl, targetEl);
+                if (currentEl && nextEl) {
+                    this.carryEdits(currentEl, nextEl);
+                }
+                if (part === "main") {
+                    insert(nextEl);
+                    mainEl = nextEl;
+                } else {
+                    currentEl?.remove();
+                    if (nextEl) {
+                        insert(nextEl);
+                    }
+                }
+                if (targetPath && !targetEl.isConnected) {
+                    // The options were on the part taken out: on the new one.
+                    newTargetEl = (nextEl && followPath(nextEl, targetPath)) || nextEl;
                 }
                 if (nextEl) {
-                    insert(nextEl);
+                    // Inserted unobserved: known from now on, so that its
+                    // edits are recorded (undo, save).
+                    this.dependencies.domReferenceMap.register(nextEl);
                     this.dependencies.setup_editor_plugin.markSavableAreas(nextEl);
                     this.dependencies.dom.normalize(nextEl);
                     if (currentEl) {
@@ -882,13 +987,41 @@ export class CustomizeWebsitePlugin extends Plugin {
         // A new part shows the previewed area presets too.
         this.updateAreaClasses();
         if (newTargetEl) {
-            // The options were on the part taken out: on the new one.
             this.dependencies.builderOptions.updateContainers(newTargetEl);
         }
         this.dependencies.edit_interaction.restartInteractions();
         // The page adapts a new header's menu (see `auto_hide_menu.js`).
         this.document.dispatchEvent(new Event("o_header_rendered"));
         this.trigger("on_dom_updated_handlers");
+    }
+    /**
+     * Moves the unsaved edits of a part taken out to the part replacing it,
+     * where the same record field is, in exchange for its unedited render (so
+     * that they move back on undo): they are saved from the live page.
+     *
+     * @param {HTMLElement} fromEl
+     * @param {HTMLElement} toEl
+     */
+    carryEdits(fromEl, toEl) {
+        for (const dirtyEl of fromEl.querySelectorAll(".o_dirty[data-oe-model]")) {
+            if (toEl.contains(dirtyEl)) {
+                // Moved with an edited ancestor.
+                continue;
+            }
+            const selector = ["oe-model", "oe-id", "oe-field", "oe-xpath"]
+                .filter((name) => dirtyEl.hasAttribute(`data-${name}`))
+                .map(
+                    (name) => `[data-${name}="${CSS.escape(dirtyEl.getAttribute(`data-${name}`))}"]`
+                )
+                .join("");
+            const counterpartEl = toEl.querySelector(selector);
+            if (counterpartEl) {
+                const markerNode = this.document.createComment("");
+                dirtyEl.replaceWith(markerNode);
+                counterpartEl.replaceWith(dirtyEl);
+                markerNode.replaceWith(counterpartEl);
+            }
+        }
     }
     /**
      * @param {string} key the previewed views, as JSON
@@ -912,6 +1045,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             return {
                 "header#top": doc.querySelector("#wrapwrap > header#top"),
                 "footer#bottom": doc.querySelector("#wrapwrap > footer#bottom"),
+                main: doc.querySelector("#wrapwrap > main"),
                 classes,
             };
         })().catch((error) => {
@@ -1430,75 +1564,34 @@ export class AddLanguageAction extends BuilderAction {
     }
 }
 
+/**
+ * The page's background image (Theme tab): opens the media dialog, previews
+ * the chosen image (see `previewBodyImage`); removes it on clean.
+ */
 export class ToggleBodyBgImageAction extends BuilderAction {
     static id = "toggleBodyBgImage";
-    static dependencies = ["builderActions", "domObserver", "customizeWebsite", "media"];
+    static dependencies = ["customizeWebsite", "media"];
     setup() {
         this.canTimeout = false;
     }
     isApplied() {
         return !!this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image");
     }
-    async applyConfigWithLoader(config) {
-        this.services.ui.block({ delay: 2500 });
-        try {
-            await this.setBodyBgConfig(config);
-        } finally {
-            this.services.ui.unblock();
-        }
-    }
-    async setBodyBgConfig(config) {
-        // Store the current body bg selection (image + type).
-        const variables = {
-            "body-image-type": `'${config.type}'`,
-            "body-image": config.image ? `'${config.image}'` : "",
-        };
-        if (!config.image) {
-            // Reset stored variables when removing the image entirely.
-            variables["body-image-background-position"] = "";
-            variables["body-image-pattern-width"] = "";
-            variables["body-image-pattern-height"] = "";
-        }
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables);
-        this.trigger("on_dom_updated_handlers");
-    }
-    getCurrentConfig() {
-        return {
-            type:
-                this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image-type") ||
-                "image",
-            image: this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image") || "",
-        };
-    }
-    async applyConfig(oldConfig, newConfig) {
-        await this.applyConfigWithLoader(newConfig);
-        this.dependencies.domObserver.stageCustomMutation({
-            apply: () => this.applyConfigWithLoader(newConfig),
-            revert: () => this.applyConfigWithLoader(oldConfig),
-        });
-    }
-    async apply({ editingElement: el } = {}) {
-        await this.dependencies.media.openMediaDialog(
-            this.getMediaDialogProps({ editingElement: el })
-        );
-    }
-    getMediaDialogProps({ editingElement }) {
-        return {
+    async apply({ editingElement }) {
+        await this.dependencies.media.openMediaDialog({
             onlyImages: true,
             node: editingElement,
-            save: async (imageEl) => {
-                const { type: currentType, image: currentImage } = this.getCurrentConfig();
-                const oldConfig = { type: currentType, image: currentImage };
-                const newConfig = { type: currentType, image: imageEl.src };
-                await this.applyConfig(oldConfig, newConfig);
-            },
-        };
+            save: (imageEl) =>
+                this.dependencies.customizeWebsite.previewBodyImage({ "body-image": imageEl.src }),
+        });
     }
-    async clean() {
-        const { type: currentType, image: currentImage } = this.getCurrentConfig();
-        const oldConfig = { type: currentType, image: currentImage };
-        const newConfig = { type: "image", image: "" };
-        await this.applyConfig(oldConfig, newConfig);
+    clean() {
+        this.dependencies.customizeWebsite.previewBodyImage({
+            "body-image": "",
+            "body-image-background-position": "",
+            "body-image-pattern-width": "",
+            "body-image-pattern-height": "",
+        });
     }
 }
 
@@ -1520,29 +1613,13 @@ export class RemoveBodyBgImageAction extends BuilderAction {
 
 export class BodyBgPositionOverlayAction extends BuilderAction {
     static id = "bodyBgPositionOverlay";
-    static dependencies = [
-        "overlayButtons",
-        "domObserver",
-        "backgroundPositionOption",
-        "customizeWebsite",
-    ];
+    static dependencies = ["overlayButtons", "backgroundPositionOption", "customizeWebsite"];
     setup() {
         this.withLoadingEffect = false;
         this.canTimeout = false;
     }
     async apply({ editingElement }) {
         const imageEl = await loadImage(getBgImageURLFromEl(editingElement));
-        const clearInlinePosition = () => {
-            // Remove inline position used for preview once value is stored in
-            // variables.
-            editingElement.style.backgroundPosition = "";
-        };
-        const setBackgroundPosition = async (value) => {
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                "body-image-background-position": value,
-            });
-            clearInlinePosition();
-        };
         const bgPosition = await new Promise((resolve) => {
             const removeOverlay = this.services.overlay.add(ImagePositionOverlay, {
                 targetEl: editingElement,
@@ -1551,7 +1628,7 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
                     resolve(position);
                 },
                 onDrag: (percentPosition) => {
-                    // Live preview via inline style; cleared on apply/discard.
+                    // While dragging only; the position is then previewed.
                     editingElement.style.backgroundPosition = `${percentPosition.left}% ${percentPosition.top}%`;
                 },
                 getDelta: () =>
@@ -1561,17 +1638,11 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
                 scrollToElement: false,
             });
         });
+        editingElement.style.backgroundPosition = "";
         if (bgPosition) {
-            const currentPosition =
-                this.dependencies.customizeWebsite.getWebsiteVariableValue(
-                    "body-image-background-position"
-                ) || "";
-            this.dependencies.domObserver.applyCustomMutation({
-                apply: () => setBackgroundPosition(bgPosition),
-                revert: () => setBackgroundPosition(currentPosition),
+            this.dependencies.customizeWebsite.previewBodyImage({
+                "body-image-background-position": bgPosition,
             });
-        } else {
-            clearInlinePosition();
         }
     }
 }
@@ -1795,6 +1866,25 @@ export class PreviewWebsiteConfigAction extends WebsiteConfigAction {
     }
 }
 
+/**
+ * `previewWebsiteConfig` for the views of the page's own content: the page's
+ * `main` is rendered again too (see `updateChrome`).
+ */
+export class PreviewPageConfigAction extends PreviewWebsiteConfigAction {
+    static id = "previewPageConfig";
+    _customizeThemeData(isViewData, shouldReset, toEnable, toDisable) {
+        return this.dependencies.customizeWebsite.previewViews(
+            {
+                ...Object.fromEntries([...toEnable].map((view) => [view, true])),
+                ...Object.fromEntries(
+                    [...toDisable].map((view) => [view, shouldReset ? "reset" : false])
+                ),
+            },
+            { areAssets: !isViewData, arePage: true }
+        );
+    }
+}
+
 export class PreviewableWebsiteConfigAction extends BuilderAction {
     static id = "previewableWebsiteConfig";
     static dependencies = ["customizeWebsite", "domObserver"];
@@ -1813,9 +1903,6 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         }
         if (!isPreviewing) {
             this.previewViews(params.views, true);
-            if (params.vars) {
-                this.dependencies.customizeWebsite.previewWebsiteVariables(params.vars);
-            }
         }
     }
     clean({ editingElement: el, isPreviewing, params }) {
@@ -1824,11 +1911,6 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         }
         if (!isPreviewing) {
             this.previewViews(params.views, false);
-            if (params.vars) {
-                this.dependencies.customizeWebsite.previewWebsiteVariables(
-                    Object.fromEntries(Object.keys(params.vars).map((name) => [name, ""]))
-                );
-            }
         }
     }
     /**
@@ -1946,6 +2028,18 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
             },
             nullValue
         );
+    }
+}
+
+/**
+ * The background image's type and pattern size (see `previewBodyImage`).
+ */
+export class PreviewBodyImageAction extends CustomizeWebsiteVariableAction {
+    static id = "previewBodyImage";
+    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
+    setup() {}
+    apply({ params: { mainParam: variable }, value }) {
+        this.dependencies.customizeWebsite.previewBodyImage({ [variable]: value });
     }
 }
 
