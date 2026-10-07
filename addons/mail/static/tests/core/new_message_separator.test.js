@@ -16,6 +16,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { Thread } from "@mail/core/common/thread_model";
+import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click as hootClick,
@@ -25,7 +26,7 @@ import {
     waitForNone,
     waitUntil,
 } from "@odoo/hoot-dom";
-import { mockDate } from "@odoo/hoot-mock";
+import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
@@ -512,4 +513,126 @@ test("mark as unread waits for the mark as read in flight", async () => {
                 .new_message_separator === messageId
     );
     await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+async function setupChannelWithReadNewMessages() {
+    const pyEnv = await startServer();
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: bobPartnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const [readMessageId] = pyEnv["mail.message"].create([
+        {
+            author_id: bobPartnerId,
+            body: "Message 0",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            author_id: bobPartnerId,
+            body: "Message 1",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: readMessageId + 1 });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitForChannelRead(channelId);
+    return { bobUserId, channelId };
+}
+
+async function waitForChannelRead(channelId) {
+    const channel = getService("mail.store")["discuss.channel"].get(channelId);
+    await waitUntil(
+        () =>
+            channel.self_member_id.message_unread_counter === 0 &&
+            channel.self_member_id.new_message_separator > channel.newestPersistentMessage.id
+    );
+}
+
+function postMessageAs(userId, channelId, body) {
+    return withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body, message_type: "comment", subtype_xmlid: "mail.mt_comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+}
+
+test("keep new message separator when message is received while reading new messages", async () => {
+    const { bobUserId, channelId } = await setupChannelWithReadNewMessages();
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Message:has(:text('Message 2')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+test("move new message separator to message received while away from the page", async () => {
+    const { bobUserId, channelId } = await setupChannelWithReadNewMessages();
+    patch(document, { hasFocus: () => false });
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 2')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+test("move new message separator to message received after a while, once silent", async () => {
+    const { bobUserId, channelId } = await setupChannelWithReadNewMessages();
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY / 2);
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Message:has(:text('Message 2')):count(1)");
+    await waitForChannelRead(channelId);
+    // separator shown for a while, but the conversation was not silent
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY / 2);
+    await postMessageAs(bobUserId, channelId, "Message 3");
+    await waitFor(".o-mail-Message:has(:text('Message 3')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await waitForChannelRead(channelId);
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY);
+    await postMessageAs(bobUserId, channelId, "Message 4");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 4')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+test("move new message separator to message received after a while, when not focused", async () => {
+    const { bobUserId, channelId } = await setupChannelWithReadNewMessages();
+    queryFirst(".o-mail-Composer-input").blur();
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Message:has(:text('Message 2')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    await hootClick(".o-mail-Composer-input");
+    await waitForChannelRead(channelId);
+    queryFirst(".o-mail-Composer-input").blur();
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY);
+    await postMessageAs(bobUserId, channelId, "Message 3");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 3')):count(1)");
+    await waitFor(".o-mail-Thread-newMessage:count(1)");
+});
+
+test("hide read new message separator after being away from the page for a while", async () => {
+    const { bobUserId, channelId } = await setupChannelWithReadNewMessages();
+    patch(document, { hasFocus: () => false });
+    window.dispatchEvent(new Event("blur"));
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY / 2);
+    window.dispatchEvent(new Event("focus"));
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY);
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 1')):count(1)");
+    window.dispatchEvent(new Event("blur"));
+    await advanceTime(ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY);
+    await waitForNone(".o-mail-Thread-newMessage");
+    await postMessageAs(bobUserId, channelId, "Message 2");
+    await waitFor(".o-mail-Thread-newMessage + .o-mail-Message:has(:text('Message 2')):count(1)");
 });
