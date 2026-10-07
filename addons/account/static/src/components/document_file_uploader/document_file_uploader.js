@@ -1,8 +1,6 @@
 import { useService } from "@web/core/utils/hooks";
-import { FileUploader } from "@web/views/fields/file_handler";
-import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-import { Component, markup, t, useProps } from "@odoo/owl";
+import { Component, markup } from "@odoo/owl";
 
 export const AbstractDocumentFileUploader = (T = Component)  => class AbstractDocumentFileUploader extends T {
 
@@ -71,32 +69,5 @@ export const AbstractDocumentFileUploader = (T = Component)  => class AbstractDo
             action.help = markup(action.help);
         }
         this.action.doAction(action);
-    }
-}
-
-export class DocumentFileUploader extends AbstractDocumentFileUploader() {
-    static template = "account.DocumentFileUploader";
-    static components = {
-        FileUploader,
-    };
-    props = useProps({
-        ...standardWidgetProps,
-        record: t.object().optional(),
-        slots: t.object().optional(),
-        resModel: t.string().optional(),
-    });
-
-    // To define specific resModal from another model
-    getResModel() {
-        return this.props.resModel;
-    }
-
-    get cleanContext() {
-        // clean the context to ensure the `create` call doesn't fail from unknown `default_*` context
-        return Object.fromEntries(Object.entries(this.env.searchModel.context).filter(([key]) => !key.startsWith('default_')));
-    }
-
-    get onUploadCompleteContext() {
-        return {...this.extraContext, ...this.env.searchModel.context};
     }
 }
