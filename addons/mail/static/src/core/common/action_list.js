@@ -157,11 +157,6 @@ export class BaseAction extends Component {
         return this.props.hasBtnBg || this.props.action.hasBtnBg;
     }
 
-    /** Whether the component of the action definition replaces the button of the action. */
-    get hasDefinitionComponent() {
-        return Boolean(this.action.component && this.action.componentCondition);
-    }
-
     get iconClass() {
         return { "oi-fw": this.props.fw };
     }

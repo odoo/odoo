@@ -80,10 +80,7 @@ function toArray(val) {
  * @property {string|(params: ActionParams_T) => string} [badgeIcon]
  * @property {string|(params: ActionParams_T) => string} [badgeIconClass]
  * @property {string|(params: ActionParams_T) => string} [badgeText]
- * @property {Component} [component]
  * @property {Component} [extraContentComponent]
- * @property {boolean|(params: ActionParams_T) => boolean} [componentCondition=true]
- * @property {(params: ActionParams_T) => Component<Props, Env>} [componentProps]
  * @property {(params: ActionParams_T) => Component<Props, Env>} [extraContentComponentProps]
  * @property {boolean|(params: ActionParams_T) => boolean} [condition=true]
  * @property {boolean|(params: ActionParams_T) => boolean} [disabledCondition]
@@ -329,35 +326,6 @@ export class Action {
             (typeof this.definition.badgeText === "function"
                 ? this.definition.badgeText.call(this, this.params)
                 : this.definition.badgeText)
-        );
-    }
-
-    /** @param {Action} action @returns {Component|undefined} */
-    _component(action) {}
-    /** When provided, this component is mounted for this action. UI/UX of action is fully managed by the component */
-    get component() {
-        return this._component(this.params) ?? this.definition.component;
-    }
-
-    /** @param {Action} action @returns {boolean|undefined} */
-    _componentCondition(action) {}
-    /** When provided, action.component is conditionally picked based on this condition. When condition is false, the usual UI/UX of action from other explicit definitions is chosen */
-    get componentCondition() {
-        return (
-            this._componentCondition(this.params) ??
-            (typeof this.definition.componentCondition === "function"
-                ? this.definition.componentCondition.call(this, this.params)
-                : this.definition.componentCondition ?? true)
-        );
-    }
-
-    /** @param {Action} action @returns {Object|undefined} */
-    _componentProps(action) {}
-    /** Props to pass to the component of this action. */
-    get componentProps() {
-        return (
-            this._componentProps(this.params) ??
-            this.definition.componentProps?.call(this, this.params)
         );
     }
 

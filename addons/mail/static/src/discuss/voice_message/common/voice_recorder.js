@@ -1,4 +1,6 @@
-import { Component, onWillUnmount, proxy, types, useProps, useScope } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, types, useProps, useScope, xml } from "@odoo/owl";
+
+import { BaseAction } from "@mail/core/common/action_list";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
@@ -33,6 +35,14 @@ export class VoiceRecorder extends Component {
     get cancelTitle() {
         return _t("Cancel");
     }
+}
+
+/** Component of the voice-recording action of a composer, @see BaseAction */
+export class VoiceRecorderAction extends BaseAction {
+    static components = { VoiceRecorder };
+    static template = xml`
+        <VoiceRecorder composer="this.action.params.composer" state="this.action.owner.voiceRecorder"/>
+    `;
 }
 
 export const patchable = {
