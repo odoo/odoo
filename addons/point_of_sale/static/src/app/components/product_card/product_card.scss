@@ -1,9 +1,11 @@
 .product {
     --btn-border-color: var(--o-gray-200);
 
-    &:hover {
-        border: var(--border-width) solid var(--border-color);
-        --btn-hover-bg: var(--o-view-background-color);
+    @media (hover: hover) {
+        &:hover {
+            border: var(--border-width) solid var(--border-color);
+            --btn-hover-bg: var(--o-view-background-color);
+        }
     }
 
     @at-root .rightpane .product {

@@ -930,8 +930,21 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     async onProductInfoClick(productTemplate, productProduct = false) {
-        const info = await this.getProductInfo(productTemplate, 1, 0, productProduct);
-        this.dialog.add(ProductInfoPopup, { info: info, productTemplate: productTemplate });
+        if (this.productInfoOpened) {
+            return;
+        }
+        this.productInfoOpened = true;
+        try {
+            const info = await this.getProductInfo(productTemplate, 1, 0, productProduct);
+            this.dialog.add(
+                ProductInfoPopup,
+                { info: info, productTemplate: productTemplate },
+                { onClose: () => (this.productInfoOpened = false) }
+            );
+        } catch (error) {
+            this.productInfoOpened = false;
+            throw error;
+        }
     }
     async openConfigurator(pTemplate, opts = {}) {
         const attrById = this.models["product.attribute"].getAllBy("id");
