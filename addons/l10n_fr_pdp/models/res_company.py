@@ -4,6 +4,7 @@ import logging
 from odoo import _, api, fields, models
 
 from odoo.exceptions import UserError
+from odoo.tools import split_every
 from odoo.tools.sql import SQL
 
 from odoo.addons.iap.tools import iap_tools
@@ -141,7 +142,7 @@ class ResCompany(models.Model):
         date_company_conditions = SQL(
             '(%s)',
             SQL(' OR ').join(SQL(
-                '(move.date >= %(date)s AND move.company_id = %(company_id)s)',
+                '(move.company_id = %(company_id)s AND (move.date >= %(date)s OR move.l10n_fr_pdp_flow_10_report_type IS NOT NULL))',
                 date=company._pdp_get_flow_10_start_date(),
                 company_id=company.id,
             ) for company in companies),
@@ -149,14 +150,24 @@ class ResCompany(models.Model):
         self.env.cr.execute(
             self._l10n_fr_pdp_get_f10_moves_query(tuple(account_ids), date_company_conditions),
         )
-        moves = self.env['account.move'].browse(res[0] for res in self.env.cr.fetchall())
-        moves._compute_l10n_fr_pdp_flow_10_operation_type()
-        moves._compute_l10n_fr_pdp_flow_10_report_type()
+        rows = self.env.cr.fetchall()
+        transaction_ids = {move_id for move_id, is_payment in rows if not is_payment}
+        payment_ids = [move_id for move_id, is_payment in rows if is_payment and move_id not in transaction_ids]
+        AccountMove = self.env['account.move']
+        f10_fnames = ['l10n_fr_pdp_flow_10_operation_type', 'l10n_fr_pdp_flow_10_report_type']
+        for move_ids in (transaction_ids, payment_ids):
+            for batch_ids in split_every(1000, move_ids):
+                batch = AccountMove.browse(batch_ids)
+                for fname in f10_fnames:
+                    self.env.add_to_compute(AccountMove._fields[fname], batch)
+                batch.modified(f10_fnames)
+                self.env.flush_all()
+                self.env.invalidate_all()
 
     def _l10n_fr_pdp_get_f10_moves_query(self, account_ids, date_company_conditions):
         return SQL('''
             -- payments --
-            SELECT move.id
+            SELECT move.id, TRUE AS is_payment
               FROM account_move move
               JOIN account_move_line reco_aml ON reco_aml.move_id = move.id AND reco_aml.account_id IN %(account_ids)s
               JOIN account_partial_reconcile apr ON apr.debit_move_id = reco_aml.id OR apr.credit_move_id = reco_aml.id
@@ -167,7 +178,7 @@ class ResCompany(models.Model):
              UNION
 
             -- transactions --
-            SELECT move.id
+            SELECT move.id, FALSE AS is_payment
               FROM account_move move
              WHERE move.move_type IN ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund')  -- not in_receipt !
                AND %(date_company_conditions)s
