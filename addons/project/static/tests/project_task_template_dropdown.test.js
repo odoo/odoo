@@ -134,15 +134,115 @@ for (const [viewType, newButtonClass] of [
     });
 }
 
-test("template dropdown should not appear when not in the context of a specific project", async () => {
+for (const [viewType, newButtonClass] of [
+    ["kanban", ".o-kanban-button-new"],
+    ["list", ".o_list_button_add"],
+]) {
+    test(`clicking a template in ${viewType} view opens the form view of the current action with the template in the context`, async () => {
+        addTemplateTasks();
+
+        mockService("action", {
+            doAction(action, options) {
+                expect.step("new task form opened");
+                expect(options.viewType).toBe("form");
+                expect(options.additionalContext).toEqual(
+                    {
+                        active_id: 1,
+                        active_ids: [1],
+                        active_model: "project.project",
+                        default_task_template_id: 4,
+                    },
+                    {
+                        message:
+                            "The template should prefill the form, and the record of the action should be kept to evaluate its context",
+                    }
+                );
+            },
+        });
+
+        await mountView({
+            resModel: "project.task",
+            type: viewType,
+            context: {
+                active_id: 1,
+                active_ids: [1],
+                active_model: "project.project",
+                default_project_id: 1,
+            },
+        });
+        await contains(newButtonClass).click();
+        await contains("span.dropdown-item:contains('Template Task 1')").click();
+        expect.verifySteps(["new task form opened"]);
+    });
+}
+
+function trackTemplateLoads() {
+    onRpc("web_save", () => expect.step("web_save"));
+    onRpc("onchange", ({ kwargs }) => {
+        expect.step(`onchange with template ${kwargs.context.default_task_template_id ?? "none"}`);
+        expect(kwargs.context.default_project_id).toBe(1, {
+            message: "The context of the form should be kept",
+        });
+    });
+    mockService("action", {
+        doAction() {
+            expect.step("doAction");
+        },
+    });
+}
+
+test("clicking a template in form view saves the current task and loads a new one prefilled from it", async () => {
     addTemplateTasks();
+    trackTemplateLoads();
+
     await mountView({
         resModel: "project.task",
-        type: "kanban",
+        resId: 1,
+        type: "form",
+        context: {
+            default_project_id: 1,
+        },
     });
+    await contains(".o_field_widget[name=name] input").edit("Edited task");
+    await contains(".o_form_button_create").click();
+    await contains("span.dropdown-item:contains('Template Task 1')").click();
+    expect.verifySteps(["web_save", "onchange with template 4"]);
+});
 
-    expect(".o-kanban-button-new").not.toHaveClass("dropdown-toggle", {
-        message:
-            "The “New” button should not be a dropdown since there is no project in the context",
+test("clicking another template in the form of a task opened from a template replaces it", async () => {
+    addTemplateTasks();
+    trackTemplateLoads();
+
+    await mountView({
+        resModel: "project.task",
+        type: "form",
+        context: {
+            default_project_id: 1,
+            default_task_template_id: 4,
+        },
     });
+    expect.verifySteps(["onchange with template 4"]);
+
+    await contains(".o_form_button_create").click();
+    await contains("span.dropdown-item:contains('Template Task 2')").click();
+    expect.verifySteps(["onchange with template 5"]);
+});
+
+test("New Task in the form of a task opened from a template is not prefilled from it", async () => {
+    addTemplateTasks();
+    trackTemplateLoads();
+
+    await mountView({
+        resModel: "project.task",
+        type: "form",
+        context: {
+            default_project_id: 1,
+            default_task_template_id: 4,
+        },
+    });
+    expect.verifySteps(["onchange with template 4"]);
+
+    await contains(".o_form_button_create").click();
+    await contains("button.dropdown-item:contains('New Task')").click();
+    expect.verifySteps(["onchange with template false"]);
 });
