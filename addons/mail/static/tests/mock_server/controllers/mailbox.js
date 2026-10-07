@@ -1,4 +1,3 @@
-import { _resolve_messages } from "@mail/../tests/mock_server/mail_mock_server";
 import { Store } from "@mail/../tests/mock_server/store";
 import { registerStoreHandler } from "@mail/../tests/mock_server/store_handler";
 
@@ -78,41 +77,3 @@ registerStoreHandler(
     },
     { readonly: false }
 );
-
-registerStoreHandler("/mail/inbox/messages", function store_mailbox_messages(store, params) {
-    store.add_inbox_fields = true;
-    _resolve_messages.call(this, store, {
-        ...params.fetch_params,
-        domain: [["needaction", "=", true]],
-    });
-});
-
-registerStoreHandler("/mail/history/messages", function store_history_messages(store, params) {
-    /** @type {import("mock_models").MailNotification} */
-    const MailNotification = this.env["mail.notification"];
-    _resolve_messages.call(
-        this,
-        store,
-        {
-            ...params.fetch_params,
-            domain: [["needaction", "=", false]],
-        },
-        {
-            filter(message) {
-                const notifs = MailNotification.search_read([
-                    ["mail_message_id", "=", message.id],
-                    ["is_read", "=", true],
-                    ["res_partner_id", "=", this.env.user.partner_id],
-                ]);
-                return notifs.length > 0;
-            },
-        }
-    );
-});
-
-registerStoreHandler("/mail/bookmark/messages", function store_bookmark_messages(store, params) {
-    _resolve_messages.call(this, store, {
-        ...params.fetch_params,
-        domain: [["bookmarked_partner_ids", "in", [this.env.user.partner_id]]],
-    });
-});

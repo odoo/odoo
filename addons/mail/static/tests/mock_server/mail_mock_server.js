@@ -1015,15 +1015,10 @@ function processRequest(fetchParams) {
     return store;
 }
 
-export function _resolve_messages(
-    store,
-    fetch_params,
-    { add_to_store = true, filter = () => true } = {}
-) {
+export function _resolve_messages(store, fetch_params, { add_to_store = true } = {}) {
     /** @type {import("mock_models").MailMessage} */
     const MailMessage = this.env["mail.message"];
     const res = MailMessage._message_fetch(makeKwArgs(fetch_params));
-    res.messages = res.messages.filter(filter.bind(this));
     const messageIds = res.messages.map((message) => message.id);
     if (add_to_store) {
         for (const messageId of messageIds) {
