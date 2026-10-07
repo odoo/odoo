@@ -28,9 +28,9 @@ patch(PaymentScreenPaymentLines.prototype, {
 
     async checkBancontactRefundStatus(line) {
         await line.payment_interface.checkRefundStatus([line]);
-        if (line.isDone()) {
+        if (line.payment_status === "done") {
             await this.pos.autoValidateOrder();
-        } else if (line.payment_status === "retry") {
+        } else if (!line.payment_status) {
             this.notification.add(_t("The refund failed."), { type: "danger" });
         } else {
             this.notification.add(_t("The refund is still pending."), { type: "info" });

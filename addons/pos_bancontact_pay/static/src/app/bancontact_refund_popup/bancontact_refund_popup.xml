@@ -16,11 +16,16 @@
                         <td t-out="row.line.payment_method_name"/>
                         <td class="text-end" t-out="this.pos.formatCurrency(row.line.amount)"/>
                         <td class="text-end" t-out="this.pos.formatCurrency(row.line.amount_left)"/>
-                        <td class="text-end" style="width: 9rem;">
-                            <input type="number" min="0" step="0.01" class="form-control text-end"
-                                t-att-class="{ 'is-invalid': row.isTooHigh() }"
-                                t-att-disabled="row.line.fully_refunded"
-                                t-model.number="row.input"/>
+                        <td class="text-end" style="width: 12rem;">
+                            <div class="input-group">
+                                <input type="number" min="0" step="0.01" class="form-control text-end"
+                                    t-att-class="{ 'is-invalid': row.isInvalid() }"
+                                    t-att-disabled="row.line.fully_refunded"
+                                    t-model.number="row.amount"/>
+                                <button class="btn btn-secondary"
+                                    t-att-disabled="row.line.fully_refunded"
+                                    t-on-click="() => this.setMaxAmount(row)">Max</button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>

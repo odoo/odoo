@@ -48,10 +48,10 @@ patch(PosPayment.prototype, {
             if (isPaymentSuccessful) {
                 this.setBancontactRefundStatus(isPaymentSuccessful);
             } else {
-                this.setPaymentStatus("retry");
+                this.setPaymentStatus(undefined);
             }
             // A pending refund isn't successful yet: its success/failure will be handled by `checkRefundStatus`
-            return this.isDone();
+            return this.payment_status === "done";
         }
 
         if (isPaymentSuccessful) {

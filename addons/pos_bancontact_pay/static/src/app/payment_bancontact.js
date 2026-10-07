@@ -73,9 +73,9 @@ export class PaymentBancontact extends PaymentInterface {
         const paymentStatuses = {
             PENDING: "waiting",
             REFUNDED: "done",
-            FAILED: "retry",
+            FAILED: undefined,
         };
-        return paymentStatuses[refundStatus] || "waiting";
+        return paymentStatuses[refundStatus];
     }
 
     async checkRefundStatus(lines) {

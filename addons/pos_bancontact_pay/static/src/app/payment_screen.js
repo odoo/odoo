@@ -69,28 +69,31 @@ patch(PaymentScreen.prototype, {
 
     async onClickBancontactRefund() {
         const lines = await this.getBancontactRefundableLines();
+        if (!lines.length) {
+            this.notification.add(_t("The refunded order has no Bancontact payment to refund."), {
+                type: "warning",
+            });
+            return;
+        }
         if (lines.every((line) => line.fully_refunded)) {
+            this.notification.add(
+                _t("The Bancontact payments of the refunded order are already fully refunded."),
+                { type: "info" }
+            );
             return;
         }
 
-        let refunds;
-        if (lines.length === 1) {
-            refunds = [{ payment: lines[0].payment, amount: lines[0].amount_left }];
-        } else {
-            const amounts = {};
-            for (const line of lines) {
-                const refundLine = this.getBancontactRefundLine(line.payment);
-                if (refundLine) {
-                    amounts[line.id] = Math.abs(refundLine.amount);
-                }
-            }
-            refunds = await makeAwaitable(this.dialog, BancontactRefundPopup, {
-                lines,
-                amounts,
-            });
-            if (!refunds) {
-                return;
-            }
+        const amounts = {};
+        for (const line of lines) {
+            const refundLine = this.getBancontactRefundLine(line.payment);
+            amounts[line.id] = refundLine ? Math.abs(refundLine.amount) : line.amount_left;
+        }
+        const refunds = await makeAwaitable(this.dialog, BancontactRefundPopup, {
+            lines,
+            amounts,
+        });
+        if (!refunds) {
+            return;
         }
 
         for (const { payment, amount } of refunds) {

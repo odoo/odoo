@@ -15,14 +15,16 @@ export class BancontactRefundPopup extends Component {
     setup() {
         this.pos = usePos();
         this.rows = this.props.lines.map((line) => {
-            const input = signal(this.props.amounts[line.id] ?? "");
-            const amount = computed(() => Number(input()) || 0);
+            const amount = signal(this.props.amounts[line.id] ?? "");
+            const refundAmount = computed(() => Number(amount()) || 0);
             return {
                 line,
-                input,
                 amount,
-                isTooHigh: computed(() =>
-                    this.pos.currency.isPositive(amount() - line.amount_left)
+                refundAmount,
+                isInvalid: computed(
+                    () =>
+                        this.pos.currency.isNegative(refundAmount()) ||
+                        this.pos.currency.isPositive(refundAmount() - line.amount_left)
                 ),
             };
         });
@@ -32,9 +34,13 @@ export class BancontactRefundPopup extends Component {
             0
         );
         this.totalRefund = computed(() =>
-            this.rows.reduce((total, row) => total + row.amount(), 0)
+            this.rows.reduce((total, row) => total + row.refundAmount(), 0)
         );
-        this.canConfirm = computed(() => !this.rows.some((row) => row.isTooHigh()));
+        this.canConfirm = computed(() => !this.rows.some((row) => row.isInvalid()));
+    }
+
+    setMaxAmount(row) {
+        row.amount.set(row.line.amount_left);
     }
 
     confirm() {
@@ -42,7 +48,7 @@ export class BancontactRefundPopup extends Component {
             return;
         }
         this.props.getPayload(
-            this.rows.map((row) => ({ payment: row.line.payment, amount: row.amount() }))
+            this.rows.map((row) => ({ payment: row.line.payment, amount: row.refundAmount() }))
         );
         this.props.close();
     }
