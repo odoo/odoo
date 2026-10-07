@@ -12,6 +12,7 @@ class ResGroups(models.Model):
             'stock.group_production_lot',
             'stock.group_adv_location',
             'stock.group_stock_multi_locations',
+            'stock.group_stock_multi_warehouses',
             'stock.group_stock_picking_batch',
             'stock.group_tracking_lot',
             'stock.group_tracking_owner',
