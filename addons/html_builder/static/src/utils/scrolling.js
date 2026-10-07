@@ -3,6 +3,7 @@
 // header at the top of the page, the wrapwrap,...) which are not considered in
 // the `@web/core/utils/scrolling` utils.
 
+import { config as transitionConfig } from "@web/core/transition";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 
 /**
@@ -137,6 +138,10 @@ export function scrollTo(el, options = {}) {
         return Math.max(0, elPosition - offset);
     }
 
+    if (transitionConfig.disabled) {
+        scrollable.scrollTop = _computeScrollTop();
+        return Promise.resolve();
+    }
     return new Promise((resolve) => {
         const start = scrollable.scrollTop;
         const duration = options.duration || 600;
