@@ -113,6 +113,18 @@ class AccountPartialReconcile(models.Model):
 
         # Get the payments without journal entry to reset once the amount residual is reset
         to_update_payments = self._get_to_update_payments(from_state='reconciled')
+
+        # Get the links between the payments and the moves they are no longer reconciled with
+        moves_to_detach_per_payment = defaultdict(lambda: self.env['account.move'])
+        for partial in self:
+            # The moves of both reconciled lines (e.g. an invoice and the journal entry of a payment), at most 2 per partial
+            moves = (partial.debit_move_id | partial.credit_move_id).move_id
+            if (
+                (payment := moves.origin_payment_id)
+                and (linked_moves := (moves - payment.move_id) & payment.invoice_ids)
+            ):
+                moves_to_detach_per_payment[payment] |= linked_moves
+
         # Retrieve the CABA entries to reverse.
         moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
         # Same for the exchange difference entries.
@@ -129,6 +141,12 @@ class AccountPartialReconcile(models.Model):
 
         # Remove the matching numbers before reversing the moves to avoid trying to remove the full twice.
         full_to_unlink.unlink()
+
+        for payment, moves in moves_to_detach_per_payment.items():
+            # Keep the link with the moves still reconciled with the payment through another partial
+            lines = payment.move_id.line_ids
+            still_reconciled_moves = (lines.matched_debit_ids.debit_move_id | lines.matched_credit_ids.credit_move_id).move_id
+            payment.invoice_ids -= (moves - still_reconciled_moves)
 
         # Reverse or unlink CABA/exchange move entries.
         if moves_to_reverse:
