@@ -1,4 +1,13 @@
-import { Component, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import {
+    Component,
+    onPatched,
+    onWillPatch,
+    proxy,
+    signal,
+    t,
+    useEffect,
+    useProps,
+} from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { downloadFile } from "@web/core/network/download";
 import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
@@ -46,6 +55,20 @@ export class FileViewer extends Component {
 
     setup() {
         useAutofocus({ ref: this.autofocusRef });
+        // The root owns the keyboard shortcuts, but focus moves to the buttons
+        // when they are clicked or tabbed to. If the focused button is removed
+        // (e.g. the image toolbar when switching to a PDF), focus falls back to
+        // the body and the shortcuts stop working: give it back to the root.
+        // Only when the focus was in the viewer, not to steal it from elsewhere.
+        let hadFocus = false;
+        onWillPatch(() => {
+            hadFocus = this.autofocusRef()?.contains(document.activeElement);
+        });
+        onPatched(() => {
+            if (hadFocus && document.activeElement === document.body) {
+                this.autofocusRef()?.focus();
+            }
+        });
         this.hasTouch = hasTouch();
 
         this.isDragging = false;
