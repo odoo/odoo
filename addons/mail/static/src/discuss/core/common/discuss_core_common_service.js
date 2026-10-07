@@ -1,3 +1,5 @@
+import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
+
 import { proxy } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
@@ -37,6 +39,31 @@ export class DiscussCoreCommon {
                 }
             }
         });
+        this.store.onChange(
+            () => [this.presence.isOdooFocused()],
+            (isOdooFocused) => {
+                if (isOdooFocused) {
+                    return;
+                }
+                const timeout = setTimeout(
+                    () => this.hideReadNewMessageSeparators(),
+                    ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY
+                );
+                return () => clearTimeout(timeout);
+            },
+            { immediate: true }
+        );
+    }
+
+    /**
+     * Hide the new message separators of the displayed channels that only mark
+     * read messages, as the user has been away from Odoo for a while.
+     */
+    async hideReadNewMessageSeparators() {
+        await this.store.chatHub.initPromise;
+        for (const channel of this.store.displayedChannels) {
+            channel.self_member_id?.hideReadNewMessageSeparatorUi();
+        }
     }
 
     /**
@@ -56,6 +83,7 @@ export class DiscussCoreCommon {
         if (!channel) {
             return;
         }
+        await this.store.chatHub.initPromise;
         const message = this.store["mail.message"].get(store_data["mail.message"][0]);
         if (!message) {
             return;
@@ -69,7 +97,7 @@ export class DiscussCoreCommon {
             if (message.isSelfAuthored) {
                 channel.onNewSelfMessage(message);
             } else {
-                if (channel.isDisplayed && channel.self_member_id?.new_message_separator_ui === 0) {
+                if (channel.self_member_id?.shouldMoveNewMessageSeparatorUi(message)) {
                     channel.self_member_id.new_message_separator_ui = message.id;
                 }
                 if (!channel.isDisplayed && channel.self_member_id) {

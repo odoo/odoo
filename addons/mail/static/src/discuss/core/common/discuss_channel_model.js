@@ -444,7 +444,7 @@ export class DiscussChannel extends Record {
     }
     invited_member_ids = fields.Many("discuss.channel.member");
     /** ⚠️ {@link AwaitChatHubInit} */
-    isDisplayed = this.computed(() => this.computeIsDisplayed());
+    isDisplayed = this.computed(() => Boolean(this.storeAsDisplayedChannels));
     lastMessageSeenByAllId = this.computed(() => {
         if (!this.hasSeenFeature) {
             return;
@@ -563,6 +563,13 @@ export class DiscussChannel extends Record {
         )
     );
     self_member_id = fields.One("discuss.channel.member", { inverse: "channelAsSelf" });
+    /** ⚠️ {@link AwaitChatHubInit} */
+    storeAsDisplayedChannels = fields.One("Store", {
+        compute() {
+            return this.computeIsDisplayed() ? this.store : null;
+        },
+        inverse: "displayedChannels",
+    });
     storeAsFavoriteChannels = fields.One("Store", {
         compute() {
             return this.self_member_id?.is_favorite ? this.store : null;
