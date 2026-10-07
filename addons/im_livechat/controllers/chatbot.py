@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, http
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.addons.mail.tools.discuss import mail_route, Store
 
@@ -60,12 +61,11 @@ class LivechatChatbotScriptController(http.Controller):
         next_step = False
         if current_step := discuss_channel.sudo().chatbot_current_step_id:
             chatbot = current_step.chatbot_script_id
-            domain = [
-                ("author_id", "!=", chatbot.operator_partner_id.id),
-                ("model", "=", "discuss.channel"),
-                ("res_id", "=", channel_id),
-                ("message_type", "=", "comment"),
-            ]
+            domain = (
+                discuss_channel._get_message_domain()
+                & Domain("author_id", "!=", chatbot.operator_partner_id.id)
+                & Domain("message_type", "=", "comment")
+            )
             # sudo: mail.message - accessing last message to process answer is allowed
             user_answer = self.env["mail.message"].sudo().search(domain, order="id desc", limit=1)
             next_step = current_step._process_answer(discuss_channel, user_answer.body)
@@ -143,11 +143,7 @@ class LivechatChatbotScriptController(http.Controller):
 
         # sudo: chatbot.script - visitor can access chatbot script of their channel
         chatbot = discuss_channel.sudo().chatbot_current_step_id.chatbot_script_id
-        domain = [
-            ("author_id", "!=", chatbot.operator_partner_id.id),
-            ("model", "=", "discuss.channel"),
-            ("res_id", "=", channel_id),
-        ]
+        domain = discuss_channel._get_message_domain() & Domain("author_id", "!=", chatbot.operator_partner_id.id)
         # sudo: mail.message - accessing last message to validate phone or email is allowed
         last_user_message = self.env["mail.message"].sudo().search(domain, order="id desc", limit=1)
         step_type = discuss_channel.chatbot_current_step_id.step_type

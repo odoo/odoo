@@ -334,6 +334,18 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
             channel._gc_bot_only_ongoing_sessions()
         self.assertTrue(channel.livechat_end_dt)
 
+    def test_gc_empty_livechat_sessions(self):
+        with self.mock_datetime_and_now(self.env.cr.now() - timedelta(hours=2)):
+            empty_session, session = self.env["discuss.channel"].create([
+                {"channel_type": "livechat", "livechat_channel_id": self.livechat_channel.id, "name": "Empty"},
+                {"channel_type": "livechat", "livechat_channel_id": self.livechat_channel.id, "name": "Not empty"},
+            ])
+            session.message_post(body="Hello", message_type="comment")
+            self.env.flush_all()
+        self.env["discuss.channel"]._gc_empty_livechat_sessions()
+        self.assertFalse(empty_session.exists())
+        self.assertTrue(session.exists())
+
     def test_expertises_added_from_discuss_are_kept(self):
         bob = self._create_operator()
         jane = self._create_operator()
