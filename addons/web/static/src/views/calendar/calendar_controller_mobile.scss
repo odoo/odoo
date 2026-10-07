@@ -5,13 +5,14 @@
             padding: var(--OtherCalendarPanel-padding, 0 var(--o-bs-spacer-2));
             min-height: 30px;
 
-            [data-icon="filter_alt"] {
-                min-height: 1.59rem;
-                line-height: 1.59rem;
-            }
-
             > .o_filter {
                 padding: var(--o-bs-spacer-2) 0;
+                overscroll-behavior-x: contain;
+                scrollbar-width: none;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
 
                 > span > span {
                     font-size: x-small;
@@ -27,14 +28,27 @@
                     }
                 }
             }
-        }
 
-        .o_calendar_sidepanel_container {
-            height: 100%;
+            /* The filters scrolling behind the button fade out against it */
+            .o_expand_filter_button {
+                position: relative;
+                z-index: 1;
 
-            > .o_calendar_sidepanel {
-                width: auto;
+                &::before {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: -30px - $border-width;
+                    width: 30px;
+                    background: linear-gradient(to right, transparent, var(--o-control-panel-background-color));
+                    pointer-events: none;
+                    content: "";
+                }
             }
         }
+    }
+
+    .o_bottom_sheet .o_calendar_sidepanel {
+        width: auto;
     }
 }
