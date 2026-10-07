@@ -1,6 +1,7 @@
 import { test, expect } from "@odoo/hoot";
 import { applyInheritance } from "@web/core/template_inheritance";
 import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 
 const parser = new DOMParser();
 const serializer = new XMLSerializer();
@@ -126,6 +127,48 @@ test("single operation: replace root (and use a replace-target)", async () => {
     ];
     for (const { arch, operations, result } of toTest) {
         expect(_applyInheritance(arch, operations)).toBe(result);
+    }
+});
+
+test("single operation: replace root (and use a $0 (compatibility))", async () => {
+    patch(console, {
+        warn: (message) => expect.step(message),
+    });
+    const toTest = [
+        {
+            arch: `<t t-name="web.A"> <div>I was petrified</div> </t>`,
+            operations: `
+                <t>
+                    <xpath expr="." position="replace"><div>At first I was afraid</div>$0</xpath>
+                </t>`,
+            result: `<div t-translation-context="from_op" t-name="web.A">At first I was afraid</div>`,
+            // in outer mode with no parent only first child of operation is kept
+            warning: false,
+        },
+        {
+            arch: `<t t-name="web.A"> <div>I was petrified</div> </t>`,
+            operations: `
+                <t>
+                    <xpath expr="." position="replace"> <div>$0</div><div>At first I was afraid</div> </xpath>
+                </t>`,
+            result: `<div t-translation-context="from_op" t-name="web.A"><t t-name="web.A" t-translation-context="from_target"> <div>I was petrified</div> </t></div>`,
+            warning: true,
+        },
+        {
+            arch: `<t t-name="web.A"> <div>I was petrified</div> </t>`,
+            operations: `
+                <t>
+                    <xpath expr="." position="replace"> <t><t t-if="cond"><div>At first I was afraid</div></t><t t-else="">$0</t></t> </xpath>
+                </t>`,
+            result: `<t t-translation-context="from_op" t-name="web.A"><t t-if="cond"><div>At first I was afraid</div></t><t t-else=""><t t-name="web.A" t-translation-context="from_target"> <div>I was petrified</div> </t></t></t>`,
+            warning: true,
+        },
+    ];
+    for (const { arch, operations, result, warning } of toTest) {
+        expect(_applyInheritance(arch, operations)).toBe(result);
+        if (warning) {
+            expect.verifySteps(["$0 is deprecated: use a node with tag replace-target instead"]);
+        }
     }
 });
 

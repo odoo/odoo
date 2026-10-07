@@ -265,7 +265,7 @@ function replace(root, target, operation) {
     switch (mode) {
         case "outer": {
             const result = operation.ownerDocument.evaluate(
-                ".//replace-target",
+                ".//replace-target | .//*[text()='$0']",
                 operation,
                 null,
                 XPathResult.ORDERED_NODE_SNAPSHOT_TYPE
@@ -273,7 +273,12 @@ function replace(root, target, operation) {
             target.setAttribute(TCTX, getTranslationContext(target));
             for (let i = 0; i < result.snapshotLength; i++) {
                 const loc = result.snapshotItem(i);
-                loc.replaceWith(deepClone(target));
+                if (loc.tagName === "replace-target") {
+                    loc.replaceWith(deepClone(target));
+                } else {
+                    console.warn("$0 is deprecated: use a node with tag replace-target instead");
+                    loc.firstChild.replaceWith(deepClone(target));
+                }
             }
             if (target.parentElement) {
                 const nodes = getNodes(target, operation);
