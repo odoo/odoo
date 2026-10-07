@@ -253,7 +253,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/lib/lame/lame.js',
         ],
         "mail.assets_message_email": [
-            "web/static/lib/odoo_ui_icons/odoo_ui_icons.css",
+            ("include", "web.icons_fonts"),
         ],
         'mail.assets_public': [
             ('include', 'web._assets_helpers'),
