@@ -83,7 +83,7 @@ class TestModel(TransactionCase):
         """Check that a float is correctly formatted"""
         partner = self.env['res.partner'].create({
             'name': 'Float Partner',
-            'partner_latitude': '-71.94987', #Precision for this field is 7 decimals
+            'partner_latitude': '-71.94987',  # Precision for this field is 7 decimals
             'partner_longitude': '53',
         })
         paperformat = self.env['report.paperformat'].create({
@@ -97,4 +97,3 @@ class TestModel(TransactionCase):
         self.assertEqual(res_lat, '-71.9498700')
         self.assertEqual(res_long, '53.0000000')
         self.assertEqual(res_paperformat, '10.00')
-
