@@ -706,8 +706,22 @@ pre {
 }
 
 /* Buttons with custom colors */
-.btn-custom:hover, .btn-fill-custom:hover {
-    filter: invert(0.2);
+.btn-custom, .btn-fill-custom {
+    /* The hover colors only apply to buttons with --btn-custom-color in their
+       style. */
+    &[style*="--btn-custom-color"]:hover {
+        color: var(--btn-custom-color) !important;
+        background-color: var(--btn-custom-hover-bg) !important;
+    }
+    &[style*="-gradient("]:hover, &:not([style*="--btn-custom-color"]):hover {
+        /* The `not:` selector is for compatibility. Buttons saved before
+           the hover colors were introduced don't have the variable and keep
+           their previous hover effect until the page is edited and saved. */
+        filter: invert(0.2);
+    }
+}
+.btn-outline-custom[style*="--btn-custom-color"]:hover {
+    color: var(--btn-outline-custom-hover-color, var(--btn-custom-color)) !important;
 }
 .btn-outline-custom:not(:hover) {
     /* Custom buttons have their fill color or gradient specified in their
