@@ -486,6 +486,19 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             category_entries = categs
 
+        if (
+            website.is_view_active('website_sale.products_categories')
+            and not request.env.user._is_internal()
+        ):
+            tree_domain = Domain("id", "child_of", categs.ids) & website_domain
+            if search:
+                tree_domain &= Domain("id", "in", search_categories.ids)
+            category_tree = (
+                Category.search(tree_domain)
+                if categs else Category
+            )
+            categs = categs.with_prefetch(category_tree.ids)
+
         # products for current pager
 
         pager = website.pager(
