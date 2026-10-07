@@ -6,6 +6,30 @@ from odoo.addons.mail.tests.common_controllers import MailControllerAttachmentCo
 
 @odoo.tests.tagged("-at_install", "post_install", "mail_controller")
 class TestAttachmentController(MailControllerAttachmentCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        admin_record, readonly_record = cls.env["mail.test.access"].create(
+            [
+                {"access": "admin", "name": "Admin"},
+                {"access": "internal_ro", "name": "Read only"},
+            ],
+        )
+        cls.admin_attachment, cls.deleted_attachment, cls.readonly_attachment = cls.env[
+            "ir.attachment"
+        ].create(
+            [
+                {"name": "Admin", "res_id": admin_record.id, "res_model": admin_record._name},
+                {"name": "Deleted"},
+                {
+                    "name": "Read only",
+                    "res_id": readonly_record.id,
+                    "res_model": readonly_record._name,
+                },
+            ],
+        )
+        cls.deleted_attachment.unlink()
+
     def test_independent_attachment_delete(self):
         """Test access to delete an attachment whether or not limited `ownership_token` is sent"""
         self._execute_subtests_delete(self.all_users, token=True, allowed=True)
@@ -33,6 +57,29 @@ class TestAttachmentController(MailControllerAttachmentCommon):
             allowed=False,
             thread=thread,
         )
+
+    def test_attachment_delete_not_found(self):
+        """Test a 404 notifies the user or guest to remove an attachment they cannot read,
+        but not one they can read without being allowed to delete it."""
+        employee_channel = (self.cr.dbname, "res.partner", self.partner_employee.id)
+        guest_channel = (self.cr.dbname, "mail.guest", self.guest.id)
+        for pseudo_user, attachment, channels in (
+            (self.user_employee, self.admin_attachment, [employee_channel]),
+            (self.user_employee, self.deleted_attachment, [employee_channel]),
+            (self.user_employee, self.readonly_attachment, []),
+            (self.guest, self.deleted_attachment, [guest_channel]),
+        ):
+            self._authenticate_pseudo_user(pseudo_user)
+            notifications = [{"type": "ir.attachment/delete", "payload": {"id": attachment.id}}]
+            with (
+                self.subTest(user=pseudo_user.name, attachment_id=attachment.id),
+                self.assertBus(channels, notifications if channels else []),
+            ):
+                res = self.url_open(
+                    "/mail/attachment/delete",
+                    json={"params": {"attachment_id": attachment.id}},
+                )
+                self.assertEqual(res.json()["error"]["code"], 404)
 
     def test_upload_multi_company(self):
         record = self.user_employee.partner_id
