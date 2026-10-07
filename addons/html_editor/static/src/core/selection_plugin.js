@@ -1459,7 +1459,9 @@ export class SelectionPlugin extends Plugin {
             return;
         }
         const anchorNode = this.dependencies.domReferenceMap.getNodeById(selection.anchorNodeId);
-        if (!anchorNode) {
+        // The node may have been removed without the history (e.g. a part of
+        // the page replaced by a plugin).
+        if (!anchorNode || !this.editable.contains(anchorNode)) {
             return;
         }
         const newSelection = {
@@ -1467,7 +1469,7 @@ export class SelectionPlugin extends Plugin {
             anchorOffset: selection.anchorOffset,
         };
         const focusNode = this.dependencies.domReferenceMap.getNodeById(selection.focusNodeId);
-        if (focusNode) {
+        if (focusNode && this.editable.contains(focusNode)) {
             newSelection.focusNode = focusNode;
             newSelection.focusOffset = selection.focusOffset;
         }

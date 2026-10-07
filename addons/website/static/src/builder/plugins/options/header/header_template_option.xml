@@ -69,17 +69,11 @@
         <BuilderRow label.translate="Blur" level="2" t-if="this.domState.isBlurAvailable">
             <BuilderRange action="'previewWebsiteVariable'" actionParam="'header-bg-blur'" min="0" max="10" step="0.5" />
         </BuilderRow>
-        <t t-set="noPreviewOptionsContentWidth" t-value="[
-            'header_boxed_opt',
-            'header_search_opt',
-            'header_sales_one_opt',
-            'header_sales_two_opt',
-            'header_sales_three_opt',
-            'header_sales_four_opt',
-        ]"/>
         <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Content Width" level="1">
-            <BuilderButtonGroup applyTo="'#o_main_nav'"
-                    action="this.hasSomeOptions(noPreviewOptionsContentWidth) and 'previewWebsiteConfig' or 'previewableWebsiteConfig'">
+            <!-- Every layout's containers have the width's class (`header_content_width`); not the
+                 mobile header's (fixed) nor the header's editable content. -->
+            <BuilderButtonGroup applyTo="':is(.container, .container-fluid, .o_container_small):not(.o_header_mobile *, .oe_structure *, .o_mega_menu *)'"
+                    action="'previewableWebsiteConfig'">
                 <BuilderButton
                     title.translate="Small"
                     iconImg="'/website/static/src/img/snippets_options/content_width_small.svg'"
@@ -105,12 +99,12 @@
         </BuilderRow>
 
         <BuilderRow label.translate="Scroll Effect" t-if="!this.isActiveItem('header_sidebar_opt')" level="1">
-            <BuilderSelect action="'previewWebsiteConfig'" className="'o_scroll_effects_selector'">
+            <!-- The views only add the header's class: shown by the class. -->
+            <BuilderSelect action="'previewableWebsiteConfig'" preview="false" className="'o_scroll_effects_selector'">
                 <BuilderSelectItem
                     id="'header_visibility_standard_opt'"
                     label.translate="Standard"
-                    actionParam="{ views: ['website.header_visibility_standard'], vars: { 'header-scroll-effect': '' } }"
-                    classAction="'o_header_standard'"
+                    actionParam="{ views: ['website.header_visibility_standard'], vars: { 'header-scroll-effect': '' }, previewClass: 'o_header_standard' }"
                     className="'o_we_img_animate'"
                 >
                     <t t-call="website.scrollEffectImages" imgName="'header_effect_standard'"/>
@@ -119,8 +113,7 @@
                 <BuilderSelectItem
                     id="'header_effect_scroll_opt'"
                     label.translate="Scroll"
-                    actionParam="{ views: [], vars: { 'header-scroll-effect': 'scroll' } }"
-                    classAction="''"
+                    actionParam="{ views: [], vars: { 'header-scroll-effect': 'scroll' }, previewClass: '' }"
                     className="'o_we_img_animate'"
                 >
                     <t t-call="website.scrollEffectImages" imgName="'header_effect_scroll'"/>
@@ -129,8 +122,7 @@
                 <BuilderSelectItem
                     id="'header_effect_fixed_opt'"
                     label.translate="Fixed"
-                    actionParam="{ views: ['website.header_visibility_fixed'], vars: { 'header-scroll-effect': 'fixed' } }"
-                    classAction="'o_header_fixed'"
+                    actionParam="{ views: ['website.header_visibility_fixed'], vars: { 'header-scroll-effect': 'fixed' }, previewClass: 'o_header_fixed' }"
                     className="'o_we_img_animate'"
                 >
                     <t t-call="website.scrollEffectImages" imgName="'header_effect_fixed'"/>
@@ -139,8 +131,7 @@
                 <BuilderSelectItem
                     id="'header_effect_disappears_opt'"
                     label.translate="Disappears"
-                    actionParam="{ views: ['website.header_visibility_disappears'], vars: { 'header-scroll-effect': 'disappears' } }"
-                    classAction="'o_header_disappears'"
+                    actionParam="{ views: ['website.header_visibility_disappears'], vars: { 'header-scroll-effect': 'disappears' }, previewClass: 'o_header_disappears' }"
                     className="'o_we_img_animate'"
                 >
                     <t t-call="website.scrollEffectImages" imgName="'header_effect_disappears'"/>
@@ -149,8 +140,7 @@
                 <BuilderSelectItem
                     id="'header_effect_fade_out_opt'"
                     label.translate="Fade Out"
-                    actionParam="{ views: ['website.header_visibility_fade_out'], vars: { 'header-scroll-effect': 'fade-out' } }"
-                    classAction="'o_header_fade_out'"
+                    actionParam="{ views: ['website.header_visibility_fade_out'], vars: { 'header-scroll-effect': 'fade-out' }, previewClass: 'o_header_fade_out' }"
                     className="'o_we_img_animate'"
                 >
                     <t t-call="website.scrollEffectImages" imgName="'header_effect_fade_out'"/>

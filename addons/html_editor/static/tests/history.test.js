@@ -19,6 +19,7 @@ import { execCommand } from "./_helpers/userCommands";
 import { nodeToTree } from "@html_editor/core/dom_reference_map_plugin";
 import { HISTORY_COMMIT_TYPES } from "@html_editor/core/history_plugin";
 import { NATIVE_MUTATION_TYPES } from "../src/core/dom_observer_plugin";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe("reset", () => {
     test("should not add mutations in the current commit from the normalization when calling reset", async () => {
@@ -355,6 +356,19 @@ describe("commit", () => {
         expect(editor.shared.history.commit()).not.toBe(false);
         undo(editor);
         expect.verifySteps(["revert x"]);
+    });
+});
+
+describe("selection restore", () => {
+    test("should not restore a selection in a node removed without the history", async () => {
+        patchWithCleanup(console, { warn: (message) => expect.step(message) });
+        const { editor } = await setupEditor("<p>a</p><p>[]b</p>");
+        const p = editor.editable.querySelectorAll("p")[1];
+        p.classList.add("x");
+        editor.shared.history.commit();
+        editor.shared.domObserver.ignore(() => p.remove());
+        undo(editor);
+        expect.verifySteps([]);
     });
 });
 

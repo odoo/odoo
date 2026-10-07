@@ -71,6 +71,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Space Above" tooltip.translate="All headings. Expand to set a level apart." action="'previewWebsiteVariable'" preview="true">
             <BuilderRange actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'" min="0" max="96" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['headings-margin-top', 'h2-margin-top', 'h3-margin-top', 'h4-margin-top', 'h5-margin-top', 'h6-margin-top', 'display-1-margin-top', 'display-2-margin-top', 'display-3-margin-top', 'display-4-margin-top']"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">
@@ -86,6 +87,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Space Below" tooltip.translate="All headings. Expand to set a level apart." action="'previewWebsiteVariable'" preview="true">
             <BuilderRange actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'" min="0" max="96" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['headings-margin-bottom', 'h2-margin-bottom', 'h3-margin-bottom', 'h4-margin-bottom', 'h5-margin-bottom', 'h6-margin-bottom', 'display-1-margin-bottom', 'display-2-margin-bottom', 'display-3-margin-bottom', 'display-4-margin-bottom']"/>
             <t t-set-slot="collapse">
                 <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
                     <BuilderRow level="1" label="heading_label + ' ' + depth">

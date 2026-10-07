@@ -15,6 +15,7 @@
             action="'previewWebsiteVariable'" preview="true"
         >
             <BuilderRange actionParam="'btn-primary-outline-border-width'" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-primary-outline-border-width']"/>
         </BuilderRow>
         <BuilderRow label.translate="Secondary Style">
             <BuilderSelect action="'previewButtonStyle'" actionParam="'secondary'" preview="true">
@@ -28,6 +29,7 @@
             action="'previewWebsiteVariable'" preview="true"
         >
             <BuilderRange actionParam="'btn-secondary-outline-border-width'" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-secondary-outline-border-width']"/>
         </BuilderRow>
         <BuilderRow label.translate="Font Family">
             <ThemeFontFamilyOption
@@ -38,6 +40,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Font Size" action="'previewWebsiteVariable'" preview="true">
             <BuilderRange actionParam="'btn-font-size'" unit="'px'" saveUnit="'rem'" min="10" max="32" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-font-size', 'btn-font-size-sm', 'btn-font-size-lg']"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
                     <BuilderRange actionParam="'btn-font-size-sm'" unit="'px'" saveUnit="'rem'" min="8" max="28" withNumberInput="true"/>
@@ -54,6 +57,7 @@
         />
         <BuilderRow label.translate="Vertical Padding" action="'previewWebsiteVariable'" preview="true">
             <BuilderRange actionParam="'btn-padding-y'" unit="'px'" saveUnit="'rem'" min="0" max="40" withNumberInput="true" prefixIcon="'height'"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-padding-y', 'btn-padding-y-sm', 'btn-padding-y-lg']"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
                     <BuilderRange actionParam="'btn-padding-y-sm'" unit="'px'" saveUnit="'rem'" min="0" max="40" withNumberInput="true" prefixIcon="'height'"/>
@@ -65,6 +69,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Horizontal Padding" action="'previewWebsiteVariable'" preview="true">
             <BuilderRange actionParam="'btn-padding-x'" unit="'px'" saveUnit="'rem'" min="0" max="80" withNumberInput="true" prefixIcon="'arrow_range'"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-padding-x', 'btn-padding-x-sm', 'btn-padding-x-lg']"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
                     <BuilderRange actionParam="'btn-padding-x-sm'" unit="'px'" saveUnit="'rem'" min="0" max="80" withNumberInput="true" prefixIcon="'arrow_range'"/>
@@ -76,6 +81,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Round Corners" action="'previewWebsiteVariable'" preview="true">
             <BuilderRange actionParam="'btn-border-radius'" unit="'px'" saveUnit="'rem'" min="0" max="100" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-border-radius', 'btn-border-radius-sm', 'btn-border-radius-lg']"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
                     <BuilderRange actionParam="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'" min="0" max="100" withNumberInput="true"/>

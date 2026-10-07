@@ -87,6 +87,10 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         on_snippet_dropped_handlers: ({ snippetEl }) => this.handleBgColorUpdated(snippetEl),
         on_cloned_handlers: ({ cloneEl }) => this.handleBgColorUpdated(cloneEl),
         on_website_color_updated_handlers: this.syncBackgroundShapeColorsWithTheme.bind(this),
+        clean_for_save_processors: (root) => {
+            this.cleanDefaultShapeImages(root);
+            return root;
+        },
     };
     static shared = [
         "getShapeStyleUrl",
@@ -234,7 +238,15 @@ export class BackgroundShapeOptionPlugin extends Plugin {
                 continue;
             }
             const selector = `[data-oe-shape-data*='"${colorVar}"'] .o_we_shape[style*="background-image"]`;
-            this.refreshBgShapes([...this.document.querySelectorAll(selector)]);
+            // A shape with its default colors takes its image from the
+            // compiled CSS, which only follows the palette once saved: it gets
+            // the image of the new colors meanwhile (see
+            // `cleanDefaultShapeImages`).
+            this.refreshBgShapes([
+                ...this.document.querySelectorAll(
+                    `[data-oe-shape-data*='"${colorVar}"'] .o_we_shape`
+                ),
+            ]);
             if (isPreviewing) {
                 // The page's shapes only: the preview's revert restores them.
                 continue;
@@ -242,6 +254,30 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             this.config.snippetModel.updateContent("snippet_custom", (snippetContent) => {
                 this.refreshBgShapes([...snippetContent.querySelectorAll(selector)]);
             });
+        }
+    }
+    /**
+     * Removes the image a palette change gave to the shapes with their default
+     * colors (see `syncBackgroundShapeColorsWithTheme`): saved, they take it
+     * from the compiled CSS again, which follows the palette.
+     *
+     * @param {HTMLElement} root
+     */
+    cleanDefaultShapeImages(root) {
+        for (const shapeEl of root.querySelectorAll(
+            "[data-oe-shape-data] > .o_we_shape[style*='background-image']"
+        )) {
+            const {
+                colors = {},
+                flip = [],
+                shapeAnimationSpeed = "0",
+            } = JSON.parse(shapeEl.parentElement.dataset.oeShapeData.replace(/'/g, '"'));
+            const areDefaultColors = Object.entries(colors).every(
+                ([colorName, colorValue]) => colorValue === `o-color-${colorName.slice(1)}`
+            );
+            if (areDefaultColors && !flip.length && !parseFloat(shapeAnimationSpeed)) {
+                shapeEl.style.removeProperty("background-image");
+            }
         }
     }
     refreshBgShapes(shapeEls) {

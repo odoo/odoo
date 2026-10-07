@@ -30,3 +30,23 @@ header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
 html.o_we_theme_previewing * {
     transition: none !important;
 }
+
+// A header or footer waiting for the server's render of a views switch (see
+// `customizeWebsite`'s `updateChrome`).
+.o_we_chrome_loading {
+    opacity: .5;
+    pointer-events: none;
+
+    @media (prefers-reduced-motion: no-preference) {
+        animation: o_we_chrome_loading .8s ease-in-out infinite alternate;
+    }
+}
+@keyframes o_we_chrome_loading {
+    to { opacity: .25; }
+}
+
+// Hidden on this page (a page option), but kept in view while editing it (see
+// `websitePageConfigOptionPlugin`'s `setPartVisible`).
+:is(#wrapwrap > header, #wrapwrap > footer, .o_page_breadcrumb).o_snippet_invisible:not(.d-none) {
+    opacity: .5;
+}
