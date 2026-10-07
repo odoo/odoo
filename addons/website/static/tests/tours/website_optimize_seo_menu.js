@@ -131,3 +131,21 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
+registerWebsitePreviewTour("seo_video_description_check", {}, () => [
+    ...openSeoModal(),
+    {
+        content: "The video is reported as missing a description",
+        trigger: ".o_seo_images_check input.is-invalid",
+        run: "edit This is a description of the video",
+    },
+    {
+        content: "The warning is gone",
+        trigger: ".o_seo_images_check input.is-valid",
+    },
+    ...saveSeoModal(),
+    {
+        content: "The description is applied as the iframe title",
+        trigger: ":iframe .media_iframe_video iframe[title='This is a description of the video']",
+    },
+]);
