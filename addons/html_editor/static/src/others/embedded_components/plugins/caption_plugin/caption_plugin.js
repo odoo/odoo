@@ -46,7 +46,6 @@ export class CaptionPlugin extends Plugin {
         on_will_drag_handlers: this.expandSelectionToCaption.bind(this),
         delete_image_overrides: this.handleDeleteImage.bind(this),
         on_media_dialog_saved_handlers: this.onImageReplaced.bind(this),
-        hints: [{ selector: "FIGCAPTION > .o_caption_editable", text: _t("Write a caption...") }],
         hint_targets_providers: (selectionData) => {
             const captionSpan = closestElement(
                 selectionData.editableSelection.anchorNode,
@@ -57,32 +56,17 @@ export class CaptionPlugin extends Plugin {
             }
             return [];
         },
-        is_formattable_node_predicates: (node) => {
-            if (closestElement(node, CAPTION_SPAN_SELECTOR)) {
-                return false;
-            }
-        },
-        is_node_splittable_predicates: [
-            (node) => {
-                // avoid merge
-                if (["FIGURE", "FIGCAPTION"].includes(node.nodeName)) {
-                    return false;
-                }
-            },
+        region_properties: [
+            { within: CAPTION_SPAN_SELECTOR, formattable: false, toolbar: DISABLED_NAMESPACE },
+            { is: "FIGCAPTION > .o_caption_editable", hintText: _t("Write a caption...") },
+            // avoid merge
+            { is: "FIGURE, FIGCAPTION", splittable: false },
         ],
         is_link_allowed_on_selection_predicates: () => {
             if (this.isLinkAllowedOnSelection()) {
                 return true;
             }
         },
-        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
-            if (
-                targetedNodes.length &&
-                targetedNodes.every((node) => closestElement(node, CAPTION_SPAN_SELECTOR))
-            ) {
-                return DISABLED_NAMESPACE;
-            }
-        }),
         html_drop_overrides: this.onDrop.bind(this),
         paste_text_overrides: this.onPaste.bind(this),
         paste_html_overrides: this.onPaste.bind(this),

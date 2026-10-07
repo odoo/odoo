@@ -175,7 +175,12 @@ export class ListPlugin extends Plugin {
             { commandId: "toggleListCL" },
         ].map((item) => withSequence(15, item)),
 
-        hints: [{ selector: `LI, LI > ${baseContainerGlobalSelector}`, text: _t("List") }],
+        /** Regions */
+        region_properties: [
+            { is: `LI, LI > ${baseContainerGlobalSelector}`, hintText: _t("List") },
+            { within: "LI", powerButtons: false },
+            { is: isListItemElement, placeholderHost: true },
+        ],
 
         /** Handlers */
         on_deleted_handlers: this.adjustListPaddingOnDelete.bind(this),
@@ -213,11 +218,6 @@ export class ListPlugin extends Plugin {
                         return true;
                     }
                 }
-            }
-        },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (isListItemElement(container)) {
-                return true;
             }
         },
         is_node_in_same_block_segment_predicates: (node, blockNode) => {

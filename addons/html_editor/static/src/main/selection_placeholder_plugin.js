@@ -21,7 +21,7 @@ const PLACEHOLDER_SELECTOR = `[${PLACEHOLDER_ATTRIBUTE}]`;
 
 export class SelectionPlaceholderPlugin extends Plugin {
     static id = "selectionPlaceholder";
-    static dependencies = ["baseContainer", "history", "selection", "domObserver"];
+    static dependencies = ["baseContainer", "history", "selection", "domObserver", "region"];
     resources = {
         on_remote_history_commits_applied_handlers: this.updatePlaceholders.bind(this),
         normalize_processors: withSequence(100, this.updatePlaceholders.bind(this)),
@@ -39,32 +39,9 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 return true;
             }
         },
-        is_selection_blocker_predicates: (blocker) => {
-            if (
-                (blocker.nodeType === Node.ELEMENT_NODE &&
-                    blocker.hasAttribute(PLACEHOLDER_ATTRIBUTE)) ||
-                !isBlock(blocker)
-            ) {
-                return false;
-            } else if (isNotEditableNode(blocker)) {
-                return true;
-            }
-        },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (
-                !isContentEditable(container) ||
-                isPhrasingContent(container) ||
-                !allowsParagraphRelatedElements(container)
-            ) {
-                return false;
-            } else if (container.getAttribute("contenteditable") === "true") {
-                return true;
-            }
-        },
-        should_show_power_buttons_predicates: ({ anchorNode }) => {
-            if (closestElement(anchorNode, PLACEHOLDER_SELECTOR)) {
-                return false;
-            }
+        region_properties: {
+            within: PLACEHOLDER_SELECTOR,
+            powerButtons: false,
         },
         move_node_blacklist_selectors: PLACEHOLDER_SELECTOR,
         system_node_selectors: PLACEHOLDER_SELECTOR,
@@ -88,12 +65,30 @@ export class SelectionPlaceholderPlugin extends Plugin {
      * everywhere we need them, and absent wherever they are not useful.
      */
     updatePlaceholders(root = this.editable) {
-        const isSelectionBlocker = (node) =>
-            this.checkPredicates("is_selection_blocker_predicates", node) ?? false;
+        // A non-editable block is a selection blocker by default; plugins
+        // override this per node via the `selectionBlocker` region property.
+        // Placeholders and inline elements are never selection blockers.
+        const isSelectionBlocker = (node) => {
+            if (
+                (node.nodeType === Node.ELEMENT_NODE && node.hasAttribute(PLACEHOLDER_ATTRIBUTE)) ||
+                !isBlock(node)
+            ) {
+                return false;
+            }
+            const region = this.dependencies.region.getProperty(node, "selectionBlocker");
+            const base = isNotEditableNode(node) ? true : undefined;
+            const defined = [region, base].filter((r) => r !== undefined);
+            return defined.length ? defined.every(Boolean) : false;
+        };
+        // A non-editable, phrasing or non-paragraph container can never host a
+        // placeholder, whatever its `placeholderHost` region property says.
         const placeholderParents = selectElements(this.editable, "*").filter(
             (container) =>
-                this.checkPredicates("can_contain_selection_placeholder_predicates", container) ??
-                false
+                isContentEditable(container) &&
+                !isPhrasingContent(container) &&
+                allowsParagraphRelatedElements(container) &&
+                (this.dependencies.region.getProperty(container, "placeholderHost") ??
+                    container.getAttribute("contenteditable") === "true")
         );
 
         const marginUpdates = [];

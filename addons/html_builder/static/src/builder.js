@@ -185,10 +185,10 @@ export class Builder extends Component {
                     Component: InvisibleElementsPanel,
                     props: this.invisibleElementsPanelState,
                 }),
-                is_node_splittable_predicates: (/** @type {Node} */ node) => {
-                    if (node.querySelector?.("[data-oe-translation-source-sha]")) {
-                        return false;
-                    }
+                region_properties: {
+                    is: (/** @type {Node} */ node) =>
+                        Boolean(node.querySelector?.("[data-oe-translation-source-sha]")),
+                    splittable: false,
                 },
             },
             localOverlayContainers: {

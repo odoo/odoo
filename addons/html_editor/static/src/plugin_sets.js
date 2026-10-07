@@ -13,6 +13,7 @@ import { LineBreakPlugin } from "./core/line_break_plugin";
 import { NoInlineRootPlugin } from "./core/no_inline_root_plugin";
 import { OverlayPlugin } from "./core/overlay_plugin";
 import { ProtectedNodePlugin } from "./core/protected_node_plugin";
+import { RegionPlugin } from "./core/region_plugin";
 import { SanitizePlugin } from "./core/sanitize_plugin";
 import { SelectionPlugin } from "./core/selection_plugin";
 import { ShortCutPlugin } from "./core/shortcut_plugin";
@@ -101,6 +102,7 @@ export const CORE_PLUGINS = [
     NoInlineRootPlugin,
     OverlayPlugin,
     ProtectedNodePlugin,
+    RegionPlugin,
     SanitizePlugin,
     SelectionPlugin,
     SplitPlugin,

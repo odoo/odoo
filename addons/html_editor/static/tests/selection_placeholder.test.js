@@ -645,7 +645,7 @@ test("should not insert a selection placeholder around an inline element", async
     class SelectionBlockerPlugin extends Plugin {
         id = "selectionBlockerPlugin";
         resources = {
-            is_selection_blocker_predicates: (node) => node.nodeName === "i",
+            region_properties: { is: "i", selectionBlocker: true },
         };
     }
     await testEditor({
