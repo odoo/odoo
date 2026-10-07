@@ -279,13 +279,14 @@ class EventMail(models.Model):
                 self.env.invalidate_all()
 
     def _create_missing_mail_registrations(self, registrations):
+        batch_size = self.env['ir.config_parameter'].sudo().get_int('mail.batch_size') or 500  # be sure to not have 0, as otherwise no iteration is done
         new = self.env["event.mail.registration"]
         for scheduler in self:
-            for _chunk in tools.split_every(500, registrations.ids, self.env["event.registration"].browse):
+            for chunk in tools.split_every(batch_size, registrations.ids, self.env["event.registration"].browse):
                 new += self.env['event.mail.registration'].create([{
                     'registration_id': registration.id,
                     'scheduler_id': scheduler.id,
-                } for registration in registrations])
+                } for registration in chunk])
         return new
 
     def _refresh_mail_count_done(self, mail_slot=False):
