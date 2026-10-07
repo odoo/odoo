@@ -2119,8 +2119,7 @@ class AccountMove(models.Model):
 
         companies = self.mapped("company_id")
         companies_partners = companies.mapped("partner_id")
-        moves_simplified = self.filtered(lambda m: m._l10n_it_edi_is_simplified())
-        moves_full = self - moves_simplified
+        moves_simplified, moves_full = self.partitioned(lambda m: m._l10n_it_edi_is_simplified())
 
         full = moves_full.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners)
         simplified = moves_simplified.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners | full)

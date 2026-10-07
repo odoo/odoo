@@ -229,15 +229,16 @@ class AccountMove(models.Model):
             'l10n_es_applicability': tax_applicability,
         })
 
-        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product')
-        base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
-        epd_amls = self.line_ids.filtered(lambda line: line.display_type == 'epd')
+        base_amls, epd_amls, cash_rounding_amls, tax_amls, _other_amls = self.line_ids.partitioned(
+            lambda line: line.display_type == 'product',
+            lambda line: line.display_type == 'epd',
+            lambda line: line.display_type == 'rounding' and not line.tax_repartition_line_id,
+            'tax_repartition_line_id',
+        )
+        base_lines = [self._prepare_product_base_line_for_taxes_computation(line) for line in base_amls]
         base_lines += [self._prepare_epd_base_line_for_taxes_computation(line) for line in epd_amls]
-        cash_rounding_amls = self.line_ids \
-            .filtered(lambda line: line.display_type == 'rounding' and not line.tax_repartition_line_id)
         base_lines += [self._prepare_cash_rounding_base_line_for_taxes_computation(line) for line in cash_rounding_amls]
-        tax_amls = self.line_ids.filtered('tax_repartition_line_id')
-        tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
+        tax_lines = [self._prepare_tax_line_for_taxes_computation(line) for line in tax_amls]
         vals['tax_details'] = self.env['l10n_es_edi_verifactu.document']._get_tax_details(base_lines, company, tax_lines=tax_lines)
 
         return vals
