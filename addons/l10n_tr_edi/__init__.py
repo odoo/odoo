@@ -2,7 +2,7 @@ from . import models
 from . import tools
 
 
-def _l10n_tr_nilvera_post_init(env):
+def _l10n_tr_edi_post_init(env):
     env["res.lang"]._activate_and_install_lang("tr_TR")
 
 

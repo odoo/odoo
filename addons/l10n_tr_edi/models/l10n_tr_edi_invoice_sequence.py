@@ -12,8 +12,8 @@ from odoo.addons.l10n_tr_edi.const import (
 SEQUENCE_NAME_REGEX = re.compile(r"[0-9A-Z]{3}")
 
 
-class L10nTrNilveraEinvoiceInvoiceSequence(models.Model):
-    _name = "l10n_tr_nilvera_einvoice.invoice.sequence"
+class L10n_Tr_EdiInvoiceSequence(models.Model):
+    _name = "l10n_tr_edi.invoice.sequence"
     _description = "Turkish e-Document Invoice Sequence"
     _order = "sequence, id"
 
@@ -49,13 +49,13 @@ class L10nTrNilveraEinvoiceInvoiceSequence(models.Model):
         help="Restrict this series to partners whose receivable account, or payable account on "
         "vendor documents, is this one. Leave empty to apply it whatever their account.",
     )
-    l10n_tr_nilvera_customer_status = fields.Selection(
+    l10n_tr_edi_customer_status = fields.Selection(
         selection=[
             ('not_checked', "Not Verified"),
             ('earchive', "E-Archive"),
             ('einvoice', "E-Invoice"),
         ],
-        compute='_compute_l10n_tr_nilvera_customer_status',
+        compute='_compute_l10n_tr_edi_customer_status',
         store=True,
         readonly=False,
         string="Customer Status",
@@ -105,13 +105,13 @@ class L10nTrNilveraEinvoiceInvoiceSequence(models.Model):
         "A journal cannot have two e-Document sequences with the same code.",
     )
 
-    @api.depends('journal_type', 'l10n_tr_is_export_invoice', 'l10n_tr_nilvera_customer_status')
+    @api.depends('journal_type', 'l10n_tr_is_export_invoice', 'l10n_tr_edi_customer_status')
     def _compute_l10n_tr_scenario_applies(self):
         for record in self:
             record.l10n_tr_scenario_applies = (
                 record.journal_type != 'purchase'
                 and not record.l10n_tr_is_export_invoice
-                and record.l10n_tr_nilvera_customer_status == 'einvoice'
+                and record.l10n_tr_edi_customer_status == 'einvoice'
             )
 
     @api.depends('journal_type', 'l10n_tr_is_export_invoice')
@@ -146,17 +146,17 @@ class L10nTrNilveraEinvoiceInvoiceSequence(models.Model):
                 record.l10n_tr_is_credit_note = record.l10n_tr_gib_invoice_type in GIB_RETURN_INVOICE_TYPES
 
     @api.depends('partner_id')
-    def _compute_l10n_tr_nilvera_customer_status(self):
+    def _compute_l10n_tr_edi_customer_status(self):
         for record in self:
             if record.partner_id:
-                record.l10n_tr_nilvera_customer_status = record.partner_id.l10n_tr_nilvera_customer_status
+                record.l10n_tr_edi_customer_status = record.partner_id.l10n_tr_edi_customer_status
             else:
-                record.l10n_tr_nilvera_customer_status = record._origin.l10n_tr_nilvera_customer_status
+                record.l10n_tr_edi_customer_status = record._origin.l10n_tr_edi_customer_status
 
     @api.constrains(
         'journal_id',
         'partner_id',
-        'l10n_tr_nilvera_customer_status',
+        'l10n_tr_edi_customer_status',
         'l10n_tr_gib_invoice_scenario',
         'l10n_tr_gib_invoice_type',
         'l10n_tr_is_export_invoice',
@@ -168,7 +168,7 @@ class L10nTrNilveraEinvoiceInvoiceSequence(models.Model):
         bypasses the computes, so this constraints makes sure the data is consistent.
         """
         for record in self:
-            if record.partner_id and record.l10n_tr_nilvera_customer_status != record.partner_id.l10n_tr_nilvera_customer_status:
+            if record.partner_id and record.l10n_tr_edi_customer_status != record.partner_id.l10n_tr_edi_customer_status:
                 raise ValidationError(self.env._(
                     "The e-Document sequence %(name)s sets a Customer Status that does not match "
                     "its customer. Leave it empty: it is taken from the customer.",
@@ -211,7 +211,7 @@ class L10nTrNilveraEinvoiceInvoiceSequence(models.Model):
         return (
             bool(self.partner_id),
             bool(self.account_id),
-            bool(self.l10n_tr_nilvera_customer_status),
+            bool(self.l10n_tr_edi_customer_status),
             bool(self.l10n_tr_gib_invoice_scenario),
             bool(self.l10n_tr_gib_invoice_type),
         )
@@ -230,8 +230,8 @@ class L10nTrNilveraEinvoiceInvoiceSequence(models.Model):
                 or self.account_id == move._l10n_tr_get_partner_control_account()
             )
             and (
-                not self.l10n_tr_nilvera_customer_status
-                or self.l10n_tr_nilvera_customer_status == move.l10n_tr_nilvera_customer_status
+                not self.l10n_tr_edi_customer_status
+                or self.l10n_tr_edi_customer_status == move.l10n_tr_edi_customer_status
             )
             and (
                 not self.l10n_tr_scenario_applies
