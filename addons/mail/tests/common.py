@@ -1218,8 +1218,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             self.assertEqual(tracking.old_value_char, (old_value and old_value.display_name) or '')
             self.assertEqual(tracking.new_value_char, (new_value and new_value.display_name) or '')
         elif value_type == 'monetary':
-            currency = (additional_info or {})['currency']
-            self.assertEqual(tracking.field_info['currency_id'], currency.id)
+            currency = (additional_info or {}).get('currency')
+            self.assertEqual(tracking.field_info['currency_id'], currency.id if currency else False)
             self.assertEqual(tracking.old_value_float, old_value)
             self.assertEqual(tracking.new_value_float, new_value)
         else:
@@ -1263,9 +1263,13 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             old_value = formatLang(TrackingMixin.env, old_value, rounding_unit='units') if old_value is not False else '0'
             new_value = formatLang(TrackingMixin.env, new_value, rounding_unit='units') if new_value is not False else '0'
         elif value_type == 'monetary':
-            currency = (additional_info or {})['currency']
-            old_value = format_amount(TrackingMixin.env, float(old_value or 0.0), currency, trailing_zeroes=True)
-            new_value = format_amount(TrackingMixin.env, float(new_value or 0.0), currency, trailing_zeroes=True)
+            currency = (additional_info or {}).get('currency')
+            if not currency:
+                old_value = formatLang(TrackingMixin.env, old_value or 0)
+                new_value = formatLang(TrackingMixin.env, new_value or 0)
+            else:
+                old_value = format_amount(TrackingMixin.env, float(old_value or 0.0), currency, trailing_zeroes=True)
+                new_value = format_amount(TrackingMixin.env, float(new_value or 0.0), currency, trailing_zeroes=True)
             # TDE to check: &nbsp; versus \xa0
             old_value = old_value.replace('\xa0', ' ')
             new_value = new_value.replace('\xa0', ' ')
