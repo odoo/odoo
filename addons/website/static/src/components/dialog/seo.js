@@ -33,6 +33,7 @@ const WORD_SEPARATORS_REGEX =
 export const seoContext = proxy({
     description: "",
     keywords: [],
+    generatedKeywords: [],
     title: "",
     seoName: "",
     metaImage: "",
@@ -88,6 +89,8 @@ const getSeo = async (self, onlyKeywords = false) => {
         p: 1,
     };
     const maxNGrams = 2;
+    const maxCandidates = 10;
+    const targetKeywordsCount = 7;
 
     const getKeywordsFromText = (text, weight, wordCounts) => {
         const segmenter = new Intl.Segmenter(lang, { granularity: "word" });
@@ -155,7 +158,7 @@ const getSeo = async (self, onlyKeywords = false) => {
             .sort((a, b) => b[1] - a[1])
             .filter((entry) => entry[1] > 0)
             .map((entry) => entry[0])
-            .slice(0, 7);
+            .slice(0, maxCandidates);
         return sortedKeywords;
     };
 
@@ -179,16 +182,31 @@ const getSeo = async (self, onlyKeywords = false) => {
         return self.seoContext.title || self.seoContext.description || "";
     };
 
-    const keywords = extractKeywords();
-    if (keywords.length) {
-        self.seoContext.keywords.push(
-            ...keywords.filter((kw) => !self.seoContext.keywords.includes(kw))
+    // Fill the list up to the target with candidates the user has not seen
+    // yet, then with the least recently generated ones (round robin), so
+    // that removed keywords only come back once all candidates were shown.
+    const seenKeywords = self.seoContext.generatedKeywords;
+    const candidates = extractKeywords().filter((kw) => !self.seoContext.keywords.includes(kw));
+    const missingCount = Math.max(0, targetKeywordsCount - self.seoContext.keywords.length);
+    const newKeywords = candidates
+        .filter((kw) => !seenKeywords.includes(kw))
+        .slice(0, missingCount);
+    if (newKeywords.length < missingCount) {
+        newKeywords.push(
+            ...seenKeywords
+                .filter((kw) => candidates.includes(kw))
+                .slice(0, missingCount - newKeywords.length)
         );
+        // All candidates were seen: start a new round.
+        self.seoContext.generatedKeywords = [];
     }
+    self.seoContext.keywords.push(...newKeywords);
+    self.seoContext.generatedKeywords.push(...newKeywords);
     if (!onlyKeywords) {
         self.seoContext.title = htmlToTextContentInline(self.seoContext.defaultTitle);
         self.seoContext.description = extractDescription();
     }
+    return newKeywords;
 };
 
 /**
@@ -459,6 +477,7 @@ class MetaKeywords extends Component {
         this.state = proxy({
             language: "",
             keyword: "",
+            noNewKeywords: false,
         });
 
         this.maxKeywords = 10;
@@ -469,8 +488,9 @@ class MetaKeywords extends Component {
         });
     }
 
-    provideKeywords() {
-        getSeo(this, true);
+    async provideKeywords() {
+        const newKeywords = await getSeo(this, true);
+        this.state.noNewKeywords = !newKeywords.length;
     }
 
     normalizeKeyword(keyword) {
@@ -499,15 +519,18 @@ class MetaKeywords extends Component {
         if (keyword && !this.seoContext.keywords.includes(keyword)) {
             this.seoContext.keywords.push(keyword);
             this.state.keyword = "";
+            this.state.noNewKeywords = false;
         }
     }
 
     removeKeyword(keyword) {
         this.seoContext.keywords = this.seoContext.keywords.filter((kw) => kw !== keyword);
+        this.state.noNewKeywords = false;
     }
 
     removeAllKeywords() {
         this.seoContext.keywords = [];
+        this.state.noNewKeywords = false;
     }
 
     get hasKeyword() {
@@ -1076,6 +1099,7 @@ export class OptimizeSEODialog extends Component {
             } else {
                 seoContext.keywords = [];
             }
+            seoContext.generatedKeywords = [];
         });
     }
 
@@ -1218,6 +1242,8 @@ export class OptimizeSEODialog extends Component {
         }
 
         await Promise.all(rpcCalls);
+        Object.assign(this.initialSeoState, this.getEditableSeoState());
+        this.isDirty.set(!this.savedContext());
 
         this.website.goToWebsite({
             path: this.url.replace(

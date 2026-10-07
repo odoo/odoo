@@ -214,6 +214,10 @@
             <i class="oi me-1" data-icon="close" aria-hidden="true"/>
             The keyword <t t-out="this.normalizeKeyword(this.state.keyword)"/> already exists.
         </span>
+        <span t-if="this.state.noNewKeywords" class="me-2 small text-danger">
+            <i class="oi me-1" data-icon="close" aria-hidden="true"/>
+            No new keywords found in this page's content.
+        </span>
     </section>
 </t>
 
