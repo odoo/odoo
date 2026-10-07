@@ -26,12 +26,9 @@ class ResUsers(models.Model):
         all_activities = self.env['mail.activity'].browse(mailing_group['activity_ids'])
         mailing_ids = set(all_activities.mapped('res_id'))
 
-        activities_by_type = all_activities.grouped(
-            lambda a: self.env['mailing.mailing'].browse(a.res_id).with_prefetch(mailing_ids).mailing_type
+        sms_activities, email_activities = all_activities.partitioned(
+            lambda a: self.env['mailing.mailing'].browse(a.res_id).with_prefetch(mailing_ids).mailing_type == 'sms',
         )
-
-        email_activities = activities_by_type.get('mail', self.env['mail.activity'])
-        sms_activities = activities_by_type.get('sms', self.env['mail.activity'])
 
         if email_activities:
             email_group = self._format_activity_group('mailing.mailing', email_activities)

@@ -634,18 +634,14 @@ class AccountMove(models.Model):
         is_intra_state = self.l10n_in_state_id == self.company_id.state_id
         is_overseas = self.l10n_in_gst_treatment == "overseas"
         is_price_adjustment = self.l10n_in_adjustment_type == 'price_adjustment'
-        line_ids = []
-        global_discount_line_ids = []
-        grouping_lines = self.invoice_line_ids.grouped(
-            lambda l: l.display_type == 'product' and (l._l10n_in_is_global_discount() and 'global_discount' or 'lines')
+        global_discount_lines, product_lines, _other_lines = self.invoice_line_ids.partitioned(
+            lambda l: l.display_type == 'product' and l._l10n_in_is_global_discount(),
+            lambda l: l.display_type == 'product',
         )
-        default_line = self.env['account.move.line'].browse()
-        lines = grouping_lines.get('lines', default_line)
-        global_discount_line = grouping_lines.get('global_discount', default_line)
         tax_details_per_record = tax_details['tax_details_per_record']
         sign = self.is_inbound() and -1 or 1
         rounding_amount = sum(line.balance for line in self.line_ids if line.display_type == 'rounding') * sign
-        global_discount_amount = sum(line.balance for line in global_discount_line) * -sign
+        global_discount_amount = sum(line.balance for line in global_discount_lines) * -sign
         in_round = self._l10n_in_round_value
         json_payload = {
             "Version": "1.1",
@@ -680,7 +676,7 @@ class AccountMove(models.Model):
                     tax_details_per_record.get(line, {}),
                     is_price_adjustment
                 )
-                for index, line in enumerate(lines, start=1)
+                for index, line in enumerate(product_lines, start=1)
             ],
             "ValDtls": {
                 "AssVal": in_round(tax_details['base_amount']),
