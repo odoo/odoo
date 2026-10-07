@@ -7,6 +7,7 @@ import { CustomerDisplayPlugin } from "@point_of_sale/customer_display/customer_
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useTime } from "@point_of_sale/app/hooks/time_hook";
 import { FeedbackPaymentSummary } from "@point_of_sale/app/components/feedback_payment_summary/feedback_payment_summary";
+import { _t } from "@web/core/l10n/translation";
 
 export class CustomerDisplay extends Component {
     static template = "point_of_sale.CustomerDisplay";
@@ -34,6 +35,10 @@ export class CustomerDisplay extends Component {
 
     get order() {
         return this.customerDisplay.data();
+    }
+
+    get posWelcomeMessage() {
+        return this.session.welcome_message || _t("Welcome");
     }
 
     get qrData() {
