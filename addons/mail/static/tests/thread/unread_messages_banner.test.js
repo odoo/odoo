@@ -14,7 +14,14 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 import { waitFor, waitForNone, waitUntil } from "@odoo/hoot-dom";
 import { mockUserAgent, tick } from "@odoo/hoot-mock";
-import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    contains,
+    getService,
+    onRpc,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -134,11 +141,11 @@ test("remove banner when opening thread at the bottom", async () => {
     await openDiscuss(channelId);
     await hover(".o-mail-Message:has(:text('Hello World'))");
     await click("[title='Expand']", { parent: [".o-mail-Message:has(:text('Hello World'))"] });
-    await click(".o-dropdown-item:contains('Mark as Unread')");
+    await contains(".o-dropdown-item:contains('Mark as Unread'):count(1)").click();
     await waitFor(".o-mail-Thread-banner:has(:text('1 new message')):count(1)");
-    await click(".o-mail-NotificationItem:has(:text('sales'))");
+    await contains(".o-mail-NotificationItem:has(:text('sales')):count(1)").click();
     await waitFor(".o-mail-DiscussContent-threadName[title='sales']:count(1)");
-    await click(".o-mail-NotificationItem:has(:text('general'))");
+    await contains(".o-mail-NotificationItem:has(:text('general')):count(1)").click();
     await waitFor(".o-mail-DiscussContent-threadName[title='general']:count(1)");
     await waitForNone(".o-mail-Thread-banner:has(:text('1 new message'))");
 });
@@ -159,7 +166,7 @@ test("keep banner after mark as unread when scrolling to bottom", async () => {
     await openDiscuss(channelId);
     await hover(".o-mail-Message:has(:text('message 29'))");
     await click("[title='Expand']", { parent: [".o-mail-Message:has(:text('message 29'))"] });
-    await click(".o-dropdown-item:text('Mark as Unread')");
+    await contains(".o-dropdown-item:text('Mark as Unread'):count(1)").click();
     await scroll(".o-mail-Thread", "bottom");
     await waitFor(".o-mail-Thread-banner:has(:text('30 new messages')):count(1)");
 });
@@ -188,7 +195,7 @@ test("sidebar and banner counters display same value", async () => {
     await mailContains(".o-discuss-badge:text('30')", {
         parent: [".o-mail-MessagingMenuItem:has(:text('Bob'))"],
     });
-    await click(".o-mail-NotificationItem:has(:text('Bob'))");
+    await contains(".o-mail-NotificationItem:has(:text('Bob')):count(1)").click();
     await waitFor(".o-mail-Thread-banner:has(:text('30 new messages')):count(1)");
     await waitFor(".o-discuss-badge:text('30'):count(1)");
     await withUser(bobUserId, () =>
@@ -229,13 +236,13 @@ test("mobile: mark as read when opening chat", async () => {
     await start();
     await openDiscuss();
     await waitFor(".o-mail-MessagingMenu-tab.active:has(:text('Chats')) .badge:text(1):count(1)");
-    await click("button:has(.badge:contains('1')):has(:text('Chats'))");
+    await contains("button:has(.badge:contains('1')):has(:text('Chats')):count(1)").click();
     await waitFor(".o-mail-NotificationItem:has(.badge:contains(1)):has(:text('bob')):count(1)");
-    await click(".o-mail-NotificationItem:has(:text('bob'))");
+    await contains(".o-mail-NotificationItem:has(:text('bob')):count(1)").click();
     await waitFor(".o-mail-Message:count(1)");
     await waitFor(".o-mail-Thread.o-focused:count(1)");
     await waitFor(".o-mail-Composer:not(.o-focused):count(1)");
-    await click(".o-mail-ChatWindow-header [title*='Close Chat Window']");
+    await contains(".o-mail-ChatWindow-header [title*='Close Chat Window']:count(1)").click();
     await waitForNone(".o-mail-NotificationItem:has(.badge:contains(1)):has(:text('bob'))");
 });
 
@@ -261,10 +268,10 @@ test("show banner for new message after thread was read from another device", as
     }
     await start();
     await openDiscuss();
-    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await click(".o-mail-NotificationItem:has(:text('General'))");
+    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('General')):count(1)").click();
     await waitFor(".o-mail-Thread-banner:has(:text('20 new messages')):count(1)");
-    await click(".o-mail-Thread-banner span:text('Mark as Read')");
+    await contains(".o-mail-Thread-banner span:text('Mark as Read'):count(1)").click();
     await waitForNone(".o-mail-Thread-banner");
     // Simulate mark as read from another device.
     await rpc("/discuss/channel/mark_as_read", {

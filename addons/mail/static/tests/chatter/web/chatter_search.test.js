@@ -11,7 +11,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { contains, serverState } from "@web/../tests/web_test_helpers";
 
 import { HIGHLIGHT_CLASS } from "@mail/core/common/message_search_hook";
 
@@ -33,7 +33,7 @@ test("Click on the search icon should open the search form", async () => {
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    await click("[title='Search Messages']");
+    await contains("[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await waitFor(".o-mail-SearchInput input:count(1)");
 });
@@ -95,15 +95,15 @@ test("opening search in chatter hides files and pinned messages panels", async (
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("button[aria-label='Attach files']:text('1')");
+    await contains("button[aria-label='Attach files']:text('1'):count(1)").click();
     await waitFor(".o-mail-AttachmentBox:count(1)");
-    await click("[title='Search Messages']");
+    await contains("[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await waitForNone(".o-mail-AttachmentBox");
     await waitFor("button[title='Attach files']:enabled:text('1'):count(1)");
-    await click("button[title='Pinned Messages']:enabled");
+    await contains("button[title='Pinned Messages']:enabled:count(1)").click();
     await waitFor(".o-mail-pinnedMessages:count(1)");
-    await click("[title='Search Messages']");
+    await contains("[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await waitForNone(".o-mail-pinnedMessages");
 });
@@ -119,7 +119,7 @@ test("Search in chatter should be hightligted", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("[title='Search Messages']");
+    await contains("[title='Search Messages']:count(1)").click();
     await insertText(".o-mail-SearchInput input", "empty");
     await waitFor(`.o-mail-SearchMessageResult .o-mail-Message .${HIGHLIGHT_CLASS}:count(1)`);
 });
@@ -140,7 +140,7 @@ test("Scrolling bottom in non-aside chatter should load more searched message", 
     }
     await start();
     await openFormView("res.partner", partnerId);
-    await click("[title='Search Messages']");
+    await contains("[title='Search Messages']:count(1)").click();
     await insertText(".o-mail-SearchInput input", "message");
     await waitFor(".o-mail-SearchMessageResult .o-mail-Message:count(30)");
     await scroll(".o_content", "bottom");
@@ -160,11 +160,11 @@ test("Switching chatter filters after empty result should show messages", async 
     });
     await start();
     await openFormView("res.partner", serverState.partnerId);
-    await click("[title='Search Messages']");
-    await click("[title='Filter Messages']");
-    await click(".o-dropdown-item:text('Changes')");
+    await contains("[title='Search Messages']:count(1)").click();
+    await contains("[title='Filter Messages']:count(1)").click();
+    await contains(".o-dropdown-item:text('Changes'):count(1)").click();
     await waitFor(".o-mail-MessageCardList:text('No messages found'):count(1)");
-    await click("[title='Filter Messages']");
-    await click(".o-dropdown-item:text('Messages')");
+    await contains("[title='Filter Messages']:count(1)").click();
+    await contains(".o-dropdown-item:text('Messages'):count(1)").click();
     await waitFor(".o-mail-SearchMessageResult .o-mail-Message-content:text('not empty'):count(1)");
 });

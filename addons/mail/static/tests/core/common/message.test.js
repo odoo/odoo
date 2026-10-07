@@ -1,5 +1,4 @@
 import {
-    click,
     contains as mailContains,
     defineMailModels,
     insertText,
@@ -13,6 +12,7 @@ import {
 import { describe, test } from "@odoo/hoot";
 import { animationFrame, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { getOrigin } from "@web/core/utils/urls";
+import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -28,7 +28,7 @@ test("following internal link from chatter does not open chat window", async () 
     await start();
     await openFormView("res.partner", partnerId);
     await waitFor(".o_last_breadcrumb_item:has(:text('Jeanne')):count(1)");
-    await click("a:text('Admin')");
+    await contains("a:text('Admin'):count(1)").click();
     await waitFor(".o_last_breadcrumb_item:has(:text('Mitchell Admin')):count(1)");
     // Assert 0 chat windows not sufficient because not enough time for potential chat window opening.
     // Let's open another chat window to give some time and assert only manually open chat window opens.
@@ -37,8 +37,8 @@ test("following internal link from chatter does not open chat window", async () 
     await triggerHotkey("control+k");
     await insertText(".o_command_palette_search input[placeholder='Search for a command...'", "@");
     await insertText(".o_command_palette_search input[placeholder='Search conversations'", "abc");
-    await click("a:has(:text('Create Channel'))");
-    await click("button:text(Create Channel)");
+    await contains("a:has(:text('Create Channel')):count(1)").click();
+    await contains("button:text(Create Channel):count(1)").click();
     await waitFor(".o-mail-ChatWindow-header:text('abc'):count(1)");
     await waitFor(".o-mail-ChatWindow:count(1)");
 });
@@ -54,7 +54,7 @@ test("message link shows error when the message is not known", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("a.o_message_redirect");
+    await contains("a.o_message_redirect:count(1)").click();
     await waitFor(".o_notification:contains(This conversation isn’t available.):count(1)");
 });
 
@@ -85,11 +85,11 @@ test("same-thread message link does not open the thread again but highlights the
     });
     await start();
     await openFormView("res.partner", aliceId);
-    await click("a.o_message_redirect:contains(Alice)");
+    await contains("a.o_message_redirect:contains(Alice):count(1)").click();
     await waitFor(".o-mail-Message.o-highlighted:contains(Hello):count(1)");
     await animationFrame(); // give enough time for the potential breadcrumb item to render
     await waitForNone(".breadcrumb-item");
-    await click("a.o_message_redirect:contains(Lena)");
+    await contains("a.o_message_redirect:contains(Lena):count(1)").click();
     await waitFor(".o-mail-Message.o-highlighted:contains(Hey):count(1)");
     await waitFor(".breadcrumb-item:contains(Alice):count(1)");
 });

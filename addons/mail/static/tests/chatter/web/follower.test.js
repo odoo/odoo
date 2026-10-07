@@ -9,7 +9,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
-import { onRpc } from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -106,13 +106,13 @@ test("edit follower and close subtype dialog", async () => {
     onRpcBefore("/mail/read_subscription_data", () => expect.step("fetch_subtypes"));
     await start();
     await openFormView("res.partner", threadId);
-    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Follower:count(1)");
     await waitFor("[title='Edit Notification Preferences']:count(1)");
-    await click("[title='Edit Notification Preferences']");
+    await contains("[title='Edit Notification Preferences']:count(1)").click();
     await waitFor(".o-mail-FollowerSubtypeDialog:count(1)");
     await expect.waitForSteps(["fetch_subtypes"]);
-    await click(".o-mail-FollowerSubtypeDialog button:text('Discard')");
+    await contains(".o-mail-FollowerSubtypeDialog button:text('Discard'):count(1)").click();
     await waitForNone(".o-mail-FollowerSubtypeDialog");
 });
 
@@ -135,13 +135,13 @@ test("remove a follower in a dirty form view", async () => {
                 <chatter/>
             </form>`,
     });
-    await click(".o_field_many2many_tags[name='channel_ids'] input");
-    await click(".dropdown-item:text('General')");
+    await contains(".o_field_many2many_tags[name='channel_ids'] input:count(1)").click();
+    await contains(".dropdown-item:text('General'):count(1)").click();
     await waitFor(".o_tag:text('General'):count(1)");
     await waitFor(".o-mail-Followers-counter:text('1'):count(1)");
     await editInput(document.body, ".o_field_char[name=name] input", "some value");
-    await click(".o-mail-Followers-button");
-    await click("[title='Remove this follower']");
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
+    await contains("[title='Remove this follower']:count(1)").click();
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");
     await mailContains(".o_field_char[name=name] input", { value: "some value" });
     await waitFor(".o_tag:text('General'):count(1)");
@@ -161,8 +161,8 @@ test("removing a follower should reload form view", async function () {
     await openFormView("res.partner", threadId);
     await waitFor(".o-mail-Followers-button:count(1)");
     await expect.waitForSteps([`read ${threadId}`]);
-    await click(".o-mail-Followers-button");
-    await click("[title='Remove this follower']");
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
+    await contains("[title='Remove this follower']:count(1)").click();
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");
     await expect.waitForSteps([`read ${threadId}`]);
 });

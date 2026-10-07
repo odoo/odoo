@@ -10,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick, waitFor } from "@odoo/hoot-dom";
-import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { contains, mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDate } from "@web/core/l10n/dates";
 
 defineMailModels();
@@ -174,12 +174,12 @@ test("list activity widget: open dropdown", async () => {
         arch: "<list><field name='name'/><field name='activity_ids' widget='list_activity'/></list>",
     });
     await waitFor(".o-mail-ListActivity-summary:text('Call with Al'):count(1)");
-    await click(".o-mail-ActivityButton");
+    await contains(".o-mail-ActivityButton:count(1)").click();
     await waitStoreFetch("mail.activity");
-    await click(
+    await contains(
         ":nth-child(1 of .o-mail-ActivityListPopoverItem) .o-mail-ActivityListPopoverItem-markAsDone"
-    );
-    await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
+    ).click();
+    await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']:count(1)").click();
     await expect.waitForSteps(["action_feedback"]);
     await waitFor(".o-mail-ListActivity-summary:text('Meet FP'):count(1)");
 });
@@ -227,7 +227,7 @@ test("list activity widget: batch selection from list", async (assert) => {
     expect(Boolean(alexanderRow)).toBe(true);
     // Clicking on the clock of a partner without selection, open the wizard for that record only
     await click(".o-mail-ActivityButton", { target: matildeRow });
-    await click(".o-mail-ActivityListPopover button");
+    await contains(".o-mail-ActivityListPopover button:count(1)").click();
     await wizardOpened;
     await tick();
     expect(scheduleWizardContext).toEqual({
@@ -247,7 +247,7 @@ test("list activity widget: batch selection from list", async (assert) => {
     await waitFor(
         ".o-mail-ActivityListPopover button:text('Schedule an activity on selected records'):count(1)"
     );
-    await click(".o-mail-ActivityListPopover button");
+    await contains(".o-mail-ActivityListPopover button:count(1)").click();
     await wizardOpened;
     expect(scheduleWizardContext).toEqual({
         // res.partner is ordered "complete_name ASC" so Mario sorts before Matilde, and active_id
@@ -263,7 +263,7 @@ test("list activity widget: batch selection from list", async (assert) => {
     await waitFor(
         ".o-mail-ActivityListPopover button:not(:contains('Schedule an activity on selected records')):count(1)"
     );
-    await click(".o-mail-ActivityListPopover button");
+    await contains(".o-mail-ActivityListPopover button:count(1)").click();
     await wizardOpened;
     expect(scheduleWizardContext).toEqual({
         active_ids: [alexanderId],
@@ -279,7 +279,7 @@ test("list activity widget: batch selection from list", async (assert) => {
     await waitFor(
         ".o-mail-ActivityListPopover button:text('Schedule an activity on selected records'):count(1)"
     );
-    await click(".o-mail-ActivityListPopover button");
+    await contains(".o-mail-ActivityListPopover button:count(1)").click();
     await wizardOpened;
     expect(scheduleWizardContext).toEqual({
         // res.partner is ordered "complete_name ASC" so Mario sorts before Matilde, and active_id

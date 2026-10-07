@@ -1,6 +1,5 @@
 import { waitFor } from "@odoo/hoot-dom";
 import {
-    click,
     start,
     startServer,
     openDiscuss,
@@ -8,7 +7,7 @@ import {
     onlineTest,
     defineMailModels,
 } from "@mail/../tests/mail_test_helpers";
-import { getService, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, getService, onRpc } from "@web/../tests/web_test_helpers";
 import { PeerToPeer, UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 
 defineMailModels();
@@ -73,7 +72,7 @@ onlineTest("Can join a call in p2p", async (assert) => {
     });
 
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-Call:count(1)");
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Remote']:count(1)");
     await Promise.all([localUserConnected, remoteUserConnected]);

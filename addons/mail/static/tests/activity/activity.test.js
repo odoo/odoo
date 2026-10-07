@@ -14,7 +14,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { hover, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
-import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { contains, mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -252,11 +252,11 @@ test("call activity displays phone actions", async () => {
         width: "1px",
     });
     expect(".o-mail-Activity-copy").toHaveStyle({ opacity: "0" });
-    await click(".o-mail-Activity-call");
+    await contains(".o-mail-Activity-call:count(1)").click();
     expect.verifySteps(["tel:+12025550182"]);
     await focus(".o-mail-Activity-copy");
     expect(".o-mail-Activity-copy").toHaveStyle({ opacity: "1" });
-    await click(".o-mail-Activity-copy");
+    await contains(".o-mail-Activity-copy:count(1)").click();
     expect.verifySteps(["copied: +1 202 555 0182"]);
 });
 
@@ -363,7 +363,7 @@ test("activity with mail template: preview mail", async () => {
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Activity:count(1)");
     await waitFor(".o-mail-ActivityMailTemplate-preview:count(1)");
-    await click(".o-mail-ActivityMailTemplate-preview");
+    await contains(".o-mail-ActivityMailTemplate-preview:count(1)").click();
     await expect.waitForSteps(["do_action"]);
 });
 
@@ -390,7 +390,7 @@ test("activity with mail template: send mail", async () => {
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Activity:count(1)");
     await waitFor(".o-mail-ActivityMailTemplate-send:count(1)");
-    await click(".o-mail-ActivityMailTemplate-send");
+    await contains(".o-mail-ActivityMailTemplate-send:count(1)").click();
     await expect.waitForSteps(["activity_send_mail"]);
 });
 
@@ -408,9 +408,9 @@ test("activity click on Done", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Activity:count(1)");
-    await click(".btn:text('Done')");
+    await contains(".btn:text('Done'):count(1)").click();
     await waitFor(".o-mail-ActivityMarkAsDone:count(1)");
-    await click(".o-mail-Activity-markDone.btn:text('Done')");
+    await contains(".o-mail-Activity-markDone.btn:text('Done'):count(1)").click();
     await waitForNone(".o-mail-ActivityMarkAsDone");
 });
 
@@ -429,7 +429,7 @@ test("activity mark as done popover should focus feedback input on open", async 
     await start();
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Activity:count(1)");
-    await click(".btn:text('Done')");
+    await contains(".btn:text('Done'):count(1)").click();
     await waitFor(
         ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']:focus:count(1)"
     );
@@ -460,7 +460,7 @@ test("activity click on edit", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Activity .btn:text('Edit')");
+    await contains(".o-mail-Activity .btn:text('Edit'):count(1)").click();
     await expect.waitForSteps(["do_action"]);
 });
 
@@ -492,7 +492,7 @@ test("activity click on edit should pass correct context", async () => {
             return super.doAction(...arguments);
         },
     });
-    await click(".o-mail-Activity .btn:text('Edit')");
+    await contains(".o-mail-Activity .btn:text('Edit'):count(1)").click();
     await expect.waitForSteps(["do_action"]);
 });
 
@@ -513,8 +513,8 @@ test("activity click on edit then delete", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Activity .btn:text('Edit')");
-    await click(".modal-dialog .btn:text('Delete')");
+    await contains(".o-mail-Activity .btn:text('Edit'):count(1)").click();
+    await contains(".modal-dialog .btn:text('Delete'):count(1)").click();
     await waitForNone(".o-mail-Activity");
     await expect.waitForSteps(["unlink"]);
 });
@@ -532,7 +532,7 @@ test("activity mark done popover close on ESCAPE", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn:text('Done')");
+    await contains(".btn:text('Done'):count(1)").click();
     await waitFor(".o-mail-ActivityMarkAsDone:count(1)");
     triggerHotkey("Escape");
     await waitForNone(".o-mail-ActivityMarkAsDone");
@@ -551,8 +551,8 @@ test("activity mark done popover click on discard", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn:text('Done')");
-    await click(".o-mail-ActivityMarkAsDone button:text('Discard')");
+    await contains(".btn:text('Done'):count(1)").click();
+    await contains(".o-mail-ActivityMarkAsDone button:text('Discard'):count(1)").click();
     await waitForNone(".o-mail-ActivityMarkAsDone");
 });
 
@@ -656,7 +656,7 @@ test("activity with a link to a record", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId1);
-    await click(".o-mail-Activity-note a:text('record')");
+    await contains(".o-mail-Activity-note a:text('record'):count(1)").click();
     await mailContains(".o_form_view input", { value: "Partner 2" });
 });
 
@@ -672,7 +672,7 @@ test("activity with a user mention", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId1);
-    await click(".o-mail-Activity-note a:text('@Partner 2')");
+    await contains(".o-mail-Activity-note a:text('@Partner 2'):count(1)").click();
     await waitFor(".o_avatar_card:contains('Partner 2'):count(1)");
 });
 
@@ -687,6 +687,6 @@ test("activity with a channel mention", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Activity-note a:text('#Channel')");
+    await contains(".o-mail-Activity-note a:text('#Channel'):count(1)").click();
     await waitFor(".o-mail-ChatWindow-header:text('Channel'):count(1)");
 });

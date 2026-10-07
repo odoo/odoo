@@ -1,5 +1,4 @@
 import {
-    click,
     defineMailModels,
     listenStoreFetch,
     openFormView,
@@ -11,6 +10,7 @@ import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 
 import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal_project/chatter";
+import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -51,7 +51,7 @@ test("rendering with multiple partner followers", async () => {
     await openFormView("res.partner", partnerId_3);
     await waitFor(".o-mail-Followers:count(1)");
     await waitFor(".o-mail-Followers-button:count(1)");
-    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Followers-dropdown:count(1)");
     await waitFor(".o-mail-Follower:count(2)");
     await waitFor(".o-mail-Follower:eq(0):text('Jean Michang'):count(1)");
@@ -65,12 +65,12 @@ test("log note toggling", async () => {
     await openFormView("res.partner", partnerId);
     await waitFor("button:not(.active):text('Log note'):count(1)");
     await waitForNone(".o-mail-Composer");
-    await click("button:text('Log note')");
+    await contains("button:text('Log note'):enabled:count(1)").click();
     await waitFor("button.active:text('Log note'):count(1)");
     await waitFor(
         ".o-mail-Composer .o-mail-Composer-input[placeholder='Log an internal note…']:count(1)"
     );
-    await click("button:text('Log note')");
+    await contains("button:text('Log note'):enabled:count(1)").click();
     await waitFor("button:not(.active):text('Log note'):count(1)");
     await waitForNone(".o-mail-Composer");
 });
@@ -82,12 +82,12 @@ test("send message toggling", async () => {
     await openFormView("res.partner", partnerId);
     await waitFor("button:not(.active):text('Send message'):count(1)");
     await waitForNone(".o-mail-Composer");
-    await click("button:text('Send message')");
+    await contains("button:text('Send message'):enabled:count(1)").click();
     await waitFor("button.active:text('Send message'):count(1)");
     await waitFor(
         ".o-mail-Composer-input[placeholder='Send a message to all followers and selected contacts…']:count(1)"
     );
-    await click("button:text('Send message')");
+    await contains("button:text('Send message'):enabled:count(1)").click();
     await waitFor("button:not(.active):text('Send message'):count(1)");
     await waitForNone(".o-mail-Composer");
 });
@@ -100,13 +100,13 @@ test("log note/send message switching", async () => {
     await waitFor("button:not(.active):text('Send message'):count(1)");
     await waitFor("button:not(.active):text('Log note'):count(1)");
     await waitForNone(".o-mail-Composer");
-    await click("button:text('Send message')");
+    await contains("button:text('Send message'):enabled:count(1)").click();
     await waitFor("button.active:text('Send message'):count(1)");
     await waitFor("button:not(.active):text('Log note'):count(1)");
     await waitFor(
         ".o-mail-Composer-input[placeholder='Send a message to all followers and selected contacts…']:count(1)"
     );
-    await click("button:text('Log note')");
+    await contains("button:text('Log note'):enabled:count(1)").click();
     await waitFor("button:not(.active):text('Send message'):count(1)");
     await waitFor("button.active:text('Log note'):count(1)");
     await waitFor(".o-mail-Composer-input[placeholder='Log an internal note…']:count(1)");
@@ -210,7 +210,7 @@ test("attachment icon open the attachment box when there is at least 1 attachmen
     await waitFor("button[aria-label='Attach files']:count(1)");
     await waitForNone(".o-mail-AttachmentBox");
     await waitForNone(".o-mail-Chatter-fileUploader");
-    await click("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach files']:enabled:count(1)").click();
     await waitFor(".o-mail-AttachmentBox:count(1)");
     await waitFor(".o-mail-Chatter-fileUploader:count(1)");
 });
@@ -224,10 +224,12 @@ test("composer state conserved when clicking on another topbar button", async ()
     await waitFor("button:text('Send message'):count(1)");
     await waitFor("button:text('Log note'):count(1)");
     await waitFor("button[aria-label='Attach files']:count(1)");
-    await click("button:text('Log note')");
+    await contains("button:text('Log note'):enabled:count(1)").click();
     await waitFor("button.active:text('Log note'):count(1)");
     await waitFor("button:not(.active):text('Send message'):count(1)");
-    await click(".o-mail-Chatter-topbar button[aria-label='Attach files']");
+    await contains(
+        ".o-mail-Chatter-topbar button[aria-label='Attach files']:enabled:count(1)"
+    ).click();
     await waitFor("button.active:text('Log note'):count(1)");
     await waitFor("button:not(.active):text('Send message'):count(1)");
 });
@@ -265,7 +267,7 @@ test("Send message displays the number of notified followers inside a badge", as
     ]);
     await start();
     await openFormView("res.partner", partnerId_4);
-    await click("button:text('Send message')");
+    await contains("button:text('Send message'):enabled:count(1)").click();
     await waitFor(".o-mail-RecipientsInput .badge:text('2 Followers'):count(1)");
 });
 
@@ -286,12 +288,12 @@ test("Attach files and Pinned Messages panels are mutually exclusive", async () 
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("button[title='Attach files']:text('1')");
+    await contains("button[title='Attach files']:text('1'):count(1)").click();
     await waitFor(".o-mail-AttachmentBox:count(1)");
-    await click("button[title='Pinned Messages']");
+    await contains("button[title='Pinned Messages']:count(1)").click();
     await waitFor(".o-mail-pinnedMessages:count(1)");
     await waitForNone(".o-mail-AttachmentBox");
-    await click("button[title='Attach files']:text('1')");
+    await contains("button[title='Attach files']:text('1'):count(1)").click();
     await waitFor(".o-mail-AttachmentBox:count(1)");
     await waitForNone(".o-mail-pinnedMessages");
 });

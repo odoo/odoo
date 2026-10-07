@@ -1,5 +1,4 @@
 import {
-    click,
     contains as mailContains,
     defineMailModels,
     openFormView,
@@ -10,7 +9,7 @@ import {
 
 import { describe, expect, test } from "@odoo/hoot";
 import { tick, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { mockService, serverState } from "@web/../tests/web_test_helpers";
+import { contains, mockService, serverState } from "@web/../tests/web_test_helpers";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
@@ -22,7 +21,7 @@ test("base rendering not editable", async () => {
     await waitFor(".o-mail-Followers:count(1)");
     await waitFor(".o-mail-Followers-button:disabled:count(1)");
     await waitForNone(".o-mail-Followers-dropdown");
-    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-button:count(1)").click();
     await waitForNone(".o-mail-Followers-dropdown");
 });
 
@@ -35,7 +34,7 @@ test("base rendering editable", async () => {
     await waitFor(".o-mail-Followers-button:count(1)");
     await waitFor(".o-mail-Followers-button:first:enabled:count(1)");
     await waitForNone(".o-mail-Followers-dropdown");
-    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Followers-dropdown:count(1)");
 });
 
@@ -78,13 +77,13 @@ test('click on "add followers" button', async () => {
     await openFormView("res.partner", partnerId_1);
     await waitFor(".o-mail-Followers:count(1)");
     await waitFor(".o-mail-Followers-counter:text('1'):count(1)");
-    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Followers-dropdown:count(1)");
-    await click("a:text('Add Followers')");
+    await contains("a:text('Add Followers'):count(1)").click();
     await waitForNone(".o-mail-Followers-dropdown");
     await expect.waitForSteps(["action:open_view"]);
     await waitFor(".o-mail-Followers-counter:text('2'):count(1)");
-    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Follower:count(2)");
     await waitFor(".o-mail-Follower:eq(0):text('François Perusse'):count(1)");
     await waitFor(".o-mail-Follower:eq(1):text('Partner3'):count(1)");
@@ -106,9 +105,9 @@ test("click on remove follower", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId_1);
-    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Follower:count(1)");
-    await click("[title='Remove this follower']");
+    await contains("[title='Remove this follower']:count(1)").click();
     await waitForNone(".o-mail-Follower");
     await waitFor(".o-mail-Followers-dropdown:count(1)");
 });
@@ -129,7 +128,7 @@ test("Load 100 followers at once", async () => {
     await start();
     await openFormView("res.partner", partnerIds[0]);
     await waitFor("button[title='Show Followers']:text('210'):count(1)");
-    await click("[title='Show Followers']");
+    await contains("[title='Show Followers']:enabled:count(1)").click();
     await waitFor(".o-mail-Follower:count(100)");
     await waitFor(".o-mail-Followers-dropdown:has(:text('Load more')):count(1)");
     await scroll(".o-mail-Followers-dropdown", "bottom");
@@ -184,7 +183,7 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
     ]);
     await start();
     await openFormView("res.partner", partnerId_1);
-    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor("a:text('Add Followers'):count(1)");
     await mailContains(":nth-child(1 of .o-mail-Follower)", {
         contains: [["[title='Edit Notification Preferences']"], ["[title='Remove this follower']"]],
@@ -196,6 +195,6 @@ test('Show "No Followers" dropdown-item if there are no followers and user does 
     const partnerId = pyEnv["res.partner"].create({ hasWriteAccess: false });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".o-mail-Followers-button");
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor("div.disabled:text('No Followers'):count(1)");
 });

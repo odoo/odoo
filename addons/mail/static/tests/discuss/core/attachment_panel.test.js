@@ -1,5 +1,4 @@
 import {
-    click,
     contains as mailContains,
     defineMailModels,
     openDiscuss,
@@ -7,6 +6,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor } from "@odoo/hoot";
+import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -16,7 +16,7 @@ test("Empty attachment panel", async () => {
     const channelId = await pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-DiscussContent-header button[title='Attachments']");
+    await contains(".o-mail-DiscussContent-header button[title='Attachments']:count(1)").click();
     await waitFor(
         `.o-mail-ActionPanel:contains("This channel doesn't have any attachments."):count(1)`
     );
@@ -42,7 +42,7 @@ test("Attachment panel sort by date", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
-    await click(".o-mail-DiscussContent-header button[title='Attachments']");
+    await contains(".o-mail-DiscussContent-header button[title='Attachments']:count(1)").click();
     await mailContains(".o-mail-AttachmentCard-info:text('file2.pdf')", {
         after: [".o-mail-DateSection:text('September, 2023')"],
         before: [".o-mail-DateSection:text('August, 2023')"],

@@ -1,6 +1,5 @@
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import {
-    click,
     defineMailModels,
     mockGetMedia,
     openDiscuss,
@@ -13,7 +12,7 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
-import { getService, serverState } from "@web/../tests/web_test_helpers";
+import { contains, getService, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
@@ -59,10 +58,10 @@ test("use blur is 'on'", async () => {
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
     await waitFor(".o-discuss-CallSettings:count(1)");
-    await click("button[title='Video']");
+    await contains("button[title='Video']:count(1)").click();
     await waitFor("input[title='Blur video background']:checked:count(1)");
     await waitFor(
         "div[title='Background blur intensity'] .o-discuss-DiscussCallSettings-width-text-percentage:text('10%'):count(1)"
@@ -106,8 +105,8 @@ test("voice activation threshold", async () => {
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
     await waitFor(".o-discuss-CallSettings:count(1)");
     await waitFor(".o-Discuss-CallSettings-thresholdInput:value(0.3):count(1)");
     const voiceActivationThresholdKey = makeRecordFieldLocalId(
@@ -133,7 +132,7 @@ test("member default open is 'off'", async () => {
     );
     expect(localStorage.getItem(isMemberPanelOpenByDefaultKey)).toBe(toRawValue(false));
     expect(localStorage.getItem("mail.user_setting.no_members_default_open")).toBe(null);
-    await click(".o-mail-ActionList-button[title='Members']");
+    await contains(".o-mail-ActionList-button[title='Members']:count(1)").click();
     await waitFor(".o-mail-ActionList-button[title='Members'].active:count(1)"); // just to validate .active is correct selector
     expect(localStorage.getItem(isMemberPanelOpenByDefaultKey)).toBe(null);
 });
@@ -160,9 +159,11 @@ test("call auto focus is 'off", async () => {
     localStorage.setItem("mail_user_setting_disable_call_auto_focus", "true");
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("button[aria-label='Video Settings']");
-    await click(".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings'))");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("button[aria-label='Video Settings']:count(1)").click();
+    await contains(
+        ".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings')):count(1)"
+    ).click();
     await waitFor(
         ".o-discuss-CallSettings .o-mail-TabHeader.o-active:has(:text('Video')):count(1)"
     );
@@ -237,8 +238,8 @@ test("device input/output id", async () => {
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await waitFor("[title='Open Actions Menu']:count(1)");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
+    await contains("[title='Open Actions Menu']:count(1)").click();
+    await contains(".o-dropdown-item:text('Voice & Video Settings'):count(1)").click();
     await waitFor(".o-discuss-CallSettings:count(1)");
     await waitFor(
         "div[aria-label='Microphone'] .o-mail-DeviceSelect-button[data-kind='audioinput']:text('audio_input_2_label'):count(1)"
@@ -246,7 +247,7 @@ test("device input/output id", async () => {
     await waitFor(
         "div[aria-label='Speakers'] .o-mail-DeviceSelect-button[data-kind='audiooutput']:text('audio_output_2_label'):count(1)"
     );
-    await click("button[title='Video']");
+    await contains("button[title='Video']:count(1)").click();
     await waitFor(
         "div[aria-label='Camera'] .o-mail-DeviceSelect-button[data-kind='videoinput']:text('video_input_2_label'):count(1)"
     );

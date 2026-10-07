@@ -1,5 +1,4 @@
 import {
-    click,
     defineMailModels,
     start,
     startServer,
@@ -8,7 +7,7 @@ import {
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryText, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -23,7 +22,7 @@ test("should update activities when opening the activity menu", async () => {
         res_id: partnerId,
         res_model: "res.partner",
     });
-    await click(".o_menu_systray i[aria-label='Activities']");
+    await contains(".o_menu_systray i[aria-label='Activities']:count(1)").click();
     await waitFor(".o-mail-ActivityMenu-counter:text('1'):count(1)");
 });
 

@@ -11,7 +11,13 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, mockService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    contains,
+    mockService,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -141,7 +147,7 @@ test("open non-channel failure", async () => {
     });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
-    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:count(1)").click();
     await expect.waitForSteps(["do_action"]);
 });
 

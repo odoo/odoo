@@ -13,7 +13,7 @@ import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
-import { getService, serverState } from "@web/../tests/web_test_helpers";
+import { contains, getService, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { range } from "@web/core/utils/numbers";
@@ -121,9 +121,9 @@ test("click on message in reply highlights original message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click(
-        ".o-mail-Message:contains('Response to deleted message') .o-mail-MessageInReply:contains('Original message was deleted') .cursor-pointer"
-    );
+    await contains(
+        ".o-mail-Message:contains('Response to deleted message') .o-mail-MessageInReply:contains('Original message was deleted') .cursor-pointer:count(1)"
+    ).click();
     await waitFor(
         ".o-mail-Message.o-highlighted:contains('This message has been removed'):count(1)"
     );

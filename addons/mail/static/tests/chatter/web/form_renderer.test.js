@@ -11,7 +11,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
-import { mockService, serverState } from "@web/../tests/web_test_helpers";
+import { contains, mockService, serverState } from "@web/../tests/web_test_helpers";
 
 import { range } from "@web/core/utils/numbers";
 
@@ -54,11 +54,11 @@ test.skip("Form view not scrolled when switching record", async () => {
     await waitFor(".o-mail-Message:count(29)");
     await mailContains(".o_content", { scroll: 0 });
     await scroll(".o_content", 150);
-    await click(".o_pager_next");
+    await contains(".o_pager_next:count(1)").click();
     await waitFor(".o-mail-Message:count(30)");
     await mailContains(".o_content", { scroll: 150 });
     await scroll(".o_content", 0);
-    await click(".o_pager_previous");
+    await contains(".o_pager_previous:count(1)").click();
     await waitFor(".o-mail-Message:count(29)");
     await mailContains(".o_content", { scroll: 0 });
 });
@@ -99,11 +99,11 @@ test("Attachments that have been unlinked from server should be visually unlinke
     await waitFor("button[aria-label='Attach files']:text('2'):count(1)");
     // The attachment links are updated on (re)load,
     // so using pager is a way to reload the record "Partner1".
-    await click(".o_pager_next");
+    await contains(".o_pager_next:count(1)").click();
     await waitFor("button[aria-label='Attach files']:not(:has(sup)):count(1)");
     // Simulate unlinking attachment 1 from Partner 1.
     pyEnv["ir.attachment"].write([attachmentId_1], { res_id: 0 });
-    await click(".o_pager_previous");
+    await contains(".o_pager_previous:count(1)").click();
     await waitFor("button[aria-label='Attach files']:text('1'):count(1)");
 });
 
@@ -181,9 +181,9 @@ test("[TECHNICAL] unfolded ellipsis button should not fold on message click besi
             </form>`,
     });
     expect(".o-mail-Message-body span").toHaveCount(0);
-    await click(".o-mail-ellipsis");
+    await contains(".o-mail-ellipsis:count(1)").click();
     expect(".o-mail-Message-body span").toHaveText("--\nSystem");
-    await click(".o-mail-Message");
+    await contains(".o-mail-Message:count(1)").click();
     expect(".o-mail-Message-body span").toHaveCount(1);
 });
 

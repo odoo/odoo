@@ -13,7 +13,14 @@ import { animationFrame, describe, expect, test } from "@odoo/hoot";
 import { rightClick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
-import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    contains,
+    getService,
+    onRpc,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -48,9 +55,9 @@ test("should show member list when clicking on member list button in thread view
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // open by default
-    await click("[title='Members']");
+    await contains("[title='Members']:count(1)").click();
     await waitForNone(".o-discuss-ChannelMemberList");
-    await click("[title='Members']");
+    await contains("[title='Members']:count(1)").click();
     await waitFor(".o-discuss-ChannelMemberList:count(1)");
 });
 
@@ -114,10 +121,10 @@ test("chat with member should be opened after clicking on channel member", async
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-discuss-ChannelMember:has(:text('Demo')).cursor-pointer");
+    await contains(".o-discuss-ChannelMember:has(:text('Demo')).cursor-pointer:count(1)").click();
     await waitFor(".o-mail-avatar-card-name:text('Demo'):count(1)");
-    await click(".o-discuss-ChannelMember:has(:text('Demo')).o-active");
-    await click(".o_avatar_card button:text('Send message')");
+    await contains(".o-discuss-ChannelMember:has(:text('Demo')).o-active:count(1)").click();
+    await contains(".o_avatar_card button:text('Send message'):count(1)").click();
     await waitFor(".o-mail-AutoresizeInput[title='Demo']:count(1)");
 });
 
@@ -140,25 +147,25 @@ test("Avatar card shows local timezone", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)");
     // Case 1: correspondent tz !== self tz
-    await click(".o-discuss-ChannelMember:has(:text('Demo'))");
+    await contains(".o-discuss-ChannelMember:has(:text('Demo')):count(1)").click();
     await waitStoreFetch(["avatar_card"]);
     await animationFrame();
     await waitFor(".o-mail-avatar-card-name:text('Demo'):count(1)");
     await waitFor(".o-mail-avatar-card-localtime:contains('17:30 local time'):count(1)");
-    await click(".o-mail-Thread");
+    await contains(".o-mail-Thread:count(1)").click();
     await waitForNone(".o-mail-avatar-card-name:text('Demo')");
     // Case 2: correspondent tz === self tz ('localtime' tz)
     pyEnv["res.partner"].write([partnerId], { tz: "localtime" });
-    await click(".o-discuss-ChannelMember:has(:text('Demo'))");
+    await contains(".o-discuss-ChannelMember:has(:text('Demo')):count(1)").click();
     await waitStoreFetch(["avatar_card"]);
     await animationFrame();
     await waitFor(".o-mail-avatar-card-name:text('Demo'):count(1)");
     await waitForNone(".o-mail-avatar-card-localtime");
-    await click(".o-mail-Thread");
+    await contains(".o-mail-Thread:count(1)").click();
     await waitForNone(".o-mail-avatar-card-name:text('Demo')");
     // Case 3: correspondent tz === self tz (explicit tz)
     pyEnv["res.partner"].write([partnerId], { tz: "Europe/Brussels" });
-    await click(".o-discuss-ChannelMember:has(:text('Demo'))");
+    await contains(".o-discuss-ChannelMember:has(:text('Demo')):count(1)").click();
     await waitStoreFetch(["avatar_card"]);
     await animationFrame();
     await waitFor(".o-mail-avatar-card-name:text('Demo'):count(1)");
@@ -200,9 +207,9 @@ test("Load more button should load more members", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMember:count(101)");
-    await click(
-        ".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members')) [title='Load more']"
-    );
+    await contains(
+        ".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members')) [title='Load more']:count(1)"
+    ).click();
     await waitFor(".o-discuss-ChannelMember:count(102)");
 });
 
@@ -215,9 +222,9 @@ test("Channel member count update after user joined", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await waitFor(".o-discuss-ChannelMemberList h6:text('Online - 1'):count(1)");
-    await click("[title='Add People']");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('Harry'))");
-    await click(".o-discuss-ChannelInvitation button:text('Invite'):enabled");
+    await contains("[title='Add People']:count(1)").click();
+    await contains(".o-discuss-ChannelInvitation-selectable:has(:text('Harry')):count(1)").click();
+    await contains(".o-discuss-ChannelInvitation button:text('Invite'):enabled:count(1)").click();
     await waitForNone(".o-discuss-ChannelInvitation");
     await waitFor(".o-discuss-ChannelMemberList h6:text('Online - 2'):count(1)");
 });

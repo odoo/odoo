@@ -29,6 +29,7 @@ import {
 import { mockDate } from "@odoo/hoot-mock";
 import {
     Command,
+    contains,
     getService,
     makeKwArgs,
     onRpc,
@@ -69,14 +70,14 @@ test("keep new message separator when message is deleted", async () => {
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('message 0'))"],
     });
-    await click(".o-dropdown-item:contains('Mark as Unread')");
+    await contains(".o-dropdown-item:contains('Mark as Unread'):count(1)").click();
     await waitFor(".o-mail-Thread-newMessage ~ .o-mail-Message:has(:text('message 0')):count(1)");
     await hover(".o-mail-Message:has(:text('message 0'))");
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('message 0'))"],
     });
-    await click(".o-dropdown-item:contains('Delete')");
-    await click(".modal button:text('Delete')");
+    await contains(".o-dropdown-item:contains('Delete'):count(1)").click();
+    await contains(".modal button:text('Delete'):count(1)").click();
     await waitForNone(".o-mail-Message:has(:text('message 0'))");
     await waitFor(".o-mail-Thread-newMessage ~ .o-mail-Message:has(:text('message 1')):count(1)");
 });
@@ -184,9 +185,9 @@ test("keep new message separator until user goes back to the thread", async () =
         "mail.record/insert",
         (n) => n["discuss.channel.member"][0].new_message_separator,
     ]);
-    await click(".o-mail-NotificationItem:has(:text('Other'))");
+    await contains(".o-mail-NotificationItem:has(:text('Other')):count(1)").click();
     await mailContains(".o-mail-DiscussContent-threadName", { value: "Other" });
-    await click(".o-mail-NotificationItem:has(:text('test'))");
+    await contains(".o-mail-NotificationItem:has(:text('test')):count(1)").click();
     await mailContains(".o-mail-DiscussContent-threadName", { value: "test" });
     await waitFor(".o-mail-Message:has(:text('Message body 2')):count(1)");
     await waitForNone(".o-mail-Thread-newMessage:contains('New')");
@@ -348,7 +349,7 @@ test("show new message separator when message is received while chat window is c
     await start();
     await waitStoreFetch(["init_messaging", "/discuss/channel/messages"]);
 
-    await click(".o-mail-ChatWindow-header [title*='Close Chat Window']");
+    await contains(".o-mail-ChatWindow-header [title*='Close Chat Window']:count(1)").click();
     await waitForNone(".o-mail-ChatWindow");
     // send after init_messaging because bus subscription is done after init_messaging
     // simulate receiving a message
@@ -361,7 +362,7 @@ test("show new message separator when message is received while chat window is c
     );
     await waitFor(".o-mail-ChatBubble:count(1)");
     await waitFor(".o-mail-ChatBubble-counter:text('1'):count(1)");
-    await click(".o-mail-ChatBubble");
+    await contains(".o-mail-ChatBubble:count(1)").click();
     await waitFor(".o-mail-Thread-newMessage:contains('New'):count(1)");
 });
 
@@ -449,12 +450,12 @@ test("pending mark as read does not revert a later mark as unread", async () => 
     await expect.waitForSteps(["handle_mark_as_read", "mark_as_read_rpc"]);
     // Request a second mark as read, queued until the first one completes.
     queryFirst(".o-mail-Composer-input").blur();
-    await click(".o-mail-Composer-input");
+    await contains(".o-mail-Composer-input:count(1)").click();
     await hover(".o-mail-Message:has(:text('Hello everyone!'))");
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('Hello everyone!'))"],
     });
-    await click(".o-dropdown-item:contains('Mark as Unread')");
+    await contains(".o-dropdown-item:contains('Mark as Unread'):count(1)").click();
     await waitFor(".o-mail-Thread-newMessage:count(1)");
     firstMarkAsReadDef.resolve();
     await expect.waitForSteps(["set_new_message_separator"]);
@@ -508,7 +509,7 @@ test("mark as unread waits for the mark as read in flight", async () => {
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('Hello everyone!'))"],
     });
-    await click(".o-dropdown-item:contains('Mark as Unread')");
+    await contains(".o-dropdown-item:contains('Mark as Unread'):count(1)").click();
     await waitFor(".o-mail-Thread-newMessage:count(1)");
     expect.verifySteps([]);
     markAsReadDef.resolve();

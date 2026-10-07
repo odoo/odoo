@@ -14,7 +14,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { getService, onRpc, preloadBundle } from "@web/../tests/web_test_helpers";
+import { contains, getService, onRpc, preloadBundle } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
@@ -102,11 +102,11 @@ test("Composer GIF button should open the GIF picker (discuss app)", async () =>
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Send GIF']");
+    await contains("button[title='Send GIF']:count(1)").click();
     await waitFor(".o-discuss-GifPicker:count(1)");
-    await click(".o-mail-DiscussContent-header"); // ensure the picker reopens correctly
+    await contains(".o-mail-DiscussContent-header:count(1)").click(); // ensure the picker reopens correctly
     await waitForNone(".o-discuss-GifPicker");
-    await click("button[title='Send GIF']");
+    await contains("button[title='Send GIF']:count(1)").click();
     await waitFor(".o-discuss-GifPicker:count(1)");
 });
 
@@ -115,9 +115,9 @@ test("Composer GIF button should open the GIF picker (chat window)", async () =>
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await click(".o-mail-NotificationItem:contains('General')");
-    await click(".o-mail-ChatWindow .o-mail-Composer [title='More Actions']");
-    await click(".o-dropdown-item:contains('Send GIF')");
+    await contains(".o-mail-NotificationItem:contains('General'):count(1)").click();
+    await contains(".o-mail-ChatWindow .o-mail-Composer [title='More Actions']:count(1)").click();
+    await contains(".o-dropdown-item:contains('Send GIF'):count(1)").click();
     await waitFor(".o-discuss-GifPicker:count(1)");
 });
 
@@ -136,15 +136,15 @@ test("Not loading of GIF categories when feature is not available", async () => 
     const store = getService("mail.store");
     store.hasGifPickerFeature = false;
     isFeatureEnabled = false;
-    await click("button[title='Send GIF']");
+    await contains("button[title='Send GIF']:count(1)").click();
     await waitFor(".o-discuss-GifPicker:count(1)");
     await animationFrame();
     expect.verifySteps([]); // no "/discuss/gif/categories"
-    await click("button[title='Send GIF']");
+    await contains("button[title='Send GIF']:count(1)").click();
     await waitForNone(".o-discuss-GifPicker");
     store.hasGifPickerFeature = true;
     isFeatureEnabled = true;
-    await click("button[title='Send GIF']");
+    await contains("button[title='Send GIF']:count(1)").click();
     await waitFor(".o-discuss-GifPicker:count(1)");
     await expect.waitForSteps(["/discuss/gif/categories"]);
 });
@@ -155,7 +155,7 @@ test("Searching for a GIF", async () => {
     onRpc("/discuss/gif/search", () => rpc.search);
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Send GIF']");
+    await contains("button[title='Send GIF']:count(1)").click();
     await insertText("input[placeholder='Search Klipy']", "search");
     await waitFor("i[aria-label='back']:count(1)");
     await waitFor(".o-discuss-Gif:count(2)");
@@ -168,8 +168,10 @@ test("Open a GIF category trigger the search for the category", async () => {
     onRpc("/discuss/gif/search", () => rpc.search);
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Send GIF']");
-    await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
+    await contains("button[title='Send GIF']:count(1)").click();
+    await contains(
+        "img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']:count(1)"
+    ).click();
     await waitFor(".o-discuss-Gif:count(2)");
     await mailContains("input[placeholder='Search Klipy']", { value: "cry" });
 });
@@ -197,7 +199,7 @@ test("Can have GIF categories with same name", async () => {
     onRpc("/discuss/gif/search", () => rpc.search);
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Send GIF']");
+    await contains("button[title='Send GIF']:count(1)").click();
     await waitFor(
         "img[data-src='https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif']:count(2)"
     );
@@ -210,9 +212,11 @@ test("Reopen GIF category list when going back", async () => {
     onRpc("/discuss/gif/search", () => rpc.search);
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Send GIF']");
-    await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
-    await click("i[aria-label='back']");
+    await contains("button[title='Send GIF']:count(1)").click();
+    await contains(
+        "img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']:count(1)"
+    ).click();
+    await contains("i[aria-label='back']:count(1)").click();
     await waitFor(".o-discuss-GifPicker div[aria-label='list']:count(1)");
 });
 
@@ -237,7 +241,7 @@ test("Chatter should not have the GIF button", async () => {
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    await click("button:text('Log note')");
+    await contains("button:text('Log note'):enabled:count(1)").click();
     await waitForNone("button[title='Send GIF']");
 });
 
@@ -261,7 +265,7 @@ test("Searching for a GIF with a failling RPC should display an error", async ()
     });
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Send GIF']");
+    await contains("button[title='Send GIF']:count(1)").click();
     await insertText("input[placeholder='Search Klipy']", "search");
     await waitFor(".o-discuss-GifPicker-error:count(1)");
 });
@@ -282,12 +286,16 @@ test("Scrolling at the bottom should trigger the search to load more gif, even a
     });
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Send GIF']");
+    await contains("button[title='Send GIF']:count(1)").click();
     // gif picker quires extra delay before click (to give time to load initial state)
     await waitFor(".o-discuss-GifPicker:count(1)");
-    await click(".o-discuss-GifPicker div[aria-label='list-item']:text('Favorites')");
-    await click("i[aria-label='back']");
-    await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
+    await contains(
+        ".o-discuss-GifPicker div[aria-label='list-item']:text('Favorites'):count(1)"
+    ).click();
+    await contains("i[aria-label='back']:count(1)").click();
+    await contains(
+        "img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']:count(1)"
+    ).click();
     await waitFor(".o-discuss-Gif:count(4)");
     await scroll(".o-discuss-GifPicker-content", "bottom");
     await waitFor(".o-discuss-Gif:count(8)");
@@ -316,10 +324,12 @@ test("Show help when no favorite GIF", async () => {
     onRpc("/discuss/gif/categories", () => rpc.categories);
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Send GIF']");
+    await contains("button[title='Send GIF']:count(1)").click();
     // gif picker quires extra delay before click (to give time to load initial state)
     await waitFor(".o-discuss-GifPicker:count(1)");
-    await click(".o-discuss-GifPicker div[aria-label='list-item']:text('Favorites')");
+    await contains(
+        ".o-discuss-GifPicker div[aria-label='list-item']:text('Favorites'):count(1)"
+    ).click();
     await waitFor("span:text('So uhh... maybe go favorite some GIFs?'):count(1)");
 });
 
@@ -330,9 +340,13 @@ test("Clicking GIF preview does not raise an error", async () => {
     onRpc("/discuss/gif/search", () => rpc.search);
     await start();
     await openDiscuss(channelId);
-    await click("button[title='Send GIF']");
-    await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
-    await click("img[data-src='https://media.tenor.com/np49Y1vrJO8AAAAM/crying-cry.gif']:eq(0)");
-    await click(".o-mail-LinkPreviewImage img");
+    await contains("button[title='Send GIF']:count(1)").click();
+    await contains(
+        "img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']:count(1)"
+    ).click();
+    await contains(
+        "img[data-src='https://media.tenor.com/np49Y1vrJO8AAAAM/crying-cry.gif']:eq(0):count(1)"
+    ).click();
+    await contains(".o-mail-LinkPreviewImage img:count(1)").click();
     await waitFor(".o-mail-Message:count(1)");
 });

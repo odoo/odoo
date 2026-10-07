@@ -21,7 +21,7 @@ import {
     waitForNone,
 } from "@odoo/hoot";
 
-import { Command, getService } from "@web/../tests/web_test_helpers";
+import { Command, contains, getService } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 defineMailModels();
@@ -76,9 +76,11 @@ test("bus subscription updated when joining non-member thread open in discuss", 
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
-    await click("[title='Add People']");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text('Mitchell Admin'))");
-    await click(".o-discuss-ChannelInvitation button:text('Invite'):enabled");
+    await contains("[title='Add People']:count(1)").click();
+    await contains(
+        ".o-discuss-ChannelInvitation-selectable:has(:text('Mitchell Admin')):count(1)"
+    ).click();
+    await contains(".o-discuss-ChannelInvitation button:text('Invite'):enabled:count(1)").click();
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
 });
 
@@ -97,11 +99,11 @@ test("bus subscription is refreshed when channel is joined", async () => {
     patch(getService("mail.store"), {
         updateBusSubscription: () => expect.step("update_bus_subscription"),
     });
-    await click(".o-mail-DiscussCommand:has(:text('Sales'))");
+    await contains(".o-mail-DiscussCommand:has(:text('Sales')):count(1)").click();
     await waitFor(".o-mail-DiscussContent-threadName[title='Sales']:count(1)");
-    await click("button:text('Add People')");
-    await click("[name='selectablePartnerName']:text('Mitchell Admin')");
-    await click("button:text('Invite')");
+    await contains("button:text('Add People'):count(1)").click();
+    await contains("[name='selectablePartnerName']:text('Mitchell Admin'):count(1)").click();
+    await contains("button:text('Invite'):count(1)").click();
     await expect.waitForSteps(["update_bus_subscription"]);
 });
 

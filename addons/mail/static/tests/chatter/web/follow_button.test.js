@@ -1,5 +1,4 @@
 import {
-    click,
     defineMailModels,
     openFormView,
     start,
@@ -7,7 +6,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { onRpc, pagerNext, pagerPrevious } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, pagerNext, pagerPrevious } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -19,16 +18,16 @@ test("base rendering follow, edit subscription and unfollow button", async () =>
     await openFormView("res.partner", threadId);
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");
     await waitFor("[title='Show Followers'] [data-icon='person']:count(1)");
-    await click("[title='Show Followers']");
-    await click(".o-dropdown-item:text('Follow')");
+    await contains("[title='Show Followers']:enabled:count(1)").click();
+    await contains(".o-dropdown-item:text('Follow'):count(1)").click();
     await waitFor(".o-mail-Followers-counter:text('1'):count(1)");
     await waitFor("[title='Show Followers'] .oi-filled[data-icon='person']:count(1)");
-    await click("[title='Show Followers']");
+    await contains("[title='Show Followers']:enabled:count(1)").click();
     await waitFor(".o-mail-Followers-dropdown:count(1)");
-    await click("[title='Edit Notification Preferences']");
+    await contains("[title='Edit Notification Preferences']:count(1)").click();
     await waitForNone(".o-mail-Followers-dropdown");
-    await click("[title='Show Followers']");
-    await click(".o-dropdown-item:text('Unfollow')");
+    await contains("[title='Show Followers']:enabled:count(1)").click();
+    await contains(".o-dropdown-item:text('Unfollow'):count(1)").click();
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");
     await waitFor("[title='Show Followers'] [data-icon='person']:count(1)");
 });
@@ -52,8 +51,8 @@ test("following during a slow RPC should not reload another record opened via th
         resIds: [partnerId_1, partnerId_2],
     });
     await expect.waitForSteps([`read ${partnerId_1}`]);
-    await click("[title='Show Followers']");
-    await click(".o-dropdown-item:text('Follow')");
+    await contains("[title='Show Followers']:enabled:count(1)").click();
+    await contains(".o-dropdown-item:text('Follow'):count(1)").click();
     await expect.waitForSteps(["subscribe"]);
     // Switch to the second record while the subscribe RPC of the first is still pending.
     await pagerNext();

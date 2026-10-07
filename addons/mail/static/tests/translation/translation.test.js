@@ -12,7 +12,7 @@ import {
 import { expect, test } from "@odoo/hoot";
 import { pointerDown, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { contains, serverState } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 
@@ -155,7 +155,7 @@ test("Toggle message translation on mobile", async () => {
     await waitFor(".o-mail-Message:count(1)");
     await pointerDown(".o-mail-Message");
     await advanceTime(LONG_PRESS_DELAY);
-    await click("button:contains('Translate')");
+    await contains("button:contains('Translate'):count(1)").click();
     await waitFor(
         ".o-mail-Message-body:text('To bad weather, good face. (Translated from: Spanish)'):count(1)"
     );

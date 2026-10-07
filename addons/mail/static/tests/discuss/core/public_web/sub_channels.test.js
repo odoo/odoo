@@ -12,7 +12,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command, contains, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
 
@@ -185,12 +185,12 @@ test("'Thread' menu available in threads", async () => {
     });
     await start();
     await openDiscuss(subChannelID);
-    await click(".o-mail-NotificationItem:has(:text('ThreadOne'))");
+    await contains(".o-mail-NotificationItem:has(:text('ThreadOne')):count(1)").click();
     await mailContains(".o-mail-DiscussContent-threadName", { value: "ThreadOne" });
-    await click("button[title='Threads']");
+    await contains("button[title='Threads']:count(1)").click();
     await insertText(".o-mail-ActionPanel input[placeholder='Search by name']", "ThreadTwo");
-    await click(".o-mail-ActionPanel button:text('Create')");
-    await click(".o-mail-NotificationItem:has(:text('ThreadTwo'))");
+    await contains(".o-mail-ActionPanel button:text('Create'):count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('ThreadTwo')):count(1)").click();
 });
 
 test("sub thread is available for channel and group, not for chat", async () => {
@@ -217,26 +217,28 @@ test("sub thread is available for channel and group, not for chat", async () => 
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
-    await click("button[title='Threads']");
+    await contains("button[title='Threads']:count(1)").click();
     await insertText(
         ".o-mail-ActionPanel input[placeholder='Search by name']",
         "Sub thread for channel"
     );
-    await click(".o-mail-ActionPanel button:text('Create')");
-    await click(".o-mail-NotificationItem:has(:text('Sub thread for channel'))");
-    await click(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await click(".o-mail-NotificationItem:has(:text('Group'))");
+    await contains(".o-mail-ActionPanel button:text('Create'):count(1)").click();
+    await contains(
+        ".o-mail-NotificationItem:has(:text('Sub thread for channel')):count(1)"
+    ).click();
+    await contains(".o-mail-MessagingMenu-tab[data-id='chat']:count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('Group')):count(1)").click();
     await mailContains(".o-mail-DiscussContent-threadName", { value: "Group" });
-    await click("button[title='Threads']");
+    await contains("button[title='Threads']:count(1)").click();
     await insertText(
         ".o-mail-ActionPanel input[placeholder='Search by name']",
         "Sub thread for group"
     );
-    await click(".o-mail-ActionPanel button:text('Create')");
-    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await click(".o-mail-NotificationItem:has(:text('Sub thread for group'))");
-    await click(".o-mail-MessagingMenu-tab[data-id='chat']");
-    await click(".o-mail-NotificationItem:has(:text('Demo'))");
+    await contains(".o-mail-ActionPanel button:text('Create'):count(1)").click();
+    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('Sub thread for group')):count(1)").click();
+    await contains(".o-mail-MessagingMenu-tab[data-id='chat']:count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('Demo')):count(1)").click();
     await waitForNone("button[title='Threads']");
 });
 
@@ -267,7 +269,7 @@ test("mention suggestions in thread match channel restrictions", async () => {
     await waitFor(".o-mail-Composer-suggestion:count(2)");
     await waitFor(".o-mail-Composer-suggestion:has(:text('Mitchell Admin')):count(1)");
     await waitFor(".o-mail-Composer-suggestion:has(:text('p1')):count(1)");
-    await click(".o-mail-NotificationItem:has(:text('Thread'))");
+    await contains(".o-mail-NotificationItem:has(:text('Thread')):count(1)").click();
     await waitFor(".o-mail-NotificationItem.o-active:has(:text('Thread')):count(1)");
     await insertText(".o-mail-Composer-input", "@");
     await waitFor(".o-mail-Composer-suggestion:count(2)");
@@ -281,13 +283,13 @@ test("sub-thread is visually muted when mute is active", async () => {
     await start();
     await openDiscuss(channelId);
     await mailContains(".o-mail-DiscussContent-threadName", { value: "General" });
-    await click("button[title='Threads']");
-    await click("button[aria-label='Create Thread']");
+    await contains("button[title='Threads']:count(1)").click();
+    await contains("button[aria-label='Create Thread']:count(1)").click();
     await waitForNone(".o-mail-NotificationItem.opacity-50:has(:text('New Thread'))");
-    await click(".o-mail-NotificationItem:has(:text('Gene… New Thread'))");
-    await click("button[title='Notification Settings']");
+    await contains(".o-mail-NotificationItem:has(:text('Gene… New Thread')):count(1)").click();
+    await contains("button[title='Notification Settings']:count(1)").click();
     await hover("button:has(:text('Mute Conversation'))");
-    await click(".o-dropdown-item:contains('Until I turn it back on')");
+    await contains(".o-dropdown-item:contains('Until I turn it back on'):count(1)").click();
     await waitFor(".o-mail-NotificationItem.opacity-50:has(:text('New Thread')):count(1)");
 });
 
@@ -308,7 +310,7 @@ test("show notification when clicking on deleted thread", async () => {
     pyEnv["discuss.channel"].unlink(activeThreadId);
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-NotificationMessage a:text('Message 1')");
+    await contains(".o-mail-NotificationMessage a:text('Message 1'):count(1)").click();
     await waitFor(
         ".o_notification:has(.o_notification_bar.bg-danger):text('This thread is no longer available.'):count(1)"
     );
@@ -320,14 +322,14 @@ test("Renaming a thread should update the message notification in parent channel
     await start();
     await openDiscuss(channelId);
     await mailContains(".o-mail-DiscussContent-threadName", { value: "General" });
-    await click("button[title='Threads']");
-    await click("button[aria-label='Create Thread']");
+    await contains("button[title='Threads']:count(1)").click();
+    await contains("button[aria-label='Create Thread']:count(1)").click();
     await waitFor("input.o-mail-DiscussContent-threadName:value(New Thread):count(1)");
     await insertText(".o-mail-DiscussContent-threadName:enabled", "Renamed Thread", {
         replace: true,
     });
     triggerHotkey("Enter");
-    await click(".o-mail-NotificationItem-name:text(General)");
+    await contains(".o-mail-NotificationItem-name:text(General):count(1)").click();
     await waitFor(".o-mail-NotificationMessage a:text('Renamed Thread'):count(1)");
 });
 

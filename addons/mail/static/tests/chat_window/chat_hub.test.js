@@ -1,5 +1,4 @@
 import {
-    click,
     defineMailModels,
     listenStoreFetch,
     patchUiSize,
@@ -9,6 +8,7 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
+import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -81,7 +81,7 @@ test("click on hidden chat window should fetch its messages", async () => {
     await waitFor(".o-mail-Message-content:text('Apple'):count(1)");
     await waitForNone(".o-mail-Message-content:contains('Orange')");
     await waitStoreFetch(["/discuss/channel/messages", "/discuss/channel/messages"]);
-    await click(".o-mail-ChatBubble");
+    await contains(".o-mail-ChatBubble:count(1)").click();
     await waitFor(".o-mail-Message-content:text('Orange'):count(1)");
     await waitFor(".o-mail-Message-content:text('Banana'):count(1)");
     await waitForNone(".o-mail-Message-content:contains('Apple')");
