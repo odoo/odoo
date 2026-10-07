@@ -258,15 +258,10 @@ class AccountPayment(models.Model):
 
         valid_account_types = set(self._get_valid_payment_account_types())
         valid_liquidity_accounts = set(self._get_valid_liquidity_accounts())
-
-        def categorize(line):
-            if line.account_id in valid_liquidity_accounts:
-                return 'liquidity'
-            if line.account_id.account_type in valid_account_types or line.account_id == line.company_id.transfer_account_id:
-                return 'counterpart'
-            return 'writeoff'
-        groups = self.move_id.line_ids.grouped(categorize)
-        liquidity, counterpart, writeoff = (groups.get(key, self.env['account.move.line']) for key in ('liquidity', 'counterpart', 'writeoff'))
+        liquidity, counterpart, writeoff = self.move_id.line_ids.partitioned(
+            lambda line: line.account_id in valid_liquidity_accounts,
+            lambda line: line.account_id.account_type in valid_account_types or line.account_id == line.company_id.transfer_account_id,
+        )
 
         # In some case, there is no liquidity or counterpart line (after changing an outstanding account on the journal for example)
         # In that case, and if there is one writeoff line, we take this line and set it as liquidity/counterpart line
