@@ -319,23 +319,30 @@ export class PosTicketPrinterPlugin extends Plugin {
     /**
      * Changes use preparation printers via this.config.preparation_printer_ids
      */
-    async printOrderChanges({ order, opts = {}, printers = this.config.preparation_printer_ids }) {
+    async printOrderChanges({
+        order,
+        opts = {},
+        printers = this.config.preparation_printer_ids,
+        retryChanges = new Map(),
+    }) {
         let isPrinted = false;
         const unsuccessfulPrints = [];
-        const retryPrinters = new Set();
-        let rawChangeForRetry = null;
+        // Each printer has its own change (filtered on its categories) to print again on retry
+        const failedChanges = new Map();
 
         for (const printer of printers) {
             const template = opts.template || "point_of_sale.pos_order_change_receipt";
             const generator = this.getGenerator({ models: this.data.models, order });
             const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
-            const changes = generator.generatePreparationData(categoryIds, opts);
+            const printerOpts = retryChanges.has(printer)
+                ? { ...opts, orderChange: retryChanges.get(printer) }
+                : opts;
+            const changes = generator.generatePreparationData(categoryIds, printerOpts);
             const tickets = printer.is_split_per_product
                 ? this._splitTicketsPerProduct(changes, generator)
                 : changes;
 
             for (const ticket of tickets) {
-                rawChangeForRetry = rawChangeForRetry || ticket._rawChange;
                 if (ticket.extra_data.reprint && !opts.explicitReprint) {
                     continue;
                 }
@@ -363,7 +370,7 @@ export class PosTicketPrinterPlugin extends Plugin {
                 }
 
                 if (!result.successful) {
-                    retryPrinters.add(printer);
+                    failedChanges.set(printer, ticket._rawChange);
                     unsuccessfulPrints.push(printer.name + ": " + result.message.body);
                 } else if (result.warningCode) {
                     this.displayPrinterWarning(result, printer.name);
@@ -380,11 +387,9 @@ export class PosTicketPrinterPlugin extends Plugin {
                 message,
                 this.printOrderChanges.bind(this, {
                     order,
-                    opts: {
-                        ...opts,
-                        orderChange: rawChangeForRetry,
-                    },
-                    retryPrinters,
+                    opts,
+                    printers: [...failedChanges.keys()],
+                    retryChanges: failedChanges,
                 }),
                 !opts.skipRetry
             );
