@@ -644,3 +644,108 @@ test("an async action is awaited before being executed", async () => {
     prom.resolve();
     await expect.waitForSteps(["action done"]);
 });
+
+test("axis lock: vertical movement is treated as scroll and blocks the swipe for the rest of the gesture", async () => {
+    expect.assertions(3);
+    class Parent extends Component {
+        static components = { ActionSwiper };
+        static template = xml`
+            <div class="d-flex">
+                <ActionSwiper
+                    onRightSwipe = "{ action: () => this.onRightSwipe() }"
+                    onLeftSwipe = "{ action: () => this.onLeftSwipe() }">
+                        <div class="target-component" style="width: 200px; height: 300px"/>
+                </ActionSwiper>
+            </div>
+        `;
+        onRightSwipe() {
+            expect.step("onRightSwipe");
+        }
+        onLeftSwipe() {
+            expect.step("onLeftSwipe");
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    const swiper = queryFirst(".o_actionswiper");
+    const targetContainer = queryFirst(".o_actionswiper_target_container");
+
+    const dragHelper = await contains(swiper).drag({
+        position: { clientX: 0, clientY: 0 },
+        initialPointerMoveDistance: 0,
+    });
+
+    // dominant vertical delta (150 >> 5) -> isVerticalScroll is set to true, and _reset() clears any transform
+    await dragHelper.moveTo(swiper, {
+        position: { clientX: 5, clientY: 150 },
+    });
+    expect(targetContainer.style.transform).not.toInclude("translateX", {
+        message: "a dominant vertical move is classified as scroll and the swipe transform is reset",
+    });
+
+    // the lock must persist: a subsequent large horizontal move in the same gesture should
+    // be ignored, since isVerticalScroll is only cleared on touchend
+    await dragHelper.moveTo(swiper, {
+        position: { clientX: swiper.clientWidth, clientY: 150 },
+    });
+    expect(targetContainer.style.transform).not.toInclude("translateX", {
+        message: "axis lock persists for the rest of the gesture once vertical scroll is detected",
+    });
+
+    await dragHelper.drop();
+    expect.verifySteps([]);
+});
+
+test("axis lock: horizontal movement blocks scrolling for the rest of the gesture", async () => {
+    expect.assertions(3);
+    class Parent extends Component {
+        static components = { ActionSwiper };
+        static template = xml`
+            <div class="d-flex">
+                <ActionSwiper
+                    onRightSwipe = "{ action: () => this.onRightSwipe() }"
+                    onLeftSwipe = "{ action: () => this.onLeftSwipe() }">
+                        <div class="target-component" style="width: 200px; height: 300px"/>
+                </ActionSwiper>
+            </div>
+        `;
+        onRightSwipe() {
+            expect.step("onRightSwipe");
+        }
+        onLeftSwipe() {
+            expect.step("onLeftSwipe");
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    const swiper = queryFirst(".o_actionswiper");
+    const targetContainer = queryFirst(".o_actionswiper_target_container");
+
+    const dragHelper = await contains(swiper).drag({
+        position: { clientX: 0, clientY: 0 },
+        initialPointerMoveDistance: 0,
+    });
+
+    // dominant horizontal delta (150 >> 5) -> isVerticalScroll is false
+    await dragHelper.moveTo(swiper, {
+        position: { clientX: 150, clientY: 5 },
+    });
+    expect(targetContainer.style.transform).toBe("translateX(150px)", {
+        message: "a dominant horizontal move locks the axis to horizontal and starts the swipe",
+    });
+
+    // a subsequent move that is now dominantly vertical should NOT be reinterpreted as scroll:
+    // isVerticalScroll was already locked to false by the first move
+    await dragHelper.moveTo(swiper, {
+        position: { clientX: 180, clientY: 250 },
+    });
+    expect(targetContainer.style.transform).toBe("translateX(180px)", {
+        message: "axis lock persists: the swipe keeps tracking horizontal distance instead of being reinterpreted as a scroll",
+    });
+
+    await dragHelper.drop();
+
+    expect.verifySteps(["onRightSwipe"], {
+        message: "the swipe completes normally; scroll never took over mid-gesture",
+    });
+});
