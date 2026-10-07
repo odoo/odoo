@@ -89,6 +89,7 @@ export class InlineCodePlugin extends Plugin {
     }
 
     onKeyDown() {
+        delete this.historySavePointRestore;
         const selection = this.dependencies.selection.getEditableSelection();
         if (
             selection.isCollapsed ||
