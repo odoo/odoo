@@ -550,3 +550,45 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo.action_confirm()
         mo.button_mark_done()
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.category, 'manufacturing_order')
+
+    def test_analytic_entry_for_extra_cost(self):
+        """ This test ensures that when a manufacturing order has a project and an extra cost set, the generated aal's
+        contain the correct extra cost analytic entry. It also verifies that these entries follow project changes and
+        are removed when the project is unset.
+        """
+        self.bom.extra_cost = 10.0
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product
+        mo_form.bom_id = self.bom
+        mo_form.product_qty = 2
+        mo_form.project_id = self.project
+        mo = mo_form.save()
+        finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == mo.product_id)
+
+        # MO is not done yet: no extra cost entry
+        mo.action_confirm()
+        self.assertFalse(finished_move.analytic_account_line_ids)
+
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        extra_cost_line = finished_move.analytic_account_line_ids
+        self.assertEqual(extra_cost_line.amount, -20.0)
+        self.assertEqual(extra_cost_line[self.analytic_plan._column_name()], self.project._get_analytic_accounts())
+
+        # Change the project: the previous line is replaced by one on the new project's account
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': "Test Account",
+            'plan_id': self.analytic_plan.id,
+        })
+        new_project = self.env['project.project'].create({
+            'name': 'New project',
+            f'{self.analytic_plan._column_name()}': analytic_account.id,
+        })
+        mo.write({'project_id': new_project.id})
+        new_extra_cost_line = finished_move.analytic_account_line_ids
+        self.assertEqual(new_extra_cost_line.amount, -20.0)
+        self.assertEqual(new_extra_cost_line[self.analytic_plan._column_name()], analytic_account)
+
+        # Remove the project: the extra cost line is deleted
+        mo.write({'project_id': False})
+        self.assertFalse(finished_move.analytic_account_line_ids)
