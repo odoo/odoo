@@ -14,8 +14,6 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
-import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
-import * as BackendUtils from "@point_of_sale/../tests/pos/tours/utils/backend_utils";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import { delay } from "@web/core/utils/concurrency";
 
@@ -629,7 +627,7 @@ registry.category("web_tour.tours").add("test_barcode_search_attributes_preset",
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_archived_product_removed_and_order_is_refunded", {
+registry.category("web_tour.tours").add("test_archived_product_removed_and_order_is_refunded_1", {
     steps: () =>
         [
             Chrome.startPoS(),
@@ -639,39 +637,21 @@ registry.category("web_tour.tours").add("test_archived_product_removed_and_order
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
-            Chrome.clickMenuOption("Close Register"),
-            {
-                trigger: ".modal .modal-footer .btn:contains(close register)",
-                run: "click",
-                expectUnloadPage: true,
-            },
-            {
-                content: `Select button backend`,
-                trigger: `button:contains(backend)`,
-                run: "click",
-                expectUnloadPage: true,
-            },
-            {
-                trigger: "body",
-                expectUnloadPage: true,
-            },
-            BackendUtils.openProductForm("A Test Product"),
-            {
-                trigger: `[data-icon="more_vert"]`,
-                run: "click",
-            },
-            {
-                trigger: ".dropdown-item:contains('Archive')",
-                run: "click",
-            },
-            Utils.selectButton("Archive"),
-            BackendUtils.openShopSession("Shop"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_archived_product_removed_and_order_is_refunded_2", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.productIsDisplayed("A Test Product").map(negateStep),
             // Refund.
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
-            TicketScreen.selectOrder("0001"),
+            Chrome.waitRequest(),
+            TicketScreen.selectOrder("001"),
             TicketScreen.confirmRefund(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
