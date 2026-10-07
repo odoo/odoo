@@ -5,6 +5,7 @@ import io
 import logging
 import zipfile
 
+import psycopg2
 from werkzeug.exceptions import BadRequest, NotFound, UnsupportedMediaType
 
 from odoo import _, http
@@ -127,16 +128,49 @@ class AttachmentController(ThreadController):
             for attachment_id, access_token in access_token_by_attachment_id.items()
         }
         attachments = request.env["ir.attachment"].browse(access_token_by_attachment_id.keys()).exists()
+        messages = request.env["mail.message"].sudo().search([("attachment_ids", "in", attachments.ids)])
         is_allowed = len(attachments) == len(access_token_by_attachment_id) and (
             attachments._has_attachments_ownership(
                 [access_token_by_attachment_id[attachment.id] for attachment in attachments]
             )
         )
         if not is_allowed:
-            for attachment_id in access_token_by_attachment_id:
-                request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
+            visible = attachments.filtered(
+                lambda attachment: attachment._has_attachments_ownership(
+                    [access_token_by_attachment_id[attachment.id]],
+                )
+                or attachment.has_access("read")
+                or any(
+                    self._get_message_with_access(message.id)
+                    for message in messages
+                    if attachment in message.attachment_ids
+                ),
+            )
+            if removed_ids := [
+                attachment_id
+                for attachment_id in access_token_by_attachment_id
+                if attachment_id not in visible.ids
+            ]:
+                user, guest = request.env["res.users"]._get_current_persona()
+                if target := user or guest:
+                    # Notify from a new cursor, as NotFound rolls the request back.
+                    @request.env.cr.postrollback.add
+                    def notify_delete():
+                        try:
+                            with target.env.registry.cursor() as cr:
+                                for attachment_id in removed_ids:
+                                    target.with_env(target.env(cr=cr))._bus_send(
+                                        "ir.attachment/delete",
+                                        {"id": attachment_id},
+                                    )
+                        except psycopg2.Error:
+                            logger.warning(
+                                "Could not notify the deletion of attachments %s",
+                                removed_ids,
+                                exc_info=True,
+                            )
+
             raise NotFound()
-        messages = request.env["mail.message"].sudo().search([("attachment_ids", "in", attachments.ids)])
         attachments_by_message = {message: attachments & message.attachment_ids for message in messages}
         posted = attachments & messages.attachment_ids
         orphans = attachments - posted
