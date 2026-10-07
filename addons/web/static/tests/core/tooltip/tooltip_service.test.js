@@ -334,6 +334,51 @@ test("touch rendering - hold-to-show", async () => {
 });
 
 test.tags("mobile");
+test("touch rendering - no tooltip when dragging", async () => {
+    class MyComponent extends Component {
+        static template = xml`<button data-tooltip="hello">Action</button>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    await pointerDown("button");
+    await advanceTime(SHOW_AFTER_DELAY / 2);
+    // moving the finger cancels the pending tooltip
+    queryOne("button").dispatchEvent(new TouchEvent("touchmove", { bubbles: true }));
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(0);
+    await pointerUp("button");
+
+    // without moving, the tooltip does show
+    await pointerDown("button");
+    await advanceTime(SHOW_AFTER_DELAY);
+    await advanceTime(OPEN_DELAY);
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveText("hello");
+});
+
+test.tags("desktop");
+test("no tooltip when dragging with the mouse", async () => {
+    class MyComponent extends Component {
+        static template = xml`<div><button class="a">A</button><button class="b" data-tooltip="hello">B</button></div>`;
+    }
+
+    await mountWithCleanup(MyComponent);
+    await pointerDown(".a");
+    await hover(".b");
+    await runAllTimers();
+    expect(".o_popover").toHaveCount(0);
+    await pointerUp(".b");
+
+    // once the button is released, the tooltip does show
+    await leave();
+    await hover(".b");
+    await runAllTimers();
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveText("hello");
+});
+
+test.tags("mobile");
 test("touch rendering - tap-to-show", async () => {
     class MyComponent extends Component {
         static template = xml`<button data-tooltip="hello" data-tooltip-touch-tap-to-show="true">Action</button>`;
