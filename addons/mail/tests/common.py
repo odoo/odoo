@@ -1294,8 +1294,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             old_value = TrackingMixin._format_tracking_datetime(old_value) if old_value else 'None'
             new_value = TrackingMixin._format_tracking_datetime(new_value) if new_value is not False else 'None'
         elif value_type == 'float':
-            old_value = formatLang(TrackingMixin.env, old_value) if old_value is not False else '0.00'
-            new_value = formatLang(TrackingMixin.env, new_value) if new_value is not False else '0.00'
+            old_value = formatLang(TrackingMixin.env, old_value or 0)
+            new_value = formatLang(TrackingMixin.env, new_value or 0)
         elif value_type == 'integer':
             old_value = formatLang(TrackingMixin.env, old_value, rounding_unit='units') if old_value is not False else '0'
             new_value = formatLang(TrackingMixin.env, new_value, rounding_unit='units') if new_value is not False else '0'

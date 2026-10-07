@@ -1615,3 +1615,21 @@ class TestTrackingInternals(TestTrackingCommon):
         ])
         fields_toremove.with_context(force_delete=True).unlink()
         self.assertEqual(len(trackings_all.exists()), 5)
+
+    @users('employee')
+    def test_mail_track_float_falsy_separator(self):
+        """ Make sure Falsy float are formatted properly with the correct separators """
+        lang = self.env['res.lang'].sudo().search([('code', '=', 'en_US')])
+        # Random decimal separator for testing
+        lang.write({'decimal_point': '|'})
+        test_record = self.env['mail.test.track.all'].with_context(lang='en_US').create({
+            'float_field': 1.0,
+        })
+        self.flush_tracking()
+        test_record.float_field = 0.0
+        self.flush_tracking()
+        self.assertMessageFields(
+            test_record.message_ids[0], {'tracking_values': [
+                ('float_field', 'float', 1.0, False),
+            ]}
+        )
