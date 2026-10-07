@@ -188,8 +188,8 @@
                         'OT' if 'the' ClaveRegimenIvaOpTrascendencia == 10
                         'RL' if 'some' ClaveRegimenIvaOpTrascendencia == 08
                     BUT those are not supported yet-->
-                    <Importe t-out="no_sujeta.get('ImportePorArticulos7_14_Otros')"/>
-                    <Importe t-out="no_sujeta.get('ImporteTAIReglasLocalizacion')"/>
+                    <Importe t-if="'ImportePorArticulos7_14_Otros' in no_sujeta" t-out="format_float(no_sujeta['ImportePorArticulos7_14_Otros'])"/>
+                    <Importe t-if="'ImporteTAIReglasLocalizacion' in no_sujeta" t-out="format_float(no_sujeta['ImporteTAIReglasLocalizacion'])"/>
                 </DetalleNoSujeta>
             </NoSujeta>
         </template>
