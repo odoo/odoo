@@ -23,7 +23,7 @@ export class PaymentPage extends Component {
         });
 
         onMounted(() => {
-            if (this.paymentMethods.length === 1) {
+            if (!this.cashPaymentMethod && this.paymentMethods.length === 1) {
                 this.selectMethod(this.paymentMethods[0].id);
             }
         });
