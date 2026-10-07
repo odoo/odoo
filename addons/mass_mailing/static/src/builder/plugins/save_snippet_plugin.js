@@ -7,6 +7,18 @@ export class SaveSnippetPlugin extends Plugin {
     static id = "mass_mailing.SaveSnippetPlugin";
     resources = {
         custom_snippets_notification_overrides: this.handleCustomSnippetNotification.bind(this),
+        clean_for_save_processors: (rootEl, { saveSnippet } = {}) => {
+            if (saveSnippet) {
+                const dynamicPlaceholders = rootEl.querySelectorAll("t[t-out]");
+                dynamicPlaceholders.forEach((placeholderEl) => {
+                    const placeholderString =
+                        placeholderEl.innerText || placeholderEl.getAttribute("t-out");
+                    placeholderEl.before(placeholderString);
+                    placeholderEl.remove();
+                });
+            }
+            return rootEl;
+        },
     };
 
     handleCustomSnippetNotification(savedName) {

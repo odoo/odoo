@@ -128,11 +128,16 @@ export class AnnouncementScroll extends Interaction {
 
         // * 2 to have 200% of the container width,
         // + 1 for the reverse animation (see scss)
-        const cloneCount = itemsPerContainer * 2 + 1;
+        // (+ 1 - childCount) for clones not removed in edit
+        const cloneCount = itemsPerContainer * 2 + 2 - this.marqueeContainerEl.childElementCount;
         for (let i = 0; i < cloneCount; i++) {
             const cloneEl = this.marqueeItemEl.cloneNode(true);
             cloneEl.classList.add("s_announcement_scroll_marquee_item_clone");
-            cloneEl.prepend(document.createTextNode("\u00A0")); // NBSP
+            if (cloneEl.classList.contains("o_not_editable")) {
+                // kept for compatibility, before direct edition this space was
+                // used between the clone elements
+                cloneEl.prepend(document.createTextNode("\u00A0")); // NBSP
+            }
             this.marqueeContainerEl.appendChild(cloneEl);
         }
     }
