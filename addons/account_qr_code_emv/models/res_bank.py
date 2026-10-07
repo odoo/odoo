@@ -11,6 +11,12 @@ class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
     display_qr_setting = fields.Boolean(compute='_compute_display_qr_setting')
+<<<<<<< d287e85f81d1b2d679e0985f682f21ccab50fe52
+||||||| b5daa9bfad4f0d9c43c32dfd6dab34cf1c257d3d
+    company_qr_code = fields.Boolean(related='company_id.qr_code')
+=======
+    company_qr_code = fields.Boolean(compute='_compute_company_qr_code')
+>>>>>>> e8cbcc545b14154bc1821a81b3179ac0e4b139cc
     include_reference = fields.Boolean(string="Include Reference", help="Include the reference in the QR code.")
     proxy_type = fields.Selection(
         [('none', 'None')],
@@ -41,6 +47,17 @@ class ResPartnerBank(models.Model):
     def _get_emv_qr_code_names(self):
         """ Maps a country code to the name its local payment scheme gives to the EMV QR code. """
         return {}
+
+    @api.depends('partner_id')
+    def _compute_company_qr_code(self):
+        # Whether the bank account is held by a company that has enabled the QR codes on its invoices.
+        qr_code_by_partner = dict(self.env['res.company']._read_group(
+            domain=[('partner_id', 'in', self.partner_id.ids)],
+            groupby=['partner_id'],
+            aggregates=['qr_code:bool_or'],
+        ))
+        for bank in self:
+            bank.company_qr_code = qr_code_by_partner.get(bank.partner_id, False)
 
     @api.depends('country_code')
     def _compute_country_proxy_keys(self):
