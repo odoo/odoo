@@ -1,10 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import math
 from collections import defaultdict
 
 from odoo import api, models, Command, _
 from odoo.exceptions import UserError
 from odoo.addons.pos_self_order_loyalty.models.res_partner import SelfOrderIdentificationExpired
+
+
+def is_valid_id(value):
+    return isinstance(value, int) and not isinstance(value, bool) and value > 0
 
 
 class PosOrder(models.Model):
@@ -27,7 +32,153 @@ class PosOrder(models.Model):
                 pos_config, partner_id, order.get('partner_token'),
             ):
                 raise SelfOrderIdentificationExpired(_("Your identification has expired, please identify yourself again."))
-        return super()._check_pos_order(pos_config, order, device_type, table)
+        result = super()._check_pos_order(pos_config, order, device_type, table)
+        # pos.order._process_loyalty only lets a with_code rule earn points if its code was entered
+        result['applied_codes'] = self._get_self_order_applied_codes(pos_config, order)
+        # The classic POS replays this state when it opens the order (recomputeRewards)
+        result.update(self._get_self_order_loyalty_state(pos_config, {**order, 'applied_codes': result['applied_codes']}))
+        return result
+
+    def _load_pos_self_data_fields(self, config):
+        # applied_codes: the codes entered are the proof for code-based rewards (see
+        # _is_self_order_card_usable). The rest of the loyalty state lets rewards survive a
+        # reload, and a classic POS taking the order over find them (see
+        # _get_self_order_loyalty_state).
+        return super()._load_pos_self_data_fields(config) + [
+            'applied_codes', 'active_rewards', 'active_payment_programs', 'disabled_program_ids',
+        ]
+
+    @api.model
+    def _get_self_order_applied_codes(self, pos_config, order):
+        """Codes of the payload that activate something on this config: a with_code rule or a card."""
+        codes = [code for code in order.get('applied_codes') or [] if isinstance(code, str) and code]
+        if not codes:
+            return []
+        programs = pos_config._get_program_ids()
+        known = set(programs.rule_ids.filtered(lambda r: r.mode == 'with_code' and r.code in codes).mapped('code'))
+        known |= set(pos_config.env['loyalty.card'].search([
+            ('program_id', 'in', programs.ids),
+            ('code', 'in', codes),
+        ]).mapped('code'))
+        return [code for code in codes if code in known]
+
+    @api.model
+    def _get_self_order_loyalty_state(self, pos_config, order):
+        """Loyalty state of the payload, reduced to what a genuine self-order client can build.
+
+        It is replayed by the classic POS when it opens the order, without any of the
+        self-order checks: a forged entry (e.g. someone else's gift card id in
+        active_payment_programs) would otherwise be spent on the cashier's screen.
+
+        :param order: the payload, with its applied_codes already validated
+        """
+        programs = pos_config._get_program_ids()
+
+        def as_list(value):
+            return value if isinstance(value, list) else []
+
+        disabled_program_ids = []
+        for program_id in as_list(order.get('disabled_program_ids')):
+            if is_valid_id(program_id) and program_id in programs.ids and program_id not in disabled_program_ids:
+                disabled_program_ids.append(program_id)
+
+        return {
+            'active_rewards': [
+                clean for entry in as_list(order.get('active_rewards'))
+                if (clean := self._sanitize_self_order_active_reward(entry, programs, order))
+            ],
+            'active_payment_programs': [
+                clean for entry in as_list(order.get('active_payment_programs'))
+                if (clean := self._sanitize_self_order_payment_program(entry, programs, order))
+            ],
+            'disabled_program_ids': disabled_program_ids,
+        }
+
+    @api.model
+    def _sanitize_self_order_active_reward(self, entry, programs, order):
+        """:return: the entry with its known keys only, or None when any of them is invalid."""
+        if not isinstance(entry, dict) or not is_valid_id(entry.get('reward_id')):
+            return None
+        reward = programs.reward_ids.filtered(lambda r: r.id == entry['reward_id'])
+        if not reward:
+            return None
+        clean = {'reward_id': reward.id}
+
+        if entry.get('qty') is not None:
+            qty = entry['qty']
+            if isinstance(qty, bool) or not isinstance(qty, (int, float)) or not math.isfinite(qty) or qty <= 0:
+                return None
+            clean['qty'] = qty
+
+        product = reward.reward_product_id or reward.reward_product_ids[:1]
+        if entry.get('reward_product_id'):
+            if not is_valid_id(entry['reward_product_id']) or entry['reward_product_id'] not in reward.reward_product_ids.ids:
+                return None
+            product = reward.reward_product_ids.filtered(lambda p: p.id == entry['reward_product_id'])
+            clean['reward_product_id'] = product.id
+
+        if 'attribute_value_ids' in entry:
+            ids = entry['attribute_value_ids']
+            if not isinstance(ids, list) or not all(is_valid_id(id_) for id_ in ids):
+                return None
+            ptavs = self.env['product.template.attribute.value'].browse(ids).exists()
+            if len(ptavs) != len(set(ids)) or any(ptav.product_tmpl_id != product.product_tmpl_id for ptav in ptavs):
+                return None
+            clean['attribute_value_ids'] = ids
+
+        if 'attribute_custom_values' in entry:
+            custom_values = entry['attribute_custom_values']
+            if isinstance(custom_values, dict):
+                # unset values are ignored by the frontend (LoyaltyReward.getRewardLineValues)
+                custom_values = {key: value for key, value in custom_values.items() if value is not None}
+            allowed_keys = {str(id_) for id_ in clean.get('attribute_value_ids', [])}
+            if not isinstance(custom_values, dict) or any(
+                key not in allowed_keys or not isinstance(value, str) for key, value in custom_values.items()
+            ):
+                return None
+            clean['attribute_custom_values'] = custom_values
+
+        if entry.get('card_id'):
+            card = self.env['loyalty.card'].browse(entry['card_id']).exists() if is_valid_id(entry['card_id']) else None
+            if not card or card.program_id != reward.program_id or not self._is_self_order_card_usable(card, order):
+                return None
+            clean['card_id'] = card.id
+        return clean
+
+    @api.model
+    def _sanitize_self_order_payment_program(self, entry, programs, order):
+        """:return: the gift card / eWallet entry with its known keys only, or None when invalid."""
+        if not isinstance(entry, dict) or not is_valid_id(entry.get('card_id')) or not is_valid_id(entry.get('reward_id')):
+            return None
+        card = self.env['loyalty.card'].browse(entry['card_id']).exists()
+        if (
+            not card
+            or card.program_id not in programs
+            or not card.program_id.is_payment_program
+            or entry['reward_id'] not in card.program_id.reward_ids.ids
+            or not self._is_self_order_card_usable(card, order)
+        ):
+            return None
+        clean = {'reward_id': entry['reward_id'], 'card_id': card.id}
+        if entry.get('amount') is not None:
+            amount = entry['amount']
+            if isinstance(amount, bool) or not isinstance(amount, (int, float)) or not math.isfinite(amount) or amount < 0:
+                return None
+            clean['amount'] = amount
+        return clean
+
+    @api.model
+    def _is_self_order_card_usable(self, card, order):
+        """Whether a public self-order payload may spend `card`.
+
+        A card reserved for a partner is spent by that partner only, whose identity is proven
+        by the identification token (see _check_pos_order). An anonymous card (gift card,
+        coupon) is spent by whoever knows its code, like a physical card: its id alone, a
+        guessable integer, is no proof.
+        """
+        if card.partner_id:
+            return card.partner_id.id == order.get('partner_id')
+        return card.code in (order.get('applied_codes') or [])
 
     @api.model
     def _verify_reward_validity(self, pos_config, order, line_data, product_id):
@@ -53,11 +204,7 @@ class PosOrder(models.Model):
         card = pos_config.env['loyalty.card']
         if line_data.get('card_id'):
             card = card.browse(line_data['card_id']).exists()
-            # A card reserved for a partner (nominative programs, e.g. loyalty cards tied to a
-            # customer) may only be spent on an order made for that same partner. Anonymous
-            # cards (gift cards, unassigned coupons) have no partner_id and are usable by
-            # whoever knows their id/code, the same trust model as a physical gift card.
-            if not card or (card.partner_id and card.partner_id.id != order.get('partner_id')):
+            if not card or not self._is_self_order_card_usable(card, order):
                 return False, False
 
         return reward, card

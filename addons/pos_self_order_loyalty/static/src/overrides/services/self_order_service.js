@@ -274,7 +274,7 @@ patch(SelfOrder.prototype, {
         }
         const applyProduct = async (reward_product_id) => {
             let attribute_value_ids = [];
-            let attribute_custom_values = [];
+            let attribute_custom_values = {};
             const productTmpl = reward_product_id.product_tmpl_id;
             if (productTmpl.isConfigurableForSelfOrder) {
                 const attributeValues = await this.openConfigurator(productTmpl, {
@@ -288,7 +288,7 @@ patch(SelfOrder.prototype, {
             }
             order.active_rewards.push({
                 reward_id: reward.id,
-                reward_product_id,
+                reward_product_id: reward_product_id.id,
                 attribute_value_ids,
                 attribute_custom_values,
             });
