@@ -11,14 +11,12 @@ import { onWillStart, usePlugin, providePlugins } from "@odoo/owl";
 import { useLeaveCancelWizard, useNewAllocationRequest } from "../hooks";
 import { TimeOffPlugin } from "../time_off_plugin";
 import { TimeOffFormViewDialog } from "../view_dialog/form_view_dialog";
-import { TimeOffCalendarMobileFilterPanel } from "./calendar_filter_panel/calendar_mobile_filter_panel";
 import { TimeOffCalendarSidePanel } from "./calendar_side_panel/calendar_side_panel";
 
 export class TimeOffCalendarController extends CalendarController {
     static components = {
         ...CalendarController.components,
         CalendarSidePanel: TimeOffCalendarSidePanel,
-        MobileFilterPanel: TimeOffCalendarMobileFilterPanel,
         Dropdown,
         DropdownItem,
     };

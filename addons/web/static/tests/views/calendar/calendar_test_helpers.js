@@ -684,12 +684,15 @@ export async function changeScale(scale) {
 export async function displayCalendarPanel() {
     if (isSmall()) {
         await contains(".o_calendar_container .o_other_calendar_panel").click();
+        // let the bottom sheet position itself
+        await animationFrame();
     }
 }
 
 export async function hideCalendarPanel() {
     if (isSmall()) {
-        await contains(".o_calendar_container .o_other_calendar_panel").click();
+        await click(".o_bottom_sheet_backdrop");
+        await animationFrame();
     }
 }
 
@@ -730,7 +733,7 @@ export async function toggleFilter(sectionName, filterValue) {
     await animationFrame();
 
     if (otherCalendarPanel) {
-        await click(otherCalendarPanel);
+        await click(".o_bottom_sheet_backdrop");
         await animationFrame();
     }
     await advanceTime(CalendarModel.DEBOUNCED_LOAD_DELAY);
@@ -756,7 +759,7 @@ export async function toggleSectionFilter(sectionName) {
     await animationFrame();
 
     if (otherCalendarPanel) {
-        await click(otherCalendarPanel);
+        await click(".o_bottom_sheet_backdrop");
         await animationFrame();
     }
     await advanceTime(CalendarModel.DEBOUNCED_LOAD_DELAY);

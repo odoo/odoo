@@ -519,6 +519,8 @@ test(`simple calendar rendering on mobile`, async () => {
     await contains(`.dropdown-item:eq(0)`).click();
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(3);
 
+    // the bottom sheet resizes to the new filter, and the autocomplete closes on scroll
+    await animationFrame();
     await contains(`.o_calendar_sidepanel input[type=text]`).click();
     expect(`.dropdown-item`).toHaveCount(1);
     expect(`.dropdown-item`).toHaveText("partner 4");
@@ -981,6 +983,8 @@ test(`add a filter with the search more dialog on mobile`, async () => {
     await contains(`${section} .o-autocomplete--dropdown-item:last-child`).click();
     await contains(".o_data_row:eq(0)").click();
     expect("o_dialog").toHaveCount(0);
+    // the bottom sheet resizes to the new filters, and the autocomplete closes on scroll
+    await animationFrame();
 
     expect(`.o_calendar_sidepanel .o_calendar_filter`).toHaveCount(1);
     expect(`.o_calendar_filter_item`).toHaveCount(4);
@@ -5771,8 +5775,7 @@ test("calendar: show and change other calendar", async () => {
         message: "should contain 2 child nodes -> 2 resources",
     });
 
-    expect(".o_calendar_sidepanel").toHaveCount(1);
-    expect(".o_calendar_renderer").toHaveCount(0);
+    expect(".o_bottom_sheet .o_calendar_sidepanel").toHaveCount(1);
     expect(".o_calendar_filter").toHaveCount(1);
     expect(".o_calendar_filter[data-name=partner_id]").toHaveCount(1);
 
@@ -5784,9 +5787,9 @@ test("calendar: show and change other calendar", async () => {
         message: "should contain 0 child nodes -> no filters selected",
     });
 
-    // Toggle again the other calendar panel should hide the sidebar and show the calendar view
-    await contains(".o_other_calendar_panel").click();
-    expect(".o_calendar_sidepanel").toHaveCount(0);
+    // Closing the bottom sheet leaves the calendar alone
+    await hideCalendarPanel();
+    expect(".o_bottom_sheet").toHaveCount(0);
     expect(".o_calendar_renderer").toHaveCount(1);
 });
 

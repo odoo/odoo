@@ -1,4 +1,4 @@
-import { Component, proxy, useProps } from "@odoo/owl";
+import { Component, proxy, useProps, useScope } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -19,6 +19,10 @@ export class CalendarSidePanel extends Component {
         useBus(this.props.model.bus, "CALENDAR_EVENT_DRAG", ({ detail }) => {
             this.state.isDragging = detail.dragging;
         });
+        // In a bottom sheet, the panel is outside the controller's tree, which
+        // is the one re-rendered on model updates.
+        const scope = useScope();
+        useBus(this.props.model.bus, "update", () => scope.render(true));
         this.uiService = useService("ui");
     }
 

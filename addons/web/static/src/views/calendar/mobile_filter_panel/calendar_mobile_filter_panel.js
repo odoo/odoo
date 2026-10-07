@@ -6,12 +6,8 @@ export class CalendarMobileFilterPanel extends Component {
     static template = "web.CalendarMobileFilterPanel";
     props = useProps({
         model: t.object(),
-        sidePanelShown: t.boolean(),
-        toggleSidePanel: t.function(),
+        openFiltersBottomSheet: t.function(),
     });
-    get caretDirection() {
-        return this.props.sidePanelShown ? "keyboard_arrow_down" : "chevron_backward";
-    }
     getFilterColor(filter) {
         return `o_color_${getColor(filter.colorIndex)}`;
     }

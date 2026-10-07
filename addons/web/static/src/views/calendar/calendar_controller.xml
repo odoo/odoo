@@ -77,8 +77,8 @@
                     </div>
                     <MobileFilterPanel t-if="this.uiService.isSmall and this.hasSidePanel" t-props="this.mobileFilterPanelProps" />
                     <div class="o_calendar_wrapper d-flex overflow-hidden">
-                        <t t-if="this.showCalendar" t-component="this.props.Renderer" t-props="this.rendererProps"/>
-                        <CalendarSidePanel t-if="this.hasSidePanel" t-props="this.sidePanelProps"/>
+                        <t t-component="this.props.Renderer" t-props="this.rendererProps"/>
+                        <CalendarSidePanel t-if="this.hasSidePanel and !this.uiService.isSmall" t-props="this.sidePanelProps"/>
                     </div>
                 </div>
             </Layout>
