@@ -25,6 +25,7 @@ import {
     ZERO_WIDTH_CHARS_REGEX,
     isVisible,
     cleanZWS,
+    fillEmpty,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -349,6 +350,50 @@ function sanitizeNode(node, root) {
             }
             node.remove();
             node = replacement; // The node has been removed, update the reference.
+        }
+    } else if (node.nodeName === "TABLE") {
+        const table = node;
+        const matrix = [];
+        let width = 0;
+        // Build the logical matrix.
+        for (let r = 0; r < table.rows.length; r++) {
+            const row = table.rows[r];
+            matrix[r] ||= [];
+            let c = 0;
+            for (const cell of row.cells) {
+                while (matrix[r][c] !== undefined) {
+                    c++;
+                }
+                const rowspan = cell.rowSpan;
+                const colspan = cell.colSpan;
+                for (let dr = 0; dr < rowspan; dr++) {
+                    matrix[r + dr] ||= [];
+
+                    for (let dc = 0; dc < colspan; dc++) {
+                        matrix[r + dr][c + dc] = dr === 0 && dc === 0 ? cell : null;
+                    }
+                }
+                cell.removeAttribute("rowspan");
+                cell.removeAttribute("colspan");
+                c += colspan;
+                width = Math.max(width, c);
+            }
+        }
+
+        // Populate each row in place.
+        for (let r = 0; r < table.rows.length; r++) {
+            const row = table.rows[r];
+            matrix[r] ||= [];
+            let domIndex = 0;
+            for (let c = 0; c < width; c++) {
+                const entry = matrix[r][c];
+                if (!entry) {
+                    const cell = root.ownerDocument.createElement("td");
+                    fillEmpty(cell);
+                    row.insertBefore(cell, row.children[domIndex] ?? null);
+                }
+                domIndex++;
+            }
         }
     }
     return node;
