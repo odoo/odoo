@@ -6,7 +6,7 @@
             <t t-set-slot="header">
                 <div class="d-flex flex-grow-1 justify-content-between mb-2">
                     <h4 class="align-middle my-1 fs-2">Closing Register</h4>
-                    <div class="total-orders fw-bolder align-middle my-1">
+                    <div t-if="this.pos.accessRight.canSeeExpectedCash" class="total-orders fw-bolder align-middle my-1">
                         <t t-out="this.props.orders_details.quantity"/> orders:
                         <span class="amount" t-out="this.pos.formatCurrency(this.props.orders_details.amount)"/>
                     </div>
@@ -120,21 +120,21 @@
                 <div class="w-100 d-flex flex-wrap justify-content-between gap-2" t-att-class="{'container-fluid row p-0': this.ui.isSmall}">
                     <!-- First line of buttons -->
                     <div t-att-class="{'col-12 col-md-6 p-0': this.ui.isSmall}" class="d-flex gap-2">
-                        <button class="button highlight btn btn-primary" t-att-disabled="!this.canConfirm()" t-on-click="this.confirm" t-att-class="{'w-100': this.ui.isSmall}">Close Register</button>
+                        <button t-if="this.pos.accessRight.canCloseSession" class="button highlight btn btn-primary" t-att-disabled="!this.canConfirm()" t-on-click="this.confirm" t-att-class="{'w-100': this.ui.isSmall}">Close Register</button>
                         <button class="button btn btn-secondary" t-att-disabled="!this.canCancel()" t-on-click="this.cancel" t-att-class="{'w-100': this.ui.isSmall}">Discard</button>
                     </div>
 
                     <!-- Second line of buttons -->
                     <div t-att-class="{'col-12 col-md-6 p-0': this.ui.isSmall}" class=" d-flex gap-2">
                         <button t-if="this.pos.showCashMoveButton" class="button btn btn-secondary" t-att-class="{'w-100': this.ui.isSmall}" t-on-click="() => this.cashMove()">Cash In/Out</button>
-                        <button class="button icon btn btn-secondary"
+                        <button t-if="this.pos.accessRight.canPrintReport" class="button icon btn btn-secondary"
                             t-on-click="this.downloadSalesReport"
                             t-att-class="this.ui.isSmall ? 'w-100' : 'ms-auto'"
                             title="Download a report with all the sales of the current PoS Session">
                                 Daily Sale
                                 <i t-if="!this.ui.isSmall" class="oi" data-icon="download" role="img"/>
                         </button>
-                        <button t-if="this.pos.ticketPrinter.hasReceiptPrinters" class="button icon btn btn-secondary">
+                        <button t-if="this.pos.ticketPrinter.hasReceiptPrinters and this.pos.accessRight.canPrintReport" class="button icon btn btn-secondary">
                             <SaleDetailsButton/>
                         </button>
                     </div>

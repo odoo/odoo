@@ -25,12 +25,17 @@ export class OpeningControlPopup extends Component {
         this.moneyDetails = null;
         this.pos = usePos();
         this.dialog = useService("dialog");
+        const initialOpeningCash = this.pos.accessRight.canSeeExpectedCash
+            ? this.pos.config._last_opening_balance || 0
+            : 0;
         this.state = proxy({
             notes: "",
             openingCash: this.pos.formatCurrency(
-                this.pos.config._last_opening_balance || 0,
+                initialOpeningCash,
                 this.pos.config.currency_id.id,
-                { noSymbol: true }
+                {
+                    noSymbol: true,
+                }
             ),
             ordersByPreset: [],
         });
