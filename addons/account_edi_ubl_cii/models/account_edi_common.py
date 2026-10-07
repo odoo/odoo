@@ -872,7 +872,7 @@ class AccountEdiCommon(models.AbstractModel):
             lines_values += self._retrieve_line_charges(record, line_values, line_values['tax_ids'])
             if isinstance(record, self.env.registry['account.move']) and hasattr(self.env['account.move.line'], '_get_predicted_values'):
                 for fname, value in self.env['account.move.line']._get_predicted_values(
-                    line_values['name'],
+                    self._get_line_label(line_values),
                     move=record,
                     line_domain=[('tax_ids', '=', line_values['tax_ids'][0])] if len(line_values['tax_ids']) == 1 else [],
                 ).items():
@@ -1103,9 +1103,8 @@ class AccountEdiCommon(models.AbstractModel):
             elif delivered_qty == 0:
                 quantity = price_subtotal / price_unit
 
-        return {
+        line_vals = {
             # vals to be written on the document line
-            'name': self._find_value(xpath_dict['name'], tree),
             'product_id': product.id,
             'product_uom_id': product_uom.id,
             'price_unit': price_unit,
@@ -1115,6 +1114,19 @@ class AccountEdiCommon(models.AbstractModel):
             'charges': charges,  # see `_retrieve_line_charges`
             'price_subtotal': price_subtotal,
         }
+
+        name = self._find_value(xpath_dict['name'], tree) or ''
+        if product:
+            name = re.sub(rf"^{re.escape(product.name)}($|\n)", "", name)
+
+        if name:
+            line_vals['name'] = name
+
+        return line_vals
+
+    def _get_line_label(self, line_values):
+        product = self.env['product.product'].browse(line_values.get('product_id'))
+        return ' '.join(filter(None, [product.name, line_values.get('name')]))
 
     def _import_product(self, partner, **product_vals):
         return self.env['product.product']._retrieve_product(**product_vals)
@@ -1250,6 +1262,7 @@ class AccountEdiCommon(models.AbstractModel):
         fpos_domain = [('fiscal_position_ids', '=', record.fiscal_position_id.id)]
         if record.fiscal_position_id.is_domestic:
             fpos_domain = ['|', ('fiscal_position_ids', '=', False)] + fpos_domain
+        line_label = self._get_line_label(line_values)
         for tax_node in line_values.pop('tax_nodes'):
             amount = float(tax_node.text)
             domain = [
@@ -1260,7 +1273,7 @@ class AccountEdiCommon(models.AbstractModel):
             ]
             tax = self.env['account.tax']
             if hasattr(record, '_get_specific_tax'):
-                tax = record._get_specific_tax(line_values['name'], domain).filtered_domain(domain)[:1]
+                tax = record._get_specific_tax(line_label, domain).filtered_domain(domain)[:1]
             if tax_exigibility is not None:
                 if not tax:
                     tax = self.env['account.tax'].search(domain + fpos_domain + [('price_include', '=', False), ('tax_exigibility', '=', tax_exigibility)], limit=1)
@@ -1274,7 +1287,7 @@ class AccountEdiCommon(models.AbstractModel):
                     logs.append(
                         _("Tax with matching exigibility could not be retrieved: '%(exigibility)s' for line '%(line)s'.",
                         exigibility=tax_exigibility,
-                        line=line_values['name']),
+                        line=line_label),
                     )
             if not tax:
                 tax = self.env['account.tax'].search(domain + fpos_domain + [('price_include', '=', False)], limit=1)
@@ -1289,7 +1302,7 @@ class AccountEdiCommon(models.AbstractModel):
                 logs.append(
                     _("Could not retrieve the tax: %(amount)s %% for line '%(line)s'.",
                     amount=amount,
-                    line=line_values['name']),
+                    line=line_label),
                 )
             else:
                 taxes.append(tax.id)

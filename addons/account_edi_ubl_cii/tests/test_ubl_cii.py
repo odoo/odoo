@@ -1071,3 +1071,71 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         exemption_reason_code = xml_tree.find('.//ram:ApplicableTradeTax/ram:ExemptionReasonCode', self.namespaces)
         self.assertEqual(category_code.text, 'G')
         self.assertEqual(exemption_reason_code.text, 'VATEX-EU-G')
+
+    def test_import_ubl_21_line_description(self):
+        self.place_prdct.write({'default_code': 'PLC', 'description_purchase': "Purchase description"})
+        line_template = '''
+            <cac:InvoiceLine>
+                <cbc:ID>{id}</cbc:ID>
+                <cbc:InvoicedQuantity unitCode="C62">1</cbc:InvoicedQuantity>
+                <cbc:LineExtensionAmount currencyID="USD">100.00</cbc:LineExtensionAmount>
+                <cac:Item>
+                    {description}
+                    <cbc:Name>Placement</cbc:Name>
+                    <cac:SellersItemIdentification>
+                        <cbc:ID>PLC</cbc:ID>
+                    </cac:SellersItemIdentification>
+                    <cac:ClassifiedTaxCategory>
+                        <cbc:ID>S</cbc:ID>
+                        <cbc:Percent>17.3</cbc:Percent>
+                        <cac:TaxScheme>
+                            <cbc:ID>VAT</cbc:ID>
+                        </cac:TaxScheme>
+                    </cac:ClassifiedTaxCategory>
+                </cac:Item>
+                <cac:Price>
+                    <cbc:PriceAmount currencyID="USD">100.00</cbc:PriceAmount>
+                </cac:Price>
+            </cac:InvoiceLine>
+        '''
+        lines = ''.join(
+            line_template.format(id=index, description=description)
+            for index, description in enumerate([
+                '',
+                '<cbc:Description>Custom description</cbc:Description>',
+                '<cbc:Description>Placement\nExtra description</cbc:Description>',
+            ], start=1)
+        )
+        xml_content = f'''<?xml version="1.0" encoding="UTF-8"?>
+            <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+                <cbc:ID>INV-1234</cbc:ID>
+                <cbc:IssueDate>2023-01-01</cbc:IssueDate>
+                <cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+                <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
+                <cac:AccountingSupplierParty>
+                    <cac:Party>
+                        <cac:PartyName>
+                            <cbc:Name>My Test Partner</cbc:Name>
+                        </cac:PartyName>
+                    </cac:Party>
+                </cac:AccountingSupplierParty>
+                <cac:LegalMonetaryTotal>
+                    <cbc:LineExtensionAmount currencyID="USD">300.00</cbc:LineExtensionAmount>
+                    <cbc:PayableAmount currencyID="USD">300.00</cbc:PayableAmount>
+                </cac:LegalMonetaryTotal>
+                {lines}
+            </Invoice>
+        '''
+        xml_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'raw': xml_content.encode(),
+            'name': 'test_invoice.xml',
+        })
+
+        bill = self._import_invoice_as_attachment_on(attachment=xml_attachment)
+        self.assertRecordValues(bill.invoice_line_ids, [
+            {'product_id': self.place_prdct.id, 'name': "Purchase description", 'tax_ids': []},
+            {'product_id': self.place_prdct.id, 'name': "Custom description", 'tax_ids': []},
+            {'product_id': self.place_prdct.id, 'name': "Extra description", 'tax_ids': []},
+        ])
