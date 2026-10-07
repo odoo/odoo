@@ -232,6 +232,7 @@ class PosConfig(models.Model):
         string='Download Invoice',
         help="Automatically download the invoice PDF when an order is invoiced.",
     )
+    welcome_message = fields.Char(string='Customer Message', help="Set the message that will be displayed on the PoS customer screen", default="Welcome")
 
     def _get_next_order_refs(self, device_identifier='0'):
         next_number = self.order_backend_seq_id._next()

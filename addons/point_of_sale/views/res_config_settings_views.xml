@@ -497,10 +497,12 @@
                             </block>
 
                             <block title="Connected Devices" id="pos_connected_devices_section">
+
                                 <setting id="customer_display" string="Customer Display" help="Set the background image of your customer display" documentation="/applications/sales/point_of_sale/shop/customer_display.html" >
                                     <label for="pos_customer_display_bg_img" />
                                     <field name="pos_customer_display_bg_img" class="w-100" filename="pos_customer_display_bg_img_name"/>
                                 </setting>
+
                                 <setting string="Receipt Printers" help="Connect printers to your PoS" id="pos_other_devices">
                                     <field name="pos_other_devices"/>
                                     <div class="content-group" invisible="not pos_other_devices">
@@ -510,9 +512,15 @@
                                         </div>
                                     </div>
                                 </setting>
+
+                                <setting id="welcome_message" string="Customer Message" help="Set the message that will be displayed on the PoS customer screen" >
+                                    <field name="pos_welcome_message" class="w-100" placeholder="Welcome"/>
+                                </setting>
+
                                 <setting string="USB Scale" help="Connect a compatible scale directly via USB to this device">
                                     <widget name="iot_webserial.connect_web_serial_scale"/>
                                 </setting>
+
                             </block>
                             <block title="Preparation" id="pos_preparation_section">
                                 <setting string="Internal Notes" help="Add internal notes on order lines for the kitchen" id="iface_orderline_notes">

@@ -28,6 +28,7 @@ class PosCustomerDisplay(http.Controller):
                 'theme': kw.get('theme', 'light'),
                 "pos_config_id": pos_config_sudo.id,
                 "pos_session_id": pos_config_sudo.current_session_id.id if pos_config_sudo.has_active_session else False,
+                "pos_welcome_message": pos_config_sudo.welcome_message,
             },
         )
 

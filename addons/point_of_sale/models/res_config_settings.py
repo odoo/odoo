@@ -127,6 +127,7 @@ class ResConfigSettings(models.TransientModel):
     pos_fast_payment_method_ids = fields.Many2many(related='pos_config_id.fast_payment_method_ids', readonly=False)
     pos_iface_printbill = fields.Boolean(related='pos_config_id.iface_printbill', readonly=False)
     pos_use_download_invoice = fields.Boolean(related='pos_config_id.use_download_invoice', readonly=False)
+    pos_welcome_message = fields.Char(related='pos_config_id.welcome_message', readonly=False)
 
     def action_launch_cron_generate_invoice_period(self):
         self.env['pos.session']._launch_cron_generate_invoice_period()

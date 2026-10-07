@@ -17,6 +17,8 @@ export class CustomerDisplayPlugin extends Plugin {
     setup() {
         this.deviceId = uuidv4();
         this.currentTheme = new URLSearchParams(location.search).get("theme") || "light";
+        this.posWelcomeMessage = this.posWelcomeMessage =
+            window.odoo.pos_welcome_message || "Welcome";
 
         // Fallback communication channel used when the system connection is unavailable (e.g., network loss).
         // NOTE: Works only between contexts within the same browser (tabs/windows sharing the same origin).
