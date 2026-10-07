@@ -123,6 +123,70 @@ test("should correctly set custom style on button", async () => {
     );
 });
 
+test("should correctly set custom hover style on button", async () => {
+    const { getEditor } = await setupHTMLBuilder(
+        '<p><a href="https://test.com/" class="btn">Link label</a></p>'
+    );
+
+    await contains(":iframe p > a").click();
+
+    await contains("[data-label=Type] .o_hb_select_toggle").click();
+    await contains(".o_popover .dropdown-item:contains('Custom')").click();
+
+    // A dark fill is shaded on hover
+    await contains("[data-label=Fill] .o_we_color_preview").click();
+    await contains(".o_color_button[data-color='#0000FF']").click();
+    expect(":iframe p > a").toHaveStyle({ "--btn-custom-hover-bg": "#0000D9" });
+
+    // A light fill is tinted on hover
+    await contains("[data-label=Fill] .o_we_color_preview").click();
+    await contains(".o_color_button[data-color='#FFFF00']").click();
+    expect(":iframe p > a").toHaveStyle({ "--btn-custom-hover-bg": "#FFFF26" });
+
+    // Switching to a non-custom type removes the hover background
+    await contains("[data-label=Type] .o_hb_select_toggle").click();
+    await contains(".o_popover .dropdown-item:contains('Button Primary')").click();
+    expect(":iframe p > a").not.toHaveStyle("--btn-custom-hover-bg", { inline: true });
+
+    const cleanedEl = getEditor().getElContent().querySelector("a.btn");
+    expect(cleanedEl).not.toHaveStyle("--btn-custom-hover-bg", { inline: true });
+});
+
+test("outline custom button should only have a color option", async () => {
+    await setupHTMLBuilder('<p><a href="https://test.com/" class="btn">Link label</a></p>', {
+        styleContent:
+            ":root { --o-color-1: #123456; } .text-o-color-1 { color: var(--o-color-1) !important; }",
+    });
+
+    await contains(":iframe p > a").click();
+
+    await contains("[data-label=Type] .o_hb_select_toggle").click();
+    await contains(".o_popover .dropdown-item:contains('Custom')").click();
+    await contains("[data-label=Shape] .o_hb_select_toggle").click();
+    await contains(".o_popover .dropdown-item:contains('Outline')").click();
+
+    expect(":iframe p > a").toHaveClass("btn btn-outline-custom");
+    expect("[data-label=Color]").toHaveCount(1);
+    expect("[data-label=Text]").toHaveCount(0);
+    expect("[data-label=Fill]").toHaveCount(0);
+
+    await contains("[data-label=Color] .o_we_color_preview").click();
+    await contains(".o_color_button[data-color='#FF0000']").click();
+    expect(":iframe p > a").toHaveStyle({ "--btn-custom-color": "#FF0000" });
+    expect("[data-label=Color] .o_we_color_preview").toHaveStyle(
+        "background-color: rgb(255, 0, 0)"
+    );
+
+    await contains("[data-label=Color] .o_we_color_preview").click();
+    await contains(".o_color_button[data-color='o-color-1']").click();
+    expect(":iframe p > a").toHaveClass("text-o-color-1");
+    expect("[data-label=Color] .o_we_color_preview").toHaveStyle(
+        "background-color: rgb(18, 52, 86)"
+    );
+    await contains("[data-label=Color] .o_we_color_preview").click();
+    expect(".o_color_button[data-color='o-color-1']").toHaveClass("selected");
+});
+
 test("fill gradient should be stored as background-image", async () => {
     await setupHTMLBuilder(
         '<p><a href="http://test.com/" class="btn btn-custom">Link label</a></p>'
