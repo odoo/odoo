@@ -13303,3 +13303,39 @@ test("edit o2m with default_order on a field not in view (2)", async () => {
     await contains(".modal-footer .o_form_button_save").click();
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blip", "kawa2", "yop"]);
 });
+
+test("one2many list: removing a new line twice does not delete a virtual id", async () => {
+    onRpc("web_save", ({ args }) => {
+        expect.step(`web_save ${JSON.stringify(args[1].p.map(([command]) => command))}`);
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="p">
+                    <list editable="bottom">
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_selected_row [name=name] input").edit("first", { confirm: "blur" });
+    // the click removes the line and, before the list is rendered again, an Enter keypress on
+    // the same remove cell (e.g. the end of a barcode scan) removes it a second time
+    const button = queryOne("td.o_list_record_remove button");
+    button.focus();
+    button.click();
+    await press("Enter");
+    await animationFrame();
+    expect(".o_data_row").toHaveCount(0);
+
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_selected_row [name=name] input").edit("second", { confirm: "blur" });
+    await clickSave();
+    // a line that was never saved must not be deleted on the server
+    expect.verifySteps(["web_save [0]"]);
+});

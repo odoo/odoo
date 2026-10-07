@@ -547,7 +547,11 @@ export class StaticList extends DataPoint {
                     if (command[0] === DELETE) {
                         const hasCreateCommand = ownCommands.some((x) => x.command[0] === CREATE);
                         ownCommands.splice(0); // reset to the empty list
-                        if (!hasCreateCommand) {
+                        // a record that has never been saved (virtual id) does not exist on the
+                        // server: there is nothing to delete, even if it is removed twice
+                        const isVirtual =
+                            typeof command[1] === "string" && command[1].startsWith("virtual_");
+                        if (!hasCreateCommand && !isVirtual) {
                             addOwnCommand([DELETE, command[1]]);
                         }
                     } else {
