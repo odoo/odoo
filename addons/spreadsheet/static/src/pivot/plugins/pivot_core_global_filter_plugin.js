@@ -12,14 +12,44 @@ import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
+import { corePlugins, stores } from "@odoo/o-spreadsheet";
+import { GlobalFiltersCorePlugin } from "@spreadsheet/global_filters";
+import { _t } from "@web/core/l10n/translation";
+
+const { SidePanelStore } = stores;
 
 export class PivotCoreGlobalFilterPlugin extends OdooCorePlugin {
+    static dependencies = [corePlugins.PivotCorePlugin, GlobalFiltersCorePlugin];
     static getters = /** @type {const} */ (["getPivotFieldMatch", "getPivotFieldMatching"]);
     constructor(config) {
         super(config);
 
         /** @type {Object.<string, GFLocalPivot>} */
         this.pivots = {};
+
+        // Completed with the evaluation accessors by PivotCoreViewGlobalFilterPlugin
+        this.getters.getGlobalFieldMatchingRegistry().replace("pivot", {
+            getIds: () =>
+                this.getters
+                    .getPivotIds()
+                    .filter(
+                        (id) =>
+                            this.getters.getPivotCoreDefinition(id).type === "ODOO" &&
+                            this.getPivotFieldMatch(id)
+                    ),
+            getDisplayName: (pivotId) => this.getters.getPivotName(pivotId),
+            getTag: (pivotId) =>
+                _t("Pivot #%(pivot_id)s", { pivot_id: this.getters.getPivotFormulaId(pivotId) }),
+            getFieldMatching: (pivotId, filterId) => this.getPivotFieldMatching(pivotId, filterId),
+            getModel: (pivotId) => {
+                const pivot = this.getters.getPivotCoreDefinition(pivotId);
+                return pivot.type === "ODOO" && pivot.model;
+            },
+            getActionXmlId: (pivotId) => this.getters.getPivotCoreDefinition(pivotId).actionXmlId,
+            getContext: (pivotId) => this.getters.getPivotCoreDefinition(pivotId).context,
+            openSidePanel: (env, pivotId) =>
+                env.getStore(SidePanelStore).open("PivotSidePanel", { pivotId }),
+        });
     }
 
     /**
