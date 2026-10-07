@@ -17,6 +17,9 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
               <data>
+                <field name="move_type" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
                 <xpath expr="//group[@name='other_infos']" position="before">
                     <group name='carrier_data' string="Shipping Information">
                         <field name="is_return_picking" invisible="1"/>
@@ -28,6 +31,7 @@
                             <field name="carrier_tracking_ref" class="oe_inline text-break"/>
                             <button type='object' class="oe_link" icon="east" confirm="Cancelling a delivery may not be undoable. Are you sure you want to continue?" name="cancel_shipment" string="Cancel" invisible="not carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state != 'done'"/>
                         </div>
+                        <field name="move_type" invisible="picking_type_code == 'incoming'" readonly="state in ['cancel', 'done']"/>
                         <label for="weight" string="Weight"/>
                         <div>
                             <field name="weight" class="oe_inline"/>
