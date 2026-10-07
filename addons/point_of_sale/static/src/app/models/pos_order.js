@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { localization } from "@web/core/l10n/localization";
-import { formatDate, serializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDate, serializeDateTime } from "@web/core/l10n/dates";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
 
 const { DateTime } = luxon;
@@ -270,8 +270,14 @@ export class PosOrder extends PosOrderAccounting {
         this.last_order_preparation_change.general_customer_note = this.general_customer_note;
         this.last_order_preparation_change.internal_note = this.internal_note;
         this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
+        // The server discards changes dated before its own version: date them after the version
+        // they are based on, even if the device clock is behind the server one
+        const lastDate = deserializeDateTime(
+            this.last_order_preparation_change.metadata?.serverDate
+        );
+        const now = DateTime.now();
         this.last_order_preparation_change.metadata = {
-            serverDate: serializeDateTime(DateTime.now()),
+            serverDate: serializeDateTime(lastDate.isValid ? DateTime.max(lastDate, now) : now),
         };
         this._markDirty();
     }
@@ -472,6 +478,19 @@ export class PosOrder extends PosOrderAccounting {
                 data: _t("There is already an electronic payment in progress."),
             };
         }
+        // A QR code cannot be generated for a zero amount
+        if (
+            payment_method.payment_method_type === "qr_code" &&
+            !this.currency.isZero(this.remainingDue) &&
+            this.currency.isZero(this.remainingDueAfterPendingQr)
+        ) {
+            return {
+                status: false,
+                data: _t(
+                    "A QR code payment already covers the amount due. Send it or remove it first."
+                ),
+            };
+        }
 
         const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method);
         const newPaymentLine = this.models["pos.payment"].create({
@@ -517,6 +536,9 @@ export class PosOrder extends PosOrderAccounting {
 
     electronicPaymentInProgress() {
         return this.payment_ids.some(function (pl) {
+            if (pl.isUnsentQrCode()) {
+                return false;
+            }
             if (pl.payment_status) {
                 return !["done", "reversed"].includes(pl.payment_status);
             } else {

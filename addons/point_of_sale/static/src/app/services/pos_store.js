@@ -676,7 +676,6 @@ export class PosStore extends WithLazyGetterTrap {
                 this.removeOrder(order, false);
                 this.removePendingOrder(order);
             }
-            await Promise.all(ordersToDelete.map((order) => this.recycleOrderNumber(order)));
         }
 
         return true;
@@ -1377,18 +1376,8 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
 
-        const removed = this.data.localDeleteCascade(order);
-        this.recycleOrderNumber(order);
-        return removed;
-    }
-    /**
-     * Recycle the receipt number only once the order is gone from IndexedDB,
-     * otherwise a reload restores it next to a new order using the same number.
-     */
-    recycleOrderNumber(order) {
-        return this.data
-            .deleteRecordsInIndexedDB("pos.order", [order.uuid])
-            .then(() => this.device.saveUnusedNumber([order]));
+        this.device.saveUnusedNumber([order]);
+        return this.data.localDeleteCascade(order);
     }
 
     /**
@@ -1455,6 +1444,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
     setNextOrderRefs(order) {
         const deviceIdentifier = this.device.identifier;
+        this.device.removeUsedNumbers(this.models["pos.order"].getAll());
         const number = `${this.device.useNext()}`.padStart(6, "0");
         const configId = this.config.id;
         const year2Digits = DateTime.now().year.toString().slice(-2);
@@ -1655,6 +1645,7 @@ export class PosStore extends WithLazyGetterTrap {
                     }
                 }
 
+                this.device.removeUsedNumbers(newData["pos.order"]);
                 await this.postSyncAllOrders(newData["pos.order"]);
                 this.removePendingOrder(order);
                 syncedOrders.push(...newData["pos.order"]);
@@ -2285,8 +2276,21 @@ export class PosStore extends WithLazyGetterTrap {
             this.dialog.add(RetryPrintPopup, {
                 message: failedReceipts,
                 canRetry: true,
-                retry: () => {
-                    this.printChanges(order, orderChange, reprint, retryPrinters);
+                retry: async () => {
+                    const isRetryPrinted = await this.printChanges(
+                        order,
+                        orderChange,
+                        reprint,
+                        retryPrinters
+                    );
+                    if (
+                        isRetryPrinted &&
+                        !isPrinted &&
+                        this.models["pos.order"].getBy("uuid", order.uuid)
+                    ) {
+                        order.updateLastOrderChange();
+                        this.syncAllOrders({ orders: [order] });
+                    }
                 },
             });
         }

@@ -33,7 +33,7 @@ def textToString(element):
 
 
 def _clean_text_content(buf):
-    """Clean PDF content: remove NULs, normalize whitespace and line breaks."""
+    """Clean text content: remove NULs, normalize whitespace and line breaks."""
     if not buf:
         return buf
     # Remove NULs, normalize CRLF/CR to LF, replace tabs with spaces
@@ -119,6 +119,8 @@ class IrAttachment(models.Model):
                 for sheet in workbook.worksheets:
                     sheet_name = sheet.title
                     sheet_name_escaped = _csv_escape(sheet_name)
+                    # prevent unnecessary memory bloat if sheet declares wrong dimensions
+                    sheet.reset_dimensions()
                     sheet_rows = []
                     for row in sheet.iter_rows(values_only=True):
                         if not any(row):
@@ -127,6 +129,7 @@ class IrAttachment(models.Model):
                             _csv_escape(str(cell) if cell is not None else '') for cell in row
                         ]
                         sheet_rows.append(','.join(row_cells))
+
                     sheet_data = '\n'.join(sheet_rows)
                     if sheet_data:
                         all_sheets.append(sheet_data)

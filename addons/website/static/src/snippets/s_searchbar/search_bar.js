@@ -2,6 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { markup } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { getTemplate } from "@web/core/templates";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -16,6 +17,14 @@ export class SearchBar extends Interaction {
                 dropdown: this.hasDropdown,
                 show: this.hasDropdown,
             }),
+        },
+        ".oe_search_found small": {
+            "t-out": () => {
+                if (this.foundResult !== undefined) {
+                    return _t("(%(count)s found)", { count: this.foundResult });
+                }
+                return Interaction.INITIAL_VALUE;
+            },
         },
         ".search-query": {
             "t-on-input": this.debounced(this.onInput, 400),
@@ -42,7 +51,8 @@ export class SearchBar extends Interaction {
         const dataset = this.inputEl.dataset;
         this.options = {
             displayImage: dataset.displayImage && JSON.parse(dataset.displayImage),
-            displayDescription: dataset.displayDescription && JSON.parse(dataset.displayDescription),
+            displayDescription:
+                dataset.displayDescription && JSON.parse(dataset.displayDescription),
             displayExtraLink: dataset.displayExtraLink && JSON.parse(dataset.displayExtraLink),
             displayDetail: dataset.displayDetail && JSON.parse(dataset.displayDetail),
             // Make it easy for customization to disable fuzzy matching on specific searchboxes
@@ -72,6 +82,15 @@ export class SearchBar extends Interaction {
                 // is sluggish
                 this.options[decodeURIComponent(pathParts[indexNumber - 1])] = value;
             }
+        }
+
+        // Note: Adapt this code in xml in master, kept it for stable versions only
+        const searchButtonEl = this.el.querySelector(".oe_search_button");
+        if (searchButtonEl && !searchButtonEl.querySelector(".oe_search_found")) {
+            const spanEl = document.createElement("span");
+            spanEl.classList.add("oe_search_found");
+            spanEl.appendChild(document.createElement("small"));
+            searchButtonEl.appendChild(spanEl);
         }
     }
 
@@ -115,6 +134,7 @@ export class SearchBar extends Interaction {
      * @param {Object} res
      */
     render(res) {
+        this.foundResult = undefined;
         if (this.menuEl) {
             this.services["public.interactions"].stopInteractions(this.menuEl);
         }
@@ -138,6 +158,7 @@ export class SearchBar extends Interaction {
                 },
                 this.el
             )[0];
+            this.foundResult = res.results_count;
         }
         this.hasDropdown = !!res;
         prevMenuEl?.remove();

@@ -22,6 +22,22 @@ const selectText = (selector) => ({
     },
 });
 
+const checkChatterNotBooted = (content, trigger) => ({
+    content,
+    trigger,
+    async run() {
+        const iframeWindow = this.anchor.ownerDocument.defaultView;
+        // Let a rendering frame pass, so that the layout observers ran.
+        await new Promise((resolve) =>
+            iframeWindow.requestAnimationFrame(() => iframeWindow.setTimeout(resolve))
+        );
+        const { globalBundleCache } = iframeWindow.odoo.loader.modules.get("@web/core/assets");
+        if (globalBundleCache.has("portal.assets_chatter")) {
+            throw new Error("portal.assets_chatter should not have been loaded");
+        }
+    },
+});
+
 registerWebsitePreviewTour(
     "fullscreen_slide_text_highlights",
     {
@@ -36,12 +52,25 @@ registerWebsitePreviewTour(
             trigger: ':iframe a:contains("Article test")',
             run: "click",
         },
-        {
-            content: "Wait for the review tab chatter to be ready",
-            trigger: ":iframe #chatterRoot:not(:visible)",
-            run: () => odoo.portalChatterReady,
-        },
+        checkChatterNotBooted(
+            "The chatter of the inactive discuss tab must not boot on its own",
+            ":iframe body[is-ready=true] #discuss .o_portal_chatter:hidden"
+        ),
         ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Reveal the discuss tab in edit mode",
+            trigger: ":iframe a[href='#discuss']",
+            run: "click",
+        },
+        checkChatterNotBooted(
+            "The chatter must not boot in edit mode, even once revealed",
+            ":iframe #discuss.active.show .o_portal_chatter:not(:visible)"
+        ),
+        {
+            content: "Go back to the lesson tab",
+            trigger: ":iframe a[href='#about']",
+            run: "click",
+        },
         selectText(".s_text_block > p"),
         {
             content: "Expand the text editor toolbar",
@@ -68,6 +97,17 @@ registerWebsitePreviewTour(
                 ":iframe .o_wslides_lesson_content_type p span.o_text_highlight > svg.o_text_highlight_svg",
         },
         ...clickOnSave(),
+        {
+            content: "Reveal the discuss tab",
+            trigger: ":iframe a[href='#discuss']",
+            run: "click",
+        },
+        {
+            content:
+                "Revealing the tab must boot the chatter that stayed dormant until now, so " +
+                "that deferring the boot never costs the user the chatter itself",
+            trigger: ":iframe #chatterRoot:shadow .o-mail-Chatter",
+        },
         {
             content: "Click on the fullscreen button",
             trigger: ':iframe #wrapwrap a[aria-label="Fullscreen"]',

@@ -1,6 +1,10 @@
 import { test, expect } from "@odoo/hoot";
+import { freezeTime } from "@odoo/hoot-dom";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
+import { serializeDateTime } from "@web/core/l10n/dates";
+
+const { DateTime } = luxon;
 
 definePosModels();
 
@@ -58,6 +62,27 @@ test("updateLastOrderChange", async () => {
     order.updateLastOrderChange();
     expect(order.last_order_preparation_change.general_customer_note).toBe("Customer note");
     expect(order.last_order_preparation_change.internal_note).toBe("Internal note");
+});
+
+test("updateLastOrderChange with device clock behind the server", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    freezeTime();
+    const now = DateTime.now();
+
+    // Version stamped by the server, 5 minutes ahead of the device clock
+    const serverDate = serializeDateTime(now.plus({ minutes: 5 }));
+    order.last_order_preparation_change.metadata = { serverDate };
+    order.updateLastOrderChange();
+    // Otherwise the server considers the change as outdated and discards it
+    expect(order.last_order_preparation_change.metadata.serverDate).toBe(serverDate);
+
+    // Server version older than the device clock: the device date is used
+    order.last_order_preparation_change.metadata = {
+        serverDate: serializeDateTime(now.minus({ minutes: 5 })),
+    };
+    order.updateLastOrderChange();
+    expect(order.last_order_preparation_change.metadata.serverDate).toBe(serializeDateTime(now));
 });
 
 test("removeOrderline", async () => {

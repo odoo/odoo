@@ -24,6 +24,9 @@ export const unpatchSelf = patch(PosData.prototype, {
     async initializeDeviceIdentifier() {
         return false;
     },
+    requestPersistentStorage() {
+        // Nothing critical in indexedDB here; don't prompt customers' devices.
+    },
     initIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
             ? super.initIndexedDB(...arguments)

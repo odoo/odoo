@@ -4,11 +4,12 @@ import {
     defineMailModels,
     listenStoreFetch,
     openFormView,
+    registerArchs,
     start,
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, mockUserAgent } from "@odoo/hoot";
 import { Deferred, advanceTime } from "@odoo/hoot-mock";
 import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
 
@@ -28,6 +29,58 @@ test("base rendering", async () => {
     await contains("button", { text: "Activity" });
     await contains("button[aria-label='Attach files']");
     await contains(".o-mail-Followers");
+});
+
+async function hasAttachmentPopoutButton(count) {
+    await contains("button i[title='Pop out Attachments']", { count });
+}
+
+test("Attachment popout button is shown on desktop", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    registerArchs({
+        "res.partner,false,form": `
+            <form string="Partner">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await hasAttachmentPopoutButton(1);
+});
+
+test("Attachment popout button is hidden on mobile", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["ir.attachment"].create({
+        mimetype: "image/jpeg",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    registerArchs({
+        "res.partner,false,form": `
+            <form string="Partner">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="o_attachment_preview"/>
+                <chatter/>
+            </form>`,
+    });
+    mockUserAgent("android");
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Chatter-topbar");
+    await hasAttachmentPopoutButton(0);
 });
 
 test("rendering with multiple partner followers", async () => {

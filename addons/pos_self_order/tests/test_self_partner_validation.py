@@ -1,5 +1,6 @@
 
 import json
+from unittest.mock import patch
 from uuid import uuid4
 
 import odoo.tests
@@ -47,6 +48,10 @@ class SelfPartnerValidationChecks:
         self.assertNotEqual(new_id, self.existing_partner.id)
         self.assertNotIn(new_id, before)
 
+    def test_validate_partner_ignores_an_integer_partner_id(self):
+        signed = self._validate_partner(partner_id=self.existing_partner.id)
+        self.assertNotEqual(int(signed.split("-")[0]), self.existing_partner.id)
+
     def test_validate_partner_ignores_a_forged_signature(self):
         forged = f"{self.existing_partner.id}-{'0' * 64}"
         self.assertFalse(self._resolve(forged))
@@ -61,7 +66,7 @@ class SelfPartnerValidationChecks:
         self.assertFalse(self._resolve(tampered))
 
     def test_resolve_rejects_malformed_tokens(self):
-        for value in (False, "", "abc-def", "-", "42"):
+        for value in (False, "", "abc-def", "-", "42", 42):
             self.assertFalse(self._resolve(value), value)
 
     def test_token_is_scoped_to_the_config(self):
@@ -78,6 +83,10 @@ class SelfPartnerValidationChecks:
         order = self._process_order(partner_id=f"{self.existing_partner.id}-{'0' * 64}")
         self.assertFalse(order.partner_id)
 
+    def test_process_order_drops_an_integer_partner(self):
+        order = self._process_order(partner_id=self.existing_partner.id)
+        self.assertFalse(order.partner_id)
+
     def test_process_order_links_a_validated_partner(self):
         signed = self._validate_partner()
         expected = self.env["res.partner"].browse(int(signed.split("-")[0]))
@@ -87,6 +96,17 @@ class SelfPartnerValidationChecks:
     def test_process_order_without_partner(self):
         order = self._process_order()
         self.assertFalse(order.partner_id)
+
+    def test_payment_result_notification_does_not_send_the_partner(self):
+        order = self._process_order(partner_id=self._validate_partner())
+        self.assertTrue(order.partner_id)
+        with patch.object(self.env.registry["pos.config"], "_notify") as notify:
+            order._send_payment_result("Success")
+        name, payload = notify.call_args.args
+        self.assertEqual(name, "PAYMENT_STATUS")
+        notified_order = payload["data"]["pos.order"][0]
+        self.assertEqual(notified_order["id"], order.id)
+        self.assertNotIn("partner_id", notified_order)
 
     # Helpers
     def _rpc(self, url, params):

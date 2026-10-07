@@ -81,7 +81,7 @@
                             <tr t-foreach="lines" t-as="move">
                                 <td>
                                     <span t-field="move.product_id">Customizable Desk</span>
-                                    <p t-if="move.description_picking and move.description_picking != move.product_id.name and move._get_report_description_picking()">
+                                    <p t-if="move.description_picking and move.description_picking.strip() != move.product_id.name.strip() and move._get_report_description_picking()">
                                         <span t-out="move._get_report_description_picking()" t-options="{'widget': 'text'}">Description on transfer</span>
                                     </p>
                                 </td>

@@ -228,6 +228,7 @@
             "website/static/src/**/common/**/*",
         ],
         'web.assets_frontend': [
+            'website/static/src/**/frontend/**/*',
             'html_builder/static/src/utils/scrolling.js',
             'website/static/src/interactions/**/*',
             'website/static/src/core/**/*',

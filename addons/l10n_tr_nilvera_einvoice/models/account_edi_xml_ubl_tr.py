@@ -68,7 +68,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'cbc:CreditNoteTypeCode': {'_text': 'IADE'} if vals['document_type'] == 'credit_note' else None,
             'cbc:PricingCurrencyCode': {'_text': invoice.currency_id.name.upper()}
                 if vals['currency_id'] != vals['company_currency_id'] else None,
-            'cbc:LineCountNumeric': {'_text': len(invoice.line_ids)},
+            'cbc:LineCountNumeric': {'_text': len(invoice.line_ids.filtered(lambda line: line.display_type == 'product'))},
             'cbc:BuyerReference': None,  # Nilvera will reject any <BuyerReference> tag, so remove it
             'cbc:Note': {
                 '_text': html2plaintext(invoice.narration, include_references=False) if invoice.narration else None,

@@ -74,15 +74,18 @@ class TestHrSkillsSlides(TransactionCase):
         self.assertIn(self.user.partner_id, channel.partner_ids)
 
         enroll_group = self.user.group_ids
-        group_users = enroll_group.all_user_ids
+        already_enrolled = channel.partner_ids
         with RecordCapturer(self.env['mail.message'], []) as capture:
             # The partner is already an active 'joined' member: no enroll message.
             # The Admin is not enrolled yet.
             channel.enroll_group_ids = enroll_group
-        newly_enrolled_users = group_users - self.user
-        self.assertEqual(len(capture.records), 1)
-        self.assertEqual(capture.records.res_id, newly_enrolled_users.employee_id.id)
-        self.assertIn('subscribed to the course', capture.records.body)
+        newly_enrolled_users = (channel.partner_ids - already_enrolled).mapped('user_ids')
+        messages = capture.records.filtered(lambda m: m.model == 'hr.employee')
+        self.assertTrue(messages)
+        self.assertNotIn(self.user, newly_enrolled_users)
+        self.assertNotIn(self.user.employee_id.id, messages.mapped('res_id'))
+        self.assertEqual(set(messages.mapped('res_id')), set(newly_enrolled_users.mapped('employee_id.id')))
+        self.assertTrue(all('subscribed to the course' in body for body in messages.mapped('body')))
 
     def test_remove_resume_line_no_readd(self):
         """

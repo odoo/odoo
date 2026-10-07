@@ -53,6 +53,14 @@ export class PosPayment extends Base {
         return Boolean(this.getPaymentStatus());
     }
 
+    // A QR code is only generated on "Send", nothing is in flight before or after a cancel.
+    isUnsentQrCode() {
+        return (
+            this.payment_method_id.payment_method_type === "qr_code" &&
+            ["pending", "retry"].includes(this.getPaymentStatus())
+        );
+    }
+
     async pay() {
         this.setPaymentStatus("waiting");
 

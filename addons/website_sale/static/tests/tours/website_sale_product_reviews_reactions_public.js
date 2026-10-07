@@ -1,3 +1,4 @@
+import { globalBundleCache } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 
 registry
@@ -9,6 +10,19 @@ registry
                 trigger: '.oe_product_cart a:contains("Storage Box Test")',
                 run: "click",
                 expectUnloadPage: true,
+            },
+            {
+                content: "The collapsed reviews must not have booted the chatter",
+                trigger: '#o_product_page_reviews_content:hidden',
+                run: async () => {
+                    // Let a rendering frame pass, so that the layout observers ran.
+                    await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve)));
+                    if (globalBundleCache.has("portal.assets_chatter")) {
+                        throw new Error(
+                            "portal.assets_chatter was loaded although the reviews are collapsed"
+                        );
+                    }
+                },
             },
             {
                 trigger: '.o_product_page_reviews_title',
