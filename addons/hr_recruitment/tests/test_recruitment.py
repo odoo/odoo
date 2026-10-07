@@ -4,7 +4,7 @@ import base64
 
 from odoo import Command
 from odoo.fields import Domain
-from odoo.tests import tagged, TransactionCase, Form
+from odoo.tests import tagged, TransactionCase, Form, new_test_user
 
 
 @tagged('recruitment')
@@ -362,6 +362,85 @@ class TestRecruitment(TransactionCase):
             ('res_id', '=', employee_applicant['res_id']),
         ])
         self.assertEqual(applicant_attachment['datas'], attachment_employee_applicant['datas'])
+
+    def _create_shared_job_with_other_company_department(self):
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        department = self.env['hr.department'].create({
+            'name': 'Other Company Department',
+            'company_id': other_company.id,
+        })
+        job = self.env['hr.job'].create({
+            'name': 'Shared Job',
+            'company_id': False,
+            'department_id': department.id,
+        })
+        recruiter = new_test_user(
+            self.env, 'recruiter_multi_company',
+            groups='base.group_user,hr.group_hr_user,hr_recruitment.group_hr_recruitment_user',
+            company_id=self.company.id,
+            company_ids=[Command.set((self.company + other_company).ids)],
+        )
+        return job, department, recruiter
+
+    def test_shared_job_department_other_company(self):
+        """
+        A job shared between companies can have a department of another company.
+        An applicant of that job created in another company must not get this
+        department, and creating the employee must not raise an access error.
+        """
+        job, _department, recruiter = self._create_shared_job_with_other_company_department()
+        applicant = self.env['hr.applicant'].with_user(recruiter).with_context(
+            allowed_company_ids=self.company.ids,
+        ).create({
+            'partner_name': 'Applicant Shared Job',
+            'email_from': 'shared_job_applicant@example.com',
+            'job_id': job.id,
+        })
+        self.assertEqual(applicant.company_id, self.company)
+        self.assertFalse(applicant.department_id)
+
+        action = applicant.create_employee_from_applicant()
+        employee = self.env['hr.employee'].browse(action['res_id'])
+        self.assertFalse(employee.department_id)
+
+    def test_create_employee_applicant_department_other_company(self):
+        """
+        Applicants created before the department compute was fixed can still
+        hold a department of another company. Creating the employee must not
+        raise an access error and must not use this department.
+        """
+        job, department, recruiter = self._create_shared_job_with_other_company_department()
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'Applicant Shared Job',
+            'email_from': 'shared_job_applicant@example.com',
+            'job_id': job.id,
+        })
+        applicant.department_id = department
+        self.assertEqual(applicant.company_id, self.company)
+
+        action = applicant.with_user(recruiter).with_context(
+            allowed_company_ids=self.company.ids,
+        ).create_employee_from_applicant()
+        employee = self.env['hr.employee'].browse(action['res_id'])
+        self.assertFalse(employee.department_id)
+        self.assertEqual(employee.work_email, 'shared_job_applicant@example.com')
+
+    def test_shared_job_shared_department(self):
+        """ A department without company is kept on the applicant of a shared job. """
+        department = self.env['hr.department'].create({
+            'name': 'Shared Department',
+            'company_id': False,
+        })
+        job = self.env['hr.job'].create({
+            'name': 'Shared Job',
+            'company_id': False,
+            'department_id': department.id,
+        })
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': 'Applicant Shared Job',
+            'job_id': job.id,
+        })
+        self.assertEqual(applicant.department_id, department)
 
     def test_other_applications_count(self):
         """
