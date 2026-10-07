@@ -382,13 +382,13 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         # remove fields that can not be updated (id and parent_id)
         values.pop('id', None)
         parent_id = values.pop('parent_id', None)
-        dst_partner.write(values)
+        dst_partner.sudo().write(values)
         for company, vals in values_by_company.items():
             dst_partner.with_company(company).sudo().write(vals)
         # try to update the parent_id
         if parent_id and parent_id != dst_partner.id:
             try:
-                dst_partner.write({'parent_id': parent_id})
+                dst_partner.sudo().write({'parent_id': parent_id})
             except ValidationError:
                 _logger.info('Skip recursive partner hierarchies for parent_id %s of partner: %s', parent_id, dst_partner.id)
 

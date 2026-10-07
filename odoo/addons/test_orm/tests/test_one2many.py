@@ -208,6 +208,56 @@ class One2manyCase(TransactionExpressionCase):
         self.assertTrue(dst_partner.exists())
         self.assertEqual(u1.partner_id.id, dst_partner.id)
 
+    def test_partner_merge_wizard_by_partner_manager_when_partner_linked_to_user(self):
+        manager = self.env['res.users'].create({
+            'name': 'Partner Manager',
+            'login': 'partner_manager',
+            'group_ids': [
+                Command.set([
+                    self.env.ref('base.group_user').id,
+                    self.env.ref('base.group_partner_manager').id,
+                ]),
+            ],
+        })
+        other_user = self.env['res.users'].create({
+            'name': 'Other User',
+            'login': 'other_user',
+        })
+        partner = self.env['res.partner'].create({'name': 'Contact To Merge'})
+        other_user_original_partner = other_user.partner_id
+        wizard = self.env['base.partner.merge.automatic.wizard'].with_user(manager).with_context(
+            active_ids=(other_user.partner_id + partner).ids,
+            active_model='res.partner',
+        ).create({})
+        wizard.action_merge()
+        self.assertEqual(other_user.partner_id, partner)
+        self.assertFalse(other_user_original_partner.exists())
+        self.assertTrue(partner.exists())
+
+    def test_partner_merge_wizard_by_partner_manager_when_dst_partner_linked_to_user(self):
+        manager = self.env['res.users'].create({
+            'name': 'Partner Manager 2',
+            'login': 'partner_manager_2',
+            'group_ids': [
+                Command.set([
+                    self.env.ref('base.group_user').id,
+                    self.env.ref('base.group_partner_manager').id,
+                ]),
+            ],
+        })
+        other_user = self.env['res.users'].create({
+            'name': 'Other User 2',
+            'login': 'other_user_2',
+        })
+        partner = self.env['res.partner'].create({'name': 'Contact To Merge 2'})
+        wizard = self.env['base.partner.merge.automatic.wizard'].with_user(manager).with_context(
+            active_ids=(other_user.partner_id + partner).ids,
+            active_model='res.partner',
+        ).create({'dst_partner_id': other_user.partner_id.id})
+        wizard.action_merge()
+        self.assertTrue(other_user.partner_id.exists())
+        self.assertFalse(partner.exists())
+
     def test_cache_invalidation(self):
         """ Cache invalidation for one2many with integer inverse. """
         record0 = self.env['test_orm.attachment.host'].create({})
