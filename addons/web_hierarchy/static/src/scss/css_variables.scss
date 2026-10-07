@@ -1,0 +1,11 @@
+/*
+ * CSS variables of web_hierarchy: its design variables exposed as CSS custom
+ * properties, so that stylesheets can read them with `var()` instead of
+ * being compiled by libsass. Every bundle including this file emits its
+ * own values (light, dark...).
+ */
+:root,
+:host {
+    --hierarchy_element_hover-background: #{$hierarchy_element_hover-background};
+    --hierarchy_element_hover-border: #{$hierarchy_element_hover-border};
+}

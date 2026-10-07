@@ -89,6 +89,7 @@
     --o-navbar-background: #{$o-navbar-background};
     --o-navbar-badge-padding: #{$o-navbar-badge-padding};
     --o-navbar-badge-size: #{$o-navbar-badge-size};
+    --o-navbar-height: #{$o-navbar-height};
     --o-shadow-color: #{$o-shadow-color};
     --o-sheet-vpadding: #{$o-sheet-vpadding};
     --o-statusbar-arrow-width: #{$o-statusbar-arrow-width};
@@ -110,6 +111,7 @@
     --o-bs-btn-focus-width: #{$btn-focus-width};
     --o-bs-btn-font-size-lg: #{$btn-font-size-lg};
     --o-bs-btn-link-disabled-color: #{$btn-link-disabled-color};
+    --o-bs-btn-link-focus-shadow-rgb: #{$btn-link-focus-shadow-rgb};
     --o-bs-btn-padding-x: #{$btn-padding-x};
     --o-bs-btn-padding-x-lg: #{$btn-padding-x-lg};
     --o-bs-btn-padding-x-sm: #{$btn-padding-x-sm};
@@ -129,6 +131,8 @@
     --o-bs-dropdown-link-color: #{$dropdown-link-color};
     --o-bs-dropdown-link-hover-bg: #{$dropdown-link-hover-bg};
     --o-bs-dropdown-link-hover-color: #{$dropdown-link-hover-color};
+    --o-bs-dropdown-padding-x: #{$dropdown-padding-x};
+    --o-bs-dropdown-padding-y: #{$dropdown-padding-y};
     --o-bs-focus-ring-blur: #{$focus-ring-blur};
     --o-bs-focus-ring-box-shadow: #{$focus-ring-box-shadow};
     --o-bs-font-size-base: #{$font-size-base};
@@ -188,6 +192,7 @@
     --o-bs-table-cell-padding-x-sm: #{$table-cell-padding-x-sm};
     --o-bs-table-cell-padding-y-sm: #{$table-cell-padding-y-sm};
     --o-bs-table-hover-bg: #{$table-hover-bg};
+    --o-bs-table-hover-bg-factor: #{$table-hover-bg-factor};
     --o-bs-text-muted: #{$text-muted};
     --o-bs-transition-base: #{$transition-base};
     --o-bs-transition-collapse: #{$transition-collapse};
@@ -210,6 +215,11 @@
     --o-bs-border-style: #{$border-style};
     --o-bs-border-width: #{$border-width};
     --o-bs-headings-color: #{$headings-color};
+
+    /* Bootstrap variables whose value reads another custom property in some bundles */
+    --o-bs-btn-link-hover-color: #{$btn-link-hover-color};
+    --o-bs-dropdown-bg: #{$dropdown-bg};
+    --o-bs-table-border-color: #{$table-border-color};
 
     /* Contrast colors that Bootstrap computes with color-contrast() */
     --o-bs-gray-100-contrast: #{color-contrast($gray-100)};
