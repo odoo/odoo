@@ -162,7 +162,7 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             self.skipTest('`appointment_hr_recruitment` module not installed')
 
         company_1 = self.env.company
-        company_2 = self.env['res.company'].create({
+        company_2 = self.add_company('base.test_company', {
             'email': 'company_2@test.example.com',
             'name': 'Company 2',
         })

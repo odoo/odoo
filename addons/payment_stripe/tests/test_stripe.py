@@ -200,7 +200,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
     def test_country_mapping_stripe_connect(self):
         """Test that La Réunion (and other french territories) is supported by Stripe Connect."""
-        mapped_country_company = self.env["res.company"].create({"name": "Mapped Company"})
+        mapped_country_company = self.add_company('base.test_company', {"name": "Mapped Company"})
         with (
             patch.object(
                 self.env.registry["payment.provider"],

@@ -141,7 +141,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
             f"{self.partner_a.display_name} has requested electronic invoices reception via French E-Invoicing.",
         )
 
-        company_lu = self.env['res.company'].create({
+        company_lu = self.add_company('base.test_company_template2', {
             'name': 'Luxembourg company',
             'country_id': self.env.ref('base.lu').id,
         })

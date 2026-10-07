@@ -16,7 +16,8 @@ class TestResCompany(PaymentCommon):
             ("module_state", "=", "installed"),
         ])
 
-        new_company = self.env["res.company"].create({"name": "New Company"})
+        new_company = self.env["res.company"].create({"name": "New Company"})  # don't use company fixture, testing company creation
+        self.assertEqual(new_company.create_date, self.env.cr.now())
         new_company_providers_count = self.env["payment.provider"].search_count([
             ("company_id", "=", new_company.id),
             ("module_state", "=", "installed"),
