@@ -413,7 +413,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             'domain': {
                 'direction': 'incoming',
                 'errors': False,
-            }
+            },
+            'limit': job_count,
         }
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
@@ -436,6 +437,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     'Error while receiving the document from Peppol Proxy: %s', e.message)
                 continue
 
+            has_more = messages.get('has_more', False)
             message_uuids = [
                 message['uuid']
                 for message in messages.get('messages', [])
@@ -456,8 +458,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if not message_uuids:
                 continue
 
-            need_retrigger = need_retrigger or len(message_uuids) > job_count
-            message_uuids = message_uuids[:job_count]
+            need_retrigger = need_retrigger or has_more
 
             # retrieve attachments for filtered messages
             all_messages = edi_user._call_peppol_proxy(
