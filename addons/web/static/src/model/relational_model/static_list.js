@@ -1038,7 +1038,7 @@ export class StaticList extends DataPoint {
             "onchange_batch",
             [recordsList, fieldsSpec],
             {
-                context: this.context,
+                context: { ...this.context, ...options.context },
             }
         );
 
