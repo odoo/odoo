@@ -927,6 +927,7 @@ export class StaticList extends DataPoint {
         const targetIndex = options.targetIndex ?? this.records.indexOf(records.at(-1)) + 1;
         const copyFields = options.copyFields || [];
         const noCopyFields = options.noCopyFields || [];
+
         let sequence;
         if (this.handleField) {
             sequence = this.records[targetIndex - 1].data[this.handleField] + 1;
@@ -961,7 +962,7 @@ export class StaticList extends DataPoint {
             "onchange_batch",
             [changesList, [], fieldsSpec],
             {
-                context: this.context,
+                context: { ...this.context, ...options.context },
             }
         );
 
