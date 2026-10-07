@@ -288,6 +288,10 @@ export const tooltipService = {
          * @param {MouseEvent} ev a "mouseenter" event
          */
         function onMouseenter(ev) {
+            // Don't open a tooltip while dragging (a mouse button is pressed).
+            if (ev.buttons) {
+                return;
+            }
             const target = ev.target?.closest(TOOLTIP_SELECTOR_WITH_TITLE);
             if (!target) {
                 return;
@@ -340,6 +344,15 @@ export const tooltipService = {
             }, timeoutDelay);
         }
 
+        /**
+         * Prevents (or closes) the tooltip when the user is dragging.
+         */
+        function onTouchMove() {
+            browser.clearTimeout(showTimer);
+            showTimer = null;
+            cleanup();
+        }
+
         function onTouchCancelEnd(ev) {
             if (isHelpNode(ev.target)) {
                 ev.preventDefault();
@@ -365,6 +378,7 @@ export const tooltipService = {
 
             if (hasTouch()) {
                 document.body.addEventListener("touchstart", onTouchStart);
+                document.body.addEventListener("touchmove", onTouchMove);
                 document.body.addEventListener("touchend", onTouchCancelEnd);
                 document.body.addEventListener("touchcancel", onTouchCancelEnd);
             }
