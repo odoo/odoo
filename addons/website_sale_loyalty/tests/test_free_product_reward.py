@@ -4,6 +4,7 @@ from odoo import Command, http
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.website_sale.controllers.checkout.address import Address
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
@@ -23,6 +24,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.WebsiteSaleAddress = Address()
         cls.WebsiteSaleCartController = Cart()
         cls.WebsiteSaleController = WebsiteSale()
 
@@ -159,7 +161,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
             )
             self.WebsiteSaleController.claim_reward(self.program.reward_ids.id)
 
-            response = self.WebsiteSaleController.shop_address()
+            response = self.WebsiteSaleAddress.shop_address()
 
         self.assertEqual(
             response.status_code,

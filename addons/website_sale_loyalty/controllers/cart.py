@@ -2,7 +2,7 @@
 
 from odoo.http import request, route
 
-from odoo.addons.website_sale.controllers.cart import Cart as WebsiteSaleCart
+from odoo.addons.website_sale.controllers.checkout.cart import Cart as WebsiteSaleCart
 
 
 class Cart(WebsiteSaleCart):
