@@ -293,7 +293,7 @@ class TestStockValuation(TestStockValuationCommon):
 
     def test_fifo_negative_1(self):
         """ Send products that you do not have. Value the first outgoing move to the standard
-        price, receive in multiple times the delivered quantity and run _fifo_vacuum to compensate.
+        price, receive in multiple times the delivered quantity and run the closing to compensate.
         """
         product = self.product_fifo
 
@@ -332,7 +332,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(move2.remaining_qty, 0)
 
         # ---------------------------------------------------------------------
-        # The vacuum ran
+        # The closing ran
         # ---------------------------------------------------------------------
 
         closing_move = self._close()
@@ -2071,6 +2071,66 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).total_value, -60)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).qty_available, 95)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).total_value, 1425)
+
+    def test_at_date_fifo_2(self):
+        """ Check the change of the cost of a fifo product will be taken into account in the value
+        at date for remaining quantities.
+        """
+        product = self.product_fifo
+
+        now = Datetime.now()
+        date1 = now - timedelta(days=8)
+        date2 = now - timedelta(days=7)
+        date3 = now - timedelta(days=6)
+        date4 = now - timedelta(days=5)
+        date5 = now - timedelta(days=4)
+
+        # receive 10@10
+        with freeze_time(date1):
+            self._make_in_move(product, 10, 10)
+        with freeze_time(date2):
+            self._make_in_move(product, 10, 15)
+
+        # Change the cost to 20
+        with freeze_time(date3):
+            product.standard_price = 20
+
+        product = product.with_context(to_date=Datetime.to_string(date1))
+        self.assertEqual(product.qty_available, 10)
+        self.assertEqual(product.total_value, 100)
+        product = product.with_context(to_date=Datetime.to_string(date2))
+        self.assertEqual(product.qty_available, 20)
+        self.assertEqual(product.total_value, 250)
+        product = product.with_context(to_date=Datetime.to_string(date3))
+        self.assertEqual(product.qty_available, 20)
+        self.assertEqual(product.total_value, 400)
+
+        with freeze_time(date4):
+            self._make_out_move(product, 8)
+
+        with freeze_time(date5):
+            self._make_in_move(product, 10, 20)
+
+        product.standard_price = 10
+
+        product = product.with_context(to_date=Datetime.to_string(date1))
+        self.assertEqual(product.qty_available, 10)
+        self.assertEqual(product.total_value, 100)
+        product = product.with_context(to_date=Datetime.to_string(date2))
+        self.assertEqual(product.qty_available, 20)
+        self.assertEqual(product.total_value, 250)
+        product = product.with_context(to_date=Datetime.to_string(date3))
+        self.assertEqual(product.qty_available, 20)
+        self.assertEqual(product.total_value, 400)
+        product = product.with_context(to_date=Datetime.to_string(date4))
+        self.assertEqual(product.qty_available, 12)
+        self.assertEqual(product.total_value, 240)
+        product = product.with_context(to_date=Datetime.to_string(date5))
+        self.assertEqual(product.qty_available, 22)
+        self.assertEqual(product.total_value, 440)
+        product = product.with_context(to_date=False)
+        self.assertEqual(product.qty_available, 22)
+        self.assertEqual(product.total_value, 220)
 
     def test_at_date_fifo_stable_after_std_price_drift(self):
         """ Historical FIFO valuation must remain stable when standard_price
