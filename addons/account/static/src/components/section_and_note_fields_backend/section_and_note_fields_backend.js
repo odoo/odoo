@@ -265,6 +265,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         await this.props.list.duplicateRecords(recordsToDuplicate, {
             targetIndex: sectionIndex,
             copyFields: this.copyFields,
+            context: { first_onchange_call: true },  
         });
     }
 
