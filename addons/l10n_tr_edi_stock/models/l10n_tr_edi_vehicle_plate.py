@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class L10nTrNilveraTrailerPlate(models.Model):
-    _name = 'l10n_tr.nilvera.trailer.plate'
+class L10n_Tr_EdiVehiclePlate(models.Model):
+    _name = 'l10n_tr_edi.vehicle.plate'
     _order = 'name'
     _description = "GİB Plate numbers"
 

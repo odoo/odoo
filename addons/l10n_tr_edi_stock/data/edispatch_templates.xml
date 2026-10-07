@@ -3,7 +3,7 @@
 
     <template
         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" id="nilvera_party_details">
+        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" id="edispatch_party_details">
         <cbc:WebsiteURI t-out="partner.website" />
         <cac:PartyIdentification>
             <t t-if="partner.country_id.code != 'TR'">
@@ -24,7 +24,7 @@
             <cbc:StreetName t-out="' '.join(s for s in [partner.street, partner.street2] if s)"/>
             <cbc:CitySubdivisionName t-out="partner.city"/>
             <cbc:CityName t-out="partner.state_id.name"/>
-            <cbc:PostalZone t-out="partner.country_id.code == 'TR' and partner.zip or partner.l10n_tr_nilvera_edispatch_customs_zip"/>
+            <cbc:PostalZone t-out="partner.country_id.code == 'TR' and partner.zip or partner.l10n_tr_edi_edispatch_customs_zip"/>
             <t t-set="tr_country" t-value="partner.country_id.with_context(lang='tr_TR')"/>
             <cac:Country>
                 <cbc:IdentificationCode t-out="tr_country.code"/>
@@ -50,15 +50,15 @@
     </template>
 
     <template
-        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" id="nilvera_party_template">
+        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" id="edispatch_party_template">
         <cac:Party>
-            <t t-call="l10n_tr_edi_stock.nilvera_party_details"/>
+            <t t-call="l10n_tr_edi_stock.edispatch_party_details"/>
         </cac:Party>
     </template>
 
     <template
         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" id="nilvera_dispatch_line">
+        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" id="edispatch_line">
         <cac:DespatchLine>
             <cbc:ID t-out="line_id"/>
             <cbc:DeliveredQuantity t-att-unitCode="line.uom_id._get_unece_code()" t-out="line.quantity"/>
@@ -103,37 +103,37 @@
             <cbc:UUID t-out="uuid"/>
             <cbc:IssueDate t-out="issue_date"/>
             <cbc:IssueTime t-out="issue_time"/>
-            <cbc:DespatchAdviceTypeCode t-out="picking.l10n_tr_nilvera_dispatch_type"/>
-            <cbc:Note t-if="picking.l10n_tr_nilvera_delivery_notes" t-out="picking.l10n_tr_nilvera_delivery_notes"/>
+            <cbc:DespatchAdviceTypeCode t-out="picking.l10n_tr_edi_dispatch_type"/>
+            <cbc:Note t-if="picking.l10n_tr_edi_delivery_notes" t-out="picking.l10n_tr_edi_delivery_notes"/>
             <cbc:LineCountNumeric t-out="line_count"/>
-            <cac:AdditionalDocumentReference t-if="picking.l10n_tr_nilvera_dispatch_type == 'MATBUDAN'">
-                <cbc:ID t-out="picking.l10n_tr_nilvera_delivery_printed_number"/>
-                <cbc:IssueDate t-out="picking.l10n_tr_nilvera_delivery_date"/>
+            <cac:AdditionalDocumentReference t-if="picking.l10n_tr_edi_dispatch_type == 'MATBUDAN'">
+                <cbc:ID t-out="picking.l10n_tr_edi_delivery_printed_number"/>
+                <cbc:IssueDate t-out="picking.l10n_tr_edi_delivery_date"/>
                 <cbc:DocumentType>MATBU</cbc:DocumentType>
             </cac:AdditionalDocumentReference>
             <cac:DespatchSupplierParty>
                 <t t-set="partner" t-value="current_company"/>
-                <t t-call="l10n_tr_edi_stock.nilvera_party_template"
+                <t t-call="l10n_tr_edi_stock.edispatch_party_template"
                     partner="partner"
                     tax_office_required="partner.country_code == 'TR'"/>
             </cac:DespatchSupplierParty>
             <cac:DeliveryCustomerParty>
                 <t t-set="partner" t-value="picking.partner_id.commercial_partner_id"/>
-                <t t-call="l10n_tr_edi_stock.nilvera_party_template"
+                <t t-call="l10n_tr_edi_stock.edispatch_party_template"
                     partner="partner"
                     tax_office_required="partner.country_code == 'TR'"/>
             </cac:DeliveryCustomerParty>
-            <cac:BuyerCustomerParty t-if="picking.l10n_tr_nilvera_buyer_id">
-                <t t-call="l10n_tr_edi_stock.nilvera_party_template"
-                    partner="picking.l10n_tr_nilvera_buyer_id"/>
+            <cac:BuyerCustomerParty t-if="picking.l10n_tr_edi_buyer_id">
+                <t t-call="l10n_tr_edi_stock.edispatch_party_template"
+                    partner="picking.l10n_tr_edi_buyer_id"/>
             </cac:BuyerCustomerParty>
-            <cac:SellerSupplierParty t-if="picking.l10n_tr_nilvera_seller_supplier_id">
-                <t t-call="l10n_tr_edi_stock.nilvera_party_template"
-                    partner="picking.l10n_tr_nilvera_seller_supplier_id"/>
+            <cac:SellerSupplierParty t-if="picking.l10n_tr_edi_seller_supplier_id">
+                <t t-call="l10n_tr_edi_stock.edispatch_party_template"
+                    partner="picking.l10n_tr_edi_seller_supplier_id"/>
             </cac:SellerSupplierParty>
-            <cac:OriginatorCustomerParty t-if="picking.l10n_tr_nilvera_buyer_originator_id">
-                <t t-call="l10n_tr_edi_stock.nilvera_party_template"
-                    partner="picking.l10n_tr_nilvera_buyer_originator_id"/>
+            <cac:OriginatorCustomerParty t-if="picking.l10n_tr_edi_buyer_originator_id">
+                <t t-call="l10n_tr_edi_stock.edispatch_party_template"
+                    partner="picking.l10n_tr_edi_buyer_originator_id"/>
             </cac:OriginatorCustomerParty>
             <cac:Shipment>
                 <cbc:ID t-out="picking.id"/>
@@ -161,16 +161,16 @@
                         <cbc:CitySubdivisionName t-out="picking.partner_id.city"/>
                         <cbc:CityName t-out="picking.partner_id.state_id.name"/>
                         <cbc:PostalZone
-                            t-out="picking.partner_id.country_id.code == 'TR' and picking.partner_id.zip or picking.partner_id.l10n_tr_nilvera_edispatch_customs_zip" />
+                            t-out="picking.partner_id.country_id.code == 'TR' and picking.partner_id.zip or picking.partner_id.l10n_tr_edi_edispatch_customs_zip" />
                         <t t-set="tr_country" t-value="picking.partner_id.country_id.with_context(lang='tr_TR')"/>
                         <cac:Country>
                             <cbc:IdentificationCode t-out="tr_country.code"/>
                             <cbc:Name t-out="tr_country.name"/>
                         </cac:Country>
                     </cac:DeliveryAddress>
-                    <cac:CarrierParty t-if="picking.l10n_tr_nilvera_carrier_id">
-                        <t t-set="partner" t-value="picking.l10n_tr_nilvera_carrier_id"/>
-                        <t t-call="l10n_tr_edi_stock.nilvera_party_details"
+                    <cac:CarrierParty t-if="picking.l10n_tr_edi_carrier_id">
+                        <t t-set="partner" t-value="picking.l10n_tr_edi_carrier_id"/>
+                        <t t-call="l10n_tr_edi_stock.edispatch_party_details"
                             partner="partner"
                             tax_office_required="partner.country_code == 'TR'"/>
                     </cac:CarrierParty>
@@ -180,7 +180,7 @@
                     </cac:Despatch>
                 </cac:Delivery>
                 <cac:TransportHandlingUnit>
-                    <t t-foreach="picking.l10n_tr_nilvera_trailer_plate_ids" t-as="trailer">
+                    <t t-foreach="picking.l10n_tr_edi_trailer_plate_ids" t-as="trailer">
                         <cac:TransportEquipment>
                             <cbc:ID schemeID="DORSEPLAKA" t-out="trailer.name"/>
                         </cac:TransportEquipment>
@@ -189,7 +189,7 @@
             </cac:Shipment>
             <t t-set="line_id" t-value="1"/>
             <t t-foreach="picking.move_ids" t-as="line">
-                <t t-call="l10n_tr_edi_stock.nilvera_dispatch_line"/>
+                <t t-call="l10n_tr_edi_stock.edispatch_line"/>
                 <t t-set="line_id" t-value="line_id + 1"/>
             </t>
         </DespatchAdvice>
