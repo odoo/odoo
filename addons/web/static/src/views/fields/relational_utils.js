@@ -833,7 +833,7 @@ export class X2ManyFieldDialog extends Component {
                 await this.props.save(this.record);
                 if (saveAndNew) {
                     await this.record.switchMode("readonly");
-                    this.record = await this.props.addNew();
+                    this.record = await this.props.addNew(this.record);
                 }
             } else {
                 return false;
@@ -918,6 +918,7 @@ export function useOpenX2ManyRecord({
     updateRecord,
     saveRecord,
     isMany2Many,
+    getAddContext,
 }) {
     const viewService = useService("view");
     const ui = useService("ui");
@@ -979,7 +980,11 @@ export function useOpenX2ManyRecord({
                 archInfo,
                 record,
                 controls,
-                addNew: () => getList().extendRecord(params),
+                addNew: (prevRecord) =>
+                    getList().extendRecord({
+                        ...params,
+                        context: { ...params.context, ...getAddContext?.(prevRecord) },
+                    }),
                 save: (rec) => {
                     if (isDuplicate && rec.id === record.id) {
                         return updateRecord(rec);

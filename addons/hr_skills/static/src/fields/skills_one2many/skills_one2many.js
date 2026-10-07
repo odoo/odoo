@@ -89,6 +89,9 @@ export class SkillsX2ManyField extends X2ManyField {
             saveRecord: saveRecord,
             updateRecord: updateRecord,
             withParentId: this.props.widget !== "many2many",
+            getAddContext: (prevRecord) => ({
+                default_skill_type_id: prevRecord.data.skill_type_id?.id
+            }),
         });
 
         this._openRecord = (params) => {
