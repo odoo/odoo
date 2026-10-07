@@ -5,10 +5,13 @@ from . import account_move_line
 from . import account_move_send
 from . import account_tax
 from . import l10n_tr_edi_alias
+from . import l10n_tr_edi_document
 from . import l10n_tr_edi_invoice_sequence
 from . import l10n_tr_edi_tax_code
 from . import product_product
 from . import product_template
+from . import res_company
+from . import res_config_settings
 from . import res_partner
 from . import template_tr
 from . import uom_uom

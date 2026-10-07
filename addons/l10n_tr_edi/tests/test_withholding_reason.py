@@ -91,7 +91,7 @@ class TestTRWithholdingReason(TestUBLTRCommon):
         # the reason is inherited; a return's own GİB code comes from the original taxes
         self.assertEqual(credit_note.l10n_tr_exemption_code_id, invoice.l10n_tr_exemption_code_id)
         self.assertFalse(
-            self.env['account.move.send']._l10n_tr_withholding_is_inconsistent(credit_note),
+            credit_note._l10n_tr_withholding_is_inconsistent(),
         )
 
     def test_sole_reason_for_the_ratio_is_preselected(self):
