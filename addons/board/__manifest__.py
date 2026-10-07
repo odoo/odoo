@@ -18,7 +18,7 @@ Allows users to create custom dashboard.
         ],
     'assets': {
         'web.assets_backend': [
-            'board/static/src/**/*.scss',
+            'board/static/src/**/*.css',
             'board/static/src/**/*.js',
             'board/static/src/**/*.xml',
         ],
