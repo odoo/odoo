@@ -1,17 +1,13 @@
-import { AccountFileUploader } from "@account/components/account_file_uploader/account_file_uploader";
 import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { DocumentFileUploader } from "../document_file_uploader/document_file_uploader";
+import { ViewButton } from "@web/views/view_button/view_button";
 import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
 
 export class BillGuide extends Component {
     static template = "account.BillGuide";
-    static components = {
-        DocumentFileUploader,
-        AccountFileUploader,
-    };
+    static components = { ViewButton };
 
     props = useProps({
         ...standardWidgetProps,
@@ -42,6 +38,15 @@ export class BillGuide extends Component {
 
         this.showSampleAction = proxy({ value: false });
         this.lazySession.getValue("is_demo", v => (this.showSampleAction.value = !!v));
+    }
+
+    // the journal receiving the files of the upload button
+    get uploadRecord() {
+        return {
+            resModel: "account.journal",
+            resId: this.props.record?.resId,
+            context: this.env.searchModel.context,
+        };
     }
 
     handleButtonClick(action, model="account.journal") {

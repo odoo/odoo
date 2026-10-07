@@ -1,15 +1,15 @@
 import { registry } from "@web/core/registry";
-import { fileUploadKanbanView } from "@account/views/file_upload_kanban/file_upload_kanban_view";
-import { FileUploadKanbanRenderer } from "@account/views/file_upload_kanban/file_upload_kanban_renderer";
+import { kanbanView } from "@web/views/kanban/kanban_view";
+import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { PurchaseDashBoard } from "@purchase/views/purchase_dashboard";
 
-export class PurchaseDashBoardKanbanRenderer extends FileUploadKanbanRenderer {
+export class PurchaseDashBoardKanbanRenderer extends KanbanRenderer {
     static template = "purchase.PurchaseKanbanView";
-    static components = Object.assign({}, FileUploadKanbanRenderer.components, { PurchaseDashBoard });
+    static components = Object.assign({}, KanbanRenderer.components, { PurchaseDashBoard });
 }
 
 export const PurchaseDashBoardKanbanView = {
-    ...fileUploadKanbanView,
+    ...kanbanView,
     Renderer: PurchaseDashBoardKanbanRenderer,
 };
 

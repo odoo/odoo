@@ -1,26 +1,15 @@
 import { registry } from "@web/core/registry";
 import { PurchaseDashBoard } from "@purchase/views/purchase_dashboard";
-import { PurchaseFileUploader } from "@purchase/components/purchase_file_uploader/purchase_file_uploader";
-import { FileUploadListController } from "@account/views/file_upload_list/file_upload_list_controller";
-import { FileUploadListRenderer } from "@account/views/file_upload_list/file_upload_list_renderer";
-import { fileUploadListView } from "@account/views/file_upload_list/file_upload_list_view";
+import { listView } from "@web/views/list/list_view";
+import { ListRenderer } from "@web/views/list/list_renderer";
 
-export class PurchaseDashBoardRenderer extends FileUploadListRenderer {
+export class PurchaseDashBoardRenderer extends ListRenderer {
     static template = "purchase.ListRenderer";
-    static components = Object.assign({}, FileUploadListRenderer.components, { PurchaseDashBoard });
-}
-
-export class PurchaseFileUploadListController extends FileUploadListController {
-    static template = `purchase.ListView`;
-    static components = {
-        ...FileUploadListController.components,
-        PurchaseFileUploader,
-    };
+    static components = Object.assign({}, ListRenderer.components, { PurchaseDashBoard });
 }
 
 export const PurchaseDashBoardListView = {
-    ...fileUploadListView,
-    Controller: PurchaseFileUploadListController,
+    ...listView,
     Renderer: PurchaseDashBoardRenderer,
 };
 

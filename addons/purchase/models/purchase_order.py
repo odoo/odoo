@@ -820,6 +820,8 @@ class PurchaseOrder(models.Model):
     def action_create_invoice(self, attachment_ids=False):
         """Create the invoice associated to the PO.
         """
+        if attachment_ids and len(self.partner_id) > 1:
+            raise UserError(_("You can only upload a bill for a single vendor at a time."))
         precision = self.env['decimal.precision'].precision_get('Product Unit')
 
         # 1) Prepare invoice vals and clean-up the section lines
