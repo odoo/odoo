@@ -135,14 +135,11 @@ class PosPayment(models.Model):
         """
 
         result = self.env['account.move.line']
-        for payment in self:
-            if not payment.account_move_id:
-                continue
+        for move, payments in self.filtered('account_move_id').grouped('account_move_id').items():
+            currency = payments[0].currency_id
+            is_positive_amount = currency.compare_amounts(sum(payments.mapped('amount')), 0) > 0
 
-            currency = payment.currency_id
-            is_positive_amount = currency.compare_amounts(payment.amount, 0) > 0
-
-            for line in payment.account_move_id.line_ids:
+            for line in move.line_ids:
                 if currency.compare_amounts(line.balance, 0) == 0 or line.account_id != receivable_account or line.reconciled:
                     continue
 
