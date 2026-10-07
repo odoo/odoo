@@ -1,6 +1,6 @@
 import { addToBoardItem } from "@board/add_to_board/add_to_board";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { hover, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import * as dsHelpers from "@web/../tests/core/domain_selector/domain_selector_helpers";
@@ -21,6 +21,7 @@ import {
     toggleMenuItem,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
+import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -76,7 +77,10 @@ beforeEach(() => {
 });
 
 test("save actions to dashboard", async () => {
-    expect.assertions(6);
+    expect.assertions(7);
+    const clearCacheListener = ({ detail }) => expect.step(`CLEAR-CACHES ${detail}`);
+    rpcBus.addEventListener("CLEAR-CACHES", clearCacheListener);
+    after(() => rpcBus.removeEventListener("CLEAR-CACHES", clearCacheListener));
 
     Partner._views = {
         list: '<list><field name="foo"/></list>',
@@ -101,6 +105,7 @@ test("save actions to dashboard", async () => {
         });
         expect(args.action_id).toBe(1, { message: "should save the correct action" });
         expect(args.view_mode).toBe("list", { message: "should save the correct view type" });
+        expect.step("add_to_dashboard");
         return true;
     });
 
@@ -129,6 +134,7 @@ test("save actions to dashboard", async () => {
         confirm: false,
     });
     await contains(queryOne("button", { root: getAddToDashboardMenu() })).click();
+    expect.verifySteps(["add_to_dashboard", "CLEAR-CACHES get_views"]);
 });
 
 test("save two searches to dashboard", async () => {
