@@ -139,6 +139,10 @@ def extract_javascript(
             and last_token.type == 'name'
             and token.type == 'template_string'
         ):
+            if options.get('parse_template_string', True) and last_token.value not in keywords:
+                # Extract terms from the expressions of tagged template strings, e.g. markup`${_t("foo")}`.
+                yield from parse_template_string(token.value, keywords, comment_tags, options, token.lineno)
+
             # Turn keyword`foo` expressions into keyword("foo") function calls.
             string_value = unquote_string(token.value)
             cur_translator_comments = translator_comments
