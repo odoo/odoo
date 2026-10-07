@@ -254,6 +254,12 @@ class User extends models.Model {
 
 defineModels([Partner, Product, Category, Currency, IrAttachment, User]);
 
+defineParams({
+    lang_parameters: {
+        time_format: "%I:%M:%S %p",
+    },
+});
+
 beforeEach(() => {
     patchWithCleanup(AnimatedNumber, { enableAnimations: false });
 });

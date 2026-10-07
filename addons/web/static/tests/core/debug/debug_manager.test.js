@@ -13,6 +13,7 @@ import {
     clearRegistry,
     contains,
     defineModels,
+    defineParams,
     defineWebModels,
     fields,
     getService,
@@ -44,6 +45,12 @@ class DebugMenuParent extends Component {
 }
 
 const debugRegistry = registry.category("debug");
+
+defineParams({
+    lang_parameters: {
+        time_format: "%I:%M:%S %p",
+    },
+});
 
 onRpc("has_access", () => true);
 onRpc("ir.attachment", "regenerate_assets_bundles", () => {
@@ -567,11 +574,11 @@ describe("DebugMenu", () => {
             "Creation User:",
             "Some user",
             "Creation Date:",
-            "01/26/2023 15:12:10",
+            "01/26/2023 03:12:10 PM",
             "Latest Modification by:",
             "Another User",
             "Latest Modification Date:",
-            "01/26/2023 15:13:31",
+            "01/26/2023 03:13:31 PM",
         ]);
     });
 
@@ -820,7 +827,7 @@ describe("DebugMenu", () => {
         expect(queryAllTexts`.modal #formview_default_fields option`).toEqual([
             "",
             "Date field = 01/01/2024",
-            "Datetime field = 01/01/2024 13:34:56",
+            "Datetime field = 01/01/2024 01:34:56 PM",
         ]);
 
         expect(queryAllProperties(".modal #formview_default_fields option", "value")).toEqual([

@@ -1686,6 +1686,7 @@ test(`attributes hide_date and hide_time`, async () => {
 
 test(`create event with timezone in week mode with formViewDialog`, async () => {
     mockTimeZone(2);
+    defineParams({ lang_parameters: { time_format: "%I:%M:%S %p" } });
 
     Event._records = [];
     Event._onChanges.is_all_day = (record) => {
@@ -3764,6 +3765,7 @@ test(`timezone does not affect current day`, async () => {
 test.tags("desktop");
 test(`timezone does not affect drag and drop on desktop`, async () => {
     mockTimeZone(-40);
+    defineParams({ lang_parameters: { time_format: "%I:%M:%S %p" } });
 
     onRpc("write", ({ args }) => {
         expect.step("write");
@@ -3782,28 +3784,30 @@ test(`timezone does not affect drag and drop on desktop`, async () => {
     });
 
     await clickEvent(1);
-    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
+    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00 AM\nevent 1");
     expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
 
     await clickEvent(6);
-    expect(`.o_event[data-event-id="6"]`).toHaveText("16:00\nevent 6");
+    expect(`.o_event[data-event-id="6"]`).toHaveText("04:00 PM\nevent 6");
     expect(`.o_field_widget[name="start"]`).toHaveText("Dec 16, 4:00 PM");
 
     await closeCwPopOver();
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
-    expect(`.o_event[data-event-id="6"]`).toHaveText("16:00\nevent 6");
+    expect(`.o_event[data-event-id="6"]`).toHaveText("04:00 PM\nevent 6");
     expect(`.o_field_widget[name="start"]`).toHaveText("Nov 27, 4:00 PM");
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
-    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
+    expect(`.o_event[data-event-id="1"]`).toHaveText("08:00 AM\nevent 1");
     expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
 });
 
 test.tags("mobile");
 test(`timezone does not affect drag and drop on mobile`, async () => {
     mockTimeZone(-40);
+    defineParams({ lang_parameters: { time_format: "%I:%M:%S %p" } });
+
     patchWithCleanup(CalendarRenderer.prototype, {
         get actionSwiperProps() {
             const props = super.actionSwiperProps;
@@ -5565,6 +5569,8 @@ test(`check if active fields are fetched in addition to field names in record da
 });
 
 test("update time while drag and drop on month mode", async () => {
+    defineParams({ lang_parameters: { time_format: "%I:%M:%S %p" } });
+
     patchWithCleanup(CalendarRenderer.prototype, {
         get actionSwiperProps() {
             const props = super.actionSwiperProps;
