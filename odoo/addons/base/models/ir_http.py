@@ -137,7 +137,7 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         return env[self.model].browse(int(v) for v in value.split(','))
 
     def to_url(self, value: models.BaseModel) -> str:
-        return ",".join(value.ids)
+        return ",".join(map(str, value.ids))
 
 
 class SignedIntConverter(NumberConverter):
