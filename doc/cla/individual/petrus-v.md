@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Pierre Verkest pierreverkest84@gmail.com https://github.com/petrus-v
+Pierre Verkest pierre@verkest.fr https://github.com/petrus-v
