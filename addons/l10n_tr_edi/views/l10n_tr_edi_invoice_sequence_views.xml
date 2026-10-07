@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_tr_nilvera_einvoice_invoice_sequence_view_list" model="ir.ui.view">
+        <field name="name">l10n_tr_nilvera_einvoice.invoice.sequence.list</field>
+        <field name="model">l10n_tr_nilvera_einvoice.invoice.sequence</field>
+        <field name="arch" type="xml">
+            <list string="e-Document Sequences" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="partner_id" placeholder="Every customer"/>
+                <field name="account_id" placeholder="Any account"/>
+                <field name="l10n_tr_nilvera_customer_status"
+                       readonly="partner_id"
+                       placeholder="Any status"/>
+                <field name="l10n_tr_scenario_applies" column_invisible="True"/> <!-- Needed for the readonly modifier on 'l10n_tr_gib_invoice_scenario' -->
+                <field name="l10n_tr_invoice_type_applies" column_invisible="True"/> <!-- Needed for the readonly modifier on 'l10n_tr_gib_invoice_type' -->
+                <field name="l10n_tr_gib_invoice_scenario"
+                       column_invisible="parent.type == 'purchase'"
+                       readonly="not l10n_tr_scenario_applies"
+                       placeholder="Not applicable"/>
+                <field name="l10n_tr_gib_invoice_type"
+                       column_invisible="parent.type == 'purchase'"
+                       readonly="not l10n_tr_invoice_type_applies"/>
+                <field name="l10n_tr_is_export_invoice"/>
+                <field name="l10n_tr_is_credit_note"
+                       column_invisible="parent.type != 'purchase'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="l10n_tr_nilvera_einvoice_view_account_journal_form" model="ir.ui.view">
+        <field name="name">l10n_tr_nilvera_einvoice.account.journal.form</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='advanced_settings']" position="after">
+                <page name="l10n_tr_einvoice_sequences"
+                      string="e-Document Sequences"
+                      invisible="country_code != 'TR' or type not in ['sale', 'purchase']">
+                    <div class="alert alert-info" role="alert">
+                        <ul class="mb-0 ps-3">
+                            <li>Documents that match all the conditions below use this series instead
+                                of the journal code. Each series has its own independent numbering
+                                sequence.</li>
+                            <li>Leave a condition empty to ignore it. Leaving <b>Customer Name</b>,
+                                <b>Account Name</b>, or <b>Customer Status</b> empty applies the
+                                series to all partners.</li>
+                            <li><b>Invoice Scenario</b> applies only to e-Invoice customers.</li>
+                        </ul>
+                    </div>
+                    <field name="l10n_tr_einvoice_sequence_ids"
+                           context="{'default_journal_id': id}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
