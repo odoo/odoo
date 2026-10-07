@@ -197,7 +197,7 @@
     --button-box-gap: 1px;
     --button-box-per-row: 2;
     --button-box-border-color: #{map-get(map-get($o-btns-bs-outline-override, 'secondary'), 'border')};
-    --button-box-spacing: #{map-get($spacers, 3)};
+    --button-box-spacing: var(--o-bs-spacer-3);
 
     display: grid;
     grid-template-columns: repeat(var(--button-box-per-row), minmax(0, 1fr));
@@ -241,8 +241,8 @@
         height: auto;
         width: 100%;
         border: none;
-        padding-top: map-get($spacers, 2);
-        padding-bottom: map-get($spacers, 2);
+        padding-top: var(--o-bs-spacer-2);
+        padding-bottom: var(--o-bs-spacer-2);
     }
 }
 
@@ -253,7 +253,7 @@
     --button-box-gap: 0;
 
     display: grid;
-    padding: map-get($spacers, 3) !important;
+    padding: var(--o-bs-spacer-3) !important;
 
     &.o-form-buttonbox-small:not(:has(.o-dropdown-item:only-child)) {
         width: revert !important;
@@ -267,7 +267,7 @@
         }
 
         .oe_stat_button {
-            gap: map-get($spacers, 2);
+            gap: var(--o-bs-spacer-2);
             height: unset;
             padding: var(--dropdown-item-padding-y) var(--dropdown-item-padding-x);
 
@@ -289,7 +289,7 @@
         .o_field_statinfo, .o_stat_info {
             flex-direction: row-reverse;
             align-items: baseline;
-            gap: map-get($spacers, 1);
+            gap: var(--o-bs-spacer-1);
         }
     }
 }

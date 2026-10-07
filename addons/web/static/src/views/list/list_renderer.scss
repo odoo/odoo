@@ -1,7 +1,7 @@
 /* ------- List renderer ------- */
 .o_list_renderer {
     --ListRenderer-table-padding-x: var(--o-bs-table-cell-padding-x-sm);
-    --ListRenderer-thead-padding-y: #{map-get($spacers, 4)};
+    --ListRenderer-thead-padding-y: var(--o-bs-spacer-4);
     --ListRenderer-thead-bg-color: linear-gradient(to bottom, #{$o-webclient-background-color}, color-mix(in srgb, var(--o-webclient-background-color) 75%, transparent) );
     --ListRendererGrouped__th-bg-color: color-mix(in srgb, var(--o-view-background-color) 50%, transparent);
     --ListRenderer-thead-border-end-color: var(--border-color);
@@ -339,7 +339,7 @@
                 }
             }
             .o_group_caret {
-                margin-inline-start: calc(var(--o-list-group-level, 0) * #{map-get($spacers, 4)});
+                margin-inline-start: calc(var(--o-list-group-level, 0) * var(--o-bs-spacer-4));
             }
 
             &.o_multi_group_expand_available {

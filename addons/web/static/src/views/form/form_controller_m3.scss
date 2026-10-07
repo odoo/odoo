@@ -3,7 +3,7 @@
 .o_form_view {
     @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
         --field-spacing-unit: 8px;
-        --o-field-box-spacing: #{map-get($spacers, 3)};
+        --o-field-box-spacing: var(--o-bs-spacer-3);
         --o-field-box-border-color: var(--gray-300);
 
         %-o-field-box {
