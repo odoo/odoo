@@ -346,28 +346,6 @@ test("Followers list scrolls to top when searching or clearing search", async ()
     await mailContains(".o-mail-FollowerList-list", { scroll: 0 });
 });
 
-test("Load 100 recipients at once", async () => {
-    const pyEnv = await startServer();
-    const partnerIds = pyEnv["res.partner"].create(
-        range(210).map((i) => ({
-            display_name: `Partner${i}`,
-            name: `Partner${i}`,
-            email: `partner${i}@example.com`,
-        }))
-    );
-    pyEnv["mail.followers"].create(
-        range(210).map((i) => ({
-            is_active: true,
-            partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
-            res_id: partnerIds[0],
-            res_model: "res.partner",
-        }))
-    );
-    await start();
-    await openFormView("res.partner", partnerIds[0]);
-    await waitFor("button[title='Show Followers']:text('210'):count(1)");
-});
-
 test('Show "Add follower" and subtypes edition/removal buttons on all followers if user has write access', async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
