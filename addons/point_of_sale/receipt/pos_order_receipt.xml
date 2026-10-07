@@ -32,18 +32,10 @@
                                 <t t-foreach="extra_data['prices']['taxes']" t-as="tax">
                                     <tr name="taxes_line">
                                         <td class="text-start w-70">
-                                            <span><t t-out="tax['name']" /></span>
+                                            <span><t t-out="tax['name']" /> on <t t-out="tax['amount_base']" /></span>
                                         </td>
                                         <td class="text-end w-30 text-break">
                                             <span class="font-monospace"><t t-out="tax['amount']" /></span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-start w-70">
-                                            <span>Base <t t-out="tax['name']" /></span>
-                                        </td>
-                                        <td class="text-end w-30 text-break">
-                                            <span class="font-monospace"><t t-out="tax['amount_base']" /></span>
                                         </td>
                                     </tr>
                                 </t>
