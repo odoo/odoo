@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
+import json
 from uuid import uuid4
 
 from dateutil.parser import parse
@@ -22,6 +23,7 @@ class CalendarEvent(models.Model):
         'Google Calendar Event Id', compute='_compute_google_id', store=True, readonly=False)
     guests_readonly = fields.Boolean(
         'Guests Event Modification Permission', default=False)
+    google_resources = fields.Char("Google Resources")
     videocall_source = fields.Selection(selection_add=[('google_meet', 'Google Meet')], ondelete={'google_meet': 'set discuss'})
 
     def _get_calendar_id_domain(self):
@@ -165,7 +167,7 @@ class CalendarEvent(models.Model):
         if not reminder_command:
             reminder_command = reminders.get('useDefault') and default_reminders or ()
         alarm_commands = self._odoo_reminders_commands(reminder_command)
-        attendee_commands, partner_commands = self._odoo_attendee_commands(google_event)
+        attendee_commands, partner_commands, resources_commands = self._odoo_attendee_commands(google_event)
         related_event = self.search([('google_id', '=', google_event.id)], limit=1)
         name = google_event.summary or related_event and related_event.name or _("(No title)")
         values = {
@@ -179,7 +181,8 @@ class CalendarEvent(models.Model):
             'recurrency': google_event.is_recurrent(),
             'videocall_location': google_event.get_meeting_url(),
             'show_as': 'free' if google_event.is_available() else 'busy',
-            'guests_readonly': not bool(google_event.guestsCanModify)
+            'guests_readonly': not bool(google_event.guestsCanModify),
+            'google_resources': json.dumps(resources_commands),
         }
         if owner := google_event.owner(self.env):
             values['user_id'] = owner.id
@@ -230,8 +233,9 @@ class CalendarEvent(models.Model):
     def _odoo_attendee_commands(self, google_event):
         attendee_commands = []
         partner_commands = []
+        resources_commands = []
         google_attendees = google_event.attendees or []
-        emails = [a.get('email') for a in google_attendees]
+        emails = [a.get('email') for a in google_attendees if not a.get('resource', False)]
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
             event = google_event.get_odoo_event(self.env)
@@ -240,6 +244,9 @@ class CalendarEvent(models.Model):
         partners = self._get_sync_partner(emails)
         partners_by_email = {(p.email_normalized or p.email): p for p in partners}
         for google_attendee in google_attendees:
+            if google_attendee.get('resource'):
+                resources_commands += [google_attendee]
+                continue
             attendee_email = google_attendee.get('email')
             attendee_email_normalized = tools.email_normalize(attendee_email)
             if attendee_email in attendees_by_emails:
@@ -265,7 +272,7 @@ class CalendarEvent(models.Model):
             if email not in emails and email != self.env.user.email:
                 attendee_commands += [(2, odoo_attendee.id)]
                 partner_commands += [(3, odoo_attendee.partner_id.id)]
-        return attendee_commands, partner_commands
+        return attendee_commands, partner_commands, resources_commands
 
     @api.model
     def _odoo_reminders_commands(self, reminders=()):
@@ -347,6 +354,10 @@ class CalendarEvent(models.Model):
             'email': attendee.partner_id.email_normalized,
             'responseStatus': attendee.state or 'needsAction',
         } for attendee in attendees if attendee.partner_id.email_normalized]
+        # We add back resources to the attendees list to ensure they are included in the Google event, even if they are not regular attendees.
+        if self.google_resources:
+            resources = json.loads(self.google_resources)
+            attendee_values += resources
         # We sort the attendees to avoid undeterministic test fails. It's not mandatory for Google.
         attendee_values.sort(key=lambda k: k['email'])
         values = {
