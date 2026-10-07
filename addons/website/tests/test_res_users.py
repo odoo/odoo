@@ -94,8 +94,8 @@ class TestWebsiteResUsers(TransactionCase):
             self.assertEqual(user_2.website_id.id, False)
 
     def test_multi_website_multi_company(self):
-        company_1 = self.env['res.company'].create({'name': "Company 1"})
-        company_2 = self.env['res.company'].create({'name': "Company 2"})
+        company_1 = self.add_company('base.test_company', {'name': "Company 1"})
+        company_2 = self.add_company('base.test_company_template', {'name': "Company 2"})
         website_1 = self.env['website'].create({'name': "Website 1", 'company_id': company_1.id})
         website_2 = self.env['website'].create({'name': "Website 2", 'company_id': company_2.id})
         # Permit uninvited signup.

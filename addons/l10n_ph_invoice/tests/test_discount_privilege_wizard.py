@@ -899,8 +899,7 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
     # ============================================================
 
     def test_discount_privilege_records_are_hidden_outside_ph_company(self):
-        other_company = self.env["res.company"].create(
-            {"name": "Non-PH Company", "country_id": self.env.ref("base.us").id},
+        other_company = self.add_company('base.test_company_template', {"name": "Non-PH Company", "country_id": self.env.ref("base.us").id},
         )
         privilege = self._create_privilege("PH Only", 0.1)
         self.assertTrue(
@@ -973,8 +972,7 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
             )
 
     def test_wizard_rejects_privilege_from_other_company(self):
-        company_b = self.env["res.company"].create(
-            {"name": "Company B", "country_id": self.env.ref("base.ph").id},
+        company_b = self.add_company('base.test_company_template', {"name": "Company B", "country_id": self.env.ref("base.ph").id},
         )
         company_b.partner_id.l10n_ph_entity_type = "corporation"
         account_b = self.env["account.account"].create(

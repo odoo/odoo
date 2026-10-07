@@ -28,8 +28,8 @@ class TestWebReadX2manyAccessRules(TransactionCase):
         #
         # Expected:
         # - web_read must read only accessible partners.
-        company_allowed = self.env['res.company'].create({'name': 'Company A'})
-        company_blocked = self.env['res.company'].create({'name': 'Company B'})
+        company_allowed = self.add_company('base.test_company', {'name': 'Company A'})
+        company_blocked = self.add_company('base.test_company_with_branch', {'name': 'Company B'})
 
         user_with_restricted_access = new_test_user(
             self.env,

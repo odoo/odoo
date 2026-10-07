@@ -516,7 +516,7 @@ class TestEdiZatca(TestSaEdiCommon):
 
     def test_csr_generation_compliant_company(self):
         """Test that CSR generation succeeds for a compliant company with valid field lengths."""
-        compliant_company = self.env['res.company'].create({
+        compliant_company = self.add_company('base.test_company', {
             'name': 'Valid Company Name',
             'vat': '300000000000003',
             'street': 'Short Street Name',
@@ -564,7 +564,7 @@ class TestEdiZatca(TestSaEdiCommon):
             'name': long_industry_name,
         })
 
-        non_compliant_company = self.env['res.company'].create({
+        non_compliant_company = self.add_company('base.test_company', {
             'name': long_name,
             'vat': '333333333333333',
             'street': long_street,

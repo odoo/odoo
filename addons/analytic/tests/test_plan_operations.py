@@ -106,7 +106,7 @@ class TestAnalyticPlanOperations(TransactionCase):
         distribution_model._validate_distribution()
 
     def test_validate_company_plans(self):
-        company_2 = self.env['res.company'].create({
+        company_2 = self.add_company('base.test_company', {
             'name': 'company_2',
         })
         plan, other_plan = self.env['account.analytic.plan'].create([{

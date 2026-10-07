@@ -128,7 +128,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         holiday.with_user(SUPERUSER_ID).unlink()
         self.assertFalse(timesheets.exists(), 'Timesheet should be deleted')
 
-        company = self.env['res.company'].create({"name": "new company"})
+        company = self.add_company('base.test_company', {"name": "new company"})
         self.empl_employee.write({
             "company_id": company.id,
         })
@@ -309,7 +309,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
     def test_timeoff_task_creation_with_holiday_leave(self):
         """ Test the search method on is_timeoff_task"""
-        company = self.env['res.company'].create({"name": "new company"})
+        company = self.add_company('base.test_company', {"name": "new company"})
         self.empl_employee.write({
             "company_id": company.id,
         })

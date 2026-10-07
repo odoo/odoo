@@ -675,7 +675,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         OdooBot has `res.company(1)` set as the default company. The test checks that the payment term correctly reflects
         the company associated with the move, independent of the user's default company.
         """
-        user_company = self.env['res.company'].create({'name': 'user_company'})
+        user_company = self.add_company('base.test_company', {'name': 'user_company'})
         other_company = self.company_data.get('company')
         self.env.user.write({
             'company_ids': [user_company.id, other_company.id],

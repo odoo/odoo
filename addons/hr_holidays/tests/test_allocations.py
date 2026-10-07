@@ -120,7 +120,7 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(employee_allocation.name, "Custom Time Off Test (10.0 day(s))")
 
     def test_allocation_request_default_work_entry_type(self):
-        company = self.env['res.company'].create({'name': 'Antarctic Company', 'country_id': self.env.ref('base.aq').id})
+        company = self.add_company('base.test_company_template2', {'name': 'Antarctic Company', 'country_id': self.env.ref('base.aq').id})
         employee = self.env['hr.employee'].create({'name': 'Penguin', 'company_id': company.id})
         legal, requestable = self.env['hr.work.entry.type'].create([{
             'name': name,

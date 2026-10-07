@@ -39,7 +39,7 @@ class TestMail(MailCase):
     def test_registration_mail_url_multi_company_multi_website(self):
         """Check registration confirmation email URL matches the website of the event."""
         company_1 = self.env.company
-        company_2 = self.env['res.company'].create({
+        company_2 = self.add_company('base.test_company_template', {
             'country_id': self.env.ref('base.ca').id,
             'currency_id': self.env.ref('base.CAD').id,
             'email': 'company_2@test.example.com',

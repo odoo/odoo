@@ -25,7 +25,7 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
             self.assertEqual(company.country_id, self.env.ref('base.de'))
 
     def test_extract_company_domain(self):
-        company_1 = self.env['res.company'].create({'name': "Test Company 1"})
+        company_1 = self.add_company('base.test_company', {'name': "Test Company 1"})
 
         company_1.website = 'http://www.info.proximus.be/faq/test'
         self.assertEqual(company_1.partner_id._get_partner_domain(), "proximus.be")

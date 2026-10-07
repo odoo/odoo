@@ -149,8 +149,8 @@ class TestCurrencyRates(TransactionCase):
     def test_currency_with_company_id(self):
         usd = self.env.ref("base.USD")
         cad = self.env.ref("base.CAD")
-        company_eur = self.env["res.company"].create({"currency_id": usd.id, "name": "EUR"})
-        company_cad = self.env["res.company"].create({"currency_id": cad.id, "name": "GBP"})
+        company_eur = self.add_company('base.test_company', {"currency_id": usd.id, "name": "EUR"})
+        company_cad = self.add_company('base.test_company_with_branch', {"currency_id": cad.id, "name": "GBP"})
         self.env["res.currency.rate"].create(
             [
                 {

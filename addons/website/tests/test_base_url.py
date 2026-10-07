@@ -93,10 +93,10 @@ class TestGetBaseUrl(odoo.tests.TransactionCase):
     def test_01_get_base_url(self):
         # Setup
         web_base_url = self.env['ir.config_parameter'].sudo().get_str('web.base.url')
-        company_1 = self.env['res.company'].create({
+        company_1 = self.add_company('base.test_company', {
             'name': 'Company 1',
         })
-        company_2 = self.env['res.company'].create({
+        company_2 = self.add_company('base.test_company_with_branch', {
             'name': 'Company 2',
         })
 

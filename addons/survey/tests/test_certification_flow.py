@@ -172,7 +172,7 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
 
         # Check that the certification can be printed without access to the participant's company
         with self.with_user('admin'):
-            new_company = self.env['res.company'].create({
+            new_company = self.add_company('base.test_company', {
                 'name': 'newB',
             })
             user_new_company = self.env['res.users'].create({
