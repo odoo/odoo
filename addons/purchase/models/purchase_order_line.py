@@ -381,10 +381,17 @@ class PurchaseOrderLine(models.Model):
                 })
                 line.analytic_distribution = distribution or line.analytic_distribution
 
+    @api.model
+    def onchange_batch(self, values_list, field_names, fields_spec):
+        # TODO: Remove when onchanges are replaced with computes
+        return super(PurchaseOrderLine, self.with_context(keep_line_values=True)).onchange_batch(
+            values_list, field_names, fields_spec
+        )
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         # TODO: Remove when onchanges are replaced with computes
-        if not self.product_id:
+        if not self.product_id or self.env.context.get("keep_line_values"):
             return
         if self.env.context.get('origin_po_id') and self.product_qty:
             self._compute_tax_id()
