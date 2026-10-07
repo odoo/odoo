@@ -60,6 +60,24 @@ class TestL10nMMEmvQrCode(AccountTestInvoicingCommon):
             structured_communication=self.emv_qr_invoice.payment_reference,
         )
 
+    def test_emv_qr_settings_company_holder(self):
+        """ The QR settings follow the company owning the bank account """
+        company = self.company_data['company']
+        # Bank account owned by the company.
+        company_bank = self.env['res.partner.bank'].create({
+            'account_number': '1111111111',
+            'partner_id': company.partner_id.id,
+        })
+
+        # QR codes enabled on the company: its bank account shows the QR settings.
+        company.qr_code = True
+        self.assertTrue(company_bank.company_qr_code)
+
+        # QR codes disabled on the company: its bank account hides the QR settings.
+        company.qr_code = False
+        company_bank.invalidate_recordset(['company_qr_code'])
+        self.assertFalse(company_bank.company_qr_code)
+
     def test_emv_qr_vals(self):
         qr_vals = self._get_qr_vals()
 
