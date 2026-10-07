@@ -51,8 +51,6 @@ export class TimeOffDashboard extends Component {
         );
         this.state.holidays = dashboardData["allocation_data"];
         this.state.allocationsNumber = dashboardData["allocations_number"];
-        this.hasAccrualAllocation = dashboardData["has_accrual_allocation"];
-        this.hasFutureAllocation = dashboardData["has_future_allocation"];
     }
 
     openNewAllocation() {
