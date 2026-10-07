@@ -268,12 +268,16 @@ class AccountEdiProxyClientUser(models.Model):
 
         job_count = batch_size or BATCH_SIZE
         need_retrigger = False
+        params = {
+            'limit': job_count
+        }
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
             try:
                 # Request all messages that haven't been acknowledged
                 messages = edi_user._call_peppol_proxy(
                     endpoint=edi_user._get_peppol_proxy_endpoint('1/get_all_ppf_documents'),
+                    params=params
                 )
             except AccountEdiProxyError as e:
                 _logger.error('Error while receiving the document from Peppol Proxy: %s', e.message)
@@ -286,8 +290,8 @@ class AccountEdiProxyClientUser(models.Model):
             if not message_uuids:
                 continue
 
-            need_retrigger = need_retrigger or len(message_uuids) > job_count
-            message_uuids = message_uuids[:job_count]
+            has_more = messages.get('has_more', False)
+            need_retrigger = need_retrigger or has_more
 
             # Retrieve attachments for filtered messages
             all_messages = edi_user._call_peppol_proxy(
