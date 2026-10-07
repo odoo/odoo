@@ -338,6 +338,13 @@ class ProjectTask(models.Model):
         'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL) OR is_template IS TRUE)',
         'A private (non-template) task cannot have a parent.',
     )
+    # WARNING: Using this field as a dependency for other compute methods may cause a cyclic dependancy.
+    task_template_id = fields.Many2one(
+        'project.task',
+        string="Task Template Used",
+        store=False,
+        copy=False,
+    )
 
     _is_template_idx = models.Index('(is_template) WHERE is_template IS TRUE')
 
@@ -694,6 +701,37 @@ class ProjectTask(models.Model):
             self.user_ids = self.user_ids.filtered(
                 lambda u: self.company_id in u._origin.company_ids
             )
+
+    @api.onchange('task_template_id')
+    def _onchange_task_template_id(self):
+        if not self.task_template_id or self.parent_id:
+            return
+        default = {
+            field: False
+            for field in self._get_template_field_blacklist()
+        }
+        data = self.task_template_id.with_context(
+            copy_from_template=True,
+            copy_from_project_template=self.task_template_id.id,
+        ).copy_data(default)[0]
+        data['is_template'] = False
+        if self.task_template_id.depend_on_ids:
+            data['depend_on_ids'] = [Command.set(self.task_template_id.depend_on_ids.ids)]
+        if self.task_template_id.date_deadline:
+            data['date_deadline'] = self.task_template_id.date_deadline
+        if 'child_ids' in data:
+            state_default = self.env['project.task'].default_get(['state']).get('state', '01_in_progress')
+            for tmpl_child, command in zip(self.task_template_id.child_ids, data['child_ids']):
+                if len(command) == 3 and isinstance(command[2], dict):
+                    # nested subtasks and dependencies are not sent back by the form,
+                    # create() uses this id to rebuild them from the template
+                    command[2]['task_template_id'] = tmpl_child.id
+                    command[2].setdefault('state', state_default)
+            data['child_ids'] = [
+                Command.clear(),
+                *self._prepare_template_child_commands(self.task_template_id.child_ids, data['child_ids']),
+            ]
+        self.update(data)
 
     @api.depends('project_id.company_id', 'parent_id.company_id')
     def _compute_company_id(self):
@@ -1172,6 +1210,28 @@ class ProjectTask(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if template_id := vals.get('task_template_id'):
+                allow_dependencies = self.env['project.project'].browse(
+                    vals.get('project_id') or self.env.context.get('default_project_id'),
+                ).allow_task_dependencies
+                if allow_dependencies and (template_depend_on := self.browse(template_id).depend_on_ids):
+                    vals.setdefault('depend_on_ids', [Command.set(template_depend_on.ids)])
+                for command in vals.get('child_ids') or []:
+                    if len(command) == 3 and isinstance(command[2], dict) and (child_template_id := command[2].pop('task_template_id', False)):
+                        template = self.browse(child_template_id)
+                        if allow_dependencies and template.depend_on_ids:
+                            command[2]['depend_on_ids'] = [Command.set(template.depend_on_ids.ids)]
+                        if template.child_ids:
+                            command[2].setdefault('child_ids', self._prepare_template_child_commands(
+                                template.child_ids,
+                                template.with_context(
+                                    copy_from_template=True,
+                                    copy_from_project_template=template.id,
+                                ).copy_data({field: False for field in self._get_template_field_blacklist()})[0].get('child_ids', []),
+                                allow_dependencies,
+                            ))
+
         # Some values are determined by this override and must be written as
         # sudo for portal users, because they do not have access to these
         # fields. Other values must not be written as sudo.
@@ -2142,6 +2202,20 @@ class ProjectTask(models.Model):
         if project_id and not self.env['project.project'].browse(project_id).allow_recurring_tasks:
             fields.extend(self._get_recurrence_fields() + ["recurrence_id", "recurring_task"])
         return fields
+
+    def _prepare_template_child_commands(self, templates, commands, allow_dependencies=True):
+        for template, command in zip(templates, commands):
+            if len(command) == 3 and isinstance(command[2], dict):
+                command[2]['is_template'] = False
+                if template.date_deadline:
+                    command[2]['date_deadline'] = template.date_deadline
+                if allow_dependencies and template.depend_on_ids:
+                    command[2]['depend_on_ids'] = [Command.set(template.depend_on_ids.ids)]
+                    if template.is_blocked_by_dependences():
+                        command[2]['state'] = '04_waiting_normal'
+                if command[2].get('child_ids'):
+                    self._prepare_template_child_commands(template.child_ids, command[2]['child_ids'], allow_dependencies)
+        return commands
 
     def action_create_from_template(self, values=None):
         self.ensure_one()
