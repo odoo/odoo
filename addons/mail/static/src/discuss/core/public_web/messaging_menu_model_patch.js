@@ -199,9 +199,7 @@ const messagingMenuPatch = {
     },
     /** @override */
     notificationMatchesExtra(message) {
-        return (
-            super.notificationMatchesExtra(message) && message.thread?.model !== "discuss.channel"
-        );
+        return super.notificationMatchesExtra(message) && !message.thread?.channel;
     },
 };
 patch(MessagingMenu.prototype, messagingMenuPatch);

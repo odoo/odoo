@@ -826,7 +826,7 @@ export class Thread extends Record {
         if (parentId) {
             params.post_data.parent_id = parentId;
         }
-        if (this.model !== "discuss.channel") {
+        if (!this.channel) {
             params.thread_id = this.id;
             params.thread_model = this.model;
         } else {
@@ -834,8 +834,6 @@ export class Thread extends Record {
                 id: tmpId,
                 message_type: params.post_data.message_type,
                 attachment_ids: attachments,
-                res_id: this.id,
-                model: "discuss.channel",
             };
             if (this.store.self_user) {
                 tmpData.author_id = this.store.self_user.partner_id;

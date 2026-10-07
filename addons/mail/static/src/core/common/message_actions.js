@@ -91,7 +91,7 @@ registerMessageAction("reply-to", {
             composer.replyToMessage = message;
             return;
         }
-        if (!message.isSelfAuthored && message.model !== "discuss.channel" && message.author) {
+        if (!message.isSelfAuthored && !message.thread?.channel && message.author) {
             composer.insertReplyFromNote(message);
         }
         ancestors.inChatter?.toggleComposer("note", { force: true });

@@ -4,7 +4,7 @@ import { Message } from "@mail/core/common/message_model";
 patch(Message.prototype, {
     get canToggleBookmark() {
         let result = super.canToggleBookmark;
-        if (this.thread && this.thread.model !== "discuss.channel") {
+        if (this.thread && !this.thread.channel) {
             result = result && this.thread.hasReadAccess;
         }
         return result;
