@@ -12,13 +12,12 @@
                             <span class="btn account_drag_drop_btn pe-none" t-att-class="{ 'btn-lg': this.props.largeIcons }">Drag &amp; drop</span>
                         </t>
                         <t t-else="">
-                            <AccountFileUploader>
-                                <t t-set-slot="toggler">
-                                    <button type="button" class="btn btn-primary o_button_upload_bill" data-hotkey="shift+i">
-                                        Upload
-                                    </button>
-                                </t>
-                            </AccountFileUploader>
+                            <ViewButton
+                                className="'btn btn-primary o_button_upload_bill'"
+                                clickParams="{ type: 'upload', name: 'create_document_from_attachment' }"
+                                record="this.uploadRecord">
+                                <t t-set-slot="contents">Upload</t>
+                            </ViewButton>
                         </t>
                         <div t-if="this.showSampleAction.value">
                             <span class="btn pe-none px-1 fw-normal">or</span>

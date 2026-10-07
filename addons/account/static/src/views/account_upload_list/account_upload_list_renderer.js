@@ -1,10 +1,10 @@
 import { BillGuide } from "@account/components/bill_guide/bill_guide";
-import { FileUploadListRenderer } from "../file_upload_list/file_upload_list_renderer";
+import { ListRenderer } from "@web/views/list/list_renderer";
 
-export class AccountUploadListRenderer extends FileUploadListRenderer {
+export class AccountUploadListRenderer extends ListRenderer {
     static template = "account.AccountUploadListRenderer";
     static components = {
-        ...FileUploadListRenderer.components,
+        ...ListRenderer.components,
         BillGuide,
     };
 
