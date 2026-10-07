@@ -135,3 +135,37 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
             )],
         })
         self.start_tour("/", 'compare_list_price_price_list_display', login=self.env.user.login)
+
+    def test_pricelist_discount_strikethrough_respects_comparison_price_setting(self):
+        """Test that pricelist discount strikethroughs are hidden when comparison price setting is disabled."""
+        public_user = self.env.ref('base.public_user')
+        comparison_group = self.env.ref('website_sale.group_product_price_comparison')
+        website = self.env['website'].get_current_website()
+
+        # Create a selectable pricelist with a 10% discount rule
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Discount Pricelist',
+            'selectable': True,
+            'website_id': website.id,
+            'item_ids': [(0, 0, {
+                'compute_price': 'percentage',
+                'percent_price': 10,
+                'applied_on': '3_global',
+            })],
+        })
+
+        product_template = self.product.product_tmpl_id
+        product_template.is_published = True
+
+        public_user.sudo().write({'groups_id': [(3, comparison_group.id)]})
+        self.env.invalidate_all()
+        self.env.registry.clear_cache()
+
+        price_info_disabled = product_template.with_user(public_user).with_context(
+            website_sale_pricelist=pricelist.id
+        )._get_sales_prices(website)
+
+        self.assertFalse(
+            price_info_disabled[product_template.id].get('base_price'),
+            "Base price for strikethrough should be None when comparison prices setting is disabled."
+        )

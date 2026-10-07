@@ -288,7 +288,7 @@ class ProductTemplate(models.Model):
                 ),
             }
             pricelist_item = template.env['product.pricelist.item'].browse(pricelist_rule_id)
-            if pricelist_item._show_discount_on_shop():
+            if comparison_prices_enabled and pricelist_item._show_discount_on_shop():
                 pricelist_base_price = pricelist_item._compute_price_before_discount(
                     product=template,
                     quantity=1.0,
@@ -484,7 +484,8 @@ class ProductTemplate(models.Model):
 
         price_before_discount = pricelist_price
         pricelist_item = self.env['product.pricelist.item'].browse(pricelist_rule_id)
-        if pricelist_item._show_discount_on_shop():
+        comparison_prices_enabled = self.env.user.has_group('website_sale.group_product_price_comparison')
+        if comparison_prices_enabled and pricelist_item._show_discount_on_shop():
             price_before_discount = pricelist_item._compute_price_before_discount(
                 product=product_or_template,
                 quantity=quantity or 1.0,
@@ -504,7 +505,7 @@ class ProductTemplate(models.Model):
         if (
             not has_discounted_price
             and product_or_template.compare_list_price
-            and self.env.user.has_group('website_sale.group_product_price_comparison')
+            and comparison_prices_enabled
         ):
             comparison_price = product_or_template.currency_id._convert(
                 from_amount=product_or_template.compare_list_price,
