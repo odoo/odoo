@@ -41,7 +41,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             'bank_ids': [Command.create({'account_number': 'TR9876543210', 'allow_out_payment': True})],
             'invoice_edi_format': 'ubl_tr',
             'ref': 'Ulus',
-            'l10n_tr_nilvera_customer_status': 'einvoice',
+            'l10n_tr_edi_customer_status': 'einvoice',
         })
 
         cls.earchive_partner = cls.env['res.partner'].create({
@@ -56,7 +56,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             'phone': '+90 509 876 54 32',
             'bank_ids': [Command.create({'account_number': 'TR9876543210', 'allow_out_payment': True})],
             'invoice_edi_format': 'ubl_tr',
-            'l10n_tr_nilvera_customer_status': 'earchive',
+            'l10n_tr_edi_customer_status': 'earchive',
         })
 
         cls.tax_20 = cls.env['account.chart.template'].ref('tr_s_20')

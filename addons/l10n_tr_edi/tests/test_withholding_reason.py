@@ -17,9 +17,9 @@ class TestTRWithholdingReason(TestUBLTRCommon):
         cls.fpos_wh_7_10 = chart.ref('tr_fp_wh_7_10')
         cls.fpos_wh_3_10 = chart.ref('tr_fp_wh_3_10')
         # 9/10 has ten reasons, 3/10 only one
-        cls.reason_607 = chart.ref('l10n_tr_nilvera_einvoice.account_tax_code_607')
-        cls.reason_603 = chart.ref('l10n_tr_nilvera_einvoice.account_tax_code_603')
-        cls.reason_625 = chart.ref('l10n_tr_nilvera_einvoice.account_tax_code_625')
+        cls.reason_607 = chart.ref('l10n_tr_edi.tax_code_607')
+        cls.reason_603 = chart.ref('l10n_tr_edi.tax_code_603')
+        cls.reason_625 = chart.ref('l10n_tr_edi.tax_code_625')
         # `Update Taxes and Accounts` maps the product's own tax
         cls.product_a.taxes_id = cls.tax_20
 
