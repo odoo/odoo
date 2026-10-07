@@ -5331,7 +5331,7 @@ class AccountTaxRepartitionLine(models.Model):
     document_type = fields.Selection(string="Related to", selection=[('invoice', 'Invoice'), ('refund', 'Refund')], required=True)
     account_id = fields.Many2one(string="Account",
         comodel_name='account.account',
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        domain="[('active', '=', True), ('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         check_company=True,
         help="Account on which to post the tax amount")
     tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True, ondelete='restrict')
