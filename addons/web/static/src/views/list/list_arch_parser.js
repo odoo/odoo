@@ -14,7 +14,7 @@ export class GroupListArchParser {
         const buttons = [];
         let buttonId = 0;
         visitXML(arch, (node) => {
-            if (node.tagName === "button") {
+            if (node.tagName === "buttons") {
                 buttons.push({
                     ...processButton(node),
                     id: buttonId++,
