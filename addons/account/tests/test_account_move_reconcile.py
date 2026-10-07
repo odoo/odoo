@@ -194,7 +194,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 "Amount currency of %s is incorrect" % account.name,
             )
 
-    def create_move_payment(self, move, payment_amount, with_outstanding_account=False):
+    def create_move_payment(self, move, payment_amount, with_outstanding_account=False, **wizard_vals):
         payment = self.env['account.payment.register'].with_context(
             active_model='account.move',
             active_ids=move.ids,
@@ -204,6 +204,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 self.company_data['default_journal_bank'].inbound_payment_method_line_ids.filtered_domain([
                     ('payment_account_id', '!=' if with_outstanding_account else "=", False),
                 ])[0].id,
+            **wizard_vals,
         })._create_payments()
         return payment
 
@@ -5699,22 +5700,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, "You can just change some non legal fields"):
             receivable_lines.currency_id = self.other_currency
 
-    def test_links_between_move_and_payment(self):
-        """
-        Test links between move and payment, via account.partial.reconcile and account_move__account_payment
-        In the context of an outstanding account
-        """
-        invoice_outstanding = self.init_invoice(move_type='out_invoice', amounts=[300], post=True)
-        payment = self.create_move_payment(invoice_outstanding, 300, True)
-
-        # Link still exists if payment is reset to draft
-        self.assertEqual(payment.reconciled_invoice_ids, invoice_outstanding)
-        payment.action_draft()
-        # The link is not destroyed as the account_move__account_payment many2many link still exists
-        self.assertEqual(payment.reconciled_invoice_ids, invoice_outstanding)
-        payment.action_post()
-        self.assertEqual(payment.reconciled_invoice_ids, invoice_outstanding)
-
     def test_reconciliation_currency_exchange_matching_number(self):
         """
         Test that reconciliation assigns the same matching number to
@@ -5753,3 +5738,116 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount': 1001.0, 'debit_move_id': line_2.id, 'credit_move_id': line_5.id},
             {'amount': 1002.0, 'debit_move_id': line_3.id, 'credit_move_id': line_4.id},
         ])
+
+    def test_matched_payment_ids_unreconcile_payment(self):
+        """ Unreconciling a payment from an invoice removes the Many2many link between them
+        (`matched_payment_ids` on the invoice, `invoice_ids` on the payment). """
+        invoice_1, invoice_2 = [self._create_invoice_one_line(price_unit=1000, date='2024-01-01', post=True) for _ in range(2)]
+
+        # Payment created from Invoice 1, unreconciled from the payment widget, then reconciled with Invoice 2
+        payment = self.create_move_payment(invoice_1, 500, with_outstanding_account=True)
+        self.assertRecordValues(invoice_1 | invoice_2, [
+            {'matched_payment_ids': payment.ids, 'reconciled_payment_ids': payment.ids},
+            {'matched_payment_ids': [], 'reconciled_payment_ids': []},
+        ])
+        self.assertEqual(payment.reconciled_invoice_ids, invoice_1)
+
+        invoice_1.js_remove_outstanding_partial((invoice_1.line_ids.matched_debit_ids | invoice_1.line_ids.matched_credit_ids).id)
+        self.assertRecordValues(invoice_1, [{'matched_payment_ids': [], 'reconciled_payment_ids': []}])
+        self.assertFalse(payment.reconciled_invoice_ids)
+
+        _liquidity_lines, counterpart_lines, _writeoff_lines = payment._seek_for_lines()
+        invoice_2.js_assign_outstanding_line(counterpart_lines.id)
+        self.assertRecordValues(invoice_1 | invoice_2, [
+            {'reconciled_payment_ids': []},
+            {'reconciled_payment_ids': payment.ids},
+        ])
+        self.assertEqual(payment.reconciled_invoice_ids, invoice_2)
+
+    def test_matched_payment_ids_unreconcile_grouped_payment(self):
+        """ Unreconciling a grouped payment from one invoice only removes the Many2many link with this invoice
+        (`matched_payment_ids` on the invoice, `invoice_ids` on the payment). """
+        invoice_a, invoice_b = [self._create_invoice_one_line(price_unit=price_unit, date='2024-01-01', post=True) for price_unit in (200, 300)]
+
+        grouped_payment = self.create_move_payment(invoice_a | invoice_b, 500, with_outstanding_account=True, group_payment=True)
+        self.assertRecordValues(invoice_a | invoice_b, [
+            {'matched_payment_ids': grouped_payment.ids, 'reconciled_payment_ids': grouped_payment.ids},
+            {'matched_payment_ids': grouped_payment.ids, 'reconciled_payment_ids': grouped_payment.ids},
+        ])
+
+        # Unreconciled from Invoice A only: only the link with Invoice A is removed
+        invoice_a.line_ids.filtered(lambda l: l.display_type == 'payment_term').remove_move_reconcile()
+        self.assertRecordValues(invoice_a | invoice_b, [
+            {'matched_payment_ids': [], 'reconciled_payment_ids': []},
+            {'matched_payment_ids': grouped_payment.ids, 'reconciled_payment_ids': grouped_payment.ids},
+        ])
+        self.assertEqual(grouped_payment.reconciled_invoice_ids, invoice_b)
+
+    def test_matched_payment_ids_unreconcile_draft_payment(self):
+        """ Resetting a payment to draft removes its reconciliation, and so the Many2many links with all its invoices
+        (`matched_payment_ids` on the invoices, `invoice_ids` on the payment). """
+        invoice_a, invoice_b = [self._create_invoice_one_line(price_unit=price_unit, date='2024-01-01', post=True) for price_unit in (200, 300)]
+
+        grouped_payment = self.create_move_payment(invoice_a | invoice_b, 500, with_outstanding_account=True, group_payment=True)
+        self.assertRecordValues(invoice_a | invoice_b, [
+            {'matched_payment_ids': grouped_payment.ids, 'reconciled_payment_ids': grouped_payment.ids},
+            {'matched_payment_ids': grouped_payment.ids, 'reconciled_payment_ids': grouped_payment.ids},
+        ])
+
+        # Reset to draft: no invoice is linked anymore
+        grouped_payment.action_draft()
+        self.assertRecordValues(invoice_a | invoice_b, [
+            {'matched_payment_ids': [], 'reconciled_payment_ids': []},
+            {'matched_payment_ids': [], 'reconciled_payment_ids': []},
+        ])
+        self.assertFalse(grouped_payment.reconciled_invoice_ids)
+
+    def test_matched_payment_ids_unreconcile_entry(self):
+        """ Unreconciling a payment from a journal entry paid from its journal items (e.g. a payslip) removes the Many2many
+        link between them (`matched_payment_ids` on the entry, `invoice_ids` on the payment). """
+        entry = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2024-01-01',
+            'line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'partner_id': self.partner_a.id,
+                    'balance': 100.0,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'balance': -100.0,
+                }),
+            ],
+        })
+        entry.action_post()
+        receivable_line = entry.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable')
+
+        payment = self.env['account.payment.register'].with_context(
+            active_model='account.move.line',
+            active_ids=receivable_line.ids,
+        ).create({
+            'payment_method_line_id': self.company_data['default_journal_bank'].inbound_payment_method_line_ids.filtered('payment_account_id')[0].id,
+        })._create_payments()
+        self.assertRecordValues(entry, [{'matched_payment_ids': payment.ids, 'reconciled_payment_ids': payment.ids}])
+
+        # Unreconciled from the journal items: the link is removed
+        receivable_line.remove_move_reconcile()
+        self.assertRecordValues(entry, [{'matched_payment_ids': [], 'reconciled_payment_ids': []}])
+
+    def test_matched_payment_ids_unreconcile_without_move(self):
+        """ The Many2many link with a payment without journal entry (`matched_payment_ids` on the invoice,
+        `invoice_ids` on the payment) is kept when the invoice is unreconciled from a credit note. """
+        invoice = self._create_invoice_one_line(price_unit=500, date='2024-01-01', post=True)
+
+        # No outstanding account, so no journal entry on the payment
+        with patch.object(self.env.registry['account.move'], '_get_invoice_in_payment_state', lambda _: 'in_payment'):
+            payment = self.create_move_payment(invoice, 500)
+        self.assertFalse(payment.move_id)
+
+        # Credit note applied on the invoice then removed: the link with the payment is kept
+        credit_note = self._create_invoice_one_line(move_type='out_refund', price_unit=100, date='2024-01-01', post=True)
+        (invoice + credit_note).line_ids.filtered(lambda l: l.display_type == 'payment_term').reconcile()
+        credit_note.line_ids.remove_move_reconcile()
+        self.assertRecordValues(invoice, [{'matched_payment_ids': payment.ids, 'reconciled_payment_ids': payment.ids}])
+        self.assertEqual(payment.reconciled_invoice_ids, invoice)
