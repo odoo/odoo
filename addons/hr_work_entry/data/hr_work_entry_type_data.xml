@@ -3824,6 +3824,119 @@
         <field name="country_id" ref="base.my"/>
     </record>
 
+<!-- NG : Nigeria -->
+
+    <record id="ng_work_entry_type_attendance" model="hr.work.entry.type">
+        <field name="name">Work</field>
+        <field name="color">0</field>
+        <field name="display_code">A</field>
+        <field name="code">002.00</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <record id="ng_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="name">Overtime</field>
+        <field name="color">4</field>
+        <field name="display_code">OT</field>
+        <field name="code">040.00</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <record id="ng_hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
+        <field name="name">Out Of Contract</field>
+        <field name="color">0</field>
+        <field name="display_code">OoC</field>
+        <field name="code">000.00</field>
+        <field name="country_id" ref="base.ng"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="ng_work_entry_type_leave" model="hr.work.entry.type">
+        <field name="name">Generic Time Off</field>
+        <field name="color">3</field>
+        <field name="display_code">GTO</field>
+        <field name="code">LEAVE100</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <record id="ng_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="name">Time Off in Lieu of Overtime</field>
+        <field name="color">3</field>
+        <field name="display_code">TOIL</field>
+        <field name="code">LEAVE105</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <record id="ng_work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="name">Work from home</field>
+        <field name="color">2</field>
+        <field name="display_code">HW</field>
+        <field name="code">002.08</field>
+        <field name="count_as">working_time</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <record id="ng_work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="name">Leave without pay</field>
+        <field name="color">5</field>
+        <field name="display_code">UN</field>
+        <field name="code">158.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ng"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="ng_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">SL</field>
+        <field name="code">013.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <record id="ng_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="name">Annual Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">AL</field>
+        <field name="code">016.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <record id="ng_work_entry_type_public_holiday" model="hr.work.entry.type">
+        <field name="name">Public Holiday</field>
+        <field name="color">3</field>
+        <field name="display_code">PH</field>
+        <field name="code">006.00</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <record id="l10n_ng_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="name">Maternity Leave</field>
+        <field name="color">5</field>
+        <field name="display_code">ML</field>
+        <field name="code">NGLEAVE110</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ng"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_ng_work_entry_type_unpaid_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Leave (Unpaid)</field>
+        <field name="color">5</field>
+        <field name="display_code">SLU</field>
+        <field name="code">NGLEAVE120</field>
+        <field name="count_as">absence</field>
+        <field name="country_id" ref="base.ng"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
 <!-- NL : Netherlands -->
 
     <record id="nl_work_entry_type_attendance" model="hr.work.entry.type">

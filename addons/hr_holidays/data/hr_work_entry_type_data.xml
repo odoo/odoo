@@ -1044,6 +1044,61 @@
         <field name="country_id" ref="base.mx"/>
     </record>
 
+<!-- NG : Nigeria -->
+    <!-- Overtime is encoded by HR, not requested by the employees: the Labour Act sets no rate, the rate of the
+         contract or of the collective agreement applies -->
+    <record id="hr_work_entry.ng_work_entry_type_overtime" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+        <field name="include_public_holidays_in_duration">True</field>
+    </record>
+
+    <!-- Annual leave: at least 6 working days with full pay after 12 months of continuous service, 12 for the
+         workers under 16 (Labour Act, s. 18); most contracts give more -->
+    <record id="hr_work_entry.ng_work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <!-- Sick leave on a medical certificate: up to 12 working days a year with full pay (Labour Act, s. 16) -->
+    <record id="hr_work_entry.ng_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <!-- Sick leave beyond the 12 paid working days of the year -->
+    <record id="hr_work_entry.l10n_ng_work_entry_type_unpaid_sick_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <!-- Maternity leave: 6 weeks before and 6 weeks after the confinement, paid at least 50% of the wages after
+         6 months of service (Labour Act, s. 54) -->
+    <record id="hr_work_entry.l10n_ng_work_entry_type_maternity_leave" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
+    <!-- Time off in lieu of the overtime, by agreement -->
+    <record id="hr_work_entry.ng_work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">hour</field>
+        <field name="unit_of_measure">hour</field>
+        <field name="country_id" ref="base.ng"/>
+    </record>
+
 <!-- OM : Oman -->
     <record id="hr_work_entry.l10n_om_work_entry_type_sick_leave_100" model="hr.work.entry.type">
         <field name="name">Sick Leave (100% Paid)</field>
