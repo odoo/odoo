@@ -1,6 +1,7 @@
 import { Component, computed, signal, useProps, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { useService } from "@web/core/utils/hooks";
 
 export class BancontactRefundPopup extends Component {
     static template = "pos_bancontact_pay.BancontactRefundPopup";
@@ -14,6 +15,7 @@ export class BancontactRefundPopup extends Component {
 
     setup() {
         this.pos = usePos();
+        this.ui = useService("ui");
         this.rows = this.props.lines.map((line) => {
             const amount = signal(this.props.amounts[line.id] ?? "");
             const refundAmount = computed(() => Number(amount()) || 0);

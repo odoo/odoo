@@ -81,7 +81,7 @@ export class PaymentScreen extends Component {
             "-": "o_colorlist_item_numpad_color_3",
         };
 
-        const disabled = this.isSelectedPaymentLineLocked;
+        const disabled = this.isPaymentLineLocked(this.selectedPaymentLine);
         return enhancedButtons().map((button) => ({
             ...button,
             class: `${colorClassMap[button.value] || ""}`,
@@ -89,10 +89,9 @@ export class PaymentScreen extends Component {
         }));
     }
 
-    get isSelectedPaymentLineLocked() {
+    isPaymentLineLocked(line) {
         return Boolean(
-            this.selectedPaymentLine?.payment_interface &&
-                !["pending", "retry"].includes(this.selectedPaymentLine.getPaymentStatus())
+            line?.payment_interface && !["pending", "retry"].includes(line.getPaymentStatus())
         );
     }
 
@@ -211,7 +210,7 @@ export class PaymentScreen extends Component {
             amount = this.currentOrder.remainingDue;
             this.showMaxValueError();
         }
-        if (this.isSelectedPaymentLineLocked) {
+        if (this.isPaymentLineLocked(this.selectedPaymentLine)) {
             return;
         }
         if (amount === null) {

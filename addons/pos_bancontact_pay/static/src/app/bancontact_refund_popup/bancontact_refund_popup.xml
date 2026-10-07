@@ -2,7 +2,31 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_bancontact_pay.BancontactRefundPopup">
         <Dialog title.translate="Bancontact Refund" size="'lg'" backdrop="false">
-            <table class="table align-middle mb-0">
+            <t t-if="this.ui.isSmall">
+                <div t-foreach="this.rows" t-as="row" t-key="row.line.id" class="border rounded p-3 mb-2" t-att-class="{ 'text-muted': row.line.fully_refunded }">
+                    <div class="d-flex justify-content-between gap-2">
+                        <div class="text-break">
+                            <div class="fw-bold" t-out="row.line.payment_method_name"/>
+                            <div>
+                                <span t-out="row.line.debtor_name or '?'"/>
+                                <span t-if="row.line.debtor_iban" class="small text-muted"> **** <t t-out="row.line.debtor_iban"/></span>
+                            </div>
+                        </div>
+                        <div class="text-end text-nowrap">
+                            <div t-out="this.pos.formatCurrency(row.line.amount)"/>
+                            <div class="small text-muted"><t t-out="this.pos.formatCurrency(row.line.amount_left)"/> left</div>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <t t-call="pos_bancontact_pay.BancontactRefundPopup.amountInput"/>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between fw-bold px-1">
+                    <span>Total refund</span>
+                    <span t-out="this.pos.formatCurrency(this.totalRefund())"/>
+                </div>
+            </t>
+            <table t-else="" class="table align-middle mb-0">
                 <thead>
                     <tr>
                         <th>Payment method</th>
@@ -22,15 +46,7 @@
                         <td class="text-end" t-out="this.pos.formatCurrency(row.line.amount)"/>
                         <td class="text-end" t-out="this.pos.formatCurrency(row.line.amount_left)"/>
                         <td class="text-end" style="width: 12rem;">
-                            <div class="input-group">
-                                <input type="number" min="0" step="0.01" class="form-control text-end"
-                                    t-att-class="{ 'is-invalid': row.isInvalid() }"
-                                    t-att-disabled="row.line.fully_refunded"
-                                    t-model.number="row.amount"/>
-                                <button class="btn btn-secondary"
-                                    t-att-disabled="row.line.fully_refunded"
-                                    t-on-click="() => this.setMaxAmount(row)">Max</button>
-                            </div>
+                            <t t-call="pos_bancontact_pay.BancontactRefundPopup.amountInput"/>
                         </td>
                     </tr>
                 </tbody>
@@ -48,5 +64,17 @@
                 <button class="btn btn-secondary" t-on-click="() => this.props.close()">Discard</button>
             </t>
         </Dialog>
+    </t>
+
+    <t t-name="pos_bancontact_pay.BancontactRefundPopup.amountInput">
+        <div class="input-group">
+            <input type="number" min="0" step="0.01" class="form-control text-end"
+                t-att-class="{ 'is-invalid': row.isInvalid() }"
+                t-att-disabled="row.line.fully_refunded"
+                t-model.number="row.amount"/>
+            <button class="btn btn-secondary"
+                t-att-disabled="row.line.fully_refunded"
+                t-on-click="() => this.setMaxAmount(row)">Max</button>
+        </div>
     </t>
 </templates>
