@@ -24,10 +24,18 @@ test("should replace splitElementBlock with insertLineBreak (selection end)", as
         contentAfter: `<div class="oe_unbreakable">ab<br>[]<br></div>`,
     });
 });
+test("should return the inserted line break", async () => {
+    const { editor } = await setupEditor(`<div class="oe_unbreakable">a[]b</div>`);
+    const result = editor.shared.split.splitBlock();
+    expect("before" in result).toBe(false);
+    expect("after" in result).toBe(false);
+    expect(result.lineBreaks).toHaveLength(1);
+    expect(result.lineBreaks[0].nodeName).toBe("BR");
+});
 test("should not split a contenteditable='false'", async () => {
     const { editor, el } = await setupEditor(`<p contenteditable="false">ab</p>`);
     const p = el.querySelector("p[contenteditable=false]");
-    editor.shared.split.splitBlockNode({ targetNode: p, targetOffset: 0 });
+    editor.shared.split.splitBlockNode(p, 0);
     expect(getContent(el)).toBe(
         '<p data-selection-placeholder=""><br></p>' +
             '<p contenteditable="false">ab</p>' +

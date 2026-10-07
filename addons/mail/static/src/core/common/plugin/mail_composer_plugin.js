@@ -32,7 +32,7 @@ export class MailComposerPlugin extends Plugin {
     static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection"];
     resources = {
         on_will_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
-        paste_odoo_editor_html_overrides: this.handlePasteHtmlOverride.bind(this),
+        fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
         should_bypass_paste_image_files_predicates: () => true,
         on_link_created_handlers: (linkEl) => (linkEl.target = "_blank"),
         hints: [
@@ -74,9 +74,9 @@ export class MailComposerPlugin extends Plugin {
             this.config.composerPluginDependencies.onFocusout
         );
     }
-    handlePasteHtmlOverride(selection, sanitizedFragment) {
-        if (sanitizedFragment.childNodes.length === 0) {
-            return false;
+    processFragmentToInsert(fragment) {
+        if (fragment.childNodes.length === 0) {
+            return fragment;
         }
         const removeStyle = (node) => {
             if (node.nodeType === Node.ELEMENT_NODE) {
@@ -103,11 +103,9 @@ export class MailComposerPlugin extends Plugin {
                 [...node.childNodes].forEach(removeStyle);
             }
         };
-        [...sanitizedFragment.childNodes].forEach(removeStyle);
-        flattenStructuralDivWrappers(sanitizedFragment);
-        this.dependencies.dom.insert(sanitizedFragment);
-        this.dependencies.history.commit();
-        return true;
+        [...fragment.childNodes].forEach(removeStyle);
+        flattenStructuralDivWrappers(fragment);
+        return fragment;
     }
 }
 

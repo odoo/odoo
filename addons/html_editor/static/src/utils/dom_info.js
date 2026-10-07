@@ -906,6 +906,13 @@ export function isContentEditableAncestor(node) {
     return node.isContentEditable && node.matches("[contenteditable]");
 }
 
+export function isEditionBoundary(node, editable) {
+    if (!node) {
+        return false;
+    }
+    return node === editable || isContentEditableAncestor(node);
+}
+
 export const QWEB_STYLE_ATTRS = ["t-att-class", "t-attf-class", "t-att-style", "t-attf-style"];
 
 /**

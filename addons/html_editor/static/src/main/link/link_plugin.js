@@ -1,10 +1,21 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    closestElement,
+    descendants,
+    getPathBetweenTwoNodes,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
-import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
+import {
+    childNodeIndex,
+    DIRECTIONS,
+    leftPos,
+    nodeSize,
+    rightPos,
+} from "@html_editor/utils/position";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
 import {
     isElement,
@@ -374,7 +385,6 @@ export class LinkPlugin extends Plugin {
         on_will_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
         on_pasted_handlers: this.onPasteNormalizeLink.bind(this),
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),
-        on_inserted_handlers: this.handleAfterInsert.bind(this),
         on_will_remove_handlers: () => this.closeLinkTools(),
 
         /** Overrides */
@@ -387,6 +397,7 @@ export class LinkPlugin extends Plugin {
 
         /** Processors */
         clean_for_save_processors: (root) => this.removeEmptyLinks(root),
+        inserted_content_processors: this.processInsertedContent.bind(this),
         normalize_processors: this.normalizeLink.bind(this),
         to_inline_code_processors: (node) => {
             this.removeEmptyLinks(node);
@@ -397,6 +408,24 @@ export class LinkPlugin extends Plugin {
                 );
             }
             return node;
+        },
+        position_after_insertion_processors: (position, insertedRange) => {
+            const closestLink = closestElement(position[0], "a");
+            if (closestLink) {
+                const linkWasFullyInserted = !!getPathBetweenTwoNodes(
+                    ...insertedRange,
+                    NodeFilter.SHOW_ELEMENT,
+                    (node) =>
+                        node.contains(closestLink)
+                            ? NodeFilter.FILTER_ACCEPT
+                            : NodeFilter.FILTER_REJECT
+                ).next().value;
+                if (linkWasFullyInserted) {
+                    // We never want to continue writing in a link we just inserted.
+                    return [closestLink.parentElement, childNodeIndex(closestLink) + 1];
+                }
+            }
+            return position;
         },
     };
 
@@ -1429,8 +1458,7 @@ export class LinkPlugin extends Plugin {
         }
         [targetNode, targetOffset] = edge === "start" ? leftPos(targetNode) : rightPos(targetNode);
         blockToSplit = targetNode;
-        splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
-        return true;
+        return splitOrLineBreakCallback({ ...params, targetNode, targetOffset, blockToSplit });
     }
 
     handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
@@ -1455,16 +1483,15 @@ export class LinkPlugin extends Plugin {
         return true;
     }
 
-    handleAfterInsert(insertedNodes) {
-        for (const node of insertedNodes) {
-            if (node.nodeType === Node.ELEMENT_NODE) {
-                for (const link of selectElements(node, "A")) {
-                    if (link.getAttribute("href") === link.textContent && !this.isImage) {
-                        this.newlyInsertedLinks.add(link);
-                    }
+    processInsertedContent(insertedRange) {
+        for (const node of getPathBetweenTwoNodes(...insertedRange, NodeFilter.SHOW_ELEMENT)) {
+            for (const link of selectElements(node, "A")) {
+                if (link.getAttribute("href") === link.textContent && !this.isImage) {
+                    this.newlyInsertedLinks.add(link);
                 }
             }
         }
+        return insertedRange;
     }
 
     initializePopovers() {

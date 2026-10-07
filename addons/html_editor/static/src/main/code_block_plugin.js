@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { unwrapContents } from "@html_editor/utils/dom";
 import { isEmptyBlock, isZWS } from "@html_editor/utils/dom_info";
 import {
     childNodes,
@@ -11,8 +10,8 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
-
-/** @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_within_pre_processors */
+import { unwrapContents } from "@html_editor/utils/dom";
+import { PLAIN_TEXT_MODES } from "@html_editor/core/dom_plugin";
 
 const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
@@ -52,7 +51,12 @@ export class CodeBlockPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlockPRE.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
-        before_insert_processors: this.handleInsertWithinPre.bind(this),
+        plain_text_container_selectors: "pre",
+        multiline_plain_text_container_selectors: "pre",
+        fragment_to_insert_as_text_processors: withSequence(
+            Infinity,
+            this.processFragmentToInsertAsText.bind(this)
+        ),
     };
 
     blockFormatIsAvailable(selection) {
@@ -83,34 +87,38 @@ export class CodeBlockPlugin extends Plugin {
             isEmptyBlock(closestBlockNode)
         ) {
             // Remove the last empty block node within pre tag
-            const [beforeElement, afterElement] = this.dependencies.split.splitElementBlock({
+            const splitResult = this.dependencies.split.splitElementBlock({
                 targetNode,
                 targetOffset,
                 blockToSplit: closestBlockNode,
             });
-            const isPreBlock = beforeElement.nodeName === "PRE";
+            if (!splitResult.before || !splitResult.after) {
+                return splitResult;
+            }
+            const isPreBlock = splitResult.before.nodeName === "PRE";
             const baseContainer = isPreBlock
                 ? this.dependencies.baseContainer.createBaseContainer({
-                      children: [...afterElement.childNodes],
+                      children: [...splitResult.after.childNodes],
                   })
-                : afterElement;
+                : splitResult.after;
             if (isPreBlock) {
-                afterElement.replaceWith(baseContainer);
+                splitResult.after.replaceWith(baseContainer);
             } else {
-                beforeElement.remove();
-                closestPre.after(afterElement);
+                splitResult.before.remove();
+                closestPre.after(splitResult.after);
             }
             const dir = closestBlockNode.getAttribute("dir") || closestPre.getAttribute("dir");
             if (dir) {
                 baseContainer.setAttribute("dir", dir);
             }
             this.dependencies.selection.setCursorStart(baseContainer);
+            return true;
         } else {
             const lineBreak = this.document.createElement("br");
             targetNode.insertBefore(lineBreak, targetNode.childNodes[targetOffset]);
             this.dependencies.selection.setCursorEnd(lineBreak);
+            return { lineBreaks: [lineBreak] };
         }
-        return true;
     }
 
     handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
@@ -133,22 +141,14 @@ export class CodeBlockPlugin extends Plugin {
         return true;
     }
 
-    handleInsertWithinPre(insertContainer, block) {
-        if (block.nodeName !== "PRE") {
-            return insertContainer;
-        }
-        insertContainer = this.processThrough(
-            "before_insert_within_pre_processors",
-            insertContainer
-        );
+    processFragmentToInsertAsText(fragment, plainTextMode) {
+        const isMultiline = plainTextMode === PLAIN_TEXT_MODES.MULTI_LINE;
         const isDeepestBlock = (node) =>
             isBlock(node) && ![...node.querySelectorAll("*")].some(isBlock);
-        let linebreak;
         const processNode = (node) => {
             const children = childNodes(node);
-            if (isDeepestBlock(node) && node.nextSibling) {
-                linebreak = this.document.createTextNode("\n");
-                node.append(linebreak);
+            if (isMultiline && isDeepestBlock(node) && node.nextSibling) {
+                node.append(this.document.createTextNode("\n"));
             }
             if (node.nodeType === Node.ELEMENT_NODE) {
                 unwrapContents(node);
@@ -157,9 +157,9 @@ export class CodeBlockPlugin extends Plugin {
                 processNode(child);
             }
         };
-        for (const node of childNodes(insertContainer)) {
+        for (const node of childNodes(fragment)) {
             processNode(node);
         }
-        return insertContainer;
+        return fragment;
     }
 }

@@ -155,6 +155,17 @@ export function descendants(node, posterity = []) {
     return posterity;
 }
 
+export function getTextNodesIterator(el) {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    walker[Symbol.iterator] = () => ({
+        next() {
+            const value = walker.nextNode();
+            return { value, done: !value };
+        },
+    });
+    return walker;
+}
+
 /**
  * Values which can be returned while browsing the DOM which gives information
  * to why the path ended.
@@ -194,13 +205,13 @@ export function createDOMPathGenerator(
 ) {
     const nextDeepest =
         direction === DIRECTIONS.LEFT
-            ? (node) => lastLeaf(node.previousSibling, stopTraverseFunction)
-            : (node) => firstLeaf(node.nextSibling, stopTraverseFunction);
+            ? (node) => lastLeaf(node.previousSibling, { stopTraverseFunction })
+            : (node) => firstLeaf(node.nextSibling, { stopTraverseFunction });
 
     const firstNode =
         direction === DIRECTIONS.LEFT
-            ? (node, offset) => lastLeaf(node.childNodes[offset - 1], stopTraverseFunction)
-            : (node, offset) => firstLeaf(node.childNodes[offset], stopTraverseFunction);
+            ? (node, offset) => lastLeaf(node.childNodes[offset - 1], { stopTraverseFunction })
+            : (node, offset) => firstLeaf(node.childNodes[offset], { stopTraverseFunction });
 
     // Note "reasons" is a way for the caller to be able to know why the
     // generator ended yielding values.
@@ -243,12 +254,21 @@ export function createDOMPathGenerator(
  * Returns the deepest child in last position.
  *
  * @param {Node} node
- * @param {Function} [stopTraverseFunction]
+ * @param {Object} [options = {}]
+ * @param {Function} [options.stopTraverseFunction]
+ * @param {Function} [options.predicate]
  * @returns {Node}
  */
-export function lastLeaf(node, stopTraverseFunction) {
+export function lastLeaf(node, { stopTraverseFunction, predicate } = {}) {
     while (node && node.lastChild && !(stopTraverseFunction && stopTraverseFunction(node))) {
-        node = node.lastChild;
+        let next = node.lastChild;
+        while (next && predicate && !predicate(next)) {
+            next = next.previousSibling;
+            if (!next) {
+                return node;
+            }
+        }
+        node = next;
     }
     return node;
 }
@@ -256,12 +276,21 @@ export function lastLeaf(node, stopTraverseFunction) {
  * Returns the deepest child in first position.
  *
  * @param {Node} node
- * @param {Function} [stopTraverseFunction]
+ * @param {Object} [options = {}]
+ * @param {Function} [options.stopTraverseFunction]
+ * @param {Function} [options.predicate]
  * @returns {Node}
  */
-export function firstLeaf(node, stopTraverseFunction) {
+export function firstLeaf(node, { stopTraverseFunction, predicate } = {}) {
     while (node && node.firstChild && !(stopTraverseFunction && stopTraverseFunction(node))) {
-        node = node.firstChild;
+        let next = node.firstChild;
+        while (next && predicate && !predicate(next)) {
+            next = next.nextSibling;
+            if (!next) {
+                return node;
+            }
+        }
+        node = next;
     }
     return node;
 }
@@ -372,6 +401,39 @@ export function traverseNode(node, traverseChildrenPredicate) {
     }
 }
 
+// TODO AGE: test!
+export const getPathBetweenTwoNodes = function* (start, end, whatToShow, filter) {
+    if (!start) {
+        return;
+    }
+    const root = start === end ? start : getCommonAncestor([start, end]);
+    const walker = document.createTreeWalker(root, whatToShow, filter);
+    walker.currentNode = start;
+
+    // Yield `start` if it passes the filters.
+    const nodeTypeFlag = 2 ** (start.nodeType - 1); // Convert `NodeType` into matching `NodeFilter`
+    if (!whatToShow || (whatToShow & nodeTypeFlag) !== 0) {
+        if (!filter) {
+            yield start;
+        } else {
+            const filterFunction = typeof filter === "function" ? filter : filter.acceptNode;
+            const isRejected = (node) => filterFunction(node) === NodeFilter.FILTER_REJECT;
+            if (
+                filterFunction(start) === NodeFilter.FILTER_ACCEPT &&
+                !ancestors(start, root).some(isRejected)
+            ) {
+                yield start;
+            }
+        }
+    }
+
+    let node = walker.nextNode();
+    while (node && !(end.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_FOLLOWING)) {
+        yield node;
+        node = walker.nextNode();
+    }
+};
+
 /**
  * Moves keyboard focus to the next or previous focusable
  * element in the given list of elements.
@@ -391,4 +453,20 @@ export function trapFocus(elements, backward = false) {
         (currentIndex + (backward ? -1 : 1) + focusableElements.length) % focusableElements.length;
 
     focusableElements[nextIndex]?.focus();
+}
+
+/**
+ * Get distinct connected parents of nodes
+ *
+ * @param {Iterable} nodes
+ * @returns {Set}
+ */
+export function getConnectedParents(nodes) {
+    const parents = new Set();
+    for (const node of nodes) {
+        if (node.isConnected && node.parentElement) {
+            parents.add(node.parentElement);
+        }
+    }
+    return parents;
 }
