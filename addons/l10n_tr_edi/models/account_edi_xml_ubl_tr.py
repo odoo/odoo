@@ -9,11 +9,9 @@ from odoo.exceptions import UserError
 
 from odoo.tools import float_compare, float_round, frozendict, html2plaintext
 
+from odoo.addons.l10n_tr_edi.const import GIB_RETURN_INVOICE_TYPES
 from odoo.addons.l10n_tr_edi.tools.clean_node_dict import clean_node_dict
 from odoo.addons.l10n_tr_edi.tools.ubl_tr_invoice import TrInvoice
-
-# InvoiceTypeCodes representing refunds in Nilvera documents.
-TR_REFUND_TYPE_CODES = {'IADE', 'TEVKIFATIADE'}
 
 
 class AccountEdiXmlUblTr(models.AbstractModel):
@@ -64,7 +62,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _add_invoice_header_nodes(self, document_node, vals):
         super()._add_invoice_header_nodes(document_node, vals)
-        # The Nilvera Extended flow is only for out_invoice and out_refund type
+        # The UBL-TR invoice header is only for out_invoice and out_refund type
         if vals['document_type'] not in {'invoice', 'credit_note'}:
             return
 
@@ -72,13 +70,13 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
         # Check the customer status if it hasn't been done before as it's needed for profile_id
         if invoice.partner_id.l10n_tr_edi_customer_status == 'not_checked':
-            invoice.partner_id._check_nilvera_customer()
+            invoice.partner_id.with_company(invoice.company_id)._l10n_tr_edi_fetch_customer_status()
 
         if invoice._l10n_tr_edi_check_negative_lines():
-            raise UserError(self.env._("Nilvera portal cannot process negative quantity nor negative price on invoice lines"))
+            raise UserError(self.env._("A Turkish e-Invoice cannot contain a negative quantity or a negative price on its lines."))
 
         # Using _get_sequence_format_param to extract the invoice sequence components for various formats.
-        # To send an invoice to Nilvera, the format needs to follow ABC2009123456789.
+        # The GİB invoice number needs to follow the format ABC2009123456789.
         _, parts = invoice._get_sequence_format_param(invoice.name or "")
         prefix, year, number = parts['prefix1'][:3], parts['year'], str(parts['seq']).zfill(9)
         invoice_id = f"{prefix.upper()}{year}{number}"
@@ -1135,7 +1133,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         move_type, qty_factor = super()._get_import_document_amount_sign(tree)
 
         invoice_type_code = tree.findtext('.//{*}InvoiceTypeCode')
-        if invoice_type_code in TR_REFUND_TYPE_CODES:
+        if invoice_type_code in GIB_RETURN_INVOICE_TYPES:
             return 'refund', qty_factor
 
         return move_type, qty_factor
@@ -1189,13 +1187,23 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'invoice_line_ids': note_lines,
         })
 
-        if scenario == 'TICARIFATURA' and invoice.move_type in {'in_invoice', 'out_invoice'}:
+        self._l10n_tr_match_refund_reversed_entry(invoice, tree)
+
+        if channel := invoice.env.context.get('l10n_tr_edi_received_document'):
+            # Received from the company's provider, so already accepted by the GİB. The channel it came from is
+            # its type, whatever the partner's GİB status says.
+            invoice._l10n_tr_edi_set_document_state(
+                'accepted', invoice.company_id.l10n_tr_edi_provider, document_type=channel,
+            )
+        if (
+            invoice.l10n_tr_gib_invoice_scenario == 'TICARIFATURA'
+            and invoice.move_type in {'in_invoice', 'out_invoice'}
+            and invoice.l10n_tr_edi_send_status == 'succeed'
+        ):
             try:
                 # Don't want to block the import in case status retrieval fails
                 invoice.l10n_tr_action_fetch_ticarifatura_response()
             except UserError as e:
                 logs.append(self.env._("Failed to fetch TICARIFATURA response: %s", str(e)))
-
-        self._l10n_tr_match_refund_reversed_entry(invoice, tree)
 
         return logs
