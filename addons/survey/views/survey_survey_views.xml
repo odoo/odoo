@@ -269,7 +269,7 @@
                         <field name="color" widget="kanban_color_picker"/>
                     </div>
                     <div t-name="card"
-                        t-attf-class="o_survey_kanban_card #{record.certification.raw_value ? 'o_survey_kanban_card_certification' : ''} #{isGrouped ? 'd-flex flex-column gap-3' : 'grid me-md-3 my-auto'}">
+                        t-attf-class="o_survey_kanban_card #{record.certification.raw_value ? 'o_survey_kanban_card_certification' : ''} #{isGrouped ? 'd-flex flex-column gap-3' : 'grid my-auto'}">
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" class="d-contents"/>
                         <div class="g-col-12 g-col-md-4 g-col-lg-3">
                             <div class="d-flex flex-grow-1 flex-column">
@@ -313,7 +313,7 @@
                                 <field name="user_id" widget="many2one_avatar_user"/>
                             </div>
                         </div>
-                        <div t-if="!selection_mode and !isGrouped" class="g-col-12 g-col-md-8 g-col-lg-3 d-flex gap-2 justify-content-between justify-content-md-end align-items-start order-2 order-md-1 order-lg-2">
+                        <div t-if="!selection_mode and !isGrouped" class="g-col-12 g-col-md-8 g-col-lg-3 d-flex gap-2 justify-content-between justify-content-md-end align-items-start order-2 order-md-1 order-lg-2" t-att-class="{ 'me-5': !record.active.raw_value }">
                             <div class="d-flex d-empty-none gap-1 flex-wrap justify-content-end">
                                 <button name="action_send_survey"
                                         string="Share" type="object"
@@ -346,7 +346,14 @@
                                     End Live Session
                                 </button>
                             </div>
-                            <field t-if="!selection_mode" name="activity_ids" widget="kanban_activity" options="{'button_classes': 'btn btn-light'}"/>
+                            <div class="d-flex gap-1">
+                                <field t-if="!selection_mode" name="activity_ids" widget="kanban_activity" options="{'button_classes': 'btn btn-light'}"/>
+                                <div class="position-absolute position-md-relative top-0 end-0 m-2 m-md-0">
+                                    <t t-call="menu">
+                                        <t t-set="customMenuClasses" t-value="'btn btn-light'"/>
+                                    </t>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </templates>
