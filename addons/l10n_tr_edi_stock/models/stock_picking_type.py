@@ -4,11 +4,11 @@ from odoo.exceptions import UserError
 
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
-    l10n_tr_nilvera_gib_sequence_code = fields.Char('GIB Sequence Prefix', compute="_compute_l10n_tr_nilvera_gib_sequence_code")
+    l10n_tr_edi_gib_sequence_code = fields.Char('GIB Sequence Prefix', compute="_compute_l10n_tr_edi_gib_sequence_code")
 
     @api.model
-    def _get_gib_sequence_prefix_from_sequence_code(self, sequence_code):
-        """Return the 3-char GIB prefix parsed from the sequence code for NILVERA.
+    def _l10n_tr_edi_get_gib_sequence_prefix_from_sequence_code(self, sequence_code):
+        """Return the 3-char GIB prefix parsed from the sequence code.
 
         Rules:
         - Prefix must be exactly 3 alphanumeric characters.
@@ -27,19 +27,19 @@ class StockPickingType(models.Model):
         return gib_prefix if gib_prefix.isalnum() else False
 
     @api.depends('sequence_code', 'company_id.account_fiscal_country_id.code', 'code')
-    def _compute_l10n_tr_nilvera_gib_sequence_code(self):
+    def _compute_l10n_tr_edi_gib_sequence_code(self):
         for picking_type in self:
             is_tr = (picking_type.company_id.account_fiscal_country_id.code == 'TR')
             is_outgoing = (picking_type.code == 'outgoing')
-            picking_type.l10n_tr_nilvera_gib_sequence_code = (
-                picking_type._get_gib_sequence_prefix_from_sequence_code(picking_type.sequence_code)
+            picking_type.l10n_tr_edi_gib_sequence_code = (
+                picking_type._l10n_tr_edi_get_gib_sequence_prefix_from_sequence_code(picking_type.sequence_code)
                 if is_tr and is_outgoing
                 else False
             )
 
     @api.onchange('sequence_code')
     def _onchange_sequence_code(self):
-        gib_prefix = self._get_gib_sequence_prefix_from_sequence_code(self.sequence_code)
+        gib_prefix = self._l10n_tr_edi_get_gib_sequence_prefix_from_sequence_code(self.sequence_code)
         if (
             self.company_id.account_fiscal_country_id.code == 'TR'
             and self.code == 'outgoing'
