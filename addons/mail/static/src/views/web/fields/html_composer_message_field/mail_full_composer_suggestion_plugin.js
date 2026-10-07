@@ -15,7 +15,7 @@ export class MailFullComposerSuggestionPlugin extends Plugin {
     setup() {
         this.mentionList = this.dependencies.overlay.createOverlay(MentionList, {
             hasAutofocus: true,
-            className: "popover o-mail-MentionPlugin-overlay",
+            className: "popover bg-view rounded-4 overflow-hidden o-mail-MentionPlugin-overlay",
         });
     }
 
