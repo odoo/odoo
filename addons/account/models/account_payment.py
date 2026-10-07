@@ -705,7 +705,7 @@ class AccountPayment(models.Model):
 
             pay.qr_code = None
 
-    @api.depends('move_id.line_ids.matched_debit_ids', 'move_id.line_ids.matched_credit_ids')
+    @api.depends('move_id.line_ids.matched_debit_ids', 'move_id.line_ids.matched_credit_ids', 'invoice_ids')
     def _compute_stat_buttons_from_reconciliation(self):
         ''' Retrieve the invoices reconciled to the payments through the reconciliation (account.partial.reconcile). '''
         stored_payments = self.filtered('id')
