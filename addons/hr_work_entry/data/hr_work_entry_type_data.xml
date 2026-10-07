@@ -5073,6 +5073,7 @@
         <field name="code">RH_LEAVE</field>
         <field name="country_id" ref="base.ph"/>
         <field name="count_as">absence</field>
+        <field name="resource_calendar_selectable" eval="True"/>
     </record>
     <record id="l10n_ph_hr_payroll_dh_leave" model="hr.work.entry.type">
         <field name="name">Double Holiday</field>
@@ -5080,6 +5081,7 @@
         <field name="code">DH_LEAVE</field>
         <field name="country_id" ref="base.ph"/>
         <field name="count_as">absence</field>
+        <field name="resource_calendar_selectable" eval="True"/>
     </record>
     <record id="l10n_ph_hr_payroll_snwh_leave" model="hr.work.entry.type">
         <field name="name">Special Non-Working Holiday</field>
@@ -5087,6 +5089,7 @@
         <field name="code">SNWH_LEAVE</field>
         <field name="country_id" ref="base.ph"/>
         <field name="count_as">absence</field>
+        <field name="resource_calendar_selectable" eval="True"/>
         <field name="amount_rate">0.0</field>
     </record>
 
