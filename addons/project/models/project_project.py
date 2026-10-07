@@ -1022,12 +1022,7 @@ class ProjectProject(models.Model):
         return action
 
     def toggle_favorite(self):
-        favorite_projects = not_fav_projects = self.env['project.project'].sudo()
-        for project in self:
-            if self.env.user in project.favorite_user_ids:
-                favorite_projects |= project
-            else:
-                not_fav_projects |= project
+        favorite_projects, not_fav_projects = self.sudo().partitioned(lambda project: self.env.user in project.favorite_user_ids)
 
         # Project User has no write access for project.
         not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
