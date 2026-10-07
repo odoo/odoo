@@ -69,7 +69,7 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         )
         return response.json()
 
-    def _post_self_order(self, lines, partner=None, partner_token=VALID_TOKEN, order_id=None, order_uuid=None):
+    def _post_self_order(self, lines, partner=None, partner_token=VALID_TOKEN, order_id=None, order_uuid=None, applied_codes=None, order_values=None):
         """Send a raw order payload on the public self-order endpoint.
 
         By default the order is made for `loyalty_partner`, backed by a valid identification
@@ -94,6 +94,9 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         }
         if partner_token:
             order["partner_token"] = partner_token
+        if applied_codes is not None:
+            order["applied_codes"] = applied_codes
+        order.update(order_values or {})
         result = self._jsonrpc("/pos-self-order/process-order/kiosk", {"table_identifier": None, "order": order})
         return result, order_uuid
 
@@ -458,3 +461,187 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         self.pos_config.self_ordering_mode = 'mobile'
         mobile_token = self.loyalty_partner._get_self_order_token(self.pos_config)
         self.assertAlmostEqual(self._expiration(mobile_token) - now, 90 * 24 * 3600, delta=60)
+
+    # ------------------------------------------------------------------
+    # Codes: the code, not a card or program id, proves a code-based reward
+    # ------------------------------------------------------------------
+
+    def _create_promo_code_program(self, code):
+        return self.env['loyalty.program'].create({
+            'name': 'Promo Code Program',
+            'program_type': 'promo_code',
+            'trigger': 'with_code',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'mode': 'with_code',
+                'code': code,
+                'reward_point_amount': 1,
+                'reward_point_mode': 'order',
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'product',
+                'reward_product_id': self.cola.id,
+                'reward_product_qty': 1,
+                'required_points': 1,
+            })],
+        })
+
+    def _create_gift_card(self, code, points):
+        program = self.env['loyalty.program'].create({
+            'name': 'Gift Cards',
+            'program_type': 'gift_card',
+            'applies_on': 'future',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'money',
+                'reward_point_amount': 1,
+                'product_ids': self.env.ref('loyalty.gift_card_product_50'),
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'per_point',
+                'discount': 1,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+        return self.env['loyalty.card'].create({'program_id': program.id, 'code': code, 'points': points})
+
+    def _gift_card_order_lines(self, card):
+        """10 colas (25.30 tax included) fully paid by `card`: the order totals 0 and is auto-paid."""
+        gift_card_line = self._reward_line(card.program_id.reward_ids.discount_line_product_id, card.program_id.reward_ids, card)
+        gift_card_line[2]['price_unit'] = -25.30
+        return [self._product_line(self.cola, 10), gift_card_line]
+
+    def test_promo_code_order_with_its_code_is_accepted(self):
+        """The code entered by the customer must reach the order, or a with_code rule earns nothing."""
+        program = self._create_promo_code_program('PROMO-SELF')
+        result, order_uuid = self._post_self_order([
+            self._product_line(self.free, 1),
+            self._reward_line(self.cola, program.reward_ids),
+        ], applied_codes=['PROMO-SELF'])
+        self.assertNotIn('error', result, result.get('error'))
+        order = self.env['pos.order'].search([('uuid', '=', order_uuid)])
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(order.applied_codes, ['PROMO-SELF'])
+
+    @mute_logger('odoo.http')
+    def test_promo_code_reward_without_its_code_is_refused(self):
+        program = self._create_promo_code_program('PROMO-SELF')
+        result, order_uuid = self._post_self_order([
+            self._product_line(self.free, 1),
+            self._reward_line(self.cola, program.reward_ids),
+        ])
+        self.assertIn('error', result, "A code-activated reward can't be claimed without its code")
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]))
+
+    @mute_logger('odoo.http')
+    def test_anonymous_card_by_id_only_is_refused(self):
+        """A gift card's id is a guessable integer: only its code proves the client holds it."""
+        card = self._create_gift_card('GIFT-SELF-1', 100)
+        result, order_uuid = self._post_self_order(self._gift_card_order_lines(card))
+        self.assertIn('error', result, "A gift card referenced by id only must be refused")
+        self.assertFalse(self.env['pos.order'].search([('uuid', '=', order_uuid)]))
+        card.invalidate_recordset()
+        self.assertEqual(card.points, 100, "The gift card must not have been debited")
+
+    def test_anonymous_card_with_its_code_is_accepted(self):
+        card = self._create_gift_card('GIFT-SELF-1', 100)
+        result, order_uuid = self._post_self_order(self._gift_card_order_lines(card), applied_codes=['GIFT-SELF-1'])
+        self.assertNotIn('error', result, result.get('error'))
+        self.assertEqual(self.env['pos.order'].search([('uuid', '=', order_uuid)]).state, 'paid')
+        card.invalidate_recordset()
+        self.assertAlmostEqual(card.points, 74.70)
+
+    def test_applied_codes_are_loaded_in_self_order(self):
+        """The self-order client only sends the fields it loads: applied_codes must be one of them."""
+        self.assertIn('applied_codes', self.env['pos.order']._load_pos_self_data_fields(self.pos_config))
+
+    # ------------------------------------------------------------------
+    # Loyalty state (active_rewards, active_payment_programs, disabled_program_ids)
+    # ------------------------------------------------------------------
+    # The classic POS replays this state when it opens a self-order (recomputeRewards), with
+    # none of the self-order checks: what reaches the order must be what a genuine self-order
+    # client could have built.
+
+    def _post_draft_order_with_state(self, applied_codes=None, **state):
+        """A non-free order (it stays draft) carrying the given loyalty state."""
+        cola_line = [Command.CREATE, 0, {
+            "uuid": str(uuid4()), "product_id": self.cola.id, "qty": 1, "price_unit": self.cola.lst_price,
+        }]
+        result, order_uuid = self._post_self_order([cola_line], applied_codes=applied_codes, order_values=state)
+        self.assertNotIn('error', result, result.get('error'))
+        return self.env['pos.order'].search([('uuid', '=', order_uuid)])
+
+    def test_loyalty_state_is_kept(self):
+        """A self-order's rewards must reach the order, so a classic POS can take it over."""
+        partner_card = self.env['loyalty.card'].create({
+            'program_id': self.program.id,
+            'partner_id': self.loyalty_partner.id,
+            'points': 500,
+        })
+        gift_card = self._create_gift_card('GIFT-SELF-1', 100)
+        state = {
+            'active_rewards': [{
+                'reward_id': self.reward.id,
+                'qty': 1,
+                'reward_product_id': self.free.id,
+                'attribute_value_ids': [],
+                'attribute_custom_values': {},
+                'card_id': partner_card.id,
+            }],
+            'active_payment_programs': [{
+                'reward_id': gift_card.program_id.reward_ids.id,
+                'card_id': gift_card.id,
+                'amount': 10,
+            }],
+            'disabled_program_ids': [self.program.id],
+        }
+        order = self._post_draft_order_with_state(applied_codes=['GIFT-SELF-1'], **state)
+        self.assertEqual(order.active_rewards, state['active_rewards'])
+        self.assertEqual(order.active_payment_programs, state['active_payment_programs'])
+        self.assertEqual(order.disabled_program_ids, state['disabled_program_ids'])
+
+    def test_forged_loyalty_state_is_stripped(self):
+        other_config = self.env['pos.config'].create({'name': 'Other Config'})
+        foreign_program = self.env['loyalty.program'].create({
+            'name': 'Foreign Program',
+            'program_type': 'loyalty',
+            'pos_config_ids': [Command.link(other_config.id)],
+            'reward_ids': [Command.create({
+                'reward_type': 'product',
+                'reward_product_id': self.free.id,
+                'required_points': 1,
+            })],
+        })
+        other_partner_card = self.env['loyalty.card'].create({
+            'program_id': self.program.id,
+            'partner_id': self.other_partner.id,
+            'points': 500,
+        })
+        gift_card = self._create_gift_card('GIFT-SELF-1', 100)
+        order = self._post_draft_order_with_state(
+            active_rewards=[
+                {'reward_id': foreign_program.reward_ids.id},  # program unavailable on this config
+                {'reward_id': self.reward.id, 'reward_product_id': self.cola.id},  # product not granted
+                {'reward_id': self.reward.id, 'card_id': other_partner_card.id},  # card of someone else
+                {'reward_id': self.reward.id, 'attribute_value_ids': [999999]},  # unknown attribute
+                {'reward_id': self.reward.id, 'qty': -5},  # nonsensical quantity
+                'not a dict',
+                {'reward_id': self.reward.id, 'injected': 'value'},  # kept, without the unknown key
+            ],
+            active_payment_programs=[
+                {'reward_id': gift_card.program_id.reward_ids.id, 'card_id': gift_card.id},  # code not entered
+                {'reward_id': self.reward.id, 'card_id': gift_card.id},  # reward of another program
+            ],
+            disabled_program_ids=['x', 999999, foreign_program.id, self.program.id],
+        )
+        self.assertEqual(order.active_rewards, [{'reward_id': self.reward.id}])
+        self.assertFalse(order.active_payment_programs)  # an empty Json list is stored as NULL
+        self.assertEqual(order.disabled_program_ids, [self.program.id])
+
+    def test_loyalty_state_is_loaded_in_self_order(self):
+        fields = self.env['pos.order']._load_pos_self_data_fields(self.pos_config)
+        for field in ('active_rewards', 'active_payment_programs', 'disabled_program_ids'):
+            self.assertIn(field, fields)

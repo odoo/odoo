@@ -382,4 +382,30 @@ describe("pos.order - loyalty", () => {
         ).toBe(customizationValue.id);
         expect(rewardLine.custom_attribute_value_ids[0].custom_value).toBe("Happy Birthday");
     });
+
+    test("a multi-product reward saved with its product id is rebuilt on that product", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [7]);
+
+        // Reward 3 (program 7) costs 1 point, card 4 gives partner 1 the 3 points it needs.
+        const defaultProduct = models["product.product"].get(5);
+        const chosenProduct = models["product.product"].get(6);
+        const reward = models["loyalty.reward"].get(3);
+        reward.update({
+            multi_product: true,
+            reward_product_id: defaultProduct,
+            reward_product_ids: [defaultProduct, chosenProduct],
+        });
+        store.setPartnerToCurrentOrder(models["res.partner"].get(1));
+
+        // As saved on the order (IndexedDB, server, another POS): a JSON id, not a record
+        order.active_rewards = [{ reward_id: reward.id, reward_product_id: chosenProduct.id }];
+        order.recomputeRewards();
+        await tick();
+
+        const rewardLine = order.getOrderlines().find((line) => line.is_reward_line);
+        expect(rewardLine?.product_id?.id).toBe(chosenProduct.id);
+    });
 });

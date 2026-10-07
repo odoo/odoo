@@ -228,7 +228,7 @@ patch(ControlButtons.prototype, {
                         reward.reward_product_id ||
                         reward.reward_product_ids[0];
                     let attribute_value_ids = [];
-                    let attribute_custom_values = [];
+                    let attribute_custom_values = {};
                     if (
                         reward.reward_type == "product" &&
                         product.product_tmpl_id.isConfigurable()
@@ -248,7 +248,7 @@ patch(ControlButtons.prototype, {
 
                     order.active_rewards.push({
                         reward_id: reward.id,
-                        reward_product_id,
+                        reward_product_id: reward_product_id?.id,
                         attribute_value_ids,
                         attribute_custom_values,
                     });
