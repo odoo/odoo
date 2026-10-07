@@ -1,9 +1,10 @@
 from freezegun import freeze_time
-from odoo import Command
 
-from odoo.addons.l10n_tr_edi.tests.test_xml_ubl_tr_common import TestUBLTRCommon
+from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import file_open
+
+from odoo.addons.l10n_tr_edi.tests.test_xml_ubl_tr_common import TestUBLTRCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')

@@ -9,11 +9,9 @@ from odoo.exceptions import UserError
 
 from odoo.tools import float_compare, float_round, frozendict, html2plaintext
 
+from odoo.addons.l10n_tr_edi.const import GIB_RETURN_INVOICE_TYPES
 from odoo.addons.l10n_tr_edi.tools.clean_node_dict import clean_node_dict
 from odoo.addons.l10n_tr_edi.tools.ubl_tr_invoice import TrInvoice
-
-# InvoiceTypeCodes representing refunds in Nilvera documents.
-TR_REFUND_TYPE_CODES = {'IADE', 'TEVKIFATIADE'}
 
 
 class AccountEdiXmlUblTr(models.AbstractModel):
@@ -64,7 +62,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _add_invoice_header_nodes(self, document_node, vals):
         super()._add_invoice_header_nodes(document_node, vals)
-        # The Nilvera Extended flow is only for out_invoice and out_refund type
+        # The UBL-TR invoice header is only for out_invoice and out_refund type
         if vals['document_type'] not in {'invoice', 'credit_note'}:
             return
 
@@ -72,16 +70,12 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
         # Check the customer status if it hasn't been done before as it's needed for profile_id
         if invoice.partner_id.l10n_tr_edi_customer_status == 'not_checked':
-            invoice.partner_id._check_nilvera_customer()
+            invoice.partner_id.with_company(invoice.company_id)._l10n_tr_edi_fetch_customer_status()
 
         if invoice._l10n_tr_edi_check_negative_lines():
-            raise UserError(self.env._("Nilvera portal cannot process negative quantity nor negative price on invoice lines"))
+            raise UserError(self.env._("A Turkish e-Invoice cannot contain a negative quantity or a negative price on its lines."))
 
-        # Using _get_sequence_format_param to extract the invoice sequence components for various formats.
-        # To send an invoice to Nilvera, the format needs to follow ABC2009123456789.
-        _, parts = invoice._get_sequence_format_param(invoice.name or "")
-        prefix, year, number = parts['prefix1'][:3], parts['year'], str(parts['seq']).zfill(9)
-        invoice_id = f"{prefix.upper()}{year}{number}"
+        invoice_id = invoice._l10n_tr_edi_get_gib_invoice_number()
 
         document_node.update({
             'cbc:CustomizationID': {'_text': 'TR1.2'},
@@ -243,7 +237,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         return f'YALNIZ : {text_i} {currency.name} {text_d} {currency.with_context(lang="tr_TR").currency_subunit_label}'.upper()
 
     def _add_invoice_accounting_customer_party_nodes(self, document_node, vals):
-        """Extend invoice accounting customer party nodes for TR E-Invoicing.
+        """Extend invoice accounting customer party nodes for TR e-Invoicing.
 
         For export invoice, the AccountingCustomerParty is set to the static
         Turkish Ministry of Customs and Trade node.
@@ -257,7 +251,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     @api.model
     def _add_invoice_buyer_customer_party_nodes(self, document_node, vals):
-        """Adds BuyerCustomerParty node for TR E-Invoicing.
+        """Adds BuyerCustomerParty node for TR e-Invoicing.
 
         For export invoices, a buyer party node is created based on the customer,
         and the PartyIdentification values are updated to indicate an export customer.
@@ -752,7 +746,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     @api.model
     def _get_ministry_party_node(self):
-        """Return the fixed ministry (party) information required for TR E-invoicing.
+        """Return the fixed ministry (party) information required for TR e-invoicing.
 
         This method provides identification, address, tax, and naming
         details of the Turkish Ministry of Customs and Trade.
@@ -932,7 +926,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             • Return "EARSIVFATURA" for e-archive invoices.
 
         :param invoice: account.move record (the invoice).
-        :return: str, TR profile ID to be used in E-invoicing.
+        :return: str, TR profile ID to be used in e-invoicing.
         """
         if invoice.l10n_tr_is_export_invoice:
             return 'IHRACAT'
@@ -942,7 +936,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     @api.model
     def _get_withholding_tax_total_node(self, vals):
-        """Build the TaxTotal node for withholding taxes in TR E-Invoicing.
+        """Build the TaxTotal node for withholding taxes in TR e-Invoicing.
 
         This method calculates total and subtotal withholding tax amounts.
 
@@ -1135,7 +1129,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         move_type, qty_factor = super()._get_import_document_amount_sign(tree)
 
         invoice_type_code = tree.findtext('.//{*}InvoiceTypeCode')
-        if invoice_type_code in TR_REFUND_TYPE_CODES:
+        if invoice_type_code in GIB_RETURN_INVOICE_TYPES:
             return 'refund', qty_factor
 
         return move_type, qty_factor
@@ -1189,13 +1183,23 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'invoice_line_ids': note_lines,
         })
 
-        if scenario == 'TICARIFATURA' and invoice.move_type in {'in_invoice', 'out_invoice'}:
+        self._l10n_tr_match_refund_reversed_entry(invoice, tree)
+
+        if channel := invoice.env.context.get('l10n_tr_edi_received_document'):
+            # Received from the company's provider, so already accepted by the GİB. The channel it came from is
+            # its type, whatever the partner's GİB status says.
+            invoice._l10n_tr_edi_set_document_state(
+                'accepted', invoice.company_id.l10n_tr_edi_provider, document_type=channel,
+            )
+        if (
+            invoice.l10n_tr_gib_invoice_scenario == 'TICARIFATURA'
+            and invoice.move_type in {'in_invoice', 'out_invoice'}
+            and invoice.l10n_tr_edi_send_status == 'succeed'
+        ):
             try:
                 # Don't want to block the import in case status retrieval fails
                 invoice.l10n_tr_action_fetch_ticarifatura_response()
             except UserError as e:
                 logs.append(self.env._("Failed to fetch TICARIFATURA response: %s", str(e)))
-
-        self._l10n_tr_match_refund_reversed_entry(invoice, tree)
 
         return logs

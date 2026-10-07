@@ -32,8 +32,6 @@ class AccountMoveLine(models.Model):
         readonly=False,
     )
 
-    l10n_tr_original_line_id = fields.Many2one("account.move.line", readonly=True)
-
     l10n_tr_original_quantity = fields.Float(
         string="Original Quantity",
         digits="Product Unit",

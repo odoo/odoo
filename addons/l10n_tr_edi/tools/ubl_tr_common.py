@@ -218,8 +218,7 @@ Despatch = {
     'cac:EstimatedDespatchPeriod': Period,
 }
 
-# cac:shipment has to be fully added here for l10n__nilvera_edispatch to be integrated with E-Invoicing
-# l10n__nilvera_edispatch.xml template has to be removed.
+# cac:Shipment has to be fully added here for the e-Dispatch to be integrated with e-Invoicing.
 GoodsItem = {
     'cbc:RequiredCustomsID': {},
 }
