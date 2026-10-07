@@ -1,7 +1,7 @@
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { isRecord, STORE_SYM } from "@mail/model/misc";
-import { nestedShallowEqual } from "@mail/utils/common/signal";
-import { Component, computed, proxy, shallowEqual, signal, useScope } from "@odoo/owl";
+import { computedShallowEqual } from "@mail/utils/common/signal";
+import { Component, computed, proxy, signal, useScope } from "@odoo/owl";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -721,9 +721,9 @@ export class UseActions {
         // only re-run when the visible set or order actually changes, and
         // otherwise keep a stable array identity so consumers do not
         // re-render for unrelated changes.
-        this.actionsComputed = computed(() => self._computeActions(), { equals: shallowEqual });
-        this.partitionComputed = computed(() => self._computePartition(), {
-            equals: nestedShallowEqual,
+        this.actionsComputed = computedShallowEqual(() => self._computeActions());
+        this.partitionComputed = computedShallowEqual(() => self._computePartition(), {
+            nested: true,
         });
         return self;
     }

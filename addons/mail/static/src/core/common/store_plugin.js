@@ -1,9 +1,8 @@
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import { formatLocalDateTime, resolveTimeZoneName } from "@mail/utils/common/dates";
 import { attClassObjectToString, generateEmojisOnHtml } from "@mail/utils/common/format";
-import { nestedShallowEqual } from "@mail/utils/common/signal";
 
-import { Plugin, proxy, shallowEqual, usePlugin } from "@odoo/owl";
+import { Plugin, proxy, usePlugin } from "@odoo/owl";
 
 import { location } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
@@ -46,7 +45,7 @@ export class Store extends BaseStore {
         return this.self_user?.partner_id || this.self_guest;
     }
     /** @type {{self: import("models").ResPartner | import("models").MailGuest, sequence: number}[]} */
-    selvesBySequence = this.computed(
+    selvesBySequence = this.computedShallowEqual(
         () => {
             const result = [];
             if (this.self_user?.partner_id) {
@@ -57,7 +56,7 @@ export class Store extends BaseStore {
             }
             return result.sort((a, b) => a.sequence - b.sequence);
         },
-        { equals: nestedShallowEqual }
+        { nested: true }
     );
     /** @type {boolean} */
     hasCannedResponses;
@@ -88,18 +87,16 @@ export class Store extends BaseStore {
     menu = { counter: 0 };
     chatHub = this.computed(() => this.ChatHub.insert({}));
     failures = fields.Many("Failure");
-    sortedFailures = this.computed(
-        () =>
-            [...this.failures].sort((f1, f2) => {
-                if (f1.lastMessage?.id && !f2.lastMessage?.id) {
-                    return -1;
-                }
-                if (!f1.lastMessage?.id && f2.lastMessage?.id) {
-                    return 1;
-                }
-                return f2.lastMessage?.id - f1.lastMessage?.id || f2.id - f1.id;
-            }),
-        { equals: shallowEqual }
+    sortedFailures = this.computedShallowEqual(() =>
+        [...this.failures].sort((f1, f2) => {
+            if (f1.lastMessage?.id && !f2.lastMessage?.id) {
+                return -1;
+            }
+            if (!f1.lastMessage?.id && f2.lastMessage?.id) {
+                return 1;
+            }
+            return f2.lastMessage?.id - f1.lastMessage?.id || f2.id - f1.id;
+        })
     );
     /** local settings of the current device (not stored server side) */
     settings = this.computed(() => this.Settings.insert({}));

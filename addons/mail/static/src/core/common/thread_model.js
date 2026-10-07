@@ -2,8 +2,6 @@ import { AND, fields, Record } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { shallowEqual } from "@odoo/owl";
-
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -133,12 +131,10 @@ export class Thread extends Record {
 
     autofocus = 0;
     activities = fields.Many("mail.activity");
-    sortedActivities = this.computed(
-        () =>
-            [...this.activities].sort(
-                (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id
-            ),
-        { equals: shallowEqual }
+    sortedActivities = this.computedShallowEqual(() =>
+        [...this.activities].sort(
+            (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id
+        )
     );
     create_uid = fields.One("res.users");
     /**
@@ -159,9 +155,9 @@ export class Thread extends Record {
     areAttachmentsLoaded = false;
     group_public_id = fields.One("res.groups");
     attachments = fields.Many("ir.attachment");
-    sortedAttachments = this.computed(() => [...this.attachments].sort((a1, a2) => a2.id - a1.id), {
-        equals: shallowEqual,
-    });
+    sortedAttachments = this.computedShallowEqual(() =>
+        [...this.attachments].sort((a1, a2) => a2.id - a1.id)
+    );
     can_react = true;
     /** @type {boolean|undefined} */
     close_chat_window;
@@ -226,9 +222,8 @@ export class Thread extends Record {
     /** @type {Array<[string,string]>} */
     priority_definition;
     needactionMessages = fields.Many("mail.message", { inverse: "threadAsNeedaction" });
-    sortedNeedactionMessages = this.computed(
-        () => [...this.needactionMessages].sort((m1, m2) => m1.id - m2.id),
-        { equals: shallowEqual }
+    sortedNeedactionMessages = this.computedShallowEqual(() =>
+        [...this.needactionMessages].sort((m1, m2) => m1.id - m2.id)
     );
     // FIXME: should be in the portal/frontend bundle but live chat can be loaded
     // before portal resulting in the field not being properly initialized.
@@ -286,15 +281,13 @@ export class Thread extends Record {
     pid;
     composerDisabled = this.computed(() => this.computeComposerDisabled());
     pinnedMessages = fields.Many("mail.message", { inverse: "threadAsPinned" });
-    sortedPinnedMessages = this.computed(
-        () =>
-            [...this.pinnedMessages].sort((m1, m2) => {
-                if (m1.pinned_at === m2.pinned_at) {
-                    return m2.id - m1.id;
-                }
-                return m1.pinned_at < m2.pinned_at ? 1 : -1;
-            }),
-        { equals: shallowEqual }
+    sortedPinnedMessages = this.computedShallowEqual(() =>
+        [...this.pinnedMessages].sort((m1, m2) => {
+            if (m1.pinned_at === m2.pinned_at) {
+                return m2.id - m1.id;
+            }
+            return m1.pinned_at < m2.pinned_at ? 1 : -1;
+        })
     );
 
     async fetchPinnedMessages() {
@@ -328,16 +321,13 @@ export class Thread extends Record {
         );
     }
 
-    attachmentsInWebClientView = this.computed(
-        () => {
-            const attachments = this.attachments.filter(
-                (attachment) => (attachment.isPdf || attachment.isImage) && !attachment.uploading
-            );
-            attachments.sort((a1, a2) => a2.id - a1.id);
-            return attachments;
-        },
-        { equals: shallowEqual }
-    );
+    attachmentsInWebClientView = this.computedShallowEqual(() => {
+        const attachments = this.attachments.filter(
+            (attachment) => (attachment.isPdf || attachment.isImage) && !attachment.uploading
+        );
+        attachments.sort((a1, a2) => a2.id - a1.id);
+        return attachments;
+    });
 
     get canPostMessage() {
         return this.hasWriteAccess || (this.hasReadAccess && this.canPostOnReadonly);
@@ -395,14 +385,11 @@ export class Thread extends Record {
         return this.messages.findLast((msg) => msg.persistent);
     }
 
-    newestPersistentAllMessages = this.computed(
-        () => {
-            const allPersistentMessages = this.allMessages.filter((message) => message.persistent);
-            allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
-            return allPersistentMessages;
-        },
-        { equals: shallowEqual }
-    );
+    newestPersistentAllMessages = this.computedShallowEqual(() => {
+        const allPersistentMessages = this.allMessages.filter((message) => message.persistent);
+        allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
+        return allPersistentMessages;
+    });
 
     newestPersistentOfAllMessage = this.computed(() => this.newestPersistentAllMessages[0]);
 
@@ -422,12 +409,11 @@ export class Thread extends Record {
         return this.messages.length === 0;
     }
 
-    nonEmptyMessages = this.computed(() => this.messages.filter((message) => !message.isEmpty), {
-        equals: shallowEqual,
-    });
-    persistentMessages = this.computed(
-        () => this.messages.filter((message) => message.persistent),
-        { equals: shallowEqual }
+    nonEmptyMessages = this.computedShallowEqual(() =>
+        this.messages.filter((message) => !message.isEmpty)
+    );
+    persistentMessages = this.computedShallowEqual(() =>
+        this.messages.filter((message) => message.persistent)
     );
 
     get prefix() {
@@ -553,9 +539,8 @@ export class Thread extends Record {
         this.pendingNewMessages = [];
     }
 
-    selvesBySequence = this.computed(
-        () => this.computeSelvesBySequence().sort((a, b) => a.sequence - b.sequence),
-        { equals: shallowEqual }
+    selvesBySequence = this.computedShallowEqual(() =>
+        this.computeSelvesBySequence().sort((a, b) => a.sequence - b.sequence)
     );
 
     computeSelvesBySequence() {

@@ -1,31 +1,26 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { useSearch } from "@mail/utils/common/hooks";
 
-import { computed, shallowEqual, useEffect } from "@odoo/owl";
+import { computed, useEffect } from "@odoo/owl";
 
 import { normalize } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
+import { computedShallowEqual } from "@mail/utils/common/signal";
 
 /** @type {MessagingMenu} */
 const messagingMenuPatch = {
     setup() {
         super.setup(...arguments);
-        this.filteredChannels = computed(
-            () => {
-                const filters = [...this.state().activePluginFilters];
-                if (this.state().selectedFilter) {
-                    filters.push(this.state().selectedFilter);
-                }
-                const channels = this.state().activeTab.channels.filter((c) =>
-                    filters.every((f) => !f.includesChannel || f.includesChannel(c))
-                );
-                return this.state().activeTab.getSortedChannels(
-                    this.state().selectedFilter,
-                    channels
-                );
-            },
-            { equals: shallowEqual }
-        );
+        this.filteredChannels = computedShallowEqual(() => {
+            const filters = [...this.state().activePluginFilters];
+            if (this.state().selectedFilter) {
+                filters.push(this.state().selectedFilter);
+            }
+            const channels = this.state().activeTab.channels.filter((c) =>
+                filters.every((f) => !f.includesChannel || f.includesChannel(c))
+            );
+            return this.state().activeTab.getSortedChannels(this.state().selectedFilter, channels);
+        });
         this.channels = computed(() => {
             if (this.state().searchTerm) {
                 return this.channelSearch.results;

@@ -1,8 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { shallowEqual } from "@odoo/owl";
-
 import { _t } from "@web/core/l10n/translation";
 
 /**
@@ -160,16 +158,12 @@ export class MessagingMenuTab extends Record {
      */
     loadStatusByFilterId = fields.Attr({}, { asProxy: true });
     /** IDs of already loaded records, used to exclude them from `loadMore` requests. */
-    loadMoreExcludeIds = this.computed(() => this._computeLoadMoreExcludeIds(), {
-        equals: shallowEqual,
-    });
+    loadMoreExcludeIds = this.computedShallowEqual(() => this._computeLoadMoreExcludeIds());
     messages = fields.Many("mail.message", { inverse: "messagingMenuTabsAsMessages" });
-    sortedMessages = this.computed(
-        () =>
-            [...this.messages].sort(
-                (m1, m2) => compareDatetime(m2.create_date, m1.create_date) || m2.id - m1.id
-            ),
-        { equals: shallowEqual }
+    sortedMessages = this.computedShallowEqual(() =>
+        [...this.messages].sort(
+            (m1, m2) => compareDatetime(m2.create_date, m1.create_date) || m2.id - m1.id
+        )
     );
     /** @type {"mail.message"|"discuss.channel"} */
     recordType;
@@ -209,9 +203,8 @@ export class MessagingMenuTab extends Record {
     }
 
     /** Filters in the order they are shown, right after the "All" one. */
-    sortedFilters = this.computed(
-        () => [...this.filters].sort((f1, f2) => (f1.sequence ?? 0) - (f2.sequence ?? 0)),
-        { equals: shallowEqual }
+    sortedFilters = this.computedShallowEqual(() =>
+        [...this.filters].sort((f1, f2) => (f1.sequence ?? 0) - (f2.sequence ?? 0))
     );
 
     /**

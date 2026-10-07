@@ -4,9 +4,10 @@ import { getCallControlComponent } from "@mail/discuss/call/common/call_action_l
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
-import { Component, computed, shallowEqual, types, useProps } from "@odoo/owl";
+import { Component, types, useProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
+import { computedShallowEqual } from "@mail/utils/common/signal";
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
@@ -53,30 +54,25 @@ export class MeetingSideActions extends Component {
         return { channel: () => this.store.rtc.channel };
     }
 
-    actions = computed(
-        () => {
-            const threadActions = this.props.threadActions;
-            // the channel can already be gone while the meeting view tears down
-            if (this.store.rtc.channel?.default_display_mode === "video_full_screen") {
-                return threadActions.actions.filter((action) =>
-                    QUICK_ACTION_IDS.includes(action.id)
-                );
-            }
-            const actions = threadActions.actions.filter((action) =>
-                QUICK_ACTION_IDS.includes(action.id)
-            );
-            actions.push(
-                threadActions.more(this.callActionsParams, {
-                    actions: meetingMoreActionGroups(threadActions, QUICK_ACTION_IDS),
-                    dropdownMenuClass: attClassObjectToString({
-                        "o-discuss-CallActionList-menu o-inMeetingView border-0 shadow": Boolean(
-                            this.ancestors.inMeetingView
-                        ),
-                    }),
-                })
-            );
-            return actions;
-        },
-        { equals: shallowEqual }
-    );
+    actions = computedShallowEqual(() => {
+        const threadActions = this.props.threadActions;
+        // the channel can already be gone while the meeting view tears down
+        if (this.store.rtc.channel?.default_display_mode === "video_full_screen") {
+            return threadActions.actions.filter((action) => QUICK_ACTION_IDS.includes(action.id));
+        }
+        const actions = threadActions.actions.filter((action) =>
+            QUICK_ACTION_IDS.includes(action.id)
+        );
+        actions.push(
+            threadActions.more(this.callActionsParams, {
+                actions: meetingMoreActionGroups(threadActions, QUICK_ACTION_IDS),
+                dropdownMenuClass: attClassObjectToString({
+                    "o-discuss-CallActionList-menu o-inMeetingView border-0 shadow": Boolean(
+                        this.ancestors.inMeetingView
+                    ),
+                }),
+            })
+        );
+        return actions;
+    });
 }
