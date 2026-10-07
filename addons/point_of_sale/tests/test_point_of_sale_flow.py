@@ -996,6 +996,56 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         self.assertEqual(order.account_move.amount_residual, 0)
 
+    def test_invoice_paid_with_cash_change_same_receivable_account(self):
+        """
+            Test that when the default_pos_receivable_account and the partner
+            account_receivable are the same, an invoiced order paid in cash
+            with change is correctly marked as paid.
+        """
+        self.pos_config_usd.open_ui()
+        pos_session = self.pos_config_usd.current_session_id
+        pos_session.company_id.account_default_pos_receivable_account_id = self.partner.property_account_receivable_id
+        cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+        product_order = {
+            'amount_paid': 20,
+            'amount_return': -5,
+            'amount_tax': 0,
+            'amount_total': 15,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'pricelist_id': self.pos_config_usd.pricelist_id.id,
+            'lines': [Command.create({
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 15.0,
+                'product_id': self.product.id,
+                'price_subtotal': 15.0,
+                'price_subtotal_incl': 15.0,
+                'tax_ids': [[6, False, []]],
+                'qty': 1,
+            })],
+            'name': 'Order 12346-123-1234',
+            'partner_id': self.partner.id,
+            'session_id': pos_session.id,
+            'sequence_number': 2,
+            'payment_ids': [Command.create({
+                'amount': 20,
+                'name': fields.Datetime.now(),
+                'payment_method_id': cash_payment_method.id,
+            })],
+            'uuid': '12346-123-1234',
+            'user_id': self.env.uid,
+            'to_invoice': True,
+        }
+        pos_order_id = self.env['pos.order'].sync_from_ui([product_order])['pos.order'][0]['id']
+        pos_order = self.env['pos.order'].browse(pos_order_id)
+        self.assertRecordValues(pos_order.payment_ids.sorted(), [
+            {'amount': -5.0, 'is_change': True},
+            {'amount': 20.0, 'is_change': False},
+        ])
+        self.assertEqual(pos_order.account_move.amount_residual, 0)
+        self.assertEqual(pos_order.account_move.payment_state, 'paid')
+
     def test_journal_entries_category_without_account(self):
         # Set company's default accounts to false
         self.env.company.income_account_id = False
