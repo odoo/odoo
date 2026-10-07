@@ -392,3 +392,42 @@ class TestProjectTemplates(TestProjectCommon):
         self.assertFalse(new_project.is_template)
         task = new_project.task_ids.filtered(lambda t: t.name == self.task_inside_template.name)
         self.assertFalse(task.user_ids)
+
+    def test_action_view_tasks_template_initial_date(self):
+        """
+        Ensure that opening tasks from a Project Template injects 'initialDate'
+        into the context based on the oldest task's date_deadline.
+        """
+        self.env['project.task'].create([{
+            'name': 'Newer Task',
+            'project_id': self.project_template.id,
+            'date_deadline': '2025-08-15 10:00:00',
+        }, {
+            'name': 'Oldest Task',
+            'project_id': self.project_template.id,
+            'date_deadline': '2025-06-01 08:00:00',
+        }])
+
+        template_action = self.project_template.action_view_tasks()
+
+        self.assertIn('initialDate', template_action['context'],
+                      "The context should contain 'initialDate' for templates.")
+        oldest_task = self.env['project.task'].search([
+            ('project_id', '=', self.project_template.id),
+            ('date_deadline', '!=', False)
+        ], order='date_deadline asc', limit=1)
+        self.assertEqual(template_action['context']['initialDate'], oldest_task.date_deadline,
+                         "The initialDate should exactly match the oldest task's date object.")
+
+        standard_project = self.env['project.project'].create({
+            'name': 'Standard Gantt Project',
+            'is_template': False,
+        })
+        self.env['project.task'].create({
+            'name': 'Standard Task',
+            'project_id': standard_project.id,
+            'date_deadline': '2025-05-01 08:00:00',
+        })
+        standard_action = standard_project.action_view_tasks()
+        self.assertNotIn('initialDate', standard_action.get('context', {}),
+                         "Standard projects should NOT have 'initialDate' injected into the context.")

@@ -1049,6 +1049,12 @@ class ProjectProject(models.Model):
         if self.is_template:
             action['context'].update({'template_project': True})
             action['views'] = [(view_id, view_type) for view_id, view_type in action['views'] if view_type not in ('pivot', 'graph')]
+            oldest_task = self.env['project.task'].search([
+                ('project_id', '=', self.id),
+                ('date_deadline', '!=', False)
+            ], order='date_deadline asc', limit=1)
+            if oldest_task:
+                action['context']['initialDate'] = oldest_task.date_deadline
         return action
 
     def action_view_all_rating(self):
