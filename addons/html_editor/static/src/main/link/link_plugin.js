@@ -50,6 +50,15 @@ function isLinkActive(selection) {
 }
 
 /**
+ * @param {EditorSelection} selection
+ * @returns {boolean} whether the selection starts and ends in the same link
+ */
+function isSelectionInOneLink(selection) {
+    const linkEl = closestElement(selection.anchorNode, "A");
+    return !!linkEl && linkEl === closestElement(selection.focusNode, "A");
+}
+
+/**
  * @param {Node} node
  */
 export function allowedToCreateLink(node) {
@@ -231,21 +240,7 @@ export class LinkPlugin extends Plugin {
                 title: _t("Remove Link"),
                 description: _t("Remove Link"),
                 icon: "link_off",
-                isAvailable: (selection) => {
-                    if (!isHtmlContentSupported(selection)) {
-                        return false;
-                    }
-                    for (const node of this.dependencies.selection.getTargetedNodes()) {
-                        const linkEl = closestElement(node, "a");
-                        if (
-                            linkEl &&
-                            !this.isLinkImmutable(linkEl) &&
-                            linkEl.parentElement.isContentEditable
-                        ) {
-                            return true;
-                        }
-                    }
-                },
+                isAvailable: this.canRemoveLinkFromSelection.bind(this),
                 run: this.removeLinkFromSelection.bind(this),
             },
         ],
@@ -268,6 +263,11 @@ export class LinkPlugin extends Plugin {
                 id: "unlink",
                 groupId: "link",
                 commandId: "removeLinkFromSelection",
+                // Within one link, the active link button opens the popover of
+                // the link, which removes it: the bar keeps Unlink for a
+                // selection across links and text.
+                isAvailable: (selection) =>
+                    !isSelectionInOneLink(selection) && this.canRemoveLinkFromSelection(selection),
                 isDisabled: () => this.removeLinkFromSelectionIsDisabled(),
             },
             {
@@ -1028,6 +1028,24 @@ export class LinkPlugin extends Plugin {
         this.linkInDocument = null;
         this.dependencies.selection.focusEditable();
         this.dependencies.history.commit();
+    }
+
+    /**
+     * @param {EditorSelection} selection
+     * @returns {boolean} whether the selection targets a link that can be
+     * removed
+     */
+    canRemoveLinkFromSelection(selection) {
+        if (!isHtmlContentSupported(selection)) {
+            return false;
+        }
+        for (const node of this.dependencies.selection.getTargetedNodes()) {
+            const linkEl = closestElement(node, "a");
+            if (linkEl && !this.isLinkImmutable(linkEl) && linkEl.parentElement.isContentEditable) {
+                return true;
+            }
+        }
+        return false;
     }
 
     removeLinkFromSelectionIsDisabled(selection) {

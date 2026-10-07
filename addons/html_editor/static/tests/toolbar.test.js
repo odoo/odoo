@@ -489,7 +489,8 @@ test("move focus in list dropdown on Tab, Escape returns focus to dropdown butto
 });
 
 test("toolbar unlink button should be disabled when link is unremovable", async () => {
-    await setupEditor('<p>a<a class="oe_unremovable" href="http://test.test/">bc[d]</a>e</p>');
+    // Across the link and text: within one link, the bar has no unlink button.
+    await setupEditor('<p>a<a class="oe_unremovable" href="http://test.test/">bc[d</a>e]</p>');
     await waitFor(".o-we-toolbar");
     expect(".btn[name='link']").toHaveCount(1);
     expect(".btn[name='link']").toHaveClass("active");
