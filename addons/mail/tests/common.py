@@ -23,7 +23,7 @@ from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.bus.models.bus import BusBus
 from odoo.addons.bus.tests.common import BusCase, BusResult
-from odoo.addons.mail.models import mail_thread
+from odoo.addons.mail.models import mail_push_device
 from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.mail.models.mail_notification import MailNotification
@@ -68,8 +68,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
     @contextmanager
     def mock_push_to_end_point(self, max_direct_push=5):
-        with patch.object(mail_thread, 'push_to_end_point') as patched_push, \
-             patch('odoo.addons.mail.models.mail_thread.MAX_DIRECT_PUSH', max_direct_push):
+        with patch.object(mail_push_device, 'push_to_end_point') as patched_push, \
+             patch('odoo.addons.mail.models.mail_push_device.MAX_DIRECT_PUSH', max_direct_push):
             self.push_to_end_point_mocked = patched_push
             yield
 
@@ -120,7 +120,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
              patch.object(MailMail, 'create', autospec=True, wraps=MailMail, side_effect=_mail_mail_create) as mail_mail_create_mocked, \
              patch.object(MailMail, '_send', autospec=True, wraps=MailMail, side_effect=mail_private_send_origin) as mail_mail_private_send_mocked, \
              patch.object(MailMail, 'unlink', autospec=True, wraps=MailMail, side_effect=_mail_mail_unlink), \
-             patch.object(mail_thread, 'push_to_end_point') as patched_push:
+             patch.object(mail_push_device, 'push_to_end_point') as patched_push:
             self.build_email_mocked = build_email_mocked
             self.send_email_mocked = send_email_mocked
             self.mail_mail_create_mocked = mail_mail_create_mocked
