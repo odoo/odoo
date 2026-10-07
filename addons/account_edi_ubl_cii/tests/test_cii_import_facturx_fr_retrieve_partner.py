@@ -47,3 +47,21 @@ class TestCiiImportFacturXFRRetrievePartner(CiiImportFacturXFR):
             journal=self.company_data['default_journal_sale'],
         )
         self.assertEqual(self.partner_fr, invoice.partner_id, "We find the belgian partner, not his contact")
+
+    @freeze_time('2020-01-01')
+    def test_import_partner_creation_email(self):
+        self.assertFalse(self.env['res.partner'].search([('vat', '=', 'DE100007911')]))
+
+        # Test the partner has been created.
+        bill = self._import_invoice_as_attachment_on(test_name='test_import_partner_creation_email')
+        partner = bill.partner_id
+        self.assertRecordValues(partner, [{
+            'name': 'partner_de',
+            'vat': 'DE100007911',
+            'peppol_eas': 'EM',
+            'peppol_endpoint': 'partner_de+invoices@company.com',
+        }])
+
+        # Test the partner has been retrieved.
+        bill = self._import_invoice_as_attachment_on(test_name='test_import_partner_creation_email')
+        self.assertRecordValues(bill.partner_id, [{'id': partner.id}])
