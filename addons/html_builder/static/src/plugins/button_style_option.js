@@ -8,6 +8,13 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { StyleAction, withoutTransition } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import {
+    convertCSSColorToRgba,
+    convertRgbaToCSSColor,
+    getContrastingColor,
+    mixCssColors,
+    normalizeCSSColor,
+} from "@web/core/utils/colors";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import {
     BUTTON_SHAPES,
@@ -19,10 +26,48 @@ import {
     getButtonType,
 } from "@html_editor/utils/button_style";
 
+const CUSTOM_BG_MIX_AMOUNT = 0.15;
+
+function removeCustomProperties(el) {
+    el.style.removeProperty("--btn-custom-color");
+    el.style.removeProperty("--btn-custom-hover-bg");
+    el.style.removeProperty("--btn-outline-custom-hover-color");
+}
+
+function getFillColor(el) {
+    const isOutline = el.classList.replace("btn-outline-custom", "btn-custom");
+    const bgColor = el.ownerDocument.defaultView.getComputedStyle(el).backgroundColor;
+    if (isOutline) {
+        el.classList.replace("btn-custom", "btn-outline-custom");
+    }
+    return bgColor;
+}
+
+function updateCustomHoverColors(el) {
+    const bgColor = getFillColor(el);
+    const rgba = convertCSSColorToRgba(bgColor);
+    if (!rgba || !rgba.opacity) {
+        el.style.removeProperty("--btn-custom-hover-bg");
+        el.style.removeProperty("--btn-outline-custom-hover-color");
+        return;
+    }
+    const contrastingColor = getContrastingColor(bgColor);
+    const shadeOrTintColor = contrastingColor === "#FFFFFF" ? "#000000" : "#FFFFFF";
+    const hoverRgba = convertCSSColorToRgba(
+        mixCssColors(shadeOrTintColor, bgColor, CUSTOM_BG_MIX_AMOUNT)
+    );
+    el.style.setProperty(
+        "--btn-custom-hover-bg",
+        convertRgbaToCSSColor(hoverRgba.red, hoverRgba.green, hoverRgba.blue, rgba.opacity)
+    );
+    // Set for every shape since the shape can be changed afterward
+    el.style.setProperty("--btn-outline-custom-hover-color", contrastingColor);
+}
+
 export class ButtonStyleOptionPlugin extends Plugin {
     static id = "buttonStyleOption";
     resources = {
-        builder_actions: { ButtonStyleAction, ButtonFillColorAction },
+        builder_actions: { ButtonStyleAction, ButtonFillColorAction, ButtonColorAction },
     };
 }
 
@@ -37,6 +82,11 @@ export class ButtonStyleOption extends BaseOptionComponent {
         BorderConfigurator,
     };
     static dependencies = ["domObserver"];
+    static cleanForSave = (editingEl) => {
+        if (!editingEl.matches(".btn-custom, .btn-fill-custom, .btn-outline-custom")) {
+            removeCustomProperties(editingEl);
+        }
+    };
 
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;
@@ -172,6 +222,9 @@ export class ButtonStyleAction extends BuilderAction {
         const mode = params.mainParam;
         if (mode === "type") {
             this.applyDefaultInlineStyle(editingElement, value);
+            if (value !== "custom") {
+                removeCustomProperties(editingElement);
+            }
         }
 
         editingElement.className = computeButtonClasses(editingElement, {
@@ -186,14 +239,20 @@ export class ButtonStyleAction extends BuilderAction {
         if (currentType === "custom") {
             withoutTransition(el, () => {
                 const computedStyle = el.ownerDocument.defaultView.getComputedStyle(el);
+                const isOutline = getButtonShape(el).startsWith("outline");
                 for (const prop of styleProps) {
                     if (computedStyle[prop] !== "none") {
                         el.style[prop] = computedStyle[prop];
                     }
                 }
+                el.style.setProperty("--btn-custom-color", computedStyle.color);
                 if (computedStyle.borderStyle === "none") {
                     el.style.borderStyle = "solid";
                 }
+                if (isOutline) {
+                    el.style.backgroundColor = computedStyle.getPropertyValue("--btn-hover-bg");
+                }
+                updateCustomHoverColors(el);
             });
         } else {
             for (const prop of styleProps) {
@@ -222,12 +281,38 @@ export class ButtonStyleAction extends BuilderAction {
 export class ButtonFillColorAction extends StyleAction {
     static id = "buttonFillColorAction";
     static dependencies = ["color"];
+    apply({ editingElement: el }) {
+        withoutTransition(el, () => {
+            super.apply(...arguments);
+            updateCustomHoverColors(el);
+        });
+    }
 
     getValue(context) {
         // This override is needed because when the button is in outline mode,
         // the color is not shown unless we hover the button
         const { editingElement: el } = context;
         return el.style.backgroundImage || el.style.backgroundColor || super.getValue(context);
+    }
+}
+
+export class ButtonColorAction extends StyleAction {
+    static id = "buttonColorAction";
+    apply({ editingElement: el, value }) {
+        super.apply(...arguments);
+        el.style.setProperty("--btn-custom-color", value);
+    }
+
+    getValue(context) {
+        // This override is needed because the color of a hovered button may
+        // differ from its text color. The variable is read from the computed
+        // style so that theme colors (e.g. "var(--o-color-1)") are resolved.
+        const { editingElement: el } = context;
+        const color = el.ownerDocument.defaultView
+            .getComputedStyle(el)
+            .getPropertyValue("--btn-custom-color")
+            .trim();
+        return color ? normalizeCSSColor(color) : super.getValue(context);
     }
 }
 
