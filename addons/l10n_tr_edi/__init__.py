@@ -1,5 +1,6 @@
 from . import models
 from . import tools
+from . import wizard
 
 
 def _l10n_tr_edi_post_init(env):
