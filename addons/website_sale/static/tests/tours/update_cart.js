@@ -9,7 +9,7 @@ registry.category("web_tour.tours").add("website_sale.update_cart", {
         },
         {
             content: "select Conference Chair Aluminium",
-            trigger: "label:contains(Aluminium) input",
+            trigger: "label:contains(Aluminium)",
             run: "click",
         },
         {
@@ -17,11 +17,11 @@ registry.category("web_tour.tours").add("website_sale.update_cart", {
         },
         {
             content: "select Conference Chair Steel",
-            trigger: "label:contains(Steel) input",
+            trigger: "label:contains(Steel)",
             run: "click",
         },
         {
-            trigger: "label:contains(Steel) input:checked",
+            trigger: 'li.o_variant_pills:has(label:contains("Steel")):has(input:checked)',
         },
         ...tourUtils.addToCartFromProductPage(),
         {
