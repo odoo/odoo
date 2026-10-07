@@ -653,6 +653,7 @@ export class TitleDescription extends Component {
         isPublished: t.boolean(),
         isVisibilityPublic: t.boolean(),
         save: t.function(),
+        close: t.function(),
         isDirty: t.function(),
     });
     static components = {
@@ -783,6 +784,7 @@ export class TitleDescription extends Component {
                 xmlid: "website.menu_page_properties",
             });
         if (!this.props.isDirty()) {
+            this.props.close();
             return openPageProperties();
         }
         const saveAndOpen = async () => {
@@ -1264,7 +1266,7 @@ export class OptimizeSEODialog extends Component {
         return el && el.content;
     }
 
-    async save(refresh = true) {
+    async save() {
         const data = {};
         if (this.canEditTitle) {
             data.website_meta_title = seoContext.title;
@@ -1360,13 +1362,11 @@ export class OptimizeSEODialog extends Component {
         Object.assign(this.initialSeoState, this.getEditableSeoState());
         this.isDirty.set(!this.savedContext());
 
-        if (refresh) {
-            this.website.goToWebsite({
-                path: this.url.replace(
-                    this.previousSeoName || this.seoNameDefault,
-                    seoContext.seoName || this.seoNameDefault
-                ),
-            });
-        }
+        this.website.goToWebsite({
+            path: this.url.replace(
+                this.previousSeoName || this.seoNameDefault,
+                seoContext.seoName || this.seoNameDefault
+            ),
+        });
     }
 }
