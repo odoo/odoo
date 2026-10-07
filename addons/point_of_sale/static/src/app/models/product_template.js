@@ -121,7 +121,10 @@ export class ProductTemplate extends ProductTemplateAccounting {
                 );
                 excludedPTAV.add(disablePTAV);
             }
-            if (ptavCommon.length === attributeValueIds.length) {
+            if (
+                ptavCommon.length === attributeValueIds.length &&
+                attributeValueIds.length === archivedCombination.length
+            ) {
                 isCombinationArchived = true;
             }
         }

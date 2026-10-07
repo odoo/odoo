@@ -1,7 +1,7 @@
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 export function confirm(confirmationText, button = ".btn-primary") {
-    let trigger = `.modal:not(.o_inactive_modal) .modal-footer ${button}`;
+    let trigger = `.modal:not(.o_inactive_modal) .modal-footer ${button}:not(.disabled)`;
     if (confirmationText) {
         trigger += `:contains("${confirmationText}")`;
     }
