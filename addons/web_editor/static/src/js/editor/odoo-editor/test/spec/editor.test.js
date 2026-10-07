@@ -7078,6 +7078,18 @@ X[]
                 });
             });
         });
+        describe("normalization", () => {
+            it("should populate ragged table rows even without any rowspan/colspan", async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(
+                        `<table><tbody><tr><td>A</td></tr><tr><td>B</td><td>C</td></tr></tbody></table>`
+                    ),
+                    contentAfter: unformat(
+                        `<table><tbody><tr><td>A</td><td><br></td></tr><tr><td>B</td><td>C</td></tr></tbody></table>`
+                    ),
+                });
+            });
+        });
     });
 
     // Note that arrow keys test have a contentAfter that is not reflective of

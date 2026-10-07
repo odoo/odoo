@@ -184,7 +184,7 @@ export const CLIPBOARD_WHITELISTS = {
         /^btn/,
         /^fa/,
     ],
-    attributes: ['class', 'href', 'src', 'target'],
+    attributes: ['class', 'href', 'src', 'target', 'rowspan', 'colspan'],
     styledTags: ['SPAN', 'B', 'STRONG', 'I', 'S', 'U', 'FONT', 'TD'],
 };
 

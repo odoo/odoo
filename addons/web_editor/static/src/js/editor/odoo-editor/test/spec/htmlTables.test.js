@@ -243,7 +243,7 @@ describe('Paste HTML tables', () => {
             <tr>
                 <td>14pt MONO TEXT
                 </td>
-            </tr>
+            <td><br></td></tr>
         </tbody></table><p>
     
 
@@ -358,7 +358,7 @@ describe('Paste HTML tables', () => {
             </tr>
             <tr>
                 <td>14pt MONO TEXT</td>
-            </tr>
+            <td><br></td></tr>
         </tbody>
     </table><p>
 []</p>`,
@@ -490,7 +490,7 @@ describe('Paste HTML tables', () => {
             <td>
                 14pt MONO TEXT
             </td>
-        </tr>
+        <td><br></td></tr>
     </tbody></table><p>
 
 

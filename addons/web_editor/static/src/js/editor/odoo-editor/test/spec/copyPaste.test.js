@@ -2469,6 +2469,92 @@ describe('Paste', () => {
                 });
             });
         });
+        describe('table', () => {
+            it('should normalize complex table with mixed rowspan/colspan', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, unformat(
+                            `<table>
+                                <tbody>
+                                    <tr><td rowspan="2" colspan="2">A</td><td>B</td></tr><tr><td colspan="2">C</td></tr>
+                                    <tr><td>D</td><td rowspan="2">E</td><td>F</td></tr><tr><td colspan="2">G</td></tr>
+                                </tbody>
+                            </table>`));
+                    },
+                    contentAfter: unformat(
+                        `<table class="table table-bordered">
+                            <tbody>
+                                <tr><td>A</td><td><br></td><td>B</td><td><br></td></tr>
+                                <tr><td><br></td><td><br></td><td>C</td><td><br></td></tr>
+                                <tr><td>D</td><td>E</td><td>F</td><td><br></td></tr>
+                                <tr><td>G</td><td><br></td><td><br></td><td><br></td></tr>
+                            </tbody>
+                        </table>
+                        <p>[]<br></p>`
+                    ),
+                });
+            });
+            it('should normalize complex table with mixed rowspan/colspan', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]<br></p>',
+                    stepFunction: async editor => {
+                        await pasteHtml(editor, unformat(`
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td rowspan="2" colspan="2">A</td>
+                                        <td>B</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">C</td>
+                                    </tr>
+                                    <tr>
+                                        <td>D</td>
+                                        <td rowspan="2">E</td>
+                                        <td>F</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">G</td>
+                                    </tr>
+                                </tbody>
+                            </table>`)
+                        );
+                    },
+                    contentAfter: unformat(`
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>A</td>
+                                    <td><br></td>
+                                    <td>B</td>
+                                    <td><br></td>
+                                </tr>
+                                <tr>
+                                    <td><br></td>
+                                    <td><br></td>
+                                    <td>C</td>
+                                    <td><br></td>
+                                </tr>
+                                <tr>
+                                    <td>D</td>
+                                    <td>E</td>
+                                    <td>F</td>
+                                    <td><br></td>
+                                </tr>
+                                <tr>
+                                    <td>G</td>
+                                    <td><br></td>
+                                    <td><br></td>
+                                    <td><br></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>[]<br></p>`
+                    ),
+                });
+            });
+        });
     });
 
     describe('link', () => {
