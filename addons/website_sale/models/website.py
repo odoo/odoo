@@ -1009,37 +1009,34 @@ class Website(models.Model):
         self.ensure_one()
 
         ExtraField = self.env["website.sale.extra.field"]
-        ProductTemplateAttributeLine = self.env["product.template.attribute.line"]
         attribute_lines = product_template.valid_product_template_attribute_line_ids
-        attribute_categories = attribute_lines._prepare_categories_for_display()
+        attribute_lines_by_category = attribute_lines._prepare_categories_for_display()
         extra_fields = ExtraField.search_fetch(
             [("website_id", "=", self.id)], ["field_id", "category_id"]
         )
         extra_field_values = extra_fields._get_values_for_display(product_variant, product_template)
         # Keep only extra fields with a value, grouped by their display category.
-        visible_extra_fields_by_category = extra_fields.filtered(
+        visible_extra_fields = extra_fields.filtered(
             lambda extra_field: extra_field in extra_field_values
-        ).grouped("category_id")
+        )
+        visible_extra_fields_by_category = visible_extra_fields.grouped("category_id")
 
         spec_groups = []
-        # Merge extra fields into existing attribute categories first to preserve category order.
-        for category, attribute_lines in attribute_categories.items():
-            spec_groups.append({
-                "category": category,
-                "attribute_lines": attribute_lines,
-                "extra_fields": visible_extra_fields_by_category.pop(category, ExtraField),
-            })
-
-        # Add categories containing only extra fields.
-        for category, visible_extra_fields in visible_extra_fields_by_category.items():
-            spec_groups.append({
-                "category": category,
-                "attribute_lines": ProductTemplateAttributeLine,
-                "extra_fields": visible_extra_fields,
-            })
-
-        # Render uncategorized specs last
-        spec_groups.sort(key=lambda spec_group: not spec_group["category"])
+        # Follow the configured category order, uncategorized specs last
+        categories = (
+            attribute_lines.attribute_id.category_id | visible_extra_fields.category_id
+        ).sorted()
+        for category in (*categories, self.env["product.attribute.category"]):
+            category_attribute_lines = attribute_lines_by_category.get(
+                category, self.env["product.template.attribute.line"]
+            )
+            category_extra_fields = visible_extra_fields_by_category.get(category, ExtraField)
+            if category_attribute_lines or category_extra_fields:
+                spec_groups.append({
+                    "category": category,
+                    "attribute_lines": category_attribute_lines,
+                    "extra_fields": category_extra_fields,
+                })
 
         return {"spec_groups": spec_groups, "extra_field_values": extra_field_values}
 

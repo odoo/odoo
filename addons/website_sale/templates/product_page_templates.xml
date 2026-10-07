@@ -1526,7 +1526,9 @@
                             aria-expanded="false"
                             aria-controls="specifications"
                         >
-                            <t t-out="category and category.name or 'Others'"/>
+                            <t t-if="category" t-out="category.name"/>
+                            <t t-elif="spec_group_size == 1">Specifications</t>
+                            <t t-else="">Others</t>
                         </button>
                     </div>
                     <div
@@ -1565,7 +1567,6 @@
                 <tr
                     t-foreach="attribute_lines.filtered(lambda attribute_line: len(attribute_line.value_ids) > 1)"
                     t-as="ptal"
-                    t-att-data-ptal-id="ptal.id"
                 >
                     <t
                         t-set="hide_border_bottom_classes"
@@ -1593,7 +1594,7 @@
                 </tr>
 
                 <t t-set="single_value_attributes" t-value="attribute_lines._prepare_single_value_for_display()"/>
-                <tr t-foreach="single_value_attributes" t-as="attribute" t-att-data-attribute-id="attribute.id">
+                <tr t-foreach="single_value_attributes" t-as="attribute">
                     <t
                         t-set="hide_border_bottom_classes"
                         t-value="'border-bottom-0' if attribute_last and is_accordion and not visible_extra_fields else ''"

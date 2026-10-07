@@ -49,17 +49,19 @@
         />
     </BuilderRow>
 
-    <t t-if="this.state.categoryCreateMode">
-        <t t-call="website_sale.CategoryCreateForm" createActionName="'createCategory'"/>
-    </t>
+    <t
+        t-if="this.state.categoryCreateMode"
+        t-call="website_sale.CategoryCreateForm"
+        createActionName="'createCategory'"
+    />
 
     <t t-if="!this.state.categoryCreateMode">
         <BuilderRow label.translate=" ">
             <BuilderButton
-                action="'addExtraField'"
                 t-if="!allFieldsAdded and this.state.fieldId"
-                preview="false"
+                action="'addExtraField'"
                 type="'success'"
+                preview="false"
             >
                 Confirm
             </BuilderButton>
@@ -101,7 +103,10 @@
     </BuilderRow>
     <BuilderRow label.translate=" ">
         <BuilderButton
-            t-props="{ action: createActionName, preview: false, type: 'success', className: 'w-auto' }"
+            action="createActionName"
+            type="'success'"
+            className="'w-auto'"
+            preview="false"
         >
             + Create Category
         </BuilderButton>

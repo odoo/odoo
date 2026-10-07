@@ -24,31 +24,31 @@
         />
     </BuilderRow>
 
-    <t t-if="this.state.rowCategoryCreateMode">
-        <t t-call="website_sale.CategoryCreateForm" createActionName="'createRowCategory'"/>
-    </t>
+    <t
+        t-if="this.state.rowCategoryCreateMode"
+        t-call="website_sale.CategoryCreateForm"
+        createActionName="'createRowCategory'"
+    />
 
-    <t t-if="!this.state.rowCategoryCreateMode">
-        <BuilderRow label.translate=" ">
-            <BuilderButton
-                t-if="this.state.rowCategoryId !== null"
-                action="'changeExtraFieldCategory'"
-                preview="false"
-                type="'success'"
-                className="'flex-grow-1'"
-            >
-                Confirm
-            </BuilderButton>
-            <BuilderButton
-                action="'deleteExtraField'"
-                preview="false"
-                type="'danger'"
-                className="'flex-grow-1'"
-            >
-                Remove
-            </BuilderButton>
-        </BuilderRow>
-    </t>
+    <BuilderRow t-if="!this.state.rowCategoryCreateMode" label.translate=" ">
+        <BuilderButton
+            t-if="this.state.rowCategoryId !== null"
+            action="'changeExtraFieldCategory'"
+            type="'success'"
+            className="'flex-grow-1'"
+            preview="false"
+        >
+            Confirm
+        </BuilderButton>
+        <BuilderButton
+            action="'deleteExtraField'"
+            type="'danger'"
+            className="'flex-grow-1'"
+            preview="false"
+        >
+            Remove
+        </BuilderButton>
+    </BuilderRow>
 
 </t>
 </templates>
