@@ -35,6 +35,8 @@ patch(PaymentScreen.prototype, {
                 id: payment.id,
                 payment,
                 payment_method_name: payment.payment_method_id.name,
+                debtor_name: payment.bancontact_debtor_name,
+                debtor_iban: payment.bancontact_debtor_iban,
                 amount: payment.amount,
                 amount_left: amountLeft,
                 fully_refunded: !this.pos.currency.isPositive(amountLeft),

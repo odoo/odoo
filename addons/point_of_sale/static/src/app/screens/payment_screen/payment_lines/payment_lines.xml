@@ -6,7 +6,7 @@
             <t t-foreach="this.paymentLines" t-as="line" t-key="line.uuid">
                 <div class="paymentline d-flex align-items-center rounded-3" t-att-class="{ 'selected': line.isSelected() }">
                     <!-- Show QR Code -->
-                    <t t-if="line.useQr">
+                    <t t-if="this.canShowQrCode(line)">
                         <button class="paymentline_show_qr_code btn btn-link ms-2 ps-3" t-on-click="() => this.showQrCode(line)" t-att-disabled="!line.qr_code || !line.isProcessing()" aria-label="Show QR Code" title="Show QR Code">
                             <i class="oi" data-icon="qr_code" role="img" />
                         </button>

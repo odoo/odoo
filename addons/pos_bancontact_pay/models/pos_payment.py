@@ -15,6 +15,8 @@ class PosPayment(models.Model):
     )
     bancontact_refund_ids = fields.One2many('pos.payment', 'bancontact_refunded_payment_id', string="Bancontact Refunds")
     bancontact_refund_id = fields.Char("Bancontact Refund ID", readonly=True, copy=False, index='btree_not_null')
+    bancontact_debtor_name = fields.Char("Bancontact Debtor Name", readonly=True, copy=False)
+    bancontact_debtor_iban = fields.Char("Bancontact Debtor IBAN", readonly=True, copy=False, help="Last 4 digits of the debtor's IBAN.")
 
     @api.model
     def _get_additional_payment_fields(self):

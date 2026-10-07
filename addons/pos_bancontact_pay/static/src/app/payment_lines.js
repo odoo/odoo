@@ -20,6 +20,10 @@ patch(PaymentScreenPaymentLines.prototype, {
         return state;
     },
 
+    canShowQrCode(line) {
+        return super.canShowQrCode(...arguments) && !line.isBancontactRefund;
+    },
+
     canDeleteLine(line) {
         return super.canDeleteLine(...arguments) && !line.isBancontactRefundPending;
     },

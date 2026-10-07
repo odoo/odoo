@@ -98,12 +98,23 @@ class BancontactPayController(http.Controller):
             return http.Response(status=204)
 
         payment = self._get_bancontact_payment(bancontact_id, payment_method, pos_config)
-        if payment and self._is_bancontact_payment_finalized(payment):
-            _logger.info("%s webhook ignored: payment already finalized (paymentId=%s)", log_prefix, bancontact_id)
-            return http.Response(status=204)
+        debtor = data.get("debtor") or {}
+        debtor_values = {
+            "bancontact_debtor_name": debtor.get("name") or False,
+            "bancontact_debtor_iban": (debtor.get("iban") or "")[-4:] or False,
+        } if bancontact_status == "SUCCEEDED" else {}
+        if payment:
+            if self._is_bancontact_payment_finalized(payment):
+                _logger.info("%s webhook ignored: payment already finalized (paymentId=%s)", log_prefix, bancontact_id)
+                return http.Response(status=204)
+
+            if bancontact_status == "SUCCEEDED":
+                payment.write({"qr_code": False, "payment_status": "done", **debtor_values})
+            else:
+                payment.write({"qr_code": False, "payment_status": "retry", "bancontact_id": False})
 
         _logger.info("%s webhook processed: paymentId=%s, status=%s", log_prefix, bancontact_id, bancontact_status)
-        self._notify_pos(pos_config, bancontact_id, bancontact_status)
+        self._notify_pos(pos_config, bancontact_id, bancontact_status, debtor_values)
 
         return http.Response(status=200)
 
@@ -137,11 +148,12 @@ class BancontactPayController(http.Controller):
         pos_config = self.env['pos.config'].sudo().browse(config_id)
         return pos_config if pos_config.exists() else None
 
-    def _notify_pos(self, pos_config, bancontact_id, bancontact_status):
+    def _notify_pos(self, pos_config, bancontact_id, bancontact_status, debtor_values=None):
         pos_config._notify(
             "BANCONTACT_PAY_PAYMENTS_NOTIFICATION",
             {
                 "bancontact_id": bancontact_id,
                 "bancontact_status": bancontact_status,
+                **(debtor_values or {}),
             },
         )

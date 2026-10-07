@@ -26,7 +26,12 @@ patch(PosStore.prototype, {
         return super._onBeforeDeleteOrder(...arguments);
     },
 
-    async handleBancontactPayNotification({ bancontact_id, bancontact_status }) {
+    async handleBancontactPayNotification({
+        bancontact_id,
+        bancontact_status,
+        bancontact_debtor_name,
+        bancontact_debtor_iban,
+    }) {
         const paymentline = this.models["pos.payment"].find(
             (line) => line.bancontact_id === bancontact_id
         );
@@ -45,6 +50,8 @@ patch(PosStore.prototype, {
         if (bancontact_status === "SUCCEEDED") {
             paymentline.setPaymentStatus("done");
             paymentline.qr_code = null;
+            paymentline.bancontact_debtor_name = bancontact_debtor_name || false;
+            paymentline.bancontact_debtor_iban = bancontact_debtor_iban || false;
 
             // Other order selected
             if (order !== currentOrder) {

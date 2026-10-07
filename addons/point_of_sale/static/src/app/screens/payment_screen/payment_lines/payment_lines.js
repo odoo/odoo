@@ -61,6 +61,10 @@ export class PaymentScreenPaymentLines extends Component {
         this.pos.displayQrCode(line);
     }
 
+    canShowQrCode(line) {
+        return line.useQr;
+    }
+
     canDeleteLine(line) {
         return !line.isDone() || !line.payment_status;
     }
