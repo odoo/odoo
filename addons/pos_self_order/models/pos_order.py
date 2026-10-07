@@ -276,12 +276,11 @@ class PosOrder(models.Model):
         partner = self._get_self_partner_from_token(pos_config, order.get('partner_id')) if order.get('partner_id') else False
 
         if order.get('id') and order.get('uuid') and isinstance(order['id'], int):
-            exists = pos_config.env['pos.order'].search_count([
-                ('id', '=', order['id']),
-                ('uuid', '=', order['uuid']),
-            ])
-            if not exists:
+            existing_order = pos_config.env['pos.order'].browse(order['id'])
+            if not existing_order.exists() or existing_order.uuid != order['uuid']:
                 raise UserError(_("The order ID isn't linked to the order UUID. This is a sign of a tampered payload."))
+            if not partner:
+                partner = existing_order.partner_id
 
         result = {
             'id': order.get('id'),
