@@ -573,7 +573,11 @@ class HrApplicant(models.Model):
     @api.depends('job_id', 'job_id.department_id')
     def _compute_department(self):
         for applicant in self:
-            applicant.department_id = applicant.job_id.department_id.id
+            department = applicant.job_id.department_id
+            # a job shared between companies can have a department of another company
+            if department.company_id and department.company_id != (applicant.job_id.company_id or self.env.company):
+                department = False
+            applicant.department_id = department
 
     @api.depends('job_id')
     def _compute_stage(self):
@@ -1015,7 +1019,8 @@ class HrApplicant(models.Model):
             })
 
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
-        employee = self.env['hr.employee'].with_context(clean_context(self.env.context)).create(self._get_employee_create_vals())
+        employee_vals = self._get_employee_create_vals()
+        employee = self.env['hr.employee'].with_context(clean_context(self.env.context)).create(employee_vals)
         action['res_id'] = employee.id
         employee_attachments = self.env['ir.attachment'].search([('res_model', '=','hr.employee'), ('res_id', '=', employee.id)])
         unique_attachments = self.attachment_ids.filtered(
@@ -1025,9 +1030,9 @@ class HrApplicant(models.Model):
         employee.write({
             'job_id': self.job_id.id,
             'job_title': self.job_id.name,
-            'department_id': self.department_id.id,
-            'work_email': self.department_id.company_id.email or self.email_from, # To have a valid email address by default
-            'work_phone': self.department_id.company_id.phone,
+            'department_id': employee_vals['department_id'],
+            'work_email': employee_vals['work_email'],
+            'work_phone': employee_vals['work_phone'],
         })
         return action
 
@@ -1035,6 +1040,10 @@ class HrApplicant(models.Model):
         self.ensure_one()
         address_id = self.partner_id.address_get(['contact'])['contact']
         address_sudo = self.env['res.partner'].sudo().browse(address_id)
+        # applicants created before the department compute was fixed can hold a department of another company
+        department_sudo = self.department_id.sudo()
+        if department_sudo.company_id and department_sudo.company_id != self.company_id:
+            department_sudo = self.env['hr.department']
         return {
             'name': self.partner_name or self.partner_id.display_name,
             'work_contact_id': self.partner_id.id,
@@ -1049,10 +1058,10 @@ class HrApplicant(models.Model):
             'private_phone': address_sudo.phone,
             'private_email': address_sudo.email,
             'lang': address_sudo.lang,
-            'department_id': self.department_id.id,
+            'department_id': department_sudo.id,
             'address_id': self.company_id.partner_id.id,
-            'work_email': self.department_id.company_id.email or self.email_from,  # To have a valid email address by default
-            'work_phone': self.department_id.company_id.phone,
+            'work_email': department_sudo.company_id.email or self.email_from,  # To have a valid email address by default
+            'work_phone': department_sudo.company_id.phone,
             'applicant_ids': self.ids,
             'phone': self.partner_phone
         }
