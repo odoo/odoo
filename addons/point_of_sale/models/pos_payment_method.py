@@ -451,8 +451,15 @@ class PosPaymentMethod(models.Model):
             payment_method=self.name,
             session=session.name,
         )
+        is_refund = float_compare(amount, 0, precision_rounding=rounding) < 0
+        payment_type = 'outbound' if is_refund else 'inbound'
+        if not outstanding_account:
+            outstanding_account = self.env['account.payment'].new({
+                'company_id': self.company_id.id,
+            })._get_outstanding_account(payment_type)
         payment_vals = {
             'amount': abs(amount),
+            'payment_type': payment_type,
             'journal_id': self.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
             'destination_account_id': destination_account.id,
@@ -475,15 +482,8 @@ class PosPaymentMethod(models.Model):
 
         account_payment = self.env['account.payment'].sudo().create(payment_vals)
 
-        if float_compare(amount, 0, precision_rounding=rounding) < 0:
-            # For refunds, only flip the payment direction don't swap accounts.
-            # outstanding_account_id is computed from force_outstanding_account_id
-            # and cannot be overridden by a direct write, so swapping via
-            # outstanding_account_id silently fails and leaves both sides on the same account.
-            account_payment.write({'payment_type': 'outbound'})
-
         account_payment.action_post()
-        if float_compare(amount, 0, precision_rounding=rounding) < 0:
+        if is_refund:
             # Outbound: receivable sits on the debit side.
             return account_payment.move_id.line_ids.filtered(
                 lambda line: line.account_id == destination_account and line.debit > 0,

@@ -1248,6 +1248,29 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         for id in sale_invoices.ids + refund_invoices.ids:
             self.assertIn(id, partner_invoices)
 
+    def test_close_session_after_bank_refund_without_outstanding_account(self):
+        """
+        Bank refund must keep an outstanding account and close the session.
+        """
+        self.bank_pm.outstanding_account_id = False
+
+        session = self.open_pos_session()
+        order = self.create_pos_order(
+            payment_method=[[self.bank_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+        )
+        self.create_pos_order(
+            payment_method=[[self.bank_pm, {'amount': -10.6}]],
+            products=[[self.product_6, {'qty': -1}]],
+            extra_data={
+                'is_refund': True,
+                'refunded_order_id': order.id,
+            },
+        )
+
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
+
     def test_invoicing_zero_amount_pos_order(self):
         session = self.open_pos_session()
         self.product_6.lst_price = 0
