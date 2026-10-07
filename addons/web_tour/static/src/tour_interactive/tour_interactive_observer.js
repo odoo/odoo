@@ -29,6 +29,7 @@ export class TourInteractiveObserver {
     }
     disconnect() {
         this.observer.disconnect();
+        this.removeCssEndListeners?.();
     }
     findAllShadowRoots(node, shadowRoots = []) {
         if (node.shadowRoot) {
@@ -42,6 +43,7 @@ export class TourInteractiveObserver {
     }
     observe(target) {
         this.observer.observe(target, this.observerOptions);
+        this.listenCssEnd(target.ownerDocument);
         //When iframes already exist at "this.target" initialization
         target
             .querySelectorAll("iframe")
@@ -50,6 +52,20 @@ export class TourInteractiveObserver {
         this.findAllShadowRoots(target).forEach((shadowRoot) => {
             this.observer.observe(shadowRoot, this.observerOptions);
         });
+    }
+    listenCssEnd(doc) {
+        this.removeCssEndListeners?.();
+        const onCssEnd = () => this.callback();
+        const eventTypes = ["transitionend", "animationend"];
+        for (const type of eventTypes) {
+            doc.addEventListener(type, onCssEnd, true);
+        }
+        this.removeCssEndListeners = () => {
+            for (const type of eventTypes) {
+                doc.removeEventListener(type, onCssEnd, true);
+            }
+            this.removeCssEndListeners = null;
+        };
     }
     observeIframe(iframeEl, observer, callback) {
         const observerOptions = {
