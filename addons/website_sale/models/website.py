@@ -1206,6 +1206,10 @@ class Website(models.Model):
 
         return False
 
+    def _hide_product_price(self, product_or_template, is_zero_price_product):
+        """Return whether the price of the provided product should be hidden."""
+        return is_zero_price_product and self._prevent_product_sale(product_or_template, True)
+
     def _get_contact_us_url(self, subject=""):
         """Build the contact us URL with an optional subject parameter.
 

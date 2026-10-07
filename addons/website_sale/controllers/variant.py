@@ -55,6 +55,24 @@ class WebsiteSaleVariantController(Controller):
         product = self.env["product.product"].browse(combination_info["product_id"])
         if product and product.id == product_id:
             combination_info["no_product_change"] = True
+            if self.env.website.product_page_image_width != "none" and not (
+                self.env.context.get("website_sale_no_images", False)
+            ):
+                # The ribbon may depend on quantity changes
+                ribbon = product_template.sudo()._get_ribbon(
+                    price_vals=combination_info,
+                    variant=product,
+                )
+                combination_info["ribbon"] = self.env.website._render_template(
+                    "website_sale.product_ribbon",
+                    values={
+                        "product": product_template,
+                        "ribbon": ribbon,
+                        "bg_color": ribbon.bg_color,
+                        "text_color": ribbon.text_color,
+                        "ribbon_price_vals": combination_info,
+                    },
+                )
             return combination_info
 
         if self.env.website.product_page_image_width != "none" and not self.env.context.get(

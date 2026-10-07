@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import float_round
 
 
 class ProductRibbon(models.Model):
@@ -95,21 +96,22 @@ class ProductRibbon(models.Model):
 
         :param dict price_data: price information for the given product
         :return: the discount percentage
-        :rtype: int
+        :rtype: float
         """
-        if not price_data:
+        if not price_data or price_data.get("hide_price"):
             return 0
-        if "base_price" in price_data:  # for /shop page
+        if "base_price" in price_data:  # from _get_sales_prices
             before, after = price_data["base_price"], price_data.get("price_reduce") or 0
-        elif price_data.get("has_discounted_price") and price_data.get("list_price"):  # for /product page
-            before, after = price_data["list_price"], price_data.get("price") or 0
-        elif "compare_list_price" in price_data:  # for /product page
-            before, after = price_data["compare_list_price"], price_data.get("price") or 0
-        else:
-            return 0
+        else:  # from _get_combination_info
+            before = (
+                price_data.get("list_price")
+                if price_data.get("has_discounted_price")
+                else price_data.get("compare_list_price")
+            )
+            after = price_data.get("price") or 0
         if not before or before <= after:
             return 0
-        return round((before - after) / before * 100)
+        return (before - after) / before * 100
 
     def _get_display_name(self, price_data=None):
         """Return the text to display for this ribbon.
@@ -118,9 +120,11 @@ class ProductRibbon(models.Model):
         :rtype: str
         """
         if self.assign == "sale":
-            discount_percent = self._get_discount_percent(price_data)
+            discount_percent = float_round(
+                self._get_discount_percent(price_data), precision_rounding=0.5, rounding_method="DOWN"
+            )
             if discount_percent:
-                return f"-{discount_percent}%"
+                return f"-{discount_percent:g}%"
         return self.name or ""
 
     def _is_applicable_for(self, product, price_data):
@@ -138,7 +142,23 @@ class ProductRibbon(models.Model):
 
         # Check if a discount is applied to the product using a pricelist, comparison price, or
         # others.
-        if self.assign == "sale" and self._get_discount_percent(price_data):
+        if (  # noqa: SIM103
+            self.assign == "sale"
+            and price_data
+            and (
+                # for /shop page
+                (
+                    "base_price" in price_data
+                    and (price_data["base_price"] > price_data["price_reduce"])
+                )
+                # for /product page
+                or (
+                    "compare_list_price" in price_data
+                    and price_data["compare_list_price"] > price_data["price"]
+                )
+                or price_data.get("has_discounted_price")
+            )
+        ):
             return True
         # Check if the product is published within the ribbon's new period.
         if (  # noqa: SIM103

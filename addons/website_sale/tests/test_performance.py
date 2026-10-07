@@ -82,6 +82,9 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "website_page": 1,
         })
         if self._has_demo_data():
+            # Sale Ribbon in demo data
+            res["product_ribbon"] += 1
+            res["product_template"] += 1
             if "website_sale_stock" in self.installed_modules:
                 res["product_template"] += 1
                 # Out of Stock Ribbon in demo data
@@ -146,7 +149,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
 
     @warmup
     def test_get_combination_info_route(self):
-        no_product_change_query_count = 31
+        no_product_change_query_count = 32
         if "website_sale_stock" in self.installed_modules:
             no_product_change_query_count += 1
         with self.assertQueryCount(no_product_change_query_count):
@@ -193,6 +196,9 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
         res["product_pricelist"] += 3
         res["product_category"] += 1
         res["product_pricelist_item"] += 1
+        if self._has_demo_data():
+            # Sale Ribbon in demo data
+            res["product_pricelist_item"] += 1
         return res
 
     def test_shop_page_generation(self):
@@ -293,6 +299,9 @@ class TestWebsiteSalePerformanceWithPricelistDepth(TestWebsiteSalePerformanceWit
         res = super()._get_shop_page_queries()
         res["product_pricelist_item"] += 8
         res["product_pricelist"] += 1
+        if self._has_demo_data():
+            # Sale Ribbon in demo data
+            res["product_pricelist_item"] += 7
         return res
 
     def test_shop_page_generation(self):
