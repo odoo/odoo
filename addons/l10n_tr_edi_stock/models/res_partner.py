@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 
 
 class ResPartner(models.Model):
@@ -9,21 +9,24 @@ class ResPartner(models.Model):
         help="The postal code of the customs office used to ship to the destination country.",
         size=5,
     )
-    l10n_tr_edi_edispatch_alias_id = fields.Many2one(
-        comodel_name='l10n_tr_edi.alias',
-        string="eDispatch Alias",
-        compute='_compute_l10n_tr_edi_edispatch_alias_id',
-        domain="[('partner_id', '=', id)]",
+    l10n_tr_edi_edispatch_alias = fields.Char(
+        string="e-Dispatch Alias",
         copy=False,
-        store=True,
-        readonly=False,
+        readonly=True,
+        help="The GİB alias (mailbox) of the partner, used when sending e-Dispatches. \n"
+        "It is picked among the e-Dispatch aliases the GİB lists for the partner, with the button next to it.",
     )
 
-    @api.depends('l10n_tr_edi_alias_ids', 'l10n_tr_edi_customer_status')
-    def _compute_l10n_tr_edi_edispatch_alias_id(self):
-        for record in self:
-            if not record.l10n_tr_edi_edispatch_alias_id:
-                record.l10n_tr_edi_edispatch_alias_id = record.l10n_tr_edi_alias_ids[:1]
+    def _l10n_tr_edi_verify_other_aliases(self):
+        # EXTENDS 'l10n_tr_edi'
+        super()._l10n_tr_edi_verify_other_aliases()
+        # Only e-Invoice users can register for e-Dispatches. Without an alias, the e-Dispatch goes to the GİB.
+        aliases = self._l10n_tr_edi_fetch_aliases('edispatch') if self.l10n_tr_edi_customer_status == 'einvoice' else []
+        if self.l10n_tr_edi_edispatch_alias not in aliases:
+            self.l10n_tr_edi_edispatch_alias = aliases[0] if aliases else False
+
+    def action_l10n_tr_edi_select_edispatch_alias(self):
+        return self._l10n_tr_edi_action_select_alias('edispatch')
 
     def _l10n_tr_edi_validate_partner_details(self, tax_office_required=False):
         error_messages = {}
