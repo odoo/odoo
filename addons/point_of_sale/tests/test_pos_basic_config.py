@@ -271,6 +271,25 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(pos_orders.account_move.state, 'posted')
         self.assertEqual(pos_orders.account_move.amount_residual, 0)
 
+    def test_invoice_paid_with_cash_change_same_receivable_account(self):
+        """ Test that when the PoS receivable account and the partner
+        account_receivable are the same, an invoiced order paid in cash
+        with change is correctly marked as paid.
+        """
+        self.config.default_partner_id.property_account_receivable_id = self.customer.property_account_receivable_id
+        self.open_new_session()
+
+        order_data = self.create_ui_order_data(
+            [(self.product1, 1)],
+            pos_order_ui_args={'amount_return': -5},
+            payments=[(self.cash_pm1, 15)],
+            customer=self.customer,
+            is_invoiced=True,
+        )
+        res = self.env['pos.order'].sync_from_ui([order_data])
+        order = self.env['pos.order'].browse(res['pos.order'][0]['id'])
+        self.assertEqual(order.account_move.payment_state, 'paid')
+
     def test_pos_archived_combination(self):
         product = self.env['product.template'].create({
             'name': 'Product Test',
