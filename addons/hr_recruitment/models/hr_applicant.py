@@ -1015,7 +1015,8 @@ class HrApplicant(models.Model):
             })
 
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
-        employee = self.env['hr.employee'].with_context(clean_context(self.env.context)).create(self._get_employee_create_vals())
+        employee_vals = self._get_employee_create_vals()
+        employee = self.env['hr.employee'].with_context(clean_context(self.env.context)).create(employee_vals)
         action['res_id'] = employee.id
         employee_attachments = self.env['ir.attachment'].search([('res_model', '=','hr.employee'), ('res_id', '=', employee.id)])
         unique_attachments = self.attachment_ids.filtered(
@@ -1026,8 +1027,8 @@ class HrApplicant(models.Model):
             'job_id': self.job_id.id,
             'job_title': self.job_id.name,
             'department_id': self.department_id.id,
-            'work_email': self.department_id.company_id.email or self.email_from, # To have a valid email address by default
-            'work_phone': self.department_id.company_id.phone,
+            'work_email': employee_vals['work_email'],
+            'work_phone': employee_vals['work_phone'],
         })
         return action
 
@@ -1035,6 +1036,7 @@ class HrApplicant(models.Model):
         self.ensure_one()
         address_id = self.partner_id.address_get(['contact'])['contact']
         address_sudo = self.env['res.partner'].sudo().browse(address_id)
+        department_sudo = self.department_id.sudo()
         return {
             'name': self.partner_name or self.partner_id.display_name,
             'work_contact_id': self.partner_id.id,
@@ -1051,8 +1053,8 @@ class HrApplicant(models.Model):
             'lang': address_sudo.lang,
             'department_id': self.department_id.id,
             'address_id': self.company_id.partner_id.id,
-            'work_email': self.department_id.company_id.email or self.email_from,  # To have a valid email address by default
-            'work_phone': self.department_id.company_id.phone,
+            'work_email': department_sudo.company_id.email or self.email_from,  # To have a valid email address by default
+            'work_phone': department_sudo.company_id.phone,
             'applicant_ids': self.ids,
             'phone': self.partner_phone
         }
