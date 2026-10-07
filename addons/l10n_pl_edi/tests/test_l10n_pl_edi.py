@@ -504,6 +504,19 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             )
 
     @freeze_time('2026-01-23')
+    def test_ksef_fa3_buyer_vat_identification(self):
+        partner_de = self.partner_a.copy({
+            'country_id': self.env.ref('base.de').id,
+            'vat': 'DE286808614',
+        })
+        tax = self.env['account.chart.template'].ref('vs_dostu')
+        product = self._create_product(name='EU Service', type='service', taxes_id=[(6, 0, [tax.id])])
+        invoice_line = self._prepare_invoice_line(product_id=product.id, quantity=1, price_unit=1000.0)
+        invoice = self._create_invoice(invoice_line_ids=[invoice_line], partner_id=partner_de.id, post=True)
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:DaneIdentyfikacyjne/ns:KodUE"), 'DE')
+
+    @freeze_time('2026-01-23')
     def test_ksef_fa3_eu_service_b2b_includes_p13_9(self):
         """
         EU B2B service invoices tagged with K_12 must include P_13_9 as the net
