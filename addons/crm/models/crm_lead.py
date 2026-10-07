@@ -1325,6 +1325,17 @@ class CrmLead(models.Model):
             create_missing=True,
         )
 
+    def action_lead_mail_compose(self):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('crm.action_lead_mail_compose')
+        partner = self.partner_id or self._find_matching_partner()
+        raw_ctx = action.get('context') or {}
+        ctx = literal_eval(raw_ctx) if isinstance(raw_ctx, str) else dict(raw_ctx)
+        if partner:
+            ctx['default_partner_ids'] = partner.ids
+        action['context'] = ctx
+        return action
+
     # ------------------------------------------------------------
     # VIEWS
     # ------------------------------------------------------------
