@@ -128,7 +128,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         holiday.with_user(SUPERUSER_ID).unlink()
         self.assertFalse(timesheets.exists(), 'Timesheet should be deleted')
 
-        company = self.env['res.company'].create({"name": "new company"})
+        company = self.add_company('base.test_company', {"name": "new company"})
         self.empl_employee.write({
             "company_id": company.id,
         })
@@ -290,7 +290,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
                 'unit_amount': 8.0,
             })
 
-        company_b = self.env['res.company'].create({'name': 'Company B'})
+        company_b = self.add_company('base.test_company', {'name': 'Company B'})
         self.user_employee.write({'company_ids': [(4, company_b.id)]})
 
         time_off_task_company_b = company_b.leave_timesheet_task_id
@@ -351,7 +351,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
     def test_timeoff_task_creation_with_holiday_leave(self):
         """ Test the search method on is_timeoff_task"""
-        company = self.env['res.company'].create({"name": "new company"})
+        company = self.add_company('base.test_company', {"name": "new company"})
         self.empl_employee.write({'company_id': company.id})
 
         # New company already has an auto-configured timeoff task

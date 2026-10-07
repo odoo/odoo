@@ -10,7 +10,7 @@ class TestMultiCompany(HttpCase):
     def test_company_in_context(self):
         """ Test website company is set in context """
         website = self.env.ref('base.default_website')
-        company = self.env['res.company'].create({'name': "Adaa"})
+        company = self.add_company('base.test_company', {'name': "Adaa"})
         website.company_id = company
         response = self.url_open('/multi_company_website')
         self.assertEqual(response.json()[0], company.id)

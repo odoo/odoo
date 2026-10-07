@@ -147,7 +147,7 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(new_si.purchase_requisition_id, requisition_blanket, 'the blanket order is not linked to the supplier info')
 
     def test_08_purchase_requisition_sequence(self):
-        new_company = self.env['res.company'].create({'name': 'Company 2'})
+        new_company = self.add_company('base.test_company', {'name': 'Company 2'})
         self.env['ir.sequence'].create({
             'code': 'purchase.requisition.blanket.order',
             'prefix': 'REQ_',

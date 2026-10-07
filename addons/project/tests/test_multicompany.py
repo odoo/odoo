@@ -394,7 +394,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
         self.assertEqual(task_2.company_id, self.company_b, "The company of task_2 should have been set to company B.")
         self.assertFalse(task_3.company_id, "The company of the task_3 should not have been updated.")
         self.assertFalse(project.company_id, "The company of the project should not have been updated.")
-        company_c = self.env['res.company'].create({'name': 'company C'})
+        company_c = self.add_company('base.test_company', {'name': 'company C'})
         project.company_id = company_c
         for task in project.tasks:
             self.assertEqual(task.company_id, company_c, "The company of the tasks should have been updated to company C.")
@@ -486,7 +486,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                     task_form.name = "Testing changing name in a company I can not read/write"
 
     def test_date_to_assign_project(self):
-        company_0 = self.env['res.company'].create({'name': 'Test company 0'})
+        company_0 = self.add_company('base.test_company_with_branch', {'name': 'Test company 0'})
 
         leaves = self.env['resource.calendar.leaves'].with_company(company_0).create([{
             'name': 'Public Holiday for company 0',
@@ -497,7 +497,7 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
             'count_as': 'absence'
         }])
 
-        company_1 = self.env['res.company'].create({'name': 'Test company 1'})
+        company_1 = self.add_company('base.test_company_template', {'name': 'Test company 1'})
         project = self.env['project.project'].with_company(company_1).create({
             'name': 'Project for company 1',
             'company_id': company_1.id

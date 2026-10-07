@@ -9,8 +9,8 @@ class TestSaleOnchanges(TransactionCase):
         """Ensure the product's constrain on `company_id` doesn't block the creation of multiple
         products in different companies (see `product.template` `_check_sale_product_company`).
         """
-        company_a = self.env["res.company"].create({"name": "Company A"})
-        company_b = self.env["res.company"].create({"name": "Company B"})
+        company_a = self.add_company('base.test_company', {"name": "Company A"})
+        company_b = self.add_company('base.test_company_with_branch', {"name": "Company B"})
         products = self.env["product.template"].create([
             {"name": "Product Test 1", "company_id": company_a.id},
             {"name": "Product Test 2", "company_id": company_b.id},

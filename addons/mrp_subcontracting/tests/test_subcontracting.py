@@ -19,7 +19,8 @@ class TestSubcontractingBasic(TransactionCase):
         """ Checks the creation and presence of the subcontracting location. """
         self.assertTrue(self.env.company.subcontracting_location_id)
         self.assertTrue(self.env.company.subcontracting_location_id.active)
-        company2 = self.env['res.company'].create({'name': 'Test Company -'})
+        company2 = self.env['res.company'].create({'name': 'Test Company -'})  # don't use company fixture, testing company creation
+        self.assertEqual(company2.create_date, self.env.cr.now())
         self.assertTrue(company2.subcontracting_location_id)
         self.assertTrue(self.env.company.subcontracting_location_id != company2.subcontracting_location_id)
 

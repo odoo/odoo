@@ -353,7 +353,7 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         Confirm PO, receive products, post bill and generate LC
         """
         company = self.env.company
-        self.env.user.company_id = self.env['res.company'].create({
+        self.env.user.company_id = self.add_company('base.test_company', {
             'name': 'Another Company',
         })
 

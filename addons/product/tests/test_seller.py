@@ -40,7 +40,7 @@ class TestSeller(TransactionCase):
 
     def test_20_sellers_company(self):
         company_a = self.env.company
-        company_b = self.env['res.company'].create({
+        company_b = self.add_company('base.test_company', {
             'name': 'Saucisson Inc.',
         })
         self.product_consu.write({'seller_ids': [
