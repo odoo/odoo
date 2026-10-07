@@ -72,25 +72,19 @@ export class FontSizePlugin extends Plugin {
                     getDisplay: () => this.fontSize,
                     onFontSizeInput: (size) => {
                         this.isTypingFontSize = true;
-                        const resolvedSize = this.resolveFontSize(parseFloat(size));
-                        if (resolvedSize === null) {
-                            // Desired size matches the inherited value
-                            this.dependencies.format.requestFormat("fontSize", {
-                                applyStyle: false,
-                            });
-                        } else {
-                            this.dependencies.format.requestFormat("fontSize", {
-                                formatProps: resolvedSize,
-                                applyStyle: true,
-                            });
-                        }
+                        this.applyFontSize(size);
                         this.updateFontSizeSelectorParams();
                     },
                     onSelected: (item) => {
-                        this.dependencies.format.requestFormat("fontSize", {
-                            formatProps: { className: item.className },
-                            applyStyle: true,
-                        });
+                        if (this.config.useInlineStyle) {
+                            const size = item.name;
+                            this.applyFontSize(size);
+                        } else {
+                            this.dependencies.format.requestFormat("fontSize", {
+                                formatProps: { className: item.className },
+                                applyStyle: true,
+                            });
+                        }
                         this.updateFontSizeSelectorParams();
                     },
                     onBlur: () => {
@@ -242,6 +236,21 @@ export class FontSizePlugin extends Plugin {
     setup() {
         this.fontSize = proxy({ displayName: "" });
         this.isTypingFontSize = false;
+    }
+
+    applyFontSize(size) {
+        const resolvedSize = this.resolveFontSize(parseFloat(size));
+        if (resolvedSize === null) {
+            // Desired size matches the inherited value
+            this.dependencies.format.requestFormat("fontSize", {
+                applyStyle: false,
+            });
+        } else {
+            this.dependencies.format.requestFormat("fontSize", {
+                formatProps: resolvedSize,
+                applyStyle: true,
+            });
+        }
     }
 
     normalize(root) {
