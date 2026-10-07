@@ -1,18 +1,18 @@
 import { registry } from '@web/core/registry';
-import { SaleFileUploadListRenderer } from '../sale_file_upload_list/sale_file_upload_list_renderer';
-import { saleFileUploadListView } from '../sale_file_upload_list/sale_file_upload_list_view';
-import { SaleFileUploadListController } from '../sale_file_upload_list/sale_file_upload_list_controller';
+import { ListRenderer } from '@web/views/list/list_renderer';
+import { saleOrderListView } from '../sale_order_list/sale_order_list_view';
+import { SaleOrderListController } from '../sale_order_list/sale_order_list_controller';
 import { Dashboard } from '../../js/dashboard/dashboard';
 
-export class DashboardListRenderer extends SaleFileUploadListRenderer {
+export class DashboardListRenderer extends ListRenderer {
     static template = 'sale.ListRenderer';
     static components = {
-        ...SaleFileUploadListRenderer.components,
+        ...ListRenderer.components,
         Dashboard,
     };
 }
 
-export class DashboardListController extends SaleFileUploadListController {
+export class DashboardListController extends SaleOrderListController {
     get actionMenuProps() {
         const actionMenuProps = super.actionMenuProps;
         return {
@@ -27,7 +27,7 @@ export class DashboardListController extends SaleFileUploadListController {
     }
 }
 
-export const dashboardListView = Object.assign(Object.create(saleFileUploadListView), {
+export const dashboardListView = Object.assign(Object.create(saleOrderListView), {
     Controller: DashboardListController,
     Renderer: DashboardListRenderer,
 });

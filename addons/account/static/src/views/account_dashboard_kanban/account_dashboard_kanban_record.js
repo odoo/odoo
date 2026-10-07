@@ -1,60 +1,18 @@
-import { user } from "@web/core/user";
-import { AccountFileUploader } from "@account/components/account_file_uploader/account_file_uploader";
-import { UploadDropZone } from "@account/components/upload_drop_zone/upload_drop_zone";
-import { KanbanDropdownMenuWrapper } from "@web/views/kanban/kanban_dropdown_menu_wrapper";
+import { onWillDestroy, usePlugin } from "@odoo/owl";
+import { DropzonePlugin } from "@web/core/dropzone/dropzone_plugin";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
-
-import { onWillStart, proxy } from "@odoo/owl";
-
-// Accounting Dashboard
-export class DashboardKanbanDropdownMenuWrapper extends KanbanDropdownMenuWrapper {
-    onClick(ev) {
-        // Keep the dropdown open as we need the fileupload to remain in the dom
-        if (!ev.target.tagName === "INPUT" && !ev.target.closest('.file_upload_kanban_action_a')) {
-            super.onClick(ev);
-        }
-    }
-}
+import { UploadDropzonePlugin } from "@web/webclient/upload_dropzone_plugin";
 
 export class DashboardKanbanRecord extends KanbanRecord {
-    static template = "account.DashboardKanbanRecord";
-    static components = {
-        ...DashboardKanbanRecord.components,
-        UploadDropZone,
-        AccountFileUploader,
-        KanbanDropdownMenuWrapper: DashboardKanbanDropdownMenuWrapper,
-    };
-
     setup() {
         super.setup();
-        onWillStart(async () => {
-            this.allowDrop = this.recordDropSettings.group ? await user.hasGroup(this.recordDropSettings.group) : true;
+        const uploadDropzone = usePlugin(UploadDropzonePlugin);
+        const getUploadButton = () => this.rootRef()?.querySelector("[type='upload']");
+        const removeDropzone = usePlugin(DropzonePlugin).add(this.rootRef, {
+            label: this.props.record.data.name,
+            onDrop: (files) => uploadDropzone.uploadWithButton(getUploadButton(), files),
+            isEnabled: () => Boolean(getUploadButton()),
         });
-        this.dropzoneState = proxy({
-            visible: false,
-        });
-    }
-
-    get recordDropSettings() {
-        const kanbanDashboard = JSON.parse(this.props.record.data.kanban_dashboard);
-        return {
-            image: kanbanDashboard.drag_drop_settings.image,
-            text: kanbanDashboard.drag_drop_settings.text,
-            company_name: kanbanDashboard.company_name,
-            show_company: kanbanDashboard.show_company
-        };
-    }
-
-    get dropzoneProps() {
-        const recordDropSettings = this.recordDropSettings;
-        return {
-            visible: this.dropzoneState.visible,
-            dragIcon: recordDropSettings.image,
-            dragText: recordDropSettings.text,
-            dragCompany: recordDropSettings.company_name,
-            dragShowCompany: recordDropSettings.show_company,
-            dragTitle: this.props.record.data.name,
-            hideZone: () => { this.dropzoneState.visible = false; },
-        }
+        onWillDestroy(removeDropzone);
     }
 }

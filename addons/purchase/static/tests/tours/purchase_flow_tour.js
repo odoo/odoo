@@ -53,12 +53,16 @@ registry.category("web_tour.tours").add("test_basic_purchase_flow_with_minimal_a
         },
         {
             content: "Upload the vendor bill",
-            trigger: ".o_widget_purchase_file_uploader",
+            trigger: ".o_statusbar_buttons button:contains('Upload Bill')",
+            run: "click",
+        },
+        {
+            trigger: "input.o_upload_input",
             async run({ inputFiles }) {
                 const testFile = new File(["Vendor, Bill"], "my_vendor_bill.png", {
                     type: "image/*",
                 });
-                await inputFiles(".o_widget_purchase_file_uploader input", [testFile]);
+                await inputFiles("input.o_upload_input", [testFile]);
             },
         },
         {

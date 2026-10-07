@@ -1,6 +1,6 @@
-import { FileUploadListRenderer } from "../file_upload_list/file_upload_list_renderer";
+import { ListRenderer } from "@web/views/list/list_renderer";
 
-export class AccountUploadListRenderer extends FileUploadListRenderer {
+export class AccountUploadListRenderer extends ListRenderer {
     // Add warning background color in the ref column if we detect that the record has a duplicated
     getCellClass(column, record) {
         const classNames = super.getCellClass(column, record);
