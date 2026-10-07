@@ -7,7 +7,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
     def _get_additional_document_reference_vals(self, invoice):
         additional_document_vals = super()._get_additional_document_reference_vals(invoice)
 
-        if invoice._has_earchive_despatch_moves():
+        if invoice._l10n_tr_edi_has_earchive_despatch_moves():
             additional_document_vals.append({
                 'cbc:ID': {'_text': '.'},  # Dummy value required for GİB schema validation
                 'cbc:IssueDate': {'_text': invoice.invoice_date},
@@ -17,9 +17,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _get_dispatch_document_reference_vals(self, invoice):
         dispatch_document_vals = []
-        for picking in invoice.l10n_tr_nilvera_edispatch_ids:
+        for picking in invoice.l10n_tr_edi_edispatch_ids:
             dispatch_document_vals.append({
-                'cbc:ID': {'_text': picking._get_nilvera_document_serial_number()},
+                'cbc:ID': {'_text': picking._l10n_tr_edi_get_dispatch_number()},
                 'cbc:IssueDate': {'_text': picking.scheduled_date.date()},
                 'cbc:DocumentTypeCode': {'_text': 'SEVK'},
             })
@@ -33,8 +33,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         ecom_data, ecom_errors = super()._l10n_tr_get_ecommerce_sale_additional_reference_data(invoice)
 
         # Delivery data
-        if picking := invoice.l10n_tr_nilvera_edispatch_ids[:1]:
-            carrier = picking.l10n_tr_nilvera_carrier_id or picking.l10n_tr_nilvera_driver_ids[0]
+        if picking := invoice.l10n_tr_edi_edispatch_ids[:1]:
+            carrier = picking.l10n_tr_edi_carrier_id or picking.l10n_tr_edi_driver_ids[0]
             if carrier.vat:
                 transport_date = picking.date_done or picking.scheduled_date
                 ecom_data.extend([

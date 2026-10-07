@@ -4,15 +4,15 @@ from odoo import _, api, fields, models
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    l10n_tr_nilvera_edispatch_customs_zip = fields.Char(
+    l10n_tr_edi_edispatch_customs_zip = fields.Char(
         string="Customs ZIP",
         help="The postal code of the customs office used to ship to the destination country.",
         size=5,
     )
-    l10n_tr_nilvera_edispatch_alias_id = fields.Many2one(
+    l10n_tr_edi_edispatch_alias_id = fields.Many2one(
         comodel_name='l10n_tr_edi.alias',
         string="eDispatch Alias",
-        compute='_compute_l10n_tr_nilvera_edispatch_alias_id',
+        compute='_compute_l10n_tr_edi_edispatch_alias_id',
         domain="[('partner_id', '=', id)]",
         copy=False,
         store=True,
@@ -20,12 +20,12 @@ class ResPartner(models.Model):
     )
 
     @api.depends('l10n_tr_edi_alias_ids', 'l10n_tr_edi_customer_status')
-    def _compute_l10n_tr_nilvera_edispatch_alias_id(self):
+    def _compute_l10n_tr_edi_edispatch_alias_id(self):
         for record in self:
-            if not record.l10n_tr_nilvera_edispatch_alias_id:
-                record.l10n_tr_nilvera_edispatch_alias_id = record.l10n_tr_edi_alias_ids[:1]
+            if not record.l10n_tr_edi_edispatch_alias_id:
+                record.l10n_tr_edi_edispatch_alias_id = record.l10n_tr_edi_alias_ids[:1]
 
-    def _l10n_tr_nilvera_validate_partner_details(self, tax_office_required=False):
+    def _l10n_tr_edi_validate_partner_details(self, tax_office_required=False):
         error_messages = {}
 
         for record in self:
@@ -49,8 +49,8 @@ class ResPartner(models.Model):
                 msg.append(_("%s is required", ', '.join(missing_fields)))
 
             if country_code != "TR" and (
-                not record.l10n_tr_nilvera_edispatch_customs_zip
-                or len(record.l10n_tr_nilvera_edispatch_customs_zip) != 5
+                not record.l10n_tr_edi_edispatch_customs_zip
+                or len(record.l10n_tr_edi_edispatch_customs_zip) != 5
             ):
                 msg.append(_("Customs ZIP of 5 characters must be present"))
 
