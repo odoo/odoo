@@ -15,14 +15,14 @@ class AccountMove(models.Model):
     _name = 'account.move'
     _inherit = ['account.move']
 
-    l10n_tr_nilvera_uuid = fields.Char(
-        string="Nilvera Document UUID",
+    l10n_tr_edi_uuid = fields.Char(
+        string="E-Document UUID",
         copy=False,
         readonly=True,
-        help="This is the unique identifier (UUID) used to link this Odoo document with the Nilvera system. \n"
+        help="This is the unique identifier (UUID) used to link this Odoo document with the GİB system. \n"
         "This record ensures every new document has its own unique ID for tracking.",
     )
-    l10n_tr_nilvera_send_status = fields.Selection(
+    l10n_tr_edi_send_status = fields.Selection(
         selection=[
             ('cancelled', 'Cancelled'),
             ('error', "Error"),
@@ -36,15 +36,15 @@ class AccountMove(models.Model):
             ('commercial_rejected', "Rejected"),
             ('draft_sent', "Sent as Draft"),
         ],
-        string="Nilvera Status",
+        string="E-Document Status",
         readonly=True,
         copy=False,
         default='not_sent',
-        help="Tracks the real-time submission status of this invoice to Nilvera. It is updated automatically based on "
-             "responses from Nilvera and GİB. \n"
-             "This field is read-only as it is updated automatically by the system based on responses from Nilvera and GİB. \n"
+        help="Tracks the real-time submission status of this invoice to the GİB. It is updated automatically based on "
+             "responses from the provider and the GİB. \n"
+             "This field is read-only as it is updated automatically by the system based on responses from the provider and the GİB. \n"
              "- Not sent: Default state before processing. \n"
-             "- Sent and waiting response: Sent to Nilvera, awaiting GİB confirmation. \n"
+             "- Sent and waiting response: Sent to the provider, awaiting GİB confirmation. \n"
              "- Successful: GİB has accepted the invoice. \n"
              "- Error: The submission failed (check chatter for details). \n"
              "- Approved: Commercial Invoice is approved by recipient.\n"
@@ -113,7 +113,7 @@ class AccountMove(models.Model):
         help="Specifies the method of transport using official GİB codes. ",
     )
     l10n_tr_exemption_code_id = fields.Many2one(
-        comodel_name='l10n_tr_nilvera_einvoice.account.tax.code',
+        comodel_name='l10n_tr_edi.tax.code',
         compute='_compute_l10n_tr_exemption_code_id',
         store=True,
         readonly=False,
@@ -124,7 +124,7 @@ class AccountMove(models.Model):
         "'Registered for Export', 'Tax Exempt' or 'Withholding'.",
     )
     l10n_tr_available_exemption_code_ids = fields.Many2many(
-        comodel_name='l10n_tr_nilvera_einvoice.account.tax.code',
+        comodel_name='l10n_tr_edi.tax.code',
         compute='_compute_l10n_tr_available_exemption_code_ids',
         compute_sudo=True,
         help="Technical field (not for users). The GİB codes available on this invoice, from "
@@ -138,10 +138,10 @@ class AccountMove(models.Model):
         "several ratios.",
     )
     l10n_tr_zero_vat_warning = fields.Boolean(compute="_compute_l10n_tr_l10n_tr_zero_vat_warning")
-    l10n_tr_nilvera_customer_status = fields.Selection(
-        string="Partner Nilvera Status",
-        related='partner_id.l10n_tr_nilvera_customer_status',
-        help="Shows the Nilvera status of the customer. ",
+    l10n_tr_edi_customer_status = fields.Selection(
+        string="Partner GİB Status",
+        related='partner_id.l10n_tr_edi_customer_status',
+        help="Shows the GİB status of the customer. ",
     )
     l10n_tr_original_invoice_date = fields.Date(string="Original Invoice Date")
     l10n_tr_public_spending_unit_id = fields.Many2one(comodel_name='res.partner',
@@ -160,16 +160,16 @@ class AccountMove(models.Model):
         ],
         string="Invoice Scenario Group",
         compute='_compute_l10n_tr_invoice_scenario_group',
-        compute_sql='_compute_sql_invoice_scenario_group',
+        compute_sql='_compute_sql_l10n_tr_invoice_scenario_group',
         compute_sudo=True,
     )
 
-    @api.depends('l10n_tr_is_export_invoice', 'partner_id.l10n_tr_nilvera_customer_status', 'l10n_tr_gib_invoice_scenario')
+    @api.depends('l10n_tr_is_export_invoice', 'partner_id.l10n_tr_edi_customer_status', 'l10n_tr_gib_invoice_scenario')
     def _compute_l10n_tr_invoice_scenario_group(self):
         for record in self:
             if record.l10n_tr_is_export_invoice:
                 record.l10n_tr_invoice_scenario_group = 'export'
-            elif record.l10n_tr_nilvera_customer_status == 'earchive':
+            elif record.l10n_tr_edi_customer_status == 'earchive':
                 record.l10n_tr_invoice_scenario_group = 'earchive'
             elif record.l10n_tr_gib_invoice_scenario == 'TEMELFATURA':
                 record.l10n_tr_invoice_scenario_group = 'basic'
@@ -180,7 +180,7 @@ class AccountMove(models.Model):
             else:
                 record.l10n_tr_invoice_scenario_group = False
 
-    def _compute_sql_invoice_scenario_group(self, table):
+    def _compute_sql_l10n_tr_invoice_scenario_group(self, table):
         partner_table = table._join('partner_id')
         return SQL(
             """
@@ -194,7 +194,7 @@ class AccountMove(models.Model):
             END
             """,
             export=table['l10n_tr_is_export_invoice'],
-            partner_status=partner_table['l10n_tr_nilvera_customer_status'],
+            partner_status=partner_table['l10n_tr_edi_customer_status'],
             scenario=table['l10n_tr_gib_invoice_scenario'],
         )
 
@@ -227,7 +227,7 @@ class AccountMove(models.Model):
         "l10n_tr_withholding_ratio",
     )
     def _compute_l10n_tr_available_exemption_code_ids(self):
-        codes = self.env['l10n_tr_nilvera_einvoice.account.tax.code'].search([])
+        codes = self.env['l10n_tr_edi.tax.code'].search([])
         for record in self:
             if record.l10n_tr_is_export_invoice:
                 code_types = {'export_exception'}
@@ -303,7 +303,7 @@ class AccountMove(models.Model):
             if (
                 move.country_code == 'TR'
                 and move.is_sale_document()
-                and move.l10n_tr_nilvera_customer_status == 'earchive'
+                and move.l10n_tr_edi_customer_status == 'earchive'
             ):
                 move.l10n_tr_sales_type = 'website' if 'website_id' in move._fields and move.website_id else 'normal'
             else:
@@ -344,14 +344,14 @@ class AccountMove(models.Model):
 
     def button_draft(self):
         # EXTENDS account
-        for move in self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type in {'out_invoice', 'in_invoice'}):
-            if move.l10n_tr_nilvera_send_status == 'error':
+        for move in self.filtered(lambda move: move.l10n_tr_edi_uuid and move.move_type in {'out_invoice', 'in_invoice'}):
+            if move.l10n_tr_edi_send_status == 'error':
                 move.message_post(body=_("To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."))
-            elif move.l10n_tr_nilvera_send_status not in {'not_sent', 'draft_sent', 'commercial_rejected'}:
+            elif move.l10n_tr_edi_send_status not in {'not_sent', 'draft_sent', 'commercial_rejected'}:
                 raise UserError(_("You cannot reset to draft an entry that has been sent/received from Nilvera."))
         return super().button_draft()
 
-    def _l10n_tr_nilvera_einvoice_check_invalid_invoice_reference(self):
+    def _l10n_tr_edi_check_invalid_invoice_reference(self):
         invalid_moves = self.env["account.move"]
         for record in self:
             _, parts = record._get_sequence_format_param(record.ref or "")
@@ -400,7 +400,7 @@ class AccountMove(models.Model):
             %(condition)s
             AND sequence_prefix NOT LIKE ALL (COALESCE((
                 SELECT array_agg(l10n_tr_series.name || '/%%')
-                  FROM l10n_tr_nilvera_einvoice_invoice_sequence l10n_tr_series
+                  FROM l10n_tr_edi_invoice_sequence l10n_tr_series
                  WHERE l10n_tr_series.journal_id = %(journal_id)s
             ), ARRAY[]::text[]))
             """,
@@ -410,13 +410,13 @@ class AccountMove(models.Model):
 
     def _post(self, soft=True):
         for move in self:
-            if move.l10n_tr_nilvera_send_status == 'error' and move.l10n_tr_nilvera_uuid:
+            if move.l10n_tr_edi_send_status == 'error' and move.l10n_tr_edi_uuid:
                 raise UserError(_("To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."))
-            if move.country_code == 'TR' and not move.l10n_tr_nilvera_uuid:
-                move.l10n_tr_nilvera_uuid = str(uuid.uuid4())
+            if move.country_code == 'TR' and not move.l10n_tr_edi_uuid:
+                move.l10n_tr_edi_uuid = str(uuid.uuid4())
         return super()._post(soft=soft)
 
-    def _l10n_tr_nilvera_get_series_prefix(self):
+    def _l10n_tr_edi_get_series_prefix(self):
         """Return the 3-character invoice series for an unnamed draft.
 
         A draft has no sequence number yet. The series is derived from the last sequence
@@ -432,14 +432,14 @@ class AccountMove(models.Model):
             prefix = self.journal_id.code or ''
         return prefix
 
-    def _l10n_tr_nilvera_einvoice_check_negative_lines(self):
+    def _l10n_tr_edi_check_negative_lines(self):
         return any(
             line.display_type not in {'line_note', 'line_section'}
             and (line.quantity < 0 or line.price_unit < 0)
             for line in self.invoice_line_ids
         )
 
-    def _l10n_tr_nilvera_einvoice_check_lines_missing_taxes(self):
+    def _l10n_tr_edi_check_lines_missing_taxes(self):
         return any(
             line.display_type == 'product' and not line.tax_ids
             for line in self.invoice_line_ids

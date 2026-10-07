@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="l10n_tr_nilvera_einvoice_invoice_sequence_view_list" model="ir.ui.view">
-        <field name="name">l10n_tr_nilvera_einvoice.invoice.sequence.list</field>
-        <field name="model">l10n_tr_nilvera_einvoice.invoice.sequence</field>
+    <record id="l10n_tr_edi_invoice_sequence_view_list" model="ir.ui.view">
+        <field name="name">l10n_tr_edi.invoice.sequence.list</field>
+        <field name="model">l10n_tr_edi.invoice.sequence</field>
         <field name="arch" type="xml">
             <list string="e-Document Sequences" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="partner_id" placeholder="Every customer"/>
                 <field name="account_id" placeholder="Any account"/>
-                <field name="l10n_tr_nilvera_customer_status"
+                <field name="l10n_tr_edi_customer_status"
                        readonly="partner_id"
                        placeholder="Any status"/>
                 <field name="l10n_tr_scenario_applies" column_invisible="True"/> <!-- Needed for the readonly modifier on 'l10n_tr_gib_invoice_scenario' -->
@@ -28,8 +28,8 @@
         </field>
     </record>
 
-    <record id="l10n_tr_nilvera_einvoice_view_account_journal_form" model="ir.ui.view">
-        <field name="name">l10n_tr_nilvera_einvoice.account.journal.form</field>
+    <record id="view_account_journal_form" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit.l10n_tr_edi</field>
         <field name="model">account.journal</field>
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">

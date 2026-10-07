@@ -14,11 +14,11 @@ class TestL10nTrInvoiceSequence(TestUBLTRCommon):
         cls.purchase_journal = cls.company_data['default_journal_purchase']
         cls.einvoice_partner_2 = cls.env['res.partner'].create({
             'name': 'Test Partner 2',
-            'l10n_tr_nilvera_customer_status': 'einvoice',
+            'l10n_tr_edi_customer_status': 'einvoice',
         })
 
     def _add_sequence(self, name, journal=None, **conditions):
-        return self.env['l10n_tr_nilvera_einvoice.invoice.sequence'].create({
+        return self.env['l10n_tr_edi.invoice.sequence'].create({
             'journal_id': (journal or self.sale_journal).id,
             'name': name,
             **conditions,

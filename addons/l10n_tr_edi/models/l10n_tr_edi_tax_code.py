@@ -1,8 +1,8 @@
 from odoo import api, fields, models
 
 
-class L10nTrNilveraEinvoiceAccountTaxCode(models.Model):
-    _name = "l10n_tr_nilvera_einvoice.account.tax.code"
+class L10n_Tr_EdiTaxCode(models.Model):
+    _name = "l10n_tr_edi.tax.code"
     _description = "Turkish Tax Codes (GIB Codes)"
 
     name = fields.Char(

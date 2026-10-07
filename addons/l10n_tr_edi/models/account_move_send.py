@@ -16,7 +16,7 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _is_tr_nilvera_applicable(self, move):
-        return move.l10n_tr_nilvera_send_status in {'not_sent', 'draft_sent'} and move.is_invoice(include_receipts=True) and move.country_code == 'TR'
+        return move.l10n_tr_edi_send_status in {'not_sent', 'draft_sent'} and move.is_invoice(include_receipts=True) and move.country_code == 'TR'
 
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
@@ -33,7 +33,7 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         # Add the Nilvera PDF to the mail attachments.
         attachments = super()._get_invoice_extra_attachments(move)
-        if move.l10n_tr_nilvera_send_status in {'succeed', 'commercial_approved', 'commercial_rejected', 'commercial_answered_automatically'} and move.l10n_tr_nilvera_pdf_id:
+        if move.l10n_tr_edi_send_status in {'succeed', 'commercial_approved', 'commercial_rejected', 'commercial_answered_automatically'} and move.l10n_tr_nilvera_pdf_id:
             attachments += move.l10n_tr_nilvera_pdf_id
         return attachments
 
@@ -105,11 +105,11 @@ class AccountMoveSend(models.AbstractModel):
         if tr_companies_missing_tax_office := self._get_l10n_tr_tax_company_tax_office_alert(tr_nilvera_moves):
             alerts["tr_companies_missing_tax_office"] = tr_companies_missing_tax_office
 
-        # Alert if partner does not use UBL TR e-invoice format or has not checked Nilvera status
+        # Alert if partner does not use UBL TR e-invoice format or has not checked GİB status
         if tr_partners_invalid_edi_or_status := tr_nilvera_moves.filtered(
             lambda m: (
                 m.partner_id.invoice_edi_format != 'ubl_tr'
-                or m.partner_id.l10n_tr_nilvera_customer_status == 'not_checked'
+                or m.partner_id.l10n_tr_edi_customer_status == 'not_checked'
             )
         ).partner_id:
             alerts["tr_partners_invalid_edi_or_status"] = {
@@ -125,7 +125,7 @@ class AccountMoveSend(models.AbstractModel):
             }
 
         if invalid_negative_lines := tr_nilvera_moves.filtered(
-            lambda move: move._l10n_tr_nilvera_einvoice_check_negative_lines(),
+            lambda move: move._l10n_tr_edi_check_negative_lines(),
         ):
             alerts["critical_invalid_negative_lines"] = {
                 "level": "danger",
@@ -135,7 +135,7 @@ class AccountMoveSend(models.AbstractModel):
             }
 
         if lines_missing_taxes_moves := tr_nilvera_moves.filtered(
-            lambda move: move._l10n_tr_nilvera_einvoice_check_lines_missing_taxes(),
+            lambda move: move._l10n_tr_edi_check_lines_missing_taxes(),
         ):
             alerts['tr_lines_missing_taxes'] = {
                 'level': 'danger',
@@ -169,7 +169,7 @@ class AccountMoveSend(models.AbstractModel):
                 'action': public_spending_units_missing_vat._get_records_action(name=self.env._("Check VAT on Partner(s)")),
             }
 
-        exemption_702 = self.env['account.chart.template'].ref('l10n_tr_nilvera_einvoice.account_tax_code_702')
+        exemption_702 = self.env['account.chart.template'].ref('l10n_tr_edi.tax_code_702')
         # Warning alert if a line has no product and is missing CTSP Number
         tr_export_moves = tr_nilvera_moves.filtered(
             lambda m: m.l10n_tr_is_export_invoice or m.l10n_tr_exemption_code_id == exemption_702,
@@ -206,7 +206,7 @@ class AccountMoveSend(models.AbstractModel):
 
         if (
             invalid_invoice_references
-            := tr_nilvera_moves._l10n_tr_nilvera_einvoice_check_invalid_invoice_reference()
+            := tr_nilvera_moves._l10n_tr_edi_check_invalid_invoice_reference()
         ):
             alerts["tr_moves_with_invalid_invoice_reference"] = {
                 "level": "danger",
@@ -267,7 +267,7 @@ class AccountMoveSend(models.AbstractModel):
         if tr_credit_note_invoice_not_sent := tr_nilvera_moves.filtered(
             lambda r: r.move_type == "out_refund"
             and r.reversed_entry_id
-            and r.reversed_entry_id.l10n_tr_nilvera_send_status
+            and r.reversed_entry_id.l10n_tr_edi_send_status
             not in {"sent", "waiting", "succeed"}
         ):
             alerts["tr_credit_note_invoice_not_sent"] = {
@@ -347,7 +347,7 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_l10n_tr_tax_partner_tax_office_alert(self, moves):
         if tr_einvoice_partners_missing_ref := moves.partner_id.filtered(
-            lambda p: p.l10n_tr_nilvera_customer_status == 'einvoice' and not p.l10n_tr_tax_office_id,
+            lambda p: p.l10n_tr_edi_customer_status == 'einvoice' and not p.l10n_tr_tax_office_id,
         ):
             return {
                 'message': self.env._("The Tax Office is not set on the following TR Partner(s)."),
@@ -382,7 +382,7 @@ class AccountMoveSend(models.AbstractModel):
         # The move needs to be put as sent only if sent by Nilvera
         for invoice, invoice_data in invoices_data.items():
             if invoice.company_id.country_code == 'TR':
-                invoice.is_move_sent = invoice.l10n_tr_nilvera_send_status == 'sent'
+                invoice.is_move_sent = invoice.l10n_tr_edi_send_status == 'sent'
 
     @api.model
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
@@ -403,7 +403,7 @@ class AccountMoveSend(models.AbstractModel):
                     # just in case.
                     invoice.partner_id._check_nilvera_customer()
                 customer_alias = invoice._get_partner_l10n_tr_nilvera_customer_alias_name()
-                if invoice.l10n_tr_nilvera_send_status == 'draft_sent':
+                if invoice.l10n_tr_edi_send_status == 'draft_sent':
                     # Already uploaded as a draft: approve it and transmit to GİB.
                     invoice._l10n_tr_nilvera_approve_and_send_draft(xml_file, customer_alias)
                 elif customer_alias:  # E-Invoice

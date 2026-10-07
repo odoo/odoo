@@ -16,7 +16,7 @@ The documents are exchanged through an integrator, which is implemented in its o
         'views/l10n_tr_edi_tax_code_views.xml',
         'views/product_views.xml',
     ],
-    'post_init_hook': '_l10n_tr_nilvera_post_init',
+    'post_init_hook': '_l10n_tr_edi_post_init',
     'uninstall_hook': 'uninstall_hook',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
