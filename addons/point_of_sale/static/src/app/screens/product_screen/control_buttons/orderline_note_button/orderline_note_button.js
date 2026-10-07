@@ -46,7 +46,7 @@ export class NoteButton extends Component {
             await this.pos.addLineToCurrentOrder({
                 product_tmpl_id: selectedOrderline.product_id.product_tmpl_id,
                 qty: quantity_with_note,
-                note: payload,
+                [this.type === "internal" ? "note" : "customer_note"]: payload,
             });
             selectedOrderline.qty = saved_quantity;
             for (const line of selectedOrderline.combo_line_ids) {

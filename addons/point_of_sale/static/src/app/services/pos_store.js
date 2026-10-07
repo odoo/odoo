@@ -1938,7 +1938,17 @@ export class PosStore extends WithLazyGetterTrap {
             this.syncingOrders.add(order.uuid);
             if (this.config.printerCategories.size && !opts.byPassPrint) {
                 try {
-                    isPrinted = await this.ticketPrinter.printOrderChanges({ order, opts });
+                    isPrinted = await this.ticketPrinter.printOrderChanges({
+                        order,
+                        opts,
+                        onRetryPrinted: () => {
+                            // The changes printed with the "Retry" button are sent as well
+                            if (this.models["pos.order"].getBy("uuid", order.uuid)) {
+                                order.updateLastOrderChange();
+                                this.syncAllOrders({ orders: [order] });
+                            }
+                        },
+                    });
                     if (isPrinted) {
                         order.updateLastOrderChange();
                     }

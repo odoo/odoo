@@ -1,10 +1,11 @@
 import { test, expect, describe } from "@odoo/hoot";
-import { getFilledOrder, setupPosEnv, createPaymentLine } from "../utils";
+import { getFilledOrder, setupPosEnv, createPaymentLine, waitUntilOrdersSynced } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import {
     getStrNotes,
     filterChangeByCategories,
+    changesToOrder,
 } from "@point_of_sale/app/models/utils/order_change";
 import { prepareRoundingVals } from "../accounting/utils";
 import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -87,6 +88,122 @@ describe("pos_store.js", () => {
 
         expect(printCalled).toBe(false);
         expect(order.hasChange).toBe(false);
+    });
+
+    test("sendOrderInPreparation retries only the failed preparation printer", async () => {
+        const store = await setupPosEnv();
+        const kitchen = store.models["pos.printer"].get(1);
+        kitchen.name = "Kitchen";
+        kitchen.product_categories_ids = [store.models["pos.category"].get(1)];
+        const bar = store.models["pos.printer"].create({
+            name: "Bar",
+            product_categories_ids: [store.models["pos.category"].get(2)],
+            printer_type: "epson_epos",
+        });
+        store.config.preparation_printer_ids = [kitchen, bar];
+        await store.ticketPrinter.initPrinters();
+        // 3 "TEST" for the kitchen and 2 "TEST 2" for the bar
+        const order = await getFilledOrder(store);
+
+        const printed = [];
+        let barFailures = 1;
+        let retry;
+        patchWithCleanup(store.ticketPrinter, {
+            async generateIframe(template, ticket) {
+                return ticket;
+            },
+            setIframeSizeFromPrinter() {},
+            async generateImage(ticket) {
+                return ticket;
+            },
+            async print({ printer, image }) {
+                if (printer === bar && barFailures-- > 0) {
+                    return { successful: false, message: { body: "Bar is not reachable" } };
+                }
+                const lines = image.changes.data.map((line) => `${line.quantity} ${line.name}`);
+                printed.push(`${printer.name}: ${lines.join(", ")}`);
+                return { successful: true };
+            },
+            showPrinterErrorDialog(message, retryFunction) {
+                retry = retryFunction;
+            },
+        });
+
+        await store.sendOrderInPreparation(order);
+        expect(printed).toEqual(["Kitchen: 3 TEST"]);
+
+        // The kitchen must not print its lines again, and the bar must print its own lines
+        await retry();
+        expect(printed).toEqual(["Kitchen: 3 TEST", "Bar: 2 TEST 2"]);
+
+        expect(store.getOrderChanges(order).nbrOfChanges).toBe(0);
+        // The changes printed on retry must not be printed again with the next ones
+        await store.sendOrderInPreparation(order);
+        expect(printed).toEqual(["Kitchen: 3 TEST", "Bar: 2 TEST 2"]);
+    });
+
+    test("sendOrderInPreparation marks the changes printed on retry as sent", async () => {
+        const store = await setupPosEnv();
+        // 3 "TEST" and 2 "TEST 2", both printed by the same printer
+        const order = await getFilledOrder(store);
+
+        const printed = [];
+        let failures = 2;
+        let retry;
+        patchWithCleanup(store.ticketPrinter, {
+            async generateIframe(template, ticket) {
+                return ticket;
+            },
+            setIframeSizeFromPrinter() {},
+            async generateImage(ticket) {
+                return ticket;
+            },
+            async print({ image }) {
+                if (failures-- > 0) {
+                    return { successful: false, message: { body: "Printer is not reachable" } };
+                }
+                const lines = image.changes.data.map((line) => `${line.quantity} ${line.name}`);
+                printed.push(lines.join(", "));
+                return { successful: true };
+            },
+            showPrinterErrorDialog(message, retryFunction) {
+                retry = retryFunction;
+            },
+        });
+
+        await store.sendOrderInPreparation(order);
+        await retry(); // fails again
+        expect(printed).toEqual([]);
+        expect(store.getOrderChanges(order).nbrOfChanges).toBe(5);
+
+        await retry();
+        expect(printed).toEqual(["3 TEST, 2 TEST 2"]);
+        expect(store.getOrderChanges(order).nbrOfChanges).toBe(0);
+        await waitUntilOrdersSynced(store);
+        expect(order.isDirty()).toBe(false);
+
+        // The changes printed on retry must not be printed again with the next ones
+        await store.sendOrderInPreparation(order);
+    });
+
+    test("changesToOrder with note and quantity changed on a sent line", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store); // 3 "TEST" and 2 "TEST 2"
+        order.updateLastOrderChange();
+        const [line] = order.lines;
+        line.setNote(JSON.stringify([{ text: "No ice", colorIndex: 0 }]));
+        const summary = (changes) => changes.map((c) => `${c.quantity} ${c.name}`);
+
+        // Only the added item is new, the 3 sent ones get the note update
+        line.setQuantity(4);
+        let changes = changesToOrder(order, store.config.preparationCategories);
+        expect(summary(changes.new)).toEqual(["1 TEST"]);
+        expect(summary(changes.noteUpdate)).toEqual(["3 TEST"]);
+
+        line.setQuantity(2);
+        changes = changesToOrder(order, store.config.preparationCategories);
+        expect(summary(changes.new)).toEqual([]);
+        expect(summary(changes.cancelled)).toEqual(["1 TEST"]);
     });
 
     describe("syncAllOrders", () => {

@@ -3,7 +3,10 @@ import { setupPosEnv, dialogActions } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { click } from "@odoo/hoot-dom";
-import { InternalNoteButton } from "@point_of_sale/app/screens/product_screen/control_buttons/orderline_note_button/orderline_note_button";
+import {
+    InternalNoteButton,
+    NoteButton,
+} from "@point_of_sale/app/screens/product_screen/control_buttons/orderline_note_button/orderline_note_button";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 
 definePosModels();
@@ -51,4 +54,23 @@ test("orderline_note_button.js", async () => {
     // Check notes (only on parent lines)
     expect(order.lines[0].note).toBe('[{"1":"Test","colorIndex":0}]');
     expect(order.lines[3].note).toBe('[{"2":"Test","colorIndex":0}]');
+});
+
+test("customer note on a partially sent line", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const line = await store.addLineToCurrentOrder({
+        product_tmpl_id: store.models["product.template"].get(5),
+        qty: 1,
+    });
+    order.updateLastOrderChange();
+    line.setQuantity(2);
+
+    // The quantity not sent yet is split in a new line with the customer note
+    const comp = await mountWithCleanup(NoteButton, { props: { label: "" } });
+    await comp.setChanges(line, "No ice");
+    expect(order.lines.map((l) => [l.qty, l.getCustomerNote(), l.getNote()])).toEqual([
+        [1, "", "[]"],
+        [1, "No ice", "[]"],
+    ]);
 });
