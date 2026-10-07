@@ -50,7 +50,7 @@ class ResPartner(models.Model):
     l10n_my_edi_malaysian_tin = fields.Char(
         string="Malaysian TIN",
         help="The value set in this field will be used as TIN for the customer/supplier.\n"
-             "If left empty, the Tax ID field will be used.",
+             "If left empty, the TIN field will be used.",
     )
 
     # --------------------------------
@@ -134,6 +134,12 @@ class ResPartner(models.Model):
         # A user may want to keep the correct VAT on a foreign contact while also use myinvois with a malaysia TIN/Generic TIN
         # Using the Tax ID field also causes issue with standard vat validation, which block setting foreign VAT numbers.
         return self.l10n_my_edi_malaysian_tin or self.vat
+
+    def _l10n_my_get_registration_number(self):
+        registration_number = super()._l10n_my_get_registration_number()
+        if not registration_number and self.l10n_my_identification_type == 'BRN':
+            return self.l10n_my_identification_number
+        return registration_number
 
     @api.model
     def _commercial_fields(self):
