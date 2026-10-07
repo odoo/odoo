@@ -380,3 +380,49 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
             'uom_id': self.uom_units.id,
             'discount': 0.0,
         }])
+
+    def test_so_import_line_description(self):
+        self.place_prdct.write({'default_code': 'PLC', 'description_sale': "Sale description"})
+        po_line_vals = [
+            {'product_id': self.place_prdct.id, 'product_qty': 1.0, 'price_unit': 30.0},
+            {'product_id': self.place_prdct.id, 'product_qty': 1.0, 'price_unit': 30.0, 'name': "Custom description"},
+        ]
+        xml_attachment = self.get_purchase_xml(po_line_vals)
+
+        so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
+        # Without item description from UBL, the line gets the description of the product
+        self.assertRecordValues(so.order_line, [
+            {'product_id': self.place_prdct.id, 'name': "Sale description"},
+            {'product_id': self.place_prdct.id, 'name': "Custom description"},
+        ])
+
+    def test_po_import_line_description(self):
+        self.place_prdct.write({'default_code': 'PLC', 'description_purchase': "Purchase description"})
+        so_line_vals = [
+            {'product_id': self.place_prdct.id, 'product_uom_qty': 1.0},
+            {'product_id': self.place_prdct.id, 'product_uom_qty': 1.0, 'name': "Custom description"},
+        ]
+        xml_attachment = self.get_sale_xml(so_line_vals)
+
+        po = self.env['purchase.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
+        # Without item description from UBL, the line gets the description of the product
+        self.assertRecordValues(po.order_line, [
+            {'product_id': self.place_prdct.id, 'name': "Purchase description"},
+            {'product_id': self.place_prdct.id, 'name': "Custom description"},
+        ])
+
+    def test_so_import_line_description_unknown_tax(self):
+        odd_tax = self.purchase_tax.copy({'amount': 17.3})
+        po_line_vals = [{'product_id': self.place_prdct.id, 'product_qty': 1.0, 'price_unit': 30.0, 'tax_ids': odd_tax.ids}]
+        xml_attachment = self.get_purchase_xml(po_line_vals)
+
+        so = self.env['sale.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
+        self.assertRecordValues(so.order_line, [{'product_id': self.place_prdct.id, 'tax_ids': []}])
+
+    def test_po_import_line_description_unknown_tax(self):
+        odd_tax = self.sale_tax.copy({'amount': 17.3})
+        so_line_vals = [{'product_id': self.place_prdct.id, 'product_uom_qty': 1.0, 'tax_ids': odd_tax.ids}]
+        xml_attachment = self.get_sale_xml(so_line_vals)
+
+        po = self.env['purchase.order'].with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(xml_attachment)
+        self.assertRecordValues(po.order_line, [{'product_id': self.place_prdct.id, 'tax_ids': []}])

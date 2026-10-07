@@ -381,7 +381,16 @@ class PurchaseEdiXmlUbl_Bis3(models.AbstractModel):
             # remove invoice line fields
             line.pop('deferred_start_date', False)
             line.pop('deferred_end_date', False)
-            if not line.get('product_id'):
+            if product_id := line.get('product_id'):
+                # If the imported description matches the product's name, omit the `name`
+                # so the default product description is used instead of storing a redundant value.
+                product = self.env['product.product'].browse(product_id)
+                name = line.get('name') or ''
+                if name == product.name:
+                    line.pop('name')
+                elif name.startswith(f"{product.name}\n"):
+                    line['name'] = name.removeprefix(f"{product.name}\n")
+            else:
                 line_logs.append(_("Could not retrieve the product named: %(name)s", name=line['name']))
         lines_vals += allowance_charges_line_vals
 
