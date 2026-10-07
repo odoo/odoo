@@ -1354,9 +1354,6 @@ class HrExpense(models.Model):
         company = employee.company_id
         currencies = company.currency_id
 
-        if not company:  # ultimate fallback, since company_id is required on expense
-            company = self.env.company
-
         # The expenses alias is the same for all companies, we need to set the proper context
         # To select the product account
         self = self.with_company(company)
