@@ -14,7 +14,7 @@
         'web.assets_backend': [
             'mysubscription/static/src/**/*.js',
             'mysubscription/static/src/**/*.xml',
-            'mysubscription/static/src/**/*.scss',
+            'mysubscription/static/src/**/*.css',
         ],
         'web.assets_unit_tests': [
             'mysubscription/static/tests/**/*',
