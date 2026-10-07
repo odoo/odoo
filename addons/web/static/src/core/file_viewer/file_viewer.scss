@@ -27,9 +27,15 @@
     padding: ($o-navbar-height * 1.125) 0;
 }
 
-.o-FileViewer-headerButton:hover {
-    background-color: rgba($white, 0.1);
-    color: lighten($gray-400, 15%);
+.o-FileViewer-headerButton {
+    border: 0;
+    background-color: transparent;
+    color: inherit;
+
+    &:hover {
+        background-color: rgba($white, 0.1);
+        color: lighten($gray-400, 15%);
+    }
 }
 
 .o-FileViewer-toolbar {
