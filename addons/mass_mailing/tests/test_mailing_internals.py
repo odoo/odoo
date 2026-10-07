@@ -14,7 +14,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import RedirectWarning, ValidationError, UserError
 from odoo.fields import Domain
 from odoo.sql_db import Cursor
 from odoo.tests import Form, HttpCase, users, tagged
@@ -912,6 +912,75 @@ class TestMailingScheduleDateWizard(MassMailCommon):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailingActions(MassMailCommon):
+
+    def test_cancel_mailing_removes_outgoing_emails(self):
+        """Cancelling removes the emails not sent yet with their traces, so that
+        sending the mailing again reaches their recipients."""
+        queued_partner, sent_partner = self.env['res.partner'].create([
+            {'email': 'queued@example.com', 'name': 'Queued'},
+            {'email': 'sent@example.com', 'name': 'Sent'},
+        ])
+        mailing = self.env['mailing.mailing'].create({
+            'mailing_domain': repr([('id', 'in', (queued_partner + sent_partner).ids)]),
+            'mailing_model_id': self.env['ir.model']._get_id('res.partner'),
+            'subject': 'A queued mailing',
+        })
+        queued_mail, sent_mail = self.env['mail.mail'].sudo().create([{
+            'body_html': '<p>Hello</p>',
+            'email_from': 'from@example.com',
+            'email_to': partner.email,
+            'mailing_id': mailing.id,
+            'mailing_trace_ids': [Command.create({
+                'mass_mailing_id': mailing.id,
+                'model': 'res.partner',
+                'res_id': partner.id,
+                'trace_status': state,
+            })],
+            'state': state,
+            'subject': 'Test',
+        } for partner, state in ((queued_partner, 'outgoing'), (sent_partner, 'sent'))])
+        sent_trace = sent_mail.mailing_trace_ids
+        mailing.action_put_in_queue()
+        self.assertEqual(mailing._get_remaining_recipients(), [])
+
+        action = self.env.ref('mass_mailing.mailing_mailing_action_set_draft')
+        action.with_context(active_model=mailing._name, active_ids=mailing.ids).run()
+
+        self.assertEqual(mailing.state, 'draft')
+        self.assertFalse(queued_mail.exists())
+        self.assertEqual(sent_mail.state, 'sent')
+        self.assertEqual(mailing.mailing_trace_ids, sent_trace)
+        self.assertEqual(mailing._get_remaining_recipients(), queued_partner.ids)
+
+    def test_cannot_edit_queued_mailing(self):
+        """Queued and sending mailings refuse content changes.
+
+        A user can keep a mailing form open while the queue cron sends it. Saving
+        that form updates the mailing while the cron is delivering it: the cron
+        then fails on a concurrent update, its last batch is rolled back although
+        its emails may already be sent, and the next run sends them again.
+
+        Once queued, a mailing refuses content changes, and the cron commits the
+        'sending' state before delivering, so that such a save is refused instead.
+        The error offers to set the mailing back to draft, where it can be edited
+        again.
+        """
+        mailing = self.env['mailing.mailing'].create({'subject': 'A mailing'})
+        mailing.write({'body_html': False, 'state': 'in_queue', 'subject': 'An edited mailing'})
+        self.assertRecordValues(mailing, [{'state': 'in_queue', 'subject': 'An edited mailing'}])
+
+        action_id = self.env.ref('mass_mailing.mailing_mailing_action_set_draft').id  # action to set mailing back to draft
+        for state in ('in_queue', 'sending'):
+            with self.subTest(state=state):
+                mailing.state = state
+                with self.assertRaises(RedirectWarning) as error:
+                    mailing.subject = 'Edited too late'
+
+                self.assertEqual(mailing.subject, 'An edited mailing')
+                self.assertEqual(error.exception.args[0], "Oops, you cannot edit a queued mailing.")
+                self.assertEqual(error.exception.args[1], action_id)
+                self.assertEqual(error.exception.args[3]['active_ids'], mailing.ids)
+
     def test_mailing_action_open(self):
         mass_mailings = self.env['mailing.mailing'].create([
             {'subject': 'First subject'},
