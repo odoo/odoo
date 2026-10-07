@@ -14,4 +14,12 @@ export class CrmKanbanRenderer extends RottingKanbanRenderer {
         ...RottingKanbanRenderer.components,
         KanbanHeader: CrmKanbanHeader,
     };
+
+    // Setup to disable the default group by stage id
+    setup(){
+        super.setup();
+        if(this.env.services.ui.isSmall){
+            this.env.searchModel.defaultGroupBy = [];
+        }
+    }
 }
