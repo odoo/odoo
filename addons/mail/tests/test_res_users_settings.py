@@ -71,3 +71,23 @@ class TestResUsersSettings(MailCommon):
             True,
             "category state should be updated correctly"
         )
+
+    @users('employee')
+    def test_set_volume_setting_of_guest(self):
+        settings = self.user_employee.res_users_settings_id
+        partner = self.env['res.partner'].sudo().create({'name': "Partner"})
+        # Simulate a guest with the id of no partner, then a guest with the id of a partner.
+        settings.set_volume_setting(False, 0.5, guest_id=partner.id + 1)
+        settings.set_volume_setting(False, 0.7, guest_id=partner.id)
+        self.assertBusNotifications(
+            [(self.cr.dbname, 'res.partner', self.partner_employee.id)],
+            [{
+                'type': 'res.users.settings.volumes',
+                'payload': [{
+                    'id': settings.volume_settings_ids.id,
+                    'volume': 0.7,
+                    'persona': {'id': partner.id, 'type': "guest"},
+                    'user_setting_id': {'id': settings.id},
+                }],
+            }],
+        )
