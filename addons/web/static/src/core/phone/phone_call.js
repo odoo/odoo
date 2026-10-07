@@ -11,9 +11,23 @@ import { registry } from "@web/core/registry";
 
 export const phoneCallHandlerRegistry = registry.category("phone_call_handlers");
 
+/**
+ * Removes display formatting from a phone number.
+ *
+ * @param {string} phoneNumber
+ * @returns {string}
+ */
+export function cleanPhoneNumber(phoneNumber) {
+    // U+00AD is the “soft hyphen” character.
+    return phoneNumber.replace(/[-()\s/.\u00AD]/g, "");
+}
+
 /** @param {string} phoneNumber */
 export function getPhoneHref(phoneNumber) {
-    return `tel:${phoneNumber.replace(/\s+/g, "")}`;
+    const cleanedNumber = cleanPhoneNumber(phoneNumber);
+    const globalPrefix = cleanedNumber.startsWith("+") ? "+" : "";
+    const encodedNumber = encodeURIComponent(cleanedNumber.slice(globalPrefix.length));
+    return `tel:${globalPrefix}${encodedNumber}`;
 }
 
 /**

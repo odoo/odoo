@@ -13,15 +13,28 @@ class TestMailActivitySchedule(ActivityScheduleCase):
     def test_call_activity_phone(self):
         """Only Call activities copy the target's phone number."""
         partner = self.env["res.partner"].create({
-            "name": "Partner with phone",
-            "phone": "+1 202 555 0182",
+            "name": "Belgian partner",
+            "country_id": self.env.ref("base.be").id,
+            "phone": "0498707070",
         })
 
         call_activity = partner.activity_schedule("mail.mail_activity_data_call")
         todo_activity = partner.activity_schedule("mail.mail_activity_data_todo")
 
-        self.assertEqual(call_activity.phone, partner.phone)
+        self.assertEqual(partner.phone_formatted, "+32 498 70 70 70")
+        self.assertEqual(call_activity.phone, partner.phone_formatted)
         self.assertFalse(todo_activity.phone)
+
+    def test_call_activity_phone_falls_back_on_raw_phone(self):
+        partner = self.env["res.partner"].create({
+            "name": "Partner with an invalid phone",
+            "phone": "not a phone number",
+        })
+
+        activity = partner.activity_schedule("mail.mail_activity_data_call")
+
+        self.assertFalse(partner.phone_formatted)
+        self.assertEqual(activity.phone, partner.phone)
 
     def test_call_activity_schedule_phone(self):
         """Call scheduling saves its phone and only fills an empty partner phone."""
@@ -30,16 +43,19 @@ class TestMailActivitySchedule(ActivityScheduleCase):
                 "name": "fill empty partner",
                 "input_partner_phone": False,
                 "input_activity_phone": "+1 202 555 0182",
-                "expected_partner_phone": "+1 202 555 0182",
+                "expected_activity_phone": "+1 202-555-0182",
+                "expected_partner_phone": "+1 202-555-0182",
             }, {
                 "name": "keep existing partner",
                 "input_partner_phone": "+1 202 555 0100",
                 "input_activity_phone": "+1 202 555 0182",
+                "expected_activity_phone": "+1 202-555-0182",
                 "expected_partner_phone": "+1 202 555 0100",
             }, {
                 "name": "clear activity phone",
                 "input_partner_phone": "+1 202 555 0100",
                 "input_activity_phone": False,
+                "expected_activity_phone": False,
                 "expected_partner_phone": "+1 202 555 0100",
             },
         ]
@@ -58,7 +74,7 @@ class TestMailActivitySchedule(ActivityScheduleCase):
                 wizard.phone = case["input_activity_phone"]
                 activity = wizard._action_schedule_activities()
 
-                self.assertEqual(activity.phone, case["input_activity_phone"])
+                self.assertEqual(activity.phone, case["expected_activity_phone"])
                 self.assertEqual(partner.phone, case["expected_partner_phone"])
 
     def test_call_activity_schedule_keeps_record_phones_in_batch(self):
@@ -77,7 +93,7 @@ class TestMailActivitySchedule(ActivityScheduleCase):
 
         self.assertEqual(
             set(activities.mapped("phone")),
-            {"+1 202 555 0101", "+1 202 555 0102"},
+            {"+1 202-555-0101", "+1 202-555-0102"},
         )
         self.assertEqual(
             set(partners.mapped("phone")),
@@ -102,7 +118,7 @@ class TestMailActivitySchedule(ActivityScheduleCase):
             wizard.phone = "+1 202 555 0182"
             activity = wizard._action_schedule_activities()
 
-        self.assertEqual(activity.phone, "+1 202 555 0182")
+        self.assertEqual(activity.phone, "+1 202-555-0182")
         self.assertFalse(any(partners.mapped("phone")))
 
     def test_call_activity_schedule_does_not_expose_inaccessible_phone(self):
@@ -143,3 +159,7 @@ class TestMailActivitySchedule(ActivityScheduleCase):
 
         self.assertEqual(wizard.phone, "6504193846")
         self.assertEqual(wizard.phone_formatted, "+1 650-419-3846")
+
+        activity = wizard._action_schedule_activities()
+
+        self.assertEqual(activity.phone, wizard.phone_formatted)
