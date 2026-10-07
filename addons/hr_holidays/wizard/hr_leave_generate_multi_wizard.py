@@ -137,15 +137,11 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
 
     @api.depends("employee_ids", "date_from")
     def _compute_valid_work_entry_type_ids(self):
-        res = self.env["hr.work.entry.type"]
-        work_entry_types = (
-            self.env["hr.work.entry.type"].search([('time_off_selectable', '=', True)]).grouped("requires_allocation")
-        )
-        work_entry_types_alloc = work_entry_types.get(True, res)
-        work_entry_types_no_alloc = work_entry_types.get(False, res)
-        res |= work_entry_types_no_alloc
+        alloc_types, no_alloc_types = self.env["hr.work.entry.type"].search([
+            ('time_off_selectable', '=', True),
+        ]).partitioned('requires_allocation')
         allocations = self.env['hr.leave.allocation'].search([
-            ('work_entry_type_id', 'in', work_entry_types_alloc.ids),
+            ('work_entry_type_id', 'in', alloc_types.ids),
             ('employee_id', 'in', self.employee_ids.ids),
             ('date_from', '<=', self.date_from),
             '|',
@@ -155,8 +151,8 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
         valid_allocations = allocations.filtered(
             lambda a: a.work_entry_type_id.allows_negative or a.virtual_remaining_leaves > 0,
         )
-        allocation_data = valid_allocations.grouped('work_entry_type_id')
-        for entry_type, entry_allocations in allocation_data.items():
-            if entry_allocations.employee_id == self.employee_ids._origin:
-                res |= entry_type
-        self.valid_work_entry_type_ids = res
+        self.valid_work_entry_type_ids = no_alloc_types + self.env["hr.work.entry.type"].concat((
+            entry_type
+            for entry_type, entry_allocations in valid_allocations.grouped('work_entry_type_id').items()
+            if entry_allocations.employee_id == self.employee_ids._origin
+        ))
