@@ -689,7 +689,11 @@ class AccountMoveLine(models.Model):
             if not line.product_id or line.display_type in ('line_section', 'line_subsection', 'line_note'):
                 continue
 
-            if not line.name or line._origin.name == get_name(line._origin) or line.product_id != line._origin.product_id:
+            if (
+                not line.name
+                or (line._origin and line._origin.name == get_name(line._origin))
+                or line.product_id != line._origin.product_id
+            ):
                 line.name = get_name(line)
 
     @api.depends_context("display_default_code")
