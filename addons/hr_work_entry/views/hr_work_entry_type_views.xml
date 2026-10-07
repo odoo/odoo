@@ -5,7 +5,7 @@
         <field name="model">hr.work.entry.type</field>
         <field name="arch" type="xml">
             <search string="Search Time Type">
-                <field name="name" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="name" filter_domain="['|', '|', ('name', 'ilike', self), ('code', 'ilike', self), ('display_code', 'ilike', self)]"/>
                 <separator/>
                 <filter name="working_time" string="Working Time" domain="[('count_as', '=', 'working_time')]"/>
                 <filter name="absence_time" string="Absence Time" domain="[('count_as', '=', 'absence')]"/>
