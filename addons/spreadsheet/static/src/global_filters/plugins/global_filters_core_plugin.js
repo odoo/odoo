@@ -118,7 +118,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
                         switch (change.changeType) {
                             case "RESIZE":
                             case "MOVE":
-                            case "CHANGE": {
+                            case "RENAME": {
                                 return change.range;
                             }
                         }
@@ -301,7 +301,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
         for (const sheetId of sheetIds) {
             for (const cell of this.getters.getCells(sheetId)) {
                 if (cell.isFormula) {
-                    const originalContent = cell.compiledFormula.toFormulaString(this.getters)
+                    const originalContent = cell.compiledFormula.toFormulaString(this.getters);
                     const newContent = originalContent.replace(
                         new RegExp(`FILTER\\.VALUE\\(\\s*"${currentLabel}"\\s*\\)`, "g"),
                         `FILTER.VALUE("${newLabel}")`
