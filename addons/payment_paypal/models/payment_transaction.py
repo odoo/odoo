@@ -373,7 +373,9 @@ class PaymentTransaction(models.Model):
         self.provider_reference = payment_data.get("id")
 
         # Update the payment method
-        # TODO
+        payment_method_code = next(iter(payment_data.get("payment_source", {})), None)
+        payment_method = self.provider_id._get_pm_from_code(payment_method_code)
+        self.payment_method_id = payment_method or self.payment_method_id
 
         # Update the payment state.
         payment_status = payment_data.get("status")
