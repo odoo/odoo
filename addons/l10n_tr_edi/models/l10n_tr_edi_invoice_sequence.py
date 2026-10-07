@@ -31,7 +31,7 @@ class L10n_Tr_EdiInvoiceSequence(models.Model):
         size=3,
         required=True,
         help="The series code used in place of the journal code when numbering the invoice, "
-        "e.g. 'EXP' produces EXP/2026/00001. This is also the series registered with Nilvera, "
+        "e.g. 'EXP' produces EXP/2026/00001. This is also the series registered with the GİB, "
         "which requires exactly 3 uppercase letters or digits.",
     )
     partner_id = fields.Many2one(
@@ -59,7 +59,7 @@ class L10n_Tr_EdiInvoiceSequence(models.Model):
         store=True,
         readonly=False,
         string="Customer Status",
-        help="Restrict this series to partners with this Nilvera status. Selecting a customer "
+        help="Restrict this series to partners with this GİB status. Selecting a customer "
         "fills it in from that customer. Leave both empty to apply the series whatever the "
         "partner's status.",
     )
@@ -197,7 +197,7 @@ class L10n_Tr_EdiInvoiceSequence(models.Model):
             if not record.name or not SEQUENCE_NAME_REGEX.fullmatch(record.name):
                 raise ValidationError(self.env._(
                     "The e-Document sequence %(name)s must be exactly 3 characters long and contain "
-                    "only uppercase letters and digits, because Nilvera expects invoice numbers in "
+                    "only uppercase letters and digits, because the GİB expects invoice numbers in "
                     "the format ABC/2025/00001.",
                     name=record.name,
                 ))

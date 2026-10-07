@@ -1,9 +1,10 @@
 from odoo.tests import tagged
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class L10nTRNilveraTest(AccountTestInvoicingCommon):
+class TestL10nTrEdiPartner(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
@@ -37,7 +38,7 @@ class L10nTRNilveraTest(AccountTestInvoicingCommon):
             'invoice_edi_format': 'ubl_tr',
         })
 
-    def test_tr_nilvera_company_definition(self):
+    def test_ubl_tr_company_definition(self):
         """
         Ensure UBL TR Partners are categorized correctly based on Tax ID length:
             - VKN (Company): 10 digits

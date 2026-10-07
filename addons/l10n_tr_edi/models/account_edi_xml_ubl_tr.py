@@ -70,10 +70,10 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
         # Check the customer status if it hasn't been done before as it's needed for profile_id
         if invoice.partner_id.l10n_tr_edi_customer_status == 'not_checked':
-            invoice.partner_id._check_nilvera_customer()
+            invoice.partner_id._l10n_tr_edi_fetch_customer_status()
 
         if invoice._l10n_tr_edi_check_negative_lines():
-            raise UserError(self.env._("Nilvera portal cannot process negative quantity nor negative price on invoice lines"))
+            raise UserError(self.env._("A Turkish e-Invoice cannot contain a negative quantity or a negative price on its lines."))
 
         # Using _get_sequence_format_param to extract the invoice sequence components for various formats.
         # To send an invoice to Nilvera, the format needs to follow ABC2009123456789.
@@ -1150,13 +1150,6 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'l10n_tr_gib_invoice_scenario': scenario,
             'l10n_tr_gib_invoice_type': invoice_type,
         })
-
-        if scenario == 'TICARIFATURA' and invoice.move_type in {'in_invoice', 'out_invoice'}:
-            try:
-                # Don't want to block the import in case status retrieval fails
-                invoice.l10n_tr_action_fetch_ticarifatura_response()
-            except UserError as e:
-                logs.append(self.env._("Failed to fetch TICARIFATURA response: %s", str(e)))
 
         self._l10n_tr_match_refund_reversed_entry(invoice, tree)
 
