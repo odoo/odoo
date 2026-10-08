@@ -1019,8 +1019,8 @@ class TestHrVersion(TestHrCommon):
             'private_city': 'New City',
         })
         self.assertEqual(changes, {
-            '(Job)': ('Developer', 'Manager'),
-            '(Private City)': ('Old City', 'New City'),
+            'job_id': ('Developer', 'Manager'),
+            'private_city': ('Old City', 'New City'),
         })
 
     def test_version_id_context_multi_employees(self):

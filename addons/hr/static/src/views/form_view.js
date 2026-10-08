@@ -15,6 +15,10 @@ export class EmployeeFormController extends FormController {
         this.pendingNewContract = null;
     }
 
+    _getVersionUpdateDialogClass(_record) {
+        return MultiVersionUpdateConfirmationDialog;
+    }
+
     async onRecordChanged(record, changes) {
         super.onRecordChanged(...arguments);
         if (!("contract_date_end" in changes)) {
@@ -65,9 +69,11 @@ export class EmployeeFormController extends FormController {
                     }
                 )
                 const proceed = await new Promise((resolve) => {
-                    this.dialogService.add(MultiVersionUpdateConfirmationDialog, {
+                    this.dialogService.add(this._getVersionUpdateDialogClass(record), {
                         title: "Apply changes to next versions?",
                         version_changes: version_changes_to_display,
+                        record,
+                        changes,
                         cancel: () => resolve(false),
                         change_current: () => resolve(true),
                         change_multi: async () => {
