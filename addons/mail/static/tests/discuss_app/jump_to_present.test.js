@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 import {
     SIZES,
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     isInViewportOf,
@@ -45,7 +45,7 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
     );
     await click("[title='Jump to Present']");
     await waitForNone("[title='Jump to Present']");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await mailContains(".o-mail-Thread", { scroll: "bottom" });
 });
 
 test("Basic jump to present when scrolling to outdated messages (DESC, chatter aside)", async () => {
@@ -68,12 +68,12 @@ test("Basic jump to present when scrolling to outdated messages (DESC, chatter a
         PRESENT_VIEWPORT_THRESHOLD * document.querySelector(".o-mail-Chatter").clientHeight,
         { message: "should have enough scroll height to trigger jump to present" }
     );
-    await contains(".o-mail-Chatter", { scroll: 0 });
+    await mailContains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", "bottom");
     await isInViewportOf("[title='Jump to Present']", ".o-mail-Thread");
     await click("[title='Jump to Present']");
     await waitForNone("[title='Jump to Present']");
-    await contains(".o-mail-Chatter", { scroll: 0 });
+    await mailContains(".o-mail-Chatter", { scroll: 0 });
 });
 
 test.tags("owl3");
@@ -97,12 +97,12 @@ test.skip("Basic jump to present when scrolling to outdated messages (DESC, chat
         PRESENT_VIEWPORT_THRESHOLD * document.querySelector(".o_content").clientHeight,
         { message: "should have enough scroll height to trigger jump to present" }
     );
-    await contains(".o_content", { scroll: 0 });
+    await mailContains(".o_content", { scroll: 0 });
     await scroll(".o_content", "bottom");
     await isInViewportOf("[title='Jump to Present']", ".o_content");
     await click("[title='Jump to Present']");
     await waitForNone("[title='Jump to Present']");
-    await contains(".o_content", { scroll: 0 });
+    await mailContains(".o_content", { scroll: 0 });
 });
 
 test("Jump to old reply should prompt jump to present", async () => {
@@ -150,7 +150,7 @@ test("Jump to old reply should prompt jump to present", async () => {
     await click("[title='Jump to Present']");
     await waitForNone("[title='Jump to Present']");
     await waitFor(".o-mail-Message:count(30)");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await mailContains(".o-mail-Thread", { scroll: "bottom" });
 });
 
 test("Jump to old reply should prompt jump to present (RPC small delay)", async () => {
@@ -210,7 +210,7 @@ test("Jump to old reply should prompt jump to present (RPC small delay)", async 
     await waitFor(".o-mail-Message:count(31)");
     await click("[title='Jump to Present']");
     await waitForNone("[title='Jump to Present']");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await mailContains(".o-mail-Thread", { scroll: "bottom" });
     await waitStoreFetch([
         [
             "/discuss/channel/messages",
@@ -257,8 +257,8 @@ test("Post message when seeing old message should jump to present", async () => 
     await insertText(".o-mail-Composer-input", "Newly posted");
     await press("Enter");
     await waitForNone("[title='Jump to Present']");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
-    await contains(".o-mail-Message-content:has(:text('Newly posted'))", {
+    await mailContains(".o-mail-Thread", { scroll: "bottom" });
+    await mailContains(".o-mail-Message-content:has(:text('Newly posted'))", {
         after: [".o-mail-Message-content:has(:text('Most Recent!'))"], // should load around present
     });
 });
@@ -308,7 +308,7 @@ test("when triggering jump to present, keeps showing old messages until recent o
     slowMessageFetchDeferred.resolve();
     await waitStoreFetch("/discuss/channel/messages");
     await waitForNone(".o-mail-Thread .o-mail-Message:has(:text('first-message'))");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await mailContains(".o-mail-Thread", { scroll: "bottom" });
 });
 
 test("focus composer after jump to present", async () => {

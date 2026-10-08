@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     editInput,
     insertText,
@@ -207,7 +207,7 @@ test("Clearing message input while pending search should empty message results",
     );
     await waitFor(".o-mail-SearchMessageInput .o-mail-SearchInput.o-searching:count(1)");
     await click("button[aria-label='Clear']");
-    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input", { value: "" });
+    await mailContains(".o-mail-SearchMessageInput .o-mail-SearchInput input", { value: "" });
     blockedFetchMessages.resolve();
     await waitStoreFetch([
         [
@@ -220,7 +220,7 @@ test("Clearing message input while pending search should empty message results",
     ]);
     await animationFrame();
     await waitForNone(".o-mail-SearchMessageResult .o-mail-Message");
-    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input", { value: "" });
+    await mailContains(".o-mail-SearchMessageInput .o-mail-SearchInput input", { value: "" });
 });
 
 test.tags("desktop");

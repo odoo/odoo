@@ -2,7 +2,7 @@ import {
     SIZES,
     STORE_FETCH_ROUTES,
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     dragenterFiles,
     dropFiles,
@@ -245,7 +245,7 @@ test("Textarea content is kept when switching from aside to bottom", async () =>
     await insertText(".o-mail-Composer-input", "Hello world !");
     await patchUiSize({ size: SIZES.LG });
     await waitFor(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input:count(1)");
-    await contains(".o-mail-Composer-input", { value: "Hello world !" });
+    await mailContains(".o-mail-Composer-input", { value: "Hello world !" });
 });
 
 test("Composer type is kept when switching from aside to bottom", async () => {
@@ -603,7 +603,7 @@ test("scroll position is kept when navigating from one record to another", async
     await waitFor(".o-mail-Message:count(20)");
     const clientHeight1 = queryFirst(".o-mail-Chatter:first").clientHeight; // client height might change (cause: breadcrumb)
     const scrollValue1 = queryFirst(".o-mail-Chatter:first").scrollHeight / 2;
-    await contains(".o-mail-Chatter", { scroll: 0 });
+    await mailContains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", scrollValue1);
     await openFormView("res.partner", partnerId_2);
     await waitFor(".o-mail-Message:count(30)");
@@ -613,11 +613,15 @@ test("scroll position is kept when navigating from one record to another", async
     await openFormView("res.partner", partnerId_1);
     await waitFor(".o-mail-Message:count(20)");
     const clientHeight3 = queryFirst(".o-mail-Chatter:first").clientHeight;
-    await contains(".o-mail-Chatter", { scroll: scrollValue1 - (clientHeight3 - clientHeight1) });
+    await mailContains(".o-mail-Chatter", {
+        scroll: scrollValue1 - (clientHeight3 - clientHeight1),
+    });
     await openFormView("res.partner", partnerId_2);
     await waitFor(".o-mail-Message:count(30)");
     const clientHeight4 = queryFirst(".o-mail-Chatter:first").clientHeight;
-    await contains(".o-mail-Chatter", { scroll: scrollValue2 - (clientHeight4 - clientHeight2) });
+    await mailContains(".o-mail-Chatter", {
+        scroll: scrollValue2 - (clientHeight4 - clientHeight2),
+    });
 });
 
 test("basic chatter rendering", async () => {

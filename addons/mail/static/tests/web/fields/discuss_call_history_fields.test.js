@@ -1,5 +1,5 @@
 import {
-    contains,
+    contains as mailContains,
     defineMailModels,
     openFormView,
     start,
@@ -22,7 +22,7 @@ test("duration omits an empty hour component", async () => {
             </form>
         `,
     });
-    await contains(".o_field_discuss_call_history_duration time", { text: "1m 49s" });
+    await mailContains(".o_field_discuss_call_history_duration time", { text: "1m 49s" });
 });
 
 test("recording indicators prefer video over audio", async () => {

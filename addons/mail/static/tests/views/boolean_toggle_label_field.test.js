@@ -1,4 +1,4 @@
-import { contains, mailModels } from "@mail/../tests/mail_test_helpers";
+import { contains as mailContains, mailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
 import { click, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -23,7 +23,7 @@ test("use BooleanToggleLabelField in form view", async () => {
                       <div class="boolean_field_off" invisible="not boolean_field">off</div>
                </form>`,
     });
-    await contains(".o_field_mail_boolean_toggle_label .btn-secondary", { text: "btnLabel" });
+    await mailContains(".o_field_mail_boolean_toggle_label .btn-secondary", { text: "btnLabel" });
     expect(".boolean_field_on").toHaveCount(1);
     expect(".boolean_field_off").toHaveCount(0);
     await click(".o_field_mail_boolean_toggle_label button");

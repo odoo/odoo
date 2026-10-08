@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     openMessagingMenu,
     start,
@@ -40,7 +40,7 @@ test("basic layout", async () => {
     ]);
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
-    await contains(".o-mail-NotificationItem", {
+    await mailContains(".o-mail-NotificationItem", {
         contains: [
             [".o-mail-NotificationItem-name:text('Email Failure: Discussion Channel')"],
             [".o-mail-NotificationItem-counter:text('2')"],

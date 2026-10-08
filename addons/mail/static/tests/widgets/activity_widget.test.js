@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     listenStoreFetch,
     openListView,
@@ -44,7 +44,7 @@ test("list activity widget with no activity", async () => {
     });
     await expect.waitForSteps(["web_search_read"]);
     await waitFor(".o-mail-ActivityButton i[data-icon='schedule']:count(1)");
-    await contains(".o-mail-ListActivity-summary", { textContent: "" });
+    await mailContains(".o-mail-ListActivity-summary", { textContent: "" });
 });
 
 test("list activity widget with activities", async () => {
@@ -85,13 +85,13 @@ test("list activity widget with activities", async () => {
     await openListView("res.users", {
         arch: "<list><field name='activity_ids' widget='list_activity'/></list>",
     });
-    await contains(":nth-child(1 of .o_data_row)", {
+    await mailContains(":nth-child(1 of .o_data_row)", {
         contains: [
             [".o-mail-ActivityButton i.text-warning[data-icon='phone']"],
             [".o-mail-ListActivity-summary:text('Call with Al')"],
         ],
     });
-    await contains(":nth-child(2 of .o_data_row)", {
+    await mailContains(":nth-child(2 of .o_data_row)", {
         contains: [
             [".o-mail-ActivityButton i.text-success[data-icon='checklist']"],
             [".o-mail-ListActivity-summary:text('Type 2')"],
@@ -343,10 +343,10 @@ test("list activity exception widget with activity", async () => {
         `,
     });
     await waitFor(".o_data_row:count(2)");
-    await contains(":nth-child(1 of .o_data_row) .o_activity_exception_cell", {
+    await mailContains(":nth-child(1 of .o_data_row) .o_activity_exception_cell", {
         contains: [".o-mail-ActivityException", { count: 0 }],
     });
-    await contains(":nth-child(2 of .o_data_row) .o_activity_exception_cell", {
+    await mailContains(":nth-child(2 of .o_data_row) .o_activity_exception_cell", {
         contains: [".o-mail-ActivityException"],
     });
 });

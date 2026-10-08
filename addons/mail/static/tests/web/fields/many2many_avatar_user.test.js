@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     openFormView,
     openKanbanView,
@@ -60,7 +60,7 @@ test('many2one_avatar_user widget edited by the smart action "Assign to..."', as
         arch: "<form><field name='user_id' widget='many2one_avatar_user'/></form>",
     });
     await waitFor(".o_field_many2one_avatar_user .o_external_button:count(1)");
-    await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
+    await mailContains(".o_field_many2one_avatar_user input", { value: "Mario" });
     triggerHotkey("control+k");
     await click(".o_command:text('Assign to ... ALT + I')");
     await waitFor(".o_command:count(6)");
@@ -71,7 +71,7 @@ test('many2one_avatar_user widget edited by the smart action "Assign to..."', as
     await waitFor(".o_command:eq(4):text('Luigi'):count(1)");
     await waitFor(".o_command:eq(5):text('Yoshi'):count(1)");
     await click(".o_command:text('Luigi')");
-    await contains(".o_field_many2one_avatar_user input", { value: "Luigi" });
+    await mailContains(".o_field_many2one_avatar_user input", { value: "Luigi" });
 });
 
 test('many2many_avatar_user widget edited by the smart action "Assign to..."', async () => {
@@ -115,15 +115,15 @@ test('many2one_avatar_user widget edited by the smart action "Assign to me" in f
     await openFormView("m2x.avatar.user", avatarUserId_1, {
         arch: "<form><field name='user_id' widget='many2one_avatar_user'/></form>",
     });
-    await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
+    await mailContains(".o_field_many2one_avatar_user input", { value: "Mario" });
     await triggerHotkey("control+k");
     await waitFor(".o_command:text('Assign to me ALT + SHIFT + I'):count(1)");
     await triggerHotkey("alt+shift+i");
-    await contains(".o_field_many2one_avatar_user input", { value: "Mitchell Admin" });
+    await mailContains(".o_field_many2one_avatar_user input", { value: "Mitchell Admin" });
     // Unassign me
     await triggerHotkey("control+k");
     await click(".o_command:text('Unassign from me ALT + SHIFT + I')");
-    await contains(".o_field_many2one_avatar_user input", { value: "" });
+    await mailContains(".o_field_many2one_avatar_user input", { value: "" });
 });
 
 test('many2one_avatar_user widget edited by the smart action "Assign to me"', async () => {
@@ -136,16 +136,16 @@ test('many2one_avatar_user widget edited by the smart action "Assign to me"', as
     await openFormView("m2x.avatar.user", avatarUserId_1, {
         arch: "<form><field name='user_id' widget='many2one_avatar_user'/></form>",
     });
-    await contains(".o_field_many2one_avatar_user input", { value: "Mario" });
+    await mailContains(".o_field_many2one_avatar_user input", { value: "Mario" });
     triggerHotkey("control+k");
     await waitFor(".o_command:text('Assign to me ALT + SHIFT + I'):count(1)");
     // Assign to me
     triggerHotkey("alt+shift+i");
-    await contains(".o_field_many2one_avatar_user input", { value: "Mitchell Admin" });
+    await mailContains(".o_field_many2one_avatar_user input", { value: "Mitchell Admin" });
     // Unassign from me
     triggerHotkey("control+k");
     await click(".o_command:text('Unassign from me ALT + SHIFT + I')");
-    await contains(".o_field_many2one_avatar_user input", { value: "" });
+    await mailContains(".o_field_many2one_avatar_user input", { value: "" });
 });
 
 test('many2one_avatar_user widget edited by the smart action "Assign to me" in list view', async () => {

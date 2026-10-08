@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     hover,
     insertText,
@@ -230,9 +230,9 @@ test('"is typing" timeout should work even when 2 notify_typing happen at the ex
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await mailContains(".o-discuss-Typing", { text: "Demo is typing..." });
     await advanceTime(Store.OTHER_LONG_TYPING);
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing..." });
+    await mailContains(".o-discuss-Typing", { count: 0, text: "Demo is typing..." });
 });
 
 test('[text composer] other member typing status "is typing" refreshes of assuming no longer typing', async () => {

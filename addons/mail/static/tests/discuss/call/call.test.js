@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     createVideoStream,
     defineMailModels,
     dragenterFiles,
@@ -83,7 +83,7 @@ test("basic rendering", async () => {
     await waitFor(".o-discuss-CallActionList:count(1)");
     await waitFor(".o-discuss-CallMenu-buttonContent:count(1)");
     await waitFor(".o-discuss-CallActionList button:count(8)");
-    await contains("button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
+    await mailContains("button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
     await waitFor("button[aria-label='Voice Settings']:count(1)");
     // Self's talking bars stand in for the chevrons of the voice settings and the call menu.
     await waitFor(
@@ -960,7 +960,9 @@ test("Dropzones below fullscreen meeting view are disabled", async () => {
     // check picture-in-picture still enables dropzone
     await click(".o-mail-Meeting [title='More']");
     await click("[name='picture-in-picture']");
-    await contains(".o-mail-Meeting:not(.o-fullscreen)", { target: popoutIframe.contentDocument });
+    await mailContains(".o-mail-Meeting:not(.o-fullscreen)", {
+        target: popoutIframe.contentDocument,
+    });
     const textFile_2 = new File(["hello, world"], "text-2.txt", { type: "text/plain" });
     await dragenterFiles(".o-mail-Discuss .o-mail-Thread", [textFile_1]);
     await waitFor(".o-Dropzone:count(1)"); // only dropzone in discuss app
@@ -1232,8 +1234,8 @@ async function startCallWithMicWarningInPip() {
     await waitFor(".o-discuss-Call:count(1)");
     await click(".o-mail-ActionList-button[name='more-action:call-layout']");
     await click(".o-dropdown-item[name='picture-in-picture']");
-    await contains(".o-mail-Meeting", { target: mocks.popoutIframe.contentDocument });
-    await contains(".o_popover:contains('No microphone permissions')", {
+    await mailContains(".o-mail-Meeting", { target: mocks.popoutIframe.contentDocument });
+    await mailContains(".o_popover:contains('No microphone permissions')", {
         target: mocks.popoutIframe.contentDocument,
     });
     return mocks;
@@ -1366,17 +1368,17 @@ test("Sort call participants by name", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Expand participants'][data-icon='chevron_forward']");
-    await contains(".o-mail-MessagingMenuCallParticipants", {
+    await mailContains(".o-mail-MessagingMenuCallParticipants", {
         contains: [
             ".o-mail-MessagingMenuCallParticipants-participant:nth-child(1):contains('AAA')",
         ],
     });
-    await contains(".o-mail-MessagingMenuCallParticipants", {
+    await mailContains(".o-mail-MessagingMenuCallParticipants", {
         contains: [
             ".o-mail-MessagingMenuCallParticipants-participant:nth-child(2):contains('BBB')",
         ],
     });
-    await contains(".o-mail-MessagingMenuCallParticipants", {
+    await mailContains(".o-mail-MessagingMenuCallParticipants", {
         contains: [
             ".o-mail-MessagingMenuCallParticipants-participant:nth-child(3):contains('CCC')",
         ],

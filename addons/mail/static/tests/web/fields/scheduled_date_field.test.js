@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     openView,
     registerArchs,
@@ -32,7 +32,7 @@ test("Text scheduled date field", async () => {
         views: [["mail.compose.message,false,form", "form"]],
     });
     // should not contain text as scheduled date is empty
-    await contains(".o_field_text_scheduled_date button", { textContent: "" });
+    await mailContains(".o_field_text_scheduled_date button", { textContent: "" });
     await click(".o_field_text_scheduled_date button");
     // should open the dialog to select the schedule date
     await waitFor(".modal:count(1)");
@@ -49,7 +49,7 @@ test("Text scheduled date field", async () => {
     // should be able to clear the selected datetime
     await click(".modal-footer button:contains('Clear Time')");
     // button should be empty again
-    await contains(".o_field_text_scheduled_date button", { textContent: "" });
+    await mailContains(".o_field_text_scheduled_date button", { textContent: "" });
 });
 
 test("Datetime scheduled date field", async () => {

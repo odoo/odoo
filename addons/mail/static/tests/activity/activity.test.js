@@ -2,7 +2,7 @@ import { describe, expect, runAllTimers, test } from "@odoo/hoot";
 
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     focus,
     mailModels,
@@ -239,7 +239,7 @@ test("call activity displays phone actions", async () => {
     await start();
     await openFormView("res.partner", partnerId);
 
-    await contains(".o-mail-Activity-phoneNumber", { text: "+1 202 555 0182" });
+    await mailContains(".o-mail-Activity-phoneNumber", { text: "+1 202 555 0182" });
     expect(".o-mail-Activity-phoneNumber > a").toHaveCount(0);
     expect(".o-mail-Activity-phoneNumber > span.user-select-all").toHaveCount(0);
     expect(".o-mail-Activity-phoneNumber .o-mail-Activity-call").toHaveCount(0);
@@ -657,7 +657,7 @@ test("activity with a link to a record", async () => {
     await start();
     await openFormView("res.partner", partnerId1);
     await click(".o-mail-Activity-note a:text('record')");
-    await contains(".o_form_view input", { value: "Partner 2" });
+    await mailContains(".o_form_view input", { value: "Partner 2" });
 });
 
 test("activity with a user mention", async () => {

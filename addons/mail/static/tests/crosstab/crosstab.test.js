@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     hover,
     insertText,
@@ -185,14 +185,16 @@ test("Message (hard) delete notification", async () => {
     await openDiscuss(MENU_ACTIVE_IDS.NOTIFICATION);
     await click(".o-mail-MessagingMenuItem [title='Message Actions']");
     await click(".o-dropdown-item:contains('Bookmark')");
-    await contains("button:has(:text('Notifications'))", { contains: [".badge:text('1')"] });
-    await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
+    await mailContains("button:has(:text('Notifications'))", { contains: [".badge:text('1')"] });
+    await mailContains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/delete", {
         message_ids: [messageId],
     });
     await waitForNone(".o-mail-Message");
-    await contains("button:has(:text('Notifications'))", { contains: [".badge", { count: 0 }] });
+    await mailContains("button:has(:text('Notifications'))", {
+        contains: [".badge", { count: 0 }],
+    });
     await waitForNone("button:has(:text('Bookmarks'))");
 });
 

@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     listenStoreFetch,
@@ -68,7 +68,7 @@ test("should have correct members in member list", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMember:count(2)");
-    await contains(".o-discuss-ChannelMember:text('" + serverState.partnerName + "')");
+    await mailContains(".o-discuss-ChannelMember:text('" + serverState.partnerName + "')");
     await waitFor(".o-discuss-ChannelMember:text('Demo'):count(1)");
 });
 
@@ -388,15 +388,15 @@ test("Members are partitioned by online/offline", async () => {
     await waitFor(".o-discuss-ChannelMember:count(3)");
     await waitFor("h6:text('Online - 2'):count(1)");
     await waitFor("h6:text('Offline - 1'):count(1)");
-    await contains(".o-discuss-ChannelMember:text('John')", {
+    await mailContains(".o-discuss-ChannelMember:text('John')", {
         after: ["h6:text('Online - 2')"],
         before: ["h6:text('Offline - 1')"],
     });
-    await contains(".o-discuss-ChannelMember:text('Mitchell Admin')", {
+    await mailContains(".o-discuss-ChannelMember:text('Mitchell Admin')", {
         after: ["h6:text('Online - 2')"],
         before: ["h6:text('Offline - 1')"],
     });
-    await contains(".o-discuss-ChannelMember:text('Dobby')", {
+    await mailContains(".o-discuss-ChannelMember:text('Dobby')", {
         after: ["h6:text('Offline - 1')"],
     });
 });

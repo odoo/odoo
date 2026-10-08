@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openDiscuss,
@@ -88,14 +88,14 @@ test("Conversation mentions in the command palette with @", async () => {
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@", { replace: true });
-    await contains(".o_command_palette .o_command_category", {
+    await mailContains(".o_command_palette .o_command_category", {
         contains: [
             ["span.fw-bold:text('Mentions')"],
             [".o_command.focused .o_command_name:text('Mitchell Admin and Mario')"],
         ],
     });
     // can also make self conversation
-    await contains(".o_command_palette .o_command_category", {
+    await mailContains(".o_command_palette .o_command_category", {
         contains: [[".o_command_name:text('Mitchell Admin')"]],
     });
     await click(".o_command.focused");
@@ -111,7 +111,7 @@ test("Max 3 most recent conversations in command palette of Discuss", async () =
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@", { replace: true });
-    await contains(".o_command_palette .o_command_category", {
+    await mailContains(".o_command_palette .o_command_category", {
         contains: [["span.fw-bold:text('Recent')"], [".o_command", { count: 3 }]],
     });
 });

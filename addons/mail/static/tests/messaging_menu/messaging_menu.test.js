@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     listenStoreFetch,
@@ -725,7 +725,7 @@ test("Messaging menu notification body of chat should show author name once", as
     await start();
     await openMessagingMenu();
     await waitFor(".o-mail-NotificationItem-name:text('Demo User'):count(1)");
-    await contains(".o-mail-NotificationItem-text", { textContent: "Hey!" });
+    await mailContains(".o-mail-NotificationItem-text", { textContent: "Hey!" });
 });
 
 test("OdooBot chat added at init messaging still shows its last message", async () => {
@@ -748,7 +748,7 @@ test("OdooBot chat added at init messaging still shows its last message", async 
     });
     await start();
     await openMessagingMenu();
-    await contains(".o-mail-NotificationItem-text", { textContent: "Welcome!" });
+    await mailContains(".o-mail-NotificationItem-text", { textContent: "Welcome!" });
 });
 
 test("fetching the bottom of a channel marks its last message as fetched", async () => {
@@ -1208,7 +1208,7 @@ test("failure is removed from messaging menu when message is deleted", async () 
     });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
-    await contains(".o-mail-NotificationItem", {
+    await mailContains(".o-mail-NotificationItem", {
         contains: [
             [
                 ".o-mail-NotificationItem-name:text('Email Failure: Contact'):text('Email Failure: Contact')",

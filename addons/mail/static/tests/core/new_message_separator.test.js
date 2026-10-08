@@ -1,7 +1,7 @@
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     hover,
     insertText,
@@ -185,9 +185,9 @@ test("keep new message separator until user goes back to the thread", async () =
         (n) => n["discuss.channel.member"][0].new_message_separator,
     ]);
     await click(".o-mail-NotificationItem:has(:text('Other'))");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Other" });
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "Other" });
     await click(".o-mail-NotificationItem:has(:text('test'))");
-    await contains(".o-mail-DiscussContent-threadName", { value: "test" });
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "test" });
     await waitFor(".o-mail-Message:has(:text('Message body 2')):count(1)");
     await waitForNone(".o-mail-Thread-newMessage:contains('New')");
 });
@@ -269,7 +269,7 @@ test("keep new message separator when switching between chat window and discuss 
     await waitFor("[title='Open Actions Menu']:count(1)");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Open in Discuss')");
-    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "General" });
     await waitFor(".o-mail-Thread-newMessage:count(1)");
     await openFormView("res.partner", serverState.partnerId);
     await waitFor(".o-mail-ChatWindow-header:has(:text('General')):count(1)");

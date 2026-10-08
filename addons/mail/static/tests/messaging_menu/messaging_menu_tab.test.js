@@ -2,7 +2,7 @@ import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     listenStoreFetch,
@@ -760,7 +760,7 @@ test("can search messages", async () => {
     );
     // Switching tabs clears the search.
     await click(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHAT}']`);
-    await contains(".o-mail-DiscussSearch input", { value: "" });
+    await mailContains(".o-mail-DiscussSearch input", { value: "" });
 });
 
 test("push notification request stays on the chat tab regardless of user notification preference", async () => {

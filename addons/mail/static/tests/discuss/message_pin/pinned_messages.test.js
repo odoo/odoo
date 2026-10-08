@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     hover,
     openDiscuss,
@@ -16,9 +16,9 @@ describe.current.tags("desktop");
 defineMailModels();
 
 async function assertPinnedPanelUnpinCount(expectedCount) {
-    await contains(".dropdown-item", { text: "Unpin", count: expectedCount });
+    await mailContains(".dropdown-item", { text: "Unpin", count: expectedCount });
     await click(".o-mail-DiscussContent-header button[title='Pinned Messages']");
-    await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message", {
+    await mailContains(".o-discuss-PinnedMessagesPanel .o-mail-Message", {
         text: "Test pinned message",
     });
     expect(".o-discuss-PinnedMessagesPanel button[title='Unpin']").toHaveCount(expectedCount);
@@ -122,7 +122,9 @@ test("Jump to message", async () => {
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await click(".o-mail-DiscussContent-header button[title='Pinned Messages']");
     await click(".o-discuss-PinnedMessagesPanel a[role='button']:text('Jump')");
-    await contains(".o-mail-Thread .o-mail-Message-body:text('Hello world!')", { visible: true });
+    await mailContains(".o-mail-Thread .o-mail-Message-body:text('Hello world!')", {
+        visible: true,
+    });
 });
 
 test("Jump to message from notification", async () => {
@@ -150,9 +152,9 @@ test("Jump to message from notification", async () => {
     await click(".modal-footer button:text('Pin Message')");
     await waitFor(".o-mail-NotificationMessage:count(1)");
     await scroll(".o-mail-Thread", "bottom");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await mailContains(".o-mail-Thread", { scroll: "bottom" });
     await click(".o-mail-NotificationMessage a[data-oe-type='highlight']:text('a message')");
-    await contains(".o-mail-Thread", { count: 0, scroll: "bottom" });
+    await mailContains(".o-mail-Thread", { count: 0, scroll: "bottom" });
 });
 
 test("can add reactions from pinned panel", async () => {
@@ -191,11 +193,11 @@ test("Guest user cannot see unpin button", async () => {
     });
     await start({ authenticateAs: false });
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", { text: "Test pinned message" });
+    await mailContains(".o-mail-Message", { text: "Test pinned message" });
     await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
-    await contains(".dropdown-item", { text: "Reply" });
-    await contains(".dropdown-item", { text: "Unpin", count: 0 });
+    await mailContains(".dropdown-item", { text: "Reply" });
+    await mailContains(".dropdown-item", { text: "Unpin", count: 0 });
     await assertPinnedPanelUnpinCount(0);
 });
 

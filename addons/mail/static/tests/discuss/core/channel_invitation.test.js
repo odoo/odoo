@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openDiscuss,
@@ -156,7 +156,7 @@ test("Invitation form should display channel group restriction", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await click("button[title='Add People']");
-    await contains(
+    await mailContains(
         ".o-discuss-ChannelInvitation div:text('Access restricted to group \"testGroup\"')",
         {
             after: ["button [data-icon='content_copy']"],

@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     openDiscuss,
     start,
@@ -43,11 +43,11 @@ test("Attachment panel sort by date", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await click(".o-mail-DiscussContent-header button[title='Attachments']");
-    await contains(".o-mail-AttachmentCard-info:text('file2.pdf')", {
+    await mailContains(".o-mail-AttachmentCard-info:text('file2.pdf')", {
         after: [".o-mail-DateSection:text('September, 2023')"],
         before: [".o-mail-DateSection:text('August, 2023')"],
     });
-    await contains(".o-mail-AttachmentCard-info:text('file1.pdf')", {
+    await mailContains(".o-mail-AttachmentCard-info:text('file1.pdf')", {
         after: [".o-mail-DateSection:text('August, 2023')"],
     });
 });

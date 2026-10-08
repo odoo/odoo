@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     focus,
     hover,
@@ -185,7 +185,7 @@ test("sidebar and banner counters display same value", async () => {
     }
     await start();
     await openDiscuss();
-    await contains(".o-discuss-badge:text('30')", {
+    await mailContains(".o-discuss-badge:text('30')", {
         parent: [".o-mail-MessagingMenuItem:has(:text('Bob'))"],
     });
     await click(".o-mail-NotificationItem:has(:text('Bob'))");
@@ -203,7 +203,7 @@ test("sidebar and banner counters display same value", async () => {
         })
     );
     await waitFor(".o-mail-Thread-banner:has(:text('31 new messages')):count(1)");
-    await contains(".o-discuss-badge:text('31')", {
+    await mailContains(".o-discuss-badge:text('31')", {
         parent: [".o-mail-MessagingMenuItem:has(:text('Bob'))"],
     });
 });
@@ -317,7 +317,7 @@ test("keep banner for messages received while scrolled up", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(20)");
     await waitFor(".o-mail-Composer.o-focused:count(1)");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await mailContains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
     const store = getService("mail.store");
     const channel = store["discuss.channel"].get(channelId);

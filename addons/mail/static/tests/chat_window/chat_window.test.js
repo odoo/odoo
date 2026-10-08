@@ -2,7 +2,7 @@ import {
     assertChatBubbleAndWindowImStatus,
     assertChatHub,
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     focus,
     hover,
@@ -28,7 +28,7 @@ import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
     Command,
-    contains as webContains,
+    contains,
     getService,
     preloadBundle,
     serverState,
@@ -416,14 +416,14 @@ test("open 2 different chat windows: enough screen width", async () => {
     });
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem-name:text('Channel_1')");
-    await contains(".o-mail-ChatWindow:has(:text('Channel_1'))", {
+    await mailContains(".o-mail-ChatWindow:has(:text('Channel_1'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem-name:text('Channel_2')");
     await waitFor(".o-mail-ChatWindow:count(2)");
     await waitFor(".o-mail-ChatWindow:has(:text('Channel_1')):count(1)");
-    await contains(".o-mail-ChatWindow:has(:text('Channel_2'))", {
+    await mailContains(".o-mail-ChatWindow:has(:text('Channel_2'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
 });
@@ -447,7 +447,7 @@ test("focus next visible chat window when closing current chat window with ESCAP
     });
     triggerHotkey("Escape");
     await waitFor(".o-mail-ChatWindow:count(1)");
-    await contains(".o-mail-ChatWindow:has(:text('General'))", {
+    await mailContains(".o-mail-ChatWindow:has(:text('General'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
 });
@@ -467,21 +467,21 @@ test("chat window: switch on TAB", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem-name:text('channel1')");
     await waitFor(".o-mail-ChatWindow:count(1)");
-    await contains(".o-mail-ChatWindow:has(:text('channel1'))", {
+    await mailContains(".o-mail-ChatWindow:has(:text('channel1'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:has(:text('channel1'))", {
+    await mailContains(".o-mail-ChatWindow:has(:text('channel1'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem-name:text('channel2')");
     await waitFor(".o-mail-ChatWindow:count(2)");
-    await contains(".o-mail-ChatWindow:has(:text('channel2'))", {
+    await mailContains(".o-mail-ChatWindow:has(:text('channel2'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:has(:text('channel1'))", {
+    await mailContains(".o-mail-ChatWindow:has(:text('channel1'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
 });
@@ -509,15 +509,15 @@ test("chat window: TAB cycle with 3 open chat windows", async () => {
         parent: [".o-mail-ChatWindow:has(:text('MyProject'))"],
     });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:has(:text('MyTeam'))", {
+    await mailContains(".o-mail-ChatWindow:has(:text('MyTeam'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:has(:text('General'))", {
+    await mailContains(".o-mail-ChatWindow:has(:text('General'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:has(:text('MyProject'))", {
+    await mailContains(".o-mail-ChatWindow:has(:text('MyProject'))", {
         contains: [".o-mail-Composer-input:focus"],
     });
 });
@@ -602,7 +602,7 @@ test("chat window should scroll to the newly posted message just after posting i
     await insertText(".o-mail-Composer-input", "WOLOLO");
     triggerHotkey("Enter");
     await waitFor(".o-mail-Message:count(11)");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await mailContains(".o-mail-Thread", { scroll: "bottom" });
 });
 
 test("chat window should remain folded when new message is received", async () => {
@@ -662,7 +662,7 @@ test("chat window: composer state conservation on toggle discuss", async () => {
     await waitFor(
         ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading):count(2)"
     );
-    await contains(".o-mail-Composer-input", { value: "XDU for the win !" });
+    await mailContains(".o-mail-Composer-input", { value: "XDU for the win !" });
 });
 
 test("don't show chat hub options when discuss is open", async () => {
@@ -692,14 +692,14 @@ test("chat window: scroll conservation on toggle discuss", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     await waitFor(".o-mail-Message:count(30)");
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
+    await mailContains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
     await openDiscuss();
     await waitForNone(".o-mail-ChatWindow");
     await openListView("discuss.channel", { res_id: channelId });
     await waitFor(".o-mail-Message:count(30)");
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 142 });
+    await mailContains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 142 });
 });
 
 test("chat window with a thread: keep scroll position in message list on folded", async () => {
@@ -716,7 +716,7 @@ test("chat window with a thread: keep scroll position in message list on folded"
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     await waitFor(".o-mail-Message:count(30)");
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
+    await mailContains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
     // fold chat window
@@ -726,7 +726,7 @@ test("chat window with a thread: keep scroll position in message list on folded"
     // unfold chat window
     await click(".o-mail-ChatBubble");
     await waitFor(".o-mail-Message:count(30)");
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 142 });
+    await mailContains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 142 });
 });
 
 test("chat window with a thread: keep scroll position in message list on toggle discuss when folded", async () => {
@@ -743,7 +743,7 @@ test("chat window with a thread: keep scroll position in message list on toggle 
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     await waitFor(".o-mail-Message:count(30)");
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
+    await mailContains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 0 });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-ChatWindow .o-mail-Thread", 142);
     // fold chat window
@@ -754,7 +754,7 @@ test("chat window with a thread: keep scroll position in message list on toggle 
     // unfold chat window
     await click(".o-mail-ChatBubble");
     await waitFor(".o-mail-ChatWindow .o-mail-Message:count(30)");
-    await contains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 142 });
+    await mailContains(".o-mail-ChatWindow .o-mail-Thread", { scroll: 142 });
 });
 
 test("folded chat window should hide member-list and settings buttons", async () => {
@@ -882,8 +882,8 @@ test("keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat w
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     await waitFor(".o-mail-ChatWindow .o-mail-Composer-input:focus:count(1)");
-    await webContains(".o-mail-Message").hover();
-    await webContains(".o-mail-Message [title='Expand']").click();
+    await contains(".o-mail-Message").hover();
+    await contains(".o-mail-Message [title='Expand']").click();
     await waitFor(".o-mail-Message-moreMenu.dropdown-menu:count(1)");
     triggerHotkey("ArrowDown");
     await waitFor(".o-mail-Message-moreMenu .dropdown-item:eq(0).focus:count(1)");
@@ -903,8 +903,8 @@ test("Close dropdown in chat window with ESCAPE does not also close the chat win
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
-    await webContains(".o-mail-Message").hover();
-    await webContains(".o-mail-Message [title='Expand']").click();
+    await contains(".o-mail-Message").hover();
+    await contains(".o-mail-Message [title='Expand']").click();
     await waitFor(".o-mail-Message-moreMenu.dropdown-menu:count(1)");
     triggerHotkey("Escape");
     await waitForNone(".o-mail-Message-moreMenu.dropdown-menu");
@@ -1066,7 +1066,7 @@ test("getting focus of chat window through tab key should jump to new message se
     );
     await waitFor(".o-mail-ChatWindow:eq(0) .o-mail-Message:count(40)");
     await scroll(".o-mail-ChatWindow:eq(0) .o-mail-Thread", 0);
-    await contains(".o-mail-ChatWindow:eq(0) .o-mail-Thread", { scroll: 0 });
+    await mailContains(".o-mail-ChatWindow:eq(0) .o-mail-Thread", { scroll: 0 });
     await focus(".o-mail-Composer-input:eq(1)");
     await waitFor(".o-mail-ChatWindow:eq(1) .o-mail-Composer.o-focused:count(1)");
     triggerHotkey("Tab");

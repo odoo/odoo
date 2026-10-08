@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     editInput,
     onRpcBefore,
@@ -143,7 +143,7 @@ test("remove a follower in a dirty form view", async () => {
     await click(".o-mail-Followers-button");
     await click("[title='Remove this follower']");
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");
-    await contains(".o_field_char[name=name] input", { value: "some value" });
+    await mailContains(".o_field_char[name=name] input", { value: "some value" });
     await waitFor(".o_tag:text('General'):count(1)");
 });
 

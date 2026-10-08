@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openFormView,
@@ -105,7 +105,7 @@ test("code block embedded in an email message's body should be ignored", async (
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(
+    await mailContains(
         "pre[data-embedded='readonlySyntaxHighlighting']:not([data-embedded-mounted]):text(print('hello'))",
         { parent: [".o-mail-Message-shadowBody", { shadowRoot: true }] }
     );
