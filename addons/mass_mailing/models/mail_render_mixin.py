@@ -14,7 +14,11 @@ class MailRenderMixin(models.AbstractModel):
 
         # apply shortener after
         if self.env.context.get('post_convert_links'):
+            # do not create link trackers for recipients that cannot be tracked
+            untracked_res_ids = self.env['mailing.mailing']._get_untracked_res_ids(model, list(rendered))
             for res_id, html in rendered.items():
+                if res_id in untracked_res_ids:
+                    continue
                 rendered[res_id] = self._shorten_links(
                     html,
                     self.env.context['post_convert_links'],
