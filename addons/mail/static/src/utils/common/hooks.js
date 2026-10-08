@@ -9,6 +9,7 @@ import {
     untrack,
     useEffect,
     useListener,
+    useOnChange,
     usePlugin,
     useProps,
     useScope,
@@ -212,10 +213,12 @@ export function useHover(refs, { onHover, onAway, stateObserver } = {}) {
  *
  * @param {import("@odoo/owl").Signal<Element>} ref
  * @param {() => void} onIntent
+ * @param {Object} [options]
+ * @param {string} [options.ignoreSelector] events from matching targets are ignored
  */
-export function useIntent(ref, onIntent) {
+export function onClickIntent(ref, onIntent, { ignoreSelector } = {}) {
     useListener(ref, "pointerdown", (ev) => {
-        if (ev.button === 0) {
+        if (ev.button === 0 && !(ignoreSelector && ev.target.closest?.(ignoreSelector))) {
             onIntent();
         }
     });
@@ -929,13 +932,33 @@ export function useRightClickMenu(
                 return; // onClose can be called more than once. Limiting to a single onClose to prevent race-condition in tests.
             }
             onCloseParam?.();
+            pendingPosition = undefined;
             isOngoingClose = true;
             await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
             isOngoingClose = false;
             delete rootRef()?.dataset.rightClicking;
         },
     });
+    const shouldRender = signal(false);
+    let pendingPosition;
+    const openAt = (el, { left, top }) => {
+        Object.assign(el.style, { left, top });
+        dropdownState.open();
+    };
+    useOnChange(
+        () => [anchor()],
+        (el) => {
+            if (el && pendingPosition) {
+                const position = pendingPosition;
+                pendingPosition = undefined;
+                openAt(el, position);
+            }
+        }
+    );
     const res = {
+        get shouldRender() {
+            return shouldRender();
+        },
         get menuProps() {
             return {
                 anchorRef: anchor,
@@ -957,10 +980,13 @@ export function useRightClickMenu(
                 return false;
             }
             rootRef().dataset.rightClicking = true;
-            const el = anchor();
-            el.style.left = ev.clientX + "px";
-            el.style.top = ev.clientY + "px";
-            dropdownState.open();
+            const position = { left: ev.clientX + "px", top: ev.clientY + "px" };
+            if (anchor()) {
+                openAt(anchor(), position);
+            } else {
+                pendingPosition = position;
+                shouldRender.set(true);
+            }
             ev.preventDefault();
             return true;
         },

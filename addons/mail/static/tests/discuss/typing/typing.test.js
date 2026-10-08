@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     onRpcBefore,
     openDiscuss,
@@ -889,6 +890,7 @@ test("[text composer] show typing in member list", async () => {
     await waitForNone(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
     // check editing doesn't trigger is typing
     await waitFor(".o-mail-Message-content:has(:text('HelloWorld!')):count(1)");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "GoodByeWorld!");
@@ -950,6 +952,7 @@ test("show typing in member list", async () => {
     await waitForNone(".o-discuss-ChannelMemberList [title='Other 10 is typing...']");
     // check editing doesn't trigger is typing
     await waitFor(".o-mail-Message-content:has(:text('HelloWorld!')):count(1)");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await waitFor(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable:count(1)");

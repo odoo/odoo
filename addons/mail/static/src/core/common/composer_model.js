@@ -122,6 +122,7 @@ export class Composer extends Record {
     isDirty = false;
     composerText = "";
     composerHtml = fields.Html(markup("<div class='o-paragraph'><br></div>"));
+    isComposerHtmlEmpty = this.computed(() => isHtmlEmpty(this.composerHtml));
     thread = fields.One("mail.thread");
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = fields.Attr(

@@ -2,6 +2,7 @@ import { onMounted, onPatched } from "@odoo/owl";
 import {
     click,
     defineMailModels,
+    hover,
     insertText,
     observeRenders,
     openDiscuss,
@@ -99,6 +100,7 @@ test("replying to message should only render relevant part", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(10)");
+    await hover(".o-mail-Message:last");
     const stopObserve = observeRenders();
     replying = true;
     await click(".o-mail-Message:last [title='Expand']");

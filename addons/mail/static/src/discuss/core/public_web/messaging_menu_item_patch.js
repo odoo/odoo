@@ -1,7 +1,7 @@
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
-import { useIntent } from "@mail/utils/common/hooks";
+import { onClickIntent } from "@mail/utils/common/hooks";
 
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -25,7 +25,9 @@ const messagingMenuItemPatch = {
         );
         this.isDiscussSidebarChannelActions = true;
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
-        useIntent(this.root, () => this.channel?.thread.prefetchMessages());
+        onClickIntent(this.root, () => this.channel?.thread.prefetchInitialMessages(), {
+            ignoreSelector: ".o-mail-MessagingMenu-actions",
+        });
     },
     get _isActive() {
         return (

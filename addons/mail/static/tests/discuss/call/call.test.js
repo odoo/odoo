@@ -24,6 +24,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
     MENU_ACTIVE_IDS,
+    hover,
 } from "@mail/../tests/mail_test_helpers";
 import { Store } from "@mail/../tests/mock_server/store";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
@@ -41,7 +42,6 @@ import {
     beforeEach,
     describe,
     expect,
-    hover,
     manuallyDispatchProgrammaticEvent,
     mockDate,
     mockSendBeacon,
@@ -2250,7 +2250,7 @@ test("Meeting chat panel excludes call notifications for 'New Meeting' channels"
     await waitFor(".o-mail-Meeting:count(1)");
     await click("[title='Chat']");
     await waitFor(".o-mail-ActionPanel-header:text('In call messages'):count(1)");
-    await waitFor(".o-mail-Thread:has(:text('Meeting, Jan 1')):count(1)");
+    await waitFor(".o-mail-Meeting .o-mail-Thread:has(:text('Meeting, Jan 1')):count(1)");
     await waitForNone(`.o-mail-NotificationMessage:text('Mitchell Admin started a call.${time}')`);
 });
 
@@ -2385,6 +2385,7 @@ test("Access to Pinned Messages from Meeting Chat", async () => {
     await waitFor(".o-mail-ActionPanel-header:has(:text('In call messages')):count(1)");
     await insertText(".o-mail-Meeting .o-mail-Composer-input", "hey");
     await click(".o-mail-Meeting .o-mail-Composer button[title='Send']:enabled");
+    await hover(".o-mail-Meeting .o-mail-Message");
     await click(".o-mail-Meeting .o-mail-Message [title='Expand']");
     await click(".dropdown-item:text('Pin')");
     await click(".modal-footer button:text('Pin Message')");

@@ -6,6 +6,7 @@ import {
     defineMailModels,
     dragenterFiles,
     dropFiles,
+    hover,
     insertText,
     listenStoreFetch,
     onRpcBefore,
@@ -351,6 +352,7 @@ test("chatter: drop attachment while editing a message", async () => {
     const textFile = new File(["hello, world"], "test.txt", { type: "text/plain" });
     await start();
     await openFormView("res.partner", partnerId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
     await waitFor(".o-mail-Message .o-mail-Composer:count(1)");
@@ -935,6 +937,7 @@ test("can mark message as unread from chatter", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Message-body:text(lorem ipsum):count(1)");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Mark as Unread')");
     await waitFor(".o_notification:text(Marked as unread):count(1)");

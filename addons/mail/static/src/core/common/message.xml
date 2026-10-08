@@ -14,7 +14,7 @@
             t-ref="this.rootRef"
             t-if="this.message.exists()"
         >
-            <MessageContextMenu t-props="this.rightClickMenu.menuProps"/>
+            <MessageContextMenu t-if="this.rightClickMenu.shouldRender" t-props="this.rightClickMenu.menuProps"/>
             <div class="o-mail-Message-jumpTarget position-absolute top-0 pe-none"/>
             <div class="o-mail-Message-core position-relative d-flex flex-shrink-0 bg-inherit" t-att-class="this.getCoreAttClass()">
                 <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-center flex-column bg-inherit" t-att-class="this.getSidebarAttClass()">
@@ -155,8 +155,13 @@
         <t t-set="isReverse" t-value="this.ancestors.inChatWindow and this.isAlignedRight"/>
         <t t-if="this.isMobileOS and isReverse" t-call="mail.Message.emptyQuickAction"/>
         <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
-            <ActionList actions="this.actions" inline="true" fw="false" actionComponent.bind="this.getActionComponent"/>
-            <t t-foreach="Array(Math.max(this.quickActionCount - this.quickActions().length - 1, 0))" t-as="i" t-key="i_index">
+            <t t-if="this.isMobileOS or this.state.shouldRenderActions">
+                <ActionList actions="this.actions" inline="true" fw="false" actionComponent.bind="this.getActionComponent"/>
+                <t t-foreach="Array(Math.max(this.quickActionCount - this.quickActions().length - 1, 0))" t-as="i" t-key="i_index">
+                    <t t-call="mail.Message.emptyQuickAction"/>
+                </t>
+            </t>
+            <t t-else="" t-foreach="Array(this.quickActionCount)" t-as="i" t-key="i_index">
                 <t t-call="mail.Message.emptyQuickAction"/>
             </t>
         </div>

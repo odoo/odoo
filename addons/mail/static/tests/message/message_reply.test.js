@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     openDiscuss,
     openFormView,
     start,
@@ -152,15 +153,18 @@ test("can reply to logged note in chatter", async () => {
     ]);
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await waitFor(".o-dropdown-item:contains('Reply'):count(1)");
     await openFormView("res.partner", serverState.partnerId);
+    await hover(".o-mail-Message:contains('Test message from B')");
     await click(".o-mail-Message:contains('Test message from B') [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await waitFor("button.active:text('Log note'):count(1)");
     await contains(".o-mail-Composer.o-focused .o-mail-Composer-input", { value: "@Partner B " });
     await click(".o-mail-Composer-send:enabled");
     await waitFor(".o-mail-Message a.o_mail_redirect:text('@Partner B'):count(1)");
+    await hover(".o-mail-Message:contains('@Partner B')");
     await click(".o-mail-Message:contains('@Partner B') [title='Expand']");
     await waitFor(".o-dropdown-item:text('Edit'):count(1)");
     await waitFor(".o-dropdown-item:contains('Delete'):count(1)");
@@ -183,6 +187,7 @@ test("reply to logged note in chatter keeps prefilled mention in html composer",
     await start();
     getService("mail.composer").setHtmlComposer();
     await openFormView("res.partner", serverState.partnerId);
+    await hover(".o-mail-Message:contains('Test message from B')");
     await click(".o-mail-Message:contains('Test message from B') [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await waitFor("button.active:text('Log note'):count(1)");
@@ -297,6 +302,7 @@ test("replying to a note restores focus on an already open composer", async () =
     await waitFor(".o-mail-Composer.o-focused:count(1)");
     queryFirst(".o-mail-Composer-input").blur();
     await waitForNone(".o-mail-Composer.o-focused");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message-actions [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await waitFor(".o-mail-Composer.o-focused:count(1)");
@@ -320,6 +326,7 @@ test("Click reply to note again preserves composer content", async () => {
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openFormView("res.partner", serverState.partnerId);
+    await hover(".o-mail-Message:contains(I am Justice)");
     await click(".o-mail-Message:contains(I am Justice) [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await waitFor(".o-mail-Composer.o-focused:count(1)");
@@ -335,6 +342,7 @@ test("Click reply to note again preserves composer content", async () => {
     expect(editor.editable.textContent).toBe("\uFEFF@Batman\uFEFF\u00A0Strong Text");
     await click("button.active:text('Log note')");
     await waitForNone(".o-mail-Composer");
+    await hover(".o-mail-Message:contains(I am Justice)");
     await click(".o-mail-Message:contains(I am Justice) [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await waitFor(".o-mail-Composer.o-focused:count(1)");
