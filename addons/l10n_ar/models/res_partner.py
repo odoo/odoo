@@ -65,14 +65,13 @@ class ResPartner(models.Model):
     def _compute_l10n_ar_formatted_vat(self):
         """ This will add some dash to the CUIT number (VAT AR) in order to show in his natural format:
         {person_category}-{number}-{validation_number} """
-        recs_cuit = self.filtered(lambda p: p.l10n_ar_afip_code == AR_CUIT_AFIP_CODE and p.vat)
+        recs_cuit, remaining = self.partitioned(lambda p: p.l10n_ar_afip_code == AR_CUIT_AFIP_CODE and p.vat)
         for rec in recs_cuit:
             try:
                 rec.l10n_ar_formatted_vat = stdnum.ar.cuit.format(rec.vat)
             except Exception as error:
                 rec.l10n_ar_formatted_vat = rec.vat
                 _logger.runbot("Argentinean VAT was not formatted: %s", repr(error))
-        remaining = self - recs_cuit
         remaining.l10n_ar_formatted_vat = False
 
     @api.depends('vat', 'commercial_partner_id', 'country_id', 'l10n_ar_afip_code')

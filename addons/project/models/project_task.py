@@ -563,8 +563,7 @@ class ProjectTask(models.Model):
 
     @api.depends('depend_on_ids')
     def _compute_depend_on_count(self):
-        tasks_with_dependency = self.filtered('allow_task_dependencies')
-        tasks_without_dependency = self - tasks_with_dependency
+        tasks_with_dependency, tasks_without_dependency = self.partitioned('allow_task_dependencies')
         tasks_without_dependency.depend_on_count = 0
         tasks_without_dependency.closed_depend_on_count = 0
         if not any(self._ids):

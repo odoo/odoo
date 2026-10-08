@@ -104,15 +104,12 @@ class FleetVehicleLogContract(models.Model):
 
     def _update_state(self):
         date_today = fields.Date.context_today(self)
-        future_contracts, running_contracts, expired_contracts = self.env[self._name], self.env[self._name], self.env[self._name]
         # Done and closed are the last steps, so a new date should never bring them back.
-        for contract in self.filtered(lambda c: c.start_date and c.state not in ('closed', 'done')):
-            if date_today < contract.start_date:
-                future_contracts |= contract
-            elif not contract.expiration_date or contract.start_date <= date_today <= contract.expiration_date:
-                running_contracts |= contract
-            else:
-                expired_contracts |= contract
+        _closed_contracts, future_contracts, running_contracts, expired_contracts = self.partitioned(
+            lambda c: not c.start_date or c.state in ('closed', 'done'),
+            lambda c: date_today < c.start_date,
+            lambda c: not c.expiration_date or c.start_date <= date_today <= c.expiration_date,
+        )
         future_contracts.action_draft()
         running_contracts.action_open()
         expired_contracts.action_expire()

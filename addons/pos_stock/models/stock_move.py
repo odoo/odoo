@@ -63,8 +63,10 @@ class StockMove(models.Model):
     def _add_mls_related_to_order(self, related_order_lines, are_qties_done=True):
         lines_data = self._prepare_lines_data_dict(related_order_lines)
         # Moves with product_id not in related_order_lines. This can happend e.g. when product_id has a phantom-type bom.
-        moves_to_assign = self.filtered(lambda m: m.product_id.id not in lines_data or m.product_id.tracking not in ['lot', 'serial']
-                                                  or (not m.picking_type_id.use_existing_lots and not m.picking_type_id.use_create_lots))
+        moves_to_assign, moves_remaining = self.partitioned(
+            lambda m: m.product_id.id not in lines_data or m.product_id.tracking not in ['lot', 'serial']
+            or (not m.picking_type_id.use_existing_lots and not m.picking_type_id.use_create_lots),
+        )
 
         # Check for any conversion issues in the moves before setting quantities
         uoms_with_issues = set()
@@ -96,7 +98,6 @@ class StockMove(models.Model):
 
         for move in moves_to_assign:
             move.quantity = move.product_uom_qty
-        moves_remaining = self - moves_to_assign
         existing_lots = moves_remaining._create_production_lots_for_pos_order(related_order_lines)
         move_lines_to_create = []
         if are_qties_done:

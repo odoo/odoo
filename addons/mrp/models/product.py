@@ -248,8 +248,7 @@ class ProductProduct(models.Model):
         with 'phantom' as BoM type.
         """
         bom_kits = self.env['mrp.bom'].sudo()._bom_find(self, bom_type='phantom', company_id=self.env.company.id)
-        kits = self.filtered(lambda p: bom_kits.get(p))
-        regular_products = self - kits
+        _kits, regular_products = self.partitioned(bom_kits.get)
         res = (
             super(ProductProduct, regular_products)._compute_quantities_dict(lot_id, owner_id, package_id, from_date=from_date, to_date=to_date)
             if regular_products

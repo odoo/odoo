@@ -23,8 +23,7 @@ class PaymentProvider(models.Model):
             return False
 
     def _apply_worldline_branding(self):
-        fr_providers = self.filtered(lambda provider: provider.company_id.is_france_country)
-        non_fr_providers = self - fr_providers
+        fr_providers, non_fr_providers = self.partitioned(lambda provider: provider.company_id.is_france_country)
         if fr_providers:
             fr_providers._apply_fr_worldline_branding()
         if non_fr_providers:

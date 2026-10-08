@@ -1270,14 +1270,11 @@ class AccountMove(models.Model):
                 or (move.state == 'draft' and not currency.is_zero(move.amount_total))
             )
 
-        groups = self.grouped(lambda move:
-            'legacy' if move.payment_state == 'invoicing_legacy' else
-            'blocked' if move.payment_state == 'blocked' else
-            'invoices' if _invoice_qualifies(move) else
-            'unpaid'
+        _skipped, invoices, unpaid = self.partitioned(
+            lambda move: move.payment_state in ('invoicing_legacy', 'blocked'),
+            _invoice_qualifies,
         )
-        groups.get('unpaid', self.browse()).payment_state = 'not_paid'
-        invoices = groups.get('invoices', self.browse())
+        unpaid.payment_state = 'not_paid'
 
         stored_ids = tuple(invoices.ids)
         if stored_ids:
@@ -1871,15 +1868,16 @@ class AccountMove(models.Model):
         if self.id:
             # The move is stored so we can add the early payment discount lines directly to reduce the
             # tax amount without touching the untaxed amount.
-            epd_amls = self.line_ids.filtered(lambda line: line.display_type == 'epd')
+            epd_amls, cash_rounding_amls, non_deductible_amls, tax_amls, _other_amls = self.line_ids.partitioned(
+                lambda line: line.display_type == 'epd',
+                lambda line: line.display_type == 'rounding' and not line.tax_repartition_line_id,
+                lambda line: line.display_type in ('non_deductible_product', 'non_deductible_product_total'),
+                'tax_repartition_line_id',
+            )
             base_lines += [self._prepare_epd_base_line_for_taxes_computation(line) for line in epd_amls]
-            cash_rounding_amls = self.line_ids \
-                .filtered(lambda line: line.display_type == 'rounding' and not line.tax_repartition_line_id)
             base_lines += [self._prepare_cash_rounding_base_line_for_taxes_computation(line) for line in cash_rounding_amls]
-            non_deductible_base_lines = self.line_ids.filtered(lambda line: line.display_type in ('non_deductible_product', 'non_deductible_product_total'))
-            base_lines += [self._prepare_non_deductible_base_line_for_taxes_computation(line) for line in non_deductible_base_lines]
+            base_lines += [self._prepare_non_deductible_base_line_for_taxes_computation(line) for line in non_deductible_amls]
             AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
-            tax_amls = self.line_ids.filtered('tax_repartition_line_id')
             tax_lines = [self._prepare_tax_line_for_taxes_computation(tax_line) for tax_line in tax_amls]
             if round_from_tax_lines == 'reapply_currency_rate':
                 for tax_line in tax_lines:
@@ -5231,9 +5229,11 @@ class AccountMove(models.Model):
             return target[list(source).index(tax_rep)]
 
         company = self.company_id
-        payment_term_line = self.line_ids.filtered(lambda x: x.display_type == 'payment_term')
-        tax_lines = self.line_ids.filtered('tax_repartition_line_id')
-        invoice_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
+        payment_term_line, invoice_lines, tax_lines, _other_lines = self.line_ids.partitioned(
+            lambda x: x.display_type == 'payment_term',
+            lambda x: x.display_type == 'product',
+            'tax_repartition_line_id',
+        )
         payment_term = self.invoice_payment_term_id
         early_pay_discount_computation = payment_term.early_pay_discount_computation
         discount_percentage = payment_term.discount_percentage
@@ -5945,16 +5945,10 @@ class AccountMove(models.Model):
     def _unlink_or_reverse(self, default_values_list=None):
         if not self:
             return
-        to_unlink = self.env['account.move']
-        to_cancel = self.env['account.move']
-        to_reverse = self.env['account.move']
-        for move in self:
-            if not move._can_be_unlinked():
-                to_reverse += move
-            elif move._is_protected_by_audit_trail():
-                to_cancel += move
-            else:
-                to_unlink += move
+        to_reverse, to_cancel, to_unlink = self.partitioned(
+            lambda move: not move._can_be_unlinked(),
+            lambda move: move._is_protected_by_audit_trail(),
+        )
         to_unlink.filtered(lambda m: m.state in ('posted', 'cancel')).button_draft()
         to_unlink.filtered(lambda m: m.state == 'draft').unlink()
         to_cancel.filtered(lambda m: m.state != 'cancel').button_cancel()
@@ -6248,13 +6242,12 @@ class AccountMove(models.Model):
             ))
 
         if soft:
-            future_moves = self.filtered(lambda move: move.date > fields.Date.context_today(self))
+            future_moves, to_post = self.partitioned(lambda move: move.date > fields.Date.context_today(self))
             for move in future_moves:
                 if move.auto_post == 'no':
                     move.auto_post = 'at_date'
                 msg = _('This move will be posted at the accounting date: %(date)s', date=format_date(self.env, move.date))
                 move.message_post(body=msg)
-            to_post = self - future_moves
         else:
             to_post = self
 

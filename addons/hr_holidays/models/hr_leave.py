@@ -631,10 +631,9 @@ class HrLeave(models.Model):
 
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_resource_calendar_id(self):
-        leaves_without_emp_or_date = self.filtered(
+        leaves_without_emp_or_date, valid_leaves = self.partitioned(
             lambda leave: not (leave.employee_id and leave.request_date_from and leave.request_date_to)
         )
-        valid_leaves = self - leaves_without_emp_or_date
         leaves_without_emp_or_date.resource_calendar_id = self.env.company.resource_calendar_id
         if not valid_leaves:
             return
@@ -1930,15 +1929,12 @@ class HrLeave(models.Model):
 
     def action_approve(self, check_state=True):
         current_employee = self.env.user.employee_id
-        leave_to_approve = self.env['hr.leave']
-        leave_to_validate = self.env['hr.leave']
-        for leave in self:
-            if check_state and leave.can_validate or not check_state and leave.validation_type != "both":
-                leave_to_validate += leave
-            elif check_state and leave.can_approve or not check_state and leave.validation_type == 'both':
-                leave_to_approve += leave
-            else:
-                raise UserError(self.env._('You cannot approve this leave.'))
+        leave_to_validate, leave_to_approve, invalid_leaves = self.partitioned(
+            lambda leave: (check_state and leave.can_validate) or (not check_state and leave.validation_type != "both"),
+            lambda leave: (check_state and leave.can_approve) or (not check_state and leave.validation_type == 'both'),
+        )
+        if invalid_leaves:
+            raise UserError(self.env._('You cannot approve this leave.'))
         leave_to_approve.write({'state': 'validate1', 'first_approver_id': current_employee.id})
         leave_to_validate._action_validate(check_state)
         if not self.env.context.get('leave_fast_create'):
@@ -2077,14 +2073,7 @@ class HrLeave(models.Model):
         # skip_time_rules: resource.calendar.leaves doesn't exist yet so recompute after _validate_leave_request
         self.with_context(skip_time_rules=True).write({'state': 'validate'})
 
-        leaves_second_approver = self.env['hr.leave']
-        leaves_first_approver = self.env['hr.leave']
-
-        for leave in self:
-            if leave.validation_type == 'both':
-                leaves_second_approver += leave
-            else:
-                leaves_first_approver += leave
+        leaves_second_approver, leaves_first_approver = self.partitioned(lambda leave: leave.validation_type == 'both')
 
         leaves_second_approver.write({'second_approver_id': current_employee.id})
         leaves_first_approver.write({'first_approver_id': current_employee.id})

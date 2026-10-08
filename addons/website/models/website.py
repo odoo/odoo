@@ -1552,8 +1552,7 @@ class Website(models.CachedModel):
         page_model_name = 'Page'
 
         def _handle_views_and_pages(views):
-            page_views = views.filtered('page_ids')
-            views = views - page_views
+            page_views, views = views.partitioned('page_ids')
             if page_views:
                 dependencies.setdefault(page_model_name, [])
                 dependencies[page_model_name] += [{

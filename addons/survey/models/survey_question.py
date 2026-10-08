@@ -600,11 +600,10 @@ class SurveyQuestion(models.Model):
             write_vals['is_time_limited'] = is_time_limited
         if time_limit is not None:
             write_vals['time_limit'] = time_limit
-        non_time_customized_questions = self.filtered(lambda s: not s.is_time_customized)
+        non_time_customized_questions, customized_questions = self.partitioned(lambda s: not s.is_time_customized)
         non_time_customized_questions.write(write_vals)
 
         # Reset `is_time_customized` as necessary
-        customized_questions = self - non_time_customized_questions
         back_to_default_questions = customized_questions.filtered(
             lambda q: q.is_time_limited == q.survey_id.session_speed_rating
             and (q.is_time_limited is False or q.time_limit == q.survey_id.session_speed_rating_time_limit))
@@ -636,8 +635,7 @@ class SurveyQuestion(models.Model):
             else:
                 answer_lines = all_lines
                 comment_line_ids = self.env['survey.user_input.line']
-            skipped_lines = answer_lines.filtered(lambda line: line.skipped)
-            done_lines = answer_lines - skipped_lines
+            _skipped_lines, done_lines = answer_lines.partitioned(lambda line: line.skipped)
             question_data.update(
                 answer_line_ids=answer_lines,
                 answer_line_done_ids=done_lines,

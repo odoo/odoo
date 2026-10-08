@@ -457,8 +457,7 @@ class StockPicking(models.Model):
             picking.has_scrap_move = picking._origin in result
 
     def _compute_packages_count(self):
-        done_pickings = self.filtered(lambda picking: picking.state == 'done')
-        other_pickings = self - done_pickings
+        done_pickings, other_pickings = self.partitioned(lambda picking: picking.state == 'done')
 
         packages_by_pick = defaultdict(int)
         # Cannot _read_group() as picking_ids isn't stored, nor grouped() because multiple pickings per package

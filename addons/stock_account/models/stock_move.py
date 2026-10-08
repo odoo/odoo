@@ -809,10 +809,9 @@ class StockMove(models.Model):
         """ Computes the unit price for a set of moves, using a weighted average between
         dropshipped and non dropshipped moves.
         """
-        dropship_moves = self.filtered(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
+        dropship_moves, regular_moves = self.partitioned(lambda m: m._is_dropshipped() or m._is_dropshipped_returned())
         dropship_quantity = sum(m._get_valued_qty() for m in dropship_moves)
         dropship_price_unit = dropship_moves._get_price_unit_dropshipped()
-        regular_moves = self - dropship_moves
         regular_quantity = sum(m._get_valued_qty() for m in regular_moves)
         regular_price_unit = regular_moves._get_price_unit(product=product)
         total_quantity = dropship_quantity + regular_quantity

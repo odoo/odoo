@@ -464,8 +464,7 @@ class ProjectProject(models.Model):
         """ Reset state for waiting tasks in the project if the feature is disabled
             or recompute the tasks with dependencies if the project has the feature enabled again
         """
-        project_with_task_dependencies_feature = self.filtered('allow_task_dependencies')
-        projects_without_task_dependencies_feature = self - project_with_task_dependencies_feature
+        project_with_task_dependencies_feature, projects_without_task_dependencies_feature = self.partitioned('allow_task_dependencies')
         ProjectTask = self.env['project.task']
         if (
             project_with_task_dependencies_feature
@@ -1022,12 +1021,7 @@ class ProjectProject(models.Model):
         return action
 
     def toggle_favorite(self):
-        favorite_projects = not_fav_projects = self.env['project.project'].sudo()
-        for project in self:
-            if self.env.user in project.favorite_user_ids:
-                favorite_projects |= project
-            else:
-                not_fav_projects |= project
+        favorite_projects, not_fav_projects = self.sudo().partitioned(lambda project: self.env.user in project.favorite_user_ids)
 
         # Project User has no write access for project.
         not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})

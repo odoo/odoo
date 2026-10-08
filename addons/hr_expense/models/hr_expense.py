@@ -1442,8 +1442,7 @@ class HrExpense(models.Model):
         self._check_can_reset_approval()
         self = self.with_context(clean_context(self.env.context))
         moves_sudo = self.sudo().account_move_id
-        draft_moves_sudo = moves_sudo.filtered(lambda m: m.state == 'draft')
-        non_draft_moves_sudo = moves_sudo - draft_moves_sudo
+        draft_moves_sudo, non_draft_moves_sudo = moves_sudo.partitioned(lambda m: m.state == 'draft')
         non_draft_moves_sudo._reverse_moves(
             default_values_list=[{'invoice_date': fields.Date.context_today(move_sudo)} for move_sudo in non_draft_moves_sudo],
             cancel=True
@@ -1739,8 +1738,7 @@ class HrExpense(models.Model):
     def _create_move(self):
         self._check_can_create_move()
 
-        company_expenses = self.filtered(lambda expense: expense.payment_mode == 'company_account')
-        employee_expenses = self - company_expenses
+        company_expenses, employee_expenses = self.partitioned(lambda expense: expense.payment_mode == 'company_account')
         if len(employee_expenses.company_id) > 1:
             raise UserError(self.env._("You can't create move for employee-paid expenses belonging to different companies at the same time"))
 
@@ -1792,10 +1790,9 @@ class HrExpense(models.Model):
 
         if employee_expenses:
             # Creation of the account moves for the employee paid expenses.
-            existing_bill_expenses = employee_expenses.filtered('existing_bill_id')
+            existing_bill_expenses, no_bill_expenses = employee_expenses.partitioned('existing_bill_id')
             existing_bill_expenses._create_entry_for_expense_with_linked_bill()
 
-            no_bill_expenses = employee_expenses - existing_bill_expenses
             if no_bill_expenses:
                 journal = no_bill_expenses[0]._get_default_journal()
                 today = fields.Date.context_today(self)

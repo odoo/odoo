@@ -48,8 +48,7 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
 
     def _concat_tasks(self, task_sudo, groupby, tasks):
         if groupby == 'sale_line_id':
-            tasks_no_sol = tasks.filtered(lambda task: task.sale_order_state != 'sale' or not task.sale_line_id)
-            tasks_sol = tasks - tasks_no_sol
+            tasks_no_sol, tasks_sol = tasks.partitioned(lambda task: task.sale_order_state != 'sale' or not task.sale_line_id)
             grouped_tasks = [task_sudo.concat(g) for k, g in groupbyelem(tasks_sol, itemgetter(groupby))]
             if not grouped_tasks:
                 if tasks_no_sol:

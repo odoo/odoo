@@ -960,10 +960,9 @@ class PosSession(models.Model):
 
         # Build the out_receipt lines. Returns pm_data_list so we can
         # create the matching account.payment / statement line records after posting.
-        sale_orders = non_invoiced_orders.filtered(
+        sale_orders, refund_orders = non_invoiced_orders.partitioned(
             lambda order: not order.is_refund_or_negative() and order.amount_total >= 0,
         )
-        refund_orders = non_invoiced_orders - sale_orders
         sales_move = self._create_session_account_move(sale_orders)
         refunds_move = self._create_session_account_move(refund_orders)
         self.sudo().sale_move_ids |= sales_move
@@ -1142,8 +1141,7 @@ class PosSession(models.Model):
         """ Return the paid orders of the session that are not invoiced. """
         self.ensure_one()
         orders = self._get_order_for_session_closing()
-        invoiced_orders = orders.filtered(lambda o: o.is_singly_invoiced or o.is_globally_invoiced)
-        non_invoiced_orders = orders - invoiced_orders
+        invoiced_orders, non_invoiced_orders = orders.partitioned(lambda o: o.is_singly_invoiced or o.is_globally_invoiced)
         return non_invoiced_orders, invoiced_orders
 
     def _check_invoiced_orders_are_posted(self, invoiced_orders):

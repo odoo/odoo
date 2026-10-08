@@ -175,12 +175,7 @@ class HrJob(models.Model):
         if not employee:
             return
 
-        unfavorited_jobs = favorited_jobs = self.env['hr.job']
-        for job in self:
-            if employee in job.favorite_recruiter_ids:
-                unfavorited_jobs |= job
-            else:
-                favorited_jobs |= job
+        unfavorited_jobs, favorited_jobs = self.partitioned(lambda job: employee in job.favorite_recruiter_ids)
         favorited_jobs.write({'favorite_recruiter_ids': [Command.link(employee.id)]})
         unfavorited_jobs.write({'favorite_recruiter_ids': [Command.unlink(employee.id)]})
 

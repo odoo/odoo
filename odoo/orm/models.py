@@ -5725,24 +5725,31 @@ class BaseModel(metaclass=MetaModel):
         if not func:
             # align with mapped()
             return self
-
-        if callable(func):
-            # normal function
-            pass
-        elif isinstance(func, str):
-            if '.' in func:
-                seq_fnames = func
-                func = lambda record: any(record.mapped(seq_fnames))  # noqa: E731
-            else:
-                # avoid costly mapped
-                func = self._fields[func].__get__
-        elif isinstance(func, Domain):
+        if isinstance(func, Domain):
             return self.filtered_domain(func)
-        else:
-            raise TypeError(f"Invalid function {func!r} to filter on {self._name}")
 
+        func = self._get_predicate(func)
         ids = tuple(id_ for id_, rec in zip(self._ids, self) if func(rec))
         return self.__class__(self.env, ids, self._prefetch_ids)
+
+    def _get_predicate(self, func: str | Callable[[Self], bool] | Domain | None) -> Callable[[Self], bool]:
+        """Return a function on a single record from anything accepted by
+        :meth:`filtered`.
+        """
+        if not func:
+            # align with filtered()
+            return lambda record: True
+        if isinstance(func, Domain):
+            return func._as_predicate(self)
+        if callable(func):
+            # normal function
+            return func
+        if isinstance(func, str):
+            if '.' in func:
+                return lambda record: any(record.mapped(func))
+            # avoid costly mapped
+            return self._fields[func].__get__
+        raise TypeError(f"Invalid function {func!r} to filter on {self._name}")
 
     @typing.overload
     def grouped(self, key: str) -> dict[typing.Any, Self]:
@@ -5777,6 +5784,36 @@ class BaseModel(metaclass=MetaModel):
 
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
         return {key: browse(tuple(ids)) for key, ids in collator.items()}
+
+    @api.private
+    def partitioned(self, *predicates: str | Callable[[Self], bool] | Domain | None) -> tuple[Self, ...]:
+        """Split the records of ``self`` according to ``predicates``, returning
+        ``len(predicates) + 1`` recordsets. Each record is put in the recordset
+        of the first predicate it satisfies, or in the last recordset if it
+        satisfies none of them. All the resulting recordsets are guaranteed to
+        be part of the same prefetch-set.
+
+        :param predicates: anything accepted by :meth:`filtered`
+
+        .. code-block:: python3
+
+            invoices, posted, others = moves.partitioned(
+                lambda m: m.is_invoice(),
+                Domain('state', '=', 'posted'),  # posted non-invoices
+            )
+        """
+        predicates = [self._get_predicate(predicate) for predicate in predicates]
+        partitions = [[] for _ in range(len(predicates) + 1)]
+        for record in self:
+            for ids, predicate in zip(partitions, predicates):
+                if predicate(record):
+                    ids.extend(record._ids)
+                    break
+            else:
+                partitions[-1].extend(record._ids)
+
+        browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
+        return tuple(browse(tuple(ids)) for ids in partitions)
 
     @api.private
     def filtered_domain(self, domain: DomainType) -> Self:
@@ -6557,8 +6594,7 @@ class BaseModel(metaclass=MetaModel):
                             records = records.browse(it and NewId(it) for it in records._ids)
                         break
             else:
-                new_records = self.filtered(lambda r: not r.id)
-                real_records = self - new_records
+                new_records, real_records = self.partitioned(lambda r: not r.id)
                 records = model.browse()
                 if real_records:
                     records = model.search([(field.name, 'in', real_records.ids)], order='id')

@@ -33,8 +33,7 @@ class IrActionsReport(models.Model):
                 initial_stream := result.get(order.id, {}).get("stream")
             ):
                 quotation_documents = order.quotation_document_ids
-                headers = quotation_documents.filtered(lambda doc: doc.document_type == "header")
-                footers = quotation_documents - headers
+                headers, footers = quotation_documents.partitioned(lambda doc: doc.document_type == "header")
                 product_documents_before_quote = []
                 product_documents_after_quote = []
 

@@ -92,8 +92,7 @@ class StockPickingType(models.Model):
                 raise ValidationError(_("You cannot set a scrap location as the destination location for a manufacturing type operation."))
 
     def _get_mo_count(self):
-        mrp_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
-        remaining = (self - mrp_picking_types)
+        mrp_picking_types, remaining = self.partitioned(lambda picking: picking.code == 'mrp_operation')
         remaining.count_mo_waiting = remaining.count_mo_todo = remaining.count_mo_late = False
         remaining.count_mo_in_progress = remaining.count_mo_to_close = False
         domains = {
@@ -118,8 +117,7 @@ class StockPickingType(models.Model):
         return action
 
     def _get_aggregated_records_by_date(self):
-        production_picking_types = self.filtered(lambda picking: picking.code == 'mrp_operation')
-        other_picking_types = (self - production_picking_types)
+        production_picking_types, other_picking_types = self.partitioned(lambda picking: picking.code == 'mrp_operation')
 
         records = super(StockPickingType, other_picking_types)._get_aggregated_records_by_date()
         mrp_records = self.env['mrp.production']._read_group(

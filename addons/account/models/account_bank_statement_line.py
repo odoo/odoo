@@ -723,17 +723,10 @@ class AccountBankStatementLine(models.Model):
         - The lines being not in one of the two previous categories.
         :return: (liquidity_lines, suspense_lines, other_lines)
         """
-        liquidity_lines = self.env['account.move.line']
-        suspense_lines = self.env['account.move.line']
-        other_lines = self.env['account.move.line']
-
-        for line in self.move_id.line_ids:
-            if line.account_id == self.journal_id.default_account_id:
-                liquidity_lines += line
-            elif line.account_id == self.journal_id.suspense_account_id:
-                suspense_lines += line
-            else:
-                other_lines += line
+        liquidity_lines, suspense_lines, other_lines = self.move_id.line_ids.partitioned(
+            lambda line: line.account_id == self.journal_id.default_account_id,
+            lambda line: line.account_id == self.journal_id.suspense_account_id,
+        )
         if not liquidity_lines:
             liquidity_lines = self.move_id.line_ids.filtered(lambda l: l.account_id.account_type in ('asset_cash', 'liability_credit_card'))
             other_lines -= liquidity_lines

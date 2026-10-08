@@ -84,9 +84,8 @@ class MailingContactToList(models.TransientModel):
     @api.model
     def _add_contacts_to_mailing_list(self, mailing_list, contacts):
         mailing_list.invalidate_recordset(["contact_ids"])  # See task-2366811
-        contacts_with_subscriptions = contacts.filtered(lambda c: c in mailing_list.contact_ids)
+        contacts_with_subscriptions, contacts_to_add = contacts.partitioned(lambda c: c in mailing_list.contact_ids)
         contacts_opted_out = contacts_with_subscriptions.filtered('opt_out')
-        contacts_to_add = contacts - contacts_with_subscriptions
         mailing_list.write({
             'subscription_ids': [
                 (0, 0, {

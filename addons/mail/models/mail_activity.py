@@ -336,8 +336,7 @@ class MailActivity(models.Model):
         else:
             activities_to_notify = activities.filtered(lambda act: act.user_id != self.env.user)
         if activities_to_notify:
-            to_sudo = activities_to_notify.filtered(lambda act: act.user_id.partner_id not in readable_user_partners)
-            other = activities_to_notify - to_sudo
+            to_sudo, other = activities_to_notify.partitioned(lambda act: act.user_id.partner_id not in readable_user_partners)
             to_sudo.sudo().action_notify()
             other.action_notify()
 
@@ -890,8 +889,7 @@ class MailActivity(models.Model):
             activity_domain.append(('res_id', 'in', DocModel._search(domain or [], offset, limit, DocModel._order) if is_filtered else []))
         all_activities = Activity.with_context(active_test=not fetch_done).search(
             activity_domain, order='date_done DESC, date_deadline ASC')
-        all_ongoing = all_activities.filtered('active')
-        all_completed = all_activities.filtered(lambda act: not act.active)
+        all_ongoing, all_completed = all_activities.partitioned('active')
 
         # 2. Get attachment of completed activities
         if all_completed:

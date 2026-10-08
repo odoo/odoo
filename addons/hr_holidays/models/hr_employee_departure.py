@@ -34,9 +34,8 @@ class HrEmployeeDeparture(models.Model):
                 ('date_to', '>', departure.departure_date),
             ])
             if employee_leaves_sudo:
-                leaves_with_departure_sudo = employee_leaves_sudo.filtered(
+                leaves_with_departure_sudo, leaves_after_departure_sudo = employee_leaves_sudo.partitioned(
                     lambda leave: leave.date_from.date() <= departure.departure_date)
-                leaves_after_departure_sudo = employee_leaves_sudo - leaves_with_departure_sudo
 
                 new_leaves_sudo = leaves_with_departure_sudo._split_leaves(
                     split_date_from=(departure.departure_date + timedelta(days=1)))
@@ -51,12 +50,13 @@ class HrEmployeeDeparture(models.Model):
 
                 # Cancel approved leaves
                 leaves_after_departure_sudo += new_leaves_sudo
-                leaves_to_cancel_sudo = leaves_after_departure_sudo.filtered(lambda leave: leave.state in ['validate', 'validate1'])
+                leaves_to_cancel_sudo, remaining_leaves_sudo = leaves_after_departure_sudo.partitioned(
+                    lambda leave: leave.state in ['validate', 'validate1'],
+                )
                 cancel_msg = self.env._('The employee will leave the company on %(departure_date)s.',
                     departure_date=departure.departure_date)
                 leaves_to_cancel_sudo._force_cancel(cancel_msg, notify_responsibles=False)
 
-                remaining_leaves_sudo = leaves_after_departure_sudo - leaves_to_cancel_sudo
                 if departure._check_refuse_future_leaves_condition():
                     # Refuse remaining leaves instead of deleting them
                     refusable_leaves = remaining_leaves_sudo.filtered(lambda leave: leave.state == 'confirm')

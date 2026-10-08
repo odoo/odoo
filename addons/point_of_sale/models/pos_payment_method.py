@@ -2,6 +2,7 @@ from math import copysign
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.tools import BinaryBytes, file_open, float_compare
 
 
@@ -308,22 +309,17 @@ class PosPaymentMethod(models.Model):
             self._force_payment_method_type_values(vals, vals['payment_method_type'])
             return super().write(vals)
 
-        pmt_terminal = self.filtered(lambda pm: pm.payment_method_type == 'terminal')
-        pmt_bank_qr = self.filtered(lambda pm: pm.payment_method_type == 'bank_qr_code')
-        pmt_external_qr = self.filtered(lambda pm: pm.payment_method_type == 'external_qr')
-        not_pmt = self - pmt_terminal - pmt_bank_qr - pmt_external_qr
+        method_types = ('terminal', 'bank_qr_code', 'external_qr')
+        *pmt_by_type, not_pmt = self.partitioned(*(
+            Domain('payment_method_type', '=', method_type) for method_type in method_types
+        ))
 
         res = True
-        forced_vals = vals.copy()
-        if pmt_terminal:
-            self._force_payment_method_type_values(forced_vals, 'terminal', True)
-            res = super(PosPaymentMethod, pmt_terminal).write(forced_vals) and res
-        if pmt_bank_qr:
-            self._force_payment_method_type_values(forced_vals, 'bank_qr_code', True)
-            res = super(PosPaymentMethod, pmt_bank_qr).write(forced_vals) and res
-        if pmt_external_qr:
-            self._force_payment_method_type_values(forced_vals, 'external_qr', True)
-            res = super().write(forced_vals) and res
+        for method_type, pmt in zip(method_types, pmt_by_type):
+            if pmt:
+                forced_vals = vals.copy()
+                self._force_payment_method_type_values(forced_vals, method_type, True)
+                res = super(PosPaymentMethod, pmt).write(forced_vals) and res
         if not_pmt:
             res = super(PosPaymentMethod, not_pmt).write(vals) and res
 
