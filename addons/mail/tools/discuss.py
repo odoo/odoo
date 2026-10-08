@@ -3,7 +3,6 @@
 import base64
 import os
 from collections import UserList, defaultdict
-from contextlib import suppress
 from datetime import date, datetime
 from functools import partial, wraps
 from itertools import product
@@ -304,8 +303,11 @@ class Store:
         """
         if not values:
             return self
-        data_list = []
-        self._add_abstract_fields_value(self._format_fields(values), data_list)
+        if isinstance(values, dict) and not any(map(callable, values.values())):
+            data_list = [values]
+        else:
+            data_list = []
+            self._add_abstract_fields_value(self._format_fields(values), data_list)
         index = self._get_record_index(model_name, [id_data or {}] + data_list)
         for data in data_list:
             self._add_values(data, model_name, index)
@@ -532,11 +534,13 @@ class Store:
 
     def _add_abstract_fields_value(self, abstract_fields, data_list, record=None):
         for field in abstract_fields:
-            with suppress(MissingError):
+            try:
                 if isinstance(field, dict):
                     data_list.append(field)
                 elif not field.predicate or field.predicate(record):
                     data_list.append({field.field_name: field._get_value(record)})
+            except MissingError:
+                pass
 
     def _get_record_index(self, model_name, data_list):
         # regroup indentifying fields into values as they might be spread accross data_list entries
@@ -558,19 +562,21 @@ class Store:
     def _deep_freeze(obj):
         """Recursively convert a data structure into an immutable version that can be hashed and
         compared for identity."""
-        if isinstance(obj, (Store.FieldList, Store.Attr, Store.TargetBlock)):
-            return Store._deep_freeze(obj._identity())
+        if obj is None or isinstance(obj, (str, int)):
+            return obj
         if isinstance(obj, dict):
             return (
                 "__dict__",
                 frozenset((Store._deep_freeze(k), Store._deep_freeze(v)) for k, v in obj.items()),
             )
         if isinstance(obj, list):
-            return ("__list__", tuple(Store._deep_freeze(i) for i in obj))
+            return ("__list__", tuple(map(Store._deep_freeze, obj)))
         if isinstance(obj, tuple):
-            return tuple(Store._deep_freeze(i) for i in obj)
+            return tuple(map(Store._deep_freeze, obj))
         if isinstance(obj, set):
-            return frozenset(Store._deep_freeze(i) for i in obj)
+            return frozenset(map(Store._deep_freeze, obj))
+        if isinstance(obj, (Store.Attr, Store.FieldList, Store.TargetBlock)):
+            return Store._deep_freeze(obj._identity())
         if hasattr(obj, "__code__"):
             return ("__code__", hash(obj.__code__))
         return obj
@@ -885,6 +891,9 @@ class Store:
             # records for which the field list will apply. Useful to pre-compute values in batch.
             self.records = records
             self._target = target
+
+        def __iter__(self):
+            return iter(self.data)
 
         @property
         def target(self):
