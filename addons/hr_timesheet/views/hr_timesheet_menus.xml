@@ -32,27 +32,11 @@
                   groups="group_hr_timesheet_approver"
                   sequence="99"
         >
-            <menuitem id="menu_timesheets_reports_timesheet"
-                      name="Timesheets"
+            <menuitem id="menu_hr_timesheet_analysis"
+                      action="action_timesheet_report"
+                      name="Timesheets Analysis"
                       sequence="10"
-            >
-                <menuitem id="menu_hr_activity_analysis"
-                          action="act_hr_timesheet_report"
-                          groups="hr_timesheet.group_hr_timesheet_approver"
-                          name="By Employee"
-                          sequence="10"
-                />
-                <menuitem id="timesheet_menu_report_timesheet_by_project"
-                          action="timesheet_action_report_by_project"
-                          name="By Project"
-                          sequence="15"
-                />
-                <menuitem id="timesheet_menu_report_timesheet_by_task"
-                          action="timesheet_action_report_by_task"
-                          name="By Task"
-                          sequence="20"
-                />
-            </menuitem>
+            />
         </menuitem>
         <menuitem id="hr_timesheet_menu_configuration"
                   name="Configuration"
