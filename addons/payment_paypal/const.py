@@ -60,6 +60,21 @@ PAYMENT_STATUS_MAPPING = {
     "error": ("FAILED", "DECLINED"),
 }
 
+# Mapping of line item categories to PayPal item categories.
+# See https://developer.paypal.com/api/orders/v2/definitions/item_request
+ITEM_CATEGORY_MAPPING = {"consu": "PHYSICAL_GOODS", "service": "DIGITAL_GOODS"}
+
+# Mapping of recurrence units to PayPal billing cycle interval units.
+INTERVAL_UNIT_MAPPING = {"week": "WEEK", "month": "MONTH", "year": "YEAR"}
+
+# Maximum interval count of a billing cycle for each interval unit.
+# See https://developer.paypal.com/platforms/checkout/standard/customize/save-payment-methods-for-recurring-payments/#recurring-billing-cycle-charges
+MAX_INTERVAL_COUNT = {"WEEK": 52, "MONTH": 12, "YEAR": 1}
+
+# Maximum number of executions of a billing cycle.
+# See https://developer.paypal.com/api/orders/v2/definitions/billing_cycle
+MAX_TOTAL_CYCLES = 999
+
 # Events which are handled by the webhook.
 # See https://developer.paypal.com/api/rest/webhooks/event-names/
 CHECKOUT_WEBHOOK_EVENTS = [
