@@ -604,7 +604,7 @@ export class Store extends BaseStore {
             : [body];
         // Longest mention text first, so e.g. "@John" inside "@John Doe" isn't kept.
         const mentionTexts = (partner) => {
-            const name = thread?.getPersonaName(partner) ?? partner.displayName;
+            const name = (thread?.getPersonaName(partner) ?? partner.displayName)?.trim();
             return [name && `@${name}`, partner.email && `@${partner.email}`].filter(Boolean);
         };
         const remaining = [...segments];
