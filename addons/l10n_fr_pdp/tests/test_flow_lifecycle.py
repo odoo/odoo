@@ -1440,6 +1440,29 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         xml = self._build_flow_xml(rectificative_flow)
         self.assertEqual(xml.findtext('./ReportDocument/TypeCode'), 'RE')
 
+    def test_payment_on_sent_invoice_does_not_create_rectificative_flow(self):
+        invoice = self._create_reporting_invoice(
+            partner=self.b2c_customer,
+            invoice_date='2025-09-03',
+        )
+        initial_flow = invoice.l10n_fr_pdp_last_flow_id
+
+        self._run_send_cron('2025-09-20', identifier='FLOW-INITIAL-SENT')
+        initial_flow.invalidate_recordset(['state'])
+        self.assertRecordValues(initial_flow, [{'state': 'sent'}])
+        payment = self._register_payment(invoice, '2025-09-25')
+        (invoice + payment.move_id)._compute_l10n_fr_pdp_last_flow_id()
+        flows = self.env['l10n.fr.pdp.reports.flow'].search([
+            ('company_id', '=', self.company.id),
+            ('report_type', '=', 'transaction'),
+            ('operation_type', '=', 'sale'),
+            ('period_start', '=', fields.Date.to_date('2025-09-01')),
+            ('period_end', '=', fields.Date.to_date('2025-09-10')),
+        ])
+
+        self.assertEqual(flows, initial_flow)
+        self.assertEqual(invoice.l10n_fr_pdp_last_flow_id, initial_flow)
+
     def test_invoice_sent_by_pdp_is_removed_from_open_e_reporting_flow(self):
         invoice = self._create_reporting_invoice(
             partner=self.b2c_customer,
