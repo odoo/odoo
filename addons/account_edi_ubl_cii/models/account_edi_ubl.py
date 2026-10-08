@@ -3,7 +3,7 @@ import logging
 from lxml import etree
 from stdnum.be import vat as be_vat
 
-from odoo import Command, _, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, unique
 from odoo.tools.float_utils import float_compare
 
@@ -3143,6 +3143,42 @@ class AccountEdiUBL(models.AbstractModel):
                 to_write['deferred_start_date'] = fields.Date.from_string(start_date_str)
                 to_write['deferred_end_date'] = fields.Date.from_string(end_date_str)
 
+    @api.model
+    def _import_ubl_get_delivery_address_values(self, delivery_tree):
+        if delivery_tree is None:
+            return {}
+        return {
+            'name': (
+                delivery_tree.findtext('./{*}DeliveryLocation/{*}Name')
+                or delivery_tree.findtext('./{*}DeliveryParty/{*}PartyName/{*}Name')
+            ),
+            'gln': delivery_tree.findtext('./{*}DeliveryLocation/{*}ID[@schemeID="0088"]'),
+            'street': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}StreetName'),
+            'street2': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}AdditionalStreetName'),
+            'street3': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}AddressLine/{*}Line'),
+            'zip': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}PostalZone'),
+            'city': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}CityName'),
+            'state': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}CountrySubentity'),
+            'country_code': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}Country/{*}IdentificationCode'),
+        }
+
+    def _import_ubl_invoice_line_add_trade_references(self, collected_values):
+        tree = collected_values['tree']
+        line_tree = collected_values['line_tree']
+        line_id = line_tree.findtext('./{*}ID')
+        despatch_line_ref = line_tree.findtext('./{*}DespatchLineReference/{*}LineID')
+        self._import_invoice_line_add_trade_references(
+            collected_values,
+            line_id,
+            {
+                'order_ref': line_tree.findtext('./{*}OrderLineReference/{*}OrderReference/{*}ID'),
+                'despatch_ref': line_tree.findtext('./{*}DespatchLineReference/{*}DocumentReference/{*}ID'),
+                'despatch_line_ref': despatch_line_ref != 'NA' and despatch_line_ref,
+                'ship_to': self._import_ubl_get_delivery_address_values(line_tree.find('./{*}Delivery')),
+            },
+            self._import_ubl_get_delivery_address_values(tree.find('./{*}Delivery')),
+        )
+
     def _import_ubl_invoice_line_prepare_classified_tax_category_tax_values(self, collected_values, tax_category_tree):
         percentage = tax_category_tree.findtext('./{*}Percent')
         category_code = tax_category_tree.findtext('./{*}ID')
@@ -3272,6 +3308,9 @@ class AccountEdiUBL(models.AbstractModel):
                 self._import_ubl_invoice_line_add_name(line_collected_values)
                 self._import_ubl_invoice_line_add_price_unit_quantity_discount(line_collected_values)
                 self._import_ubl_invoice_line_add_deferred_dates(line_collected_values)
+
+                # order / delivery order / delivery address of the line (multi-order / multi-delivery invoices)
+                self._import_ubl_invoice_line_add_trade_references(line_collected_values)
 
                 # product / product_uom / taxes
                 self._import_ubl_invoice_line_add_product_values(line_collected_values)
@@ -3419,6 +3458,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         # Invoice lines values.
         self._import_ubl_invoice_add_invoice_line_values(collected_values)
+        self._import_invoice_add_lines_order_refs(collected_values)
         self._import_ubl_invoice_retrieve_products(collected_values)
         self._import_ubl_invoice_retrieve_product_uoms(collected_values)
         self._import_ubl_invoice_retrieve_accounts(collected_values)

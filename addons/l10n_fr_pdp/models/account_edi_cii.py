@@ -14,6 +14,44 @@ class L10nFRAccountEdiCii(models.AbstractModel):
             }
         super()._cii_add_exchanged_document_context_node(vals)
 
+    def _cii_get_included_supply_chain_trade_line_item_node(self, vals, line_idx, base_line):
+        # EXTENDS account_edi_ubl_cii
+        node = super()._cii_get_included_supply_chain_trade_line_item_node(vals, line_idx, base_line)
+        if vals['company']._get_peppol_proxy_type() == 'pdp':
+            # Order, delivery order and delivery address per line (multi-order / multi-delivery invoices).
+            trade_references = self._get_line_trade_references(base_line)
+            node['ram:SpecifiedLineTradeAgreement']['ram:BuyerOrderReferencedDocument'] = self._l10n_fr_pdp_cii_get_line_buyer_order_referenced_document_node(trade_references)
+            delivery_node = node['ram:SpecifiedLineTradeDelivery']
+            delivery_node['ram:ShipToTradeParty'] = self._l10n_fr_pdp_cii_get_line_ship_to_trade_party_node(vals, trade_references)
+            delivery_node['ram:DespatchAdviceReferencedDocument'] = self._l10n_fr_pdp_cii_get_line_despatch_advice_referenced_document_node(trade_references)
+        return node
+
+    def _l10n_fr_pdp_cii_get_line_buyer_order_referenced_document_node(self, trade_references):
+        if not trade_references.get('order_ref'):
+            return None
+        return {
+            'ram:IssuerAssignedID': {'_text': trade_references['order_ref']},
+        }
+
+    def _l10n_fr_pdp_cii_get_line_ship_to_trade_party_node(self, vals, trade_references):
+        # Only when the line is delivered elsewhere than the invoice's delivery address.
+        ship_to = trade_references.get('ship_to')
+        if not ship_to or ship_to == vals['partner_shipping']:
+            return None
+        node = self._cii_get_ship_to_trade_party_node({**vals, 'partner_shipping': ship_to})
+        node['ram:DefinedTradeContact'] = None
+        if ship_to.state_id:
+            node['ram:PostalTradeAddress']['ram:CountrySubDivisionName'] = {'_text': ship_to.state_id.name}
+        return node
+
+    def _l10n_fr_pdp_cii_get_line_despatch_advice_referenced_document_node(self, trade_references):
+        if not trade_references.get('despatch_ref'):
+            return None
+        return {
+            'ram:IssuerAssignedID': {'_text': trade_references['despatch_ref']},
+            'ram:LineID': {'_text': trade_references.get('despatch_line_ref')},
+        }
+
     def _cii_add_exchanged_document_node(self, vals):
         invoice = vals['invoice']
         if invoice._is_downpayment() and vals['company']._get_peppol_proxy_type() == 'pdp':
