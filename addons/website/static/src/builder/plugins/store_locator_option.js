@@ -1,9 +1,15 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { onWillStart, usePlugin } from "@odoo/owl";
+import { onWillStart, proxy, usePlugin } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { useDomState } from "@html_builder/core/utils";
 
+const STORE_LOCATOR_PARTNER_DOMAIN = [
+    ["city", "!=", false],
+    ["street", "!=", false],
+    ["zip", "!=", false],
+];
+const STORE_LOCATOR_SEARCH_LIMIT = 50;
 export const STORE_LOCATOR_PARTNER_FIELDS = [
     "city",
     "contact_address_inline",
@@ -50,25 +56,49 @@ export class StoreLocatorOption extends BaseOptionComponent {
         super.setup();
         this.orm = usePlugin(ORM);
         this.editingElement = this.env.getEditingElement();
-        this.availableRecords = [];
         this.hasAvailableRecords = false;
+        this.listState = proxy({
+            availableRecords: "[]",
+        });
         this.state = useDomState((editingElement) => ({
             hasLocations: JSON.parse(editingElement.dataset.locationsList || "[]").length > 0,
         }));
 
         onWillStart(async () => {
-            this.searchResult = await this.orm.searchRead(
-                "res.partner",
-                [
-                    ["city", "!=", false],
-                    ["street", "!=", false],
-                    ["zip", "!=", false],
-                ],
-                STORE_LOCATOR_PARTNER_FIELDS
-            );
-            this.availableRecords = JSON.stringify(this.searchResult ?? []);
-            this.hasAvailableRecords = this.searchResult?.length > 0;
+            const searchResult = await this.searchAvailableRecords("");
+            this.listState.availableRecords = JSON.stringify(searchResult ?? []);
+            this.hasAvailableRecords = searchResult?.length > 0;
         });
+    }
+
+    async searchAvailableRecords(searchString, excludeIds) {
+        let domain = searchString
+            ? [...STORE_LOCATOR_PARTNER_DOMAIN, ["display_name", "ilike", searchString]]
+            : STORE_LOCATOR_PARTNER_DOMAIN;
+        if (excludeIds?.length) {
+            domain = [...domain, ["id", "not in", excludeIds]];
+        }
+        const searchResult = await this.orm.searchRead(
+            "res.partner",
+            domain,
+            STORE_LOCATOR_PARTNER_FIELDS,
+            { limit: STORE_LOCATOR_SEARCH_LIMIT }
+        );
+        return searchResult;
+    }
+
+    async onInput(searchString) {
+        const searchTime = Date.now();
+        this.lastSearchTime = searchTime;
+        const locationsList = JSON.parse(this.editingElement.dataset.locationsList || "[]");
+        const excludeIds = locationsList.map((location) => location.id);
+        const searchResult = await this.searchAvailableRecords(searchString, excludeIds);
+        if (searchTime < this.lastSearchTime) {
+            return;
+        }
+        if (searchResult.length > 0) {
+            this.listState.availableRecords = JSON.stringify(searchResult);
+        }
     }
 }
 

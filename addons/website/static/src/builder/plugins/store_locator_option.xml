@@ -74,10 +74,11 @@
                         default="{ display_name: 'default' }"
                         defaultNewValue="{ id: 'default' }"
                         forbidLastItemRemoval="false"
-                        records="this.availableRecords"
+                        records="this.listState.availableRecords"
                         alternativeChoiceItemTemplate="'website.StoreLocatorChoiceItemTemplate'"
                         emptyListMessage.translate="Click on 'Add' to start adding locations"
                         refreshRecordsAction="'refreshStoreLocator'"
+                        realTimeSearchOnInput="this.onInput.bind(this)"
                     />
                 </t>
                 <t t-else="">
