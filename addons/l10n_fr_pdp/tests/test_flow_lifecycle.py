@@ -695,6 +695,144 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(invoices[0].findtext('ID'), invoice.name)
         self.assertEqual(invoices[0].findtext('CurrencyCode'), invoice.currency_id.name)
 
+    def test_non_eu_vendor_without_vat_uses_country_and_name_identifier(self):
+        us_vendor = self.env['res.partner'].create({
+            'name': 'CREATORS COUTURE COMPANY',
+            'street': '1 Main Street',
+            'zip': '10001',
+            'city': 'New York',
+            'country_id': self.env.ref('base.us').id,
+        })
+        bill = self._create_reporting_vendor_bill(partner=us_vendor)
+
+        self.assertFalse(bill._get_l10n_fr_pdp_errors())
+        seller = self._build_flow_xml(bill.l10n_fr_pdp_last_flow_id).find(
+            './TransactionsReport/Invoice/Seller'
+        )
+
+        self.assertEqual(seller.find('CompanyId').get('schemeId'), '0227')
+        self.assertEqual(seller.findtext('CompanyId'), 'USCREATORS COUTURE')
+        self.assertIsNone(seller.find('TaxRegistrationId'))
+
+    def test_non_eu_vendor_vat_is_not_used_as_company_identifier(self):
+        us_vendor = self.env['res.partner'].with_context(no_vat_validation=True).create({
+            'name': 'CREATORS COUTURE COMPANY',
+            'street': '1 Main Street',
+            'zip': '10001',
+            'city': 'New York',
+            'country_id': self.env.ref('base.us').id,
+            'vat': 'US123456789',
+        })
+        bill = self._create_reporting_vendor_bill(partner=us_vendor)
+
+        seller = self._build_flow_xml(bill.l10n_fr_pdp_last_flow_id).find(
+            './TransactionsReport/Invoice/Seller'
+        )
+
+        self.assertEqual(seller.find('CompanyId').get('schemeId'), '0227')
+        self.assertEqual(seller.findtext('CompanyId'), 'USCREATORS COUTURE')
+        self.assertEqual(seller.findtext('TaxRegistrationId'), us_vendor.vat)
+
+    def test_wallis_and_futuna_vendor_without_vat_uses_0227_identifier(self):
+        wf_vendor = self.env['res.partner'].create({
+            'name': 'WALLIS VENDOR COMPANY',
+            'street': '1 Main Street',
+            'zip': '98600',
+            'city': 'Mata Utu',
+            'country_id': self.env.ref('base.wf').id,
+        })
+        bill = self._create_reporting_vendor_bill(partner=wf_vendor)
+
+        self.assertFalse(bill._get_l10n_fr_pdp_errors())
+        seller = self._build_flow_xml(bill.l10n_fr_pdp_last_flow_id).find(
+            './TransactionsReport/Invoice/Seller'
+        )
+
+        self.assertEqual(seller.find('CompanyId').get('schemeId'), '0227')
+        self.assertEqual(seller.findtext('CompanyId'), 'WFWALLIS VENDOR CO')
+
+    def test_french_partner_without_siren_has_no_0227_identifier(self):
+        french_partner = self.env['res.partner'].create({
+            'name': 'French Partner Without SIREN',
+            'country_id': self.env.ref('base.fr').id,
+        })
+
+        self.assertEqual(
+            french_partner._l10n_fr_pdp_get_flow_10_identifier(),
+            (False, False),
+        )
+
+    def test_eu_vendor_without_vat_is_excluded_on_send(self):
+        valid_vendor = self.env['res.partner'].create({
+            'name': 'CREATORS COUTURE COMPANY',
+            'street': '1 Main Street',
+            'zip': '10001',
+            'city': 'New York',
+            'country_id': self.env.ref('base.us').id,
+        })
+        eu_vendor = self.env['res.partner'].create({
+            'name': 'EU Vendor',
+            'street': '1 Main Street',
+            'zip': '1000',
+            'city': 'Brussels',
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+        })
+        valid_bill = self._create_reporting_vendor_bill(
+            partner=valid_vendor,
+            invoice_date='2025-09-03',
+        )
+        invalid_bill = self._create_reporting_vendor_bill(
+            partner=eu_vendor,
+            invoice_date='2025-09-03',
+        )
+        second_invalid_bill = self._create_reporting_vendor_bill(
+            partner=eu_vendor,
+            invoice_date='2025-09-03',
+        )
+        flow = valid_bill.l10n_fr_pdp_last_flow_id
+        self.assertEqual(flow, invalid_bill.l10n_fr_pdp_last_flow_id)
+        self.assertEqual(flow, second_invalid_bill.l10n_fr_pdp_last_flow_id)
+        self.assertFalse(invalid_bill.l10n_fr_pdp_has_error)
+        self.assertFalse(second_invalid_bill.l10n_fr_pdp_has_error)
+
+        # Partner subfields deliberately do not invalidate the stored error field.
+        eu_vendor.vat = False
+        self.assertFalse(invalid_bill.l10n_fr_pdp_has_error)
+        self.assertFalse(second_invalid_bill.l10n_fr_pdp_has_error)
+        self.assertIn(
+            'The partner VAT number is required for EU e-reporting.',
+            invalid_bill._get_l10n_fr_pdp_errors(),
+        )
+
+        self._run_send_cron('2025-09-20', identifier='FLOW-PURCHASE-WITHOUT-EU-VAT')
+        flow.invalidate_recordset(['state', 'payload_id'])
+        valid_bill.invalidate_recordset(['l10n_fr_pdp_sent_in_flow_ids'])
+        (invalid_bill + second_invalid_bill).invalidate_recordset([
+            'l10n_fr_pdp_has_error',
+            'l10n_fr_pdp_sent_in_flow_ids',
+        ])
+        reported_invoice_ids = [
+            invoice_node.findtext('ID')
+            for invoice_node in etree.fromstring(flow.payload_id.raw).findall(
+                './TransactionsReport/Invoice'
+            )
+        ]
+
+        self.assertEqual(flow.state, 'sent')
+        self.assertIn(valid_bill.name, reported_invoice_ids)
+        self.assertNotIn(invalid_bill.name, reported_invoice_ids)
+        self.assertNotIn(second_invalid_bill.name, reported_invoice_ids)
+        self.assertIn(flow, valid_bill.l10n_fr_pdp_sent_in_flow_ids)
+        self.assertNotIn(flow, invalid_bill.l10n_fr_pdp_sent_in_flow_ids)
+        self.assertNotIn(flow, second_invalid_bill.l10n_fr_pdp_sent_in_flow_ids)
+        self.assertTrue(invalid_bill.l10n_fr_pdp_has_error)
+        self.assertTrue(second_invalid_bill.l10n_fr_pdp_has_error)
+        self.assertTrue(any(
+            'Payload built with 1 valid invoice(s) and 2 error(s).' in message.body
+            for message in flow.message_ids
+        ))
+
     def test_b2bi_invoice_limits_free_text_values(self):
         invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
         invoice.invoice_line_ids.name = 'P' * 300
