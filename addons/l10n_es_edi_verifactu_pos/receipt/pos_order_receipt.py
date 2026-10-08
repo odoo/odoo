@@ -8,9 +8,12 @@ class PosOrderReceipt(models.AbstractModel):
 
     def order_receipt_generate_data(self, basic_receipt=False):
         data = super().order_receipt_generate_data(basic_receipt)
+        if self.l10n_es_edi_verifactu_required:
+            data['conditions']['display_vat'] = not self.account_move
         if self.l10n_es_edi_verifactu_qr_code:
             qr_code_data = self._order_receipt_generate_qr_code(self.l10n_es_edi_verifactu_qr_code)
             data['image']['l10n_es_edi_verifactu_qr_code'] = qr_code_data
             data['conditions']['l10n_es_edi_verifactu_pos'] = True
+            data['conditions']['has_account_move'] = bool(self.account_move)
             data['extra_data']['invoice_name'] = self.account_move.name if self.account_move else ''
         return data
