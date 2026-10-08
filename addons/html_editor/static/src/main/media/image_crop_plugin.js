@@ -62,4 +62,8 @@ export class ImageCropPlugin extends Plugin {
             },
         });
     }
+    destroy() {
+        super.destroy();
+        registry.category("main_components").remove("ImageCropping");
+    }
 }
