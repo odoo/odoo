@@ -33,7 +33,6 @@ class ResCompany(models.Model):
              "Thus, PAN acts as an identifier for the person with the tax department.",
     )
     l10n_in_pan_type = fields.Selection(related="l10n_in_pan_entity_id.type", string="PAN Type")
-    l10n_in_tan = fields.Char(related="partner_id.l10n_in_tan", string="TAN", readonly=False)
     l10n_in_gst_state_warning = fields.Char(related="partner_id.l10n_in_gst_state_warning")
 
     # TDS/TCS settings
