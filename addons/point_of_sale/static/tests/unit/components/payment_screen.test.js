@@ -1,11 +1,12 @@
 import { test, expect, animationFrame } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { setupPosEnv, getFilledOrder, expectFormattedPrice, addTestTerminals } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { queryOne } from "@odoo/hoot-dom";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { localization } from "@web/core/l10n/localization";
+import { currencies } from "@web/core/currency";
 
 definePosModels();
 
@@ -198,4 +199,28 @@ test("invoice button is enabled for normal orders", async () => {
 
     const invoiceBtn = queryOne(".js_invoice");
     expect(invoiceBtn.disabled).toBe(false);
+});
+
+test("addTip default amount of a currency without decimals", async () => {
+    const store = await setupPosEnv();
+    store.config.iface_tipproduct = true;
+    patchWithCleanup(currencies[store.config.currency_id.id], { digits: [69, 0] });
+    store.currency.decimal_places = 0;
+
+    const order = await getFilledOrder(store);
+    order.addPaymentline(store.models["pos.payment.method"].get(1)).data.setAmount(3000);
+    expect(Math.abs(order.change)).toBe(2405);
+
+    let startingValue;
+    const screen = {
+        pos: store,
+        currentOrder: order,
+        dialog: { add: (_, props) => (startingValue = props.startingValue) },
+    };
+    await PaymentScreen.prototype.addTip.call(screen);
+    const tip = PaymentScreen.prototype.computeNewTip.call(screen, {
+        value: startingValue,
+        type: "fixed",
+    });
+    expect(tip).toBe(2405);
 });

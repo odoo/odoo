@@ -1,5 +1,6 @@
 import { test, expect } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { currencies } from "@web/core/currency";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
@@ -70,4 +71,21 @@ test("validPms includes bank/cash methods with more than one payment", async () 
     });
 
     expect(popup.validPms.map((pm) => pm.id)).toEqual([10, 11]);
+});
+
+test("counted cash of a currency without decimals is not read as decimals", async () => {
+    const store = await setupPosEnv();
+    store.config.cash_control = true;
+    patchWithCleanup(currencies[store.config.currency_id.id], { digits: [69, 0] });
+    store.currency.decimal_places = 0;
+
+    const popup = await mountWithCleanup(ClosePosPopup, {
+        props: getProps({
+            default_cash_details: { ...getProps().default_cash_details, amount: 2000 },
+        }),
+    });
+
+    expect(popup.state.payments[1].counted).toBe("2,000");
+    expect(popup.getDifference(1)).toBe(0);
+    expect(popup.parseValidCounted("2,000")).toBe(2000);
 });

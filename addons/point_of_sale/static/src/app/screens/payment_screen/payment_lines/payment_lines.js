@@ -3,7 +3,6 @@ import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/n
 import { useService } from "@web/core/utils/hooks";
 import { Component, useProps, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { parseFloat } from "@web/views/fields/parsers";
 import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { PosPayment } from "@point_of_sale/app/models/pos_payment";
@@ -51,7 +50,7 @@ export class PaymentScreenPaymentLines extends Component {
                     { noSymbol: true }
                 ),
                 getPayload: (num) => {
-                    this.props.updateSelectedPaymentline(parseFloat(num));
+                    this.props.updateSelectedPaymentline(this.pos.parseCurrency(num));
                 },
             });
         }
