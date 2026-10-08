@@ -1,23 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 # TODO-PARP: Move tests and remove File
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPosMargin(TestPoSCommon):
+class TestPosMargin(CommonPosTest):
     """
     Test the margin computation on orders with basic configuration
     The tests contain the base scenarios.
     """
-    _test_user_groups = None  # FIXME list needed groups
-
-    def setUp(self):
-        super(TestPosMargin, self).setUp()
-        self.config = self.basic_config
-        self.uom_unit = self.env.ref('uom.product_uom_unit')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.config = cls.pos_config_usd
 
     def test_positive_margin(self):
         """
@@ -30,26 +28,24 @@ class TestPosMargin(TestPoSCommon):
         # open a session
         self.open_new_session()
 
-        # create orders
-        orders = [self.create_ui_order_data([(product1, 1)]),
-                  self.create_ui_order_data([(product2, 1)]),
-                  self.create_ui_order_data([(product1, 2), (product2, 2)])]
-
-        # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]], 'config': self.config},
+            {'lines': [[product2, 1]], 'config': self.config},
+            {'lines': [[product1, 2], [product2, 2]], 'config': self.config},
+        ]).values())
 
         # check margins
-        self.assertEqual(self.pos_session.order_ids[0].margin, 5)
-        self.assertEqual(self.pos_session.order_ids[1].margin, 20)
-        self.assertEqual(self.pos_session.order_ids[2].margin, 50)
+        self.assertEqual(orders[0].margin, 5)
+        self.assertEqual(orders[1].margin, 20)
+        self.assertEqual(orders[2].margin, 50)
 
         # check margins percent
-        self.assertEqual(self.pos_session.order_ids[0].margin_percent, 0.5)
-        self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0.4)
-        self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
+        self.assertEqual(orders[0].margin_percent, 0.5)
+        self.assertEqual(orders[1].margin_percent, 0.4)
+        self.assertEqual(round(orders[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.close_session_from_ui()
+        self.close_pos_session(config=self.config)
 
     def test_negative_margin(self):
         """
@@ -62,26 +58,24 @@ class TestPosMargin(TestPoSCommon):
         # open a session
         self.open_new_session()
 
-        # create orders
-        orders = [self.create_ui_order_data([(product1, 1)]),
-                  self.create_ui_order_data([(product2, 1)]),
-                  self.create_ui_order_data([(product1, 2), (product2, 2)])]
-
-        # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]], 'config': self.config},
+            {'lines': [[product2, 1]], 'config': self.config},
+            {'lines': [[product1, 2], [product2, 2]], 'config': self.config},
+        ]).values())
 
         # check margins
-        self.assertEqual(self.pos_session.order_ids[0].margin, -5)
-        self.assertEqual(self.pos_session.order_ids[1].margin, -50)
-        self.assertEqual(self.pos_session.order_ids[2].margin, -110)
+        self.assertEqual(orders[0].margin, -5)
+        self.assertEqual(orders[1].margin, -50)
+        self.assertEqual(orders[2].margin, -110)
 
         # check margins percent
-        self.assertEqual(self.pos_session.order_ids[0].margin_percent, -0.5)
-        self.assertEqual(self.pos_session.order_ids[1].margin_percent, -1)
-        self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), -0.92)
+        self.assertEqual(orders[0].margin_percent, -0.5)
+        self.assertEqual(orders[1].margin_percent, -1)
+        self.assertEqual(round(orders[2].margin_percent, 2), -0.92)
 
         # close session
-        self.pos_session.close_session_from_ui()
+        self.close_pos_session(config=self.config)
 
     def test_full_margin(self):
         """
@@ -94,26 +88,24 @@ class TestPosMargin(TestPoSCommon):
         # open a session
         self.open_new_session()
 
-        # create orders
-        orders = [self.create_ui_order_data([(product1, 1)]),
-                  self.create_ui_order_data([(product2, 1)]),
-                  self.create_ui_order_data([(product1, 2), (product2, 2)])]
-
-        # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]], 'config': self.config},
+            {'lines': [[product2, 1]], 'config': self.config},
+            {'lines': [[product1, 2], [product2, 2]], 'config': self.config},
+        ]).values())
 
         # check margins
-        self.assertEqual(self.pos_session.order_ids[0].margin, 10)
-        self.assertEqual(self.pos_session.order_ids[1].margin, 50)
-        self.assertEqual(self.pos_session.order_ids[2].margin, 120)
+        self.assertEqual(orders[0].margin, 10)
+        self.assertEqual(orders[1].margin, 50)
+        self.assertEqual(orders[2].margin, 120)
 
         # check margins percent
-        self.assertEqual(self.pos_session.order_ids[0].margin_percent, 1)
-        self.assertEqual(self.pos_session.order_ids[1].margin_percent, 1)
-        self.assertEqual(self.pos_session.order_ids[2].margin_percent, 1)
+        self.assertEqual(orders[0].margin_percent, 1)
+        self.assertEqual(orders[1].margin_percent, 1)
+        self.assertEqual(orders[2].margin_percent, 1)
 
         # close session
-        self.pos_session.close_session_from_ui()
+        self.close_pos_session(config=self.config)
 
     def test_tax_margin(self):
         """
@@ -123,31 +115,29 @@ class TestPosMargin(TestPoSCommon):
         """
 
         product1 = self.create_product('Product 1', self.categ_basic, 10, 5, self.taxes['tax7'].ids)
-        product2 = self.create_product('Product 2', self.categ_basic, 55, 30, self.taxes['tax10'].ids)
+        product2 = self.create_product('Product 2', self.categ_basic, 55, 30, self.taxes['tax10_incl'].ids)
 
         # open a session
         self.open_new_session()
 
-        # create orders
-        orders = [self.create_ui_order_data([(product1, 1)]),
-                  self.create_ui_order_data([(product2, 1)]),
-                  self.create_ui_order_data([(product1, 2), (product2, 2)])]
-
-        # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]], 'config': self.config},
+            {'lines': [[product2, 1]], 'config': self.config},
+            {'lines': [[product1, 2], [product2, 2]], 'config': self.config},
+        ]).values())
 
         # check margins
-        self.assertEqual(self.pos_session.order_ids[0].margin, 5)
-        self.assertEqual(self.pos_session.order_ids[1].margin, 20)
-        self.assertEqual(self.pos_session.order_ids[2].margin, 50)
+        self.assertEqual(orders[0].margin, 5)
+        self.assertEqual(orders[1].margin, 20)
+        self.assertEqual(orders[2].margin, 50)
 
         # check margins percent
-        self.assertEqual(self.pos_session.order_ids[0].margin_percent, 0.5)
-        self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0.4)
-        self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
+        self.assertEqual(orders[0].margin_percent, 0.5)
+        self.assertEqual(orders[1].margin_percent, 0.4)
+        self.assertEqual(round(orders[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.close_session_from_ui()
+        self.close_pos_session(config=self.config)
 
     def test_other_currency_margin(self):
         """
@@ -157,35 +147,33 @@ class TestPosMargin(TestPoSCommon):
 
         # change the config
         current_config = self.config
-        self.config = self.other_currency_config
+        self.config = self.pos_config_eur
 
         # same parameters as test_positive_margin
         product1 = self.create_product('Product 1', self.categ_basic, 10, 5)
         product2 = self.create_product('Product 2', self.categ_basic, 50, 30)
 
         # open a session
-        self.open_new_session()
+        self.open_new_session(config=self.config)
 
-        # create orders
-        orders = [self.create_ui_order_data([(product1, 1)]),
-                  self.create_ui_order_data([(product2, 1)]),
-                  self.create_ui_order_data([(product1, 2), (product2, 2)])]
-
-        # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]], 'config': self.config},
+            {'lines': [[product2, 1]], 'config': self.config},
+            {'lines': [[product1, 2], [product2, 2]], 'config': self.config},
+        ]).values())
 
         # check margins in the config currency
-        self.assertEqual(self.pos_session.order_ids[0].margin, 2.5)
-        self.assertEqual(self.pos_session.order_ids[1].margin, 10)
-        self.assertEqual(self.pos_session.order_ids[2].margin, 25)
+        self.assertEqual(orders[0].margin, 2.5)
+        self.assertEqual(orders[1].margin, 10)
+        self.assertEqual(orders[2].margin, 25)
 
         # check margins percent which should be the same as test_positive_margin
-        self.assertEqual(self.pos_session.order_ids[0].margin_percent, 0.5)
-        self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0.4)
-        self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
+        self.assertEqual(orders[0].margin_percent, 0.5)
+        self.assertEqual(orders[1].margin_percent, 0.4)
+        self.assertEqual(round(orders[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.close_session_from_ui()
+        self.close_pos_session(config=self.config)
 
         # set the config back
         self.config = current_config
@@ -200,34 +188,32 @@ class TestPosMargin(TestPoSCommon):
 
         # change the config
         current_config = self.config
-        self.config = self.other_currency_config
+        self.config = self.pos_config_eur
 
         product1 = self.create_product('Product 1', self.categ_basic, 10, 5, self.taxes['tax7'].ids)
-        product2 = self.create_product('Product 2', self.categ_basic, 55, 30, self.taxes['tax10'].ids)
+        product2 = self.create_product('Product 2', self.categ_basic, 55, 30, self.taxes['tax10_incl'].ids)
 
         # open a session
-        self.open_new_session()
+        self.open_new_session(config=self.config)
 
-        # create orders
-        orders = [self.create_ui_order_data([(product1, 1)]),
-                  self.create_ui_order_data([(product2, 1)]),
-                  self.create_ui_order_data([(product1, 2), (product2, 2)])]
-
-        # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]], 'config': self.config},
+            {'lines': [[product2, 1]], 'config': self.config},
+            {'lines': [[product1, 2], [product2, 2]], 'config': self.config},
+        ]).values())
 
         # check margins in the config currency
-        self.assertEqual(self.pos_session.order_ids[0].margin, 2.5)
-        self.assertEqual(self.pos_session.order_ids[1].margin, 10)
-        self.assertEqual(self.pos_session.order_ids[2].margin, 25)
+        self.assertEqual(orders[0].margin, 2.5)
+        self.assertEqual(orders[1].margin, 10)
+        self.assertEqual(orders[2].margin, 25)
 
         # check margins percent which should be the same as test_tax_margin
-        self.assertEqual(self.pos_session.order_ids[0].margin_percent, 0.5)
-        self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0.4)
-        self.assertEqual(self.pos_session.order_ids[2].margin_percent, 0.4167)
+        self.assertEqual(orders[0].margin_percent, 0.5)
+        self.assertEqual(orders[1].margin_percent, 0.4)
+        self.assertEqual(orders[2].margin_percent, 0.4167)
 
         # close session
-        self.pos_session.close_session_from_ui()
+        self.close_pos_session(config=self.config)
 
         # set the config back
         self.config = current_config
@@ -243,25 +229,21 @@ class TestPosMargin(TestPoSCommon):
         # open a session
         self.open_new_session()
 
-        # create orders
-        orders = [
-            self.create_ui_order_data([(product1, -1)], pos_order_ui_args={'is_refund': True}),
-            self.create_ui_order_data([(product2, -1)], pos_order_ui_args={'is_refund': True}),
-            self.create_ui_order_data([(product1, -2), (product2, -2)], pos_order_ui_args={'is_refund': True}),
-        ]
-
-        # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
+        orders = list(self.create_orders([
+            {'is_refund': True, 'lines': [[product1, -1]], 'config': self.config},
+            {'is_refund': True, 'lines': [[product2, -1]], 'config': self.config},
+            {'is_refund': True, 'lines': [[product1, -2], [product2, -2]], 'config': self.config},
+        ]).values())
 
         # check margins
-        self.assertEqual(self.pos_session.order_ids[0].margin, -5)
-        self.assertEqual(self.pos_session.order_ids[1].margin, -20)
-        self.assertEqual(self.pos_session.order_ids[2].margin, -50)
+        self.assertEqual(orders[0].margin, -5)
+        self.assertEqual(orders[1].margin, -20)
+        self.assertEqual(orders[2].margin, -50)
 
         # check margins percent
-        self.assertEqual(self.pos_session.order_ids[0].margin_percent, 0.5)
-        self.assertEqual(self.pos_session.order_ids[1].margin_percent, 0.4)
-        self.assertEqual(round(self.pos_session.order_ids[2].margin_percent, 2), 0.42)
+        self.assertEqual(orders[0].margin_percent, 0.5)
+        self.assertEqual(orders[1].margin_percent, 0.4)
+        self.assertEqual(round(orders[2].margin_percent, 2), 0.42)
 
         # close session
-        self.pos_session.close_session_from_ui()
+        self.close_pos_session(config=self.config)

@@ -2,36 +2,23 @@
 
 from odoo import Command
 from odoo.tests.common import tagged
-from odoo.addons.point_of_sale.tests.common import CommonPosTest, TestPoSCommon
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
 # TODO-PARP: Move tests and remove File
 
 @tagged('post_install', '-at_install')
-class TestPosInvoiceConsolidation(TestPoSCommon, CommonPosTest):
+class TestPosInvoiceConsolidation(CommonPosTest):
 
-    _test_user_groups = None  # FIXME list needed groups
-
-    def setUp(cls):
-        super().setUp()
-        cls.config = cls.basic_config
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.config = cls.pos_config_usd
         cls.user1 = cls.env.user
         cls.user2 = cls.simple_accountman
         cls.user2.group_ids = [Command.link(cls.env.ref('point_of_sale.group_pos_user').id)]
         cls.product1 = cls.create_product('Product 1', cls.categ_basic, 10.0)
         cls.product2 = cls.create_product('Product 2', cls.categ_basic, 20.0)
-
-    def _close_session(self):
-        cash_payments = self.pos_session.order_ids.payment_ids.filtered(
-            lambda p: p.payment_method_id.type == 'cash'
-        )
-        self.pos_session.close_session_from_ui({self.cash_pm1.id: sum(cash_payments.mapped('amount'))})
-
-    def _refund_order(self, order):
-        """ Refund `order` entirely and pay the refund back in cash, as the POS UI does. """
-        refund = self.env['pos.order'].browse(order.refund()['res_id'])
-        self.make_payment(refund, self.cash_pm1, refund.amount_total)
-        return refund
 
     def _consolidate(self, orders):
         self.env['pos.make.invoice'].create({'consolidated_billing': True}).with_context(active_ids=orders.ids).action_create_invoices()
@@ -40,25 +27,25 @@ class TestPosInvoiceConsolidation(TestPoSCommon, CommonPosTest):
         self.open_new_session()
 
         with self.with_user(self.user1.login):
-            orders_user1 = self._create_orders([{
-                'pos_order_lines_ui_args': [(self.product1, 1)],
+            orders_user1 = self.create_orders([{
+                'lines': [(self.product1, 1)],
                 'customer': self.customer,
-                'is_invoiced': False,
+                'to_invoice': False,
                 'uuid': 'u1-order',
             }])
             # This flattens the dict into the recordset
             orders_user1 = sum(orders_user1.values(), self.env['pos.order'])
 
         with self.with_user(self.user2.login):
-            orders_user2 = self._create_orders([
+            orders_user2 = self.create_orders([
                 {
-                    'pos_order_lines_ui_args': [(self.product1, 2)],
+                    'lines': [(self.product1, 2)],
                     'customer': self.customer,
-                    'is_invoiced': False,
+                    'to_invoice': False,
                 }, {
-                    'pos_order_lines_ui_args': [(self.product2, 1)],
+                    'lines': [(self.product2, 1)],
                     'customer': self.customer,
-                    'is_invoiced': False,
+                    'to_invoice': False,
                 }
             ])
             # This flattens the dict into the recordset
@@ -89,25 +76,25 @@ class TestPosInvoiceConsolidation(TestPoSCommon, CommonPosTest):
         self.open_new_session()
 
         with self.with_user(self.user1.login):
-            orders_user1 = self._create_orders([{
-                'pos_order_lines_ui_args': [(self.product1, 1)],
+            orders_user1 = self.create_orders([{
+                'lines': [(self.product1, 1)],
                 'customer': self.customer,
-                'is_invoiced': False,
+                'to_invoice': False,
                 'uuid': 'u1-order',
             }])
             # This flattens the dict into the recordset
             orders_user1 = sum(orders_user1.values(), self.env['pos.order'])
 
         with self.with_user(self.user2.login):
-            orders_user2 = self._create_orders([
+            orders_user2 = self.create_orders([
                 {
-                    'pos_order_lines_ui_args': [(self.product1, 2)],
+                    'lines': [(self.product1, 2)],
                     'customer': self.customer,
-                    'is_invoiced': False,
+                    'to_invoice': False,
                 }, {
-                    'pos_order_lines_ui_args': [(self.product2, 1)],
+                    'lines': [(self.product2, 1)],
                     'customer': self.customer,
-                    'is_invoiced': False,
+                    'to_invoice': False,
                 }
             ])
             # This flattens the dict into the recordset
@@ -132,13 +119,13 @@ class TestPosInvoiceConsolidation(TestPoSCommon, CommonPosTest):
         self.open_new_session()
 
         with self.with_user(self.user1.login):
-            orders = self._create_orders([
-                {'pos_order_lines_ui_args': [(self.product1, 1)], 'customer': self.customer, 'is_invoiced': False, 'uuid': 'sale-1'},
-                {'pos_order_lines_ui_args': [(self.product2, 1)], 'customer': self.customer, 'is_invoiced': False, 'uuid': 'sale-2'},
+            orders = self.create_orders([
+                {'lines': [(self.product1, 1)], 'customer': self.customer, 'to_invoice': False, 'uuid': 'sale-1'},
+                {'lines': [(self.product2, 1)], 'customer': self.customer, 'to_invoice': False, 'uuid': 'sale-2'},
             ])
-            refund = self._refund_order(orders['sale-1'])
+            refund = self.refund_pos_order(orders['sale-1'], self.cash_pm, -orders['sale-1'].amount_total)
 
-        self._close_session()
+        self.close_pos_session()
 
         all_orders = orders['sale-1'] | orders['sale-2'] | refund
         self._consolidate(all_orders)
@@ -153,13 +140,13 @@ class TestPosInvoiceConsolidation(TestPoSCommon, CommonPosTest):
         self.open_new_session()
 
         with self.with_user(self.user1.login):
-            orders = self._create_orders([
-                {'pos_order_lines_ui_args': [(self.product2, 1)], 'customer': self.customer, 'is_invoiced': False, 'uuid': 'sale-1'},
-                {'pos_order_lines_ui_args': [(self.product1, 1)], 'customer': self.customer, 'is_invoiced': False, 'uuid': 'sale-2'},
+            orders = self.create_orders([
+                {'lines': [(self.product2, 1)], 'customer': self.customer, 'to_invoice': False, 'uuid': 'sale-1'},
+                {'lines': [(self.product1, 1)], 'customer': self.customer, 'to_invoice': False, 'uuid': 'sale-2'},
             ])
-            refund = self._refund_order(orders['sale-1'])
+            refund = self.refund_pos_order(orders['sale-1'], self.cash_pm, -orders['sale-1'].amount_total)
 
-        self._close_session()
+        self.close_pos_session()
 
         # sale-1 is left out of the selection, so the refund outweighs the sale: 10 - 20 = -10
         selected_orders = orders['sale-2'] | refund
@@ -190,13 +177,13 @@ class TestPosInvoiceConsolidation(TestPoSCommon, CommonPosTest):
         })
 
         with self.with_user(self.user1.login):
-            orders = self._create_orders([
-                {'pos_order_lines_ui_args': [(self.product1, 1)], 'customer': self.customer, 'is_invoiced': False, 'uuid': 'sale-1'},
-                {'pos_order_lines_ui_args': [(self.product2, 1)], 'customer': self.customer, 'is_invoiced': False, 'uuid': 'sale-2'},
+            orders = self.create_orders([
+                {'lines': [(self.product1, 1)], 'customer': self.customer, 'to_invoice': False, 'uuid': 'sale-1'},
+                {'lines': [(self.product2, 1)], 'customer': self.customer, 'to_invoice': False, 'uuid': 'sale-2'},
             ])
-            refund = self._refund_order(orders['sale-1'])
+            refund = self.refund_pos_order(orders['sale-1'], self.cash_pm, -orders['sale-1'].amount_total)
 
-        self._close_session()
+        self.close_pos_session()
 
         all_orders = orders['sale-1'] | orders['sale-2'] | refund
         self._consolidate(all_orders)
@@ -229,17 +216,17 @@ class TestPosInvoiceConsolidation(TestPoSCommon, CommonPosTest):
             'rounding_method': rounding.id,
         })
 
-        non_cash_pm = self.config.payment_method_ids.filtered(lambda pm: pm.type != 'cash')[:1]
+        non_cash_pm = self.bank_pm
         self.assertTrue(non_cash_pm, "Need at least one non-cash payment method on the POS config.")
         self.product2.lst_price = 9.99
         with self.with_user(self.user1.login):
-            orders = self._create_orders([
-                {'pos_order_lines_ui_args': [(self.product1, 1)], 'customer': self.customer, 'is_invoiced': False},
+            orders = self.create_orders([
+                {'lines': [(self.product1, 1)], 'customer': self.customer, 'payments': [(non_cash_pm, 10)]},
                 {
-                    'pos_order_lines_ui_args': [(self.product2, 1)],
+                    'lines': [(self.product2, 1)],
                     'customer': self.customer,
-                    'is_invoiced': False,
-                    'payments': [(self.cash_pm1, 10)]},
+                    'to_invoice': False,
+                    'payments': [(self.cash_pm, 10)]},
             ])
             orders = sum(orders.values(), self.env['pos.order'])
 

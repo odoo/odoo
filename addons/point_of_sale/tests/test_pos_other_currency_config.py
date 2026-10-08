@@ -2,35 +2,34 @@
 
 import odoo
 from odoo import fields, tools
-from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 # TODO-PARP: Move tests and remove File
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPoSOtherCurrencyConfig(TestPoSCommon):
+class TestPoSOtherCurrencyConfig(CommonPosTest):
     """ Test PoS with basic configuration
     """
-    _test_user_groups = None  # FIXME list needed groups
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-    def setUp(self):
-        super(TestPoSOtherCurrencyConfig, self).setUp()
-
-        self.config = self.other_currency_config
-        self.product1 = self.create_product('Product 1', self.categ_basic, 10.0, 5)
-        self.product2 = self.create_product('Product 2', self.categ_basic, 20.0, 10)
-        self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15)
-        self.product7 = self.create_product('Product 7', self.categ_basic, 7, 7, tax_ids=self.taxes['tax7'].ids)
+        cls.config = cls.pos_config_eur
+        cls.product1 = cls.create_product('Product 1', cls.categ_basic, 10.0, 5)
+        cls.product2 = cls.create_product('Product 2', cls.categ_basic, 20.0, 10)
+        cls.product3 = cls.create_product('Product 3', cls.categ_basic, 30.0, 15)
+        cls.product7 = cls.create_product('Product 7', cls.categ_basic, 7, 7, tax_ids=cls.taxes['tax7'].ids)
         # change the price of product2 to 12.99 fixed. No need to convert.
-        pricelist_item = self.env['product.pricelist.item'].create({
-            'product_tmpl_id': self.product2.product_tmpl_id.id,
+        pricelist_item = cls.env['product.pricelist.item'].create({
+            'product_tmpl_id': cls.product2.product_tmpl_id.id,
             'fixed_price': 12.99,
         })
-        self.config.pricelist_id.write({'item_ids': [(6, 0, (self.config.pricelist_id.item_ids | pricelist_item).ids)]})
+        cls.config.pricelist_id.write({'item_ids': [(6, 0, (cls.config.pricelist_id.item_ids | pricelist_item).ids)]})
 
     def test_01_check_product_cost(self):
         # Product price should be half of the original price because currency rate is 0.5.
-        # (see `self._create_other_currency_config` method)
+        # The shared EUR fixture uses a rate of 0.5.
         # Except for product2 where the price is specified in the pricelist.
 
         self.assertAlmostEqual(self.config.pricelist_id._get_product_price(self.product1, 1), 5.00)
@@ -41,41 +40,15 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
     def test_bank_journal_balance(self):
         """Verify that debit and credit are balanced when adding a difference to the bank."""
 
-        # Make a sale paid by bank
-        self.other_currency_config.open_ui()
-        session_id = self.other_currency_config.current_session_id
-        order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': session_id.id,
-            'partner_id': False,
-            'lines': [(0, 0, {
-                'name': 'OL/0001',
-                'product_id': self.product1.id,
-                'price_unit': 10.00,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': False,
-                'price_subtotal': 10.00,
-                'price_subtotal_incl': 10.00,
-            })],
-            'pricelist_id': self.other_currency_config.pricelist_id.id,
-            'amount_paid': 10.00,
-            'amount_total': 10.00,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        })
-
-        # Make payment
-        payment_context = {"active_ids": order.ids, "active_id": order.id}
-        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
-            'amount': order.amount_total,
-            'payment_method_id': self.bank_pm2.id
-        })
-        order_payment.with_context(**payment_context).check()
-
-        # Close session with counted +10 for bank compared with expected
-        session_id.close_session_from_ui()  # Real 20, expected 10, diff 10
+        self.open_new_session(config=self.config)
+        session_id = self.pos_session
+        self.create_pos_order(
+            [[self.product1, 1, 0, {'price_unit': 10}]],
+            payments=[[self.bank_pm2, 10]],
+            config=self.config,
+        )
+        session_id.close_session_from_ui({self.bank_pm2.id: 20})
+        self.assertEqual(session_id.state, 'closed')
 
         # Check debit/credit session's balance
         for move in session_id._get_related_account_moves():
@@ -83,14 +56,14 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             for line in move.line_ids:
                 debit += line.debit
                 credit += line.credit
-            self.assertEqual(tools.float_compare(debit, credit, precision_rounding=self.other_currency_config.currency_id.rounding), 0)  # debit and credit should be equal
+            self.assertEqual(tools.float_compare(debit, credit, precision_rounding=self.pos_config_eur.currency_id.rounding), 0)  # debit and credit should be equal
 
     def test_with_session_check_product_cost(self):
         def find_by(list_of_dicts, key, value):
             return next((d for d in list_of_dicts if d.get(key) == value), None)
 
-        self.other_currency_config.open_ui()
-        product = self.other_currency_config.current_session_id.load_data({'only_records': True})['product.product']
+        self.pos_config_eur.open_ui()
+        product = self.pos_config_eur.current_session_id.load_data({'only_records': True})['product.product']
 
         self.assertAlmostEqual(find_by(product, 'id', self.product1.id)['lst_price'], 5.00)
         self.assertAlmostEqual(find_by(product, 'id', self.product2.id)['lst_price'], 10.00)
@@ -98,8 +71,8 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.assertAlmostEqual(find_by(product, 'id', self.product7.id)['lst_price'], 3.50)
 
     def test_pos_data_standard_price_converted(self):
-        self.other_currency_config.open_ui()
-        res = self.other_currency_config.current_session_id.load_data({'only_records': True})
+        self.pos_config_eur.open_ui()
+        res = self.pos_config_eur.current_session_id.load_data({'only_records': True})
         product1_data = next(filter(lambda product: product['display_name'] == "Product 1", res['product.product']))
         self.assertEqual(product1_data['standard_price'], 2.5)  # standard price should be converted
 
@@ -142,8 +115,8 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.assertEqual(shared_product.currency_id, main_company.currency_id)
         self.assertEqual(shared_product.cost_currency_id, self.other_currency)
 
-        self.assertEqual(self.other_currency_config.currency_id, self.other_currency)
-        [data] = shared_product._load_pos_data_read(shared_product, self.other_currency_config)
+        self.assertEqual(self.pos_config_eur.currency_id, self.other_currency)
+        [data] = shared_product._load_pos_data_read(shared_product, self.pos_config_eur)
 
         self.assertAlmostEqual(data['standard_price'], 100.0)
         self.assertAlmostEqual(data['lst_price'], 50.0)

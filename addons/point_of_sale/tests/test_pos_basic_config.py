@@ -1,34 +1,31 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from unittest.mock import patch
 
 import odoo
 from odoo import fields, Command
 from odoo.exceptions import UserError, ValidationError
 
-from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.addons.point_of_sale.models.pos_payment_method import PosPaymentMethod
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPoSBasicConfig(TestPoSCommon):
+class TestPoSBasicConfig(CommonPosTest):
     """ Test PoS with basic configuration
 
     The tests contain base scenarios in using pos.
     More specialized cases are tested in other tests.
     """
-    _test_user_groups = None  # FIXME list needed groups
-
-    def setUp(self):
-        super(TestPoSBasicConfig, self).setUp()
-        self.config = self.basic_config
-        self.product0 = self.create_product('Product 0', self.categ_basic, 0.0, 0.0)
-        self.product1 = self.create_product('Product 1', self.categ_basic, 10.0, 5)
-        self.product2 = self.create_product('Product 2', self.categ_basic, 20.0, 10)
-        self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15)
-        self.product4 = self.create_product('Product_4', self.categ_basic, 9.96, 4.98)
-        self.product99 = self.create_product('Product_99', self.categ_basic, 99, 50)
-        self.product_multi_tax = self.create_product('Multi-tax product', self.categ_basic, 100, 100, (self.taxes['tax8'] | self.taxes['tax9']).ids)
-        self.company_data_2 = self.setup_other_company()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.config = cls.pos_config_usd
+        cls.product0 = cls.create_product('Product 0', cls.categ_basic, 0.0, 0.0)
+        cls.product1 = cls.create_product('Product 1', cls.categ_basic, 10.0, 5)
+        cls.product2 = cls.create_product('Product 2', cls.categ_basic, 20.0, 10)
+        cls.product4 = cls.create_product('Product_4', cls.categ_basic, 9.96, 4.98)
 
     def test_pos_session_name_sequencing(self):
         """ This test check if the session name is correctly set according to the sequence """
@@ -41,7 +38,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.open_new_session(0)
         self.assertEqual(self.pos_session.name, name + '/01000')
 
-        self.pos_session.close_session_from_ui()
+        self.close_pos_session()
 
         sequence.prefix = 'TEST/'
 
@@ -55,9 +52,9 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         - When there are partners that belong to different company
         """
-
+        company_data_2 = self.setup_other_company()
         # create a partner that belongs to different company
-        company2 = self.company_data_2['company']
+        company2 = company_data_2['company']
         self.env['res.partner'].create({
             'name': 'Test',
             'company_id': company2.id,
@@ -175,8 +172,8 @@ class TestPoSBasicConfig(TestPoSCommon):
             - Copy multiple payment methods
             - Check the duplicated cash payment method journal should be empty
         """
-        pm_1 = self.cash_pm1
-        pm_2 = self.bank_pm1
+        pm_1 = self.cash_pm
+        pm_2 = self.bank_pm
         pm_3, pm_4 = (pm_1 + pm_2).copy()
 
         self.assertTrue(pm_3)
@@ -187,18 +184,12 @@ class TestPoSBasicConfig(TestPoSCommon):
     def test_single_config_global_invoice(self):
         """For a single POS config, create multiple orders and consolidate them into a single invoice"""
         self.open_new_session()
-        # create orders
-        orders = [
-            self.create_ui_order_data([(self.product1, 2), (self.product4, 3)], payments=[(self.bank_pm1, 49.88)]),
-            self.create_ui_order_data([(self.product4, 1), (self.product2, 5)], payments=[(self.bank_pm1, 109.96)])
-        ]
-
-        # sync orders
-        self.env['pos.order'].sync_from_ui(orders)
-        # close the session
-        self.pos_session.close_session_from_ui()
-
-        pos_orders = self.env['pos.order'].search([])
+        orders = self.create_orders([
+            {'lines': [[self.product1, 2], [self.product4, 3]], 'payments': [[self.bank_pm, 49.88]]},
+            {'lines': [[self.product4, 1], [self.product2, 5]], 'payments': [[self.bank_pm, 109.96]]},
+        ])
+        self.close_pos_session()
+        pos_orders = sum(orders.values(), self.env['pos.order'])
         # set customer for the orders
         pos_orders.write({'partner_id': self.customer.id})
 
@@ -219,24 +210,20 @@ class TestPoSBasicConfig(TestPoSCommon):
 
     def test_multi_config_global_invoice(self):
         self.open_new_session()
-        orders = []
-        orders = [
-            self.create_ui_order_data([(self.product1, 3), (self.product2, 10)], payments=[(self.bank_pm1, 230)]),
-            self.create_ui_order_data([(self.product1, 5), (self.product0, 10)], payments=[(self.bank_pm1, 50)])
-        ]
-        self.env['pos.order'].sync_from_ui(orders)
-        self.pos_session.close_session_from_ui()
+        orders = self.create_orders([
+            {'lines': [[self.product1, 3], [self.product2, 10]], 'payments': [[self.bank_pm, 230]]},
+            {'lines': [[self.product1, 5], [self.product0, 10]], 'payments': [[self.bank_pm, 50]]},
+        ])
+        self.close_pos_session()
 
-        # open new session & create orders
+        # Open a second session and create orders.
         self.open_new_session()
-        orders2 = [
-            self.create_ui_order_data([(self.product1, 2), (self.product4, 3)], payments=[(self.bank_pm1, 49.88)]),
-            self.create_ui_order_data([(self.product4, 1), (self.product2, 5)], payments=[(self.bank_pm1, 109.96)])
-        ]
-        self.env['pos.order'].sync_from_ui(orders2)
-        self.pos_session.close_session_from_ui()
-
-        pos_orders = self.env['pos.order'].search([])
+        orders2 = self.create_orders([
+            {'lines': [[self.product1, 2], [self.product4, 3]], 'payments': [[self.bank_pm, 49.88]]},
+            {'lines': [[self.product4, 1], [self.product2, 5]], 'payments': [[self.bank_pm, 109.96]]},
+        ])
+        self.close_pos_session()
+        pos_orders = sum((*orders.values(), *orders2.values()), self.env['pos.order'])
         # set customer for the orders
         pos_orders.write({'partner_id': self.customer.id})
 
@@ -334,40 +321,23 @@ class TestPoSBasicConfig(TestPoSCommon):
         but some legacy records of this kind may still exist.
         This test ensures that the refunded_order_id is correctly computed in such cases.
         """
-        current_session = self.open_new_session()
-        orders = list(self._create_orders([
-            {'pos_order_lines_ui_args': [(self.product1, 1)]},
-            {'pos_order_lines_ui_args': [(self.product2, 1)]}
+        self.open_new_session()
+        orders = list(self.create_orders([
+            {'lines': [[self.product1]], 'payments': [[self.bank_pm, 10]]},
+            {'lines': [[self.product2]], 'payments': [[self.bank_pm, 20]]},
         ]).values())
 
-        refund_order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': current_session.id,
-            'lines': [
-                (0, 0, {
-                    'product_id': self.product1.id,
-                    'price_unit': -10,
-                    'qty': 1,
-                    'tax_ids': [[6, False, []]],
-                    'price_subtotal': -10,
-                    'price_subtotal_incl': -10,
-                    'refunded_orderline_id': orders[0].lines[0].id
-                }),
-                (0, 0, {
-                    'product_id': self.product2.id,
-                    'price_unit': -10,
-                    'qty': 1,
-                    'tax_ids': [[6, False, []]],
-                    'price_subtotal': -10,
-                    'price_subtotal_incl': -10,
-                    'refunded_orderline_id': orders[1].lines[0].id
-                })
+        # Create the legacy record through the ORM: sync_from_ui rejects refunds
+        # containing lines from multiple original orders.
+        refund_data = self._create_ui_order_data(
+            [
+                [self.product1, 1, 0, {'price_unit': -10, 'refunded_orderline_id': orders[0].lines.id}],
+                [self.product2, 1, 0, {'price_unit': -10, 'refunded_orderline_id': orders[1].lines.id}],
             ],
-            'amount_paid': -10,
-            'amount_total': -10,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-        })
+            payments=[],
+            state='draft',
+        )
+        refund_order = self.env['pos.order'].create(refund_data)
 
         self.assertEqual(refund_order.refunded_order_id, orders[0])
 
@@ -384,7 +354,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             'name': 'Test PM',
             'type': 'cash',
             'journal_id': test_journal.id,
-            'receivable_account_id': self.cash_pm1.receivable_account_id.id,
+            'receivable_account_id': self.cash_pm.receivable_account_id.id,
         })
 
         with self.assertRaises(ValidationError):
@@ -419,16 +389,15 @@ class TestPoSBasicConfig(TestPoSCommon):
             'group_ids': [self.env.ref('point_of_sale.group_pos_manager').id],
         })
 
-        orders = self._create_orders([{
-            'pos_order_lines_ui_args': [(self.product1, 1)],
-            'customer': self.customer,
-            'is_invoiced': False,
-        }])
-        orders = sum(orders.values(), self.env['pos.order'])
+        order = self.create_pos_order(
+            [[self.product1]],
+            payments=[[self.bank_pm, 10]],
+            customer=self.customer,
+        )
 
-        orders.with_user(pos_only_user)._generate_pos_order_invoice()
+        order.with_user(pos_only_user)._generate_pos_order_invoice()
 
-        self.assertEqual(orders.account_move.review_state, 'no_review')
+        self.assertEqual(order.account_move.review_state, 'no_review')
 
     def test_delete_archive_product_pos_category_with_active_pos_session(self):
         self.env['pos.session'].search([('state', '!=', 'closed')]).state = "closed"
@@ -442,8 +411,8 @@ class TestPoSBasicConfig(TestPoSCommon):
         product2.pos_categ_ids = [(6, 0, [category2.id])]
 
         # Open unrestricted session -> everything protected.
-        self.basic_config.open_ui()
-        self.basic_config.iface_available_categ_ids = []
+        self.pos_config_usd.open_ui()
+        self.pos_config_usd.iface_available_categ_ids = []
 
         with self.assertRaisesRegex(UserError, "active Point of Sale session"):
             product2.action_archive()
@@ -452,7 +421,7 @@ class TestPoSBasicConfig(TestPoSCommon):
             category2.unlink()
 
         # Open restricted session for category1 only.
-        self.basic_config.iface_available_categ_ids = [(6, 0, [category1.id])]
+        self.pos_config_usd.iface_available_categ_ids = [(6, 0, [category1.id])]
 
         # category1/product1 still protected.
         with self.assertRaisesRegex(UserError, "active Point of Sale session"):
@@ -469,7 +438,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         category2.unlink()
 
         # After session close, only config protection remains.
-        self.basic_config.current_session_id.state = 'closed'
+        self.pos_config_usd.current_session_id.state = 'closed'
 
         with self.assertRaisesRegex(UserError, "currently in use in a point of sale"):
             category1.unlink()
@@ -529,3 +498,167 @@ class TestPoSBasicConfig(TestPoSCommon):
             'available_preset_ids': [(6, 0, [preset.id])],
             'default_preset_id': preset.id,
         })
+
+    def test_onchange_payment_provider(self):
+        pm = self.env['pos.payment.method'].create({'name': 'Test PM', 'type': 'bank'})
+        with patch.object(PosPaymentMethod, '_get_terminal_provider_selection', return_value=[('terminal_1', 'Terminal 1'), ('terminal_2', 'Terminal 2')]), \
+             patch.object(PosPaymentMethod, '_get_external_qr_provider_selection', return_value=[('qr_1', 'QR Code 1'), ('qr_2', 'QR Code 2')]), \
+             patch.object(PosPaymentMethod, '_get_cash_machine_selection', return_value=[('cash_1', 'Cash Machine 1'), ('cash_2', 'Cash Machine 2')]):
+            # False --> terminal_1 = terminal
+            pm.payment_provider = 'terminal_1'
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'terminal')
+
+            # terminal_1 --> terminal_2 = terminal
+            pm.payment_provider = 'terminal_2'
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'terminal')
+
+            # terminal_2 --> qr_1 = external_qr
+            pm.payment_provider = 'qr_1'
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'external_qr')
+
+            # qr_1 --> qr_2 = external_qr
+            pm.payment_provider = 'qr_2'
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'external_qr')
+
+            # qr_2 --> False = external_qr
+            pm.payment_provider = False
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'external_qr')
+
+            # False --> qr_1 = external_qr
+            pm.payment_provider = 'qr_1'
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'external_qr')
+
+            # qr_1 --> cash_1 = cash_machine
+            pm.payment_provider = 'cash_1'
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'cash_machine')
+
+            # cash_1 --> terminal_1 = terminal
+            pm.payment_provider = 'terminal_1'
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'terminal')
+
+            # terminal_1 --> False = terminal
+            pm.payment_provider = False
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'terminal')
+
+            # False --> cash_1 = cash_machine
+            pm.payment_provider = 'cash_1'
+            pm._onchange_payment_provider()
+            self.assertEqual(pm.payment_method_type, 'cash_machine')
+
+    def test_onchange_payment_method_type(self):
+        pm = self.env['pos.payment.method'].create({'name': 'Test PM', 'type': 'bank'})
+        with patch.object(PosPaymentMethod, '_get_terminal_provider_selection', return_value=[('terminal_1', 'Terminal 1'), ('terminal_2', 'Terminal 2')]), \
+             patch.object(PosPaymentMethod, '_get_external_qr_provider_selection', return_value=[('qr_1', 'QR Code 1'), ('qr_2', 'QR Code 2')]), \
+             patch.object(PosPaymentMethod, '_get_cash_machine_selection', return_value=[('cash_1', 'Cash Machine 1'), ('cash_2', 'Cash Machine 2')]):
+            # (False) none --> terminal = False
+            pm.payment_method_type = 'terminal'
+            pm._onchange_payment_method_type()
+            self.assertFalse(pm.payment_provider)
+
+            # (terminal_1) terminal --> external_qr = False
+            pm.payment_provider = 'terminal_1'
+            pm.payment_method_type = 'external_qr'
+            pm._onchange_payment_method_type()
+            self.assertFalse(pm.payment_provider)
+
+            # (qr_1) external_qr --> terminal = False
+            pm.payment_provider = 'qr_1'
+            pm.payment_method_type = 'terminal'
+            pm._onchange_payment_method_type()
+            self.assertFalse(pm.payment_provider)
+
+            # (terminal_1) terminal --> cash_machine = False
+            pm.payment_provider = 'terminal_1'
+            pm.payment_method_type = 'cash_machine'
+            pm._onchange_payment_method_type()
+            self.assertFalse(pm.payment_provider)
+
+            # (terminal_1) terminal --> none = False
+            pm.payment_provider = 'terminal_1'
+            pm.payment_method_type = 'none'
+            pm._onchange_payment_method_type()
+            self.assertFalse(pm.payment_provider)
+
+    def test_no_default_pricelist(self):
+        """ Verify that the default pricelist isn't automatically set in the config """
+        new_config = self.env['pos.config'].create({
+            'name': 'usd config',
+            'available_pricelist_ids': [Command.set(self.pricelist_eur.ids)]
+        })
+        self.assertEqual(
+            new_config.pricelist_id,
+            self.env['product.pricelist'],
+            'POS config incorrectly has pricelist %s' % new_config.pricelist_id.display_name
+        )
+
+    def test_pos_bill_digits(self):
+        coin = self.env.ref('point_of_sale.0_05')
+        coin.value = 0.005
+        self.assertEqual(coin.value, 0.005)
+
+    def test_basic_config_values(self):
+        config = self.pos_config_usd
+        self.assertEqual(config.currency_id, self.company_currency)
+        self.assertFalse(config.use_pricelist)
+        self.assertFalse(config.pricelist_id)
+
+    def test_other_currency_config_values(self):
+        config = self.pos_config_eur
+        self.assertEqual(config.currency_id, self.other_currency)
+        self.assertEqual(config.pricelist_id.currency_id, self.other_currency)
+
+    def test_product_price(self):
+        def get_price(pricelist, product):
+            return pricelist._get_product_price(product, 1)
+
+        products = [
+            self.create_product('Product 1', self.categ_basic, lst_price=10.0, standard_price=5),
+            self.create_product('Product 2', self.categ_basic, lst_price=20.0, standard_price=10),
+            self.create_product('Product 3', self.categ_basic, lst_price=30.0, standard_price=15),
+        ]
+        # check usd pricelist
+        pricelist = self.pos_config_usd.pricelist_id
+        for product in products:
+            self.assertAlmostEqual(get_price(pricelist, product), product.lst_price)
+
+        # check eur pricelist
+        # exchange rate to the other currency is set to 0.5, thus, lst_price
+        # is expected to have half its original value.
+        pricelist = self.pos_config_eur.pricelist_id
+        for product in products:
+            self.assertAlmostEqual(get_price(pricelist, product), product.lst_price * 0.5)
+
+    def test_taxes(self):
+        tax7 = self.taxes['tax7']
+        self.assertAlmostEqual(tax7.amount, 7)
+        self.assertFalse(tax7.price_include)
+        tax10 = self.taxes['tax10']
+        self.assertAlmostEqual(tax10.amount, 10)
+        self.assertFalse(tax10.price_include)
+        self.assertTrue(self.taxes['tax10_incl'].price_include)
+        self.assertEqual(self.taxes['tax10_incl'].amount, 10)
+        tax_group_7_10 = self.taxes['tax_group_7_10']
+        self.assertEqual(tax_group_7_10.amount_type, 'group')
+        self.assertEqual(sorted(tax_group_7_10.children_tax_ids.ids), sorted((tax7 | tax10).ids))
+
+    def test_archive_used_journal(self):
+        self.create_pos_order([[self.ten_dollars_no_tax.product_variant_id]], payments=[[self.bank_pm, 10]])
+        with self.assertRaises(ValidationError):
+            self.bank_pm.journal_id.action_archive()
+
+    def test_card_payment_method_initialization(self):
+        """Test that the 'Card' payment method created by default has an outstanding account."""
+        (self.bank_pm | self.bank_pm2).active = False
+        _, payment_method_ids = self.pos_config_usd._create_journal_and_payment_methods()
+        card_pm = self.env['pos.payment.method'].browse(payment_method_ids).filtered(lambda pm: pm.name == 'Card')
+        self.assertTrue(card_pm)
+        self.assertTrue(card_pm.outstanding_account_id)

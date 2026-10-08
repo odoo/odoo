@@ -151,7 +151,7 @@ class TestPosStockProductsWithTax(TestPosStockCommon):
             odoo.Command.set(xx_cash_payment_method.ids),
         ]})
         self.config = xx_config
-        pos_session = self.open_new_session()
+        pos_session = self.open_new_session(config=self.config)
         # load the session data from Branch XX:
         # - Product all taxes           => tax from Branch XX should be set
         # - Product no tax from XX      => tax from Branch X should be set

@@ -4,18 +4,16 @@ from datetime import timedelta
 import odoo
 
 from odoo import Command
-from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
-# TODO-PARP: Use util method to create pos order
 @odoo.tests.tagged('post_install', '-at_install')
-class TestReportSession(TestPoSCommon):
+class TestReportSession(CommonPosTest):
 
-    _test_user_groups = None  # FIXME list needed groups
-
-    def setUp(self):
-        super().setUp()
-        self.config = self.basic_config
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.config = cls.pos_config_usd
 
     def test_report_session(self):
 
@@ -24,42 +22,18 @@ class TestReportSession(TestPoSCommon):
             'amount': 10,
             'price_include_override': 'tax_included',
         })
-        self.product1 = self.create_product('Product A', self.categ_basic, 110, self.tax1.id)
+        self.product1 = self.create_product('Product A', self.categ_basic, 110, tax_ids=self.tax1.ids)
 
-        self.config.open_ui()
-        self.res_users_partner_manager_user = self.env['res.users'].create({
-            'name': "Product Manager",
-            'login': "products",
-            'email': "productmanager@yourcompany.com",
-            'group_ids': [(6, 0, [self.env.ref('product.group_product_manager').id])],
-        })
-        session_id = self.config.current_session_id.id
-        order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': session_id,
-            'partner_id': self.partner_a.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 110,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': [[6, False, [self.tax1.id]]],
-                'price_subtotal': 100,
-                'price_subtotal_incl': 110,
-            })],
-            'pricelist_id': self.config.pricelist_id.id,
-            'amount_paid': 110.0,
-            'amount_total': 110.0,
-            'amount_tax': 10.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        })
-
-        self.make_payment(order, self.bank_split_pm1, 60)
-        self.make_payment(order, self.bank_pm1, 50)
-
-        self.config.current_session_id.close_session_from_ui()
+        second_bank_pm = self.bank_pm.copy({'name': 'Second Bank'})
+        self.config.payment_method_ids |= second_bank_pm
+        session = self.open_new_session()
+        session_id = session.id
+        self.create_pos_order(
+            [[self.product1]],
+            payments=[[second_bank_pm, 60], [self.bank_pm, 50]],
+            customer=self.partner_a,
+        )
+        self.close_pos_session()
 
         # PoS Orders have negative IDs to avoid conflict, so reports[0] will correspond to the newest order
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session_id])
@@ -73,47 +47,14 @@ class TestReportSession(TestPoSCommon):
 
         self.product1 = self.create_product('Product A', self.categ_basic, 100)
 
-        self.config.open_ui()
-        session_id_1 = self.config.current_session_id.id
-        order_info = {'company_id': self.env.company.id,
-                      'session_id': session_id_1,
-                      'partner_id': self.partner_a.id,
-                      'lines': [(0, 0, {
-                          'name': "OL/0001",
-                          'product_id': self.product1.id,
-                          'price_unit': 100,
-                          'discount': 0,
-                          'qty': 1,
-                          'tax_ids': [],
-                          'price_subtotal': 100,
-                          'price_subtotal_incl': 100,
-                      })],
-                      'pricelist_id': self.config.pricelist_id.id,
-                      'amount_paid': 100.0,
-                      'amount_total': 100.0,
-                      'amount_tax': 0.0,
-                      'amount_return': 0.0,
-                      'to_invoice': False,
-                      }
-
-        order = self.env['pos.order'].create(order_info)
-        self.make_payment(order, self.bank_pm1, 100)
-
-        order = self.env['pos.order'].create(order_info)
-        self.make_payment(order, self.cash_pm1, 100)
-
-        self.config.current_session_id.close_session_from_ui()
-
-        self.config.open_ui()
-        session_id_2 = self.config.current_session_id.id
-        order_info['session_id'] = session_id_2
-        order = self.env['pos.order'].create(order_info)
-        self.make_payment(order, self.bank_pm1, 100)
-
-        order = self.env['pos.order'].create(order_info)
-        self.make_payment(order, self.cash_pm1, 100)
-
-        self.config.current_session_id.close_session_from_ui()
+        for _ in range(2):
+            session = self.open_new_session()
+            self.create_orders([
+                {'lines': [[self.product1]], 'payments': [[payment_method, 100]], 'customer': self.partner_a}
+                for payment_method in (self.bank_pm, self.cash_pm)
+            ])
+            self.close_pos_session()
+        session_id_2 = session.id
 
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
         for payment in report['payments']:
@@ -128,60 +69,12 @@ class TestReportSession(TestPoSCommon):
         product1 = self.create_product('Product 1', self.categ_basic, 150)
         product2 = self.create_product('Product 2', self.categ_basic, 150)
 
-        cash_payment_method = self.env['pos.payment.method'].create({
-            'name': 'Cash',
-            'type': 'cash',
-            'receivable_account_id': self.company_data['default_account_receivable'].id,
-            'journal_id': self.company_data['default_journal_cash'].id,
-            'company_id': self.env.company.id,
-        })
-        bank_payment_method = self.env['pos.payment.method'].create({
-            'name': 'Bank',
-            'type': 'bank',
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'receivable_account_id': self.company_data['default_account_receivable'].id,
-            'company_id': self.env.company.id,
-        })
-        self.config.write({'payment_method_ids': [(5, 0), (4, bank_payment_method.id), (4, cash_payment_method.id)]})
-
+        (product1 | product2).taxes_id = self.taxes['tax10']
         self.open_new_session()
-        session = self.pos_session
-
-        self.tax_sale_a['amount'] = 10
-        order = self.env['pos.order'].create({
-            'session_id': session.id,
-            'lines': [(0, 0, {
-                'name': "TR/0001",
-                'product_id': product1.id,
-                'price_unit': 150,
-                'discount': 0,
-                'qty': 1.0,
-                'price_subtotal': 150,
-                'tax_ids': [(6, 0, self.tax_sale_a.ids)],
-                'price_subtotal_incl': 165,
-            }), (0, 0, {
-                'name': "TR/0001",
-                'product_id': product2.id,
-                'price_unit': 150,
-                'discount': 0,
-                'qty': 1.0,
-                'price_subtotal': 150,
-                'tax_ids': [(6, 0, self.tax_sale_a.ids)],
-                'price_subtotal_incl': 165,
-            })],
-            'amount_total': 330.0,
-            'amount_tax': 30.0,
-            'amount_paid': 0.0,
-            'amount_return': 0.0,
-        })
-        payment_context = {"active_ids": order.ids, "active_id": order.id}
-
-        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create([{
-            'amount': am,
-            'payment_method_id': pm
-        } for am in [65, 100] for pm in [cash_payment_method.id, bank_payment_method.id]])
-        for payment in order_payment:
-            payment.with_context(**payment_context).check()
+        order = self.create_pos_order(
+            [[product1], [product2]],
+            payments=[[payment_method, amount] for amount in (65, 100) for payment_method in (self.cash_pm, self.bank_pm)],
+        )
 
         order_report_lines = self.env['report.pos.order'].sudo().search([('order_id', '=', order.id)])
 
@@ -201,34 +94,16 @@ class TestReportSession(TestPoSCommon):
 
     def test_report_session_3(self):
         self.product1 = self.create_product('Product A', self.categ_basic, 100)
-        self.config.open_ui()
-        session_id = self.config.current_session_id.id
-        order_info = {'company_id': self.env.company.id,
-                'session_id': session_id,
-                'partner_id': self.partner_a.id,
-                'lines': [(0, 0, {
-                    'name': "OL/0001",
-                    'product_id': self.product1.id,
-                    'price_unit': 0,
-                    'discount': 0,
-                    'qty': 14.9,
-                    'tax_ids': [],
-                    'price_subtotal': 0,
-                    'price_subtotal_incl': 0,
-                })],
-                'pricelist_id': self.config.pricelist_id.id,
-                'amount_paid': 0.0,
-                'amount_total': 0.0,
-                'amount_tax': 0.0,
-                'amount_return': 0.0,
-                'to_invoice': False,
-                }
-        order = self.env['pos.order'].create(order_info)
-        self.make_payment(order, self.bank_pm1, 0)
-        order_info['lines'][0][2]['qty'] = 59.7
-        order = self.env['pos.order'].create(order_info)
-        self.make_payment(order, self.bank_pm1, 0)
-        self.config.current_session_id.close_session_from_ui()
+        self.open_new_session()
+        self.create_orders([
+            {
+                'lines': [[self.product1, quantity, 0, {'price_unit': 0}]],
+                'payments': [[self.bank_pm, 0]],
+                'customer': self.partner_a,
+            }
+            for quantity in (14.9, 59.7)
+        ])
+        self.close_pos_session()
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
         self.assertEqual(report['products'][0]['products'][0]['quantity'], 74.6, "Quantity of product should be 74.6, as we want the sum of the quantity of the two orders")
 
@@ -242,152 +117,76 @@ class TestReportSession(TestPoSCommon):
             'amount': 10,
             'price_include_override': 'tax_included',
         })
-        self.product1 = self.create_product('Product A', self.categ_basic, 100, self.tax1.id)
+        self.product1 = self.create_product('Product A', self.categ_basic, 100, tax_ids=self.tax1.ids)
 
-        self.bank_pm1.outstanding_account_id = self.outstanding_bank.id
+        self.bank_pm.outstanding_account_id = self.outstanding_bank.id
         self.config.open_ui()
 
         session1_id = self.config.current_session_id.id
-        order1 = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': session1_id,
-            'partner_id': self.partner_a.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 100,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': [[6, False, [self.tax1.id]]],
-                'price_subtotal': 100,
-                'price_subtotal_incl': 100,
-            })],
-            'pricelist_id': self.config.pricelist_id.id,
-            'amount_paid': 100.0,
-            'amount_total': 100.0,
-            'amount_tax': 10.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        })
-
-        self.make_payment(order1, self.bank_pm1, 100)
+        self.create_pos_order(
+            [[self.product1]],
+            payments=[[self.bank_pm, 100]],
+            customer=self.partner_a,
+        )
 
         self.config.current_session_id.close_session_from_ui(
-            payment_method_closing={self.bank_pm1.id: 80})
+            payment_method_closing={self.bank_pm.id: 80})
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session1_id])
-        self.assertEqual(report['payments'][1]['money_difference'], -20)
+        self.assertEqual(next(payment for payment in report['payments'] if payment.get('id') == self.bank_pm.id)['money_difference'], -20)
 
-        self.bank_pm1.outstanding_account_id = False
+        self.bank_pm.outstanding_account_id = False
         self.config.open_ui()
 
         session2_id = self.config.current_session_id.id
-        order2 = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': session2_id,
-            'partner_id': self.partner_a.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 100,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': [[6, False, [self.tax1.id]]],
-                'price_subtotal': 100,
-                'price_subtotal_incl': 100,
-            })],
-            'pricelist_id': self.config.pricelist_id.id,
-            'amount_paid': 100.0,
-            'amount_total': 100.0,
-            'amount_tax': 10.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        })
-
-        self.make_payment(order2, self.bank_pm1, 100)
+        self.create_pos_order(
+            [[self.product1]],
+            payments=[[self.bank_pm, 100]],
+            customer=self.partner_a,
+        )
 
         self.config.current_session_id.close_session_from_ui(
-            payment_method_closing={self.bank_pm1.id: 80})
+            payment_method_closing={self.bank_pm.id: 80})
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session2_id])
-        self.assertEqual(report['payments'][1]['money_difference'], -20)
+        self.assertEqual(next(payment for payment in report['payments'] if payment.get('id') == self.bank_pm.id)['money_difference'], -20)
 
     def test_report_session_4(self):
         self.tax1 = self.env['account.tax'].create({
             'name': 'Tax 1',
             'amount': 10,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
 
         self.tax2 = self.env['account.tax'].create({
             'name': 'Tax 2',
             'amount': 15,
-            'price_include': True,
+            'price_include_override': 'tax_included',
         })
-        self.product1 = self.create_product('Product A', self.categ_basic, 125, self.tax1.id)
+        self.product1 = self.create_product('Product A', self.categ_basic, 125, tax_ids=(self.tax1 | self.tax2).ids)
 
-        self.config.open_ui()
-        session_id = self.config.current_session_id.id
-        order_info = {
-            'company_id': self.env.company.id,
-            'session_id': session_id,
-            'partner_id': self.partner_a.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 125,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': [[6, False, [self.tax1.id, self.tax2.id]]],
-                'price_subtotal': 100,
-                'price_subtotal_incl': 125,
-            })],
-            'pricelist_id': self.config.pricelist_id.id,
-            'amount_paid': 125.0,
-            'amount_total': 156.25,
-            'amount_tax': 25.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        }
-        order = self.env['pos.order'].create(order_info)
-        self.make_payment(order, self.bank_pm1, 156.25)
-        self.config.current_session_id.close_session_from_ui()
+        self.open_new_session()
+        self.create_pos_order(
+            [[self.product1]],
+            payments=[[self.bank_pm, 125]],
+            customer=self.partner_a,
+        )
+        self.close_pos_session()
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
         self.assertEqual(report["taxes_info"]["base_amount"], 100, "Base amount should be equal to 100")
 
     def test_report_session_category_qty_round(self):
         self.config.open_ui()
-        session_id_1 = self.config.current_session_id.id
         quantities = [12.45, 88.21, 45.09, 7.33, 56.12, 92.84, 31.56, 19.47, 64.91, 5.02, 77.38, 41.65, 23.19, 99.72, 10.88]
         products = [self.create_product(f'Product {i}', self.categ_basic, 100) for i in range(len(quantities))]
         total = sum(quantities)
-        order_info = [{
-            'company_id': self.env.company.id,
-            'session_id': session_id_1,
-            'partner_id': self.partner_a.id,
-            'lines': [(0, 0, {
-                'name': f"OL/{str(i).zfill(4)}",
-                'product_id': product.id,
-                'price_unit': 1,
-                'discount': 0,
-                'qty': qty,
-                'tax_ids': [],
-                'price_subtotal': qty,
-                'price_subtotal_incl': qty,
-                }) for i, (product, qty) in enumerate(zip(products, quantities), 1)],
-            'pricelist_id': self.config.pricelist_id.id,
-            'amount_paid': total,
-            'amount_total': total,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        } for _ in range(5)]
-
-        for order_data in order_info:
-            order = self.env['pos.order'].create(order_data)
-            self.make_payment(order, self.bank_pm1, order.amount_total)
-
-        session = self.config.current_session_id
-        session.close_session_from_ui()
-        self.assertEqual(session.state, 'closed', "Session should be closed")
+        self.create_orders([
+            {
+                'lines': [[product, quantity, 0, {'price_unit': 1}] for product, quantity in zip(products, quantities)],
+                'payments': [[self.bank_pm, total]],
+                'customer': self.partner_a,
+            }
+            for _ in range(5)
+        ])
+        self.close_pos_session()
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
         self.assertAlmostEqual(report['products'][0]['qty'], 675.82 * 5)  # The test create 5 orders
         self.assertAlmostEqual(report['products'][0]['total'], 675.82 * 5)  # The test create 5 orders
@@ -410,34 +209,16 @@ class TestReportSession(TestPoSCommon):
             'fiscal_position_ids': [Command.link(fiscal_position.id)],
             'original_tax_ids': [Command.link(self.tax1.id)],
         })
-        self.product1 = self.create_product('Vanela Gathiya', self.categ_basic, 100, self.tax1.id)
+        self.product1 = self.create_product('Vanela Gathiya', self.categ_basic, 100, tax_ids=self.tax1.ids)
         self.config.open_ui()
-        session_id = self.config.current_session_id
-        order_info = {
-            'company_id': self.env.company.id,
-            'session_id': session_id.id,
-            'fiscal_position_id': fiscal_position.id,
-            'partner_id': self.partner_a.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 100,
-                'discount': 10,
-                'qty': 1,
-                'tax_ids': [[6, False, [self.tax1.id]]],
-                'price_subtotal': 90,
-                'price_subtotal_incl': 108,
-            })],
-            'amount_paid': 108.0,
-            'amount_total': 108.0,
-            'amount_tax': 18.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        }
-        order = self.env['pos.order'].create(order_info)
-        self.assertEqual(order.lines[0].tax_ids_after_fiscal_position.id, self.tax2.id)
-        self.make_payment(order, self.bank_pm1, 108.0)
-        session_id.close_session_from_ui()
+        order = self.create_pos_order(
+            [[self.product1, 1, 10]],
+            payments=[[self.bank_pm, 108]],
+            customer=self.partner_a,
+            fiscal_position_id=fiscal_position.id,
+        )
+        self.assertEqual(order.lines.tax_ids_after_fiscal_position, self.tax2)
+        self.close_pos_session()
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
         self.assertEqual(report["discount_amount"], 12.0, "Discount amount should be equal to 12.0")
         self.assertEqual(report["taxes_info"]["base_amount"], 90.0, "Base amount should be equal to 90.0")
@@ -446,40 +227,19 @@ class TestReportSession(TestPoSCommon):
         """A refunded discount must be subtracted, not added, in the report."""
         product = self.create_product('Discounted Book', self.categ_basic, 100)
         self.config.open_ui()
-        session = self.config.current_session_id
 
         # Sell 2 units at 10% discount: subtotal 200 -> 180, discount 20.
-        order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': session.id,
-            'partner_id': self.partner_a.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': product.id,
-                'price_unit': 100,
-                'discount': 10,
-                'qty': 2,
-                'tax_ids': [],
-                'price_subtotal': 180,
-                'price_subtotal_incl': 180,
-            })],
-            'amount_paid': 180.0,
-            'amount_total': 180.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        })
-        self.make_payment(order, self.bank_pm1, 180.0)
-
-        # Fully refund the order: refund line has negative qty, positive subtotal.
-        order.refund()
-        refund = session.order_ids.filtered(lambda o: o.state == 'draft')
+        order = self.create_pos_order(
+            [[product, 2, 10]],
+            payments=[[self.bank_pm, 180]],
+            customer=self.partner_a,
+        )
+        refund = self.refund_pos_order(order, self.bank_pm, -180)
         self.assertEqual(refund.lines[0].discount, 10)
         self.assertEqual(refund.lines[0].qty, -2)
         self.assertEqual(refund.lines[0].price_subtotal_incl, 180)
-        self.make_payment(refund, self.bank_pm1, -180.0)
 
-        session.close_session_from_ui()
+        self.close_pos_session()
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
 
         # Sale discount is 200 - 180 = 20; the refund must cancel it out.
@@ -495,40 +255,14 @@ class TestReportSession(TestPoSCommon):
         report.
         """
         product = self.create_product('Test Product', self.categ_basic, 100)
-        order_vals = {
-            'company_id': self.env.company.id,
-            'pricelist_id': self.config.pricelist_id.id,
-            'partner_id': self.partner_a.id,
-            'lines': [(0, 0, {
-                'name': 'OL/0001',
-                'product_id': product.id,
-                'price_unit': 100,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': [],
-                'price_subtotal': 100,
-                'price_subtotal_incl': 100,
-            })],
-            'amount_paid': 100.0,
-            'amount_total': 100.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        }
-
         # Session 1: open, create an order, close.
-        self.config.open_ui()
-        session1 = self.config.current_session_id
-        order1 = self.env['pos.order'].create({**order_vals, 'session_id': session1.id})
-        self.make_payment(order1, self.bank_pm1, 100)
-        session1.close_session_from_ui()
+        self.open_new_session()
+        self.create_pos_order([[product]], payments=[[self.bank_pm, 100]], customer=self.partner_a)
+        self.close_pos_session()
 
         # Session 2: open, create an order, intentionally leave open.
-        self.config.open_ui()
-        session2 = self.config.current_session_id
-        session2.set_opening_control(0, None)
-        order2 = self.env['pos.order'].create({**order_vals, 'session_id': session2.id})
-        self.make_payment(order2, self.bank_pm1, 100)
+        session2 = self.open_new_session()
+        order2 = self.create_pos_order([[product]], payments=[[self.bank_pm, 100]], customer=self.partner_a)
 
         # Run the report via date range (config_ids only, no session_ids).
         # Both sessions' orders fall in the default date range (today).
@@ -543,7 +277,7 @@ class TestReportSession(TestPoSCommon):
         self.assertEqual(report['nbr_orders'], 2,
             "Both sessions' orders should be included in the report body")
 
-        session2.close_session_from_ui()
+        self.close_pos_session()
         report2 = self.env['report.point_of_sale.report_saledetails'].get_sale_details(
             config_ids=self.config.ids,
         )
@@ -581,29 +315,8 @@ class TestReportSession(TestPoSCommon):
 
         self.config.open_ui()
 
-        order = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': self.config.current_session_id.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': product.id,
-                'price_unit': 10.42,
-                'qty': 1,
-                'tax_ids': [],
-                'price_subtotal': 10.42,
-                'price_subtotal_incl': 10.42,
-            })],
-            'pricelist_id': self.config.pricelist_id.id,
-            'amount_paid': 10.40,
-            'amount_total': 10.42,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-            'to_invoice': False,
-        })
-
-        self.make_payment(order, self.cash_pm1, 10.40)
-        session = self.config.current_session_id
-        session.close_session_from_ui()
+        self.create_pos_order([[product]], payments=[[self.cash_pm, 10.40]])
+        session = self.close_pos_session()
 
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session.id])
         self.assertAlmostEqual(
@@ -618,25 +331,8 @@ class TestReportSession(TestPoSCommon):
         product1.write({'pos_categ_ids': [odoo.Command.set(self.categ_all.ids)]})
 
         self.open_new_session()
-        session = self.pos_session
-        self.env['pos.order'].create({
-            'session_id': session.id,
-            'lines': [
-                (0, 0, {
-                    'name': "OL/0001",
-                    'product_id': product1.id,
-                    'price_unit': 150,
-                    'discount': 0,
-                    'qty': 1.0,
-                    'price_subtotal': 150,
-                    'price_subtotal_incl': 150,
-                })
-            ],
-            'amount_total': 150.0,
-            'amount_tax': 0.0,
-            'amount_paid': 0.0,
-            'amount_return': 0.0,
-        })
+        self.create_pos_order([[product1]], payments=[], state='draft')
+
         # PoS Orders have negative IDs to avoid conflict, so reports[0] will correspond to the newest order
         reports = self.env['report.pos.order'].sudo().search([('product_id', '=', product1.id)], order='id')
 
@@ -647,27 +343,11 @@ class TestReportSession(TestPoSCommon):
     def test_report_pos_order_1(self):
         """Test the margin and price_total of a PoS Order with taxes."""
 
-        product1 = self.create_product('Product 1', self.categ_basic, 150, self.taxes['tax10'].id)
+        product1 = self.create_product('Product 1', self.categ_basic, 150, tax_ids=self.taxes['tax10'].ids)
 
         self.open_new_session()
-        session = self.pos_session
 
-        self.env['pos.order'].create({
-            'session_id': session.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': product1.id,
-                'price_unit': 150,
-                'discount': 0,
-                'qty': 1.0,
-                'price_subtotal': 150,
-                'price_subtotal_incl': 165,
-            })],
-            'amount_total': 165.0,
-            'amount_tax': 15.0,
-            'amount_paid': 0.0,
-            'amount_return': 0.0,
-        })
+        self.create_pos_order([[product1]], payments=[], state='draft')
 
         # PoS Orders have negative IDs to avoid conflict, so reports[0] will correspond to the newest order
         reports = self.env['report.pos.order'].sudo().search([('product_id', '=', product1.id)], order='id')
@@ -681,26 +361,8 @@ class TestReportSession(TestPoSCommon):
         product1 = self.create_product('Product 1', self.categ_basic, 150)
 
         self.open_new_session()
-        session = self.pos_session
 
-        self.env['pos.order'].create({
-            'session_id': session.id,
-            'lines': [
-                (0, 0, {
-                    'name': "OL/0001",
-                    'product_id': product1.id,
-                    'price_unit': 150,
-                    'discount': 10,
-                    'qty': 1.0,
-                    'price_subtotal': 135,
-                    'price_subtotal_incl': 135,
-                })
-            ],
-            'amount_total': 135.0,
-            'amount_tax': 0.0,
-            'amount_paid': 0.0,
-            'amount_return': 0.0,
-        })
+        self.create_pos_order([[product1, 1, 10]], payments=[], state='draft')
 
         # PoS Orders have negative IDs to avoid conflict, so reports[0] will correspond to the newest order
         reports = self.env['report.pos.order'].sudo().search([('product_id', '=', product1.id)], order='id')
@@ -713,27 +375,8 @@ class TestReportSession(TestPoSCommon):
 
         product1 = self.create_product('Product 1', self.categ_basic, 150)
         self.open_new_session()
-        session = self.pos_session
 
-        self.env['pos.order'].create({
-         'session_id': session.id,
-            'lines': [
-                (0, 0, {
-                    'name': "OL/0001",
-                    'product_id': product1.id,
-                    'price_unit': 300,
-                    'discount': 0,
-                    'qty': 1.0,
-                    'price_subtotal': 300,
-                    'price_subtotal_incl': 300,
-                })
-            ],
-            'amount_total': 300.0,
-            'amount_tax': 0.0,
-            'amount_paid': 300.0,
-            'amount_return': 0.0,
-            'currency_rate': 2
-        })
+        self.create_pos_order([[product1, 1, 0, {'price_unit': 300}]], payments=[], state='draft', currency_rate=2)
 
         reports = self.env['report.pos.order'].sudo().search([('product_id', '=', product1.id)], order='id')
 
