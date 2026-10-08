@@ -1,10 +1,38 @@
 import { useState } from "@web/owl2/utils";
 import { Dialog } from "@web/core/dialog/dialog";
+<<<<<<< ceeca13233232630c1e85a40ea57cab8308be2c4:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js
 import { Component, onMounted } from "@odoo/owl";
+||||||| ebdae3c57f17e0dd4093fb9f64433614aa7b590f:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.js
+import { Component, onMounted, useState } from "@odoo/owl";
+=======
+import { Component, onMounted, useComponent, useState, status } from "@odoo/owl";
+>>>>>>> efc5cda77179d6a1442c48300e0fd40bec3f6643:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.js
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+
+function useDelayedFocus(inputRef) {
+    const component = useComponent();
+    onMounted(async () => {
+        const input = inputRef.el;
+        const dialogContent = input.closest(".modal-content");
+        // The click toggles the dropdown: don't open it automatically if the
+        // user already interacted with the input during the animation.
+        let interacted = false;
+        const onInteraction = () => (interacted = true);
+        input.addEventListener("pointerdown", onInteraction);
+        input.addEventListener("keydown", onInteraction);
+        await Promise.allSettled(
+            dialogContent.getAnimations().map((animation) => animation.finished)
+        );
+        input.removeEventListener("pointerdown", onInteraction);
+        input.removeEventListener("keydown", onInteraction);
+        if (status(component) !== "destroyed" && !interacted) {
+            input.click();
+        }
+    });
+}
 
 export class SelectLotPopup extends Component {
     static template = "pos_stock.SelectLotPopup";
@@ -36,9 +64,7 @@ export class SelectLotPopup extends Component {
         useAutoFocusToLast();
         this.notification = useService("notification");
         this.inputRef = useChildRef();
-        onMounted(() => {
-            this.inputRef.el.click();
-        });
+        useDelayedFocus(this.inputRef);
     }
     _nextId() {
         return this._id++;
