@@ -10,15 +10,15 @@ import { services } from "@web/core/services";
  * couldn't be established after a reconnect attempt.
  */
 export class BusMonitoringPlugin extends Plugin {
-    busService = usePlugin(BusPlugin);
+    #busService = usePlugin(BusPlugin);
     isConnectionLost = signal(false);
-    isReconnecting = signal(false);
+    #isReconnecting = signal(false);
 
     setup() {
-        useListener(this.busService, "BUS:WORKER_STATE_UPDATED", ({ detail }) =>
-            this.workerStateOnChange(detail)
+        useListener(this.#busService, "BUS:WORKER_STATE_UPDATED", ({ detail }) =>
+            this.#workerStateOnChange(detail)
         );
-        useListener(browser, "offline", () => this.isReconnecting.set(false));
+        useListener(browser, "offline", () => this.#isReconnecting.set(false));
     }
 
     /**
@@ -26,21 +26,21 @@ export class BusMonitoringPlugin extends Plugin {
      *
      * @param {WORKER_STATE[keyof WORKER_STATE]} state
      */
-    workerStateOnChange(state) {
+    #workerStateOnChange(state) {
         switch (state) {
             case WORKER_STATE.CONNECTING: {
-                this.isReconnecting.set(true);
+                this.#isReconnecting.set(true);
                 break;
             }
             case WORKER_STATE.CONNECTED: {
-                this.isReconnecting.set(false);
+                this.#isReconnecting.set(false);
                 this.isConnectionLost.set(false);
                 break;
             }
             case WORKER_STATE.DISCONNECTED: {
-                if (this.isReconnecting()) {
+                if (this.#isReconnecting()) {
                     this.isConnectionLost.set(true);
-                    this.isReconnecting.set(false);
+                    this.#isReconnecting.set(false);
                 }
                 break;
             }

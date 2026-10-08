@@ -34,45 +34,39 @@ import { AUTHORIZED_KEYS, getActiveHotkey, MODIFIERS } from "./hotkey_utils";
  */
 
 export class HotkeyPlugin extends Plugin {
-    /** @private */
-    ui = usePlugin(UIPlugin);
-    /** @private @type {Map<number, HotkeyRegistration>} */
-    registrations = new Map();
-    /** @private */
-    nextToken = 0;
-    /** @private */
-    overlaysVisible = false;
+    #ui = usePlugin(UIPlugin);
+    /** @type {Map<number, HotkeyRegistration>} */
+    #registrations = new Map();
+    #nextToken = 0;
+    #overlaysVisible = false;
     // Be aware that all odoo hotkeys are designed with this modifier in mind, so
     // changing the overlay modifier may conflict with some shortcuts.
     overlayModifier = "alt";
-    /** @private @type {[EventTarget, string, Function][]} */
-    listeners = [];
+    /** @type {[EventTarget, string, Function][]} */
+    #listeners = [];
 
     setup() {
-        this.addListeners(browser);
-        onWillDestroy(() => this.removeListeners());
+        this.#addListeners(browser);
+        onWillDestroy(() => this.#removeListeners());
     }
 
-    /** @private */
-    addListeners(target) {
-        this.addListener(target, "keydown", this.onKeydown);
-        this.addListener(target, "keyup", this.removeHotkeyOverlays);
-        this.addListener(target, "blur", this.removeHotkeyOverlays);
-        this.addListener(target, "click", this.removeHotkeyOverlays);
+    #addListeners(target) {
+        this.#addListener(target, "keydown", this.#onKeydown);
+        this.#addListener(target, "keyup", this.#removeHotkeyOverlays);
+        this.#addListener(target, "blur", this.#removeHotkeyOverlays);
+        this.#addListener(target, "click", this.#removeHotkeyOverlays);
     }
 
-    /** @private */
-    addListener(target, type, listener) {
+    #addListener(target, type, listener) {
         target.addEventListener(type, listener);
-        this.listeners.push([target, type, listener]);
+        this.#listeners.push([target, type, listener]);
     }
 
-    /** @private */
-    removeListeners() {
-        for (const [target, type, listener] of this.listeners) {
+    #removeListeners() {
+        for (const [target, type, listener] of this.#listeners) {
             target.removeEventListener(type, listener);
         }
-        this.listeners = [];
+        this.#listeners = [];
     }
 
     /**
@@ -83,9 +77,8 @@ export class HotkeyPlugin extends Plugin {
      * - the pressed key is not whitelisted
      *
      * @param {KeyboardEvent} event
-     * @private
      */
-    onKeydown = (event) => {
+    #onKeydown = (event) => {
         if (event.code && event.code.indexOf("Numpad") === 0 && /^\d$/.test(event.key)) {
             // Ignore all number keys from the Keypad because of a certain input method
             // of (advance-)ASCII characters on Windows OS: ALT+[numerical code from keypad]
@@ -97,8 +90,8 @@ export class HotkeyPlugin extends Plugin {
         if (!hotkey) {
             return;
         }
-        const activeElement = this.ui.activeElement();
-        const isBlocked = this.ui.isBlocked();
+        const activeElement = this.#ui.activeElement();
+        const isBlocked = this.#ui.isBlocked();
 
         // Do not dispatch if UI is blocked
         if (isBlocked) {
@@ -117,8 +110,8 @@ export class HotkeyPlugin extends Plugin {
         }
 
         // Special case: open hotkey overlays
-        if (!this.overlaysVisible && hotkey === this.overlayModifier) {
-            if (this.addHotkeyOverlays(activeElement)) {
+        if (!this.#overlaysVisible && hotkey === this.overlayModifier) {
+            if (this.#addHotkeyOverlays(activeElement)) {
                 event.preventDefault();
             }
             return;
@@ -147,7 +140,7 @@ export class HotkeyPlugin extends Plugin {
             target: event.target,
             shouldProtectEditable,
         };
-        const dispatched = this.dispatch(infos);
+        const dispatched = this.#dispatch(infos);
         if (dispatched) {
             // Only if event has been handled.
             // Purpose: prevent browser defaults
@@ -157,8 +150,8 @@ export class HotkeyPlugin extends Plugin {
         }
 
         // Finally, always remove overlays at that point
-        if (this.overlaysVisible) {
-            this.removeHotkeyOverlays();
+        if (this.#overlaysVisible) {
+            this.#removeHotkeyOverlays();
             event.preventDefault();
         }
     };
@@ -178,14 +171,13 @@ export class HotkeyPlugin extends Plugin {
      *  shouldProtectEditable: boolean,
      * }} infos
      * @returns {boolean} true if has been dispatched
-     * @private
      */
-    dispatch(infos) {
+    #dispatch(infos) {
         const { activeElement, hotkey, isRepeated, target, shouldProtectEditable } = infos;
 
         // Prepare registrations and the common filter
-        const reversedRegistrations = Array.from(this.registrations.values()).reverse();
-        const domRegistrations = this.getDomRegistrations(hotkey, activeElement);
+        const reversedRegistrations = Array.from(this.#registrations.values()).reverse();
+        const domRegistrations = this.#getDomRegistrations(hotkey, activeElement);
         const allRegistrations = reversedRegistrations.concat(domRegistrations);
 
         // Find all candidates
@@ -227,9 +219,8 @@ export class HotkeyPlugin extends Plugin {
      * @param {string} hotkey
      * @param {HTMLElement} activeElement
      * @returns {HotkeyRegistration[]}
-     * @private
      */
-    getDomRegistrations(hotkey, activeElement) {
+    #getDomRegistrations(hotkey, activeElement) {
         const overlayModParts = this.overlayModifier.split("+");
         if (!overlayModParts.every((el) => hotkey.includes(el))) {
             return [];
@@ -260,12 +251,11 @@ export class HotkeyPlugin extends Plugin {
      * Add the hotkey overlays respecting the ui active element.
      * @param {HTMLElement} activeElement
      * @returns {boolean} true if overlays were actually displayed
-     * @private
      */
-    addHotkeyOverlays(activeElement) {
+    #addHotkeyOverlays(activeElement) {
         // Gather the hotkeys to overlay registered through the useHotkey hook.
         const hotkeysFromHookToHighlight = [];
-        for (const [, registration] of this.registrations) {
+        for (const [, registration] of this.#registrations) {
             const overlayElement = registration.withOverlay?.();
             if (overlayElement) {
                 hotkeysFromHookToHighlight.push({
@@ -325,19 +315,18 @@ export class HotkeyPlugin extends Plugin {
             }
             overlayParent.appendChild(overlay);
         }
-        this.overlaysVisible = true;
+        this.#overlaysVisible = true;
         return true;
     }
 
     /**
      * Remove all the hotkey overlays.
-     * @private
      */
-    removeHotkeyOverlays = () => {
+    #removeHotkeyOverlays = () => {
         for (const overlay of document.querySelectorAll(".o_web_hotkey_overlay")) {
             overlay.remove();
         }
-        this.overlaysVisible = false;
+        this.#overlaysVisible = false;
     };
 
     /**
@@ -347,9 +336,8 @@ export class HotkeyPlugin extends Plugin {
      * @param {HotkeyCallback} callback
      * @param {HotkeyOptions} [options]
      * @returns {number} registration token
-     * @private
      */
-    registerHotkey(hotkey, callback, options = {}) {
+    #registerHotkey(hotkey, callback, options = {}) {
         // Validate some informations
         if (!hotkey || hotkey.length === 0) {
             throw new Error("You must specify an hotkey when registering a registration.");
@@ -384,7 +372,7 @@ export class HotkeyPlugin extends Plugin {
         }
 
         // Add registration
-        const token = this.nextToken++;
+        const token = this.#nextToken++;
         /** @type {HotkeyRegistration} */
         const registration = {
             hotkey: hotkey.toLowerCase(),
@@ -401,10 +389,10 @@ export class HotkeyPlugin extends Plugin {
         // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
         // we need to wait the next micro task tick to set the context owner of the registration.
         Promise.resolve().then(() => {
-            registration.activeElement = this.ui.activeElement();
+            registration.activeElement = this.#ui.activeElement();
         });
 
-        this.registrations.set(token, registration);
+        this.#registrations.set(token, registration);
         return token;
     }
 
@@ -412,10 +400,9 @@ export class HotkeyPlugin extends Plugin {
      * Unsubscribes the token corresponding registration.
      *
      * @param {number} token
-     * @private
      */
-    unregisterHotkey(token) {
-        this.registrations.delete(token);
+    #unregisterHotkey(token) {
+        this.#registrations.delete(token);
     }
 
     /**
@@ -425,9 +412,9 @@ export class HotkeyPlugin extends Plugin {
      * @returns {() => void}
      */
     add(hotkey, callback, options = {}) {
-        const token = this.registerHotkey(hotkey, callback, options);
+        const token = this.#registerHotkey(hotkey, callback, options);
         return () => {
-            this.unregisterHotkey(token);
+            this.#unregisterHotkey(token);
         };
     }
 
@@ -435,14 +422,14 @@ export class HotkeyPlugin extends Plugin {
      * @param {HTMLIFrameElement} iframe
      */
     registerIframe(iframe) {
-        this.addListeners(iframe.contentWindow);
+        this.#addListeners(iframe.contentWindow);
     }
 
     /**
      * @param {Window} window
      */
     registerWindow(window) {
-        this.addListeners(window);
+        this.#addListeners(window);
     }
 }
 

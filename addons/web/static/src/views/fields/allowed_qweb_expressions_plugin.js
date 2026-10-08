@@ -4,20 +4,18 @@ import { services } from "@web/core/services";
 import { ORM } from "@web/core/orm_plugin";
 
 export class AllowedQwebExpressionsPlugin extends Plugin {
-    /** @private */
-    orm = usePlugin(ORM);
-    /** @private */
-    cache = new Map();
+    #orm = usePlugin(ORM);
+    #cache = new Map();
 
     getAllowedQwebExpressions(resModel) {
-        if (this.cache.has(resModel)) {
-            return this.cache.get(resModel);
+        if (this.#cache.has(resModel)) {
+            return this.#cache.get(resModel);
         }
-        const prom = this.orm.call(resModel, "mail_allowed_qweb_expressions").catch((e) => {
-            this.cache.delete(resModel);
+        const prom = this.#orm.call(resModel, "mail_allowed_qweb_expressions").catch((e) => {
+            this.#cache.delete(resModel);
             return Promise.reject(e);
         });
-        this.cache.set(resModel, prom);
+        this.#cache.set(resModel, prom);
         return prom;
     }
 }
