@@ -4,6 +4,7 @@ from odoo import Command
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_bis3 import CHORUS_PRO_PEPPOL_ID
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common
 from odoo.addons.l10n_fr_facturx_chorus_pro.tests.common import TestUblCiiFRCommonChorusPro
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
@@ -42,6 +43,14 @@ class TestUblExportBis3FRChorusPro(TestUblBis3Common, TestUblCiiFRCommonChorusPr
             partner=self.partner_fr_chorus_pro,
             test_file='test_invoice_customer_party_identifiers_partner_chorus_pro',
         )
+
+    def test_invoice_incomplete_siret_error(self):
+        self.partner_fr_chorus_pro.siret = '123456789'  # incomplete siret (siren)
+        with self.assertRaisesRegex(UserError, "The siret of the final recipient is mandatory for the customer when invoicing through Chorus Pro."):
+            self._assert_invoice_partner_party_identifiers(
+            partner=self.partner_fr_chorus_pro,
+            test_file="",
+            )
 
     def test_export_invoice_chorus_pro_overseas_drom(self):
         """ A public customer located in a DROM, its SIRET must
