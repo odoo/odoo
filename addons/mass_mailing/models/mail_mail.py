@@ -18,6 +18,9 @@ class MailMail(models.Model):
         token = self._generate_mail_recipient_token(self.id)
         # Build the tracking URL on the recipient's website, like the rendered body (multi-website setups).
         record = self.env[self.model].browse(self.res_id) if (self.mailing_id and self.model and self.res_id) else self
+        disable_link_tracking = self.env['ir.config_parameter'].sudo().get_param('link_tracker.disable_link_tracking', 'False').upper()
+        if disable_link_tracking in ['TRUE', 'YES', '1'] or record._mail_get_partners()[record.id].country_code in disable_link_tracking:
+            return ''
         return werkzeug.urls.url_join(
             record.get_base_url(),
             f'mail/track/{self.id}/{token}/blank.gif'
@@ -48,11 +51,12 @@ class MailMail(models.Model):
 
             # generate tracking URL
             tracking_url = self._get_tracking_url()
-            body = tools.mail.append_content_to_html(
-                body,
-                f'<img src="{tracking_url}"/>',
-                plaintext=False,
-            )
+            if tracking_url:
+                body = tools.mail.append_content_to_html(
+                    body,
+                    f'<img src="{tracking_url}"/>',
+                    plaintext=False,
+                )
         return body
 
     def _prepare_outgoing_list(self, mail_server=False, recipients_follower_status=None):
