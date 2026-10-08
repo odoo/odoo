@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
 import { Interaction } from "@web/public/interaction";
 
 export class Whatsapp extends Interaction {
@@ -81,7 +80,7 @@ export class Whatsapp extends Interaction {
         const whatsappUrl = `https://wa.me/${this.companyNumber}?text=${encodeURIComponent(
             messageText
         )}`;
-        browser.open(whatsappUrl, "_blank");
+        window.open(whatsappUrl, "_blank");
     }
 
     onKeydownMessage(ev) {

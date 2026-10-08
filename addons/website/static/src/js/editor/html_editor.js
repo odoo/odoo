@@ -4,7 +4,7 @@ import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomp
 import { useProps, signal, t, onMounted } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import wUtils from "@website/js/utils";
-import { location, browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
 /**
@@ -116,7 +116,7 @@ patch(LinkPopover.prototype, {
             ) {
                 ev.preventDefault();
                 currentUrl.pathname = `/@${currentUrl.pathname}`;
-                browser.open(currentUrl);
+                window.open(currentUrl);
             }
         }
     },

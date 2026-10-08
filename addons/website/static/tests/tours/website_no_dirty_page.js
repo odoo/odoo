@@ -1,4 +1,3 @@
-import { browser } from "@web/core/browser/browser";
 import {
     clickOnEditAndWaitEditMode,
     clickOnSave,
@@ -39,7 +38,7 @@ const makeSteps = (steps = []) => [
         async run(actions) {
             actions.click();
             await new Promise((resolve) => {
-                browser.setTimeout(() => {
+                setTimeout(() => {
                     document.body.classList.add("o_test_delay");
                     resolve();
                 }, 999);

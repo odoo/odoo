@@ -1,6 +1,5 @@
 import { usePlugin } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
-import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -291,7 +290,7 @@ export class CarouselSlider extends Interaction {
      * value otherwise
      */
     handleBsRide() {
-        if (browser.matchMedia(`(prefers-reduced-motion: reduce)`).matches) {
+        if (matchMedia(`(prefers-reduced-motion: reduce)`).matches) {
             // Only recreate the Bootstrap carousel the 1st time.
             if (this.el.dataset.bsRide !== "false") {
                 this.bootstrap.disposeBootstrapInstance(window.Carousel.getInstance(this.el), {

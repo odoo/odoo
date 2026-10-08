@@ -1,5 +1,4 @@
 import { onMounted, onPatched } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { localization } from "@web/core/l10n/localization";
 
@@ -95,7 +94,7 @@ function handleMatrixKeyNavigation(ev, { matrix, activeMatrixEl, focusableChildS
         if (focusableChildSelector) {
             nextActiveMatrixEl = nextActiveMatrixEl.querySelector(focusableChildSelector);
         }
-        const reducedMotion = browser.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
         nextActiveMatrixEl.scrollIntoView({
             block: "nearest",
             behavior: reducedMotion ? "instant" : "smooth",

@@ -20,7 +20,7 @@ import {
     waitForNone,
 } from "@odoo/hoot";
 import { contains, onRpc, serverState } from "@web/../tests/web_test_helpers";
-import { browser, location } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
@@ -185,7 +185,7 @@ test("LinkPopover opens in full composer", async () => {
 });
 
 test("link redirection should be prefixed for url of website pages only", async () => {
-    patch(browser, {
+    patch(window, {
         open(url) {
             expect.step("website page url prefixed");
             expect(url.pathname.startsWith("/@")).toBe(true);
@@ -226,7 +226,7 @@ test("link redirection should be prefixed for url of website pages only", async 
 });
 
 test("link redirection should not be prefixed when the current page is not a website page", async () => {
-    patch(browser, {
+    patch(window, {
         open(url) {
             expect.step("website page url prefixed");
             expect(url.pathname.startsWith("/@")).toBe(true);

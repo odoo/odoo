@@ -2,14 +2,13 @@ import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { setupInteractionWhiteList } from "@web/../tests/public/helpers";
 import { contains } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 import { startInteractionsWithSnippet } from "../helpers";
 
 setupInteractionWhiteList("website.whatsapp");
 
 test("Drop Whatsapp snippet and verify redirection to company number", async () => {
-    patch(browser, {
+    patch(window, {
         open: (url) => {
             expect.step(`open ${url}`);
         },

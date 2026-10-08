@@ -16,7 +16,7 @@ import {
     t,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
-import { location, browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
@@ -732,12 +732,12 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     get aceEditorWidth() {
-        const storedWidth = browser.localStorage.getItem("ace_editor_width");
+        const storedWidth = localStorage.getItem("ace_editor_width");
         return storedWidth ? parseInt(storedWidth) : 720;
     }
 
     onResourceEditorResize(width) {
-        browser.localStorage.setItem("ace_editor_width", width);
+        localStorage.setItem("ace_editor_width", width);
     }
 
     get translation() {

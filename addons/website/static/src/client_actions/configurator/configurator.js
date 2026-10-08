@@ -1,6 +1,5 @@
 import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { location, browser } from "@web/core/browser/browser";
-const sessionStorage = browser.sessionStorage;
+import { location } from "@web/core/browser/browser";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { delay } from "@web/core/utils/concurrency";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";

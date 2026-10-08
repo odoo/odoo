@@ -1,5 +1,4 @@
 import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -81,7 +80,7 @@ export class WebsiteSwitcherSystrayItem extends Component {
                                 ],
                             }
                         );
-                        browser.setTimeout(closeFn, 7000);
+                        setTimeout(closeFn, 7000);
                     }
                 }
             },
