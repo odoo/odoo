@@ -108,10 +108,17 @@ class MailTrackingValue(models.Model):
                 'new_value_integer': new_value
             })
         elif col_info['type'] == 'selection':
-            values.update({
-                'old_value_char': initial_value and dict(col_info['selection']).get(initial_value, initial_value) or '',
-                'new_value_char': new_value and dict(col_info['selection'])[new_value] or ''
-            })
+            if field.ttype == 'selection':
+                values.update({
+                    'old_value_char': initial_value or '',
+                    'new_value_char': new_value or ''
+                })
+            else:
+                values.update({
+                    'old_value_char': initial_value and dict(col_info['selection']).get(initial_value, initial_value) or '',
+                    'new_value_char': new_value and dict(col_info['selection'])[new_value] or ''
+                })
+
         elif col_info['type'] == 'many2one':
             # Can be:
             # - False value
@@ -313,6 +320,14 @@ class MailTrackingValue(models.Model):
                     result.append(f'{value}Z')
             elif field_type == 'boolean':
                 result.append(bool(value))
+            elif field_type == 'selection':
+                field = record.field_id
+                if value and field and field.ttype == 'selection':
+                    selection = dict(self.env[field.model].fields_get(
+                        [field.name], attributes={'selection'}
+                    ).get(field.name, {}).get('selection', []))
+                    value = selection.get(value, value)
+                result.append(value)
             else:
                 result.append(value)
         return result
