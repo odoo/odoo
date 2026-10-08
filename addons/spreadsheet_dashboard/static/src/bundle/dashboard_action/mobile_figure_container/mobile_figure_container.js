@@ -10,11 +10,12 @@ import {
 } from "@odoo/owl";
 import { render, useSubEnv } from "@web/owl2/utils";
 
-const { registries, stores, constants, helpers, owlPlugins } = spreadsheet;
+const { registries, stores, constants, helpers, owlPlugins, hooks } = spreadsheet;
 const { figureRegistry } = registries;
-const { ModelPlugin, PopoverContainerPlugin } = owlPlugins;
+const { ModelPlugin, PopoverContainerPlugin, IsSmallPlugin } = owlPlugins;
 const { ModelStore, useStoreProvider } = stores;
 const { isMobileOS } = helpers;
+const { provideSpreadsheetRect } = hooks;
 
 const EMPTY_FIGURE = { tag: "empty" };
 const { DARK_MODE_FILTER_STRING } = constants;
@@ -29,9 +30,10 @@ export class MobileFigureContainer extends Component {
     containerWidth = signal(0);
 
     setup() {
+        provideSpreadsheetRect(this.figureContainer);
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.spreadsheetModel);
-        providePlugins([ModelPlugin], { model: this.props.spreadsheetModel });
+        providePlugins([ModelPlugin, IsSmallPlugin], { model: this.props.spreadsheetModel });
         providePlugins([PopoverContainerPlugin], {
             getPopoverContainerRect: () => this.getGridRect(),
         });
@@ -49,7 +51,6 @@ export class MobileFigureContainer extends Component {
         });
 
         useSubEnv({
-            model: this.props.spreadsheetModel,
             isDashboard: () => this.props.spreadsheetModel.getters.isDashboard(),
             openSidePanel: () => {},
             isMobile: isMobileOS,
