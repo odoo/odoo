@@ -15,6 +15,7 @@ from odoo.tools.sql import column_exists, create_column
 from stdnum.it import codicefiscale, iva
 
 from odoo import _, api, Command, fields, models, modules
+from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.models.account_payment_method_line import L10N_IT_PAYMENT_METHOD_SELECTION
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
@@ -1803,12 +1804,27 @@ class AccountMove(models.Model):
             payments_info = self._l10n_it_edi_get_payment_info(tree)
             if payments_info['info']:
                 message_to_log.append(_("Total amount from the XML File: %s", payments_info['amount_total']))
+                # Search / Create the bank account only on incoming docs,
+                # unless the IBAN is one of ours (e.g. RiBa, where it's the debtor's one)
+                if self.move_type not in ('out_invoice', 'in_refund'):
+                    ibans = {
+                        sanitize_account_number(iban): iban
+                        for payment_info in payments_info['info']
+                        if (iban := payment_info.get('account_number'))
+                    }
+                    existing_ibans = {
+                        bank['sanitized_account_number']
+                        for bank in self.env['res.partner.bank'].sudo().with_context(active_test=False).search_read([
+                            ('sanitized_account_number', 'in', list(ibans)),
+                            ('partner_id', 'in', self.env['res.company']._cached_data()['partner_id']),
+                        ], ['sanitized_account_number'])
+                    }
+                    for sanitized_iban, iban in ibans.items():
+                        if sanitized_iban not in existing_ibans:
+                            self.env['account.edi.common'].with_company(company)._import_partner_bank(self, [iban])
                 payment_due_dates = []
                 self.l10n_it_payment_method = False
                 for payment_info in payments_info['info']:
-                    # Search / Create the bank account only on incoming docs
-                    if self.move_type not in ('out_invoice', 'in_refund') and (iban := payment_info.get('account_number')):
-                        self.env['account.edi.common'].with_company(company)._import_partner_bank(self, [iban])
                     # Set payment data on the bill
                     self.payment_reference = self.payment_reference or payment_info.get('payment_code', False)
                     payment_due_dates.append(payment_info.get('invoice_date_due'))
