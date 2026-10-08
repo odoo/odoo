@@ -199,7 +199,7 @@
             ('include', 'point_of_sale.base_app'),
 
             'web/static/src/core/colorlist/colorlist.scss',
-            'web/static/src/webclient/webclient_layout.scss',
+            'web/static/src/webclient/webclient_layout.css',
 
             'web/static/src/webclient/icons.scss',
 
