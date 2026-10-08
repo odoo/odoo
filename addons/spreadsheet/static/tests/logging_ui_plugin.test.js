@@ -4,6 +4,7 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
 import { makeServerError } from "@web/../tests/web_test_helpers";
 import { getChartDefinition, insertChartInSpreadsheet } from "@spreadsheet/../tests/helpers/chart";
+import { createSpreadsheetWithList } from "@spreadsheet/../tests/helpers/list";
 
 defineSpreadsheetModels();
 
@@ -43,4 +44,14 @@ test("getLoadedDataSources discards datasources with an invalid model", async ()
     await waitForDataLoaded(model);
 
     expect(model.getters.getLoadedDataSources()).resolves.toHaveLength(0);
+});
+
+test("list source sent to the export log carries its column names", async () => {
+    const { model } = await createSpreadsheetWithList({
+        columns: ["foo", "bar"],
+    });
+    const listSources = model.getters.getLoadedDataSources().filter((s) => s.type === "list");
+    expect(listSources).toHaveLength(1);
+    expect(listSources[0].resModel).toBe("partner");
+    expect(listSources[0].fields).toEqual(["id", "foo", "bar"]);
 });
