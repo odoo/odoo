@@ -285,7 +285,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                             pop_server.quit()
                         except OSError:
                             _logger.warning('Failed to properly finish pop connection: %s.', server.name, exc_info=True)
-            server.write({'date': fields.Datetime.now()})
+            server.with_context(additionnal_context).write({'date': fields.Datetime.now()})
         return True
 
     def _get_connection_type(self):
