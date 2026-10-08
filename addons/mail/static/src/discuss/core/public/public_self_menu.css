@@ -1,0 +1,39 @@
+.o-mail-PublicSelfMenu-toggler {
+    --btn-active-bg: rgba(var(--emphasis-color-rgb), 0.08);
+    --btn-hover-bg: rgba(var(--emphasis-color-rgb), 0.08);
+    --btn-active-border-color: transparent;
+    --btn-focus-box-shadow: none;
+}
+
+.o-mail-PublicSelfMenu-avatar {
+    width: var(--o-mail-Avatar-size);
+    height: var(--o-mail-Avatar-size);
+}
+
+.o-mail-PublicSelfMenu-name {
+    /* The dropdown toggler doesn't wrap. */
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    /* `.o-mail-MessagingMenu-self` keeps the room of the toggler with these two lines. */
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+}
+
+.o-mail-PublicSelfMenu .dropdown-item {
+    /* Not --gradient: transparent, as the checked switch inside draws `url(knob), var(--gradient)`,
+       which becomes the invalid `url(knob), transparent` and loses its knob. */
+    background-image: none;
+}
+
+/* Center the switch on the label line, without the room for its absent label. */
+.o-mail-PublicSelfMenu-colorScheme .o-checkbox {
+    display: flex;
+    min-height: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+}
+
+.o-mail-PublicSelfMenu-colorScheme .form-check-input {
+    margin: 0;
+}
