@@ -79,7 +79,6 @@ patch(Configurator.prototype, {
      */
     async getInitialState() {
         const initState = await super.getInitialState(...arguments);
-        initState.selectedThemeName = undefined;
         initState.selectedShopPageStyleOption = undefined;
         initState.selectedProductPageStyleOption = undefined;
         return initState;
