@@ -7,7 +7,6 @@ from werkzeug import urls
 
 from odoo import api, models
 from odoo.exceptions import ValidationError
-from odoo.http import request
 from odoo.tools import float_round
 from odoo.tools.urls import urljoin
 
@@ -52,39 +51,14 @@ class PaymentTransaction(models.Model):
         :return: The redirect URL, or None if no additional action is required.
         :rtype: str | None
         """
-        if (
-            self.state not in ("draft", "pending")
-            or not self.token_id
-            # A legacy (v2) token charge has no `v3/payment_requests` counterpart to look up.
-            or not self.token_id.provider_ref.startswith(const.V3_TOKEN_ID_PREFIX)
-        ):
+        if self.state not in ("draft", "pending") or not self.token_id:
             return None
 
         # The response to the charge sent earlier in the same request is recorded but not yet
-        # processed, so neither the state nor the provider reference reflect it yet.
+        # processed, so the state doesn't reflect it yet.
         payment_request_data = self.payment_data_ids.sorted("id")[-1:].payload or {}
-        if payment_request_data.get("status", "REQUIRES_ACTION") != "REQUIRES_ACTION":
+        if payment_request_data.get("status") != "REQUIRES_ACTION":
             return None
-
-        if not payment_request_data.get("actions"):
-            payment_request_id = (
-                payment_request_data.get("payment_request_id") or self.provider_reference
-            )
-            if not payment_request_id:
-                return None
-            try:
-                payment_request_data = self._send_api_request(
-                    "GET", f"v3/payment_requests/{payment_request_id}", api_version="2024-11-11"
-                )
-            except ValidationError:
-                # The charge itself was already sent before this point; don't crash the checkout
-                # confirmation over a failure to fetch the 3DS redirect that follows it.
-                _logger.exception(
-                    "Unable to fetch the pending authentication URL for %s.", self.reference
-                )
-                return None
-            if payment_request_data.get("status") != "REQUIRES_ACTION":
-                return None
 
         for action in payment_request_data.get("actions", []):
             if action.get("type") == "REDIRECT_CUSTOMER":
@@ -104,51 +78,14 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "xendit":
             return res
 
-        payload = self._xendit_prepare_invoice_request_payload()
+        payload = self._xendit_prepare_session_request_payload()
         try:
             session_data = self._send_api_request("POST", "sessions", json=payload)
         except ValidationError as error:
             self._set_error(str(error))
             return {}
 
-        # Save the session id now rather than waiting for the webhook, so that a customer
-        # returning from checkout before the webhook arrives can still be checked against it.
-        self.provider_reference = session_data.get("payment_session_id") or session_data.get("id")
-
         return {"api_url": session_data.get("payment_link_url"), "http_method": "get"}
-
-    def _xendit_sync_from_provider(self):
-        """Fetch the current status of the transaction from Xendit and record it for processing.
-
-        Used as a fallback to the webhook when the customer returns from Xendit (either the
-        hosted checkout page, or a 3DS authentication challenge for a token payment), in case the
-        notification hasn't been received yet (e.g. delayed or dropped).
-
-        Note: self.ensure_one()
-
-        :return: Whether the status was fetched and recorded.
-        :rtype: bool
-        """
-        self.ensure_one()
-        if not self.provider_reference:
-            return False
-
-        if self.operation == "online_token":
-            endpoint = f"v3/payment_requests/{self.provider_reference}"
-            request_kwargs = {"api_version": "2024-11-11"}
-        else:
-            endpoint = f"sessions/{self.provider_reference}"
-            request_kwargs = {}
-
-        try:
-            data = self._send_api_request("GET", endpoint, **request_kwargs)
-        except ValidationError:
-            _logger.exception(
-                "Unable to fetch the status of %s upon return; relying on the webhook.", endpoint
-            )
-            return False
-        self._record(data)
-        return True
 
     def _xendit_get_return_url(self):
         """Return the URL Xendit should redirect the customer to after a payment attempt.
@@ -158,11 +95,8 @@ class PaymentTransaction(models.Model):
         """
         return urljoin(self.provider_id.get_base_url(), XenditController._return_url)
 
-    def _xendit_prepare_invoice_request_payload(self):
+    def _xendit_prepare_session_request_payload(self):
         """Create the payload for the session request based on the transaction values.
-
-        The method name is kept from the legacy (v2) invoices API for backward compatibility; the
-        payload is now built for the Payment Sessions API.
 
         :return: The request payload.
         :rtype: dict
@@ -184,7 +118,7 @@ class PaymentTransaction(models.Model):
             amount = 0
         else:
             session_type = "PAY"
-            amount = self._get_rounded_amount()
+            amount = self._xendit_get_rounded_amount()
 
         payload = {
             "reference_id": self.reference,
@@ -243,25 +177,10 @@ class PaymentTransaction(models.Model):
         if not self.token_id:
             raise ValidationError(self.env._("The transaction is not linked to a token."))
 
-        self._xendit_create_charge(self.token_id.provider_ref)
-
-    def _xendit_create_charge(self, token_ref, auth_id=None):
-        """Create a charge on Xendit with the given token.
-
-        Tokens created through the v3 Payment Tokens API are charged through the
-        `v3/payment_requests` endpoint, and tokens saved before the migration to that API through
-        the legacy (v2) `credit_card_charges` endpoint.
-
-        :param str token_ref: The reference of the Xendit token to use to make the payment.
-        :param str auth_id: Unused; kept for backward compatibility with the removed inline form.
-        :return: None
-        """
         try:
-            if token_ref.startswith(const.V3_TOKEN_ID_PREFIX):
-                payment_method_code = self.token_id.payment_method_id.code
-                self._xendit_create_token_charge(token_ref, payment_method_code)
-            else:
-                self._xendit_create_legacy_token_charge(token_ref)
+            self._xendit_create_token_charge(
+                self.token_id.provider_ref, self.token_id.payment_method_id.code
+            )
         except ValidationError as error:
             self.with_context(
                 payment_safe_write=True  # API request failed; safe to replay
@@ -280,28 +199,15 @@ class PaymentTransaction(models.Model):
             # Xendit only accepts the countries it operates in, i.e. the merchant's.
             "country": self.company_id.country_code,
             "currency": self.currency_id.name,
-            "request_amount": self._get_rounded_amount(),
+            "request_amount": self._xendit_get_rounded_amount(),
             "capture_method": "AUTOMATIC",
             "payment_token_id": token_ref,
         }
 
         if payment_method_code == "card":
             # Only used if the card unexpectedly requires a 3DS challenge; the transaction state
-            # is otherwise updated by the webhook regardless of whether this URL is ever visited.
+            # is updated by the webhook regardless of whether this URL is ever visited.
             return_url = self._xendit_get_return_url()
-            success_return_url = return_url
-            if request:
-                # Let the customer be checked against Xendit on return, as a fallback in case the
-                # webhook is delayed or dropped. Not available from a cron context (e.g. an
-                # off-session subscription renewal), which never reaches this redirect anyway
-                # since there is no cardholder to send through it.
-                access_token = payment_utils.generate_access_token(self.reference, self.amount)
-                success_url_params = urls.url_encode({
-                    "tx_ref": self.reference,
-                    "access_token": access_token,
-                    "success": "true",
-                })
-                success_return_url = f"{return_url}?{success_url_params}"
             # Offline charges (e.g. subscription renewals, backend payments by token) have no
             # cardholder present; flag them as merchant- rather than customer-initiated to reduce
             # the odds of a 3DS challenge.
@@ -311,7 +217,7 @@ class PaymentTransaction(models.Model):
                 card_on_file_type = "CUSTOMER_UNSCHEDULED"
             payload["channel_properties"] = {
                 "card_on_file_type": card_on_file_type,
-                "success_return_url": success_return_url,
+                "success_return_url": return_url,
                 "failure_return_url": return_url,
             }
 
@@ -320,25 +226,7 @@ class PaymentTransaction(models.Model):
         )
         self._record(payment_request_data)
 
-    def _xendit_create_legacy_token_charge(self, token_ref):
-        """Create a charge on Xendit using the legacy (v2) `credit_card_charges` endpoint, for
-        tokens saved before the migration to the v3 Payment Tokens API.
-
-        :param str token_ref: The Xendit v2 credit card token id.
-        :return: None
-        """
-        payload = {
-            "token_id": token_ref,
-            "external_id": self.reference,
-            "amount": self._get_rounded_amount(),
-            "currency": self.currency_id.name,
-            "is_recurring": True,  # Ensure that next payments will not require 3DS.
-        }
-
-        charge_payment_data = self._send_api_request("POST", "credit_card_charges", json=payload)
-        self._record(charge_payment_data)
-
-    def _get_rounded_amount(self):
+    def _xendit_get_rounded_amount(self):
         decimal_places = const.CURRENCY_DECIMALS.get(
             self.currency_id.name, self.currency_id.decimal_places
         )
@@ -346,14 +234,10 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
-        """Override of `payment` to extract the reference from the payment data.
-
-        `reference_id` is used by the sessions/v3 APIs; `external_id` is the legacy (v2)
-        equivalent, still sent by `credit_card_charges` notifications.
-        """
+        """Override of `payment` to extract the reference from the payment data."""
         if provider_code != "xendit":
             return super()._extract_reference(provider_code, payment_data)
-        return payment_data.get("reference_id") or payment_data.get("external_id")
+        return payment_data.get("reference_id")
 
     @api.model
     def _search_by_reference(self, provider_code, payment_data):
@@ -404,11 +288,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "xendit":
             return super()._extract_amount_data(payment_data)
 
-        amount = (
-            payment_data.get("amount")
-            or payment_data.get("authorized_amount")
-            or payment_data.get("request_amount")
-        )
+        amount = payment_data.get("amount") or payment_data.get("request_amount")
         currency_code = payment_data.get("currency")
         return {
             "amount": float(amount),
@@ -422,9 +302,7 @@ class PaymentTransaction(models.Model):
             return super()._apply_updates(payment_data)
 
         if provider_reference := (
-            payment_data.get("payment_session_id")
-            or payment_data.get("payment_request_id")
-            or payment_data.get("id")
+            payment_data.get("payment_session_id") or payment_data.get("payment_request_id")
         ):
             self.provider_reference = provider_reference
 
@@ -439,10 +317,9 @@ class PaymentTransaction(models.Model):
         elif channel_code not in const.PAYMENT_METHODS_MAPPING.values():
             # Unmapped channel codes are the uppercased payment method codes.
             channel_code = channel_code.lower()
-        payment_method_code = channel_code or payment_data.get("payment_method", "")
 
         payment_method = self.provider_id._get_pm_from_code(
-            payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
+            channel_code, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
 
