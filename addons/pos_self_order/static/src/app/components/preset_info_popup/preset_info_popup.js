@@ -131,9 +131,7 @@ export class PresetInfoPopup extends Component {
         this.state.validationError = null;
         try {
             if (this.preset.needsPartner || this.state.phoneLocal) {
-                const result = await rpc(`/pos-self-order/validate-partner`, {
-                    access_token: this.selfOrder.access_token,
-                    preset_id: this.preset?.id,
+                const partnerValues = {
                     name: this.state.name,
                     email: this.state.email,
                     phone: this.getFullPhone(),
@@ -142,10 +140,16 @@ export class PresetInfoPopup extends Component {
                     country_id: this.state.countryId,
                     state_id: this.state.stateId,
                     zip: this.state.zip,
+                };
+                const result = await rpc(`/pos-self-order/validate-partner`, {
+                    access_token: this.selfOrder.access_token,
+                    preset_id: this.preset?.id,
+                    ...partnerValues,
                 });
                 if (this.handleValidationErrors(result)) {
                     return;
                 }
+                result["res.partner"][0] = { ...result["res.partner"][0], ...partnerValues };
                 const connectedData = this.selfOrder.models.connectNewData(result);
                 this.selfOrder.data.synchronizeServerDataInIndexedDB(result);
                 this.setPartnerAndOrderName(connectedData["res.partner"][0]);
