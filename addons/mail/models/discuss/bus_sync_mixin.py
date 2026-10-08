@@ -35,7 +35,7 @@ class BusSyncMixin(models.AbstractModel):
         new_val_by_field_by_store_by_record = get_vals(manager_by_bus_target.values(), self)
         for record in self:
             for store, new_vals_by_field in new_val_by_field_by_store_by_record[record].items():
-                field_list = Store.FieldList(store, record)
+                field_list = Store.FieldList(record)
                 for field, new_value in new_vals_by_field.items():
                     if new_value != old_val_by_field_by_store_by_record[record][store][field]:
                         # Copy to avoid sharing the same Store.Attr for multiple stores/records.

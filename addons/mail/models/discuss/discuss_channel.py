@@ -1678,10 +1678,7 @@ class DiscussChannel(models.Model):
         all_members.sudo().mapped("channel_role")
         # prefetch in batch, including nested relations (member, guest, ...).
         # `_build_result` must be called as store is lazy.
-        Store(bus_channel=res.target.channel, bus_subchannel=res.target.subchannel).add(
-            all_members,
-            "_store_member_fields",
-        )._build_result()
+        Store().add(all_members, "_store_member_fields")._build_result()
         res.attr("avatar_cache_key")
         res.attr("avatar_128_access_token", lambda c: c._get_avatar_128_access_token())
         # sudo: discuss.category - guests can read categories of accessible channels
@@ -1729,7 +1726,8 @@ class DiscussChannel(models.Model):
         # sudo: discuss.channel: reading sessions of accessible channel is acceptable
         res.many("rtc_session_ids", "_store_extra_fields", mode="ADD", sudo=True)
         res.attr("uuid")
-        if res.is_for_current_user():
+
+        def current_user_fields(res):
             # sudo: bus.bus: reading non-sensitive last id
             bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
             res.attr("fetchChannelInfoState", "fetched")
@@ -1750,6 +1748,8 @@ class DiscussChannel(models.Model):
                 ),
                 only_data=True,
             )
+
+        res.for_current_user(current_user_fields)
 
     # User methods
 

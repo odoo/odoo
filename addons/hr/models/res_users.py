@@ -367,9 +367,10 @@ class ResUsers(models.Model):
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
-        if res.is_for_internal_users():
+        res.for_internal_users(
             # sudo: res.users - internal users can access employee information of accessible user
-            res.many("employee_ids", "_store_avatar_card_fields", sudo=True)
+            lambda res: res.many("employee_ids", "_store_avatar_card_fields", sudo=True),
+        )
 
     def _store_im_status_fields(self, res: Store.FieldList):
         super()._store_im_status_fields(res)
