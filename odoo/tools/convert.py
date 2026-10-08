@@ -9,6 +9,7 @@ import logging
 import os.path
 import pprint
 import re
+import shutils
 import subprocess
 import typing
 import warnings
@@ -17,10 +18,6 @@ from datetime import datetime, timedelta, UTC, tzinfo
 
 from dateutil.relativedelta import relativedelta
 from lxml import etree, builder
-try:
-    import jingtrang
-except ImportError:
-    jingtrang = None
 
 from .binary import BinaryBytes
 from .config import config
@@ -34,6 +31,12 @@ _logger = logging.getLogger(__name__)
 
 ConvertMode = typing.Literal['init', 'update']
 IdRef = dict[str, int | typing.Literal[False]]
+
+
+# Detect installation of either jing or jingtrang
+jingtrang = shutils.which('jing')
+if not jingtrang:
+    jingtrang = shutils.which('pyjing')
 
 
 class Pytz(typing.NamedTuple):
@@ -800,13 +803,15 @@ def convert_xml_import(
             environ = os.environ.copy()
             environ['JAVA_TOOL_OPTIONS'] = '-Xmx64m -XX:-UseCompressedClassPointers'
             p = subprocess.run(
-                ["pyjing", schema, xmlfile.name], stdout=subprocess.PIPE, env=environ,
+                [jingtrang, schema, xmlfile.name], stdout=subprocess.PIPE, env=environ,
             )
             _logger.warning(p.stdout.decode())
         else:
             for e in relaxng.error_log:
                 _logger.warning(e)
-            _logger.info("Install 'jingtrang' for more precise and useful validation messages.")
+            _logger.info("Install 'jing' (Debian package, recommanded) or jingtrang (python module)"
+                         " for more precise and useful validation messages.")
+
         raise
 
     if isinstance(xmlfile, str):
