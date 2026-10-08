@@ -2,7 +2,7 @@
 /* Base layout rules, use the 'webclient.scss' file for styling */
 /* ------------------------------------------------------------------ */
 
-@include media-only(screen) {
+@media screen {
   html {
     height: 100%;
 
@@ -23,7 +23,7 @@
           flex-flow: column nowrap;
           overflow: hidden;
 
-          @media screen and (min-width: 992px), print and (min-width: 190mm) {
+          @media (min-width: 992px) {
             -ms-overflow-style: none; /* IE and Edge */
             scrollbar-width: none;    /* Firefox */
 
@@ -40,7 +40,7 @@
             height: 100%;
           }
 
-          @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+          @media (max-width: 767.98px) {
             /* Made the o_action scroll instead of its o_content. */
             /* Except when the view wants to handle the scroll itself. */
             &:not(.o_action_delegate_scroll),
@@ -92,7 +92,7 @@
 /* Print Layout */
 /* ------------------------------------------------------------------------------ */
 
-@include media-only(print) {
+@media print {
     .o_web_client {
         max-width: 100%;
     }

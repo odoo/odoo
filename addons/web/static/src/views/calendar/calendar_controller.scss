@@ -90,7 +90,7 @@
 }
 
 /* Print */
-@include media-only(print) {
+@media print {
     html:has(.o_action_manager .o_calendar_view.o_view_controller.o_action) {
         height: 100%;
 
@@ -119,7 +119,7 @@
                         height: 100%;
                     }
 
-                    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+                    @media (max-width: 187.98mm) {
                         /* Made the o_action scroll instead of its o_content. */
                         /* Except when the view wants to handle the scroll itself. */
                         &:not(.o_action_delegate_scroll) {

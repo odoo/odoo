@@ -65,10 +65,10 @@
     .o_kanban_renderer {
         --KanbanRecord-width: 480px;
 
-        @include media-only(screen) {
+        @media screen {
             --KanbanGroup-width: 480px;
         }
-        @include media-only(print) {
+        @media print {
             --KanbanGroup-width: 400px;
         }
     }

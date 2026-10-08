@@ -35,7 +35,7 @@
         word-break: normal;
     }
 
-    @include media-only(print) {
+    @media print {
         font-size: 0.8rem;
     }
 
@@ -45,7 +45,7 @@
     border-style: solid;
     border-color: var(--Card-border-color, var(--border-color));
 
-    @include media-only(print) {
+    @media print {
         .o_field_background_image {
             height: auto;
         }
@@ -73,7 +73,7 @@
         min-width: 0;
         height: 100%;
 
-        @include media-only(print) {
+        @media print {
             height: auto;
         }
     }
@@ -91,7 +91,7 @@
         img {
             height: var(--Card__image-height, var(--Card__image-width));
 
-            @include media-only(print) {
+            @media print {
                 height: auto;
             }
         }
@@ -100,7 +100,7 @@
             --Card__image-height: 100%;
             --Card__image-width: var(--Card__image--fill-width);
 
-            @include media-only(print) {
+            @media print {
                 --Card__image-height: auto;
             }
 
@@ -108,7 +108,7 @@
                 min-height: var(--Card__image-fill-width);
                 max-height: var(--Card__image-max-height, $o-kanban-image-fill-width * 1.5);
 
-                @include media-only(print) {
+                @media print {
                     height: auto;
                 }
             }
@@ -120,7 +120,7 @@
                     margin-bottom: calc(var(--Card-padding-v)* -1);
                     margin-left: calc(var(--Card-padding-h)* -1);
                 
-                    @include media-only(print) {
+                    @media print {
                         height: auto;
                     }
                 }
