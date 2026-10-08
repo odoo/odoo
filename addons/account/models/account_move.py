@@ -1671,14 +1671,22 @@ class AccountMove(models.Model):
         self.ensure_one()
         is_invoice = self.is_invoice(include_receipts=True)
         sign = self.direction_sign if is_invoice else 1
-
+        if is_invoice:
+            special_mode = False
+            price_unit = product_line.price_unit
+        elif self.env.context.get('from_allocate_amounts'):
+            special_mode = 'total_included'
+            price_unit = (product_line.extra_tax_data or {}).get('base_amount') or product_line.amount_currency
+        else:
+            special_mode = 'total_excluded'
+            price_unit = product_line.amount_currency
         kwargs = {
-            'price_unit': product_line.price_unit if is_invoice else product_line.amount_currency,
+            'price_unit': price_unit,
             'quantity': product_line.quantity if is_invoice else 1.0,
             'discount': product_line.discount if is_invoice else 0.0,
             'rate': self._get_product_base_line_currency_rate(product_line),
             'sign': sign,
-            'special_mode': False if is_invoice else 'total_excluded',
+            'special_mode': special_mode,
             'name': product_line.name,
         }
 
@@ -3255,6 +3263,8 @@ class AccountMove(models.Model):
     def _get_automatic_balancing_account(self):
         """ Small helper for special cases where we want to auto balance a move with a specific account. """
         self.ensure_one()
+        if self.journal_id.type in {'bank', 'cash', 'credit'} and self.journal_id.suspense_account_id:
+            return self.journal_id.suspense_account_id.id
         if self.journal_id.default_account_id:
             return self.journal_id.default_account_id.id
         return self.company_id.account_journal_suspense_account_id.id
@@ -3266,9 +3276,10 @@ class AccountMove(models.Model):
 
         move_had_tax = {move: has_tax(move) for move in container['records']}
         yield
+        from_allocate_amounts = self.env.context.get('from_allocate_amounts')
         # Skip posted moves.
-        for move in (x for x in container['records'] if x.state != 'posted'):
-            if not has_tax(move) and not move_had_tax.get(move):
+        for move in (x for x in container['records'] if x.state != 'posted' or from_allocate_amounts):
+            if not has_tax(move) and not move_had_tax.get(move) and not from_allocate_amounts:
                 continue  # only manage automatically unbalanced when taxes are involved
             if move_had_tax.get(move) and not has_tax(move):
                 # taxes have been removed, the tax sync is deactivated so we need to clear everything here
@@ -3277,10 +3288,14 @@ class AccountMove(models.Model):
 
             # Set the balancing line's balance and amount_currency to zero,
             # so that it does not interfere with _get_unbalanced_moves() below.
-            balance_name = _('Automatic Balancing Line')
-            existing_balancing_line = move.line_ids.filtered(lambda line: line.name == balance_name)
-            if existing_balancing_line:
-                existing_balancing_line.balance = existing_balancing_line.amount_currency = 0.0
+            if move.journal_id.type in {'bank', 'cash', 'credit'}:
+                balance_name = ''
+                existing_balancing_line = move.line_ids.filtered(lambda line: line.account_id == move.journal_id.suspense_account_id)
+            else:
+                balance_name = _('Automatic Balancing Line')
+                existing_balancing_line = move.line_ids.filtered(lambda line: line.name == balance_name)
+                if existing_balancing_line:
+                    existing_balancing_line.balance = existing_balancing_line.amount_currency = 0.0
 
             # Create an automatic balancing line to make sure the entry can be saved/posted.
             # If such a line already exists, we simply update its amounts.
@@ -3387,13 +3402,14 @@ class AccountMove(models.Model):
                 for fname in values
             )
 
+        from_allocate_amounts = self.env.context.get('from_allocate_amounts')
         moves_values_before = {
             move: {
                 field: get_value(move, field)
                 for field in ('currency_id', 'partner_id', 'move_type', 'invoice_currency_rate', 'invoice_date', 'document_tax_mode')
             }
             for move in container['records']
-            if move.state == 'draft'
+            if move.state == 'draft' or from_allocate_amounts
         }
         base_lines_values_before = {
             move: {
@@ -3421,7 +3437,7 @@ class AccountMove(models.Model):
         to_create = []
         grouped_update = defaultdict(set)
         for move in container['records']:
-            if move.state != 'draft':
+            if move.state != 'draft' and not from_allocate_amounts:
                 continue
 
             tax_lines = get_tax_lines(move)
@@ -3546,7 +3562,7 @@ class AccountMove(models.Model):
         if grouped_update:
             # Need to use currency_id as a key to avoid writing with multiple currencies
             for (currency_id, values), lines in grouped_update.items():
-                self.env['account.move.line'].browse(lines).write(dict(values))
+                self.env['account.move.line'].browse(lines).with_context(dynamic_write=True).write(dict(values))
         if to_delete:
             self.env['account.move.line'].browse(to_delete).with_context(dynamic_unlink=True).unlink()
         if to_create:
