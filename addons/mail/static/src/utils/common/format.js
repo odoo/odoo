@@ -196,6 +196,18 @@ function generateMentionElement({ className, id, model, text }) {
 }
 
 /**
+ * Name used to mention a partner, without leading/trailing spaces so that
+ * the mention text stays identical everywhere it is built or searched.
+ *
+ * @param {import("models").ResPartner} partner
+ * @param {import("models").Thread} [thread]
+ * @returns {string}
+ */
+export function getPartnerMentionName(partner, thread) {
+    return (thread?.getPersonaName?.(partner) ?? partner.name ?? "").trim();
+}
+
+/**
  * @param {import("models").ResPartner} partner
  * @param {import("models").Thread} thread
  */
@@ -204,7 +216,7 @@ export function generatePartnerMentionElement(partner, thread) {
         className: "o_mail_redirect",
         id: partner.id,
         model: "res.partner",
-        text: `@${thread?.getPersonaName(partner) ?? partner.name}`,
+        text: `@${getPartnerMentionName(partner, thread)}`,
     });
 }
 
@@ -258,7 +270,7 @@ function generateMentionsLinks(
     const mentions = [];
     for (const partner of partners) {
         const placeholder = `@-mention-partner-${partner.id}!`;
-        const text = `@${thread?.getPersonaName(partner) ?? partner.name}`;
+        const text = `@${getPartnerMentionName(partner, thread)}`;
         mentions.push({
             link: generatePartnerMentionElement(partner, thread),
             placeholder,

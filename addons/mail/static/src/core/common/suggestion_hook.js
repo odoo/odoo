@@ -5,6 +5,7 @@ import {
     generateRoleMentionElement,
     generateSpecialMentionElement,
     generateThreadMentionElement,
+    getPartnerMentionName,
 } from "@mail/utils/common/format";
 import { status, useComponent, useEffect, useState } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
@@ -357,7 +358,7 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                         };
                     }
                     return {
-                        label: thread?.getPersonaName(suggestion) ?? suggestion.name,
+                        label: getPartnerMentionName(suggestion, thread),
                         partner: suggestion,
                         thread,
                         classList,
