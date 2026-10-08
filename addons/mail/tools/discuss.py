@@ -267,8 +267,12 @@ class Store:
         if not records:
             return self
         # call _format_fields before checking identifier to always compare the final shape
-        field_list = self._format_fields(fields, records, fields_params)
-        identifier = Store._deep_freeze((records.env, records, field_list, as_thread))
+        field_list, identifier = Store._format_fields_with_identity(
+            fields,
+            records,
+            fields_params,
+            as_thread,
+        )
         if identifier in self.already_done:
             return self
         self.already_done.add(identifier)
@@ -477,6 +481,30 @@ class Store:
         return field_list
 
     @staticmethod
+    def _format_fields_with_identity(fields, records, fields_params, as_thread):
+        """Return the expanded field list and the identity used to deduplicate `add` calls. Both
+        are reused between the stores of a bus batch, as a field list does not depend on the
+        target of the store it is added to."""
+        cache = records.env.cr.precommit.data.get("mail.store.field_lists")
+        key = None
+        if cache is not None and isinstance(fields, str):
+            key = (
+                records.env,
+                records._name,
+                records._ids,
+                fields,
+                Store._deep_freeze(fields_params),
+                as_thread,
+            )
+            if key in cache:
+                return cache[key]
+        field_list = Store._format_fields(fields, records, fields_params)
+        result = field_list, Store._deep_freeze((records.env, records, field_list, as_thread))
+        if key is not None:
+            cache[key] = result
+        return result
+
+    @staticmethod
     def _get_fields_method(records, method_name):
         if (
             isinstance(records, models.Model)
@@ -544,8 +572,35 @@ class Store:
         if isinstance(obj, set):
             return frozenset(Store._deep_freeze(i) for i in obj)
         if hasattr(obj, "__code__"):
-            return ("__code__", hash(obj.__code__))
+            captured = (
+                getattr(obj, "__self__", None),
+                *(obj.__defaults__ or ()),
+                *(cell.cell_contents for cell in obj.__closure__ or ()),
+            )
+            return ("__code__", hash(obj.__code__), tuple(map(Store._freeze_captured, captured)))
         return obj
+
+    @staticmethod
+    def _freeze_captured(value):
+        if hasattr(value, "__code__"):
+            return hash(value.__code__), Store._freeze_captured(getattr(value, "__self__", None))
+        try:
+            hash(value)
+        except TypeError:
+            return Store.ObjectIdentity(value)
+        return value
+
+    class ObjectIdentity:
+        """Compares an unhashable value by object, keeping it alive so that its id is not reused."""
+
+        def __init__(self, value):
+            self.value = value
+
+        def __eq__(self, other):
+            return isinstance(other, Store.ObjectIdentity) and self.value is other.value
+
+        def __hash__(self):
+            return id(self.value)
 
     class LazyValue(Generic[T]):  # noqa: OLS01001
         def __init__(self, fn):
