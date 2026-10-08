@@ -46,6 +46,7 @@ const {
     Headers,
     Map,
     Math: { floor: $floor, max: $max, min: $min, random: $random },
+    MessageChannel,
     Object: {
         assign: $assign,
         create: $create,
@@ -69,6 +70,23 @@ const { parse: $parse, stringify: $stringify } = globalThis.JSON;
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+/**
+ * Returns a promise resolved in the next task, like {@link tick}, but scheduled
+ * through a (real) message channel: browsers clamp nested `setTimeout(0)` calls
+ * to 4ms, which adds up quickly when messages are relayed through the mocked
+ * workers, ports and sockets (e.g. bus notifications).
+ *
+ * @returns {Promise<void>}
+ */
+function nextTask() {
+    return new Promise((resolve) => {
+        nextTaskResolvers.push(resolve);
+        if (nextTaskResolvers.length === 1) {
+            nextTaskChannel.port2.postMessage(null);
+        }
+    });
+}
 
 /**
  * @param {EventTarget} target
@@ -106,7 +124,7 @@ async function dispatchMessage(target, data, transfer) {
         }
     }
     if (dispatched) {
-        await tick();
+        await nextTask();
     }
 }
 
@@ -278,6 +296,16 @@ let getNetworkDelay = null;
 let mockFetchFn = null;
 /** @type {((websocket: ServerWebSocket) => any) | null} */
 let mockWebSocketConnection = null;
+/** @type {(() => void)[]} */
+let nextTaskResolvers = [];
+const nextTaskChannel = new MessageChannel();
+nextTaskChannel.port1.onmessage = () => {
+    const resolvers = nextTaskResolvers;
+    nextTaskResolvers = [];
+    for (const resolve of resolvers) {
+        resolve();
+    }
+};
 
 //-----------------------------------------------------------------------------
 // Exports
