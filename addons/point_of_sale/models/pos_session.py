@@ -227,7 +227,8 @@ class PosSession(models.Model):
             data_to_remove = self.filter_local_data({model: list(d.keys()) for model, d in local_data['records'].items()})
             for model, ids in data_to_remove.items():
                 if model in data:
-                    data[model]['to_remove'] = ids
+                    loaded_ids = set(metadata[model]['records'].ids)
+                    data[model]['to_remove'] = [record_id for record_id in ids if record_id not in loaded_ids]
 
         # If there are more models than last time, we need to add the metadata (especially fields and relations) to the response
         for model, d in metadata.items():
