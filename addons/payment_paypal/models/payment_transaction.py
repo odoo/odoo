@@ -1,10 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 from urllib.parse import urlencode
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import urls
+from odoo.tools import float_repr, urls
+from odoo.tools.barcode import check_barcode_encoding
+from odoo.tools.date_utils import get_timedelta
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -192,13 +195,26 @@ class PaymentTransaction(models.Model):
             invoice_address_vals = paypal_utils.format_partner_address(self.partner_id)
             shipping_address_vals = paypal_utils.format_shipping_address(self)
 
+        purchase_unit = self._paypal_prepare_purchase_units_payload(shipping_address_vals)
+        payment_source = self._paypal_prepare_payment_source_payload(
+            invoice_address_vals, has_shipping=bool(shipping_address_vals)
+        )
+        items = purchase_unit["items"]
+        if items and "billing_plan" in items[0]:
+            # Billing plans require the usage pattern of the saved PayPal wallet, which must match
+            # the pricing model: SUBSCRIPTION for FIXED, RECURRING for VARIABLE.
+            pricing_model = items[0]["billing_plan"]["billing_cycles"][0]["pricing_scheme"][
+                "pricing_model"
+            ]
+            payment_source["paypal"]["attributes"]["vault"]["usage_pattern"] = (
+                "RECURRING_POSTPAID" if pricing_model == "VARIABLE" else "SUBSCRIPTION_PREPAID"
+            )
+
         # See https://developer.paypal.com/docs/api/orders/v2/#orders_create!ct=application/json
         return {
             "intent": "CAPTURE",
-            "purchase_units": [self._paypal_prepare_purchase_units_payload(shipping_address_vals)],
-            "payment_source": self._paypal_prepare_payment_source_payload(
-                invoice_address_vals, has_shipping=bool(shipping_address_vals)
-            ),
+            "purchase_units": [purchase_unit],
+            "payment_source": payment_source,
         }
 
     def _paypal_prepare_purchase_units_payload(self, shipping_address_vals):
@@ -214,13 +230,187 @@ class PaymentTransaction(models.Model):
         }
         if company_email := self.provider_id.company_id.email:
             payee_data["display_data"]["business_email"] = company_email
+        line_items = self._get_line_items()
+        items = self._paypal_prepare_items_payload(line_items)
         return {
             "reference_id": self.reference,
             "description": f"{self.company_id.name}: {self.reference}",
-            "amount": {"currency_code": self.currency_id.name, "value": str(self.amount)},
+            "amount": self._paypal_prepare_amount_payload(items, line_items),
+            "items": items,
             "payee": payee_data,
             **shipping_address_vals,
         }
+
+    def _paypal_prepare_amount_payload(self, items, line_items):
+        """Prepare the amount payload.
+
+        :param list items: The items payload
+        :param dict line_items: The line items of the transaction
+        :return: The amount payload
+        :rtype: dict
+        """
+        currency = self.currency_id
+        amount_vals = {"currency_code": currency.name, "value": str(self.amount)}
+        if not items:
+            return amount_vals
+
+        amount_untaxed = sum(
+            float(item["unit_amount"]["value"]) * int(item["quantity"]) for item in items
+        )
+        # Items are sent without taxes so that the taxes of the discount lines can be deducted.
+        tax_total = currency.round(
+            sum(line_item["tax_amount"] for line_item in line_items.values())
+        )
+        discount = currency.round(amount_untaxed + tax_total - self.amount)
+        amount_vals["breakdown"] = {
+            "item_total": {
+                "currency_code": currency.name,
+                "value": float_repr(amount_untaxed, currency.decimal_places),
+            },
+            "tax_total": {
+                "currency_code": currency.name,
+                "value": float_repr(tax_total, currency.decimal_places),
+            },
+        }
+        if discount:
+            amount_vals["breakdown"]["discount"] = {
+                "currency_code": currency.name,
+                "value": float_repr(discount, currency.decimal_places),
+            }
+        return amount_vals
+
+    def _paypal_prepare_items_payload(self, line_items):
+        """Prepare the items payload.
+
+        :param dict line_items: The line items of the transaction
+        :return: The items payload
+        :rtype: list
+        """
+        currency = self.currency_id
+        line_items = line_items.values()
+        total = sum(line_item["subtotal"] + line_item["tax_amount"] for line_item in line_items)
+        if currency.compare_amounts(total, self.amount):
+            return []
+
+        items = []
+        for line_item in line_items:
+            if line_item["subtotal"] < 0:
+                # not support negative amount
+                continue
+            if line_item["tax_amount"] < 0:
+                # negative taxes are not supported.
+                return []
+            quantity = line_item["quantity"]
+            unit_amount = currency.round(line_item["subtotal"] / quantity) if quantity else 0.0
+            if (
+                quantity < 1
+                or quantity != int(quantity)
+                or currency.compare_amounts(unit_amount * quantity, line_item["subtotal"])
+            ):
+                # Only accepts whole quantities whose unit amounts add up to the subtotal.
+                quantity, unit_amount = 1, line_item["subtotal"]
+            item = {
+                "name": line_item["name"][:3000],
+                "description": line_item["description"][:4000],
+                "quantity": str(int(quantity)),
+                "unit_amount": {
+                    "currency_code": currency.name,
+                    "value": float_repr(unit_amount, currency.decimal_places),
+                },
+            }
+
+            if line_item.get("is_donation"):
+                item["category"] = "DONATION"
+            elif category := const.ITEM_CATEGORY_MAPPING.get(line_item.get("product_type")):
+                item["category"] = category
+            if line_item.get("sku"):
+                item["sku"] = line_item["sku"][:127]
+            # Only accepts UPC codes, not other barcode encodings.
+            if (barcode := line_item.get("barcode")) and check_barcode_encoding(barcode, "upca"):
+                item["upc"] = {"type": "UPC-A", "code": barcode}
+            if 0 < len(line_item.get("url", "")) <= 2048:
+                item["url"] = line_item["url"]
+            # Only accepts HTTPS image URLs ending with an image file extension.
+            image_url = line_item.get("image_url", "")
+            if image_url.startswith("https://") and len(image_url) <= 2048:
+                item["image_url"] = image_url
+
+            items.append(item)
+
+        # Billing plans require a new PayPal wallet token and a single item of quantity 1.
+        recurrence = len(line_items) == 1 and next(iter(line_items)).get("recurrence")
+        if (
+            recurrence
+            and self.payment_method_code == "paypal"
+            and self.tokenize
+            and not self.token_id
+            and len(items) == 1
+            and items[0]["quantity"] == "1"
+        ):
+            billing_plan = self._paypal_prepare_billing_plan_payload(
+                recurrence, items[0]["unit_amount"]
+            )
+            if billing_plan:
+                items[0]["billing_plan"] = billing_plan
+        return items
+
+    def _paypal_prepare_billing_plan_payload(self, recurrence, unit_amount):
+        """Prepare the billing plan payload of a recurring item.
+
+        :param dict recurrence: The recurrence details of the item
+        :param dict unit_amount: The unit amount payload of the item
+        :return: The billing plan payload, or None if the recurrence is not supported by PayPal
+        :rtype: dict | None
+        """
+        mandate_values = self._get_mandate_values()
+        interval_unit = const.INTERVAL_UNIT_MAPPING.get(mandate_values.get("recurrence_unit"))
+        interval_count = mandate_values.get("recurrence_duration")
+        if not (interval_unit and interval_count) or (
+            interval_count > const.MAX_INTERVAL_COUNT[interval_unit]
+        ):
+            return None
+
+        total_cycles = self._paypal_compute_total_cycles(mandate_values)
+        if total_cycles > const.MAX_TOTAL_CYCLES:
+            return None
+
+        # No start date as the current payment is the first billing cycle
+        billing_cycle = {
+            "tenure_type": "REGULAR",
+            "sequence": 1,
+            "frequency": {"interval_unit": interval_unit, "interval_count": interval_count},
+            "total_cycles": total_cycles,
+            "pricing_scheme": {
+                "pricing_model": "VARIABLE" if recurrence["is_postpaid"] else "FIXED",
+                "price": dict(unit_amount),
+            },
+        }
+        billing_plan = {"billing_cycles": [billing_cycle]}
+        # Only accepts plan names made of unaccented latin letters, digits and some punctuation.
+        if re.fullmatch(r"[A-Za-z0-9() +',.:-]{1,127}", recurrence["name"] or ""):
+            billing_plan["name"] = recurrence["name"]
+        return billing_plan
+
+    def _paypal_compute_total_cycles(self, mandate_values):
+        """Compute the number of billing cycles between the start and the end of the mandate.
+
+        :param dict mandate_values: The mandate values of the transaction
+        :return: The number of billing cycles, or 0 if the mandate has no end
+        :rtype: int
+        """
+        start_datetime = mandate_values.get("start_datetime")
+        end_datetime = mandate_values.get("end_datetime")
+        if not (start_datetime and end_datetime and mandate_values.get("recurrence_unit")):
+            return 0
+        period = get_timedelta(
+            mandate_values["recurrence_duration"], mandate_values["recurrence_unit"]
+        )
+        # Step through the periods as months and years have no fixed length.
+        total_cycles, cycle_start = 0, start_datetime
+        while cycle_start < end_datetime:
+            cycle_start += period
+            total_cycles += 1
+        return total_cycles
 
     def _paypal_prepare_payment_source_payload(self, invoice_address_vals, has_shipping):
         """Prepare the payment source of the create order request payload.
@@ -320,6 +510,8 @@ class PaymentTransaction(models.Model):
         """
         return_url, cancel_url = self._paypal_build_return_urls()
         locale = (self.partner_id.lang or self.env.user.lang or "en_US").replace("_", "-")
+        line_items = self._get_line_items()
+        items = self._paypal_prepare_items_payload(line_items)
         return {
             "intent": "CAPTURE",
             "processing_instruction": "ORDER_COMPLETE_ON_PAYMENT_APPROVAL",
@@ -328,7 +520,8 @@ class PaymentTransaction(models.Model):
                     "reference_id": self.reference,
                     "custom_id": self.reference,
                     "description": f"{self.company_id.name}: {self.reference}",
-                    "amount": {"currency_code": self.currency_id.name, "value": str(self.amount)},
+                    "amount": self._paypal_prepare_amount_payload(items, line_items),
+                    "items": items,
                 }
             ],
             "payment_source": {
