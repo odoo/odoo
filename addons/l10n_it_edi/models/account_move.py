@@ -13,6 +13,7 @@ from stdnum.it import codicefiscale, iva
 
 from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
+from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -1131,7 +1132,14 @@ class AccountMove(models.Model):
         else:
             return
         banks = self.env['res.partner.bank']
+        company_partner_ids = self.env['res.company']._get_company_partner_ids()
         for account_number in bank_details:
+            # The IBAN may be one of ours (e.g. RiBa): don't duplicate it on the counterpart
+            if partner.id not in company_partner_ids and self.env['res.partner.bank'].sudo().with_context(active_test=False).search_count([
+                ('sanitized_acc_number', '=', sanitize_account_number(account_number)),
+                ('partner_id', 'in', company_partner_ids),
+            ], limit=1):
+                continue
             try:
                 banks += self.env['res.partner.bank']._find_or_create_bank_account(
                     account_number=account_number,
@@ -1402,8 +1410,13 @@ class AccountMove(models.Model):
                 message_to_log.append(_("Total amount from the XML File: %s", payments_info['amount_total']))
                 payment_due_dates = []
                 for payment_info in payments_info['info']:
-                    # Search / Create the bank account only on incoming docs
-                    if self.move_type not in ('out_invoice', 'in_refund') and (iban := payment_info.get('acc_number')):
+                    # Search / Create the bank account only on incoming docs.
+                    # With RiBa (MP12) the IBAN is the debtor's one (ours), not the vendor's.
+                    if (
+                        self.move_type not in ('out_invoice', 'in_refund')
+                        and payment_info.get('payment_mode') != 'MP12'
+                        and (iban := payment_info.get('acc_number'))
+                    ):
                         self.with_company(company)._l10n_it_edi_import_partner_bank(self, [iban])
                     # Set payment data on the bill
                     self.payment_reference = self.payment_reference or payment_info.get('payment_code', False)
