@@ -2,6 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Composer">
+    <!-- rendering observes the focus requests, applied once patched -->
+    <t t-set="focusRequest" t-value="this.focusRequest"/>
     <t t-set="isChatterComposer" t-value="this.extended and !this.props.composer.message"/>
     <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex rounded-4 flex-shrink-0'"/>
     <div class="d-print-none" t-ref="this.rootRef">
