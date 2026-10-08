@@ -28,4 +28,6 @@ class ResourceCalendarAttendance(models.Model):
         return res
 
     def _is_work_period(self):
-        return self.work_entry_type_id.count_as == 'working_time' and super()._is_work_period()
+        return (
+            not self.work_entry_type_id or self.work_entry_type_id.count_as == 'working_time'
+        ) and super()._is_work_period()
