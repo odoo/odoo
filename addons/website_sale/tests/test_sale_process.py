@@ -79,13 +79,6 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             transfer_provider = cls.env.ref("payment.payment_provider_transfer")
             transfer_provider.is_published = True
 
-    def test_01_admin_shop_tour(self):
-        self.start_tour(
-            self.env["website"].get_client_action_url("/shop"),
-            "website_sale.onboarding_tour",
-            login="admin",
-        )
-
     def test_01_cart_update_check(self):
         self.start_tour("/shop", "website_sale.update_cart", login="admin")
 
