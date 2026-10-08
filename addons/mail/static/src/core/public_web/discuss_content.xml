@@ -48,11 +48,6 @@
             <div class="pe-1 flex-shrink-0 ms-auto d-print-none">
                 <ActionList actions="this.headerActionsList" inline="true" hasBtnBg="true" actionComponent.bind="this.getActionComponent"/>
             </div>
-            <div t-if="this.store.inPublicPage and !this.ui.isSmall" class="d-flex align-items-center">
-                <img class="o-mail-DiscussContent-selfAvatar me-1 rounded-3 object-fit-cover flex-shrink-0 smaller" alt="Avatar" t-att-src="this.store.self.avatarUrl"/>
-                <div t-if="this.store.self_user" class="text-nowrap px-1 me-2" t-out="this.store.self_user.name"/>
-                <AutoresizeInput t-else="" className="'py-1'" onValidate.bind="this.renameGuest" value="this.selfGuestName"/>
-            </div>
         </div>
         <div class="o-mail-DiscussContent-main d-flex overflow-hidden flex-grow-1 gap-2" t-att-class="{ 'position-relative': this.ui.isSmall }">
             <t t-set="hasActivePanel" t-value="this.threadActions.activeAction?.actionPanelComponentCondition"/>

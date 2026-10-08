@@ -42,7 +42,6 @@ export class DiscussContent extends Component {
         this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;
         this.attClassObjectToString = attClassObjectToString;
-        this.selfGuestName = computed(() => this.store.self_guest?.name);
         this.threadDisplayName = computed(() => this.thread?.displayName);
         this.threadDescription = computed(() => this.thread?.description);
         useOnChange(
@@ -109,13 +108,6 @@ export class DiscussContent extends Component {
 
     async onFileUploaded(file) {
         await this.thread.channel?.notifyAvatarToServer(file.data);
-    }
-
-    async renameGuest(name) {
-        const newName = name.trim();
-        if (this.store.self_guest.name !== newName) {
-            await this.store.self_guest.updateGuestName(newName);
-        }
     }
 
     async renameThread(name) {
