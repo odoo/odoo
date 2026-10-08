@@ -17,11 +17,15 @@ import { groupAttachments } from "@mail/utils/common/attachments";
 import {
     Component,
     computed,
+    onMounted,
+    onPatched,
+    onWillUnmount,
     proxy,
+    shallowEqual,
     signal,
     t,
-    untrack,
     useApp,
+    useOnChange,
     useProps,
     useScope,
 } from "@odoo/owl";
@@ -51,7 +55,6 @@ import { assignGetter, loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
-import { useLayoutEffect } from "@web/owl2/utils";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { computedShallowEqual } from "@mail/utils/common/signal";
@@ -154,10 +157,11 @@ export class Message extends Component {
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
         this.isActive = computed(() => Boolean(this._isActive));
-        useLayoutEffect(
-            () => {
-                if (this.shadowBody()) {
-                    this.shadowRoot.set(this.shadowBody().attachShadow({ mode: "open" }));
+        useOnChange(
+            () => [this.shadowBody()],
+            (shadowBody) => {
+                if (shadowBody) {
+                    this.shadowRoot.set(shadowBody.attachShadow({ mode: "open" }));
                     const color = this.store.isOdooWhiteTheme ? "dark" : "white";
                     loadCssFromBundle(this.shadowRoot(), "mail.assets_message_email");
                     const shadowStyle = document.createElement("style");
@@ -216,12 +220,18 @@ export class Message extends Component {
                 `;
                     this.shadowRoot().appendChild(ellipsisStyle);
                 }
-            },
-            () => [untrack(this.shadowBody)]
+            }
         );
-        useLayoutEffect(
-            () => {
-                const shadowRoot = this.shadowRoot();
+        useOnChange(
+            () => [
+                this.shadowRoot(),
+                this.message.showTranslation,
+                this.message.richTranslationValue,
+                this.props.messageSearch?.searchTerm,
+                this.message.richBody,
+                this.isEditing,
+            ],
+            (shadowRoot) => {
                 if (shadowRoot) {
                     const bodyEl = createElementWithContent(
                         "span",
@@ -239,34 +249,34 @@ export class Message extends Component {
                         shadowRoot.removeChild(bodyEl);
                     };
                 }
-            },
-            () => [
-                this.shadowRoot(),
-                this.message.showTranslation,
-                this.message.richTranslationValue,
-                this.props.messageSearch?.searchTerm,
-                this.message.richBody,
-                this.isEditing,
-            ]
+            }
         );
-        useLayoutEffect(
-            () => {
-                const roots = this.isEditing
-                    ? []
-                    : this.prepareMessageBody(this.messageBody()) ?? [];
-                return () => {
-                    for (const root of roots) {
-                        root.destroy();
-                    }
-                };
-            },
-            () => [
-                this.isEditing,
-                this.message.richBody,
-                this.props.messageSearch?.searchTerm,
-                untrack(this.messageBody),
-            ]
-        );
+        // prepared on the patched body: it renders the content these dependencies describe
+        let preparedFor;
+        let bodyRoots = [];
+        const destroyBodyRoots = () => {
+            for (const root of bodyRoots) {
+                root.destroy();
+            }
+            bodyRoots = [];
+        };
+        const prepareRenderedBody = () => {
+            const current = {
+                isEditing: this.isEditing,
+                richBody: this.message.richBody,
+                searchTerm: this.props.messageSearch?.searchTerm,
+                bodyEl: this.messageBody(),
+            };
+            if (shallowEqual(current, preparedFor)) {
+                return;
+            }
+            preparedFor = current;
+            destroyBodyRoots();
+            bodyRoots = this.isEditing ? [] : this.prepareMessageBody(this.messageBody()) ?? [];
+        };
+        onMounted(prepareRenderedBody);
+        onPatched(prepareRenderedBody);
+        onWillUnmount(destroyBodyRoots);
     }
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
