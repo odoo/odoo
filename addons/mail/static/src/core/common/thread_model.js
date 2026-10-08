@@ -57,11 +57,6 @@ export class Thread extends Record {
             }
         );
         this.onChange(
-            () => [this.composerDisabled],
-            () => this.composerDisabledonUpdate(),
-            { immediate: true, initialRun: false }
-        );
-        this.onChange(
             () => [this.close_chat_window],
             function onChangeCloseChatWindow(close_chat_window) {
                 if (close_chat_window) {
@@ -415,8 +410,6 @@ export class Thread extends Record {
     }
 
     computeComposerDisabled() {}
-
-    composerDisabledonUpdate() {}
 
     get isEmpty() {
         return this.messages.length === 0;
