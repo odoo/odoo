@@ -24,6 +24,127 @@ import {
  */
 
 /**
+ * Selection of a document, as seen from one of its shadow trees.
+ *
+ * Used when the shadow root has no `getSelection`: the document selection is
+ * retargeted to the shadow host, but its composed range still gives the
+ * boundaries inside the shadow tree.
+ *
+ * It follows the `Selection` interface, like the selection returned by
+ * `getSelection`, but only implements the part of it used by the editor.
+ *
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Selection
+ * @see https://developer.mozilla.org/en-US/docs/Web/API/Selection/getComposedRanges
+ */
+class ShadowRootSelection {
+    /**
+     * @param {Selection} selection
+     * @param {ShadowRoot} root
+     */
+    constructor(selection, root) {
+        this.selection = selection;
+        this.root = root;
+    }
+    /** @returns {StaticRange|undefined} */
+    get composedRange() {
+        let ranges;
+        try {
+            ranges = this.selection.getComposedRanges({ shadowRoots: [this.root] });
+        } catch {
+            // Older signature, taking the shadow roots as arguments.
+            ranges = this.selection.getComposedRanges(this.root);
+        }
+        return ranges[0];
+    }
+    get isBackward() {
+        return this.selection.direction === "backward";
+    }
+    get anchorNode() {
+        const range = this.composedRange;
+        return (this.isBackward ? range?.endContainer : range?.startContainer) ?? null;
+    }
+    get anchorOffset() {
+        const range = this.composedRange;
+        return (this.isBackward ? range?.endOffset : range?.startOffset) ?? 0;
+    }
+    get focusNode() {
+        const range = this.composedRange;
+        return (this.isBackward ? range?.startContainer : range?.endContainer) ?? null;
+    }
+    get focusOffset() {
+        const range = this.composedRange;
+        return (this.isBackward ? range?.startOffset : range?.endOffset) ?? 0;
+    }
+    get isCollapsed() {
+        return this.composedRange?.collapsed ?? true;
+    }
+    get rangeCount() {
+        return this.selection.rangeCount;
+    }
+    get type() {
+        return this.selection.type;
+    }
+    get direction() {
+        return this.selection.direction;
+    }
+    getRangeAt(index) {
+        const staticRange = this.composedRange;
+        if (index !== 0 || !staticRange) {
+            return this.selection.getRangeAt(index);
+        }
+        const range = new Range();
+        range.setStart(staticRange.startContainer, staticRange.startOffset);
+        range.setEnd(staticRange.endContainer, staticRange.endOffset);
+        return range;
+    }
+    addRange(range) {
+        this.selection.addRange(range);
+    }
+    collapse(node, offset) {
+        this.selection.collapse(node, offset);
+    }
+    extend(node, offset) {
+        this.selection.extend(node, offset);
+    }
+    modify(alter, direction, granularity) {
+        this.selection.modify(alter, direction, granularity);
+    }
+    removeAllRanges() {
+        this.selection.removeAllRanges();
+    }
+    setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset) {
+        this.selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+    }
+    toString() {
+        return this.selection.toString();
+    }
+}
+
+/**
+ * Returns the selection of the tree of the given node.
+ *
+ * In a shadow tree (e.g. the livechat), the document selection is retargeted
+ * to the shadow host, so it never is inside the nodes of the shadow tree.
+ *
+ * @param {Node} node
+ * @returns {Selection|null}
+ */
+export function getSelectionInTree(node) {
+    const root = node.getRootNode();
+    const selection = node.ownerDocument.getSelection();
+    if (!root.host) {
+        return selection;
+    }
+    if (root.getSelection) {
+        return root.getSelection();
+    }
+    if (selection?.getComposedRanges) {
+        return new ShadowRootSelection(selection, root);
+    }
+    return selection;
+}
+
+/**
  * From selection position, checks if it is left-to-right or right-to-left.
  *
  * @param {Node} anchorNode

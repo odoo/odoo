@@ -1,6 +1,7 @@
 import { SuggestionList } from "@html_editor/components/suggestion/suggestion_list";
 import { Plugin } from "@html_editor/plugin";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
+import { getSelectionInTree } from "@html_editor/utils/selection";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { EmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
@@ -195,7 +196,7 @@ export class EmojiPlugin extends Plugin {
                 props: {
                     state: this.emojiListState,
                     onSelect: ({ value }) => {
-                        const selection = this.document.getSelection();
+                        const selection = getSelectionInTree(this.editable);
                         selection.extend(this.searchNode, this.offset);
                         this.dependencies.delete.deleteSelection();
                         this.dependencies.dom.insert(value);

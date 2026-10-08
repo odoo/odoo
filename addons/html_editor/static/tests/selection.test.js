@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, getFixture, test } from "@odoo/hoot";
 import { isInViewPort, press, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { Component, signal, xml } from "@odoo/owl";
@@ -10,10 +10,11 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { useAutofocus } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 import { Plugin } from "../src/plugin";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
-import { insertText, tripleClick } from "./_helpers/user_actions";
+import { insertText, splitBlock, tripleClick } from "./_helpers/user_actions";
 import { unformat } from "./_helpers/format";
 import { withSequence } from "@html_editor/utils/resource";
 import { SelectionPlugin } from "@html_editor/core/selection_plugin";
@@ -1436,6 +1437,44 @@ describe("Focus changes", () => {
         await press(["Escape"]);
         await animationFrame();
         expect(getContent(el)).toBe("<p>ab[]cd</p>");
+    });
+});
+
+describe("Shadow DOM", () => {
+    const { getSelection: getShadowRootSelection } = ShadowRoot.prototype;
+
+    async function setupEditorInShadowRoot(content) {
+        const host = document.createElement("div");
+        getFixture().append(host);
+        const target = document.createElement("div");
+        host.attachShadow({ mode: "open" }).append(target);
+        return setupEditor(content, { target });
+    }
+
+    async function testSplitAtCaret() {
+        const { editor, el } = await setupEditorInShadowRoot("<p>abc</p>");
+        expect(el.getRootNode()).toBeInstanceOf(ShadowRoot);
+        const text = el.querySelector("p").firstChild;
+        el.focus();
+        // Like the user moving the caret: the document selection is then
+        // retargeted to the shadow host.
+        getShadowRootSelection.call(el.getRootNode()).setBaseAndExtent(text, 1, text, 1);
+        expect(document.getSelection().anchorNode).not.toBe(text);
+        await animationFrame();
+        const selection = editor.shared.selection.getEditableSelection();
+        expect([selection.anchorNode, selection.anchorOffset]).toEqual([text, 1]);
+        splitBlock(editor);
+        expect(el.innerHTML).toBe("<p>a</p><p>bc</p>");
+        const splitText = el.querySelector("p:last-child").firstChild;
+        const { anchorNode, anchorOffset } = editor.shared.selection.getEditableSelection();
+        expect([anchorNode, anchorOffset]).toEqual([splitText, 0]);
+    }
+
+    test("should use the selection of the shadow root", testSplitAtCaret);
+
+    test("should use the composed selection without the selection of the shadow root", async () => {
+        patch(ShadowRoot.prototype, { getSelection: undefined });
+        await testSplitAtCaret();
     });
 });
 

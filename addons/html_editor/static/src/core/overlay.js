@@ -16,6 +16,7 @@ import { useActiveElement } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { useSubEnv } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../utils/hooks";
+import { getSelectionInTree } from "../utils/selection";
 
 export class EditorOverlay extends Component {
     static template = xml`
@@ -124,7 +125,7 @@ export class EditorOverlay extends Component {
 
     getSelectionTarget() {
         const doc = this.props.editable.ownerDocument;
-        const selection = doc.getSelection();
+        const selection = getSelectionInTree(this.props.editable);
         const selectionData = this.props.shared.getSelectionData();
         if (!selection || !selection.rangeCount || !this.props.isOverlayOpen()) {
             return null;

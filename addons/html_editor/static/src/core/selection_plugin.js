@@ -27,6 +27,7 @@ import { DIRECTIONS, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
     getCursorDirection,
+    getSelectionInTree,
     normalizeDeepCursorPosition,
     normalizeFakeBR,
     normalizeNotEditableNode,
@@ -329,7 +330,7 @@ export class SelectionPlugin extends Plugin {
         this.resetSelection();
         this.addGlobalDomListener("selectionchange", () => {
             this.updateActiveSelection();
-            const selection = this.document.getSelection();
+            const selection = getSelectionInTree(this.editable);
             if (this.isSelectionInEditable(selection)) {
                 scrollToSelection(selection);
             }
@@ -481,7 +482,7 @@ export class SelectionPlugin extends Plugin {
             // `before_input_handler` may change the selection, which would
             // invalidate the cached selection. Keep it in sync as long as
             // the cache is active.
-            this.setCachedSelection(this.document.getSelection());
+            this.setCachedSelection(getSelectionInTree(this.editable));
         }
         this.previousActiveSelection = this.activeSelection;
         // getSelectionData sets this.activeSelection to the current selection
@@ -641,7 +642,7 @@ export class SelectionPlugin extends Plugin {
      * @return { SelectionData }
      */
     getSelectionData() {
-        const selection = this.getCachedSelection() || this.document.getSelection();
+        const selection = this.getCachedSelection() || getSelectionInTree(this.editable);
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         let collapsed;
         const documentSelection =
@@ -790,7 +791,7 @@ export class SelectionPlugin extends Plugin {
 
         [anchorNode, anchorOffset] = normalizeFakeBR(anchorNode, anchorOffset);
         [focusNode, focusOffset] = normalizeFakeBR(focusNode, focusOffset);
-        const selection = this.document.getSelection();
+        const selection = getSelectionInTree(this.editable);
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         if (selection) {
             if (documentSelectionIsInEditable || selection.anchorNode === null) {
@@ -874,8 +875,7 @@ export class SelectionPlugin extends Plugin {
      * @returns {Cursors}
      */
     preserveSelection() {
-        const hadSelection =
-            this.document.getSelection() && this.document.getSelection().anchorNode !== null;
+        const hadSelection = !!getSelectionInTree(this.editable)?.anchorNode;
         const selectionData = this.getSelectionData();
         const selection = selectionData.editableSelection;
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };
@@ -1119,7 +1119,7 @@ export class SelectionPlugin extends Plugin {
             // Last stored selection is also at the editable root
             return false;
         }
-        const selection = this.document.getSelection();
+        const selection = getSelectionInTree(this.editable);
         if (!selection) {
             return false;
         }
@@ -1193,7 +1193,7 @@ export class SelectionPlugin extends Plugin {
         if (!selectionData.documentSelectionIsInEditable) {
             return selectionData.editableSelection;
         }
-        const selection = this.document.getSelection();
+        const selection = getSelectionInTree(this.editable);
         if (!selection) {
             return selectionData.editableSelection;
         }
@@ -1212,7 +1212,7 @@ export class SelectionPlugin extends Plugin {
      * characters).
      */
     onKeyDownArrows(ev) {
-        const selection = this.document.getSelection();
+        const selection = getSelectionInTree(this.editable);
         if (!selection || !this.isSelectionInEditable(selection)) {
             return;
         }
@@ -1323,7 +1323,7 @@ export class SelectionPlugin extends Plugin {
     }
 
     focusEditable() {
-        const selection = this.document.getSelection();
+        const selection = getSelectionInTree(this.editable);
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         if (this.editable.contains(this.document.activeElement) && documentSelectionIsInEditable) {
             // Editor has focus — nothing to do. Unless the current active
@@ -1362,7 +1362,7 @@ export class SelectionPlugin extends Plugin {
         if (!(documentSelectionIsInEditable && this.editableDocumentHasFocus())) {
             // Selection is outside the editor — restore it.
             const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
-            const selection = this.document.getSelection();
+            const selection = getSelectionInTree(this.editable);
             if (selection) {
                 selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
             }

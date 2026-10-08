@@ -48,7 +48,11 @@ import {
     isBrowserSafari,
     isMacOS,
 } from "@web/core/browser/feature_detection";
-import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils/selection";
+import {
+    getSelectionInTree,
+    normalizeDeepCursorPosition,
+    normalizeFakeBR,
+} from "@html_editor/utils/selection";
 
 /**
  * @typedef {Object} RangeLike
@@ -315,7 +319,7 @@ export class DeletePlugin extends Plugin {
             this.includeEndOrStartBlock,
         ]);
         range = this.deleteRange(range);
-        this.document.getSelection()?.removeAllRanges();
+        getSelectionInTree(this.editable)?.removeAllRanges();
         this.setCursorFromRange(range, { collapseToEnd: true });
     }
 

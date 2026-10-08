@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { paragraphRelatedElementsSelector } from "@html_editor/utils/dom_info";
+import { getSelectionInTree } from "@html_editor/utils/selection";
 
 export class AutofocusPlugin extends Plugin {
     static id = "autofocus";
@@ -19,7 +20,7 @@ export class AutofocusPlugin extends Plugin {
                     });
                 const selectionData = this.dependencies.selection.getSelectionData();
                 if (!selectionData.documentSelectionIsInEditable) {
-                    const selection = this.document.getSelection();
+                    const selection = getSelectionInTree(this.editable);
                     selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
                 }
                 break;
