@@ -755,6 +755,21 @@ test("bookmark tab is only shown when there are bookmarked messages", async () =
     );
 });
 
+test("active tab is assigned again when another flow writes it", async () => {
+    await start();
+    const store = getService("mail.store");
+    const state = store.messagingMenuSystrayState;
+    const [firstTab, secondTab] = store.messagingMenu.sortedVisibleTabs;
+    expect(store.messagingMenu.bookmarkTab.canBeShown).toBe(false);
+    state.activeTab = secondTab;
+    expect(state.activeTab?.id).toBe(secondTab.id);
+    state.activeTab = firstTab;
+    state.activeTab = undefined;
+    expect(state.activeTab?.id).toBe(firstTab.id);
+    state.activeTab = store.messagingMenu.bookmarkTab;
+    expect(state.activeTab?.id).toBe(firstTab.id);
+});
+
 test("can search messages", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -940,15 +955,21 @@ test("non app wide tab tracks its own counter but doesn't participate to the glo
     patch(MessagingMenu.prototype, {
         setup() {
             super.setup(...arguments);
-            this.testTab = fields.One("MessagingMenuTab", {
-                compute: () => ({
-                    id: "test_not_app_wide",
-                    recordType: "mail.message",
-                    appWide: false,
-                    includesMessage: (m) => m.needaction,
-                }),
-                eager: true,
-            });
+            this.testTab = fields.One("MessagingMenuTab");
+            this.onChange(
+                function computeTestTab() {
+                    return [
+                        this.store.MessagingMenuTab.insert({
+                            id: "test_not_app_wide",
+                            recordType: "mail.message",
+                            appWide: false,
+                            includesMessage: (m) => m.needaction,
+                        }),
+                    ];
+                },
+                (testTab) => (this.testTab = testTab),
+                { immediate: true }
+            );
         },
     });
     await start();
@@ -989,20 +1010,24 @@ test("tab added after boot fetches its own counter without re-fetching the other
         setup() {
             super.setup(...arguments);
             this.testDynamicOn = fields.Attr(false);
-            this.testTab = fields.One("MessagingMenuTab", {
-                compute() {
+            this.testTab = fields.One("MessagingMenuTab");
+            this.onChange(
+                function computeTestTab() {
                     if (!this.testDynamicOn) {
-                        return;
+                        return [];
                     }
-                    return {
-                        id: "test_dynamic",
-                        recordType: "mail.message",
-                        label: "Dynamic Tab",
-                        includesMessage: (m) => m.needaction,
-                    };
+                    return [
+                        this.store.MessagingMenuTab.insert({
+                            id: "test_dynamic",
+                            recordType: "mail.message",
+                            label: "Dynamic Tab",
+                            includesMessage: (m) => m.needaction,
+                        }),
+                    ];
                 },
-                eager: true,
-            });
+                (testTab) => (this.testTab = testTab),
+                { immediate: true }
+            );
         },
     });
     await start();
