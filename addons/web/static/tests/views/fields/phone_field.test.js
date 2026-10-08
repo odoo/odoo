@@ -58,6 +58,7 @@ test("PhoneField in form view on normal screens (readonly)", async () => {
     expect(".o_field_phone .o_phone_form_link").toHaveCount(1);
     expect(".o_field_phone span:first-child").toHaveText("yop");
     await assertUrl(`.o_field_phone .o_phone_form_link`, "tel:yop");
+    expect(".o_field_phone span:first-child").toHaveClass("o_force_ltr");
 });
 
 test("PhoneField in form view on normal screens (edit)", async () => {

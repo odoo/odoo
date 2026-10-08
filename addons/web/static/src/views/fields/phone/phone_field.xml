@@ -4,8 +4,16 @@
     <t t-name="web.PhoneField">
         <div class="d-inline-flex align-items-baseline w-100">
             <t t-if="this.props.readonly">
+<<<<<<< 306792519753dfbc69c4b88a3eb8ed05eca0eb9d
                 <span t-out="this.value"/>
                 <t t-if="this.props.displayButtons" t-call="web.PhoneFieldActions"/>
+||||||| 62e2ce0e50c07e907b419aa936d31946746c7782
+                <span t-out="this.props.record.data[this.props.name]"/>
+                <t t-call="web.PhoneFieldActions"/>
+=======
+                <span class="o_force_ltr" t-out="this.props.record.data[this.props.name]"/>
+                <t t-call="web.PhoneFieldActions"/>
+>>>>>>> afb7b2e43177e755e22c85cf40fceec122f8e895
             </t>
             <t t-else="">
                 <input
