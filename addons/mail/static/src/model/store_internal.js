@@ -5,9 +5,8 @@
 import { ManyFieldVersion, SingleFieldVersion, SKIP_REVISION } from "@mail/model/field_version";
 import { isCommandList, isMany, normalizeManyCommands, untrackFunctions } from "@mail/model/misc";
 import { RecordInternal } from "@mail/model/record_internal";
-import { incrementFn } from "@mail/utils/common/signal";
 
-import { computed, htmlEscape, markup, signal } from "@odoo/owl";
+import { htmlEscape, markup, signal } from "@odoo/owl";
 
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 
@@ -18,14 +17,19 @@ const Markup = markup().constructor;
 export class StoreInternal extends RecordInternal {
     /**
      * See {@link Store#MAKE_UPDATE}.
-     * @type {Map<import("./record").Record, Map<string, true>>}
-     */
-    FC_QUEUE = new Map(); // field-computes
-    /**
-     * See {@link Store#MAKE_UPDATE}.
      * @type {Map<Record, true>}
      */
     RD_QUEUE = new Map(); // record-deletes
+    /**
+     * See {@link Store#MAKE_UPDATE}. One Set per running onChange, for what it
+     * queues: the top one runs first.
+     * @type {Set<() => void>[]}
+     */
+    OC_QUEUE = [new Set()]; // immediate onChanges
+    /** @type {Map<() => void, Set<() => void>>} */
+    OC_QUEUED = new Map();
+    /** See {@link Store#MAKE_UPDATE}. */
+    isRunningOnChanges = false;
     /** See {@link Store#MAKE_UPDATE}. */
     ERRORS = [];
     /** See {@link Store#MAKE_UPDATE}. */
@@ -38,14 +42,12 @@ export class StoreInternal extends RecordInternal {
      */
     app;
     /** See {@link Store#MAKE_UPDATE}. */
-    updateDepth = signal(0);
-    raiseUpdateDepth = incrementFn(this.updateDepth);
-    lowerUpdateDepth = incrementFn(this.updateDepth, -1);
+    updateDepth = 0;
     /**
-     * A computed of the depth, so a held field only recomputes when this
-     * flips, not on every nested raise. See {@link Store#MAKE_UPDATE}.
+     * Written only when the depth leaves or comes back to 0, so a held field
+     * is not notified on every nested raise. See {@link Store#MAKE_UPDATE}.
      */
-    isUpdateInProgress = computed(() => this.updateDepth() > 0);
+    isUpdateInProgress = signal(false);
     /** See {@link Store#MAKE_UPDATE}. */
     isDrainingQueues = signal(false);
     /**
@@ -61,13 +63,19 @@ export class StoreInternal extends RecordInternal {
      */
     currentInsertVersion = null;
 
-    constructor() {
-        super(...arguments);
-        untrackFunctions(this, ["lowerUpdateDepth", "raiseUpdateDepth"]);
+    raiseUpdateDepth() {
+        if (this.updateDepth++ === 0) {
+            this.isUpdateInProgress.set(true);
+        }
+    }
+    lowerUpdateDepth() {
+        if (--this.updateDepth === 0) {
+            this.isUpdateInProgress.set(false);
+        }
     }
 
     /**
-     * @param {"compute"|"delete"} type
+     * @param {"change"|"delete"} type
      * @param {...any} params
      */
     ADD_QUEUE(type, ...params) {
@@ -80,18 +88,31 @@ export class StoreInternal extends RecordInternal {
                 }
                 break;
             }
-            case "compute": {
-                /** @type {[import("./record").Record, string]} */
-                const [record, fieldName] = params;
-                let recMap = this.FC_QUEUE.get(record);
-                if (!recMap) {
-                    recMap = new Map();
-                    this.FC_QUEUE.set(record, recMap);
-                }
-                recMap.set(fieldName, true);
+            case "change": {
+                const [runOnChange] = params;
+                const queue = this.OC_QUEUE.at(-1);
+                this.OC_QUEUED.get(runOnChange)?.delete(runOnChange);
+                queue.add(runOnChange);
+                this.OC_QUEUED.set(runOnChange, queue);
                 break;
             }
         }
+    }
+    /** @returns {(() => void)|undefined} the next queued onChange, with a new Set for what it queues */
+    nextOnChange() {
+        let queue = this.OC_QUEUE.at(-1);
+        while (queue.size === 0 && this.OC_QUEUE.length > 1) {
+            this.OC_QUEUE.pop();
+            queue = this.OC_QUEUE.at(-1);
+        }
+        const [runOnChange] = queue;
+        if (!runOnChange) {
+            return;
+        }
+        queue.delete(runOnChange);
+        this.OC_QUEUED.delete(runOnChange);
+        this.OC_QUEUE.push(new Set());
+        return runOnChange;
     }
     /** @param {RecordList<Record>} recordList */
     sortRecordList(recordList, func) {
