@@ -15,11 +15,9 @@ const discussChannelPatch = {
         this.chatbot_message_ids = fields.Many("chatbot.message", {
             inverse: "discuss_channel_id",
         });
-        this.sortedChatbotMessages = fields.Many("chatbot.message", {
-            compute() {
-                return [...this.chatbot_message_ids].sort((a, b) => a.id - b.id);
-            },
-        });
+        this.sortedChatbotMessages = this.computed(() =>
+            [...this.chatbot_message_ids].sort((a, b) => a.id - b.id)
+        );
         this.chatbot_current_step_id = fields.One("chatbot.script.step");
         this.onChange(
             () => [this.chatbot_current_step_id],
