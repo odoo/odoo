@@ -569,6 +569,12 @@ class AccountMove(models.Model):
                 yield _("The company SIREN is missing or invalid.")
 
             if transaction_type == 'b2bi':
+                partner_identifier = self.commercial_partner_id._l10n_fr_pdp_get_flow_10_identifier()[1]
+                if not partner_identifier:
+                    if self.commercial_partner_id.country_id in self.env.ref('base.europe').country_ids:
+                        yield _("The partner VAT number is required for EU e-reporting.")
+                    else:
+                        yield _("The partner identifier required for Flow 10 is missing.")
                 try:
                     self.commercial_partner_id.check_vat()
                 except ValidationError:

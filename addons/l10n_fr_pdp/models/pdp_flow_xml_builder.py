@@ -346,35 +346,18 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         # Country codes for DROM-COM territories are mapped to 'FR' for PPF transmission
         mapped_country_code = drom_com_territories.map_country_code_for_ppf(partner.country_id.code)
         mapped_country_code = mapped_country_code.upper() if mapped_country_code else mapped_country_code
-        # Check for specific identifier schemes (RIDET, TAHITI, etc.)
-        specific_scheme = drom_com_territories.get_specific_identifier_scheme(partner.country_id.code)
-
-        # Determine company scheme and ID
-        if specific_scheme and partner.ref:
-            # Use specific identifier for territories like NC (RIDET), PF (TAHITI), WF
-            company_scheme = specific_scheme['qualifier']
-            company_id = partner.ref
-        elif siren := partner._l10n_fr_pdp_get_siren():
-            # Standard French SIREN
-            company_scheme = '0002'
-            company_id = siren
-        elif len(partner.vat) > 1:
-            # VAT scheme
-            company_scheme = '0223'
-            company_id = partner.vat
-        else:
-            company_scheme = False
-            company_id = partner.ref or ''
+        company_scheme, company_id = partner._l10n_fr_pdp_get_flow_10_identifier()
+        partner_vat = partner.vat or ''
 
         partner_vals = {
             'CompanyId': {
-                '_text': company_id,
+                '_text': company_id or '',
                 'schemeId': company_scheme,
             }
         }
-        if len(partner.vat) > 1:
+        if len(partner_vat) > 1:
             partner_vals['TaxRegistrationId'] = {
-                '_text': partner.vat,
+                '_text': partner_vat,
                 'qualifyingId': 'VAT',
             }
         if mapped_country_code:
