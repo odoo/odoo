@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import odoo.tests
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -190,3 +190,22 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         homepage_view_arch_misconfigured = re.sub(r'data-filter-id="\d+"', 'data-filter-id="-1"', homepage_view.arch_db)
         homepage_view.write({'arch': homepage_view_arch_misconfigured})
         self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_misconfigured', login='admin')
+
+    def test_blog_feed_only_lists_published_posts(self):
+        blog = self.env['blog.blog'].create({'name': 'Feed Blog'})
+        now = datetime.now()
+        self.env['blog.post'].create([{
+            'name': 'Past Post',
+            'blog_id': blog.id,
+            'is_published': True,
+            'post_date': now - timedelta(days=1),
+        }, {
+            'name': 'Future Post',
+            'blog_id': blog.id,
+            'is_published': True,
+            'post_date': now + timedelta(days=1),
+        }])
+
+        res = self.url_open(f'/blog/{blog.id}/feed')
+        self.assertIn('Past Post', res.text)
+        self.assertNotIn('Future Post', res.text)
