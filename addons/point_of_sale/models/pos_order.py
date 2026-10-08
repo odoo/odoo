@@ -201,7 +201,7 @@ class PosOrder(models.Model):
             existing_order.write({'partner_id': order.get('partner_id'), 'to_invoice': order.get('to_invoice', False)})
         # payments
         if order.get('payment_ids'):
-            self._update_lines(order, existing_order, ['lines', 'payment_ids'])
+            self._update_lines(order, existing_order.with_context(skip_pay_later_invoice=True), ['lines', 'payment_ids'])
             self._process_payment_lines(order, existing_order, existing_order.session_id, False)
         existing_order._generate_order_invoice()
 
@@ -533,6 +533,11 @@ class PosOrder(models.Model):
                 vals['print_history'] = False
 
         list_line = self._create_pm_change_log(vals)
+        orders_without_pay_later = self.browse()
+        if vals.get("payment_ids") and not self.env.context.get("skip_pay_later_invoice"):
+            orders_without_pay_later = self.filtered(
+                lambda o: "pay_later" not in o.payment_ids.payment_method_id.mapped("type")
+            ) if vals.get("payment_ids") else self.browse()
         res = super().write(vals)
         for order in self:
             if vals.get('payment_ids'):
@@ -551,6 +556,12 @@ class PosOrder(models.Model):
             for order in self:
                 if vals.get('payment_ids'):
                     order.message_post(body=body)
+
+        switched_to_pay_later = orders_without_pay_later.filtered(
+            lambda o: o.state == "paid" and "pay_later" in o.payment_ids.payment_method_id.mapped("type")
+        )
+        for order in switched_to_pay_later:
+            order._generate_order_invoice()
 
         return res
 
