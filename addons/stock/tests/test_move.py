@@ -5028,6 +5028,22 @@ class TestStockMove(TestStockCommon):
         warning = scrap.action_scrap()
         self.assertEqual(warning.get('res_model'), 'stock.warn.insufficient.qty.scrap', "Should trigger the warning as no qty in location")
 
+    def test_scrap_13_lot_quantity_below_one(self):
+        """ Check that scrapping less than 1 unit of a lot that has no quantity
+            in the source location keeps the encoded quantity.
+        """
+        lot = self.env['stock.lot'].create({'name': 'lot1', 'product_id': self.product_lot.id})
+        scrap_form = Form(self.env['stock.move'].with_context(default_is_scrap=True), view='stock.view_scrap_move_form')
+        scrap_form.product_id = self.product_lot
+        scrap_form.location_id = self.shelf_1
+        scrap_form.location_dest_id = self.scrap_location
+        scrap_form.lot_ids.add(lot)
+        scrap_form.quantity = 0.5
+        scrap = scrap_form.save()
+        self.assertRecordValues(scrap.move_line_ids, [{'lot_id': lot.id, 'quantity': 0.5}])
+        Form.from_action(self.env, scrap.action_scrap()).save().action_done()
+        self.assertRecordValues(scrap, [{'state': 'done', 'quantity': 0.5}])
+
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.
         """

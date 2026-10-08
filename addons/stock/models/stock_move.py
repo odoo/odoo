@@ -845,6 +845,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         for vals in vals_list:
             if vals.get('move_line_ids') and 'lot_ids' in vals:
                 vals.pop('lot_ids')
+            if 'lot_ids' in vals and 'quantity' in vals:
+                # To make sure that the lot_ids is processed before the quantity.
+                vals['quantity'] = vals.pop('quantity')
             picking_id = self.env['stock.picking'].browse(vals.get('picking_id'))
             if picking_id.state == 'done' and vals.get('state') != 'done':
                 vals['state'] = 'done'
