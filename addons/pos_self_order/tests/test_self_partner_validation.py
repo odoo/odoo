@@ -5,6 +5,7 @@ from uuid import uuid4
 
 import odoo.tests
 
+from odoo import Command
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
 
@@ -70,7 +71,9 @@ class SelfPartnerValidationChecks:
             self.assertFalse(self._resolve(value), value)
 
     def test_token_is_scoped_to_the_config(self):
-        other_config = self.pos_config.copy()
+        other_config = self.pos_config.copy({
+            "payment_method_ids": [Command.set(self.bank_payment_method.ids)],
+        })
         signed = self._validate_partner()
         self.assertTrue(self._resolve(signed))
         self.assertFalse(self._resolve(signed, pos_config=other_config))
