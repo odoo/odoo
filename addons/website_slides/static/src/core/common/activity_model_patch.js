@@ -1,12 +1,10 @@
 import { Activity } from "@mail/core/common/activity_model";
+import { patchModel } from "@mail/model/export";
 import { fields } from "@mail/model/misc";
-import { patch } from "@web/core/utils/patch";
 
-/** @type {import("models").Activity} */
-const activityPatch = {
+export const activityPatch = patchModel(Activity, {
     setup() {
         super.setup(...arguments);
         this.request_partner_id = fields.One("res.partner");
     },
-};
-patch(Activity.prototype, activityPatch);
+});

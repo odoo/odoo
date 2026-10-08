@@ -1,9 +1,9 @@
 import { Store, StorePlugin } from "@mail/core/common/store_plugin";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 import { router } from "@web/core/browser/router";
 import { patch } from "@web/core/utils/patch";
 
-patch(Store.prototype, {
+export const storePatch = patchModel(Store, {
     setup() {
         super.setup(...arguments);
         this.discuss = fields.One("DiscussApp");

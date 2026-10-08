@@ -1,10 +1,9 @@
 import { Thread } from "@mail/core/common/thread_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
 import { rpc } from "@web/core/network/rpc";
 
-/** @type {import("models").Thread} */
-const threadPatch = {
+export const threadPatch = patchModel(Thread, {
     get recipientsFullyLoaded() {
         return this.recipientsCount === this.recipients.length;
     },
@@ -51,5 +50,4 @@ const threadPatch = {
         });
         this.store.insert(data);
     },
-};
-patch(Thread.prototype, threadPatch);
+});

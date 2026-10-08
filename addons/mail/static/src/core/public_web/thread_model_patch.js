@@ -1,12 +1,11 @@
 import { Thread } from "@mail/core/common/thread_model";
+import { patchModel } from "@mail/model/export";
 import { fields } from "@mail/model/misc";
 
-import { patch } from "@web/core/utils/patch";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
-/** @type {import("models").Thread} */
-const threadModelPatch = {
+export const threadModelPatch = patchModel(Thread, {
     setup() {
         super.setup(...arguments);
         /**
@@ -52,5 +51,4 @@ const threadModelPatch = {
             });
         });
     },
-};
-patch(Thread.prototype, threadModelPatch);
+});

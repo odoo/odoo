@@ -9,6 +9,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 const { DateTime } = luxon;
 
 export class ChannelMember extends Record {
+    /** @type {"discuss.channel.member"} */
     static _name = "discuss.channel.member";
 
     setup() {

@@ -1,8 +1,7 @@
 import { ResUsersSettings } from "@mail/core/common/res_users_settings_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(ResUsersSettings.prototype, {
+export const resUsersSettingsPatch = patchModel(ResUsersSettings, {
     setup() {
         super.setup();
         /** @type {number[]} */

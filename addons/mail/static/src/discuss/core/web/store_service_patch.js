@@ -1,11 +1,9 @@
 import { Store } from "@mail/core/common/store_plugin";
+import { patchModel } from "@mail/model/export";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Store} */
-const StorePatch = {
+export const StorePatch = patchModel(Store, {
     /** @returns {import("models").DiscussChannel[]} */
     getSelfImportantChannels() {
         return this.getSelfRecentChannels().filter((channel) => channel.importantCounter > 0);
@@ -33,5 +31,4 @@ const StorePatch = {
             model: "res.partner",
         });
     },
-};
-patch(Store.prototype, StorePatch);
+});

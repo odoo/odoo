@@ -1,8 +1,8 @@
 import { Attachment } from "@mail/core/common/attachment_model";
-import { patch } from "@web/core/utils/patch";
+import { patchModel } from "@mail/model/export";
 
-/** @type {import("models").Attachment} */
-const attachmentPatch = {
+export const attachmentPatch = patchModel(Attachment, {
+    /** @returns {boolean} */
     get isViewable() {
         return !this.voice && super.isViewable;
     },
@@ -17,8 +17,8 @@ const attachmentPatch = {
             super.onClickAttachment(attachment);
         }
     },
+    /** @returns {boolean} */
     get voice() {
         return this.voice_ids.length > 0;
     },
-};
-patch(Attachment.prototype, attachmentPatch);
+});

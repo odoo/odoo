@@ -14,6 +14,7 @@ const { DateTime } = luxon;
 /** @typedef {import("@mail/discuss/call/common/rtc_service").ContextOptions} ContextOptions */
 
 export class DiscussChannel extends Record {
+    /** @type {"discuss.channel"} */
     static _name = "discuss.channel";
     static _inherits = { "mail.thread": "thread" };
 

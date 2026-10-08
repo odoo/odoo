@@ -6,6 +6,8 @@ import { router } from "@web/core/browser/router";
 const SIDEBAR_WIDTH = 400;
 
 export class DiscussApp extends Record {
+    /** @type {"DiscussApp"} */
+    static _name = "DiscussApp";
     setup() {
         super.setup(...arguments);
         this.onChange(

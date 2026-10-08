@@ -1,10 +1,8 @@
 import { Thread } from "@mail/core/common/thread_model";
+import { patchModel } from "@mail/model/export";
 import "@mail/chatter/web_portal_project/thread_model_patch";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Thread} */
-const threadPatch = {
+export const threadPatch = patchModel(Thread, {
     /** @param {string[]} requestList */
     async fetchThreadData(requestList) {
         this.isLoadingAttachments =
@@ -15,6 +13,7 @@ const threadPatch = {
         }
     },
 
+    /** @returns {string[]} */
     get fullComposerCloseRequestList() {
         return super.fullComposerCloseRequestList.concat([
             "defaultSubject",
@@ -22,5 +21,4 @@ const threadPatch = {
             "suggestedSubject",
         ]);
     },
-};
-patch(Thread.prototype, threadPatch);
+});

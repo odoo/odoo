@@ -1,11 +1,10 @@
 import { ScheduledMessage } from "@mail/chatter/common/scheduled_message_model";
+import { patchModel } from "@mail/model/export";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
 import { _t } from "@web/core/l10n/translation";
-import { patch } from "@web/core/utils/patch";
 
-/** @type {import("models").ScheduledMessage} */
-const ScheduledMessagePatch = {
+export const ScheduledMessagePatch = patchModel(ScheduledMessage, {
     setup() {
         super.setup();
         this.textContent = this.computed(() => {
@@ -17,14 +16,17 @@ const ScheduledMessagePatch = {
     },
 
     // Editors of the records can delete scheduled messages
+    /** @returns {boolean} */
     get deletable() {
         return this.store.self_user?.is_admin || this.thread.hasWriteAccess;
     },
 
+    /** @returns {boolean} */
     get editable() {
         return this.store.self_user?.is_admin || this.isSelfAuthored;
     },
 
+    /** @returns {boolean} */
     get isSelfAuthored() {
         return this.author_id.eq(this.store.self);
     },
@@ -83,5 +85,4 @@ const ScheduledMessagePatch = {
             return;
         }
     },
-};
-patch(ScheduledMessage.prototype, ScheduledMessagePatch);
+});

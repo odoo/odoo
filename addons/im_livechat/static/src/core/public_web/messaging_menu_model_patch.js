@@ -2,15 +2,14 @@ import {
     MENU_TABS,
     MessagingMenu,
 } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
-import { fields } from "@mail/model/export";
+import { fields, patchModel } from "@mail/model/export";
 
 import { _t } from "@web/core/l10n/translation";
-import { patch } from "@web/core/utils/patch";
 
 MENU_TABS.LIVECHAT = "livechat";
 
 /** @type {MessagingMenu} */
-const messagingMenuModelPatch = {
+export const messagingMenuModelPatch = patchModel(MessagingMenu, {
     setup() {
         super.setup(...arguments);
         this.livechatTab = fields.One("MessagingMenuTab", {
@@ -61,5 +60,4 @@ const messagingMenuModelPatch = {
             eager: true,
         });
     },
-};
-patch(MessagingMenu.prototype, messagingMenuModelPatch);
+});

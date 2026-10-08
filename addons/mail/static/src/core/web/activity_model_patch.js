@@ -1,13 +1,13 @@
 import { Activity } from "@mail/core/common/activity_model";
+import { patchModel } from "@mail/model/export";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 
 import { createElementWithContent } from "@web/core/utils/html";
-import { patch } from "@web/core/utils/patch";
 
-patch(Activity.prototype, {
+export const activityPatch = patchModel(Activity, {
     setup() {
         super.setup(...arguments);
         this.isNoteEmpty = this.computed(

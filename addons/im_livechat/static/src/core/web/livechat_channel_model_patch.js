@@ -1,13 +1,13 @@
 import { LivechatChannel } from "@im_livechat/core/common/livechat_channel_model";
+import { patchModel } from "@mail/model/export";
 
 import { useSequential } from "@mail/utils/common/hooks";
 
 import { _t } from "@web/core/l10n/translation";
-import { patch } from "@web/core/utils/patch";
 
 const sequential = useSequential();
 
-const livechatChannelPatch = {
+export const livechatChannelPatch = patchModel(LivechatChannel, {
     async join({ notify = true } = {}) {
         this.are_you_inside = true;
         if (notify) {
@@ -36,5 +36,4 @@ const livechatChannelPatch = {
     get leaveTitle() {
         return _t("Leave %s", this.name);
     },
-};
-patch(LivechatChannel.prototype, livechatChannelPatch);
+});

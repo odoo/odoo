@@ -1,13 +1,12 @@
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
+import { patchModel } from "@mail/model/export";
 import { fields } from "@mail/model/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { patch } from "@web/core/utils/patch";
 import { LivechatLeaveDialog } from "./livechat_leave_dialog";
 
-/** @type {import("models").DiscussChannel} */
-const discussChannelPatch = {
+export const discussChannelPatch = patchModel(DiscussChannel, {
     setup() {
         super.setup(...arguments);
         this.appAsLivechats = fields.One("DiscussApp", {
@@ -42,6 +41,7 @@ const discussChannelPatch = {
         }
         return _t("In progress");
     },
+    /** @returns {boolean} */
     get matchesSelfExpertise() {
         return (
             this.store.self_user &&
@@ -94,5 +94,4 @@ const discussChannelPatch = {
             super.showThreadIcon(...args)
         );
     },
-};
-patch(DiscussChannel.prototype, discussChannelPatch);
+});

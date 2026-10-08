@@ -1,11 +1,8 @@
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
-import { fields } from "@mail/model/export";
-
-import { patch } from "@web/core/utils/patch";
+import { fields, patchModel } from "@mail/model/export";
 
 ChannelMember.CANCEL_CALL_INVITE_DELAY = 30000;
-/** @type {import("models").ChannelMember} */
-const ChannelMemberPatch = {
+export const ChannelMemberPatch = patchModel(ChannelMember, {
     setup() {
         super.setup(...arguments);
         this.rtc_inviting_session_id = fields.One("discuss.channel.rtc.session");
@@ -44,5 +41,4 @@ const ChannelMemberPatch = {
             this.channel_id.cancelRtcInvitationTimeout = undefined;
         }, ChannelMember.CANCEL_CALL_INVITE_DELAY);
     },
-};
-patch(ChannelMember.prototype, ChannelMemberPatch);
+});

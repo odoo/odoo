@@ -1,9 +1,9 @@
 import { Store } from "@mail/core/common/store_plugin";
+import { patchModel } from "@mail/model/export";
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { patch } from "@web/core/utils/patch";
 
 let unread_store;
 
@@ -38,8 +38,7 @@ async function saveUnreadCounter(counter, retry = true) {
     }
 }
 
-/** @type {import("models").Store} */
-const StorePatch = {
+export const StorePatch = patchModel(Store, {
     setup() {
         super.setup(...arguments);
         /** @type {BroadcastChannel|null} synchronizes activity data between tabs */
@@ -81,6 +80,7 @@ const StorePatch = {
             this.activityBroadcastChannel = null;
         }
     },
+    /** @returns {Object[]} */
     get activityGroups() {
         return (this.activity_groups || []).slice().sort((g1, g2) => {
             /**
@@ -221,9 +221,7 @@ const StorePatch = {
     },
     /** @param {import("models").Thread} fromThread */
     onLinkFollowed(fromThread) {},
-};
-patch(Store.prototype, StorePatch);
-
+});
 registry.category("actions").add("mail.store_insert", function storeInsertAction(action) {
     const store = useService("mail.store");
     store.insert(action.params.store_values);

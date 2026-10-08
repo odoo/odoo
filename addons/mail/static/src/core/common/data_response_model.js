@@ -18,6 +18,8 @@ import { fields, Record } from "@mail/model/export";
  * they are resolved with their data. This class should not be used directly under typical use.
  */
 export class DataResponse extends Record {
+    /** @type {"DataResponse"} */
+    static _name = "DataResponse";
     static _lastId = 0;
 
     /** @returns {import("models").DataResponse} */

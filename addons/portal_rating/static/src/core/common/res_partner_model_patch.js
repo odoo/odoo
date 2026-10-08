@@ -1,8 +1,7 @@
 import { ResPartner } from "@mail/core/common/res_partner_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(ResPartner.prototype, {
+export const resPartnerPatch = patchModel(ResPartner, {
     setup() {
         super.setup(...arguments);
         /** @type {boolean|undefined} can publish a comment on a rating */
