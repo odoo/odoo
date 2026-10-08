@@ -3,7 +3,7 @@
     min-width: unset;
     overflow-y: auto;
 
-    .o-hb-text-effect-preview {
+    .o_hb_text_effect_preview {
         overflow: hidden;
         height: 40px;
         width: 48px;
@@ -12,19 +12,19 @@
         background-color: $white;
         color: $black;
 
-        .o-hb-text-effect-preview-sample {
+        .o_hb_text_effect_preview_sample {
             font-size: 32px;
             line-height: 1em;
             scale: 0.8;
         }
 
-        &.o-hb-text-effect-preview-dark {
+        &.o_hb_text_effect_preview_dark {
             background-color: $gray-900;
             color: $white;
         }
     }
 
-    .o-hb-text-effect-options {
+    .o_hb_text_effect_options {
         --o-hb-text-effect-option-bg: $white;
         --o-hb-text-effect-shadow-bg: rgba(0, 0, 0, 0.05);
 
@@ -36,25 +36,25 @@
             aspect-ratio: 1 / 1;
         }
 
-        .o-hb-text-effect-shadow {
+        .o_hb_text_effect_shadow {
             border-radius: $border-radius-sm;
             background-color: var(--o-hb-text-effect-shadow-bg);
 
-            .o-hb-text-effect-shadow-options {
+            .o_hb_text_effect_shadow_options {
                 border-right: $border-width solid var(--o-hb-text-effect-option-bg);
 
-                .hb-row-label {
+                .o_hb_row_label {
                     background-color: transparent;
                 }
             }
 
 
-            .o-hb-text-effect-remove-shadow {
+            .o_hb_text_effect_remove_shadow {
                 width: 32px;
             }
         }
 
-        .o-hb-text-effect-add-shadow {
+        .o_hb_text_effect_add_shadow {
             border-style: dashed;
 
             &, &:focus, &:hover, &:active {
@@ -65,7 +65,7 @@
             }
         }
 
-        .o-hb-text-effect-add-shadow, .o-hb-text-effect-remove-shadow {
+        .o_hb_text_effect_add_shadow, .o_hb_text_effect_remove_shadow {
             &, &:focus, &:hover {
                 background-color: transparent !important;
             }
@@ -73,6 +73,6 @@
     }
 }
 
-.hb-row-content .o-hb-text-effect-preview {
+.o_hb_row_content .o_hb_text_effect_preview {
     display: none !important;
 }

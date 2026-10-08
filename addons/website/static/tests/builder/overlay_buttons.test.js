@@ -474,7 +474,7 @@ test("An inner snippet alone in a column should not have overlay options", async
     expect(".oe_overlay.oe_active").toHaveCount(2);
     // Clone the block so it is not alone anymore.
     await contains(
-        ".options-container[data-container-title='Blockquote'] .oe_snippet_clone"
+        ".o_hb_options_container[data-container-title='Blockquote'] .oe_snippet_clone"
     ).click();
     // Only the "Blockquote" should have an overlay.
     expect(".oe_overlay").toHaveCount(3);

@@ -208,7 +208,7 @@
     </BuilderRow>
     <BuilderRow t-if="this.state.valueList and (!(this.domState.fieldName === 'state_id' and this.isActiveItem('link_state_to_country_opt')))">
         <div class="d-flex flex-column w-100">
-            <p class="hb-row-label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">
+            <p class="o_hb_row_label mb-0 flex-grow-0 flex-shrink-0 flex-basis-auto">
                 <t t-out="this.state.valueList.title" />
             </p>
             <BuilderList
@@ -360,10 +360,10 @@
     </BuilderRow>
     <BuilderRow t-if="this.isMultipleTextConditionForRequirementOptionVisible">
         <div class="d-flex flex-column w-100">
-            <p class="hb-row-label mb-0 flex-basis-auto"
+            <p class="o_hb_row_label mb-0 flex-basis-auto"
                 t-att-data-tooltip="this.multiTextRequirementConfig.tooltip">
                 <t t-out="this.multiTextRequirementConfig.title"/>
-                <i class="oi icon-sup" data-icon="question_mark"/>
+                <i class="oi o_hb_icon_sup" data-icon="question_mark"/>
             </p>
             <BuilderList
                 dataAttributeAction="'requirementCondition'"
@@ -385,7 +385,7 @@
         </BuilderSelect>
     </BuilderRow>
     <t t-if="this.isActiveItem('hidden_if_opt')">
-        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row">
+        <div class="d-flex position-relative p-1 px-2 ps-3 o_hb_row">
             <BuilderSelect id="'hidden_condition_opt'" preview="false">
                 <!-- Load every existing form input -->
                 <BuilderSelectItem t-foreach="this.state.conditionInputs" t-as="input" t-key="input.name"
@@ -456,7 +456,7 @@
                 <BuilderSelectItem dataAttributeActionValue="'!selected'">Is not equal to</BuilderSelectItem>
             </BuilderSelect>
         </div>
-        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row" data-name="hidden_condition_additional_text">
+        <div class="d-flex position-relative p-1 px-2 ps-3 o_hb_row" data-name="hidden_condition_additional_text">
             <BuilderSelect t-if="!this.isMultiSelectVisible"
                 id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
             >

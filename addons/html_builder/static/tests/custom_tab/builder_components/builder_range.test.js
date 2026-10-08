@@ -35,14 +35,14 @@ test("should commit changes", async () => {
         <div class="test-options-target">10</div>
     `);
     await contains(":iframe .test-options-target").click();
-    await editBuilderRangeValue(".options-container input", "50");
+    await editBuilderRangeValue(".o_hb_options_container input", "50");
 
     expect.verifySteps(["customAction 50", "customAction 50"]);
     expect(":iframe .test-options-target").toHaveInnerHTML("50");
     await click(document.body);
     await animationFrame();
-    expect(".o-snippets-top-actions [data-icon='undo']").toBeEnabled();
-    expect(".o-snippets-top-actions [data-icon='redo']").not.toBeEnabled();
+    expect(".o_hb_snippets_top_actions [data-icon='undo']").toBeEnabled();
+    expect(".o_hb_snippets_top_actions [data-icon='redo']").not.toBeEnabled();
 });
 
 test("range input should step up or down with arrow keys", async () => {
@@ -78,19 +78,19 @@ test("range input should step up or down with arrow keys", async () => {
     // Test integer steps
     await contains(":iframe .test-integer-step").click();
     // Simulate ArrowUp
-    await contains(".options-container input").press("ArrowUp");
+    await contains(".o_hb_options_container input").press("ArrowUp");
     await advanceTime(750);
     expect(":iframe .test-integer-step").toHaveInnerHTML("12");
     // Simulate ArrowRight
-    await contains(".options-container input").press("ArrowRight");
+    await contains(".o_hb_options_container input").press("ArrowRight");
     await advanceTime(750);
     expect(":iframe .test-integer-step").toHaveInnerHTML("14");
     // Simulate ArrowDown
-    await contains(".options-container input").press("ArrowDown");
+    await contains(".o_hb_options_container input").press("ArrowDown");
     await advanceTime(750);
     expect(":iframe .test-integer-step").toHaveInnerHTML("12");
     // Simulate ArrowLeft
-    await contains(".options-container input").press("ArrowLeft");
+    await contains(".o_hb_options_container input").press("ArrowLeft");
     await advanceTime(750);
     expect(":iframe .test-integer-step").toHaveInnerHTML("10");
     // Verify steps
@@ -104,19 +104,19 @@ test("range input should step up or down with arrow keys", async () => {
     // Test fractional steps
     await contains(":iframe .test-fractional-step").click();
     // Simulate ArrowUp
-    await contains(".options-container input").press("ArrowUp");
+    await contains(".o_hb_options_container input").press("ArrowUp");
     await advanceTime(750);
     expect(":iframe .test-fractional-step").toHaveInnerHTML("15");
     // Simulate ArrowRight
-    await contains(".options-container input").press("ArrowRight");
+    await contains(".o_hb_options_container input").press("ArrowRight");
     await advanceTime(750);
     expect(":iframe .test-fractional-step").toHaveInnerHTML("15.15");
     // Simulate ArrowDown
-    await contains(".options-container input").press("ArrowDown");
+    await contains(".o_hb_options_container input").press("ArrowDown");
     await advanceTime(750);
     expect(":iframe .test-fractional-step").toHaveInnerHTML("15");
     // Simulate ArrowLeft
-    await contains(".options-container input").press("ArrowLeft");
+    await contains(".o_hb_options_container input").press("ArrowLeft");
     await advanceTime(750);
     expect(":iframe .test-fractional-step").toHaveInnerHTML("14.85");
     // Verify steps
@@ -162,13 +162,13 @@ test("keeping an arrow key pressed should commit only once", async () => {
     `);
     await contains(":iframe .test-options-target").click();
     // Simulate a long press on ArrowUp
-    await contains(".options-container input").keyDown("ArrowUp");
+    await contains(".o_hb_options_container input").keyDown("ArrowUp");
     await advanceTime(500);
-    await contains(".options-container input").keyDown("ArrowUp");
+    await contains(".o_hb_options_container input").keyDown("ArrowUp");
     await advanceTime(50);
-    await contains(".options-container input").keyDown("ArrowUp");
+    await contains(".o_hb_options_container input").keyDown("ArrowUp");
     await advanceTime(50);
-    await contains(".options-container input").keyDown("ArrowUp");
+    await contains(".o_hb_options_container input").keyDown("ArrowUp");
     expect(":iframe .test-options-target").toHaveInnerHTML("18");
     expect.verifySteps([
         "customAction 12",
@@ -203,36 +203,36 @@ test("should syncronize previews", async () => {
     // Change the value using the number input.
     // Fill without pressing Enter will trigger a preview.
     await contains(":iframe .test-options-target").click();
-    await contains(".options-container input[type='number']").click();
+    await contains(".o_hb_options_container input[type='number']").click();
     await edit("9");
     await animationFrame();
     expect.verifySteps(["customAction isPreviewing: true", "customAction isPreviewing: true"]);
     // Verify that the slider value is updated during preview
     await animationFrame();
-    await expect(".options-container input[type='range']").toHaveValue(9);
+    await expect(".o_hb_options_container input[type='range']").toHaveValue(9);
     expect.verifySteps([]);
 
     // Click somewhere to commit the change
     await contains(":iframe .test-options-target").click();
     expect.verifySteps(["customAction isPreviewing: false"]);
-    await expect(".options-container input[type='range']").toHaveValue(9);
+    await expect(".o_hb_options_container input[type='range']").toHaveValue(9);
 
     // Change the value using the slider input.
     // Pressing arrow key will trigger a preview.
     await contains(":iframe .test-options-target").click();
-    await contains(".options-container input[type='range']").click();
+    await contains(".o_hb_options_container input[type='range']").click();
     await press("ArrowUp");
     expect.verifySteps(["customAction isPreviewing: true"]);
 
     // Verify that the number input value is updated during preview
     await animationFrame();
-    await expect(".options-container input[type='number']").toHaveProperty("value", 10);
+    await expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 10);
     expect.verifySteps([]);
 
     // Slider changes are committed automatically after a short delay
     await advanceTime(1200);
     await expect.verifySteps(["customAction isPreviewing: false"]);
-    await expect(".options-container input[type='number']").toHaveProperty("value", 10);
+    await expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 10);
 });
 
 test("number input arrow changes should be committed after debounce", async () => {
@@ -258,7 +258,7 @@ test("number input arrow changes should be committed after debounce", async () =
     `);
 
     await contains(":iframe .test-options-target").click();
-    await contains(".options-container input[type='number']").keyDown("ArrowUp");
+    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowUp");
     expect.verifySteps(["customAction isPreviewing: true"]);
     expect(":iframe .test-options-target").toHaveInnerHTML("11");
 
@@ -289,26 +289,26 @@ test("number input should have the same min, max and step as the range input", a
     `);
 
     await contains(":iframe .test-options-target").click();
-    await contains(".options-container input[type='number']").keyDown("ArrowUp");
+    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowUp");
 
     // Check that step=2
-    expect(".options-container input[type='number']").toHaveProperty("value", 4);
+    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 4);
     expect(":iframe .test-options-target").toHaveInnerHTML("4");
     expect.verifySteps(["customAction 4"]);
 
-    await contains(".options-container input[type='number']").keyDown("ArrowUp");
+    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowUp");
 
     // Check that max=5
-    expect(".options-container input[type='number']").toHaveProperty("value", 5);
+    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 5);
     expect(":iframe .test-options-target").toHaveInnerHTML("5");
     expect.verifySteps(["customAction 5"]);
 
-    await contains(".options-container input[type='number']").keyDown("ArrowDown");
-    await contains(".options-container input[type='number']").keyDown("ArrowDown");
-    await contains(".options-container input[type='number']").keyDown("ArrowDown");
+    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowDown");
+    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowDown");
+    await contains(".o_hb_options_container input[type='number']").keyDown("ArrowDown");
 
     // Check that min=0
-    expect(".options-container input[type='number']").toHaveProperty("value", 0);
+    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 0);
     expect(":iframe .test-options-target").toHaveInnerHTML("0");
     expect.verifySteps(["customAction 3", "customAction 1", "customAction 0"]);
 });
@@ -335,9 +335,9 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5px</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
-        expect(".options-container input").toHaveValue(5);
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
+        expect(".o_hb_options_container input").toHaveValue(5);
         await press("ArrowRight");
         expect.verifySteps(["customAction 6px"]);
         expect(":iframe .test-options-target").toHaveInnerHTML("6px");
@@ -363,9 +363,9 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5000ms</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
-        expect(".options-container input").toHaveValue(5);
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
+        expect(".o_hb_options_container input").toHaveValue(5);
         await fill("7");
         await animationFrame();
         expect.verifySteps(["customAction 7000ms"]);
@@ -389,9 +389,9 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5000</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
-        expect(".options-container input").toHaveValue(5);
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
+        expect(".o_hb_options_container input").toHaveValue(5);
     });
     test("should handle empty saveUnit", async () => {
         addBuilderAction({
@@ -414,9 +414,9 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
-        expect(".options-container input").toHaveValue(5);
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
+        expect(".o_hb_options_container input").toHaveValue(5);
         await fill(15);
         await animationFrame();
         expect.verifySteps(["customAction 15"]);
@@ -443,9 +443,9 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5s</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
-        expect(".options-container input").toHaveValue(5);
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
+        expect(".o_hb_options_container input").toHaveValue(5);
         await fill("7");
         await animationFrame();
         expect.verifySteps(["customAction 7000ms"]);
@@ -472,9 +472,9 @@ test("should map range from 0 to 100 scale when empty convertorRatio object is p
     });
     await setupHTMLBuilder(`<div class="test-ratio-target">-2</div>`);
     await contains(":iframe .test-ratio-target").click();
-    expect(".options-container input[type='number']").toHaveProperty("value", 1);
+    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 1);
     // Arrow down at min (-2) stays at -2 (boundary check)
-    await contains(".options-container input[type='range']").focus();
+    await contains(".o_hb_options_container input[type='range']").focus();
     await press("ArrowDown");
     await advanceTime(750);
     expect.verifySteps(["applied -2", "applied -2"]);
@@ -483,11 +483,11 @@ test("should map range from 0 to 100 scale when empty convertorRatio object is p
     await press("ArrowUp");
     await advanceTime(750);
     expect.verifySteps(["applied -1.9", "applied -1.9"]);
-    expect(".options-container input[type='number']").toHaveProperty("value", 3);
+    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 3);
     // Arrow up on input: moves from 2.5 -> 5 (ratio), applies -1.8
-    await contains(".options-container input[type='number']").focus();
+    await contains(".o_hb_options_container input[type='number']").focus();
     await press("ArrowUp");
     await advanceTime(750);
     expect.verifySteps(["applied -1.84", "applied -1.84"]);
-    expect(".options-container input[type='number']").toHaveProperty("value", 5);
+    expect(".o_hb_options_container input[type='number']").toHaveProperty("value", 5);
 });

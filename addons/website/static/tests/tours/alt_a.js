@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add("alt_a_edit", {
         pressAltA(),
         {
             content: "Check that the sidebar is in edit mode",
-            trigger: ".o_builder_sidebar_open .o-tab-content #snippet_groups",
+            trigger: ".o_builder_sidebar_open .o_hb_tab_content #snippet_groups",
         },
         {
             content: "Check that the iframe is in edit mode",
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("alt_a_translation", {
         {
             content: "Check that the sidebar is in translate mode",
             trigger:
-                ".o_builder_sidebar_open .o-tab-content .options-container-header:contains(Translation)",
+                ".o_builder_sidebar_open .o_hb_tab_content .o_hb_options_container_header:contains(Translation)",
         },
         {
             content: "Check that the iframe is in translate mode",

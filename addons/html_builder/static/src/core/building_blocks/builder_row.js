@@ -59,7 +59,7 @@ export class BuilderRow extends Component {
         this.transition = useTransition({
             initialVisibility: this.props.expand,
             leaveDuration: 350,
-            name: "hb-collapse-content",
+            name: "o_hb_collapse_content",
         });
 
         useEffect(() => {
@@ -100,7 +100,7 @@ export class BuilderRow extends Component {
     }
 
     getLevelClass() {
-        return this.props.level ? `hb-row-sublevel hb-row-sublevel-${this.props.level}` : "";
+        return this.props.level ? `o_hb_row_sublevel o_hb_row_sublevel_${this.props.level}` : "";
     }
 
     onRowContentClick() {
@@ -125,7 +125,7 @@ export class BuilderRow extends Component {
 }
 
 function refreshSublevelLines(rowEl) {
-    const optionsContainerEl = rowEl?.closest(".options-container");
+    const optionsContainerEl = rowEl?.closest(".o_hb_options_container");
     if (!optionsContainerEl) {
         return;
     }
@@ -138,13 +138,13 @@ function refreshSublevelLines(rowEl) {
 // - When a row comes back to a shallower level after deeper rows, stretch its
 //   line up to the last visible sibling of the same level.
 function alignSublevelLines(optionsContainerEl) {
-    const rowEls = [...optionsContainerEl.querySelectorAll(".hb-row")];
+    const rowEls = [...optionsContainerEl.querySelectorAll(".o_hb_row")];
     if (!rowEls.length) {
         return;
     }
     const visibleRowEls = [];
     for (const rowEl of rowEls) {
-        const labelEl = rowEl.querySelector(":scope > .hb-row-label");
+        const labelEl = rowEl.querySelector(":scope > .o_hb_row_label");
         if (labelEl) {
             labelEl.style.removeProperty("--o-hb-row-sublevel-top");
         }
@@ -173,8 +173,8 @@ function alignSublevelLines(optionsContainerEl) {
 }
 
 function applyLineOffset(rowEl, previousRowEl) {
-    const labelEl = rowEl.querySelector(":scope > .hb-row-label");
-    const previousLabelEl = previousRowEl.querySelector(":scope > .hb-row-label");
+    const labelEl = rowEl.querySelector(":scope > .o_hb_row_label");
+    const previousLabelEl = previousRowEl.querySelector(":scope > .o_hb_row_label");
     if (!labelEl || !previousLabelEl) {
         return;
     }
@@ -187,12 +187,12 @@ function applyLineOffset(rowEl, previousRowEl) {
 
 function getRowLevel(rowEl) {
     const sublevelClass = [...rowEl.classList].find((className) =>
-        className.startsWith("hb-row-sublevel-")
+        className.startsWith("o_hb_row_sublevel_")
     );
     if (!sublevelClass) {
         return 0;
     }
-    return parseInt(sublevelClass.replace("hb-row-sublevel-", ""), 10) || 0;
+    return parseInt(sublevelClass.replace("o_hb_row_sublevel_", ""), 10) || 0;
 }
 
 export { refreshSublevelLines };

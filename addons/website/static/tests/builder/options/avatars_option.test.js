@@ -11,7 +11,7 @@ defineWebsiteModels();
 test("Change avatars size", async () => {
     await setupWebsiteBuilderWithSnippet("s_avatars", { loadIframeBundles: true });
     await contains(":iframe .s_avatars").click();
-    expect(".options-container[data-container-title='Avatars']").toHaveCount(1);
+    expect(".o_hb_options_container[data-container-title='Avatars']").toHaveCount(1);
     expect("[data-label='Size'] input").toHaveValue(3);
     expect(":iframe .s_avatars").toHaveStyle("--avatars-size: 3rem");
 

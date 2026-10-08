@@ -1,26 +1,26 @@
-.options-container {
+.o_hb_options_container {
     background-color: $o-we-bg-lighter;
 
-    .options-container-header {
+    .o_hb_options_container_header {
         --o-hb-btn-has-icon-paddingX: #{map-get($spacers, 1)};
 
         background-color: $o-we-bg-light;
 
-        .o-hb-image-size-info {
+        .o_hb_image_size_info {
             margin-left: 8px;
         }
     }
 
-    &:where(:not(:first-of-type)) .options-container-header {
+    &:where(:not(:first-of-type)) .o_hb_options_container_header {
         box-shadow: inset 0 1px 0 $o-we-bg-lighter;
     }
 
-    .options-container-label {
+    .o_hb_options_container_label {
         min-width: 0; // Ensure text-overflow works in flex layouts
         color: $o-we-fg-light;
         font-size: $o-we-font-size-lg;
 
-        &-actionable {
+        &_actionable {
             &:hover, &:focus {
                 color: $o-we-fg-lighter;
                 background-color: unset;
@@ -38,17 +38,17 @@
 
     @include o-input-number-no-arrows();
 
-    .o-hb-image-size-info {
+    .o_hb_image_size_info {
         background-color: $o-we-bg-darker;
     }
 
-    .hb-row-content .o-hb-image-size-info {
+    .o_hb_row_content .o_hb_image_size_info {
         font-size: 0.9em;
     }
 }
 
-.o_theme_tab:has(.o-options-container-highlight) {
-    .options-container:not(.o-options-container-highlight) {
+.o_theme_tab:has(.o_hb_options_container_highlight) {
+    .o_hb_options_container:not(.o_hb_options_container_highlight) {
         position: relative;
         &::before {
             content: "";

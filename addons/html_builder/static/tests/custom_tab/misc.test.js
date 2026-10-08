@@ -31,8 +31,8 @@ test("Open custom tab with template option", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeVisible();
-    expect(queryAllTexts(".options-container > div")).toEqual(["Yop", "Row 1\nTest"]);
+    expect(".o_hb_options_container").toBeVisible();
+    expect(queryAllTexts(".o_hb_options_container > div")).toEqual(["Yop", "Row 1\nTest"]);
 });
 
 test("Open custom tab with Component option", async () => {
@@ -46,8 +46,8 @@ test("Open custom tab with Component option", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeVisible();
-    expect(queryAllTexts(".options-container > div")).toEqual(["Yop", "Row 1\nTest"]);
+    expect(".o_hb_options_container").toBeVisible();
+    expect(queryAllTexts(".o_hb_options_container > div")).toEqual(["Yop", "Row 1\nTest"]);
 });
 
 test("OptionContainer should display custom title", async () => {
@@ -62,8 +62,8 @@ test("OptionContainer should display custom title", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeVisible();
-    expect(queryAllTexts(".options-container > div")).toEqual(["My custom title", "Row 1\nTest"]);
+    expect(".o_hb_options_container").toBeVisible();
+    expect(queryAllTexts(".o_hb_options_container > div")).toEqual(["My custom title", "Row 1\nTest"]);
 });
 
 test("Don't display option base on exclude", async () => {
@@ -87,10 +87,10 @@ test("Don't display option base on exclude", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target test-exclude">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(queryAllTexts(".options-container .hb-row")).toEqual(["Row 2\nb", "Row 3\nc"]);
+    expect(queryAllTexts(".o_hb_options_container .o_hb_row")).toEqual(["Row 2\nb", "Row 3\nc"]);
 
     await contains("[data-class-action='test-exclude-2']").click();
-    expect(queryAllTexts(".options-container .hb-row")).toEqual(["Row 3\nc"]);
+    expect(queryAllTexts(".o_hb_options_container .o_hb_row")).toEqual(["Row 3\nc"]);
 });
 
 test("Don't display option base on applyTo", async () => {
@@ -113,11 +113,11 @@ test("Don't display option base on applyTo", async () => {
             <div class="test-target">b</div>
         </div>`);
     await contains(":iframe .test-options-target").click();
-    expect(queryAllTexts(".options-container .hb-row")).toEqual(["Row 1\na"]);
+    expect(queryAllTexts(".o_hb_options_container .o_hb_row")).toEqual(["Row 1\na"]);
 
     await contains("[data-class-action='test-target-2']").click();
     await animationFrame();
-    expect(queryAllTexts(".options-container .hb-row")).toEqual(["Row 1\na", "Row 2\nb"]);
+    expect(queryAllTexts(".o_hb_options_container .o_hb_row")).toEqual(["Row 1\na", "Row 2\nb"]);
 });
 
 test("basic multi options containers", async () => {
@@ -135,18 +135,18 @@ test("basic multi options containers", async () => {
     });
     await setupHTMLBuilder(`<div class="main"><p class="test-options-target a">b</p></div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container-header i[data-icon='arrow_right']").toHaveCount(1);
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(1);
+    expect(".o_hb_options_container_header i[data-icon='arrow_right']").toHaveCount(1);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(1);
     await unfoldAllOptionsGroups();
-    expect(".options-container-header i[data-icon='arrow_right']").toHaveCount(0);
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(2);
-    expect(".options-container").toHaveCount(2);
-    expect(queryAllTexts(".options-container:first .we-bg-options-container > div > div")).toEqual([
+    expect(".o_hb_options_container_header i[data-icon='arrow_right']").toHaveCount(0);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(2);
+    expect(".o_hb_options_container").toHaveCount(2);
+    expect(queryAllTexts(".o_hb_options_container:first .o_hb_bg_options_container > div > div")).toEqual([
         "Row 3",
         "C",
     ]);
     expect(
-        queryAllTexts(".options-container:nth-child(2) .we-bg-options-container > div > div")
+        queryAllTexts(".o_hb_options_container:nth-child(2) .o_hb_bg_options_container > div > div")
     ).toEqual(["Row 1", "A", "Row 2", "B"]);
 });
 
@@ -173,17 +173,17 @@ test("option group stay unfolded when clicking 'Select only this block'", async 
         </div>`
     );
     await contains(":iframe .test-options-child").click();
-    expect(".options-container-header i[data-icon='arrow_right']").toHaveCount(2);
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(1);
+    expect(".o_hb_options_container_header i[data-icon='arrow_right']").toHaveCount(2);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(1);
     await contains(
-        ".options-container-header:contains('Parent') i[data-icon='arrow_right']"
+        ".o_hb_options_container_header:contains('Parent') i[data-icon='arrow_right']"
     ).click();
-    expect(".options-container-header i[data-icon='arrow_right']").toHaveCount(1);
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(2);
+    expect(".o_hb_options_container_header i[data-icon='arrow_right']").toHaveCount(1);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(2);
     await contains(
-        ".options-container-header:contains('Target') button[title='Select only this block']"
+        ".o_hb_options_container_header:contains('Target') button[title='Select only this block']"
     ).click();
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(2);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(2);
 });
 
 test("option group stay unfolded when changing an option", async () => {
@@ -207,15 +207,15 @@ test("option group stay unfolded when changing an option", async () => {
         </section>`
     );
     await contains(":iframe .test-options-child").click();
-    expect(".options-container-header i[data-icon='arrow_right']").toHaveCount(1);
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(1);
+    expect(".o_hb_options_container_header i[data-icon='arrow_right']").toHaveCount(1);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(1);
     await contains(
-        ".options-container-header:contains('Target') i[data-icon='arrow_right']"
+        ".o_hb_options_container_header:contains('Target') i[data-icon='arrow_right']"
     ).click();
-    expect(".options-container-header i[data-icon='arrow_right']").toHaveCount(0);
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(2);
+    expect(".o_hb_options_container_header i[data-icon='arrow_right']").toHaveCount(0);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(2);
     await contains("button[data-class-action='test-class']").click();
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(2);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(2);
 });
 
 test("last container with options is unfolded regardless of containers without options", async () => {
@@ -243,8 +243,8 @@ test("last container with options is unfolded regardless of containers without o
         </section>`
     );
     await contains(":iframe .test-options-child").click();
-    expect(".options-container-header i[data-icon='arrow_right']").toHaveCount(0);
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(1);
+    expect(".o_hb_options_container_header i[data-icon='arrow_right']").toHaveCount(0);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(1);
 });
 
 test("unfold parent of last container if there is a match in `auto_unfold_container_providers`", async () => {
@@ -279,7 +279,7 @@ test("unfold parent of last container if there is a match in `auto_unfold_contai
         </section>`
     );
     await contains(":iframe .test-options-child").click();
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(2);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(2);
 });
 
 test("options restricted to groups excluding current user do not make an empty folded group appear", async () => {
@@ -309,8 +309,8 @@ test("options restricted to groups excluding current user do not make an empty f
         </section>`
     );
     await contains(":iframe .test-options-child").click();
-    expect(".options-container-header:contains(Target)").toHaveCount(0);
-    expect(".options-container-header i[data-icon='arrow_drop_down']").toHaveCount(1);
+    expect(".o_hb_options_container_header:contains(Target)").toHaveCount(0);
+    expect(".o_hb_options_container_header i[data-icon='arrow_drop_down']").toHaveCount(1);
 });
 
 test("option with groups restriction not available to user", async () => {
@@ -328,7 +328,7 @@ test("option with groups restriction not available to user", async () => {
     );
     await setupHTMLBuilder(`<div class="test-target">Hello</div>`);
     await contains(":iframe .test-target").click();
-    expect(".options-container").toHaveCount(0);
+    expect(".o_hb_options_container").toHaveCount(0);
 });
 
 test("unfolded-by-click option group stay unfolded when changing target", async () => {
@@ -358,24 +358,24 @@ test("unfolded-by-click option group stay unfolded when changing target", async 
         </section>`
     );
     await contains(":iframe .test-options-child.first-child").click();
-    expect(".options-container-header [data-icon='arrow_right']").toHaveCount(1);
-    expect(".options-container-header [data-icon='arrow_drop_down']").toHaveCount(1);
+    expect(".o_hb_options_container_header [data-icon='arrow_right']").toHaveCount(1);
+    expect(".o_hb_options_container_header [data-icon='arrow_drop_down']").toHaveCount(1);
     await contains(
-        ".options-container-header:contains('Target') [data-icon='arrow_right']"
+        ".o_hb_options_container_header:contains('Target') [data-icon='arrow_right']"
     ).click();
-    expect(".options-container-header [data-icon='arrow_right']").toHaveCount(0);
-    expect(".options-container-header [data-icon='arrow_drop_down']").toHaveCount(2);
+    expect(".o_hb_options_container_header [data-icon='arrow_right']").toHaveCount(0);
+    expect(".o_hb_options_container_header [data-icon='arrow_drop_down']").toHaveCount(2);
     await contains(":iframe .test-options-child.second-child").click();
-    expect(".options-container-header [data-icon='arrow_right']").toHaveCount(0);
-    expect(".options-container-header [data-icon='arrow_drop_down']").toHaveCount(2);
+    expect(".o_hb_options_container_header [data-icon='arrow_right']").toHaveCount(0);
+    expect(".o_hb_options_container_header [data-icon='arrow_drop_down']").toHaveCount(2);
 
     // Moving away then back does not reopen the parent
     await contains(":iframe .second-section").click();
-    expect(".options-container-header [data-icon='arrow_right']").toHaveCount(0);
-    expect(".options-container-header [data-icon='arrow_drop_down']").toHaveCount(1);
+    expect(".o_hb_options_container_header [data-icon='arrow_right']").toHaveCount(0);
+    expect(".o_hb_options_container_header [data-icon='arrow_drop_down']").toHaveCount(1);
     await contains(":iframe .test-options-child.first-child").click();
-    expect(".options-container-header [data-icon='arrow_right']").toHaveCount(1);
-    expect(".options-container-header [data-icon='arrow_drop_down']").toHaveCount(1);
+    expect(".o_hb_options_container_header [data-icon='arrow_right']").toHaveCount(1);
+    expect(".o_hb_options_container_header [data-icon='arrow_drop_down']").toHaveCount(1);
 });
 
 test("option that matches several elements", async () => {
@@ -391,8 +391,8 @@ test("option that matches several elements", async () => {
     await setupHTMLBuilder(`<div class="a"><div class="a test-target">b</div></div>`);
     await contains(":iframe .test-target").click();
     await unfoldAllOptionsGroups();
-    expect(".options-container:not(.d-none)").toHaveCount(2);
-    expect(queryAllTexts(".options-container:not(.d-none)")).toEqual([
+    expect(".o_hb_options_container:not(.d-none)").toHaveCount(2);
+    expect(queryAllTexts(".o_hb_options_container:not(.d-none)")).toEqual([
         "Block\nRow\nTest",
         "Block\nRow\nTest",
     ]);
@@ -421,11 +421,11 @@ test("hide empty OptionContainer and display OptionContainer with content", asyn
 
     await contains(":iframe .parent-target > div").click();
     await unfoldAllOptionsGroups();
-    expect(".options-container:not(.d-none)").toHaveCount(1);
+    expect(".o_hb_options_container:not(.d-none)").toHaveCount(1);
 
     await contains("[data-class-action='my-custom-class']").click();
     await unfoldAllOptionsGroups();
-    expect(".options-container:not(.d-none)").toHaveCount(2);
+    expect(".o_hb_options_container:not(.d-none)").toHaveCount(2);
 });
 
 test("hide empty OptionContainer and display OptionContainer with content (with BuilderButtonGroup)", async () => {
@@ -454,12 +454,12 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
     );
     await contains(":iframe .parent-target > div").click();
     await unfoldAllOptionsGroups();
-    expect(".options-container:not(.d-none)").toHaveCount(1);
+    expect(".o_hb_options_container:not(.d-none)").toHaveCount(1);
 
     await contains("[data-class-action='my-custom-class']").click();
     await unfoldAllOptionsGroups();
-    expect(".options-container:not(.d-none)").toHaveCount(2);
-    expect(".options-container:not(.d-none):nth-child(2)").toHaveText("Block\nRow 2\nTest");
+    expect(".o_hb_options_container:not(.d-none)").toHaveCount(2);
+    expect(".o_hb_options_container:not(.d-none):nth-child(2)").toHaveText("Block\nRow 2\nTest");
 });
 
 test("hide empty OptionContainer and display OptionContainer with content (with BuilderButtonGroup) - 2", async () => {
@@ -488,18 +488,18 @@ test("hide empty OptionContainer and display OptionContainer with content (with 
     );
     await contains(":iframe .parent-target > div").click();
     await unfoldAllOptionsGroups();
-    expect(".options-container:not(.d-none)").toHaveCount(1);
+    expect(".o_hb_options_container:not(.d-none)").toHaveCount(1);
 
     await contains("[data-class-action='my-custom-class']").click();
     await unfoldAllOptionsGroups();
-    expect(".options-container:not(.d-none)").toHaveCount(2);
-    expect(".options-container:not(.d-none):nth-child(2)").toHaveText("Block\nRow 2\nTest");
+    expect(".o_hb_options_container:not(.d-none)").toHaveCount(2);
+    expect(".o_hb_options_container:not(.d-none):nth-child(2)").toHaveText("Block\nRow 2\nTest");
 });
 
 test("fallback on the 'Blocks' tab if no option match the selected element", async () => {
     await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target > div").click();
-    expect(".o-snippets-tabs button:contains('Blocks')").toHaveClass("active");
+    expect(".o_hb_snippets_tabs button:contains('Blocks')").toHaveClass("active");
 });
 
 test("move back on the 'Blocks' tab if no more option match the selected element", async () => {
@@ -513,9 +513,9 @@ test("move back on the 'Blocks' tab if no more option match the selected element
     });
     await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target > div").click();
-    expect(".o-snippets-tabs button[data-name=customize]").toHaveClass("active");
+    expect(".o_hb_snippets_tabs button[data-name=customize]").toHaveClass("active");
     await contains("button.oe_snippet_remove").click();
-    expect(".o-snippets-tabs button[data-name=blocks]").toHaveClass("active");
+    expect(".o_hb_snippets_tabs button[data-name=blocks]").toHaveClass("active");
 });
 
 test("stay on the 'Theme' tab if no more option match the selected element", async () => {
@@ -538,10 +538,10 @@ test("stay on the 'Theme' tab if no more option match the selected element", asy
     const { getEditor } = await setupHTMLBuilder(
         `<div class="parent-target"><div class="child-target">b</div></div>`
     );
-    await contains(".o-snippets-tabs button[data-name=theme]").click();
-    expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
+    await contains(".o_hb_snippets_tabs button[data-name=theme]").click();
+    expect(".o_hb_snippets_tabs button[data-name=theme]").toHaveClass("active");
     getEditor().shared.builderOptions.deactivateContainers();
-    expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
+    expect(".o_hb_snippets_tabs button[data-name=theme]").toHaveClass("active");
 });
 
 test("display empty message if no option container is visible", async () => {
@@ -623,7 +623,7 @@ test("hide/display option container base on selector", async () => {
     await contains(":iframe .sub-child-target").click();
     await unfoldAllOptionsGroups();
     expect("[data-class-action='test']").not.toHaveCount();
-    const selectorRowLabel = ".options-container .hb-row:not(.d-none) .hb-row-label";
+    const selectorRowLabel = ".o_hb_options_container .o_hb_row:not(.d-none) .o_hb_row_label";
     expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 3"]);
 
     await contains("[data-class-action='my-custom-class']").click();
@@ -690,7 +690,7 @@ test("no need to define 'isApplied' method for custom action if the widget alrea
         a
         </div>`);
     await contains(":iframe .s_test").click();
-    expect(".options-container [data-class-action='A-class']").toHaveText("A");
+    expect(".o_hb_options_container [data-class-action='A-class']").toHaveText("A");
 });
 
 test("useDomState callback shouldn't be called when the editingElement is removed", async () => {
@@ -735,17 +735,17 @@ test("useDomState callback shouldn't be called when the editingElement is remove
     editor = getEditor();
     await contains(":iframe .s_dummy").click();
     await contains("[data-action-id='addTestSnippet']").click();
-    expect(".options-container .test_option").toHaveCount(1);
+    expect(".o_hb_options_container .test_option").toHaveCount(1);
     expect.verifySteps(["useDomState 0"]);
 
     undo(editor);
     await animationFrame();
-    expect(".options-container .test_option").toHaveCount(0);
+    expect(".o_hb_options_container .test_option").toHaveCount(0);
     expect.verifySteps([]);
 
     redo(editor);
     await animationFrame();
-    expect(".options-container .test_option").toHaveCount(1);
+    expect(".o_hb_options_container .test_option").toHaveCount(1);
     expect.verifySteps(["useDomState 1"]);
 });
 
@@ -810,10 +810,10 @@ test("An option should only appear if its target is inside an editable area, unl
     editor.shared.history.commit();
 
     await contains(":iframe .test-not-editable").click();
-    expect(queryAllTexts(".options-container [data-class-action]")).toEqual(["Option B"]);
+    expect(queryAllTexts(".o_hb_options_container [data-class-action]")).toEqual(["Option B"]);
 
     await contains(":iframe .test-editable").click();
-    expect(queryAllTexts(".options-container [data-class-action]")).toEqual([
+    expect(queryAllTexts(".o_hb_options_container [data-class-action]")).toEqual([
         "Option A",
         "Option B",
     ]);
@@ -836,7 +836,7 @@ describe("isActiveItem", () => {
             anchorOffset: 0,
         });
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeVisible();
+        expect(".o_hb_options_container").toBeVisible();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
         ).not.toHaveCount();
@@ -898,15 +898,15 @@ describe("isActiveItem", () => {
         });
         await contains(":iframe .test-options-target").click();
         await animationFrame();
-        expect(".options-container").toBeVisible();
+        expect(".o_hb_options_container").toBeVisible();
 
-        expect(".we-bg-options-container .dropdown").toHaveText("x");
+        expect(".o_hb_bg_options_container .dropdown").toHaveText("x");
         expect("[data-class-action='b1']").toBeVisible();
         expect("[data-class-action='b2']").not.toHaveCount();
 
-        await contains(".we-bg-options-container .dropdown").click();
+        await contains(".o_hb_bg_options_container .dropdown").click();
         await contains("[data-class-action='a b']").click();
-        expect(".we-bg-options-container .dropdown").toHaveText("y");
+        expect(".o_hb_bg_options_container .dropdown").toHaveText("y");
         expect("[data-class-action='b1']").not.toHaveCount();
         expect("[data-class-action='b2']").toBeVisible();
     });
@@ -920,7 +920,7 @@ describe("isActiveItem", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeVisible();
+        expect(".o_hb_options_container").toBeVisible();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
         ).toBeVisible();
@@ -945,7 +945,7 @@ describe("isActiveItem", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeVisible();
+        expect(".o_hb_options_container").toBeVisible();
         expect(
             "[data-attribute-action='my-attribute2'][data-attribute-action-value='1']"
         ).not.toHaveCount();

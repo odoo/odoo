@@ -71,7 +71,7 @@ registerWebsitePreviewTour("website_auto_hide_menu", {}, () => [
     },
     {
         content: "Change content width",
-        trigger: ".hb-row[data-label='Content Width'] .o-hb-btn[title='Small']",
+        trigger: ".o_hb_row[data-label='Content Width'] .o_hb_btn[title='Small']",
         run: "click",
     },
     {
@@ -81,23 +81,23 @@ registerWebsitePreviewTour("website_auto_hide_menu", {}, () => [
     checkThatLayoutChanged,
     {
         content: "Make content width large",
-        trigger: ".hb-row[data-label='Content Width'] .o-hb-btn[title='Full']",
+        trigger: ".o_hb_row[data-label='Content Width'] .o_hb_btn[title='Full']",
         run: "click",
     },
     getTheLayoutChildren,
     {
         content: "Go to the Theme Tab",
-        trigger: ".o-website-builder_sidebar .o-snippets-tabs [data-name='theme']",
+        trigger: ".o_website_builder_sidebar .o_hb_snippets_tabs [data-name='theme']",
         run: "click",
     },
     {
         content: "Change the page layout",
-        trigger: ".hb-row[data-label='Page Layout'] .o-dropdown",
+        trigger: ".o_hb_row[data-label='Page Layout'] .o-dropdown",
         run: "click",
     },
     {
         content: "Set the page layout to 'boxed'",
-        trigger: ".o-hb-select-dropdown-item[data-action-value='boxed']",
+        trigger: ".o_hb_select_dropdown_item[data-action-value='boxed']",
         run: "click",
     },
     {

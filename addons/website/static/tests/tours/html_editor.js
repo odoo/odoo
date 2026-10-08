@@ -59,7 +59,7 @@ registerWebsitePreviewTour(
         {
             content: "drop a snippet group",
             trigger:
-                ".o-website-builder_sidebar .o_snippet[name=Intro].o_draggable .o_snippet_thumbnail",
+                ".o_website_builder_sidebar .o_snippet[name=Intro].o_draggable .o_snippet_thumbnail",
             // id starting by 'oe_structure..' will actually create an inherited view
             run: "drag_and_drop :iframe #oe_structure_test_ui",
         },
@@ -390,7 +390,7 @@ registerWebsitePreviewTour("test_ace_editor_is_hidden", {}, () => [
     },
     {
         content: "Wait for it to open",
-        trigger: ".o-website-builder_sidebar",
+        trigger: ".o_website_builder_sidebar",
     },
     {
         content: "Make sure the editor has been hidden after starting editing",
@@ -398,7 +398,7 @@ registerWebsitePreviewTour("test_ace_editor_is_hidden", {}, () => [
     },
     {
         content: "Discard edit mode",
-        trigger: ".o-website-builder_sidebar .o-snippets-top-actions button:contains(Discard)",
+        trigger: ".o_website_builder_sidebar .o_hb_snippets_top_actions button:contains(Discard)",
         run: "click",
     },
     {

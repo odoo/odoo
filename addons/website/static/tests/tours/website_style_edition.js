@@ -69,7 +69,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Open the theme color slider",
-            trigger: "button.o-hb-theme-color-slider-btn",
+            trigger: "button.o_hb_theme_color_slider_btn",
             run: "click",
         },
         {

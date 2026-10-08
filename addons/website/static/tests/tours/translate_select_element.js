@@ -48,7 +48,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on add field button",
-            trigger: ".options-container-header button:contains('+ Field')",
+            trigger: ".o_hb_options_container_header button:contains('+ Field')",
             run: "click",
         },
         {
@@ -79,8 +79,8 @@ registerWebsitePreviewTour(
         },
         {
             content: "Edit the second option and click on another one to apply the edit",
-            trigger: "input.o-hb-input-base[data-id='1']",
-            run: "edit(Second option) && click input.o-hb-input-base[data-id='0']",
+            trigger: "input.o_hb_input_base[data-id='1']",
+            run: "edit(Second option) && click input.o_hb_input_base[data-id='0']",
         },
         ...clickOnSave(),
         {

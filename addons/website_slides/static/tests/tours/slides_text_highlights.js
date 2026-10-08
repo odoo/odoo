@@ -74,7 +74,7 @@ registerWebsitePreviewTour("fullscreen_slide_text_highlights", {}, () => [
     },
     {
         content: "Click on the 'Highlight Effects' button to show the listing",
-        trigger: "button.o-select-highlight",
+        trigger: "button.o_hb_select_highlight",
         run: "click",
     },
     {

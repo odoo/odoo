@@ -45,5 +45,5 @@ test("skip saving page options when the relevant element is not in the DOM", asy
     });
     await contains(":iframe #wrapwrap > footer").click();
     await contains("[data-label='Page Visibility'] input").click();
-    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
 });

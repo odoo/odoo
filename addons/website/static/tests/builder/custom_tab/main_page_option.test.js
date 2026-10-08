@@ -17,7 +17,7 @@ test("switch to custom tab and click on a main page option", async () => {
     await setupWebsiteBuilder(`<main>b</main>`);
     await contains('[id="customize-tab"]').click();
     await contains("[data-class-action='my-custom-class']").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
     expect("[data-class-action='my-custom-class']").toHaveCount(1);
     expect(":iframe main").toHaveClass("my-custom-class");
 });

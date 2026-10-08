@@ -9,13 +9,13 @@ import { animationFrame, press, queryFirst } from "@odoo/hoot-dom";
 defineWebsiteModels();
 
 const openChartSlidingPanel = async () => {
-    await contains("[data-label='Chart Data'] button.o-hb-btn").click();
+    await contains("[data-label='Chart Data'] button.o_hb_btn").click();
     await advanceTime(200);
     await animationFrame();
 };
 
 const closeChartSlidingPanel = async () => {
-    await contains(".hb-sliding-panel-label button[aria-label='close']").click();
+    await contains(".o_hb_sliding_panel_label button[aria-label='close']").click();
     await advanceTime(200);
     await animationFrame();
 };
@@ -59,7 +59,7 @@ describe("Differences between pie & non-pie charts", () => {
         expect(data.datasets[0].backgroundColor).toBeOfType("string");
         expect(data.datasets[0].borderColor).toBeOfType("string");
         await contains(":iframe .s_chart").click();
-        await contains(".options-container .dropdown-toggle:contains('Bar Vertical')").click();
+        await contains(".o_hb_options_container .dropdown-toggle:contains('Bar Vertical')").click();
         await contains("[data-action-id=setChartType][data-action-value=pie]").click();
         expect(":iframe .s_chart").toHaveAttribute("data-type", "pie");
         data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
@@ -73,7 +73,7 @@ describe("Differences between pie & non-pie charts", () => {
         expect(data.datasets[0].backgroundColor).toHaveLength(3);
         expect(data.datasets[0].borderColor).toHaveLength(3);
         await contains(":iframe .s_chart").click();
-        await contains(".options-container .dropdown-toggle:contains('Pie')").click();
+        await contains(".o_hb_options_container .dropdown-toggle:contains('Pie')").click();
         await contains("[data-action-id=setChartType][data-action-value=bar]").click();
         expect(":iframe .s_chart").toHaveAttribute("data-type", "bar");
         data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
@@ -87,21 +87,21 @@ describe("Differences between pie & non-pie charts", () => {
         await animationFrame();
         await openChartSlidingPanel();
         await contains(
-            ".hb-sliding-panel table [data-action-id=updateDatasetLabel]:last input"
+            ".o_hb_sliding_panel table [data-action-id=updateDatasetLabel]:last input"
         ).click();
         await animationFrame();
         expect(
-            ".hb-sliding-panel [data-label='Dataset Color'] button.o_we_color_preview"
+            ".o_hb_sliding_panel [data-label='Dataset Color'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgb(74, 123, 140)",
         });
         expect(
-            ".hb-sliding-panel table [data-action-id=updateDatasetLabel]:last input"
+            ".o_hb_sliding_panel table [data-action-id=updateDatasetLabel]:last input"
         ).toHaveStyle({
             border: "2px solid rgb(74, 123, 140)",
         });
         expect(
-            ".hb-sliding-panel table [data-action-id=updateDatasetValue]:first input"
+            ".o_hb_sliding_panel table [data-action-id=updateDatasetValue]:first input"
         ).not.toHaveAttribute("style");
     });
     test("Bar chart => border color set as fallback for border on header input", async () => {
@@ -111,26 +111,26 @@ describe("Differences between pie & non-pie charts", () => {
         await animationFrame();
         await openChartSlidingPanel();
         await contains(
-            ".hb-sliding-panel table [data-action-id=updateDatasetLabel]:first input"
+            ".o_hb_sliding_panel table [data-action-id=updateDatasetLabel]:first input"
         ).click();
         await animationFrame();
         expect(
-            ".hb-sliding-panel [data-label='Dataset Color'] button.o_we_color_preview"
+            ".o_hb_sliding_panel [data-label='Dataset Color'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgba(255, 255, 255, 0)",
         });
         expect(
-            ".hb-sliding-panel [data-label='Dataset Border'] button.o_we_color_preview"
+            ".o_hb_sliding_panel [data-label='Dataset Border'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgb(255, 127, 80)",
         });
         expect(
-            ".hb-sliding-panel table [data-action-id=updateDatasetLabel]:first input"
+            ".o_hb_sliding_panel table [data-action-id=updateDatasetLabel]:first input"
         ).toHaveStyle({
             border: "2px solid rgb(255, 127, 80)",
         });
         expect(
-            ".hb-sliding-panel table [data-action-id=updateDatasetValue]:first input"
+            ".o_hb_sliding_panel table [data-action-id=updateDatasetValue]:first input"
         ).not.toHaveAttribute("style");
     });
     test("Pie chart => background color set as border on individual data inputs", async () => {
@@ -140,21 +140,21 @@ describe("Differences between pie & non-pie charts", () => {
         await animationFrame();
         await openChartSlidingPanel();
         await contains(
-            ".hb-sliding-panel table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
+            ".o_hb_sliding_panel table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
         ).click();
         await animationFrame();
-        expect(".hb-sliding-panel [data-label='Data Color'] button.o_we_color_preview").toHaveStyle(
+        expect(".o_hb_sliding_panel [data-label='Data Color'] button.o_we_color_preview").toHaveStyle(
             {
                 backgroundColor: "rgb(74, 123, 140)",
             }
         );
         expect(
-            ".hb-sliding-panel table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
+            ".o_hb_sliding_panel table td:nth-child(3) [data-action-id=updateDatasetValue]:first input"
         ).toHaveStyle({
             border: "2px solid rgb(74, 123, 140)",
         });
         expect(
-            ".hb-sliding-panel table th:nth-child(3) [data-action-id=updateDatasetLabel]:first input"
+            ".o_hb_sliding_panel table th:nth-child(3) [data-action-id=updateDatasetLabel]:first input"
         ).not.toHaveAttribute("style");
     });
     test("Pie chart => border color set as fallback for border on individual data inputs", async () => {
@@ -164,26 +164,26 @@ describe("Differences between pie & non-pie charts", () => {
         await animationFrame();
         await openChartSlidingPanel();
         await contains(
-            ".hb-sliding-panel table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
+            ".o_hb_sliding_panel table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
         ).click();
         await animationFrame();
-        expect(".hb-sliding-panel [data-label='Data Color'] button.o_we_color_preview").toHaveStyle(
+        expect(".o_hb_sliding_panel [data-label='Data Color'] button.o_we_color_preview").toHaveStyle(
             {
                 backgroundColor: "rgba(255, 255, 255, 0)",
             }
         );
         expect(
-            ".hb-sliding-panel [data-label='Data Border'] button.o_we_color_preview"
+            ".o_hb_sliding_panel [data-label='Data Border'] button.o_we_color_preview"
         ).toHaveStyle({
             backgroundColor: "rgb(255, 127, 80)",
         });
         expect(
-            ".hb-sliding-panel table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
+            ".o_hb_sliding_panel table td:nth-child(2) [data-action-id=updateDatasetValue]:first input"
         ).toHaveStyle({
             border: "2px solid rgb(255, 127, 80)",
         });
         expect(
-            ".hb-sliding-panel table th:nth-child(2) [data-action-id=updateDatasetLabel]:first input"
+            ".o_hb_sliding_panel table th:nth-child(2) [data-action-id=updateDatasetLabel]:first input"
         ).not.toHaveAttribute("style");
     });
 });
@@ -194,17 +194,17 @@ describe("Add & Delete buttons", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await openChartSlidingPanel();
-        expect(".hb-sliding-panel table [data-action-id=removeColumn]:first").toHaveClass(
+        expect(".o_hb_sliding_panel table [data-action-id=removeColumn]:first").toHaveClass(
             "visually-hidden-focusable"
         );
-        expect(".hb-sliding-panel table [data-action-id=removeRow]:first").toHaveClass(
+        expect(".o_hb_sliding_panel table [data-action-id=removeRow]:first").toHaveClass(
             "visually-hidden-focusable"
         );
-        await contains(".hb-sliding-panel table [data-action-id=updateDatasetValue]:first").hover();
-        expect(".hb-sliding-panel table [data-action-id=removeColumn]:first").not.toHaveClass(
+        await contains(".o_hb_sliding_panel table [data-action-id=updateDatasetValue]:first").hover();
+        expect(".o_hb_sliding_panel table [data-action-id=removeColumn]:first").not.toHaveClass(
             "visually-hidden-focusable"
         );
-        expect(".hb-sliding-panel table [data-action-id=removeRow]:first").not.toHaveClass(
+        expect(".o_hb_sliding_panel table [data-action-id=removeRow]:first").not.toHaveClass(
             "visually-hidden-focusable"
         );
     });
@@ -213,17 +213,17 @@ describe("Add & Delete buttons", () => {
         await setupWebsiteBuilder(chartTemplate(type, getData(type)));
         await contains(":iframe .s_chart").click();
         await openChartSlidingPanel();
-        expect(".hb-sliding-panel table [data-action-id=removeColumn]:first").toHaveClass(
+        expect(".o_hb_sliding_panel table [data-action-id=removeColumn]:first").toHaveClass(
             "visually-hidden-focusable"
         );
-        expect(".hb-sliding-panel table [data-action-id=removeRow]:first").toHaveClass(
+        expect(".o_hb_sliding_panel table [data-action-id=removeRow]:first").toHaveClass(
             "visually-hidden-focusable"
         );
-        await contains(".hb-sliding-panel table [data-action-id=updateDatasetValue]:first").focus();
-        expect(".hb-sliding-panel table [data-action-id=removeColumn]:first").not.toHaveClass(
+        await contains(".o_hb_sliding_panel table [data-action-id=updateDatasetValue]:first").focus();
+        expect(".o_hb_sliding_panel table [data-action-id=removeColumn]:first").not.toHaveClass(
             "visually-hidden-focusable"
         );
-        expect(".hb-sliding-panel table [data-action-id=removeRow]:first").not.toHaveClass(
+        expect(".o_hb_sliding_panel table [data-action-id=removeRow]:first").not.toHaveClass(
             "visually-hidden-focusable"
         );
     });
@@ -235,11 +235,11 @@ describe("Add & Delete buttons", () => {
         expect(data.datasets[0].data).toHaveLength(3);
         await contains(":iframe .s_chart").click();
         await openChartSlidingPanel();
-        await contains(".hb-sliding-panel table [data-action-id=addRow]").click();
+        await contains(".o_hb_sliding_panel table [data-action-id=addRow]").click();
         data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.labels).toHaveLength(4);
         expect(data.datasets[0].data).toHaveLength(4);
-        expect(".hb-sliding-panel table tbody tr").toHaveCount(5);
+        expect(".o_hb_sliding_panel table tbody tr").toHaveCount(5);
     });
     test("Adding a column updates the data and available cells", async () => {
         const type = "bar";
@@ -248,11 +248,11 @@ describe("Add & Delete buttons", () => {
         expect(data.datasets).toHaveLength(2);
         await contains(":iframe .s_chart").click();
         await openChartSlidingPanel();
-        await contains(".hb-sliding-panel table [data-action-id=addColumn]").click();
+        await contains(".o_hb_sliding_panel table [data-action-id=addColumn]").click();
         data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.datasets).toHaveLength(3);
-        expect(".hb-sliding-panel table thead tr th").toHaveCount(5);
-        expect(".hb-sliding-panel table tbody tr:first td").toHaveCount(4);
+        expect(".o_hb_sliding_panel table thead tr th").toHaveCount(5);
+        expect(".o_hb_sliding_panel table tbody tr:first td").toHaveCount(4);
     });
     test("Deleting a row updates the data and available cells", async () => {
         const type = "bar";
@@ -263,12 +263,12 @@ describe("Add & Delete buttons", () => {
         expect(data.labels[0]).toBe("First");
         await contains(":iframe .s_chart").click();
         await openChartSlidingPanel();
-        await contains(".hb-sliding-panel table [data-action-id=removeRow]:first").click();
+        await contains(".o_hb_sliding_panel table [data-action-id=removeRow]:first").click();
         data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.labels).toHaveLength(2);
         expect(data.datasets[0].data).toHaveLength(2);
         expect(data.labels[0]).toBe("Second");
-        expect(".hb-sliding-panel table tbody tr").toHaveCount(3);
+        expect(".o_hb_sliding_panel table tbody tr").toHaveCount(3);
     });
     test("Deleting a column updates the data and available cells", async () => {
         const type = "bar";
@@ -278,11 +278,11 @@ describe("Add & Delete buttons", () => {
         expect(data.datasets[0].label).toBe("One");
         await contains(":iframe .s_chart").click();
         await openChartSlidingPanel();
-        await contains(".hb-sliding-panel table [data-action-id=removeColumn]:first").click();
+        await contains(".o_hb_sliding_panel table [data-action-id=removeColumn]:first").click();
         data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.datasets).toHaveLength(1);
-        expect(".hb-sliding-panel table thead tr th").toHaveCount(3);
-        expect(".hb-sliding-panel table tbody tr:first td").toHaveCount(2);
+        expect(".o_hb_sliding_panel table thead tr th").toHaveCount(3);
+        expect(".o_hb_sliding_panel table tbody tr:first td").toHaveCount(2);
         expect(data.datasets[0].label).toBe("Two");
     });
     test("Cannot delete column if there is only 1 dataset", async () => {
@@ -302,7 +302,7 @@ describe("Add & Delete buttons", () => {
         );
         await contains(":iframe .s_chart").click();
         await openChartSlidingPanel();
-        expect(".hb-sliding-panel table [data-action-id=removeColumn]").toHaveCount(0);
+        expect(".o_hb_sliding_panel table [data-action-id=removeColumn]").toHaveCount(0);
     });
     test("Cannot delete row if there is only 1 label", async () => {
         await setupWebsiteBuilder(
@@ -328,7 +328,7 @@ describe("Add & Delete buttons", () => {
         );
         await contains(":iframe .s_chart").click();
         await openChartSlidingPanel();
-        expect(".hb-sliding-panel table [data-action-id=removeRow]").toHaveCount(0);
+        expect(".o_hb_sliding_panel table [data-action-id=removeRow]").toHaveCount(0);
     });
     test("Tab to a delete row button and enter to validate", async () => {
         const type = "bar";
@@ -338,7 +338,7 @@ describe("Add & Delete buttons", () => {
         let data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.labels).toHaveLength(3);
         expect(data.labels[0]).toBe("First");
-        await contains(".hb-sliding-panel table tbody input").focus();
+        await contains(".o_hb_sliding_panel table tbody input").focus();
         await press("Tab");
         await press("Tab");
         await press("Tab");
@@ -355,7 +355,7 @@ describe("Add & Delete buttons", () => {
         let data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
         expect(data.datasets).toHaveLength(2);
         expect(data.datasets[0].label).toBe("One");
-        await contains(".hb-sliding-panel table tbody tr:eq(2) input:last").focus();
+        await contains(".o_hb_sliding_panel table tbody tr:eq(2) input:last").focus();
         await press("Tab"); // remove row button
         await press("Tab"); // add row button
         await press("Tab");
@@ -373,16 +373,16 @@ test("Adding / Deleting multiple columns updates the data and available cells", 
     expect(data.datasets).toHaveLength(2);
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
-    await contains(".hb-sliding-panel [data-action-id=setColumns] input").edit(10);
+    await contains(".o_hb_sliding_panel [data-action-id=setColumns] input").edit(10);
     data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
     expect(data.datasets).toHaveLength(10);
-    expect(".hb-sliding-panel table thead tr th").toHaveCount(12);
-    expect(".hb-sliding-panel table tbody tr:first td").toHaveCount(11);
-    await contains(".hb-sliding-panel [data-action-id=setColumns] input").edit(1);
+    expect(".o_hb_sliding_panel table thead tr th").toHaveCount(12);
+    expect(".o_hb_sliding_panel table tbody tr:first td").toHaveCount(11);
+    await contains(".o_hb_sliding_panel [data-action-id=setColumns] input").edit(1);
     data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
     expect(data.datasets).toHaveLength(1);
-    expect(".hb-sliding-panel table thead tr th").toHaveCount(3);
-    expect(".hb-sliding-panel table tbody tr:first td").toHaveCount(2);
+    expect(".o_hb_sliding_panel table thead tr th").toHaveCount(3);
+    expect(".o_hb_sliding_panel table tbody tr:first td").toHaveCount(2);
 });
 
 test("Adding / Deleting multiple rows updates the data and available cells", async () => {
@@ -393,16 +393,16 @@ test("Adding / Deleting multiple rows updates the data and available cells", asy
     expect(data.datasets[0].data).toHaveLength(3);
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
-    await contains(".hb-sliding-panel [data-action-id=setRows] input").edit(10);
+    await contains(".o_hb_sliding_panel [data-action-id=setRows] input").edit(10);
     data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
     expect(data.labels).toHaveLength(10);
     expect(data.datasets[0].data).toHaveLength(10);
-    expect(".hb-sliding-panel table tbody tr").toHaveCount(11);
-    await contains(".hb-sliding-panel [data-action-id=setRows] input").edit(1);
+    expect(".o_hb_sliding_panel table tbody tr").toHaveCount(11);
+    await contains(".o_hb_sliding_panel [data-action-id=setRows] input").edit(1);
     data = JSON.parse(queryFirst(":iframe .s_chart").dataset.data);
     expect(data.labels).toHaveLength(1);
     expect(data.datasets[0].data).toHaveLength(1);
-    expect(".hb-sliding-panel table tbody tr").toHaveCount(2);
+    expect(".o_hb_sliding_panel table tbody tr").toHaveCount(2);
 });
 
 test("Pasting values updates multiple chart values at once", async () => {
@@ -410,12 +410,12 @@ test("Pasting values updates multiple chart values at once", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
-    await contains(".hb-sliding-panel [data-action-id=setColumns] input").edit(5);
-    await contains(".hb-sliding-panel [data-action-id=setRows] input").edit(5);
-    expect(".hb-sliding-panel table tbody tr:nth-child(1) td:nth-child(2) input").toHaveValue(25);
-    expect(".hb-sliding-panel table tbody tr:nth-child(5) td:nth-child(6) input").toHaveValue(0);
-    expect(".hb-sliding-panel table tbody tr:nth-child(3) td:nth-child(3) input").toHaveValue(45);
-    const input = queryFirst(".hb-sliding-panel table [data-action-id=updateDatasetValue] input");
+    await contains(".o_hb_sliding_panel [data-action-id=setColumns] input").edit(5);
+    await contains(".o_hb_sliding_panel [data-action-id=setRows] input").edit(5);
+    expect(".o_hb_sliding_panel table tbody tr:nth-child(1) td:nth-child(2) input").toHaveValue(25);
+    expect(".o_hb_sliding_panel table tbody tr:nth-child(5) td:nth-child(6) input").toHaveValue(0);
+    expect(".o_hb_sliding_panel table tbody tr:nth-child(3) td:nth-child(3) input").toHaveValue(45);
+    const input = queryFirst(".o_hb_sliding_panel table [data-action-id=updateDatasetValue] input");
     const clipboardData = new DataTransfer();
     clipboardData.setData(
         "text/plain",
@@ -427,9 +427,9 @@ test("Pasting values updates multiple chart values at once", async () => {
     );
     await manuallyDispatchProgrammaticEvent(input, "paste", { clipboardData });
     await waitSidebarUpdated();
-    expect(".hb-sliding-panel table tbody tr:nth-child(1) td:nth-child(2) input").toHaveValue(11);
-    expect(".hb-sliding-panel table tbody tr:nth-child(5) td:nth-child(6) input").toHaveValue(55);
-    expect(".hb-sliding-panel table tbody tr:nth-child(3) td:nth-child(3) input").toHaveValue(32);
+    expect(".o_hb_sliding_panel table tbody tr:nth-child(1) td:nth-child(2) input").toHaveValue(11);
+    expect(".o_hb_sliding_panel table tbody tr:nth-child(5) td:nth-child(6) input").toHaveValue(55);
+    expect(".o_hb_sliding_panel table tbody tr:nth-child(3) td:nth-child(3) input").toHaveValue(32);
 });
 
 test("Pasting extra values extends rows and columns", async () => {
@@ -438,7 +438,7 @@ test("Pasting extra values extends rows and columns", async () => {
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
 
-    const input = queryFirst(".hb-sliding-panel table [data-action-id=updateDatasetValue] input");
+    const input = queryFirst(".o_hb_sliding_panel table [data-action-id=updateDatasetValue] input");
     const clipboardData = new DataTransfer();
     clipboardData.setData(
         "text/plain",
@@ -457,10 +457,10 @@ test("Pasting extra values extends rows and columns", async () => {
     expect(data.datasets[0].data[0]).toBe(11);
     expect(data.datasets[3].data[3]).toBe(44);
 
-    expect(".hb-sliding-panel table thead tr th").toHaveCount(6);
-    expect(".hb-sliding-panel table tbody tr").toHaveCount(5);
-    expect(".hb-sliding-panel table tbody tr:nth-child(1) td:nth-child(2) input").toHaveValue(11);
-    expect(".hb-sliding-panel table tbody tr:nth-child(4) td:nth-child(5) input").toHaveValue(44);
+    expect(".o_hb_sliding_panel table thead tr th").toHaveCount(6);
+    expect(".o_hb_sliding_panel table tbody tr").toHaveCount(5);
+    expect(".o_hb_sliding_panel table tbody tr:nth-child(1) td:nth-child(2) input").toHaveValue(11);
+    expect(".o_hb_sliding_panel table tbody tr:nth-child(4) td:nth-child(5) input").toHaveValue(44);
 });
 
 test("Pasting on dataset labels uses text and can add columns", async () => {
@@ -470,7 +470,7 @@ test("Pasting on dataset labels uses text and can add columns", async () => {
     await openChartSlidingPanel();
 
     const input = queryFirst(
-        ".hb-sliding-panel table [data-action-id=updateDatasetLabel]:first input"
+        ".o_hb_sliding_panel table [data-action-id=updateDatasetLabel]:first input"
     );
     const clipboardData = new DataTransfer();
     clipboardData.setData("text/plain", "Alpha\tBeta\tGamma");
@@ -482,7 +482,7 @@ test("Pasting on dataset labels uses text and can add columns", async () => {
     expect(data.datasets[0].label).toBe("Alpha");
     expect(data.datasets[1].label).toBe("Beta");
     expect(data.datasets[2].label).toBe("Gamma");
-    expect(".hb-sliding-panel table thead tr th").toHaveCount(5);
+    expect(".o_hb_sliding_panel table thead tr th").toHaveCount(5);
 });
 
 test("Pasting on row labels uses text and can add rows", async () => {
@@ -492,7 +492,7 @@ test("Pasting on row labels uses text and can add rows", async () => {
     await openChartSlidingPanel();
 
     const input = queryFirst(
-        ".hb-sliding-panel table [data-action-id=updateLabelName]:first input"
+        ".o_hb_sliding_panel table [data-action-id=updateLabelName]:first input"
     );
     const clipboardData = new DataTransfer();
     clipboardData.setData("text/plain", ["North", "South", "East", "West"].join("\n"));
@@ -506,7 +506,7 @@ test("Pasting on row labels uses text and can add rows", async () => {
     expect(data.labels[2]).toBe("East");
     expect(data.labels[3]).toBe("West");
     expect(data.datasets[0].data[3]).toBe(0);
-    expect(".hb-sliding-panel table tbody tr").toHaveCount(5);
+    expect(".o_hb_sliding_panel table tbody tr").toHaveCount(5);
 });
 
 test("Focusing input displays related data color/data border colorpickers", async () => {
@@ -514,18 +514,18 @@ test("Focusing input displays related data color/data border colorpickers", asyn
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
-    expect(".hb-sliding-panel [data-label='Data Color']").not.toHaveCount();
-    expect(".hb-sliding-panel [data-label='Data Border']").not.toHaveCount();
-    expect(".hb-sliding-panel [data-label='Dataset Color']").toBeVisible();
-    expect(".hb-sliding-panel [data-label='Dataset Border']").toBeVisible();
+    expect(".o_hb_sliding_panel [data-label='Data Color']").not.toHaveCount();
+    expect(".o_hb_sliding_panel [data-label='Data Border']").not.toHaveCount();
+    expect(".o_hb_sliding_panel [data-label='Dataset Color']").toBeVisible();
+    expect(".o_hb_sliding_panel [data-label='Dataset Border']").toBeVisible();
     await closeChartSlidingPanel();
-    await contains(".options-container [data-label='Type'] button.o-dropdown").click();
+    await contains(".o_hb_options_container [data-label='Type'] button.o-dropdown").click();
     await contains(".o_popover [data-action-id='setChartType'][data-action-value='pie']").click();
     await openChartSlidingPanel();
-    expect(".hb-sliding-panel [data-label='Data Color']").toBeVisible();
-    expect(".hb-sliding-panel [data-label='Data Border']").toBeVisible();
-    expect(".hb-sliding-panel [data-label='Dataset Color']").not.toHaveCount();
-    expect(".hb-sliding-panel [data-label='Dataset Border']").not.toHaveCount();
+    expect(".o_hb_sliding_panel [data-label='Data Color']").toBeVisible();
+    expect(".o_hb_sliding_panel [data-label='Data Border']").toBeVisible();
+    expect(".o_hb_sliding_panel [data-label='Dataset Color']").not.toHaveCount();
+    expect(".o_hb_sliding_panel [data-label='Dataset Border']").not.toHaveCount();
 });
 
 test("CSS colors and CSS custom variables are correctly computed", async () => {
@@ -540,11 +540,11 @@ test("CSS colors and CSS custom variables are correctly computed", async () => {
     });
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
-    await contains(".hb-sliding-panel table tbody input:eq(1)").click();
-    expect(".hb-sliding-panel [data-label='Dataset Color'] .o_we_color_preview").toHaveStyle({
+    await contains(".o_hb_sliding_panel table tbody input:eq(1)").click();
+    expect(".o_hb_sliding_panel [data-label='Dataset Color'] .o_we_color_preview").toHaveStyle({
         "background-color": "rgb(255, 0, 0)",
     });
-    expect(".hb-sliding-panel [data-label='Dataset Border'] .o_we_color_preview").toHaveStyle({
+    expect(".o_hb_sliding_panel [data-label='Dataset Border'] .o_we_color_preview").toHaveStyle({
         "background-color": "rgb(255, 127, 80)",
     });
 });
@@ -553,11 +553,11 @@ test("Stacked option is only available with more than 1 dataset", async () => {
     const type = "bar";
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
-    expect(".options-container [data-label='Stacked']").toBeVisible();
+    expect(".o_hb_options_container [data-label='Stacked']").toBeVisible();
     await openChartSlidingPanel();
-    await contains(".hb-sliding-panel table [data-action-id=removeColumn]").click();
+    await contains(".o_hb_sliding_panel table [data-action-id=removeColumn]").click();
     await closeChartSlidingPanel();
-    expect(".options-container [data-label='Stacked']").not.toHaveCount();
+    expect(".o_hb_options_container [data-label='Stacked']").not.toHaveCount();
 });
 
 test("Adding a new column/row displays the color pickers of the cell in new column/row", async () => {
@@ -565,28 +565,28 @@ test("Adding a new column/row displays the color pickers of the cell in new colu
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
-    expect(".hb-sliding-panel [data-label='Data Color']").toBeVisible();
-    const prevColor = queryFirst(".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview")
+    expect(".o_hb_sliding_panel [data-label='Data Color']").toBeVisible();
+    const prevColor = queryFirst(".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview")
         .style.backgroundColor;
 
-    await contains(".hb-sliding-panel button.add_column").click();
-    expect(".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
+    await contains(".o_hb_sliding_panel button.add_column").click();
+    expect(".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
         backgroundColor: prevColor,
     });
     const columnColor = queryFirst(
-        ".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview"
+        ".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview"
     ).style.backgroundColor;
-    expect(".hb-sliding-panel table tbody tr:first-child td:nth-child(4) input").toHaveStyle({
+    expect(".o_hb_sliding_panel table tbody tr:first-child td:nth-child(4) input").toHaveStyle({
         border: `2px solid ${columnColor}`,
     });
 
-    await contains(".hb-sliding-panel button.add_row").click();
-    expect(".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
+    await contains(".o_hb_sliding_panel button.add_row").click();
+    expect(".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview").not.toHaveStyle({
         backgroundColor: columnColor,
     });
-    const rowColor = queryFirst(".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview")
+    const rowColor = queryFirst(".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview")
         .style.backgroundColor;
-    expect(".hb-sliding-panel table tbody tr:nth-child(4) td:nth-child(2) input").toHaveStyle({
+    expect(".o_hb_sliding_panel table tbody tr:nth-child(4) td:nth-child(2) input").toHaveStyle({
         border: `2px solid ${rowColor}`,
     });
 });
@@ -596,26 +596,26 @@ test("Removing a row with the current cell resets the current cell", async () =>
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
     await openChartSlidingPanel();
-    expect(".hb-sliding-panel [data-label='Data Color']").toBeVisible();
+    expect(".o_hb_sliding_panel [data-label='Data Color']").toBeVisible();
 
     const defaultColor = queryFirst(
-        ".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview"
+        ".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview"
     ).style.backgroundColor;
 
-    await contains(".hb-sliding-panel table tbody tr:nth-child(1) td:nth-child(3) input").click();
+    await contains(".o_hb_sliding_panel table tbody tr:nth-child(1) td:nth-child(3) input").click();
     const focusedCellColor = queryFirst(
-        ".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview"
+        ".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview"
     ).style.backgroundColor;
-    expect(".hb-sliding-panel table tbody tr:nth-child(1) td:nth-child(3) input").toHaveStyle({
+    expect(".o_hb_sliding_panel table tbody tr:nth-child(1) td:nth-child(3) input").toHaveStyle({
         border: `2px solid ${focusedCellColor}`,
     });
 
     await contains(
-        ".hb-sliding-panel table tbody tr:last-child td:nth-child(3) button.o_builder_matrix_remove_col"
+        ".o_hb_sliding_panel table tbody tr:last-child td:nth-child(3) button.o_builder_matrix_remove_col"
     ).click();
     // After removal, the current cell should reset to default (first dataset, first data point)
     // The color picker should now reflect the default cell's color
-    expect(".hb-sliding-panel [data-label='Data Color'] .o_we_color_preview").toHaveStyle({
+    expect(".o_hb_sliding_panel [data-label='Data Color'] .o_we_color_preview").toHaveStyle({
         backgroundColor: defaultColor,
     });
 });
@@ -625,7 +625,7 @@ test("Adding a description updates the aria-label", async () => {
     await setupWebsiteBuilder(chartTemplate(type, getData(type)));
     await contains(":iframe .s_chart").click();
 
-    await contains(".options-container [data-label='Description'] input").fill("Super description");
+    await contains(".o_hb_options_container [data-label='Description'] input").fill("Super description");
     await contains(":iframe .s_chart").click();
     expect(":iframe .s_chart canvas").toHaveAttribute("aria-label", "Super description");
 });

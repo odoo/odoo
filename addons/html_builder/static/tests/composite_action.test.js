@@ -233,5 +233,5 @@ test("applied composite action's with no getPriority implementation is considere
     });
     await setupHTMLBuilder(`<section class="s_test" data-test="something">Test</section>`);
     await contains(":iframe .s_test").click();
-    expect(".o-hb-select-wrapper button").toHaveText("The Test Option");
+    expect(".o_hb_select_wrapper button").toHaveText("The Test Option");
 });

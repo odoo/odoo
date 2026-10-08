@@ -27,7 +27,7 @@ test("dropping a floating snippet moves it to the end of the container", async (
     await setupWebsiteBuilder("<section class='first-snippet'>First snippet</section>");
 
     const { moveTo, drop } = await contains(
-        ".o-website-builder_sidebar [data-snippet-group='intro'] .o_snippet_thumbnail"
+        ".o_website_builder_sidebar [data-snippet-group='intro'] .o_snippet_thumbnail"
     ).drag();
     // Drop the snippet in the first dropzone.
     await moveTo(":iframe .oe_drop_zone:first");
@@ -63,7 +63,7 @@ test("can move a snippet to a provided custom scope", async () => {
     expect(":iframe .custom-container > *").toHaveCount(0);
     expect(":iframe .s_popup .modal").toBeVisible();
     await contains(":iframe .s_popup .modal").click();
-    await contains(".hb-row[data-label='Show on'] .dropdown-toggle").click();
+    await contains(".o_hb_row[data-label='Show on'] .dropdown-toggle").click();
     await contains(".dropdown-item:contains('Custom')").click();
     await waitSidebarUpdated();
     expect(":iframe .custom-container > *").toHaveCount(1);

@@ -150,7 +150,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "edit",
-            trigger: ".o-website-btn-custo-primary.dropdown-toggle:contains('edit')",
+            trigger: ".o_website_btn_custo_primary.dropdown-toggle:contains('edit')",
             run: "click",
         },
         {
@@ -175,7 +175,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the generic 'Translation' option is always visible",
-            trigger: ".o_customize_tab .options-container [data-label='Translate to']",
+            trigger: ".o_customize_tab .o_hb_options_container [data-label='Translate to']",
         },
         {
             trigger: ":iframe .js_language_selector > button:contains(Parseltongue)",
@@ -213,12 +213,12 @@ registerWebsitePreviewTour(
         },
         {
             content: "translate placeholder",
-            trigger: `.options-container [data-action-id='translateAttribute'][data-action-param='placeholder'] input`,
+            trigger: `.o_hb_options_container [data-action-id='translateAttribute'][data-action-param='placeholder'] input`,
             run: "edit test Parseltongue placeholder",
         },
         {
             content: "translate default value",
-            trigger: `.options-container [data-action-id='translateAttribute'][data-action-param='value'] input`,
+            trigger: `.o_hb_options_container [data-action-id='translateAttribute'][data-action-param='value'] input`,
             run: "edit test Parseltongue default value",
         },
         {

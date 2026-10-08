@@ -95,7 +95,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check the ribbon name appears in the dropdown title",
-            trigger: "[data-container-title='Product'] .o-hb-select-toggle:contains(New Ribbon)",
+            trigger: "[data-container-title='Product'] .o_hb_select_toggle:contains(New Ribbon)",
         },
         {
             content: "Check the background color preview displays correctly in the dropdown",

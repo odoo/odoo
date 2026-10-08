@@ -20,7 +20,7 @@
                                 <t t-foreach="Object.entries(this.props.itemShape).filter(([key,_]) => !this.props.hiddenProperties.includes(key))" t-as="entry" t-key="entry[0]">
                                     <td t-att-class="this.props.columnWidth[entry[0]] || ''">
                                         <t t-if="entry[1].endsWith('boolean')">
-                                            <div class="o-hb-checkbox o-checkbox form-check o_field_boolean o_boolean_toggle form-switch">
+                                            <div class="o_hb_checkbox o-checkbox form-check o_field_boolean o_boolean_toggle form-switch">
                                                 <input type="checkbox" class="form-check-input"
                                                     t-att-name="entry[0]"
                                                     t-att-checked="item[entry[0]]"
@@ -31,7 +31,7 @@
                                             </div>
                                         </t>
                                         <t t-else="">
-                                            <input  class="o-hb-input-base"
+                                            <input  class="o_hb_input_base"
                                                     t-att-type="entry[1]"
                                                     t-att-name="entry[0]"
                                                     t-att-value="item[entry[0]]"
@@ -56,7 +56,7 @@
                     </table>
                 </div>
             </t>
-            <div t-if="isMany2X" class="o-hb-select-wrapper">
+            <div t-if="isMany2X" class="o_hb_select_wrapper">
                 <t t-set="excludedRecords" t-value="this.getExcludedRecords()"></t>
                 <div class="mt-1 ms-auto">
                     <div class="d-flex align-items-center gap-2">
@@ -64,9 +64,9 @@
                             <SelectMenu
                                 choices="excludedRecords.map((record) => ({ value: record, label: record.display_name  }))"
                                 onSelect="(record) => this.addItem(record)"
-                                class="'o-hb-selectMany2X-wrapper min-w-0'"
-                                menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown'"
-                                togglerClass="'o-hb-selectMany2X-toggle btn-secondary'"
+                                class="'o_hb_selectMany2X_wrapper min-w-0'"
+                                menuClass="'o_hb_select_dropdown o_hb_selectMany2X_dropdown'"
+                                togglerClass="'o_hb_selectMany2X_toggle btn-secondary'"
                                 disabled="!excludedRecords.length"
                                 position="'bottom-end'"
                             >
@@ -81,7 +81,7 @@
             <t t-else="">
                 <div class="text-end mt-1">
                     <button t-if="this.props.isEditable" type="button"
-                            class="builder_list_add_item o-hb-btn btn btn-success px-3"
+                            class="builder_list_add_item o_hb_btn btn btn-success px-3"
                             t-on-click="() => this.addItem()">
                         <t t-out="this.props.addItemTitle"/>
                     </button>

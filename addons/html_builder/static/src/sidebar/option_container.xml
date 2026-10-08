@@ -3,12 +3,12 @@
 
 <t t-name="html_builder.OptionsContainer">
     <div t-if="this.options().length"
-        class="options-container mb-1" t-ref="this.rootRef" t-att-data-container-title="this.title">
-        <div class="options-container-header d-flex align-items-center justify-content-between">
+        class="o_hb_options_container mb-1" t-ref="this.rootRef" t-att-data-container-title="this.title">
+        <div class="o_hb_options_container_header d-flex align-items-center justify-content-between">
             <t
                 t-tag="this.props.toggleFold ? 'button' : 'div'"
-                class="options-container-label py-2 flex-grow-1 d-flex align-items-center"
-                t-att-class="this.props.toggleFold ? 'options-container-label-actionable o-hb-btn btn' : ''"
+                class="o_hb_options_container_label py-2 flex-grow-1 d-flex align-items-center"
+                t-att-class="this.props.toggleFold ? 'o_hb_options_container_label_actionable o_hb_btn btn' : ''"
                 t-att-aria-expanded="this.props.toggleFold ? `${!this.props.folded}` : undefined"
                 t-att-aria-controls="this.containerId"
                 t-on-click="this.props.toggleFold ?? (() => {})"
@@ -32,7 +32,7 @@
                     </t>
                 </div>
                 <t t-foreach="this.props.containerTopButtons" t-as="button" t-key="button_index">
-                    <button class="o-hb-btn" t-att-class="button.class"
+                    <button class="o_hb_btn" t-att-class="button.class"
                             t-att-data-icon="button.icon"
                             t-att-title="button.title" t-att-aria-label="button.title"
                             t-on-click="() => button.handler(this.props.editingElement)"/>
@@ -40,7 +40,7 @@
                 <t t-if="this.props.isClonable || this.props.cloneDisabledReason">
                     <!-- Disabled buttons do not display their title -->
                     <span t-att-title="this.props.cloneDisabledReason" t-att-aria-label="this.props.cloneDisabledReason">
-	                    <button class="oi oi-fw oe_snippet_clone o-hb-btn btn btn-success-color-hover" data-icon="content_copy"
+	                    <button class="oi oi-fw oe_snippet_clone o_hb_btn btn btn-success-color-hover" data-icon="content_copy"
 	                            title="Duplicate this block"
 	                            aria-label="Duplicate this block"
                                 t-att-disabled="!!this.props.cloneDisabledReason"
@@ -50,7 +50,7 @@
                 <t t-if="this.props.isRemovable || this.props.removeDisabledReason">
                     <!-- Disabled buttons do not display their title -->
                     <span t-att-title="this.props.removeDisabledReason" t-att-aria-label="this.props.removeDisabledReason">
-	                    <button class="oi oi-fw oi-filled oe_snippet_remove o-hb-btn btn btn-danger-color-hover" data-icon="delete"
+	                    <button class="oi oi-fw oi-filled oe_snippet_remove o_hb_btn btn btn-danger-color-hover" data-icon="delete"
 	                            title="Remove this block"
 	                            aria-label="Remove this block"
 	                            t-att-disabled="!!this.props.removeDisabledReason"
@@ -59,7 +59,7 @@
                 </t>
             </div>
         </div>
-        <div t-att-id="this.containerId" t-if="!this.props.folded" class="we-bg-options-container pb-3" t-ref="this.contentRef">
+        <div t-att-id="this.containerId" t-if="!this.props.folded" class="o_hb_bg_options_container pb-3" t-ref="this.contentRef">
             <t t-foreach="this.options()" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template + '-' + OptionClass_index">
                 <BuilderContext applyTo="OptionClass.applyTo">
                     <t t-component="OptionClass" t-props="OptionClass.propsValue || {}"></t>

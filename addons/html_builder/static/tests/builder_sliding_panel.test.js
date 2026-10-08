@@ -31,7 +31,7 @@ test("sliding panel slot content is not rendered until the panel is opened", asy
     expect(".panel-inner-content").toHaveCount(0);
 
     // Open the panel.
-    await contains(".we-bg-options-container .o-hb-btn").click();
+    await contains(".o_hb_bg_options_container .o_hb_btn").click();
     await animationFrame();
 
     // Now the slot content should be rendered.

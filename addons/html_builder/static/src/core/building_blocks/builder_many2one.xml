@@ -19,7 +19,7 @@
         />
         <button type="button"
                 t-if="this.domState.selected and this.props.allowUnselect"
-                class="o-hb-btn o-hb-btn-has-icon btn btn-secondary"
+                class="o_hb_btn o_hb_btn_has_icon btn btn-secondary"
                 t-att-title="this.props.unselectBtnTitle"
                 t-on-click="() => this.select()"
                 t-on-pointerenter="this.hasPreview ? () => this.preview() : () => {}"

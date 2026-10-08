@@ -45,7 +45,7 @@ test("many2many: find tag, select tag, unselect tag", async () => {
     const editableContent = getEditableContent();
 
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
     expect("table tr").toHaveCount(0);
     expect(editableContent).toHaveInnerHTML(`<div class="test-options-target">b</div>`);
 

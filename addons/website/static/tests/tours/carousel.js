@@ -108,7 +108,7 @@ registerWebsitePreviewTour(
         checkSlides(4, 2),
         {
             content: "Check if the slide indicator was correctly updated",
-            trigger: ".options-container span:contains(' (2/4)')",
+            trigger: ".o_hb_options_container span:contains(' (2/4)')",
         },
         // Check if we can still remove a slide.
         changeOption("Slide (2/4)", "button[aria-label='Remove Slide']"),

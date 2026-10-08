@@ -12,12 +12,12 @@ function setFormActionToCreateOpportunity() {
             run: "click",
         },
         {
-            trigger: ".o-snippets-menu .o-snippets-tabs [data-name='customize'].active",
+            trigger: ".o_hb_snippets_menu .o_hb_snippets_tabs [data-name='customize'].active",
         },
         {
             content: "Open action select",
             trigger:
-                ".o-snippets-menu [data-container-title='Form'] [data-label='Action'] .dropdown-toggle",
+                ".o_hb_snippets_menu [data-container-title='Form'] [data-label='Action'] .dropdown-toggle",
             run: "click",
         },
         {
@@ -114,7 +114,7 @@ registerWebsitePreviewTour(
         {
             content: "Open Sales Team select",
             trigger:
-                ".o-snippets-menu [data-container-title='Form'] [data-label='Sales Team'] .dropdown-toggle",
+                ".o_hb_snippets_menu [data-container-title='Form'] [data-label='Sales Team'] .dropdown-toggle",
             run: "click",
         },
         {

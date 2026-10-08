@@ -120,7 +120,7 @@ class BuilderContainer extends Component {
                 </div>
             </div>
             <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.localOverlayContainerKey"/>
-            <div t-if="this.state.isEditing" t-att-class="{'o_builder_sidebar_open': this.state.isEditing and this.state.showSidebar}" class="o-website-builder_sidebar border-start border-dark">
+            <div t-if="this.state.isEditing" t-att-class="{'o_builder_sidebar_open': this.state.isEditing and this.state.showSidebar}" class="o_website_builder_sidebar border-start border-dark">
                 <Builder t-props="this.getBuilderProps()"/>
             </div>
         </div>`;
@@ -368,7 +368,7 @@ export async function setupHTMLBuilder(
         getEditor: () => attachedEditor,
         getEditableContent: () => editableContent,
         contentEl: comp.iframeRef().contentDocument.body.firstChild.firstChild,
-        builderEl: comp.containerRef().querySelector(".o-website-builder_sidebar"),
+        builderEl: comp.containerRef().querySelector(".o_website_builder_sidebar"),
         waitSidebarUpdated,
     };
 }
@@ -615,7 +615,7 @@ export async function editBuilderRangeValue(selector, newValue) {
 }
 
 export async function unfoldAllOptionsGroups() {
-    for (const i of queryAll(".options-container-header i[data-icon='arrow_right']")) {
+    for (const i of queryAll(".o_hb_options_container_header i[data-icon='arrow_right']")) {
         await click(i);
     }
     await animationFrame();

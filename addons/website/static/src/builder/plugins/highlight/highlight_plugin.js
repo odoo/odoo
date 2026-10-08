@@ -296,7 +296,7 @@ class HighlightToolbarButton extends Component {
         getSelection: t.function(),
     });
     static template = xml`
-        <button t-ref="this.root" t-attf-class="btn btn-light o-select-highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title">
+        <button t-ref="this.root" t-attf-class="btn btn-light o_hb_select_highlight {{this.highlightState.highlightId ? 'active' : ''}}" t-on-click="this.openHighlightConfigurator" t-att-title="this.props.title">
             <i class="oi oi-fw py-1" data-icon="stylus_laser_pointer"/>
         </button>
     `;

@@ -43,7 +43,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ".o-snippets-menu .o_customize_tab",
+            trigger: ".o_hb_snippets_menu .o_customize_tab",
         },
         ...changeOptionInPopover("Layout", "Default Layout", "list"),
         {

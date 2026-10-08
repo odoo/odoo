@@ -106,7 +106,7 @@ test("elements within iframe can't be clicked while the builder is being set up"
     await contains(":iframe .test-section button").click();
     expect.verifySteps(["button clicked"]);
     // Reimplementation of openBuilderSidebar().
-    await click(".o-website-btn-custo-primary");
+    await click(".o_website_btn_custo_primary");
     // The button should not be clickable.
     await expect(click(":iframe .test-section button")).rejects.toThrow(
         `found 0 elements instead of 1: 1 matching ":iframe .test-section button" (1 iframe element), including 0 interactive elements`
@@ -224,16 +224,16 @@ test("Builder is disabled when reloading", async () => {
     });
     await contains(":iframe .target").click();
     await waitSidebarUpdated();
-    await contains(".options-container [data-action-id='testReload']").click();
-    expect(".o-website-builder_sidebar .o_builder_disabled").toHaveCount(1);
+    await contains(".o_hb_options_container [data-action-id='testReload']").click();
+    expect(".o_website_builder_sidebar .o_builder_disabled").toHaveCount(1);
     // when builder is disabled we can't go to another tab, or do anything else
     // in the builder
-    await contains(".o-snippets-tabs [data-name='blocks']").click();
-    expect(".o-snippets-tabs [data-name='customize']").toHaveClass("active");
+    await contains(".o_hb_snippets_tabs [data-name='blocks']").click();
+    expect(".o_hb_snippets_tabs [data-name='customize']").toHaveClass("active");
     // new instance of the builder shouldn't be disabled
     builderStart.resolve();
     await waitSidebarUpdated();
-    expect(".o-website-builder_sidebar .o_builder_disabled").toHaveCount(0);
-    await contains(".o-snippets-tabs [data-name='blocks']").click();
-    expect(".o-snippets-tabs [data-name='blocks']").toHaveClass("active");
+    expect(".o_website_builder_sidebar .o_builder_disabled").toHaveCount(0);
+    await contains(".o_hb_snippets_tabs [data-name='blocks']").click();
+    expect(".o_hb_snippets_tabs [data-name='blocks']").toHaveClass("active");
 });

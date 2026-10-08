@@ -358,7 +358,7 @@ async function openBuilderSidebar(editAssetsLoaded) {
         loadBundle("html_editor.assets_image_cropper"),
     ]);
 
-    await click(".o-website-btn-custo-primary");
+    await click(".o_website_btn_custo_primary");
     await editAssetsLoaded;
     // animationFrame linked to state.isEditing rendering the
     // WebsiteBuilderClientAction.
@@ -433,7 +433,7 @@ export async function setupWebsiteBuilderWithDummySnippet(content) {
 
 export async function insertCategorySnippet({ group, snippet } = {}) {
     await contains(
-        `.o-snippets-menu #snippet_groups .o_snippet${
+        `.o_hb_snippets_menu #snippet_groups .o_snippet${
             group ? `[data-snippet-group=${group}]` : ""
         } .o_snippet_thumbnail .o_snippet_thumbnail_area`
     ).click();

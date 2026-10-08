@@ -19,7 +19,7 @@ describe("classAction", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target x">a</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".o_hb_options_container").toBeDisplayed();
 
         expect("[data-class-action='x']").toHaveClass("active");
 
@@ -38,7 +38,7 @@ describe("classAction", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target x">b</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".o_hb_options_container").toBeDisplayed();
 
         expect("[data-class-action='x']").toHaveClass("active");
         expect("[data-class-action='x y z']").not.toHaveClass("active");
@@ -66,7 +66,7 @@ describe("classAction", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".o_hb_options_container").toBeDisplayed();
 
         await contains("[data-class-action='x']").click();
         expect(":iframe .test-options-target").toHaveClass("x");
@@ -91,7 +91,7 @@ describe("styleAction", () => {
         await setupHTMLBuilder(`<div class="test-options-target" style="width: 10px;">a</div>`);
         await contains(":iframe .test-options-target").click();
         expect("input").toHaveValue(10);
-        expect(".options-container").toBeDisplayed();
+        expect(".o_hb_options_container").toBeDisplayed();
         expect(":iframe .test-options-target").toHaveStyle({ width: "10px" });
         expect(":iframe .test-options-target").toHaveAttribute("style", "width: 10px;"); // no !important
 
@@ -117,7 +117,7 @@ describe("styleAction", () => {
         });
         await contains(":iframe .test-options-target").click();
         expect("input").toHaveValue("1");
-        expect(".options-container").toBeDisplayed();
+        expect(".o_hb_options_container").toBeDisplayed();
         expect(":iframe .test-options-target").not.toHaveAttribute("style");
 
         await contains("input").click();
@@ -150,7 +150,7 @@ describe("styleAction", () => {
         });
         await contains(":iframe .test-options-target").click();
         expect("input").toHaveValue("0");
-        expect(".options-container").toBeDisplayed();
+        expect(".o_hb_options_container").toBeDisplayed();
         expect(":iframe .test-options-target").not.toHaveAttribute("style");
 
         await contains("input").edit("10");
@@ -222,7 +222,7 @@ describe("styleAction", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target x">a</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".o_hb_options_container").toBeDisplayed();
 
         expect("[data-style-action-value='']").toHaveClass("active");
         expect("[data-style-action-value='50%']").not.toHaveClass("active");

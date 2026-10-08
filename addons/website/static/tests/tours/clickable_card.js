@@ -18,13 +18,13 @@ registerWebsitePreviewTour(
         {
             content: "Drag a Card into the Title section",
             trigger:
-                ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Card'].o_draggable .o_snippet_thumbnail",
+                ".o_hb_snippets_menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Card'].o_draggable .o_snippet_thumbnail",
             run: "drag_and_drop :iframe .s_title .oe_drop_zone:last",
         },
         {
             content: "Add a Button inside the Card",
             trigger:
-                ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Button'].o_draggable .o_snippet_thumbnail",
+                ".o_hb_snippets_menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Button'].o_draggable .o_snippet_thumbnail",
             run: "drag_and_drop :iframe .s_title .s_card .oe_drop_zone:last",
         },
         {

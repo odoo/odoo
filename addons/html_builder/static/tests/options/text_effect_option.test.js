@@ -28,7 +28,7 @@ test("apply preset", async () => {
         focusOffset: 1,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
     await waitForNone(".o_text_effect_popover");
     expect(`:iframe [data-text-effect*="flat"]`).toHaveStyle("text-shadow");
@@ -46,7 +46,7 @@ test("open applies blurred black by default", async () => {
         focusOffset: 1,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
 
     expect(".o_text_effect_popover").toHaveCount(1);
     expect(".o_text_effect_popover .active:contains('Blurred (Black)')").toHaveCount(1);
@@ -65,13 +65,13 @@ test("switch preset", async () => {
         focusOffset: 1,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
     await waitForNone(".o_text_effect_popover");
     expect(`:iframe [data-text-effect*="flat"]`).toHaveStyle("text-shadow");
 
     // Change text effect
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Outline')").click();
     await waitForNone(".o_text_effect_popover");
     expect(`:iframe [data-text-effect*="outline"]`).toHaveStyle("-webkit-text-stroke");
@@ -89,18 +89,18 @@ test("remove", async () => {
         focusOffset: 1,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
     await waitForNone(".o_text_effect_popover");
     expect(`:iframe [data-text-effect*="flat"]`).toHaveStyle("text-shadow");
 
     // Remove text effect
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('No Shadow')").click();
     await waitForNone(".o_text_effect_popover");
     expect(":iframe [data-text-effect]").toHaveCount(0);
     expect(getContent(contentEl)).toBe("<p>[Text]</p>");
-    expect(".o-select-text-effect").not.toHaveClass("active");
+    expect(".o_hb_select_text_effect").not.toHaveClass("active");
 });
 
 test("remove if empty", async () => {
@@ -131,7 +131,7 @@ test("custom opens the option", async () => {
         focusOffset: 1,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Custom')").click();
     expect(".o_text_effect_popover:contains('Text Shadow')").toHaveCount(1);
     expect(".o_text_effect_popover .dropdown-item").toHaveCount(0);
@@ -152,7 +152,7 @@ test("custom preset opens the option", async () => {
         focusOffset: 5,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Custom Shadow')").click();
     expect(".o_text_effect_popover:contains('Text Shadow')").toHaveCount(1);
     expect(".o_text_effect_popover .dropdown-item").toHaveCount(0);
@@ -181,13 +181,13 @@ test("custom shadow hash is updated when editing text effect", async () => {
         focusOffset: 1,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Custom')").click();
     let textEffect = JSON.parse(queryOne(":iframe [data-text-effect]").dataset.textEffect);
     const initialHash = textEffect.presetHash;
     expect(initialHash).toBe(getTextEffectPresetHash(textEffect));
 
-    await contains(".o_text_effect_popover .o-hb-text-effect-add-shadow").click();
+    await contains(".o_text_effect_popover .o_hb_text_effect_add_shadow").click();
     await animationFrame();
 
     textEffect = JSON.parse(queryOne(":iframe [data-text-effect]").dataset.textEffect);
@@ -208,7 +208,7 @@ test("open option by default if custom", async () => {
         focusOffset: 4,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     expect(".o_text_effect_popover:contains('Text Shadow')").toHaveCount(1);
     expect(".o_text_effect_popover .dropdown-item").toHaveCount(0);
 
@@ -229,7 +229,7 @@ test("selecting part of a text effect applies preset on the full text effect", a
         focusOffset: 3,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Outline')").click();
     await waitForNone(".o_text_effect_popover");
 
@@ -253,7 +253,7 @@ test("selecting multiple text effects shows no active preset", async () => {
         focusOffset: 3,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
 
     expect(".o_text_effect_popover .dropdown-item.active").toHaveCount(0);
 });
@@ -271,9 +271,9 @@ test("preview applies on full selection and stopping preview restores initial st
         focusOffset: 3,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await hover(
-        ".o_text_effect_popover .dropdown-item:contains('Outline') .o-hb-text-effect-preset"
+        ".o_text_effect_popover .dropdown-item:contains('Outline') .o_hb_text_effect_preset"
     );
     await animationFrame();
 
@@ -307,11 +307,11 @@ test("add multiple shadows on an element", async () => {
         focusOffset: 1,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Custom')").click();
     expect(".o_text_effect_popover [data-label='Color']").toHaveCount(1);
-    await contains(".o_text_effect_popover .o-hb-text-effect-add-shadow").click();
-    await contains(".o_text_effect_popover .o-hb-text-effect-add-shadow").click();
+    await contains(".o_text_effect_popover .o_hb_text_effect_add_shadow").click();
+    await contains(".o_text_effect_popover .o_hb_text_effect_add_shadow").click();
     await animationFrame();
     expect(".o_text_effect_popover [data-label='Color']").toHaveCount(3);
     expect(
@@ -331,20 +331,20 @@ test("delete one specific shadow on an element", async () => {
         focusOffset: 1,
     });
     await contains("[data-icon='more_vert']").click();
-    await contains(".o-select-text-effect").click();
+    await contains(".o_hb_select_text_effect").click();
     await contains(".o_text_effect_popover .dropdown-item:contains('Custom')").click();
-    await contains(".o_text_effect_popover .o-hb-text-effect-add-shadow").click();
-    await contains(".o_text_effect_popover .o-hb-text-effect-add-shadow").click();
+    await contains(".o_text_effect_popover .o_hb_text_effect_add_shadow").click();
+    await contains(".o_text_effect_popover .o_hb_text_effect_add_shadow").click();
     await animationFrame();
 
     const nthShadowBlurSelector = (index) =>
-        `.o-hb-text-effect-shadow:nth-child(${index + 1}) .hb-row[data-label='Blur'] input`;
+        `.o_hb_text_effect_shadow:nth-child(${index + 1}) .o_hb_row[data-label='Blur'] input`;
     await contains(nthShadowBlurSelector(1)).edit(5);
     await contains(nthShadowBlurSelector(2)).edit(6);
     await contains(nthShadowBlurSelector(3)).edit(7);
 
     await animationFrame();
-    await contains(".o-hb-text-effect-shadow:nth-child(3) [data-icon='delete']").click();
+    await contains(".o_hb_text_effect_shadow:nth-child(3) [data-icon='delete']").click();
     await animationFrame();
 
     expect(".o_text_effect_popover [data-label='Color']").toHaveCount(2);
@@ -369,7 +369,7 @@ describe("nesting", () => {
             focusOffset: 1,
         });
         await contains("[data-icon='more_vert']").click();
-        await contains(".o-select-text-effect").click();
+        await contains(".o_hb_select_text_effect").click();
         await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
         await waitForNone(".o_text_effect_popover");
         expect(`:iframe [data-text-effect*="flat"]`).toHaveStyle("text-shadow");
@@ -385,7 +385,7 @@ describe("nesting", () => {
         const fontSizeProperty = fontSizeEl.style.fontSize; // Current representation of 50px
 
         // Remove text effect
-        await contains(".o-select-text-effect").click();
+        await contains(".o_hb_select_text_effect").click();
         await contains(".o_text_effect_popover .dropdown-item:contains('No Shadow')").click();
         await waitForNone(".o_text_effect_popover");
         expect(getContent(contentEl)).toBe(
@@ -417,14 +417,14 @@ describe("nesting", () => {
         const fontSizeProperty = fontSizeEl.style.fontSize; // Current representation of 50px
 
         // Apply text effect
-        await contains(".o-select-text-effect").click();
+        await contains(".o_hb_select_text_effect").click();
         await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
         await waitForNone(".o_text_effect_popover");
         expect(`:iframe [data-text-effect*="flat"]`).toHaveStyle("text-shadow");
         await waitFor(":iframe span[style] span[data-text-effect]");
 
         // Remove text effect
-        await contains(".o-select-text-effect").click();
+        await contains(".o_hb_select_text_effect").click();
         await contains(".o_text_effect_popover .dropdown-item:contains('No Shadow')").click();
         await waitForNone(".o_text_effect_popover");
         expect(getContent(contentEl)).toBe(
@@ -444,7 +444,7 @@ describe("nesting", () => {
             focusOffset: 1,
         });
         await contains("[data-icon='more_vert']").click();
-        await contains(".o-select-text-effect").click();
+        await contains(".o_hb_select_text_effect").click();
         await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
         await waitForNone(".o_text_effect_popover");
         expect(`:iframe [data-text-effect*="flat"]`).toHaveStyle("text-shadow");
@@ -477,7 +477,7 @@ describe("nesting", () => {
 
         // Apply text effect
         await contains("[data-icon='more_vert']").click();
-        await contains(".o-select-text-effect").click();
+        await contains(".o_hb_select_text_effect").click();
         await contains(".o_text_effect_popover .dropdown-item:contains('Flat')").click();
         await waitForNone(".o_text_effect_popover");
         expect(`:iframe [data-text-effect*="flat"]`).toHaveStyle("text-shadow");

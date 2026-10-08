@@ -22,10 +22,10 @@ registerWebsitePreviewTour(
         }),
         // Edit another part in the page, like the footer
         {
-            trigger: ".o-website-builder_sidebar.o_builder_sidebar_open .o_snippet",
+            trigger: ".o_website_builder_sidebar.o_builder_sidebar_open .o_snippet",
         },
         {
-            trigger: `.o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name="Separator"].o_draggable .o_snippet_thumbnail`,
+            trigger: `.o_hb_snippets_menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name="Separator"].o_draggable .o_snippet_thumbnail`,
             content: "Drag the Separator building block and drop it at the bottom of the page.",
             run: "drag_and_drop :iframe .oe_drop_zone:last",
         },

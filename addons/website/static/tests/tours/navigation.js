@@ -12,7 +12,7 @@ registerWebsitePreviewTour("website_editing_awaits_navigation", {}, () => [
     },
     {
         content: "Can insert a snippet",
-        trigger: ".o-website-builder_sidebar",
+        trigger: ".o_website_builder_sidebar",
     },
     ...insertSnippet({
         id: "s_banner",

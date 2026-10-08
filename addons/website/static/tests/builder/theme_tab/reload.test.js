@@ -14,10 +14,10 @@ test("reload from 'theme' tab should stay on 'theme'", async () => {
     queryOne(":iframe .test").dataset.applied = "1";
     expect(":iframe .test").toHaveAttribute("data-applied");
 
-    await contains(".o-snippets-tabs button[data-name=theme]").click();
+    await contains(".o_hb_snippets_tabs button[data-name=theme]").click();
     await waitFor(".o_theme_tab");
-    expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
-    await contains("div.hb-row:contains(Show Header) input[type=checkbox]").click();
+    expect(".o_hb_snippets_tabs button[data-name=theme]").toHaveClass("active");
+    await contains("div.o_hb_row:contains(Show Header) input[type=checkbox]").click();
 
     expect.verifySteps(["save"]);
     // NOTE: the goal of the following assertion is to ensure that the relaod is
@@ -26,7 +26,7 @@ test("reload from 'theme' tab should stay on 'theme'", async () => {
     // resets to initial content
     expect(":iframe .test").not.toHaveAttribute("data-applied");
 
-    expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
+    expect(".o_hb_snippets_tabs button[data-name=theme]").toHaveClass("active");
 });
 
 test("hide invisible element after reload from 'theme' tab should stay on 'theme'", async () => {
@@ -46,10 +46,10 @@ test("hide invisible element after reload from 'theme' tab should stay on 'theme
     ).click();
     expect(":iframe .o_snippet_invisible").toHaveAttribute("data-invisible", "1");
 
-    await contains(".o-snippets-tabs button[data-name=theme]").click();
+    await contains(".o_hb_snippets_tabs button[data-name=theme]").click();
     await waitFor(".o_theme_tab");
-    expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
-    await contains("div.hb-row:contains(Show Header) input[type=checkbox]").click();
+    expect(".o_hb_snippets_tabs button[data-name=theme]").toHaveClass("active");
+    await contains("div.o_hb_row:contains(Show Header) input[type=checkbox]").click();
 
     await expect.waitForSteps(["save"]);
     // NOTE: the goal of the following assertion is to ensure that the relaod is
@@ -58,7 +58,7 @@ test("hide invisible element after reload from 'theme' tab should stay on 'theme
     // resets to initial content
     expect(":iframe .o_snippet_invisible").not.toHaveAttribute("data-invisible", "1");
 
-    expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
+    expect(".o_hb_snippets_tabs button[data-name=theme]").toHaveClass("active");
 
     await contains(
         ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i[data-icon='visibility']"
@@ -68,5 +68,5 @@ test("hide invisible element after reload from 'theme' tab should stay on 'theme
     expect(
         ".o_we_invisible_el_panel  .o_we_invisible_entry:contains('Invisible Element') i"
     ).toHaveAttribute("data-icon", "visibility_off");
-    expect(".o-snippets-tabs button[data-name=theme]").toHaveClass("active");
+    expect(".o_hb_snippets_tabs button[data-name=theme]").toHaveClass("active");
 });

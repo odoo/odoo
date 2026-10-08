@@ -19,7 +19,7 @@ registerWebsitePreviewTour(
         ...goToTheme(),
         {
             content: "Open colorpicker to change website main color",
-            trigger: ".we-bg-options-container .o_we_color_preview",
+            trigger: ".o_hb_bg_options_container .o_we_color_preview",
             run: "click",
         },
         {

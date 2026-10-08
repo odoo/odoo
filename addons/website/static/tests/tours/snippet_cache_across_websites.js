@@ -14,7 +14,7 @@ registerWebsitePreviewTour(
         {
             content: "Click on the Custom category block",
             trigger:
-                ".o-website-builder_sidebar .o_snippet[name='Custom'].o_draggable .o_snippet_thumbnail_area",
+                ".o_website_builder_sidebar .o_snippet[name='Custom'].o_draggable .o_snippet_thumbnail_area",
             run: "click",
         },
         {
@@ -39,7 +39,7 @@ registerWebsitePreviewTour(
         ...clickOnEditAndWaitEditMode(),
         {
             content: "Check that the custom snippet category is not here",
-            trigger: ".o-website-builder_sidebar:not(:has(.o_snippet[name='Custom']))",
+            trigger: ".o_website_builder_sidebar:not(:has(.o_snippet[name='Custom']))",
         },
     ]
 );

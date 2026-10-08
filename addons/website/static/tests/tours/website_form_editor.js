@@ -619,11 +619,11 @@ registerWebsitePreviewTour(
         {
             content: "Verify that the button options do not have clone/remove/save buttons.",
             trigger:
-                "div[data-container-title='Button'] .options-container-header:not(:has(.oe_snippet_remove, .oe_snippet_clone, .oe_snippet_save))",
+                "div[data-container-title='Button'] .o_hb_options_container_header:not(:has(.oe_snippet_remove, .oe_snippet_clone, .oe_snippet_save))",
         },
         {
             content: "Click on button type dropdown",
-            trigger: "[data-label=Type] .o-hb-select-toggle",
+            trigger: "[data-label=Type] .o_hb_select_toggle",
             run: "click",
         },
         {
@@ -632,7 +632,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: "[data-label=Shape] .o-hb-select-toggle",
+            trigger: "[data-label=Shape] .o_hb_select_toggle",
             run: "click",
         },
         {
@@ -640,7 +640,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: "[data-label=Size] .o-hb-select-toggle",
+            trigger: "[data-label=Size] .o_hb_select_toggle",
             run: "click",
         },
         {
@@ -767,7 +767,7 @@ registerWebsitePreviewTour(
         ...unfoldOptionsGroup("Form"),
         {
             content: "Verify that the form editor appeared",
-            trigger: ".o_customize_tab div[data-container-title='Form'] .we-bg-options-container",
+            trigger: ".o_customize_tab div[data-container-title='Form'] .o_hb_bg_options_container",
         },
         ...selectButtonByText("Is set", "Contains"),
         {
@@ -810,7 +810,7 @@ registerWebsitePreviewTour(
         {
             content: "Check that the delete button is disabled and shows the tooltip",
             trigger:
-                '.options-container-header span[title=\'The field "subject" is mandatory for the action "Send an E-mail".\'] > button[data-icon="delete"][disabled]',
+                '.o_hb_options_container_header span[title=\'The field "subject" is mandatory for the action "Send an E-mail".\'] > button[data-icon="delete"][disabled]',
         },
         ...changeOptionInPopover("Field", "Visibility Rule", "Visible only if"),
         ...selectConditionField("[data-action-value='Philippe of Belgium']"),
@@ -983,7 +983,7 @@ registerWebsitePreviewTour(
 function editContactUs(steps) {
     return [
         {
-            trigger: ".o-website-builder_sidebar .o_snippet_thumbnail",
+            trigger: ".o_website_builder_sidebar .o_snippet_thumbnail",
         },
         {
             content: "Select the contact us form by clicking on an input field",
@@ -1209,7 +1209,7 @@ registerWebsitePreviewTour(
     },
     () => [
         {
-            trigger: ".o-website-builder_sidebar .o_snippets_container .o_snippet",
+            trigger: ".o_website_builder_sidebar .o_snippets_container .o_snippet",
         },
         {
             trigger:
@@ -1234,10 +1234,10 @@ registerWebsitePreviewTour(
     },
     () => [
         {
-            trigger: ".o-snippets-menu div.o_snippet",
+            trigger: ".o_hb_snippets_menu div.o_snippet",
         },
         {
-            trigger: `.o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name="Form"].o_draggable .o_snippet_thumbnail`,
+            trigger: `.o_hb_snippets_menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name="Form"].o_draggable .o_snippet_thumbnail`,
             run: "drag_and_drop :iframe #wrap",
         },
         {
@@ -1370,7 +1370,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Delete the form snippet",
-            trigger: "[data-container-title='Form'] .options-container-header .oe_snippet_remove",
+            trigger: "[data-container-title='Form'] .o_hb_options_container_header .oe_snippet_remove",
             run: "click",
         },
         // Cloning a snippet with form in it should generate new IDs for the
@@ -1383,7 +1383,7 @@ registerWebsitePreviewTour(
         {
             content: "Clone the 'Title - Form' snippet",
             trigger:
-                "[data-container-title='Title - Form'] .options-container-header .oe_snippet_clone",
+                "[data-container-title='Title - Form'] .o_hb_options_container_header .oe_snippet_clone",
             run: "click",
         },
         {
@@ -1407,7 +1407,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Clone the form",
-            trigger: "[data-container-title='Form'] .options-container-header .oe_snippet_clone",
+            trigger: "[data-container-title='Form'] .o_hb_options_container_header .oe_snippet_clone",
             run: "click",
         },
         {
@@ -1430,7 +1430,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Clone the name field",
-            trigger: "[data-container-title='Field'] .options-container-header .oe_snippet_clone",
+            trigger: "[data-container-title='Field'] .o_hb_options_container_header .oe_snippet_clone",
             run: "click",
         },
         compareIds({

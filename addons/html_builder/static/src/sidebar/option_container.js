@@ -55,12 +55,12 @@ export class OptionsContainer extends BaseOptionComponent {
             const rootEl = this.rootRef();
             if (this.props.highlight && rootEl) {
                 rootEl.scrollIntoView({ behavior: "smooth", block: "center" });
-                rootEl.classList.add("o-options-container-highlight");
+                rootEl.classList.add("o_hb_options_container_highlight");
                 // The highlight animation runs on sibling option containers, so
                 // the highlight class is removed here instead of using an
                 // "animation-end" event listener.
                 setTimeout(
-                    () => rootEl.classList.remove("o-options-container-highlight"),
+                    () => rootEl.classList.remove("o_hb_options_container_highlight"),
                     HIGHLIGHT_DURATION
                 );
             }

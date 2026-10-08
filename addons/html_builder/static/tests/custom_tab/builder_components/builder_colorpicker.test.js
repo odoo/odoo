@@ -21,8 +21,8 @@ test("should apply backgroundColor to the editing element", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    expect(".o_hb_options_container").toBeDisplayed();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     await click(".o-overlay-item [data-color='o-color-1']");
     await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("test-options-target bg-o-color-1");
@@ -35,8 +35,8 @@ test("should apply color to the editing element", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    expect(".o_hb_options_container").toBeDisplayed();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     await click(".o-overlay-item [data-color='o-color-1']");
     await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("test-options-target text-o-color-1");
@@ -60,14 +60,14 @@ test("hide/display base on applyTo", async () => {
         `<div class="parent-target"><p class="child-target b">b</p></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
-    expect(".options-container .o_we_color_preview").toHaveCount(0);
+    expect(".o_hb_options_container .o_we_color_preview").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target"><p class="child-target b my-custom-class">b</p></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
-    expect(".options-container .o_we_color_preview").toHaveCount(1);
+    expect(".o_hb_options_container .o_we_color_preview").toHaveCount(1);
 });
 
 test("apply color to a different style than color or backgroundColor", async () => {
@@ -77,13 +77,13 @@ test("apply color to a different style than color or backgroundColor", async () 
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    expect(".o_hb_options_container").toBeDisplayed();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     await contains(".o-overlay-item [data-color='#FF0000']").click();
     expect(":iframe .test-options-target").toHaveStyle({
         borderTopColor: "rgb(255, 0, 0)",
     });
-    expect(".we-bg-options-container .o_we_color_preview").toHaveStyle({
+    expect(".o_hb_bg_options_container .o_we_color_preview").toHaveStyle({
         "background-color": "rgb(255, 0, 0)",
     });
 });
@@ -109,7 +109,7 @@ test("apply custom action", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     await contains(".o-overlay-item [data-color='#FF0000']").click();
     // Applied twice for hover (preview) and click (commit).
     expect.verifySteps(["load", "apply rgb(255, 0, 0)", "load", "apply rgb(255, 0, 0)"]);
@@ -139,7 +139,7 @@ test("apply custom async action", async () => {
     const { getEditor } = await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     const editor = getEditor();
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     await contains(".o-overlay-item [data-color='#FF0000']").click();
     await contains("[data-class-action='test']").click();
     expect(":iframe .test-options-target").not.toHaveClass("test");
@@ -167,8 +167,8 @@ test("should revert preview on escape", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(":iframe .test-options-target").toHaveStyle({ "background-color": "rgba(0, 0, 0, 0)" });
-    expect(".options-container").toBeDisplayed();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    expect(".o_hb_options_container").toBeDisplayed();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     await hover(".o-overlay-item [data-color='#FF0000']");
     expect(":iframe .test-options-target").toHaveStyle({ "background-color": "rgb(255, 0, 0)" });
     await press("escape");
@@ -195,8 +195,8 @@ test("should apply transparent color if no color is defined", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    expect(".o_hb_options_container").toBeDisplayed();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     await contains(".o-overlay-item button:contains('Custom')").click();
     expect.verifySteps(["getValue"]);
     const hexInputEl = await getIframeInput(
@@ -209,7 +209,7 @@ test("should apply transparent color if no color is defined", async () => {
     expect(hexInputEl).not.toHaveValue("#FFFFFF00");
     expect(":iframe .test-options-target").toHaveAttribute("data-color");
     expect.verifySteps(["apply"]); // Preview
-    await contains(".options-container-header").click(); // Close the popover by clicking outside.
+    await contains(".o_hb_options_container_header").click(); // Close the popover by clicking outside.
     expect.verifySteps(["apply", "getValue"]); // Commit
 });
 
@@ -240,8 +240,8 @@ describe("Custom colorpicker: preview and commit", () => {
     test("should preview while modifying custom pickers with mouse", async () => {
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await contains(".we-bg-options-container .o_we_color_preview").click();
+        expect(".o_hb_options_container").toBeDisplayed();
+        await contains(".o_hb_bg_options_container .o_we_color_preview").click();
         await contains(".o-overlay-item button:contains('Custom')").click();
         expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
         await contains(".o-overlay-item .o_color_pick_area").click({ top: "50%", left: "50%" });
@@ -261,14 +261,14 @@ describe("Custom colorpicker: preview and commit", () => {
     test("should commit when popover is closed by clicking outside", async () => {
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await contains(".we-bg-options-container .o_we_color_preview").click();
+        expect(".o_hb_options_container").toBeDisplayed();
+        await contains(".o_hb_bg_options_container .o_we_color_preview").click();
         await contains(".o-overlay-item button:contains('Custom')").click();
         expect(":iframe .test-options-target").not.toHaveAttribute("data-color");
         await contains(".o-overlay-item .o_color_pick_area").click({ top: "50%", left: "50%" });
         expect(":iframe .test-options-target").toHaveAttribute("data-color");
         expect.verifySteps(["apply"]); // Only once: preview
-        await contains(".options-container-header").click(); // Close the popover by clicking outside.
+        await contains(".o_hb_options_container_header").click(); // Close the popover by clicking outside.
         expect.verifySteps(["apply"]); // Commit
         expect(":iframe .test-options-target").toHaveAttribute("data-color");
     });
@@ -279,8 +279,8 @@ describe("Custom colorpicker: preview and commit", () => {
     const prepareKeyboardSetup = async () => {
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await contains(".we-bg-options-container .o_we_color_preview").click();
+        expect(".o_hb_options_container").toBeDisplayed();
+        await contains(".o_hb_bg_options_container .o_we_color_preview").click();
         await waitFor(".o-overlay-item button:contains('Custom')");
         await press("Tab");
         await press("Enter");
@@ -345,9 +345,9 @@ test("should open the last used tab", async () => {
         styleContent: ":root { --900: #212527; }",
     });
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
 
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     await click(".theme-tab");
     await animationFrame();
     expect(".theme-tab.active").toHaveCount(1);
@@ -356,19 +356,19 @@ test("should open the last used tab", async () => {
     await animationFrame();
     await click(".o_color_picker_button[data-color='900']");
     await animationFrame();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     expect(".custom-tab.active").toHaveCount(1);
 
     await click(".gradient-tab");
     await animationFrame();
     await click(".o_gradient_color_button");
     await animationFrame();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     expect(".gradient-tab.active").toHaveCount(1);
 
     await click("button[title='Reset']");
     await animationFrame();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     expect(".theme-tab.active").toHaveCount(1);
 });
 
@@ -406,7 +406,7 @@ test("the color picker opens on click after it has been remounted", async () => 
     expect(".o_we_color_preview").toHaveCount(1);
     await contains(".o_we_color_preview").click();
     await animationFrame();
-    expect(".o-hb-colorpicker-popover").toHaveCount(1);
+    expect(".o_hb_colorpicker_popover").toHaveCount(1);
     await contains(".o_we_color_preview").click();
 
     await contains("[data-action-id='toggleTarget'] input").click();
@@ -422,7 +422,7 @@ test("the color picker opens on click after it has been remounted", async () => 
 
     await contains(".o_we_color_preview").click();
     await waitSidebarUpdated();
-    expect(".o-hb-colorpicker-popover").toHaveCount(1);
+    expect(".o_hb_colorpicker_popover").toHaveCount(1);
 });
 
 test("should work with force and allowImportant params", async () => {
@@ -438,7 +438,7 @@ test("should work with force and allowImportant params", async () => {
 
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container .o_we_color_preview:nth-child(1)").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview:nth-child(1)").click();
     let hexInputEl = await getIframeInput(
         ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
         "input[name='hex_input']"
@@ -447,7 +447,7 @@ test("should work with force and allowImportant params", async () => {
     await waitForEndOfOperation();
     expect(":iframe .test-options-target").toHaveStyle("color: rgb(0, 0, 255)", { inline: true });
 
-    await contains(".we-bg-options-container .o_we_color_preview:nth-child(2)").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview:nth-child(2)").click();
     hexInputEl = await getIframeInput(
         ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
         "input[name='hex_input']"
@@ -479,10 +479,10 @@ test("should apply theme and update preview using CSS variables", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o_hb_bg_options_container .o_we_color_preview").click();
     await contains(".o-overlay-item [data-color='o_cc1']").click();
     expect(":iframe .test-options-target").toHaveClass("o_cc o_cc1");
-    expect(".we-bg-options-container .o_we_color_preview").toHaveAttribute(
+    expect(".o_hb_bg_options_container .o_we_color_preview").toHaveAttribute(
         "style",
         "background-color: var(--hb-cp-o-cc1-bg); background-image: var(--hb-cp-o-cc1-bg-gradient);"
     );

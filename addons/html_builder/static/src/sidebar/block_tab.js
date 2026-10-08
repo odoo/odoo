@@ -197,7 +197,7 @@ export class BlockTab extends Component {
                 const draggedEl = element.cloneNode(true);
                 draggedEl
                     .querySelectorAll(
-                        ".o_snippet_thumbnail_title, .o_snippet_thumbnail_area, .rename-delete-buttons"
+                        ".o_snippet_thumbnail_title, .o_snippet_thumbnail_area, .o_hb_rename_delete_buttons"
                     )
                     .forEach((el) => el.remove());
                 draggedEl.style.position = "fixed";

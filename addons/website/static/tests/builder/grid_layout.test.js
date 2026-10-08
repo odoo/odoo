@@ -60,7 +60,7 @@ test("Drag & drop an inner snippet inside a grid item should adjust its height o
     );
 
     const { moveTo, drop } = await contains(
-        ".o-website-builder_sidebar [name='Button'] .o_snippet_thumbnail"
+        ".o_website_builder_sidebar [name='Button'] .o_snippet_thumbnail"
     ).drag();
     expect(":iframe .oe_drop_zone:nth-child(1)").toHaveCount(1);
     expect(":iframe .oe_drop_zone:nth-child(3)").toHaveCount(1);

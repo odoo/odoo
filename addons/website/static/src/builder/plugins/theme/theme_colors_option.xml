@@ -4,7 +4,7 @@
             <BuilderRow label.translate="Colors">
                 <BuilderSlidingPanel
                     label.translate="Colors"
-                    extraClasses="'btn-secondary p-0 d-flex o-hb-theme-color-slider-btn'"
+                    extraClasses="'btn-secondary p-0 d-flex o_hb_theme_color_slider_btn'"
                     darkBackground="true"
                     openByDefault="!!this.colorPresetToShow"
                     onClose="() => this.closeThemeColorsPreviewDialog?.()">
@@ -16,7 +16,7 @@
                         </t>
                     </div>
                     <t t-set-slot="sliding_panel_top_options">
-                        <button class="o-hb-btn btn btn-primary ms-auto oi oi-fw" t-on-click="this.toggleThemeColorsPreview"
+                        <button class="o_hb_btn btn btn-primary ms-auto oi oi-fw" t-on-click="this.toggleThemeColorsPreview"
                             t-att-data-icon="this.isThemeColorsPreviewOpen() ? 'visibility_off' : 'visibility'"
                             title="Colors preview" aria-label="Colors preview" type="button">
                         </button>
@@ -72,13 +72,13 @@
                                         </div>
                                         <div class="d-flex flex-column h-100">
                                             <div class="d-flex flex-column h-100 justify-content-center">
-                                                <BuilderSelect action="'changeColorPalette'" actionParam="'color-palettes-name'" dropdownContainerClass="'o-color-palette-dropdown'">
+                                                <BuilderSelect action="'changeColorPalette'" actionParam="'color-palettes-name'" dropdownContainerClass="'o_hb_color_palette_dropdown'">
                                                     <t t-set-slot="fixedButton">
                                                         <i class="oi oi-filled fs-4" data-icon="palette"/>
                                                     </t>
                                                     <t t-foreach="this.palettes" t-as="palette" t-key="palette.name">
                                                         <BuilderSelectItem actionValue="`'${palette.name}'`">
-                                                            <div class="o-color-palette-card d-flex flex-row border rounded overflow-hidden p-2 align-items-center"
+                                                            <div class="o_hb_color_palette_card d-flex flex-row border rounded overflow-hidden p-2 align-items-center"
                                                                 t-attf-style="background-color: {{palette.backgroundColor}};">
                                                                 <span class="w-100 me-1" t-attf-style="color: {{palette.textColor}};">Text</span>
                                                                 <span class="w-100 h-100 rounded" t-attf-style="background-color: {{palette.swatchColors[0]}};"></span>

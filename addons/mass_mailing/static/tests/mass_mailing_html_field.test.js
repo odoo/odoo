@@ -408,7 +408,7 @@ describe("field HTML", () => {
         });
         await contains(".o_dialog :iframe .s_call_to_action", { timeout: 3000 }).click();
         await waitFor(
-            ".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Call to Action)",
+            ".o_dialog .o_mass_mailing-builder_sidebar .o_hb_options_container_header:contains(Call to Action)",
             { timeout: 3000 }
         );
         const overlayOptionsSelect =
@@ -435,14 +435,14 @@ describe("field HTML", () => {
         });
         await click(section);
         await waitFor(
-            ".o-snippets-menu:has([data-action-id='dataAttributeChangeAction'].active:contains(Visible))",
+            ".o_hb_snippets_menu:has([data-action-id='dataAttributeChangeAction'].active:contains(Visible))",
             { timeout: 3000 }
         );
         section.dataset.filterDomain = JSON.stringify([["id", "=", 1]]);
         htmlField.editor.config.onChange({ isPreviewing: false });
-        await waitFor(".o-snippets-menu [data-label='Domain']", { timeout: 3000 });
+        await waitFor(".o_hb_snippets_menu [data-label='Domain']", { timeout: 3000 });
         expect(
-            ".o-snippets-menu [data-label='Domain'] span[data-icon='filter_alt'] + span"
+            ".o_hb_snippets_menu [data-label='Domain'] span[data-icon='filter_alt'] + span"
         ).toHaveText("Id = 1");
         await clickSave();
         const table = await waitFor(".o_mail_body_inline table[t-if]", { timeout: 3000 });

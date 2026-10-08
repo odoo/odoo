@@ -141,7 +141,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         width: 100%;
 
         .o_snippet_thumbnail,
-        .rename-delete-buttons {
+        .o_hb_rename_delete_buttons {
             display: flex;
             align-items: center;
         }
@@ -155,19 +155,19 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         }
 
         // TODO improve the following rules later
-        .rename-delete-buttons button {
+        .o_hb_rename_delete_buttons button {
             // @extend %we-generic-link;
             padding-left: $o-we-sidebar-content-field-button-group-button-spacing;
             padding-right: $o-we-sidebar-content-field-button-group-button-spacing;
         }
 
         &:not(:hover, :focus-within), &.o_disabled:hover {
-            .rename-delete-buttons button {
+            .o_hb_rename_delete_buttons button {
                 display: none;
             }
         }
 
-        .rename-input {
+        .o_hb_rename_input {
             // @extend %we-generic-text-input;
             display: flex;
             cursor: pointer;

@@ -84,7 +84,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
         });
         useSortable({
             ref: this.rootRef,
-            elements: ".hb-row",
+            elements: ".o_hb_row",
             handle: ".o_drag_handle",
             cursor: "grabbing",
             placeholderClasses: ["d-table-row"],

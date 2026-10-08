@@ -40,7 +40,7 @@ registerWebsitePreviewTour(
         {
             content: "Drag the Text snippet group and drop it.",
             trigger:
-                ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Text'] .o_snippet_thumbnail",
+                ".o_hb_snippets_menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Text'] .o_snippet_thumbnail",
             run: "drag_and_drop :iframe #wrap",
         },
         {
@@ -53,7 +53,7 @@ registerWebsitePreviewTour(
         {
             content: "Drag the Intro snippet group and drop it.",
             trigger:
-                ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Intro'] .o_snippet_thumbnail",
+                ".o_hb_snippets_menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Intro'] .o_snippet_thumbnail",
             run: "drag_and_drop :iframe #wrap",
         },
         {
@@ -81,7 +81,7 @@ registerWebsitePreviewTour(
         {
             content: "Hide the first TOC on mobile",
             trigger:
-                '.options-container[data-container-title="Table of Content"] [data-action-param="no_mobile"]',
+                '.o_hb_options_container[data-container-title="Table of Content"] [data-action-param="no_mobile"]',
             run: "click",
         },
         {
@@ -98,7 +98,7 @@ registerWebsitePreviewTour(
         {
             content: "Hide the second TOC on desktop",
             trigger:
-                '.options-container[data-container-title="Table of Content"] [data-action-param="no_desktop"]',
+                '.o_hb_options_container[data-container-title="Table of Content"] [data-action-param="no_desktop"]',
             run: "click",
         },
         {

@@ -3,9 +3,9 @@
 
 <t t-name="html_builder.shapeSelector">
     <header class="o_pager_nav d-flex flex-column flex-wrap flex-shrink-0 mh-100">
-        <div class="o-hb-select-pager-tab-container d-flex" t-ref="this.tabsRef">
+        <div class="o_hb_select_pager_tab_container d-flex" t-ref="this.tabsRef">
             <t t-foreach="Object.entries(this.props.shapeGroups)" t-as="group" t-key="group_index">
-                <button type="button" class="o-hb-select-pager-tab p-0 text-uppercase" t-att-class="{ 'active': this.state.activeGroup === group[0] }" t-on-click="() => this.scrollToShapes(group[0])" t-att-data-group-id="group[0]">
+                <button type="button" class="o_hb_select_pager_tab p-0 text-uppercase" t-att-class="{ 'active': this.state.activeGroup === group[0] }" t-on-click="() => this.scrollToShapes(group[0])" t-att-data-group-id="group[0]">
                     <span class="w-100" t-out="group[1].label"/>
                 </button>
             </t>

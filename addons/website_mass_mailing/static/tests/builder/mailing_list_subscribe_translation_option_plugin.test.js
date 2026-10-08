@@ -17,7 +17,7 @@ test("'Display Thanks message' option should be visible in the translate mode", 
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
     await contains(":iframe .s_newsletter_block").click();
 
-    expect(".hb-row [data-action-id='toggleThanksMessage']").toHaveCount(1);
+    expect(".o_hb_row [data-action-id='toggleThanksMessage']").toHaveCount(1);
     // thanks message shouldn't be displayed
     expect(":iframe .js_subscribed_wrap").not.toHaveClass("o_enable_preview");
     expect(":iframe .js_subscribe_wrap").not.toHaveClass("o_disable_preview");

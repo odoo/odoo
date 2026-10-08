@@ -98,7 +98,7 @@ registry.category("web_tour.tours").add("snippet_popup_and_animations", {
         {
             content: "Drag the Columns snippet group and drop it at the bottom of the popup.",
             trigger:
-                ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Columns'].o_draggable .o_snippet_thumbnail",
+                ".o_hb_snippets_menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Columns'].o_draggable .o_snippet_thumbnail",
             run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
         },
         {
@@ -162,7 +162,7 @@ registry.category("web_tour.tours").add("snippet_popup_and_animations", {
         ...changeOptionInPopover("Image", "Effect", "Outline"),
         {
             trigger:
-                ".o_customize_tab .options-container[data-container-title='Image'] [data-label='Effect'] button:contains('Outline')",
+                ".o_customize_tab .o_hb_options_container[data-container-title='Image'] [data-label='Effect'] button:contains('Outline')",
         },
         {
             content: "Check that the outline effect has been applied on the image",
@@ -184,7 +184,7 @@ registry.category("web_tour.tours").add("snippet_popup_and_animations", {
         ...changeOptionInPopover("Image", "Filter", "Blur"),
         {
             trigger:
-                ".o_customize_tab .options-container[data-container-title='Image'] [data-label='Filter'] button:contains('Blur')",
+                ".o_customize_tab .o_hb_options_container[data-container-title='Image'] [data-label='Filter'] button:contains('Blur')",
         },
         {
             content: "Check that the Blur filter has been applied on the image",
@@ -192,7 +192,7 @@ registry.category("web_tour.tours").add("snippet_popup_and_animations", {
         },
         {
             content: "Click on the 'undo' button",
-            trigger: ".o-snippets-top-actions button[data-icon='undo']",
+            trigger: ".o_hb_snippets_top_actions button[data-icon='undo']",
             run: "click",
         },
         {

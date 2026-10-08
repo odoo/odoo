@@ -278,7 +278,7 @@ function saveTranslation(timeout = 50000) {
     return [
         {
             content: "Save translation",
-            trigger: ".o-website-builder_sidebar button[data-action=save]",
+            trigger: ".o_website_builder_sidebar button[data-action=save]",
             run: "click",
         },
         {

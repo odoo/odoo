@@ -45,7 +45,7 @@ registry.category("web_tour.tours").add('snippets_mailing_menu_toolbar', {
     },
     {
         content: "Make sure the snippets menu is not hidden",
-        trigger: ".o-snippets-menu",
+        trigger: ".o_hb_snippets_menu",
     },
     {
         content: "Wait for .s_text_block to be populated",

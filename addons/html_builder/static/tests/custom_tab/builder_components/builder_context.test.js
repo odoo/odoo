@@ -29,7 +29,7 @@ test("should pass the context", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container button").click();
+    await contains(".o_hb_bg_options_container button").click();
     // The function `apply` should be called twice (on hover (for preview), then, on click).
     expect.verifySteps(["customAction myParam myValue", "customAction myParam myValue"]);
 });

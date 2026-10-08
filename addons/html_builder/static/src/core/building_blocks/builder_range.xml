@@ -4,7 +4,7 @@
 <t t-name="html_builder.BuilderRange">
     <BuilderComponent>
         <div
-            t-attf-class="o-hb-range d-flex flex-row flex-nowrap align-items-center {{ this.props.withNumberInput ? 'me-2' : 'w-100' }}"
+            t-attf-class="o_hb_range d-flex flex-row flex-nowrap align-items-center {{ this.props.withNumberInput ? 'me-2' : 'w-100' }}"
             t-att-data-action-id="this.info.actionId"
             t-att-data-action-param="this.info.actionParam"
             t-att-data-action-value="this.info.actionValue"
@@ -15,7 +15,7 @@
             t-att-data-attribute-action-value="this.info.attributeActionValue">
             <input
                 type="range"
-                class="o-hb-rangeInput"
+                class="o_hb_rangeInput"
                 t-ref="this.inputRefRange"
                 t-att-class="this.className"
                 t-att-min="this.props.min"
@@ -31,8 +31,8 @@
             t-props="this.textInputBaseProps"
             inputRef="this.inputRefNumber"
             value="this.displayValueNumber"
-            classes="'o-hb-input-field-number justify-content-end'"
-            inputClasses="'o-hb-input-number text-end'"
+            classes="'o_hb_input_field_number justify-content-end'"
+            inputClasses="'o_hb_input_number text-end'"
             commit.bind="this.commitInput"
             preview.bind="this.previewInput"
             clampValue.bind="this.clampValueForInput"
@@ -42,7 +42,7 @@
             max="this.props.max"
             step="this.step"
         >
-            <span class="o-hb-input-field-unit" t-out="this.props.unit"/>
+            <span class="o_hb_input_field_unit" t-out="this.props.unit"/>
         </BuilderNumberInputBase>
     </BuilderComponent>
 </t>

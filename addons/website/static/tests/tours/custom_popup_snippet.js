@@ -20,7 +20,7 @@ registerWebsitePreviewTour(
         ...clickOnSnippet(snippets[1]),
         {
             content: "save this snippet to save later",
-            trigger: ".options-container[data-container-title='Popup'] .oe_snippet_save",
+            trigger: ".o_hb_options_container[data-container-title='Popup'] .oe_snippet_save",
             run: "click",
         },
         {

@@ -351,12 +351,12 @@ registry.category("web_tour.tours").add("edit_megamenu_visibility", {
         },
         {
             trigger:
-                '.options-container [data-label="Visibility"] button[data-action-param="no_mobile"]',
+                '.o_hb_options_container [data-label="Visibility"] button[data-action-param="no_mobile"]',
             run: "click",
         },
         {
             trigger:
-                '.options-container [data-label="Visibility"] button[data-action-param="no_mobile"].active',
+                '.o_hb_options_container [data-label="Visibility"] button[data-action-param="no_mobile"].active',
         },
         // Mega Menu 2: Mobile Only
         {
@@ -371,7 +371,7 @@ registry.category("web_tour.tours").add("edit_megamenu_visibility", {
         },
         {
             trigger:
-                '.options-container [data-label="Visibility"] button[data-action-param="no_desktop"]',
+                '.o_hb_options_container [data-label="Visibility"] button[data-action-param="no_desktop"]',
             run: "click",
         },
         {
@@ -381,7 +381,7 @@ registry.category("web_tour.tours").add("edit_megamenu_visibility", {
         },
         {
             trigger:
-                '.options-container [data-label="Visibility"] button[data-action-param="no_desktop"].active',
+                '.o_hb_options_container [data-label="Visibility"] button[data-action-param="no_desktop"].active',
         },
         // Mega Menu 3: Logged Out Only
         {

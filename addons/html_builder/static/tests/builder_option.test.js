@@ -37,15 +37,15 @@ test("Undo/Redo correctly restores the stored container target", async () => {
     `);
 
     await contains(":iframe .target1").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
     await contains("[data-action-id='customAction']").click();
     await contains(":iframe .target2").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 2");
 
-    await contains(".o-snippets-top-actions [data-icon='undo']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
-    await contains(".o-snippets-top-actions [data-icon='redo']").click();
-    expect(".options-container").toHaveCount(0);
+    await contains(".o_hb_snippets_top_actions [data-icon='undo']").click();
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
+    await contains(".o_hb_snippets_top_actions [data-icon='redo']").click();
+    expect(".o_hb_options_container").toHaveCount(0);
 });
 
 test("Undo/Redo multiple actions always restores the action container target", async () => {
@@ -72,23 +72,23 @@ test("Undo/Redo multiple actions always restores the action container target", a
     `);
 
     await contains(":iframe .target1").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
     await contains("[data-action-id='customAction']").click();
     await contains(":iframe .target2").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 2");
     await contains("[data-action-id='customAction']").click();
     expect(":iframe .test-options-target.test").toHaveCount(2);
     // Undo everything.
-    await contains(".o-snippets-top-actions [data-icon='undo']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
-    await contains(".o-snippets-top-actions [data-icon='undo']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    await contains(".o_hb_snippets_top_actions [data-icon='undo']").click();
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 2");
+    await contains(".o_hb_snippets_top_actions [data-icon='undo']").click();
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
     expect(":iframe .test-options-target.test").toHaveCount(0);
     // Redo everything.
-    await contains(".o-snippets-top-actions [data-icon='redo']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
-    await contains(".o-snippets-top-actions [data-icon='redo']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
+    await contains(".o_hb_snippets_top_actions [data-icon='redo']").click();
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
+    await contains(".o_hb_snippets_top_actions [data-icon='redo']").click();
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 2");
     expect(":iframe .test-options-target.test").toHaveCount(2);
 });
 
@@ -119,14 +119,14 @@ test("Undo/Redo an action that activates another target restores the old one on 
     editor = getEditor();
 
     await contains(":iframe .target1").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
     await contains("[data-action-id='customAction']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 2");
     // Undo everything.
-    await contains(".o-snippets-top-actions [data-icon='undo']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
-    await contains(".o-snippets-top-actions [data-icon='redo']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
+    await contains(".o_hb_snippets_top_actions [data-icon='undo']").click();
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
+    await contains(".o_hb_snippets_top_actions [data-icon='redo']").click();
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 2");
 });
 
 test("Undo/Redo an action that deactivates the containers restores the old one on undo and deactivates again on redo", async () => {
@@ -152,15 +152,15 @@ test("Undo/Redo an action that deactivates the containers restores the old one o
     editor = getEditor();
 
     await contains(":iframe .target1").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
     await contains("[data-action-id='customAction']").click();
-    expect(".options-container").toHaveCount(0);
+    expect(".o_hb_options_container").toHaveCount(0);
     expect("button[data-name='blocks']").toHaveClass("active");
     // Undo everything.
-    await contains(".o-snippets-top-actions [data-icon='undo']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
-    await contains(".o-snippets-top-actions [data-icon='redo']").click();
-    expect(".options-container").toHaveCount(0);
+    await contains(".o_hb_snippets_top_actions [data-icon='undo']").click();
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
+    await contains(".o_hb_snippets_top_actions [data-icon='redo']").click();
+    expect(".o_hb_options_container").toHaveCount(0);
     expect("button[data-name='blocks']").toHaveClass("active");
 });
 
@@ -197,16 +197,16 @@ test("Undoing an action that deactivates target followed by another action does 
     editor = getEditor();
 
     await contains(":iframe .target1").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
     await contains("[data-action-id='customAction']").click();
-    expect(".options-container").toHaveCount(0);
+    expect(".o_hb_options_container").toHaveCount(0);
     expect("button[data-name='blocks']").toHaveClass("active");
 
-    await contains(".o-snippets-top-actions [data-icon='undo']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    await contains(".o_hb_snippets_top_actions [data-icon='undo']").click();
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
 
     await contains("[data-action-id='otherAction']").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
 });
 
 test("Reverting a preview after an action that deactivates target does not deactivate target", async () => {
@@ -242,18 +242,18 @@ test("Reverting a preview after an action that deactivates target does not deact
     editor = getEditor();
 
     await contains(":iframe .target1").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
     await contains("[data-action-id='customAction']").click();
-    expect(".options-container").toHaveCount(0);
+    expect(".o_hb_options_container").toHaveCount(0);
     expect("button[data-name='blocks']").toHaveClass("active");
 
     await contains(":iframe .target1").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
     await contains("[data-action-id='otherAction']").hover();
     expect(":iframe .target1").toHaveClass("other-test");
     await contains(":iframe .target1").hover();
     expect(":iframe .target1").not.toHaveClass("other-test");
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 1");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 1");
 });
 
 test("Containers fallback to a valid ancestor if the target disappears and restore it on undo", async () => {
@@ -290,16 +290,16 @@ test("Containers fallback to a valid ancestor if the target disappears and resto
     `);
 
     await contains(":iframe .target1").click();
-    expect(".options-container[data-container-title='Ancestor']").toHaveCount(1);
-    expect(".options-container[data-container-title='Target 1']").toHaveCount(1);
+    expect(".o_hb_options_container[data-container-title='Ancestor']").toHaveCount(1);
+    expect(".o_hb_options_container[data-container-title='Target 1']").toHaveCount(1);
     await contains("[data-action-id='targetAction']").click();
-    expect(".options-container[data-container-title='Ancestor']").toHaveCount(1);
-    expect(".options-container[data-container-title='Target 1']").toHaveCount(0);
+    expect(".o_hb_options_container[data-container-title='Ancestor']").toHaveCount(1);
+    expect(".o_hb_options_container[data-container-title='Target 1']").toHaveCount(0);
     expect("[data-action-id='ancestorAction']").toHaveCount(1);
 
-    await contains(".o-snippets-top-actions [data-icon='undo']").click();
-    expect(".options-container[data-container-title='Ancestor']").toHaveCount(1);
-    expect(".options-container[data-container-title='Target 1']").toHaveCount(1);
+    await contains(".o_hb_snippets_top_actions [data-icon='undo']").click();
+    expect(".o_hb_options_container[data-container-title='Ancestor']").toHaveCount(1);
+    expect(".o_hb_options_container[data-container-title='Target 1']").toHaveCount(1);
 });
 
 test("Do not activate/update containers if the element clicked is excluded", async () => {
@@ -318,12 +318,12 @@ test("Do not activate/update containers if the element clicked is excluded", asy
     `);
 
     await contains(":iframe .target1").click();
-    expect(".options-container").toHaveCount(0);
+    expect(".o_hb_options_container").toHaveCount(0);
     await contains(":iframe .target2").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
-    expect(".options-container [data-class-action='test']").toHaveCount(1);
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 2");
+    expect(".o_hb_options_container [data-class-action='test']").toHaveCount(1);
     await contains(":iframe .target1").click();
-    expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Target 2");
 });
 
 test("Do not show parent container for no_parent_containers targets", async () => {
@@ -359,17 +359,17 @@ test("Do not show parent container for no_parent_containers targets", async () =
     `);
 
     await contains(":iframe .test-child-target").click();
-    expect(".options-container").toHaveCount(1);
-    expect(".options-container").toHaveAttribute("data-container-title", "Child");
+    expect(".o_hb_options_container").toHaveCount(1);
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Child");
     // Try with several layers
     await contains(":iframe .test-grand-child-target").click();
-    expect(".options-container").toHaveCount(2);
-    expect(".options-container:eq(0)").toHaveAttribute("data-container-title", "Child");
-    expect(".options-container:eq(1)").toHaveAttribute("data-container-title", "Grand-child");
+    expect(".o_hb_options_container").toHaveCount(2);
+    expect(".o_hb_options_container:eq(0)").toHaveAttribute("data-container-title", "Child");
+    expect(".o_hb_options_container:eq(1)").toHaveAttribute("data-container-title", "Grand-child");
     // Make sure the parent's options still appear for itself.
     await contains(":iframe .test-parent-target").click();
-    expect(".options-container").toHaveCount(1);
-    expect(".options-container").toHaveAttribute("data-container-title", "Parent");
+    expect(".o_hb_options_container").toHaveCount(1);
+    expect(".o_hb_options_container").toHaveAttribute("data-container-title", "Parent");
 });
 
 test("Option containers should update reactively", async () => {
@@ -402,11 +402,11 @@ test("Option containers should update reactively", async () => {
     `);
     await contains(":iframe .target1").click();
     expect(".oe_snippet_clone").not.toHaveAttribute("disabled");
-    expect(".options-container-label").toHaveText("Test enabled clone");
+    expect(".o_hb_options_container_label").toHaveText("Test enabled clone");
     await contains("[data-class-action='disabled_clone']").click();
     await animationFrame();
     expect(".oe_snippet_clone").toHaveAttribute("disabled");
-    expect(".options-container-label").toHaveText("Test disabled clone");
+    expect(".o_hb_options_container_label").toHaveText("Test disabled clone");
 });
 
 test("Option containers dispatched to plugins are updated reactively", async () => {

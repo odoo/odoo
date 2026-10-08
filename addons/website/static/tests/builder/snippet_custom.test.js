@@ -72,7 +72,7 @@ test("Renaming custom snippets don't make an orm call", async () => {
     );
 
     await contains(
-        ".o-website-builder_sidebar .o_snippets_container .o_snippet[name='Custom'] button"
+        ".o_website_builder_sidebar .o_snippets_container .o_snippet[name='Custom'] button"
     ).click();
     await animationFrame();
 

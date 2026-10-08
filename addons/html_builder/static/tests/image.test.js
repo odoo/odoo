@@ -18,7 +18,7 @@ test("Size should not be displayed on CORS protected images", async () => {
     );
     await contains(":iframe img").click();
     await waitSidebarUpdated();
-    expect(".o-hb-image-size-info").toHaveCount(0);
+    expect(".o_hb_image_size_info").toHaveCount(0);
 });
 
 test("Transfer all options before processing image at image replace", async () => {

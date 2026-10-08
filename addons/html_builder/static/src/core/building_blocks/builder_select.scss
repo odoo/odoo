@@ -13,13 +13,13 @@
     display: none;
 }
 
-.o-hb-select-wrapper {
+.o_hb_select_wrapper {
     flex: 1 0 0;
     min-width: 7ch; // Approx 4 characters + caret
     max-width: 100%;
     display: flex;
 
-    .o-hb-select-toggle.o-hb-btn.btn.o-dropdown.dropdown-toggle {
+    .o_hb_select_toggle.o_hb_btn.btn.o-dropdown.dropdown-toggle {
         display: block;
         flex: 1;
         min-width: 0;
@@ -46,7 +46,7 @@
     }
 
     &:first-child {
-        .o-hb-select-toggle {
+        .o_hb_select_toggle {
             --btn-padding-x: #{map-get($spacers , 2)};
         }
     }
@@ -55,19 +55,19 @@
 // The following code handles the case where a select and a group of buttons are
 // on the same row. In this situation, we want to show as much of the buttons’
 // text as possible. (For Animation: "onScroll" or Layout: "Column")
-.hb-row-content {
-    &:has(.o-hb-button-group) > .o-hb-select-wrapper {
+.o_hb_row_content {
+    &:has(.o_hb_button_group) > .o_hb_select_wrapper {
         flex: 1 0 auto;
         max-width: 50%;
     }
 
-    &:has(.o-hb-select-wrapper) > .o-hb-button-group .o-hb-btn {
+    &:has(.o_hb_select_wrapper) > .o_hb_button_group .o_hb_btn {
         min-width: 6ch;
     }
 }
 
 // Image format badge.
-.o-hb-select-toggle.dropdown-toggle, .o-hb-select-dropdown-item {
+.o_hb_select_toggle.dropdown-toggle, .o_hb_select_dropdown_item {
     > div > .badge {
         color: $o-we-item-clickable-color;
         background-color: $o-we-bg-darker;
@@ -78,7 +78,7 @@
 // TODO: review the SelectMenu template to allow both light/dark backgrounds and
 // remove most '!important' needed here to override Bootstrap classes. See
 // implementations of Many2X builder components for examples.
-.o-hb-select-dropdown {
+.o_hb_select_dropdown {
     --o-hb-select-bg: #{$o-we-item-clickable-bg};
     --o-hb-select-color: #{$o-we-fg-light};
     --o-hb-select-bg-hover: #{$o-we-bg-lighter};
@@ -115,7 +115,7 @@
             color: $active-color !important;
         }
 
-        &.active:has(.hb-svg, > img) {
+        &.active:has(.o_hb_svg, > img) {
             position: relative;
             background-color: color-mix(in srgb, $active-color 10%, transparent);
 
@@ -146,17 +146,17 @@
 }
 
 .o_builder_open {
-    &:has(.o-snippets-tabs [data-name='theme'].active) {
-        .o-hb-select-dropdown {
+    &:has(.o_hb_snippets_tabs [data-name='theme'].active) {
+        .o_hb_select_dropdown {
             --o-hb-select-item-active-color: #{$o-we-color-global};
         }
     }
 }
 
-.o-hb-select-toggle .o-hb-theme-tab-link {
+.o_hb_select_toggle .o_hb_theme_tab_link {
     display: none;
 }
 
-.o-hb-select-dropdown-item:has(.o-hb-theme-tab-link) {
+.o_hb_select_dropdown_item:has(.o_hb_theme_tab_link) {
     padding-right: 0;
 }

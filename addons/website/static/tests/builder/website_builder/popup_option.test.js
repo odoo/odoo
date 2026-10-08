@@ -99,7 +99,7 @@ test("dropping the popup snippet appends it to the end of the container", async 
         loadAssetsFrontendJS: true,
     });
     const { moveTo, drop } = await contains(
-        ".o-website-builder_sidebar [data-snippet-group='content'] .o_snippet_thumbnail"
+        ".o_website_builder_sidebar [data-snippet-group='content'] .o_snippet_thumbnail"
     ).drag();
     // Drop the snippet in the first dropzone.
     await moveTo(":iframe .oe_drop_zone:first");

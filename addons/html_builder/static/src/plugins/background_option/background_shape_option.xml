@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BackgroundShapeOption">
     <BuilderRow label.translate="Shape">
-        <div class="btn-group o-hb-button-group">
+        <div class="btn-group o_hb_button_group">
             <BuilderSlidingPanel
                 label.translate="Shape"
                 extraClasses="'btn-secondary'"
@@ -14,7 +14,7 @@
                     <BackgroundShapeSelector
                         onClose="panel.close"
                         shapeActionId="'setBackgroundShape'"
-                        buttonWrapperClassName="'o-hb-bg-shape-btn'"
+                        buttonWrapperClassName="'o_hb_bg_shape_btn'"
                         selectorTitle.translate="Background Shapes"
                         shapeGroups="this.getBackgroundShapeGroups()"
                         imgThroughDiv="true"
@@ -35,7 +35,7 @@
                 title.translate="Show/Hide on Mobile"
                 action="'showOnMobile'"
                 preview="false"
-                className="'o-hb-btn-has-icon o_hb_device btn-danger-color-active'"
+                className="'o_hb_btn_has_icon o_hb_device btn-danger-color-active'"
                 t-if="this.state.hasShape"
                 icon="'mobile_off'">
             </BuilderButton>

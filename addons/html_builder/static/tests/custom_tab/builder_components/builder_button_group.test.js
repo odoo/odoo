@@ -44,7 +44,7 @@ test("change the editingElement of sub widget through `applyTo` prop", async () 
                 </div>
             `);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
     await hover("[data-action-id='customAction']");
     expect.verifySteps(["customAction a"]);
 });
@@ -72,7 +72,7 @@ test("should propagate actionParam in the context", async () => {
                 </div>
             `);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
     await hover("[data-action-id='customAction']");
     expect.verifySteps(["customAction myParam"]);
 });
@@ -128,7 +128,7 @@ test("prevent preview of all buttons", async () => {
                 </div>
             `);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
     await contains("[data-action-id='customAction1']").hover();
     expect.verifySteps([]);
     await contains("[data-action-id='customAction2']").hover();
@@ -155,10 +155,10 @@ test("hide/display base on applyTo", async () => {
 
     await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target").click();
-    expect(".options-container .btn-group").toHaveCount(0);
+    expect(".o_hb_options_container .btn-group").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
-    expect(".options-container .btn-group").toHaveCount(1);
+    expect(".o_hb_options_container .btn-group").toHaveCount(1);
 });
 
 test("hide/display base on applyTo - 2", async () => {
@@ -178,10 +178,10 @@ test("hide/display base on applyTo - 2", async () => {
 
     await setupHTMLBuilder(`<div class="parent-target"><div class="child-target">b</div></div>`);
     await contains(":iframe .parent-target").click();
-    expect(".options-container .btn-group").not.toBeVisible();
+    expect(".o_hb_options_container .btn-group").not.toBeVisible();
 
     await contains("[data-class-action='my-custom-class']").click();
-    expect(".options-container .btn-group").toBeVisible();
+    expect(".o_hb_options_container .btn-group").toBeVisible();
 });
 
 test("click on BuilderButton with empty value should remove styleAction", async () => {
@@ -253,7 +253,7 @@ test("BuilderButton: no activation on preview", async () => {
     });
 
     // Open the builder select
-    await contains("button.o-hb-select-toggle").click();
+    await contains("button.o_hb_select_toggle").click();
 
     // Hover the builder button while the builder select is still open
     const builderButtonEl = queryOne("button[data-class-action=b2]");

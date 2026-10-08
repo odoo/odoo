@@ -42,7 +42,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the block tab",
-            trigger: ".o-snippets-tabs button[data-name='blocks']",
+            trigger: ".o_hb_snippets_tabs button[data-name='blocks']",
             run: "click",
         },
         {

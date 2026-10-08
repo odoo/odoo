@@ -13,8 +13,8 @@
             <Image t-if="this.snippet.isDisabled" src="'/html_builder/static/img/snippet_disabled.svg'" class="'o_snippet_undroppable'"/>
             <div class="o_snippet_thumbnail_img" t-att-style="this.snippet.thumbnailSrc and ('background-image: url(' + this.snippet.thumbnailSrc + ');')"/>
             <t t-if="this.state.isRenaming">
-                <div class="rename-input w-100 z-1">
-                    <input t-ref="this.renameInputRef" type="text" autocomplete="chrome-off" t-att-value="this.snippet.title" class="text-start o-hb-input-text o-hb-input-base" t-on-pointerdown.stop=""/>
+                <div class="o_hb_rename_input w-100 z-1">
+                    <input t-ref="this.renameInputRef" type="text" autocomplete="chrome-off" t-att-value="this.snippet.title" class="text-start o_hb_input_text o_hb_input_base" t-on-pointerdown.stop=""/>
                     <button class="o_we_text_success oi btn btn-outline-success border-0"
                             data-icon="check"
                             data-tooltip="Confirm"
@@ -29,7 +29,7 @@
                 <span class="o_snippet_thumbnail_title" t-out="this.snippet.title"/>
             </t>
         </div>
-        <div t-if="!this.state.isRenaming" class="rename-delete-buttons me-2 float-end z-1">
+        <div t-if="!this.state.isRenaming" class="o_hb_rename_delete_buttons me-2 float-end z-1">
             <button class="oi oi-filled btn o_we_hover_success btn-outline-info border-0"
                     data-icon="edit"
                     t-att-data-tooltip="this.renameButtonTooltip"

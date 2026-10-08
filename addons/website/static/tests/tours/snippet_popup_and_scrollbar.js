@@ -66,7 +66,7 @@ registerWebsitePreviewTour(
         {
             content: "Drag the Content snippet group and drop it at the bottom of the popup.",
             trigger:
-                ".o-snippets-menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Content'].o_draggable .o_snippet_thumbnail",
+                ".o_hb_snippets_menu .o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Content'].o_draggable .o_snippet_thumbnail",
             run: "drag_and_drop :iframe #wrap .s_popup .oe_drop_zone:last",
         },
         {
@@ -120,7 +120,7 @@ registerWebsitePreviewTour(
         {
             content: "Drag the Content snippet group and drop it at the bottom of the popup.",
             trigger:
-                ".o-snippets-menu .o_snippet[name='Content'] .o_snippet_thumbnail:not(.o_we_ongoing_insertion)",
+                ".o_hb_snippets_menu .o_snippet[name='Content'] .o_snippet_thumbnail:not(.o_we_ongoing_insertion)",
             run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
         },
         {
@@ -152,7 +152,7 @@ registerWebsitePreviewTour(
         {
             content: "Drag the Content snippet group and drop it in the Cookies Bar.",
             trigger:
-                ".o-snippets-menu .o_snippet[name='Content'] .o_snippet_thumbnail:not(.o_we_ongoing_insertion)",
+                ".o_hb_snippets_menu .o_snippet[name='Content'] .o_snippet_thumbnail:not(.o_we_ongoing_insertion)",
             run: "drag_and_drop :iframe #website_cookies_bar .modal-content.oe_structure",
         },
         {
@@ -172,7 +172,7 @@ registerWebsitePreviewTour(
         {
             content: "Duplicate the Media List snippet",
             trigger:
-                ".o_customize_tab .options-container[data-container-title='Media List'] .oe_snippet_clone",
+                ".o_customize_tab .o_hb_options_container[data-container-title='Media List'] .oe_snippet_clone",
             run: "click",
         },
         {
@@ -200,7 +200,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check the sidebar menu has changed",
-            trigger: ".o-website-builder_sidebar:has([data-container-title='Media item'])",
+            trigger: ".o_website_builder_sidebar:has([data-container-title='Media item'])",
         },
         {
             content: "Select the second Media List snippet in the Cookies Bar.",
@@ -208,7 +208,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
-            trigger: ".o-website-builder_sidebar:not(:has([data-container-title='Media item']))",
+            trigger: ".o_website_builder_sidebar:not(:has([data-container-title='Media item']))",
         },
         {
             content: "Remove the second Media List snippet in the Cookies Bar.",

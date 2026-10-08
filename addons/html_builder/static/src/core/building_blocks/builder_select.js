@@ -43,7 +43,7 @@ export class BuilderSelect extends Component {
             default: t.object(), // Content is not optional
             fixedButton: t.object().optional(),
         }),
-        dropdownClass: t.string().optional("o-hb-select-dropdown"),
+        dropdownClass: t.string().optional("o_hb_select_dropdown"),
     });
     buttonRef = signal.ref();
     rootRef = signal.ref();

@@ -47,7 +47,7 @@ test("should load the current style", async () => {
     );
     await contains(":iframe p > a").click();
 
-    await contains("[data-label=Type] .o-hb-select-toggle").click();
+    await contains("[data-label=Type] .o_hb_select_toggle").click();
     await contains(".o_popover .dropdown-item:contains('Custom')").click();
 
     expect(":iframe p > a").toHaveStyle(
@@ -66,11 +66,11 @@ test("should load the current custom style correctly", async () => {
     );
     await contains(":iframe p > a").click();
 
-    expect("[data-label=Type] .o-hb-select-toggle").toHaveText("Custom");
+    expect("[data-label=Type] .o_hb_select_toggle").toHaveText("Custom");
     expect("[data-label=Text] .o_we_color_preview").toHaveStyle("background-color: rgb(0, 255, 0)");
     expect("[data-label=Fill] .o_we_color_preview").toHaveStyle("background-color: rgb(0, 0, 255)");
-    expect("[data-label=Border] .o-hb-input-number").toHaveValue("4");
-    expect("[data-label=Border] .o-hb-select-toggle .o-hb-border-preview").toHaveStyle(
+    expect("[data-label=Border] .o_hb_input_number").toHaveValue("4");
+    expect("[data-label=Border] .o_hb_select_toggle .o_hb_border_preview").toHaveStyle(
         "border-style: dotted",
         { inline: true }
     );
@@ -84,7 +84,7 @@ test("should not have the link option type", async () => {
 
     await contains(":iframe p > a").click();
 
-    await contains("[data-label=Type] .o-hb-select-toggle").click();
+    await contains("[data-label=Type] .o_hb_select_toggle").click();
 
     expect(".o_popover .dropdown-item").toHaveCount(3);
     expect(".o_popover .dropdown-item:contains('Link')").toHaveCount(0);
@@ -95,7 +95,7 @@ test("should correctly set custom style on button", async () => {
 
     await contains(":iframe p > a").click();
 
-    await contains("[data-label=Type] .o-hb-select-toggle").click();
+    await contains("[data-label=Type] .o_hb_select_toggle").click();
     await contains(".o_popover .dropdown-item:contains('Custom')").click();
 
     await contains("[data-label=Text] .o_we_color_preview").click();
@@ -104,12 +104,12 @@ test("should correctly set custom style on button", async () => {
     await contains("[data-label=Fill] .o_we_color_preview").click();
     await contains(".o_color_button[data-color='#00FF00']").click();
 
-    await contains("[data-label=Border] .o-hb-input-number").edit("6");
+    await contains("[data-label=Border] .o_hb_input_number").edit("6");
 
     await contains("[data-label=Border] .o_we_color_preview").click();
     await contains(".o_color_button[data-color='#0000FF']").click();
 
-    await contains("[data-label=Border] .o-hb-select-toggle").click();
+    await contains("[data-label=Border] .o_hb_select_toggle").click();
     await contains(".o_popover .dropdown-item[data-action-value=dotted]").click();
 
     expect(":iframe p > a").toHaveClass("btn btn-custom");
@@ -170,16 +170,16 @@ test("border works even if current border style is none", async () => {
 
     await contains(":iframe p > a").click();
 
-    await contains("[data-label=Type] .o-hb-select-toggle").click();
+    await contains("[data-label=Type] .o_hb_select_toggle").click();
     await contains(".o_popover .dropdown-item:contains('Custom')").click();
 
-    expect("[data-label=Border] .o-hb-input-number").toHaveValue("0");
+    expect("[data-label=Border] .o_hb_input_number").toHaveValue("0");
 
-    await contains("[data-label=Border] .o-hb-input-number").edit("4");
+    await contains("[data-label=Border] .o_hb_input_number").edit("4");
     await animationFrame();
 
-    expect("[data-label=Border] .o-hb-input-number").toHaveValue("4");
-    expect("[data-label=Border] .o-hb-select-toggle .o-hb-border-preview").toHaveStyle(
+    expect("[data-label=Border] .o_hb_input_number").toHaveValue("4");
+    expect("[data-label=Border] .o_hb_select_toggle .o_hb_border_preview").toHaveStyle(
         "border-style: solid",
         { inline: true }
     );
@@ -192,7 +192,7 @@ test("border works even if current border style is none", async () => {
     await contains("[data-label=Border] .o_we_color_preview").click();
     await contains(".o_color_button[data-color='#0000FF']").click();
 
-    await contains("[data-label=Border] .o-hb-select-toggle").click();
+    await contains("[data-label=Border] .o_hb_select_toggle").click();
     await contains(".o_popover .dropdown-item[data-action-value=dotted]").click();
 
     expect(":iframe p > a").toHaveStyle(/border: 4px dotted rgb(0, 0, 255)/, { inline: true });

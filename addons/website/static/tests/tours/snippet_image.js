@@ -37,7 +37,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the 'undo' button",
-            trigger: ".o-snippets-top-actions button[data-icon='undo']",
+            trigger: ".o_hb_snippets_top_actions button[data-icon='undo']",
             run: "click",
         },
         {

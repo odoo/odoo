@@ -55,10 +55,10 @@ export class BuilderButtonInternal extends Component {
             }
         }
         if (this.props.icon) {
-            className += ` o-hb-btn-has-icon`;
+            className += ` o_hb_btn_has_icon`;
         }
         if (this.props.iconImg) {
-            className += ` o-hb-btn-has-img-icon`;
+            className += ` o_hb_btn_has_img_icon`;
         }
         return className;
     }

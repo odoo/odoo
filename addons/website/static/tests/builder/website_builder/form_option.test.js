@@ -101,18 +101,18 @@ test("change action of form changes available options", async () => {
     await setupWebsiteBuilderWithSnippet("s_website_form", { withIframeRegistry });
 
     await contains(":iframe section").click();
-    await contains(".hb-row[data-label='Action'] button").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
 
     await animationFrame();
     expect("span:contains('Applied Job')").toHaveCount(1);
-    expect(".hb-row[data-label='URL'] input").toHaveValue("/job-thank-you");
+    expect(".o_hb_row[data-label='URL'] input").toHaveValue("/job-thank-you");
 
-    await contains(".hb-row[data-label='Action'] button").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Create a Customer')").click();
 
     expect("span:contains('Applied Job')").toHaveCount(0);
-    expect(".hb-row[data-label='URL'] input").toHaveValue("/contactus-thank-you");
+    expect(".o_hb_row[data-label='URL'] input").toHaveValue("/contactus-thank-you");
 });
 
 test("remove hidden many2one field from form if value is None", async () => {
@@ -127,16 +127,16 @@ test("remove hidden many2one field from form if value is None", async () => {
     await setupWebsiteBuilderWithSnippet("s_website_form", { withIframeRegistry });
 
     await contains(":iframe section").click();
-    await contains(".hb-row[data-label='Action'] button").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
 
     await animationFrame();
-    await contains(".hb-row[data-label='Applied Job'] button").click();
+    await contains(".o_hb_row[data-label='Applied Job'] button").click();
     await contains("div.o-dropdown-item:contains('Some Job')").click();
 
     await animationFrame();
     expect(':iframe input[type="hidden"][name="job_id"][value="1"]').toHaveCount(1);
-    await contains(".hb-row[data-label='Applied Job'] button").click();
+    await contains(".o_hb_row[data-label='Applied Job'] button").click();
     await contains("div.o-dropdown-item:contains('None')").click();
 
     await animationFrame();
@@ -172,12 +172,12 @@ test("'Author' field's type stays selected when you modify the option list", asy
     );
 
     await contains(":iframe section span:contains(Author)").click();
-    await contains(".hb-row[data-label='Type'] button:contains('Author')").click();
+    await contains(".o_hb_row[data-label='Type'] button:contains('Author')").click();
     expect(".o_popover [data-choice-index]:contains('Author')").toHaveClass("selected");
-    await contains(".o_select_menu button.o-hb-selectMany2X-toggle:contains('Add')").click();
+    await contains(".o_select_menu button.o_hb_selectMany2X_toggle:contains('Add')").click();
     await contains(".o_select_menu_menu .o-dropdown-item").click();
     // check that the author is still marked as selected
-    await contains(".hb-row[data-label='Type'] button:contains('Author')").click();
+    await contains(".o_hb_row[data-label='Type'] button:contains('Author')").click();
     expect(".o_popover [data-choice-index]:contains('Author')").toHaveClass("selected");
 });
 
@@ -293,15 +293,15 @@ test("Set 'Message' as form success action and show/hide the message preview", a
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilderWithSnippet("s_website_form", { loadIframeBuilderTemplates: true });
     await contains(":iframe section.s_website_form").click();
-    expect(".options-container[data-container-title='Form']").toHaveCount(1);
+    expect(".o_hb_options_container[data-container-title='Form']").toHaveCount(1);
 
-    await contains(".options-container [data-label='On Success'] button").click();
+    await contains(".o_hb_options_container [data-label='On Success'] button").click();
     await contains("div[data-action-id='onSuccess'][data-action-value='message']").click();
     expect(":iframe .s_website_form_end_message.d-none").toHaveCount(1);
 
-    await contains(".options-container [data-action-id='toggleEndMessage']").click();
+    await contains(".o_hb_options_container [data-action-id='toggleEndMessage']").click();
     expect(":iframe .o_show_form_success_message").toHaveCount(2);
-    await contains(".options-container [data-action-id='toggleEndMessage']").click();
+    await contains(".o_hb_options_container [data-action-id='toggleEndMessage']").click();
     expect(":iframe .o_show_form_success_message").toHaveCount(0);
 });
 
@@ -545,11 +545,11 @@ test("Changing max files number option updates file input 'multiple' attribute",
     expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
     await contains(":iframe .s_website_form_input").click();
-    await contains(".options-container div[data-action-id='setMultipleFiles'] input").edit("2");
+    await contains(".o_hb_options_container div[data-action-id='setMultipleFiles'] input").edit("2");
     expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "2");
     expect(":iframe input[type=file]").toHaveAttribute("multiple");
     await contains(":iframe .s_website_form_input").click();
-    await contains(".options-container div[data-action-id='setMultipleFiles'] input").edit("1");
+    await contains(".o_hb_options_container div[data-action-id='setMultipleFiles'] input").edit("1");
     expect(":iframe input[type=file]").toHaveAttribute("data-max-files-number", "1");
     expect(":iframe input[type=file]").not.toHaveAttribute("multiple");
 });
@@ -570,7 +570,7 @@ test("Form using the Outgoing Mails model includes hidden email_to field", async
     );
 
     await contains(":iframe section").click();
-    await contains(".hb-row[data-label='Action'] button").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Send an E-mail')").click();
 
     expect(":iframe input[type='hidden'][name='email_to']").toHaveCount(1);
@@ -601,12 +601,12 @@ test("Saving outgoing mail form without company email uses editor email fallback
     );
 
     await contains(":iframe section").click();
-    await contains(".hb-row[data-label='Action'] button").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Send an E-mail')").click();
 
     expect(":iframe input[type='hidden'][name='email_to']").toHaveValue("user@mail.com");
 
-    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
 });
 
 test("dropping a snippet containing a form applies the default recipient email", async () => {
@@ -621,7 +621,7 @@ test("dropping a snippet containing a form applies the default recipient email",
     await contains(":iframe .s_website_form_info .s_website_form").click();
 
     expect(":iframe .s_website_form_info input[name='email_to']").toHaveValue("company@mail.com");
-    expect(".hb-row[data-label='Recipient Emails'] input").toHaveValue("company@mail.com");
+    expect(".o_hb_row[data-label='Recipient Emails'] input").toHaveValue("company@mail.com");
 });
 
 test("Last list entry cannot be removed", async () => {
@@ -667,17 +667,17 @@ test("Last list entry cannot be removed", async () => {
         { loadIframeBuilderTemplates: true }
     );
     await contains(":iframe .s_website_form_field").click();
-    expect(".options-container .builder_list_remove_item").toHaveCount(3);
+    expect(".o_hb_options_container .builder_list_remove_item").toHaveCount(3);
     await contains(
-        ".options-container .o_row_draggable:has(input[data-id='0']) .builder_list_remove_item"
+        ".o_hb_options_container .o_row_draggable:has(input[data-id='0']) .builder_list_remove_item"
     ).click();
-    expect(".options-container .builder_list_remove_item").toHaveCount(2);
+    expect(".o_hb_options_container .builder_list_remove_item").toHaveCount(2);
     await contains(
-        ".options-container .o_row_draggable:has(input[data-id='1']) .builder_list_remove_item"
+        ".o_hb_options_container .o_row_draggable:has(input[data-id='1']) .builder_list_remove_item"
     ).click();
-    expect(".options-container .builder_list_remove_item").toHaveCount(0);
-    await contains(".options-container .builder_list_add_item").click();
-    expect(".options-container .builder_list_remove_item").toHaveCount(2);
+    expect(".o_hb_options_container .builder_list_remove_item").toHaveCount(0);
+    await contains(".o_hb_options_container .builder_list_add_item").click();
+    expect(".o_hb_options_container .builder_list_remove_item").toHaveCount(2);
 });
 
 class ResCountryState extends models.Model {
@@ -739,18 +739,18 @@ test("Can link states to a country", async () => {
         { loadIframeBuilderTemplates: true }
     );
     await contains(":iframe select[name='state_id']").click();
-    expect(".options-container .hb-row [data-action-id='linkStateToCountry']").toHaveCount(1);
+    expect(".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry']").toHaveCount(1);
     expect(
-        ".options-container .hb-row [data-action-id='linkStateToCountry'] input"
+        ".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input"
     ).not.toBeChecked();
-    expect(".options-container .hb-row p:contains('Option List')").toHaveCount(1);
+    expect(".o_hb_options_container .o_hb_row p:contains('Option List')").toHaveCount(1);
 
     await contains(
-        ".options-container .hb-row [data-action-id='linkStateToCountry'] input"
+        ".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input"
     ).click();
 
-    expect(".options-container .hb-row [data-action-id='linkStateToCountry'] input").toBeChecked();
-    expect(".options-container .hb-row :contains('Option List')").toHaveCount(0);
+    expect(".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input").toBeChecked();
+    expect(".o_hb_options_container .o_hb_row :contains('Option List')").toHaveCount(0);
     expect(":iframe select[name='state_id']").toHaveAttribute("data-link-state-to-country", "true");
 });
 
@@ -776,7 +776,7 @@ test("Shouldn't have the 'Link to country' option if there's no country field", 
         </form></section>`
     );
     await contains(":iframe select[name='state_id']").click();
-    expect(".options-container .hb-row[data-action-id='linkStateToCountry']").toHaveCount(0);
+    expect(".o_hb_options_container .o_hb_row[data-action-id='linkStateToCountry']").toHaveCount(0);
 });
 
 test("Min and max character limits should not contradict one another.", async () => {
@@ -860,13 +860,13 @@ test("Only state fields have data-link-state-to-country attr", async () => {
     );
     await contains(":iframe select[name='state_id']").click();
     await contains(
-        ".options-container .hb-row [data-action-id='linkStateToCountry'] input"
+        ".o_hb_options_container .o_hb_row [data-action-id='linkStateToCountry'] input"
     ).click();
     expect(":iframe select[name='state_id']").toHaveAttribute("data-link-state-to-country", "true");
 
     // Other 'select' elements shouldn't have this attribute
-    await contains(".options-container .btn[title='Add a new field after this one']").click();
-    await contains(".hb-row[data-label='Type'] .dropdown-toggle").click();
+    await contains(".o_hb_options_container .btn[title='Add a new field after this one']").click();
+    await contains(".o_hb_row[data-label='Type'] .dropdown-toggle").click();
     await contains(".o_popover [data-choice-index]:contains('Selection')").click();
     expect(":iframe .s_website_form_field:last-child select").not.toHaveAttribute(
         "data-link-state-to-country"
@@ -1021,7 +1021,7 @@ test("contains conditional visibility value for 'record' field", async () => {
 
 describe("Many2one Field", () => {
     const addRecordButtonSelector =
-        ".we-bg-options-container .o_select_menu button.o-hb-selectMany2X-toggle";
+        ".o_hb_bg_options_container .o_select_menu button.o_hb_selectMany2X_toggle";
     let records;
 
     beforeEach(async () => {
@@ -1133,7 +1133,7 @@ describe("Many2one Field", () => {
     });
 
     test("Update button", async () => {
-        await contains(".we-bg-options-container [data-icon='refresh']").click();
+        await contains(".o_hb_bg_options_container [data-icon='refresh']").click();
         expect(addRecordButtonSelector).toHaveProperty("disabled", true, {
             message: "Add button should be disabled when all records are included",
         });
@@ -1152,7 +1152,7 @@ describe("Many2one Field", () => {
     });
 
     describe("Dialog", () => {
-        const dialogButtonSelector = ".we-bg-options-container [data-icon='settings']";
+        const dialogButtonSelector = ".o_hb_bg_options_container [data-icon='settings']";
 
         test("Add all and remove all", async () => {
             await contains(dialogButtonSelector).click();
@@ -1242,15 +1242,15 @@ test("other option attributes are preserved when switching between radio and sel
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-label");
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-placeholder");
 
-    await contains(".hb-row[data-label='Type'] .dropdown-toggle").click();
+    await contains(".o_hb_row[data-label='Type'] .dropdown-toggle").click();
     await contains(".o_popover [data-choice-index]:contains('Selection')").click();
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-allowed", "true");
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-label");
     expect(":iframe .s_website_form_field").toHaveAttribute("data-other-option-placeholder");
 
-    await contains(".hb-row[data-label='Type'] .dropdown-toggle").click();
+    await contains(".o_hb_row[data-label='Type'] .dropdown-toggle").click();
     await contains(".o_popover [data-choice-index]:contains('Selection')").click();
-    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
     await contains(".o_popover [data-choice-index]:contains('Multiple Checkboxes')").click();
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-allowed");
     expect(":iframe .s_website_form_field").not.toHaveAttribute("data-other-option-label");
@@ -1271,7 +1271,7 @@ test("label's markup is preserved when switching between field's type", async ()
     );
 
     await contains(":iframe .s_website_form_field:contains(Your Name)").click();
-    await contains(".hb-row[data-label='Type'] .dropdown-toggle").click();
+    await contains(".o_hb_row[data-label='Type'] .dropdown-toggle").click();
     await contains("[data-action-value='selection']").click();
 
     expect(":iframe .s_website_form_label_content:contains(Your Name)").toHaveInnerHTML(
@@ -1338,7 +1338,7 @@ test("builderList re-renders when the field type changes (custom fields)", async
 
     await contains(":iframe .s_website_form_field").click();
     expect.verifySteps(["setup", "setup"]);
-    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
     await contains(".o_popover [data-action-value='one2many']").click();
     expect.verifySteps(["setup"]);
 });
@@ -1397,7 +1397,7 @@ test("builderList re-renders when the field type changes (existing fields)", asy
 
     await contains(":iframe .s_website_form_field").click();
     expect.verifySteps(["setup", "setup"]);
-    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
     await contains(".o_popover [data-action-value='country_id']").click();
     expect.verifySteps(["setup"]);
 });
@@ -1465,7 +1465,7 @@ test("default for label when user deletes its content, and use it on save", asyn
         expect(args[1]).toMatch("Custom Field");
         return true;
     });
-    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
     expect.verifySteps(["save"]);
 });
 
@@ -1501,13 +1501,13 @@ test("Changing field type removes data-fill-with attribute", async () => {
 
     // Change the field type to custom field.
     await contains(":iframe input[type='text'][data-fill-with='commercial_company_name']").click();
-    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
     await contains(".o_popover [data-action-value='email']").click();
     expect(":iframe input[type='email']").not.toHaveAttribute("data-fill-with");
 
     // Change the field type to existing field.
     await contains(":iframe input[type='tel'][data-fill-with='phone']").click();
-    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
     await contains(".o_popover [data-action-value='cc']").click();
     expect(":iframe input[name='cc']").not.toHaveAttribute("data-fill-with");
 });
@@ -1538,7 +1538,7 @@ test("Changing field type to existing field removes custom label", async () => {
 
     // Change the field type to custom field.
     await contains(":iframe input[type='text']").click();
-    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
     await contains(".o_popover [data-action-value='cc']").click();
     expect(":iframe label").toHaveText("CC");
 });
@@ -1566,7 +1566,7 @@ test("incomplete field requirements are discarded on save", async () => {
     `);
 
     queryOne(":iframe .s_website_form").classList.add("o_dirty");
-    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
 });
 
 test("only known model fields are whitelisted on save", async () => {
@@ -1598,7 +1598,7 @@ test("only known model fields are whitelisted on save", async () => {
     `);
 
     queryOne(":iframe .s_website_form").classList.add("o_dirty");
-    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
     expect(whitelistCalls.length).toBeGreaterThan(0);
     for (const names of whitelistCalls) {
         expect(names).toEqual(["email_from"]);
@@ -1643,7 +1643,7 @@ test("change action of form to a model without registered fields adds the model'
     );
 
     await contains(":iframe section").click();
-    await contains(".hb-row[data-label='Action'] button").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Create a Custom Record')").click();
 
     expect(":iframe form").toHaveAttribute("data-model_name", "x_custom.model");
@@ -1702,14 +1702,14 @@ test("single-choice field is displayed as a dropdown when it has more than five 
     await contains(":iframe .s_website_form_field").click();
 
     // Five options or less: the selection keeps its radio buttons.
-    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
     await contains(".o_popover [data-action-value='short_selection']").click();
     expect(":iframe .s_website_form_field").toHaveAttribute("data-type", "selection");
     expect(":iframe input[type='radio'][name='short_selection']").toHaveCount(5);
     expect(":iframe select").toHaveCount(0);
 
     // More than five options: the selection is turned into a dropdown.
-    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
     await contains(".o_popover [data-action-value='long_selection']").click();
     expect(":iframe .s_website_form_field").toHaveAttribute("data-type", "many2one");
     expect(":iframe input[type='radio']").toHaveCount(0);
@@ -1751,7 +1751,7 @@ test("field added by the form action is displayed as a dropdown when it has more
     );
 
     await contains(":iframe section").click();
-    await contains(".hb-row[data-label='Action'] button").click();
+    await contains(".o_hb_row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
 
     // Five options or less: the selection keeps its radio buttons.
@@ -1781,12 +1781,12 @@ test("Changing field type from date to datetime removes value property (and attr
 
     // Set a default date.
     await contains(":iframe input#field").click();
-    await contains(".hb-row[data-label='Default Value'] input").fill("08/20/2026");
+    await contains(".o_hb_row[data-label='Default Value'] input").fill("08/20/2026");
 
     expect(":iframe input#field").toHaveAttribute("value", "1787180400");
     expect(":iframe input#field").toHaveProperty("value", "08/20/2026");
 
-    await contains(".options-container [data-label='Type'] button").click();
+    await contains(".o_hb_options_container [data-label='Type'] button").click();
     await contains(".o_popover [data-action-value='datetime']").click();
 
     expect(":iframe input#field").toHaveAttribute("value", "");
