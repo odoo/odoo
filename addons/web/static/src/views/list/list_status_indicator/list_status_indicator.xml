@@ -1,0 +1,22 @@
+<t t-name="web.ListView.StatusIndicator" t-inherit="web.FormStatusIndicator" t-inherit-mode="primary">
+    
+    <xpath expr="//div[hasclass('o_form_status_indicator')]" position="attributes">
+        <attribute name="class" remove="o_form_status_indicator" add="o_list_status_indicator" separator=" " />
+        <attribute name="t-att-class">{ o_list_status_indicator_new_record: this.props.isNew }</attribute>
+    </xpath>
+
+    <xpath expr="//div[hasclass('o_form_status_indicator_buttons')]" position="attributes">
+        <attribute name="class" remove="o_form_status_indicator_buttons" add="o_list_status_indicator_buttons" separator=" " />
+    </xpath>
+
+    <xpath expr="//button[hasclass('o_form_button_save')]" position="attributes">
+        <attribute name="class" remove="o_form_button_save" add="o_list_button_save" separator=" " />
+    </xpath>
+
+    <xpath expr="//button[hasclass('o_form_button_cancel')]" position="attributes">
+        <attribute name="t-on-mousedown">this.props.onMouseDownDiscard</attribute>
+        <attribute name="class" remove="o_form_button_cancel" add="o_list_button_discard" separator=" " />
+    </xpath>
+
+    <xpath expr="//span[hasclass('text-danger')]" position="replace" />
+</t>
