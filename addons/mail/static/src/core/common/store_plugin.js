@@ -848,7 +848,7 @@ export class Store extends BaseStore {
      * @param {string|undefined} search_filter
      */
     async searchMessagesInThread(searchTerm, thread, before, search_filter) {
-        const { count, messages } = await this.fetchStoreData(
+        const { messages } = await this.fetchStoreData(
             thread.getFetchRoute(),
             {
                 ...thread.getFetchParams(),
@@ -856,14 +856,15 @@ export class Store extends BaseStore {
                     search_filter,
                     search_term: searchTerm,
                     before,
+                    // one extra message to know whether there are more results
+                    limit: this.FETCH_LIMIT + 1,
                 },
             },
             { requestData: true }
         );
         return {
-            count,
-            loadMore: messages.length === this.FETCH_LIMIT,
-            messages,
+            loadMore: messages.length > this.FETCH_LIMIT,
+            messages: messages.slice(0, this.FETCH_LIMIT),
         };
     }
 
