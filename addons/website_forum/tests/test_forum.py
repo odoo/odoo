@@ -267,7 +267,7 @@ class TestForum(TestForumCommon):
             self.post.with_user(self.user_portal).message_post(body='Should crash', message_type='comment')
 
     def test_comment(self):
-        self.post.with_user(self.user_employee).message_post(body='Test0', message_type='notification')
+        self.post.with_user(self.user_employee).with_context(forum_auto_notification=True).message_post(body='Test0', message_type='notification')
         self.user_employee.karma = KARMA['com_all']
         self.post.with_user(self.user_employee).message_post(body='Test1', message_type='comment')
         self.assertEqual(len(self.post.message_ids), 4, 'website_forum: wrong behavior of message_post')
