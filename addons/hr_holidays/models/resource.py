@@ -179,7 +179,7 @@ class ResourceCalendar(models.Model):
         return [
             (tz.localize(datetime.combine(i[0].date(), time.min)).astimezone(pytz.utc),
              tz.localize(datetime.combine(i[1].date(), time.max)).astimezone(pytz.utc))
-            if not any(holiday.request_unit_half or holiday.request_unit_hours for holiday in i[2].holiday_id)
+            if not any(holiday.request_unit_half or holiday.request_unit_hours for holiday in i[2].sudo().holiday_id)
             else (i[0], i[1])
             for i in res_leaves
         ]
