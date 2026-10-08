@@ -88,11 +88,11 @@ async function autoHideMenu(el, options) {
         // Move extra menu items from dropdown-menu to menu element in the same order.
         [...extraItemsToggle.querySelector('.dropdown-menu').children].forEach((item) => {
             if (!isUserNavbar) {
-                item.classList.add('nav-item');
+                // item.classList.add('nav-item');
                 const itemLink = item.querySelector('.dropdown-item');
                 if (itemLink) {
                     itemLink.classList.remove('dropdown-item');
-                    itemLink.classList.add('nav-link');
+                    // itemLink.classList.add('nav-link');
                 }
             } else {
                 item.classList.remove('dropdown-item');
@@ -172,9 +172,9 @@ async function autoHideMenu(el, options) {
         extraItems.forEach((el) => {
             if (!isUserNavbar) {
                 const navLink = el.querySelector('.nav-link, a');
-                el.classList.remove('nav-item');
+                // el.classList.remove('nav-item');
                 if (navLink) {
-                    navLink.classList.remove('nav-link');
+                    // navLink.classList.remove('nav-link');
                     navLink.classList.add('dropdown-item');
                 }
             } else {
