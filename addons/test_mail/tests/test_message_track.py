@@ -1615,3 +1615,38 @@ class TestTrackingInternals(TestTrackingCommon):
         ])
         fields_toremove.with_context(force_delete=True).unlink()
         self.assertEqual(len(trackings_all.exists()), 5)
+
+    @users('employee')
+    def test_mail_track_float_falsy_separator(self):
+        """ Make sure Falsy float are formatted properly with the correct separators """
+        lang = self.env['res.lang'].sudo().search([('code', '=', 'en_US')])
+        # Random decimal separator for testing
+        lang.write({'decimal_point': '|'})
+        test_record = self.env['mail.test.track.all'].with_context(lang='en_US').create({
+            'float_field': 1.0,
+        })
+        self.flush_tracking()
+        test_record.float_field = 0.0
+        self.flush_tracking()
+        self.assertMessageFields(
+            test_record.message_ids[0], {'tracking_values': [
+                ('float_field', 'float', 1.0, False),
+            ]}
+        )
+
+    @users('employee')
+    def test_mail_track_monetary_no_currency(self):
+        """ Make sure monetary fields are tracked properly even without a currency set """
+        test_record = self.env['mail.test.track.all'].create({
+            'monetary_field': 1.0,
+            'company_id': False,
+        })
+        self.flush_tracking()
+        test_record.monetary_field = 2.0
+        self.flush_tracking()
+        with mute_logger('odoo.addons.mail.tests.common'):
+            self.assertMessageFields(
+                test_record.message_ids[0], {'tracking_values': [
+                    ('monetary_field', 'monetary', 1.0, 2.0, {'currency': self.env['res.currency']}),
+                ]}
+            )
