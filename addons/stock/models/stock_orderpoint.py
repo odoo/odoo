@@ -35,6 +35,9 @@ class StockWarehouseOrderpoint(models.Model):
         'Active', default=True,
         help="If the active field is set to False, it will allow you to hide the orderpoint without removing it.")
     snoozed_until = fields.Date('Snoozed', help="Hidden until next scheduler.")
+    snooze_reason = fields.Char('Snooze Reason', help="Reason for snoozing this orderpoint.")
+    snooze_info = fields.Char('Snooze Info', compute="_compute_snooze_info", store=False, help="Reason for snoozing this orderpoint.")
+    is_snoozed = fields.Boolean(compute="_compute_is_snoozed", store=False, help="Whether this orderpoint is snoozed or not.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse',
         compute="_compute_warehouse_id", store=True, readonly=False, precompute=True,
@@ -470,6 +473,21 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in self:
             orderpoint.qty_to_order_to_max = max(0, orderpoint._get_multiple_rounded_qty(orderpoint.product_max_qty - orderpoint.qty_forecast))
 
+    @api.depends('snoozed_until')
+    def _compute_is_snoozed(self):
+        for orderpoint in self:
+            orderpoint.is_snoozed = orderpoint.snoozed_until and orderpoint.snoozed_until > fields.Date.today()
+
+    @api.depends('snoozed_until', 'snooze_reason', 'is_snoozed')
+    def _compute_snooze_info(self):
+        for orderpoint in self:
+            if orderpoint.is_snoozed:
+                orderpoint.snooze_info = orderpoint.snoozed_until.strftime('%b %-d')
+                if orderpoint.snooze_reason:
+                    orderpoint.snooze_info = f"{orderpoint.snooze_info} - {orderpoint.snooze_reason}"
+            else:
+                orderpoint.snooze_info = False
+
     def _get_default_rule(self):
         self.ensure_one()
         return self.env['stock.rule']._get_rule(self.product_id, self.location_id, {
@@ -670,6 +688,11 @@ class StockWarehouseOrderpoint(models.Model):
 
     def action_remove_manual_qty_to_order(self):
         self.qty_to_order_manual = 0
+
+    def action_unsnooze(self):
+        self.ensure_one()
+        self.snoozed_until = False
+        self.snooze_reason = False
 
     @api.model
     def _get_orderpoint_values(self, product, location):
