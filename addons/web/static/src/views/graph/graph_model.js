@@ -90,6 +90,14 @@ export class GraphModel extends Model {
     //--------------------------------------------------------------------------
 
     /**
+     * @returns {boolean} true if the x-axis is grouped by a date or datetime field
+     */
+    hasDateXAxis() {
+        const { fields, groupBy } = this.metaData;
+        return ["date", "datetime"].includes(fields[groupBy[0]?.fieldName]?.type);
+    }
+
+    /**
      * @protected
      * @param {Object} [params={}]
      * @returns {Object}
@@ -110,6 +118,9 @@ export class GraphModel extends Model {
             if (metaData.mode === "line") {
                 metaData.cumulated =
                     "graph_cumulated" in context ? context.graph_cumulated : metaData.cumulated;
+            } else if (metaData.mode === "bar") {
+                metaData.allDates =
+                    "graph_all_dates" in context ? context.graph_all_dates : metaData.allDates;
             }
         }
 
@@ -255,6 +266,8 @@ export class GraphModel extends Model {
             processedDataPoints = this.dataPoints.filter(
                 (dataPoint) => dataPoint.value > 0 && dataPoint.count !== 0
             );
+        } else if (this.metaData.allDates && this.hasDateXAxis()) {
+            processedDataPoints = this.dataPoints;
         } else {
             processedDataPoints = this.dataPoints.filter((dataPoint) => dataPoint.count !== 0);
         }
