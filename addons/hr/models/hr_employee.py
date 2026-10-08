@@ -262,6 +262,7 @@ class HrEmployee(models.Model):
     # the ORM blindly included these restricted fields without checking user groups.
     # The extra fix just strips those restricted fields out of the vals before the create method crashes,
     # keeping everything safe and working.
+    contract_file = fields.Binary(readonly=False, related='version_id.contract_file', inherited=True, groups="hr.group_hr_manager")
     first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user", store=True,
                                     help="The date of the first contract of the employee in the company.")
     contract_date_start = fields.Date(readonly=False, related="version_id.contract_date_start", inherited=True, groups="hr.group_hr_user")
@@ -2387,6 +2388,20 @@ class HrEmployee(models.Model):
             'search_view_id': self.env.ref('hr.hr_version_search_view').id
         }
 
+    def action_generate_contract_wizard(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("Generate Contract"),
+            'res_model': 'hr.contract.pdf.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'dialog_size': 'medium',
+                'default_version_id': self.version_id.id,
+            },
+        }
+
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.attr("resource_id", "_store_avatar_card_fields")
         res.one("user_id", "_store_avatar_card_fields")
@@ -2569,6 +2584,13 @@ class HrEmployee(models.Model):
         for field_name in version_changes:
             new_value = version_changes[field_name]
             field = self.env['ir.model.fields'].search([('model', '=', 'hr.version'), ('name', '=', field_name)])
+            if field['ttype'] == 'binary':
+                # binary fields have no tracking display, only tell whether there is a file
+                version_changes_to_display[f'({field.field_description})'] = (
+                    self.env._("File") if self[field_name] else self.env._("None"),
+                    self.env._("New file") if new_value else self.env._("None"),
+                )
+                continue
             if field['relation']:
                 new_value = self.env[field['relation']].search([('id', 'in', new_value)])
             tracking_values = self._create_mail_tracking_values(
