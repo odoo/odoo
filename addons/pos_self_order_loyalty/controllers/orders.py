@@ -3,6 +3,7 @@ from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 from odoo.tools.mail import email_normalize
 from odoo.exceptions import UserError
 from odoo.addons.pos_self_order_loyalty.models.res_partner import SelfOrderIdentificationExpired
+from werkzeug.exceptions import Unauthorized
 import re
 
 
@@ -69,35 +70,27 @@ class PosSelfOrderControllerLoyalty(PosSelfOrderController):
     @http.route('/pos-self-order/get-partner-by-barcode', auth='public', type='jsonrpc', website=True)
     def get_partner(self, access_token, partner_barcode):
         pos_config = self._verify_pos_config(access_token)
+        if pos_config.self_ordering_mode != "kiosk":
+            raise Unauthorized('Invalid device type')
         partner = pos_config.env['res.partner'].search([('barcode', '=', partner_barcode)], limit=1)
         return self._get_partner_information(pos_config, partner) if partner else {}
 
     @http.route('/pos-self-order/get-partner-by-mail', auth='public', type='jsonrpc', website=True)
     def get_partner_by_mail(self, access_token, mail):
+        """Email an identification code to `mail`.
+
+        The answer is the same whether a customer exists with this email or not, so that
+        nobody can find out who the customers are.
+        """
         pos_config = self._verify_pos_config(access_token)
-        new = False
         mail = email_normalize(mail)
         if not mail:
             raise UserError(self.env._('Email address is invalid.'))
-
-        partner = pos_config.env['res.partner'].search([('email', '=', mail)], limit=1)
-        if not partner:
-            partner = pos_config.env['res.partner'].create({
-                'name': mail,
-                'email': mail,
-                'is_company': False,
-                'company_id': pos_config.company_id.id,
-            })
-            new = True
-        else:
-            partner._send_code_to_client()
-            partner = False
-        return {
-            'new': new,
-            'data': {
-                'res.partner': pos_config.env['res.partner']._load_pos_self_data_read_with_token(partner, pos_config) if partner else [],
-            },
-        }
+        Otp = pos_config.env['pos_self_order_loyalty.otp']
+        if Otp._is_email_blocked(mail, pos_config.company_id):
+            return {'code_sent': False, 'too_many_attempts': True}
+        Otp._send_code(mail, pos_config.company_id)
+        return {'code_sent': True}
 
     @http.route('/pos-self-order/validate-partner-code', auth='public', type='jsonrpc', website=True)
     def validate_partner_code(self, access_token, mail, code):
@@ -105,12 +98,26 @@ class PosSelfOrderControllerLoyalty(PosSelfOrderController):
         mail = email_normalize(mail)
         if not mail:
             raise UserError(self.env._('Email address is invalid.'))
-        if not bool(re.fullmatch(r"\d{6}", code)):
+        if not isinstance(code, str) or not re.fullmatch(r"\d{6}", code):
             raise UserError(self.env._('Invalid verification code.'))
-        partner = pos_config.env['res.partner'].search([('email', '=', mail)], limit=1)
-        if partner and partner._validate_code(code):
-            return self._get_partner_information(pos_config, partner)
-        return {'res.partner': []}
+        Otp = pos_config.env['pos_self_order_loyalty.otp']
+        if not Otp._check_code(mail, pos_config.company_id, code):
+            return {'res.partner': [], 'too_many_attempts': Otp._is_email_blocked(mail, pos_config.company_id)}
+        return self._get_partner_information(pos_config, self._get_or_create_partner_by_mail(pos_config, mail))
+
+    def _get_or_create_partner_by_mail(self, pos_config, mail):
+        """The customer owning `mail`, created now that the code proved the email is theirs."""
+        # email_normalized also matches "Alice <Alice@Example.com>"; the oldest one wins
+        # when several share the address, so a customer always gets the same account back
+        partner = pos_config.env['res.partner'].search([('email_normalized', '=', mail)], order='id', limit=1)
+        if partner:
+            return partner
+        # The self-order user isn't allowed to create contacts, as in validate_partner
+        return pos_config.env['res.partner'].sudo().create({
+            'name': mail,
+            'email': mail,
+            'company_id': pos_config.company_id.id,
+        }).sudo(False)
 
     @http.route('/pos-self-order/check-card-code', auth='public', type='jsonrpc', website=True)
     def check_card_code(self, access_token, code, partner_id=None, partner_token=None, order_uuid=None):

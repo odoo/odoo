@@ -38,8 +38,8 @@ patch(PaymentPage.prototype, {
     },
     async scanCode(code) {
         await this.selfOrder._barcodeCouponCodeAction({ code: code });
-        if (this.selfOrder.currency.isZero(this.selfOrder.currentOrder.priceIncl)) {
-            const order = await this.selfOrder.sendDraftOrderToServer();
+        const order = await this.selfOrder.sendDraftOrderToServer();
+        if (order && this.selfOrder.currency.isZero(order.priceIncl)) {
             this.selfOrder.confirmationPage(
                 "pay",
                 this.selfOrder.config.self_ordering_mode,
