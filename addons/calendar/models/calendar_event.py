@@ -460,16 +460,14 @@ class CalendarEvent(models.Model):
         for event in self:
             event.privacy_placeholder = privacy_selection_dict.get(event.effective_privacy, _('User default'))
 
+    @api.depends_context('active_id', 'active_model')
+    @api.depends('partner_ids')
     def _compute_is_highlighted(self):
-        if self.env.context.get('active_model') == 'res.partner':
-            partner_id = self.env.context.get('active_id')
-            for event in self:
-                if event.partner_ids.filtered(lambda s: s.id == partner_id):
-                    event.is_highlighted = True
-                else:
-                    event.is_highlighted = False
-        else:
-            for event in self:
+        partner_id = self.env.context.get('active_id') if self.env.context.get('active_model') == 'res.partner' else None
+        for event in self:
+            if partner_id:
+                event.is_highlighted = partner_id in event.partner_ids.ids
+            else:
                 event.is_highlighted = False
 
     @api.depends('partner_id', 'attendee_ids')
