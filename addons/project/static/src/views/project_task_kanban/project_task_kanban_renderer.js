@@ -17,13 +17,6 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
 
     setup() {
         super.setup();
-        // Disables the group by Stage id if on mobile
-        if(this.uiService.isSmall){
-                // console.log(this.env);
-                this.env.searchModel.defaultGroupBy = [];
-                // this.env.model.config.groupBy = [];
-                console.log(this.env.searchModel)
-            }
         this.action = useService('action');
 
         onWillStart(async () => {
