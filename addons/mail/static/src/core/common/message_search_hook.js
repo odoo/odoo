@@ -90,10 +90,9 @@ export function useMessageSearch(thread) {
                 if (!data || currentSearchId !== searchId) {
                     return; // Search was cleared or superseded during request.
                 }
-                const { count, loadMore, messages } = data;
+                const { loadMore, messages } = data;
                 this.searched = true;
                 this.searching = false;
-                this.count = count;
                 this.loadMore = loadMore;
                 if (before) {
                     this.messages.push(...messages);
@@ -104,7 +103,6 @@ export function useMessageSearch(thread) {
                 this.clear();
             }
         },
-        count: 0,
         clear() {
             searchId++;
             this.is_notification = undefined;
