@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="mrp.view_warehouse_inherit_mrp"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='manufacture_to_resupply']" position="before">
-                <field name="subcontracting_to_resupply" />
+                <field name="subcontracting_to_resupply" widget="radio"/>
             </xpath>
         </field>
     </record>
