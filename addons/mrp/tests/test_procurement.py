@@ -1102,3 +1102,41 @@ class TestProcurement(TestMrpCommon):
         })
         update_quantity_wizard.change_prod_qty()
         self.assertEqual(replenishment.product_uom_qty, 7)
+
+    def test_mto_mo_with_kit_component_and_operation(self):
+        """ A MO triggered by MTO whose BoM has an operation and a kit as
+        component should not leave an orphan draft move for the kit's
+        component. """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        mto_route = warehouse.mto_pull_id.route_id
+        mto_route.active = True
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+        parent, finished, kit, component = self.env['product.product'].create([{
+            'name': 'Parent',
+        }, {
+            'name': 'Finished',
+            'is_storable': True,
+            'route_ids': [Command.set((mto_route | manufacture_route).ids)],
+        }, {
+            'name': 'Kit',
+        }, {
+            'name': 'Component',
+        }])
+        parent_bom, _finished_bom, _kit_bom = self.env['mrp.bom'].create([{
+            'product_tmpl_id': parent.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': finished.id, 'product_qty': 1})],
+        }, {
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': kit.id, 'product_qty': 1})],
+            'operation_ids': [Command.create({'name': 'Assembly', 'workcenter_id': self.workcenter_1.id})],
+        }, {
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        }])
+
+        parent_mo = self.env['mrp.production'].create({'bom_id': parent_bom.id})
+        parent_mo.action_confirm()
+        mo = parent_mo._get_children()
+        self.assertEqual(mo.product_id, finished)
+        self.assertEqual(self.env['stock.move'].search([('product_id', '=', component.id)]), mo.move_raw_ids)
