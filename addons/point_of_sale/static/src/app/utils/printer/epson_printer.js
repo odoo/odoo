@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { getTemplate } from "@web/core/templates";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
 import { getLNATargetAddressSpace } from "../init_lna";
+import { lna } from "@iot_base/network_utils/lna";
 
 const STATUS_ROLL_PAPER_HAS_RUN_OUT = 0x00080000;
 const STATUS_ROLL_PAPER_HAS_ALMOST_RUN_OUT = 0x00020000;
@@ -80,7 +81,7 @@ export class EpsonPrinter extends BasePrinter {
         }
 
         try {
-            const res = await fetch(this.address, params);
+            const res = await lna.fetch(this.address, params);
             const body = await res.text();
             const parser = new DOMParser();
             const parsedBody = parser.parseFromString(body, "application/xml");
