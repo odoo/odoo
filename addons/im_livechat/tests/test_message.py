@@ -309,6 +309,20 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "id": channel.id,
                     },
                 ),
+                BusResult(
+                    (channel, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "mail.message": [
+                            {
+                                "email_from": message.email_from,
+                                "id": message.id,
+                                "notification_ids": [],
+                                "reply_to": message.reply_to,
+                            },
+                        ],
+                    },
+                ),
             ]
 
         with self.assertBus(notifications):
