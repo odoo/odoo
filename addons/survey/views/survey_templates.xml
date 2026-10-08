@@ -43,7 +43,7 @@
             <div class="wrap o_survey_wrap d-flex flex-column justify-items-center align-items-center h-100 mx-3 mx-md-auto pb-5 pt-md-5">
                 <div class="container o_survey_form mb-5 mb-md-0 rounded p-0">
                     <div class="row">
-                        <div class="col-12 col-lg-8 offset-lg-2">
+                        <div class="col-12 col-lg-10 offset-lg-1 col-xl-8 offset-xl-2">
                             <t t-call="survey.survey_fill_header"/>
                             <div class="o_survey_form_body d-flex flex-column">
                                 <t t-call="survey.survey_fill_form"/>
@@ -429,12 +429,16 @@
              t-att-data-name="question.id"
              t-att-data-is-post-submit-question="is_post_submit_question or None"
              data-question-type="scale">
-            <div role="radiogroup" class="d-flex gap-1 mb-2 rounded overflow-hidden" t-att-aria-label="">
+            <div role="radiogroup" class="d-flex flex-column flex-md-row gap-1 mb-2 rounded overflow-hidden" t-att-aria-label="">
                 <t t-foreach="range(question.scale_min, question.scale_max + 1)" t-as="value">
                     <t t-set="answer_selected" t-value="answer_line and answer_line.value_scale == value"/>
-                    <label t-attf-class="o_survey_choice_btn flex-grow-1 py-2 px-3 text-center #{'o_survey_selected' if answer_selected else ''}"
+                    <label t-attf-class="o_survey_choice_btn d-flex flex-row-reverse flex-md-column justify-content-end align-items-center gap-2 gap-md-0 flex-grow-1 py-2 px-3 text-center #{'o_survey_selected' if answer_selected else ''}"
                            t-attf-for="{{ question.id }}_{{ value }}">
-                        <div t-out="value"/>
+                        <div class="d-flex d-md-block gap-2 justify-content-between align-items-center w-100">
+                            <t t-out="value"/>
+                            <span t-if="value_first and question.scale_min_label" class="d-md-none text-end text-muted" t-out="question.scale_min_label"/>
+                            <span t-elif="value_last and question.scale_max_label" class="d-md-none text-end text-muted" t-out="question.scale_max_label"/>
+                        </div>
                         <input autocomplete="off"
                             class="btn-check o_survey_form_choice_item form-check-input position-relative mb-1"
                             type="radio"
@@ -448,7 +452,7 @@
                 </t>
             </div>
             <div t-if="question.scale_min_label or question.scale_max_label"
-                 class="d-flex justify-content-between text-muted">
+                 class="d-none d-md-flex justify-content-between text-muted">
                 <div class="text-start" t-out="question.scale_min_label"/>
                 <div class="text-end" t-out="question.scale_max_label"/>
             </div>
