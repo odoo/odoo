@@ -56,6 +56,12 @@ export class MessagingMenu extends Component {
         this.ancestors = useAncestors();
         this.dialog = useService("dialog");
         this.notification = useService("mail.notification.permission");
+        this.store = useService("mail.store");
+        this.state = useProps.static(
+            "state",
+            types.signal(types.instanceOf(this.store.MessagingMenuUIState))
+        );
+        this.activeTab = computed(() => this.state().activeTab);
         this.messageSearch = useSearch({
             fetch: (term) =>
                 this.activeTab().loadMore({
@@ -74,12 +80,6 @@ export class MessagingMenu extends Component {
                 }),
             deps: () => [this.filteredMessages()],
         });
-        this.store = useService("mail.store");
-        this.state = useProps.static(
-            "state",
-            types.signal(types.instanceOf(this.store.MessagingMenuUIState))
-        );
-        this.activeTab = computed(() => this.state().activeTab);
         this.close = useProps.static("close", types.function().optional());
         this.searchInputAutofocus = useProps.static(
             "searchInputAutofocus",

@@ -4,6 +4,7 @@ import {
     onPatched,
     onWillUnmount,
     proxy,
+    shallowEqual,
     signal,
     t,
     untrack,
@@ -15,12 +16,11 @@ import {
     useScope,
 } from "@odoo/owl";
 
-import { useLayoutEffect } from "@web/owl2/utils";
-
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
+import { batched } from "@web/core/utils/timing";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 /**
@@ -194,7 +194,7 @@ export function useHover(refs, { onHover, onAway, stateObserver } = {}) {
     }
 
     if (stateObserver) {
-        useLayoutEffect((open) => {
+        useOnChange(stateObserver, (open) => {
             // Note: stateObserver is essentially used with useDropdownState()?.isOpen.
             // While isOpen can become false, the ref() can still be there for a short period of time.
             // Relying on isOpen becoming false forces good syncing of isHover state on dropdown close.
@@ -202,7 +202,7 @@ export function useHover(refs, { onHover, onAway, stateObserver } = {}) {
                 setHover(false);
                 lastHoveredRef = null;
             }
-        }, stateObserver);
+        });
     }
     return state;
 }
@@ -299,11 +299,20 @@ export function useOnBottomScrolled(ref, callback, threshold = 1) {
 }
 
 /**
- * @param {string} refName
- * @param {function} [cb]
+ * Observes the visibility of the element of `ref` while `ready`. The element is
+ * observed from the mount/patch following a change of `ref` or `ready`, i.e.
+ * once the patched DOM is scrolled in place: observed from the change itself,
+ * it could be reported visible before the patch scrolls it away (e.g. to a
+ * highlighted message). The rendering of the component must read `ready` so
+ * that a patch follows its change. A change of `ref` is also followed when the
+ * element is patched by another component (e.g. in a slot).
+ *
+ * @param {import("@odoo/owl").Signal<HTMLElement>} ref
+ * @param {function} [cb] called with the visibility on each change
+ * @param {Object} [options]
+ * @param {boolean} [options.ready=true] whether the element can be observed
  */
 export function useVisible(ref, cb, { ready = true } = {}) {
-    const getEl = () => untrack(ref);
     const state = proxy({
         isVisible: undefined,
         ready,
@@ -315,18 +324,30 @@ export function useVisible(ref, cb, { ready = true } = {}) {
     const observer = new IntersectionObserver((entries) => {
         setValue(entries.at(-1).isIntersecting);
     });
-    useLayoutEffect(
-        (el, ready) => {
-            if (el && ready) {
-                observer.observe(el);
-                return () => {
-                    setValue(undefined);
-                    observer.unobserve(el);
-                };
-            }
-        },
-        () => [getEl(), state.ready]
-    );
+    let observedEl;
+    const unobserve = () => {
+        if (observedEl) {
+            setValue(undefined);
+            observer.unobserve(observedEl);
+            observedEl = undefined;
+        }
+    };
+    const observe = () => {
+        const el = state.ready ? ref() : undefined;
+        if (el === observedEl) {
+            return;
+        }
+        unobserve();
+        if (el) {
+            observer.observe(el);
+            observedEl = el;
+        }
+    };
+    onMounted(observe);
+    onPatched(observe);
+    // the ref can be patched by another component (e.g. in a slot)
+    useOnChange(() => [ref()], observe);
+    onWillUnmount(unobserve);
     return state;
 }
 
@@ -451,14 +472,11 @@ export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => 
             direction: el.selectionDirection,
         });
     });
-    onMounted(() => {
-        document.addEventListener("selectionchange", onSelectionChange);
-        document.addEventListener("input", onSelectionChange);
-    });
-    onWillUnmount(() => {
-        document.removeEventListener("selectionchange", onSelectionChange);
-        document.removeEventListener("input", onSelectionChange);
-    });
+    onMounted(() => document.addEventListener("selectionchange", onSelectionChange));
+    onWillUnmount(() => document.removeEventListener("selectionchange", onSelectionChange));
+    // on the element, like `t-model`: the selection is synced with the text, even from an
+    // `input` event that does not bubble (`selectionchange` only follows asynchronously)
+    useListener(elRef, "input", onSelectionChange);
     return {
         restore() {
             getEl()?.setSelectionRange(model.start, model.end, model.direction);
@@ -519,8 +537,8 @@ export class SearchState {
      * @param {(term: string) => Promise<boolean | void>} [options.fetch] Async
      *  server call. Resolving to `false` signals "no results" for narrow-dedup.
      * @param {(term: string) => any} [options.filter] Sync local lookup that
-     *  produces `results`. Runs immediately on term/deps change and again after
-     *  `fetch` resolves (to pick up server-loaded data).
+     *  produces `results`. Runs on term/deps change (once per animation frame)
+     *  and again after `fetch` resolves (to pick up server-loaded data).
      * @param {any} [options.initialResults] Value assigned to `results` on
      *  reset. Defaults to an empty array.
      * @param {() => any[]} [options.deps] Extra reactive values read inside
@@ -555,8 +573,14 @@ export class SearchState {
             this.depsGetter = deps;
         }
         this.sequential = useSequential();
-        useLayoutEffect(
+        const scope = useScope();
+        // once per animation frame, like the rendering: searching on each change
+        // (e.g. each typed character) would fetch every intermediate term
+        const update = batched(
             () => {
+                if (scope.isDestroyed()) {
+                    return;
+                }
                 if (!self.isActive) {
                     self.reset();
                     return;
@@ -566,7 +590,13 @@ export class SearchState {
                 }
                 self.run();
             },
-            () => [self.searchTerm, ...self.deps]
+            () => new Promise((resolve) => requestAnimationFrame(resolve))
+        );
+        useOnChange(
+            () => [self.searchTerm, ...self.deps],
+            () => {
+                update();
+            }
         );
         onWillUnmount(() => self.reset());
         return self;
@@ -834,17 +864,27 @@ export class UseForwardRefsToParent {
     constructor(propName, getRefIdFn, ref) {
         const compProps = useProps();
         this.ref = ref;
-        // Note: The `useChildRefs()` Map is shared with all children, using useLayoutEffect/willUnmount to ensure proper on/off life cycle hook calls for given child.
+        // Note: The `useChildRefs()` Map is shared with all children, using mounted/patched/willUnmount to ensure proper on/off life cycle hook calls for given child.
         // If we use setup/willDestroy we can have 2 fiber nodes of same child component with one finalizing with willDestroy from cancelling duplicated fiber node.
-        useLayoutEffect(
-            (map, key) => {
-                if (map) {
-                    this.registerRef(map, key);
-                    return () => map.delete(key);
-                }
-            },
-            () => [compProps[propName], getRefIdFn(compProps)]
-        );
+        let registered;
+        const unregister = () => {
+            registered?.map.delete(registered.key);
+            registered = undefined;
+        };
+        const register = () => {
+            const current = { map: compProps[propName], key: getRefIdFn(compProps) };
+            if (shallowEqual(current, registered)) {
+                return;
+            }
+            unregister();
+            if (current.map) {
+                this.registerRef(current.map, current.key);
+                registered = current;
+            }
+        };
+        onMounted(register);
+        onPatched(register);
+        onWillUnmount(unregister);
     }
 
     registerRef(map, key) {
