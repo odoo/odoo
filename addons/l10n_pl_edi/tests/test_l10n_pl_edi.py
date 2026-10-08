@@ -539,6 +539,43 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self._assert_export_invoice(invoice, 'fa3_invoice_foreign_currency.xml')
 
     @freeze_time('2026-01-23')
+    def test_advance_invoice_in_foreign_currency(self):
+        """
+        KursWalutyZ must be present for ZAL and KOR_ZAL invoices in a foreign
+        currency, since the FA(3) schema requires the exchange rate on both the
+        advance invoice and its correction.
+        """
+        self.env.ref('base.EUR').active = True
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_pl.id,
+            'invoice_date': fields.Date.today(),
+            'currency_id': self.env.ref('base.EUR').id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 10.0,
+            })],
+            'invoice_currency_rate': '2',
+        })
+        invoice.action_post()
+
+        # ZAL + foreign currency: KursWalutyZ must be present.
+        # l10n_pl_edi doesn't depend on sale, so a real down-payment invoice can't be created here.
+        with patch.object(self.env.registry['account.move'], '_l10n_pl_edi_get_ksef_invoice_type', return_value='ZAL'):
+            xml_zal = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml_zal, "//ns:Fa/ns:RodzajFaktury"), 'ZAL')
+        self.assertEqual(self._get_xml_value(xml_zal, "//ns:Fa/ns:KodWaluty"), 'EUR')
+        self.assertEqual(self._get_xml_value(xml_zal, "//ns:Fa/ns:KursWalutyZ"), '0.50000')
+
+        # KOR_ZAL + foreign currency: KursWalutyZ must also be present (rate after correction).
+        with patch.object(self.env.registry['account.move'], '_l10n_pl_edi_get_ksef_invoice_type', return_value='KOR_ZAL'):
+            xml_kor_zal = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml_kor_zal, "//ns:Fa/ns:RodzajFaktury"), 'KOR_ZAL')
+        self.assertEqual(self._get_xml_value(xml_kor_zal, "//ns:Fa/ns:KursWalutyZ"), '0.50000')
+
+    @freeze_time('2026-01-23')
     def test_prefiks_podatnika_for_eu_transactions(self):
         """
         Verification that PrefiksPodatnika ('PL') is included in Podmiot1 for invoices
