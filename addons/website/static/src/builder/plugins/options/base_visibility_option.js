@@ -11,6 +11,7 @@ export class BaseVisibilityOption extends BaseOptionComponent {
         overlay: t.string().optional(),
         textColor: t.string().optional(),
         tooltip: t.string().optional(),
+        useThemeBackgroundTab: t.boolean().optional(),
         visibilityOpt: t.string().optional(),
         level: t.number().optional(0),
     });
