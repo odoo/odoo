@@ -137,6 +137,8 @@ $-o-theme-text-colors: map-merge($theme-colors, $o-theme-text-colors);
 .btn {
     @each $-name, $-color in $-o-theme-text-colors {
         &.btn-hover-#{$-name} {
+            --#{$prefix}gradient: none;
+
             @include o-btn-link-variant($o-main-text-color!important, o-text-color($-name) or $-color!important);
         }
     }
@@ -272,6 +274,8 @@ $-o-bg-colors-custom: null;
 .btn {
     @each $-name, $-color in $o-text-colors-custom {
         &.btn-hover-#{$-name} {
+            --#{$prefix}gradient: none;
+
             @include o-btn-link-variant($o-main-text-color!important, o-text-color($-name) or $-color!important);
         }
     }
