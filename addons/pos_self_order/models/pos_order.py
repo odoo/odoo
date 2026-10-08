@@ -5,6 +5,7 @@ import math
 
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, LockError
+from odoo.tools import consteq, hmac
 
 _logger = logging.getLogger(__name__)
 
@@ -95,10 +96,11 @@ class PosOrder(models.Model):
 
     def _send_payment_result(self, payment_result):
         self.ensure_one()
+        order_fields = [field for field in self._load_pos_self_data_fields(self.config_id) if field != 'partner_id']
         self.config_id._notify('PAYMENT_STATUS', {
             'payment_result': payment_result,
             'data': {
-                'pos.order': self.read(self._load_pos_self_data_fields(self.config_id), load=False),
+                'pos.order': self.read(order_fields, load=False),
                 'pos.order.line': self.lines.read(self.lines._load_pos_self_data_fields(self.config_id), load=False),
                 'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_self_data_fields(self.config_id), load=False),
             },
@@ -259,8 +261,7 @@ class PosOrder(models.Model):
         lines = [line for line in lines if len(line)]
         payment_lines = self._check_pos_order_payment(device_type, order, order.get("payment_ids"))
         payment_lines = [line for line in payment_lines if len(line)]
-        partner_id = order.get('partner_id')
-        partner = pos_config.env['res.partner'].browse(partner_id) if partner_id else None
+        partner = self._get_self_partner_from_token(pos_config, order.get('partner_id')) if order.get('partner_id') else False
 
         if order.get('id') and order.get('uuid') and isinstance(order['id'], int):
             exists = pos_config.env['pos.order'].search_count([
@@ -281,7 +282,7 @@ class PosOrder(models.Model):
             'amount_return': order.get('amount_return'),
             'company_id': company.id,
             'pricelist_id': pricelist_id.id if pricelist_id else False,
-            'partner_id': order.get('partner_id'),
+            'partner_id': partner.id if partner else False,
             'sequence_number': order.get('sequence_number'),
             'session_id': pos_config.current_session_id.id,
             'fiscal_position_id': fiscal_position_id.id if fiscal_position_id else False,
@@ -351,6 +352,28 @@ class PosOrder(models.Model):
             for child in children:
                 if child.order_id != self or child.combo_parent_id != line:
                     raise UserError(_("Invalid combo line"))
+
+    @api.model
+    def _get_self_partner_token(self, pos_config, partner_id):
+        return hmac(self.env(su=True), 'pos-self-order-partner', (pos_config.id, partner_id))
+
+    @api.model
+    def _get_signed_self_partner_id(self, pos_config, partner_id):
+        return f"{partner_id}-{self._get_self_partner_token(pos_config, partner_id)}"
+
+    @api.model
+    def _get_self_partner_from_token(self, pos_config, signed_partner):
+        if not isinstance(signed_partner, str) or "-" not in signed_partner:
+            return False
+        raw_id, _sep, token = signed_partner.partition("-")
+        try:
+            partner_id = int(raw_id)
+        except ValueError:
+            return False
+        if not consteq(token, self._get_self_partner_token(pos_config, partner_id)):
+            return False
+        partner = pos_config.env['res.partner'].sudo().browse(partner_id)
+        return partner if partner.exists() else False
 
     def recompute_prices(self):
         self.ensure_one()
