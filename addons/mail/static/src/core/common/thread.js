@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -19,10 +18,10 @@ import {
     onMounted,
     onPatched,
     onWillPatch,
+    onWillUnmount,
     proxy,
     signal,
     t,
-    untrack,
     useOnChange,
     useProps,
     useScope,
@@ -99,9 +98,9 @@ export class Thread extends Component {
         // before hooks depending on `mountedAndLoaded`, so they see it on mount
         onMounted(() => (this.state.mountedAndLoaded = this.props.thread.isLoaded));
         /**
-         * Bumped by `reset()`. Used as a dependency of the effect mirroring
-         * `isLoaded` into `mountedAndLoaded` so the mirror is re-synced after a
-         * reset without making `mountedAndLoaded` depend on itself.
+         * Bumped by `reset()`. Observed by the rendering so that the patch
+         * mirroring `isLoaded` into `mountedAndLoaded` follows a reset, without
+         * making `mountedAndLoaded` depend on itself.
          */
         this.resetCount = signal(0);
         this.incrementResetCount = incrementFn(this.resetCount);
@@ -110,12 +109,17 @@ export class Thread extends Component {
         this.ui = useService("ui");
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.scrollingToHighlight = false;
-        useLayoutEffect(
-            () => {
+        // scrolled on the patched messages, which render the highlight
+        let lastHighlightedMessageId;
+        const scrollToNewHighlighted = () => {
+            const highlightedMessageId = this.messageHighlight?.highlightedMessageId();
+            if (highlightedMessageId !== lastHighlightedMessageId) {
+                lastHighlightedMessageId = highlightedMessageId;
                 this.scrollToHighlighted();
-            },
-            () => [this.messageHighlight?.highlightedMessageId()]
-        );
+            }
+        };
+        onMounted(scrollToNewHighlighted);
+        onPatched(scrollToNewHighlighted);
         this.present = signal.ref();
         this.jumpPresentRef = signal.ref();
         this.loadOlderRef = signal.ref();
@@ -166,49 +170,46 @@ export class Thread extends Component {
             this.updateShowJumpPresent()
         );
         this.setupScroll();
-        useLayoutEffect(
-            (focus) => {
-                if (focus && this.state.mountedAndLoaded) {
+        useOnChange(
+            () => [this.props.autofocus + this.props.thread.autofocus, this.state.mountedAndLoaded],
+            (focus, mountedAndLoaded) => {
+                if (focus && mountedAndLoaded) {
                     this.rootRef().focus();
                 }
-            },
-            () => [this.props.autofocus + this.props.thread.autofocus, this.state.mountedAndLoaded]
+            }
         );
-        useLayoutEffect(
-            () => {
-                this.computeJumpPresentPosition();
-            },
-            () => [untrack(this.jumpPresentRef), untrack(() => this.viewportEl)]
+        useOnChange(
+            () => [this.jumpPresentRef(), this.viewportEl],
+            () => this.computeJumpPresentPosition()
         );
-        useLayoutEffect(
-            () => this.updateShowJumpPresent(),
-            () => [this.props.thread.loadNewer]
+        useOnChange(
+            () => [this.props.thread.loadNewer],
+            () => this.updateShowJumpPresent()
         );
-        useLayoutEffect(
-            () => {
-                if (this.props.jumpPresent !== this.lastJumpPresent) {
+        useOnChange(
+            () => [this.props.jumpPresent],
+            (jumpPresent) => {
+                if (jumpPresent !== this.lastJumpPresent) {
                     this.jumpToPresent({ immediate: true });
                 }
-            },
-            () => [this.props.jumpPresent]
+            }
         );
-        useLayoutEffect(
-            () => {
-                if (this.props.thread.highlightMessage && this.state.mountedAndLoaded) {
-                    this.messageHighlight?.highlightMessage(this.props.thread.highlightMessage);
+        useOnChange(
+            () => [this.props.thread.highlightMessage, this.state.mountedAndLoaded],
+            (highlightMessage, mountedAndLoaded) => {
+                if (highlightMessage && mountedAndLoaded) {
+                    this.messageHighlight?.highlightMessage(highlightMessage);
                     this.props.thread.highlightMessage = null;
                 }
-            },
-            () => [this.props.thread.highlightMessage, this.state.mountedAndLoaded]
+            }
         );
-        useLayoutEffect(
-            () => {
-                if (!this.state.mountedAndLoaded) {
-                    return;
+        useOnChange(
+            () => [this.state.mountedAndLoaded],
+            (mountedAndLoaded) => {
+                if (mountedAndLoaded) {
+                    this.updateShowJumpPresent();
                 }
-                this.updateShowJumpPresent();
-            },
-            () => [this.state.mountedAndLoaded]
+            }
         );
         onMounted(() => {
             if (!this.ancestors.inChatter) {
@@ -224,39 +225,35 @@ export class Thread extends Component {
                 }
             }
         );
-        useLayoutEffect(
-            (isLoaded) => {
-                this.state.mountedAndLoaded = isLoaded;
-            },
-            /**
-             * `reset()` forces `mountedAndLoaded` false and this effect writes
-             * it too, so it can't be its own dependency: `useLayoutEffect`
-             * records dependencies before running the body, hence a `reset()`
-             * landing while this effect is being applied would leave the
-             * recorded value matching the current one and strand
-             * `mountedAndLoaded` at false. Depend on `resetCount`, bumped by
-             * `reset()`, so every reset re-syncs `mountedAndLoaded` with
-             * `isLoaded`.
-             */
-            () => [this.props.thread.isLoaded, this.resetCount()]
-        );
-        useLayoutEffect(
-            () => {
-                if (!this.props.jumpToNewMessage) {
-                    return;
-                }
-                const el = this.messageRefs.get(
-                    this.channel?.self_member_id.new_message_separator_ui - 1
-                )?.();
-                if (el) {
-                    el.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
-                        behavior: "instant",
-                        block: "center",
-                    });
-                }
-            },
-            () => [this.props.jumpToNewMessage]
-        );
+        /**
+         * Re-synced on each mount/patch, after `applyScroll` (registered before
+         * in `setupScroll`): a `reset()` forcing `mountedAndLoaded` false is
+         * followed by a render, as `resetCount` is observed by the rendering.
+         */
+        const syncMountedAndLoaded = () => {
+            this.state.mountedAndLoaded = this.props.thread.isLoaded;
+        };
+        onMounted(syncMountedAndLoaded);
+        onPatched(syncMountedAndLoaded);
+        const jumpToNewMessage = () => {
+            if (!this.props.jumpToNewMessage) {
+                return;
+            }
+            const el = this.messageRefs.get(
+                this.channel?.self_member_id.new_message_separator_ui - 1
+            )?.();
+            if (el) {
+                el.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
+                    behavior: "instant",
+                    block: "center",
+                });
+            }
+        };
+        // the messages are only there once mounted
+        onMounted(jumpToNewMessage);
+        useOnChange(() => [this.props.jumpToNewMessage], jumpToNewMessage, {
+            initialRun: false,
+        });
         useBus(this.env.bus, "MAIL:RELOAD-THREAD", ({ detail }) => {
             const { model, id } = this.props.thread;
             if (detail.model === model && detail.id === id) {
@@ -397,21 +394,32 @@ export class Thread extends Component {
             this.computeJumpPresentPosition();
             this.applyScroll();
         });
-        useLayoutEffect(
-            (el, mountedAndLoaded) => {
-                if (el && mountedAndLoaded) {
-                    el.addEventListener("scroll", this.onScroll);
-                    el.addEventListener("wheel", this.onWheel);
-                    observer.observe(el);
-                    return () => {
-                        observer.unobserve(el);
-                        el.removeEventListener("scroll", this.onScroll);
-                        el.removeEventListener("wheel", this.onWheel);
-                    };
-                }
-            },
-            () => [this.scrollableRef(), this.state.mountedAndLoaded]
-        );
+        // listened from the patch rendering the loaded messages, after `applyScroll`
+        let listenedEl;
+        const stopListening = () => {
+            if (listenedEl) {
+                observer.unobserve(listenedEl);
+                listenedEl.removeEventListener("scroll", this.onScroll);
+                listenedEl.removeEventListener("wheel", this.onWheel);
+                listenedEl = undefined;
+            }
+        };
+        const listenScroll = () => {
+            const el = this.state.mountedAndLoaded ? this.scrollableRef() : undefined;
+            if (el === listenedEl) {
+                return;
+            }
+            stopListening();
+            if (el) {
+                el.addEventListener("scroll", this.onScroll);
+                el.addEventListener("wheel", this.onWheel);
+                observer.observe(el);
+                listenedEl = el;
+            }
+        };
+        onMounted(listenScroll);
+        onPatched(listenScroll);
+        onWillUnmount(stopListening);
     }
 
     applyScroll() {
@@ -616,7 +624,7 @@ export class Thread extends Component {
 
     reset() {
         this.state.mountedAndLoaded = false;
-        // Bump `resetCount` (a mirror-effect dependency) so the effect re-runs
+        // Bump `resetCount` (observed by the rendering) so a patch follows
         // and re-syncs `mountedAndLoaded`. Only when loaded: while `!isLoaded`,
         // `applyScroll` resets on every patch, so an unconditional bump would
         // spin the render loop until the fetch resolves. When loaded the bump
@@ -727,7 +735,7 @@ export class Thread extends Component {
     }
 
     get orderedMessages() {
-        // ensure rendering observes resetCount to re-trigger the effect when reset() is called
+        // ensure rendering observes resetCount to re-sync mountedAndLoaded when reset() is called
         void this.resetCount();
         // and the readiness of the load triggers, observed from the following patch
         void this.loadOlderState.ready;
