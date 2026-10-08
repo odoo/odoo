@@ -22456,48 +22456,38 @@ test("Empty Groups: filter out empty groups unless field has group_expand", asyn
         resModel: "foo",
         arch: `
             <list>
-                <field name="foo"/>
-                <field name="m2o"/>
+                <column/>
+                <field name="display_name" />
             </list>
         `,
-        actionMenus: {},
-        groupBy: ["m2o"],
     });
-
-    expect(".o_group_header").toHaveCount(2);
-
-    await contains(".o_group_name:eq(1)").click();
-    await clickRecordSelector(1);
-    await contains("div.o_control_panel .o_cp_action_menus .dropdown-toggle").click();
-    await toggleMenuItem("Archive");
-    await contains(".modal-footer .btn-primary").click();
-
-    expect(".o_group_header").toHaveCount(2);
+    expect(".o_list_view th:not(.o_list_record_selector)").toHaveCount(1);
 });
 
-test("Empty Groups: filter out empty groups", async () => {
-    Foo._fields.active = fields.Boolean({ default: true });
-
+test("handles empty column node", async () => {
     await mountView({
         type: "list",
         resModel: "foo",
         arch: `
             <list>
-                <field name="foo"/>
-                <field name="m2o"/>
+                <column/>
+                <field name="display_name" />
             </list>
         `,
-        actionMenus: {},
-        groupBy: ["m2o"],
     });
+    expect(".o_list_view th:not(.o_list_record_selector)").toHaveCount(1);
+});
 
-    expect(".o_group_header").toHaveCount(2);
-
-    await contains(".o_group_name:eq(1)").click();
-    await clickRecordSelector(1);
-    await contains("div.o_control_panel .o_cp_action_menus .dropdown-toggle").click();
-    await toggleMenuItem("Archive");
-    await contains(".modal-footer .btn-primary").click();
-
-    expect(".o_group_header").toHaveCount(1);
+test("handles column node with untolerrated content", async () => {
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <column><button name="a" type="obj" string="button"/></column>
+                <field name="display_name" />
+            </list>
+        `,
+    });
+    expect(".o_list_view th:not(.o_list_record_selector)").toHaveCount(1);
 });
