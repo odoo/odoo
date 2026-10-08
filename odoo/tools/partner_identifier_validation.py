@@ -3,6 +3,7 @@ from stdnum.exceptions import InvalidFormat, ValidationError
 from stdnum.sg import uen as sg_uen
 from odoo.tools import single_email_re
 
+IN_TAN_RE = re.compile(r'[A-Z]{4}[0-9]{5}[A-Z]')
 NON_DIGIT_RE = re.compile(r'\D')
 # KVK: 8-digit
 NL_KVK_RE = re.compile(r'\d{8}')
@@ -23,6 +24,14 @@ SG_PEPPOL_PREFIX_RE = re.compile(r'(?P<uen_prefix>SGUEN|SGUXN)|(?P<other_prefix>
 # ===========================================================
 # Validators when no library provides it (typically stdnum) =
 # ===========================================================
+def in_tan_validate(value):
+    """Normalize and validate an Indian Tax Deduction and Collection Account Number."""
+    value = value.strip().upper()
+    if not IN_TAN_RE.fullmatch(value):
+        raise InvalidFormat()
+    return value
+
+
 def nl_kvk_validate(value):
     """Normalize and validate a Dutch KVK number."""
     value = NON_DIGIT_RE.sub('', value)
