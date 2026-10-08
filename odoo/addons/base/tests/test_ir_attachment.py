@@ -12,7 +12,7 @@ from PIL import Image
 
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo.tools import BinaryBytes, file_open, file_path, mute_logger
 from odoo.tools.image import image_apply_opt
 
@@ -255,6 +255,29 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
                 [('id', 'in', main_partner.ids)], ['image_128']
             )
             self.assertEqual(patch_file_read.call_count, 0)
+
+    def test_16_create_unique_only_reuses_writable_attachments(self):
+        """ create_unique() must not return an attachment the current user cannot write, as
+        callers link new attachments to it (e.g. the resized variants of an uploaded image).
+        """
+        user_other = new_test_user(self.env, login='other_user', groups='base.group_user')
+        vals = {'name': 'image.webp', 'raw': self.blob1_v, 'mimetype': 'image/webp'}
+        # attachment of another user, not linked to any record (like an image variant)
+        attachment_other = self.Attachment.with_user(user_other).create({**vals, 'public': True})
+
+        Attachment = self.Attachment.with_user(self.user_demo)
+        attachments = Attachment.create_unique([vals])
+        self.assertNotIn(attachment_other, attachments)
+        # a variant can be linked to the returned attachment, as the image field does
+        Attachment.create({
+            'name': 'image.jpg',
+            'raw': self.blob2_v,
+            'mimetype': 'image/jpeg',
+            'res_model': 'ir.attachment',
+            'res_id': attachments[0].id,
+        })
+        # the attachments of the current user are still reused
+        self.assertEqual(Attachment.create_unique([vals]), attachments)
 
     def test_16_from_file_takes_little_memory(self):
         # The biggest file we reliably have is "i18n/base.pot" which is
