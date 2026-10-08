@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+from datetime import datetime, timedelta
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -52,3 +53,22 @@ class TestUi(odoo.tests.HttpCase):
         self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = False
         self.start_tour("/blog", 'blog_autocomplete_with_date')
+
+    def test_blog_feed_only_lists_published_posts(self):
+        blog = self.env['blog.blog'].create({'name': 'Feed Blog'})
+        now = datetime.now()
+        self.env['blog.post'].create([{
+            'name': 'Past Post',
+            'blog_id': blog.id,
+            'is_published': True,
+            'post_date': now - timedelta(days=1),
+        }, {
+            'name': 'Future Post',
+            'blog_id': blog.id,
+            'is_published': True,
+            'post_date': now + timedelta(days=1),
+        }])
+
+        res = self.url_open(f'/blog/{blog.id}/feed')
+        self.assertIn('Past Post', res.text)
+        self.assertNotIn('Future Post', res.text)
