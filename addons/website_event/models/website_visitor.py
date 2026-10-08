@@ -27,7 +27,7 @@ class WebsiteVisitor(models.Model):
         super()._compute_display_name()
         # sudo is needed for `event_registration_ids`
         for visitor in self.sudo().filtered(lambda v: not v.partner_id and v.event_registration_ids):
-            visitor.display_name = visitor.event_registration_ids[-1].name
+            visitor.display_name = visitor.event_registration_ids[-1].name or visitor.display_name or ''
 
     @api.depends('event_registration_ids')
     def _compute_event_registration_count(self):
