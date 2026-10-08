@@ -101,12 +101,16 @@ class ResCompany(models.Model):
         super(ResCompany, self - indian_companies)._compute_qr_code()
 
     def _inverse_l10n_in_tds_feature(self):
+        tds_reports = self.env.ref('l10n_in.tds_report_it_act_25', raise_if_not_found=False) | self.env.ref('l10n_in.tds_credit_report', raise_if_not_found=False)
         for company in self:
             self._activate_l10n_in_taxes(['tds_it_act_25_group'], company, company.l10n_in_tds_feature)
+            tds_reports.active_selection = company.l10n_in_tds_feature
 
     def _inverse_l10n_in_tcs_feature(self):
+        tcs_reports = self.env.ref('l10n_in.tcs_report_it_act_25', raise_if_not_found=False) | self.env.ref('l10n_in.tcs_credit_report', raise_if_not_found=False)
         for company in self:
             self._activate_l10n_in_taxes(['tcs_it_act_25_group'], company, company.l10n_in_tcs_feature)
+            tcs_reports.active_selection = company.l10n_in_tcs_feature
 
     def _inverse_l10n_in_gst_registration_type(self):
         for company in self:
