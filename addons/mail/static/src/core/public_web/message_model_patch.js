@@ -13,7 +13,6 @@ const messagePatch = {
             compute() {
                 return this.store.messagingMenu.allTabs.filter((tab) => tab.includesMessage(this));
             },
-            eager: true,
         });
     },
 };

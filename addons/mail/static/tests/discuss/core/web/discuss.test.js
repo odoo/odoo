@@ -15,9 +15,11 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { Store } from "@mail/../tests/mock_server/store";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { Command, contains, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
+import { serializeDateTime, today } from "@web/core/l10n/dates";
 import { pick } from "@web/core/utils/objects";
 
 describe.current.tags("desktop");
@@ -341,4 +343,35 @@ test("Can join accessible channel via thread action", async () => {
     await waitForNone(".o-discuss-ChannelMember");
     await contains("[title='Join Channel']:count(1)").click();
     await waitFor(".o-discuss-ChannelMember:text('Mitchell Admin'):count(1)");
+});
+
+test("joined channel leaves Discuss when unpinned from another tab", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Very cool channel",
+        channel_member_ids: [],
+    });
+    await start();
+    await openDiscuss();
+    await getService("action").doAction({
+        context: { active_id: channelId },
+        tag: "mail.action_discuss",
+        type: "ir.actions.client",
+    });
+    await contains("[title='Join Channel']:count(1)").click();
+    await waitFor(".o-discuss-ChannelMember:text('Mitchell Admin'):count(1)");
+    const [memberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    pyEnv["discuss.channel.member"].write([memberId], {
+        unpin_dt: serializeDateTime(today().plus({ days: 1 })),
+    });
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    pyEnv["bus.bus"]._sendone(
+        partner,
+        "mail.record/insert",
+        new Store().add(pyEnv["discuss.channel.member"].browse(memberId), ["unpin_dt"]).as_dict()
+    );
+    await waitFor("h4:text('No conversation selected.'):count(1)");
 });

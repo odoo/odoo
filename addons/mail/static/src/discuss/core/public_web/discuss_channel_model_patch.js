@@ -14,7 +14,7 @@ const discussChannelPatch = {
             function onChangeIsLocallyPinned() {
                 this.onPinStateUpdated();
             },
-            { immediate: true }
+            { immediate: true, initialRun: false }
         );
         this.lastSubChannelLoaded = fields.One("discuss.channel");
         this.loadSubChannelsDone = false;
@@ -26,7 +26,6 @@ const discussChannelPatch = {
                     tab.includesChannel(this)
                 );
             },
-            eager: true,
         });
         this.primaryMessagingMenuTab = this.computed(
             () =>
@@ -40,7 +39,6 @@ const discussChannelPatch = {
             compute() {
                 return this._computeMessagingMenuTabsWithCounter();
             },
-            eager: true,
         });
     },
     _computeMessagingMenuTabsWithCounter() {

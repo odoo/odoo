@@ -19,6 +19,14 @@ export class DiscussChannel extends Record {
     static _name = "discuss.channel";
     static _inherits = { "mail.thread": "thread" };
 
+    static preinsert() {
+        /** @type {import("models").DiscussChannel} */
+        const channel = super.preinsert(...arguments);
+        // Create the thread first, as the thread fields of the payload are written to it.
+        channel.thread ??= { id: channel.id, model: "discuss.channel" };
+        return channel;
+    }
+
     setup() {
         super.setup(...arguments);
         this.onEnter(
@@ -42,11 +50,7 @@ export class DiscussChannel extends Record {
         );
         this.onChange(
             () => [this.self_member_id],
-            (self_member_id) => {
-                if (!self_member_id) {
-                    this.onPinStateUpdated();
-                }
-            },
+            () => this.onPinStateUpdated(),
             { immediate: true, initialRun: false }
         );
         // Handles subscriptions for non-members. Subscriptions for channels
@@ -578,12 +582,7 @@ export class DiscussChannel extends Record {
         },
         inverse: "favoriteChannels",
     });
-    thread = fields.One("mail.thread", {
-        compute() {
-            return { id: this.id, model: "discuss.channel" };
-        },
-        inverse: "channel",
-    });
+    thread = fields.One("mail.thread", { inverse: "channel" });
     // Start with `not_member` not to trigger a subscription if the user is not a member
     // initially, only when switching from `member_xxx` to `not_member` following a leave.
     typingMembers = fields.Many("discuss.channel.member", { inverse: "channelAsTyping" });

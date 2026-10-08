@@ -61,7 +61,6 @@ const messagingMenuPatch = {
                             : [],
                 };
             },
-            eager: true,
         });
         this.channelTab = fields.One("MessagingMenuTab", {
             compute() {
@@ -110,7 +109,6 @@ const messagingMenuPatch = {
                             : [],
                 };
             },
-            eager: true,
         });
         this.meetingTab = fields.One("MessagingMenuTab", {
             compute() {
@@ -177,7 +175,6 @@ const messagingMenuPatch = {
                             : [],
                 };
             },
-            eager: true,
         });
     },
     /** @override */
