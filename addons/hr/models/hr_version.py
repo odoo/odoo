@@ -154,6 +154,7 @@ class HrVersion(models.Model):
     tz = fields.Selection(_tz_get, string='Timezone', required=True, default=lambda self: self.env.context.get('tz') or self.env.user.tz or 'UTC')
 
     # Contract Information
+    contract_file = fields.Binary('Contract File', groups="hr.group_hr_manager")
     contract_date_start = fields.Date('Contract Start Date', tracking=1, groups="hr.group_hr_user")
     contract_date_end = fields.Date(
         'Contract End Date', tracking=1, help="End date of the contract (if it's a fixed-term contract).",

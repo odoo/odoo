@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<odoo>
+<template id="report_contract">
+    <t t-set="o" t-value="o.with_context(lang=o.employee_id.lang)"/>
+    <t t-call="web.external_layout">
+        <div class="page">
+            <h2 class="text-center mb-4">Employment Contract</h2>
+
+            <!-- Articles are numbered by the list, localizations can insert theirs with xpath on the article names -->
+            <ol name="contract_articles" class="ps-3">
+                <li name="article_parties" class="mb-3">
+                    <h5>Parties</h5>
+                    <p>
+                        This employment contract is entered into between the company, hereinafter referred to as
+                        "the Employer", and <strong t-field="o.legal_name"/>, hereinafter referred to as "the Employee".
+                    </p>
+                </li>
+
+                <li name="article_position" class="mb-3">
+                    <h5>Position and Employee Type</h5>
+                    <p>
+                        The Employee is hired as <strong t-field="o.job_title"/><t t-if="o.employee_type_id">,
+                        under the employee type <strong t-field="o.employee_type_id"/></t>.
+                        The Employee shall perform the duties related to this position, as well as any other task
+                        reasonably assigned by the Employer in line with the Employee's qualifications.
+                    </p>
+                </li>
+
+                <li name="article_duration" class="mb-3">
+                    <h5>Duration</h5>
+                    <p>
+                        This contract takes effect on <strong t-field="o.contract_date_start"/>
+                        <t t-if="o.contract_date_end">
+                            and is concluded for a fixed term ending on <strong t-field="o.contract_date_end"/>.
+                        </t>
+                        <t t-else="">
+                            and is concluded for an indefinite period.
+                        </t>
+                    </p>
+                </li>
+
+                <li name="article_work_location" class="mb-3">
+                    <h5>Work Location</h5>
+                    <p>
+                        The Employee will primarily perform their duties at
+                        <t t-if="o.work_location_id"><strong t-field="o.work_location_id"/>.</t>
+                        <t t-else="">the premises of the Employer.</t>
+                        The Employer may require the Employee to work at another location when the needs of the
+                        business so require.
+                    </p>
+                </li>
+
+                <li name="article_work_schedule" class="mb-3">
+                    <h5>Work Schedule</h5>
+                    <p>
+                        The Employee will work according to the <strong t-field="o.resource_calendar_id"/> schedule.
+                        The working hours may be adapted by the Employer within the limits set by the applicable law.
+                    </p>
+                </li>
+
+                <li name="article_remuneration" class="mb-3">
+                    <h5>Remuneration</h5>
+                    <p>
+                        In consideration of their services, the Employee will receive a gross monthly wage of
+                        <strong t-field="o.wage"/>, payable at the end of each month, subject to the deductions
+                        required by law.
+                    </p>
+                </li>
+
+                <li name="article_termination" class="mb-3">
+                    <h5>Termination</h5>
+                    <p>
+                        Either party may terminate this contract by giving written notice to the other party, in
+                        accordance with the notice periods and conditions provided by the applicable law.
+                        The contract may be terminated without notice in case of serious misconduct.
+                        <t t-if="o.contract_date_end">
+                            Unless renewed, this contract ends automatically at the end of its term.
+                        </t>
+                    </p>
+                </li>
+            </ol>
+
+            <div name="signatures" class="row mt-5" style="page-break-inside: avoid;">
+                <p class="col-12">
+                    Done in two copies, each party acknowledging receipt of their own copy.
+                </p>
+                <div class="col-6">
+                    <p><strong>For the Employer</strong></p>
+                    <p>Date:</p>
+                    <p class="mt-5">Signature</p>
+                </div>
+                <div class="col-6">
+                    <p><strong>The Employee</strong></p>
+                    <p t-field="o.legal_name"/>
+                    <p>Date:</p>
+                    <p class="mt-5">Signature</p>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="report_contract_lang">
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="hr.report_contract" t-lang="o.employee_id.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

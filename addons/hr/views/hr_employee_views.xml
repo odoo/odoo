@@ -110,6 +110,8 @@
                     <header groups="hr.group_hr_user">
                         <button string="Invite" name="action_send_invitation" type="object"
                                 class="btn btn-primary align-self-center" invisible="user_id" groups="base.group_erp_manager"/>
+                        <button name="action_generate_contract_wizard" string="Generate Contract" type="object" class="btn-secondary"
+                            groups="hr.group_hr_manager" invisible="not active or not id or contract_file"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" class="o_button_plan_wizard_action align-self-center"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
                         <field name="user_state" class="align-self-center d-none d-md-block" widget="employee_user_status"/>
@@ -199,6 +201,7 @@
                                                 class="ms-auto text-end w-auto p-0 mb-0 border-0 lh-1"
                                                 nolabel="1"/>
                                             </div>
+                                        <field name="contract_file"/>
                                         <field name="employee_type_id" string="Employee Type" placeholder="Select employee type"
                                                 domain="[('country_id', 'in', [company_country_id, False]), '|', ('company_id', 'in', [company_id, False]), ('company_id', '=', parent_company_id)]"/>
                                         <label for="contract_date_start" string="Contract"/>

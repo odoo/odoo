@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="action_report_contract" model="ir.actions.report">
+        <field name="name">Contract PDF</field>
+        <field name="model">hr.contract.pdf.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr.report_contract_lang</field>
+        <field name="print_report_name">object._get_report_base_filename()</field>
+        <!-- Erase fields to avoid double PDF posting -->
+        <field name="attachment"></field>
+        <field name="attachment_use" eval="False"/>
+    </record>
+</odoo>
