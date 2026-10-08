@@ -38,6 +38,7 @@ export const graphView = {
                 resModel: resModel,
                 stacked: "stacked" in archInfo ? archInfo.stacked : true,
                 cumulated: archInfo.cumulated || false,
+                allDates: false,
                 cumulatedStart: archInfo.cumulatedStart || false,
                 title: archInfo.title || _t("Untitled"),
             };

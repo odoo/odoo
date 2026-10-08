@@ -22,8 +22,23 @@
                            type="checkbox"
                            role="switch"
                            id="switchCumulated"
+                           name="switchCumulated"
                            t-on-change="this.toggleCumulated"
                            t-att-checked="this.model.metaData.cumulated"
+                    />
+                </div>
+                <div t-if="this.model.metaData.mode === 'bar' and this.model.hasDateXAxis()"
+                     class="form-check form-switch align-self-center me-2 mb-0 text-nowrap"
+                     data-tooltip="Display all dates of the range, including the empty ones"
+                >
+                    <label class="form-check-label small" for="switchAllDates">All dates</label>
+                    <input class="form-check-input"
+                           type="checkbox"
+                           role="switch"
+                           id="switchAllDates"
+                           name="switchAllDates"
+                           t-on-change="this.toggleAllDates"
+                           t-att-checked="this.model.metaData.allDates"
                     />
                 </div>
                 <div class="form-check form-switch align-self-center mb-0"
@@ -34,6 +49,7 @@
                            type="checkbox"
                            role="switch"
                            id="switchStacked"
+                           name="switchStacked"
                            t-on-change="this.toggleStacked"
                            t-att-checked="this.model.metaData.stacked"
                     />
