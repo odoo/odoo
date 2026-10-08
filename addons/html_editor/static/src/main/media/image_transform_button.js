@@ -1,4 +1,4 @@
-import { Component, useExternalListener, useState } from "@odoo/owl";
+import { Component, onWillDestroy, useExternalListener, useState } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { registry } from "@web/core/registry";
 import { ImageTransformation } from "./image_transformation";
@@ -42,6 +42,7 @@ export class ImageTransformButton extends Component {
             },
             { capture: true }
         );
+        onWillDestroy(this.closeImageTransformation);
     }
 
     isNodeInsideTransform(node) {

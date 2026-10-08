@@ -72,4 +72,8 @@ export class ImageCropPlugin extends Plugin {
             props: { ...this.imageCropProps, onClose, onSave, document: this.document },
         });
     }
+    destroy() {
+        super.destroy();
+        registry.category("main_components").remove("ImageCropping");
+    }
 }
