@@ -1,6 +1,8 @@
 import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Domain } from "@web/core/domain";
+import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
@@ -48,6 +50,8 @@ export class SearchBar extends Component {
     static components = {
         SearchBarMenu,
         SearchBarDropdown,
+        CheckboxItem,
+        Dropdown,
         DropdownItem,
     };
     props = useProps({
@@ -88,6 +92,7 @@ export class SearchBar extends Component {
         // derived state
         this.items = proxy([]);
         this.subItems = {};
+        this.dateFacetWidths = new WeakMap();
 
         this.menuRef = signal.ref();
         this.setupFacetNavigation();
@@ -123,6 +128,24 @@ export class SearchBar extends Component {
      */
     getSearchItem(id) {
         return this.env.searchModel.searchItems[id];
+    }
+
+    /**
+     * @param {number} groupId
+     * @returns {Object} the query element of the relative filter active in the group
+     */
+    getRelativeQueryElem(groupId) {
+        const { query } = this.env.searchModel;
+        return query.find((q) => this.getSearchItem(q.searchItemId).groupId === groupId);
+    }
+
+    /**
+     * @param {Object} facet
+     * @returns {string | undefined}
+     */
+    getDateFacetStyle(facet) {
+        const width = this.dateFacetWidths.get(this.getRelativeQueryElem(facet.groupId));
+        return width && `width: ${width}px`;
     }
 
     /**
@@ -485,7 +508,14 @@ export class SearchBar extends Component {
             hotkeys: {
                 enter: {
                     isAvailable: () => !this.inputDropdownState.isOpen,
-                    callback: () => this.env.searchModel.search() /** @todo keep this thing ?*/,
+                    callback: (navigator) => {
+                        const el = navigator.activeItem?.el;
+                        if (isFacet(el) && el.ariaHasPopup) {
+                            el.click();
+                        } else {
+                            this.env.searchModel.search(); /** @todo keep this thing ?*/
+                        }
+                    },
                 },
                 arrowdown: {
                     callback: () => this.env.searchModel.trigger("focus-view"),
@@ -621,12 +651,22 @@ export class SearchBar extends Component {
         });
     }
 
-    onPrevDateFacetClick(facet) {
-        this.env.searchModel.shiftRelativeFilter(facet.groupId, -1);
-    }
-
-    onNextDateFacetClick(facet) {
-        this.env.searchModel.shiftRelativeFilter(facet.groupId, 1);
+    /**
+     * @param {PointerEvent} ev
+     * @param {Object} facet
+     * @param {number} direction
+     */
+    onDateFacetNavClick(ev, facet, direction) {
+        // The facet's width depends on the period, so the search bar would resize and move
+        // the arrows away from the mouse: the facet keeps its initial width while shifting
+        // its period, and crops its value if needed. The query element is shifted in place
+        // and replaced on any other change, which resets its width.
+        const queryElem = this.getRelativeQueryElem(facet.groupId);
+        if (!this.dateFacetWidths.has(queryElem)) {
+            const facetEl = ev.target.closest(".o_searchview_facet");
+            this.dateFacetWidths.set(queryElem, facetEl.getBoundingClientRect().width);
+        }
+        this.env.searchModel.shiftRelativeFilter(facet.groupId, direction);
     }
 
     /**
