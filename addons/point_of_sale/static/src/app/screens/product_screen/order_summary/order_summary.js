@@ -157,7 +157,7 @@ export class OrderSummary extends Component {
             } else if (this.pos.numpadMode === "discount") {
                 buffer = selectedLine.getDiscount() * -1;
             } else if (this.pos.numpadMode === "price") {
-                buffer = selectedLine.prices.total_excluded_currency * -1;
+                buffer = selectedLine.displayPriceUnitNoDiscount * -1;
             }
             this.numberBuffer.state.buffer = buffer.toString();
         }
