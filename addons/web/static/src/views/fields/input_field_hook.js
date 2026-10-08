@@ -1,7 +1,29 @@
-import { onMounted, onPatched, untrack, useListener, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    proxy,
+    t,
+    untrack,
+    useListener,
+    useProps,
+} from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { useBus } from "@web/core/utils/hooks";
+import { Operation } from "@web/model/relational_model/operation";
 import { onWillRender } from "@web/owl2/utils";
+import { DurationParseError, InvalidNumberError } from "./parsers";
+
+const PREVIEW_PARSE_ERRORS = [EvalError, InvalidNumberError, DurationParseError];
+
+class InputPreviewPopover extends Component {
+    static template = "web.InputPreviewPopover";
+    props = useProps({
+        state: t.object(),
+        close: t.function().optional(),
+    });
+}
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -17,6 +39,9 @@ import { onWillRender } from "@web/owl2/utils";
  * @param {boolean} [params.preventLineBreaks] Prevent line breaks in input when set
  * @param {string} [params.fieldName]
  * @param {() => boolean} [params.shouldSave] if true, save the record with the new value
+ * @param {(value: any) => string} [params.preview] if set, a popover anchored on the input displays the value
+ *   that will be set on the field once the text typed by the user is parsed (e.g. "=2*3" or
+ *   "+=5"). It is only shown if that value differs from the text of the input. Requires `parse`.
  */
 export function useInputField(params) {
     const inputRef = params.ref;
@@ -108,6 +133,50 @@ export function useInputField(params) {
     useListener(inputRef, "input", onInput);
     useListener(inputRef, "change", onChange);
     useListener(inputRef, "keydown", onKeydown);
+
+    if (params.preview && params.parse) {
+        const previewState = proxy({ formattedResult: "" });
+        const previewPopover = usePopover(InputPreviewPopover, { position: "bottom" });
+
+        /**
+         * Get the preview value or false if there is nothing to show
+         */
+        function getPreview(text) {
+            let result;
+            try {
+                result = params.parse(text);
+            } catch (error) {
+                if (PREVIEW_PARSE_ERRORS.every((e) => !(error instanceof e))) {
+                    throw error;
+                }
+                return null;
+            }
+            if (result instanceof Operation) {
+                let currentValue = params.getValue();
+                result = result.compute(params.parse(currentValue));
+            }
+
+            let formatted = params.preview(result);
+            return text !== formatted && formatted;
+        }
+
+        function updatePreview() {
+            const el = getEl();
+            const preview = el && el.value && getPreview(el.value);
+            if (!preview) {
+                previewPopover.close();
+                return;
+            }
+            previewState.formattedResult = preview;
+            if (!previewPopover.isOpen) {
+                previewPopover.open(el, { state: previewState });
+            }
+        }
+
+        useListener(inputRef, "input", updatePreview);
+        useListener(inputRef, "focusin", updatePreview);
+        useListener(inputRef, "focusout", () => previewPopover.close());
+    }
 
     // We need to call getValue to always observe
     // the corresponding value in the record. Otherwise, in some cases,
