@@ -182,6 +182,16 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
             'discount': 9.52380952380953,
         }])
 
+    def test_partial_import_invoice_line_price_unit_precision(self):
+        # Line 1: price = 0.043, basis_qty = 1, billed_qty = 2000, line_total_amount = 0.043 * 2000 = 86.00
+        # Line 2: price = 10.00 for 3 units, billed_qty = 3, line_total_amount = 10.00
+        # price_unit = 10 / 3 => price_subtotal = 3.333333 * 3 = 10.00
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_price_unit_precision')
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'price_unit': 0.043, 'quantity': 2000.0, 'discount': 0.0, 'price_subtotal': 86.00},
+            {'price_unit': 10 / 3, 'quantity': 3.0, 'discount': 0.0, 'price_subtotal': 10.00},
+        ])
+
     def test_partial_import_invoice_line_negative_lines_and_total(self):
         # as TaxBasisTotalAmount < 0, refund --> document_sign = -1
         # Line 1
