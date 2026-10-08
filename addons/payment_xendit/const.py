@@ -105,7 +105,7 @@ PAYMENT_METHODS_MAPPING = {
     "bangkok_bank": "BBL_MOBILE_BANKING",
     "touch_n_go": "TOUCHNGO",
     "paynow": "SGQR",
-    "KFH": "KFH_FPX",
+    "kfh": "KFH_FPX",
 }
 
 # Mapping of transaction states to Xendit payment statuses.
