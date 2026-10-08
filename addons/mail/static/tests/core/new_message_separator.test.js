@@ -4,7 +4,6 @@ import {
     contains,
     defineMailModels,
     hover,
-    insertText,
     listenStoreFetch,
     openDiscuss,
     openFormView,
@@ -17,6 +16,7 @@ import {
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
 import { Thread } from "@mail/core/common/thread_model";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     click as hootClick,
@@ -240,14 +240,14 @@ test("keep new message separator until current user sends a message", async () =
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "hello");
+    await insertTextInComposer(".o-mail-Composer", "hello");
     await triggerHotkey("Enter");
     await waitFor(".o-mail-Message:has(:text('hello')):count(1)");
     await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Mark as Unread')");
     await waitFor(".o-mail-Thread-newMessage:contains('New'):count(1)");
-    await insertText(".o-mail-Composer-input", "hey!");
+    await insertTextInComposer(".o-mail-Composer", "hey!");
     await press("Enter");
     await waitFor(".o-mail-Message:count(2)");
     await waitForNone(".o-mail-Thread-newMessage:contains('New')");
@@ -259,7 +259,7 @@ test("keep new message separator when switching between chat window and discuss 
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem-name:text('General')");
-    await insertText(".o-mail-Composer-input", "Very important message!");
+    await insertTextInComposer(".o-mail-Composer", "Very important message!");
     await triggerHotkey("Enter");
     await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");

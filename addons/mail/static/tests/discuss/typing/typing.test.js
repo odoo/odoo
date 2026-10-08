@@ -3,7 +3,6 @@ import {
     contains,
     defineMailModels,
     hover,
-    insertText,
     onRpcBefore,
     openDiscuss,
     openMessagingMenu,
@@ -20,6 +19,7 @@ import { Store } from "@mail/core/common/store_plugin";
 import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
 import { rpc } from "@web/core/network/rpc";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
+import { insertTextInComposer } from "../../mail_test_helpers_composer";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -487,7 +487,7 @@ test("[text composer] current partner notify is typing to other thread members",
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     testEnded = true;
 });
@@ -528,12 +528,12 @@ test("[text composer] current partner notify is typing again to other members fo
     await start();
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     // simulate current partner typing a character for a long time.
     const elapseTickTime = SHORT_TYPING / 2;
     for (let i = 0; i <= LONG_TYPING / elapseTickTime; i++) {
-        await insertText(".o-mail-Composer-input", "a");
+        await insertTextInComposer(".o-mail-Composer", "a");
         await advanceTime(elapseTickTime);
     }
     await expect.waitForSteps(["notify_typing:true"]);
@@ -580,7 +580,7 @@ test("[text composer] current partner notify no longer is typing to thread membe
     await start();
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await advanceTime(SHORT_TYPING);
     await expect.waitForSteps(["notify_typing:false"]);
@@ -619,7 +619,7 @@ test("[text composer] current partner is typing should not translate on textual 
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await waitFor(".o-discuss-Typing:count(1)");
     await waitForNone(".o-discuss-Typing:text('Demo is typing...')");
@@ -878,7 +878,7 @@ test("[text composer] show typing in member list", async () => {
         })
     );
     await waitFor(".o-discuss-ChannelMemberList [title='Other 10 is typing...']:count(1)");
-    await insertText(".o-mail-Composer-input", "HelloWorld!");
+    await insertTextInComposer(".o-mail-Composer", "HelloWorld!");
     await waitFor(
         `.o-discuss-ChannelMemberList [title='${serverState.partnerName} is typing...']:count(1)`
     );
@@ -893,7 +893,7 @@ test("[text composer] show typing in member list", async () => {
     await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:text('Edit')");
-    await insertText(".o-mail-Message .o-mail-Composer-input", "GoodByeWorld!");
+    await insertTextInComposer(".o-mail-Message .o-mail-Composer", "GoodByeWorld!");
     await animationFrame();
     await advanceTime(SHORT_TYPING / 2);
     await withUser(userId, () =>
@@ -995,7 +995,7 @@ test("[text composer] switching to another channel triggers notify_typing to sto
     );
     await start();
     await openDiscuss(chatId);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertTextInComposer(".o-mail-Composer", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await click(".o-mail-MessagingMenu-tab[data-id='channel']");
     await click(".o-mail-NotificationItem:has(:text('general'))");

@@ -3,13 +3,13 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     openFormView,
     patchUiSize,
     scroll,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
@@ -261,7 +261,7 @@ test("read more/less should appear only once for the signature", async () => {
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Chatter:count(1)");
     await click(".o-mail-Chatter-sendMessage");
-    await insertText(".o-mail-Composer-input", "Example Body");
+    await insertTextInComposer(".o-mail-Composer", "Example Body");
     await click("[name='open-full-composer']");
     await waitFor(".o-mail-Message-body:has(:text('Example Body')):count(1)");
     expect(".o-mail-Message .o-signature-container button.o-mail-ellipsis").toHaveCount(1);

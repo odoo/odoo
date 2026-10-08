@@ -3,7 +3,6 @@ import {
     contains,
     defineMailModels,
     dragenterFiles,
-    insertText,
     isInViewportOf,
     listenStoreFetch,
     openDiscuss,
@@ -15,6 +14,10 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { mail_store } from "@mail/../tests/mock_server/mail_mock_server";
 import { Store } from "@mail/../tests/mock_server/store";
 
@@ -375,7 +378,7 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", queryFirst(".o-mail-Thread").scrollHeight / 2);
     await scroll(".o-mail-Thread", "bottom");
-    await insertText(".o-mail-Composer-input", "123");
+    await insertTextInComposer(".o-mail-Composer", "123");
     await press("Enter");
     await waitFor(".o-mail-Message:count(21)");
     await contains(".o-mail-Thread", { scroll: "bottom" });
@@ -547,10 +550,10 @@ test("Mention a partner with special character (e.g. apostrophe ')", async () =>
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@");
-    await insertText(".o-mail-Composer-input", "Pyn");
+    await insertTextInComposer(".o-mail-Composer", "@");
+    await insertTextInComposer(".o-mail-Composer", "Pyn");
     await click('.o-mail-Composer-suggestion:has(:text("Pynya\'s spokesman"))');
-    await contains(".o-mail-Composer-input", { value: "@Pynya's spokesman " });
+    await containsTextInComposer(".o-mail-Composer", "@Pynya's spokesman ");
     await press("Enter");
     await waitFor(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:text("@Pynya's spokesman"):count(1)`
@@ -579,12 +582,12 @@ test("mention 2 different partners that have the same name", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@Te");
+    await insertTextInComposer(".o-mail-Composer", "@Te");
     await click(":nth-child(1 of .o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "@TestPartner " });
-    await insertText(".o-mail-Composer-input", "@Te");
+    await containsTextInComposer(".o-mail-Composer", "@TestPartner ");
+    await insertTextInComposer(".o-mail-Composer", "@Te");
     await click(":nth-child(2 of .o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "@TestPartner @TestPartner " });
+    await containsTextInComposer(".o-mail-Composer", "@TestPartner @TestPartner ");
     await press("Enter");
     await waitFor(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]:text("@TestPartner"):count(1)`
@@ -609,9 +612,9 @@ test("Post a message containing an email address followed by a mention on anothe
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "email@odoo.com\n@Te");
+    await insertTextInComposer(".o-mail-Composer", "email@odoo.com\n@Te");
     await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "email@odoo.com\n@TestPartner " });
+    await containsTextInComposer(".o-mail-Composer", "email@odoo.com\n@TestPartner ");
     await press("Enter");
     await waitFor(
         `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]:text("@TestPartner"):count(1)`
@@ -666,11 +669,11 @@ test("first unseen message should be directly preceded by the new message separa
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "not empty");
+    await insertTextInComposer(".o-mail-Composer", "not empty");
     await press("Enter");
     await waitFor(".o-mail-Message:has(:text('not empty')):count(1)");
     // send a command that leads to receiving a transient message
-    await insertText(".o-mail-Composer-input", "/who");
+    await insertTextInComposer(".o-mail-Composer", "/who");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await waitFor(".o-mail-Message:count(2)");
     // composer is focused by default, we remove that focus
@@ -694,7 +697,7 @@ test("composer should be focused automatically after clicking on the send button
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await press("Enter");
     await waitFor(".o-mail-Composer-input:focus:count(1)");
 });
@@ -1095,10 +1098,10 @@ test("Transient messages are added at the end of the thread", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await press("Enter");
     await waitFor(".o-mail-Message:count(1)");
-    await insertText(".o-mail-Composer-input", "/help");
+    await insertTextInComposer(".o-mail-Composer", "/help");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await waitFor(".o-mail-Message:count(2)");
     await waitFor(".o-mail-Message:eq(0):has(:text('Mitchell Admin')):count(1)");

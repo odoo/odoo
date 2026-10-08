@@ -24,6 +24,10 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
@@ -75,7 +79,7 @@ test('chat window: post message on channel with "CTRL-Enter" keyboard shortcut f
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Test");
     triggerHotkey("control+Enter");
     await waitFor(".o-mail-Message:count(1)");
 });
@@ -320,7 +324,7 @@ test("Close composer suggestions in chat window with ESCAPE does not also close 
     });
     setupChatHub({ opened: [channelId] });
     await start();
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     triggerHotkey("Escape");
     await waitFor(".o-mail-ChatWindow:count(1)");
 });
@@ -599,7 +603,7 @@ test("chat window should scroll to the newly posted message just after posting i
     setupChatHub({ opened: [channelId] });
     await start();
     await waitFor(".o-mail-Message:count(10)");
-    await insertText(".o-mail-Composer-input", "WOLOLO");
+    await insertTextInComposer(".o-mail-Composer", "WOLOLO");
     triggerHotkey("Enter");
     await waitFor(".o-mail-Message:count(11)");
     await contains(".o-mail-Thread", { scroll: "bottom" });
@@ -651,7 +655,7 @@ test("chat window: composer state conservation on toggle discuss", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     // Set content of the composer of the chat window
-    await insertText(".o-mail-Composer-input", "XDU for the win !");
+    await insertTextInComposer(".o-mail-Composer", "XDU for the win !");
     await waitForNone(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer");
     // Set attachments of the composer
     await inputFiles(".o-mail-Composer .o_input_file", [textFile1, textFile2]);
@@ -662,7 +666,7 @@ test("chat window: composer state conservation on toggle discuss", async () => {
     await waitFor(
         ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading):count(2)"
     );
-    await contains(".o-mail-Composer-input", { value: "XDU for the win !" });
+    await containsTextInComposer(".o-mail-Composer", "XDU for the win !");
 });
 
 test("don't show chat hub options when discuss is open", async () => {

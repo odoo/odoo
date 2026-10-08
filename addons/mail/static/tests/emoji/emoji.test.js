@@ -17,6 +17,7 @@ import { queryAllTexts, waitFor, waitForNone } from "@odoo/hoot-dom";
 
 import { signal } from "@odoo/owl";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { containsTextInComposer } from "../mail_test_helpers_composer";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -135,7 +136,7 @@ test("Basic keyboard navigation", async () => {
     ).dataset;
     triggerHotkey("Enter");
     await waitForNone(".o-EmojiPicker");
-    await contains(".o-mail-Composer-input", { value: codepoints });
+    await containsTextInComposer(".o-mail-Composer", codepoints);
 });
 
 test("recent category (basic)", async () => {
@@ -230,7 +231,7 @@ test("selecting an emoji while holding down the Shift key prevents the emoji pic
     await click(".o-EmojiPicker-content .o-Emoji:text('👺')", { shiftKey: true });
     await waitFor(".o-EmojiPicker-navbar [title='Smileys & Emotion']:count(1)");
     await waitFor(".o-EmojiPicker:count(1)");
-    await contains(".o-mail-Composer-input", { value: "👺" });
+    await containsTextInComposer(".o-mail-Composer", "👺");
 });
 
 test("shortcodes shown in emoji title in message", async () => {
@@ -269,9 +270,9 @@ test("Frequently used category only appears when the emoji picker is reopened", 
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
     await click(".o-EmojiPicker-content .o-Emoji:text('😀')", { shiftKey: true });
-    await contains(".o-mail-Composer-input", { value: "😀" });
+    await containsTextInComposer(".o-mail-Composer", "😀");
     await click(".o-EmojiPicker-content .o-Emoji:text('😝')", { shiftKey: true });
-    await contains(".o-mail-Composer-input", { value: "😀😝" });
+    await containsTextInComposer(".o-mail-Composer", "😀😝");
     await waitFor(".o-EmojiPicker-section:count(8)");
     expect(queryAllTexts(".o-EmojiPicker-section small")).toEqual([
         "SMILEYS & EMOTION",

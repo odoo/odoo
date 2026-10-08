@@ -26,6 +26,10 @@ import {
     getChannelCommandsForThread,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { Store } from "@mail/../tests/mock_server/store";
 
@@ -241,7 +245,7 @@ test("Message following a notification should not be squashed", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Hello world!");
+    await insertTextInComposer(".o-mail-Composer", "Hello world!");
     await press("Enter");
     await waitFor(".o-mail-Message-sidebar .o-mail-Message-avatarContainer:count(1)");
 });
@@ -254,7 +258,7 @@ test("Posting message should transform links.", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
+    await insertTextInComposer(".o-mail-Composer", "test https://www.odoo.com/");
     await press("Enter");
     await waitFor(".o-mail-Message a[href='https://www.odoo.com/']:count(1)");
 });
@@ -268,7 +272,7 @@ test("[text composer] Posting message should transform relevant data to emoji.",
     await start();
     await openDiscuss(channelId);
     // Type a trailing space to close the emoji suggestion, which Enter would pick.
-    await insertText(".o-mail-Composer-input", "test :P :laughing: ");
+    await insertTextInComposer(".o-mail-Composer", "test :P :laughing: ");
     await press("Enter");
     await waitFor(".o-mail-Message-body:text('test 😛 😆'):count(1)");
 });
@@ -302,10 +306,10 @@ test("posting a message immediately after another one is displayed in 'simple' m
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "abc");
+    await insertTextInComposer(".o-mail-Composer", "abc");
     await press("Enter");
     await waitFor(".o-mail-Message:count(1)");
-    await insertText(".o-mail-Composer-input", "def");
+    await insertTextInComposer(".o-mail-Composer", "def");
     await press("Enter");
     await waitFor(".o-mail-Message:count(2)");
     await waitFor(".o-mail-Message-header:count(1)"); // just 1, because 2nd message is squashed
@@ -360,7 +364,7 @@ test("guests are not allowed to use commands", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     await start({ authenticateAs: false });
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/who");
+    await insertTextInComposer(".o-mail-Composer", "/who");
     expect(getChannelCommandsForThread(channelId)).toHaveLength(0);
 });
 
@@ -1016,11 +1020,11 @@ test("post a simple message", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Thread:has(:text('Welcome to #general!')):count(1)");
     await waitForNone(".o-mail-Message");
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-Composer", "Test");
     await press("Enter");
     await expect.waitForSteps(["message_post"]);
     // optimistically show posted message
-    await contains(".o-mail-Composer-input", { value: "" });
+    await containsTextInComposer(".o-mail-Composer", "");
     await waitFor(".o-mail-Message-author:text('Mitchell Admin'):count(1)");
     await waitFor(".o-mail-Message-content:text('Test'):count(1)");
     expect(".o-mail-Message-content").toHaveStyle({ opacity: "0.5" });
@@ -1049,15 +1053,15 @@ test("post several messages with failures", async () => {
     // post 3 messages
     await waitFor(".o-mail-Thread:has(:text('Welcome to #general!')):count(1)");
     await waitForNone(".o-mail-Message");
-    await insertText(".o-mail-Composer-input", "0");
+    await insertTextInComposer(".o-mail-Composer", "0");
     await press("Enter");
-    await contains(".o-mail-Composer-input", { value: "" });
-    await insertText(".o-mail-Composer-input", "1");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await insertTextInComposer(".o-mail-Composer", "1");
     await press("Enter");
-    await contains(".o-mail-Composer-input", { value: "" });
-    await insertText(".o-mail-Composer-input", "2");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await insertTextInComposer(".o-mail-Composer", "2");
     await press("Enter");
-    await contains(".o-mail-Composer-input", { value: "" });
+    await containsTextInComposer(".o-mail-Composer", "");
     await waitFor(".o-mail-Message-author:text('Mitchell Admin'):count(1)");
     await contains(".o-mail-Thread", {
         contains: [
@@ -1109,7 +1113,7 @@ test("failed message tooltip includes the server error", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-Composer", "Test");
     await press("Enter");
     await waitFor(
         ".o-mail-Message button[title='Failed to post the message (Error message). Click to retry']:count(1)"
@@ -1957,7 +1961,7 @@ test("composer should be focused automatically after clicking on the send button
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await press("Enter");
     expect(".o-mail-Composer-input").toBeFocused();
 });
@@ -2015,7 +2019,7 @@ test("warning on send with shortcut when attempting to post message with still-u
     await openDiscuss(channelId);
     await waitFor(".o-mail-Composer input[type=file]:count(1)");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
     await waitFor(
         ".o-mail-AttachmentContainer.o-isUploading:contains(text.txt) [data-icon='autorenew']:count(1)"

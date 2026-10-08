@@ -8,7 +8,6 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     isInViewportOf,
     listenStoreFetch,
     openDiscuss,
@@ -19,6 +18,7 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
 
 describe.current.tags("desktop");
@@ -254,7 +254,7 @@ test("Post message when seeing old message should jump to present", async () => 
     await waitFor(".o-mail-Message:count(30)");
     await click(".o-mail-MessageInReply .cursor-pointer");
     await waitFor("[title='Jump to Present']:count(1)");
-    await insertText(".o-mail-Composer-input", "Newly posted");
+    await insertTextInComposer(".o-mail-Composer", "Newly posted");
     await press("Enter");
     await waitForNone("[title='Jump to Present']");
     await contains(".o-mail-Thread", { scroll: "bottom" });

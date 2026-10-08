@@ -2,7 +2,6 @@ import {
     click,
     contains,
     focus,
-    insertText,
     openDiscuss,
     openMessagingMenu,
     patchUiSize,
@@ -12,6 +11,7 @@ import {
     triggerHotkey,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, test } from "@odoo/hoot";
 import { press, waitFor } from "@odoo/hoot-dom";
@@ -384,7 +384,7 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
     ]);
     await start();
     await openDiscuss(channelIds[0]);
-    await insertText(".o-mail-Composer-input", "Hello, ");
+    await insertTextInComposer(".o-mail-Composer", "Hello, ");
     triggerHotkey("Tab");
     await contains(".o-mail-NotificationItem.o-active", { text: "Visitor 11" });
 });

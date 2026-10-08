@@ -1,11 +1,5 @@
-import {
-    click,
-    contains,
-    insertText,
-    openDiscuss,
-    start,
-    startServer,
-} from "@mail/../tests/mail_test_helpers";
+import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, test, waitFor } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
@@ -60,7 +54,7 @@ test("Display livechat custom username if defined", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "hello");
+    await insertTextInComposer(".o-mail-Composer", "hello");
     await press("Enter");
     await contains(".o-mail-Message-author", { text: "livechat custom username" });
 });

@@ -2,12 +2,12 @@ import { waitForChannels } from "@bus/../tests/bus_test_helpers";
 import {
     click,
     defineMailModels,
-    insertText,
     openDiscuss,
     start,
     startServer,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
 import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
@@ -33,7 +33,7 @@ test("unknown channel can be displayed and interacted with", async () => {
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
     await waitFor(".o-mail-NotificationItem.o-active:has(:text('Not So Secret')):count(1)");
-    await insertText(".o-mail-Composer-input", "Hello", { replace: true });
+    await insertTextInComposer(".o-mail-Composer", "Hello", { replace: true });
     await press("Enter");
     await waitFor(".o-mail-Message:has(:text('Hello')):count(1)");
     await expect.waitForSteps(["discuss.channel/new_message"]);

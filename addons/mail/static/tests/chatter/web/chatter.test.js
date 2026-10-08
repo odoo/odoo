@@ -20,6 +20,10 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { Message } from "@mail/core/common/message";
 import { describe, expect, mockUserAgent, rightClick, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
@@ -117,7 +121,7 @@ test("can post a message on a record thread", async () => {
     await waitForNone(".o-mail-Composer");
     await click("button:text('Send message')");
     await waitFor(".o-mail-Composer:count(1)");
-    await insertText(".o-mail-Composer-input", "hey");
+    await insertTextInComposer(".o-mail-Composer", "hey");
     await waitForNone(".o-mail-Message");
 
     await insertText(".o-mail-Chatter input[placeholder='Followers only']", "new-partner@ex.com");
@@ -160,7 +164,7 @@ test("can post a note on a record thread", async () => {
     await waitForNone(".o-mail-Composer");
     await click("button:text('Log note')");
     await waitFor(".o-mail-Composer:count(1)");
-    await insertText(".o-mail-Composer-input", "hey");
+    await insertTextInComposer(".o-mail-Composer", "hey");
     await waitForNone(".o-mail-Message");
     await click(".o-mail-Composer button:enabled:text('Log')");
     await waitFor(".o-mail-Message:count(1)");
@@ -185,7 +189,7 @@ test("post with reload_on_post keeps the changes of an invalid record", async ()
     await expect.waitForSteps(["web_read"]);
     await insertText(".o_field_widget[name=name] input", "", { replace: true });
     await click("button:text('Log note')");
-    await insertText(".o-mail-Composer-input", "hey");
+    await insertTextInComposer(".o-mail-Composer", "hey");
     await click(".o-mail-Composer button:enabled:text('Log')");
     await waitFor(".o-mail-Message:count(1)");
     await waitFor(".o_notification:text('Missing required fields'):count(1)");
@@ -242,10 +246,10 @@ test("Textarea content is kept when switching from aside to bottom", async () =>
     await openFormView("res.partner", partnerId);
     await click("button:text('Send message')");
     await waitFor(".o-mail-Form-chatter.o-aside .o-mail-Composer-input:count(1)");
-    await insertText(".o-mail-Composer-input", "Hello world !");
+    await insertTextInComposer(".o-mail-Composer", "Hello world !");
     await patchUiSize({ size: SIZES.LG });
     await waitFor(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input:count(1)");
-    await contains(".o-mail-Composer-input", { value: "Hello world !" });
+    await containsTextInComposer(".o-mail-Composer", "Hello world !");
 });
 
 test("Composer type is kept when switching from aside to bottom", async () => {
@@ -435,7 +439,7 @@ async function postMesssageShortcutInChatter({ isMacOS = false } = {}) {
     await openFormView("res.partner", partnerId);
     await click("button:text('Send message')");
     await waitForNone(".o-mail-Message");
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-Composer", "Test");
     triggerHotkey("control+Enter"); // hot-key converts control to command
     await waitFor(".o-mail-Message:count(1)");
 }
@@ -561,7 +565,7 @@ test('do not post message with "Enter" keyboard shortcut', async () => {
     await openFormView("res.partner", partnerId);
     await click("button:text('Send message')");
     await waitForNone(".o-mail-Message");
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-Composer", "Test");
     triggerHotkey("Enter");
     // weak test, no guarantee that we waited long enough for the potential message to be posted
     await waitForNone(".o-mail-Message");
@@ -744,7 +748,7 @@ test("chatter message actions appear only after saving the form", async () => {
     await expect.waitForSteps(["Message.onContextMenu"]);
     await click(".o_form_button_save");
     await click("button:text('Send message')");
-    await insertText(".o-mail-Composer-input", "hey");
+    await insertTextInComposer(".o-mail-Composer", "hey");
     await click(".o-mail-Composer-send:enabled");
     await waitFor(".o-mail-Message-actions:count(1)");
     await rightClick(".o-mail-Message");
@@ -764,7 +768,7 @@ test("post message on draft record", async () => {
             </form>`,
     });
     await click("button:text('Send message')");
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-Composer", "Test");
     await click(".o-mail-Composer button[aria-label='Send']:enabled");
     await waitFor(".o-mail-Message:count(1)");
     await waitFor(".o-mail-Message-content:text('Test'):count(1)");
@@ -840,7 +844,7 @@ test("Mentions in composer should still work when using pager", async () => {
     await waitFor(".o-mail-Composer-input:count(1)");
     await click(".o_pager_next");
     await waitFor(".o_pager:text(2 / 2):count(1)"); // ensures we correctly switched to the second record
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     // all active records in DB with a name: Mitchell Admin | Hermit
     await waitFor(".o-mail-Composer-suggestion:count(2)");
 });
@@ -956,13 +960,13 @@ test("Can only mention internal users in Log note", async () => {
     await start();
     await openFormView("res.partner");
     await click("button:text('Send message')");
-    await insertText(".o-mail-Composer-input", "@ext");
+    await insertTextInComposer(".o-mail-Composer", "@ext");
     await click(".o-mail-Composer-suggestion strong:text('External Partner')");
     await click(".o-mail-Composer button:enabled:text('Send')");
     await waitFor(".o-mail-Message a.o_mail_redirect:text('@External Partner'):count(1)");
     await click("button:text('Send message')");
     await waitFor(".o-mail-Composer:count(1)");
-    await insertText(".o-mail-Composer-input", "@ext");
+    await insertTextInComposer(".o-mail-Composer", "@ext");
     await click(".o-mail-Composer-suggestion strong:text('External Partner')");
     await click("button:text('Log note')");
     await click(".o-mail-Composer button:enabled:text('Log')");
