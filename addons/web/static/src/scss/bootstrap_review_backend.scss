@@ -12,6 +12,13 @@
     --#{$variable-prefix}btn-disabled-border-color: transparent;
     --#{$prefix}btn-focus-box-shadow: #{$focus-ring-box-shadow};
     --#{$prefix}gradient: #{$o-gradient-btn};
+
+    // Disable the gradient on buttons with a transparent background:
+    // `.btn` without contextual class ,`.btn-light` (except on hover/focus) and
+    // `.btn` with contextual color on hover (`.btn-hover-*`)
+    &:not([class*="btn-"]), &.btn-light:not(:hover, :focus-visible), &[class*="btn-hover-"] {
+        --#{$prefix}gradient: none;
+    }
 }
 
 /* 1. Render buttons defined in '$o-btns-bs-override' and '$o-btns-bs-outline-override' */
