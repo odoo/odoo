@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openFormView,
@@ -20,7 +20,7 @@ test("insert emoji at end of word", async () => {
     await insertText("textarea#name_0", "Hello", { replace: true });
     await click(".o_field_text_emojis button");
     await click('.o-Emoji[data-codepoints="😀"]');
-    await contains("textarea#name_0", { value: "Hello😀" });
+    await mailContains("textarea#name_0", { value: "Hello😀" });
 });
 
 test("insert emoji as new word", async () => {
@@ -31,5 +31,5 @@ test("insert emoji as new word", async () => {
     await insertText("textarea#name_0", "Hello ", { replace: true });
     await click(".o_field_text_emojis button");
     await click('.o-Emoji[data-codepoints="😀"]');
-    await contains("textarea#name_0", { value: "Hello 😀" });
+    await mailContains("textarea#name_0", { value: "Hello 😀" });
 });

@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     openDiscuss,
     start,
@@ -220,7 +220,7 @@ test("do not show message seen indicator on all the messages of the current user
     pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message:has(:text('Message before last seen'))", {
+    await mailContains(".o-mail-Message:has(:text('Message before last seen'))", {
         contains: [
             ".o-mail-Message-seenContainer",
             { contains: ["[data-icon='check']", { count: 0 }] },

@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     hover,
     insertText,
@@ -58,17 +58,17 @@ test("show default emojis when no frequent emojis are available", async () => {
     await press("Enter");
     await hover(".o-mail-Message");
     await click("[title='Add a Reaction']");
-    await contains(".o-mail-QuickReactionMenu-emoji", {
+    await mailContains(".o-mail-QuickReactionMenu-emoji", {
         count: QuickReactionMenu.DEFAULT_EMOJIS.length,
     });
     for (const emoji of QuickReactionMenu.DEFAULT_EMOJIS) {
-        await contains(".o-mail-QuickReactionMenu-emoji:text('" + emoji + "')");
+        await mailContains(".o-mail-QuickReactionMenu-emoji:text('" + emoji + "')");
     }
     await click(".o-mail-QuickReactionMenu [title='Toggle Emoji Picker']");
     await click(".o-Emoji:text('🤢')");
     await hover(".o-mail-Message");
     await click(".o-mail-Message-actions [title='Add a Reaction']");
-    await contains(
+    await mailContains(
         ".o-mail-QuickReactionMenu-emoji:text('" + QuickReactionMenu.DEFAULT_EMOJIS.at(-1) + "')",
         {
             count: 0,
@@ -87,7 +87,7 @@ test("navigate quick reaction menu using tab key", async () => {
     await hover(".o-mail-Message");
     await click("[title='Add a Reaction']");
     for (const emoji of QuickReactionMenu.DEFAULT_EMOJIS) {
-        await contains(".o-mail-QuickReactionMenu-emoji:focus:text('" + emoji + "')");
+        await mailContains(".o-mail-QuickReactionMenu-emoji:focus:text('" + emoji + "')");
         await press("Tab");
     }
     await waitFor(".o-mail-QuickReactionMenu-emojiPicker:focus:count(1)");
@@ -103,13 +103,13 @@ test("navigate quick reaction menu using arrow keys", async () => {
     await hover(".o-mail-Message");
     await click("[title='Add a Reaction']");
     for (const emoji of QuickReactionMenu.DEFAULT_EMOJIS) {
-        await contains(".o-mail-QuickReactionMenu-emoji:focus:text('" + emoji + "')");
+        await mailContains(".o-mail-QuickReactionMenu-emoji:focus:text('" + emoji + "')");
         await press("ArrowRight");
     }
     await waitFor(".o-mail-QuickReactionMenu-emojiPicker:focus:count(1)");
     await press("ArrowLeft");
     for (const emoji of [...QuickReactionMenu.DEFAULT_EMOJIS].reverse()) {
-        await contains(".o-mail-QuickReactionMenu-emoji:focus:text('" + emoji + "')");
+        await mailContains(".o-mail-QuickReactionMenu-emoji:focus:text('" + emoji + "')");
         await press("ArrowLeft");
     }
     await waitFor(".o-mail-QuickReactionMenu-emojiPicker:focus:count(1)");
@@ -190,7 +190,7 @@ test("return focus to message edition composer on close", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello world!");
     await press("Enter");
-    await contains(".o-mail-Composer-input", { value: "" });
+    await mailContains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "Goodbye world!!");
     await press("Enter");
     await waitFor(".o-mail-Message:count(2)");

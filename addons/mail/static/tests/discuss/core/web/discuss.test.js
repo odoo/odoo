@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     listenStoreFetch,
@@ -230,7 +230,7 @@ test("Auto-open OdooBot chat when opening discuss for the first time", async () 
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussContent-threadName", { value: "OdooBot" });
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "OdooBot" });
 });
 
 test("no conversation selected when opening non-existing channel in discuss", async () => {
@@ -270,7 +270,7 @@ test("can access portal partner profile from avatar popover", async () => {
     await waitFor(".o-mail-avatar-card-name:text('Joel'):count(1)");
     await click("button:text('View Profile')");
     await waitFor(".o_form_view:count(1)");
-    await contains(".o_field_widget[name='name'] .o_input", { value: "Joel" });
+    await mailContains(".o_field_widget[name='name'] .o_input", { value: "Joel" });
 });
 
 test("clicking chat correspondent avatars opens avatar card", async () => {
@@ -309,7 +309,7 @@ test("Preserve letter case and accents when creating channel from sidebar", asyn
     );
     await click(".o-mail-DiscussCommand-nameContainer:text('Create Channel')");
     await click("button:text(Create Channel)");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Crème brûlée Fan Club" });
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "Crème brûlée Fan Club" });
 });
 
 test("Create channel must have a name", async () => {

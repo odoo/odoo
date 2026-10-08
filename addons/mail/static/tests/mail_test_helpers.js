@@ -34,7 +34,7 @@ import {
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
-import { click, contains, TIMEOUT } from "./mail_test_helpers_contains";
+import { click, contains as mailContains, TIMEOUT } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched } from "@odoo/owl";
@@ -266,7 +266,7 @@ export async function openDiscuss(activeIdOrTabId, { target } = {}) {
     });
     if (tabId) {
         await click(`.o-mail-Discuss .o-mail-MessagingMenu-tab[data-id=${tabId}]`);
-        await contains(`.o-mail-Discuss .o-mail-MessagingMenu-tab[data-id=${tabId}].active`);
+        await mailContains(`.o-mail-Discuss .o-mail-MessagingMenu-tab[data-id=${tabId}].active`);
     }
 }
 
@@ -897,8 +897,8 @@ export function observeRenders() {
  * @param {string} parentSelector
  */
 export async function isInViewportOf(childSelector, parentSelector) {
-    await contains(parentSelector);
-    await contains(childSelector);
+    await mailContains(parentSelector);
+    await mailContains(childSelector);
     const {
         promise: inViewportPromise,
         reject: rejectInViewport,
@@ -950,7 +950,7 @@ export async function openMessagingMenu(tabId) {
 }
 
 export async function hover(selector) {
-    await contains(selector);
+    await mailContains(selector);
     await hootHover(selector);
 }
 
@@ -1192,10 +1192,10 @@ export function mockPermissionsPrompt() {
  * @param {Number} count
  */
 export async function assertChatBubbleAndWindowImStatus(conversationName, count) {
-    await contains(`.o-mail-ChatBubble[name=${conversationName}]`);
+    await mailContains(`.o-mail-ChatBubble[name=${conversationName}]`);
     expect(`.o-mail-ChatBubble[name=${conversationName}] .o-mail-ImStatus`).toHaveCount(count);
     await click(`.o-mail-ChatBubble[name=${conversationName}]`);
-    await contains(`.o-mail-ChatWindow-header:has(:text(${conversationName}))`);
+    await mailContains(`.o-mail-ChatWindow-header:has(:text(${conversationName}))`);
     expect(
         `.o-mail-ChatWindow-header:has(:text(${conversationName})) .o-mail-ImStatus`
     ).toHaveCount(count);

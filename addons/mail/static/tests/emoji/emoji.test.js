@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openDiscuss,
@@ -87,10 +87,10 @@ test("updating search emoji should scroll top", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await contains(".o-EmojiPicker-content", { scroll: 0 });
+    await mailContains(".o-EmojiPicker-content", { scroll: 0 });
     await scroll(".o-EmojiPicker-content", 150);
     await insertText(".o-EmojiPicker-search input", "m");
-    await contains(".o-EmojiPicker-content", { scroll: 0 });
+    await mailContains(".o-EmojiPicker-content", { scroll: 0 });
 });
 
 test("Press Escape in emoji picker closes the emoji picker", async () => {
@@ -135,7 +135,7 @@ test("Basic keyboard navigation", async () => {
     ).dataset;
     triggerHotkey("Enter");
     await waitForNone(".o-EmojiPicker");
-    await contains(".o-mail-Composer-input", { value: codepoints });
+    await mailContains(".o-mail-Composer-input", { value: codepoints });
 });
 
 test("recent category (basic)", async () => {
@@ -148,7 +148,7 @@ test("recent category (basic)", async () => {
     await click(".o-EmojiPicker-content .o-Emoji:text('😀')");
     await click("button[title='Add Emojis']");
     await waitFor(".o-EmojiPicker-navbar [title='Frequently used']:count(1)");
-    await contains(".o-Emoji:text('😀')", {
+    await mailContains(".o-Emoji:text('😀')", {
         after: ["small", { textContent: "Frequently used" }],
         before: ["small", { textContent: "Smileys & Emotion" }],
     });
@@ -200,7 +200,7 @@ test("emoji usage amount orders frequent emojis", async () => {
     await click("button[title='Add Emojis']");
     await click(".o-EmojiPicker-content .o-Emoji:text('👽')");
     await click("button[title='Add Emojis']");
-    await contains(".o-Emoji:text('👽')", {
+    await mailContains(".o-Emoji:text('👽')", {
         after: ["small", { textContent: "Frequently used" }],
         before: [
             ".o-Emoji:text('😀')",
@@ -230,7 +230,7 @@ test("selecting an emoji while holding down the Shift key prevents the emoji pic
     await click(".o-EmojiPicker-content .o-Emoji:text('👺')", { shiftKey: true });
     await waitFor(".o-EmojiPicker-navbar [title='Smileys & Emotion']:count(1)");
     await waitFor(".o-EmojiPicker:count(1)");
-    await contains(".o-mail-Composer-input", { value: "👺" });
+    await mailContains(".o-mail-Composer-input", { value: "👺" });
 });
 
 test("shortcodes shown in emoji title in message", async () => {
@@ -269,9 +269,9 @@ test("Frequently used category only appears when the emoji picker is reopened", 
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
     await click(".o-EmojiPicker-content .o-Emoji:text('😀')", { shiftKey: true });
-    await contains(".o-mail-Composer-input", { value: "😀" });
+    await mailContains(".o-mail-Composer-input", { value: "😀" });
     await click(".o-EmojiPicker-content .o-Emoji:text('😝')", { shiftKey: true });
-    await contains(".o-mail-Composer-input", { value: "😀😝" });
+    await mailContains(".o-mail-Composer-input", { value: "😀😝" });
     await waitFor(".o-EmojiPicker-section:count(8)");
     expect(queryAllTexts(".o-EmojiPicker-section small")).toEqual([
         "SMILEYS & EMOTION",
@@ -309,6 +309,6 @@ test("clear search icon appears with a search term and clears it on click", asyn
     await insertText(".o-EmojiPicker-search input", "ok");
     await waitFor("[data-icon='cancel']:count(1)");
     await click("[data-icon='cancel']");
-    await contains(".o-EmojiPicker-search input", { value: "" });
+    await mailContains(".o-EmojiPicker-search input", { value: "" });
     await waitForNone("[data-icon='cancel']");
 });

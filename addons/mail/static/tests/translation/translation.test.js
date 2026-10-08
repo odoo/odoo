@@ -1,7 +1,7 @@
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     hover,
     onRpcBefore,
@@ -70,19 +70,19 @@ test("translation of email message", async () => {
     }));
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("span:text('Al mal tiempo, buena cara.')", {
+    await mailContains("span:text('Al mal tiempo, buena cara.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
     await hover(".o-mail-Message");
     await click("button[title='Expand']");
     await click(".o-dropdown-item:contains('Translate')");
-    await contains("span:text('To bad weather, good face.')", {
+    await mailContains("span:text('To bad weather, good face.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
-    await contains(".o-mail-Message-body:text('(Translated from: Spanish)')", {});
+    await mailContains(".o-mail-Message-body:text('(Translated from: Spanish)')", {});
     await click("button[title='Expand']");
     await click(".o-dropdown-item:contains('Initial Language')");
-    await contains("span:text('Al mal tiempo, buena cara.')", {
+    await mailContains("span:text('Al mal tiempo, buena cara.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
 });

@@ -1,7 +1,7 @@
 import { pasteHtml } from "@html_editor/../tests/_helpers/user_actions";
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     hover,
     openDiscuss,
@@ -72,7 +72,7 @@ test("click on message in reply to scroll to the parent message", async () => {
     await click(".o-mail-MessageInReply-message", {
         parent: [".o-mail-Message:has(:text('Response to first message'))"],
     });
-    await contains(":nth-child(1 of .o-mail-Message)", { visible: true });
+    await mailContains(":nth-child(1 of .o-mail-Message)", { visible: true });
 });
 
 test("reply shows correct author avatar", async () => {
@@ -161,7 +161,9 @@ test("can reply to logged note in chatter", async () => {
     await click(".o-mail-Message:contains('Test message from B') [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await waitFor("button.active:text('Log note'):count(1)");
-    await contains(".o-mail-Composer.o-focused .o-mail-Composer-input", { value: "@Partner B " });
+    await mailContains(".o-mail-Composer.o-focused .o-mail-Composer-input", {
+        value: "@Partner B ",
+    });
     await click(".o-mail-Composer-send:enabled");
     await waitFor(".o-mail-Message a.o_mail_redirect:text('@Partner B'):count(1)");
     await hover(".o-mail-Message:contains('@Partner B')");

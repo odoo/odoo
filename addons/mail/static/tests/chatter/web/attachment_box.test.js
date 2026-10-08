@@ -1,7 +1,7 @@
 import {
     SIZES,
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     inputFiles,
     onRpcBefore,
@@ -136,8 +136,8 @@ test("scroll to attachment box when toggling on", async () => {
     await scroll(".o-mail-Chatter", "bottom");
     await click("button[aria-label='Attach files']");
     await waitFor(".o-mail-AttachmentBox:count(1)");
-    await contains(".o-mail-Chatter", { scroll: 0 });
-    await contains(".o-mail-AttachmentBox", { visible: true });
+    await mailContains(".o-mail-Chatter", { scroll: 0 });
+    await mailContains(".o-mail-AttachmentBox", { visible: true });
 });
 
 test("do not auto-scroll to attachment box when initially open", async () => {
@@ -165,7 +165,7 @@ test("do not auto-scroll to attachment box when initially open", async () => {
     });
     await waitFor(".o-mail-Message:count(1)");
     // weak test, no guarantee that we waited long enough for the potential scroll to happen
-    await contains(".o_content", { scroll: 0 });
+    await mailContains(".o_content", { scroll: 0 });
 });
 
 test("attachment box should order attachments from newest to oldest", async () => {
@@ -524,7 +524,7 @@ test("attachment should be uploaded on the correct record when using the pager n
     await waitFor("button[aria-label='Attach files']:not(:has(sup)):count(1)");
     await pagerPrevious();
     await click("button[aria-label='Attach files']", { text: "1" });
-    await contains(".o-mail-AttachmentCard", { text: "A.jpeg" });
+    await mailContains(".o-mail-AttachmentCard", { text: "A.jpeg" });
     // Second upload
     uploadDeferred = Promise.withResolvers();
     await click("button[aria-label='Attach files']");
@@ -536,6 +536,6 @@ test("attachment should be uploaded on the correct record when using the pager n
     await waitFor("button[aria-label='Attach files']:not(:has(sup)):count(1)");
     await pagerPrevious();
     await click("button[aria-label='Attach files']", { text: "2" });
-    await contains(".o-mail-AttachmentCard", { text: "A.jpeg" });
-    await contains(".o-mail-AttachmentCard", { text: "B.jpeg" });
+    await mailContains(".o-mail-AttachmentCard", { text: "A.jpeg" });
+    await mailContains(".o-mail-AttachmentCard", { text: "B.jpeg" });
 });

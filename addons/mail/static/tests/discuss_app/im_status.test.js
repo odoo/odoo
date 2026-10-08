@@ -1,5 +1,5 @@
 import {
-    contains,
+    contains as mailContains,
     defineMailModels,
     openDiscuss,
     openMessagingMenu,
@@ -101,7 +101,7 @@ test("show im status in messaging menu preview of chat", async () => {
     });
     await start();
     await openMessagingMenu();
-    await contains(".o-mail-NotificationItem:has(.o-mail-NotificationItem-name:text('Demo'))", {
+    await mailContains(".o-mail-NotificationItem:has(.o-mail-NotificationItem-name:text('Demo'))", {
         contains: ["i[aria-label='User is online']"],
     });
 });
