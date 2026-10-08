@@ -207,7 +207,10 @@ class WebsiteBlog(http.Controller):
         v = {}
         v['blog'] = blog
         v['base_url'] = blog.get_base_url()
-        v['posts'] = request.env['blog.post'].search([('blog_id', '=', blog.id)], limit=min(int(limit), 50), order="post_date DESC")
+        domain = [('blog_id', '=', blog.id)]
+        if not request.env.user.has_group('website.group_website_designer'):
+            domain += [('post_date', '<=', fields.Datetime.now())]
+        v['posts'] = request.env['blog.post'].search(domain, limit=min(int(limit), 50), order="post_date DESC")
         v['html2plaintext'] = html2plaintext
         r = request.render("website_blog.blog_feed", v, headers=[('Content-Type', 'application/atom+xml')])
         return r
