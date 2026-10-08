@@ -1,8 +1,7 @@
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, signal, t, useListener, useProps } from "@odoo/owl";
+import { Component, onMounted, onPatched, signal, t, useListener, useProps } from "@odoo/owl";
 
-import { useLayoutEffect } from "@web/owl2/utils";
 import { useNavigation } from "@web/core/navigation/navigation";
 import { usePosition } from "@web/core/position/position_hook";
 import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
@@ -43,20 +42,15 @@ export class CallDropdown extends Component {
                 return [];
             },
         });
-        useLayoutEffect(
-            (triggerEl, toggleOpenFn) => {
-                if (triggerEl) {
-                    const fn = (ev) => {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        toggleOpenFn();
-                    };
-                    triggerEl.addEventListener("click", fn);
-                    return () => triggerEl.removeEventListener("click", fn);
-                }
-            },
-            () => [this.triggerEl, toggleFn(this.isOpen)]
-        );
+        // the trigger comes from the rendered slot: it is known only once mounted/patched
+        const triggerRef = signal.ref();
+        onMounted(() => triggerRef.set(this.triggerEl));
+        onPatched(() => triggerRef.set(this.triggerEl));
+        useListener(triggerRef, "click", (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            toggleFn(this.isOpen)();
+        });
     }
 
     /** The dropdown toggle is the component's own first element. */
