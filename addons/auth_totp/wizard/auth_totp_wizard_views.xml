@@ -17,14 +17,12 @@
                                 <h3 class="fw-bold"><a data-bs-toggle="collapse"
                                    href="#collapseTotpSecret" role="button" aria-expanded="false"
                                    aria-controls="collapseTotpSecret">Cannot scan it?</a></h3>
-                                <div class="collapse" id="collapseTotpSecret">
-                                  <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 ps-3"/>
-                                </div>
                             </div>
 
                             <!-- Mobile Version -->
                             <h3 class="fw-bold d-block d-md-none">Add this key in your Authenticator app</h3>
-                            <div class="d-block d-md-none">
+
+                            <div class="collapse" id="collapseTotpSecret">
                                 <field name="secret" widget="CopyClipboardChar" readonly="1" class="mb-3 ps-3"/>
                             </div>
 
