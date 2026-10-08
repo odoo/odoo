@@ -120,3 +120,8 @@ test("Test Carousel Option (s_image_gallery)", async () => {
     expect(carouselEl).toHaveAttribute("data-bs-ride", "false");
     expect(carouselEl).toHaveAttribute("data-bs-interval", "1000");
 });
+
+test("carousel indicators wrapper should not disable pointer events", async () => {
+    await setupWebsiteBuilderWithSnippet("s_carousel", { loadIframeBundles: true });
+    expect(":iframe .carousel-indicators").not.toHaveStyle({ pointerEvents: "none" });
+});
