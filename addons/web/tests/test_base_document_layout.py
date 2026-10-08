@@ -1,4 +1,5 @@
 import os
+import re
 from PIL import Image
 from functools import partial
 
@@ -237,3 +238,31 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         self.company.write({'street2': 'street_2_detail'})
         doc_layout_2 = self.env['base.document.layout'].create({'company_id': self.company.id})
         self.assertTrue('street_2_detail' in doc_layout_2.company_details)
+
+    def _get_company_report_styles(self, styles, company):
+        company_marker = f'.o_company_{company.id}_layout'
+        match = re.search(
+            rf'{re.escape(company_marker)}.*?(?=\n\s*\.o_company_\d+_layout|\Z)',
+            styles,
+            re.S,
+        )
+        return match.group() if match else ''
+
+    def test_report_tables_id_change_updates_company_report_styles(self):
+        """Test that changing only the table design must refresh report table colors."""
+        primary_color = '#ff0080'
+        attachment = self.env.ref('web.asset_styles_company_report')
+        self.company.write({
+            'primary_color': primary_color,
+            'report_tables_id': 'light',
+        })
+        styles = (attachment.raw or b'').decode()
+        company_styles = self._get_company_report_styles(styles, self.company)
+        self.assertNotIn('o_report_layout_bubble', company_styles)
+
+        self.company.write({'report_tables_id': 'bubble'})
+        styles = (attachment.raw or b'').decode()
+        company_styles = self._get_company_report_styles(styles, self.company)
+        self.assertIn('o_report_layout_bubble', company_styles)
+        self.assertIn('thead th', company_styles)
+        self.assertIn(primary_color, company_styles)
