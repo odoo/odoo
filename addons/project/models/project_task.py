@@ -338,6 +338,12 @@ class ProjectTask(models.Model):
         'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL) OR is_template IS TRUE)',
         'A private (non-template) task cannot have a parent.',
     )
+    task_template_id = fields.Many2one(
+        'project.task',
+        string="Task Template Used",
+        store=False,
+        copy=False,
+    )
 
     _is_template_idx = models.Index('(is_template) WHERE is_template IS TRUE')
 
@@ -695,6 +701,36 @@ class ProjectTask(models.Model):
             self.user_ids = self.user_ids.filtered(
                 lambda u: self.company_id in u._origin.company_ids
             )
+
+    @api.onchange('task_template_id')
+    def _onchange_task_template_id(self):
+        if not self.task_template_id:
+            return
+        default = {
+            field: False
+            for field in self._get_template_field_blacklist()
+        }
+        data = self.task_template_id.with_context(
+            copy_from_template=True,
+            copy_from_project_template=self.task_template_id.id,
+        ).copy_data(default)[0]
+        data['is_template'] = False
+        if self.task_template_id.depend_on_ids:
+            data['depend_on_ids'] = [Command.set(self.task_template_id.depend_on_ids.ids)]
+        if self.task_template_id.date_deadline:
+            data['date_deadline'] = self.task_template_id.date_deadline
+        if 'child_ids' in data:
+            state_default = self.env['project.task'].default_get(['state']).get('state', '01_in_progress')
+            for tmpl_child, cmd in zip(self.task_template_id.child_ids, data['child_ids']):
+                if len(cmd) == 3 and isinstance(cmd[2], dict):
+                    cmd[2]['is_template'] = False
+                    if 'state' not in cmd[2]:
+                        cmd[2]['state'] = state_default
+                    if tmpl_child.depend_on_ids:
+                        cmd[2]['depend_on_ids'] = [Command.set(tmpl_child.depend_on_ids.ids)]
+                    if tmpl_child.date_deadline:
+                        cmd[2]['date_deadline'] = tmpl_child.date_deadline
+        self.update(data)
 
     @api.depends('project_id.company_id', 'parent_id.company_id')
     def _compute_company_id(self):
@@ -1168,6 +1204,29 @@ class ProjectTask(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('task_template_id') and vals.get('child_ids'):
+                template = self.browse(vals['task_template_id'])
+                template_data = template.with_context(copy_from_template=True).copy_data(
+                    {field: False for field in self._get_template_field_blacklist()},
+                )[0]
+                state_default = self.env['project.task'].default_get(['state']).get('state', '01_in_progress')
+
+                def _child_ids_command(records, commands):
+                    for record, command in zip(records, commands):
+                        if len(command) == 3 and isinstance(command[2], dict):
+                            command[2]['is_template'] = False
+                            command[2]['state'] = command[2].get('state', state_default)
+                            if record.date_deadline:
+                                command[2]['date_deadline'] = record.date_deadline
+                            if 'child_ids' in command[2]:
+                                _child_ids_command(record.child_ids, command[2]['child_ids'])
+                    return commands
+                for tmpl_record, cmd_tmpl, cmd in zip(template.child_ids, template_data.get('child_ids', []), vals.get('child_ids', [])):
+                    if len(cmd_tmpl) == 3 and isinstance(cmd_tmpl[2], dict) and len(cmd) == 3 and isinstance(cmd[2], dict):
+                        if cmd_tmpl[2].get('child_ids'):
+                            cmd[2]['child_ids'] = _child_ids_command(tmpl_record.child_ids, cmd_tmpl[2]['child_ids'])
+
         # Some values are determined by this override and must be written as
         # sudo for portal users, because they do not have access to these
         # fields. Other values must not be written as sudo.
@@ -2150,14 +2209,7 @@ class ProjectTask(models.Model):
                       field: False
                       for field in self._get_template_field_blacklist()
                   } | values
-        data = {}
-        for key, value in self.with_context(copy_from_template=True).copy_data(default=default)[0].items():
-            if key == 'child_ids' and isinstance(value, list):
-                for cmd in value:
-                    if len(cmd) == 3 and isinstance(cmd[2], dict):
-                        cmd[2]['state'] = self.env['project.task'].default_get(['state']).get('state', '01_in_progress')
-            data[f'default_{key}'] = value
-        return data
+        return self.with_context(copy_from_template=True).copy(default=default).id
 
     def action_archive(self):
         child_tasks = self.child_ids.filtered(lambda child_task: not child_task.display_in_project)
