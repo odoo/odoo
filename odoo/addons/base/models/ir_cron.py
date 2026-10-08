@@ -501,6 +501,7 @@ class IrCron(models.Model):
                 job_cr.commit()
 
                 success = False
+                call_start_time = time.monotonic()
                 try:
                     # signaling check and commit is done inside `_callback`
                     cron._callback(job['cron_name'], job['ir_actions_server_id'])
@@ -554,6 +555,7 @@ class IrCron(models.Model):
 
                     loop_count += 1
                     progress.timed_out_counter = 0
+                    progress.duration = time.monotonic() - call_start_time
                     timed_out_counter = 0
                     job_cr.commit()  # ensure we have no leftovers
 
@@ -841,6 +843,8 @@ class IrCron(models.Model):
             # we use timed_out_counter + 1 so that if the current execution
             # times out, the counter already takes it into account
             'timed_out_counter': 0 if timed_out_counter is None else timed_out_counter + 1,
+            # set the duration to 10 minutes by default
+            'duration': False if timed_out_counter is None else 600.0,
         }])
         return self.with_context(ir_cron_progress_id=progress.id), progress
 
@@ -934,6 +938,7 @@ class IrCronProgress(models.Model):
     done = fields.Integer(default=0)
     deactivate = fields.Boolean()
     timed_out_counter = fields.Integer(default=0)
+    duration = fields.Float(help="Duration of the job in seconds")
 
     @api.autovacuum
     def _gc_cron_progress(self):
