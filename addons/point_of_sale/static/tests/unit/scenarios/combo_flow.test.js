@@ -2,7 +2,6 @@ import { expect, test } from "@odoo/hoot";
 import { animationFrame, waitFor, queryAll, queryOne } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
-import { patch } from "@web/core/utils/patch";
 import {
     setupAndMountPosApp,
     createAttribute,
@@ -883,7 +882,6 @@ test("test_convert_orderlines_to_combo_with_same_product: same product with diff
 
 test("ProductComboPriceButtonDisabled: price numpad button is disabled for combo lines", async () => {
     const store = await setupAndMountPosApp({ use_pricelist: false });
-    patch(store.accessRight, { disablePriceButton: true });
 
     createComboSetup(store, {
         id: 8400,

@@ -177,7 +177,7 @@ test("a restrictive employee gets no Price numpad button", async () => {
     await Utils.switchCashier("A Little Guy");
     await waitFor(".product-screen");
     expect(store.accessRight.loggedCashier._role).toBe("restrictive");
-    expect(store.accessRight.disablePriceButton).toBe(false);
+    expect(store.accessRight.disablePriceButton).toBe(true);
     if (!Utils.isMobile()) {
         expect('.numpad button:contains("Price")').toHaveAttribute("disabled");
     }
