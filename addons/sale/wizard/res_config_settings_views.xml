@@ -117,14 +117,17 @@
                         >
                             <field name="sale_order_mandatory_product"/>
                         </setting>
-                        <setting id="online_signature" company_dependent="1"
-                                 documentation="/applications/sales/sales/send_quotations/get_signature_to_validate.html"
-                                 help="Request customers to sign quotations to validate orders. The default can be changed per order or template.">
+                        <setting
+                            id="online_signature"
+                            company_dependent="1"
+                            documentation="/applications/sales/sales/send_quotations/get_signature_to_validate.html"
+                            help="Request customers to sign quotations to validate orders. The default can be changed per order or template."
+                        >
                             <field name="portal_confirmation_sign"/>
                         </setting>
                         <setting id="quotation_validity_days">
                             <div title="Days between quotation proposal and expiration. 0 days means automatic expiration is disabled">
-                                <label for="quotation_validity_days" string="Quotation Validity"/>
+                                <label for="quotation_validity_days"/>
                                 <field name="quotation_validity_days" class="text-center" style="width: 3rem;"/>
                                 <div class="d-inline-block">days</div>
                                 <span class="oi oi-lg p-2" data-icon="business"
@@ -147,7 +150,6 @@
                         </setting>
                         <setting
                             id="display_product_images_on_so"
-                            string="Product Images"
                             help="Show product images on your PDF and online quotes."
                             company_dependent="1"
                         >
@@ -157,8 +159,8 @@
                             <field name="group_auto_done_setting"/>
                         </setting>
                         <setting
-                            id="proforma_configuration"
                             string="Pro Forma"
+                            id="proforma_configuration"
                             help="Allows you to send Pro Forma Invoice to your customers"
                         >
                             <field name="group_proforma_sales"/>

@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
     setup() {
         super.setup();
-        // product_template_id is added for purchase_product_matrix's PO view and sale's SO view
+        // product_template_id is added for purchase's PO view and sale's SO view
         this.productColumns = ["product_id", "product_template_id"];
     }
 

@@ -117,6 +117,7 @@ export const listSaleOrderLineLabelText = {
         { name: "service_tracking", type: "selection" },
         { name: "product_template_attribute_value_ids", type: "many2many" },
         { name: "mandatory_product", type: "boolean" },
+        { name: "product_add_mode", type: "selection" },
     ],
 };
 

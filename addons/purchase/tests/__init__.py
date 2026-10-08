@@ -13,3 +13,4 @@ from . import test_purchase_dashboard
 from . import test_import_files
 from . import test_purchase_product_catalog
 from . import test_purchase_order_tax_mode
+from . import test_purchase_matrix

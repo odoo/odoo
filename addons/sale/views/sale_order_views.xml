@@ -451,6 +451,9 @@
                                widget="res_partner_many2one"
                                context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_identifier': True}"
                                placeholder="Type to find a customer..." readonly="state in ['cancel', 'sale']"/>
+                        <field name="grid" invisible="1"/> <!-- grid data for the grid entry dialog -->
+                        <field name="grid_product_tmpl_id" invisible="1"/> <!-- product opened in the grid entry dialog -->
+                        <field name="grid_update" invisible="1"/> <!-- tells if grid changes must be applied -->
                         <field name="partner_invoice_id"
                               groups="account.group_delivery_invoice_address"
                               options="{'no_quick_create': True}"
@@ -1046,6 +1049,7 @@
                                 <field name="reference" readonly="1" invisible="not reference"/>
                                 <field name="client_order_ref"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
+                                <field name="report_grids" groups="base.group_no_one"/>
                             </group>
                             <group name="sale_info" string="Invoicing">
                                 <label for="fiscal_position_id"/>
