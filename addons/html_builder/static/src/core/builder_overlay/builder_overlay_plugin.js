@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
 import { BuilderOverlay, sizingY, sizingX, sizingGrid } from "./builder_overlay";
 
 function isResizable(el) {
@@ -74,10 +73,8 @@ export class BuilderOverlayPlugin extends Plugin {
 
         // Hide the overlay when scrolling. Show it again when the scroll is
         // over and recompute its position.
-        const scrollingElement = getScrollingElement(this.document);
-        const scrollingTarget = getScrollingTarget(scrollingElement);
         this.addDomListener(
-            scrollingTarget,
+            this.document.defaultView,
             "scroll",
             throttleForAnimation(() => {
                 this.toggleOverlaysVisibility(false);

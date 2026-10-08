@@ -1,21 +1,14 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { getScrollingElement, isScrollableY } from "@web/core/utils/scrolling";
 import { utils as uiUtils, SIZES } from "@web/core/ui/ui_utils";
 import { scrollFixedOffset } from "@html_builder/utils/scrolling";
 
 export class BlogTableOfContents extends Interaction {
     static selector = "#o_wblog_post_main";
     static selectorHas = ".o_wblog_toc";
-    dynamicSelectors = {
-        ...this.dynamicSelectors,
-        _scrollingTarget: () => this.scrollingTarget,
-    };
     dynamicContent = {
         _window: {
             "t-on-resize": this.debounced(this.onResize, 200),
-        },
-        _scrollingTarget: {
             "t-on-scroll": this.process,
         },
         ".o_wblog_toc": {
@@ -39,10 +32,7 @@ export class BlogTableOfContents extends Interaction {
         this.activeTarget = null;
 
         this.isMobile = uiUtils.getSize() < SIZES.LG;
-        this.scrollingElement = getScrollingElement(this.el.ownerDocument);
-        this.scrollingTarget = isScrollableY(this.scrollingElement)
-            ? this.scrollingElement
-            : this.scrollingElement.ownerDocument.defaultView;
+        this.scrollingElement = this.el.ownerDocument.scrollingElement;
         this.scrollHeight = this.getScrollHeight();
     }
 

@@ -30,7 +30,6 @@ import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { uniqueId } from "@web/core/utils/functions";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
-import { getScrollingElement } from "@web/core/utils/scrolling";
 import { redirect } from "@web/core/utils/urls";
 import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
@@ -698,9 +697,7 @@ export class WebsiteBuilderClientAction extends Component {
         const fallBackDoc = this.iframefallback()?.contentDocument;
         if (!this.state.isEditing && websiteDoc && fallBackDoc) {
             fallBackDoc.documentElement.replaceWith(websiteDoc.documentElement.cloneNode(true));
-            const currentScrollEl = getScrollingElement(websiteDoc);
-            const scrollElement = getScrollingElement(fallBackDoc);
-            scrollElement.scrollTop = currentScrollEl.scrollTop;
+            fallBackDoc.scrollingElement.scrollTop = websiteDoc.scrollingElement.scrollTop;
             this.cleanIframeFallback();
         }
     }
