@@ -565,7 +565,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Change last option label with a number",
-            trigger: ".o_we_table_wrapper table input[name='display_name']:eq(3)",
+            trigger: ".o_we_table_wrapper table input[name='display_name']:eq(3):value(Item)",
             run: "edit 44 - UK",
         },
         {
