@@ -5,11 +5,12 @@
        t-inherit="html_editor.linkPopover"
        t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_advance_options_grid')]" position="inside">
-            <div t-if="this.shouldDisplayNoTrackingOption()" class="o_seo_option_row d-flex justify-content-between align-items-center py-1 gap-2">
-                <span t-att-title="this.state.noTracking.description" t-out="this.state.noTracking.label"/>
-                <CheckBox
-                    value="this.state.noTracking.isChecked"
-                    onChange.bind="this.toggleDisableLinkTracking"/>
+            <div t-if="this.shouldDisplayNoTrackingOption()" class="d-flex justify-content-between align-items-center py-1 gap-2">
+                <span t-att-data-tooltip="this.state.noTracking.description">
+                    <t t-out="this.state.noTracking.label"/>
+                    <i class="oi icon-sup" data-icon="question_mark" t-att-class="this.isRTL ? 'oi-flip-horizontal' : ''"/>
+                </span>
+                <CheckBox value="this.state.noTracking.isChecked" onChange.bind="this.toggleDisableLinkTracking"/>
             </div>
         </xpath>
     </t>

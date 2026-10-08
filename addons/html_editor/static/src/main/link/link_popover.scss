@@ -13,6 +13,9 @@
 }
 
 .o-we-linkpopover {
+    max-height: 440px;
+    scrollbar-width: thin;
+
     .custom-fill-color, .custom-text-color, .custom-border, .input-group {
         label {
             width: 70px;
@@ -26,6 +29,29 @@
     .form-control:focus, .form-select:focus, .form-check-input:focus {
         border-color: $input-focus-border-color !important;
         box-shadow: 0 0 0 $focus-ring-width rgba($input-focus-border-color, $focus-ring-opacity);
+    }
+
+    .o_popover_sliding_panel {
+        width: 300px;
+
+        .icon-sup {
+            @include o-he-icon-sup();
+        }
+
+        .o_popover_sliding_panel_card_content {
+            span {
+                flex: 0 0 35%;
+            }
+
+            input {
+                height: 24px;
+                border-color: $o-we-item-border-color;
+                border-radius: $o-we-item-border-radius;
+                padding: 0 map-get($spacers, 1);
+                background-color: $o-view-background-color;
+                font-size: inherit;
+            }
+        }
     }
 
     .o_link_popover_container {
@@ -77,30 +103,6 @@
     }
 }
 /* rtl:end:ignore */
-
-.o_seo_option_child {
-    padding-left: 20px;
-    position: relative;
-
-    &::before, &::after {
-        content: "";
-        position: absolute;
-        left: 6px;
-        background: #999;
-    }
-
-    &::before {
-        top: 0;
-        height: calc(100% - 14px);
-        width: 1px;
-    }
-
-    &::after {
-        top: 16px;
-        width: 10px;
-        height: 1px;
-    }
-}
 
 .custom-border {
     @include o-input-number-no-arrows();
