@@ -3,12 +3,6 @@
 # The currencies supported by Xendit, in ISO 4217 format.
 SUPPORTED_CURRENCIES = ["IDR", "MYR", "PHP", "SGD", "THB", "USD", "VND"]
 
-# Tokens created through the v3 Payment Tokens API are prefixed this way. Tokens saved before the
-# migration to that API (and the Payment Sessions API) don't have this prefix; there is no
-# documented way to migrate them, so they must still be charged through the legacy (v2)
-# `credit_card_charges` endpoint.
-V3_TOKEN_ID_PREFIX = "pt-"
-
 # To correctly allow lowest decimal place rounding
 # https://docs.xendit.co/payment-link/payment-channels
 CURRENCY_DECIMALS = {"IDR": 0, "MYR": 0, "PHP": 0, "SGD": 0, "THB": 0, "USD": 0, "VND": 0}
@@ -96,7 +90,6 @@ PAYMENT_METHODS_MAPPING = {
     "vietcapital": "VIETCAPITAL_VIRTUAL_ACCOUNT",
     "vpb": "VPB_VIRTUAL_ACCOUNT",
     "woori": "WOORI_VIRTUAL_ACCOUNT",
-    "bpi": "BPI_DIRECT_DEBIT",
     "card": "CARDS",
     "maya": "PAYMAYA",
     "wechat_pay": "WECHATPAY",
@@ -112,7 +105,7 @@ PAYMENT_METHODS_MAPPING = {
 PAYMENT_STATUS_MAPPING = {
     "draft": (),
     "pending": ("PENDING", "ACTIVE", "REQUIRES_ACTION"),
-    "done": ("SUCCEEDED", "PAID", "CAPTURED", "COMPLETED"),
-    "cancel": ("CANCELLED", "EXPIRED", "CANCELED"),
+    "done": ("SUCCEEDED", "COMPLETED"),
+    "cancel": ("CANCELED", "EXPIRED"),
     "error": ("FAILED",),
 }

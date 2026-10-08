@@ -16,18 +16,6 @@ class XenditController(http.Controller):
     _webhook_url = "/payment/xendit/webhook"
     _return_url = "/payment/xendit/return"
 
-    @http.route("/payment/xendit/payment", type="jsonrpc", auth="public")
-    def xendit_payment(self, reference, token_ref, access_token, auth_id=None):
-        """Kept for backward compatibility; no longer used, as card payments now go through the
-        Xendit-hosted payment link instead of the inline form.
-
-        :param str reference: The reference of the transaction.
-        :param str token_ref: The reference of the Xendit token to use to make the payment.
-        :param str access_token: The access token used to verify the provided values
-        :param str auth_id: The authentication id to use to make the payment.
-        :return: None
-        """
-
     @http.route(_webhook_url, type="http", methods=["POST"], auth="public", csrf=False)
     def xendit_webhook(self):
         """Process the payment data sent by Xendit to the webhook.
@@ -58,12 +46,9 @@ class XenditController(http.Controller):
 
     @http.route(_return_url, type="http", methods=["GET"], auth="public")
     def xendit_return(self, tx_ref=None, success=False, access_token=None, **_data):
-        """Check the transaction status with Xendit after returning from checkout, falling back
-        to pending if the webhook notification hasn't come in yet."""
+        """Set the transaction to pending upon a successful return from Xendit, until the webhook
+        notification confirms its status."""
         if access_token and str2bool(success, default=False):
-            # A checkout redirect leaves the transaction in `draft` until this return or the
-            # webhook processes it, but a token charge requiring 3DS authentication is already
-            # `pending` by the time the customer comes back from the challenge.
             tx_sudo = (
                 self
                 .env["payment.transaction"]
@@ -72,12 +57,11 @@ class XenditController(http.Controller):
                     [
                         ("provider_code", "=", "xendit"),
                         ("reference", "=", tx_ref),
-                        ("state", "in", ("draft", "pending")),
+                        ("state", "=", "draft"),
                     ],
                     limit=1,
                 )
             )
             if tx_sudo and payment_utils.check_access_token(access_token, tx_ref, tx_sudo.amount):
-                if not tx_sudo._xendit_sync_from_provider() and tx_sudo.state == "draft":
-                    tx_sudo._record({"status": "PENDING"})
+                tx_sudo._record({"status": "PENDING"})
         return request.redirect("/payment/status")
