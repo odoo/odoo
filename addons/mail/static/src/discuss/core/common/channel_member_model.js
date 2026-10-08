@@ -108,7 +108,7 @@ export class ChannelMember extends Record {
                     this.registerTypingTimeout();
                 }
             },
-            { immediate: true }
+            { immediate: true, initialRun: false }
         );
     }
 
@@ -188,7 +188,6 @@ export class ChannelMember extends Record {
         compute() {
             return this.isTyping ? this.channel_id : undefined;
         },
-        eager: true,
     });
     /** @type {number} */
     typingTimeoutId;
