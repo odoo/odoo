@@ -1946,14 +1946,14 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _get_mto_procurement_date(self):
         return self.date
 
-    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
+    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None, location_dest_id=None):
         self.ensure_one()
         vals = {
             'move_id': self.id,
             'product_id': self.product_id.id,
             'uom_id': self.uom_id.id,
             'location_id': self.location_id.id,
-            'location_dest_id': self.location_dest_id.id,
+            'location_dest_id': location_dest_id or self.location_dest_id.id,
             'picking_id': self.picking_id.id,
             'company_id': self.company_id.id,
         }
@@ -2651,12 +2651,14 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         # If quant is not enough, create a(some) move lines from the move itself
         if self.uom_id.compare(_move_qty(qty), 0.0) > 0:
+            last_ml = self.move_line_ids[-1:]
+            ml_location_dest_id = last_ml.location_dest_id.id or self.location_dest_id.id
             if self.product_id.tracking != 'serial':
-                vals = self._prepare_move_line_vals(quantity=qty)
+                vals = self._prepare_move_line_vals(quantity=qty, location_dest_id=ml_location_dest_id)
                 res.append((0, 0, vals))
             else:
                 for _i in range(0, int(qty)):
-                    vals = self._prepare_move_line_vals(quantity=0)
+                    vals = self._prepare_move_line_vals(quantity=0, location_dest_id=ml_location_dest_id)
                     vals['quantity'] = 1
                     vals['uom_id'] = self.product_id.uom_id.id
                     res.append((0, 0, vals))

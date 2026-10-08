@@ -566,8 +566,8 @@ class StockMove(models.Model):
         # Do not update extra product quantities
         return self.uom_id.is_zero(self.product_uom_qty)
 
-    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
-        vals = super()._prepare_move_line_vals(quantity, reserved_quant)
+    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None, location_dest_id=None):
+        vals = super()._prepare_move_line_vals(quantity, reserved_quant, location_dest_id)
         if self.production_id.product_tracking == 'lot' and self.product_id == self.production_id.product_id and self.production_id.lot_producing_ids:
             vals['lot_id'] = self.production_id.lot_producing_ids.ids[0]
         return vals
