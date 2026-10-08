@@ -99,3 +99,21 @@ test("FloatTimeTzField uses the default timezone when the user timezone is unset
     await clickSave();
     expect(".o_field_float_time_tz[name=qux] input").toHaveValue("4:00");
 });
+
+test("FloatTimeTzField previews a formula in the user timezone", async () => {
+    expect.assertions(3);
+    patchTimeZone();
+    onRpc("foo", "web_save", ({ args }) => {
+        expect(args[1].qux).toBe(8);
+    });
+
+    await mountView({ type: "form", resModel: "foo", arch: TZ_ARCH, resId: 5 });
+
+    await contains(".o_field_float_time_tz[name=qux] input").edit("=9+1");
+    expect(".o_duration_popover").toHaveText("10:00", {
+        message: "the preview should be the value displayed once confirmed, not the UTC one",
+    });
+
+    await clickSave();
+    expect(".o_field_float_time_tz[name=qux] input").toHaveValue("10:00");
+});
