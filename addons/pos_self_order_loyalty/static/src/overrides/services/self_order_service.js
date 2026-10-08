@@ -135,10 +135,7 @@ patch(SelfOrder.prototype, {
     },
     //#region Barcode Methods
     async _barcodePartnerAction(code) {
-        if (!this.ordering) {
-            return;
-        }
-        if (this.config.self_ordering_mode == "mobile" && this.currentOrder.getPartner()) {
+        if (!this.ordering || this.config.self_ordering_mode !== "kiosk") {
             return;
         }
         // No need to check the local data, we always want to be up to date so we query the backend
@@ -373,50 +370,58 @@ patch(SelfOrder.prototype, {
     async identifyCustomer(title = "") {
         // Open identification popup
         this.dialog.closeAll();
+        title ||=
+            this.config.self_ordering_mode === "kiosk"
+                ? _t(
+                      "Scan your customer barcode or fill in your mail address to identify yourself."
+                  )
+                : _t("Fill in your mail address to identify yourself.");
         const mail = await makeAwaitable(this.dialog, UserInputPopup, {
-            text:
-                title ||
-                _t("Scan your customer barcode or fill in your mail address to identify yourself"),
-            useMobileScanner: true,
+            text: title,
             inputPlaceholder: _t("Enter your email address"),
             isValid: isValidEmail,
         });
         if (!mail) {
             return;
         }
-        const existingMail = await this.identifyCustomerByMail(mail);
-        if (existingMail) {
-            const askValidationCode = async () => {
-                const code = await makeAwaitable(this.dialog, UserInputPopup, {
-                    text: _t(
-                        "A verification code has been sent to %s. It's valid for 10 minutes. If you can't find it, check your spam folder.",
-                        existingMail
-                    ),
-                    isValid: (input) => /^\d{6}$/.test(input),
-                });
-                return code;
-            };
-            let result = false;
-            while (!result) {
-                const code = await askValidationCode();
-                if (!code) {
-                    return;
-                }
-                result = await this.validateCustomerCode(code, existingMail);
+        let request;
+        try {
+            request = await rpc(`/pos-self-order/get-partner-by-mail/`, {
+                access_token: this.access_token,
+                mail: mail,
+            });
+        } catch (error) {
+            this.handleErrorNotification(error);
+            return;
+        }
+        if (request["too_many_attempts"]) {
+            this.notifyTooManyAttempts();
+            return;
+        }
+        // A code is sent to new and known emails alike: the customer is only identified
+        // (or created) once it proves it owns the mailbox
+        let identified = false;
+        while (!identified) {
+            const code = await makeAwaitable(this.dialog, UserInputPopup, {
+                text: _t(
+                    "A verification code has been sent to %s. It's valid for 10 minutes. If you can't find it, check your spam folder.",
+                    mail
+                ),
+                isValid: (input) => /^\d{6}$/.test(input),
+            });
+            if (!code) {
+                return;
+            }
+            const result = await this.validateCustomerCode(code, mail);
+            identified = result.identified;
+            if (result.tooManyAttempts) {
+                this.notifyTooManyAttempts();
+                return;
+            }
+            if (!identified) {
+                this.notification.add(_t("This code is wrong or has expired."), { type: "danger" });
             }
         }
-    },
-    async identifyCustomerByMail(mail) {
-        const result = await rpc(`/pos-self-order/get-partner-by-mail/`, {
-            access_token: this.access_token,
-            mail: mail,
-        });
-        const data = result["data"];
-        if (!result["new"]) {
-            return mail;
-        }
-        this.addPartner(data);
-        return false;
     },
     async validateCustomerCode(code, mail) {
         const result = await rpc(`/pos-self-order/validate-partner-code/`, {
@@ -425,10 +430,15 @@ patch(SelfOrder.prototype, {
             code: code,
         });
         if (result["res.partner"].length == 0) {
-            return false;
+            return { identified: false, tooManyAttempts: Boolean(result["too_many_attempts"]) };
         }
         this.addPartner(result);
-        return true;
+        return { identified: true, tooManyAttempts: false };
+    },
+    notifyTooManyAttempts() {
+        this.notification.add(_t("Too many attempts, please try again later."), {
+            type: "danger",
+        });
     },
     addPartner(data) {
         const records = this.models.connectNewData(data);
@@ -542,7 +552,9 @@ patch(SelfOrder.prototype, {
         } else {
             this.logoutPartner();
         }
-        this.identifyCustomer(_t("Your identification has expired, please identify yourself again."));
+        this.identifyCustomer(
+            _t("Your identification has expired, please identify yourself again.")
+        );
     },
     isIdentificationExpiredError(error) {
         return (
