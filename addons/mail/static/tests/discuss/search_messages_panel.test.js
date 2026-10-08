@@ -316,7 +316,10 @@ test("Editing the searched term should not edit the current searched term", asyn
     await waitStoreFetch([
         [
             "/discuss/channel/messages",
-            { channel_id: channelId, fetch_params: { search_term: "message", before: false } },
+            {
+                channel_id: channelId,
+                fetch_params: { search_term: "message", before: false, limit: 31 },
+            },
         ],
     ]);
     await insertText(".o_searchview_input", "test");
@@ -324,7 +327,10 @@ test("Editing the searched term should not edit the current searched term", asyn
     await waitStoreFetch([
         [
             "/discuss/channel/messages",
-            { channel_id: channelId, fetch_params: { search_term: "message", before: 31 } },
+            {
+                channel_id: channelId,
+                fetch_params: { search_term: "message", before: 31, limit: 31 },
+            },
         ],
     ]);
 });
@@ -381,7 +387,7 @@ test("Close message search panel when navigating back on mobile", async () => {
 test.tags("desktop");
 test("Empty search should not trigger rpc", async () => {
     listenStoreFetch("/discuss/channel/messages", {
-        logParams: ["/discuss/channel/messages"]
+        logParams: ["/discuss/channel/messages"],
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -411,7 +417,10 @@ test("Empty search should not trigger rpc", async () => {
     await waitStoreFetch([
         [
             "/discuss/channel/messages",
-            { channel_id: channelId, fetch_params: { search_term: "message", before: false } },
+            {
+                channel_id: channelId,
+                fetch_params: { search_term: "message", before: false, limit: 31 },
+            },
         ],
     ]);
 });
