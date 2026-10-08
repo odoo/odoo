@@ -801,7 +801,7 @@ class TestMultiCompany(TransactionCase):
             'product_max_qty': 10,
             'route_id': self.warehouse_a.resupply_route_ids.id,
         })
-        op_name = orderpoint.name
+        op_name = orderpoint.display_name
         orderpoint.action_replenish()
         pickings = self.env['stock.picking'].sudo().search([('origin', '=', op_name)])
         in_from_b = pickings.filtered(lambda p: p.picking_type_code == 'incoming')
@@ -850,7 +850,12 @@ class TestMultiCompany(TransactionCase):
             'product_max_qty': 10,
             'route_id': self.warehouse_a.resupply_route_ids.id,
         })
-        op_name = orderpoint.name
+        op_name = "%g - %g for %s in %s" % (
+            orderpoint.product_min_qty,
+            orderpoint.product_max_qty,
+            orderpoint.product_id.display_name,
+            orderpoint.location_id.display_name,
+        )
         orderpoint.action_replenish()
         pickings = self.env['stock.picking'].search([('origin', '=', op_name)])
         in_from_other = pickings.filtered(lambda p: p.picking_type_code == 'incoming')

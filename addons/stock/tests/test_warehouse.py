@@ -526,7 +526,7 @@ class TestWarehouse(TestStockCommon):
         })
         orderpoint.action_replenish()
         # Check that the orderpoint generated the source move from the furthest location.
-        move = self.env['stock.move'].search([('location_id', '=', warehouse_A.lot_stock_id.id), ('origin', '=', orderpoint.name)])
+        move = self.env['stock.move'].search([('location_id', '=', warehouse_A.lot_stock_id.id), ('origin', '=', orderpoint.display_name)])
         self.assertTrue(move, 'No move created from WH_A/Stock')
 
         # Validate each intermediate transfers towards resupply of WH_B/Stock
