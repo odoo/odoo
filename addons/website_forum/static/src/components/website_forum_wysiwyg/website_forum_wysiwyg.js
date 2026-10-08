@@ -71,7 +71,7 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
                 on_editor_started_handlers: () => this.cleanImageClasses(this.editor.editable),
                 clean_for_save_processors: (root) => this.cleanImageClasses(root),
             },
-            defaultLinkAttributes: { rel: "ugc noreferrer noopener", target: "_blank" },
+            defaultLinkAttributes: { target: "_blank" },
             dropImageAsAttachment: true,
             height: this.props.height,
             allowImageResize: false,

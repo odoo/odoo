@@ -195,20 +195,19 @@ class TestForumKarma(TestForumCommon):
 
         # check karma done on right forum, using context values
         self.user_portal.karma = KARMA['post']
-        for karma_value, has_nofollow in [
-            (self.user_portal.karma + 1, True),
-            (self.user_portal.karma, False),
+        for karma_value in [
+            (self.user_portal.karma + 1),
+            (self.user_portal.karma),
         ]:
             with self.subTest(karma_value=karma_value):
-                self.forum.karma_dofollow = karma_value
                 post = Post.with_user(self.user_portal).with_context(default_content='<p>Super <a href="www.link.com">Link</a></p>').create({
                     'name': "Bypass",
                     'forum_id': self.forum.id,
                 })
-                if has_nofollow:
-                    self.assertTrue("nofollow" in post.content, 'website_forum: default_content in context should not bypass karma check.')
-                else:
-                    self.assertFalse("nofollow" in post.content, 'website_forum: default_content in context should not bypass karma check.')
+                self.assertTrue("nofollow" in post.content, 'website_forum: default_content in context should not bypass karma check.')
+                self.assertTrue("noopener" in post.content, 'website_forum: default_content in context should not bypass karma check.')
+                self.assertTrue("noreferrer" in post.content, 'website_forum: default_content in context should not bypass karma check.')
+                self.assertTrue("ugc" in post.content, 'website_forum: default_content in context should not bypass karma check.')
                 # reset karma
                 self.user_portal.karma = KARMA['post']
 
@@ -216,10 +215,10 @@ class TestForumKarma(TestForumCommon):
                     'name': "Bypass",
                     'content': '<p>Super <a href="www.link.com">Link</a></p>',
                 })
-                if has_nofollow:
-                    self.assertTrue("nofollow" in post.content, 'website_forum: default_forum_id in context should not bypass karma check.')
-                else:
-                    self.assertFalse("nofollow" in post.content, 'website_forum: default_forum_id in context should not bypass karma check.')
+                self.assertTrue("nofollow" in post.content, 'website_forum: default_forum_id in context should not bypass karma check.')
+                self.assertTrue("noopener" in post.content, 'website_forum: default_forum_id in context should not bypass karma check.')
+                self.assertTrue("noreferrer" in post.content, 'website_forum: default_forum_id in context should not bypass karma check.')
+                self.assertTrue("ugc" in post.content, 'website_forum: default_forum_id in context should not bypass karma check.')
                 # reset karma
                 self.user_portal.karma = KARMA['post']
 
