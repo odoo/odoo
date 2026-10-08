@@ -28,6 +28,18 @@ export class TimeOffCalendarModel extends CalendarModel {
     }
 
     /**
+     * Requests are read on the clock the grid is drawn on, not on the reader's profile.
+     * @override
+     */
+    async load(params = {}) {
+        const context = params.context ?? this.meta.context;
+        return super.load({
+            ...params,
+            context: { ...context, tz: luxon.Settings.defaultZone.name },
+        });
+    }
+
+    /**
      * @override
      */
     normalizeRecord(rawRecord) {
@@ -160,6 +172,7 @@ export class TimeOffCalendarModel extends CalendarModel {
             [serializeDateTime(data.range.start), serializeDateTime(data.range.end)],
             {
                 context: {
+                    ...this.meta.context,
                     employee_id: this.employeeId,
                 },
             }
@@ -207,7 +220,7 @@ export class TimeOffCalendarModel extends CalendarModel {
             resModel,
             this.computeDomain(data),
             [...fieldNames, ...fieldNamesToAdd],
-            { context }
+            { context: { ...this.meta.context, ...context } }
         );
     }
 
