@@ -1,11 +1,19 @@
-import { Component, proxy, signal, types, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    proxy,
+    signal,
+    types,
+    useOnChange,
+    useProps,
+} from "@odoo/owl";
 
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 export class WelcomePage extends Component {
     static template = "mail.WelcomePage";
@@ -30,7 +38,8 @@ export class WelcomePage extends Component {
             isDescriptionLong: false,
             isDescriptionUnfolded: false,
         });
-        useLayoutEffect(
+        useOnChange(
+            () => [this.showCallPreview, this.rtc.cameraPermission, this.rtc.microphonePermission],
             (showCallPreview, cameraPermission, microphonePermission) => {
                 if (!showCallPreview) {
                     return;
@@ -45,19 +54,19 @@ export class WelcomePage extends Component {
                 if (microphonePermission === "granted") {
                     this.state.activateMicrophone++;
                 }
-            },
-            () => [this.showCallPreview, this.rtc.cameraPermission, this.rtc.microphonePermission]
+            }
         );
-        useLayoutEffect(
-            (isDescriptionUnfolded, description) => {
-                const descriptionEl = this.description();
-                this.state.isDescriptionLong =
-                    !isDescriptionUnfolded &&
-                    description &&
-                    descriptionEl?.scrollWidth > descriptionEl?.clientWidth;
-            },
-            () => [this.state.isDescriptionUnfolded, this.channel.description]
-        );
+        onMounted(() => this.updateIsDescriptionLong());
+        onPatched(() => this.updateIsDescriptionLong());
+    }
+
+    /** Measures the rendered description, hence after mount/patch. */
+    updateIsDescriptionLong() {
+        const descriptionEl = this.description();
+        this.state.isDescriptionLong =
+            !this.state.isDescriptionUnfolded &&
+            this.channel.description &&
+            descriptionEl?.scrollWidth > descriptionEl?.clientWidth;
     }
 
     onKeydownInput(ev) {
