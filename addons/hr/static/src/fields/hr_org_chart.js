@@ -125,7 +125,8 @@ export class HrOrgChart extends Component {
 
     async _onEmployeeMoreManager(managerId) {
         this.max_level = 100; // Set a high level to fetch all managers
-        await this.fetchEmployeeData(this.state.employee_id, null, true);
+        this.managers_more = this.managers.length <= 100 ? false : this.managers_more;
+        await this.fetchEmployeeData(this.state.employee_id, null, null, true);
     }
 }
 
