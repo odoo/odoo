@@ -15,9 +15,6 @@ import {
     useListener,
     useProps,
 } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
     static template = "html_editor.EmbeddedVideo";
@@ -53,11 +50,10 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
             }
         }
 
-        this.dropdown = useDropdownState();
-
         this.videoSettingsOverlay = this.videoEmbedProps.createOverlay(VideoSettings, {
+            // Above the video: a full width video leaves no room beside it.
             positionOptions: {
-                position: "right-start",
+                position: "top-end",
             },
             className: "video-overlay",
             closeOnPointerdown: false,
@@ -79,13 +75,12 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
                         this.videoEmbedProps.commit();
                     },
                     focusEditable: this.videoEmbedProps.focusEditable,
-                    dropdown: this.dropdown,
                 },
             });
         });
 
         useListener(this.videoBlock, "pointerleave", (e) => {
-            if (this.dropdown.isOpen || e.relatedTarget?.closest(".video-overlay")) {
+            if (e.relatedTarget?.closest(".video-overlay")) {
                 return;
             }
             this.videoSettingsOverlay.close();
@@ -131,14 +126,12 @@ export const videoEmbedding = {
 
 export class VideoSettings extends Component {
     static template = "html_editor.VideoSettings";
-    static components = { Dropdown, DropdownItem };
     props = useProps({
         videoBlock: t.instanceOf(HTMLElement),
         overlay: t.object(),
         replaceVideo: t.function(),
         removeVideo: t.function(),
         focusEditable: t.function(),
-        dropdown: t.object(),
     });
 
     menuRef = signal.ref();
@@ -146,14 +139,13 @@ export class VideoSettings extends Component {
     setup() {
         onMounted(() => {
             this.menuRef()?.addEventListener("pointerleave", () => {
-                if (!this.props.dropdown.isOpen) {
-                    this.props.overlay.close();
-                }
+                this.props.overlay.close();
             });
         });
 
         useListener(document, "pointerdown", (ev) => {
-            if (this.props.dropdown.isOpen) {
+            // Let the buttons of the bar receive their click.
+            if (this.menuRef()?.contains(ev.target)) {
                 return;
             }
             this.props.overlay.close();

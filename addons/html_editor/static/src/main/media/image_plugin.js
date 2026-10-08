@@ -63,7 +63,7 @@ export class ImagePlugin extends Plugin {
             {
                 id: "previewImage",
                 description: _t("Preview image"),
-                icon: "zoom_in",
+                icon: "visibility",
                 run: this.previewImage.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
@@ -113,6 +113,7 @@ export class ImagePlugin extends Plugin {
                     name: "image_padding",
                     icon: "padding",
                     items: IMAGE_PADDING,
+                    isSelected: (item) => this.getImagePadding() === item.value,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
                     onSelected: (item) => {
                         this.setImagePadding({ size: item.value });
@@ -129,8 +130,9 @@ export class ImagePlugin extends Plugin {
                     name: "image_size",
                     getDisplay: () => this.imageSize,
                     items: IMAGE_SIZE,
+                    isSelected: (item) => (this.getTargetedImage()?.style.width || "") === item.value,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
-                    icon: "resize",
+                    icon: "open_in_full",
                     onSelected: (item) => {
                         this.resizeImage({ size: item.value });
                         this.updateImageParams();
@@ -223,6 +225,16 @@ export class ImagePlugin extends Plugin {
         }
         this.imageAlignment.displayIcon = alignment.icon;
         this.dependencies.history.commit();
+    }
+
+    /**
+     * @returns {number} the padding step of the targeted image (0 without one)
+     */
+    getImagePadding() {
+        const paddingClass = [...(this.getTargetedImage()?.classList || [])].find((classString) =>
+            /^p-[0-9]$/.test(classString)
+        );
+        return paddingClass ? Number(paddingClass.slice(2)) : 0;
     }
 
     setImagePadding({ size } = {}) {

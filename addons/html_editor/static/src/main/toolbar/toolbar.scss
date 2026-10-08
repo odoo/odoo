@@ -54,9 +54,11 @@ $o-we-toolbar-btn-size: calc(var(--btn-font-size) * var(--btn-line-height) + 2 *
         }
 
         // Square icon buttons, also when the icon is an SVG. The buttons of the
-        // block options are the icon themselves.
+        // block options are the icon themselves. The height holds in a bar of
+        // icons only, where no text button sets it.
         &:has(> .oi-fw:only-child, > svg:only-child), &.oi {
             min-width: $o-we-toolbar-btn-size;
+            min-height: $o-we-toolbar-btn-size;
         }
 
         &.disabled {

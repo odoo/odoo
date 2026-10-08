@@ -69,7 +69,6 @@ export class MediaPlugin extends Plugin {
             {
                 id: "replaceImage",
                 description: _t("Replace media"),
-                icon: "image",
                 run: this.replaceImage.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
@@ -93,6 +92,7 @@ export class MediaPlugin extends Plugin {
                 id: "replace_image",
                 groupId: "image_replace",
                 commandId: "replaceImage",
+                text: _t("Replace"),
             },
         ],
         powerbox_categories: withSequence(40, { id: "media", name: _t("Media") }),

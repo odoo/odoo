@@ -1,4 +1,4 @@
-import { withSequence } from "@html_editor/utils/resource";
+import { READ, withSequence } from "@html_editor/utils/resource";
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
@@ -13,6 +13,14 @@ import {
     isZwnbsp,
 } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { proxy } from "@odoo/owl";
+import { ImageToolbarDropdown } from "./image_toolbar_dropdown";
+
+const ICON_SIZES = ["1", "2", "3", "4", "5"].map((size) => ({
+    id: `icon_size_${size}`,
+    name: `${size}x`,
+    value: size,
+}));
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -54,7 +62,7 @@ export class IconPlugin extends Plugin {
             {
                 id: "toggleSpinIcon",
                 description: _t("Toggle icon spin"),
-                icon: "play_arrow",
+                icon: "progress_activity",
                 run: this.toggleSpinIcon.bind(this),
                 isAvailable: isHtmlContentSupported,
             },
@@ -83,39 +91,24 @@ export class IconPlugin extends Plugin {
         ],
         toolbar_items: [
             {
-                id: "icon_size_1",
+                // A menu showing the current size, as the size of images.
+                id: "icon_size",
                 groupId: "icon_size",
-                commandId: "resizeIcon1",
-                text: "1x",
-                isActive: () => this.hasIconSize("1"),
-            },
-            {
-                id: "icon_size_2",
-                groupId: "icon_size",
-                commandId: "resizeIcon2",
-                text: "2x",
-                isActive: () => this.hasIconSize("2"),
-            },
-            {
-                id: "icon_size_3",
-                groupId: "icon_size",
-                commandId: "resizeIcon3",
-                text: "3x",
-                isActive: () => this.hasIconSize("3"),
-            },
-            {
-                id: "icon_size_4",
-                groupId: "icon_size",
-                commandId: "resizeIcon4",
-                text: "4x",
-                isActive: () => this.hasIconSize("4"),
-            },
-            {
-                id: "icon_size_5",
-                groupId: "icon_size",
-                commandId: "resizeIcon5",
-                text: "5x",
-                isActive: () => this.hasIconSize("5"),
+                description: _t("Resize icon"),
+                Component: ImageToolbarDropdown,
+                props: {
+                    name: "icon_size",
+                    icon: "open_in_full",
+                    getDisplay: () => this.iconSize,
+                    items: ICON_SIZES,
+                    isSelected: (item) => this.hasIconSize(item.value),
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
+                    onSelected: (item) => {
+                        this.resizeIcon({ size: item.value });
+                        this.updateIconSize();
+                    },
+                },
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "icon_spin",
@@ -127,15 +120,28 @@ export class IconPlugin extends Plugin {
                 id: "icon_replace",
                 groupId: "icon_replace",
                 commandId: "replaceIcon",
-                icon: "image",
+                // In words: no icon reads as "replace", as in the builder.
+                text: _t("Replace"),
             },
         ],
+        on_selectionchange_handlers: withSequence(READ, this.updateIconSize.bind(this)),
+        on_history_commit_undone_handlers: this.updateIconSize.bind(this),
+        on_history_commit_redone_handlers: this.updateIconSize.bind(this),
         /** Providers */
         selected_background_color_providers: withSequence(
             5,
             this.computeBackgroundColorForIcon.bind(this)
         ),
     };
+
+    setup() {
+        this.iconSize = proxy({ displayName: "1x" });
+    }
+
+    updateIconSize() {
+        const item = ICON_SIZES.find((size) => this.hasIconSize(size.value));
+        this.iconSize.displayName = item ? item.name : "1x";
+    }
 
     getTargetedIcon() {
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
