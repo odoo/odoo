@@ -8,10 +8,10 @@ const MUTATION_OPTIONS = {
 /**
  * Calls `onChange` whenever the DOM may have changed: on any mutation of the
  * observed document, of its iframes (including after they reload) and of its
- * shadow roots, and periodically every {@link TourInteractiveObserver.CHECK_INTERVAL}
+ * shadow roots, and periodically every {@link TourObserver.CHECK_INTERVAL}
  * ms as a fallback for changes that don't mutate the DOM.
  */
-export class TourInteractiveObserver {
+export class TourObserver {
     static CHECK_INTERVAL = 2000;
 
     /**
@@ -36,7 +36,7 @@ export class TourInteractiveObserver {
      */
     start(doc) {
         this.observeRoot(doc);
-        this.interval = setInterval(this.onChange, TourInteractiveObserver.CHECK_INTERVAL);
+        this.interval = setInterval(this.onChange, TourObserver.CHECK_INTERVAL);
     }
 
     disconnect() {

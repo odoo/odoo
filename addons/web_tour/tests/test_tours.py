@@ -165,7 +165,7 @@ class WebTourHttp(HttpCase):
         # Do not start any onboarding tour on startup
         admin.tour_enabled = False
 
-        tour_auto_bundle = IrAsset._get_asset_paths("web_tour.automatic", {})
+        tour_auto_bundle = IrAsset._get_asset_paths("web_tour.engine", {})
         self.assertTrue(len(tour_auto_bundle) > 0)
 
         # web.assets_tests by default contain all the necessary code to start tours
@@ -190,7 +190,7 @@ class WebTourHttp(HttpCase):
         code = """
         odoo.define("@web_tour/../tests/sanity_test", [], () => {
             const errors = [];
-            for (const module of ["@odoo/hoot-dom", "@web_tour/tour_step"]) {
+            for (const module of ["@odoo/hoot-dom", "@web_tour/tour_engine/tour_action"]) {
                 if (odoo.loader.modules.get(module)) {
                     errors.push(module)
                 }
@@ -233,7 +233,7 @@ class WebTourHttp(HttpCase):
         code = """
         odoo.define("@web_tour/../tests/sanity_test", [], () => {
             const errors = [];
-            for (const module of ["@odoo/hoot-dom", "@web_tour/tour_step"]) {
+            for (const module of ["@odoo/hoot-dom", "@web_tour/tour_engine/tour_action"]) {
                 if (odoo.loader.modules.get(module)) {
                     errors.push(module)
                 }

@@ -26,7 +26,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
-import { TourInteractive } from "@web_tour/tour_interactive/tour_interactive";
+import { TourEngine } from "@web_tour/tour_engine/tour_engine";
 import { Tour, TourStep } from "./tour_models";
 
 describe.current.tags("desktop");
@@ -73,7 +73,7 @@ beforeEach(() => {
 });
 
 after(() => {
-    TourInteractive.current?.stop();
+    TourEngine.current?.stop();
 });
 
 defineModels([Tour, TourStep]);

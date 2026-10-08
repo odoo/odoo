@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import {
+    advanceFrame,
     advanceTime,
     after,
     animationFrame,
@@ -29,10 +30,12 @@ import {
 import { location, browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
+import { config as transitionConfig } from "@web/core/transition";
+import { user } from "@web/core/user";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
-import { TourInteractive } from "@web_tour/tour_interactive/tour_interactive";
-import { TourInteractiveObserver } from "@web_tour/tour_interactive/tour_interactive_observer";
+import { TourEngine } from "@web_tour/tour_engine/tour_engine";
+import { TourObserver } from "@web_tour/tour_engine/tour_observer";
 import { TourPointer, pointerState } from "@web_tour/tour_pointer/tour_pointer";
 import { Tour, TourStep } from "./tour_models";
 
@@ -102,7 +105,7 @@ beforeEach(() => {
 });
 
 after(() => {
-    TourInteractive.current?.stop();
+    TourEngine.current?.stop();
 });
 
 test("registering test tour after service is started doesn't auto-start the tour", async () => {
@@ -356,7 +359,13 @@ test("manual tour with alternative trigger", async () => {
     await contains(".button4").click();
     await contains(".button5").click();
     await contains(".button2").click();
-    expect.verifySteps(["click", "click", "click", "click", "tour succeeded"]);
+    expect.verifySteps([
+        "[1/4] Tour tour_des_flandres_2 → Step .button, .button2",
+        "[2/4] Tour tour_des_flandres_2 → Step body:not(:visible), .button4, .button3",
+        "[3/4] Tour tour_des_flandres_2 → Step .interval1, .interval2, .button5",
+        "[4/4] Tour tour_des_flandres_2 → Step button:contains(hellow):enabled, button:contains(youpi)",
+        "tour succeeded",
+    ]);
 });
 
 test("Tour backward when the pointed element disappear", async () => {
@@ -503,7 +512,7 @@ test("Lost tour goes backward as soon as a previous trigger is back", async () =
 
 test("Tour only looks for a previous trigger among the last actions when going backward", async () => {
     Tour._records = [{ name: "tour1" }];
-    const pages = [...Array(TourInteractive.MAX_BACKWARD_ACTIONS + 1).keys()].map((i) => i + 1);
+    const pages = [...Array(TourEngine.MAX_BACKWARD_ACTIONS + 1).keys()].map((i) => i + 1);
     registry.category("web_tour.tours").add("tour1", {
         steps: () => [
             { trigger: "button.first", run: "click" },
@@ -1071,13 +1080,12 @@ test("robot mode logs an error and removes the pointer when a step times out", a
     registry.category("web_tour.tours").add("tour_robot_timeout", {
         steps: () => [{ trigger: "button.inc", run: "click" }],
     });
-    patchWithCleanup(console, {
-        error: (msg) => {
-            if (typeof msg === "string" && msg.startsWith("Robot: no progress")) {
-                expect.step("timeout");
-            }
-        },
-    });
+    const onFailure = (msg) => {
+        if (typeof msg === "string" && msg.startsWith("FAILED:")) {
+            expect.step("timeout");
+        }
+    };
+    patchWithCleanup(console, { error: onFailure, warn: onFailure });
     const state = proxy({ disabled: false });
     class Root extends Component {
         static template = xml`<button class="inc" t-att-disabled="this.state.disabled">+</button>`;
@@ -1178,11 +1186,11 @@ test("finished tour is released and no longer listens to the bus", async () => {
     const comp = await mountWithCleanup(Root);
     await getService("tour_service").startTour("release_tour", { mode: "manual" });
     await waitFor(".o_tour_pointer");
-    const tour = TourInteractive.current;
+    const tour = TourEngine.current;
 
     await contains("button.foo").click();
     await waitUntil(() => tourConsumed.includes("release_tour"));
-    expect(TourInteractive.current).toBe(null);
+    expect(TourEngine.current).toBe(null);
 
     comp.env.bus.trigger("ACTION_MANAGER:UPDATE");
     expect(tour.isBusy).toBe(false);
@@ -1194,10 +1202,10 @@ test("trigger is only looked for again once the DOM changed or the periodic chec
         steps: () => [{ trigger: "button.bar", run: "click" }],
     });
     let searches = 0;
-    patchWithCleanup(TourInteractive.prototype, {
-        track() {
+    patchWithCleanup(TourEngine.prototype, {
+        trackAction() {
             searches++;
-            return super.track(...arguments);
+            return super.trackAction(...arguments);
         },
     });
     const state = proxy({ showBar: false, value: 0 });
@@ -1229,7 +1237,7 @@ test("trigger is only looked for again once the DOM changed or the periodic chec
     await animationFrame();
     expect(searches).toBe(initialSearches + 1);
 
-    await advanceTime(TourInteractiveObserver.CHECK_INTERVAL);
+    await advanceTime(TourObserver.CHECK_INTERVAL);
     await animationFrame();
     expect(searches).toBe(initialSearches + 2);
 
@@ -1243,10 +1251,10 @@ test("a change inside a shadow root added after the start triggers a new search"
         steps: () => [{ trigger: ".host:shadow button.bar", run: "click" }],
     });
     let searches = 0;
-    patchWithCleanup(TourInteractive.prototype, {
-        track() {
+    patchWithCleanup(TourEngine.prototype, {
+        trackAction() {
             searches++;
-            return super.track(...arguments);
+            return super.trackAction(...arguments);
         },
     });
     class Root extends Component {
@@ -1272,4 +1280,548 @@ test("a change inside a shadow root added after the start triggers a new search"
     await animationFrame();
     await animationFrame();
     expect(searches).toBe(searchesBeforeShadowChange + 1);
+});
+
+test("robot mode fails when its action doesn't trigger the event a human would trigger", async () => {
+    Tour._records = [{ name: "tour_robot_not_consumed" }];
+    registry.category("web_tour.tours").add("tour_robot_not_consumed", {
+        steps: () => [{ trigger: "button.inc", run: "click" }],
+    });
+    patchWithCleanup(console, {
+        error: (msg) => {
+            if (typeof msg === "string" && msg.startsWith("FAILED:")) {
+                expect.step(msg.split("\n").find((line) => line.startsWith("BUT:")));
+            }
+        },
+    });
+    class Root extends Component {
+        static template = xml`<div class="wrapper"><button class="inc">+</button></div>`;
+    }
+
+    await mountWithCleanup(Root);
+    queryFirst(".wrapper").addEventListener(
+        "click",
+        (ev) => {
+            ev.stopPropagation();
+            expect.step("click stopped");
+        },
+        true
+    );
+    await getService("tour_service").startTour("tour_robot_not_consumed", {
+        mode: "manual",
+        robot: true,
+    });
+    await expect.waitForSteps(["click stopped"]);
+    await waitUntil(() => TourEngine.current.awaitingConsume);
+
+    await advanceTime(10000);
+    await animationFrame();
+    expect.verifySteps(["BUT: the action has been performed without triggering (click, keydown)."]);
+});
+
+test("robot mode waits for the pointer of each action before performing it", async () => {
+    Tour._records = [{ name: "tour_robot_pointer" }];
+    registry.category("web_tour.tours").add("tour_robot_pointer", {
+        steps: () => [
+            { trigger: "button.first", run: "click" },
+            { trigger: "button.second", run: "click" },
+        ],
+    });
+    patchWithCleanup(TourPointer.prototype, {
+        get isVisible() {
+            return super.isVisible && !this.trigger.matches("button.second");
+        },
+    });
+    patchWithCleanup(console, {
+        error: (msg) => {
+            if (typeof msg === "string" && msg.startsWith("FAILED:")) {
+                expect.step("failed");
+            }
+        },
+    });
+    class Root extends Component {
+        static template = xml`
+            <button class="first" t-on-click="() => this.onClick('first')">First</button>
+            <button class="second" t-on-click="() => this.onClick('second')">Second</button>
+        `;
+        onClick(name) {
+            expect.step(name);
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_pointer", {
+        mode: "manual",
+        robot: true,
+    });
+    await waitFor(".o_tour_pointer");
+    await waitForNone(".o_tour_pointer");
+    expect.verifySteps(["first"]);
+
+    await advanceTime(10000);
+    await animationFrame();
+    expect.verifySteps(["failed"]);
+});
+
+test("robot mode looks for its target again when it is re-rendered before being acted on", async () => {
+    Tour._records = [{ name: "tour_robot_rerender" }];
+    registry.category("web_tour.tours").add("tour_robot_rerender", {
+        steps: () => [{ trigger: "button.inc", run: "click" }],
+    });
+    const state = proxy({ first: true });
+    class Root extends Component {
+        static template = xml`
+            <button t-if="this.state.first" class="inc" t-on-click="() => this.onClick('first')">+</button>
+            <button t-else="" class="inc" t-on-click="() => this.onClick('second')">+</button>
+        `;
+        setup() {
+            this.state = state;
+        }
+        onClick(name) {
+            expect.step(name);
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_rerender", {
+        mode: "manual",
+        robot: true,
+    });
+    state.first = false;
+    await waitUntil(() => tourConsumed.includes("tour_robot_rerender"));
+    expect.verifySteps(["second"]);
+});
+
+test("robot mode runs the run function of a step", async () => {
+    Tour._records = [{ name: "tour_robot_function" }];
+    registry.category("web_tour.tours").add("tour_robot_function", {
+        steps: () => [
+            {
+                trigger: "button.inc",
+                run() {
+                    expect.step("run");
+                },
+            },
+        ],
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml`<Counter />`;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_function", {
+        mode: "manual",
+        robot: true,
+    });
+    await waitUntil(() => tourConsumed.includes("tour_robot_function"));
+    expect.verifySteps(["run"]);
+});
+
+test("manual tour points to the trigger of a command whose argument isn't a selector", async () => {
+    Tour._records = [{ name: "tour_fill" }];
+    registry.category("web_tour.tours").add("tour_fill", {
+        steps: () => [{ trigger: ".interval input", run: "fill 5" }],
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml`<Counter />`;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_fill", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+    expect(pointerState.trigger).toBe(queryFirst(".interval input"));
+    await contains(".interval input").edit(5);
+    await waitUntil(() => tourConsumed.includes("tour_fill"));
+});
+
+test("starting a tour removes the pointer of the tour in progress", async () => {
+    Tour._records = [{ name: "tour_in_progress" }, { name: "tour_started" }];
+    registry.category("web_tour.tours").add("tour_in_progress", {
+        steps: () => [{ trigger: "button.inc", run: "click" }],
+    });
+    registry.category("web_tour.tours").add("tour_started", {
+        steps: () => [{ trigger: "button.missing", run: "click" }],
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml`<Counter />`;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_in_progress", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+    await getService("tour_service").startTour("tour_started", { mode: "manual" });
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("robot mode fails when the pointer isn't displayed on its target", async () => {
+    Tour._records = [{ name: "tour_robot_no_pointer" }];
+    registry.category("web_tour.tours").add("tour_robot_no_pointer", {
+        steps: () => [{ trigger: "button.inc", run: "click" }],
+    });
+    patchWithCleanup(TourPointer.prototype, {
+        get isVisible() {
+            return false;
+        },
+    });
+    patchWithCleanup(console, {
+        error: (msg) => {
+            if (typeof msg === "string" && msg.startsWith("FAILED:")) {
+                expect.step(msg.split("\n").find((line) => line.startsWith("BUT:")));
+            }
+        },
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml`<Counter />`;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_no_pointer", {
+        mode: "manual",
+        robot: true,
+    });
+    await animationFrame();
+
+    await advanceTime(10000);
+    await animationFrame();
+    expect.verifySteps(["BUT: the pointer has not been displayed on the element."]);
+});
+
+test("robot mode reports the action whose pointer isn't removed", async () => {
+    Tour._records = [{ name: "tour_robot_pointer_kept" }];
+    registry.category("web_tour.tours").add("tour_robot_pointer_kept", {
+        steps: () => [{ trigger: "button.inc", run: "click" }],
+    });
+    patchWithCleanup(console, {
+        error: (msg) => {
+            if (typeof msg === "string" && msg.startsWith("FAILED:")) {
+                const lines = msg.split("\n");
+                expect.step(lines[0]);
+                expect.step(lines.find((line) => line.startsWith("BUT:")));
+            }
+        },
+    });
+    class Root extends Component {
+        static template = xml`
+            <div class="o_tour_pointer"/>
+            <button class="inc" t-on-click="() => this.onClick()">+</button>
+        `;
+        onClick() {
+            expect.step("click");
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_pointer_kept", {
+        mode: "manual",
+        robot: true,
+    });
+    await expect.waitForSteps(["click"]);
+    await waitUntil(() => !pointerState.trigger);
+
+    await advanceTime(10000);
+    await animationFrame();
+    expect.verifySteps([
+        "FAILED: [1/1] Tour tour_robot_pointer_kept → Step button.inc.",
+        "BUT: the pointer has not been removed after the action.",
+    ]);
+});
+
+test("robot mode doesn't perform its action once its tour is stopped", async () => {
+    Tour._records = [{ name: "tour_robot_stopped" }, { name: "tour_human_started" }];
+    registry.category("web_tour.tours").add("tour_robot_stopped", {
+        steps: () => [{ trigger: "button.first", run: "click" }],
+    });
+    registry.category("web_tour.tours").add("tour_human_started", {
+        steps: () => [{ trigger: "button.second", run: "click" }],
+    });
+    let hidePointer = true;
+    patchWithCleanup(TourPointer.prototype, {
+        get isVisible() {
+            return !hidePointer && super.isVisible;
+        },
+    });
+    class Root extends Component {
+        static template = xml`
+            <button class="first" t-on-click="() => this.onClick('first')">First</button>
+            <button class="second" t-on-click="() => this.onClick('second')">Second</button>
+        `;
+        onClick(name) {
+            expect.step(name);
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_stopped", {
+        mode: "manual",
+        robot: true,
+    });
+    await animationFrame();
+    hidePointer = false;
+    await getService("tour_service").startTour("tour_human_started", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
+test("robot mode fails when a step unloads the page without expecting it", async () => {
+    Tour._records = [{ name: "tour_robot_unload" }];
+    registry.category("web_tour.tours").add("tour_robot_unload", {
+        steps: () => [
+            { trigger: "button.inc", run: "click" },
+            { trigger: "button.missing", run: "click" },
+        ],
+    });
+    patchWithCleanup(console, {
+        error: (msg) => {
+            if (typeof msg === "string" && msg.startsWith("FAILED:")) {
+                expect.step(msg.split("\n")[1]);
+            }
+        },
+    });
+    class Root extends Component {
+        static template = xml`<button class="inc" t-on-click="() => this.onClick()">+</button>`;
+        onClick() {
+            window.dispatchEvent(new Event("beforeunload"));
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_unload", {
+        mode: "manual",
+        robot: true,
+    });
+    await expect.waitForSteps(["Be sure to use { expectUnloadPage: true } for any step"]);
+});
+
+test("robot mode stops on a step expecting the page to unload", async () => {
+    Tour._records = [{ name: "tour_robot_expect_unload" }];
+    registry.category("web_tour.tours").add("tour_robot_expect_unload", {
+        steps: () => [
+            { trigger: "button.inc", run: "click", expectUnloadPage: true },
+            { trigger: "button.inc", run: "click" },
+        ],
+    });
+    patchWithCleanup(console, {
+        error: (msg) => {
+            if (typeof msg === "string" && msg.startsWith("FAILED:")) {
+                expect.step("failed");
+            }
+        },
+    });
+    class Root extends Component {
+        static template = xml`<button class="inc" t-on-click="() => this.onClick()">+</button>`;
+        onClick() {
+            expect.step("click");
+            window.dispatchEvent(new Event("beforeunload"));
+        }
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_expect_unload", {
+        mode: "manual",
+        robot: true,
+    });
+    await expect.waitForSteps(["click"]);
+    await waitUntil(() => !TourEngine.current);
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
+test("manual tour steps accept the same keys as automatic tour steps", async () => {
+    Tour._records = [{ name: "tour_manual_keys" }];
+    registry.category("web_tour.tours").add("tour_manual_keys", {
+        steps: () => [
+            { trigger: "button.inc", run: "click", timeout: 5000, expectUnloadPage: false },
+        ],
+    });
+    patchWithCleanup(console, {
+        error: (msg) => {
+            if (typeof msg === "string" && msg.startsWith("Error in schema")) {
+                expect.step("schema error");
+            }
+        },
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml`<Counter />`;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_manual_keys", { mode: "manual" });
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
+test("robot mode points to a press step without content with Press Enter", async () => {
+    Tour._records = [{ name: "tour_robot_press" }];
+    registry.category("web_tour.tours").add("tour_robot_press", {
+        steps: () => [{ trigger: "button.inc", run: "press Enter" }],
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml`<Counter />`;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_press", {
+        mode: "manual",
+        robot: true,
+    });
+    await waitFor(".o_tour_pointer");
+    expect(pointerState.content).toBe("Press Enter");
+});
+
+test("robot mode waits for the drop of drag_and_drop on its zone", async () => {
+    Tour._records = [{ name: "tour_robot_dnd" }];
+    registry.category("web_tour.tours").add("tour_robot_dnd", {
+        steps: () => [
+            { trigger: ".drag-src", run: "drag_and_drop .drop-zone" },
+            { trigger: "button.done", run: "click" },
+        ],
+    });
+    class Root extends Component {
+        static template = xml`
+            <div class="drag-src" style="width: 50px; height: 50px;">Drag</div>
+            <div class="drop-zone" style="width: 100px; height: 100px;">Zone</div>
+            <button class="done w-100">Done</button>
+        `;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_dnd", { mode: "manual", robot: true });
+    await waitUntil(() => tourConsumed.includes("tour_robot_dnd"));
+});
+
+test("robot mode fails when its drop misses the zone a human would drop on", async () => {
+    Tour._records = [{ name: "tour_robot_dnd_missed" }];
+    registry.category("web_tour.tours").add("tour_robot_dnd_missed", {
+        steps: () => [
+            { trigger: ".drag-src", run: "drag_and_drop .drop-zone" },
+            { trigger: "button.done", run: "click" },
+        ],
+    });
+    patchWithCleanup(console, {
+        error: (msg) => {
+            if (typeof msg === "string" && msg.startsWith("FAILED:")) {
+                expect.step(msg.split("\n").find((line) => line.startsWith("BUT:")));
+            }
+        },
+    });
+    class Root extends Component {
+        static template = xml`
+            <div class="drag-src" style="width: 50px; height: 50px;">Drag</div>
+            <div class="drop-zone" style="width: 100px; height: 100px; pointer-events: none;">Zone</div>
+            <button class="done w-100">Done</button>
+        `;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_dnd_missed", {
+        mode: "manual",
+        robot: true,
+    });
+    await waitUntil(() => TourEngine.current.awaitingConsume);
+
+    await advanceTime(10000);
+    await animationFrame();
+    expect.verifySteps([
+        "BUT: the action has been performed without triggering (pointerup, drop).",
+    ]);
+    expect(tourConsumed).not.toInclude("tour_robot_dnd_missed");
+});
+
+test("robot mode doesn't wait for a pointer on a step running a function", async () => {
+    Tour._records = [{ name: "tour_robot_function_no_pointer" }];
+    registry.category("web_tour.tours").add("tour_robot_function_no_pointer", {
+        steps: () => [
+            {
+                trigger: "button.inc",
+                run() {
+                    expect.step("run");
+                },
+            },
+        ],
+    });
+    patchWithCleanup(TourPointer.prototype, {
+        get isVisible() {
+            return false;
+        },
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml`<Counter />`;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_function_no_pointer", {
+        mode: "manual",
+        robot: true,
+    });
+    await waitUntil(() => tourConsumed.includes("tour_robot_function_no_pointer"));
+    expect.verifySteps(["run"]);
+});
+
+test("robot mode fails when its rainbow man isn't displayed", async () => {
+    Tour._records = [{ name: "tour_robot_rainbow" }];
+    registry.category("web_tour.tours").add("tour_robot_rainbow", {
+        steps: () => [{ trigger: "button.inc", run: "click" }],
+    });
+    patchWithCleanup(user, { showEffect: false });
+    patchWithCleanup(console, {
+        error: (msg) => {
+            if (typeof msg === "string" && msg.startsWith("FAILED:")) {
+                expect.step(msg.split("\n").find((line) => line.startsWith("BUT:")));
+            }
+        },
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml`<Counter />`;
+    }
+
+    await mountWithCleanup(Root);
+    await getService("tour_service").startTour("tour_robot_rainbow", {
+        mode: "manual",
+        robot: true,
+        rainbowManMessage: "Congrats!",
+    });
+    const tour = TourEngine.current;
+    await waitUntil(() => tour.awaitingRainbowMan);
+
+    for (let frame = 0; frame < 700; frame++) {
+        await advanceFrame(1);
+    }
+    expect.verifySteps(["BUT: the rainbow man has not been displayed."]);
+});
+
+test("a stopped tour doesn't undo the setup of the tour started after it", async () => {
+    Tour._records = [{ name: "tour_robot_stuck" }];
+    registry.category("web_tour.tours").add("tour_robot_stuck", {
+        steps: () => [{ trigger: "button.inc", run: "click" }],
+    });
+    registry.category("web_tour.tours").add("tour_auto_next", {
+        steps: () => [{ trigger: "button.missing", run: "click", timeout: 60000 }],
+    });
+    class Root extends Component {
+        static template = xml`<div class="wrapper"><button class="inc">+</button></div>`;
+    }
+
+    await mountWithCleanup(Root);
+    queryFirst(".wrapper").addEventListener("click", (ev) => ev.stopPropagation(), true);
+    await getService("tour_service").startTour("tour_robot_stuck", {
+        mode: "manual",
+        robot: true,
+    });
+    await waitUntil(() => TourEngine.current.awaitingConsume);
+    await getService("tour_service").startTour("tour_auto_next", { mode: "auto" });
+    expect(transitionConfig.disabled).toBe(true);
+
+    await advanceTime(10000);
+    await animationFrame();
+    expect(transitionConfig.disabled).toBe(true);
 });
