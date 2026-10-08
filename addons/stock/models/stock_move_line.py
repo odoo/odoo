@@ -1146,15 +1146,15 @@ class StockMoveLine(models.Model):
         self.write({'result_package_id': package.id})
         return package
 
-    def _post_put_in_pack_hook(self, package):
-        if package and self.picking_type_id.auto_print_package_label:
+    def _post_put_in_pack_hook(self, packages):
+        if packages and self.picking_type_id.auto_print_package_label:
             print_format = self.picking_type_id.package_label_to_print
             if print_format in ('pdf', 'zpl'):
-                action = self.env['stock.package.label.layout']._process_package_labels(package, print_format)
+                action = self.env['stock.package.label.layout']._process_package_labels(packages, print_format)
                 if action:
                     clean_action(action, self.env)
                     return action
-        return package
+        return packages
 
     def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False, package_capacity=None):
         move_lines = self
