@@ -45,6 +45,7 @@ export class WithSearch extends Component {
     props = useProps(withSearchProps);
 
     setup() {
+        this.ui = useService("ui");
         if (!this.env.__getContext__) {
             useSubEnv({ __getContext__: new CallbackRecorder() });
         }
@@ -93,6 +94,11 @@ export class WithSearch extends Component {
                 config.state = JSON.parse(config.globalState.searchModel);
                 delete config.globalState;
             }
+            if (this.ui.isSmall){
+                console.log(this)
+                config.defaultGroupBy = [];
+            }
+
             await this.searchModel.load(config);
         });
 
