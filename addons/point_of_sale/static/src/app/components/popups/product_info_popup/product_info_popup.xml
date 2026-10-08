@@ -6,7 +6,7 @@
             <t t-set-slot="header">
                 <div class="w-100">
                     <div class="d-flex justify-content-start">
-                        <button t-att-disabled="!this.pos.accessRight.disableToggleFavorite" t-on-click="this.toggleFavorite" class="border-0 bg-transparent p-0 mb-2">
+                        <button t-att-disabled="this.pos.accessRight.disableToggleFavorite" t-on-click="this.toggleFavorite" class="border-0 bg-transparent p-0 mb-2">
                             <i class="oi oi-lg oi-fw" t-att-class="{'oi-filled': this.props.productTemplate.is_favorite}" data-icon="star"
                                 t-att-style="this.props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
                                 role="img"/>

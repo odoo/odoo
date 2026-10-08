@@ -26,18 +26,18 @@ test("price mode follows the active cashier's price rights", async () => {
 
     store.config.restrict_price_control = true;
     store.setCashier(manager);
-    expect(store.accessRight.disablePriceButton).toBe(true);
+    expect(store.accessRight.disablePriceButton).toBe(false);
     store.numpadMode = "price";
     store.setCashier(cashier);
-    expect(store.accessRight.disablePriceButton).toBe(false);
+    expect(store.accessRight.disablePriceButton).toBe(true);
     expect(store.numpadMode).toBe("quantity");
 
     store.config.restrict_price_control = false;
     store.setCashier(cashier);
-    expect(store.accessRight.disablePriceButton).toBe(true);
+    expect(store.accessRight.disablePriceButton).toBe(false);
     store.numpadMode = "price";
     store.setCashier(restrictive);
-    expect(store.accessRight.disablePriceButton).toBe(false);
+    expect(store.accessRight.disablePriceButton).toBe(true);
     expect(store.numpadMode).toBe("quantity");
 });
 test("_getConnectedCashier", async () => {
