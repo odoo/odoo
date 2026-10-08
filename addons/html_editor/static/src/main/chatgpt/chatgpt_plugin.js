@@ -28,6 +28,7 @@ export class ChatGPTPlugin extends Plugin {
                 description: _t("Generate or transform content with AI."),
                 icon: "fa-magic",
                 run: this.openDialog.bind(this),
+                isAvailable: () => user.isInternalUser,
             },
         ],
         toolbar_groups: withSequence(50, {
@@ -39,7 +40,7 @@ export class ChatGPTPlugin extends Plugin {
                 groupId: "ai",
                 title: _t("Translate with AI"),
                 isAvailable: (selection) => {
-                    return !selection.isCollapsed && user.userId;
+                    return !selection.isCollapsed && user.isInternalUser;
                 },
                 isDisabled: this.isNotReplaceableByAI.bind(this),
                 Component: LanguageSelector,

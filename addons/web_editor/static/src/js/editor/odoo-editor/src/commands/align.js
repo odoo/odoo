@@ -17,6 +17,9 @@ HTMLElement.prototype.oAlign = function (offset, mode) {
     const alreadyAlignedLeft = textAlign === 'start' || textAlign === 'left';
     const shouldApplyStyle = !(alreadyAlignedLeft && mode === 'left');
     if (shouldApplyStyle) {
-        this.style.textAlign = mode;
+        this.style.setProperty("text-align", mode);
+        if (getComputedStyle(this).textAlign !== mode) {
+            this.style.setProperty("text-align", mode, "important");
+        }
     }
 };

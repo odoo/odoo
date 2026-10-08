@@ -56,7 +56,7 @@ class Action(Controller):
             request.update_context(**context)
         action = request.env['ir.actions.server'].browse([action_id])
         result = action.run()
-        return clean_action(result, env=action.env) if result else False
+        return clean_action(result, env=action.env) if isinstance(result, dict) and result else False
 
     @route('/web/action/load_breadcrumbs', type='json', auth='user', readonly=True)
     def load_breadcrumbs(self, actions):

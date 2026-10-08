@@ -5,6 +5,7 @@
 from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 from calendar import monthrange
+from pytz import timezone
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
@@ -434,7 +435,6 @@ class HolidaysAllocation(models.Model):
             else:
                 start_date = max(start_date, first_level_start_date)
 
-        date_to = date_to or fields.Date.today()
         already_accrued = {allocation.id: allocation.already_accrued or (allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start') for allocation in self}
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
@@ -444,6 +444,9 @@ class HolidaysAllocation(models.Model):
             level_ids = allocation.accrual_plan_id.level_ids
             if not level_ids:
                 continue
+            if not date_to:
+                employee_tz = timezone(allocation.employee_id.tz or 'UTC')
+                date_to = datetime.now(employee_tz).date()
             # "cache" leaves taken, as it gets recomputed every time allocation.number_of_days is assigned to. Without this,
             # every loop will take 1+ second. It can be removed if computes don't chain in a way to always reassign accrual plan
             # even if the value doesn't change. This is the best performance atm.
