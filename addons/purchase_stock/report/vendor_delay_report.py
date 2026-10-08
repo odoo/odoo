@@ -22,6 +22,12 @@ class VendorDelayReport(models.Model):
         tools.drop_view_if_exists(self.env.cr, 'vendor_delay_report')
         self.env.cr.execute("""
 CREATE OR replace VIEW vendor_delay_report AS(
+SELECT report.*,
+       CASE
+           WHEN report.qty_total != 0 THEN report.qty_on_time / report.qty_total * 100
+           ELSE 100
+       END                      AS on_time_rate
+FROM (
 SELECT pol.id                   AS id,
        Min(m.date)              AS date,
        pol.id                   AS purchase_line_id,
@@ -49,6 +55,7 @@ FROM   stock_move m
        LEFT JOIN uom_uom ml_uom
          ON ml_uom.id = ml.uom_id
 GROUP  BY pol.id
+) report
 )""")
 
     def _read_group_select(self, table, aggregate_spec):
