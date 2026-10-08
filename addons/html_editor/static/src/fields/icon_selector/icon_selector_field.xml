@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="html_editor.IconSelectorField">
+        <t t-if="this.props.readonly">
+            <span t-out="this.iconValue"/>
+        </t>
+        <t t-else="">
+            <SelectMenu
+                autoSort="false"
+                class="'o_field_icon_selector'"
+                menuClass="'o_field_icon_selector_menu'"
+                togglerClass="'border-0'"
+                value="this.iconValue"
+                choices="this.availableChoices"
+                onSelect.bind="this.onSelect"
+                placeholder.translate="Search a pictogram"
+            >
+                <t t-set-slot="choice" t-slot-scope="choice">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="oi" t-att-class="{ 'oi-filled': choice.data.value.endsWith('_f') }" t-att-data-icon="this.getIconName(choice.data.value)"/>
+                        <span t-out="choice.data.label"/>
+                    </div>
+                </t>
+            </SelectMenu>
+        </t>
+    </t>
+
+</templates>
