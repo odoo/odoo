@@ -1120,6 +1120,39 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'transparency': 'opaque',
         })
 
+    def test_google_calendar_light_sync_flow(self):
+        """ Test light sync flow: verify cron trigger behavior and sync execution. """
+        cron_light = self.env.ref('google_calendar.ir_cron_sync_light_cals')
+
+        with patch.object(cron_light.__class__, '_trigger') as mock_trigger:
+            event = self.env['calendar.event'].with_user(self.organizer_user).create({
+                'name': "Appointment Single Event",
+                'start': datetime(2026, 10, 15, 10, 0),
+                'stop': datetime(2026, 10, 15, 11, 0),
+                'recurrency': False,
+                'need_sync': True,
+                'user_id': self.organizer_user.id,
+                'partner_ids': [(6, 0, self.organizer_user.partner_id.ids)],
+            })
+            self.assertTrue(mock_trigger.called, "Trigger must be called for single events.")
+
+        with patch.object(cron_light.__class__, '_trigger') as mock_trigger:
+            event.write({
+                'recurrency': True,
+                'rrule': 'FREQ=WEEKLY;COUNT=2;BYDAY=TU',
+            })
+            self.assertFalse(mock_trigger.called, "Trigger must not be called for recurring events.")
+
+        self.organizer_user.sudo().res_users_settings_id.write({
+            'google_calendar_rtoken': 'dummy-refresh-token',
+            'google_calendar_token': 'dummy-token',
+            'google_synchronization_stopped': False,
+        })
+
+        with patch.object(ResUsers, '_sync_light_google_events', autospec=True) as mock_sync_events:
+            self.env['res.users']._sync_light_google_calendar()
+            self.assertTrue(mock_sync_events.called, "Light sync cron must process active user events.")
+
 
 @patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')
 @tagged('-at_install', 'post_install')

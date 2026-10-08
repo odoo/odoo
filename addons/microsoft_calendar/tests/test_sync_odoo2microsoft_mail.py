@@ -110,3 +110,30 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
 
         self.assertTrue(event.active, "Pure Odoo event should not be archived when changing organizer")
         self.assertEqual(event.user_id, self.attendee_user, "Organizer should be updated")
+
+    def test_microsoft_calendar_light_sync_flow(self):
+        """ Test light sync flow: verify cron trigger behavior and sync execution for Microsoft. """
+        cron_light = self.env.ref('microsoft_calendar.ir_cron_sync_light_cals')
+
+        with patch.object(cron_light.__class__, '_trigger') as mock_trigger:
+            event = self.env['calendar.event'].with_user(self.organizer_user).create({
+                'name': "Appointment Single Event Microsoft",
+                'start': datetime(2026, 10, 15, 10, 0),
+                'stop': datetime(2026, 10, 15, 11, 0),
+                'recurrency': False,
+                'need_sync_m': True,
+                'user_id': self.organizer_user.id,
+                'partner_ids': [Command.set([self.organizer_user.partner_id.id])],
+            })
+            self.assertTrue(mock_trigger.called, "The sync trigger must be called for single events.")
+
+        with patch.object(cron_light.__class__, '_trigger') as mock_trigger:
+            event.write({
+                'recurrency': True,
+                'rrule': 'FREQ=WEEKLY;COUNT=2;BYDAY=TU',
+            })
+            self.assertFalse(mock_trigger.called, "The sync trigger must not be called for recurring events.")
+
+        with patch.object(ResUsers, '_sync_light_microsoft_events', autospec=True) as mock_sync_events:
+            self.env['res.users']._sync_light_microsoft_calendar()
+            self.assertTrue(mock_sync_events.called, "Light sync cron must process active user events.")
