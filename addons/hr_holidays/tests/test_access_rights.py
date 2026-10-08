@@ -2,8 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import unittest
+import pytz
 
-from datetime import date
+from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
@@ -153,6 +154,37 @@ class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
 @tests.tagged('access_rights', 'access_rights_read')
 class TestAccessRightsRead(TestHrHolidaysAccessRightsCommon):
     # base.group_user
+
+    def test_flexible_leave_date_inaccessible_holiday(self):
+        """A user without access to another employee's leave can process flexible leaves."""
+        leave_day = date_utils.start_of(date.today() + relativedelta(days=30), 'week')
+        leave = self.env['hr.leave'].create({
+            'name': 'Flexible Resource Leave',
+            'holiday_status_id': self.leave_type.id,
+            'employee_id': self.employee_hruser.id,
+            'request_date_from': leave_day,
+            'request_date_to': leave_day,
+        })
+        leave.action_approve()
+
+        calendar_leaves = self.env['resource.calendar.leaves'].with_user(
+            self.user_employee
+        ).search([('holiday_id', '=', leave.id)])
+        self.assertTrue(calendar_leaves, "the calendar leave must be visible to the employee user")
+
+        with self.assertRaises(AccessError):
+            leave.with_user(self.user_employee).read(['request_unit_half'])
+
+        start = pytz.utc.localize(datetime.combine(leave_day, time.min))
+        end = pytz.utc.localize(datetime.combine(leave_day, time.max))
+        result = self.env['resource.calendar'].with_user(
+            self.user_employee
+        )._get_flexible_leaves_date(
+            [(start, end, calendar_leaves)],
+            self.employee_hruser.resource_id,
+            pytz.utc,
+        )
+        self.assertEqual(result, [(start, end)])
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_read_by_user_other(self):
