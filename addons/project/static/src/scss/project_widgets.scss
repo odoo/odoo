@@ -1,6 +1,4 @@
 .o_status_bubble {
-    @extend .o_status;
-
     @for $size from 2 through length($o-colors) {
         /* Note: the first color is supposed to be invisible so it's ignored */
         &.o_color_bubble_#{$size - 1} {

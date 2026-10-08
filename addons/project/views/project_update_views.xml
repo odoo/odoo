@@ -85,7 +85,7 @@
                         <div class="d-flex align-items-center">
                             <span class="oi oi-fw oi-filled me-1" data-icon="calendar_today" title="Date"/><field name="date"/>
                             <div class="d-flex ms-auto align-items-center gap-1">
-                                <span t-attf-class="o_status_bubble o_color_bubble_{{ record.color.raw_value }}" t-att-title="record.status.value"></span>
+                                <span t-attf-class="o_status o_status_bubble o_color_bubble_{{ record.color.raw_value }}" t-att-title="record.status.value"></span>
                                 <field name="user_id" widget="many2one_avatar_user"/>
                             </div>
                         </div>

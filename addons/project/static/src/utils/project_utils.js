@@ -9,4 +9,4 @@ export const STATUS_COLORS = {
     'done': 24,
 };
 
-export const STATUS_COLOR_PREFIX = 'o_status_bubble mx-0 o_color_bubble_';
+export const STATUS_COLOR_PREFIX = 'o_status o_status_bubble mx-0 o_color_bubble_';
