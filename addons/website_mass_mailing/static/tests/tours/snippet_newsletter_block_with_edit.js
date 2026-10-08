@@ -26,7 +26,7 @@ registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     },
     {
         content: "Verify that the button options do not have clone/remove/save buttons.",
-        trigger: "div[data-container-title='Button'] .options-container-header:not(:has(.oe_snippet_remove, .oe_snippet_clone, .oe_snippet_save))",
+        trigger: "div[data-container-title='Button'] .o_hb_options_container_header:not(:has(.oe_snippet_remove, .oe_snippet_clone, .oe_snippet_save))",
     },
     ...clickOnSave(),
     // Subscribe to the newsletter.

@@ -29,7 +29,7 @@ test("click on 'Show/hide on desktop'", async () => {
     await contains(":iframe .col-lg-3").click();
 
     await contains("button[data-action-id='toggleDeviceVisibility']").click();
-    expect(".options-container").not.toHaveCount();
+    expect(".o_hb_options_container").not.toHaveCount();
 
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     await contains("button[data-action-id='toggleDeviceVisibility']").click();
@@ -85,7 +85,7 @@ test("check invisible element after save", async () => {
         </div>
     `);
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
-    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
     expect(resultSave[0]).toBe(
         `<div id="wrap" class="oe_structure oe_empty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here">
         <section class="o_colored_level">
@@ -107,7 +107,7 @@ test("click on 'Show/hide on mobile' in mobile view", async () => {
     await toggleMobilePreview();
 
     await contains("button[data-action-id='toggleDeviceVisibility']:last").click();
-    expect(".o-snippets-tabs button:contains('Blocks')").toHaveClass("active");
+    expect(".o_hb_snippets_tabs button:contains('Blocks')").toHaveClass("active");
     expect(":iframe .col-lg-3[data-invisible='1']").toHaveClass("o_snippet_mobile_invisible");
 });
 

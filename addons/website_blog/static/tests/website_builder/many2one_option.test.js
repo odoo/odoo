@@ -154,6 +154,6 @@ test("Editing the recommended next post option updates recommended_next_post_id"
     await contains(".o-dropdown-item:contains('Post 2')").click();
     expect.verifySteps([`write ${post2}`, "reload"]);
 
-    await contains(".o-hb-btn[aria-label='Unselect']").click();
+    await contains(".o_hb_btn[aria-label='Unselect']").click();
     expect.verifySteps([`write ${false}`, "reload"]);
 });

@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BuilderNumberInputBase">
     <div class="d-flex flex-row flex-nowrap w-100 align-items-baseline"
-        t-attf-class="{{ this.props.classes + ( this.props.prefix ? ' o-hb-input-base' : '' ) }}"
+        t-attf-class="{{ this.props.classes + ( this.props.prefix ? ' o_hb_input_base' : '' ) }}"
         t-att-data-action-id="this.info.actionId"
         t-att-data-action-param="this.info.actionParam"
         t-att-data-action-value="this.info.actionValue"
@@ -12,13 +12,13 @@
         t-att-data-style-action-value="this.info.styleActionValue"
         t-att-data-attribute-action="this.info.attributeAction"
         t-att-data-attribute-action-value="this.info.attributeActionValue">
-        <span t-if="this.props.prefix" class="o-hb-input-prefix" t-out="this.props.prefix"/>
-        <i t-if="this.props.prefixIcon" role="img" class="o-hb-input-prefix align-self-center oi" t-att-data-icon="this.props.prefixIcon"/>
+        <span t-if="this.props.prefix" class="o_hb_input_prefix" t-out="this.props.prefix"/>
+        <i t-if="this.props.prefixIcon" role="img" class="o_hb_input_prefix align-self-center oi" t-att-data-icon="this.props.prefixIcon"/>
         <input
             t-ref="this.inputRef"
             t-att-type="this.props.composable ? 'text' : 'number'"
             t-att-autocomplete="this.props.composable ? 'chrome-off' : undefined"
-            t-attf-class="{{ this.props.inputClasses + ( this.props.prefix ? ' o-hb-input-transparent ' : ' o-hb-input-base ' ) }}"
+            t-attf-class="{{ this.props.inputClasses + ( this.props.prefix ? ' o_hb_input_transparent ' : ' o_hb_input_base ' ) }}"
             t-att-placeholder="this.props.placeholder"
             t-att-data-tooltip="this.props.tooltip"
             t-att-aria-label="this.props.tooltip"

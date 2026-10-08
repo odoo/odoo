@@ -71,14 +71,14 @@ test("images can be resized by slider, text input and button", async () => {
     `);
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
-    expect(".options-container [data-action-id='mediaSizeSlider'] input").toHaveValue(99);
-    expect(".options-container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
+    expect(".o_hb_options_container [data-action-id='mediaSizeSlider'] input").toHaveValue(99);
+    expect(".o_hb_options_container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
     expect(
-        ".options-container [data-action-id='mediaSizeText'] .o-hb-input-field-unit"
+        ".o_hb_options_container [data-action-id='mediaSizeText'] .o_hb_input_field_unit"
     ).toHaveCount(0);
-    expect(".options-container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
+    expect(".o_hb_options_container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
 
-    await contains(".options-container [data-action-id='mediaSizeText'] input").click();
+    await contains(".o_hb_options_container [data-action-id='mediaSizeText'] input").click();
     await edit("3");
     await animationFrame();
     //min width is clipped to 5%
@@ -87,7 +87,7 @@ test("images can be resized by slider, text input and button", async () => {
         { inline: true }
     );
 
-    await contains(".options-container [data-action-id='mediaSizeText'] input").click();
+    await contains(".o_hb_options_container [data-action-id='mediaSizeText'] input").click();
     await edit("110");
     await animationFrame();
     //max width is clipped to 100%
@@ -98,7 +98,7 @@ test("images can be resized by slider, text input and button", async () => {
 
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
-    await contains(".options-container [data-action-id='mediaSizeText'] input").click();
+    await contains(".o_hb_options_container [data-action-id='mediaSizeText'] input").click();
     await edit("50");
     await press("Enter");
     await waitSidebarUpdated();
@@ -109,38 +109,38 @@ test("images can be resized by slider, text input and button", async () => {
 
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
-    await contains(".options-container button[data-action-id='setMediaSizeAuto']").click();
+    await contains(".o_hb_options_container button[data-action-id='setMediaSizeAuto']").click();
     await waitSidebarUpdated();
     expect(":iframe .test-options-target img").toHaveStyle(
         { width: "auto !important" },
         { inline: true }
     );
-    expect(".options-container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
+    expect(".o_hb_options_container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
     expect(
-        ".options-container [data-action-id='mediaSizeText'] .o-hb-input-field-unit"
+        ".o_hb_options_container [data-action-id='mediaSizeText'] .o_hb_input_field_unit"
     ).toHaveCount(0);
-    expect(".options-container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
+    expect(".o_hb_options_container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
 
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
-    await contains(".options-container [data-action-id='mediaSizeSlider'] input").click();
+    await contains(".o_hb_options_container [data-action-id='mediaSizeSlider'] input").click();
     await edit("65");
     await waitSidebarUpdated();
     expect(":iframe .test-options-target img").toHaveStyle(
         { width: "65% !important" },
         { inline: true }
     );
-    expect(".options-container [data-action-id='mediaSizeText'] input").toHaveValue(65);
+    expect(".o_hb_options_container [data-action-id='mediaSizeText'] input").toHaveValue(65);
     expect(
-        ".options-container [data-action-id='mediaSizeText'] .o-hb-input-field-unit"
+        ".o_hb_options_container [data-action-id='mediaSizeText'] .o_hb_input_field_unit"
     ).toHaveCount(1);
-    expect(".options-container button[data-action-id='setMediaSizeAuto']").not.toHaveClass(
+    expect(".o_hb_options_container button[data-action-id='setMediaSizeAuto']").not.toHaveClass(
         "active"
     );
 
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
-    await contains(".options-container [data-action-id='mediaSizeText'] input").click();
+    await contains(".o_hb_options_container [data-action-id='mediaSizeText'] input").click();
     await clear();
     await press("Enter");
     await waitSidebarUpdated();
@@ -148,11 +148,11 @@ test("images can be resized by slider, text input and button", async () => {
         { width: "auto !important" },
         { inline: true }
     );
-    expect(".options-container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
+    expect(".o_hb_options_container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
     expect(
-        ".options-container [data-action-id='mediaSizeText'] .o-hb-input-field-unit"
+        ".o_hb_options_container [data-action-id='mediaSizeText'] .o_hb_input_field_unit"
     ).toHaveCount(0);
-    expect(".options-container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
+    expect(".o_hb_options_container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
 });
 
 test("videos can be resized by slider, text input and button", async () => {
@@ -165,20 +165,20 @@ test("videos can be resized by slider, text input and button", async () => {
     `);
     await contains(":iframe .media_iframe_video").click();
     await waitSidebarUpdated();
-    expect(".options-container [data-action-id='mediaSizeSlider'] input").toHaveValue(99);
-    expect(".options-container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
+    expect(".o_hb_options_container [data-action-id='mediaSizeSlider'] input").toHaveValue(99);
+    expect(".o_hb_options_container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
     expect(
-        ".options-container [data-action-id='mediaSizeText'] .o-hb-input-field-unit"
+        ".o_hb_options_container [data-action-id='mediaSizeText'] .o_hb_input_field_unit"
     ).toHaveCount(0);
-    expect(".options-container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
+    expect(".o_hb_options_container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
 
-    await contains(".options-container [data-action-id='mediaSizeText'] input").click();
+    await contains(".o_hb_options_container [data-action-id='mediaSizeText'] input").click();
     await edit("3"); // preview
     await animationFrame();
     //min width is clipped to 5%
     expect(":iframe .media_iframe_video").toHaveStyle({ width: "5% !important" }, { inline: true });
 
-    await contains(".options-container [data-action-id='mediaSizeText'] input").click();
+    await contains(".o_hb_options_container [data-action-id='mediaSizeText'] input").click();
     await edit("110"); // preview
     await animationFrame();
     //max width is clipped to 100%
@@ -189,7 +189,7 @@ test("videos can be resized by slider, text input and button", async () => {
 
     await contains(":iframe .media_iframe_video").click();
     await waitSidebarUpdated();
-    await contains(".options-container [data-action-id='mediaSizeText'] input").click();
+    await contains(".o_hb_options_container [data-action-id='mediaSizeText'] input").click();
     await edit("50");
     await press("Enter");
     await waitSidebarUpdated();
@@ -200,38 +200,38 @@ test("videos can be resized by slider, text input and button", async () => {
 
     await contains(":iframe .media_iframe_video").click();
     await waitSidebarUpdated();
-    await contains(".options-container button[data-action-id='setMediaSizeAuto']").click();
+    await contains(".o_hb_options_container button[data-action-id='setMediaSizeAuto']").click();
     await waitSidebarUpdated();
     expect(":iframe .media_iframe_video").toHaveStyle(
         { width: "auto !important" },
         { inline: true }
     );
-    expect(".options-container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
+    expect(".o_hb_options_container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
     expect(
-        ".options-container [data-action-id='mediaSizeText'] .o-hb-input-field-unit"
+        ".o_hb_options_container [data-action-id='mediaSizeText'] .o_hb_input_field_unit"
     ).toHaveCount(0);
-    expect(".options-container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
+    expect(".o_hb_options_container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
 
     await contains(":iframe .media_iframe_video").click();
     await waitSidebarUpdated();
-    await contains(".options-container [data-action-id='mediaSizeSlider'] input").click();
+    await contains(".o_hb_options_container [data-action-id='mediaSizeSlider'] input").click();
     await edit("65");
     await waitSidebarUpdated();
     expect(":iframe .media_iframe_video").toHaveStyle(
         { width: "65% !important" },
         { inline: true }
     );
-    expect(".options-container [data-action-id='mediaSizeText'] input").toHaveValue(65);
+    expect(".o_hb_options_container [data-action-id='mediaSizeText'] input").toHaveValue(65);
     expect(
-        ".options-container [data-action-id='mediaSizeText'] .o-hb-input-field-unit"
+        ".o_hb_options_container [data-action-id='mediaSizeText'] .o_hb_input_field_unit"
     ).toHaveCount(1);
-    expect(".options-container button[data-action-id='setMediaSizeAuto']").not.toHaveClass(
+    expect(".o_hb_options_container button[data-action-id='setMediaSizeAuto']").not.toHaveClass(
         "active"
     );
 
     await contains(":iframe .media_iframe_video").click();
     await waitSidebarUpdated();
-    await contains(".options-container [data-action-id='mediaSizeText'] input").click();
+    await contains(".o_hb_options_container [data-action-id='mediaSizeText'] input").click();
     await clear();
     await press("Enter");
     await waitSidebarUpdated();
@@ -239,11 +239,11 @@ test("videos can be resized by slider, text input and button", async () => {
         { width: "auto !important" },
         { inline: true }
     );
-    expect(".options-container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
+    expect(".o_hb_options_container [data-action-id='mediaSizeText'] input").toHaveValue(NaN);
     expect(
-        ".options-container [data-action-id='mediaSizeText'] .o-hb-input-field-unit"
+        ".o_hb_options_container [data-action-id='mediaSizeText'] .o_hb_input_field_unit"
     ).toHaveCount(0);
-    expect(".options-container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
+    expect(".o_hb_options_container button[data-action-id='setMediaSizeAuto']").toHaveClass("active");
 });
 
 test("media resize bar does not appear in grid mode", async () => {
@@ -265,9 +265,9 @@ test("media resize bar does not appear in grid mode", async () => {
     `);
     await contains(":iframe .image-test img").click();
     await waitSidebarUpdated();
-    expect(".options-container [data-label='Size']").toHaveCount(0);
+    expect(".o_hb_options_container [data-label='Size']").toHaveCount(0);
 
     await contains(":iframe .video-test .media_iframe_video").click();
     await waitSidebarUpdated();
-    expect(".options-container [data-label='Size']").toHaveCount(0);
+    expect(".o_hb_options_container [data-label='Size']").toHaveCount(0);
 });

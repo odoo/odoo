@@ -74,7 +74,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on the 'undo' button.",
-            trigger: ".o-snippets-top-actions button[data-icon='undo']",
+            trigger: ".o_hb_snippets_top_actions button[data-icon='undo']",
             run: "click",
         },
         {
@@ -83,7 +83,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "The invisible elements panel should also be removed.",
-            trigger: ".o-snippets-menu:not(:has(.o_we_invisible_el_panel)",
+            trigger: ".o_hb_snippets_menu:not(:has(.o_we_invisible_el_panel)",
         },
     ]
 );

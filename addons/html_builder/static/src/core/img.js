@@ -46,7 +46,7 @@ export class Image extends Component {
                 t-att-width="this.svg.width"
                 t-att-viewBox="this.svg.viewBox"
                 t-att-fill="this.svg.fill"
-                class="hb-svg d-flex m-auto"
+                class="o_hb_svg d-flex m-auto"
                 t-att-class="this.props.class"
                 t-att-style="this.props.style"
                 t-att="this.props.attrs"/>

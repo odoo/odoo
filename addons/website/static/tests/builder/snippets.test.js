@@ -12,7 +12,7 @@ defineWebsiteModels();
 test("Can't drop some snippets in the s_table_of_content snippet", async () => {
     await setupWebsiteBuilderWithSnippet("s_table_of_content");
     const { moveTo, drop } = await contains(
-        ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
+        ".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
     await moveTo(":iframe .s_table_of_content .oe_drop_zone:nth-child(3)");
     expect(":iframe .s_table_of_content .oe_drop_zone:nth-child(3)").toHaveClass(
@@ -30,7 +30,7 @@ test("Can't drop some snippets in the s_table_of_content snippet", async () => {
 test("Can't drop some snippets in the s_tabs snippet", async () => {
     await setupWebsiteBuilderWithSnippet("s_tabs");
     const { moveTo, drop } = await contains(
-        ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
+        ".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
     await moveTo(":iframe .s_tabs_main .oe_drop_zone");
     await drop(getDragHelper());

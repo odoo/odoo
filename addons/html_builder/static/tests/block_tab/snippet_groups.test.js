@@ -33,7 +33,7 @@ test("display group snippet", async () => {
     await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets,
     });
-    const snippetGroupsSelector = ".o-snippets-menu #snippet_groups .o_snippet";
+    const snippetGroupsSelector = ".o_hb_snippets_menu #snippet_groups .o_snippet";
     expect(snippetGroupsSelector).toHaveCount(3);
     expect(queryAllTexts(snippetGroupsSelector)).toEqual(["A", "B", "C"]);
     const thumbnailImgUrls = queryAll(`${snippetGroupsSelector} .o_snippet_thumbnail_img`).map(
@@ -60,7 +60,7 @@ test("install an app from snippet group", async () => {
             ],
         },
     });
-    await click(`.o-snippets-menu #snippet_groups .o_snippet .btn.o_install_btn`);
+    await click(`.o_hb_snippets_menu #snippet_groups .o_snippet .btn.o_install_btn`);
     await animationFrame();
 
     expect(".modal").toHaveCount(1);
@@ -107,7 +107,7 @@ test("install an app from snippet structure", async () => {
             ),
         },
     });
-    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    await click(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     expect(
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap"
@@ -150,8 +150,8 @@ test("open add snippet dialog + switch snippet category", async () => {
             ),
         },
     });
-    expect(queryAllTexts(".o-snippets-menu #snippet_groups .o_snippet")).toEqual(["A", "B"]);
-    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    expect(queryAllTexts(".o_hb_snippets_menu #snippet_groups .o_snippet")).toEqual(["A", "B"]);
+    await click(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     expect(queryAllTexts(".o_add_snippet_dialog aside .list-group .list-group-item")).toEqual([
         "A",
@@ -209,7 +209,7 @@ test("search snippet in add snippet dialog", async () => {
             ),
         },
     });
-    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    await click(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     expect("aside .list-group .list-group-item").toHaveCount(2);
     const snippetsDescriptionProcessed = createTestSnippets({ snippets, withName: true });
@@ -296,7 +296,7 @@ test("search snippet by class", async () => {
             ),
         },
     });
-    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    await click(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
 
     // Search among classes of root node
@@ -358,7 +358,7 @@ test("search snippet by label", async () => {
             ),
         },
     });
-    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    await click(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
 
     // Search "hello" -> 1 result
@@ -406,7 +406,7 @@ test("add snippet dialog with imagePreview", async () => {
             ),
         },
     });
-    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    await click(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     const previewSnippetIframeSelector =
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
     await waitForSnippetDialog();
@@ -435,7 +435,7 @@ test("insert snippet structure", async () => {
     });
     expect(contentEl).toHaveInnerHTML(`<section><p>Text</p></section>`);
 
-    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    await click(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     const previewSelector =
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
@@ -468,7 +468,7 @@ test("Drag & drop snippet structure", async () => {
     expect(contentEl).toHaveInnerHTML(`<section><p>Text</p></section>`);
 
     const { moveTo, drop } = await contains(
-        ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
+        ".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
     expect(":iframe .oe_drop_zone:nth-child(1)").toHaveCount(1);
     expect(":iframe .oe_drop_zone:nth-child(3)").toHaveCount(1);
@@ -499,7 +499,7 @@ test("Cancel snippet drag & drop over sidebar", async () => {
     const { contentEl } = await setupHTMLBuilderWithDummySnippet();
 
     const { moveTo, drop } = await contains(
-        ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
+        ".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
     expect(":iframe .oe_drop_zone").toHaveCount(1);
 
@@ -507,7 +507,7 @@ test("Cancel snippet drag & drop over sidebar", async () => {
     // sometimes fails, probably because the snippet is partially touching the
     // iframe. We drop on the "mobile" button to be as far as possible from the
     // iframe.
-    await moveTo(".o-website-builder_sidebar button[data-action=mobile]");
+    await moveTo(".o_website_builder_sidebar button[data-action=mobile]");
     await drop(getDragHelper());
     expect(".o_add_snippet_dialog").toHaveCount(0);
     await waitForEndOfOperation();

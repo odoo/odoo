@@ -199,7 +199,7 @@ registry.category("web_tour.tours").add("conditional_visibility_4", {
         ...clickOnSnippet(snippets[1]),
         {
             content: "Wait for the target to be the banner (by looking at its options)",
-            trigger: ".options-container[data-container-title=Banner]",
+            trigger: ".o_hb_options_container[data-container-title=Banner]",
         },
         {
             content: "Move the mouse away to make sure no option is still being previewed",
@@ -328,7 +328,7 @@ registry.category("web_tour.tours").add("conditional_visibility_5", {
         },
         {
             content: "Activate mobile preview",
-            trigger: ".o-snippets-top-actions button[data-action='mobile']",
+            trigger: ".o_hb_snippets_top_actions button[data-action='mobile']",
             run: "click",
         },
         {

@@ -40,7 +40,7 @@ test("reorder and toggle portal cards before saving", async () => {
     `);
     await contains(":iframe main:has(.o_portal_wrap)").click();
 
-    const rowSelector = (id) => `.we-bg-options-container .o_row_draggable[data-id="${id}"]`;
+    const rowSelector = (id) => `.o_hb_bg_options_container .o_row_draggable[data-id="${id}"]`;
     await contains(`${rowSelector(0)} .o_handle_cell`).dragAndDrop(rowSelector(1));
     expect(":iframe .o_portal_index_card:nth-child(1)").toHaveAttribute("data-id", "2");
     expect(":iframe .o_portal_index_card:nth-child(2)").toHaveAttribute("data-id", "1");
@@ -59,6 +59,6 @@ test("reorder and toggle portal cards before saving", async () => {
     expect(":iframe .o_portal_index_card[data-id='3']").toHaveClass("d-none");
     expect.verifySteps([]);
 
-    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
     expect.verifySteps(["save portal cards"]);
 });

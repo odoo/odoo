@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add("blog_context_and_social_media", {
         },
         {
             content: "Click on Discard",
-            trigger: ".o-snippets-top-actions [data-action='cancel']",
+            trigger: ".o_hb_snippets_top_actions [data-action='cancel']",
             run: "click",
         },
         {

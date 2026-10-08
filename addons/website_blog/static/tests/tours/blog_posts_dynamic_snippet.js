@@ -25,11 +25,11 @@ registry.category("web_tour.tours").add("blog_posts_dynamic_snippet_options", {
         ...clickOnSnippet({ ...blogPostsSnippet, id: "s_blog_posts" }),
         {
             content: "Check That the `Model` option is hidden",
-            trigger: `.options-container:not(:has([data-label="Model"]))`,
+            trigger: `.o_hb_options_container:not(:has([data-label="Model"]))`,
         },
         {
             content: "Check That the `Template` option is hidden",
-            trigger: `.options-container:not(:has([data-label="Template"]))`,
+            trigger: `.o_hb_options_container:not(:has([data-label="Template"]))`,
         },
         goBackToBlocks(),
         ...insertSnippet(dynamicSnippet),
@@ -37,16 +37,16 @@ registry.category("web_tour.tours").add("blog_posts_dynamic_snippet_options", {
         ...changeOptionInPopover("Dynamic Snippet", "Filter", "Latest Blog Posts"),
         {
             content: "Check That the `Model` option is visible",
-            trigger: `.options-container [data-label="Fetched Elements"]`,
+            trigger: `.o_hb_options_container [data-label="Fetched Elements"]`,
         },
         ...changeOptionInPopover("Dynamic Snippet", "Fetched Elements", `1`),
         {
             content: "Check That the `Model` option is visible",
-            trigger: `.options-container [data-label="Model"]`,
+            trigger: `.o_hb_options_container [data-label="Model"]`,
         },
         {
             content: "Check That the `Template` option is visible",
-            trigger: `.options-container [data-label="Template"]`,
+            trigger: `.o_hb_options_container [data-label="Template"]`,
         },
     ],
 });

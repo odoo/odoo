@@ -17,7 +17,7 @@ registerWebsitePreviewTour("website_sale.category_page_and_products_snippet_edit
     },
     ...clickOnEditAndWaitEditMode(),
     {
-        trigger: ".o-website-builder_sidebar .o_snippets_container .o_snippet",
+        trigger: ".o_website_builder_sidebar .o_snippets_container .o_snippet",
     },
     {
         content: "Drag and drop the Products snippet group inside the category area.",

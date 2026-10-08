@@ -75,10 +75,10 @@ test("clone of editable media inside not editable area should be editable", asyn
     `);
     await contains(":iframe img").click();
     await waitSidebarUpdated();
-    expect(".options-container[data-container-title='Image']").toBeDisplayed();
+    expect(".o_hb_options_container[data-container-title='Image']").toBeDisplayed();
     await contains(".oe_snippet_clone").click();
     await contains(":iframe section:last-of-type img").click();
-    expect(".options-container[data-container-title='Image']").toBeDisplayed();
+    expect(".o_hb_options_container[data-container-title='Image']").toBeDisplayed();
 });
 
 const setupEditable = async (contentEl) => {

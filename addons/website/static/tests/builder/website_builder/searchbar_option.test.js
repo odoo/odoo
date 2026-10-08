@@ -126,6 +126,6 @@ test("saving the header bar stores its settings on the website", async () => {
         return true;
     });
 
-    await contains(".o-snippets-top-actions button[data-action='save']").click();
+    await contains(".o_hb_snippets_top_actions button[data-action='save']").click();
     expect.verifySteps(["store the header search settings"]);
 });

@@ -53,7 +53,7 @@ test("Check contenteditable attribute", async () => {
         return true;
     });
     queryOne(":iframe .o_container_small").textContent = "dirty for save";
-    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
 });
 
 test("Check contenteditable on Parallax snippet", async () => {
@@ -85,7 +85,7 @@ test("Do not set contenteditable attribute on data-oe-readonly", async () => {
     `);
     expect(":iframe .target").not.toHaveAttribute("contenteditable");
     await contains(":iframe .target").click();
-    await contains(".options-container [data-class-action='test-class']").click();
+    await contains(".o_hb_options_container [data-class-action='test-class']").click();
     expect(":iframe .target").not.toHaveAttribute("contenteditable");
 });
 
@@ -121,7 +121,7 @@ test("feff on links are cleaned up", async () => {
     setSelection({ anchorNode: link.childNodes[1], anchorOffset: 2 });
     await insertText(getEditor(), "x");
     expect(link.innerText).toMatch(/\u{FEFF}/u);
-    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
     expect.verifySteps(["save"]);
 });
 

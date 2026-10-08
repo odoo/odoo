@@ -40,7 +40,7 @@ describe("Icon styles", () => {
     test("Use the icon font selected in the theme options", async () => {
         mockIconFontCustomization();
         await setupWebsiteBuilder(`<i class="oi" data-icon="search"/>`);
-        await contains(".o-snippets-tabs button[data-name=theme]").click();
+        await contains(".o_hb_snippets_tabs button[data-name=theme]").click();
         await contains(".o_theme_tab [data-action-param='icon-font-family'][data-action-value='Material Symbols Sharp']").click();
         await dblclick(":iframe .oi");
         await waitFor(".font-icons-icons [data-icon='favorite']");

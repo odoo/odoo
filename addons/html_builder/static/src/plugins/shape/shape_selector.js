@@ -51,7 +51,7 @@ export class ShapeSelector extends BaseOptionComponent {
         // is too small it might never get `active` if it's the last section.
         const threshold = pagerContainerRect.height / 2;
 
-        const anchorEls = this.tabsRef().querySelectorAll(".o-hb-select-pager-tab");
+        const anchorEls = this.tabsRef().querySelectorAll(".o_hb_select_pager_tab");
         for (const anchorEl of anchorEls) {
             const groupId = anchorEl.dataset.groupId;
             const sectionEl = this.rootRef().querySelector(`[data-shape-group-id="${groupId}"]`);

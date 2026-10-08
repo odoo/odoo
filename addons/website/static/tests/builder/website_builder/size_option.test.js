@@ -10,14 +10,14 @@ import { unfoldAllOptionsGroups } from "@html_builder/../tests/helpers";
 defineWebsiteModels();
 
 test("Size option should be present when scroll down button is enabled", async () => {
-    const sizeOptionSelector = ".hb-row-sublevel-1[data-label='Size']";
+    const sizeOptionSelector = ".o_hb_row_sublevel_1[data-label='Size']";
     await setupWebsiteBuilderWithSnippet("s_banner", { loadIframeBundles: true });
     await contains(":iframe img").click();
     await unfoldAllOptionsGroups();
     await contains("[data-label='Height'] [data-action-param='o_full_screen_height']").click();
     await contains("[data-label='Scroll Down Button'] input").click();
     await waitFor(sizeOptionSelector);
-    expect(`${sizeOptionSelector} .o-hb-button-group button`).toHaveCount(5);
+    expect(`${sizeOptionSelector} .o_hb_button_group button`).toHaveCount(5);
     await contains(`[data-class-action='oi-2x']`).click();
     const scrollDownButtonEl = queryOne(":iframe .o_scroll_button");
     const angleDownIconEl = scrollDownButtonEl.querySelector("[data-icon='keyboard_arrow_down']");

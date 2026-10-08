@@ -62,10 +62,10 @@ registerWebsitePreviewTour(
         ),
         ...goToTheme(),
         clickOnElement("color option", "[data-label='Colors'] button"),
-        clickOnElement("Click color palette", ".o_theme_tab .hb-sliding-panel .o-dropdown-caret"),
+        clickOnElement("Click color palette", ".o_theme_tab .o_hb_sliding_panel .o-dropdown-caret"),
         clickOnElement(
             "Change color palette",
-            `.o-color-palette-dropdown [data-action-value="'default-light-1'"]`
+            `.o_hb_color_palette_dropdown [data-action-value="'default-light-1'"]`
         ),
         {
             content: "Wait for no loading",
@@ -86,7 +86,7 @@ registerWebsitePreviewTour(
         clickOnElement("color option", "[data-label='Colors'] button"),
         clickOnElement(
             "color picker of theme preset 1",
-            ".hb-sliding-panel-content .o_we_color_preview"
+            ".o_hb_sliding_panel_content .o_we_color_preview"
         ),
         clickOnElement("solid colors tab", ".o_font_color_selector .btn-tab.solid-tab"),
         clickOnElement(

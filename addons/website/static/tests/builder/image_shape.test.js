@@ -14,7 +14,7 @@ import { dummyCORSSrc, setupCORSProtectedImg } from "@html_builder/../tests/help
 defineWebsiteModels();
 
 const selectImageShape = async (shape) => {
-    await contains("[data-label='Media'] ~ [data-label='Shape'] button.o-hb-btn").click();
+    await contains("[data-label='Media'] ~ [data-label='Shape'] button.o_hb_btn").click();
     // Wait for the panel to be opened
     await advanceTime(200);
     await animationFrame();
@@ -762,7 +762,7 @@ test("Should have the correct active shape in the image shape selector", async (
     await waitSidebarUpdated();
 
     // Open the image shape selector
-    await contains("[data-label='Media'] ~ [data-label='Shape'] button.o-hb-btn").click();
+    await contains("[data-label='Media'] ~ [data-label='Shape'] button.o_hb_btn").click();
     await waitSidebarUpdated();
     expect("[data-action-value='html_builder/geometric/geo_tetris']").toHaveClass("active");
 });
@@ -892,9 +892,9 @@ test("Be able to add and remove shape from custom groups", async () => {
     `);
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
-    await contains("[data-label='Media'] ~ [data-label='Shape'] button.o-hb-btn").click();
+    await contains("[data-label='Media'] ~ [data-label='Shape'] button.o_hb_btn").click();
     expect(".o_pager_container").toHaveText(/Custom/);
-    expect("button.o-hb-select-pager-tab[data-group-id='extra']").toHaveCount(1);
+    expect("button.o_hb_select_pager_tab[data-group-id='extra']").toHaveCount(1);
     expect("[data-action-value='html_builder/geometric/geo_shuriken']").toHaveCount(1);
     expect("[data-action-value='html_builder/geometric/geo_diamond']").toHaveCount(1);
     await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
@@ -904,7 +904,7 @@ test("Be able to add and remove shape from custom groups", async () => {
         "html_builder/geometric/geo_shuriken"
     );
     expect(
-        "[data-label='Media'] ~ [data-label='Shape'] button.o-hb-btn:not([data-action-id])"
+        "[data-label='Media'] ~ [data-label='Shape'] button.o_hb_btn:not([data-action-id])"
     ).toHaveText("Custom Shuriken");
 });
 
@@ -941,7 +941,7 @@ test("Should reset shape transformation with reset button and when switching sha
     expect(imgSelector).toHaveAttribute("data-shape-flip", "x");
     expect(imgSelector).toHaveAttribute("data-shape-rotate", "90");
 
-    await contains("[data-label='Media'] ~ [data-label='Shape'] button.o-hb-btn").click();
+    await contains("[data-label='Media'] ~ [data-label='Shape'] button.o_hb_btn").click();
     await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
     await waitSidebarUpdated();
 

@@ -170,7 +170,7 @@ export class AddSnippetDialog extends Component {
         metaElement.setAttribute("name", "color-scheme");
         metaElement.content = colorScheme;
         iframeDocument.head.appendChild(metaElement);
-        iframeDocument.body.parentElement.classList.add("o_add_snippets_preview--" + colorScheme);
+        iframeDocument.body.parentElement.classList.add("o_add_snippets_preview_" + colorScheme);
     }
 
     /**

@@ -1,4 +1,4 @@
-.o-hb-btn {
+.o_hb_btn {
     --gradient: none;
 
     transition: none;
@@ -9,7 +9,7 @@
     white-space: nowrap;
     min-height: var(--o-hb-btn-minHeight);
 
-    &.o-hb-btn-has-icon, &.oi {
+    &.o_hb_btn_has_icon, &.oi {
         --btn-padding-x: var(--o-hb-btn-has-icon-paddingX, #{map-get($spacers , 2)});
         vertical-align: middle;
 
@@ -17,7 +17,7 @@
         min-width: fit-content;
     }
 
-    &.o-hb-btn-has-img-icon, &:has(.hb-svg) {
+    &.o_hb_btn_has_img_icon, &:has(.o_hb_svg) {
         flex: 0 1 auto;
         display: flex;
         align-items: center;
@@ -25,14 +25,14 @@
         --btn-padding-x: #{map-get($spacers , 2)};
     }
 
-    &.o-hb-btn-has-img-icon > img {
+    &.o_hb_btn_has_img_icon > img {
         max-height: 1em;
         width: 1.4em;
         margin-top: 0.2em;
         margin-bottom: 0.2em;
     }
 
-    &.o-hb-btn-has-img-icon .hb-svg {
+    &.o_hb_btn_has_img_icon .o_hb_svg {
         flex-shrink: 0;
 
         &, .o_graphic, .o_subdle {

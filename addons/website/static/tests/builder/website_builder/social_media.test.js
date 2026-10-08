@@ -207,7 +207,7 @@ test("reorder social medias", async () => {
     expect(":iframe a:nth-of-type(7)").toHaveAttribute("href", "https://www.discord.com/your-page");
     expect(":iframe a:nth-of-type(8)").toHaveAttribute("href", "https://www.example.com/first");
 
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='undo']").click();
 
     expect("tr:nth-child(1) input[type=text]").toHaveValue("https://www.linkedin.com/your-page");
     expect("tr:nth-child(2) input[type=text]").toHaveValue("https://x.com/odoo");
@@ -249,7 +249,7 @@ test("share snippet should not be editable (except title) nor user-selectable", 
 test("Edit share icon", async () => {
     const dragAndDropSnippet = async (dataSnippet) => {
         const dragUtils = await contains(
-            `.o-snippets-menu #snippet_content .o_snippet_thumbnail[data-snippet='${dataSnippet}']`
+            `.o_hb_snippets_menu #snippet_content .o_snippet_thumbnail[data-snippet='${dataSnippet}']`
         ).drag();
         await dragUtils.moveTo(":iframe .s_text_image .oe_drop_zone");
         await dragUtils.drop(getDragHelper());
@@ -272,7 +272,7 @@ test("Social Media snippet options are correct", async () => {
 });
 
 test("Share snippet options are correct", async () => {
-    const rowSelector = (id) => `.we-bg-options-container .o_row_draggable[data-id="${id}"]`;
+    const rowSelector = (id) => `.o_hb_bg_options_container .o_row_draggable[data-id="${id}"]`;
     await testSocialSnippetOptions("s_share", "Share", "facebook");
     expect(":iframe .s_share.o_not_editable").toHaveCount(1);
     await contains(`${rowSelector(0)} .o_handle_cell`).dragAndDrop(rowSelector(1));

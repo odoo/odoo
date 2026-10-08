@@ -10,9 +10,9 @@ async function setupWebsiteBuilderWithButtonsTabs() {
         loadIframeBundles: true,
     });
     await contains(":iframe .s_tabs .s_tabs_nav").click();
-    await contains(".o-hb-select-toggle:contains('Underline')").click();
+    await contains(".o_hb_select_toggle:contains('Underline')").click();
     await contains(
-        ".o-hb-select-dropdown-item[data-action-id='setStyle'][data-action-value='nav-buttons']"
+        ".o_hb_select_dropdown_item[data-action-id='setStyle'][data-action-value='nav-buttons']"
     ).click();
     await websiteBuilderObject.waitSidebarUpdated();
     return websiteBuilderObject;
@@ -21,7 +21,7 @@ async function setupWebsiteBuilderWithButtonsTabs() {
 test("set a theme (color combination) background on .s_tabs tabs", async () => {
     await setupWebsiteBuilderWithButtonsTabs();
     await contains(".o_we_color_preview:eq(1)").click();
-    await contains(".color-combination-button.o_cc4").click();
+    await contains(".o_hb_color_combination_button.o_cc4").click();
     expect(".o_we_color_preview:eq(1)").toHaveStyle({ backgroundColor: "rgb(113, 75, 103)" });
     expect(":iframe .s_tabs_nav .nav-link.active").toHaveStyle({
         backgroundColor: "rgb(27, 19, 25)",
@@ -31,7 +31,7 @@ test("set a theme (color combination) background on .s_tabs tabs", async () => {
 test("set a theme (color combination) background on .s_tabs tabs with a custom link color", async () => {
     await setupWebsiteBuilderWithButtonsTabs();
     await contains(".o_we_color_preview:eq(1)").click();
-    await contains(".color-combination-button.o_cc4").click();
+    await contains(".o_hb_color_combination_button.o_cc4").click();
     await contains(".o_we_color_preview:eq(2)").click();
     await contains(".o_color_button[data-color='#FFFF00']").click();
     expect(".o_we_color_preview:eq(2)").toHaveStyle({ backgroundColor: "rgb(255, 255, 0)" });
@@ -92,9 +92,9 @@ test("switching from buttons tabs to tabs tabs keeps custom colors", async () =>
     });
     // Switch to tabs tabs
     await contains(":iframe .s_tabs .s_tabs_nav").click();
-    await contains(".o-hb-select-toggle:contains('Buttons')").click();
+    await contains(".o_hb_select_toggle:contains('Buttons')").click();
     await contains(
-        ".o-hb-select-dropdown-item[data-action-id='setStyle'][data-action-value='nav-tabs']"
+        ".o_hb_select_dropdown_item[data-action-id='setStyle'][data-action-value='nav-tabs']"
     ).click();
     await waitSidebarUpdated();
     expect(".o_we_color_preview:eq(1)").toHaveStyle({ backgroundColor: "rgb(206, 212, 218)" });
@@ -121,9 +121,9 @@ test("switching back from buttons tabs to underline or pills erases custom color
     const inactiveTabColor = getElStyle(inactiveTabEl, "color");
     const activeTabBackground = getElStyle(activeTabEl, "backgroundColor");
     await contains(":iframe .s_tabs .s_tabs_nav").click();
-    await contains(".o-hb-select-toggle:contains('Underline')").click();
+    await contains(".o_hb_select_toggle:contains('Underline')").click();
     await contains(
-        ".o-hb-select-dropdown-item[data-action-id='setStyle'][data-action-value='nav-buttons']"
+        ".o_hb_select_dropdown_item[data-action-id='setStyle'][data-action-value='nav-buttons']"
     ).click();
     await waitSidebarUpdated();
     // Update background
@@ -141,13 +141,13 @@ test("switching back from buttons tabs to underline or pills erases custom color
     expect(getElStyle(inactiveTabEl, "color")).not.toBe(inactiveTabColor);
     // Switch back to underline tabs
     await contains(":iframe .s_tabs .s_tabs_nav").click();
-    await contains(".o-hb-select-toggle:contains('Buttons')").click();
+    await contains(".o_hb_select_toggle:contains('Buttons')").click();
     await contains(
-        ".o-hb-select-dropdown-item[data-action-id='setStyle'][data-action-value='nav-underline']"
+        ".o_hb_select_dropdown_item[data-action-id='setStyle'][data-action-value='nav-underline']"
     ).click();
     await waitSidebarUpdated();
     // The option is not available anymore.
-    expect(".hb-row.hb-row-sublevel-1[data-label='Background']").not.toHaveCount();
+    expect(".o_hb_row.o_hb_row_sublevel_1[data-label='Background']").not.toHaveCount();
     // The tabs are back to standard styles.
     expect(tabsNavEl).toHaveStyle({ backgroundColor: tabsNavBackground });
     expect(":iframe .s_tabs_nav .nav-link.active").toHaveStyle({

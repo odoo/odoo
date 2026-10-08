@@ -48,7 +48,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     });
     await contains(":iframe .test-options-target").click();
     await animationFrame();
-    expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
+    expect(".o_hb_tab_content > .o_customize_tab").toHaveCount(1);
 
     expect.step("set preset");
     await contains("button.o_we_color_preview").click();
@@ -136,15 +136,15 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
         "asset reload",
     ]);
 
-    await contains('.o-snippets-tabs button[data-name="theme"]').click();
-    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
+    await contains('.o_hb_snippets_tabs button[data-name="theme"]').click();
+    await contains(".o_hb_tab_content .o_hb_theme_color_slider_btn").click();
     await contains(
-        '.hb-sliding-panel-content button[aria-controls^="builder_collapse_content_"]'
+        '.o_hb_sliding_panel_content button[aria-controls^="builder_collapse_content_"]'
     ).click();
     await contains(
-        '.hb-sliding-panel-content div[data-label="Background"] .o_we_color_preview'
+        '.o_hb_sliding_panel_content div[data-label="Background"] .o_we_color_preview'
     ).click();
-    await contains(".o-hb-colorpicker .custom-tab").click();
+    await contains(".o_hb_colorpicker .custom-tab").click();
     const hexInputEl = await getIframeInput(
         ".o_font_color_selector .o_color_picker_inputs iframe.o_hex_iframe",
         "input[name='hex_input']"

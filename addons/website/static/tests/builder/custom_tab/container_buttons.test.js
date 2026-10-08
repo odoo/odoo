@@ -44,11 +44,11 @@ test("Use the sidebar 'remove' buttons", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(dummySnippet);
 
     const removeSectionSelector =
-        ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_remove";
+        ".o_customize_tab .o_hb_options_container > div:contains('Dummy Section') button.oe_snippet_remove";
     const removeColumnSelector =
-        ".o_customize_tab .options-container > div:contains('Column') button.oe_snippet_remove";
+        ".o_customize_tab .o_hb_options_container > div:contains('Column') button.oe_snippet_remove";
     const removeImageSelector =
-        ".o_customize_tab .options-container > div:contains('Image') button.oe_snippet_remove";
+        ".o_customize_tab .o_hb_options_container > div:contains('Image') button.oe_snippet_remove";
 
     await contains(":iframe .col-lg-7 img").click();
     await waitSidebarUpdated();
@@ -68,9 +68,9 @@ test("Use the sidebar 'clone' buttons", async () => {
     await setupWebsiteBuilder(dummySnippet);
 
     const cloneSectionSelector =
-        ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_clone";
+        ".o_customize_tab .o_hb_options_container > div:contains('Dummy Section') button.oe_snippet_clone";
     const cloneColumnSelector =
-        ".o_customize_tab .options-container > div:contains('Column') button.oe_snippet_clone";
+        ".o_customize_tab .o_hb_options_container > div:contains('Column') button.oe_snippet_clone";
 
     await contains(":iframe .col-lg-7").click();
     await animationFrame();
@@ -138,16 +138,16 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     onRpc("ir.ui.view", "render_public_asset", (args) => getSnippetView(snippets));
 
     const saveSectionSelector =
-        ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_save";
+        ".o_customize_tab .o_hb_options_container > div:contains('Dummy Section') button.oe_snippet_save";
     const saveColumnSelector =
-        ".o_customize_tab .options-container > div:contains('Column') button.oe_snippet_save";
+        ".o_customize_tab .o_hb_options_container > div:contains('Column') button.oe_snippet_save";
     const saveButtonSelector =
-        ".o_customize_tab .options-container > div:contains('Button') button.oe_snippet_save";
+        ".o_customize_tab .o_hb_options_container > div:contains('Button') button.oe_snippet_save";
 
     // Check that there is no custom section.
     const customGroupSelector =
-        ".o-snippets-menu #snippet_groups .o_snippet[data-snippet-group='custom'] .o_snippet_thumbnail_area";
-    expect(".o-snippets-menu div:contains('Custom Inner Content')").toHaveCount(0);
+        ".o_hb_snippets_menu #snippet_groups .o_snippet[data-snippet-group='custom'] .o_snippet_thumbnail_area";
+    expect(".o_hb_snippets_menu div:contains('Custom Inner Content')").toHaveCount(0);
     expect(customGroupSelector).toHaveCount(0);
 
     await contains(":iframe .btn").click();
@@ -165,9 +165,9 @@ test("Use the sidebar 'save snippet' buttons", async () => {
     expect(".o_notification_manager .o_notification_content").toHaveCount(1);
 
     // Check that the custom sections appeared.
-    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Blocks)").click();
+    await contains(".o_website_builder_sidebar .o_hb_snippets_tabs button:contains(Blocks)").click();
     expect(
-        ".o-snippets-menu div:contains('Custom Inner Content') div[name='Custom Button']"
+        ".o_hb_snippets_menu div:contains('Custom Inner Content') div[name='Custom Button']"
     ).toHaveCount(1);
     expect(customGroupSelector).toHaveCount(1);
     await contains(customGroupSelector).click();
@@ -257,7 +257,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     `;
     await setupWebsiteBuilder(websiteContent);
     const anchorSelector =
-        ".o_customize_tab .options-container > div:contains('Dummy Section') button.oe_snippet_anchor";
+        ".o_customize_tab .o_hb_options_container > div:contains('Dummy Section') button.oe_snippet_anchor";
     const notificationContentSelector = ".o_notification_manager .o_notification_content";
     const notificationCloseSelector = ".o_notification_manager .o_notification_close";
     const notificationEditSelector = ".o_notification_manager .o_notification_buttons button";
@@ -311,7 +311,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await contains(":iframe section.fourth div.row div").click();
     await animationFrame();
     await contains(
-        ".o_customize_tab .options-container > div:contains('Column') button.oe_snippet_anchor"
+        ".o_customize_tab .o_hb_options_container > div:contains('Column') button.oe_snippet_anchor"
     ).click();
     await animationFrame();
     expect(queryText(notificationContentSelector)).toInclude("#Column");
@@ -322,14 +322,14 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     await contains(":iframe section.fifth div.row div").click();
     await animationFrame();
     expect(
-        ".o_customize_tab .options-container > div:contains('Column') button.oe_snippet_anchor"
+        ".o_customize_tab .o_hb_options_container > div:contains('Column') button.oe_snippet_anchor"
     ).toHaveCount(0);
 
     // Card outside a column also support anchor
     await contains(":iframe section.sixth div").click();
     await animationFrame();
     await contains(
-        ".o_customize_tab .options-container > div:contains('Card') button.oe_snippet_anchor"
+        ".o_customize_tab .o_hb_options_container > div:contains('Card') button.oe_snippet_anchor"
     ).click();
     await animationFrame();
     expect(queryText(notificationContentSelector)).toInclude("#Card");
@@ -342,13 +342,13 @@ test("Clicking on the select element button in container's header selects the co
 
     await contains(":iframe .col-lg-7").click();
     await animationFrame();
-    expect(".o_customize_tab .options-container").toHaveCount(2);
+    expect(".o_customize_tab .o_hb_options_container").toHaveCount(2);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-7");
 
     await contains(
-        ".o_customize_tab .options-container-header:has(span:contains('Dummy Section')) button[title='Select only this block']"
+        ".o_customize_tab .o_hb_options_container_header:has(span:contains('Dummy Section')) button[title='Select only this block']"
     ).click();
-    expect(".o_customize_tab .options-container").toHaveCount(1);
+    expect(".o_customize_tab .o_hb_options_container").toHaveCount(1);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe section");
 });
 
@@ -360,12 +360,12 @@ test("Show the overlay preview when hovering an options container", async () => 
     expect(".oe_overlay").toHaveCount(2);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-7");
 
-    await contains(".o_customize_tab .options-container span:contains('Dummy Section')").hover();
+    await contains(".o_customize_tab .o_hb_options_container span:contains('Dummy Section')").hover();
     expect(".overlay .o_overlay_options.d-none").toHaveCount(1);
     expect(".oe_overlay.oe_active.o_overlay_hidden").toHaveCount(1);
     expect(".oe_overlay.o_we_overlay_preview").toHaveRect(":iframe section");
 
-    await contains(".o_customize_tab .options-container span:contains('Column')").hover();
+    await contains(".o_customize_tab .o_hb_options_container span:contains('Column')").hover();
     expect(".overlay .o_overlay_options.d-none").toHaveCount(1);
     expect(".oe_overlay.oe_active.o_we_overlay_preview").toHaveCount(1);
     expect(".oe_overlay.o_we_overlay_preview").toHaveRect(":iframe .col-lg-7");
@@ -443,11 +443,11 @@ test("applying option container button should wait for actions in progress", asy
 test("Use the sidebar 'target' button", async () => {
     await setupWebsiteBuilderWithSnippet("s_banner");
     await contains(":iframe h1").click();
-    expect(".options-container").toHaveCount(2);
+    expect(".o_hb_options_container").toHaveCount(2);
     await contains(
-        ".o_customize_tab .options-container[data-container-title='Banner'] button[title='Select only this block']"
+        ".o_customize_tab .o_hb_options_container[data-container-title='Banner'] button[title='Select only this block']"
     ).click();
-    expect(".options-container").toHaveCount(1);
+    expect(".o_hb_options_container").toHaveCount(1);
 });
 
 test("Custom snippet appears in block and inner content on save and is removed on delete", async () => {
@@ -509,14 +509,14 @@ test("Custom snippet appears in block and inner content on save and is removed o
     await contains(":iframe section[data-snippet='s_map']").click();
     await contains(".oe_snippet_save").click();
     expect.verifySteps(["save snippet"]);
-    await contains(".o-snippets-tabs button:contains(Blocks)").click();
+    await contains(".o_hb_snippets_tabs button:contains(Blocks)").click();
     expect(
-        ".o-snippets-menu div:contains('Custom Inner Content') div[name='Custom Map']"
+        ".o_hb_snippets_menu div:contains('Custom Inner Content') div[name='Custom Map']"
     ).toHaveCount(1);
-    expect(".o-snippets-menu .o_snippet[data-snippet-group='custom']").toHaveCount(1);
+    expect(".o_hb_snippets_menu .o_snippet[data-snippet-group='custom']").toHaveCount(1);
 
     // Delete the custom snippet and check that it is removed from the sidebar.
-    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    await click(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     await contains(
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe button:has([data-icon='delete'])"
@@ -524,7 +524,7 @@ test("Custom snippet appears in block and inner content on save and is removed o
     await contains(".o_dialog .btn:contains('Delete Block')").click();
     expect.verifySteps(["delete snippet"]);
     expect(
-        ".o-snippets-menu div:contains('Custom Inner Content') div[name='Custom Map']"
+        ".o_hb_snippets_menu div:contains('Custom Inner Content') div[name='Custom Map']"
     ).toHaveCount(0);
-    expect(".o-snippets-menu .o_snippet[data-snippet-group='custom']").toHaveCount(0);
+    expect(".o_hb_snippets_menu .o_snippet[data-snippet-group='custom']").toHaveCount(0);
 });

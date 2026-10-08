@@ -302,7 +302,7 @@ registry.category("web_tour.tours").add("edit_menus", {
         },
         {
             trigger:
-                ".o-website-builder_sidebar:has([aria-selected]:contains(Style)) .o-tab-content:contains(Select a block on your page to style it.)",
+                ".o_website_builder_sidebar:has([aria-selected]:contains(Style)) .o_hb_tab_content:contains(Select a block on your page to style it.)",
         },
         goBackToBlocks(),
         ...insertSnippet({ id: "s_media_list", name: "Media List", groupName: "Content" }),

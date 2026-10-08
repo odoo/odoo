@@ -56,7 +56,7 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
         model: "test.base",
         recordId: 1,
     });
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
     expect("table tr").toHaveCount(0);
     expect(modelEdit.get("rel")).toEqual([]);
 
@@ -86,7 +86,7 @@ test("model many2many: find tag, select tag, unselect tag", async () => {
     expect("table tr").toHaveCount(1);
     expect("table input").toHaveValue("Second");
 
-    await contains(".o-snippets-tabs button").click();
+    await contains(".o_hb_snippets_tabs button").click();
     await contains(":iframe .test-options-target").click();
     expect("table tr").toHaveCount(1);
     expect("table input").toHaveValue("Second");

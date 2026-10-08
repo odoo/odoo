@@ -109,7 +109,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Describe it again in the default language, which delays its translation",
-            trigger: ".hb-row[data-label='Description'] input",
+            trigger: ".o_hb_row[data-label='Description'] input",
             run: "edit a photograph of the sea && click body",
         },
         ...clickOnSave(),

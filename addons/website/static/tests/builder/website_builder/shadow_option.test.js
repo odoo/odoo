@@ -27,7 +27,7 @@ test("bootstrap shadow controls in the theme tab of website builder", async () =
         "asset reload",
     ]);
 
-    await contains("div.hb-row-label:contains('Normal')").click();
+    await contains("div.o_hb_row_label:contains('Normal')").click();
     await contains("div[data-label='Color'] button.o_we_color_preview").click();
     await contains("div.o_popover button.o_color_button[data-color='#FF0000']").click();
     expect.waitForSteps([

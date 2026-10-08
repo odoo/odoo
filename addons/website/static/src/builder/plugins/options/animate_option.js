@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { useProps, t } from "@odoo/owl";
 
 export const animateOptionProps = {
-    dropdownClass: t.string().optional("o-hb-select-dropdown"),
+    dropdownClass: t.string().optional("o_hb_select_dropdown"),
     requireAnimation: t.boolean().optional(false),
     slots: t.object().optional(),
 };

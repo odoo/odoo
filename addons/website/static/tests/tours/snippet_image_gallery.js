@@ -76,12 +76,12 @@ registerWebsitePreviewTour(
         {
             content:
                 "Check that the Snippet Editor of the clicked image has been loaded with its size",
-            trigger: ".o-tab-content [data-container-title='Image']:has([title='Size']:text(.+ kB)",
+            trigger: ".o_hb_tab_content [data-container-title='Image']:has([title='Size']:text(.+ kB)",
         },
         {
             content: "Click on Remove Block",
             trigger:
-                ".o_customize_tab .options-container[data-container-title='Image Gallery'] .oe_snippet_remove",
+                ".o_customize_tab .o_hb_options_container[data-container-title='Image Gallery'] .oe_snippet_remove",
             run: "click",
         },
         {
@@ -125,7 +125,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the footer options have been loaded",
-            trigger: ".o-tab-content [data-container-title='Footer']",
+            trigger: ".o_hb_tab_content [data-container-title='Footer']",
         },
         {
             content: "Click on the moved image",

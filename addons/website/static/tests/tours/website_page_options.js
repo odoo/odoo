@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("website_page_options", {
         {
             content: "Open the color picker to change the background color of the header",
             trigger:
-                "div[data-container-title='Header'] .hb-row[data-label='Header Position'] + .hb-row-sublevel-1[data-label='Background'] button",
+                "div[data-container-title='Header'] .o_hb_row[data-label='Header Position'] + .o_hb_row_sublevel_1[data-label='Background'] button",
             run: "click",
         },
         {
@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add("website_page_options", {
         {
             content: "Open the color picker to change the text color of the header",
             trigger:
-                "div[data-container-title='Header'] .hb-row-sublevel-1[data-label='Text Color'] button",
+                "div[data-container-title='Header'] .o_hb_row_sublevel_1[data-label='Text Color'] button",
             run: "click",
         },
         {

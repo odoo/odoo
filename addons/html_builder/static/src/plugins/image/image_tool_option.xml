@@ -6,7 +6,7 @@
         <MediaSizeOption level="1"/>
     </t>
     <BuilderRow label.translate="Transform" level="1" preview="false">
-        <div class="btn-group o-hb-button-group">
+        <div class="btn-group o_hb_button_group">
             <BuilderButton t-if="this.state.showCropTool" title.translate="Crop image" action="'cropImage'" icon="'crop'" id="'cropImage'" />
             <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.state.showCropTool and this.isActiveItem('cropImage')" icon="'close_small'" className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'" />
         </div>

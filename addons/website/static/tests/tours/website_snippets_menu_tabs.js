@@ -8,7 +8,7 @@ registerWebsitePreviewTour(
     () => [
         ...goToTheme(),
         {
-            trigger: "div[data-container-title='Website'] div.we-bg-options-container",
+            trigger: "div[data-container-title='Website'] div.o_hb_bg_options_container",
         },
         {
             content: "Click on the empty 'Drag blocks here' area.",
@@ -18,7 +18,7 @@ registerWebsitePreviewTour(
         ...goToTheme(),
         {
             content: "Verify that the customize panel is not empty.",
-            trigger: ".o_theme_tab .options-container",
+            trigger: ".o_theme_tab .o_hb_options_container",
         },
         {
             content: "Click on the style tab.",
@@ -28,7 +28,7 @@ registerWebsitePreviewTour(
         ...goToTheme(),
         {
             content: "Verify that the customize panel is not empty.",
-            trigger: ".o_theme_tab .options-container",
+            trigger: ".o_theme_tab .o_hb_options_container",
         },
     ]
 );

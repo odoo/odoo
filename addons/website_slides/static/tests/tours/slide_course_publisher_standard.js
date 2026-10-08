@@ -114,7 +114,7 @@ registry.category("web_tour.tours").add("course_publisher_standard", {
                 },
                 {
                     content: "eLearning: save article",
-                    trigger: '.o-snippets-top-actions button[data-action="save"]',
+                    trigger: '.o_hb_snippets_top_actions button[data-action="save"]',
                     run: "click",
                 },
                 {

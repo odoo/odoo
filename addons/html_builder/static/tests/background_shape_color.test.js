@@ -297,7 +297,7 @@ test("Connections shape color updates when snippet is dropped next to it", async
     await contains("#blocks-tab").click();
     const section1 = queryOne(":iframe #section1");
     const { moveTo, drop } = await contains(
-        ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
+        ".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
     await moveTo(section1);
     await drop();

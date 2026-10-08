@@ -82,12 +82,12 @@ registry.category("web_tour.tours").add("website_update_column_count", {
         },
         {
             content: "Toggle mobile view",
-            trigger: ".o-snippets-top-actions button[data-action='mobile']",
+            trigger: ".o_hb_snippets_top_actions button[data-action='mobile']",
             run: "click",
         },
         {
             content: `Target the "Columns" group`,
-            trigger: `.options-container[data-container-title="Columns"]:has(.options-container-label i[data-icon='arrow_right']) button[title="Select only this block"]`,
+            trigger: `.o_hb_options_container[data-container-title="Columns"]:has(.o_hb_options_container_label i[data-icon='arrow_right']) button[title="Select only this block"]`,
             run: "click",
         },
         {
@@ -113,7 +113,7 @@ registry.category("web_tour.tours").add("website_update_column_count", {
         },
         {
             content: `Wait for "Columns" group update`,
-            trigger: `.options-container[data-container-title="Columns"]:has(.options-container-label i[data-icon='arrow_right'])`,
+            trigger: `.o_hb_options_container[data-container-title="Columns"]:has(.o_hb_options_container_label i[data-icon='arrow_right'])`,
         },
         {
             content: "Add a fake resized class on mobile to the 2nd item",
@@ -169,7 +169,7 @@ registry.category("web_tour.tours").add("website_update_column_count", {
         },
         {
             content: "Toggle desktop view",
-            trigger: ".o-snippets-top-actions button[data-action='mobile']",
+            trigger: ".o_hb_snippets_top_actions button[data-action='mobile']",
             run: "click",
         },
         ...changeOptionInPopover("Columns", "Layout", "6"),

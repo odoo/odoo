@@ -176,7 +176,7 @@ export class BuilderOptionsPlugin extends Plugin {
             const buttons = [];
             if (el.matches("section")) {
                 buttons.push({
-                    class: "oi oi-fw btn o-hb-btn btn-accent-color-hover",
+                    class: "oi oi-fw btn o_hb_btn btn-accent-color-hover",
                     icon: "center_focus_weak",
                     title: _t("Select only this block"),
                     handler: (el) => this.updateContainers(el),

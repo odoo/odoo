@@ -177,8 +177,8 @@ export class BuilderColorPicker extends Component {
         selectedTab: t.string().optional("theme"),
         defaultColor: t.string().optional("#FFFFFF00"),
         defaultOpacity: t.number().optional(),
-        colorPickerClassName: t.string().optional("o-hb-colorpicker"),
-        colorPickerPopoverClassName: t.string().optional("o-hb-colorpicker-popover"),
+        colorPickerClassName: t.string().optional("o_hb_colorpicker"),
+        colorPickerPopoverClassName: t.string().optional("o_hb_colorpicker_popover"),
     });
 
     setup() {

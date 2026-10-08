@@ -75,7 +75,7 @@ export function changeOption(
     const noPalette = allowPalette
         ? ""
         : !document.querySelector(".o_popover .o_font_color_selector") &&
-          ".o-tab-content > [role='tabpanel']";
+          ".o_hb_tab_content > [role='tabpanel']";
     const option_block = `${noPalette} [data-container-title='${blockName}']`;
     return {
         trigger: `${option_block} ${actionId}, ${option_block} [data-action-id="${actionId}"]`,
@@ -263,7 +263,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
     const trigger = snippet.id ? `#wrapwrap .${snippet.id}` : snippet;
     return [
         {
-            trigger: ".o-website-builder_sidebar",
+            trigger: ".o_website_builder_sidebar",
         },
         {
             trigger: `:iframe ${trigger}`,
@@ -276,7 +276,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
 export function clickOnSave(timeout = 50000, withContains = true) {
     return [
         {
-            trigger: ".o-snippets-menu:not(:has(.o_we_ongoing_insertion))",
+            trigger: ".o_hb_snippets_menu:not(:has(.o_we_ongoing_insertion))",
         },
         {
             trigger: "body:not(:has(.o_dialog))",
@@ -386,7 +386,7 @@ export function goBackToBlocks() {
 export function goToTheme() {
     return [
         {
-            trigger: ".o-website-builder_sidebar",
+            trigger: ".o_website_builder_sidebar",
         },
         {
             trigger: "button[data-name='theme']",
@@ -395,7 +395,7 @@ export function goToTheme() {
         },
         {
             content: "Check that the theme tab is active",
-            trigger: ".o-tab-content .options-container [data-action-id='switchTheme']",
+            trigger: ".o_hb_tab_content .o_hb_options_container [data-action-id='switchTheme']",
         },
     ];
 }
@@ -412,7 +412,7 @@ export function unfoldOptionsGroup(name) {
     return [
         {
             content: `Unfold the "${name}" group`,
-            trigger: `.options-container[data-container-title="${name}"] .options-container-label i[data-icon='arrow_right']`,
+            trigger: `.o_hb_options_container[data-container-title="${name}"] .o_hb_options_container_label i[data-icon='arrow_right']`,
             run: "click",
         },
     ];
@@ -603,7 +603,7 @@ export function toggleMobilePreview(toggleOn) {
         },
         {
             content: `Toggle the mobile preview ${onOrOff}`,
-            trigger: ".o-snippets-top-actions [data-action='mobile']",
+            trigger: ".o_hb_snippets_top_actions [data-action='mobile']",
             run: "click",
         },
         {
@@ -752,21 +752,21 @@ export function changeBackgroundShape(shape = "html_builder/Connections/01") {
     return [
         {
             content: "Open Background Shape selector",
-            trigger: "div[data-label='Background'] ~ div[data-label='Shape'] button.o-hb-btn",
+            trigger: "div[data-label='Background'] ~ div[data-label='Shape'] button.o_hb_btn",
             run: "click",
         },
         {
             content: "Wait for panel to open",
-            trigger: ".hb-sliding-panel.d-block",
+            trigger: ".o_hb_sliding_panel.d-block",
         },
         {
             content: "Pick a Background Shape",
-            trigger: `.o_pager_container .o-hb-bg-shape-btn [data-action-id='setBackgroundShape'][data-action-value='${shape}']`,
+            trigger: `.o_pager_container .o_hb_bg_shape_btn [data-action-id='setBackgroundShape'][data-action-value='${shape}']`,
             run: "click",
         },
         {
             content: "Wait for panel to close",
-            trigger: "body:not(:has(.hb-panel-slide-out))",
+            trigger: "body:not(:has(.o_hb_panel_slide_out))",
         },
     ];
 }
@@ -775,21 +775,21 @@ export function changeImageShape(shape = "html_builder/geometric/geo_shuriken") 
     return [
         {
             content: "Open Image Shape selector",
-            trigger: "div[data-label='Media'] ~ div[data-label='Shape'] button.o-hb-btn",
+            trigger: "div[data-label='Media'] ~ div[data-label='Shape'] button.o_hb_btn",
             run: "click",
         },
         {
             content: "Wait for panel to open",
-            trigger: ".hb-sliding-panel.d-block",
+            trigger: ".o_hb_sliding_panel.d-block",
         },
         {
             content: "Pick an Image Shape",
-            trigger: `.o_pager_container .o-hb-img-shape-btn [data-action-id='setImageShape'][data-action-value='${shape}']`,
+            trigger: `.o_pager_container .o_hb_img_shape_btn [data-action-id='setImageShape'][data-action-value='${shape}']`,
             run: "click",
         },
         {
             content: "Wait for panel to close",
-            trigger: ".options-container:visible",
+            trigger: ".o_hb_options_container:visible",
         },
     ];
 }

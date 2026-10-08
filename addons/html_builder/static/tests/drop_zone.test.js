@@ -21,7 +21,7 @@ test("wrapper element has the 'Drag blocks here' message", async () => {
 test("drop beside dropzone inserts the snippet", async () => {
     const { contentEl } = await setupHTMLBuilder();
     const { moveTo, drop } = await contains(
-        ".o-snippets-menu #snippet_groups .o_snippet_thumbnail"
+        ".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail"
     ).drag();
     await moveTo(contentEl.ownerDocument.body);
     // The dropzone is not hovered, so not highlighted.
@@ -55,7 +55,7 @@ test("snippets cannot be dropped next to elements inside excluded parent", async
         { snippetContent, dropzoneSelectors }
     );
 
-    await contains(".o-snippets-menu .o_snippet_thumbnail[data-snippet='s_image']").drag();
+    await contains(".o_hb_snippets_menu .o_snippet_thumbnail[data-snippet='s_image']").drag();
     // Should have 3 dropzones in first-div (not excluded)
     expect(":iframe .first-div .oe_drop_zone").toHaveCount(3);
     // Should have no dropzones in second-div (excluded by excludeNearParent)

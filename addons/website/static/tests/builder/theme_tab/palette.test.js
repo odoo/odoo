@@ -25,16 +25,16 @@ test("theme tab: warning on palette change", async () => {
     await setupWebsiteBuilder("", {
         styleContent: 'body { --has-customized-colors: "true"; }',
     });
-    await contains(".o-snippets-tabs button[data-name=theme]").click();
-    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
+    await contains(".o_hb_snippets_tabs button[data-name=theme]").click();
+    await contains(".o_hb_tab_content .o_hb_theme_color_slider_btn").click();
     await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o-color-palette-card span`).click();
+    await contains(`[data-action-value="'default-light-1'"] .o_hb_color_palette_card span`).click();
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog .btn-secondary").click();
     expect(".o_dialog").toHaveCount(0);
     expect.verifySteps([]);
     await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o-color-palette-card span`).click();
+    await contains(`[data-action-value="'default-light-1'"] .o_hb_color_palette_card span`).click();
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog .btn-primary").click();
     await def.promise;
@@ -60,10 +60,10 @@ test("theme tab: no warning on palette change", async () => {
     });
 
     await setupWebsiteBuilder("");
-    await contains(".o-snippets-tabs button[data-name=theme]").click();
-    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
+    await contains(".o_hb_snippets_tabs button[data-name=theme]").click();
+    await contains(".o_hb_tab_content .o_hb_theme_color_slider_btn").click();
     await contains(".o_theme_tab [data-icon='palette']").click();
-    await contains(`[data-action-value="'default-light-1'"] .o-color-palette-card span`).click();
+    await contains(`[data-action-value="'default-light-1'"] .o_hb_color_palette_card span`).click();
     await def.promise;
     expect(".o_dialog").toHaveCount(0);
     expect.verifySteps([

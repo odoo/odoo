@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.ImageShapeOption">
     <BuilderRow label.translate="Shape" t-if="this.state.isShapeSupported">
-        <div class="btn-group o-hb-button-group">
+        <div class="btn-group o_hb_button_group">
             <BuilderSlidingPanel
                 label.translate="Shape"
                 extraClasses="'btn-secondary'"
@@ -14,7 +14,7 @@
                     <ShapeSelector
                         onClose="panel.close"
                         shapeActionId="'setImageShape'"
-                        buttonWrapperClassName="'o-hb-img-shape-btn'"
+                        buttonWrapperClassName="'o_hb_img_shape_btn'"
                         selectorTitle.translate="Shapes"
                         shapeGroups="this.getFilteredGroups()"
                     />

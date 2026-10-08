@@ -137,8 +137,8 @@ test("Data Attribute action works with non string values", async () => {
     });
     await setupHTMLBuilder(`<section class="s_test">Test</section>`);
     await contains(":iframe .s_test").click();
-    await contains(".we-bg-options-container button:contains('Click')").click();
-    expect(".we-bg-options-container button:contains('Click')").toHaveClass("active");
+    await contains(".o_hb_bg_options_container button:contains('Click')").click();
+    expect(".o_hb_bg_options_container button:contains('Click')").toHaveClass("active");
     expect(":iframe .s_test").toHaveAttribute("data-customer-order-ids", "100,200");
 });
 

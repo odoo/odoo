@@ -24,14 +24,14 @@ test("open BuilderSidebar and discard", async () => {
     const { openBuilderSidebar } = await setupWebsiteBuilder(`<h1> Homepage </h1>`, {
         openEditor: false,
     });
-    expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
+    expect(".o_menu_systray .o_website_btn_custo_primary").toHaveCount(1);
     await openBuilderSidebar();
-    expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(0);
-    await click(".o-snippets-top-actions button:contains(Discard)");
+    expect(".o_menu_systray .o_website_btn_custo_primary").toHaveCount(0);
+    await click(".o_hb_snippets_top_actions button:contains(Discard)");
     await websiteBuilder.iframeLoaded;
     await animationFrame(); // WebsiteBuilderClientAction out of edit mode
     await animationFrame(); // Navbar systray items updated
-    expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
+    expect(".o_menu_systray .o_website_btn_custo_primary").toHaveCount(1);
 });
 
 test("navigate between builder tab don't fetch snippet description again", async () => {
@@ -39,24 +39,24 @@ test("navigate between builder tab don't fetch snippet description again", async
         expect.step("render_public_asset");
     });
     await setupWebsiteBuilder(`<h1> Homepage </h1>`);
-    expect(queryAllTexts(".o-website-builder_sidebar .o-snippets-tabs button")).toEqual([
+    expect(queryAllTexts(".o_website_builder_sidebar .o_hb_snippets_tabs button")).toEqual([
         "Blocks",
         "Style",
         "Theme",
     ]);
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
+    expect(queryOne(".o_website_builder_sidebar .o_hb_snippets_tabs button.active")).toHaveText(
         "Blocks"
     );
     expect.verifySteps(["render_public_asset"]);
 
-    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Theme)").click();
+    await contains(".o_website_builder_sidebar .o_hb_snippets_tabs button:contains(Theme)").click();
     await animationFrame();
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
+    expect(queryOne(".o_website_builder_sidebar .o_hb_snippets_tabs button.active")).toHaveText(
         "Theme"
     );
 
-    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Blocks)").click();
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
+    await contains(".o_website_builder_sidebar .o_hb_snippets_tabs button:contains(Blocks)").click();
+    expect(queryOne(".o_website_builder_sidebar .o_hb_snippets_tabs button.active")).toHaveText(
         "Blocks"
     );
     expect.verifySteps([]);
@@ -69,7 +69,7 @@ test("undo and redo buttons", async () => {
             openEditor: false,
         }
     );
-    expect(".o_menu_systray .o-website-btn-custo-primary").toHaveCount(1);
+    expect(".o_menu_systray .o_website_btn_custo_primary").toHaveCount(1);
     await openBuilderSidebar();
     expect(":iframe #wrap").not.toHaveClass("o_dirty");
     expect(":iframe #wrap").toHaveClass("o_savable");
@@ -81,12 +81,12 @@ test("undo and redo buttons", async () => {
         '<div id="wrap" class="oe_structure oe_empty o_savable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here" contenteditable="true"> <p> Texta </p> </div>'
     );
     await animationFrame();
-    await click(".o-snippets-menu button[data-icon='undo']");
+    await click(".o_hb_snippets_menu button[data-icon='undo']");
     await animationFrame();
     expect(editor.editable).toHaveInnerHTML(
         '<div id="wrap" class="oe_structure oe_empty o_savable" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here" contenteditable="true"> <p> Text </p> </div>'
     );
-    await click(".o-snippets-menu button[data-icon='redo']");
+    await click(".o_hb_snippets_menu button[data-icon='redo']");
     expect(editor.editable).toHaveInnerHTML(
         '<div id="wrap" class="oe_structure oe_empty o_savable o_dirty" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch" data-editor-message-default="true" data-editor-message="Drag blocks here" contenteditable="true"> <p> Texta </p> </div>'
     );
@@ -94,11 +94,11 @@ test("undo and redo buttons", async () => {
 
 test("activate customize tab without any selection", async () => {
     await setupWebsiteBuilder("<h1> Homepage </h1>");
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
+    expect(queryOne(".o_website_builder_sidebar .o_hb_snippets_tabs button.active")).toHaveText(
         "Blocks"
     );
-    await contains(".o-website-builder_sidebar .o-snippets-tabs button:contains(Style)").click();
-    expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
+    await contains(".o_website_builder_sidebar .o_hb_snippets_tabs button:contains(Style)").click();
+    expect(queryOne(".o_website_builder_sidebar .o_hb_snippets_tabs button.active")).toHaveText(
         "Style"
     );
 });
@@ -109,26 +109,26 @@ test("Clicking on the 'Blocks' or 'Theme' tab should deactivate the options", as
     await contains(":iframe .s_banner").click();
     await animationFrame();
     expect(".oe_overlay:not(.o_hover_overlay)").toHaveCount(1);
-    expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
-    expect(".o_customize_tab .options-container").toHaveCount(1);
+    expect(".o_hb_snippets_tabs button:contains('Style')").toHaveClass("active");
+    expect(".o_customize_tab .o_hb_options_container").toHaveCount(1);
 
-    await contains(".o-snippets-tabs button:contains('Blocks')").click();
+    await contains(".o_hb_snippets_tabs button:contains('Blocks')").click();
     expect(".oe_overlay:not(.o_hover_overlay)").toHaveCount(0);
-    await contains(".o-snippets-tabs button:contains('Style')").click();
-    expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
-    expect(".o_customize_tab .options-container").toHaveCount(1);
+    await contains(".o_hb_snippets_tabs button:contains('Style')").click();
+    expect(".o_hb_snippets_tabs button:contains('Style')").toHaveClass("active");
+    expect(".o_customize_tab .o_hb_options_container").toHaveCount(1);
 
     await contains(":iframe .s_banner").click();
-    await waitFor(".o_customize_tab .options-container");
+    await waitFor(".o_customize_tab .o_hb_options_container");
     expect(".oe_overlay:not(.o_hover_overlay)").toHaveCount(1);
-    expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
-    expect(".o_customize_tab .options-container").toHaveCount(1);
+    expect(".o_hb_snippets_tabs button:contains('Style')").toHaveClass("active");
+    expect(".o_customize_tab .o_hb_options_container").toHaveCount(1);
 
-    await contains(".o-snippets-tabs button:contains('Theme')").click();
+    await contains(".o_hb_snippets_tabs button:contains('Theme')").click();
     expect(".oe_overlay:not(.o_hover_overlay)").toHaveCount(0);
-    await contains(".o-snippets-tabs button:contains('Style')").click();
-    expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
-    expect(".o_customize_tab .options-container").toHaveCount(1);
+    await contains(".o_hb_snippets_tabs button:contains('Style')").click();
+    expect(".o_hb_snippets_tabs button:contains('Style')").toHaveClass("active");
+    expect(".o_customize_tab .o_hb_options_container").toHaveCount(1);
 });
 
 test("Hotkeys on Theme and Blocks tab", async () => {

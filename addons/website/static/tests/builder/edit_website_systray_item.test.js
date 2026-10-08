@@ -37,7 +37,7 @@ test("Clicking on 'Edit' hides the notification", async () => {
     registry.category("website_systray").dispatchEvent(new CustomEvent("CONTENT-UPDATED"));
     await waitFor(".o_notification_bar");
     // clicking on edit dropdown should hide the notification
-    await contains(".o-website-btn-custo-primary:contains('Edit')").click();
+    await contains(".o_website_btn_custo_primary:contains('Edit')").click();
     await animationFrame();
     expect(".o_notification_bar").toHaveCount(0);
 });

@@ -24,7 +24,7 @@ registerWebsitePreviewTour(
         ...unfoldOptionsGroup("Popup"),
         {
             content: "Remove the 'New customer' button so the popup has no focusable elements",
-            trigger: ".options-container[data-container-title=Button] [title='Remove this block']",
+            trigger: ".o_hb_options_container[data-container-title=Button] [title='Remove this block']",
             run: "click",
         },
         {

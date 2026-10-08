@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add("website_sale.onboarding_tour", {
         {
             // Wait until the drag and drop is resolved (causing a history step)
             // before clicking save.
-            trigger: ".o-snippets-top-actions button[data-icon='undo']:not([disabled])",
+            trigger: ".o_hb_snippets_top_actions button[data-icon='undo']:not([disabled])",
         },
         {
             trigger: "button[data-action=save]",

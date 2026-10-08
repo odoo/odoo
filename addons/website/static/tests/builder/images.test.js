@@ -64,7 +64,7 @@ test("Double click on image and replace it", async () => {
     await waitForNone(".o_select_media_dialog");
     expect(".o_select_media_dialog").toHaveCount(0);
     expect(":iframe img").toHaveClass("o_modified_image_to_save");
-    expect(".options-container[data-container-title='Image']").toHaveCount(1);
+    expect(".o_hb_options_container[data-container-title='Image']").toHaveCount(1);
 });
 
 test("media dialog requests website logo attachments", async () => {
@@ -199,7 +199,7 @@ test("pasted/dropped images are converted to attachments on save in website edit
     ).toBe(true);
 
     // Save and check if image has been saved as attachment
-    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
     expect.verifySteps(["add_data", "save"]);
 });
 
@@ -276,7 +276,7 @@ test("pasted/dropped images are converted to attachments on snippet save", async
     await expect.waitForSteps(["add_data image-1.png", "save snippet"]);
 
     // Save and check if image of section 2 has been saved as attachment
-    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
     await expect.waitForSteps(["add_data image-2.png", "save"]);
 });
 
@@ -404,7 +404,7 @@ test("Save image with correct parameter", async () => {
                 class="o_modified_image_to_save"
             >
         </div>`);
-    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    await contains(".o_hb_snippets_top_actions button:contains(Save)").click();
     await expect.waitForSteps(["modify_image"]);
 });
 

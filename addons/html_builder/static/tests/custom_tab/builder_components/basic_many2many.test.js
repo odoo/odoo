@@ -50,7 +50,7 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
     expect("table tr").toHaveCount(0);
     expect(selection).toEqual([]);
 
@@ -109,7 +109,7 @@ test("basic many2many: toggle dropdown without changing search term or selection
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
     expect("table tr").toHaveCount(0);
     expect(selection).toEqual([]);
 
@@ -173,7 +173,7 @@ test("basic many2many: search with uncreated records", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
 
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
     // Number of items in selection
     expect("table tr").toHaveCount(3);
 

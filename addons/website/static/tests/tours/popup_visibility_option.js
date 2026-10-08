@@ -18,7 +18,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click the 'No Desktop' visibility option to hide the banner.",
-            trigger: `.options-container [data-label="Visibility"] button[data-action-param="no_desktop"]`,
+            trigger: `.o_hb_options_container [data-label="Visibility"] button[data-action-param="no_desktop"]`,
             run: "click",
         },
         {

@@ -33,8 +33,8 @@ test("Call a global BuilderSearchSelect action with params", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">Content...</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeVisible();
-    await click(".we-bg-options-container .dropdown");
+    expect(".o_hb_options_container").toBeVisible();
+    await click(".o_hb_bg_options_container .dropdown");
     await animationFrame();
     await click(".popover [data-choice-index='0']");
     await animationFrame();
@@ -83,15 +83,15 @@ test("The BuilderSearchSelect item action takes precedence over the parent one",
     });
     await setupHTMLBuilder(`<div class="test-options-target">Content...</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeVisible();
+    expect(".o_hb_options_container").toBeVisible();
 
-    await click(".we-bg-options-container .dropdown");
+    await click(".o_hb_bg_options_container .dropdown");
     await animationFrame();
     await click(".popover [data-choice-index='0']");
     await animationFrame();
     expect.verifySteps(["color action", "color action"]);
 
-    await click(".we-bg-options-container .dropdown");
+    await click(".o_hb_bg_options_container .dropdown");
     await animationFrame();
     await click(".popover [data-choice-index='1']");
     await animationFrame();
@@ -144,16 +144,16 @@ test("Call different BuilderSearchSelect item actions", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">Content...</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeVisible();
+    expect(".o_hb_options_container").toBeVisible();
 
-    await click(".we-bg-options-container .dropdown");
+    await click(".o_hb_bg_options_container .dropdown");
     await animationFrame();
     await click(".popover [data-choice-index='0']");
     await animationFrame();
     expect.verifySteps(["size: 50/75", "size: 50/75"]);
     expect(":iframe .test-options-target").toHaveStyle({ opacity: "0.5" });
 
-    await click(".we-bg-options-container .dropdown");
+    await click(".o_hb_bg_options_container .dropdown");
     await animationFrame();
     await click(".popover [data-choice-index='1']");
     await animationFrame();
@@ -188,8 +188,8 @@ test("Call a filtered BuilderSearchSelect item action", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">Content...</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeVisible();
-    await click(".we-bg-options-container .dropdown");
+    expect(".o_hb_options_container").toBeVisible();
+    await click(".o_hb_bg_options_container .dropdown");
     await animationFrame();
     await press("0");
     await waitForNone(".popover [data-choice-index='1']", { timeout: 500 });
@@ -251,16 +251,16 @@ test("Call a combination of BuilderSearchSelect and BuilderSearchSelect item act
     });
     await setupHTMLBuilder(`<div class="test-options-target">Content...</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeVisible();
+    expect(".o_hb_options_container").toBeVisible();
 
-    await click(".we-bg-options-container .dropdown");
+    await click(".o_hb_bg_options_container .dropdown");
     await animationFrame();
     await click(".popover [data-choice-index='1']");
     await animationFrame();
     expect.verifySteps(["shape: 2D", "shape: 2D"]);
     expect(":iframe .test-options-target").toHaveStyle({ opacity: "0" });
 
-    await click(".we-bg-options-container .dropdown");
+    await click(".o_hb_bg_options_container .dropdown");
     await animationFrame();
     await click(".popover [data-choice-index='2']");
     await animationFrame();
@@ -268,7 +268,7 @@ test("Call a combination of BuilderSearchSelect and BuilderSearchSelect item act
     expect(":iframe .test-options-target").toHaveStyle({ opacity: "0.5" });
     expect(":iframe .test-options-target").toHaveClass("class_0");
 
-    await click(".we-bg-options-container .dropdown");
+    await click(".o_hb_bg_options_container .dropdown");
     await animationFrame();
     await click(".popover [data-choice-index='4']");
     await animationFrame();
@@ -304,8 +304,8 @@ test("Use isActiveItem for an option in the BuilderSearchSelect", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target class_0">Content...</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeVisible();
-    expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
+    expect(".o_hb_options_container").toBeVisible();
+    expect(".o_hb_tab_content > .o_customize_tab").toHaveCount(1);
     expect("[data-label='Test'] .dropdown-toggle").toHaveText("Option 0");
     expect(".dependency").toHaveCount(0);
 
@@ -346,7 +346,7 @@ test("Consider the priority of BuilderSearchSelect items", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target class_1">Content...</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeVisible();
+    expect(".o_hb_options_container").toBeVisible();
     expect("[data-label='Test'] .dropdown-toggle").toHaveText("Style 1");
 
     await contains("[data-label='Test'] .dropdown-toggle").click();
@@ -389,11 +389,11 @@ test("The applyTo feature is changing the BuilderSearchSelect visibility", async
     );
     await contains(":iframe .parent-options-target").click();
     expect("[data-class-action='class_apply_to']").not.toHaveClass("active");
-    expect(".options-container button.dropdown-toggle").toHaveCount(0);
+    expect(".o_hb_options_container button.dropdown-toggle").toHaveCount(0);
     await contains("[data-class-action='class_apply_to']").click();
     expect(":iframe .child-options-target").toHaveClass("class_apply_to");
     expect("[data-class-action='class_apply_to']").toHaveClass("active");
-    expect(".options-container button.dropdown-toggle").toHaveText("Option 1");
+    expect(".o_hb_options_container button.dropdown-toggle").toHaveText("Option 1");
 });
 
 test("Preview BuilderSearchSelect options (on hover)", async () => {
@@ -421,11 +421,11 @@ test("Preview BuilderSearchSelect options (on hover)", async () => {
     await contains("[data-label='Test'] .dropdown-toggle").click();
     await contains(".o-dropdown--menu span.o-dropdown-item:contains('Option 1')").hover();
     expect(":iframe .test-options-target").toHaveAttribute("title", "Title 1");
-    await contains(".we-bg-options-container").hover();
+    await contains(".o_hb_bg_options_container").hover();
     expect(":iframe .test-options-target").not.toHaveAttribute("title");
     await contains(".o-dropdown--menu span.o-dropdown-item:contains('Option 0')").hover();
     expect(":iframe .test-options-target").toHaveAttribute("title", "Title 0");
-    await click(".we-bg-options-container");
+    await click(".o_hb_bg_options_container");
     expect(":iframe .test-options-target").not.toHaveAttribute("title");
 });
 

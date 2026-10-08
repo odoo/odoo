@@ -38,7 +38,7 @@ test("empty border input is treated as 0", async () => {
     await setupWebsiteBuilder(`<section class="test-options-target">Bordered block</section>`, {
         loadIframeBundles: true,
     });
-    const borderOptionInputSelector = ".options-container [data-label=Border] input";
+    const borderOptionInputSelector = ".o_hb_options_container [data-label=Border] input";
 
     expectBorder = false;
     await contains(":iframe section").click();
@@ -69,13 +69,13 @@ test("hasBorder is true when multiple-value border starts by 0", async () => {
         loadIframeBundles: true,
     });
     await contains(":iframe section").click();
-    await waitFor(".options-container [data-label=Border]");
-    expect(".options-container [data-label=Border] input").toHaveValue("0");
-    expect(".options-container [data-label=Border] .o_we_color_preview").not.toHaveCount();
-    await contains(".options-container [data-label=Border] input").edit("0 3 4 4", {
+    await waitFor(".o_hb_options_container [data-label=Border]");
+    expect(".o_hb_options_container [data-label=Border] input").toHaveValue("0");
+    expect(".o_hb_options_container [data-label=Border] .o_we_color_preview").not.toHaveCount();
+    await contains(".o_hb_options_container [data-label=Border] input").edit("0 3 4 4", {
         confirm: "enter",
     });
-    expect(".options-container [data-label=Border] .o_we_color_preview").toBeVisible();
+    expect(".o_hb_options_container [data-label=Border] .o_we_color_preview").toBeVisible();
     expect(":iframe section").toHaveStyle({
         "border-top-width": "0px",
         "border-right-width": "3px",
@@ -104,7 +104,7 @@ test("Elements with withBSClass = false don't reset their style when width is ch
 
     // click on separator
     await click(queryOne(":iframe .s_hr"));
-    await waitFor(".we-bg-options-container");
+    await waitFor(".o_hb_bg_options_container");
 
     // set color to white
     await click(queryOne("[data-label='Border'] .o_we_color_preview"));
@@ -113,8 +113,8 @@ test("Elements with withBSClass = false don't reset their style when width is ch
     await waitForNone(".o_popover");
 
     // set style to dotted
-    await click(queryOne("[data-label='Border'] .o-hb-select-toggle"));
-    await waitFor("[data-label='Border'] .o-hb-select-toggle.show", { timeout: 500 });
+    await click(queryOne("[data-label='Border'] .o_hb_select_toggle"));
+    await waitFor("[data-label='Border'] .o_hb_select_toggle.show", { timeout: 500 });
     await click(queryOne(".o_popover [data-action-value='dotted']"));
 
     // edit width and check that color and style have been kept

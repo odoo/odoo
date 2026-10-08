@@ -22,12 +22,12 @@ registerWebsitePreviewTour(
         }),
         {
             content: "Test t-snippet and t-snippet-call: snippets have data-snippet set",
-            trigger: ".o-snippets-menu .o_snippets_container_body > .o_snippet",
+            trigger: ".o_hb_snippets_menu .o_snippets_container_body > .o_snippet",
             run: function () {
                 // Tests done here as all these are not visible on the page
                 const draggableSnippets = [
                     ...document.querySelectorAll(
-                        ".o-snippets-menu .o_snippets_container_body > .o_snippet:not([data-module-id]) > :nth-child(2)"
+                        ".o_hb_snippets_menu .o_snippets_container_body > .o_snippet:not([data-module-id]) > :nth-child(2)"
                     ),
                 ];
                 if (

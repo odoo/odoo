@@ -24,7 +24,7 @@ registerWebsitePreviewTour(
         changeBackgroundColor(),
         {
             content: "Switch to custom colors pane",
-            trigger: ".o-hb-colorpicker .custom-tab",
+            trigger: ".o_hb_colorpicker .custom-tab",
             run: "click",
         },
         {

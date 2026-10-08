@@ -8,16 +8,16 @@ import {
 import { registry } from "@web/core/registry";
 
 const EDIT_BUTTON_SELECTOR =
-    "body .o_menu_systray button.o-website-btn-custo-primary:contains(edit)";
+    "body .o_menu_systray button.o_website_btn_custo_primary:contains(edit)";
 
 const checkNoTranslate = {
     content: "Check there is no translate button",
-    trigger: `${EDIT_BUTTON_SELECTOR}:not(.o-dropdown-toggle-custo)`,
+    trigger: `${EDIT_BUTTON_SELECTOR}:not(.o_dropdown_toggle_custo)`,
 };
 const translate = [
     {
         content: "Open Edit menu",
-        trigger: `${EDIT_BUTTON_SELECTOR}.o-dropdown-toggle-custo`,
+        trigger: `${EDIT_BUTTON_SELECTOR}.o_dropdown_toggle_custo`,
         run: "click",
     },
     {

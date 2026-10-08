@@ -3,12 +3,12 @@
 
 <t t-name="html_builder.BasicMany2Many">
     <div class="d-flex flex-column">
-        <table class="o-hb-m2m-table">
+        <table class="o_hb_m2m_table">
             <tr t-foreach="this.props.selection" t-as="entry" t-key="entry.id">
                 <td>
                     <input
                         type="text"
-                        class="o-hb-input-base"
+                        class="o_hb_input_base"
                         disabled=""
                         t-att-data-name="entry[this.props.displayNameField]"
                         t-att-value="entry[this.props.displayNameField]"

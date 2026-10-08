@@ -41,8 +41,8 @@ test("should get the initial value of the input", async () => {
                 <div class="test-options-target">10</div>
             `);
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
-    const input = queryFirst(".options-container input");
+    expect(".o_hb_options_container").toBeDisplayed();
+    const input = queryFirst(".o_hb_options_container input");
     expect(input).toHaveValue(10);
 });
 test("hide/display base on applyTo", async () => {
@@ -91,7 +91,7 @@ test("input with classAction and styleAction", async () => {
                 <div class="test-options-target">10</div>
             `);
     await contains(":iframe .test-options-target").click();
-    await contains(".options-container input").edit("2");
+    await contains(".o_hb_options_container input").edit("2");
     expect(":iframe .test-options-target").toHaveStyle({
         "--custom-property": "2",
     });
@@ -117,11 +117,11 @@ test("input kept on async action", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target" data-test="1">Hello</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".options-container input").edit("2");
-    await contains(".options-container input").fill(3, { confirm: false });
+    await contains(".o_hb_options_container input").edit("2");
+    await contains(".o_hb_options_container input").fill(3, { confirm: false });
     def.resolve();
     await animationFrame();
-    expect(".options-container input").toHaveValue(23);
+    expect(".o_hb_options_container input").toHaveValue(23);
 });
 
 test("input should remove invalid char", async () => {
@@ -154,32 +154,32 @@ test("input should remove invalid char", async () => {
     // Single
     await contains(":iframe .test-options-target").click();
 
-    await contains(".options-container:first input").edit("-1-2-", { instantly: true });
+    await contains(".o_hb_options_container:first input").edit("-1-2-", { instantly: true });
     await animationFrame();
-    expect(".options-container:first input").toHaveValue(0);
+    expect(".o_hb_options_container:first input").toHaveValue(0);
 
-    await contains(".options-container:first input").edit("3-4-5", { instantly: true });
+    await contains(".o_hb_options_container:first input").edit("3-4-5", { instantly: true });
     await animationFrame();
-    expect(".options-container:first input").toHaveValue(0);
+    expect(".o_hb_options_container:first input").toHaveValue(0);
 
-    await contains(".options-container:first input").edit(" .$a?,6.b$?,7.$?,", { instantly: true });
+    await contains(".o_hb_options_container:first input").edit(" .$a?,6.b$?,7.$?,", { instantly: true });
     await animationFrame();
-    expect(".options-container:first input").toHaveValue(0);
+    expect(".o_hb_options_container:first input").toHaveValue(0);
 
     // Composable
     await contains(":iframe .test-options-target-composable").click();
 
-    await contains(".options-container:last input").edit("-12 12 -12 12", { instantly: true });
+    await contains(".o_hb_options_container:last input").edit("-12 12 -12 12", { instantly: true });
     await animationFrame();
-    expect(".options-container:last input").toHaveValue("-12 12 -12 12");
+    expect(".o_hb_options_container:last input").toHaveValue("-12 12 -12 12");
 
-    await contains(".options-container:last input").edit("3?/4.5 34,/?5", { instantly: true });
+    await contains(".o_hb_options_container:last input").edit("3?/4.5 34,/?5", { instantly: true });
     await animationFrame();
-    expect(".options-container:last input").toHaveValue("34.5 34.5");
+    expect(".o_hb_options_container:last input").toHaveValue("34.5 34.5");
 
-    await contains(".options-container:last input").edit("  6bc7 6//7 6$a7  ", { instantly: true });
+    await contains(".o_hb_options_container:last input").edit("  6bc7 6//7 6$a7  ", { instantly: true });
     await animationFrame();
-    expect(".options-container:last input").toHaveValue("67 67 67");
+    expect(".o_hb_options_container:last input").toHaveValue("67 67 67");
 });
 
 test("should select input value on focus only if selectTextOnFocus prop is set", async () => {
@@ -204,11 +204,11 @@ test("should select input value on focus only if selectTextOnFocus prop is set",
                 <div class="test-options-target-2">10</div>
             `);
     await contains(":iframe .test-options-target-1").click();
-    await contains(".options-container input").click();
+    await contains(".o_hb_options_container input").click();
     expect(window.getSelection().toString()).toBe("10");
 
     await contains(":iframe .test-options-target-2").click();
-    await contains(".options-container input").click();
+    await contains(".o_hb_options_container input").click();
     expect(window.getSelection().toString()).toBe("");
 });
 
@@ -233,9 +233,9 @@ describe("default value", () => {
             <div class="test-options-target">10</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await editBuilderRangeValue(".options-container input", "20");
+        await editBuilderRangeValue(".o_hb_options_container input", "20");
         expect.verifySteps(["customAction 20", "customAction 20"]);
-        expect(".options-container input").toHaveValue(20);
+        expect(".o_hb_options_container input").toHaveValue(20);
     });
     test("clear BuilderNumberInput without default value", async () => {
         addBuilderAction({
@@ -263,7 +263,7 @@ describe("default value", () => {
         await clear();
         expect("[data-action-id='customAction'] input").toHaveValue(NaN);
         expect(":iframe .test-options-target").toHaveInnerHTML("0"); //Check that default value is used during preview
-        await click(".options-container");
+        await click(".o_hb_options_container");
         expect("[data-action-id='customAction'] input").toHaveValue(0);
         expect(":iframe .test-options-target").toHaveInnerHTML("0");
     });
@@ -291,7 +291,7 @@ describe("default value", () => {
         expect("[data-action-id='customAction'] input").toHaveValue(10);
 
         await clear();
-        await click(".options-container");
+        await click(".o_hb_options_container");
         expect("[data-action-id='customAction'] input").toHaveValue(1);
         expect(":iframe .test-options-target").toHaveInnerHTML("1");
     });
@@ -325,7 +325,7 @@ describe("default value", () => {
         expect(":iframe .test-options-target").toHaveInnerHTML("5");
 
         await clear();
-        await click(".options-container");
+        await click(".o_hb_options_container");
         await animationFrame();
         expect(":iframe .test-options-target").toHaveInnerHTML("10");
         expect("[data-action-id='customAction'] input").toHaveValue(10);
@@ -353,13 +353,13 @@ describe("operations", () => {
                     <div class="test-options-target">10</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
         await fill("2");
         expect.verifySteps(["customAction 102"]);
         expect(":iframe .test-options-target").toHaveInnerHTML("102");
-        expect(".o-snippets-top-actions [data-icon='undo']").not.toBeEnabled();
-        expect(".o-snippets-top-actions [data-icon='redo']").not.toBeEnabled();
+        expect(".o_hb_snippets_top_actions [data-icon='undo']").not.toBeEnabled();
+        expect(".o_hb_snippets_top_actions [data-icon='redo']").not.toBeEnabled();
     });
     test("should commit changes", async () => {
         addBuilderAction({
@@ -382,16 +382,16 @@ describe("operations", () => {
                     <div class="test-options-target">10</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
         await fill("2");
         expect.verifySteps(["customAction 102"]);
         expect(":iframe .test-options-target").toHaveInnerHTML("102");
         await click(document.body);
         await animationFrame();
         expect.verifySteps(["customAction 102"]);
-        expect(".o-snippets-top-actions [data-icon='undo']").toBeEnabled();
-        expect(".o-snippets-top-actions [data-icon='redo']").not.toBeEnabled();
+        expect(".o_hb_snippets_top_actions [data-icon='undo']").toBeEnabled();
+        expect(".o_hb_snippets_top_actions [data-icon='redo']").not.toBeEnabled();
     });
     test("should commit changes after an undo", async () => {
         addBuilderAction({
@@ -414,16 +414,16 @@ describe("operations", () => {
                     <div class="test-options-target">10</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        await click(".options-container input");
+        await click(".o_hb_options_container input");
         await fill(2);
         expect(":iframe .test-options-target").toHaveInnerHTML("102");
         await click(document.body);
         expect.verifySteps(["customAction 102", "customAction 102"]);
         await animationFrame();
-        click(".o-snippets-top-actions [data-icon='undo']");
+        click(".o_hb_snippets_top_actions [data-icon='undo']");
         await animationFrame();
         expect(":iframe .test-options-target").toHaveInnerHTML("10");
-        await click(".options-container input");
+        await click(".o_hb_options_container input");
         await fill("2");
         expect(":iframe .test-options-target").toHaveInnerHTML("102");
         await click(document.body);
@@ -450,7 +450,7 @@ describe("operations", () => {
                     <div class="test-options-target">10</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        await click(".options-container input");
+        await click(".o_hb_options_container input");
         await fill(2);
         expect(":iframe .test-options-target").toHaveInnerHTML("10");
         await click(document.body);
@@ -482,12 +482,12 @@ describe("keyboard triggers", () => {
         await contains(":iframe .test-options-target").click();
 
         // simulate arrow up
-        await contains(".options-container input").keyDown("ArrowUp");
+        await contains(".o_hb_options_container input").keyDown("ArrowUp");
         await advanceTime();
         expect(":iframe .test-options-target").toHaveInnerHTML("12");
 
         // simulate arrow down
-        await contains(".options-container input").keyDown("ArrowDown");
+        await contains(".o_hb_options_container input").keyDown("ArrowDown");
         await advanceTime();
         expect(":iframe .test-options-target").toHaveInnerHTML("10");
 
@@ -516,13 +516,13 @@ describe("keyboard triggers", () => {
         await contains(":iframe .test-options-target").click();
 
         // simulate arrow up
-        await contains(".options-container input").focus();
-        await contains(".options-container input").keyDown("ArrowUp");
+        await contains(".o_hb_options_container input").focus();
+        await contains(".o_hb_options_container input").keyDown("ArrowUp");
         await advanceTime();
         expect(":iframe .test-options-target").toHaveInnerHTML("11 5 1");
 
         // simulate arrow down
-        await contains(".options-container input").keyDown("ArrowDown");
+        await contains(".o_hb_options_container input").keyDown("ArrowDown");
         await advanceTime();
         expect(":iframe .test-options-target").toHaveInnerHTML("10 4 0");
 
@@ -603,13 +603,13 @@ describe("keyboard triggers", () => {
             <div class="test-options-target">10</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").focus();
+        await contains(".o_hb_options_container input").focus();
         // Simulate a single keydown hold down for a while.
-        await contains(".options-container input").keyDown("ArrowUp");
+        await contains(".o_hb_options_container input").keyDown("ArrowUp");
         await advanceTime(500); // Default browser delay between 1st & 2nd keydown.
-        await contains(".options-container input").keyDown("ArrowUp");
+        await contains(".o_hb_options_container input").keyDown("ArrowUp");
         await advanceTime(50);
-        await contains(".options-container input").keyDown("ArrowUp");
+        await contains(".o_hb_options_container input").keyDown("ArrowUp");
         await advanceTime(50);
         expect(":iframe .test-options-target").toHaveInnerHTML("13");
         // 3 previews
@@ -641,9 +641,9 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5px</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
-        const input = queryFirst(".options-container input");
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
+        const input = queryFirst(".o_hb_options_container input");
         expect(input).toHaveValue(5);
         await fill(1);
         expect.verifySteps(["customAction 51px"]);
@@ -670,9 +670,9 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5000ms</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
-        const input = queryFirst(".options-container input");
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
+        const input = queryFirst(".o_hb_options_container input");
         expect(input).toHaveValue(5);
         await fill("7");
         expect.verifySteps(["customAction 57000ms"]);
@@ -696,9 +696,9 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5000</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
-        const input = queryFirst(".options-container input");
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
+        const input = queryFirst(".o_hb_options_container input");
         expect(input).toHaveValue(5);
     });
     test("should handle empty saveUnit", async () => {
@@ -722,9 +722,9 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
-        const input = queryFirst(".options-container input");
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
+        const input = queryFirst(".o_hb_options_container input");
         expect(input).toHaveValue(5);
         await fill(1);
         expect.verifySteps(["customAction 51"]);
@@ -751,9 +751,9 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5s</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
-        await click(".options-container input");
-        const input = queryFirst(".options-container input");
+        expect(".o_hb_options_container").toBeDisplayed();
+        await click(".o_hb_options_container input");
+        const input = queryFirst(".o_hb_options_container input");
         expect(input).toHaveValue(5);
         await fill("7");
         expect.verifySteps(["customAction 57000ms"]);
@@ -798,41 +798,41 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5px</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".o_hb_options_container").toBeDisplayed();
         expect(
-            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+            ".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit"
         ).toBeDisplayed();
 
         // Clear the input. Placeholder is appearing, units are hidden (already during preview)
-        await click(".options-container input");
+        await click(".o_hb_options_container input");
         await clear();
         await animationFrame();
-        expect(".options-container .o-hb-input-field-number .o-hb-input-field-unit").toHaveCount(0);
+        expect(".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit").toHaveCount(0);
 
         // Press enter. Action apply is called, units remain hidden
         await press("Enter");
         await animationFrame();
         expect.verifySteps(["customAction empty"]);
-        expect(".options-container .o-hb-input-field-number .o-hb-input-field-unit").toHaveCount(0);
+        expect(".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit").toHaveCount(0);
 
         // Enter "0". Since it is a number, units are displayed (already during preview)
         await press("0");
         await animationFrame();
         expect(
-            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+            ".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit"
         ).toBeDisplayed();
 
         // Append "x". Since "0x" is not a number, units are hidden (already during preview)
         await press("x");
         await animationFrame();
-        expect(".options-container .o-hb-input-field-number .o-hb-input-field-unit").toHaveCount(0);
+        expect(".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit").toHaveCount(0);
 
         // Enter again a valid number, units are displayed (already during preview)
         await clear();
         await fill("3");
         await animationFrame();
         expect(
-            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+            ".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit"
         ).toBeDisplayed();
 
         // Press enter. Action apply is called, units remain visible
@@ -840,13 +840,13 @@ describe("unit & saveUnit", () => {
         await animationFrame();
         expect.verifySteps(["customAction 3px"]);
         expect(
-            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+            ".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit"
         ).toBeDisplayed();
 
         // Click the button, which replaces the value with empty string. Units are hidden
-        await click(".options-container button[data-action-id='customActionButton']");
+        await click(".o_hb_options_container button[data-action-id='customActionButton']");
         await animationFrame();
-        expect(".options-container .o-hb-input-field-number .o-hb-input-field-unit").toHaveCount(0);
+        expect(".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit").toHaveCount(0);
     });
     test("should never hide unit when has no placeholder", async () => {
         addBuilderAction({
@@ -871,27 +871,27 @@ describe("unit & saveUnit", () => {
                     <div class="test-options-target">5px</div>
                 `);
         await contains(":iframe .test-options-target").click();
-        expect(".options-container").toBeDisplayed();
+        expect(".o_hb_options_container").toBeDisplayed();
         expect(
-            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+            ".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit"
         ).toBeDisplayed();
 
-        await click(".options-container input");
+        await click(".o_hb_options_container input");
         await clear();
         await press("Enter");
         await animationFrame();
         expect.verifySteps(["customAction 0px"]);
         expect(
-            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+            ".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit"
         ).toBeDisplayed();
 
-        await click(".options-container input");
+        await click(".o_hb_options_container input");
         await fill("3");
         await press("Enter");
         await animationFrame();
         expect.verifySteps(["customAction 3px"]);
         expect(
-            ".options-container .o-hb-input-field-number .o-hb-input-field-unit"
+            ".o_hb_options_container .o_hb_input_field_number .o_hb_input_field_unit"
         ).toBeDisplayed();
     });
 });
@@ -916,8 +916,8 @@ describe("sanitized values", () => {
             <div class="test-options-target">10</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit("33 4 0", { instantly: true });
-        expect(".options-container input").toHaveValue(0);
+        await contains(".o_hb_options_container input").edit("33 4 0", { instantly: true });
+        expect(".o_hb_options_container input").toHaveValue(0);
         expect(":iframe .test-options-target").toHaveInnerHTML("0");
     });
     test("use min when the given value is smaller", async () => {
@@ -940,9 +940,9 @@ describe("sanitized values", () => {
             <div class="test-options-target">10</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit("-1", { instantly: true });
+        await contains(".o_hb_options_container input").edit("-1", { instantly: true });
         expect.verifySteps(["customAction 0", "customAction 0"]); // input, change
-        expect(".options-container input").toHaveValue(0);
+        expect(".o_hb_options_container input").toHaveValue(0);
     });
     test("clamp to min value when pressing down arrow with min > 0", async () => {
         addBuilderAction({
@@ -966,14 +966,14 @@ describe("sanitized values", () => {
         `);
         await contains(":iframe .test-options-target").click();
         // Simulate pressing arrow down
-        await contains(".options-container input").keyDown("ArrowDown");
+        await contains(".o_hb_options_container input").keyDown("ArrowDown");
         expect.verifySteps(["customAction 1"]);
-        expect(".options-container input").toHaveValue(1);
+        expect(".o_hb_options_container input").toHaveValue(1);
         expect(":iframe .test-options-target").toHaveText("1");
         // Pressing down again should stay at min value
-        await contains(".options-container input").keyDown("ArrowDown");
+        await contains(".o_hb_options_container input").keyDown("ArrowDown");
         expect.verifySteps(["customAction 1"]);
-        expect(".options-container input").toHaveValue(1);
+        expect(".o_hb_options_container input").toHaveValue(1);
         expect(":iframe .test-options-target").toHaveText("1");
     });
     test("use max when the given value is bigger", async () => {
@@ -996,10 +996,10 @@ describe("sanitized values", () => {
             <div class="test-options-target">3</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit("11", { instantly: true });
+        await contains(".o_hb_options_container input").edit("11", { instantly: true });
         await animationFrame();
         expect.verifySteps(["customAction 0", "customAction 10"]); // input, change
-        expect(".options-container input").toHaveValue(10);
+        expect(".o_hb_options_container input").toHaveValue(10);
     });
     test("multi values: trailing space in BuilderNumberInput is ignored", async () => {
         addBuilderAction({
@@ -1021,9 +1021,9 @@ describe("sanitized values", () => {
             <div class="test-options-target">10</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").fill("3 4 5 ", { instantly: true });
+        await contains(".o_hb_options_container input").fill("3 4 5 ", { instantly: true });
         expect.verifySteps(["customAction 3 4 5", "customAction 3 4 5"]); // input, change
-        expect(".options-container input").toHaveValue("3 4 5");
+        expect(".o_hb_options_container input").toHaveValue("3 4 5");
     });
     test("after input, displayed value is cleaned to match only numbers", async () => {
         addBuilderOption({
@@ -1034,8 +1034,8 @@ describe("sanitized values", () => {
             <div class="test-options-target" data-number="10">Test</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit(" a&$*+>");
-        expect(".options-container input").toHaveValue(0);
+        await contains(".o_hb_options_container input").edit(" a&$*+>");
+        expect(".o_hb_options_container input").toHaveValue(0);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "0");
     });
     test("after input, displayed value is cleaned to match only numbers (default=null)", async () => {
@@ -1047,8 +1047,8 @@ describe("sanitized values", () => {
             <div class="test-options-target" data-number="10">Test</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit(" a&$*+>");
-        expect(".options-container input").toHaveValue(NaN);
+        await contains(".o_hb_options_container input").edit(" a&$*+>");
+        expect(".o_hb_options_container input").toHaveValue(NaN);
         expect(":iframe .test-options-target").not.toHaveAttribute("data-number");
     });
     test("after copy / pasting, displayed value is cleaned to match only numbers (non-composable)", async () => {
@@ -1060,8 +1060,8 @@ describe("sanitized values", () => {
             <div class="test-options-target" data-number="10">Test</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit(" a&$*-3+>", { instantly: true });
-        expect(".options-container input").toHaveValue(0);
+        await contains(".o_hb_options_container input").edit(" a&$*-3+>", { instantly: true });
+        expect(".o_hb_options_container input").toHaveValue(0);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", 0);
     });
     test("after copy / pasting, displayed value is cleaned to match only numbers (composable)", async () => {
@@ -1073,8 +1073,8 @@ describe("sanitized values", () => {
             <div class="test-options-target" data-number="10">Test</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit(" a&$*-3+>", { instantly: true });
-        expect(".options-container input").toHaveValue(-3);
+        await contains(".o_hb_options_container input").edit(" a&$*-3+>", { instantly: true });
+        expect(".o_hb_options_container input").toHaveValue(-3);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", -3);
     });
     test("accept decimal numbers", async () => {
@@ -1086,8 +1086,8 @@ describe("sanitized values", () => {
             <div class="test-options-target" data-number="10">Test</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit("3.3", { instantly: true });
-        expect(".options-container input").toHaveValue(3.3);
+        await contains(".o_hb_options_container input").edit("3.3", { instantly: true });
+        expect(".o_hb_options_container input").toHaveValue(3.3);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.3");
     });
     test("BuilderNumberInput transforms , into . (composable)", async () => {
@@ -1099,8 +1099,8 @@ describe("sanitized values", () => {
             <div class="test-options-target" data-number="10">Test</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit("3,3", { instantly: true });
-        expect(".options-container input").toHaveValue(3.3);
+        await contains(".o_hb_options_container input").edit("3,3", { instantly: true });
+        expect(".o_hb_options_container input").toHaveValue(3.3);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.3");
     });
     test("displays the correct value (no floating point precision error)", async () => {
@@ -1112,15 +1112,15 @@ describe("sanitized values", () => {
             <div class="test-options-target" data-number="10">Test</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit("0.2", { instantly: true });
-        expect(".options-container input").toHaveValue(0.2);
+        await contains(".o_hb_options_container input").edit("0.2", { instantly: true });
+        expect(".o_hb_options_container input").toHaveValue(0.2);
         // simulate arrow keys
-        await contains(".options-container input").keyDown("ArrowUp");
+        await contains(".o_hb_options_container input").keyDown("ArrowUp");
         await advanceTime();
-        expect(".options-container input").toHaveValue(0.3);
-        await contains(".options-container input").keyDown("ArrowDown");
+        expect(".o_hb_options_container input").toHaveValue(0.3);
+        await contains(".o_hb_options_container input").keyDown("ArrowDown");
         await advanceTime();
-        expect(".options-container input").toHaveValue(0.2);
+        expect(".o_hb_options_container input").toHaveValue(0.2);
     });
     test("rounds the number to 3 decimals", async () => {
         addBuilderOption({
@@ -1131,12 +1131,12 @@ describe("sanitized values", () => {
             <div class="test-options-target" data-number="10">Test</div>
         `);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit("3.33333333333", { instantly: true });
-        expect(".options-container input").toHaveValue(3.333);
+        await contains(".o_hb_options_container input").edit("3.33333333333", { instantly: true });
+        expect(".o_hb_options_container input").toHaveValue(3.333);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.333");
 
-        await contains(".options-container input").edit("1.284778323", { instantly: true });
-        expect(".options-container input").toHaveValue(1.285);
+        await contains(".o_hb_options_container input").edit("1.284778323", { instantly: true });
+        expect(".o_hb_options_container input").toHaveValue(1.285);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "1.285");
     });
     test("should save font with full precision in rem and display to correct value in px", async () => {
@@ -1151,7 +1151,7 @@ describe("sanitized values", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target">Test</div>`);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container input").edit("19");
-        expect(".options-container input").toHaveValue(19);
+        await contains(".o_hb_options_container input").edit("19");
+        expect(".o_hb_options_container input").toHaveValue(19);
     });
 });

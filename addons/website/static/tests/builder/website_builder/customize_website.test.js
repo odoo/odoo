@@ -37,11 +37,11 @@ test("BuilderButton with action “websiteConfig” are correctly displayed", as
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".o-tab-content > .o_customize_tab").toHaveCount(0);
+    expect(".o_hb_tab_content > .o_customize_tab").toHaveCount(0);
 
     def.resolve();
     await animationFrame();
-    expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
+    expect(".o_hb_tab_content > .o_customize_tab").toHaveCount(1);
     expect("[data-action-param*='test_template_1']").not.toHaveClass("active");
     expect("[data-action-param*='test_template_2']").toHaveClass("active");
     expect.verifySteps(["theme_customize_data_get"]);
@@ -113,7 +113,7 @@ test("click on BuilderSelectItem with action “websiteConfig”", async () => {
     await contains(":iframe .test-options-target").click();
     expect.verifySteps(["theme_customize_data_get"]);
 
-    await contains(".options-container .dropdown-toggle").click();
+    await contains(".o_hb_options_container .dropdown-toggle").click();
     await contains("[data-action-param*='test_template_1']").click();
     expect.verifySteps(["theme_customize_data"]);
 });
@@ -136,11 +136,11 @@ test("use isActiveItem base on BuilderButton with 'websiteConfig'", async () => 
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".o-tab-content > .o_customize_tab").toHaveCount(0);
+    expect(".o_hb_tab_content > .o_customize_tab").toHaveCount(0);
 
     def.resolve();
     await animationFrame();
-    expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
+    expect(".o_hb_tab_content > .o_customize_tab").toHaveCount(1);
     expect("[data-action-param*='test_template_1']").toHaveClass("active");
     expect(".test").toHaveCount(1);
     expect.verifySteps(["theme_customize_data_get"]);
@@ -164,11 +164,11 @@ test("use isActiveItem base on BuilderCheckbox with 'websiteConfig'", async () =
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".o-tab-content > .o_customize_tab").toHaveCount(0);
+    expect(".o_hb_tab_content > .o_customize_tab").toHaveCount(0);
 
     def.resolve();
     await animationFrame();
-    expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
+    expect(".o_hb_tab_content > .o_customize_tab").toHaveCount(1);
     expect("[data-action-param*='test_template_1'] .form-check-input:checked").toHaveCount(1);
     expect(".test").toHaveCount(1);
     expect.verifySteps(["theme_customize_data_get"]);
@@ -233,7 +233,7 @@ test("use isActiveItem base on BuilderSelectItem with websiteConfig", async () =
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await animationFrame();
-    expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
+    expect(".o_hb_tab_content > .o_customize_tab").toHaveCount(1);
     expect(".my-test").toHaveCount(1);
     expect("[data-label='Test'] .dropdown-toggle").toHaveText("b");
     expect(".o-dropdown-item:visible").toHaveCount(0);
@@ -288,10 +288,10 @@ test("isApplied with action “websiteConfig” depends on views, assets and var
     await contains(":iframe .test-options-target").click();
     await animationFrame();
     expect.verifySteps(["theme_customize_data_get view", "theme_customize_data_get asset"]);
-    expect(".options-container input[type='checkbox']:eq(0)").toBeChecked();
-    expect(".options-container input[type='checkbox']:eq(1)").not.toBeChecked();
-    expect(".options-container input[type='checkbox']:eq(2)").not.toBeChecked();
-    expect(".options-container input[type='checkbox']:eq(3)").not.toBeChecked();
+    expect(".o_hb_options_container input[type='checkbox']:eq(0)").toBeChecked();
+    expect(".o_hb_options_container input[type='checkbox']:eq(1)").not.toBeChecked();
+    expect(".o_hb_options_container input[type='checkbox']:eq(2)").not.toBeChecked();
+    expect(".o_hb_options_container input[type='checkbox']:eq(3)").not.toBeChecked();
 });
 
 test("BuilderButton with action “previewableWebsiteConfig”", async () => {
@@ -347,7 +347,7 @@ test("BuilderButton with action “previewableWebsiteConfig”", async () => {
     expect(":iframe .test-options-target").not.toHaveClass("test_class_1");
     expect(":iframe .test-options-target").toHaveClass("test_class_2");
 
-    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
     expect.verifySteps(["websiteSave", "theme_customize_data"]);
 });
 
@@ -404,7 +404,7 @@ test("Undo and redo “previewableWebsiteConfig” action", async () => {
     expect(":iframe .test-options-target").toHaveClass("test_class_1");
     expect(":iframe .test-options-target").not.toHaveClass("test_class_2");
 
-    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
     expect.verifySteps(["websiteSave", "theme_customize_data"]);
 });
 
@@ -431,7 +431,7 @@ test("No rpc call if “previewableWebsiteConfig” action is undone", async () 
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-param*='test_template']").click();
     undo(editor);
-    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
     expect.verifySteps([]); // No call to `theme_customize_data` nor to `save`
 });
 

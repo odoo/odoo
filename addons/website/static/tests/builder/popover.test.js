@@ -61,7 +61,7 @@ test("Popovers scroll with iframe", async () => {
     await contains(".o-we-toolbar div[name=websiteDecoration] > button").click();
     await expectScroll(".o_popover");
 
-    await contains(".o-we-toolbar button.o-select-highlight").click();
+    await contains(".o-we-toolbar button.o_hb_select_highlight").click();
     await expectScroll(".o_popover");
 
     await contains(".o-we-toolbar button[title='Animate Text']").click();
@@ -83,9 +83,9 @@ test("Floating toolbar visual consistency and usability", async () => {
 
     // Verify animation option dropdown matches font style popover design
     await contains(".o-we-toolbar button[title='Animate Text']").click();
-    await contains(".o_animate_text_popover .hb-row-content button").click();
+    await contains(".o_animate_text_popover .o_hb_row_content button").click();
     const animationPopover = await waitFor(".o_popover:has([data-action-value='onAppearance'])");
-    expect(animationPopover).not.toHaveClass("o-hb-select-dropdown");
+    expect(animationPopover).not.toHaveClass("o_hb_select_dropdown");
 
     // Verify highlight picker grid is scrollable and scrollbar is hidden
     await pointerDown(".o-we-toolbar button[title='Apply highlight']");
@@ -97,8 +97,8 @@ test("Floating toolbar visual consistency and usability", async () => {
     // Verify highlight color picker has sublevel rows for hierarchy
     await contains(".o_popover .o_text_highlight_underline").click();
     const colorLabel = await waitFor(".o_popover label[for='colorButton']");
-    const sublevelRow = colorLabel.closest(".hb-row-sublevel-1");
-    expect(sublevelRow).toHaveClass("hb-row-sublevel-1");
+    const sublevelRow = colorLabel.closest(".o_hb_row_sublevel_1");
+    expect(sublevelRow).toHaveClass("o_hb_row_sublevel_1");
 });
 
 test("closing the link popover should re-open the toolbar", async () => {

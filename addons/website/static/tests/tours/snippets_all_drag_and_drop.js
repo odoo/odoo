@@ -84,7 +84,7 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
                 },
                 {
                     content: `Remove the ${snippet.name} snippet`, // Avoid bad perf if many snippets
-                    trigger: ".options-container .oe_snippet_remove:last",
+                    trigger: ".o_hb_options_container .oe_snippet_remove:last",
                     run: "click",
                 },
                 goBackToBlocks(),

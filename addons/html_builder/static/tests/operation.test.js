@@ -267,7 +267,7 @@ describe("Async operations", () => {
 
         await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`);
         await contains(":iframe .test-options-target").click();
-        await contains(".options-container [data-label='Type'] .btn-secondary ").click();
+        await contains(".o_hb_options_container [data-label='Type'] .btn-secondary ").click();
         await hover(".popover [data-action-value='first']");
         await hover(".popover [data-action-value='second']");
         await advanceTime(applyDelay + 50);
@@ -311,7 +311,7 @@ describe("Async operations", () => {
         await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`);
         await contains(":iframe .test-options-target").click();
 
-        await contains(".we-bg-options-container .o_we_color_preview").click();
+        await contains(".o_hb_bg_options_container .o_we_color_preview").click();
         await contains(".o-overlay-item [data-color='#FF0000']").hover();
         await contains(".o-overlay-item [data-color='#0000FF']").hover();
         await advanceTime(applyDelay + 50);

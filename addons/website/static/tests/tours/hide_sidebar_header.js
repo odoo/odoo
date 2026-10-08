@@ -13,12 +13,12 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click on header template",
-            trigger: ".hb-row[data-label='Template'] button.o-hb-select-toggle",
+            trigger: ".o_hb_row[data-label='Template'] button.o_hb_select_toggle",
             run: "click",
         },
         {
             content: "Change header template to 'Sidebar'",
-            trigger: ".dropdown-menu .o-hb-select-dropdown-item[title='Sidebar']",
+            trigger: ".dropdown-menu .o_hb_select_dropdown_item[title='Sidebar']",
             run: "click",
         },
         {
@@ -32,12 +32,12 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the builder is not disabled",
-            trigger: ".o-website-builder_sidebar:not(:has(.o_builder_disabled))",
+            trigger: ".o_website_builder_sidebar:not(:has(.o_builder_disabled))",
         },
         ...goToTheme(),
         {
             content: "Toggle 'Show Header' off",
-            trigger: ".hb-row[data-label='Show Header'] input[type='checkbox']",
+            trigger: ".o_hb_row[data-label='Show Header'] input[type='checkbox']",
             run: "click",
         },
         {

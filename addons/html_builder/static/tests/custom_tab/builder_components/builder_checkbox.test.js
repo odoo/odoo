@@ -14,7 +14,7 @@ test("Click on checkbox", async () => {
     const editableContent = getEditableContent();
 
     await contains(":iframe .test-options-target").click();
-    expect(".options-container").toBeDisplayed();
+    expect(".o_hb_options_container").toBeDisplayed();
     expect(".o-checkbox .form-check-input:checked").toHaveCount(0);
     expect(editableContent).toHaveInnerHTML(`<p class="test-options-target">b</p>`);
 
@@ -45,14 +45,14 @@ test("hide/display base on applyTo", async () => {
         `<div class="parent-target"><p class="child-target b">b</p></div>`
     );
     expect("[data-class-action='my-custom-class']").not.toHaveClass("active");
-    expect(".options-container .o-checkbox").toHaveCount(0);
+    expect(".o_hb_options_container .o-checkbox").toHaveCount(0);
 
     await contains("[data-class-action='my-custom-class']").click();
     expect(editableContent).toHaveInnerHTML(
         `<div class="parent-target"><p class="child-target b my-custom-class">b</p></div>`
     );
     expect("[data-class-action='my-custom-class']").toHaveClass("active");
-    expect(".options-container .o-checkbox").toHaveCount(1);
+    expect(".o_hb_options_container .o-checkbox").toHaveCount(1);
 });
 
 test("click on BuilderCheckbox with inverseAction", async () => {

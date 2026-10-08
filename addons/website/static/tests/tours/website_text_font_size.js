@@ -118,7 +118,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         ...goToTheme(),
         {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
-            trigger: `.we-bg-options-container:has([data-action-param="${
+            trigger: `.o_hb_bg_options_container:has([data-action-param="${
                 classNameInfo.get(fontSizeClass).scssVariableMainName
             }"]) [data-label="Font Size"] .o_hb_collapse_toggler`,
             run: "click",
@@ -150,7 +150,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         ...goToTheme(),
         {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
-            trigger: `.we-bg-options-container:has([data-action-param="${
+            trigger: `.o_hb_bg_options_container:has([data-action-param="${
                 classNameInfo.get(fontSizeClass).scssVariableMainName
             }"]) [data-label="Font Size"] .o_hb_collapse_toggler`,
             run: "click",
@@ -166,7 +166,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         },
         {
             content: `Close the collapse to hide the font size of ${fontSizeClass}`,
-            trigger: `.we-bg-options-container:has([data-action-param="${
+            trigger: `.o_hb_bg_options_container:has([data-action-param="${
                 classNameInfo.get(fontSizeClass).scssVariableMainName
             }"]) [data-label="Font Size"] .o_hb_collapse_toggler`,
             run: "click",

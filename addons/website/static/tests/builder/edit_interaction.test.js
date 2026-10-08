@@ -28,10 +28,10 @@ test("dropping a new snippet starts its interaction", async () => {
         },
     });
     await openBuilderSidebar();
-    await waitFor(".o-website-builder_sidebar.o_builder_sidebar_open");
+    await waitFor(".o_website_builder_sidebar.o_builder_sidebar_open");
     expect.verifySteps(["refresh"]);
     await contains(
-        `.o-snippets-menu #snippet_groups .o_snippet[data-snippet-group='text'] .o_snippet_thumbnail_area`
+        `.o_hb_snippets_menu #snippet_groups .o_snippet[data-snippet-group='text'] .o_snippet_thumbnail_area`
     ).click();
     await confirmAddSnippet("s_title");
     await waitForEndOfOperation();
@@ -84,13 +84,13 @@ describe("exit builder", () => {
     test("saving stops the interactions", async () => {
         await waitFor(":iframe [data-snippet='s_text_block']");
         await contains("[data-action='save']").click();
-        await waitFor(".o-website-builder_sidebar:not(.o_builder_sidebar_open)");
+        await waitFor(".o_website_builder_sidebar:not(.o_builder_sidebar_open)");
         expect.verifySteps(["stop", "stop"]); // save stops & destroy also stops
     });
     test("discarding stops the interactions", async () => {
         await waitFor(":iframe [data-snippet='s_text_block']");
         await contains("[data-action='cancel']").click();
-        await waitFor(".o-website-builder_sidebar:not(.o_builder_sidebar_open)");
+        await waitFor(".o_website_builder_sidebar:not(.o_builder_sidebar_open)");
         expect.verifySteps(["stop"]);
     });
 });

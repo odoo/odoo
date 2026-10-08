@@ -29,9 +29,9 @@ test("opens DateTimePicker on focus, closes on blur", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container input").click();
+    await contains(".o_hb_bg_options_container input").click();
     expect(".o_datetime_picker").toBeDisplayed();
-    await contains(".options-container").click();
+    await contains(".o_hb_options_container").click();
     expect(".o_datetime_picker").not.toHaveCount();
 });
 
@@ -47,11 +47,11 @@ test("defaults to now if undefined", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    let dateString = queryOne(".we-bg-options-container input.o-hb-input-base").value;
+    let dateString = queryOne(".o_hb_bg_options_container input.o_hb_input_base").value;
     expect(isExpectedDateTime({ dateString })).toBe(true);
 
-    await contains(".we-bg-options-container input.form-check-input").click();
-    dateString = queryOne(".we-bg-options-container input.o-hb-input-base").value;
+    await contains(".o_hb_bg_options_container input.form-check-input").click();
+    dateString = queryOne(".o_hb_bg_options_container input.o_hb_input_base").value;
     expect(isExpectedDateTime({ dateString })).toBe(true);
 });
 
@@ -62,16 +62,16 @@ test("defaults to last one when invalid date provided", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target" data-date="1554219400">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".we-bg-options-container input").toHaveValue("04/02/2019 16:36");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/02/2019 16:36");
 
-    await contains(".we-bg-options-container input").edit("INVALID DATE");
-    expect(".we-bg-options-container input").toHaveValue("04/02/2019 16:36");
+    await contains(".o_hb_bg_options_container input").edit("INVALID DATE");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/02/2019 16:36");
 
-    await contains(".we-bg-options-container input").edit("04/01/2019 10:00");
-    expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00");
+    await contains(".o_hb_bg_options_container input").edit("04/01/2019 10:00");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/01/2019 10:00");
 
-    await contains(".we-bg-options-container input").edit("INVALID DATE");
-    expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00");
+    await contains(".o_hb_bg_options_container input").edit("INVALID DATE");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/01/2019 10:00");
 });
 
 test("defaults to last one when invalid date provided (date)", async () => {
@@ -81,16 +81,16 @@ test("defaults to last one when invalid date provided (date)", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target" data-date="1554219400">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".we-bg-options-container input").toHaveValue("04/02/2019");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/02/2019");
 
-    await contains(".we-bg-options-container input").edit("INVALID DATE");
-    expect(".we-bg-options-container input").toHaveValue("04/02/2019");
+    await contains(".o_hb_bg_options_container input").edit("INVALID DATE");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/02/2019");
 
-    await contains(".we-bg-options-container input").edit("04/01/2019 10:00");
-    expect(".we-bg-options-container input").toHaveValue("04/01/2019");
+    await contains(".o_hb_bg_options_container input").edit("04/01/2019 10:00");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/01/2019");
 
-    await contains(".we-bg-options-container input").edit("INVALID DATE");
-    expect(".we-bg-options-container input").toHaveValue("04/01/2019");
+    await contains(".o_hb_bg_options_container input").edit("INVALID DATE");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/01/2019");
 });
 
 test("defaults to now when no date is selected", async () => {
@@ -100,11 +100,11 @@ test("defaults to now when no date is selected", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container input").edit("04/01/2019 10:00");
-    expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00");
+    await contains(".o_hb_bg_options_container input").edit("04/01/2019 10:00");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/01/2019 10:00");
 
-    await contains(".we-bg-options-container input").edit("");
-    const dateString = queryOne(".we-bg-options-container input").value;
+    await contains(".o_hb_bg_options_container input").edit("");
+    const dateString = queryOne(".o_hb_bg_options_container input").value;
     expect(isExpectedDateTime({ dateString })).toBe(true);
 });
 
@@ -115,14 +115,14 @@ test("defaults to now when clicking on clear button", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container input").edit("04/01/2019 10:00");
-    expect(".we-bg-options-container input").toHaveValue("04/01/2019 10:00");
+    await contains(".o_hb_bg_options_container input").edit("04/01/2019 10:00");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/01/2019 10:00");
 
     for (let i = 0; i < 3; i++) {
-        await contains(".we-bg-options-container input").click();
+        await contains(".o_hb_bg_options_container input").click();
         await contains(".o_datetime_buttons button [data-icon='ink_eraser']").click();
-        await contains(".options-container").click();
-        const dateString = queryOne(".we-bg-options-container input").value;
+        await contains(".o_hb_options_container").click();
+        const dateString = queryOne(".o_hb_bg_options_container input").value;
         expect(isExpectedDateTime({ dateString })).toBe(true);
     }
 });
@@ -135,11 +135,11 @@ test("selects a date and properly applies it", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container input").click();
+    await contains(".o_hb_bg_options_container input").click();
     await contains(".o_date_item_cell.o_today + .o_date_item_cell").click();
-    await contains(".options-container").click();
+    await contains(".o_hb_options_container").click();
 
-    const dateString = queryOne(".we-bg-options-container input").value;
+    const dateString = queryOne(".o_hb_bg_options_container input").value;
     const expectedDateTime = DateTime.now().plus({ days: 1 });
     expect(isExpectedDateTime({ dateString, expectedDateTime })).toBe(true);
 
@@ -155,10 +155,10 @@ test("selects a date and synchronize the input field, while still in preview", a
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container input").click();
+    await contains(".o_hb_bg_options_container input").click();
     await contains(".o_date_item_cell.o_today + .o_date_item_cell").click();
 
-    const dateString = queryOne(".we-bg-options-container input").value;
+    const dateString = queryOne(".o_hb_bg_options_container input").value;
     const expectedDateTime = DateTime.now().plus({ days: 1 });
     expect(isExpectedDateTime({ dateString, expectedDateTime })).toBe(true);
 
@@ -176,18 +176,18 @@ test("edit a date with the datetime picker should correctly apply the mutation",
         <div class="test-options-target" data-date="1554219400">b</div>
         <div class="another-target">c</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container input").click();
+    await contains(".o_hb_bg_options_container input").click();
     await contains(".o_date_item_cell:contains('9')").click();
-    expect(".we-bg-options-container input").toHaveValue("04/09/2019 16:36");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/09/2019 16:36");
 
     await contains(".o_datetime_buttons .btn:contains('apply')").click();
-    expect(".we-bg-options-container input").toHaveValue("04/09/2019 16:36");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/09/2019 16:36");
     expect(":iframe .test-options-target").toHaveAttribute("data-date", "1554824160");
 
     // refresh the Edit tab
     await contains(":iframe .another-target").click();
     await contains(":iframe .test-options-target").click();
-    expect(".we-bg-options-container input").toHaveValue("04/09/2019 16:36");
+    expect(".o_hb_bg_options_container input").toHaveValue("04/09/2019 16:36");
     expect(":iframe .test-options-target").toHaveAttribute("data-date", "1554824160");
 });
 
@@ -198,8 +198,8 @@ test("toggles today as a relative date", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    const inputSelector = ".we-bg-options-container input.o-hb-input-base";
-    const todayButtonSelector = ".we-bg-options-container button:has([data-icon='today'])";
+    const inputSelector = ".o_hb_bg_options_container input.o_hb_input_base";
+    const todayButtonSelector = ".o_hb_bg_options_container button:has([data-icon='today'])";
 
     await contains(inputSelector).edit("01/01/2025");
     await waitFor(":iframe .test-options-target[data-date]");

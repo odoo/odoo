@@ -58,7 +58,7 @@ test("Drop Whatsapp snippet and verify snippet options", async () => {
 
 test("whatsapp snippet shouldn't create extra dropzones", async () => {
     await setupWebsiteBuilderWithSnippet("s_whatsapp");
-    const { moveTo } = await contains(".o-snippets-menu .o_snippet_thumbnail").drag();
+    const { moveTo } = await contains(".o_hb_snippets_menu .o_snippet_thumbnail").drag();
     await moveTo(":iframe #wrap");
     // Whatsapp snippet shouldn't create an extra dropzone.
     expect(":iframe .oe_drop_zone").toHaveCount(1);

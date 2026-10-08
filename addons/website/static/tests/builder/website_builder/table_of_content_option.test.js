@@ -108,8 +108,8 @@ test("hide title in content with table of content", async () => {
 
     // Hide title
     await contains(":iframe .s_table_of_content_main h2").click();
-    await waitFor(".options-container");
-    const sectionOptionContainer = queryAll(".options-container").pop();
+    await waitFor(".o_hb_options_container");
+    const sectionOptionContainer = queryAll(".o_hb_options_container").pop();
     expect(sectionOptionContainer.querySelector("div")).toHaveText("Section");
     await click(sectionOptionContainer.querySelector("[data-action-id='toggleDeviceVisibility']"));
     await tick();

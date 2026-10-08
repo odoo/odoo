@@ -51,7 +51,7 @@ registerWebsitePreviewTour(
         {
             content: "ensure image size is displayed",
             trigger:
-                ".o_customize_tab [data-container-title='Image'] .options-container-header:contains('kb')",
+                ".o_customize_tab [data-container-title='Image'] .o_hb_options_container_header:contains('kb')",
         },
         ...changeImageShape(),
         {
@@ -76,7 +76,7 @@ registerWebsitePreviewTour(
             trigger: ".o_customize_tab [data-container-title='Image'] span[title='Size']",
         },
         {
-            trigger: ".o-hb-image-size-info[title=Size]:contains(0.6 kB)",
+            trigger: ".o_hb_image_size_info[title=Size]:contains(0.6 kB)",
         },
         {
             content: "replace image",

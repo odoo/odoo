@@ -35,11 +35,11 @@ test("writes a list of numbers to a data attribute", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    await contains(".we-bg-options-container input[type=number]").edit("35");
-    await contains(".we-bg-options-container input[type=text]").edit("a thing");
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
+    await contains(".o_hb_bg_options_container input[type=number]").edit("35");
+    await contains(".o_hb_bg_options_container input[type=text]").edit("a thing");
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
         JSON.stringify([
@@ -67,9 +67,9 @@ test("supports arbitrary number of text and number inputs on entries", async () 
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    expect(".we-bg-options-container input[type=number]").toHaveCount(2);
-    expect(".we-bg-options-container input[type=text]").toHaveCount(2);
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
+    expect(".o_hb_bg_options_container input[type=number]").toHaveCount(2);
+    expect(".o_hb_bg_options_container input[type=text]").toHaveCount(2);
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
         JSON.stringify([
@@ -98,12 +98,12 @@ test("delete an item", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container .builder_list_add_item").click();
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
         JSON.stringify(defaultValueWithIds([0]))
     );
-    await contains(".we-bg-options-container .builder_list_remove_item").click();
+    await contains(".o_hb_bg_options_container .builder_list_remove_item").click();
     expect(":iframe .test-options-target").toHaveAttribute("data-list", JSON.stringify([]));
 });
 
@@ -121,9 +121,9 @@ test("reorder items", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
     function expectOrder(ids) {
         expect(":iframe .test-options-target").toHaveAttribute(
             "data-list",
@@ -132,7 +132,7 @@ test("reorder items", async () => {
     }
     expectOrder([0, 1, 2]);
 
-    const rowSelector = (id) => `.we-bg-options-container .o_row_draggable[data-id="${id}"]`;
+    const rowSelector = (id) => `.o_hb_bg_options_container .o_row_draggable[data-id="${id}"]`;
     const rowHandleSelector = (id) => `${rowSelector(id)} .o_handle_cell`;
 
     await contains(rowHandleSelector(0)).dragAndDrop(rowSelector(1));
@@ -227,12 +227,12 @@ test("hides hiddenProperties from options", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    expect(".we-bg-options-container input[type=number]").toHaveCount(1);
-    expect(".we-bg-options-container input[type=text]").toHaveCount(1);
-    await contains(".we-bg-options-container input[type=number]").edit("35");
-    await contains(".we-bg-options-container input[type=text]").edit("a thing");
-    await contains(".we-bg-options-container .builder_list_add_item").click();
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
+    expect(".o_hb_bg_options_container input[type=number]").toHaveCount(1);
+    expect(".o_hb_bg_options_container input[type=text]").toHaveCount(1);
+    await contains(".o_hb_bg_options_container input[type=number]").edit("35");
+    await contains(".o_hb_bg_options_container input[type=text]").edit("a thing");
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
         JSON.stringify([
@@ -279,9 +279,9 @@ test("do not lose id when adjusting 'selected'", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container .o-hb-selectMany2X-toggle").click();
+    await contains(".o_hb_bg_options_container .o_hb_selectMany2X_toggle").click();
     await contains(".o_select_menu_menu .o-dropdown-item").click();
-    await contains(".we-bg-options-container .o-hb-selectMany2X-toggle").click();
+    await contains(".o_hb_bg_options_container .o_hb_selectMany2X_toggle").click();
     await contains(".o_select_menu_menu .o-dropdown-item").click();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
@@ -299,7 +299,7 @@ test("do not lose id when adjusting 'selected'", async () => {
         ])
     );
 
-    await contains(".we-bg-options-container .o-hb-checkbox input").click();
+    await contains(".o_hb_bg_options_container .o_hb_checkbox input").click();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
         JSON.stringify([
@@ -317,7 +317,7 @@ test("do not lose id when adjusting 'selected'", async () => {
         ])
     );
 
-    await contains(".we-bg-options-container .o-hb-checkbox input").click();
+    await contains(".o_hb_bg_options_container .o_hb_checkbox input").click();
     expect(":iframe .test-options-target").toHaveAttribute(
         "data-list",
         JSON.stringify([
@@ -367,10 +367,10 @@ test("can add item with string and integer ids", async () => {
     await contains(":iframe .test-options-target").click();
 
     for (let i = 0; i < 2; i++) {
-        await contains(".we-bg-options-container .o-hb-selectMany2X-toggle").click();
+        await contains(".o_hb_bg_options_container .o_hb_selectMany2X_toggle").click();
         await contains(".o_select_menu_menu .o-dropdown-item").click();
     }
-    expect(".we-bg-options-container .o-hb-selectMany2X-toggle").toHaveProperty("disabled");
+    expect(".o_hb_bg_options_container .o_hb_selectMany2X_toggle").toHaveProperty("disabled");
 });
 
 test("not editable builder list option", async () => {
@@ -412,8 +412,8 @@ test("not editable builder list option", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".we-bg-options-container .builder_list_add_item").toHaveCount(0);
-    expect(".we-bg-options-container .o-hb-input-base[disabled]").toHaveCount(2);
+    expect(".o_hb_bg_options_container .builder_list_add_item").toHaveCount(0);
+    expect(".o_hb_bg_options_container .o_hb_input_base[disabled]").toHaveCount(2);
 });
 
 test("drops blank textual entries", async () => {
@@ -442,21 +442,21 @@ test("drops blank textual entries", async () => {
 
     // forbidLastItemRemoval="false"
     await contains(":iframe .test-options-target-a").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    expect(".we-bg-options-container input").toHaveCount(1);
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
+    expect(".o_hb_bg_options_container input").toHaveCount(1);
 
-    await contains(".we-bg-options-container input").clear();
+    await contains(".o_hb_bg_options_container input").clear();
     await press("enter");
-    expect(".we-bg-options-container input").toHaveCount(0);
+    expect(".o_hb_bg_options_container input").toHaveCount(0);
 
     // forbidLastItemRemoval="true"
     await contains(":iframe .test-options-target-b").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    expect(".we-bg-options-container input").toHaveCount(1);
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
+    expect(".o_hb_bg_options_container input").toHaveCount(1);
 
-    await contains(".we-bg-options-container input").clear();
+    await contains(".o_hb_bg_options_container input").clear();
     await press("enter");
-    expect(".we-bg-options-container input").toHaveCount(1);
+    expect(".o_hb_bg_options_container input").toHaveCount(1);
 });
 
 test("loads more items when the last row intersects", async () => {
@@ -480,11 +480,11 @@ test("loads more items when the last row intersects", async () => {
     );
     await setupHTMLBuilder(`<div class="test-options-target">content</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".we-bg-options-container .o_row_draggable").toHaveCount(50);
-    await contains(".we-bg-options-container .o_we_table_wrapper").scroll({ top: 9999 });
-    expect(".we-bg-options-container .o_row_draggable").toHaveCount(100);
-    await contains(".we-bg-options-container .o_we_table_wrapper").scroll({ top: 9999 });
-    expect(".we-bg-options-container .o_row_draggable").toHaveCount(150);
+    expect(".o_hb_bg_options_container .o_row_draggable").toHaveCount(50);
+    await contains(".o_hb_bg_options_container .o_we_table_wrapper").scroll({ top: 9999 });
+    expect(".o_hb_bg_options_container .o_row_draggable").toHaveCount(100);
+    await contains(".o_hb_bg_options_container .o_we_table_wrapper").scroll({ top: 9999 });
+    expect(".o_hb_bg_options_container .o_row_draggable").toHaveCount(150);
 });
 
 test("should disable last checked checkbox", async () => {
@@ -500,6 +500,6 @@ test("should disable last checked checkbox", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">a</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container .builder_list_add_item").click();
-    expect(".we-bg-options-container tr .o-checkbox input").toHaveAttribute("disabled");
+    await contains(".o_hb_bg_options_container .builder_list_add_item").click();
+    expect(".o_hb_bg_options_container tr .o-checkbox input").toHaveAttribute("disabled");
 });

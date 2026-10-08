@@ -58,12 +58,12 @@ test("change the background shape of elements", async () => {
             </div>
         </div>`);
     await contains(":iframe .selector").click();
-    await contains("div[data-label='Shape'] button.o-hb-btn").click();
+    await contains("div[data-label='Shape'] button.o_hb_btn").click();
     expect(
-        ".o_pager_container .o-hb-bg-shape-btn:nth-child(1) .btn.active[data-action-id='setBackgroundShape']"
+        ".o_pager_container .o_hb_bg_shape_btn:nth-child(1) .btn.active[data-action-id='setBackgroundShape']"
     ).toHaveCount();
     await contains(
-        ".o_pager_container .o-hb-bg-shape-btn:nth-child(2) .btn:not(.active)[data-action-id='setBackgroundShape']"
+        ".o_pager_container .o_hb_bg_shape_btn:nth-child(2) .btn:not(.active)[data-action-id='setBackgroundShape']"
     ).click();
     expect(":iframe .selector div#first").toHaveAttribute(
         "data-oe-shape-data",
@@ -422,9 +422,9 @@ test("changing shape's background color doesn't hide the shape itself", async ()
         }
     );
     await contains(":iframe section").click();
-    await contains("div[data-label='Shape'] button.o-hb-btn").click();
+    await contains("div[data-label='Shape'] button.o_hb_btn").click();
     await contains(
-        ".o_pager_container .o-hb-bg-shape-btn [data-action-value='html_builder/Connections/01'][data-action-id='setBackgroundShape']"
+        ".o_pager_container .o_hb_bg_shape_btn [data-action-value='html_builder/Connections/01'][data-action-id='setBackgroundShape']"
     ).click();
     await waitSidebarUpdated();
     const backgroundImageValue = getComputedStyle(queryOne(":iframe .o_we_shape")).backgroundImage;
@@ -565,9 +565,9 @@ test("can customize background shape groups", async () => {
 
     await setupWebsiteBuilder(`<section>AAAA</section>`);
     await contains(":iframe section").click();
-    await contains("div[data-label='Shape'] button.o-hb-btn").click();
+    await contains("div[data-label='Shape'] button.o_hb_btn").click();
     expect(".o_pager_container").toHaveText(/Custom/);
-    expect("button.o-hb-select-pager-tab[data-group-id='extra']").toHaveCount(1);
+    expect("button.o_hb_select_pager_tab[data-group-id='extra']").toHaveCount(1);
     expect("[data-action-value='html_builder/Connections/01']").toHaveCount(1);
     expect("[data-action-value='html_builder/Connections/02']").toHaveCount(1);
     await contains("[data-action-value='html_builder/Connections/01']").click();

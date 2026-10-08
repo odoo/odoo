@@ -202,14 +202,14 @@ test("Shouldn't reload(save, etc) when a reload is canceled", async () => {
 
     await setupHTMLBuilder(`<div class="test-options-target">Target</div>`);
     await contains(":iframe .test-options-target").click();
-    await contains(".options-container [data-action-id='testCancelReload']").click();
+    await contains(".o_hb_options_container [data-action-id='testCancelReload']").click();
     expect(".o_blockUI").toHaveCount(0);
     expect.verifySteps([]);
 
     const editingEl = queryOne(":iframe .test-options-target");
     editingEl.classList.add("should_reload");
     await contains(":iframe .test-options-target").click();
-    await contains(".options-container [data-action-id='testCancelReload']").click();
+    await contains(".o_hb_options_container [data-action-id='testCancelReload']").click();
     expect(".o_blockUI").toHaveCount(1);
     resolve();
     await animationFrame();
@@ -247,7 +247,7 @@ test("UI is blocked when doing the reloadable operation", async () => {
         `<div class="test-options-target">Target</div>`
     );
     await contains(":iframe .test-options-target").click();
-    await contains(".options-container [data-action-id='testReload']").click();
+    await contains(".o_hb_options_container [data-action-id='testReload']").click();
     expect(".o_blockUI").toHaveCount(1);
     await waitSidebarUpdated();
     expect(".o_blockUI").toHaveCount(0);
@@ -390,7 +390,7 @@ test("UI is unblocked when getting an error on a reloadable operation", async ()
         `<div class="test-options-target">Target</div>`
     );
     await contains(":iframe .test-options-target").click();
-    await contains(".options-container [data-action-id='testAction']").click();
+    await contains(".o_hb_options_container [data-action-id='testAction']").click();
     expect(".o_blockUI").toHaveCount(1);
     resolve();
     await waitSidebarUpdated();

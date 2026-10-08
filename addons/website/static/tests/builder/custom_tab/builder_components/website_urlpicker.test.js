@@ -66,14 +66,14 @@ test("link button opens in new window if url not empty", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container button").click();
+    await contains(".o_hb_bg_options_container button").click();
 
-    await contains(".we-bg-options-container input").edit("/url");
-    await contains(".we-bg-options-container button").click();
+    await contains(".o_hb_bg_options_container input").edit("/url");
+    await contains(".o_hb_bg_options_container button").click();
     expect.verifySteps(["callWindowOpen /url"]);
 
-    await contains(".we-bg-options-container input").edit("");
-    await contains(".we-bg-options-container button").click();
+    await contains(".o_hb_bg_options_container input").edit("");
+    await contains(".o_hb_bg_options_container button").click();
 });
 
 test("opens dropdown when typing /", async () => {
@@ -87,7 +87,7 @@ test("opens dropdown when typing /", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container input").edit("/", { confirm: false });
+    await contains(".o_hb_bg_options_container input").edit("/", { confirm: false });
     await advanceTime(250);
     expect.verifySteps(["button_immediate_install"]);
     expect(document.querySelector(".o_website_ui_autocomplete")).toBeVisible();
@@ -102,11 +102,11 @@ test("selects and commits value from dropdown", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
 
-    await contains(".we-bg-options-container input").edit("/", { confirm: false });
+    await contains(".o_hb_bg_options_container input").edit("/", { confirm: false });
     await advanceTime(250);
     await contains(document.querySelector(".o_website_ui_autocomplete > li:first-child a")).click();
     expect(document.querySelector(".o_website_ui_autocomplete")).toBe(null);
-    expect(".we-bg-options-container input").toHaveValue("/page1");
+    expect(".o_hb_bg_options_container input").toHaveValue("/page1");
     expect(":iframe .test-options-target").toHaveAttribute("data-url", "/page1");
 });
 
@@ -122,7 +122,7 @@ test("collects anchors in current page and suggests them", async () => {
         <div id="anchor2" data-anchor="true">anchor2</div>
     `);
     await contains(":iframe .test-options-target").click();
-    await contains(".we-bg-options-container input").edit("#", { confirm: false });
+    await contains(".o_hb_bg_options_container input").edit("#", { confirm: false });
     await advanceTime(250);
 
     // Check autocomplete suggests both anchors
@@ -133,6 +133,6 @@ test("collects anchors in current page and suggests them", async () => {
 
     // Check clicking on one of them properly applies
     await contains(els[1]).click();
-    expect(".we-bg-options-container input").toHaveValue("#anchor1");
+    expect(".o_hb_bg_options_container input").toHaveValue("#anchor1");
     await expect(":iframe .test-options-target").toHaveAttribute("data-url", "#anchor1");
 });
