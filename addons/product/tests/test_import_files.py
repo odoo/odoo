@@ -172,6 +172,12 @@ class TestImportFiles(TransactionCase):
             self.assertEqual(self.env.ref('__import__.product_template_1').qty_available, 3.0)
             self.assertEqual(self.env.ref('__import__.product_product_1').qty_available, 100.0)
 
+            results = self.import_product_xls("product.product", filepath=test_file)
+            self.assertFalse(results["messages"])
+            self.env.invalidate_all()
+            self.assertEqual(self.env.ref('__import__.product_template_1').qty_available, 3.0)
+            self.assertEqual(self.env.ref('__import__.product_product_1').qty_available, 100.0)
+
     def test_import_create_product_template_xls(self):
         results = self.import_product_xls("product.template", filepath="product/static/xls/test_import_template.xls")
 
