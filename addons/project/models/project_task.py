@@ -338,6 +338,12 @@ class ProjectTask(models.Model):
         'CHECK (NOT (project_id IS NULL AND parent_id IS NOT NULL) OR is_template IS TRUE)',
         'A private (non-template) task cannot have a parent.',
     )
+    task_template_id = fields.Many2one(
+        'project.task',
+        string="Task Template Used",
+        store=False,
+        export_string_translation=False,
+    )
 
     _is_template_idx = models.Index('(is_template) WHERE is_template IS TRUE')
 
@@ -695,6 +701,36 @@ class ProjectTask(models.Model):
             self.user_ids = self.user_ids.filtered(
                 lambda u: self.company_id in u._origin.company_ids
             )
+
+    @api.onchange('task_template_id')
+    def _onchange_task_template_id(self):
+        if not self.task_template_id:
+            return
+        default = {
+            field: False
+            for field in self._get_template_field_blacklist()
+        }
+        data = self.task_template_id.with_context(
+            copy_from_template=True,
+            copy_from_project_template=self.task_template_id.id,
+        ).copy_data(default)[0]
+        data['is_template'] = False
+        if self.task_template_id.depend_on_ids:
+            data['depend_on_ids'] = [Command.set(self.task_template_id.depend_on_ids.ids)]
+        if 'child_ids' in data:
+            state_default = self.env['project.task'].default_get(['state']).get('state', '01_in_progress')
+            child_ids = []
+            for cmd in data['child_ids']:
+                if len(cmd) == 3 and isinstance(cmd[2], dict):
+                    subtask = cmd[2]
+                    subtask['is_template'] = False
+                    if 'state' not in subtask:
+                        subtask['state'] = state_default
+                    child_ids.append(Command.create(subtask))
+                else:
+                    child_ids.append(cmd)
+            data['child_ids'] = child_ids
+        self.update(data)
 
     @api.depends('project_id.company_id', 'parent_id.company_id')
     def _compute_company_id(self):
@@ -2148,14 +2184,7 @@ class ProjectTask(models.Model):
                       field: False
                       for field in self._get_template_field_blacklist()
                   } | values
-        data = {}
-        for key, value in self.with_context(copy_from_template=True).copy_data(default=default)[0].items():
-            if key == 'child_ids' and isinstance(value, list):
-                for cmd in value:
-                    if len(cmd) == 3 and isinstance(cmd[2], dict):
-                        cmd[2]['state'] = self.env['project.task'].default_get(['state']).get('state', '01_in_progress')
-            data[f'default_{key}'] = value
-        return data
+        return self.with_context(copy_from_template=True).copy(default=default).id
 
     def action_archive(self):
         child_tasks = self.child_ids.filtered(lambda child_task: not child_task.display_in_project)
