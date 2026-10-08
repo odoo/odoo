@@ -92,6 +92,7 @@ export class BuilderList extends Component {
         alternativeChoiceItemTemplate: t.string().optional(),
         emptyListMessage: t.string().optional(),
         refreshRecordsAction: t.string().optional(),
+        realTimeSearchOnInput: t.function().optional(),
     });
 
     tableRef = signal.ref();
@@ -184,12 +185,13 @@ export class BuilderList extends Component {
                 label: record.display_name,
             })),
             onSelect: (record) => this.addItem(record),
+            onInput: this.props.realTimeSearchOnInput,
             class: "o-hb-selectMany2X-wrapper min-w-0",
             menuClass:
                 "o-hb-select-dropdown o-hb-selectMany2X-dropdown" +
                 (this.props.fullWidthDropdown ? " o-hb-full-width-dropdown" : ""),
             togglerClass: "o-hb-selectMany2X-toggle btn-secondary",
-            disabled: !excludedRecords.length,
+            disabled: !this.props.realTimeSearchOnInput && !excludedRecords.length,
             position: "bottom-end",
         };
     }

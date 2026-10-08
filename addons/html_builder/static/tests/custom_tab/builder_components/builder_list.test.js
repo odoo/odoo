@@ -5,8 +5,8 @@ import {
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { expect, test, describe } from "@odoo/hoot";
-import { onError, xml } from "@odoo/owl";
+import { animationFrame, expect, test, describe, runAllTimers } from "@odoo/hoot";
+import { onError, proxy, xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { press } from "@odoo/hoot-dom";
 
@@ -502,4 +502,79 @@ test("should disable last checked checkbox", async () => {
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container .builder_list_add_item").click();
     expect(".we-bg-options-container tr .o-checkbox input").toHaveAttribute("disabled");
+});
+
+test("calls realTimeSearchOnInput when the search input changes", async () => {
+    class Test extends BaseOptionComponent {
+        static template = xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                records="this.availableRecords"
+                realTimeSearchOnInput="this.onSearchInput.bind(this)"
+            />
+        `;
+        availableRecords = JSON.stringify([{ id: 1, display_name: "A" }]);
+        onSearchInput(searchString) {
+            expect.step(`search:${searchString}`);
+        }
+    }
+    addBuilderOption({
+        selector: ".test-options-target",
+        Component: Test,
+    });
+
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .o-hb-selectMany2X-toggle").click();
+    expect.verifySteps(["search:"]);
+
+    await contains(".o_select_menu_menu .o_select_menu_input").edit("foo", {
+        confirm: false,
+    });
+    await runAllTimers();
+    expect.verifySteps(["search:foo"]);
+});
+
+test("updates choices when the records prop is updated by realTimeSearchOnInput", async () => {
+    class Test extends BaseOptionComponent {
+        static template = xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                default = "{}"
+                records="this.state.availableRecords"
+                realTimeSearchOnInput="this.onSearchInput.bind(this)"
+            />
+        `;
+        setup() {
+            super.setup();
+            this.state = proxy({
+                availableRecords: JSON.stringify([{ id: 1, display_name: "Item A" }]),
+            });
+        }
+        onSearchInput(searchString) {
+            if (!searchString) {
+                return;
+            }
+            this.state.availableRecords = JSON.stringify([
+                { id: 1, display_name: "Item A" },
+                { id: 2, display_name: "Item B" },
+            ]);
+        }
+    }
+    addBuilderOption({
+        selector: ".test-options-target",
+        Component: Test,
+    });
+
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    await contains(".we-bg-options-container .o-hb-selectMany2X-toggle").click();
+    expect(".o_select_menu_menu .o-dropdown-item").toHaveCount(1);
+
+    await contains(".o_select_menu_menu .o_select_menu_input").edit("item", {
+        confirm: false,
+    });
+    await runAllTimers();
+    await animationFrame();
+    expect(".o_select_menu_menu .o-dropdown-item").toHaveCount(2);
 });
