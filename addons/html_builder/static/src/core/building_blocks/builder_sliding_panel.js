@@ -27,6 +27,7 @@ export class BuilderSlidingPanel extends Component {
         useBuilderComponent(this.props);
         this.state = proxy({
             optionContainerName: "",
+            displayClass: "d-none",
             contentRendered: this.props.openByDefault,
         });
         onMounted(() => {
@@ -40,7 +41,7 @@ export class BuilderSlidingPanel extends Component {
             }
         });
         useHotkey("escape", this.hideSlidingPanel.bind(this), {
-            isAvailable: () => !this.slidingPanelRef().classList.contains("d-none"),
+            isAvailable: () => this.state.displayClass != "d-none",
         });
         onWillUnmount(() => {
             clearTimeout(this.updateDisplayTimeout);
@@ -48,35 +49,19 @@ export class BuilderSlidingPanel extends Component {
         });
     }
 
-    updateDisplay(className) {
-        const slidingPanelEl = this.slidingPanelRef();
-        if (!slidingPanelEl) {
-            return;
-        }
-        slidingPanelEl.classList.remove(
-            "d-none",
-            "d-block",
-            "hb-panel-slide-in",
-            "hb-panel-slide-out"
-        );
-        slidingPanelEl.classList.add(className);
-    }
-
     showSlidingPanel() {
         this.state.contentRendered = true;
-        this.updateDisplay("hb-panel-slide-in");
-        this.updateDisplayTimeout = setTimeout(() => this.updateDisplay("d-block"), 200);
+        this.state.displayClass = "hb-panel-slide-in";
+        this.updateDisplayTimeout = setTimeout(() => (this.state.displayClass = "d-block"), 200);
     }
 
     hideSlidingPanel() {
-        this.updateDisplay("hb-panel-slide-out");
-        // We set a timeout slightly shorter than 200 because some flicker may
-        // happen otherwise.
+        this.state.displayClass = "hb-panel-slide-out";
         this.updateDisplayTimeout = setTimeout(() => {
-            this.updateDisplay("d-none");
+            this.state.displayClass = "d-none";
             this.openButtonRef().focus();
             this.props.onClose?.();
-        }, 180);
+        }, 200);
     }
 
     onBackdropClick(ev) {
