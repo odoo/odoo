@@ -27,14 +27,18 @@ test("newly created record", async () => {
         expect(result.lines.length).toBe(2);
         expect(result.lines[0]).toBe(line1.id);
         expect(result.lines[1]).toBe(line2.id);
-        expect(result[SERIALIZED_UI_STATE_PROP]).toBeEmpty();
+        const state = JSON.parse(result[SERIALIZED_UI_STATE_PROP]);
+        delete state.lastUse;
+        expect(state).toBeEmpty();
     }
 
     {
         const result = line1.serializeForIndexedDB();
         expect(result.id).toBe(line1.id);
         expect(result.qty).toBe(1);
-        expect(result[SERIALIZED_UI_STATE_PROP]).toBeEmpty();
+        const state = JSON.parse(result[SERIALIZED_UI_STATE_PROP]);
+        delete state.lastUse;
+        expect(state).toBeEmpty();
     }
 });
 

@@ -16,6 +16,7 @@ import { Base, createRelatedModels } from "@point_of_sale/app/models/related_mod
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { getOutdatedRecords } from "../models/related_models/cleanup";
 
 const { DateTime } = luxon;
 const CONSOLE_COLOR = "#28ffeb";
@@ -245,66 +246,6 @@ export class PosDataPlugin extends Plugin {
             }
         }
 
-        this.indexedDB.readAll(Object.keys(this.opts.databaseTable)).then((data) => {
-            if (!data) {
-                return;
-            }
-
-            for (const [model, records] of Object.entries(data)) {
-                const key = this.opts.databaseTable[model].key;
-                const keysToDelete = [];
-
-                for (const record of records) {
-                    const localRecord = this.models[model].get(record.id);
-                    if (!localRecord) {
-                        keysToDelete.push(record[key]);
-                        continue;
-                    }
-                    if (!dataToKeep[model] || !dataToKeep[model].includes(record[key])) {
-                        keysToDelete.push(record[key]);
-                    }
-                }
-
-                if (model === "pos.order") {
-                    const idbOrdersByUuid = new Map(records.map((r) => [r[key], r]));
-                    for (const trackedUuid of [...this.localUnsyncedPaidOrderUuids()]) {
-                        const idbRecord = idbOrdersByUuid.get(trackedUuid);
-                        if (!idbRecord) {
-                            logPosMessage(
-                                "IndexedDB",
-                                "localUnsyncedPaidOrderUuids",
-                                `Paid order ${trackedUuid} is flagged but not found in IndexedDB — potential data loss`,
-                                CONSOLE_COLOR,
-                                [],
-                                true
-                            );
-                            continue;
-                        }
-                        const localRecord = this.models[model].get(idbRecord.id);
-                        if (idbRecord.state === "paid" || !localRecord?.isUnsyncedPaid) {
-                            // Remove guard when either:
-                            // - the order is confirmed in IndexedDB in paid state (safe on reload), or
-                            // - the order is no longer unsynced in memory (synced to server).
-                            this.localUnsyncedPaidOrderUuids().delete(trackedUuid);
-                        } else {
-                            logPosMessage(
-                                "IndexedDB",
-                                "localUnsyncedPaidOrderUuids",
-                                `Paid order ${trackedUuid} is in IndexedDB but has state "${idbRecord.state}" instead of "paid"`,
-                                CONSOLE_COLOR,
-                                [],
-                                true
-                            );
-                        }
-                    }
-                }
-
-                if (keysToDelete.length) {
-                    this.indexedDB.delete(model, keysToDelete);
-                }
-            }
-        });
-
         return data;
     }
 
@@ -426,6 +367,17 @@ export class PosDataPlugin extends Plugin {
         this.models = proxy(models);
     }
 
+    get outdatedRecords() {
+        return getOutdatedRecords(this.models, this.opts, this.dependencies);
+    }
+
+    cleanOutdatedRecords() {
+        const deletedKeys = this.models.cleanup(this.dependencies);
+        for (const [model, ids] of Object.entries(deletedKeys)) {
+            this.indexedDB.delete(model, ids);
+        }
+    }
+
     async loadInitialData() {
         // Here the order is important. We first init the indexedDB with stored params
         // about the models loaded in the PoS. Then we load the data from the server
@@ -434,11 +386,6 @@ export class PosDataPlugin extends Plugin {
         // in the indexedDB.
 
         let params = {};
-
-        if (odoo.debug === "assets") {
-            window.performance.mark("pos_data_service_init");
-        }
-
         let localData = {};
         let recordsWriteDate = {};
         let data;
@@ -516,23 +463,17 @@ export class PosDataPlugin extends Plugin {
 
     async cleanLocalData(data, localData) {
         await this.cleanOldModels(localData, data);
-        for (const [model, values] of Object.entries(data)) {
-            let local = localData[model] || [];
 
-            if (this.opts.uniqueModels.includes(model) && values.records.length > 0) {
-                this.indexedDB.delete(
-                    model,
-                    local.map((r) => r.id)
-                );
-                localData[model] = values.records;
-            } else {
-                const dataToRemove = values.to_remove || [];
-                if (dataToRemove.length > 0) {
-                    local = local.filter((r) => !dataToRemove.includes(r.id));
-                    this.indexedDB.delete(model, dataToRemove);
-                }
-                localData[model] = local.concat(values.records);
+        for (const [model, values] of Object.entries(data)) {
+            const dataToRemove = values.to_remove || [];
+            if (dataToRemove.length > 0) {
+                localData[model].forEach((record) => {
+                    if (dataToRemove.includes(record.id)) {
+                        record["_outdated"] = true;
+                    }
+                });
             }
+            localData[model] = (localData[model] || []).concat(values.records);
         }
     }
 
@@ -586,29 +527,9 @@ export class PosDataPlugin extends Plugin {
     async initializeDataRelation() {
         await this.initData();
         await this.getLocalDataFromIndexedDB();
+        this.cleanOutdatedRecords();
         this.initListeners();
-
-        if (this.debugMode.isActive("assets")) {
-            window.performance.mark("pos_data_service_init_end");
-            this.debugInfos();
-        }
-
         this.network.loading = false;
-    }
-
-    debugInfos() {
-        const measure = window.performance.measure(
-            "pos_loading",
-            "pos_data_service_init",
-            "pos_data_service_init_end"
-        );
-
-        logPosMessage(
-            "DataService",
-            "debugInfos",
-            `PosDataService initialized in ${measure.duration.toFixed(2)}ms`,
-            CONSOLE_COLOR
-        );
     }
 
     initListeners() {

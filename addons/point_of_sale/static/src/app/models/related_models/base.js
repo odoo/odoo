@@ -63,6 +63,19 @@ export class Base extends WithLazyGetterTrap {
         };
     }
 
+    /**
+     * Mark the record as used by updating its uiState.lastUse date
+     * The last use date is stored in the uiState.lastUse property.
+     * It allow us to track the last time the record was used and to
+     * remove it when it is no longer used from a while.
+     */
+    touch() {
+        if (!this.uiState) {
+            this.uiState = {};
+        }
+        this.uiState.lastUse = Date.now();
+    }
+
     isDirty() {
         return Boolean(this._dirty);
     }

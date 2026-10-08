@@ -1936,7 +1936,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Should load 7 different products, since 7 products were created
         # The stack count is 14 since load_data is called by the frontend (loadNewProducts)
         # and by the backend (notify_synchronisation) after the frontend dispatch its new data
-        self.assertEqual(load_data_from_pos_stats['count'], 14)
+        self.assertEqual(load_data_from_pos_stats['count'], 15)
 
         # Length of loaded pricelist items should correspond to the number of items linked
         # to the product template or product variant

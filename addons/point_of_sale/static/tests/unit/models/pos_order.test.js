@@ -7,8 +7,10 @@ definePosModels();
 test("uiState", async () => {
     const store = await setupPosEnv();
     const order = store.addNewOrder();
+    const state = order.uiState;
+    delete state.lastUse;
 
-    expect(order.uiState).toEqual({
+    expect(state).toEqual({
         lineToRefund: {},
         displayed: true,
         booked: false,
