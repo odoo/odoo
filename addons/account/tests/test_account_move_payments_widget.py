@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 from odoo import Command
 
 
@@ -280,3 +280,35 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         self.assert_invoice_outstanding_to_reconcile_widget(in_invoices[2], {})
         self.assert_invoice_outstanding_to_reconcile_widget(out_invoices[3], {**expected_amounts, out_refund[0].id: 2500.0, out_refund[1].id: 1000.0})
         self.assert_invoice_outstanding_to_reconcile_widget(in_invoices[3], {**expected_amounts, in_refund[0].id: 2500.0, in_refund[1].id: 1000.0})
+
+    def test_payments_widget_open_moves_access(self):
+        """ Invoicing users can open the payments and invoices from the payments widget, but not the bank transactions
+        and journal entries.
+        """
+        invoicing_user = new_test_user(self.env, login='invoicing_user', groups='base.group_user,account.group_account_invoice')
+        accountant = new_test_user(self.env, login='accountant', groups='base.group_user,account.group_account_readonly')
+
+        out_invoice = self.init_invoice('out_invoice', amounts=[3000.0], post=True)
+        payment = self.init_payment(100.0, post=True)
+        out_refund = self.init_invoice('out_refund', amounts=[100.0], post=True)
+        statement_line_move = self.pay_with_statement_line(
+            out_invoice, self.company_data['default_journal_bank'].id, '2019-01-01', 100.0,
+        )['statement_line_reconciled'].move_id
+
+        def get_can_open_moves(user, widget_field):
+            out_invoice.invalidate_recordset([widget_field])
+            return {vals['move_id']: vals['can_open_move'] for vals in out_invoice.with_user(user)[widget_field]['content']}
+
+        self.assertDictEqual(get_can_open_moves(invoicing_user, 'invoice_outstanding_credits_debits_widget'), {
+            payment.move_id.id: True,
+            out_refund.id: True,
+            self.payment_2016_curr_1.id: False,
+            self.payment_2016_curr_2.id: False,
+            self.payment_2017_curr_2.id: False,
+            self.payment_2016_curr_3.id: False,
+            self.payment_2017_curr_3.id: False,
+        })
+        self.assertDictEqual(get_can_open_moves(invoicing_user, 'invoice_payments_widget'), {statement_line_move.id: False})
+
+        self.assertTrue(all(get_can_open_moves(accountant, 'invoice_outstanding_credits_debits_widget').values()))
+        self.assertDictEqual(get_can_open_moves(accountant, 'invoice_payments_widget'), {statement_line_move.id: True})
