@@ -53,5 +53,5 @@ class TestControllersRoute(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                 self.assertEqual(res.status_code, 200)
                 self.assertEqual(rating_test.consumed, expected_consume)
 
-                message = b'You cannot rate this' if login == self.user_demo.login else b'Feel free to share feedback on your experience:'
+                message = b'You cannot rate this' if login == self.user_demo.login else b'Feel free to share feedback on your experience'
                 self.assertIn(message, res.content)
