@@ -729,6 +729,9 @@ export class Thread extends Component {
     get orderedMessages() {
         // ensure rendering observes resetCount to re-trigger the effect when reset() is called
         void this.resetCount();
+        // and the readiness of the load triggers, observed from the following patch
+        void this.loadOlderState.ready;
+        void this.loadNewerState.ready;
         const messages = this.showLoadedContent
             ? this.props.thread.messages
             : this.props.thread.phantomMessages;
