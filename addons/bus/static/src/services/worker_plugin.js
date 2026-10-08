@@ -13,16 +13,16 @@ export const WORKER_STATE = Object.freeze({
 });
 
 export class WorkerPlugin extends Plugin {
-    params = usePlugin(BusParametersPlugin);
-    worker = null;
-    isUsingSharedWorker = Boolean(browser.SharedWorker);
-    /** @private */
-    _state = signal(WORKER_STATE.UNINITIALIZED);
+    #params = usePlugin(BusParametersPlugin);
+    #worker = null;
+    #isUsingSharedWorker = Boolean(browser.SharedWorker);
+    #state = signal(WORKER_STATE.UNINITIALIZED);
+    #resolveWorkerInit = null;
 
     setup() {
         const promWithResolvers = Promise.withResolvers();
         this.workerInitPromise = promWithResolvers.promise;
-        this._resolveWorkerInit = promWithResolvers.resolve;
+        this.#resolveWorkerInit = promWithResolvers.resolve;
         if (!session.bus_info && session.websocket_worker_version) {
             console.warn(
                 "'session.websocket_worker_version' is deprecated. Bus consumers should provide " +
@@ -33,18 +33,18 @@ export class WorkerPlugin extends Plugin {
         }
     }
 
-    startWorker() {
+    #startWorker() {
         if (!session.bus_info) {
             console.warn("Worker service cannot start: missing 'session.bus_info'.");
-            this._state.set(WORKER_STATE.FAILED);
-            this._resolveWorkerInit(false);
+            this.#state.set(WORKER_STATE.FAILED);
+            this.#resolveWorkerInit(false);
             return;
         }
-        this._state.set(WORKER_STATE.INITIALIZING);
-        let workerURL = `${this.params.serverURL()}/bus/websocket_worker_bundle?v=${
+        this.#state.set(WORKER_STATE.INITIALIZING);
+        let workerURL = `${this.#params.serverURL()}/bus/websocket_worker_bundle?v=${
             session.bus_info.worker_version
         }`;
-        if (this.params.serverURL() !== window.origin) {
+        if (this.#params.serverURL() !== window.origin) {
             // Worker service can be loaded from a different origin than the
             // bundle URL. The Worker expects an URL from this origin, give
             // it a base64 URL that will then load the bundle via "importScripts"
@@ -52,59 +52,59 @@ export class WorkerPlugin extends Plugin {
             const source = `importScripts("${workerURL}");`;
             workerURL = "data:application/javascript;base64," + window.btoa(source);
         }
-        const workerClass = this.isUsingSharedWorker ? browser.SharedWorker : browser.Worker;
-        this.worker = new workerClass(workerURL, {
-            name: this.isUsingSharedWorker ? "odoo:bus_shared_worker" : "odoo:bus_worker",
+        const workerClass = this.#isUsingSharedWorker ? browser.SharedWorker : browser.Worker;
+        this.#worker = new workerClass(workerURL, {
+            name: this.#isUsingSharedWorker ? "odoo:bus_shared_worker" : "odoo:bus_worker",
         });
-        this.worker.onerror = (e) => this.onInitError(e);
-        this._registerHandler((ev) => {
+        this.#worker.onerror = (e) => this.#onInitError(e);
+        this.#registerHandler((ev) => {
             if (ev.data.type === "BASE:INITIALIZED") {
-                this._state.set(WORKER_STATE.INITIALIZED);
-                this._resolveWorkerInit(true);
+                this.#state.set(WORKER_STATE.INITIALIZED);
+                this.#resolveWorkerInit(true);
             }
         });
-        if (this.isUsingSharedWorker) {
-            this.worker.port.start();
+        if (this.#isUsingSharedWorker) {
+            this.#worker.port.start();
         }
-        this._send("BASE:INIT");
+        this.#send("BASE:INIT");
     }
 
     /** @returns {Promise<boolean>} */
     ensureWorkerStarted() {
-        if (this._state() === WORKER_STATE.UNINITIALIZED) {
-            this.startWorker();
+        if (this.#state() === WORKER_STATE.UNINITIALIZED) {
+            this.#startWorker();
         }
         return this.workerInitPromise;
     }
 
-    onInitError(e) {
+    #onInitError(e) {
         // FIXME: SharedWorker can still fail for unknown reasons even when it is supported.
-        if (this._state() === WORKER_STATE.INITIALIZING && this.isUsingSharedWorker) {
+        if (this.#state() === WORKER_STATE.INITIALIZING && this.#isUsingSharedWorker) {
             console.warn("Error while loading SharedWorker, fallback on Worker: ", e);
-            this.isUsingSharedWorker = false;
-            this.worker?.port?.close?.();
-            this.startWorker();
-        } else if (this._state() === WORKER_STATE.INITIALIZING) {
-            this._state.set(WORKER_STATE.FAILED);
-            this._resolveWorkerInit(false);
+            this.#isUsingSharedWorker = false;
+            this.#worker?.port?.close?.();
+            this.#startWorker();
+        } else if (this.#state() === WORKER_STATE.INITIALIZING) {
+            this.#state.set(WORKER_STATE.FAILED);
+            this.#resolveWorkerInit(false);
             console.warn("Worker service failed to initialize: ", e);
         }
     }
 
-    _registerHandler(handler) {
-        if (this.isUsingSharedWorker) {
-            this.worker.port.addEventListener("message", handler);
+    #registerHandler(handler) {
+        if (this.#isUsingSharedWorker) {
+            this.#worker.port.addEventListener("message", handler);
         } else {
-            this.worker.addEventListener("message", handler);
+            this.#worker.addEventListener("message", handler);
         }
     }
 
-    _send(action, data) {
+    #send(action, data) {
         const message = { action, data };
-        if (this.isUsingSharedWorker) {
-            this.worker.port.postMessage(message);
+        if (this.#isUsingSharedWorker) {
+            this.#worker.port.postMessage(message);
         } else {
-            this.worker.postMessage(message);
+            this.#worker.postMessage(message);
         }
     }
 
@@ -118,15 +118,15 @@ export class WorkerPlugin extends Plugin {
      * executed.
      */
     async send(action, data) {
-        if (this._state() === WORKER_STATE.UNINITIALIZED) {
+        if (this.#state() === WORKER_STATE.UNINITIALIZED) {
             return;
         }
         await this.workerInitPromise;
-        if (this._state() === WORKER_STATE.FAILED) {
+        if (this.#state() === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot send message.");
             return;
         }
-        this._send(action, data);
+        this.#send(action, data);
     }
 
     /**
@@ -135,19 +135,19 @@ export class WorkerPlugin extends Plugin {
      * @param {function} handler
      */
     async registerHandler(handler) {
-        if (this._state() === WORKER_STATE.UNINITIALIZED) {
-            this.startWorker();
+        if (this.#state() === WORKER_STATE.UNINITIALIZED) {
+            this.#startWorker();
         }
         await this.workerInitPromise;
-        if (this._state() === WORKER_STATE.FAILED) {
+        if (this.#state() === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot register handler.");
             return;
         }
-        this._registerHandler(handler);
+        this.#registerHandler(handler);
     }
 
     get state() {
-        return this._state();
+        return this.#state();
     }
 }
 

@@ -15,11 +15,11 @@ services.add(GlobalBusPlugin);
 export class EnvBusBridgePlugin extends Plugin {
     static sequence = 1;
 
-    env = useEnv();
-    globalBus = usePlugin(GlobalBusPlugin);
+    #env = useEnv();
+    #globalBus = usePlugin(GlobalBusPlugin);
 
     setup() {
-        this.env.bus = this.globalBus.bus;
+        this.#env.bus = this.#globalBus.bus;
     }
 }
 services.add(EnvBusBridgePlugin);

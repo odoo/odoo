@@ -166,7 +166,7 @@ export class PosNumberBufferPlugin extends Plugin {
             : 0;
     }
     _onKeyboardInput(event) {
-        const overlays = this.overlay.overlays.items();
+        const overlays = this.overlay.overlays();
         if (
             overlays.length &&
             !overlays.some((overlay) => overlay.props.subComponent?.name === "NumberPopup")

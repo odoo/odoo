@@ -45,12 +45,9 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
  */
 
 export class ViewPlugin extends Plugin {
-    /** @private */
-    orm = usePlugin(ORM);
-    /** @private */
-    ui = usePlugin(UIPlugin);
-    /** @private */
-    debugMode = usePlugin(DebugModePlugin);
+    #orm = usePlugin(ORM);
+    #ui = usePlugin(UIPlugin);
+    #debugMode = usePlugin(DebugModePlugin);
 
     setup() {
         useListener(rpcBus, "RPC:RESPONSE", (ev) => {
@@ -93,17 +90,17 @@ export class ViewPlugin extends Plugin {
                 loadViewsOptions[key] = options[key];
             }
         }
-        if (this.ui.isSmall()) {
+        if (this.#ui.isSmall()) {
             loadViewsOptions.mobile = true;
         }
-        if (this.debugMode.isActive()) {
+        if (this.#debugMode.isActive()) {
             loadViewsOptions.debug = true;
         }
         const filteredContext = Object.fromEntries(
             Object.entries(context || {}).filter(([k, v]) => k == "lang" || k.endsWith("_view_ref"))
         );
 
-        const result = await this.orm.cache({ type: "disk" }).call(resModel, "get_views", [], {
+        const result = await this.#orm.cache({ type: "disk" }).call(resModel, "get_views", [], {
             context: filteredContext,
             views,
             options: loadViewsOptions,
@@ -140,7 +137,8 @@ export const viewService = {
     dependencies: ["orm", "ui"],
     async: ["loadViews"],
     start() {
-        return usePlugin(ViewPlugin);
+        const viewPlugin = usePlugin(ViewPlugin);
+        return { loadViews: viewPlugin.loadViews.bind(viewPlugin) };
     },
 };
 
