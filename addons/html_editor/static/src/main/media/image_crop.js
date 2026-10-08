@@ -331,6 +331,5 @@ export class ImageCrop extends Component {
     async onCropZoom() {
         // Wait for the zoom event to be fully processed before reseting.
         await new Promise((res) => setTimeout(res, 0));
-        this.resetCropBox();
     }
 }
