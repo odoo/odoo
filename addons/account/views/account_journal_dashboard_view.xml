@@ -41,7 +41,11 @@
 
                     <t t-name="JournalTop">
                         <span class="d-flex d-flew-row align-items-baseline">
-                            <a class="fs-4 fw-bold" type="object" name="open_action"><field name="name"/></a>
+                            <a t-if="journal_type == 'sale' || journal_type == 'purchase'" class="fs-4 fw-bold" type="object" name="open_action"><field name="name"/></a>
+                            <t t-else="">
+                                <a class="fs-4 fw-bold" type="object" name="open_action" groups="account.group_account_readonly"><field name="name"/></a>
+                                <span class="fs-4 fw-bold" groups="!account.group_account_readonly"><field name="name"/></span>
+                            </t>
                             <t t-if="dashboard.show_company" groups="base.group_multi_company" >
                                 <span class="small fw-bold ms-1"> - <field name="company_id"/></span>
                             </t>
@@ -66,7 +70,7 @@
                                     <h5 id="card_action_view_menus" class="o_kanban_card_manage_title">
                                         <span role="separator">View</span>
                                     </h5>
-                                    <div id="action_card_statements">
+                                    <div id="action_card_statements" groups="account.group_account_readonly">
                                         <a t-if="journal_type == 'bank'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_tree', 'search_default_journal': True}">Statements</a>
                                         <a t-if="journal_type == 'credit'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_credit_statement_tree', 'search_default_journal': True}">Statements</a>
                                         <a t-if="journal_type == 'cash'" role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_view_bank_statement_tree', 'search_default_journal': True}">Cash Registers</a>
@@ -214,7 +218,7 @@
                                 <field name="json_activity_data" widget="kanban_vat_activity"/>
                             </div>
                             <t t-if="dashboard.number_to_check > 0">
-                                <div class="row">
+                                <div class="row" groups="account.group_account_readonly">
                                     <div class="col overflow-hidden text-start">
                                         <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_to_check': True}"><t t-out="dashboard.number_to_check"/> To Check</a>
                                     </div>
@@ -239,7 +243,7 @@
                             <div name="bank_cash_buttons" class="d-flex gap-1">
                                 <t t-set="bank_requires_setup" t-value="!record.bank_account_id.raw_value and ['undefined', 'online_sync'].includes(dashboard.bank_statements_source)"/>
                                 <button t-if="journal_type == 'bank' and bank_requires_setup" name="action_configure_bank_journal" type="object" class="btn btn-primary" groups="account.group_account_basic">Bank Setup</button>
-                                <button id="all_transactions_btn" type="object" name="open_action" class="btn btn-primary">Transactions</button>
+                                <button id="all_transactions_btn" type="object" name="open_action" class="btn btn-primary" groups="account.group_account_readonly">Transactions</button>
                             </div>
                         </div>
                         <!-- On the right, show other common informations/actions -->
