@@ -2037,13 +2037,9 @@ class MrpProduction(models.Model):
         return True
 
     def action_reset_to_progress(self):
+        self.state = 'confirmed'
         self.workorder_ids._action_reset_to_progress()
         (self.move_raw_ids | self.move_finished_ids)._action_reset_to_progress()
-        for production in self:
-            production.write({
-                'state': 'confirmed',
-                'qty_producing': production.product_qty - production.qty_produced,
-        })
 
     def action_reset_to_draft(self):
         self.workorder_ids._action_reset_to_draft()
