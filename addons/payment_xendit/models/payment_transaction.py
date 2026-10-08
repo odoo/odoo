@@ -436,6 +436,9 @@ class PaymentTransaction(models.Model):
             and channel_code not in const.PAYMENT_METHODS_MAPPING.values()
         ):
             channel_code = "fpx"
+        elif channel_code not in const.PAYMENT_METHODS_MAPPING.values():
+            # Unmapped channel codes are the uppercased payment method codes.
+            channel_code = channel_code.lower()
         payment_method_code = channel_code or payment_data.get("payment_method", "")
 
         payment_method = self.provider_id._get_pm_from_code(
