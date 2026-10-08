@@ -1,4 +1,4 @@
-import { Plugin, Resource, types as t, untrack, usePlugin } from "@odoo/owl";
+import { computed, Plugin, Resource, types as t, untrack, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 import { registry } from "@web/core/registry";
 
@@ -8,14 +8,16 @@ const NotificationOptionSchema = t.object({
     type: t.selection(["warning", "danger", "success", "info"]).optional("warning"),
     title: t.or([t.string(), t.boolean(), t.object({ toString: t.function() })]).optional(),
     className: t.string().optional(""),
-    buttons: t.array(
-        t.object({
-            name: t.string(),
-            icon: t.string().optional(),
-            primary: t.boolean().optional(),
-            onClick: t.function(),
-        })
-    ).optional([]),
+    buttons: t
+        .array(
+            t.object({
+                name: t.string(),
+                icon: t.string().optional(),
+                primary: t.boolean().optional(),
+                onClick: t.function(),
+            })
+        )
+        .optional([]),
     sticky: t.boolean().optional(),
     autocloseDelay: t.number().optional(AUTOCLOSE_DELAY),
     close: t.function(),
@@ -40,12 +42,13 @@ const NotificationOptionWrapperSchema = t.object({
 
 export class NotificationPlugin extends Plugin {
     /** @private */
-    notifId = 0;
+    #notifId = 0;
     /** @private */
-    notifications = new Resource({
+    #notifications = new Resource({
         name: "notifications",
         validation: NotificationOptionWrapperSchema,
     });
+    notifications = computed(() => this.#notifications.items());
 
     /**
      * @param {TranslatedString} message
@@ -53,17 +56,17 @@ export class NotificationPlugin extends Plugin {
      */
     add(message, options = {}) {
         return untrack(() => {
-            const id = ++this.notifId;
-            const closeFn = () => this.close(notification);
+            const id = ++this.#notifId;
+            const closeFn = () => this.#close(notification);
             const props = Object.assign({}, options, { message, close: closeFn });
             delete props.onClose;
             const notification = { id, props, onClose: options.onClose };
-            for (const notif of this.notifications.items()) {
+            for (const notif of this.#notifications.items()) {
                 if (notif.props.message.toString() === notification.props.message.toString()) {
-                    this.close(notif);
+                    this.#close(notif);
                 }
             }
-            this.notifications.add(notification);
+            this.#notifications.add(notification);
             return closeFn;
         });
     }
@@ -72,13 +75,13 @@ export class NotificationPlugin extends Plugin {
      * @private
      * @param {NotificationOptionWrapperSchema} notification
      */
-    close(notification) {
+    #close(notification) {
         untrack(() => {
-            if (this.notifications.has(notification)) {
+            if (this.#notifications.has(notification)) {
                 if (notification.onClose) {
                     notification.onClose();
                 }
-                this.notifications.delete(notification);
+                this.#notifications.delete(notification);
             }
         });
     }
