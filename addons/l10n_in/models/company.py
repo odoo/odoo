@@ -103,11 +103,22 @@ class ResCompany(models.Model):
 
     def _inverse_l10n_in_tds_feature(self):
         for company in self:
-            self._activate_l10n_in_taxes(['tds_it_act_25_group'], company, company.l10n_in_tds_feature)
+            company._l10n_in_set_tds_tcs_feature_active('tds', company.l10n_in_tds_feature)
 
     def _inverse_l10n_in_tcs_feature(self):
         for company in self:
-            self._activate_l10n_in_taxes(['tcs_it_act_25_group'], company, company.l10n_in_tcs_feature)
+            company._l10n_in_set_tds_tcs_feature_active('tcs', company.l10n_in_tcs_feature)
+
+    def _l10n_in_set_tds_tcs_feature_active(self, feature, active):
+        self.ensure_one()
+        tax_group_ref, report_xmlids = {
+            'tds': ('tds_it_act_25_group', ('l10n_in.tds_report_it_act_25', 'l10n_in.tds_credit_report')),
+            'tcs': ('tcs_it_act_25_group', ('l10n_in.tcs_report_it_act_25', 'l10n_in.tcs_credit_report')),
+        }[feature]
+        self._activate_l10n_in_taxes([tax_group_ref], self, active)
+        reports = self.env['account.report'].browse([self.env.ref(xmlid).id for xmlid in report_xmlids])
+        for company in self.search([('id', 'child_of', self.id)]):
+            reports.with_company(company).active_selection = str(active)
 
     def _inverse_l10n_in_gst_registration_type(self):
         for company in self:
