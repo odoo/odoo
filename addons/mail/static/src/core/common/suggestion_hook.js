@@ -7,11 +7,10 @@ import {
 } from "@mail/utils/common/format";
 import { useSearch } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
-import { proxy, t, useProps, useScope } from "@odoo/owl";
+import { onMounted, onPatched, proxy, shallowEqual, t, useProps, useScope } from "@odoo/owl";
 import { emojiType } from "@web/core/emoji_picker/emoji_loader";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * Delimiters that trigger suggestion lists in the composer.
@@ -80,17 +79,29 @@ export class UseSuggestion {
             deps: () => [this.detection.delimiter, this.detection.position],
             isActive: () => !!this.detection.delimiter,
         });
-        useLayoutEffect(
-            () => {
-                this.detect();
-            },
-            () => [
-                this.composer.selection.start,
-                this.composer.selection.end,
-                this.composer.composerText,
-                this.composer.composerHtml,
-            ]
-        );
+        // on the patched composer (`detectionDeps` is observed by its rendering): the editor
+        // is only loaded once rendered, and detecting once per patch rather than once per
+        // keystroke avoids a fetch for each intermediate term
+        let detectedFor;
+        const detectOnChange = () => {
+            const deps = this.detectionDeps;
+            if (detectedFor && shallowEqual(deps, detectedFor)) {
+                return;
+            }
+            detectedFor = deps;
+            this.detect();
+        };
+        onMounted(detectOnChange);
+        onPatched(detectOnChange);
+    }
+    /** The composer state {@link detect} depends on. */
+    get detectionDeps() {
+        return [
+            this.composer.selection.start,
+            this.composer.selection.end,
+            this.composer.composerText,
+            this.composer.composerHtml,
+        ];
     }
     /**
      * Whether the user closed the suggestion list. Only the answer of an ongoing fetch is
