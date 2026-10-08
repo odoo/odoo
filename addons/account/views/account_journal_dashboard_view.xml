@@ -43,7 +43,17 @@
 
                     <t t-name="JournalTop">
                         <span class="d-flex d-flew-row align-items-baseline">
+<<<<<<< f185efc07caae71d3eb0be13bdde7c0c4b733439
                             <a class="fs-4 fw-bold" type="object" name="open_action" context="{'show_fetch_in_einvoices_button': show_fetch_in_einvoices_button, 'show_refresh_out_einvoices_status_button': show_refresh_out_einvoices_status_button}"><field name="name"/></a>
+||||||| 2ad2a6f07e0d35a1dfb800648d6e1c62dc712395
+                            <a class="fs-4 fw-bold" type="object" name="open_action"><field name="name"/></a>
+=======
+                            <t t-if="journal_type == 'general'">
+                                <a class="fs-4 fw-bold" type="object" name="open_action" groups="account.group_account_readonly"><field name="name"/></a>
+                                <span class="fs-4 fw-bold" groups="!account.group_account_readonly"><field name="name"/></span>
+                            </t>
+                            <a t-else="" class="fs-4 fw-bold" type="object" name="open_action"><field name="name"/></a>
+>>>>>>> 977d2976a9b6ac5ccc532fc1c72615119b19db80
                             <t t-if="dashboard.show_company" groups="base.group_multi_company" >
                                 <span class="small fw-bold ms-1"> - <field name="company_id"/></span>
                             </t>
@@ -221,8 +231,22 @@
                             </button>
                         </div>
                         <div id="dashboard_general_right" class="col-auto">
+<<<<<<< f185efc07caae71d3eb0be13bdde7c0c4b733439
                             <t t-if="dashboard.number_draft > 0">
                                 <div class="row" groups="account.group_account_user">
+||||||| 2ad2a6f07e0d35a1dfb800648d6e1c62dc712395
+                            <div class="row">
+                                <field name="json_activity_data" widget="kanban_vat_activity"/>
+                            </div>
+                            <t t-if="dashboard.number_to_check > 0">
+                                <div class="row">
+=======
+                            <div class="row">
+                                <field name="json_activity_data" widget="kanban_vat_activity"/>
+                            </div>
+                            <t t-if="dashboard.number_to_check > 0">
+                                <div class="row" groups="account.group_account_readonly">
+>>>>>>> 977d2976a9b6ac5ccc532fc1c72615119b19db80
                                     <div class="col overflow-hidden text-start">
                                         <a type="object" name="open_action" context="{'search_default_no_auto_post': 1, 'search_default_posted': 0, 'search_default_unposted': 1}"><t t-out="dashboard.number_draft"/> To Validate</a>
                                     </div>
