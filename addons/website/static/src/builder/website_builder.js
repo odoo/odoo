@@ -13,7 +13,6 @@ import { Plugin } from "@html_editor/plugin";
 import { revertPreview } from "@html_builder/core/utils";
 import { rpc } from "@web/core/network/rpc";
 import { redirect } from "@web/core/utils/urls";
-import { browser } from "@web/core/browser/browser";
 import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
@@ -53,7 +52,7 @@ export class WebsiteBuilder extends Component {
                 : [];
         });
         onMounted(() => {
-            if (this.props.translation && !browser.localStorage.getItem(localStorageNoDialogKey)) {
+            if (this.props.translation && !localStorage.getItem(localStorageNoDialogKey)) {
                 this.dialog.add(TranslatorInfoDialog);
             }
             this.websiteEditService?.clearRpcCache();

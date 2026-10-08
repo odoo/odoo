@@ -12,7 +12,6 @@ import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
 import { MenuDialog } from "@website/components/dialog/edit_menu";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
-import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
 defineWebsiteModels();
@@ -104,7 +103,7 @@ describe("NavbarLinkPopover", () => {
     });
 
     test("link redirection should be prefixed for links in the nav bar", async () => {
-        patch(browser, {
+        patch(window, {
             open(url) {
                 expect.step("website page url prefixed");
                 expect(url.pathname.startsWith("/@")).toBe(true);

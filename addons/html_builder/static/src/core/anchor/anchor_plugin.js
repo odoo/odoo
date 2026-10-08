@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { markup } from "@odoo/owl";
 import { AnchorDialog } from "./anchor_dialog";
@@ -133,7 +132,7 @@ export class AnchorPlugin extends Plugin {
             this.createAnchor(element);
         }
         const anchorLink = this.getAnchorLink(element);
-        await browser.navigator.clipboard.writeText(anchorLink);
+        await navigator.clipboard.writeText(anchorLink);
         const message = _t(
             "Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%(close_span)s",
             {

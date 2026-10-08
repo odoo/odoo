@@ -5,7 +5,6 @@ import {
     goBackToBlocks,
     clickToolbarButton,
 } from "@website/js/tours/tour_utils";
-import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 registerWebsitePreviewTour(
@@ -28,7 +27,7 @@ registerWebsitePreviewTour(
             trigger: "[data-container-title='Accordion Item'] .oe_snippet_anchor",
             async run(helpers) {
                 // Patch and ignore write on clipboard in tour as we don't have permissions
-                browser.navigator.clipboard.writeText = () => {
+                navigator.clipboard.writeText = () => {
                     console.info("Copy in clipboard ignored!");
                 };
                 await helpers.click();

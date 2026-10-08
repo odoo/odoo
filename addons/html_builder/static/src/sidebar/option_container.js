@@ -1,6 +1,5 @@
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { asyncComputed, onMounted, onWillStart, useProps, signal, t, useListener } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
 import { user } from "@web/core/user";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
@@ -40,8 +39,8 @@ export class OptionsContainer extends BaseOptionComponent {
         this.getItemValue = useGetItemValue();
         useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
 
-        useListener(browser, "focusin", this.updateOverlayPreview.bind(this));
-        useListener(browser, "pointermove", this.updateOverlayPreview.bind(this));
+        useListener(window, "focusin", this.updateOverlayPreview.bind(this));
+        useListener(window, "pointermove", this.updateOverlayPreview.bind(this));
         useListener(this.document, "pointermove", this.updateOverlayPreview.bind(this));
         this.showingOverlayPreview = false;
 

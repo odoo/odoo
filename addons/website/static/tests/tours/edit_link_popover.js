@@ -5,7 +5,6 @@ import {
     clickToolbarButton,
     waitForEditMode,
 } from "@website/js/tours/tour_utils";
-import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
 const FIRST_PARAGRAPH =
@@ -152,7 +151,7 @@ registry.category("web_tour.tours").add("edit_link_popover", {
             async run({ click }) {
                 // We do not want to open a link in a tour
                 patch(
-                    browser,
+                    window,
                     {
                         open(url) {
                             if (

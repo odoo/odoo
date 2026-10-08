@@ -3,7 +3,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
-import { location, browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { getTabableElements } from "@web/core/utils/ui";
@@ -132,7 +132,7 @@ export class Popup extends Interaction {
             // We remove the hash from the URL because otherwise the popup
             // cannot open again after being closed.
             const urlWithoutHash = location.href.replace(hash, "");
-            browser.history.replaceState(null, null, urlWithoutHash);
+            window.history.replaceState(null, null, urlWithoutHash);
             this.showPopup();
         }
     }
