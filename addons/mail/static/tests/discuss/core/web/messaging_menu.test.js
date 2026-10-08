@@ -4,7 +4,6 @@ import {
     contains as mailContains,
     defineMailModels,
     hover,
-    insertText,
     listenStoreFetch,
     openDiscuss,
     openMessagingMenu,
@@ -14,6 +13,7 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { PREFETCH_MAX_WAIT } from "@mail/discuss/core/common/thread_model_patch";
 
 import {
@@ -133,7 +133,7 @@ test("channel preview ignores transient message", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/who");
+    await insertTextInComposer(".o-mail-Composer", "/who");
     await contains(".o-mail-Composer button[title='Send']:enabled:count(1)").click();
     await waitFor(".o_mail_notification:text('You are alone in this channel.'):count(1)");
     await contains(
