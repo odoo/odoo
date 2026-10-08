@@ -10,6 +10,12 @@ import { _t } from "@web/core/l10n/translation";
  * @returns {String}
  */
 export function getSnippetName(snippetEl) {
+    if (snippetEl.dataset.customName) {
+        if (!snippetEl.classList.contains("s_custom_snippet")) {
+            console.warn("data-custom-name should not be used on non-custom snippets");
+        }
+        return snippetEl.dataset.customName;
+    }
     if (snippetEl.dataset.name) {
         return snippetEl.dataset.name;
     }
