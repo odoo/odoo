@@ -51,5 +51,8 @@ The generation of the QR-bill is automatic if you meet the previous criteria. Th
     }
 ,
     'author': 'Odoo S.A.',
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

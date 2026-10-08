@@ -41,6 +41,9 @@ With this module you will have:
     'demo': [
         'demo/demo_company.xml',
     ],
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
     'post_init_hook': '_enable_group_uom_post_init',
 }

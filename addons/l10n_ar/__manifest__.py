@@ -116,5 +116,8 @@ Master Data:
         'demo/account_supplier_invoice_demo.xml',
         'demo/account_supplier_refund_demo.xml',
     ],
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

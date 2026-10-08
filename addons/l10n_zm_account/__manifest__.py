@@ -25,5 +25,8 @@ This is the basic Zambian localization necessary to run Odoo in ZM:
     ],
     "demo": [
         "demo/demo_company.xml",
-    ]
+    ],
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
 }

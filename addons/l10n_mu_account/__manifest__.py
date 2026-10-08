@@ -24,4 +24,7 @@ This is the base module to manage the accounting chart for the Republic of Mauri
         "demo/demo_company.xml",
     ],
     "license": "LGPL-3",
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Repair existing noupdate fixtures created before their country was specified. -->
+    <function model="res.company" name="write">
+        <value model="res.company" eval="obj().browse([
+            ref('base.test_company_chart_syscebnl'), ref('base.test_company_chart_syscebnl_2'),
+            ref('base.test_company_chart_syscohada'), ref('base.test_company_chart_syscohada_2')
+        ]).filtered(lambda company: not company.country_id).ids"/>
+        <value eval="{'country_id': ref('base.bj'), 'currency_id': ref('base.XOF')}"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>syscebnl</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_chart_syscebnl')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>syscebnl</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_chart_syscebnl_2')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>syscohada</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_chart_syscohada')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>syscohada</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_chart_syscohada_2')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+</odoo>

@@ -29,5 +29,8 @@ It also includes the invoice OCR payment reference handling.
     'demo': [
         'demo/demo_company.xml',
     ],
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

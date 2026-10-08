@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Warehouses are created once for localization fixtures when stock is installed. -->
+    <function model="stock.warehouse" name="create">
+        <value model="stock.warehouse" eval="[
+            {'name': company.name, 'code': 'WH', 'company_id': company.id, 'partner_id': company.partner_id.id}
+            for company in (
+                obj().env['res.company'].browse(obj().env['ir.model.data'].search([
+                    ('module', '=', 'base'), ('model', '=', 'res.company'), ('name', '=like', 'test_company_%'),
+                    ('name', 'not in', ['test_company_with_branch', 'test_company_branch_a', 'test_company_branch_b', 'test_company_template', 'test_company_template2'])
+                ]).mapped('res_id')) - obj().search([]).company_id
+            )
+        ]"/>
+    </function>
+</odoo>

@@ -49,5 +49,8 @@ position.
     'demo': [
         'demo/demo.xml',
     ],
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

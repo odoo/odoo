@@ -29,5 +29,8 @@ Activates:
         'demo/demo_company.xml',
     ],
     'author': 'Odoo S.A.',
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

@@ -13,6 +13,9 @@ This module also includes:
 author is Allegro IT (visit for more information https://www.allegro.lv)
 co-author is Chick.Farm (visit for more information https://www.myacc.cloud)
     """,
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
     'author': "Allegro IT, Chick.Farm",
     'website': "https://allegro.lv",

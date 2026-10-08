@@ -6,6 +6,9 @@
 Basic package for Cyprus that contains the chart of accounts, taxes, tax reports,...
     """,
     'author': 'Odoo S.A.',
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [

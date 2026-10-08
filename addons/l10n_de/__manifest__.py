@@ -31,5 +31,8 @@ By default, the audit trail is enabled for GoBD compliance.
         'demo/demo_company.xml',
     ],
     'post_init_hook': '_post_init_hook',
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

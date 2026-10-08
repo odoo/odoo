@@ -14,6 +14,9 @@ This module also includes:
 * Fiscal positions.
 * Account Tags.
     """,
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
     'author': 'Focusate',
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations.html',

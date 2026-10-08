@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>ar_ri</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_ar')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>ar_ri</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_ar_2')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>ar_base</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_chart_ar_base')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>ar_base</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_chart_ar_base_2')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>ar_ex</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_chart_ar_ex')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+    <function model="account.chart.template" name="_load">
+        <value eval="[]"/>
+        <value>ar_ex</value>
+        <value model="res.company" eval="obj().env.ref('base.test_company_chart_ar_ex_2')"/>
+        <value name="install_demo" eval="False"/>
+    </function>
+</odoo>
