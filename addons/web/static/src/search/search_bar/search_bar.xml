@@ -3,36 +3,61 @@
 
     <t t-name="web.SearchBar.Facets">
         <t t-foreach="this.env.searchModel.facets" t-as="facet" t-key="facet_index">
-            <div class="o_searchview_facet position-relative d-inline-flex rounded-2 bg-100 border border-transparent text-nowrap opacity-trigger-hover mw-100"
-                t-att-class="{o_facet_with_domain: facet.domain }"
-                role="listitem"
-                aria-label="search"
-                tabindex="0"
-                t-on-click="() => this.onFacetLabelClick(facet)"
-            >
-
-                <!-- Special navigation facets for filters with date="..." and relative dates (eg Last Week) -->
-                <t t-if="facet.type === 'relative'" t-call="web.SearchBar.NavigationFacetIcon"/>
-                <t t-else="" t-call="web.SearchBar.NormalFacetIcon"/>
-
-                <div
-                    class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap overflow-hidden"
-                    t-att-class="{'cursor-pointer': facet.type != 'groupBy'}"
-                >
-                    <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
-                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-out="facet.separator"/>
-                        <small class="o_facet_value text-truncate" t-out="facetValue" t-att-title="facet.tooltip or facetValue"/>
+            <!-- Special navigation facets for filters with date="..." and relative dates (eg Last Week) -->
+            <DropdownNestingBoundary t-if="facet.type === 'relative'">
+                <Dropdown position="'bottom-start'" menuClass="'o_date_period_menu'" noClasses="true">
+                    <t t-call="web.SearchBar.Facet"/>
+                    <t t-set-slot="content">
+                        <t t-call="web.SearchBar.DatePeriodItems"/>
                     </t>
-                    <button class="o_facet_remove oi btn btn-link d-flex align-items-center px-1 py-0 text-danger d-print-none fs-5"
-                        data-icon="close_small"
-                        aria-label="Remove"
-                        title="Remove"
-                        t-on-click.stop="() => this.onFacetRemove(facet)"
-                        tabindex="-1"
-                    />
-                </div>
-            </div>
+                </Dropdown>
+            </DropdownNestingBoundary>
+            <t t-else="" t-call="web.SearchBar.Facet"/>
         </t>
+    </t>
+
+    <t t-name="web.SearchBar.Facet">
+        <div class="o_searchview_facet position-relative d-inline-flex rounded-2 bg-100 border border-transparent text-nowrap opacity-trigger-hover mw-100"
+            t-att-class="{o_facet_with_domain: facet.domain }"
+            role="listitem"
+            aria-label="search"
+            tabindex="0"
+            t-on-click="() => this.onFacetLabelClick(facet)"
+        >
+            <t t-if="facet.type === 'relative'" t-call="web.SearchBar.NavigationFacetIcon"/>
+            <t t-else="" t-call="web.SearchBar.NormalFacetIcon"/>
+
+            <div
+                class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap overflow-hidden"
+                t-att-class="{'cursor-pointer': facet.type != 'groupBy'}"
+            >
+                <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
+                    <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-out="facet.separator"/>
+                    <small class="o_facet_value text-truncate" t-out="facetValue" t-att-title="facet.tooltip or facetValue"/>
+                </t>
+                <i t-if="facet.type === 'relative'" class="o_facet_caret oi ps-1 opacity-0 opacity-100-hover" data-icon="keyboard_arrow_down" role="img"/>
+                <button class="o_facet_remove oi btn btn-link d-flex align-items-center px-1 py-0 text-danger d-print-none fs-5"
+                    data-icon="close_small"
+                    aria-label="Remove"
+                    title="Remove"
+                    t-on-click.stop="() => this.onFacetRemove(facet)"
+                    tabindex="-1"
+                />
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.SearchBar.DatePeriodItems">
+        <t t-foreach="this.env.searchModel.getRelativeFilterPeriods(facet.groupId)" t-as="option" t-key="option.id">
+            <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
+                checked="option.isActive"
+                onSelected="() => this.env.searchModel.setRelativeFilter(facet.groupId, option.id)"
+                t-out="option.description"
+            />
+        </t>
+        <DropdownItem class="'o_date_period_edit text-action'"
+            onSelected="() => this.env.searchModel.editRelativeFilter(facet.groupId)"
+        >Edit filter...</DropdownItem>
     </t>
 
     <t t-name="web.SearchBar.NormalFacetIcon">
@@ -67,19 +92,21 @@
 
     <t t-name="web.SearchBar.NavigationFacetIcon">
         <!-- :hover overlay -->
-        <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
+        <div class="position-absolute start-0 top-0 bottom-0 end-0 border rounded-2 shadow opacity-0 opacity-100-hover"/>
 
-        <button class="o_date_nav_btn o_searchview_facet_label btn btn-primary rounded-start-2 rounded-end-0 p-0 border-0"
+        <button class="o_date_nav_btn o_searchview_facet_label btn btn-outline-primary rounded-start-2 rounded-end-0 p-0 border-0"
             type="button"
             aria-label="Previous period"
-            t-on-click="() => this.onPrevDateFacetClick(facet)"
+            data-tooltip="Previous period"
+            t-on-click.stop="() => this.onPrevDateFacetClick(facet)"
         >
             <i class="oi oi-fw" data-icon="keyboard_arrow_left" role="img"/>
         </button>
-        <button class="o_date_nav_btn btn btn-primary rounded-0 p-0 border-0"
+        <button class="o_date_nav_btn btn btn-outline-primary rounded-start-0 rounded-end-2 p-0 border-0"
             type="button"
             aria-label="Next period"
-            t-on-click="() => this.onNextDateFacetClick(facet)"
+            data-tooltip="Next period"
+            t-on-click.stop="() => this.onNextDateFacetClick(facet)"
         >
             <i class="oi oi-fw" data-icon="keyboard_arrow_right" role="img"/>
         </button>
