@@ -183,7 +183,7 @@ class DiscussChannelMember(models.Model):
         if self.livechat_member_type == "visitor":
             partner_res.attr("email")
             partner_res.many("user_ids", ["offline_since"])
-        partner_res.from_method("_store_im_status_fields", internal=True)
+        partner_res.for_internal_users("_store_im_status_fields")
 
     def _store_guest_dynamic_fields(self, guest_res: Store.FieldList):
         super()._store_guest_dynamic_fields(guest_res)
@@ -193,7 +193,7 @@ class DiscussChannelMember(models.Model):
         guest_res.one("country_id", ["code", "name"])
         guest_res.attr("offline_since")
         guest_res.from_method("_store_avatar_fields")
-        guest_res.from_method("_store_im_status_fields", internal=True)
+        guest_res.for_internal_users("_store_im_status_fields")
 
     def _get_rtc_invite_members_domain(self, *a, **kw):
         domain = super()._get_rtc_invite_members_domain(*a, **kw)

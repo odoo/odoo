@@ -202,8 +202,9 @@ class ResUsers(models.Model):
 
     def _store_init_fields(self, res: Store.FieldList):
         super()._store_init_fields(res)
-        if res.is_for_internal_users():
-            res.attr(
+        res.for_internal_users(
+            lambda res: res.attr(
                 "is_livechat_manager",
                 lambda u: u.has_group("im_livechat.im_livechat_group_manager"),
-            )
+            ),
+        )

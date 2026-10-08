@@ -510,15 +510,22 @@ class DiscussChannel(models.Model):
             predicate=is_livechat_channel,
             sudo=True,
         )
-        if res.is_for_internal_users():
-            res.one("livechat_channel_id", ["name"], predicate=is_livechat_channel, sudo=True)
-            res.attr("description", predicate=is_livechat_channel)
-            res.one("livechat_lang_id", ["name", "code"], predicate=is_livechat_channel)
-            res.attr("livechat_note", predicate=is_livechat_channel)
-            res.attr("livechat_outcome", predicate=is_livechat_channel)
-            res.attr("livechat_status", predicate=is_livechat_channel)
-            res.attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel)
-            res.many("livechat_expertise_ids", ["name", "color"], predicate=is_livechat_channel)
+        res.for_internal_users(
+            lambda res: (
+                res.one("livechat_channel_id", ["name"], predicate=is_livechat_channel, sudo=True),
+                res.attr("description", predicate=is_livechat_channel),
+                res.one("livechat_lang_id", ["name", "code"], predicate=is_livechat_channel),
+                res.attr("livechat_note", predicate=is_livechat_channel),
+                res.attr("livechat_outcome", predicate=is_livechat_channel),
+                res.attr("livechat_status", predicate=is_livechat_channel),
+                res.attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel),
+                res.many(
+                    "livechat_expertise_ids",
+                    ["name", "color"],
+                    predicate=is_livechat_channel,
+                ),
+            ),
+        )
 
         lang = self.env["chatbot.script"]._get_chatbot_language()
 
