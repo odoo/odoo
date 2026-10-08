@@ -10,12 +10,13 @@ import { LivechatLeaveDialog } from "./livechat_leave_dialog";
 const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
-        this.appAsLivechats = fields.One("DiscussApp", {
-            compute() {
-                return this.channel_type === "livechat" ? this.store.discuss : null;
-            },
-        });
+        this.appAsLivechats = fields.One("DiscussApp");
         this.shadowedBySelf = 0;
+        this.onChange(
+            () => [this.channel_type === "livechat" ? this.store.discuss : null],
+            (appAsLivechats) => (this.appAsLivechats = appAsLivechats),
+            { immediate: true }
+        );
     },
     get autoOpenChatWindowOnNewMessage() {
         return (
