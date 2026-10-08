@@ -1316,7 +1316,7 @@ class AccountEdiCii(models.AbstractModel):
             # quantity = 6.0
             # discount_amount = 300.0
             if not currency.is_zero(price_subtotal):
-                price_unit = round((price_subtotal + price_discount_amount) / price_quantity, 2)
+                price_unit = (price_subtotal + price_discount_amount) / price_quantity
                 line_price_discount_amount = price_discount_amount * quantity / price_quantity
 
                 line_total_discount_amount = (price_unit * quantity) - subtotal
