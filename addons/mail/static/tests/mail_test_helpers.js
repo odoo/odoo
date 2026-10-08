@@ -391,6 +391,7 @@ export async function start(options) {
     });
     preventActualMediaUsage();
     serverState.serverVersion = options?.serverVersion ?? [99, 9]; // so local storage entries upgrade to latest version. HOOT sets 1.0 otherwise, ignoring all upgrades...
+    preventActualMediaUsage();
     if (!MockServer.current) {
         await startServer();
     }
@@ -693,6 +694,29 @@ export function mockPipWindow() {
         },
     });
     return { popoutWindow, popoutIframe };
+}
+
+/**
+ * Prevents tests from using the actual microphone, camera, screen and speakers:
+ * media requests that are not mocked by the test get synthetic streams, and
+ * audio is processed without being rendered to an output device.
+ *
+ * The prototype is patched so that the test's own mocks on `navigator.mediaDevices`
+ * (e.g. `mockGetMedia`, denied permissions) take precedence regardless of order.
+ */
+function preventActualMediaUsage() {
+    patch(MediaDevices.prototype, {
+        async getUserMedia(constraints) {
+            return constraints?.audio ? createAudioStream() : createVideoStream();
+        },
+        async getDisplayMedia() {
+            return createVideoStream();
+        },
+    });
+    if (window.AudioContext === AudioContext) {
+        // not already mocked by the test, e.g. with `patchVoiceMessageAudio`
+        patch(window, { AudioContext: SilentAudioContext });
+    }
 }
 
 /**
