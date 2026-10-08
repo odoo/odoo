@@ -69,8 +69,7 @@ class PosOrder(models.Model):
                 line not in used_pos_lines
                 and line.product_id == pos_order.config_id.down_payment_product_id
             ))
-            downpayment_refund_lines = downpayment_pos_order_lines.filtered('refunded_orderline_id')
-            new_downpayment_lines = downpayment_pos_order_lines - downpayment_refund_lines
+            downpayment_refund_lines, new_downpayment_lines = downpayment_pos_order_lines.partitioned('refunded_orderline_id')
 
             for refund_line in downpayment_refund_lines:
                 original_sale_line = refund_line.refunded_orderline_id.sale_order_line_id

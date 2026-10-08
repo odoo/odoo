@@ -400,8 +400,7 @@ class ProjectCustomerPortal(CustomerPortal):
             return self._task_get_name_search_domain(search)
 
     def _concat_tasks(self, task_sudo, groupby, tasks):
-        tasks_project_allow_milestone = tasks.filtered(lambda t: t.allow_milestones)
-        tasks_no_milestone = tasks - tasks_project_allow_milestone
+        tasks_project_allow_milestone, tasks_no_milestone = tasks.partitioned(lambda t: t.allow_milestones)
         if groupby == 'milestone_id':
             grouped_tasks = [task_sudo.concat(g) for k, g in groupbyelem(tasks_project_allow_milestone, itemgetter(groupby))]
 

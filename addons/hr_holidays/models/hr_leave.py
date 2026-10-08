@@ -631,10 +631,9 @@ class HrLeave(models.Model):
 
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_resource_calendar_id(self):
-        leaves_without_emp_or_date = self.filtered(
+        leaves_without_emp_or_date, valid_leaves = self.partitioned(
             lambda leave: not (leave.employee_id and leave.request_date_from and leave.request_date_to)
         )
-        valid_leaves = self - leaves_without_emp_or_date
         leaves_without_emp_or_date.resource_calendar_id = self.env.company.resource_calendar_id
         if not valid_leaves:
             return

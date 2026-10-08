@@ -6594,8 +6594,7 @@ class BaseModel(metaclass=MetaModel):
                             records = records.browse(it and NewId(it) for it in records._ids)
                         break
             else:
-                new_records = self.filtered(lambda r: not r.id)
-                real_records = self - new_records
+                new_records, real_records = self.partitioned(lambda r: not r.id)
                 records = model.browse()
                 if real_records:
                     records = model.search([(field.name, 'in', real_records.ids)], order='id')

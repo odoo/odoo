@@ -3341,11 +3341,10 @@ class MrpProduction(models.Model):
         """Re-sequence the workorders of a given production"""
         self.ensure_one()
         # reorganize the workorders to put the kit operations first
-        phantom_workorders = self.workorder_ids.filtered(lambda wo: wo.operation_id.bom_id.type == 'phantom')
+        phantom_workorders, non_phantom_workorders = self.workorder_ids.partitioned(lambda wo: wo.operation_id.bom_id.type == 'phantom')
         for index_wo, wo in enumerate(phantom_workorders):
             wo.sequence = index_wo
         offset = len(phantom_workorders)
-        non_phantom_workorders = self.workorder_ids - phantom_workorders
         operation_sequence_map = {op.id: index for index, op in enumerate(self.bom_id.operation_ids)}
         for index_wo, wo in enumerate(non_phantom_workorders):
             if wo.operation_id:

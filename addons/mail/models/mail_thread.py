@@ -5133,8 +5133,7 @@ class MailThread(models.AbstractModel):
             ('res_id', '=', self.id),
             ('message_type', '!=', 'user_notification'),
         ])
-        non_generic_messages = messages.filtered(lambda m: m.subtype_id.res_model)
-        generic_messages = messages - non_generic_messages
+        non_generic_messages, generic_messages = messages.partitioned(lambda m: m.subtype_id.res_model)
 
         # update the messages
         msg_vals = {"res_id": new_thread.id, "model": new_thread._name}
@@ -5395,8 +5394,7 @@ class MailThread(models.AbstractModel):
         if 'original_id' in self.env['ir.attachment']._fields:
             # If the image is SVG: We take the png version if exist otherwise we take the svg
             # If the image is not SVG: We take the original one if exist otherwise we take it
-            svg_ids = res.filtered(lambda attachment: attachment.mimetype == 'image/svg+xml')
-            non_svg_ids = res - svg_ids
+            svg_ids, non_svg_ids = res.partitioned(lambda attachment: attachment.mimetype == 'image/svg+xml')
             original_ids = res.mapped('original_id')
             res = res.filtered(lambda attachment: (attachment in svg_ids and attachment not in original_ids) or (attachment in non_svg_ids and attachment.original_id not in non_svg_ids))
         return res

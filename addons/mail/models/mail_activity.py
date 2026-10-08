@@ -336,8 +336,7 @@ class MailActivity(models.Model):
         else:
             activities_to_notify = activities.filtered(lambda act: act.user_id != self.env.user)
         if activities_to_notify:
-            to_sudo = activities_to_notify.filtered(lambda act: act.user_id.partner_id not in readable_user_partners)
-            other = activities_to_notify - to_sudo
+            to_sudo, other = activities_to_notify.partitioned(lambda act: act.user_id.partner_id not in readable_user_partners)
             to_sudo.sudo().action_notify()
             other.action_notify()
 

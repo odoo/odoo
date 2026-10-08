@@ -6242,13 +6242,12 @@ class AccountMove(models.Model):
             ))
 
         if soft:
-            future_moves = self.filtered(lambda move: move.date > fields.Date.context_today(self))
+            future_moves, to_post = self.partitioned(lambda move: move.date > fields.Date.context_today(self))
             for move in future_moves:
                 if move.auto_post == 'no':
                     move.auto_post = 'at_date'
                 msg = _('This move will be posted at the accounting date: %(date)s', date=format_date(self.env, move.date))
                 move.message_post(body=msg)
-            to_post = self - future_moves
         else:
             to_post = self
 

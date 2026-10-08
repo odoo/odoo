@@ -31,8 +31,7 @@ class StockPicking(models.Model):
         )
         if not stockable_lines:
             return pickings
-        positive_lines = stockable_lines.filtered(lambda l: l._get_qty_to_move() > 0)
-        negative_lines = stockable_lines - positive_lines
+        positive_lines, negative_lines = stockable_lines.partitioned(lambda l: l._get_qty_to_move() > 0)
 
         if positive_lines:
             location_id = picking_type.default_location_src_id.id

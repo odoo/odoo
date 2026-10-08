@@ -1929,8 +1929,7 @@ class AccountMoveLine(models.Model):
             return taxes.mapped(repartition_field)
 
         for aml in self:
-            caba_taxes = aml.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment')
-            non_caba_taxes = aml.tax_ids - caba_taxes
+            caba_taxes, non_caba_taxes = aml.tax_ids.partitioned(lambda x: x.tax_exigibility == 'on_payment')
 
             caba_base_tags = get_base_repartition(aml, caba_taxes).filtered(lambda x: x.repartition_type == 'base').tag_ids
             non_caba_base_tags = get_base_repartition(aml, non_caba_taxes).filtered(lambda x: x.repartition_type == 'base').tag_ids

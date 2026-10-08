@@ -358,10 +358,9 @@ class PosOrder(models.Model):
         company = self.company_id
         tip_product = self.config_id.tip_product_id
 
-        service_fee_lines = self.lines.filtered(
+        _service_fee_lines, other_lines = self.lines.partitioned(
             lambda line: line.product_id == self.preset_id.service_fee_product_id,
         )
-        other_lines = self.lines - service_fee_lines
 
         # First process regular lines so service fee can derive taxes from them
         for line in other_lines:

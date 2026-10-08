@@ -121,7 +121,7 @@ class PosOrder(models.Model):
         history_vals = []
         movements = []
 
-        topup_lines = self.lines.filtered(
+        topup_lines, earning_lines = self.lines.partitioned(
             lambda l: not l.is_reward_line and not l._is_tip_line() and (
                 l._get_loyalty_program() in programs
                 or l.refunded_orderline_id.card_id.program_id in programs
@@ -170,7 +170,6 @@ class PosOrder(models.Model):
             LoyaltyHistory.create(history_vals)
             history_vals = []
 
-        earning_lines = self.lines - topup_lines
         for program in programs:
             reward_lines = self.lines.filtered(
                 lambda l: l.is_reward_line and l.reward_id.program_id == program

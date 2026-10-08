@@ -96,8 +96,7 @@ class SaleOrder(models.Model):
         headers_available = available_docs.filtered(lambda doc: doc.document_type == "header")
         footers_available = available_docs.filtered(lambda doc: doc.document_type == "footer")
         selected_documents = self.quotation_document_ids
-        selected_headers = selected_documents.filtered(lambda doc: doc.document_type == "header")
-        selected_footers = selected_documents - selected_headers
+        selected_headers, selected_footers = selected_documents.partitioned(lambda doc: doc.document_type == "header")
         lines_params = [
             {
                 "name": line.label.splitlines()[0],

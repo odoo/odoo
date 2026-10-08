@@ -218,8 +218,7 @@ class AccountMove(models.Model):
             We recognize these cases based on the taxes that target the VJ tax grids, which imply
             the use of VAT External Reverse Charge.
         """
-        purchases = self.filtered(lambda m: m.is_purchase_document())
-        others = self - purchases
+        purchases, others = self.partitioned(lambda m: m.is_purchase_document())
         for move in others:
             move.l10n_it_edi_is_self_invoice = False
         if purchases:
