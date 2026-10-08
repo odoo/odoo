@@ -15,12 +15,13 @@
                         </button>
                     </td>
                     <td width="100%">
-                        <BuilderTextInput
+                        <BuilderUrlPicker
                             action="'editSocialMediaLink'"
                             attributeAction="'href'"
                             applyTo="`a:nth-of-type(${item.domPosition})`"
                             placeholder="'https://example.com/your-page'"
                             default="itemsLength === 1 ? '#' : ''"
+                            previewButton="false"
                         />
                     </td>
                     <td style="'min-width: 2.5em'">

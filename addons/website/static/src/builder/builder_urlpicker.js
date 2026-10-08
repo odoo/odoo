@@ -55,7 +55,8 @@ patch(BuilderUrlPicker.prototype, {
         if (isOptionSelected) {
             return;
         }
-        this.commit(inputValue);
+        const normalizedDisplayValue = this.commit(inputValue);
+        this.urlRef.el.value = normalizedDisplayValue;
     },
 
     openPreviewUrl() {

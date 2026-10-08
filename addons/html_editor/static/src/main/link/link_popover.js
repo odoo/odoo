@@ -12,7 +12,7 @@ import {
     onWillUnmount,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { cleanZWChars, deduceURLfromText } from "./utils";
+import { cleanZWChars, deduceLinkUrl, normalizeLinkUrlInput } from "./utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -107,9 +107,15 @@ export class LinkPopover extends Component {
         this.state = proxy({
             editing: this.props.LinkPopoverState.editing,
             // `.getAttribute("href")` instead of `.href` to keep relative url
+<<<<<<< 2aeace2f0d103e67b0593eeb89a66cc990b77783
             url: this.setUrlFileNamePath(
                 linkElement.getAttribute("href") || this.deduceUrl(textContent)
             ),
+||||||| e678c8dc2e67b80037e84ca3aca2a8571e33d258
+            url: linkElement.getAttribute("href") || this.deduceUrl(textContent),
+=======
+            url: linkElement.getAttribute("href") || deduceLinkUrl(textContent, linkElement),
+>>>>>>> 45b27de266805f995b4d84bbedce3f2c3548ab7c
             label: labelEqualsUrl ? "" : textContent,
             previewIcon: {
                 /** @type {'oi'|'imgSrc'|'mimetype'} */
@@ -246,10 +252,7 @@ export class LinkPopover extends Component {
         if (this.state.label === "") {
             this.state.label = this.state.url;
         }
-        const deducedUrl = this.deduceUrl(this.state.url);
-        this.state.url = deducedUrl
-            ? this.correctLink(deducedUrl)
-            : this.correctLink(this.state.url);
+        this.state.url = normalizeLinkUrlInput(this.state.url, this.props.linkElement);
         if (
             this.props.allowStripDomain &&
             this.state.stripDomain &&
@@ -355,32 +358,6 @@ export class LinkPopover extends Component {
         } else {
             this.state.isDocument = false;
             this.state.directDownload = true;
-        }
-    }
-    correctLink(url) {
-        if (
-            url &&
-            !url.startsWith("tel:") &&
-            !url.startsWith("mailto:") &&
-            !url.includes("://") &&
-            !url.startsWith("/") &&
-            !url.startsWith("#") &&
-            !url.startsWith("${")
-        ) {
-            url = "https://" + url;
-        }
-        if (url && (url.startsWith("http:") || url.startsWith("https:"))) {
-            url = URL.parse(url) ? url : "";
-        }
-        return url;
-    }
-    deduceUrl(text) {
-        text = text.trim();
-        if (/^(https?:|mailto:|tel:)/.test(text)) {
-            // Text begins with a known protocol, accept it as valid URL.
-            return text;
-        } else {
-            return deduceURLfromText(text, this.props.linkElement) || "";
         }
     }
     /**

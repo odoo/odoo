@@ -1,7 +1,6 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { setHrefUrl } from "@html_builder/plugins/utils";
 
 export class ClickableCardOptionPlugin extends Plugin {
     static id = "clickableCardOptionPlugin";
@@ -39,7 +38,11 @@ class SetCardAnchorUrlAction extends BuilderAction {
     apply({ editingElement, value }) {
         const linkEl = editingElement.querySelector(":scope > a.stretched-link");
         if (linkEl) {
-            setHrefUrl(linkEl, value);
+            if (value) {
+                linkEl.setAttribute("href", value);
+            } else {
+                linkEl.removeAttribute("href");
+            }
         }
     }
     getValue({ editingElement }) {
