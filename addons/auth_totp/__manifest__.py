@@ -33,6 +33,7 @@ can setup API keys to replace their main password.
             'auth_totp/static/src/services/check_identity/*',
         ],
         'web.assets_frontend': [
+            'auth_totp/static/src/scss/auth_totp_wizard.css',
             'auth_totp/static/src/services/check_identity/*',
         ],
     },

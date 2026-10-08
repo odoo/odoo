@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     trigger: `.modal a:contains("Cannot scan it?")`,
     async run({ edit }) {
         const secret = this.anchor
-            .closest("div")
+            .closest(".modal")
             .querySelector("[name=secret] span:first-child");
         const copyBtn = secret.querySelector("button");
         if (copyBtn) {
