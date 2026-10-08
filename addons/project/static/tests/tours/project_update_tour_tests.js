@@ -81,6 +81,70 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: '.o_kanban_quick_create .o_kanban_add',
     run: "click",
 }, {
+    trigger: ".o_kanban_record:contains('New task')",
+    run: "click",
+}, {
+    trigger: ".o_form_project_tasks .o_field_widget[name='user_ids'] input",
+    run: "edit Admin",
+}, {
+    trigger: "a.dropdown-item[id*='user_ids'] span",
+    run: "click",
+}, {
+    trigger: 'button[name="sub_tasks_page"]',
+    run: "click",
+}, {
+    trigger: ".o_field_subtasks_one2many .o_list_renderer .o_field_x2many_list_row_add button",
+    run: "click",
+}, {
+    trigger: '.o_field_subtasks_one2many div[name="name"] input',
+    run: "edit New Sub-task",
+},
+{
+    trigger: ".o_form_project_tasks .o_form_dirty",
+},
+{
+    trigger: ".o_form_button_save",
+    run: "click",
+},
+{
+    trigger: ".o_form_project_tasks .o_form_saved",
+},
+{
+    trigger: ".o_breadcrumb .o_back_button",
+    run: "click",
+}, {
+    trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button",
+    run: "click",
+},
+{
+    trigger: ".o_widget_subtask_kanban_list .subtask_list",
+},
+{
+    trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create",
+    run: "click",
+},
+{
+    trigger: ".subtask_create_input",
+},
+{
+    trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_create_input input",
+    run: "edit Newer Sub-task && click body",
+}, {
+    trigger: ".o_kanban_record .o_widget_subtask_kanban_list .subtask_list_row:contains(newer sub-task) .o_field_project_task_state_selection button",
+    run: "click",
+},
+{
+    trigger: ".project_task_state_selection_menu.dropdown-menu",
+},
+{
+    trigger: ".project_task_state_selection_menu.dropdown-menu span.text-danger",
+    run: "click",
+}, {
+    trigger: ".o-overlay-container:not(:visible):not(:has(.project_task_state_selection_menu))",
+}, {
+    trigger: ".o_kanban_record .o_widget_subtask_counter .subtask_list_button:contains('1/2')",
+    run: "click",
+}, {
     trigger: ".o_kanban_group:nth-child(2) .o_kanban_header",
     run: "hover && click .o_kanban_group:nth-child(2) .o_kanban_header .dropdown-toggle",
 }, {
