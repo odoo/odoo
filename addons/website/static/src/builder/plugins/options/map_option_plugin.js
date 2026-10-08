@@ -1,7 +1,29 @@
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
+import { onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { generateGMapLink } from "@website/js/utils";
+
+export class MapOption extends BaseOptionComponent {
+    static id = "map_option";
+    static template = "website.mapOption";
+
+    setup() {
+        super.setup();
+        this.orm = useService("orm");
+        onWillStart(async () => {
+            this.website_distance_unit = await this.orm.call(
+                "res.config.settings",
+                "get_website_distance_unit",
+                []
+            );
+        });
+    }
+}
+
+registry.category("website-options").add(MapOption.id, MapOption);
 
 export class MapOptionPlugin extends Plugin {
     static id = "mapOption";
