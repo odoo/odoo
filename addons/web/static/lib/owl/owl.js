@@ -3695,11 +3695,11 @@ ${issueStrings}`);
     // after each patch and after this subtree is removed, to unset a ref pointing
     // at a bulk-removed element (slot host, enclosing t-if) — see sweepRefs.
     trackedRefs = null;
-    constructor(C, props2, app, parent, parentKey) {
+    constructor(C, props2, app, pluginManager, parent, parentKey) {
       super(app);
       this.parent = parent;
       this.parentKey = parentKey;
-      this.pluginManager = parent ? parent.pluginManager : app.pluginManager;
+      this.pluginManager = pluginManager;
       this.componentName = C.name;
       this.signalComputation = createComputation(
         () => this.render(false),
@@ -4306,7 +4306,7 @@ ${issueStrings}`);
             );
           }
         }
-        node = new ComponentNode(C, props2, app, ctx, key);
+        node = new ComponentNode(C, props2, app, ctx.pluginManager, ctx, key);
         children[key] = node;
         const fiber = new Fiber(node, parentFiber);
         if (node.willStart.length) {
@@ -4496,11 +4496,12 @@ ${issueStrings}`);
       let node;
       let error = null;
       try {
-        node = new ComponentNode(Root, props2, this, null, null);
         const subConfig = config3;
+        let pluginManager = this.pluginManager;
         if (subConfig.pluginManager) {
-          node.pluginManager = subConfig.pluginManager;
+          pluginManager = subConfig.pluginManager;
         }
+        node = new ComponentNode(Root, props2, this, pluginManager, null, null);
         if (subConfig.onError) {
           nodeErrorHandlers.set(node, [subConfig.onError]);
         }
