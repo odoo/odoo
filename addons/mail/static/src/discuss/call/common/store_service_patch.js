@@ -32,11 +32,7 @@ patch(router, {
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        this.rtc = fields.One("Rtc", {
-            compute() {
-                return {};
-            },
-        });
+        this.rtc = this.computed(() => this.Rtc.insert({}));
         this.ringingChannels = fields.Many("discuss.channel");
         this.onChange(
             () => [this.ringingChannels.length > 0],
@@ -90,7 +86,7 @@ const StorePatch = {
         this.meetingViewOpened = false;
     },
     get shareUrl() {
-        return this.self_user && this.rtc.isFullscreen
+        return this.self_user && this.rtc?.isFullscreen
             ? this.rtc.localChannel?.invitationLink
             : undefined;
     },
