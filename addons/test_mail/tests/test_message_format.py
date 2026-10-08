@@ -25,7 +25,7 @@ class TestMessageFormat(TransactionCase):
     def test_find_value_from_field_path_monetary(self):
         """ Check the format of the return in case of monetary value (Digits after comma """
         test_cases = [
-            (self.euro_currency, '150.00'),  #  2 decimals
+            (self.euro_currency, '150.00'),  # 2 decimals
             (self.jpy_currency, '150'),  # 0 decimals
             (self.lyd_currency, '150.000'),  # 3 decimals
         ]

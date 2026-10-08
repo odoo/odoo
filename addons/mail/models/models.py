@@ -862,7 +862,7 @@ class Base(models.AbstractModel):
             )
         elif last_field.type == 'monetary':
             currency_fname = last_field.get_currency_field(last_model)
-            formated_value =(formatLang(record.env,
+            formated_value = (formatLang(record.env,
                                         value,
                                         digits=(
                                                 record[currency_fname] or
