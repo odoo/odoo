@@ -2,6 +2,7 @@
 
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.tests.common import new_test_user
 
 from odoo.addons.bus.tests.common import BusResult
@@ -498,6 +499,33 @@ class TestDiscussTools(MailCase):
         ):
             channel.write({"default_display_mode": "video_full_screen", "description": "Text 368"})
 
+    def test_370_bus_batch_reuses_field_lists(self):
+        """Test that the stores of a bus batch reuse the field list built for the same records."""
+        group = self.env["res.groups"].create({"name": "Group 370"})
+        users = new_test_user(self.env, "user_370_a") | new_test_user(self.env, "user_370_b")
+        users.group_ids = [Command.link(group.id)]
+        channel = self.env["discuss.channel"].create({"name": "Channel 370"})
+        with (
+            patch.object(
+                DiscussChannel,
+                "_store_channel_fields",
+                autospec=True,
+                side_effect=DiscussChannel._store_channel_fields,
+            ) as store_channel_fields,
+            self.assertBus(
+                lambda: [
+                    BusResult(channel, "mail.record/insert"),
+                    *(
+                        BusResult(member.partner_id.user_ids, "mail.record/insert")
+                        for member in channel.channel_member_ids.sorted("id")
+                        if member.partner_id in users.partner_id
+                    ),
+                ],
+            ),
+        ):
+            channel.group_ids = group
+        self.assertEqual(store_channel_fields.call_count, 1)
+
     def test_390_add_no_loop(self):
         """Test that store.add() does not loop indefinitely but it is still allowed to process
         consecutive calls."""
@@ -525,6 +553,31 @@ class TestDiscussTools(MailCase):
         self.assertEqual(data["res.partner"][0]["test"], user.partner_id.id)
         self.assertEqual(data["res.users"][0]["test"], user.id)
 
+    def test_392_add_callable_identity_captured_values(self):
+        partner = self.env["res.partner"].create({"name": "Test Partner 392"})
+        attachment = self.env["ir.attachment"].create({"name": "test_392.txt", "raw": b"392"})
+        messages = partner.message_post(body="a") + partner.message_post(body="b")
+        messages.attachment_ids = attachment
+        data = (
+            Store()
+            .add(
+                messages,
+                lambda res: res.many(
+                    "attachment_ids",
+                    [],
+                    dynamic_fields=lambda res, message: res.for_current_user(
+                        lambda res: res.attr("test", message.id),
+                    ),
+                ),
+            )
+            ._build_result()
+        )
+        self.assertEqual(data["ir.attachment"][0]["test"], messages[1].id)
+        self.assertNotEqual(
+            Store._deep_freeze(messages[0]._store_message_fields),
+            Store._deep_freeze(messages[1]._store_message_fields),
+        )
+
     def test_393_delayed_add(self):
         """Test that delayed store.add() postpones reading fields until _build_result()."""
         user_a = new_test_user(self.env, "test_user_390@example.com")
@@ -534,6 +587,38 @@ class TestDiscussTools(MailCase):
         self.env["mail.presence"]._update_presence(user_a)
         data = store._build_result()
         self.assertEqual(data["res.users"][0]["im_status"], "online")
+
+    def test_394_callable_identity_captured_records_and_empty_cell(self):
+        partners = self.env["res.partner"].create([{"name": "A 394"}, {"name": "B 394"}])
+
+        def get_fields(records):
+            return lambda res: res.attr("test", records.ids)
+
+        def get_identity_before_assignment():
+            def fields(res):
+                res.attr("test", value)
+
+            identity = Store._deep_freeze(fields)
+            value = "assigned after the identity"
+            return identity
+
+        self.assertEqual(
+            Store._deep_freeze(get_fields(partners)),
+            Store._deep_freeze(get_fields(partners)),
+        )
+        self.assertNotEqual(
+            Store._deep_freeze(get_fields(partners)),
+            Store._deep_freeze(get_fields(partners.with_context(test_394=True))),
+        )
+        self.assertNotEqual(
+            Store._deep_freeze(get_fields(partners)),
+            Store._deep_freeze(get_fields(partners[::-1])),
+        )
+        self.assertNotEqual(
+            Store._deep_freeze({"records": partners}),
+            Store._deep_freeze({"records": partners[::-1]}),
+        )
+        self.assertTrue(get_identity_before_assignment())
 
     def test_395_delayed_add_ignores_deleted_record(self):
         """Test that delayed store.add() ignores deleted records."""
