@@ -10,6 +10,29 @@ from odoo import models
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
+    def _get_line_items(self):
+        """Override of `payment` to add the page and image URLs of the published products."""
+        line_items = super()._get_line_items()
+        for order in self.sale_order_ids:
+            base_url = order.get_base_url()
+            website = order.sudo().assigned_website_id
+            published_lines = order.order_line.with_context(website_id=website.id).filtered(
+                lambda line: (
+                    line in line_items
+                    and line.product_id.website_published
+                    and line.product_id.sale_ok
+                )
+            )
+            for line in published_lines:
+                product = line.product_id
+                item = line_items[line]
+                item["url"] = f"{base_url}{product.website_url}"
+                if product.image_128:
+                    item["image_url"] = (
+                        f"{base_url}/web/image/product.product/{product.id}/image_128/image.png"
+                    )
+        return line_items
+
     def _process(self, payment_data):
         """Override of `payment` to append payment status message to the landing route."""
         super()._process(payment_data)
