@@ -68,9 +68,18 @@ export function searchHighlight(searchTerm, target) {
 }
 
 export class MessageSearchState extends SearchState {
+<<<<<<< 3a00e0b2160c3572853fa3f8b289ce7f1d7bb159
     count = 0;
     /** @type {string | undefined} */
     search_filter = undefined;
+||||||| 90a21f65a594d4c160a7374a78a48d865130c5e7
+    count = 0;
+    /** @type {boolean | undefined} */
+    is_notification = undefined;
+=======
+    /** @type {boolean | undefined} */
+    is_notification = undefined;
+>>>>>>> 6f51525c256de26e2fe80d5389c99797ff5a95f1
     hasMore = false;
     /** @type {import('@mail/core/common/message_model').Message[]} */
     messages = [];
@@ -113,7 +122,6 @@ export class MessageSearchState extends SearchState {
             return; // Search was cleared or superseded during request.
         }
         this.searched = true;
-        this.count = data.count;
         this.hasMore = data.loadMore;
         if (before !== undefined) {
             this.messages.push(...data.messages);
@@ -137,7 +145,6 @@ export class MessageSearchState extends SearchState {
         this.search_filter = undefined;
         this.messages = [];
         this.searched = false;
-        this.count = 0;
         this.hasMore = false;
         this.loadMoreBeforeMessageId = undefined;
     }
