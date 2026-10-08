@@ -3,7 +3,7 @@
 
 import odoo.tests
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -103,3 +103,22 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
 
         self.start_tour("/blog", "blog_tags_with_date", login="admin")
+
+    def test_blog_feed_only_lists_published_posts(self):
+        blog = self.env['blog.blog'].create({'name': 'Feed Blog'})
+        now = datetime.now()
+        self.env['blog.post'].create([{
+            'name': 'Past Post',
+            'blog_id': blog.id,
+            'is_published': True,
+            'post_date': now - timedelta(days=1),
+        }, {
+            'name': 'Future Post',
+            'blog_id': blog.id,
+            'is_published': True,
+            'post_date': now + timedelta(days=1),
+        }])
+
+        res = self.url_open(f'/blog/{blog.id}/feed')
+        self.assertIn('Past Post', res.text)
+        self.assertNotIn('Future Post', res.text)
