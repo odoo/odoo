@@ -3,7 +3,6 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { Component, proxy, onMounted, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { parseFloat } from "@web/views/fields/parsers";
 import { Dialog } from "@web/core/dialog/dialog";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { CashInput } from "@point_of_sale/app/components/inputs/input/cash_input/cash_input";
@@ -58,7 +57,11 @@ export class OpeningControlPopup extends Component {
             await this.pos.data.call(
                 "pos.session",
                 "set_opening_control",
-                [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
+                [
+                    this.pos.session.id,
+                    this.pos.parseCurrency(this.state.openingCash),
+                    this.state.notes,
+                ],
                 {},
                 queue
             );
@@ -115,7 +118,7 @@ export class OpeningControlPopup extends Component {
         this.state.notes = "";
     }
     handleInputBlur() {
-        const parsed = parseFloat(this.state.openingCash);
+        const parsed = this.pos.parseCurrency(this.state.openingCash);
         this.state.openingCash = this.pos.formatCurrency(parsed, this.pos.config.currency_id.id, {
             noSymbol: true,
         });

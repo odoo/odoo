@@ -32,7 +32,7 @@
                         <PaymentMethodBreakdown title.translate="Cash In / Out" total_amount="this.cashMoveData.total" transactions="this.cashMoveData.moves"/>
                         <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2">
                             <span>Counted</span>
-                            <span t-out="this.pos.formatCurrency(this.pos.parseValidFloat(counted))" />
+                            <span t-out="this.pos.formatCurrency(this.parseValidCounted(counted))" />
                         </div>
                         <div class="d-flex align-items-center justify-content-between text-muted border-start ps-2" t-att-class="{'text-danger fw-bold': diff}">
                             <span>Difference</span>
@@ -42,7 +42,7 @@
                     <div class="w-100 mb-3" t-foreach="this.props.non_cash_payment_methods" t-as="pm" t-key="pm.id">
                         <t t-set="_showDiff" t-value="pm.type === 'bank' and pm.number !== 0" />
                         <t t-set="diff" t-value="_showDiff ? this.getDifference(pm.id) : 0" />
-                        <t t-set="counted" t-value="_showDiff ? this.pos.parseValidFloat(this.state.payments[pm.id].counted) : 0" />
+                        <t t-set="counted" t-value="_showDiff ? this.parseValidCounted(this.state.payments[pm.id].counted) : 0" />
                         <div class="d-flex align-items-center justify-content-between fs-3">
                             <span t-out="pm.name" />
                             <span t-out="this.pos.formatCurrency(pm.amount)" />

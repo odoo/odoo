@@ -239,7 +239,7 @@ export class PaymentScreen extends Component {
                 this.onNewTip({ newValue, type, currentTipAmount: tip.amount, change }),
             formatDisplayedValue: (value, type) => {
                 if (type === "fixed") {
-                    return this.pos.formatCurrency(parseFloat(value));
+                    return this.pos.formatCurrency(this.pos.parseCurrency(value));
                 }
                 if (type === "percent") {
                     return `${value} %`;
@@ -276,7 +276,10 @@ export class PaymentScreen extends Component {
         pLine.setAmount(pLine.getAmount() + tipToAdd);
     }
     computeNewTip({ value, type, currentTipAmount = 0 }) {
-        const valueParsed = typeof value === "string" ? parseFloat(value) : value;
+        let valueParsed = value;
+        if (typeof value === "string") {
+            valueParsed = type === "fixed" ? this.pos.parseCurrency(value) : parseFloat(value);
+        }
         if (isNaN(valueParsed)) {
             return 0;
         }

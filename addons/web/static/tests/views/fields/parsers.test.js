@@ -169,6 +169,19 @@ test("parseFloatTime", () => {
     expect(() => parseFloatTime("=6h/0")).toThrow();
 });
 
+test("parseFloat with digits without decimals", () => {
+    // No decimal point possible: . and , are grouping noise, as for integers
+    expect(parseFloat("2,000", { digits: [69, 0] })).toBe(2000);
+    expect(parseFloat("2.000", { digits: [69, 0] })).toBe(2000);
+    expect(parseFloat("1,234,567", { digits: [69, 0] })).toBe(1234567);
+    expect(parseFloat("-2,000", { digits: [69, 0] })).toBe(-2000);
+    expect(parseFloat("NT$\u00a02,000", { digits: [69, 0] })).toBe(2000);
+
+    // Other digits keep the usual parsing
+    expect(parseFloat("2,000", { digits: [69, 2] })).toBe(2);
+    expect(parseFloat("2,000")).toBe(2);
+});
+
 test("parseInteger", () => {
     // Basic parsing
     expect(parseInteger("")).toBe(0);
