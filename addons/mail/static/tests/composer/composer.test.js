@@ -2001,3 +2001,24 @@ test("discard stale mention when replacing it with a longer partner mention", as
 
     await contains(".o-mail-Message a", { text: "@John Doe" });
 });
+
+test("mention partner whose name ends with a space at the end of the message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "zara@odoo.com",
+        name: "Zara Space ",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "@Zara");
+    await click(".o-mail-Composer-suggestion strong", { text: "Zara Space" });
+    await press("Enter");
+    await contains(".o-mail-Message a.o_mail_redirect", { text: "@Zara Space" });
+});
