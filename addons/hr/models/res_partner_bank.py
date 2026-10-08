@@ -43,13 +43,19 @@ class ResPartnerBank(models.Model):
                 bank.employee_id = False
 
     def _compute_display_name(self):
-        account_employee = self.browse()
-        if not self.env.user.has_group('hr.group_hr_user'):
-            account_employee = self.sudo().filtered("partner_id.employee_ids")
-            for account in account_employee:
-                account.sudo(self.env.su).display_name = \
-                    account.account_number[:2] + "*" * len(account.account_number[2:-4]) + account.account_number[-4:]
-        super(ResPartnerBank, self - account_employee)._compute_display_name()
+        # Because a read access at the recordset level would evaluate to False if one record is not accessible,
+        # the permission check is done at the record level. As a user can have access to some bank accounts, but not others.
+        accessible_accounts = self._filtered_access('read')
+        restricted_accounts = self - accessible_accounts
+        for account in restricted_accounts.sudo():
+            acc_num = account.sanitized_account_number or ''
+            if len(acc_num) == 0:
+                account.display_name = ""
+            elif len(acc_num) <= 6:
+                account.display_name = "****"
+            else:
+                account.display_name = f"{acc_num[:2]}{(len(acc_num) - 6) * '*'}{acc_num[-4:]}"
+        super(ResPartnerBank, accessible_accounts)._compute_display_name()
 
     @api.model
     def _is_iban_valid(self, iban):

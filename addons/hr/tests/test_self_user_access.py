@@ -130,6 +130,36 @@ class TestSelfAccessRights(TestHrCommon):
             if callable(field.compute) and hasattr(field.compute, 'employee_field_name')
         ])
 
+        cls.user_regular = new_test_user(
+            cls.env,
+            login='user_regular',
+            groups='base.group_user',
+        )
+        cls.user_hr = new_test_user(
+            cls.env,
+            login='user_hr',
+            groups='base.group_user,hr.group_hr_user',
+        )
+
+        cls.employee_partner = cls.env['res.partner'].create({'name': 'Employee Partner'})
+        cls.employee = cls.env['hr.employee'].create({
+            'name': 'Employee Name',
+            'work_contact_id': cls.employee_partner.id,
+            'bank_account_ids': [Command.create({
+                'account_number': 'EM12 3456 7890 1234',
+                'partner_id': cls.employee_partner.id,
+            })],
+        })
+        cls.contact = cls.env['res.partner'].create({
+            'name': 'Contact Name',
+            'bank_ids': [Command.create({
+                'account_number': 'CO09 8765 4321 4321',
+            })],
+        })
+
+        cls.employee_bank = cls.employee.bank_account_ids[:1]
+        cls.contact_bank = cls.contact.bank_ids[:1]
+
     # Read hr.employee #
     def testReadSelfEmployee(self):
         with self.assertRaises(AccessError):
@@ -243,21 +273,55 @@ class TestSelfAccessRights(TestHrCommon):
             form.lang = "fr_FR"
             form.tz = "Europe/Brussels"
 
-    def test_access_employee_account(self):
-        hubert = new_test_user(self.env, login='hubert', groups='base.group_user', name='Hubert Bonisseur de La Bath', email='hubert@oss.fr')
-        hubert = hubert.with_user(hubert)
-        hubert_acc = self.env['res.partner.bank'].create({'account_number': 'FR1234567890', 'partner_id': hubert.partner_id.id})
-        hubert_emp = self.env['hr.employee'].create({
-            'name': 'Hubert',
-            'user_id': hubert.id,
-            'bank_account_ids': [Command.link(hubert_acc.id)]
-        })
-        hubert.partner_id.sudo().employee_ids = hubert_emp
+    def test_res_partner_bank_account_access(self):
+        user_regular_employee_bank = self.employee_bank.with_user(self.user_regular)
+        self.assertEqual(
+            user_regular_employee_bank.display_name,
+            'EM**********1234',
+            "Regular user can't have access to employee's bank account",
+        )
+        self.employee_bank.invalidate_recordset(['display_name'])
 
-        self.assertFalse(hubert.env.user.has_group('hr.group_hr_user'))
-        self.assertFalse(hubert.env.su)
-        self.assertEqual(hubert.sudo().employee_bank_account_ids.display_name, 'FR******7890')
-        self.assertEqual(hubert_emp.with_user(hubert).sudo().bank_account_ids.display_name, 'FR******7890')
+        user_hr_employee_bank = self.employee_bank.with_user(self.user_hr)
+        self.assertEqual(
+            user_hr_employee_bank.display_name,
+            'EM12 3456 7890 1234',
+            "HR officer should have access to employee's bank account",
+        )
 
-        hubert_acc.invalidate_recordset(["display_name"])
-        self.assertEqual(hubert_emp.with_user(hubert).sudo().bank_account_ids.sudo(False).display_name, 'FR******7890')
+        user_regular_contact_bank = self.contact_bank.with_user(self.user_regular)
+        self.assertEqual(
+            user_regular_contact_bank.display_name,
+            'CO09 8765 4321 4321',
+            "Regular user should have access to contact's bank account",
+        )
+        self.contact_bank.invalidate_recordset(['display_name'])
+
+        user_hr_contact_bank = self.contact_bank.with_user(self.user_hr)
+        self.assertEqual(
+            user_hr_contact_bank.display_name,
+            'CO09 8765 4321 4321',
+            "HR officer should have access to contact's bank account",
+        )
+
+    def test_res_partner_bank_account_format(self):
+        test_cases = [
+            ('', ''),
+            ('BE12', '****'),
+            ('BE1234', '****'),
+            ('BE123456', 'BE**3456'),
+            ('BE12345678901234', 'BE**********1234'),
+            ('BE1234567890444 4 ', 'BE**********4444'),
+        ]
+
+        for input_number, expected_display in test_cases:
+            with self.subTest(input_number=input_number):
+                self.employee_bank.sudo().write({'account_number': input_number})
+                self.employee_bank.invalidate_recordset(['display_name', 'account_number'])
+
+                bank_as_regular = self.employee_bank.with_user(self.user_regular)
+                self.assertEqual(
+                    bank_as_regular.display_name,
+                    expected_display,
+                    f"Format failed for account length {len(input_number)}",
+                )
