@@ -8,21 +8,20 @@ import { patch } from "@web/core/utils/patch";
 const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
-        this.livechatWelcomeMessage = fields.One("mail.message", {
-            compute() {
-                if (this.hasWelcomeMessage) {
-                    const livechatService = this.store.env.services["im_livechat.livechat"];
-                    return {
-                        id: -0.2 - this.id,
-                        body: livechatService.options.default_message,
-                        thread: this.thread,
-                        author_id: [
-                            ...this.livechat_agent_history_ids,
-                            ...this.livechat_bot_history_ids,
-                        ].sort((a, b) => a.id - b.id)[0]?.partner_id,
-                    };
-                }
-            },
+        this.livechatWelcomeMessage = this.computed(() => {
+            if (!this.hasWelcomeMessage) {
+                return undefined;
+            }
+            const livechatService = this.store.env.services["im_livechat.livechat"];
+            return this.store["mail.message"].insert({
+                id: -0.2 - this.id,
+                body: livechatService.options.default_message,
+                thread: this.thread,
+                author_id: [
+                    ...this.livechat_agent_history_ids,
+                    ...this.livechat_bot_history_ids,
+                ].sort((a, b) => a.id - b.id)[0]?.partner_id,
+            });
         });
         this.storeAsActiveVisitorLivechats = fields.One("Store", {
             /** @this {import("models").DiscussChannel} */
