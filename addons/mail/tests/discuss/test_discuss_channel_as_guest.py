@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import release
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
@@ -82,11 +83,41 @@ class TestMailPublicPage(HttpCaseWithUserPortal):
     def test_discuss_channel_public_page_as_guest(self):
         self.start_tour(self.channel.invitation_url, "discuss_channel_as_guest_tour.js")
         guest = self.env['mail.guest'].search([('channel_ids', 'in', self.channel.id)], limit=1, order='id desc')
+        self.assertEqual(guest.name, "Guest Luigi")
         self.start_tour(self.channel.invitation_url, self.tour, cookies={guest._cookie_name: guest._format_auth_cookie()})
 
     def test_discuss_channel_public_page_call_public(self):
         self.channel.default_display_mode = 'video_full_screen'
         self.start_tour(self.channel.invitation_url, "discuss_channel_call_public_tour.js")
+
+    def test_discuss_channel_public_page_self_menu_as_portal(self):
+        # Portal users only have the color scheme in the menu, which only enterprise has.
+        self.patch(release, "version_info", release.version_info[:5] + ("e",))
+        self.start_tour(
+            self.channel.invitation_url,
+            "discuss_public_self_menu_portal_tour.js",
+            login="portal_bowser",
+        )
+
+    def test_discuss_channel_public_page_without_self_menu_as_portal(self):
+        # Community, where portal users have nothing to change in the menu.
+        self.patch(release, "version_info", release.version_info[:5] + ("",))
+        self.start_tour(
+            self.channel.invitation_url,
+            "discuss_public_self_menu_portal_without_menu_tour",
+            login="portal_bowser",
+        )
+
+    def test_discuss_channel_public_page_self_menu_as_guest_mobile(self):
+        self.browser_size = "375x667"
+        self.touch_enabled = True
+        guest = self.channel.channel_member_ids.guest_id
+        self.start_tour(
+            self.channel.invitation_url,
+            "discuss_public_self_menu_mobile_tour.js",
+            cookies={guest._cookie_name: guest._format_auth_cookie()},
+        )
+        self.assertEqual(guest.name, "Guest Luigi")
 
     def test_mail_group_public_page_as_guest(self):
         self.start_tour(self.group.invitation_url, "discuss_channel_as_guest_tour.js")

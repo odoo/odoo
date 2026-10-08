@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.MessagingMenu-navigation" t-inherit-mode="extension">
+        <xpath expr="//nav[hasclass('o-mail-MessagingMenu-navbar')]" position="inside">
+            <div t-if="this.isCollapsible()" class="o-mail-MessagingMenu-self d-flex justify-content-center align-items-start mt-auto flex-shrink-0">
+                <PublicSelfMenu/>
+            </div>
+        </xpath>
+    </t>
+</templates>

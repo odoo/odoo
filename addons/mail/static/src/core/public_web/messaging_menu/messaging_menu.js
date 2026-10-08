@@ -14,9 +14,8 @@ import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
 /** How long the pointer rests on a tab for the shown list to change to it. */
@@ -26,42 +25,6 @@ export const PEEK_TAB_DELAY = 50;
 class IsolatedDropdown extends Dropdown {
     get hasParent() {
         return false;
-    }
-}
-
-class GuestNamePopover extends Component {
-    static template = "mail.GuestNamePopover";
-
-    inputRef = signal.ref();
-
-    setup() {
-        super.setup();
-        this.store = useService("mail.store");
-        this.props = useProps({ close: types.function().optional() });
-        useAutofocus({ ref: this.inputRef });
-    }
-
-    /** @param {KeyboardEvent} ev */
-    onKeydown(ev) {
-        switch (ev.key) {
-            case "Enter":
-                // Commits the name through `change`.
-                ev.target.blur();
-                this.props.close?.();
-                break;
-            case "Escape":
-                ev.target.value = this.store.self_guest.name;
-                this.props.close?.();
-                break;
-        }
-    }
-
-    /** @param {string} name */
-    async rename(name) {
-        const newName = name.trim();
-        if (newName && this.store.self_guest.name !== newName) {
-            await this.store.self_guest.updateGuestName(newName);
-        }
     }
 }
 
@@ -175,10 +138,6 @@ export class MessagingMenu extends Component {
                 this.peekTab(tab);
             }
         }, PEEK_TAB_DELAY);
-        this.guestNamePopover = usePopover(GuestNamePopover, {
-            arrow: false,
-            position: "right-end",
-        });
         onClickIntent(this.navRef, (ev) => {
             const tabId = ev.target.closest?.(".o-mail-MessagingMenu-tab")?.dataset.id;
             const tab = this.visibleTabs.find((t) => String(t.id) === tabId);
@@ -286,15 +245,6 @@ export class MessagingMenu extends Component {
         this.peek.close();
         this.resetPeek();
         this.onToggleSidebar();
-    }
-
-    /** @param {MouseEvent} ev */
-    onClickSelf(ev) {
-        if (this.guestNamePopover.isOpen) {
-            this.guestNamePopover.close();
-        } else {
-            this.guestNamePopover.open(ev.currentTarget, {});
-        }
     }
 
     /**

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.PublicSelfMenu">
+    <Dropdown t-if="this.hasMenu()" position="this.props.compact ? 'bottom-end' : 'right-start'" menuClass="'o-mail-PublicSelfMenu'">
+        <button class="o-mail-PublicSelfMenu-toggler btn d-flex align-items-center gap-1 rounded-3" t-att-class="{ 'px-1 py-0 me-1': this.props.compact, 'flex-column p-1 mw-100': !this.props.compact }" t-att-title="this.store.self.name">
+            <t t-call="mail.PublicSelfMenu.self"/>
+        </button>
+        <t t-set-slot="content">
+            <div t-if="this.isGuest()" class="px-2 py-1">
+                <label class="form-label small text-muted mb-1" for="o-mail-PublicSelfMenu-guestName">Your name</label>
+                <input
+                    id="o-mail-PublicSelfMenu-guestName"
+                    t-ref="this.guestNameRef"
+                    class="o-mail-PublicSelfMenu-guestName form-control form-control-sm bg-view rounded-3"
+                    type="text"
+                    t-att-value="this.store.self_guest.name"
+                    t-on-change="(ev) => this.renameGuest(ev.target.value)"
+                    t-on-keydown="this.onKeydownGuestName"
+                />
+            </div>
+            <t t-if="this.canChooseColorScheme">
+                <div t-if="this.isGuest()" role="separator" class="dropdown-divider"/>
+                <DropdownItem class="'o-mail-PublicSelfMenu-colorScheme small rounded-3 px-2'" onSelected="() => this.setColorScheme(this.store.publicColorScheme === 'dark' ? 'light' : 'dark')">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <span><i class="oi me-1" data-icon="dark_mode"/> Dark Theme</span>
+                        <CheckBox value="this.store.publicColorScheme === 'dark'" className="'form-switch ms-2'" onChange="(dark) => this.setColorScheme(dark ? 'dark' : 'light')"/>
+                    </div>
+                </DropdownItem>
+            </t>
+        </t>
+    </Dropdown>
+    <div t-else="" class="d-flex align-items-center gap-1" t-att-class="{ 'px-1 me-1': this.props.compact, 'flex-column p-1 mw-100': !this.props.compact }" t-att-title="this.store.self.name">
+        <t t-call="mail.PublicSelfMenu.self"/>
+    </div>
+</t>
+
+<t t-name="mail.PublicSelfMenu.self">
+    <img class="rounded-3 object-fit-cover flex-shrink-0" t-att-class="this.props.compact ? 'o-mail-DiscussContent-selfAvatar' : 'o-mail-PublicSelfMenu-avatar'" alt="Avatar" t-att-src="this.store.self.avatarUrl"/>
+    <span t-if="!this.props.compact" class="o-mail-PublicSelfMenu-name o-xsmaller text-center text-break lh-1 mw-100" t-out="this.store.self.name"/>
+</t>
+
+</templates>
