@@ -2,6 +2,7 @@
 
 import logging
 import pytz
+from ast import literal_eval
 from collections import OrderedDict, defaultdict
 from datetime import datetime, timedelta
 from markupsafe import Markup
@@ -1383,6 +1384,17 @@ class CrmLead(models.Model):
             'active_test': False,
             'create': False
         }
+        return action
+
+    def action_lead_mail_compose(self):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('crm.action_lead_mail_compose')
+        partner = self.partner_id or self._find_matching_partner()
+        raw_ctx = action.get('context') or {}
+        ctx = literal_eval(raw_ctx) if isinstance(raw_ctx, str) else dict(raw_ctx)
+        if partner:
+            ctx['default_partner_ids'] = partner.ids
+        action['context'] = ctx
         return action
 
     # ------------------------------------------------------------
