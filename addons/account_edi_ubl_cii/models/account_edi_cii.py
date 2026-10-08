@@ -284,16 +284,22 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_line_specified_trade_product_node(self, vals, base_line):
         product = base_line['product_id']
+        line_name = base_line['name'] or ''
+        name, description = line_name, None
+        if product:
+            line_without_name = line_name.removeprefix(f'{product.display_name}\n')
+            if line_without_name != line_name:
+                name, description = product.display_name, line_without_name.strip()
         return {
             'ram:GlobalID': {
                 '_text': product.barcode,
                 'schemeID': "0160",
             } if product.barcode else None,
             'ram:SellerAssignedID': {'_text': product.default_code} if product.default_code else None,
-            'ram:Name': {'_text': base_line['name']},
+            'ram:Name': {'_text': name},
             'ram:Description': {
-                '_text': html2plaintext(product.description),
-            } if product.description else None,
+                '_text': description,
+            } if description else None,
         }
 
     def _cii_get_gross_price_product_trade_price_node(self, vals, base_line):
