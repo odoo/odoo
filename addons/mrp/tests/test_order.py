@@ -3826,6 +3826,44 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.bom_id = bom_wh02
         self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should be adapted because of the default value')
 
+    def test_change_bom_to_other_warehouse_replaces_moves_without_missing_error(self):
+        """Changing a saved draft MO's BoM to one from another warehouse must
+        not raise a MissingError when its old component moves are replaced.
+        """
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Second Warehouse',
+            'code': 'WH02',
+        })
+        bom_1, bom_2 = self.env['mrp.bom'].create([{
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'picking_type_id': warehouse.manu_type_id.id,
+            'bom_line_ids': [Command.create({
+                'product_id': component.id,
+                'product_qty': 1,
+            })],
+        } for warehouse, component in [
+            (self.warehouse_1, self.product_1),
+            (warehouse_2, self.product_2),
+        ]])
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'bom_id': bom_1.id,
+        })
+        self.assertEqual(mo.bom_id, bom_1)
+        self.assertRecordValues(mo.move_raw_ids, [{
+            'product_id': self.product_1.id,
+            'state': 'draft',
+            'picking_type_id': self.warehouse_1.manu_type_id.id,
+        }])
+        with Form(mo) as mo_form:
+            mo_form.bom_id = bom_2
+        self.assertEqual(mo.bom_id, bom_2)
+        self.assertRecordValues(mo.move_raw_ids, [{
+            'product_id': self.product_2.id,
+            'state': 'draft',
+            'picking_type_id': warehouse_2.manu_type_id.id,
+        }])
+
     def test_workcenter_specific_capacities(self):
         """ Test that the duraction expected is correctly computed when specific capacities are defined on the workcenter.
         """
