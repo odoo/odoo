@@ -1270,7 +1270,19 @@ class AccountEdiCii(models.AbstractModel):
             # quantity = 6.0
             # discount_amount = 300.0
             if not currency.is_zero(price_subtotal):
-                price_unit = round((price_subtotal + price_discount_amount) / price_quantity, 2)
+                # Some suppliers fill the BasisQuantity (BT-149) with the billed quantity while the
+                # ChargeAmount is the price of a single unit. In that case, the line total amount (BT-131)
+                # is only consistent when ignoring the BasisQuantity.
+                def is_consistent_with_line_total(basis_quantity):
+                    return currency.compare_amounts(price_amount * quantity / basis_quantity, subtotal) == 0
+
+                if (
+                    price_amount
+                    and not is_consistent_with_line_total(price_quantity)
+                    and is_consistent_with_line_total(1.0)
+                ):
+                    price_quantity = 1.0
+                price_unit = round((price_subtotal + price_discount_amount) / price_quantity, 6)
                 discount_amount += price_discount_amount * quantity / price_quantity
         else:
             quantity = 0.0
