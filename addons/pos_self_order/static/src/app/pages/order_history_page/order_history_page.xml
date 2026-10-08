@@ -28,7 +28,7 @@
                         </div>
                         <div class="o_so_order_body pt-3 border-top">
                             <div
-                                t-foreach="order.lines"
+                                t-foreach="this.getLines(order)"
                                 t-as="line"
                                 t-key="line.uuid"
                                 class="o_self_order_item_card position-relative d-flex align-items-start w-100 mb-2"

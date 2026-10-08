@@ -199,6 +199,17 @@ export class GeneratePrinterData {
         });
     }
 
+    sortLineData(linesData) {
+        if (!this.config.iface_group_by_categ) {
+            return linesData;
+        }
+        const position = new Map(
+            this.order.getOrderlines().map((line, index) => [line.uuid, index])
+        );
+        const getPosition = (data) => position.get(data.uuid) ?? position.size;
+        return linesData.sort((a, b) => getPosition(a) - getPosition(b));
+    }
+
     generatePaymentData() {
         return this.order.payment_ids.map((line) => ({
             ...line.raw,
@@ -248,7 +259,7 @@ export class GeneratePrinterData {
             company: this.company.raw,
             partner: this.order.partner_id ? this.order.partner_id.raw : false,
             preset: this.order.preset_id ? this.order.preset_id.raw : false,
-            lines: this.generateLineData(),
+            lines: this.sortLineData(this.generateLineData()),
             payments: this.generatePaymentData(),
             image: {
                 invoice_qr_code: useQrCode ? this.generateQrCode(url) : false,
@@ -282,17 +293,48 @@ export class GeneratePrinterData {
      * Methods bellow are used to generate preparations tickets data
      */
     preparePreparationGroupedData(changes) {
+        delete changes.groupedData;
         const dataChanges = changes.data || [];
         if (dataChanges && dataChanges.some((c) => c.group)) {
-            const groupedData = dataChanges.reduce((acc, c) => {
-                const { name = "", index = -1 } = c.group || {};
-                if (!acc[name]) {
-                    acc[name] = { name, index, data: [] };
+            const comboParents = {};
+            const childParentUuids = new Set();
+            for (const change of dataChanges) {
+                if (change.isCombo) {
+                    comboParents[change.uuid] = change;
                 }
-                acc[name].data.push(c);
-                return acc;
-            }, {});
-            changes.groupedData = Object.values(groupedData).sort((a, b) => a.index - b.index);
+                if (change.combo_parent_uuid) {
+                    childParentUuids.add(change.combo_parent_uuid);
+                }
+            }
+
+            const groupedData = new Map();
+            for (const c of dataChanges) {
+                if (c.isCombo && childParentUuids.has(c.uuid)) {
+                    continue;
+                }
+                const { name = "", index = Infinity, categ_id } = c.group || {};
+                // Distinct categories may share a name, so key them by id.
+                const key = categ_id || name;
+                if (!groupedData.has(key)) {
+                    groupedData.set(key, { name, index, data: [] });
+                }
+                groupedData.get(key).data.push(c);
+            }
+
+            for (const group of groupedData.values()) {
+                const seenParents = new Set();
+                for (let i = 0; i < group.data.length; i++) {
+                    const line = group.data[i];
+                    const parentUuid = line.combo_parent_uuid;
+                    if (parentUuid && !seenParents.has(parentUuid) && comboParents[parentUuid]) {
+                        seenParents.add(parentUuid);
+                        group.data.splice(i, 0, { ...comboParents[parentUuid] });
+                        i++;
+                    }
+                }
+            }
+
+            changes.groupedData = [...groupedData.values()].sort((a, b) => a.index - b.index);
         }
         return changes;
     }

@@ -11,6 +11,11 @@ class PosOrderReceipt(models.AbstractModel):
     def _is_item_count_excluded_line(self, line):
         return super()._is_item_count_excluded_line(line) or line.is_reward_line
 
+    def _get_receipt_lines(self):
+        lines = super()._get_receipt_lines()
+        reward_lines = lines.filtered('is_reward_line')
+        return (lines - reward_lines) + reward_lines
+
     def order_receipt_generate_data(self, basic_receipt=False):
         """Add the loyalty points summary and issued-coupon barcodes to the receipt.
 
