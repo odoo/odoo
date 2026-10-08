@@ -45,6 +45,8 @@ export class MonetaryField extends Component {
             getValue: () => this.formattedValue,
             ref: this.numpadDecimalRef,
             parse: (v) => parseFloat(v, { allowOperation: true }),
+            preview: (v) => this.formatValue(v),
+            previewOnlyFormula: true,
         };
     }
 
@@ -85,7 +87,11 @@ export class MonetaryField extends Component {
         if (this.props.inputType === "number" && !this.props.readonly && this.value) {
             return this.value;
         }
-        return formatMonetary(this.value, {
+        return this.formatValue(this.value);
+    }
+
+    formatValue(value) {
+        return formatMonetary(value, {
             digits: this.currencyDigits,
             minDigits:
                 this.props.useFieldDigits &&
