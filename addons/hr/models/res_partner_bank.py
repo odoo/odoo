@@ -36,7 +36,7 @@ class ResPartnerBank(models.Model):
     def _compute_employee_id(self):
         for bank in self:
             if bank.partner_id.employee:
-                bank.employee_id = bank.partner_id.employee_ids.filtered(lambda e: e.company_id in self.env.companies)[:1]
+                bank.employee_id = bank.partner_id.sudo().employee_ids.filtered(lambda e: e.company_id in self.env.companies)[:1]
             else:
                 bank.employee_id = False
 
