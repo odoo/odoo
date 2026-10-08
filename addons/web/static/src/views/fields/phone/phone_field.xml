@@ -4,7 +4,7 @@
     <t t-name="web.PhoneField">
         <div class="d-inline-flex align-items-baseline w-100">
             <t t-if="this.props.readonly">
-                <span t-out="this.props.record.data[this.props.name]"/>
+                <span class="o_force_ltr" t-out="this.props.record.data[this.props.name]"/>
                 <t t-call="web.PhoneFieldActions"/>
             </t>
             <t t-else="">
