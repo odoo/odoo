@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website_sale.Configurator.EcomStyleSelectionScreen">
+        <div class="o_configurator_screen o_wsale_configurator_screen h-100 d-flex flex-column o_theme_selection_screen">
+            <div class="o_configurator_screen_content flex-grow-1 pb-2">
+                <div class="container-fluid px-3 px-xl-5">
+                    <h1 class="mb-2 mb-xxl-3 pt-3 text-center o_configurator_typing_text">
+                        <t t-out="0"/>
+                    </h1>
+                    <div class="grid gap-2 gap-sm-3 gap-lg-4 mt-2">
+                        <t t-foreach="styles" t-as="style" t-key="style_index">
+                            <div class="g-col-12 g-col-sm-6 g-col-lg-4">
+                                <div class="theme_preview o_configurator_show_fast rounded position-relative mt-3 mt-lg-0 mb-2 mb-lg-0 text-center">
+                                    <div class="ratio" style="--aspect-ratio: 66%;">
+                                        <div t-if="this.state.hasCatalog and !this.previews.hasFailed(style.preview_url)" class="theme_preview_container rounded overflow-hidden" dir="ltr">
+                                            <div class="o_configurator_theme_preview_loader position-absolute top-0 start-0 end-0 bottom-0 d-flex align-items-center justify-content-center pe-none">
+                                                <span class="spinner-border" role="status"/>
+                                            </div>
+                                            <iframe
+                                                class="o_configurator_theme_preview_iframe position-absolute top-0 start-0 d-block border-0 pe-none"
+                                                sandbox="allow-same-origin"
+                                                t-att-src="this.previews.getUrl(style.preview_url)"
+                                                t-on-load="(ev) => this.previews.onLoad(ev, style.preview_url)"
+                                                t-att-title="style.title"
+                                                loading="lazy"
+                                                scrolling="no"
+                                                tabindex="-1"
+                                            />
+                                        </div>
+                                        <img t-else="" t-attf-src="{{style.img_src}}" class="rounded" role="presentation"/>
+                                    </div>
+                                    <button
+                                        class="o_btn_reset button_area"
+                                        t-on-click="() => this.selectStyle(style.option)"
+                                        t-att-aria-label="style.title"
+                                    />
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

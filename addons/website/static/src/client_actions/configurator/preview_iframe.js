@@ -8,12 +8,16 @@ export const DESKTOP_PREVIEW_WIDTH = 1440;
  *
  * @param {Object} state configurator store
  * @param {string} [themeName]
+ * @param {string} [previewUrl]
  * @returns {string}
  */
-export function getConfiguratorPreviewUrl(state, themeName = "") {
+export function getConfiguratorPreviewUrl(state, themeName = "", previewUrl = "") {
     const url = new URL("/website/configurator/preview", location.origin);
     const palette = state.selectedPalette || {};
     url.searchParams.set("theme_name", themeName);
+    if (previewUrl) {
+        url.searchParams.set("preview_url", previewUrl);
+    }
     url.searchParams.set("industry_id", state.selectedIndustry?.id || -1);
     url.searchParams.set("is_dark", palette.isDark ? "1" : "0");
     for (const colorName of ["color1", "color2", "color3", "color4", "color5"]) {
@@ -42,7 +46,9 @@ export function replacePreviewIframeLogo(iframe, logo) {
     if (!previewDocument) {
         return;
     }
-    const logoImage = previewDocument.querySelector("header img, #top img, .navbar-brand img");
+    const logoImage =
+        previewDocument.querySelector("[preview_logo]") ||
+        previewDocument.querySelector("header img, #top img, .navbar-brand img");
     if (logoImage) {
         logoImage.src = logo;
     }
