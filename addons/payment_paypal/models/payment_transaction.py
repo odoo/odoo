@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import urls
+from odoo.tools import float_repr, urls
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -214,13 +214,97 @@ class PaymentTransaction(models.Model):
         }
         if company_email := self.provider_id.company_id.email:
             payee_data["display_data"]["business_email"] = company_email
+        items = self._paypal_prepare_items_payload()
         return {
             "reference_id": self.reference,
             "description": f"{self.company_id.name}: {self.reference}",
-            "amount": {"currency_code": self.currency_id.name, "value": str(self.amount)},
+            "amount": self._paypal_prepare_amount_payload(items),
+            "items": items,
             "payee": payee_data,
             **shipping_address_vals,
         }
+
+    def _paypal_prepare_amount_payload(self, items):
+        """Prepare the amount payload.
+
+        :param list items: The items payload
+        :return: The amount payload
+        :rtype: dict
+        """
+        currency = self.currency_id
+        amount_vals = {"currency_code": currency.name, "value": str(self.amount)}
+        if not items:
+            return amount_vals
+
+        item_total = sum(
+            float(item["unit_amount"]["value"]) * int(item["quantity"]) for item in items
+        )
+        tax_total = sum(float(item["tax"]["value"]) * int(item["quantity"]) for item in items)
+        discount = currency.round(item_total + tax_total - self.amount) or 0.0
+        amount_vals["breakdown"] = {
+            "item_total": {
+                "currency_code": currency.name,
+                "value": float_repr(item_total, currency.decimal_places),
+            },
+            "tax_total": {
+                "currency_code": currency.name,
+                "value": float_repr(tax_total, currency.decimal_places),
+            },
+            "discount": {
+                "currency_code": currency.name,
+                "value": float_repr(discount, currency.decimal_places),
+            },
+        }
+        return amount_vals
+
+    def _paypal_prepare_items_payload(self):
+        """Prepare the items payload.
+
+        :return: The items payload
+        :rtype: list
+        """
+        currency = self.currency_id
+        line_items = self._get_line_items().values()
+        total = sum(item["subtotal"] + item["tax_amount"] for item in line_items)
+        if currency.compare_amounts(total, self.amount):
+            return []
+
+        items = []
+        for item in line_items:
+            if item["subtotal"] < 0:
+                # not support negative amount
+                continue
+            quantity = item["quantity"]
+            unit_amount = currency.round(item["subtotal"] / quantity) if quantity else 0.0
+            unit_tax_amount = currency.round(item["tax_amount"] / quantity) if quantity else 0.0
+            if (
+                quantity < 1
+                or quantity != int(quantity)
+                or currency.compare_amounts(unit_amount * quantity, item["subtotal"])
+                or currency.compare_amounts(unit_tax_amount * quantity, item["tax_amount"])
+            ):
+                # Only accepts whole quantities whose unit amounts add up to the totals.
+                quantity, unit_amount, unit_tax_amount = 1, item["subtotal"], item["tax_amount"]
+            items.append({
+                "name": item["name"],
+                "description": item["description"],
+                "category": "PHYSICAL_GOODS" if item["category"] == "physical" else "DIGITAL_GOODS",
+                "quantity": str(int(quantity)),
+                "unit_amount": {
+                    "currency_code": currency.name,
+                    "value": float_repr(unit_amount, currency.decimal_places),
+                },
+                "tax": {
+                    "currency_code": currency.name,
+                    "value": float_repr(unit_tax_amount, currency.decimal_places),
+                },
+            })
+            if item.get("url"):
+                items[-1]["url"] = item["url"]
+            # Only accepts HTTPS image URLs ending with an image file extension.
+            if item.get("image_url", "").startswith("https://"):
+                items[-1]["image_url"] = item["image_url"]
+        return items
 
     def _paypal_prepare_payment_source_payload(self, invoice_address_vals, has_shipping):
         """Prepare the payment source of the create order request payload.
@@ -320,6 +404,7 @@ class PaymentTransaction(models.Model):
         """
         return_url, cancel_url = self._paypal_build_return_urls()
         locale = (self.partner_id.lang or self.env.user.lang or "en_US").replace("_", "-")
+        items = self._paypal_prepare_items_payload()
         return {
             "intent": "CAPTURE",
             "processing_instruction": "ORDER_COMPLETE_ON_PAYMENT_APPROVAL",
@@ -328,7 +413,8 @@ class PaymentTransaction(models.Model):
                     "reference_id": self.reference,
                     "custom_id": self.reference,
                     "description": f"{self.company_id.name}: {self.reference}",
-                    "amount": {"currency_code": self.currency_id.name, "value": str(self.amount)},
+                    "amount": self._paypal_prepare_amount_payload(items),
+                    "items": items,
                 }
             ],
             "payment_source": {
