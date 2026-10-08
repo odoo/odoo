@@ -3,7 +3,6 @@ import { AttendeeCalendarCommonRenderer } from "@calendar/views/attendee_calenda
 import { patch } from "@web/core/utils/patch";
 import { renderToFragment } from "@web/core/utils/render";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
-import { useService } from "@web/core/utils/hooks";
 
 /**
  * Render the pending user activities in the Attendee Calendar day, week and month views.
@@ -20,8 +19,6 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
      */
     setup() {
         super.setup(...arguments);
-        this.notification = useService("notification");
-        this.orm = useService("orm");
         this.activityListPopover = useCalendarPopover(AttendeeCalendarActivityListPopover);
     },
 

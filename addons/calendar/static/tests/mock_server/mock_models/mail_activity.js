@@ -22,12 +22,6 @@ export class MailActivity extends mailModels.MailActivity {
     action_reschedule_tomorrow(ids) {
         this.write(ids, { date_deadline: serializeDate(today().plus({ days: 1 })) });
     }
-    unlink_w_meeting() {
-        const eventIds = this.map((act) => act.calendar_event_id);
-        const res = this.unlink(arguments[0]);
-        this.env["calendar.event"].unlink(eventIds);
-        return res;
-    }
 
     _store_activity_fields(res) {
         super._store_activity_fields(res);
