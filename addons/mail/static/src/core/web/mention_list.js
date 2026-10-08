@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, t, useListener, useProps } from "@odoo/owl";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { useService } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
@@ -27,7 +28,8 @@ export class MentionList extends Component {
             type: t.string(),
         });
         this.suggestionService = useService("mail.suggestion");
-        this.anchorRef = signal.ref();
+        this.isMobileOS = isMobileOS();
+        useListener(window, "keydown", (ev) => this.onKeydown(ev), true);
         this.search = useSearch({
             fetch: (term) =>
                 this.suggestionService.fetchSuggestions(
@@ -58,8 +60,7 @@ export class MentionList extends Component {
 
     get navigableListProps() {
         return {
-            anchorRef: this.anchorRef,
-            position: "bottom-fit",
+            closeOnSelect: false, // a click on the search input must not close the list alone
             isLoading: !!this.search.searchTerm && this.search.loading,
             onSelect: (...args) => {
                 this.props.onSelect(...args);
@@ -74,6 +75,7 @@ export class MentionList extends Component {
     onKeydown(ev) {
         switch (ev.key) {
             case "Escape": {
+                ev.stopPropagation();
                 this.props.close();
                 break;
             }
