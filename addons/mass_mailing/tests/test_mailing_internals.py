@@ -789,8 +789,8 @@ class TestMailingHeaders(MassMailCommon, HttpCase):
 
     @users('user_marketing')
     def test_mailing_unsubscribe_headers(self):
-        """ Check unsubscribe headers are present in outgoing emails and work
-        as one-click """
+        """ Check unsubscribe headers are present in outgoing emails, are not
+        folded when sent to the SMTP server and work as one-click """
         test_mailing = self.test_mailing.with_env(self.env)
         test_mailing.action_put_in_queue()
 
@@ -812,6 +812,13 @@ class TestMailingHeaders(MassMailCommon, HttpCase):
             self.assertEqual(headers.get("List-Unsubscribe"), f"<{unsubscribe_oneclick_url}>")
             self.assertEqual(headers.get("List-Unsubscribe-Post"), "List-Unsubscribe=One-Click")
             self.assertEqual(headers.get("Precedence"), "list")
+
+            # check List-Unsubscribe is not folded (no encoded-words) in the message sent to the SMTP server
+            smtp_message = next(
+                sent['message'] for sent in self.emails
+                if sent['smtp_to_list'] == [contact.email_normalized]
+            )
+            self.assertIn(f"List-Unsubscribe: <{unsubscribe_oneclick_url}>\r\n", smtp_message)
 
             # check outgoing email has real links
             self.assertNotIn("/unsubscribe_from_list", email["body"])
