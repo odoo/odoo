@@ -278,7 +278,7 @@ class StockQuant(models.Model):
                 package_id = self.env['stock.package'].browse(vals.get('package_id'))
                 owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
                 quant = self.env['stock.quant']
-                if not self.env.context.get('import_file'):
+                if not self.env.context.get('import_quant_lines'):
                     # Merge quants later, to make sure one line = one record during batch import
                     quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
                 if lot_id:
@@ -318,13 +318,16 @@ class StockQuant(models.Model):
         return quants
 
     def _load_records_create(self, values):
-        """ Add default location if import file did not fill it"""
+        """ Add default location if import file did not fill it, and keep one quant
+        per line only when importing quants directly"""
         company_user = self.env.company
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_user.id)], limit=1)
         for value in values:
             if 'location_id' not in value:
                 value['location_id'] = warehouse.lot_stock_id.id
-        return super(StockQuant, self.with_context(inventory_mode=True))._load_records_create(values)
+        return super(StockQuant, self.with_context(
+            inventory_mode=True, import_quant_lines=self.env.context.get('import_file'),
+        ))._load_records_create(values)
 
     def _load_records_write(self, values):
         """ Only allowed fields should be modified """
