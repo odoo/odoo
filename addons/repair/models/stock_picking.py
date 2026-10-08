@@ -137,8 +137,7 @@ class StockPickingType(models.Model):
         return action
 
     def _get_aggregated_records_by_date(self):
-        repair_picking_types = self.filtered(lambda picking: picking.code == 'repair_operation')
-        other_picking_types = (self - repair_picking_types)
+        repair_picking_types, other_picking_types = self.partitioned(lambda picking: picking.code == 'repair_operation')
 
         records = super(StockPickingType, other_picking_types)._get_aggregated_records_by_date()
         repair_records = self.env['repair.order']._read_group(

@@ -199,14 +199,13 @@ class StockWarehouse(models.Model):
     def _update_resupply_rules(self):
         '''update (archive/unarchive) any warehouse subcontracting location resupply rules'''
         subcontracting_locations = self._get_subcontracting_locations()
-        warehouses_to_resupply = self.filtered(lambda w: w.subcontracting_to_resupply and w.active)
+        warehouses_to_resupply, warehouses_not_to_resupply = self.partitioned(lambda w: w.subcontracting_to_resupply and w.active)
         if warehouses_to_resupply:
             self.env['stock.rule'].with_context(active_test=False).search([
                 '&', ('picking_type_id', 'in', warehouses_to_resupply.subcontracting_resupply_type_id.ids),
                 '|', ('location_src_id', 'in', subcontracting_locations.ids),
                 ('location_dest_id', 'in', subcontracting_locations.ids)]).action_unarchive()
 
-        warehouses_not_to_resupply = self - warehouses_to_resupply
         if warehouses_not_to_resupply:
             self.env['stock.rule'].search([
                 '&', ('picking_type_id', 'in', warehouses_not_to_resupply.subcontracting_resupply_type_id.ids),

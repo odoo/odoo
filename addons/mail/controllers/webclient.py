@@ -125,10 +125,9 @@ class WebclientController(ThreadController):
             model: set(request.env[model].browse(ids).exists().ids)
             for model, ids in found.items()
         }
-        valid = notifications.filtered(
+        valid, lost = notifications.partitioned(
             lambda n: n.mail_message_id.res_id in existing[n.mail_message_id.model]
         )
-        lost = notifications - valid
         # might break readonly status of mail/store, but in really rare cases
         # and solves it by removing useless notifications
         if lost:

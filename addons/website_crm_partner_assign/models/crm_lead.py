@@ -82,8 +82,7 @@ class CrmLead(models.Model):
             set (see method 'assign_geo_localize' and 'search_geo_partner'). So for leads that does not
             have country set, we show the notification, and for the rest, we geo-localize them.
         """
-        leads_with_country = self.filtered(lambda lead: lead.country_id)
-        leads_without_country = self - leads_with_country
+        leads_with_country, leads_without_country = self.partitioned(lambda lead: lead.country_id)
         if leads_without_country:
             self.env.user._bus_send('simple_notification', {
                 'type': 'danger',

@@ -311,8 +311,7 @@ class StockMove(models.Model):
                 move.picked = False
 
     def _inverse_picked(self):
-        picked_moves = self.filtered('picked')
-        not_picked_moves = self - picked_moves
+        picked_moves, not_picked_moves = self.partitioned('picked')
         picked_moves.move_line_ids.picked = True
         not_picked_moves.move_line_ids.picked = False
 
@@ -535,11 +534,9 @@ Please change the quantity done or the rounding precision in your settings.""",
         # Prefetch product info to avoid fetching all product fields
         self.product_id.fetch(['type', 'uom_id'])
 
-        not_product_moves = self.filtered(lambda move: not move.product_id.is_storable)
+        not_product_moves, product_moves = self.partitioned(lambda move: not move.product_id.is_storable)
         for move in not_product_moves:
             move.forecast_availability = move.product_qty
-
-        product_moves = (self - not_product_moves)
 
         outgoing_unreserved_moves_per_warehouse = defaultdict(set)
         now = fields.Datetime.now()

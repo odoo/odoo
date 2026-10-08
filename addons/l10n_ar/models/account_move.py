@@ -82,10 +82,9 @@ class AccountMove(models.Model):
 
     @api.depends('invoice_line_ids', 'invoice_line_ids.product_id', 'invoice_line_ids.product_id.type', 'journal_id')
     def _compute_l10n_ar_afip_concept(self):
-        recs_afip = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.l10n_latam_use_documents)
+        recs_afip, remaining = self.partitioned(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.l10n_latam_use_documents)
         for rec in recs_afip:
             rec.l10n_ar_afip_concept = rec._get_concept()
-        remaining = self - recs_afip
         remaining.l10n_ar_afip_concept = ''
 
     def _get_concept(self):

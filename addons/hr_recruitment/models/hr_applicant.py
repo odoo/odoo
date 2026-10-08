@@ -190,14 +190,13 @@ class HrApplicant(models.Model):
         if not pool_applicants:
             return
 
-        directly_linked = pool_applicants.filtered("pool_applicant_id")
+        directly_linked, indirectly_linked = pool_applicants.partitioned("pool_applicant_id")
         for applicant in directly_linked:
             # All talents(applications with talent_pool_ids set) have a pool_applicant_id set to
             # themselves which is the reason we only look for that instead of searching for all
             # applications with talent_pool_ids and all applications with pool_applicant_id seperately
             applicant.talent_pool_count = len(applicant.pool_applicant_id.talent_pool_ids)
 
-        indirectly_linked = pool_applicants - directly_linked
         if not indirectly_linked:
             return
 

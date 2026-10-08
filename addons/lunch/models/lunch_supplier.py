@@ -180,8 +180,7 @@ class LunchSupplier(models.Model):
             self.env['lunch.order'].search([('supplier_id', 'in', self.ids)]).write({'company_id': values['company_id']})
         res = super().write(values)
         if 'active' in values:
-            active_suppliers = self.filtered(lambda s: s.active)
-            inactive_suppliers = self - active_suppliers
+            active_suppliers, inactive_suppliers = self.partitioned(lambda s: s.active)
             Product = self.env['lunch.product'].with_context(active_test=False)
             Product.search([('supplier_id', 'in', active_suppliers.ids)]).write({'active': True})
             Product.search([('supplier_id', 'in', inactive_suppliers.ids)]).write({'active': False})

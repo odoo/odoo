@@ -12,9 +12,8 @@ class ResourceCalendarLeaves(models.Model):
     timesheet_ids = fields.One2many('account.analytic.line', 'global_leave_id', string="Analytic Lines", export_string_translation=False)
 
     def _get_resource_calendars(self):
-        leaves_with_calendar = self.filtered('calendar_id')
+        leaves_with_calendar, leaves_wo_calendar = self.partitioned('calendar_id')
         calendars = leaves_with_calendar.calendar_id
-        leaves_wo_calendar = self - leaves_with_calendar
         if leaves_wo_calendar:
             calendars += self.env['resource.calendar'].search([
                 ('company_id', 'in', leaves_wo_calendar.company_id.ids + [False]),

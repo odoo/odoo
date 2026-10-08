@@ -724,13 +724,11 @@ class HrEmployee(models.Model):
                         counter['data'][allocation]['remaining_leaves'] -= allocated_time
                     return remaining - allocated_time
 
-                allocations_with_date_to = allocations_per_employee_type[employee][work_entry_type].filtered('date_to')
-                allocations_without_date_to = allocations_per_employee_type[employee][work_entry_type] - allocations_with_date_to
+                allocations_with_date_to, accrual_allocations, other_allocations = allocations_per_employee_type[employee][work_entry_type].partitioned(
+                    'date_to', 'accrual_plan_id',
+                )
                 # Defines the order in which allocation will be used to take the leaves in priority
-                sorted_leave_allocations = (
-                    allocations_with_date_to.sorted(key='date_to') +
-                    allocations_without_date_to.filtered('accrual_plan_id') +
-                    allocations_without_date_to.filtered(lambda alloc: not alloc.accrual_plan_id))
+                sorted_leave_allocations = allocations_with_date_to.sorted(key='date_to') + accrual_allocations + other_allocations
 
                 for leave in leaves_per_employee_type[employee][work_entry_type].sorted('date_from'):
                     if leave.date_from.date() > target_date and sorted_leave_allocations.filtered(lambda a:

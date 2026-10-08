@@ -248,11 +248,10 @@ class AccountMove(models.Model):
     def _is_end_of_seq_chain(self):
         """Normalize LK batch keys to journal_code only, so invoices from
         different months but the same journal are grouped together."""
-        lk_records = self.filtered(lambda m: m[m._sequence_field] and m._l10n_lk_use_tax_invoice_sequence())
+        lk_records, standard_records = self.partitioned(lambda m: m[m._sequence_field] and m._l10n_lk_use_tax_invoice_sequence())
         if not lk_records:
             return super()._is_end_of_seq_chain()
 
-        standard_records = self - lk_records
         if standard_records and not super(AccountMove, standard_records)._is_end_of_seq_chain():
             return False
 

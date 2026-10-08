@@ -116,10 +116,9 @@ class BaseDocumentLayout(models.TransientModel):
         # EXTENDS 'web' - Re-trigger preview rendering when invoice-specific fields change.
 
         # Safely route any non-account wizards to the base method.
-        non_account_wizards = self.filtered(lambda w: not w._is_account_layout_configurator())
+        non_account_wizards, account_wizards = self.partitioned(lambda w: not w._is_account_layout_configurator())
         super(BaseDocumentLayout, non_account_wizards)._compute_preview()
 
-        account_wizards = self - non_account_wizards
         if not account_wizards:
             return
 

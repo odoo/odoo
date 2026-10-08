@@ -52,8 +52,7 @@ class MailCannedResponse(models.Model):
     @api.depends_context('uid')
     @api.depends("create_uid")
     def _compute_is_editable(self):
-        creating = self.filtered(lambda c: not c.id)
-        updating = self - creating
+        creating, updating = self.partitioned(lambda c: not c.id)
         editable = creating._filtered_access("create") + updating._filtered_access("write")
         editable.is_editable = True
         (self - editable).is_editable = False
