@@ -15,10 +15,20 @@ export class SearchMessageResult extends Component {
     static props = ["thread", "messageSearch", "onClickJump?"];
 
     get MESSAGE_FOUND() {
-        if (this.props.messageSearch.messages.length === 0) {
+        const count = this.props.messageSearch.messages.length;
+        if (count === 0) {
             return false;
         }
-        return _t("%s messages found", this.props.messageSearch.count);
+        if (count === 1) {
+            return _t("1 message found");
+        }
+        if (this.props.messageSearch.loadMore) {
+            return _t(
+                "Showing the first %(count)s messages found. Narrow your search or scroll to see more.",
+                { count }
+            );
+        }
+        return _t("%s messages found", count);
     }
 
     onLoadMoreVisible() {
