@@ -17,6 +17,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { formatFloat } from "@web/core/utils/numbers";
 import { useDebounced } from "@web/core/utils/timing";
 import { Model } from "@web/model/model";
+import { getFieldsSpec } from "@web/model/relational_model/utils";
 import { computeAggregatedValue } from "@web/views/utils";
 
 const { DateTime } = luxon;
@@ -684,11 +685,12 @@ export class CalendarModel extends Model {
     async fetchEventsToSchedule(params) {
         const { data, limit } = params;
         const domain = this.computeEventsToScheduleDomain(data);
+        const { activeFields, fields } = this.meta.schedulecard;
         const result = await this.orm.webSearchRead(
             this.resModel,
             domain.toList(this.meta.context),
             {
-                specification: { display_name: {} },
+                specification: getFieldsSpec(activeFields, fields),
                 limit: limit || 20,
             }
         );

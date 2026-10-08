@@ -22,6 +22,8 @@ import { getLocalYearAndWeek } from "@web/core/l10n/dates";
 
 import { Component, proxy, t, useProps } from "@odoo/owl";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
+import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { omit } from "@web/core/utils/objects";
 
 const { DateTime } = luxon;
 
@@ -102,14 +104,24 @@ export class CalendarController extends Component {
     }
 
     get modelParams() {
+        // extract fields from schedulecard and force display_name: it is used as title
+        // when dragging the records and when opening them in a dialog
+        const { schedulecardArchInfo } = this.props.archInfo;
+        const { activeFields, fields } = extractFieldsFromArchInfo(
+            schedulecardArchInfo,
+            this.props.fields
+        );
+        addFieldDependencies(activeFields, fields, [{ name: "display_name", type: "char" }]);
+
         return {
-            ...this.props.archInfo,
+            ...omit(this.props.archInfo, "schedulecardArchInfo"),
             canScheduleEvents: this.canScheduleEvents,
             resModel: this.props.resModel,
             domain: this.props.domain,
             fields: this.props.fields,
             date: this.props.state?.date,
             loadSurroundings: hasTouch(),
+            schedulecard: { archInfo: schedulecardArchInfo, activeFields, fields },
         };
     }
 
