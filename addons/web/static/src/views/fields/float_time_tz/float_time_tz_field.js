@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 import { FloatTimeField, floatTimeField } from "@web/views/fields/float_time/float_time_field";
 import { user } from "@web/core/user";
-import { formatFloatTime } from "../formatters";
 
 const { DateTime } = luxon;
 
@@ -33,12 +32,12 @@ export class FloatTimeTzField extends FloatTimeField {
         return this.wrap(super.parseValue(value) - this.offset);
     }
 
+    formatValue(value) {
+        return super.formatValue(this.wrap(value + this.offset));
+    }
+
     get formattedValue() {
-        const value = this.props.record.data[this.props.name];
-        if (value === false) {
-            return "";
-        }
-        return formatFloatTime(this.wrap(value + this.offset), this.formatOptions);
+        return this.value === false ? "" : this.formatValue(this.value);
     }
 }
 

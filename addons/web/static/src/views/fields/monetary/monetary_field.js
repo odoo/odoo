@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { formatMonetary } from "../formatters";
 import { parseFloat } from "../parsers";
 import { useInputField } from "../input_field_hook";
+import { useInputPreview } from "../input_preview_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { nbsp } from "@web/core/utils/strings";
@@ -26,7 +27,13 @@ export class MonetaryField extends Component {
     numpadDecimalRef = signal.ref();
 
     setup() {
-        this.inputRef = useInputField(this.inputOptions);
+        const inputOptions = this.inputOptions;
+        this.inputRef = useInputField(inputOptions);
+        useInputPreview({
+            ...inputOptions,
+            format: (v) => this.formatValue(v),
+            onlyFormula: true,
+        });
         this.state = proxy({ value: undefined });
         this.nbsp = nbsp;
         useNumpadDecimal(this.numpadDecimalRef);
@@ -85,7 +92,11 @@ export class MonetaryField extends Component {
         if (this.props.inputType === "number" && !this.props.readonly && this.value) {
             return this.value;
         }
-        return formatMonetary(this.value, {
+        return this.formatValue(this.value);
+    }
+
+    formatValue(value) {
+        return formatMonetary(value, {
             digits: this.currencyDigits,
             minDigits:
                 this.props.useFieldDigits &&

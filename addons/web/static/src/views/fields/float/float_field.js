@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useInputField } from "../input_field_hook";
+import { useInputPreview } from "../input_preview_hook";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { formatFloat } from "../formatters";
 import { parseFloat } from "../parsers";
@@ -35,7 +36,23 @@ export class FloatField extends Component {
             ref: this.numpadDecimalRef,
             parse: (v) => this.parse(v),
         });
+        useInputPreview({
+            ref: this.numpadDecimalRef,
+            getValue: () => this.formattedValue,
+            parse: (v) => this.parse(v),
+            format: (v) => formatFloat(v, this.getFormatOptions()),
+            onlyFormula: true,
+        });
         useNumpadDecimal(this.numpadDecimalRef);
+    }
+
+    getFormatOptions() {
+        return {
+            digits: this.props.digits,
+            minDigits: this.props.minDigits,
+            field: this.props.record.fields[this.props.name],
+            trailingZeros: this.props.trailingZeros,
+        };
     }
 
     onFocusIn() {
@@ -59,12 +76,7 @@ export class FloatField extends Component {
         ) {
             return this.value;
         }
-        const options = {
-            digits: this.props.digits,
-            minDigits: this.props.minDigits,
-            field: this.props.record.fields[this.props.name],
-            trailingZeros: this.props.trailingZeros,
-        };
+        const options = this.getFormatOptions();
         if (this.props.humanReadable && !this.state.hasFocus) {
             return formatFloat(this.value, {
                 ...options,

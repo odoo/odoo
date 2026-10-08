@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { formatInteger } from "../formatters";
 import { parseInteger } from "../parsers";
 import { useInputField } from "../input_field_hook";
+import { useInputPreview } from "../input_preview_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 
@@ -33,6 +34,13 @@ export class IntegerField extends Component {
             getValue: () => this.formattedValue,
             ref: this.numpadDecimalRef,
             parse: (v) => parseInteger(v, { allowOperation: true }),
+        });
+        useInputPreview({
+            ref: this.numpadDecimalRef,
+            getValue: () => this.formattedValue,
+            parse: (v) => parseInteger(v, { allowOperation: true }),
+            format: (v) => formatInteger(v),
+            onlyFormula: true,
         });
         useNumpadDecimal(this.numpadDecimalRef);
     }
