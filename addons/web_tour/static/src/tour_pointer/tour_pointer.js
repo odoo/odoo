@@ -209,7 +209,14 @@ export class TourPointer extends Component {
                     pointerAnchor.ownerDocument !== document
                         ? pointerAnchor.ownerDocument.defaultView?.frameElement
                         : pointerAnchor;
-                this.state.triggerBelow = frameEl ? !activeEl.contains(frameEl) : true;
+                const frameOverlay = frameEl?.closest(".o-overlay-item");
+                const isInFrontOverlay =
+                    frameOverlay &&
+                    activeEl.closest?.(".o-overlay-item")?.compareDocumentPosition(frameOverlay) &
+                        Node.DOCUMENT_POSITION_FOLLOWING;
+                this.state.triggerBelow = frameEl
+                    ? !activeEl.contains(frameEl) && !isInFrontOverlay
+                    : true;
             }
         };
         useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
