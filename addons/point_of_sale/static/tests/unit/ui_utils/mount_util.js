@@ -5,6 +5,7 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 
 export async function mountPosApp(store) {
     store.session.state = "opened";
+    store.session.default_preset_id = store.config.default_preset_id;
     await mountWithCleanup(Chrome, { props: { disableLoader: () => {} } });
     await tick();
     await animationFrame();
