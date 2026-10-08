@@ -287,7 +287,7 @@ class AccountJournal(models.Model):
 
     incoming_einvoice_notification_email = fields.Char(  # no longer incoming-specific, rename in master
         string="Send Copy To",
-        help="Email addresses that will receive copy for sent and received invoices. Separate entries with ';'.",
+        help="Email addresses that should receive invoices copy/return reminders. Separate entries with ';'.",
     )
 
     _code_company_uniq = models.Constraint(
