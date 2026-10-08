@@ -23,7 +23,6 @@ from . import test_mail_presence
 from . import test_mail_render
 from . import test_mail_template
 from . import test_mail_tools
-from . import test_models
 from . import test_res_config_settings
 from . import test_res_partner
 from . import test_res_role
