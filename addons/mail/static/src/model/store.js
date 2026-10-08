@@ -29,25 +29,26 @@ export class Store extends Record {
      * consistent once the whole update is done. Until then:
      * - A computed field keeps its last value rather than computing one from
      *   half written data (`isUpdateInProgress`).
-     * - The computes and the record deletions that the writes ask for wait
-     *   in `FC_QUEUE` and `RD_QUEUE`, to run once at the end.
-     * - An immediate onChange waits for the update and its queues to be done
-     *   (`isDrainingQueues`), so it sees the final values.
+     * - The record deletions that the writes ask for wait in `RD_QUEUE`, to
+     *   run once at the end.
+     * - An immediate onChange waits in `OC_QUEUE`, run after the deletions,
+     *   so it sees the final values.
      * - An error does not leave the store in the middle of an update: it goes
      *   to `ERRORS`, the update still ends, and then the first error is thrown.
      *
      * An update started inside another update joins the outer one (`UPDATE`,
      * `updateDepth`): only the outermost update runs the queues.
      *
-     * A write made while the queues drain does not raise `updateDepth`:
-     * immediate onChanges still wait for `isDrainingQueues`, computeds
+     * A write of a record deletion does not raise `updateDepth`: computeds
      * already run unheld between its writes, and raising it would wake every
-     * waiter twice per write.
+     * held computed twice per write. A write of a queued onChange raises it,
+     * as its callback may insert records that other computeds read.
      *
      * @param {() => any} fn
      */
     MAKE_UPDATE(fn) {
-        const isDrainWrite = this._.UPDATE !== 0 && untrack(this._.isDrainingQueues);
+        const isDrainWrite =
+            this._.UPDATE !== 0 && untrack(this._.isDrainingQueues) && !this._.isRunningOnChanges;
         if (!isDrainWrite) {
             this._.raiseUpdateDepth();
         }
@@ -68,19 +69,9 @@ export class Store extends Record {
         if (this._.UPDATE === 0) {
             // pretend an increased update cycle so that nothing in queue creates many small update cycles
             this._.UPDATE++;
-            while (this._.FC_QUEUE.size > 0 || this._.RD_QUEUE.size > 0) {
-                const FC_QUEUE = new Map(this._.FC_QUEUE);
+            while (this._.RD_QUEUE.size > 0 || this._.OC_QUEUED.size > 0) {
                 const RD_QUEUE = new Map(this._.RD_QUEUE);
-                this._.FC_QUEUE.clear();
                 this._.RD_QUEUE.clear();
-                while (FC_QUEUE.size > 0) {
-                    /** @type {[Record, Map<string, true>]} */
-                    const [record, recMap] = FC_QUEUE.entries().next().value;
-                    FC_QUEUE.delete(record);
-                    for (const fieldName of recMap.keys()) {
-                        record._.requestCompute(fieldName, { force: true });
-                    }
-                }
                 while (RD_QUEUE.size > 0) {
                     /** @type {Record} */
                     const record = RD_QUEUE.keys().next().value;
@@ -107,7 +98,15 @@ export class Store extends Record {
                         recordList._.syncLength();
                     }
                 }
+                // One at a time, so that what it queues and deletes runs before the next one.
+                const runOnChange = this._.nextOnChange();
+                if (runOnChange) {
+                    this._.isRunningOnChanges = true;
+                    runOnChange();
+                    this._.isRunningOnChanges = false;
+                }
             }
+            this._.OC_QUEUE.splice(1);
             this._.UPDATE--;
             this._.isDrainingQueues.set(false);
             if (this._.ERRORS.length) {

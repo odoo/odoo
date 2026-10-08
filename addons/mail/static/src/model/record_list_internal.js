@@ -107,9 +107,6 @@ export class RecordListInternal {
             self.syncLength();
         });
     }
-    computeField() {
-        this.owner._.compute(this.name, { fromInNeed: true });
-    }
     /**
      * Version of delete() that does not update the inverse.
      * This is internally called when inserting (with intent to delete)
@@ -187,15 +184,6 @@ export class RecordListInternal {
             recordList._store[targetModel].insert(val);
         }
         return newRecord;
-    }
-    isComputeField() {
-        return this.owner.Model._.fieldsCompute.get(this.name);
-    }
-    isComputeOnNeed() {
-        return this.owner._.fieldsComputeOnNeed.get(this.name);
-    }
-    isEager() {
-        return this.owner.Model._.fieldsEager.get(this.name);
     }
     isOne() {
         return this.owner.Model._.fieldsOne.get(this.name);
@@ -288,16 +276,7 @@ export class RecordListInternal {
     }
     /** @returns {Record[]} */
     records() {
-        if (this.isComputeField() && !this.isEager()) {
-            this.setComputeInNeed();
-            if (this.isComputeOnNeed()) {
-                this.computeField();
-            }
-        }
         return this.data();
-    }
-    setComputeInNeed() {
-        this.owner._.fieldsComputeInNeed.set(this.name, true);
     }
     /**
      * Sync the data length with the array length, as to not introduce confusion while debugging

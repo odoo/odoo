@@ -17,6 +17,14 @@ export class DiscussChannel extends Record {
     static _name = "discuss.channel";
     static _inherits = { "mail.thread": "thread" };
 
+    static preinsert() {
+        /** @type {import("models").DiscussChannel} */
+        const channel = super.preinsert(...arguments);
+        // Create the thread first, as the thread fields of the payload are written to it.
+        channel.thread ??= { id: channel.id, model: "discuss.channel" };
+        return channel;
+    }
+
     setup() {
         super.setup(...arguments);
         this.onEnter(
@@ -40,12 +48,19 @@ export class DiscussChannel extends Record {
         );
         this.onChange(
             () => [this.self_member_id],
-            (self_member_id) => {
-                if (!self_member_id) {
-                    this.onPinStateUpdated();
-                }
-            },
+            () => this.onPinStateUpdated(),
             { immediate: true, initialRun: false }
+        );
+        this.onChange(
+            () => [this.computeIsDisplayed() ? this.store : null],
+            (storeAsDisplayedChannels) =>
+                (this.storeAsDisplayedChannels = storeAsDisplayedChannels),
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.self_member_id?.is_favorite ? this.store : null],
+            (storeAsFavoriteChannels) => (this.storeAsFavoriteChannels = storeAsFavoriteChannels),
+            { immediate: true }
         );
         // Handles subscriptions for non-members. Subscriptions for channels
         // that the user is a member of are handled by
@@ -564,24 +579,9 @@ export class DiscussChannel extends Record {
     );
     self_member_id = fields.One("discuss.channel.member", { inverse: "channelAsSelf" });
     /** ⚠️ {@link AwaitChatHubInit} */
-    storeAsDisplayedChannels = fields.One("Store", {
-        compute() {
-            return this.computeIsDisplayed() ? this.store : null;
-        },
-        inverse: "displayedChannels",
-    });
-    storeAsFavoriteChannels = fields.One("Store", {
-        compute() {
-            return this.self_member_id?.is_favorite ? this.store : null;
-        },
-        inverse: "favoriteChannels",
-    });
-    thread = fields.One("mail.thread", {
-        compute() {
-            return { id: this.id, model: "discuss.channel" };
-        },
-        inverse: "channel",
-    });
+    storeAsDisplayedChannels = fields.One("Store", { inverse: "displayedChannels" });
+    storeAsFavoriteChannels = fields.One("Store", { inverse: "favoriteChannels" });
+    thread = fields.One("mail.thread", { inverse: "channel" });
     // Start with `not_member` not to trigger a subscription if the user is not a member
     // initially, only when switching from `member_xxx` to `not_member` following a leave.
     typingMembers = fields.Many("discuss.channel.member", { inverse: "channelAsTyping" });
