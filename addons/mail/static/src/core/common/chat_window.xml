@@ -52,18 +52,6 @@
             <div class="d-flex flex-shrink-0 me-1">
                 <ActionList actions="this.quickActionsList" inline="true" actionComponent.bind="this.getActionComponent"/>
             </div>
-            <t t-if="this.store.inPublicPage and !this.store.self_user">
-                <button class="btn ps-1" t-if="!this.state.editingGuestName">
-                    <img class="o-mail-DiscussContent-selfAvatar rounded-circle object-fit-cover flex-shrink-0" alt="Avatar" t-att-src="this.store.self.avatarUrl" t-on-click="() => this.state.editingGuestName = true"/>
-                </button>
-                <AutoresizeInput
-                    t-if="this.state.editingGuestName"
-                    className="'py-1 me-2'"
-                    autofocus="true"
-                    onValidate.bind="this.renameGuest"
-                    value="this.selfGuestName"
-                />
-            </t>
         </div>
         <div t-if="!this.props.chatWindow.folded or this.ui.isSmall()" class="d-flex flex-column h-100 overflow-auto o-scrollbar-thin position-relative bg-inherit" t-att-class="{ 'opacity-50': this.editingName() }" t-ref="this.chatWindowContentRef">
             <t name="thread content">

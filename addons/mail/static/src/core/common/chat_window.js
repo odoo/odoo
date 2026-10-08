@@ -63,7 +63,6 @@ export class ChatWindow extends Component {
         this.state = proxy({
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
-            editingGuestName: false,
         });
         this.ui = usePlugin(UIPlugin);
         this.chatWindowContentRef = signal.ref(HTMLDivElement);
@@ -79,7 +78,6 @@ export class ChatWindow extends Component {
         this.actionsMenuButtonHover = useHover(this.actionsMenuButtonRef);
         this.parentChannelHover = useHover(this.parentChannelRef);
         this.isMobileOS = isMobileOS();
-        this.selfGuestName = computed(() => this.store.self_guest?.name);
         this.channelDisplayName = computed(() => this.props.chatWindow.channel?.displayName);
         useBackButton(() => this.close());
     }
@@ -223,14 +221,6 @@ export class ChatWindow extends Component {
     async renameChannel(name) {
         await this.channel.rename(name);
         this.editingName.set(false);
-    }
-
-    async renameGuest(name) {
-        const newName = name.trim();
-        if (this.store.self_guest.name !== newName) {
-            await this.store.self_guest.updateGuestName(newName);
-        }
-        this.state.editingGuestName = false;
     }
 
     async onActionsMenuStateChanged(isOpen) {

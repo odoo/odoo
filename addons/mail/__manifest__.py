@@ -240,6 +240,8 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/tests/tours/discuss_channel_call_public_tour.js',
             'mail/static/tests/tours/discuss_sidebar_in_public_page_tour.js',
             'mail/static/tests/tours/discuss_channel_meeting_view_tour.js',
+            'mail/static/tests/tours/discuss_public_self_menu_mobile_tour.js',
+            'mail/static/tests/tours/discuss_public_self_menu_portal_tour.js',
         ],
         # Unit test files
         'web.assets_unit_tests': [
@@ -303,6 +305,17 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/discuss/**/public_web/**/*',
             'mail/static/src/discuss/**/public/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.css'),
+        ],
+        'mail.assets_public_dark': [
+            ('include', 'mail.assets_public'),
+            'web/static/src/core/**/*.dark.scss',
+            # removed from html_editor.assets_editor, which the composer uses
+            'html_editor/static/src/**/*.dark.css',
+            # ensure core.dark.scss before any other style
+            'mail/static/src/core/common/core.dark.scss',
+            'mail/static/src/**/common/**/*.dark.scss',
+            'mail/static/src/**/common/**/*.dark.css',
+            'mail/static/src/**/public_web/**/*.dark.css',
         ],
         'mail.assets_markdown': [
             'mail/static/src/markdown_assets/mail_markdown_assets.css',

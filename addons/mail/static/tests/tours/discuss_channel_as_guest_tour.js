@@ -28,6 +28,26 @@ registry.category("web_tour.tours").add("discuss_channel_as_guest_tour.js", {
         {
             content: "Check that we are on channel page",
             trigger: ".o-mail-Thread",
+        },
+        {
+            trigger: ".o-mail-PublicSelfMenu-toggler:has(.o-mail-PublicSelfMenu-name:text(Guest))",
+            run: "click",
+        },
+        {
+            content: "Rename the guest from the self menu",
+            trigger: ".o-mail-PublicSelfMenu-guestName",
+            run: "edit Guest Luigi && press Enter",
+        },
+        {
+            trigger:
+                ".o-mail-PublicSelfMenu-toggler:has(.o-mail-PublicSelfMenu-name:text(Guest Luigi))",
+            run: "click",
+        },
+        {
+            trigger: "body:not(:has(.o-mail-PublicSelfMenu))",
+        },
+        {
+            trigger: ".o-mail-Thread",
             run: "press ctrl+k",
         },
         {
