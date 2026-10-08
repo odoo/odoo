@@ -67,6 +67,12 @@ export class Store extends BaseStore {
      * public page.
      */
     inPublicPage = false;
+    /**
+     * Color scheme of the public page, false when it cannot be chosen.
+     *
+     * @type {"light"|"dark"|false|undefined}
+     */
+    publicColorScheme;
     /** @type {boolean|undefined} */
     isOdooWhiteTheme;
     odoobot = fields.One("res.partner");
