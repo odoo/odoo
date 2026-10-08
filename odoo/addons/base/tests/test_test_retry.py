@@ -80,6 +80,7 @@ class TestRetryFailures(TestRetryCommon):
         _logger.error('Failure')
 
 
+<<<<<<< d4c333957213f134bb6f295865eb3182d9ec4f4b
 @tagged('test_retry', 'test_retry_success')
 class TestRetryRollbackedCursor(TestRetryCommon, TransactionCase):
     def test_broken_cursor(self):
@@ -119,6 +120,21 @@ class TestRetryCommitedCursorError(TestRetryCommon, TransactionCase):
 
 
 @tagged('test_retry', 'test_retry_success')
+||||||| 2df25c68396510abdb85f9b94ae0ba73f8cb340d
+@tagged('-standard', 'test_retry', 'test_retry_success')
+=======
+@tagged('-standard', 'test_retry', 'test_retry_success')
+class TestRetryTracebackExcInfo(TestRetryCommon):
+
+    def test_retry_traceback_exc_info_success(self):
+        try:
+            raise Exception("Some exception")  # ruff: ignore[raise-vanilla-class, raise-within-try, raw-string-in-exception]
+        except Exception:
+            _logger.warning("Error during browser shutdown", exc_info=True)
+
+
+@tagged('-standard', 'test_retry', 'test_retry_success')
+>>>>>>> 85eabeb5403f9d86e844ac553e834d65cad4f8bc
 class TestRetrySubtest(TestRetryCommon):
 
     def test_retry_subtest_success_one(self):

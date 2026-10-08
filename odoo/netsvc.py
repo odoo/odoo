@@ -175,6 +175,35 @@ class DBFormatter(logging.Formatter):
         record.dbname = getattr(threading.current_thread(), 'dbname', '?')
         return logging.Formatter.format(self, record)
 
+<<<<<<< d4c333957213f134bb6f295865eb3182d9ec4f4b
+||||||| 2df25c68396510abdb85f9b94ae0ba73f8cb340d
+    def formatMessage(self, record):
+        if record.munge_traceback:
+            return super().formatMessage(record).replace(
+                'Traceback (most recent call last):',
+                '_Traceback_ (most recent call last):',
+            )
+        else:
+            return super().formatMessage(record)
+
+
+=======
+    def formatMessage(self, record):
+        if record.munge_traceback:
+            if record.exc_info:
+                record.exc_text = self.formatException(record.exc_info).replace(
+                'Traceback (most recent call last):',
+                '_Traceback_ (most recent call last):',
+            )
+            return super().formatMessage(record).replace(
+                'Traceback (most recent call last):',
+                '_Traceback_ (most recent call last):',
+            )
+        else:
+            return super().formatMessage(record)
+
+
+>>>>>>> 85eabeb5403f9d86e844ac553e834d65cad4f8bc
 class ColoredFormatter(DBFormatter):
     def format(self, record):
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
