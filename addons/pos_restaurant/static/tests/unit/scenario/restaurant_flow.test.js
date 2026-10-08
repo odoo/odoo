@@ -910,6 +910,7 @@ test("test_open_register_with_preset_takeaway: timing popup on table, cancel rem
     const preset = store.models["pos.preset"].get(2);
     preset.attendance_ids = [...preset.attendance_ids, att];
     store.config.default_preset_id = preset;
+    store.session.default_preset_id = preset;
 
     await Utils.clickTable("1");
     await waitFor(".modal .preset-slot-button");
