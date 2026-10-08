@@ -1,5 +1,6 @@
 import { markRaw, EventBus } from "@odoo/owl";
 import { Plugin } from "../plugin";
+import { getSelectionInTree } from "../utils/selection";
 import { EditorOverlay } from "./overlay";
 
 /**
@@ -76,7 +77,7 @@ export class Overlay {
             this.updatePosition();
         } else {
             this.isOpen = true;
-            const selection = this.plugin.editable.ownerDocument.getSelection();
+            const selection = getSelectionInTree(this.plugin.editable);
             let initialSelection;
             if (selection && selection.type !== "None") {
                 const rect = this.plugin.getCustomRect();

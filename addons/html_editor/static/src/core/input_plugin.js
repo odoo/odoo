@@ -1,4 +1,5 @@
 import { Plugin } from "../plugin";
+import { getSelectionInTree } from "../utils/selection";
 
 /**
  * @typedef {((ev: InputEvent) => void)[]} on_beforeinput_handlers
@@ -19,7 +20,7 @@ export class InputPlugin extends Plugin {
     }
 
     onKeyDown(ev) {
-        const selection = this.document.getSelection();
+        const selection = getSelectionInTree(this.editable);
         // Some virtual keyboards (e.g. MS SwiftKey) fire keydown events with
         // key === "Unidentified" before a `beforeinput` event. At that point,
         // `document.getSelection()` reflects the correct caret position, but
@@ -62,7 +63,7 @@ export class InputPlugin extends Plugin {
 
     updateCachedSelection() {
         if (this.dependencies.selection.getCachedSelection()) {
-            const selection = this.document.getSelection();
+            const selection = getSelectionInTree(this.editable);
             // A selection snapshot may already have been cached during
             // `keydown` to work around virtual keyboards that move the DOM
             // selection before `beforeinput`. Since `undo()` can also modify
