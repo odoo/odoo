@@ -14,7 +14,13 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { hover } from "@odoo/hoot-dom";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
-import { mockService, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import {
+    getService,
+    mockService,
+    onRpc,
+    patchWithCleanup,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
@@ -624,6 +630,32 @@ test("chatter 'activity' button open the activity schedule wizard", async () => 
     });
     await click("button:text('Activity')");
     await expect.waitForSteps(["doAction"]);
+});
+
+test("activity of type email: 'Send' opens the email composer", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const emailTypeId = pyEnv["mail.activity.type"].find((r) => r.name === "Email").id;
+    pyEnv["mail.activity"].create({
+        activity_type_id: emailTypeId,
+        can_write: true,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    mockService("action", {
+        async doAction(action) {
+            if (action?.res_model === "mail.compose.message") {
+                expect.step(`doAction ${action.name}`);
+                return;
+            }
+            return super.doAction(...arguments);
+        },
+    });
+    await start();
+    getService("mail.store").emailActivityTypeId = emailTypeId;
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Activity-composeEmail");
+    await expect.waitForSteps(["doAction Compose Email"]);
 });
 
 test("Activity avatar should have a unique timestamp", async () => {
