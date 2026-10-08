@@ -3,6 +3,7 @@
 
 import argparse
 import logging
+import os
 import signal
 import subprocess
 import time
@@ -21,14 +22,13 @@ logger.addHandler(handler)
 
 IOTBOX_IMAGE = "iotbox.img"
 IOTBOX_VERSION = datetime.now().strftime('%Y.%m.%0d')
-RASPI_IMAGE = "2025-10-01-raspios-trixie-armhf-lite.img.xz"
-RASPI_IMAGE_URl = f"https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-2025-10-02/{RASPI_IMAGE}"
+RASPI_IMAGE = "2026-10-06-raspios-trixie-armhf-lite.img.xz"
+RASPI_IMAGE_URl = f"https://downloads.raspberrypi.com/raspios_lite_armhf/images/raspios_lite_armhf-2026-10-06/{RASPI_IMAGE}"
 BUILD_DIR = "/iot_build"
 RASPI_PATH = f"{BUILD_DIR}/rpi/images"
 BOX_MOUNT_POINT = "/iot_build/mnt"
 IOTBOX_PATH = f"{RASPI_PATH}/{IOTBOX_IMAGE}"
 SYSTEM_INCREASE_MiB = 2816
-SYSTEM_INCREASE_AMOUNT_SECTORS = SYSTEM_INCREASE_MiB * 2048
 QEMU_ARM_STATIC = "/usr/bin/qemu-arm-static"
 BEFORE_INIT_FILES = Path(__file__).parent / 'overwrite_before_init'
 BUILD_UTILS_FILES = Path(__file__).parent / 'build_utils'
@@ -51,6 +51,7 @@ class KvmIotBuilder:
         kvm_cmd = [
             "kvm",
             "-cpu", "host",
+            "-smp", str(os.cpu_count()),
             "-nic", "user,model=virtio-net-pci,mac=52:54:00:d6:ad:96,hostfwd=tcp:127.0.0.1:10242-:10242",
             "-m", "8192",
             "-drive", f"if=virtio,file={self.image},snapshot=on",
@@ -71,15 +72,20 @@ class KvmIotBuilder:
             self.kvm_proc.terminate()
             time.sleep(2)
 
-    def sync_files(self):
+    def rsync(self, src, dest, *options):
         identity_options = f' -i {self.ssh_key}' if self.ssh_key else ''
-        rsync_cmd = [
+        subprocess.run([
             'rsync',
             '-e', 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10242' + identity_options,
             '-aq',
-        ]
-        subprocess.run(rsync_cmd + [f'{BEFORE_INIT_FILES}', f'{self.login}@127.0.0.1:{BUILD_DIR}'], check=True)
-        subprocess.run(rsync_cmd + [f'{BUILD_UTILS_FILES}', f'{self.login}@127.0.0.1:{BUILD_DIR}'], check=True)
+            *options,
+            src,
+            dest,
+        ], check=True)
+
+    def sync_files(self):
+        self.rsync(f'{BEFORE_INIT_FILES}', f'{self.login}@127.0.0.1:{BUILD_DIR}')
+        self.rsync(f'{BUILD_UTILS_FILES}', f'{self.login}@127.0.0.1:{BUILD_DIR}')
 
     def run(self):
         connect_kwargs = {"key_filename": self.ssh_key} if self.ssh_key else None
@@ -93,7 +99,7 @@ class KvmIotBuilder:
             f'[[ -f {RASPI_PATH}/{RASPI_IMAGE} ]] || wget -nc -q {RASPI_IMAGE_URl} -O {RASPI_PATH}/{RASPI_IMAGE}',
             f'unxz {RASPI_PATH}/{RASPI_IMAGE}',
             f'mv {RASPI_PATH}/{RASPI_IMAGE.removesuffix(".xz")} {IOTBOX_PATH}',
-            f'dd if=/dev/zero of={IOTBOX_PATH} bs=512 count={SYSTEM_INCREASE_AMOUNT_SECTORS} status=none conv=notrunc oflag=append',
+            f'truncate -s +{SYSTEM_INCREASE_MiB}M {IOTBOX_PATH}',
             f'sudo growpart {IOTBOX_PATH} 2',
             f'sudo losetup -P /dev/loop0 {IOTBOX_PATH}',
             'ls /dev/loop0*',  # this should show the two mapped partitions loop devices
@@ -103,7 +109,7 @@ class KvmIotBuilder:
             'sudo e2label /dev/loop0p2 iotboxfs',
             # Odoo Clone
             f'mkdir -p {RPI_ODOO_CLONE_DIR}',
-            f'git clone -b {self.args.odoo_branch} --no-local --no-checkout --depth=1 https://github.com/{self.odoo_org}/odoo.git {RPI_ODOO_CLONE_DIR}',
+            f'git clone -b {self.args.odoo_branch} --no-local --no-checkout --depth=1 --filter=blob:none https://github.com/{self.odoo_org}/odoo.git {RPI_ODOO_CLONE_DIR}',
             f'cd {RPI_ODOO_CLONE_DIR} && git config core.sparsecheckout true',
             f'cd {RPI_ODOO_CLONE_DIR} && cat {BUILD_DIR}/build_utils/sparse-checkout >> .git/info/sparse-checkout',
             f'cd {RPI_ODOO_CLONE_DIR} && git read-tree -mu HEAD',
@@ -139,9 +145,9 @@ class KvmIotBuilder:
                 connection.close()
                 time.sleep(5)  # let the time for the connection to properly close
                 self.kvm_proc.terminate()
-        dest_image = f'{self.args.destdir}/iotbox_{IOTBOX_VERSION}.img'
-        connection.get(f'{IOTBOX_PATH}', local=dest_image)
         connection.close()
+        dest_image = f'{self.args.destdir}/iotbox_{IOTBOX_VERSION}.img'
+        self.rsync(f'{self.login}@127.0.0.1:{IOTBOX_PATH}', dest_image, '--sparse')
 
 
 if __name__ == '__main__':

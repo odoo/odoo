@@ -23,7 +23,7 @@ def get_last_stable_odoo_version():
     To be changed whenever a new stable Odoo version is released and
     we are sure that this version is compatible with all db versions.
     """
-    return "saas-19.4"
+    return "20.0"
 
 
 def get_update_day(serial_number):

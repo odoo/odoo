@@ -158,34 +158,44 @@ EOF
 echo iotbox | tee /etc/hostname
 sed -i 's/\braspberrypi/iotbox/g' /etc/hosts
 
-# Remove man pages
-apt-get -y -qq purge man-db
+# KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
+# http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
+apt_options=(
+    -y -qq
+    --no-install-recommends
+    -o Dpkg::Options::="--force-confdef"
+    -o Dpkg::Options::="--force-confold"
+    -o Dpkg::Options::="--force-unsafe-io"
+    -o Acquire::Retries=16
+    -o Acquire::Languages=none
+)
+
+# Remove man pages and the ARMv6 kernel (Pi 1/Zero), IoT Boxes are Pi 3/4/5
+apt-get "${apt_options[@]}" purge man-db '?and(?installed, ?name(^linux-.*-rpi-v6$))'
 
 # add Tailscale apt repository
 curl -fsSL https://pkgs.tailscale.com/stable/raspbian/bullseye.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg > /dev/null
 curl -fsSL https://pkgs.tailscale.com/stable/raspbian/bullseye.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list
 
-apt-get update
+apt-get "${apt_options[@]}" update
 
 # At the first start it is necessary to configure a password
 # This will be modified by a unique password on the first start of Odoo
 password="$(openssl rand -base64 12)"
 echo "pi:${password}" | chpasswd
+# Raspberry Pi OS ships 'pi' with a nologin shell until userconfig sets it up, which we disable
+usermod -s /bin/bash pi
 echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config
 
-# KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
-# http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
+# The chroot root device can't be resolved by mkinitramfs with MODULES=dep
+sed -i 's/^MODULES=.*/MODULES=most/' /etc/initramfs-tools/initramfs.conf
+apt-get "${apt_options[@]}" full-upgrade
 xargs -r -a /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt \
-    apt-get -y -qq \
-    --no-install-recommends \
-    -o Dpkg::Options::="--force-confdef" \
-    -o Dpkg::Options::="--force-confold" \
-    -o Acquire::Retries=16 \
-    install
+    apt-get "${apt_options[@]}" install
 apt-get -y -qq autoremove
 
 apt-get -qq clean
-rm -rfv /usr/share/doc /usr/share/locale/*
+rm -rf /usr/share/doc /usr/share/locale/*
 
 # Remove the default nginx website, we have our own config in /etc/nginx/conf.d/
 rm /etc/nginx/sites-enabled/default
@@ -198,9 +208,12 @@ pip3 install \
 # Create Odoo user for odoo service and disable password login
 adduser --disabled-password --gecos "" --shell /usr/sbin/nologin odoo
 
-# odoo user doesn't need to type its password to run sudo commands
-echo "odoo ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/010_odoo-nopasswd
-chmod 440 /etc/sudoers.d/010_odoo-nopasswd
+# odoo and pi users don't need to type their password to run sudo commands
+# (Raspberry Pi OS no longer ships 010_pi-nopasswd)
+for user in odoo pi; do
+    echo "${user} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/010_${user}-nopasswd"
+    chmod 440 "/etc/sudoers.d/010_${user}-nopasswd"
+done
 
 # copy the odoo.conf file to the overwrite directory
 mv -v "/home/pi/odoo/setup/iot_box_builder/configuration/odoo.conf" "/home/pi/"
