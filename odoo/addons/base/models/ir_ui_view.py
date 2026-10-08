@@ -769,6 +769,16 @@ actual arch.
                 node.set('data-oe-field', 'arch')
         return specs_tree
 
+    def _can_be_branded(self):
+        """
+        The branding is the set of ``data-oe-*`` attributes added by
+        ``inherit_branding`` to tie a node back to the arch it comes from.
+
+        :return: whether the branding may be added on ``self``'s arch
+        :rtype: bool
+        """
+        return self.env.context.get('inherit_branding')
+
     def _add_validation_flag(self, combined_arch, view=None, arch=None):
         """ Add a validation flag on elements in ``combined_arch`` or ``arch``.
         This is part of the partial validation of views.
@@ -880,7 +890,7 @@ actual arch.
         #   4 [6]
         #   6 []
         combined_arch = etree.fromstring(self.arch)
-        if self.env.context.get('inherit_branding'):
+        if self._can_be_branded():
             combined_arch.attrib.update({
                 'data-oe-model': 'ir.ui.view',
                 'data-oe-id': str(self.id),
@@ -899,7 +909,7 @@ actual arch.
         while queue:
             view = queue.popleft()
             arch = etree.fromstring(view.arch)
-            if view.env.context.get('inherit_branding'):
+            if view._can_be_branded():
                 view.inherit_branding(arch)
             self._add_validation_flag(combined_arch, view, arch)
             combined_arch = view.apply_inheritance_specs(combined_arch, arch)
