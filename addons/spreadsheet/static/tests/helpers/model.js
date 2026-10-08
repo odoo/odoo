@@ -17,7 +17,7 @@ import { markRaw } from "@odoo/owl";
 import { makeOwlPluginManager } from "./owl_plugins";
 
 const { ModelStore, globalStores, proxifyStoreMutation, DependencyContainer } = stores;
-const { NotificationPlugin, ModelPlugin } = owlPlugins;
+const { NotificationPlugin, ModelPlugin, IsSmallPlugin, SpreadsheetRectPlugin } = owlPlugins;
 
 /**
  * @typedef {import("@spreadsheet/../tests/helpers/data").ServerData} ServerData
@@ -35,9 +35,10 @@ export function makeSpreadsheetActionTestEnv(model, createMockApp = true) {
     let container = undefined;
     let getPlugin = undefined;
     if (createMockApp) {
-        ({ getPlugin, container } = makeOwlPluginManager([NotificationPlugin, ModelPlugin], {
-            model,
-        }));
+        ({ getPlugin, container } = makeOwlPluginManager(
+            [NotificationPlugin, ModelPlugin, IsSmallPlugin, SpreadsheetRectPlugin],
+            { model }
+        ));
     } else {
         container = new DependencyContainer();
     }
