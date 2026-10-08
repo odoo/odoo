@@ -237,21 +237,20 @@ export class ProductScreen extends Component {
                 value: "discount",
                 text: _t("%"),
                 disabled:
-                    !this.pos.config.manual_discount ||
-                    !this.pos.accessRight.disableLinediscount ||
+                    this.pos.accessRight.disableLinediscount ||
                     order?.getSelectedOrderline()?.isServiceFeeLine(),
             },
             {
                 value: "price",
                 text: _t("Price"),
                 disabled:
-                    !this.pos.accessRight.disablePriceButton ||
+                    this.pos.accessRight.disablePriceButton ||
                     order?.getSelectedOrderline()?.isPartOfCombo(),
             },
             {
                 ...BACKSPACE,
                 disabled:
-                    !this.pos.accessRight.disableBackSpaceButton &&
+                    this.pos.accessRight.disableBackSpaceButton &&
                     !order.getSelectedOrderline()?.isDirty(),
             },
         ]).map((button) => ({
