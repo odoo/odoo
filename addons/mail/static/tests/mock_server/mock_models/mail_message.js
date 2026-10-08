@@ -620,8 +620,6 @@ export class MailMessage extends models.ServerModel {
                 ["message_type", "!=", "user_notification"],
             ]);
         }
-        // keep in sync with `MESSAGE_SEARCH_FILTERS` in `mail/models/mail_message.py`
-        const isFiltered = ["messages", "notes", "activities", "changes"].includes(search_filter);
         if (search_filter === "messages") {
             domain.push(
                 [
@@ -671,9 +669,6 @@ export class MailMessage extends models.ServerModel {
                 [["subtype_ids", "in", subtypeIds]],
             ]);
             domain = Domain.and([domain, message_domain]).toList();
-        }
-        if (search_term || isFiltered) {
-            res.count = this.search_count(domain);
         }
         if (around !== undefined) {
             const messagesBefore = this._filter(domain.concat([["id", "<=", around]])).sort(
