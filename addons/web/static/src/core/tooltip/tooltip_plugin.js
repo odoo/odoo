@@ -1,4 +1,3 @@
-import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { Tooltip } from "./tooltip";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -50,46 +49,40 @@ export const SHOW_AFTER_DELAY = 250;
 const TOOLTIP_SELECTOR = "[data-tooltip], [data-tooltip-template]";
 const TOOLTIP_SELECTOR_WITH_TITLE = TOOLTIP_SELECTOR + ", [title]";
 
-export class TooltipPlugin extends Plugin {
-    /** @private */
-    popover = usePlugin(PopoverPlugin);
-    /** @private */
-    openTooltipTimeout = null;
-    /** @private */
-    closeTooltip = null;
-    /** @private */
-    showTimer = null;
-    /** @private */
-    target = null;
-    /** @private */
-    interval = null;
+class TooltipPlugin extends Plugin {
+    #popover = usePlugin(PopoverPlugin);
+    #openTooltipTimeout = null;
+    #closeTooltip = null;
+    #showTimer = null;
+    #target = null;
+    #interval = null;
 
     setup() {
-        this.interval = window.setInterval(() => {
-            if (this.shouldCleanup()) {
-                this.cleanup();
+        this.#interval = window.setInterval(() => {
+            if (this.#shouldCleanup()) {
+                this.#cleanup();
             }
         }, CLOSE_DELAY);
 
         if (hasTouch()) {
-            const onTouchCancelEnd = this.onTouchCancelEnd.bind(this);
-            useListener(document.body, "touchstart", this.onTouchStart.bind(this));
+            const onTouchCancelEnd = this.#onTouchCancelEnd.bind(this);
+            useListener(document.body, "touchstart", this.#onTouchStart.bind(this));
             useListener(document.body, "touchend", onTouchCancelEnd);
             useListener(document.body, "touchcancel", onTouchCancelEnd);
         }
 
         // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
-        useListener(document.body, "mouseenter", this.onMouseenter.bind(this), {
+        useListener(document.body, "mouseenter", this.#onMouseenter.bind(this), {
             capture: true,
         });
         // Listen (using event delegation) to "mouseleave" events to close the tooltip if any
-        useListener(document.body, "mouseleave", this.cleanupTooltip.bind(this), {
+        useListener(document.body, "mouseleave", this.#cleanupTooltip.bind(this), {
             capture: true,
         });
-        useListener(document.body, "click", this.onClick.bind(this), { capture: true });
+        useListener(document.body, "click", this.#onClick.bind(this), { capture: true });
 
         onWillDestroy(() => {
-            window.clearInterval(this.interval);
+            window.clearInterval(this.#interval);
         });
     }
 
@@ -97,9 +90,8 @@ export class TooltipPlugin extends Plugin {
      * Detect if the current node is the `sup` tooltip node
      * @param {HTMLElement} el
      * @return {boolean}
-     * @private
      */
-    isHelpNode(el) {
+    #isHelpNode(el) {
         return (
             el.textContent === "?" &&
             (el.hasAttribute("data-tooltip") || el.hasAttribute("data-tooltip-template"))
@@ -113,9 +105,8 @@ export class TooltipPlugin extends Plugin {
      *
      * @param {HTMLElement} el
      * @return {boolean}
-     * @private
      */
-    isOverflowing(el) {
+    #isOverflowing(el) {
         return (
             el.clientWidth > 0 &&
             (el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight)
@@ -130,16 +121,15 @@ export class TooltipPlugin extends Plugin {
      *
      * @param {HTMLElement} el
      * @return {boolean}
-     * @private
      */
-    isClippedByAncestor(el) {
+    #isClippedByAncestor(el) {
         const { top, right, bottom, left } = el.getBoundingClientRect();
         for (
             let parent = el.parentElement;
             parent && parent !== document.documentElement;
             parent = parent.parentElement
         ) {
-            if (!this.isOverflowing(parent)) {
+            if (!this.#isOverflowing(parent)) {
                 continue; // nothing sticks out of that ancestor, nor does el
             }
             // that check is only done on the few ancestors having an
@@ -169,10 +159,9 @@ export class TooltipPlugin extends Plugin {
      *
      * @param {HTMLElement} el
      * @return {boolean}
-     * @private
      */
-    isTextEntirelyVisible(el) {
-        if (this.isOverflowing(el)) {
+    #isTextEntirelyVisible(el) {
+        if (this.#isOverflowing(el)) {
             return false; // most common case: the element itself is truncated
         }
         for (const descendant of el.querySelectorAll("*")) {
@@ -181,11 +170,11 @@ export class TooltipPlugin extends Plugin {
             // look at the text of the few descendants that overflow: those
             // displaying no text can't hide any part of it anyway (e.g. a
             // button displaying only an icon).
-            if (this.isOverflowing(descendant) && descendant.textContent.trim()) {
+            if (this.#isOverflowing(descendant) && descendant.textContent.trim()) {
                 return false;
             }
         }
-        return !this.isClippedByAncestor(el);
+        return !this.#isClippedByAncestor(el);
     }
 
     /**
@@ -198,9 +187,8 @@ export class TooltipPlugin extends Plugin {
      * @param {string} tooltip
      * @param {string} [template]
      * @return {boolean}
-     * @private
      */
-    isTooltipRedundant(el, tooltip, template) {
+    #isTooltipRedundant(el, tooltip, template) {
         if (template) {
             return false; // dynamic content, nothing to compare
         }
@@ -211,30 +199,28 @@ export class TooltipPlugin extends Plugin {
         if (normalize(el.innerText) !== normalize(tooltip)) {
             return false;
         }
-        return this.isTextEntirelyVisible(el);
+        return this.#isTextEntirelyVisible(el);
     }
 
     /**
      * Closes the currently opened tooltip if any, or prevent it from opening.
-     * @private
      */
-    cleanup() {
-        this.target = null;
-        window.clearTimeout(this.openTooltipTimeout);
-        this.openTooltipTimeout = null;
-        if (this.closeTooltip) {
-            this.closeTooltip();
-            this.closeTooltip = null;
+    #cleanup() {
+        this.#target = null;
+        window.clearTimeout(this.#openTooltipTimeout);
+        this.#openTooltipTimeout = null;
+        if (this.#closeTooltip) {
+            this.#closeTooltip();
+            this.#closeTooltip = null;
         }
     }
 
     /**
      * Checks whether the target of the current tooltip has been removed from the DOM.
      * @returns {boolean}
-     * @private
      */
-    shouldCleanup() {
-        return this.target?.isConnected === false;
+    #shouldCleanup() {
+        return this.#target?.isConnected === false;
     }
 
     /**
@@ -252,29 +238,28 @@ export class TooltipPlugin extends Plugin {
      * @param {'top'|'bottom'|'left'|'right'} param1.position
      * @param {number} [param1.delay] delay after which the popover should
      *  open
-     * @private
      */
-    openTooltip(el, { tooltip = "", template, info, position, delay = OPEN_DELAY }) {
-        this.cleanup();
+    #openTooltip(el, { tooltip = "", template, info, position, delay = OPEN_DELAY }) {
+        this.#cleanup();
         if (!tooltip && !template) {
             return;
         }
 
-        this.target = el;
+        this.#target = el;
         // Prevent title from showing on a parent at the same time (break the title scope heritage)
-        if (!this.target.title) {
-            this.target.title = "";
+        if (!this.#target.title) {
+            this.#target.title = "";
         }
-        const timeoutDelay = this.isHelpNode(el) ? 0 : delay;
-        this.openTooltipTimeout = window.setTimeout(() => {
+        const timeoutDelay = this.#isHelpNode(el) ? 0 : delay;
+        this.#openTooltipTimeout = window.setTimeout(() => {
             // verify that the element is still in the DOM, and that the
             // tooltip is actually useful
             if (
-                this.target.isConnected &&
-                !this.isTooltipRedundant(this.target, tooltip, template)
+                this.#target.isConnected &&
+                !this.#isTooltipRedundant(this.#target, tooltip, template)
             ) {
-                this.closeTooltip = this.popover.add(
-                    this.target,
+                this.#closeTooltip = this.#popover.add(
+                    this.#target,
                     Tooltip,
                     { tooltip, template, info },
                     { position }
@@ -290,9 +275,8 @@ export class TooltipPlugin extends Plugin {
      *
      * @param {HTMLElement} el
      * @param { boolean | undefined } titleTooltip
-     * @private
      */
-    openElementsTooltip(el, titleTooltip) {
+    #openElementsTooltip(el, titleTooltip) {
         // Fix weird behavior in Firefox where MouseEvent can be dispatched
         // from TEXT_NODE, even if they shouldn't...
         if (el.nodeType === Node.TEXT_NODE) {
@@ -300,7 +284,7 @@ export class TooltipPlugin extends Plugin {
         }
         const selector = titleTooltip ? TOOLTIP_SELECTOR_WITH_TITLE : TOOLTIP_SELECTOR;
         const element = el.closest(selector);
-        if (element && element === this.target) {
+        if (element && element === this.#target) {
             return;
         }
         if (element) {
@@ -318,7 +302,7 @@ export class TooltipPlugin extends Plugin {
             if (dataset.tooltipDelay) {
                 params.delay = parseInt(dataset.tooltipDelay, 10);
             }
-            this.openTooltip(element, params);
+            this.#openTooltip(element, params);
         }
     }
 
@@ -328,9 +312,8 @@ export class TooltipPlugin extends Plugin {
      * after a delay.
      *
      * @param {MouseEvent} ev a "mouseenter" event
-     * @private
      */
-    onMouseenter(ev) {
+    #onMouseenter(ev) {
         const target = ev.target?.closest(TOOLTIP_SELECTOR_WITH_TITLE);
         if (!target) {
             return;
@@ -338,16 +321,16 @@ export class TooltipPlugin extends Plugin {
         if (target.title?.length) {
             // If we have a title attribute on a node, we should close the currently displayed tooltip
             // to avoid showing the tooltip and the title at the same time.
-            if (this.openTooltipTimeout) {
-                this.cleanup();
+            if (this.#openTooltipTimeout) {
+                this.#cleanup();
             }
             // If the title and tooltip are shown at the same time, remove the title and open the tooltip.
             if (target.dataset.tooltipTemplate || target.dataset.tooltip) {
                 target.title = "";
-                this.openElementsTooltip(target);
+                this.#openElementsTooltip(target);
             }
         } else {
-            this.openElementsTooltip(target);
+            this.#openElementsTooltip(target);
         }
     }
 
@@ -355,19 +338,17 @@ export class TooltipPlugin extends Plugin {
      * Check whether there is a tooltip registered on the event target, and if there is,
      * cleanup it.
      * @param {MouseEvent} ev a "click" event
-     * @private
      */
-    onClick(ev) {
-        if (this.isHelpNode(ev.target)) {
+    #onClick(ev) {
+        if (this.#isHelpNode(ev.target)) {
             ev.preventDefault();
         }
-        this.cleanupTooltip(ev);
+        this.#cleanupTooltip(ev);
     }
 
-    /** @private */
-    cleanupTooltip(ev) {
-        if (this.target == ev.target) {
-            this.cleanup();
+    #cleanupTooltip(ev) {
+        if (this.#target == ev.target) {
+            this.#cleanup();
         }
     }
 
@@ -377,46 +358,29 @@ export class TooltipPlugin extends Plugin {
      * after a delay.
      *
      * @param {TouchEvent} ev a "touchstart" event
-     * @private
      */
-    onTouchStart(ev) {
-        this.cleanup();
-        const timeoutDelay = this.isHelpNode(ev.target) ? 0 : SHOW_AFTER_DELAY;
-        this.showTimer = window.setTimeout(() => {
-            this.openElementsTooltip(ev.target, true);
+    #onTouchStart(ev) {
+        this.#cleanup();
+        const timeoutDelay = this.#isHelpNode(ev.target) ? 0 : SHOW_AFTER_DELAY;
+        this.#showTimer = window.setTimeout(() => {
+            this.#openElementsTooltip(ev.target, true);
         }, timeoutDelay);
     }
 
-    /** @private */
-    onTouchCancelEnd(ev) {
-        if (this.isHelpNode(ev.target)) {
+    #onTouchCancelEnd(ev) {
+        if (this.#isHelpNode(ev.target)) {
             ev.preventDefault();
             return;
         }
         if (ev.target.closest(TOOLTIP_SELECTOR_WITH_TITLE)) {
             if (!ev.target.dataset.tooltipTouchTapToShow) {
-                window.clearTimeout(this.showTimer);
-                this.showTimer = null;
-                window.clearTimeout(this.openTooltipTimeout);
-                this.openTooltipTimeout = null;
+                window.clearTimeout(this.#showTimer);
+                this.#showTimer = null;
+                window.clearTimeout(this.#openTooltipTimeout);
+                this.#openTooltipTimeout = null;
             }
         }
     }
 }
 
 services.add(TooltipPlugin);
-
-/**
- * -----------------------------------------------------------------------------
- * @todo owl3 migration
- * temporary - to remove when all use of the tooltip service are removed
- * -----------------------------------------------------------------------------
- */
-export const tooltipService = {
-    dependencies: ["popover"],
-    start() {
-        return usePlugin(TooltipPlugin);
-    },
-};
-
-registry.category("services").add("tooltip", tooltipService);
