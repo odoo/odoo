@@ -54,12 +54,12 @@ const messagingMenuPatch = {
     /** @param {import("models").DiscussChannel} channel */
     async onClickChannel(channel) {
         this.channelToOpen = channel;
-        const prefetchingCapped = channel.thread?.prefetchingCapped;
-        if (prefetchingCapped) {
+        const prefetchingOrTimeout = channel.thread?.prefetchingOrTimeout;
+        if (prefetchingOrTimeout) {
             // Wait for the prefetch, so the thread shows already loaded instead of
             // rendering once empty and again once it resolves.
             const activeTab = this.state().activeTab;
-            await prefetchingCapped;
+            await prefetchingOrTimeout;
             if (this.channelToOpen !== channel || this.state().activeTab !== activeTab) {
                 return;
             }

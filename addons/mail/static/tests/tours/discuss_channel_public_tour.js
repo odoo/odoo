@@ -150,7 +150,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             trigger: messageSelector,
-            run: `hover && click ${messageSelector} [title='Add a Reaction']`,
+            run: "hover",
+        },
+        {
+            trigger: `${messageSelector} [title='Add a Reaction']`,
+            run: "click",
         },
         {
             trigger: ".o-mail-QuickReactionMenu",
@@ -172,7 +176,11 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
         },
         {
             trigger: `${messageSelector}`,
-            run: `hover && click ${messageSelector} [title='Expand']`,
+            run: "hover",
+        },
+        {
+            trigger: `${messageSelector} [title='Expand']`,
+            run: "click",
         },
         {
             trigger: `.o-mail-Message-moreMenu [name='edit']`,

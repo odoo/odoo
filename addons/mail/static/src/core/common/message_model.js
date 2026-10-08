@@ -271,12 +271,12 @@ export class Message extends Record {
         return this.message_type === "comment";
     }
 
-    get dateDay() {
+    dateDay = this.computed(() => {
         if (this.datetime.hasSame(this.store.startOfToday, "day")) {
             return _t("Today");
         }
         return this.datetime.toLocaleString(DateTime.DATE_MED);
-    }
+    });
 
     get dateSimple() {
         return this.datetime
@@ -286,7 +286,7 @@ export class Message extends Record {
             .replace(" ", " "); // so that AM/PM are properly wrapped
     }
 
-    get dateSimpleWithDay() {
+    dateSimpleWithDay = this.computed(() => {
         const userLocale = { locale: user.lang };
         const startOfToday = this.store.startOfToday;
         if (this.datetime.hasSame(startOfToday, "day")) {
@@ -304,7 +304,7 @@ export class Message extends Record {
             );
         }
         return this.datetime.toLocaleString({ ...DateTime.DATETIME_MED }, userLocale);
-    }
+    });
 
     get datetime() {
         return this.date || DateTime.now();
@@ -332,15 +332,15 @@ export class Message extends Record {
         return this.selvesBySequence[0]?.self;
     }
 
-    get datetimeMedium() {
-        return this.datetime.toLocaleString({ ...DateTime.DATETIME_MED }, { locale: user.lang });
-    }
+    datetimeMedium = this.computed(() =>
+        this.datetime.toLocaleString({ ...DateTime.DATETIME_MED }, { locale: user.lang })
+    );
 
-    get isSelfMentioned() {
-        return this.partner_ids.some((partner) =>
+    isSelfMentioned = this.computed(() =>
+        this.partner_ids.some((partner) =>
             this.selvesBySequence.some(({ self }) => partner.eq(self))
-        );
-    }
+        )
+    );
 
     get isHighlightedFromMention() {
         return this.isSelfMentioned && Boolean(this.thread?.channel);
@@ -402,6 +402,7 @@ export class Message extends Record {
 
     isEmpty = this.computed(() => this.computeIsEmpty());
     isBodyEmpty = this.computed(
+        // Do not reuse `bodyEl` which is detached hence failing `getComputedDisplay`.
         () => !this.body || isEmptyBlock(createElementWithContent("div", this.body))
     );
 
@@ -422,8 +423,8 @@ export class Message extends Record {
      * - There is only one link in the message body.
      * - The link preview is of image type.
      */
-    get linkPreviewSquash() {
-        return (
+    linkPreviewSquash = this.computed(
+        () =>
             this.store.hasLinkPreviewFeature &&
             this.body &&
             this.body.startsWith("<a") &&
@@ -431,8 +432,7 @@ export class Message extends Record {
             this.body.match(/<\/a>/im)?.length === 1 &&
             this.message_link_preview_ids.length === 1 &&
             this.message_link_preview_ids[0].link_preview_id.isImage
-        );
-    }
+    );
 
     /**
      * This is the preferred way to display the name of the author of a message.
@@ -447,6 +447,8 @@ export class Message extends Record {
     get notificationHidden() {
         return false;
     }
+
+    bodyTextContentInline = this.computed(() => htmlToTextContentInline(this.body || ""));
 
     inlineBody = this.computed(() => {
         if (this.poll) {

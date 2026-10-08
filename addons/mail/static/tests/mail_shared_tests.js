@@ -6,7 +6,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { expect, mockTouch, mockUserAgent, queryFirst, waitFor } from "@odoo/hoot";
+import { expect, mockTouch, mockUserAgent, queryFirst, waitFor, waitForNone } from "@odoo/hoot";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 export async function mailCanAddMessageReactionMobile() {
@@ -97,11 +97,12 @@ export async function mailChatterMessageActionsInvisibleWhenNotHovered() {
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Message-actions.invisible:count(1)");
     await waitFor(".o-mail-Message-actions button:count(2)");
+    await waitForNone(".o-mail-Message-actions button[title]");
     expect(isNodeVisible(".o-mail-Message-actions button:eq(0)")).toBe(false);
     expect(isNodeVisible(".o-mail-Message-actions button:eq(1)")).toBe(false);
     await hover(".o-mail-Message");
     await waitFor(".o-mail-Message-actions:not(.invisible):count(1)");
-    await waitFor(".o-mail-Message-actions button:count(2)");
+    await waitFor(".o-mail-Message-actions button[title]:count(2)");
     expect(isNodeVisible(".o-mail-Message-actions button:eq(0)")).toBe(true);
     expect(isNodeVisible(".o-mail-Message-actions button:eq(1)")).toBe(true);
 }

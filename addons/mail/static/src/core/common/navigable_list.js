@@ -68,11 +68,15 @@ export class NavigableList extends Component {
             }
             this.close();
         });
-        // position and size
-        usePosition(this.rootRef, () => this.props.anchorRef?.(), {
-            position: this.props.position,
-            rememberPosition: this.props.rememberPosition,
-        });
+        // position and size, only when shown as positioning forces a layout on each render
+        usePosition(
+            () => (this.show ? this.rootRef() : null),
+            () => this.props.anchorRef?.(),
+            {
+                position: this.props.position,
+                rememberPosition: this.props.rememberPosition,
+            }
+        );
         useOnChange(
             // Open on mount and when a new set of options arrives. In particular,
             // do not re-open on unrelated re-renders after the user closed the

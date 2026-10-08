@@ -986,8 +986,13 @@ export const STORE_FETCH_ROUTES = ["/mail/store"];
  * @param {function} [options.onRpc] entry point to override the onRpc of the intercepted calls.
  * @param {string[]} [options.logParams=[]] names of the store fetch params for which both the name
  *  and the specific params should be logged in expect.step. By default only the name is logged.
+ * @param {string[]} [options.ignoreParamKeys=[]] keys omitted from the logged params, for params
+ *  depending on timing (such as is_prefetch).
  */
-export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRpcOverride } = {}) {
+export function listenStoreFetch(
+    nameOrNames = [],
+    { logParams = [], ignoreParamKeys = [], onRpc: onRpcOverride } = {}
+) {
     const namesToRegister = typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames;
     function isRegistered(name) {
         return namesToRegister.length === 0 || namesToRegister.includes(name);
@@ -997,7 +1002,15 @@ export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRp
             const res = await super.fetchStoreData(...arguments);
             if (isRegistered(name)) {
                 if (logParams.includes(name)) {
-                    expect.step(`store fetch: ${name} - ${JSON.stringify(params)}`);
+                    const loggedParams =
+                        params && typeof params === "object"
+                            ? Object.fromEntries(
+                                  Object.entries(params).filter(
+                                      ([key]) => !ignoreParamKeys.includes(key)
+                                  )
+                              )
+                            : params;
+                    expect.step(`store fetch: ${name} - ${JSON.stringify(loggedParams)}`);
                 } else {
                     expect.step(`store fetch: ${name}`);
                 }

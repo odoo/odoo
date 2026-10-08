@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     focus,
+    hover,
     openDiscuss,
     patchUiSize,
     scroll,
@@ -131,6 +132,7 @@ test("remove banner when opening thread at the bottom", async () => {
     pyEnv["discuss.channel.member"].write([selfMemberId], { new_message_separator: messageId + 1 });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message:has(:text('Hello World'))");
     await click("[title='Expand']", { parent: [".o-mail-Message:has(:text('Hello World'))"] });
     await click(".o-dropdown-item:contains('Mark as Unread')");
     await waitFor(".o-mail-Thread-banner:has(:text('1 new message')):count(1)");
@@ -155,6 +157,7 @@ test("keep banner after mark as unread when scrolling to bottom", async () => {
     }
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message:has(:text('message 29'))");
     await click("[title='Expand']", { parent: [".o-mail-Message:has(:text('message 29'))"] });
     await click(".o-dropdown-item:text('Mark as Unread')");
     await scroll(".o-mail-Thread", "bottom");

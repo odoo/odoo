@@ -1,6 +1,7 @@
 import {
     click,
     contains,
+    hover,
     insertText,
     openDiscuss,
     start,
@@ -146,6 +147,7 @@ test("reply to message composer should disappear when livechat conversation ends
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message:has(:text('Hello, I need help!'))");
     await click(".o-mail-Message:has(:text('Hello, I need help!')) [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await contains(".o-mail-Composer:has(:text('Replying to Visitor'))");

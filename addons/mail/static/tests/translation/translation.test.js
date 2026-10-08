@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     onRpcBefore,
     openFormView,
     start,
@@ -31,6 +32,7 @@ test("Toggle display of original/translated version of chatter message", async (
     });
     await start();
     await openFormView("res.partner", partnerId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await waitFor(".o-dropdown-item:contains('Translate'):count(1)");
     await waitForNone(".o-dropdown-item:contains('Initial Language')");
@@ -71,6 +73,7 @@ test("translation of email message", async () => {
     await contains("span:text('Al mal tiempo, buena cara.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
+    await hover(".o-mail-Message");
     await click("button[title='Expand']");
     await click(".o-dropdown-item:contains('Translate')");
     await contains("span:text('To bad weather, good face.')", {
@@ -115,14 +118,17 @@ test("Do not show translate action if message body is empty", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Message:count(3)");
+    await hover(".o-mail-Message:eq(0)");
     await click(".o-mail-Message:eq(0) button[title='Expand']");
     await waitFor(".o-dropdown-item:text('Pin')");
     await waitFor(".o-dropdown-item:contains('Translate'):count(1)");
     await click(".o-mail-Message:eq(0) button[title='Expand']");
     // The attachment-only message has an empty body, so its menu must not offer translation.
+    await hover(".o-mail-Message:eq(1)");
     await click(".o-mail-Message:eq(1) button[title='Expand']");
     await waitFor(".dropdown-menu");
     await waitForNone(".o-dropdown-item:contains('Translate')");
+    await hover(".o-mail-Message:eq(2)");
     await click(".o-mail-Message:eq(2) button[title='Expand']");
     await waitFor(".o-dropdown-item:text('Pin')");
 });

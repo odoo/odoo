@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     openDiscuss,
     scroll,
     start,
@@ -38,6 +39,7 @@ test("Pin message", async () => {
     await waitFor(
         '.o-discuss-PinnedMessagesPanel p:text("This channel doesn\'t have any pinned messages."):count(1)'
     );
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item:text('Pin')");
     await click(".modal-footer button:text('Pin Message')");
@@ -60,7 +62,8 @@ test("Unpin message", async () => {
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
     await click(".o-mail-DiscussContent-header button[title='Pinned Messages']");
     await waitFor(".o-discuss-PinnedMessagesPanel .o-mail-Message:count(1)");
-    await click(".o-mail-Message [title='Expand']");
+    await hover(".o-mail-Thread .o-mail-Message");
+    await click(".o-mail-Thread .o-mail-Message [title='Expand']");
     await click(".dropdown-item:text('Unpin')");
     await click(".modal-footer button:text('Unpin Message')");
     await waitForNone(".o-discuss-PinnedMessagesPanel .o-mail-Message");
@@ -76,6 +79,7 @@ test("Open pinned panel from notification", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(":nth-child(1 of .o-mail-Message)");
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".dropdown-item:text('Pin')");
     await click(".modal-footer button:text('Pin Message')");
@@ -140,6 +144,7 @@ test("Jump to message from notification", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(21)");
+    await hover(":nth-child(1 of .o-mail-Message)");
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
     await click(".dropdown-item:text('Pin')");
     await click(".modal-footer button:text('Pin Message')");
@@ -161,10 +166,12 @@ test("can add reactions from pinned panel", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message-actions [title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button:text('👍')");
     await waitFor(".o-mail-MessageReaction:text('👍 1'):count(1)");
     await click(".o-mail-DiscussContent-header button[title='Pinned Messages']");
+    await hover(".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await click(".o-discuss-PinnedMessagesPanel .o-mail-Message [title='Add a Reaction']");
     await click(".o-mail-QuickReactionMenu button:text('👍')");
     await waitForNone(".o-mail-MessageReaction");
@@ -185,6 +192,7 @@ test("Guest user cannot see unpin button", async () => {
     await start({ authenticateAs: false });
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { text: "Test pinned message" });
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await contains(".dropdown-item", { text: "Reply" });
     await contains(".dropdown-item", { text: "Unpin", count: 0 });
@@ -202,6 +210,7 @@ test("Internal user can see unpin button", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await assertPinnedPanelUnpinCount(1);
 });

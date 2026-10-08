@@ -3,28 +3,37 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
+    listenStoreFetch,
     openDiscuss,
     openMessagingMenu,
     patchUiSize,
     start,
     startServer,
+    waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import { PREFETCH_MAX_WAIT } from "@mail/discuss/core/common/thread_model_patch";
+
 import {
     describe,
     disableAnimations,
     expect,
     mockPermission,
     mockTouch,
+    pointerDown,
+    pointerUp,
     test,
     waitFor,
     waitForNone,
 } from "@odoo/hoot";
+import { advanceTime, freezeTime, unfreezeTime } from "@odoo/hoot-dom";
 import {
     Command,
     contains as webContains,
     getService,
+    onRpc,
     serverState,
     swipeLeft,
     swipeRight,
@@ -319,4 +328,84 @@ test("counter does not double count channel needaction messages", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL); // fetch channels
     await contains(".o-mail-NotificationItem", { text: "General" }); // ensure channels fetched
     await waitFor(".o-mail-MessagingMenuInDropdown-counter:text('1'):count(1)");
+});
+
+test("clicking on a channel waits for the prefetch, up to a cap when it is slow", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "Message on channel",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const fetchDeferred = Promise.withResolvers();
+    onRpc("/mail/store", async (request) => {
+        const { params } = await request.json();
+        if (params.fetch_params.some((param) => param[0] === "/discuss/channel/messages")) {
+            await fetchDeferred.promise;
+        }
+    });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    freezeTime();
+    await click(".o-mail-NotificationItem:contains(General)");
+    await advanceTime(PREFETCH_MAX_WAIT - 1);
+    await contains(".o-mail-DiscussContent-threadName", { count: 0 });
+    await advanceTime(1);
+    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    unfreezeTime();
+    fetchDeferred.resolve();
+    await contains(".o-mail-Message:has(:text('Message on channel'))");
+});
+
+test("opening a prefetched channel with a mention drops its needaction counter", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "Hey @Mitchell Admin",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    onRpc("mail.message", "mark_all_as_read", () => expect.step("mark-all-messages-as-read"));
+    listenStoreFetch("/discuss/channel/messages");
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await contains(".o-mail-NotificationItem:contains(General) .o-mail-NotificationItem-badge");
+    await pointerDown(".o-mail-NotificationItem:contains(General)");
+    await waitStoreFetch("/discuss/channel/messages");
+    await expect.waitForSteps([]);
+    await pointerUp(".o-mail-NotificationItem:contains(General)");
+    await expect.waitForSteps(["mark-all-messages-as-read"]);
+    await contains(".o-mail-Message:has(:text('Hey @Mitchell Admin'))");
+    await contains(".o-mail-NotificationItem-badge", { count: 0 });
+});
+
+test("clicking on channel actions do not prefetches its messages", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    listenStoreFetch("/discuss/channel/messages");
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await hover(".o-mail-NotificationItem:contains(General)");
+    await click(".o-mail-MessagingMenu-actions button");
+    await contains(".o-mail-MessagingMenu-dropdownMenu");
+    expect.verifySteps([]);
+    await click(".o-mail-NotificationItem:contains(General)");
+    await waitStoreFetch("/discuss/channel/messages");
 });

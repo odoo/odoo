@@ -9,7 +9,7 @@ import { patch } from "@web/core/utils/patch";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 // Past this delay, consumers stop waiting on the prefetch rather than delaying the user further.
-const PREFETCH_MAX_WAIT = 200;
+export const PREFETCH_MAX_WAIT = 200;
 
 /** @type {import("models").Thread} */
 const threadPatch = {
@@ -44,7 +44,7 @@ const threadPatch = {
         /** @type {Promise|undefined} resolves when the prefetch is done */
         this.prefetching = undefined;
         /** @type {Promise|undefined} like prefetching, but also resolves after PREFETCH_MAX_WAIT */
-        this.prefetchingCapped = undefined;
+        this.prefetchingOrTimeout = undefined;
         this.scrollUnread = true;
     },
     /** @override */
@@ -97,18 +97,24 @@ const threadPatch = {
         }
         return super.fetchInitialMessages(...arguments);
     },
-    async prefetchMessages() {
+    /**
+     * Loads the initial messages ahead of the thread being opened, on intent to open it.
+     * Unlike `fetchInitialMessages`, it only applies to threads of which the user is a member
+     * and exposes `prefetching` and `prefetchingOrTimeout` so the opening can wait for it. A
+     * failure is silent, the load is retried when the thread is actually opened.
+     */
+    async prefetchInitialMessages() {
         // Only members are kept up to date by the bus once loaded.
         if (!this.channel?.self_member_id || this.status === "loading") {
             return;
         }
         this.prefetching = this.fetchInitialMessages({ routeParams: { is_prefetch: true } });
-        this.prefetchingCapped = Promise.race([
+        this.prefetchingOrTimeout = Promise.race([
             this.prefetching,
             new Promise((resolve) => setTimeout(resolve, PREFETCH_MAX_WAIT)),
         ]);
         await this.prefetching;
-        this.prefetchingCapped = undefined;
+        this.prefetchingOrTimeout = undefined;
         this.prefetching = undefined;
         if (this.hasLoadingFailed && !this.channel.isDisplayed) {
             // Retry on open instead of showing an error for a thread the user never opened.

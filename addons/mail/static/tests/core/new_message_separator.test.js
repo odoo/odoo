@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     listenStoreFetch,
     openDiscuss,
@@ -64,11 +65,13 @@ test("keep new message separator when message is deleted", async () => {
     await openDiscuss(generalId);
     await waitFor(".o-mail-Message:count(2)");
     queryFirst(".o-mail-Composer-input").blur();
+    await hover(".o-mail-Message:has(:text('message 0'))");
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('message 0'))"],
     });
     await click(".o-dropdown-item:contains('Mark as Unread')");
     await waitFor(".o-mail-Thread-newMessage ~ .o-mail-Message:has(:text('message 0')):count(1)");
+    await hover(".o-mail-Message:has(:text('message 0'))");
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('message 0'))"],
     });
@@ -240,6 +243,7 @@ test("keep new message separator until current user sends a message", async () =
     await insertText(".o-mail-Composer-input", "hello");
     await triggerHotkey("Enter");
     await waitFor(".o-mail-Message:has(:text('hello')):count(1)");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Mark as Unread')");
     await waitFor(".o-mail-Thread-newMessage:contains('New'):count(1)");
@@ -257,6 +261,7 @@ test("keep new message separator when switching between chat window and discuss 
     await click(".o-mail-NotificationItem-name:text('General')");
     await insertText(".o-mail-Composer-input", "Very important message!");
     await triggerHotkey("Enter");
+    await hover(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Mark as Unread')");
     await waitFor(".o-mail-Thread-newMessage:count(1)");
@@ -445,6 +450,7 @@ test("pending mark as read does not revert a later mark as unread", async () => 
     // Request a second mark as read, queued until the first one completes.
     queryFirst(".o-mail-Composer-input").blur();
     await click(".o-mail-Composer-input");
+    await hover(".o-mail-Message:has(:text('Hello everyone!'))");
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('Hello everyone!'))"],
     });
@@ -498,6 +504,7 @@ test("mark as unread waits for the mark as read in flight", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:has(:text('Hello everyone!')):count(1)");
     await expect.waitForSteps(["mark_as_read"]);
+    await hover(".o-mail-Message:has(:text('Hello everyone!'))");
     await click("[title='Expand']", {
         parent: [".o-mail-Message:has(:text('Hello everyone!'))"],
     });
