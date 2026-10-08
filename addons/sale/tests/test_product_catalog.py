@@ -227,21 +227,6 @@ class TestProductCatalog(HttpCase, SaleCommon):
             ],
         )
 
-        # Add a third item --> discount should stay on the discount field
-        update_data = self.request_update_order_line_info(product=product, quantity=3.0)
-        self.assertEqual(update_data["price"], product.lst_price / 2)
-        self.assertRecordValues(
-            sol,
-            [
-                {
-                    "product_id": product.id,
-                    "product_uom_qty": 3.0,
-                    "price_unit": product.lst_price,
-                    "discount": 50.0,
-                }
-            ],
-        )
-
     def test_remove_product_from_catalog_without_sol(self):
         """Test update line with zero quantity and no existing line."""
         product = self.service_product

@@ -191,6 +191,9 @@
                             <field name="company_id" invisible="1" readonly="state in ['cancel', 'purchase']"/> <!-- provides parent.company_id for product_id/tax_ids domains in order_line -->
                             <field name="currency_id" invisible="1" readonly="state in ['cancel', 'purchase']" groups="!base.group_multi_currency"/> <!-- keeps currency_id loaded when multi-currency group is disabled, complementing the visible field above -->
                             <field name="tax_calculation_rounding_method" invisible="1"/> <!-- used by order_line kanban/list to control per-line vs total tax rounding display -->
+                            <field name="grid" invisible="1"/> <!-- grid data for the grid entry dialog -->
+                            <field name="grid_product_tmpl_id" invisible="1"/> <!-- product opened in the grid entry dialog -->
+                            <field name="grid_update" invisible="1"/> <!-- tells if grid changes must be applied -->
                         </group>
                         <group>
                             <label for="date_order" invisible="state == 'purchase'"/>
@@ -267,11 +270,23 @@
                                     <!-- optional="show" allows name (description) to be editable -->
                                     <column name="product_and_description">
                                         <field
-                                            name="product_id"
-                                            widget="account_product_field"
+                                            name="product_template_id"
+                                            string="Product"
                                             readonly="state in ('purchase', 'to approve', 'cancel') or is_downpayment"
                                             required="not display_type and not is_downpayment"
                                             optional="show"
+                                            context="{'partner_id': parent.partner_id}"
+                                            widget="pol_product_many2one"
+                                            invisible="display_type"
+                                            placeholder="Select a Product"
+                                        />
+                                        <field
+                                            name="product_id"
+                                            string="Product Variant"
+                                            widget="account_product_field"
+                                            readonly="state in ('purchase', 'to approve', 'cancel') or is_downpayment"
+                                            required="not display_type and not is_downpayment"
+                                            optional="hide"
                                             context="{'partner_id':partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
                                             force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"
                                             invisible="display_type"
@@ -285,6 +300,9 @@
                                         />
                                         <field name="label" widget="text" invisible="display_type"/>
                                     </column>
+                                    <field name="product_template_attribute_value_ids" column_invisible="1"/> <!-- used to find the line of each grid cell -->
+                                    <field name="product_no_variant_attribute_value_ids" column_invisible="1"/> <!-- used to find the line of each grid cell -->
+                                    <field name="is_configurable_product" column_invisible="1"/> <!-- needed to open the grid entry dialog -->
                                     <field name="date_planned" optional="hide" required="not display_type and not is_downpayment" force_save="1" readonly="is_downpayment"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"

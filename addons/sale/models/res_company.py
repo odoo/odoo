@@ -40,9 +40,9 @@ class ResCompany(models.Model):
         default=1.0,
         help="The percentage of the amount needed to be paid to confirm quotations.",
     )
-    display_product_images_on_so = fields.Boolean(string="Display Product Images")
+    display_product_images_on_so = fields.Boolean(string="Product Images")
     quotation_validity_days = fields.Integer(
-        string="Default Quotation Validity",
+        string="Quotation Validity",
         default=30,
         help="Days between quotation proposal and expiration."
         " 0 days means automatic expiration is disabled",
