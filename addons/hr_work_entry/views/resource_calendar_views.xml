@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="resource.view_resource_calendar_attendance_tree"/>
         <field name="arch" type="xml">
             <field name="hour_to" position="after">
-                <field name="work_entry_type_id" widget="many2one_work_entry_type" placeholder="Default: Attendance" optional="hidden" domain="[('resource_calendar_selectable', '=', True)]"/>
+                <field name="work_entry_type_id" widget="many2one_work_entry_type" options="{'no_open': True}" placeholder="Default: Work" optional="hidden" domain="[('resource_calendar_selectable', '=', True)]"/>
             </field>
         </field>
     </record>
@@ -28,7 +28,7 @@
         <field name="inherit_id" ref="resource.view_resource_calendar_attendance_form"/>
         <field name="arch" type="xml">
             <div id="resource_attendance_hours" position="after">
-                <field name="work_entry_type_id" widget="many2one_work_entry_type" domain="[('resource_calendar_selectable', '=', True)]"/>
+                <field name="work_entry_type_id" widget="many2one_work_entry_type" placeholder="Default: Work" domain="[('resource_calendar_selectable', '=', True)]"/>
             </div>
         </field>
     </record>
@@ -39,7 +39,7 @@
         <field name="inherit_id" ref="resource.view_resource_calendar_multi_create_form"/>
         <field name="arch" type="xml">
             <field name="recurrency" position="before">
-                <field name="work_entry_type_id" widget="many2one_work_entry_type" placeholder="Attendance" domain="[('resource_calendar_selectable', '=', True)]"/>
+                <field name="work_entry_type_id" widget="many2one_work_entry_type" placeholder="Work" domain="[('resource_calendar_selectable', '=', True)]"/>
             </field>
         </field>
     </record>
@@ -73,7 +73,7 @@
         <field name="inherit_id" ref="resource.resource_calendar_leave_tree"/>
         <field name="arch" type="xml">
             <field name="date_to" position="after">
-                <field name="work_entry_type_id" widget="many2one_work_entry_type" required="1" domain="[('resource_calendar_selectable', '=', True)]"/>
+                <field name="work_entry_type_id" widget="many2one_work_entry_type" options="{'no_open': True}" required="1" domain="[('resource_calendar_selectable', '=', True)]"/>
             </field>
         </field>
     </record>
