@@ -1,4 +1,4 @@
-import { visitXML } from "@web/core/utils/xml";
+import { parseXML, visitXML } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
 import { Widget } from "@web/views/widgets/widget";
 import { getActiveActions } from "../utils";
@@ -59,4 +59,23 @@ export class CardArchParser {
             xmlDoc,
         };
     }
+}
+
+const DEFAULT_CARD_ARCH = `
+    <templates>
+        <t t-name="card"><field name="display_name" class="text-truncate"/></t>
+    </templates>
+`;
+
+/**
+ * Parses a card node with a default arch if node is not provided.
+ *
+ * @param {Element} [node] the card node, if any
+ * @param {Object} models
+ * @param {string} modelName
+ * @returns {Object} the card archInfo, as returned by CardArchParser
+ */
+export function parseCard(node, models, modelName) {
+    node ||= parseXML(DEFAULT_CARD_ARCH);
+    return new CardArchParser().parse(node, models, modelName);
 }
