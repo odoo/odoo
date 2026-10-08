@@ -69,13 +69,7 @@ export class OdooPivot {
         this.odooDataProvider = services.odooDataProvider;
 
         /** @protected @type {Object} */
-        this.context = omit(
-            definition.context,
-            ...Object.keys(user.context),
-            "pivot_measures",
-            "pivot_row_groupby",
-            "pivot_column_groupby"
-        );
+        this.context = this._purgeContext(definition.context);
 
         /** @protected */
         this.domainWithGlobalFilters = this.coreDefinition.domain;
@@ -85,7 +79,7 @@ export class OdooPivot {
      * @param {OdooPivotCoreDefinition} nextDefinition
      */
     onDefinitionChange(nextDefinition) {
-        this.context = omit(nextDefinition.context, ...Object.keys(user.context));
+        this.context = this._purgeContext(nextDefinition.context);
         const actualDefinition = this.coreDefinition;
         this.coreDefinition = nextDefinition;
         if (
@@ -117,6 +111,24 @@ export class OdooPivot {
             }
         }
         this.load({ reload: true });
+    }
+
+    /**
+     * Remove the user context keys and the PivotView related keys, which would
+     * otherwise override the measures and groupbys of the definition.
+     *
+     * @protected
+     * @param {Object} context
+     * @returns {Object}
+     */
+    _purgeContext(context) {
+        return omit(
+            context,
+            ...Object.keys(user.context),
+            "pivot_measures",
+            "pivot_row_groupby",
+            "pivot_column_groupby"
+        );
     }
 
     /**
