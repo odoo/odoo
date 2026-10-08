@@ -939,7 +939,7 @@
                                         context="{'order_id': parent.id}"/>
                                 </control>
                                 <templates>
-                                    <t t-name="card" class="row g-0 ps-0 pe-0">
+                                    <t t-name="card" class="row g-0 rounded ps-0 pe-0">
                                         <t t-if="!record.display_type.raw_value">
                                             <aside t-if="record.product_id.value" class="col-auto p-1 pe-2 d-flex align-items-start">
                                                 <span t-att-title="record.product_id.value" class="d-inline-block flex-shrink-0">
@@ -1018,8 +1018,8 @@
                             <group colspan="4" class="order-1 order-lg-0">
                                 <field  colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
                             </group>
-                            <group class="oe_subtotal_footer border-top-0 d-flex order-0 order-lg-1 flex-column gap-3" colspan="2" name="sale_total">
-                                <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" readonly="1"/>
+                            <group class="oe_subtotal_footer o_sale_order_totals d-flex order-0 order-lg-1 flex-column gap-3 border-top-0" colspan="2" name="sale_total">
+                                <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" readonly="1" class="rounded pt-3 p-md-3"/>
                                 <field name="extra_total_fields" widget="sale-extra-totals" nolabel="1" readonly="1"/>
                             </group>
                         </group>
