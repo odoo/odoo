@@ -272,6 +272,7 @@ def load_module_graph(
             package.state = 'installed'
             module.env.flush_all()
             module.env.cr.commit()
+            module.env.cr.execute("ANALYZE")
 
         test_time = 0.0
         test_queries = 0
