@@ -130,7 +130,7 @@ test("Searching messages shows spinner icon", async () => {
             "/discuss/channel/messages",
             {
                 channel_id: channelId,
-                fetch_params: { search_term: "message", before: false },
+                fetch_params: { search_term: "message", before: false, limit: 31 },
             },
         ],
     ]);
@@ -183,7 +183,7 @@ test("Clearing message input while pending search should empty message results",
             "/discuss/channel/messages",
             {
                 channel_id: channelId,
-                fetch_params: { search_term: "This is", before: false },
+                fetch_params: { search_term: "This is", before: false, limit: 31 },
             },
         ],
     ]);
@@ -199,7 +199,7 @@ test("Clearing message input while pending search should empty message results",
             "/discuss/channel/messages",
             {
                 channel_id: channelId,
-                fetch_params: { search_term: "This is a message", before: false },
+                fetch_params: { search_term: "This is a message", before: false, limit: 31 },
             },
         ],
     ]);
@@ -250,7 +250,10 @@ test("Clearing message input while a search is queued should not show its result
     await waitStoreFetch([
         [
             "/discuss/channel/messages",
-            { channel_id: channelId, fetch_params: { search_term: "This", before: false } },
+            {
+                channel_id: channelId,
+                fetch_params: { search_term: "This", before: false, limit: 31 },
+            },
         ],
     ]);
     blockedFetchMessages.resolve();
@@ -523,7 +526,7 @@ test("Search should trigger a single store fetch", async () => {
 test.tags("desktop");
 test("Empty search should not trigger rpc", async () => {
     listenStoreFetch("/discuss/channel/messages", {
-        logParams: ["/discuss/channel/messages"]
+        logParams: ["/discuss/channel/messages"],
     });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
@@ -553,7 +556,10 @@ test("Empty search should not trigger rpc", async () => {
     await waitStoreFetch([
         [
             "/discuss/channel/messages",
-            { channel_id: channelId, fetch_params: { search_term: "m", before: false } },
+            {
+                channel_id: channelId,
+                fetch_params: { search_term: "m", before: false, limit: 31 },
+            },
         ],
     ]);
 });
