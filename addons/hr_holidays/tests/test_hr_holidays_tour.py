@@ -12,7 +12,7 @@ from datetime import date
 @tagged('post_install', '-at_install')
 class TestHrHolidaysTour(HttpCase):
     @freeze_time('01/17/2022')
-    def test_hr_holidays_tour(self):
+    def test_hr_holidays_tour_onboarding(self):
         admin_user = self.env.ref('base.user_admin')
         admin_user.write({
             'email': 'mitchell.admin@example.com',
@@ -50,4 +50,7 @@ class TestHrHolidaysTour(HttpCase):
             'date_to': '2022-12-31',
         })
 
-        self.start_tour('/odoo', 'hr_holidays_tour', login="admin")
+        leaves_before = HRLeave.search([('employee_id', '=', admin_employee.id)])
+        self.start_tour('/odoo', 'hr_holidays_tour', login="admin", code="odoo.startTour('hr_holidays_tour', {'mode': 'manual', 'robot': true})")
+        new_leave = HRLeave.search([('employee_id', '=', admin_employee.id)]) - leaves_before
+        self.assertRecordValues(new_leave, [{'state': 'confirm'}])
