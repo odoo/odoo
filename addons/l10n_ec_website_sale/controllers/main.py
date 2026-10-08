@@ -54,3 +54,7 @@ class L10nECWebsiteSale(WebsiteSale):
             payment_methods = payment_values['payment_methods_sudo'].filtered(lambda pm: bool(pm.l10n_ec_sri_payment_id))
             payment_values['payment_methods_sudo'] = payment_methods
         return payment_values
+
+    def _vat_required(self, country_code):
+        """ Colombia requires VAT for all partners """
+        return country_code == 'EC'
