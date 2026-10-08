@@ -18,6 +18,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { range } from "@web/core/utils/numbers";
 import { getOrigin } from "@web/core/utils/urls";
+import { containsTextInComposer } from "../mail_test_helpers_composer";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -161,9 +162,7 @@ test("can reply to logged note in chatter", async () => {
     await click(".o-mail-Message:contains('Test message from B') [title='Expand']");
     await click(".o-dropdown-item:text('Reply')");
     await waitFor("button.active:text('Log note'):count(1)");
-    await mailContains(".o-mail-Composer.o-focused .o-mail-Composer-input", {
-        value: "@Partner B ",
-    });
+    await containsTextInComposer(".o-mail-Composer.o-focused", "@Partner B ");
     await click(".o-mail-Composer-send:enabled");
     await waitFor(".o-mail-Message a.o_mail_redirect:text('@Partner B'):count(1)");
     await hover(".o-mail-Message:contains('@Partner B')");
@@ -325,8 +324,7 @@ test("Click reply to note again preserves composer content", async () => {
         },
     ]);
     await start();
-    const composerService = getService("mail.composer");
-    composerService.setHtmlComposer();
+    getService("mail.composer").setHtmlComposer();
     await openFormView("res.partner", serverState.partnerId);
     await hover(".o-mail-Message:contains(I am Justice)");
     await click(".o-mail-Message:contains(I am Justice) [title='Expand']");
