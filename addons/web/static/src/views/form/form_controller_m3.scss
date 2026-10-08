@@ -6,7 +6,9 @@
         --o-field-box-spacing: var(--o-bs-spacer-3);
         --o-field-box-border-color: var(--gray-300);
 
-        %-o-field-box {
+        .o_outlined,
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label .o_property_field_value,
+        .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) {
             margin-bottom: var(--o-field-box-spacing);
             border-radius: calc(.5 * var(--field-spacing-unit));
             border: 1px solid var(--o-field-box-border-color);
@@ -34,7 +36,9 @@
             }
         }
 
-        %-o-field-label {
+        .o_form_label:has(+ .o_outlined),
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label label,
+        .o_inner_group:not(.oe_subtotal_footer) .o_wrap_label:has(+ .o_cell:not(.o_no_box)) .o_form_label {
             display: block !important;
             width: max-content !important;
             transform: translate(calc(var(--field-spacing-unit)), calc(-.5 * var(--field-spacing-unit)));
@@ -70,8 +74,6 @@
         /* Subtotals are already visually grouped by the footer itself, no box needed */
         .o_inner_group:not(.oe_subtotal_footer) {
             :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) {
-                @extend %-o-field-box;
-
                 .o_external_button,
                 :is(.o_field_email, .o_field_phone, .o_field_url) :is(a, button):not(.o_form_uri) {
                     height: calc(3 * var(--field-spacing-unit));
@@ -87,10 +89,6 @@
 
             .o_wrap_label:has(+ .o_cell:not(.o_no_box)) {
                 display: contents;
-
-                .o_form_label {
-                    @extend %-o-field-label;
-                }
 
                 &:has(+ .o_cell .o_required_modifier:not(.o_readonly_modifier)) .o_form_label {
                     font-weight: var(--o-bs-font-weight-semibold);
@@ -118,13 +116,7 @@
             .o_property_field.o_wrap_label {
                 display: contents;
 
-                .o_property_field_value {
-                    @extend %-o-field-box;
-                }
-
                 label {
-                    @extend %-o-field-label;
-
                     &:has(+ .o_property_field_value .o_required_modifier:not(.o_readonly_modifier)) {
                         font-weight: var(--o-bs-font-weight-semibold);
                     }
@@ -137,8 +129,6 @@
         }
 
         .o_outlined {
-            @extend %-o-field-box;
-
             /* `.o_row` pulls its content outwards to align it on the edges of */
             /* the cell holding it. As the box itself, it would rather stick out */
             /* of the boxes of the fields around it. */
@@ -156,8 +146,6 @@
         }
 
         .o_form_label:has(+ .o_outlined) {
-            @extend %-o-field-label;
-
             &:has(+ .o_outlined .o_required_modifier:not(.o_readonly_modifier)) {
                 font-weight: var(--o-bs-font-weight-semibold);
             }
