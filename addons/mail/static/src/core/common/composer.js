@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
@@ -26,14 +25,16 @@ import {
     immediateEffect,
     markup,
     onMounted,
+    onPatched,
     onWillDestroy,
     onWillUnmount,
     proxy,
+    shallowEqual,
     signal,
     t,
-    untrack,
     useApp,
     useListener,
+    useOnChange,
     usePlugin,
     useProps,
 } from "@odoo/owl";
@@ -255,61 +256,68 @@ export class Composer extends Component {
                         : !this.thread?.messageInEdition?.composer?.isEditComposerVisible)
             );
         }
-        useLayoutEffect(
-            () => {
-                const focus = this.props.autofocus + this.props.composer.autofocus;
-                if (focus && this.ref()) {
-                    this.selection.restore();
-                    this.ref().focus();
-                }
-                if (focus && this.editor?.editable) {
-                    this.editor.shared.selection.focusEditable();
-                    this.editor.shared.selection.selectAroundNonEditable();
-                }
-            },
-            () => [
-                this.props.autofocus + this.props.composer.autofocus,
-                this.props.placeholder,
-                untrack(this.ref),
-            ]
-        );
-        useLayoutEffect(
-            () => {
-                if (this.props.composer.replyToMessage) {
+        // on the patched composer (`focusRequest` is observed by the rendering): the text
+        // changed with the request has to be rendered, and the composer may be moved around
+        let focusedFor; // [focusRequest, placeholder, textarea]
+        const focusComposer = () => {
+            const focus = this.focusRequest;
+            const deps = [focus, this.props.placeholder, this.ref()];
+            if (focusedFor && shallowEqual(deps, focusedFor)) {
+                return;
+            }
+            focusedFor = deps;
+            if (focus && this.ref()) {
+                this.selection.restore();
+                this.ref().focus();
+            }
+            if (focus && this.editor?.editable) {
+                this.editor.shared.selection.focusEditable();
+                this.editor.shared.selection.selectAroundNonEditable();
+            }
+        };
+        onMounted(focusComposer);
+        onPatched(focusComposer);
+        useOnChange(
+            () => [this.props.composer.replyToMessage],
+            (replyToMessage) => {
+                if (replyToMessage) {
                     this.props.composer.autofocus++;
                 }
-            },
-            () => [this.props.composer.replyToMessage]
+            }
         );
-        useLayoutEffect(
-            () => {
+        useOnChange(
+            () => [this.props.composer.composerText],
+            () => this.saveContentDebounced()
+        );
+        // measured and restored on the patched textarea, after the text it renders changed
+        let resizedFor; // [composerText, textarea]
+        const updateTextareaHeightAndCursor = () => {
+            const textareaEl = this.ref();
+            const composerText = this.props.composer.composerText;
+            if (!resizedFor || resizedFor[0] !== composerText || resizedFor[1] !== textareaEl) {
+                resizedFor = [composerText, textareaEl];
                 const fakeTextareaEl = this.fakeTextarea();
-                if (fakeTextareaEl?.scrollHeight && this.ref()) {
+                if (fakeTextareaEl?.scrollHeight && textareaEl) {
                     let wasEmpty = false;
                     if (!fakeTextareaEl.value) {
                         wasEmpty = true;
                         fakeTextareaEl.value = "0";
                     }
-                    this.ref().style.height = fakeTextareaEl.scrollHeight + "px";
+                    textareaEl.style.height = fakeTextareaEl.scrollHeight + "px";
                     if (wasEmpty) {
                         fakeTextareaEl.value = "";
                     }
                 }
-                this.saveContentDebounced();
-            },
-            () => [this.props.composer.composerText, untrack(this.ref)]
-        );
-        useLayoutEffect(
-            () => {
-                if (!this.props.composer.forceCursorMove) {
-                    return;
-                }
+            }
+            if (this.props.composer.forceCursorMove) {
                 this.selection.restore();
                 this.props.composer.forceCursorMove = false;
-            },
-            () => [this.props.composer.forceCursorMove]
-        );
-        useLayoutEffect(
+            }
+        };
+        onMounted(updateTextareaHeightAndCursor);
+        onPatched(updateTextareaHeightAndCursor);
+        useOnChange(
+            () => [this.props.type],
             () => {
                 if (!this.ancestors.inChatter || !this.props.composer.mentionedPartners.length) {
                     return;
@@ -343,10 +351,22 @@ export class Composer extends Component {
                 if (hasChanged) {
                     this.props.composer.composerHtml = getInnerHtml(fragment);
                 }
-            },
-            () => [this.props.type]
+            }
         );
-        useLayoutEffect(
+        // not before mounted: the actions are only complete once the setup (and its patches) ran
+        const isMounted = signal(false);
+        onMounted(() => isMounted.set(true));
+        useOnChange(
+            () =>
+                isMounted()
+                    ? [
+                          this.state.isFullComposerOpen,
+                          this.props.composer.restoredFromFullComposer,
+                          this.props.composer.message
+                              ? this.moreAction()?.actionRef()
+                              : this.rootRef()?.querySelector("button[name='open-full-composer']"),
+                      ]
+                    : [],
             (isFullComposerOpen, restoredFromFullComposer, fullComposerButtonEl) => {
                 if (isFullComposerOpen || !restoredFromFullComposer || !fullComposerButtonEl) {
                     this.fullComposerRecoveryPopover.close();
@@ -365,14 +385,7 @@ export class Composer extends Component {
                         this.props.composer.restoredFromFullComposer = false;
                     },
                 });
-            },
-            () => [
-                this.state.isFullComposerOpen,
-                this.props.composer.restoredFromFullComposer,
-                this.props.composer.message
-                    ? untrack(() => this.moreAction()?.actionRef())
-                    : untrack(this.rootRef)?.querySelector("button[name='open-full-composer']"),
-            ]
+            }
         );
         onMounted(() => {
             this.ref()?.scrollTo({ top: 0, behavior: "instant" });
@@ -518,6 +531,11 @@ export class Composer extends Component {
 
     get extended() {
         return this.props.mode === "extended";
+    }
+
+    /** Incremented to (re)focus the composer. */
+    get focusRequest() {
+        return this.props.autofocus + this.props.composer.autofocus;
     }
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
