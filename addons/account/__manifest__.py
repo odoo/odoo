@@ -111,7 +111,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/scss/account_searchpanel.css',
             'account/static/src/scss/account_payment_term.css',
             'account/static/src/scss/account_reconcile_model.css',
-            'account/static/src/scss/account_multi_ledger.scss',
+            'account/static/src/scss/account_multi_ledger.css',
             'account/static/src/scss/account_move_send_wizard.css',
             'account/static/src/scss/account_type_selection.css',
             'account/static/src/components/**/*',
