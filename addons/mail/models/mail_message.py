@@ -1156,7 +1156,7 @@ class MailMessage(models.Model):
 
         :param inbox_fields: if True, also add inbox fields: followers of the current target for
             each thread of each message as well as module icon and priority fields.
-            Only applicable if ``res.target`` is a specific user.
+            Only applicable if the target is a specific user.
 
         :param chatter_fields: forwarded to _store_attachment_fields
 
@@ -1187,10 +1187,13 @@ class MailMessage(models.Model):
             sudo=True,
         )
         res.extend(["body", "create_date", "date"])
-        res.attr(
-            "email_from",
-            predicate=lambda m: res.is_for_internal_users()
-            or (not m.author_id and not m.author_guest_id),
+
+        def is_email_visible_predicate(res):
+            is_for_internal_users = res.is_for_internal_users()
+            return lambda m: is_for_internal_users or (not m.author_id and not m.author_guest_id)
+
+        res.for_target(
+            lambda res: res.attr("email_from", predicate=is_email_visible_predicate(res)),
         )
         # keep "model" for iOS app
         res.extend(["incoming_email_cc", "incoming_email_to", "message_type", "model"])
@@ -1212,11 +1215,7 @@ class MailMessage(models.Model):
         )
         res.attr("pinned_at")
         res.from_method("_store_reaction_group_fields")
-        res.attr(
-            "reply_to",
-            predicate=lambda m: res.is_for_internal_users()
-            or (not m.author_id and not m.author_guest_id)
-        )
+        res.for_target(lambda res: res.attr("reply_to", predicate=is_email_visible_predicate(res)))
         # keep "record_name" and "res_id" for iOS app
         res.extend(["record_name", "res_id"])
         # sudo - mail.poll: reading poll of accessible message is allowed.
@@ -1234,13 +1233,13 @@ class MailMessage(models.Model):
         res.attr("write_date")
         self._store_linked_messages_fields(res)
         self._store_message_link_previews_fields(res)
-        if res.is_for_internal_users():
-            # sudo - mail.notification: internal users can access notifications.
-            res.many(
-                "notification_ids",
-                "_store_notification_fields",
-                sudo=True,
-            )
+
+        def notification_fields(res):
+            if res.is_for_internal_users():
+                # sudo - mail.notification: internal users can access notifications.
+                res.many("notification_ids", "_store_notification_fields", sudo=True)
+
+        res.for_target(notification_fields)
 
         scheduled_dt_by_msg = defaultdict(bool)
         if self:
@@ -1249,25 +1248,37 @@ class MailMessage(models.Model):
                 scheduled_dt_by_msg[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
         record_by_message = self._record_by_message()
         records = record_by_message.values()
-        non_channel_records = filter(lambda record: record._name != "discuss.channel", records)
-        target_user = res.target_user()
+        non_channel_records = [record for record in records if record._name != "discuss.channel"]
         follower_by_record_and_partner = defaultdict(self.env["mail.followers"].browse)
-        if target_user and inbox_fields and non_channel_records:
-            if followers is None:
-                domain = Domain.OR(
-                    [("res_model", "=", model), ("res_id", "in", [r.id for r in records])]
-                    for model, records in groupby(non_channel_records, key=lambda r: r._name)
-                )
-                domain &= Domain("partner_id", "=", target_user.partner_id.id)
-                # sudo: mail.followers - reading followers of current partner
-                followers = self.env["mail.followers"].sudo().search(domain)
-            else:
-                followers = followers.get(self.env)
-            for follower in followers:
-                follower_by_record_and_partner[
-                    self.env[follower.res_model].browse(follower.res_id),
-                    follower.partner_id,
-                ] = follower
+        fetched_follower_partners = set()
+
+        def self_follower_fields(res):
+            target_user = res.target_user()
+            if not (target_user and inbox_fields):
+                return
+            if target_user.partner_id not in fetched_follower_partners:
+                fetched_follower_partners.add(target_user.partner_id)
+                if followers is None:
+                    domain = Domain.OR(
+                        [("res_model", "=", model), ("res_id", "in", [r.id for r in records])]
+                        for model, records in groupby(non_channel_records, key=lambda r: r._name)
+                    )
+                    domain &= Domain("partner_id", "=", target_user.partner_id.id)
+                    # sudo: mail.followers - reading followers of current partner
+                    target_followers = self.env["mail.followers"].sudo().search(domain)
+                else:
+                    target_followers = followers.get(self.env)
+                for follower in target_followers:
+                    follower_by_record_and_partner[
+                        self.env[follower.res_model].browse(follower.res_id),
+                        follower.partner_id,
+                    ] = follower
+            res.one(
+                "selfFollower",
+                ["is_active", "partner_id"],
+                value=lambda t: follower_by_record_and_partner[t, target_user.partner_id],
+            )
+
         res.one(
             "thread",
             lambda res: (
@@ -1279,12 +1290,7 @@ class MailMessage(models.Model):
                     lambda t: modules.module.get_module_icon(t._original_module),
                     predicate=lambda t: inbox_fields and t._original_module,
                 ),
-                res.one(
-                    "selfFollower",
-                    ["is_active", "partner_id"],
-                    predicate=lambda t: target_user and inbox_fields and non_channel_records,
-                    value=lambda t: follower_by_record_and_partner[t, target_user.partner_id],
-                ),
+                res.for_target(self_follower_fields),
                 res.attr(
                     "priority",
                     value=lambda t: t[t._priority_field],
@@ -1300,8 +1306,7 @@ class MailMessage(models.Model):
             as_thread=True,
             value=record_by_message.get,
         )
-        if res.is_for_current_user():
-            res.append("is_bookmarked")
+        res.for_current_user(["is_bookmarked"])
 
         def default_subject(message):
             if record := record_by_message.get(message):
@@ -1323,8 +1328,8 @@ class MailMessage(models.Model):
             lambda message: tools.mail.email_split_tuples(message.incoming_email_to),
             predicate=lambda message: message.incoming_email_to,
         )
-        if res.is_for_current_user():
 
+        def needaction_fields(res):
             def needaction(message):
                 # sudo: mail.message - checking whether there is a notification for the current user is acceptable
                 return not message.env.user._is_public() and bool(
@@ -1345,6 +1350,8 @@ class MailMessage(models.Model):
 
             res.attr("needaction", needaction)
             res.attr("needaction_done", needaction_done)
+
+        res.for_current_user(needaction_fields)
 
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is
@@ -1371,8 +1378,8 @@ class MailMessage(models.Model):
         res.attr("name")
 
     def _store_attachment_dynamic_fields(self, attachment_res: Store.FieldList):
-        if attachment_res.is_for_current_user() and self.is_current_user_or_guest_author:
-            attachment_res.from_method("_store_ownership_fields")
+        if self.is_current_user_or_guest_author:
+            attachment_res.for_current_user("_store_ownership_fields")
 
     def _store_linked_messages_fields(self, res: Store.FieldList):
         """Add the messages that are referenced by the current message's body to the given store.
