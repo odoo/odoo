@@ -98,8 +98,8 @@ export class AutoComplete extends Component {
             try {
                 await this.open(true);
                 currentPromise.resolve();
-            } catch {
-                currentPromise.reject();
+            } catch (e) {
+                currentPromise.reject(e);
             } finally {
                 if (currentPromise === this.loadingPromise) {
                     this.loadingPromise = null;
