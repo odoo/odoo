@@ -317,61 +317,91 @@ class AccountAnalyticPlan(models.Model):
             self._sync_plan_column(model)
 
     def _sync_plan_column(self, model):
-        # Create/delete a new field/column on related models for this plan, and keep the name in sync.
-        # Sort by parent_path to ensure parents are processed before children
-        for plan in self.sorted('parent_path'):
-            prev_stored = plan._find_plan_column(model)
-            depth, name_related = plan._hierarchy_name()
-            prev_related = plan._find_related_field(model)
-            if plan.parent_id:
-                # If there is a parent, we just need to make sure there is a field to group by the hierarchy level
-                # of this plan, allowing to group by sub plan
-                if prev_stored:
-                    prev_stored.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
-                description = f"{plan.root_id.name} ({depth})"
-                if not prev_related:
-                    self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
-                        'name': name_related,
-                        'field_description': description,
-                        'state': 'manual',
-                        'model': model,
-                        'model_id': self.env['ir.model']._get_id(model),
-                        'ttype': 'many2one',
-                        'relation': 'account.analytic.plan',
-                        'related': plan._column_name() + '.plan_id' + '.parent_id' * (depth - 1),
-                        'store': False,
-                        'readonly': True,
-                    })
-                else:
-                    prev_related.field_description = description
+        # Create/delete a new field/column on related models for this plan (and its sub plans), and keep the name
+        # in sync.
+        # Every write/create/unlink on ir.model.fields reloads the registry, so everything is done in batch: the
+        # fields only depend on the root plans (one stored field each) and on the (root plan, depth) pairs (one
+        # related field each), no matter how many plans share them.
+        if not self:
+            return
+        plans = self.browse()
+        todo = self
+        while todo:
+            plans |= todo
+            todo = todo.children_ids - plans
+        roots = plans.filtered(lambda p: not p.parent_id)
+        subplans = plans - roots
+        stored_vals = {}  # {column: description}
+        related_vals = {}  # {fname: (root plan, depth)}
+        to_remove = set()
+        for plan in roots:
+            stored_vals[plan._strict_column_name()] = plan.name
+        for plan in subplans:
+            to_remove.add(plan._strict_column_name())
+            depth, fname = plan._hierarchy_name()
+            related_vals[fname] = (plan.root_id, depth)
+
+        IrModelFields = self.env['ir.model.fields'].sudo()
+        existing = IrModelFields.search([
+            ('model', '=', model),
+            ('name', 'in', list(stored_vals.keys() | related_vals.keys() | to_remove)),
+        ]).grouped('name')
+
+        # Remove the stored fields of the plans that got a parent and the related fields of the plans that lost it
+        to_unlink = IrModelFields.browse(existing[fname].id for fname in to_remove if fname in existing)
+        to_unlink.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+
+        to_create = []
+        to_write = {}  # {description: fields}
+        model_id = self.env['ir.model']._get_id(model)
+
+        def field_vals(fname, description):
+            return {
+                'name': fname,
+                'field_description': description,
+                'state': 'manual',
+                'model': model,
+                'model_id': model_id,
+                'ttype': 'many2one',
+            }
+
+        for column, description in stored_vals.items():
+            if column in existing:
+                to_write.setdefault(description, []).append(existing[column])
             else:
-                # If there is no parent, then we need to create a new stored field as this is the root plan
-                if prev_related:
-                    prev_related.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
-                description = plan.name
-                if not prev_stored:
-                    column = plan._strict_column_name()
-                    field = self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
-                        'name': column,
-                        'field_description': description,
-                        'state': 'manual',
-                        'model': model,
-                        'model_id': self.env['ir.model']._get_id(model),
-                        'ttype': 'many2one',
-                        'relation': 'account.analytic.account',
-                        'copied': True,
-                        'on_delete': 'restrict',
-                    })
-                    Model = self.env[model]
-                    if Model._auto:
-                        tablename = Model._table
-                        indexname = make_index_name(tablename, column)
-                        create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
-                        field['index'] = True
-                else:
-                    prev_stored.field_description = description
-        if self.children_ids:
-            self.children_ids._sync_plan_column(model)
+                to_create.append({
+                    **field_vals(column, description),
+                    'relation': 'account.analytic.account',
+                    'copied': True,
+                    'on_delete': 'restrict',
+                })
+        for fname, (root, depth) in related_vals.items():
+            description = f"{root.name} ({depth})"
+            if fname in existing:
+                to_write.setdefault(description, []).append(existing[fname])
+            else:
+                to_create.append({
+                    **field_vals(fname, description),
+                    'relation': 'account.analytic.plan',
+                    'related': root._strict_column_name() + '.plan_id' + '.parent_id' * (depth - 1),
+                    'store': False,
+                    'readonly': True,
+                })
+
+        if to_create:
+            created = IrModelFields.with_context(update_custom_fields=True).create(to_create)
+            Model = self.env[model]
+            if Model._auto:
+                tablename = Model._table
+                stored = created.filtered('store')
+                for column in stored.mapped('name'):
+                    indexname = make_index_name(tablename, column)
+                    create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
+                stored.index = True
+        for description, fields_list in to_write.items():
+            IrModelFields.browse(
+                f.id for f in fields_list if f.field_description != description
+            ).field_description = description
 
     @api.model_create_multi
     def create(self, vals_list):
