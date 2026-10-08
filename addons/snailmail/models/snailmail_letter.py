@@ -371,8 +371,7 @@ class SnailmailLetter(models.Model):
             return 'sn_error'
 
     def _snailmail_print(self, immediate=True):
-        valid_address_letters = self.filtered(lambda l: l._is_valid_address(l))
-        invalid_address_letters = self - valid_address_letters
+        valid_address_letters, invalid_address_letters = self.partitioned(lambda l: l._is_valid_address(l))
         invalid_address_letters._snailmail_print_invalid_address()
         if valid_address_letters and immediate:
             for letter in valid_address_letters:

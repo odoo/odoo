@@ -54,10 +54,9 @@ class AccountPayment(models.Model):
         Triggered by the 'Thailand: 50 tawi' bulk print action.
         Validates the records and downloads a ZIP containing individual PDF reports,
         """
-        invalid_payments = self.filtered(
+        invalid_payments, valid_payments = self.partitioned(
             lambda p: p.state not in ['paid', 'reconciled'] or p.payment_type == 'inbound' or p.country_code != 'TH' or not p.withholding_line_ids,
         )
-        valid_payments = self - invalid_payments
 
         if not valid_payments:
             raise UserError(_("No eligible payments found for 50 Tawi report."))

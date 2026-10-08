@@ -129,8 +129,7 @@ class AccountPayment(models.Model):
         return withholding_lines
 
     def _generate_journal_entry(self, write_off_line_vals=None, force_balance=None, line_ids=None):
-        withhold_payments = self.filtered(lambda p: p.withhold == 'withhold')
-        regular_payments = self - withhold_payments
+        withhold_payments, regular_payments = self.partitioned(lambda p: p.withhold == 'withhold')
 
         if regular_payments:
             super(AccountPayment, regular_payments)._generate_journal_entry(write_off_line_vals, force_balance, line_ids)

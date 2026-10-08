@@ -357,8 +357,7 @@ class CrmLead(models.Model):
     @api.depends('create_date', 'date_open')
     def _compute_day_open(self):
         """ Compute difference between create date and open date """
-        leads = self.filtered(lambda l: l.date_open and l.create_date)
-        others = self - leads
+        leads, others = self.partitioned(lambda l: l.date_open and l.create_date)
         others.day_open = None
         for lead in leads:
             date_create = fields.Datetime.from_string(lead.create_date).replace(microsecond=0)
@@ -368,8 +367,7 @@ class CrmLead(models.Model):
     @api.depends('create_date', 'date_closed')
     def _compute_day_close(self):
         """ Compute difference between current date and log date """
-        leads = self.filtered(lambda l: l.date_closed and l.create_date)
-        others = self - leads
+        leads, others = self.partitioned(lambda l: l.date_closed and l.create_date)
         others.day_close = None
         for lead in leads:
             date_create = fields.Datetime.from_string(lead.create_date)
@@ -803,8 +801,7 @@ class CrmLead(models.Model):
             result = super().write(vals)
         else:
             # stage change between two won stages: does not change the date_closed
-            leads_already_won = self.filtered(lambda lead: lead.stage_id.is_won)
-            remaining = self - leads_already_won
+            leads_already_won, remaining = self.partitioned(lambda lead: lead.stage_id.is_won)
             if remaining:
                 result = super(CrmLead, remaining).write(vals)
             if leads_already_won:

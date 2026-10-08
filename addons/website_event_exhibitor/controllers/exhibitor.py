@@ -90,8 +90,7 @@ class ExhibitorController(WebsiteEventController):
         for sponsor_category, sponsors in sponsor_categories_dict.items():
             # To display random published sponsors first and random unpublished sponsors last
             if is_event_user:
-                published_sponsors = sponsors.filtered(lambda s: s.website_published)
-                unpublished_sponsors = sponsors - published_sponsors
+                published_sponsors, unpublished_sponsors = sponsors.partitioned(lambda s: s.website_published)
                 random_sponsors = sample(published_sponsors, len(published_sponsors)) + sample(unpublished_sponsors, len(unpublished_sponsors))
             else:
                 random_sponsors = sample(sponsors, len(sponsors))

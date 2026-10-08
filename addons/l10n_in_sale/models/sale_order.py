@@ -46,10 +46,9 @@ class SaleOrder(models.Model):
 
         # Handle non-Indian orders using standard logic
         FiscalPosition = self.env['account.fiscal.position']
-        non_in_orders = self.filtered(lambda o: o.country_code != 'IN')
+        non_in_orders, in_orders = self.partitioned(lambda o: o.country_code != 'IN')
         super(SaleOrder, non_in_orders)._compute_fiscal_position_id()
 
-        in_orders = self - non_in_orders
         orders_group_by_fp = in_orders.grouped(_get_partner_fiscal)
         orders_without_fiscal = orders_group_by_fp.pop(FiscalPosition, False)
         for fiscal_position, orders in orders_group_by_fp.items():

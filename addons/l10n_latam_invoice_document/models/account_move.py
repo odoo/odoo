@@ -89,10 +89,9 @@ class AccountMove(models.Model):
     @api.depends('l10n_latam_document_type_id', 'journal_id')
     def _compute_l10n_latam_manual_document_number(self):
         """ Indicates if this document type uses a sequence or if the numbering is made manually """
-        recs_with_journal_id = self.filtered(lambda x: x.journal_id and x.l10n_latam_use_documents)
+        recs_with_journal_id, remaining = self.partitioned(lambda x: x.journal_id and x.l10n_latam_use_documents)
         for rec in recs_with_journal_id:
             rec.l10n_latam_manual_document_number = rec._is_manual_document_number()
-        remaining = self - recs_with_journal_id
         remaining.l10n_latam_manual_document_number = False
 
     def _is_manual_document_number(self):
@@ -105,14 +104,13 @@ class AccountMove(models.Model):
 
     @api.depends('name')
     def _compute_l10n_latam_document_number(self):
-        recs_with_name = self.filtered(lambda x: x.name and x.name != "/")
+        recs_with_name, remaining = self.partitioned(lambda x: x.name and x.name != "/")
         for rec in recs_with_name:
             name = rec.name
             doc_code_prefix = rec.l10n_latam_document_type_id.doc_code_prefix
             if doc_code_prefix and name:
                 name = name.split(" ", 1)[-1]
             rec.l10n_latam_document_number = name
-        remaining = self - recs_with_name
         remaining.l10n_latam_document_number = False
 
     @api.onchange('l10n_latam_document_type_id', 'l10n_latam_document_number', 'partner_id')

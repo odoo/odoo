@@ -66,8 +66,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         domain = self._get_domain(date_start, date_stop, config_ids, session_ids, **kwargs)
 
         all_orders = self.env['pos.order'].search(domain)
-        orders = all_orders.filtered(lambda o: o.state != 'cancel')
-        cancel_orders = all_orders - orders
+        orders, cancel_orders = all_orders.partitioned(lambda o: o.state != 'cancel')
         PosSession = self.env['pos.session']
 
         if config_ids:

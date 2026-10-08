@@ -109,9 +109,8 @@ class ProductProduct(models.Model):
         Exclude kit products from inventory valuation to avoid double counting.
         Only non-kit products are valuated; kits are set to zero value.
         """
-        non_kit_products = self.filtered(lambda product: not product.is_kits)
+        non_kit_products, kit_products = self.partitioned(lambda product: not product.is_kits)
         super(ProductProduct, non_kit_products)._compute_value()
-        kit_products = self - non_kit_products
         for kit_product in kit_products:
             kit_product.company_currency_id = kit_product.company_id.currency_id or self.env.company.currency_id
             kit_product.total_value = 0.0

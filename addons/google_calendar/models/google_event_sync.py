@@ -163,8 +163,7 @@ class GoogleEventSync(models.AbstractModel):
             records_to_sync = self
         cancelled_records = self - records_to_sync
 
-        updated_records = records_to_sync.filtered('google_id')
-        new_records = records_to_sync - updated_records
+        updated_records, new_records = records_to_sync.partitioned('google_id')
         for record in cancelled_records:
             if record.google_id and record.need_sync:
                 record.with_user(record._get_event_user())._google_delete(google_service, record._get_google_calendar_path(), record.google_id)

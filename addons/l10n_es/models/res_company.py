@@ -84,10 +84,9 @@ class ResCompany(models.Model):
             ('l10n_es_applicability', '!=', False)
         ])
 
-        canary_taxes = regime_taxes.filtered(
+        canary_taxes, mainland_taxes = regime_taxes.partitioned(
             lambda t: t.l10n_es_applicability == '03'
         )
-        mainland_taxes = regime_taxes - canary_taxes
 
         is_canary = self._l10n_es_is_canary()
         canary_taxes.active = is_canary

@@ -464,8 +464,7 @@ class ProjectProject(models.Model):
         """ Reset state for waiting tasks in the project if the feature is disabled
             or recompute the tasks with dependencies if the project has the feature enabled again
         """
-        project_with_task_dependencies_feature = self.filtered('allow_task_dependencies')
-        projects_without_task_dependencies_feature = self - project_with_task_dependencies_feature
+        project_with_task_dependencies_feature, projects_without_task_dependencies_feature = self.partitioned('allow_task_dependencies')
         ProjectTask = self.env['project.task']
         if (
             project_with_task_dependencies_feature

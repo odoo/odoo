@@ -71,8 +71,7 @@ class PosPaymentMethod(models.Model):
             self._force_online_payment_values(vals)
             return super().write(vals)
 
-        opm = self.filtered(lambda p: p.type == 'online')
-        not_opm = self - opm
+        opm, not_opm = self.partitioned(lambda p: p.type == 'online')
 
         res = True
         if opm:

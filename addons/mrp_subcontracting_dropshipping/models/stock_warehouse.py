@@ -34,7 +34,7 @@ class StockWarehouse(models.Model):
         subcontracting_locations = self._get_subcontracting_locations()
         route_id = self._find_or_create_global_route('stock_dropshipping.route_drop_shipping',
                                            _('Dropship Subcontractor on Order'))
-        warehouses_dropship = self.filtered(lambda w: w.subcontracting_to_resupply and w.active)
+        warehouses_dropship, warehouses_no_dropship = self.partitioned(lambda w: w.subcontracting_to_resupply and w.active)
         if warehouses_dropship:
             self.env['stock.rule'].with_context(active_test=False).search([
                 ('route_id', '=', route_id.id),
@@ -42,7 +42,6 @@ class StockWarehouse(models.Model):
                 ('warehouse_id', 'in', warehouses_dropship.ids),
                 ('location_src_id', 'in', subcontracting_locations.ids)]).action_unarchive()
 
-        warehouses_no_dropship = self - warehouses_dropship
         if warehouses_no_dropship:
             self.env['stock.rule'].search([
                 ('route_id', '=', route_id.id),
