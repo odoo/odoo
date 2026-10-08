@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    View for settings.view model-->
+    <record id="settings_view_for_users" model="ir.ui.view">
+        <field name="name">Default Settings</field>
+        <field name="model">settings.view</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="commission"/>
+                    <field name="amt_limit"/>
+                    <field name="minimum_gap"/>
+                </group>
+                <footer>
+                    <button special="cancel" data-hotkey="z" string="Cancel"
+                            type="object" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <!--    Action and view for settings.view model-->
+    <record id="settings_view_action" model="ir.actions.act_window">
+        <field name="name">Default Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">settings.view</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="settings_view_for_users"/>
+        <field name="target">new</field>
+    </record>
+</odoo>
