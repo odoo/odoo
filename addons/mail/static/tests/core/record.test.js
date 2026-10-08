@@ -1030,6 +1030,27 @@ test("attr that are default [] should be isolated per record", async () => {
     expect(p2.names).toEqual([]);
 });
 
+test("in-place mutation of an array attr is reactive", async () => {
+    (class Person extends Record {
+        static id = "id";
+        id;
+        names = fields.Attr([], { asProxy: true });
+    }).register(localRegistry);
+    const store = await start();
+    const person = store.Person.insert({ id: 1 });
+    const disposeFn = immediateEffect(() => {
+        expect.step(`names:${person.names.length}`);
+    });
+    after(() => disposeFn());
+    expect.verifySteps(["names:0"]);
+    person.names.push("John");
+    expect.verifySteps(["names:1"]);
+    person.names.push("Jane");
+    expect.verifySteps(["names:2"]);
+    person.names = [];
+    expect.verifySteps(["names:0"]);
+});
+
 test("record.toData() is JSON stringified and can be reinserted as record", async () => {
     // If the default value is stored and reused for all records,
     // this could lead to mistakenly sharing the default value among records
@@ -1573,6 +1594,24 @@ test("Can delete record with chained onEnter: () => record.delete()", async () =
     expect(thread.exists()).toBe(false);
 });
 
+test("a getter patched after the store is made returns the patched value", async () => {
+    const Thread = class Thread extends Record {
+        static id = "name";
+        name;
+        get label() {
+            return `Thread: ${this.name}`;
+        }
+    };
+    Thread.register(localRegistry);
+    const store = await start();
+    patch(Thread.prototype, {
+        get label() {
+            return `${super.label} (patched)`;
+        },
+    });
+    expect(store.Thread.insert("general").label).toBe("Thread: general (patched)");
+});
+
 test("fields, getters and functions are inherited", async () => {
     (class Thread extends Record {
         static id = "id";
@@ -1697,6 +1736,23 @@ test("A field declared with localStorage() is restored from local storage", asyn
     const store = await start();
     const message = store.Message.insert(1);
     expect(message.body).toBe("test");
+});
+
+test("localStorage entry equal to the field default is dropped on restore", async () => {
+    class Message extends Record {
+        static id = "id";
+        id;
+        body = this.localStorage("hello");
+    }
+    Message.register(localRegistry);
+    const bodyLocalId = makeRecordFieldLocalId(Message.localId(1), "body");
+    localStorage.setItem(bodyLocalId, toRawValue("hello"));
+    const store = await start();
+    const message = store.Message.insert(1);
+    expect(message.body).toBe("hello");
+    expect(localStorage.getItem(bodyLocalId)).toBe(null);
+    message.body = "world";
+    expect(localStorage.getItem(bodyLocalId)).toBe(toRawValue("world"));
 });
 
 test("Fields updated from the local storage do not trigger another storage event", async () => {
