@@ -1,7 +1,7 @@
 import {
     SIZES,
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     hover,
     insertText,
@@ -31,7 +31,7 @@ import {
 import { advanceTime, freezeTime, unfreezeTime } from "@odoo/hoot-dom";
 import {
     Command,
-    contains as webContains,
+    contains,
     getService,
     onRpc,
     serverState,
@@ -105,10 +105,10 @@ test("deleted message should not show parent message reference and mentions", as
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-MessageInReply:has(:text('Parent Message')):count(1)");
-    await webContains(
+    await contains(
         ".o-mail-Message:has(.o-mail-Message-bubble.o-orange):contains('reply message')"
     ).hover();
-    await webContains(
+    await contains(
         ".o-mail-Message:has(.o-mail-Message-bubble.o-orange):contains('reply message') [title='Expand']"
     ).click();
     await click(".o-mail-Message-moreMenu .o-dropdown-item:contains(Delete)");
@@ -176,7 +176,7 @@ test("channel preview ignores messages from the past", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(30)");
     await waitFor(".o-mail-Message-content:has(:text('last message')):count(1)");
-    await contains(".o-mail-Thread", { scroll: "bottom" });
+    await mailContains(".o-mail-Thread", { scroll: "bottom" });
     await click(".o-mail-MessageInReply-content:has(:text('first message'))");
     await waitFor(".o-mail-Message:count(31)");
     await waitFor(".o-mail-Message-content:has(:text('first message')):count(1)");
@@ -326,7 +326,7 @@ test("counter does not double count channel needaction messages", async () => {
     });
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL); // fetch channels
-    await contains(".o-mail-NotificationItem", { text: "General" }); // ensure channels fetched
+    await mailContains(".o-mail-NotificationItem", { text: "General" }); // ensure channels fetched
     await waitFor(".o-mail-MessagingMenuInDropdown-counter:text('1'):count(1)");
 });
 
@@ -350,12 +350,12 @@ test("clicking on a channel waits for the prefetch, up to a cap when it is slow"
     freezeTime();
     await click(".o-mail-NotificationItem:contains(General)");
     await advanceTime(PREFETCH_MAX_WAIT - 1);
-    await contains(".o-mail-DiscussContent-threadName", { count: 0 });
+    await mailContains(".o-mail-DiscussContent-threadName", { count: 0 });
     await advanceTime(1);
-    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "General" });
     unfreezeTime();
     fetchDeferred.resolve();
-    await contains(".o-mail-Message:has(:text('Message on channel'))");
+    await mailContains(".o-mail-Message:has(:text('Message on channel'))");
 });
 
 test("opening a prefetched channel with a mention drops its needaction counter", async () => {
@@ -386,14 +386,14 @@ test("opening a prefetched channel with a mention drops its needaction counter",
     listenStoreFetch("/discuss/channel/messages");
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-NotificationItem:contains(General) .o-mail-NotificationItem-badge");
+    await mailContains(".o-mail-NotificationItem:contains(General) .o-mail-NotificationItem-badge");
     await pointerDown(".o-mail-NotificationItem:contains(General)");
     await waitStoreFetch("/discuss/channel/messages");
     await expect.waitForSteps([]);
     await pointerUp(".o-mail-NotificationItem:contains(General)");
     await expect.waitForSteps(["mark-all-messages-as-read"]);
-    await contains(".o-mail-Message:has(:text('Hey @Mitchell Admin'))");
-    await contains(".o-mail-NotificationItem-badge", { count: 0 });
+    await mailContains(".o-mail-Message:has(:text('Hey @Mitchell Admin'))");
+    await mailContains(".o-mail-NotificationItem-badge", { count: 0 });
 });
 
 test("clicking on channel actions do not prefetches its messages", async () => {
@@ -404,7 +404,7 @@ test("clicking on channel actions do not prefetches its messages", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await hover(".o-mail-NotificationItem:contains(General)");
     await click(".o-mail-MessagingMenu-actions button");
-    await contains(".o-mail-MessagingMenu-dropdownMenu");
+    await mailContains(".o-mail-MessagingMenu-dropdownMenu");
     expect.verifySteps([]);
     await click(".o-mail-NotificationItem:contains(General)");
     await waitStoreFetch("/discuss/channel/messages");

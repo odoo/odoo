@@ -1,7 +1,7 @@
 import {
     SIZES,
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openDiscuss,
@@ -171,7 +171,7 @@ test("Open a GIF category trigger the search for the category", async () => {
     await click("button[title='Send GIF']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await waitFor(".o-discuss-Gif:count(2)");
-    await contains("input[placeholder='Search Klipy']", { value: "cry" });
+    await mailContains("input[placeholder='Search Klipy']", { value: "cry" });
 });
 
 test("Can have GIF categories with same name", async () => {

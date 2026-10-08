@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     editInput,
     mockGetMedia,
@@ -53,10 +53,10 @@ test("Device selectors match a selected device by ID and kind", async () => {
     // endpoints. When settings are reopened, the selected label must therefore
     // also be matched by kind, or the speaker selector displays the microphone
     // endpoint listed first by enumerateDevices().
-    await contains(".o-mail-DeviceSelect-button[data-kind='audioinput']", {
+    await mailContains(".o-mail-DeviceSelect-button[data-kind='audioinput']", {
         text: "Default headset microphone",
     });
-    await contains(".o-mail-DeviceSelect-button[data-kind='audiooutput']", {
+    await mailContains(".o-mail-DeviceSelect-button[data-kind='audiooutput']", {
         text: "Default headset speakers",
     });
 });

@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openFormView,
@@ -107,7 +107,7 @@ test("code block embedded in an email message's body should be ignored", async (
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(
+    await mailContains(
         "pre[data-embedded='readonlySyntaxHighlighting']:not([data-embedded-mounted]):text(print('hello'))",
         { parent: [".o-mail-Message-shadowBody", { shadowRoot: true }] }
     );
@@ -125,11 +125,11 @@ test("read more button of an email message shows its icon", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     const shadowBody = [".o-mail-Message-shadowBody", { shadowRoot: true }];
-    await contains(".o-mail-ellipsis i[data-icon='more_horiz']", {
+    await mailContains(".o-mail-ellipsis i[data-icon='more_horiz']", {
         parent: shadowBody,
         visible: true,
     });
-    await contains("blockquote:text(Previous message)", { parent: shadowBody, visible: false });
+    await mailContains("blockquote:text(Previous message)", { parent: shadowBody, visible: false });
     await click(".o-mail-ellipsis", { parent: shadowBody });
-    await contains("blockquote:text(Previous message)", { parent: shadowBody, visible: true });
+    await mailContains("blockquote:text(Previous message)", { parent: shadowBody, visible: true });
 });

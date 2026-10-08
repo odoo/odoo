@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     onRpcBefore,
@@ -210,7 +210,9 @@ test("suggested recipients without name should show display_name instead", async
     await start();
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
-    await contains(".o-mail-RecipientsInput .o_tag_badge_text", { text: "Test Partner, Invoice" });
+    await mailContains(".o-mail-RecipientsInput .o_tag_badge_text", {
+        text: "Test Partner, Invoice",
+    });
 });
 
 test("update email for the partner on the fly", async () => {
@@ -240,7 +242,7 @@ test("recipients dropdown only offers 'Create' when the input has text", async (
     await openFormView("res.fake", fakeId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-RecipientsInput .o-autocomplete--input", "New");
-    await contains(".o_m2o_dropdown_option_create", { text: "Create New" });
+    await mailContains(".o_m2o_dropdown_option_create", { text: "Create New" });
     await insertText(".o-mail-RecipientsInput .o-autocomplete--input", "", { replace: true });
     await waitForNone(".o_m2o_dropdown_option_create");
 });

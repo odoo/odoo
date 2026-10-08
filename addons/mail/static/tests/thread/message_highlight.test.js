@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     isInViewportOf,
     openDiscuss,
@@ -127,5 +127,7 @@ test("Chatter jumps when navigating to a specific message link", async () => {
         { sync: true }
     );
     routerBus.trigger("ROUTE_CHANGE");
-    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content", { text: "message 0" });
+    await mailContains(".o-mail-Message.o-highlighted .o-mail-Message-content", {
+        text: "message 0",
+    });
 });

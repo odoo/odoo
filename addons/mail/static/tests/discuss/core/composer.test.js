@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     focus,
     insertText,
@@ -97,13 +97,13 @@ test("add an emoji after a command", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input", { value: "" });
+    await mailContains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "/");
     await click(":nth-child(2 of .o-mail-Composer-suggestion)");
-    await contains(".o-mail-Composer-input", { value: "/who " });
+    await mailContains(".o-mail-Composer-input", { value: "/who " });
     await click("button[title='Add Emojis']");
     await click(".o-Emoji:text('😊')");
-    await contains(".o-mail-Composer-input", { value: "/who 😊" });
+    await mailContains(".o-mail-Composer-input", { value: "/who 😊" });
 });
 
 test.tags("html composer");
@@ -115,7 +115,7 @@ test("html composer: send a message in a channel", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input", { value: "" });
+    await mailContains(".o-mail-Composer-input", { value: "" });
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await focus(".o-mail-Composer-html.odoo-editor-editable");
@@ -127,7 +127,7 @@ test("html composer: send a message in a channel", async () => {
     await waitFor(".o-mail-Composer-html.odoo-editor-editable:text('Hello'):count(1)");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await click(".o-mail-Message[data-persistent]:contains(Hello)");
-    await contains(".o-mail-Composer-html.odoo-editor-editable", { textContent: "" });
+    await mailContains(".o-mail-Composer-html.odoo-editor-editable", { textContent: "" });
 });
 
 test("Show self-avatar in composer of Discuss App", async () => {
@@ -206,7 +206,7 @@ test("keep mentions when channel post is deferred", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await click(".o-mail-Composer-suggestion strong:text('Mitchell Admin')");
-    await contains(".o-mail-Composer-input", { value: "@Mitchell Admin " });
+    await mailContains(".o-mail-Composer-input", { value: "@Mitchell Admin " });
     await click(".o-mail-Composer button[title='Send']:enabled");
     await animationFrame();
     resolve();

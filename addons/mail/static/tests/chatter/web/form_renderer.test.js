@@ -1,7 +1,7 @@
 import {
     SIZES,
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openFormView,
@@ -52,15 +52,15 @@ test.skip("Form view not scrolled when switching record", async () => {
         resIds: [partnerId_1, partnerId_2],
     });
     await waitFor(".o-mail-Message:count(29)");
-    await contains(".o_content", { scroll: 0 });
+    await mailContains(".o_content", { scroll: 0 });
     await scroll(".o_content", 150);
     await click(".o_pager_next");
     await waitFor(".o-mail-Message:count(30)");
-    await contains(".o_content", { scroll: 150 });
+    await mailContains(".o_content", { scroll: 150 });
     await scroll(".o_content", 0);
     await click(".o_pager_previous");
     await waitFor(".o-mail-Message:count(29)");
-    await contains(".o_content", { scroll: 0 });
+    await mailContains(".o_content", { scroll: 0 });
 });
 
 test("Attachments that have been unlinked from server should be visually unlinked from record", async () => {

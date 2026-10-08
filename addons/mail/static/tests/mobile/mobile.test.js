@@ -6,7 +6,7 @@ import {
     SIZES,
     assertChatHub,
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openDiscuss,
@@ -49,7 +49,7 @@ test("enter key should create a newline in composer", async () => {
     await press("Enter");
     await insertText(".o-mail-Composer-input", "Other");
     await click("[data-icon='send']");
-    await contains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
+    await mailContains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
 });
 
 test("can add message reaction (mobile)", mailCanAddMessageReactionMobile);

@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     listenStoreFetch,
@@ -166,7 +166,7 @@ test("sidebar: open pinned channel", async () => {
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:has(:text('General'))");
     await waitFor(".o-mail-Composer-input[placeholder='Message #General…']:count(1)");
-    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "General" });
 });
 
 test("sidebar: open channel and leave it", async () => {
@@ -180,7 +180,7 @@ test("sidebar: open channel and leave it", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "General" });
     await expect.waitForSteps([]);
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Conversation')");
@@ -249,7 +249,7 @@ test("sidebar: public channel rendering", async () => {
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await contains(".o-mail-MessagingMenuItem:has(:text('channel1'))", {
+    await mailContains(".o-mail-MessagingMenuItem:has(:text('channel1'))", {
         contains: ["[data-icon='public']"],
     });
 });
@@ -340,14 +340,14 @@ test("chat should be sorted by last activity time", async () => {
     ]);
     await start();
     await openDiscuss();
-    await contains(".o-mail-MessagingMenuItem:has(:text('Yoshi'))", {
+    await mailContains(".o-mail-MessagingMenuItem:has(:text('Yoshi'))", {
         before: [".o-mail-MessagingMenuItem:has(:text('Demo'))"],
     });
     await click(".o-mail-NotificationItem:has(:text('Demo'))");
     await insertText(".o-mail-Composer-input[placeholder='Message Demo…']", "Blabla");
     await press("Enter");
     await waitFor(".o-mail-Message:has(:text('Blabla')):count(1)");
-    await contains(".o-mail-MessagingMenuItem:has(:text('Demo'))", {
+    await mailContains(".o-mail-MessagingMenuItem:has(:text('Demo'))", {
         before: [".o-mail-MessagingMenuItem:has(:text('Yoshi'))"],
     });
 });
@@ -450,7 +450,7 @@ test("Leaving channel does not open another conversation", async () => {
     pyEnv["discuss.channel"].create({ name: "Sales" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await mailContains(".o-mail-DiscussContent-threadName", { value: "General" });
     await waitFor(
         ".o-mail-MessagingMenuItem:has(.o-mail-NotificationItem.o-active):has(:text('General')):count(1)"
     );

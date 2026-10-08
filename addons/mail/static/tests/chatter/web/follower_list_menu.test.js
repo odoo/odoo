@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     openFormView,
     scroll,
@@ -186,7 +186,7 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
     await openFormView("res.partner", partnerId_1);
     await click(".o-mail-Followers-button");
     await waitFor("a:text('Add Followers'):count(1)");
-    await contains(":nth-child(1 of .o-mail-Follower)", {
+    await mailContains(":nth-child(1 of .o-mail-Follower)", {
         contains: [["[title='Edit Notification Preferences']"], ["[title='Remove this follower']"]],
     });
 });

@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openFormView,
@@ -55,5 +55,5 @@ test("activity assign popover assign user", async () => {
     await click(".ui-menu-item:text('Mitchell Admin')");
     await click(".o-mail-ActivityAssignPopover button[aria-label='Assign']");
     await waitForNone(".o-mail-ActivityAssignPopover");
-    await contains(".o-mail-Activity-user", { text: "for Mitchell Admin" });
+    await mailContains(".o-mail-Activity-user", { text: "for Mitchell Admin" });
 });

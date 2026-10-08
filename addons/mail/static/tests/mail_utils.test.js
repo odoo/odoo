@@ -2,7 +2,7 @@ import { addLink, inlineElement, parseAndTransform } from "@mail/utils/common/fo
 import { useSequential } from "@mail/utils/common/hooks";
 import { createElementFromContent, getInnerHtml } from "@mail/utils/common/html";
 import {
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openDiscuss,
@@ -131,7 +131,7 @@ test("addLink: linkify inside text node (1 occurrence)", async () => {
     fragment.appendChild(div);
     div.innerHTML = linkified;
     expect(div).toHaveText("some text https://somelink.com");
-    await contains("a", { target: div });
+    await mailContains("a", { target: div });
     expect(div.querySelector(":scope a")).toHaveText("https://somelink.com");
 });
 
