@@ -884,3 +884,30 @@ class TestAllocations(TestHrHolidaysCommon):
         self.employee.invalidate_recordset(['allocations_count', 'allocation_display'])
         self.assertEqual(self.employee.allocation_display, '0', "nothing accrued yet")
         self.assertEqual(self.employee.allocations_count, 1, "but the employee has an allocation")
+
+    def test_allocation_with_different_country_for_employee_and_time_type_throws_exception(self):
+        employee = self.employee
+        work_entry_type = self.work_entry_type
+
+        belgium_company = self.env['res.company'].create({
+            'name': 'Belgium Company',
+            'country_id': self.env.ref('base.be').id,
+        })
+        macedonia = self.env.ref('base.mk')
+
+        employee.write({
+            'company_id': belgium_company.id,
+        })
+
+        work_entry_type.write({
+            'country_id': macedonia.id,
+        })
+
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave.allocation'].create({
+                'name': 'Regular allocation',
+                'date_from': date(2026, 10, 26),
+                'date_to': date(2026, 10, 30),
+                'work_entry_type_id': work_entry_type.id,
+                'employee_id': employee.id,
+            })
