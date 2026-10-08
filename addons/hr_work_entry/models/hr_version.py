@@ -144,6 +144,14 @@ class HrVersion(models.Model):
 
     def _get_valid_leave_intervals(self, attendances, interval):
         self.ensure_one()
+        non_working_attendances = Intervals([
+            (start, end, records) for (start, end, records) in attendances
+            if start <= interval[1] and end > interval[0]
+            and records._name == 'resource.calendar.attendance'
+            and records and not any(a._is_work_period() for a in records)
+        ], keep_distinct=True)
+        if non_working_attendances:
+            return list(Intervals([interval], keep_distinct=True) - non_working_attendances)
         return [interval]
 
     @api.model
