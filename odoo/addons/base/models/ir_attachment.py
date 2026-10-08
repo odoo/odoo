@@ -856,10 +856,11 @@ class IrAttachment(models.Model):
                 ['file_size', '=', len(bin_data)],
                 ['mimetype', '=', values['mimetype']],
             ]
-            existing = self.sudo().search(existing_domain)
-            if existing:
-                for attachment in existing:
-                    ids.append(attachment.id)
+            # Only reuse the attachments the current user can write, as callers may
+            # link new attachments to them (e.g. the resized variants of an image).
+            existing_ids = self.sudo().search(existing_domain).with_env(self.env)._filtered_access('write').ids
+            if existing_ids:
+                ids.extend(existing_ids)
             else:
                 attachment = self.create(values)
                 ids.append(attachment.id)
