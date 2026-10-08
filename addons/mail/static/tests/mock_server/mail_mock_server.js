@@ -198,7 +198,10 @@ async function load_attachments(request) {
     return {
         count: attachmentIds.length,
         store_data: new Store()
-            .add(IrAttachment.browse(attachmentIds), "_store_attachment_fields")
+            .add(IrAttachment.browse(attachmentIds), (r) => {
+                r.from_method("_store_attachment_fields");
+                r.from_method("_store_thread_message_fields");
+            })
             .as_dict(),
     };
 }

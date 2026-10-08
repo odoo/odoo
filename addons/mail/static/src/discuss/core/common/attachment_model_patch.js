@@ -10,8 +10,8 @@ const attachmentPatch = {
         this.voice_ids = fields.Many("discuss.voice.metadata");
     },
     get isDeletable() {
-        if (this.message && this.thread?.channel) {
-            return this.message.editable;
+        if (this.message_ids.length && this.thread?.channel) {
+            return this.message_ids.some((m) => m.editable);
         }
         return super.isDeletable;
     },

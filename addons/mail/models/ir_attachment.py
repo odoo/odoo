@@ -18,6 +18,15 @@ class IrAttachment(models.Model):
 
     thumbnail = fields.Image()
     has_thumbnail = fields.Boolean(compute="_compute_has_thumbnail")
+    message_ids = fields.Many2many(
+        "mail.message",
+        "message_attachment_rel",
+        "attachment_id",
+        "message_id",
+        string="Messages",
+        readonly=True,
+        copy=False,
+    )
 
     @api.depends("thumbnail")
     def _compute_has_thumbnail(self):
@@ -115,6 +124,24 @@ class IrAttachment(models.Model):
         res.one("thread", [], as_thread=True, predicate=lambda a: a.res_model != "mail.message")
         res.attr("thumbnail_access_token", lambda a: a._get_thumbnail_token())
         res.extend(["type", "url"])
+
+    def _store_thread_message_fields(self, res: Store.FieldList):
+        """ Add the messages the attachment is posted on in the thread it belongs to, so that it
+        can be located in the conversation. Messages of other threads are left out as they are
+        irrelevant here and the current user has no guarantee of access to them.
+        """
+        res.many(
+            "message_ids",
+            lambda res: (
+                res.attr("message_type"),
+                res.one("author_guest_id", []),
+                res.one("author_id", []),
+                res.one("thread", [], as_thread=True),
+            ),
+            value=lambda a: a.message_ids.filtered(
+                lambda m: (m.model, m.res_id) == (a.res_model, a.res_id),
+            ),
+        )
 
     def _get_ownership_token(self):
         """ Returns a scoped limited access token that indicates ownership of the attachment when
