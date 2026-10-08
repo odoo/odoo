@@ -282,17 +282,41 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_line_specified_trade_product_node(self, vals, base_line):
         product = base_line['product_id']
+<<<<<<< 51353aeba3ab80e76eabe1df58ad447e889be7d2
         description = base_line['name']
+||||||| b32e374f4a705a83c3533f1d12d028aa1ec7a7fd
+=======
+        line_name = base_line['name'] or ''
+        name, description = line_name, None
+        if product:
+            line_without_name = line_name.removeprefix(f'{product.display_name}\n')
+            if line_without_name != line_name:
+                name, description = product.display_name, line_without_name.strip()
+>>>>>>> 854d4bfc7d9df74cf70f51168e13cef8012e6c71
         return {
             'ram:GlobalID': {
                 '_text': product.barcode,
                 'schemeID': "0160",
             } if product.barcode else None,
             'ram:SellerAssignedID': {'_text': product.default_code} if product.default_code else None,
+<<<<<<< 51353aeba3ab80e76eabe1df58ad447e889be7d2
             'ram:Name': {'_text': product.name or description},
+||||||| b32e374f4a705a83c3533f1d12d028aa1ec7a7fd
+            'ram:Name': {'_text': base_line['name']},
+=======
+            'ram:Name': {'_text': name},
+>>>>>>> 854d4bfc7d9df74cf70f51168e13cef8012e6c71
             'ram:Description': {
+<<<<<<< 51353aeba3ab80e76eabe1df58ad447e889be7d2
                 '_text': description,
             } if product else None,
+||||||| b32e374f4a705a83c3533f1d12d028aa1ec7a7fd
+                '_text': html2plaintext(product.description),
+            } if product.description else None,
+=======
+                '_text': description,
+            } if description else None,
+>>>>>>> 854d4bfc7d9df74cf70f51168e13cef8012e6c71
         }
 
     def _cii_get_gross_price_product_trade_price_node(self, vals, base_line):

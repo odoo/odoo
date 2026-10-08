@@ -147,11 +147,33 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
             lst_price=100.0,
             default_code='P123',
             barcode='1234567890123',
+<<<<<<< 51353aeba3ab80e76eabe1df58ad447e889be7d2
+||||||| b32e374f4a705a83c3533f1d12d028aa1ec7a7fd
+            description='A simple product description',
+=======
+            description='Internal note that must not be exported',
+            description_sale='Sales description',
+>>>>>>> 854d4bfc7d9df74cf70f51168e13cef8012e6c71
             taxes_id=self.tax_20,
         )
+<<<<<<< 51353aeba3ab80e76eabe1df58ad447e889be7d2
         invoice = self._create_invoice_one_line(
             product_id=product,
             name='A simple product description',
+||||||| b32e374f4a705a83c3533f1d12d028aa1ec7a7fd
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+=======
+        invoice = self._create_invoice(
+            invoice_line_ids=[
+                # Default label computed from the product: split into Name / Description.
+                self._prepare_invoice_line(product_id=product),
+                # Label equal to the product's display_name only: Name only.
+                self._prepare_invoice_line(product_id=product, name=product.display_name),
+                # Label only.
+                self._prepare_invoice_line(name="Custom label\nwith details", price_unit=50.0, tax_ids=self.tax_20),
+            ],
+>>>>>>> 854d4bfc7d9df74cf70f51168e13cef8012e6c71
             partner_id=self.partner_fr,
             partner_bank_id=self.recipient_bank,
             post=True,
