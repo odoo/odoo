@@ -214,7 +214,7 @@
 
     /* Sheet BG */
     .o_form_sheet_bg {
-        @include media-only(screen) {
+        @media screen {
             --formView-sheetBg-padding-x: var(--o-bs-spacer-3);
         }
 
@@ -553,14 +553,14 @@
                     /* Full width on first x2many or on second x2many if first is invisible */
                     &:not(.o_group), &.o_invisible_modifier {
                         .o_field_x2many.o_field_x2many_list .o_list_renderer {
-                            @include media-only(screen) {
+                            @media screen {
                                 --ListRenderer-margin-x: var(--Notebook-margin-x);
                                 --ListRenderer-table-padding-x: var(--Notebook-padding-x);
 
                                 margin-top: calc(var(--o-horizontal-padding) * -1);
                             }
 
-                            @include media-only(print) {
+                            @media print {
                                 --ListRenderer-margin-x: 0;
                                 --ListRenderer-table-padding-x: var(--Notebook-padding-x);
 

@@ -2,7 +2,7 @@
     border-bottom: var(--ControlPanel-border-bottom, #{$o-control-panel-border-bottom});
     padding-bottom: var(--ControlPanel-padding-bottom, #{map-get($spacers, 2)});
     background-color: $o-control-panel-background-color;
-    @include media-only(screen) {
+    @media screen {
         .o_control_panel_breadcrumbs {
             --#{$variable-prefix}breadcrumb-font-size: #{$small-font-size};
         }
@@ -34,7 +34,7 @@
     // ------------------------------------------------------------------
     // Print
     // ------------------------------------------------------------------
-    @include media-only(print) {
+    @media print {
         padding: 0 0 map-get($spacers, 2) !important; // The @page margin will be used instead.
         margin-bottom: 1rem;
 

@@ -13,7 +13,7 @@
     margin-right: var(--ListRenderer-margin-x, unset);
 
     /* sticky header on desktop */
-    @include media-only(screen) {
+    @media screen {
         @media screen and (min-width: 768px), print and (min-width: 188mm) {
             height: 100%;
 
@@ -25,7 +25,7 @@
         }
     }
 
-    @include media-only(print) {
+    @media print {
         width: 100% !important;
     }
 
@@ -43,7 +43,7 @@
         --ListRenderer-thead-padding-y: var(--o-bs-table-cell-padding-y-sm);
         --ListRenderer-table-padding-x: var(--o-horizontal-padding);
 
-        @include media-only(print) {
+        @media print {
             --ListRenderer-table-padding-x: 0;
 
             --Tag-font-size: var(--o-bs-font-size-sm);
@@ -58,7 +58,7 @@
         border-collapse: collapse;
         font-variant-numeric: tabular-nums;
 
-        @include media-only(print) {
+        @media print {
             width: 100% !important;
             border-collapse: separate;
             border-spacing: 0;
@@ -100,7 +100,7 @@
                 /* Define backdrop blur here to ensure it will applied on all th */
                 backdrop-filter: var(--o-backdrop-blur-sm);
 
-                @include media-only(print) {
+                @media print {
                     font-weight: var(--o-bs-font-weight-bold);
                 }
             }
@@ -225,7 +225,7 @@
         }
 
         .o_handle_cell {
-            @include media-only(print) {
+            @media print {
                 display: none;
             }
         }
@@ -238,7 +238,7 @@
             width: 40px;  /* Don't force to keep o_group_name width dynamic */
             vertical-align: middle;
 
-            @include media-only(print) {
+            @media print {
                 width: 1.5rem !important;
             }
         }
@@ -563,7 +563,7 @@
         }
     }
 
-    @include media-only(screen) {
+    @media screen {
         /**
         Because of border-collapse, border top and border bottom are 'merged'.
 
@@ -599,7 +599,7 @@
         }
     }
 
-    @include media-only(print) {
+    @media print {
         .o_data_cell {
             [type="action"] {
                 display: none;
