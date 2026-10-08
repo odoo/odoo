@@ -5,6 +5,7 @@ import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { Component, providePlugins, t, useListener, usePlugin, useProps, xml } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
 
 export class PortalChatter extends Component {
     static template = xml`
@@ -19,9 +20,11 @@ export class PortalChatter extends Component {
         twoColumns: t.any(),
         displayRating: t.any(),
         reviewChatter: t.any().optional(),
+        rootId: t.any(),
     });
 
     setup() {
+        useSubEnv({ rootId: this.props.rootId });
         providePlugins([PortalChatterPlugin]);
         const portalChatterPlugin = usePlugin(PortalChatterPlugin);
         portalChatterPlugin.displayRating.set(this.props.displayRating);

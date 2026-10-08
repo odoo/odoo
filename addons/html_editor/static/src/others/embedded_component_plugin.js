@@ -6,6 +6,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { memoize } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
+import { useScope } from "@odoo/owl";
 
 /**
  * @typedef { Object } EmbeddedComponentShared
@@ -63,6 +64,8 @@ export class EmbeddedComponentPlugin extends Plugin {
         /** Selectors */
         move_node_whitelist_selectors: "[data-embedded]",
     };
+
+    scope = useScope();
 
     setup() {
         this.components = new Set();
@@ -222,7 +225,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         // an inserted blueprint, run it synchronously right after the mounted
         // callbacks, in the same call stack as the DOM insertion.
         const onComponentInserted = this.extractOnComponentInserted(host);
-        const { root } = mountComponent(this.app, Component, host, props, env, {
+        const { root } = mountComponent(this.scope, Component, host, props, env, {
             onBeforeComplete: () => {
                 if (this.isDestroyed) {
                     return false;

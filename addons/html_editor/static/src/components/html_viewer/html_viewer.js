@@ -13,7 +13,6 @@ import {
     proxy,
     signal,
     t,
-    useApp,
     useEffect,
     useProps,
     useScope,
@@ -25,7 +24,6 @@ import { memoize } from "@web/core/utils/functions";
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
 
-    app = useApp();
     iframeRef = signal.ref();
     readonlyElementRef = signal.ref();
     props = useProps({
@@ -303,7 +301,7 @@ export class HtmlViewer extends Component {
             env,
             props,
         });
-        const { root, mountPromise } = mountComponent(this.app, Component, host, props, env, {
+        const { root, mountPromise } = mountComponent(this.scope, Component, host, props, env, {
             onBeforeComplete: () => {
                 if (this.scope.isDestroyed()) {
                     return false;

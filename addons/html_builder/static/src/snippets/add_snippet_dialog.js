@@ -1,5 +1,5 @@
 import { onWillRender } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, useProps, proxy, signal, t, useApp } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useProps, proxy, signal, t, useApp, useScope } from "@odoo/owl";
 import { loadBundle, loadCSS } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -19,6 +19,8 @@ import { SnippetViewer } from "./snippet_viewer";
 export class AddSnippetDialog extends Component {
     static template = "html_builder.AddSnippetDialog";
     static components = { Dialog };
+
+    scope = useScope();
     props = useProps({
         title: t.string().optional(_t("Insert a block")),
         selectedSnippet: t.object(),
@@ -87,7 +89,7 @@ export class AddSnippetDialog extends Component {
             this.hotkeyService.registerIframe(this.iframeRef());
 
             root = app.createRoot(SnippetViewer, {
-                env: Object.create(this.env),
+                pluginManager: this.scope.pluginManager,
                 props: this.snippetViewerProps,
             });
             root.mount(iframeDocument.body);

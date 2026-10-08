@@ -76,7 +76,7 @@ export class MailingTemplateKanbanIframe extends Component {
                 iframe.contentDocument.head.appendChild(this.renderHeadContent());
                 iframe.contentDocument.body.style.setProperty("direction", localization.direction);
                 this.templateKanbanRoot = this.app.createRoot(MailingTemplateKanbanWrapper, {
-                    env: this.env,
+                    pluginManager: this.scope.pluginManager,
                     props: props,
                 });
                 await Promise.all([

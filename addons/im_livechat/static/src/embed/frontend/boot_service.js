@@ -1,7 +1,7 @@
 import { makeRoot, makeShadow } from "@im_livechat/embed/common/boot_helpers";
 import { canLoadLivechat } from "@im_livechat/embed/common/misc";
 import { LivechatRoot } from "@im_livechat/embed/frontend/livechat_root";
-import { onWillDestroy, useApp } from "@odoo/owl";
+import { onWillDestroy, useApp, useScope } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export const livechatBootService = {
@@ -21,13 +21,15 @@ export const livechatBootService = {
         const target = this.getTarget();
         const rootEl = makeRoot(target);
         const app = useApp();
+        const scope = useScope();
         let root;
         makeShadow(rootEl).then((shadow) => {
             env.services["discuss.rtc"].rootEl = shadow;
             root = app.createRoot(LivechatRoot, {
-                env: Object.assign(Object.create(env), {
+                pluginManager: scope.pluginManager,
+                props: {
                     rootId: rootEl.getAttribute("id"),
-                }),
+                },
             });
             return root.mount(shadow);
         });
