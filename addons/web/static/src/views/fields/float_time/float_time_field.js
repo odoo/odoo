@@ -2,13 +2,12 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { formatFloatTime } from "../formatters";
 import { useInputField } from "../input_field_hook";
+import { useInputPreview } from "../input_preview_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
-import { DurationParseError, InvalidNumberError, parseFloatTime } from "../parsers";
-import { Operation } from "@web/model/relational_model/operation";
+import { parseFloatTime } from "../parsers";
 
-import { Component, proxy, signal, t, useProps } from "@odoo/owl";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 export const floatTimeFieldProps = {
     ...standardFieldProps,
@@ -28,14 +27,17 @@ export class FloatTimeField extends Component {
             ref: this.numpadDecimalRef,
             parse: (v) => this.parseValue(v),
         });
-
-        this.state = proxy({
-            formattedResult: "",
-        });
-        this.resultPopover = usePopover(DurationPopover, {
-            position: "bottom",
-        });
+        this.setupInputPreview();
         useNumpadDecimal(this.numpadDecimalRef);
+    }
+
+    setupInputPreview() {
+        useInputPreview({
+            ref: this.numpadDecimalRef,
+            getValue: () => this.value,
+            parse: (v) => this.parseValue(v),
+            format: (v) => this.formatValue(v),
+        });
     }
 
     get formatOptions() {
@@ -46,54 +48,6 @@ export class FloatTimeField extends Component {
         };
     }
 
-    onValueChange(ev) {
-        const currentInput = ev.target.value;
-        const parsedValue = this.parseOrClosePopover(currentInput);
-
-        if (parsedValue || parsedValue === 0) {
-            this.state.formattedResult = formatFloatTime(parsedValue, this.formatOptions);
-            if (currentInput === this.state.formattedResult && this.resultPopover.isOpen) {
-                this.resultPopover.close();
-            } else if (currentInput !== this.state.formattedResult && !this.resultPopover.isOpen) {
-                this.resultPopover.open(this.inputFloatTimeRef(), {
-                    state: this.state,
-                });
-            }
-        } else {
-            this.resultPopover.close();
-        }
-    }
-
-    openPopover() {
-        const duration = this.parseOrClosePopover(this.inputFloatTimeRef().value);
-        if (duration || duration === 0) {
-            this.state.formattedResult = formatFloatTime(duration, this.formatOptions);
-            this.resultPopover.open(this.inputFloatTimeRef(), {
-                state: this.state,
-            });
-        }
-    }
-
-    closePopover() {
-        this.resultPopover.close();
-    }
-
-    parseOrClosePopover(value) {
-        try {
-            const parsed = this.parseValue(value);
-            return parsed instanceof Operation ? parsed.compute(this.value) : parsed;
-        } catch (error) {
-            if (
-                [EvalError, InvalidNumberError, DurationParseError].every(
-                    (e) => !(error instanceof e)
-                )
-            ) {
-                throw error;
-            }
-            this.closePopover();
-        }
-    }
-
     parseValue(value) {
         return parseFloatTime(value, this.props.unit);
     }
@@ -102,17 +56,13 @@ export class FloatTimeField extends Component {
         return this.props.record.data[this.props.name];
     }
 
-    get formattedValue() {
-        return formatFloatTime(this.value, this.formatOptions);
+    formatValue(value) {
+        return formatFloatTime(value, this.formatOptions);
     }
-}
 
-class DurationPopover extends Component {
-    static template = "web.DurationPopover";
-    props = useProps({
-        state: t.object().optional(),
-        close: t.function().optional(),
-    });
+    get formattedValue() {
+        return this.formatValue(this.value);
+    }
 }
 
 export const floatTimeField = {

@@ -93,8 +93,9 @@ export class FloatTimeSelectionField extends FloatTimeField {
         this.props.record.update({ [this.props.name]: this.timeValues.floatValue });
     }
 
-    // Remove the tooltip that shows up in the float time selection widget
-    openPopover() {}
+    setupInputPreview() {
+        // no preview: the value is picked through the popover
+    }
 }
 
 export const charHours = {
