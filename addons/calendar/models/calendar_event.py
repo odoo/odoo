@@ -16,7 +16,6 @@ from werkzeug.urls import url_encode, url_parse
 from odoo import api, fields, models
 from odoo.fields import Command, Domain
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.addons.calendar.models.calendar_attendee import CalendarAttendee
 from odoo.addons.calendar.models.calendar_recurrence import (
     weekday_to_field,
     RRULE_TYPE_SELECTION,
@@ -102,10 +101,6 @@ class CalendarEvent(models.Model):
     _systray_view = 'calendar'
 
     DISCUSS_ROUTE = 'calendar/join_videocall'
-
-    @api.model
-    def get_state_selections(self):
-        return CalendarAttendee.STATE_SELECTION
 
     @api.model
     def default_get(self, fields):
