@@ -64,7 +64,6 @@ export function searchHighlight(searchTerm, target) {
 }
 
 export class MessageSearchState extends SearchState {
-    count = 0;
     /** @type {string | undefined} */
     search_filter = undefined;
     hasMore = false;
@@ -109,7 +108,6 @@ export class MessageSearchState extends SearchState {
             return; // Search was cleared or superseded during request.
         }
         this.searched = true;
-        this.count = data.count;
         this.hasMore = data.loadMore;
         if (before !== undefined) {
             this.messages.push(...data.messages);
@@ -133,7 +131,6 @@ export class MessageSearchState extends SearchState {
         this.search_filter = undefined;
         this.messages = [];
         this.searched = false;
-        this.count = 0;
         this.hasMore = false;
     }
 
