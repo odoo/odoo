@@ -798,7 +798,12 @@ class MrpProduction(models.Model):
             list_move_raw = [Command.link(move.id) for move in production.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
             if not production.bom_id and not production._origin.product_id:
                 production.move_raw_ids = list_move_raw
-            if any(move.bom_line_id.bom_id != production.bom_id or move.bom_line_id._skip_bom_line(production.product_id, production.never_product_template_attribute_value_ids)
+            # a kit is exploded into its components, whose moves have a line of the kit BoM
+            relevant_boms = [production.bom_id]
+            if 'phantom' in production.move_raw_ids.bom_line_id.bom_id.mapped('type'):
+                relevant_boms = [exploded_boms[0] for exploded_boms in production.bom_id.explode(production.product_id, 1.0, picking_type=production.bom_id.picking_type_id,
+                    never_attribute_values=production.never_product_template_attribute_value_ids)[0]]
+            if any(move.bom_line_id.bom_id not in relevant_boms or move.bom_line_id._skip_bom_line(production.product_id, production.never_product_template_attribute_value_ids)
                 for move in production.move_raw_ids if move.bom_line_id):
                 production.move_raw_ids = [Command.clear()]
             if production.bom_id and production.product_id and production.product_qty > 0:
