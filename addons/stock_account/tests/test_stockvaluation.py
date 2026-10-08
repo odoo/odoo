@@ -31,7 +31,7 @@ class TestStockValuation(TestStockValuationCommon):
         # Enter 10 products while price is 5.0
         product = self.product_standard_auto
         product.standard_price = 5.0
-        move1 = self._make_in_move(product, 10, 5)
+        self._make_in_move(product, 10, 5)
 
         closing_move = self._close()
         debit_line = closing_move.line_ids.filtered(lambda l: l.debit > 0)
@@ -42,12 +42,8 @@ class TestStockValuation(TestStockValuationCommon):
 
         # Set price to 6.0
         product.standard_price = 6.0
-        closing_move = self._close()
-        debit_line = closing_move.line_ids.filtered(lambda l: l.debit > 0)
-        self.assertEqual(len(debit_line), 1)
-        self.assertEqual(debit_line.debit, 10.0)
-        self.assertEqual(debit_line.credit, 0)
-        self.assertEqual(move1.product_id, product)
+        with self.assertRaises(UserError):
+            self._close()
 
     def test_realtime_consumable(self):
         """ An automatic consumable product should not create any account move entries"""
@@ -1373,7 +1369,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         valuation_aml = self._get_stock_valuation_move_lines()
         move2_valuation_aml = valuation_aml[-1]
-        self.assertEqual(len(valuation_aml), 4)
+        self.assertEqual(len(valuation_aml), 5)
         self.assertEqual(move2_valuation_aml.debit, 0)
         self.assertEqual(move2_valuation_aml.credit, 10)
 
@@ -3499,7 +3495,7 @@ class TestStockValuation(TestStockValuationCommon):
         closing_lines = self.env['account.move'].browse(closing['res_id']).line_ids
         self.assertRecordValues(closing_lines.sorted('debit'), [
             {'account_id': self.product_avco_auto.categ_id.account_stock_variation_id.id, 'debit': 0, 'credit': 10},
-            {'account_id': self.product_avco_auto.categ_id.property_stock_valuation_account_id.id, 'debit': 10, 'credit': 0}
+            {'account_id': self.product_avco_auto.categ_id.property_stock_valuation_account_id.id, 'debit': 10, 'credit': 0},
         ])
 
     def test_generate_entry_branch_correct_account(self):
