@@ -39,6 +39,7 @@ test("PhoneField in form view on normal screens (readonly)", async () => {
     expect(".o_field_phone a").toHaveCount(1);
     expect(".o_field_phone a").toHaveText("yop");
     expect(".o_field_phone a").toHaveAttribute("href", "tel:yop");
+    expect(".o_field_phone a").toHaveClass("o_force_ltr");
 });
 
 test("PhoneField in form view on normal screens (edit)", async () => {
