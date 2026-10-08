@@ -5720,7 +5720,7 @@ class AccountMove(models.Model):
                     l.is_account_reconcile or
                     l.move_id.tax_cash_basis_origin_move_id
                 )) \
-                .grouped(lambda l: (l.account_id, l.currency_id))
+                .grouped(lambda l: (l.account_id, l.currency_id, l.partner_id))
             reconciliation_plan.extend(group.values())
         self.env['account.move.line'].with_context(move_reverse_cancel=move_reverse_cancel)._reconcile_plan(reconciliation_plan)
         return reverse_moves
