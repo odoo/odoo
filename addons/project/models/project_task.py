@@ -716,6 +716,11 @@ class ProjectTask(models.Model):
             else:
                 task.stage_id = False
 
+    @api.onchange('stage_id')
+    def _onchange_stage_id(self):
+        if self.state not in CLOSED_STATES and self.state != '04_waiting_normal' and self.stage_id != self._origin.stage_id:
+            self.state = '01_in_progress'
+
     @api.depends('user_ids')
     def _compute_portal_user_names(self):
         """ This compute method allows to see all the names of assigned users to each task contained in `self`.
