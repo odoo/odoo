@@ -3,10 +3,10 @@
 <data noupdate="1">
     <record id="mail_template_self_otp" model="mail.template">
             <field name="name">Self Order: Verification Code</field>
-            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="model_id" ref="pos_self_order_loyalty.model_pos_self_order_loyalty_otp"/>
             <field name="subject">{{ ctx.get('otp_code') }} is your verification code</field>
             <field name="email_from">{{ object.company_id.email_formatted or user.company_id.email_formatted }}</field>
-            <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="email_to">{{ object.email }}</field>
             <field name="lang">{{ object.lang }}</field>
             <field name="auto_delete" eval="False"/>
             <field name="description">Sent when a customer requests a one-time code to identify themselves in self-order.</field>

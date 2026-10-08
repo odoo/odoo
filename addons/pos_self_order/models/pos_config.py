@@ -117,7 +117,8 @@ class PosConfig(models.Model):
 
     def _update_access_token(self):
         self.access_token = uuid.uuid4().hex[:16]
-        self.floor_ids.table_ids._update_identifier()
+        for table in self.floor_ids.table_ids:
+            table.identifier = self._get_identifier()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -174,6 +175,7 @@ class PosConfig(models.Model):
             and not product_delivery_template.active
         ):
             product_delivery_template.active = True
+        access_token_to_update = []
         for record in self:
             mode = vals.get('self_ordering_mode', record.self_ordering_mode)
 
@@ -204,9 +206,15 @@ class PosConfig(models.Model):
             elif mode == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
                 vals['self_ordering_service_mode'] = 'table'
 
+            if mode != record.self_ordering_mode and mode == 'kiosk':
+                access_token_to_update.append(record)
         res = super().write(vals)
         self._ensure_public_attachments()
         self._prepare_self_order_custom_btn()
+        # When switching to kiosk mode, update the access token so it does
+        # not reuse an access_token that might be public.
+        for record in access_token_to_update:
+            record._update_access_token()
         return res
 
     def _ensure_public_attachments(self):

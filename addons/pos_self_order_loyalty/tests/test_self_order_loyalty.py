@@ -2,11 +2,13 @@
 
 import json
 import time
+from datetime import timedelta
 from unittest.mock import patch
 from uuid import uuid4
 
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
+from odoo import fields
 from odoo.fields import Command
 from odoo.tools import mute_logger
 
@@ -645,3 +647,133 @@ class TestSelfOrderLoyalty(SelfOrderCommonTest):
         fields = self.env['pos.order']._load_pos_self_data_fields(self.pos_config)
         for field in ('active_rewards', 'active_payment_programs', 'disabled_program_ids'):
             self.assertIn(field, fields)
+
+    # ------------------------------------------------------------------
+    # Barcode identification: kiosk only
+    # ------------------------------------------------------------------
+    # A partner barcode is often short and sequential (typed by staff, see the "042" prefix
+    # convention). Outside a kiosk the config access token is public (printed in the table QR
+    # codes), so anyone could enumerate barcodes and get identification tokens for them.
+
+    def _get_partner_by_barcode(self):
+        self.loyalty_partner.barcode = '0420000000001'
+        return self._jsonrpc('/pos-self-order/get-partner-by-barcode', {'partner_barcode': '0420000000001'})
+
+    def test_partner_barcode_identifies_in_kiosk(self):
+        result = self._get_partner_by_barcode()
+        self.assertNotIn('error', result, result.get('error'))
+        partners = result['result']['res.partner']
+        self.assertEqual([p['id'] for p in partners], self.loyalty_partner.ids)
+        self.assertTrue(partners[0]['_self_order_token'])
+
+    @mute_logger('odoo.http')
+    def test_partner_barcode_refused_outside_kiosk(self):
+        for mode in ('mobile', 'consultation'):
+            with self.subTest(mode=mode):
+                self.pos_config.self_ordering_mode = mode
+                result = self._get_partner_by_barcode()
+                self.assertNotIn('result', result, "No partner data may leak outside a kiosk")
+                self.assertEqual(result['error']['data']['name'], 'werkzeug.exceptions.Unauthorized')
+
+    # ------------------------------------------------------------------
+    # Email identification
+    # ------------------------------------------------------------------
+    # The code is pinned to 111111 (secrets.choice) to stand for the one read in the mailbox.
+
+    def _request_code(self, mail):
+        with patch('secrets.choice', return_value='1'):
+            return self._jsonrpc('/pos-self-order/get-partner-by-mail', {'mail': mail})
+
+    def _validate_code(self, mail, code):
+        return self._jsonrpc('/pos-self-order/validate-partner-code', {'mail': mail, 'code': code})['result']
+
+    def _partners_with_email(self, mail):
+        return self.env['res.partner'].search([('email_normalized', '=', mail)])
+
+    def test_email_code_request_reveals_nothing(self):
+        """Same answer whether the email is a customer or not: no customer data, no token."""
+        self.loyalty_partner.email = 'known@example.com'
+        known = self._request_code('known@example.com')
+        unknown = self._request_code('unknown@example.com')
+        self.assertNotIn('error', unknown, unknown.get('error'))
+        self.assertEqual(known['result'], unknown['result'], "The answer must not tell whether the email is a customer")
+        self.assertNotIn('_self_order_token', json.dumps(unknown['result']))
+        self.assertFalse(self._partners_with_email('unknown@example.com'), "No customer before the code is validated")
+
+    def test_new_customer_created_once_the_code_is_validated(self):
+        self._request_code('new@example.com')
+        result = self._validate_code('new@example.com', '111111')
+        partner = self._partners_with_email('new@example.com')
+        self.assertEqual(len(partner), 1)
+        self.assertEqual([p['id'] for p in result['res.partner']], partner.ids)
+        self.assertTrue(result['res.partner'][0]['_self_order_token'])
+
+    def test_wrong_code_is_refused(self):
+        self._request_code('new@example.com')
+        self.assertEqual(self._validate_code('new@example.com', '222222')['res.partner'], [])
+        self.assertFalse(self._partners_with_email('new@example.com'))
+
+    def test_existing_customer_found_by_normalized_email(self):
+        """A stored "Name <Address>" or capitals must not lead to a duplicate customer."""
+        self.loyalty_partner.email = '"Alice" <Alice@Example.com>'
+        self._request_code('alice@example.com')
+        result = self._validate_code('alice@example.com', '111111')
+        self.assertEqual([p['id'] for p in result['res.partner']], self.loyalty_partner.ids)
+        self.assertEqual(self._partners_with_email('alice@example.com'), self.loyalty_partner)
+
+    def test_code_is_single_use_and_attempts_are_limited(self):
+        self._request_code('new@example.com')
+        self.assertTrue(self._validate_code('new@example.com', '111111')['res.partner'])
+        self.assertEqual(self._validate_code('new@example.com', '111111')['res.partner'], [], "A code is single use")
+
+        self.env['pos_self_order_loyalty.otp'].search([]).sent_at = '2000-01-01'  # skip the resend cooldown
+        self._request_code('new@example.com')
+        for _attempt in range(5):
+            self._validate_code('new@example.com', '222222')
+        self.assertEqual(
+            self._validate_code('new@example.com', '111111')['res.partner'], [],
+            "Once the attempts are exhausted, even the right code is refused",
+        )
+
+    # A new code doesn't give new chances: wrong codes are counted per email over 24 hours
+
+    def _skip_resend_cooldown(self):
+        self.env['pos_self_order_loyalty.otp'].search([]).sent_at = '2000-01-01'
+
+    def _fail_codes(self, mail, count):
+        """Request a new code (once the cooldown is over), then send `count` wrong ones."""
+        self._skip_resend_cooldown()
+        self._request_code(mail)
+        for _attempt in range(count):
+            self._validate_code(mail, '222222')
+
+    def test_wrong_codes_are_not_reset_by_new_codes(self):
+        for _round in range(3):
+            self._fail_codes('new@example.com', 5)  # 15 wrong codes in total
+        self._skip_resend_cooldown()
+        request = self._request_code('new@example.com')['result']
+        self.assertEqual(request, {'code_sent': False, 'too_many_attempts': True})
+        result = self._validate_code('new@example.com', '111111')
+        self.assertEqual(result['res.partner'], [], "A blocked email is refused even with the right code")
+        self.assertTrue(result['too_many_attempts'])
+
+    def test_blocked_email_is_unblocked_after_24_hours(self):
+        for _round in range(3):
+            self._fail_codes('new@example.com', 5)
+        self.env['pos_self_order_loyalty.otp'].search([]).failures_since = fields.Datetime.now() - timedelta(hours=25)
+        self._skip_resend_cooldown()
+        self.assertEqual(self._request_code('new@example.com')['result'], {'code_sent': True})
+        self.assertTrue(self._validate_code('new@example.com', '111111')['res.partner'])
+
+    def test_identification_resets_wrong_codes(self):
+        self._fail_codes('new@example.com', 5)
+        self._fail_codes('new@example.com', 5)
+        self._fail_codes('new@example.com', 4)  # 14 wrong codes
+        self.assertTrue(self._validate_code('new@example.com', '111111')['res.partner'])
+        for _round in range(2):
+            self._fail_codes('new@example.com', 5)
+        self._fail_codes('new@example.com', 4)  # 14 more since the identification
+        self.assertTrue(
+            self._validate_code('new@example.com', '111111')['res.partner'],
+            "Wrong codes from before a successful identification don't count anymore",
+        )
