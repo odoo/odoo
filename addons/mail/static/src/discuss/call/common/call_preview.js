@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Action, ACTION_TAGS } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
@@ -58,7 +57,14 @@ export class CallPreview extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = proxy({ audioStream: null, blurManager: null, videoStream: null });
-        useLayoutEffect(
+        useOnChange(
+            () => [
+                this.videoRef(),
+                this.audioRef(),
+                this.state.audioStream,
+                this.state.videoStream,
+                this.state.blurManager?.stream,
+            ],
             (videoEl, audioEl, audioStream, videoStream, blurStream) => {
                 if (audioEl && !audioEl.srcObject && audioStream) {
                     audioEl.srcObject = audioStream;
@@ -66,14 +72,7 @@ export class CallPreview extends Component {
                 if (videoEl && !videoEl.srcObject && videoStream) {
                     videoEl.srcObject = blurStream ?? videoStream;
                 }
-            },
-            () => [
-                this.videoRef(),
-                this.audioRef(),
-                this.state.audioStream,
-                this.state.videoStream,
-                this.state.blurManager?.stream,
-            ]
+            }
         );
         if (this.hasRtcSupport) {
             useOnChange(
@@ -151,21 +150,21 @@ export class CallPreview extends Component {
                 closeStream(this.state.audioStream);
                 closeStream(this.state.videoStream);
             });
-            useLayoutEffect(
+            useOnChange(
+                () => [this.props.activateCamera],
                 (activateCamera) => {
                     if (activateCamera > 0 && !this.state.videoStream) {
                         this.enableCamera();
                     }
-                },
-                () => [this.props.activateCamera]
+                }
             );
-            useLayoutEffect(
+            useOnChange(
+                () => [this.props.activateMicrophone],
                 (activateMicrophone) => {
                     if (activateMicrophone > 0 && !this.state.audioStream) {
                         this.enableMicrophone();
                     }
-                },
-                () => [this.props.activateMicrophone]
+                }
             );
         }
     }
