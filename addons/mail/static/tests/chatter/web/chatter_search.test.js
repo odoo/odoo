@@ -124,7 +124,10 @@ test("Posting after jumping to a searched message loads the newest messages", as
         ["/mail/thread/messages", { ...threadParams, fetch_params: { limit: 30 } }],
         [
             "/mail/thread/messages",
-            { ...threadParams, fetch_params: { search_term: "needle", before: false } },
+            {
+                ...threadParams,
+                fetch_params: { search_term: "needle", before: false, limit: 31 },
+            },
         ],
         [
             "/mail/thread/messages",
