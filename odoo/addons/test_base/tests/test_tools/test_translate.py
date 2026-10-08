@@ -273,6 +273,14 @@ class TranslationToolsTestCase(BaseCase):
         self.assertItemsEqual(terms,
             ['Translate this'])
 
+    def test_translate_xml_upload_button(self):
+        """ Test xml_translate() with the dropzone label of an upload button. """
+        terms = []
+        source = """<button type="upload" name="foo" string="Upload" dropzone-label="My Bills" options="{'accept': '.pdf'}"/>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms, ['Upload', 'My Bills'])
+
     def test_translate_xml_a(self):
         """ Test xml_translate() with <a> elements. """
         terms = []

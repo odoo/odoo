@@ -18,9 +18,16 @@ class QuotationDocumentController(Controller):
         methods=["POST"],
         auth="user",
     )
-    def upload_document(self, ufile, sale_order_template_id=False, allowed_company_ids=False):  # noqa: ARG002
+    def upload_document(
+        self, ufile, sale_order_template_id=False, allowed_company_ids=False, context="{}", **kwargs,  # noqa: ARG002
+    ):
+        # the upload button of the kanban view sends the context, the one of the form field the ids
+        allowed_company_ids = (
+            json.loads(allowed_company_ids) if allowed_company_ids
+            else json.loads(context).get("allowed_company_ids")
+        )
         if allowed_company_ids:
-            request.update_context(allowed_company_ids=json.loads(allowed_company_ids))
+            request.update_context(allowed_company_ids=allowed_company_ids)
         sale_order_template = self.env["sale.order.template"].browse(int(sale_order_template_id))
         if sale_order_template:
             sale_order_template.check_access("write")

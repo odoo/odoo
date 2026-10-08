@@ -70,6 +70,10 @@
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile" sample="1" quick_create="false">
+                <header>
+                    <button type="upload" name="create_document_from_attachment" string="Upload" data-hotkey="shift+i"
+                        title="Upload a request for quotation received from a customer"/>
+                </header>
                 <field name="currency_id"/>
                 <progressbar field="activity_state"
                     colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -96,20 +100,6 @@
         </field>
     </record>
 
-    <!-- TODO Remove me and merge upload list & dashboard ? -->
-    <record id="sale_order_kanban_upload" model="ir.ui.view">
-        <field name="name">sale.order.kanban.upload (orders)</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="view_sale_order_kanban"/>
-        <field name="mode">primary</field>
-        <field name="priority">32</field>
-        <field name="arch" type="xml">
-            <kanban position="attributes">
-                <attribute name="js_class">sale_file_upload_kanban</attribute>
-            </kanban>
-        </field>
-    </record>
-
     <record id="sale_order_tree" model="ir.ui.view">
         <field name="name">sale.order.list</field>
         <field name="model">sale.order</field>
@@ -123,6 +113,8 @@
                 decoration-muted="state == 'cancel'"
             >
                 <header>
+                    <button type="upload" name="create_document_from_attachment" string="Upload" data-hotkey="shift+i"
+                        title="Upload a request for quotation received from a customer"/>
                     <button
                         string="Create Invoices"
                         name="%(sale.action_view_sale_advance_payment_inv)d"
@@ -191,20 +183,6 @@
                 <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="client_order_ref" optional="hide"/>
                 <field name="validity_date" optional="hide"/>
-            </list>
-        </field>
-    </record>
-
-    <!-- TODO Remove me and merge upload list & dashboard ? -->
-    <record id="sale_order_list_upload" model="ir.ui.view">
-        <field name="name">sale.order.tree.upload (orders)</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale_order_tree"/>
-        <field name="mode">primary</field>
-        <field name="priority">32</field>
-        <field name="arch" type="xml">
-            <list position="attributes">
-                <attribute name="js_class">sale_file_upload_list</attribute>
             </list>
         </field>
     </record>

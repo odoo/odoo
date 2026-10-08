@@ -117,7 +117,7 @@
                     <button name="action_rfq_send" invisible="state != 'sent'" string="Send RFQ" type="object" context="{'send_rfq':True}" data-hotkey="g"/>
                     <button name="button_confirm" type="object" invisible="state != 'draft'" context="{'validate_analytic': True}" string="Confirm Order" id="draft_confirm" data-hotkey="q"/>
                     <button name="action_receive" class="btn-primary" type="object" string="Receive" data-hotkey="e" invisible="not show_receive_button"/>
-                    <widget name="purchase_file_uploader" invisible="state != 'purchase'"/>
+                    <button name="action_create_invoice" type="upload" string="Upload Bill" data-hotkey="shift+i" invisible="state != 'purchase'"/>
                     <button name="action_rfq_send" invisible="state != 'purchase'" string="Send PO" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
                     <button name="action_acknowledge" string="Acknowledge" type="object" invisible="acknowledged or state != 'purchase'" data-hotkey="a"/>
                     <button name="button_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="o"/>
@@ -539,6 +539,9 @@
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile" js_class="purchase_dashboard_kanban" sample="1" quick_create="false">
+                    <header>
+                        <button name="create_document_from_attachment" type="upload" string="Upload" data-hotkey="shift+i"/>
+                    </header>
                     <field name="date_order"/>
                     <field name="currency_id"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -617,6 +620,7 @@
                 multi_edit="1"
                 class="o_purchase_order" js_class="purchase_dashboard_list" sample="1">
                     <header>
+                        <button name="action_create_invoice" type="upload" string="Upload Bill" display="selection" data-hotkey="shift+i"/>
                         <button name="button_cancel" type="object" string="Cancel" data-hotkey="x"
                             confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>

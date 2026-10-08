@@ -34,6 +34,7 @@ export const fileUploadService = {
          * @returns {Number}                        upload.total
          * @returns {String}                        upload.title
          * @returns {String||undefined}             upload.type
+         * @returns {Object||undefined}             upload.response  the parsed JSON response, once loaded
          */
         const upload = async (route, files, params = {}) => {
             const xhr = this.createXhr();
@@ -97,6 +98,9 @@ export const fileUploadService = {
                                 /** pass */
                             }
                         }
+                    }
+                    if (content instanceof Object && !(content instanceof Document)) {
+                        upload.response = content;
                     }
                     // Not sure what to do if the content is neither JSON nor HTML
                     // Let's the call be successful then....

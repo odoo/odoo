@@ -1,18 +1,16 @@
 import { registry } from '@web/core/registry';
 
 import { ExpenseDashboard } from "@hr_expense/components/expense_dashboard";
-import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from "@hr_expense/mixins/document_upload";
+import { useUploadOnHelperClick } from "@hr_expense/views/upload_helper_hook";
 
 import { kanbanView } from '@web/views/kanban/kanban_view';
 import { KanbanController } from '@web/views/kanban/kanban_controller';
-import { KanbanRenderer, kanbanRendererProps } from '@web/views/kanban/kanban_renderer';
+import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 import { user } from "@web/core/user";
 import { rpc } from "@web/core/network/rpc";
 import { onWillStart } from "@odoo/owl";
 
-export class ExpenseKanbanController extends ExpenseDocumentUpload(KanbanController) {
-    static template = "hr_expense.KanbanView";
-
+export class ExpenseKanbanController extends KanbanController {
     setup() {
         super.setup();
         onWillStart(async () => {
@@ -40,8 +38,13 @@ export class ExpenseKanbanController extends ExpenseDocumentUpload(KanbanControl
     }
 }
 
-export class ExpenseKanbanRenderer extends ExpenseDocumentDropZone(KanbanRenderer, kanbanRendererProps) {
+export class ExpenseKanbanRenderer extends KanbanRenderer {
     static template = "hr_expense.KanbanRenderer";
+
+    setup() {
+        super.setup();
+        useUploadOnHelperClick(this.rootRef);
+    }
 }
 
 export class ExpenseDashboardKanbanRenderer extends ExpenseKanbanRenderer {
@@ -53,12 +56,10 @@ registry.category('views').add('hr_expense_kanban', {
     ...kanbanView,
     Controller: ExpenseKanbanController,
     Renderer: ExpenseKanbanRenderer,
-    buttonTemplate: "hr_expense.KanbanView.Buttons"
 });
 
 registry.category('views').add('hr_expense_dashboard_kanban', {
     ...kanbanView,
     Controller: ExpenseKanbanController,
     Renderer: ExpenseDashboardKanbanRenderer,
-    buttonTemplate: "hr_expense.KanbanView.Buttons"
 });

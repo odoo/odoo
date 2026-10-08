@@ -54,9 +54,13 @@ patch(PurchaseAdditionalTourSteps.prototype, {
             isActive: ["auto"],
             trigger: "button:contains('Upload Bill')",
             content: _t("Generate the draft vendor bill."),
+            run: "click",
+        }, {
+            isActive: ["auto"],
+            trigger: "input.o_upload_input",
             async run({ inputFiles }) {
                 const files = [new File(["hello, world"], "bill.txt", { type: "text/plain" })];
-                await inputFiles(".document_file_uploader", files);
+                await inputFiles("input.o_upload_input", files);
             },
         }, {
             isActive: ["manual"],

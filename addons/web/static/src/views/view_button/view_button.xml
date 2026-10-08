@@ -16,7 +16,9 @@
         t-att-data-tooltip-info="this.hasBigTooltip ? this.tooltip : false"
         t-att-data-tooltip="this.hasSmallToolTip ? this.props.title : false"
         t-att-tabindex="this.props.tabindex"
+        t-att-hidden="this.isDropzoneOnly"
         t-custom-click.stop="this.onClick"
+        t-on-upload-files="this.onUploadFiles"
     >
       <t t-if="this.icon" t-tag="this.icon.tag" t-att-class="this.icon.class + (this.buttonLabel ? ' me-1' : '') + ' ' + this.props.iconClass" t-att-src="this.icon.src" t-att-data-icon="this.icon.name"/>
       <t t-call-slot="contents"><span t-if="this.buttonLabel" t-out="this.buttonLabel"/></t>

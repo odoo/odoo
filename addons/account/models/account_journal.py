@@ -1177,6 +1177,12 @@ class AccountJournal(models.Model):
         """ Create the invoices from files.
          :return: A action redirecting to account.move list/form view.
         """
+        if len(self) == 1 and 'default_move_type' not in self.env.context:
+            # uploaded on a journal (e.g. its dashboard card): the type of its documents
+            self = self.with_context(default_move_type={  # noqa: PLW0642
+                'sale': 'out_invoice',
+                'purchase': 'in_invoice',
+            }.get(self.type, 'entry'))
         invoices = self._create_document_from_attachment(attachment_ids)
         action_vals = {
             'name': _('Generated Documents'),

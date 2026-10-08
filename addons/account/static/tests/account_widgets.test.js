@@ -1,10 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { setInputFiles } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
     fields,
-    mockService,
     models,
     mountView,
     onRpc,
@@ -25,7 +23,6 @@ class Partner extends models.Model {
     _views = {
         form: `
             <form>
-                <widget name="account_file_uploader"/>
                 <field name="name" required="1"/>
             </form>
         `,
@@ -73,65 +70,14 @@ class AccountPaymentTermLine extends models.Model {
 defineModels([AccountPaymentTerm, AccountPaymentTermLine, Partner]);
 defineMailModels();
 
-describe("AccountFileUploader", () => {
-    test("widget contains context based on the record despite field not in view", async () => {
-        onRpc("ir.attachment", "create", () => {
-            expect.step("create ir.attachment");
-            return [99];
-        });
-
-        onRpc("account.journal", "create_document_from_attachment", ({ kwargs }) => {
-            expect.step("create_document_from_attachment");
-            expect(kwargs.context.default_journal_id).toBe(7, {
-                message: "create documents in correct journal",
-            });
-            expect(kwargs.context.default_move_type).toBe("in_invoice", {
-                message: "create documents with correct move type",
-            });
-            return {
-                name: "Generated Documents",
-                domain: [],
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                context: {},
-                views: [
-                    [false, "list"],
-                    [false, "form"],
-                ],
-                view_mode: "list, form",
-            };
-        });
-        mockService("action", {
-            doAction(action) {
-                expect.step("doAction");
-                expect(action.type).toBe("ir.actions.act_window", {
-                    message: "do action after documents created",
-                });
-            },
-        });
-        await mountView({
-            type: "form",
-            resModel: "partner",
-            resId: 7,
-        });
-
-        expect(".o_widget_account_file_uploader").toHaveCount(1);
-        const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
-        await contains(".o_widget_account_file_uploader a").click();
-        await setInputFiles([file]);
-        await expect.waitForSteps([
-            "create ir.attachment",
-            "create_document_from_attachment",
-            "doAction",
-        ]);
-    });
-});
-
 describe("AccountMoveUploadKanbanView", () => {
     test.tags("desktop");
     test("can render AccountMoveUploadKanbanView", async () => {
         Partner._views.kanban = `
             <kanban js_class="account_documents_kanban">
+                <header>
+                    <button type="upload" name="create_document_from_attachment" string="Upload"/>
+                </header>
                 <templates>
                     <t t-name="card">
                         <field name="name"/>
@@ -145,7 +91,7 @@ describe("AccountMoveUploadKanbanView", () => {
             resModel: "partner",
         });
 
-        expect(".o_control_panel .o_button_upload_bill:visible").toHaveCount(1);
+        expect(".o_control_panel button[type=upload]:visible").toHaveCount(1);
         expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(1);
     });
 });

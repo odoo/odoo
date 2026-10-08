@@ -721,6 +721,10 @@ export class FormController extends Component {
 
     async beforeExecuteActionButton(clickParams) {
         const record = this.model.root;
+        if (clickParams.special === "upload") {
+            // the files are uploaded without saving the record (e.g. a new record created from them)
+            return;
+        }
         if (clickParams.special !== "cancel") {
             let saved = false;
             if (clickParams.special === "save" && this.props.saveRecord) {

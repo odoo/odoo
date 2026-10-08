@@ -1,6 +1,6 @@
 import { render } from "@web/owl2/utils";
 import { ExpenseDashboard } from "@hr_expense/components/expense_dashboard";
-import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from "@hr_expense/mixins/document_upload";
+import { useUploadOnHelperClick } from "@hr_expense/views/upload_helper_hook";
 
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
@@ -9,10 +9,10 @@ import { rpc } from "@web/core/network/rpc";
 import { listView } from "@web/views/list/list_view";
 
 import { ListController } from "@web/views/list/list_controller";
-import { ListRenderer, listRendererProps } from "@web/views/list/list_renderer";
+import { ListRenderer } from "@web/views/list/list_renderer";
 import { onWillStart } from "@odoo/owl";
 
-export class ExpenseListController extends ExpenseDocumentUpload(ListController) {
+export class ExpenseListController extends ListController {
     static template = `hr_expense.ListView`;
 
     setup() {
@@ -95,8 +95,13 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
     }
 }
 
-export class ExpenseListRenderer extends ExpenseDocumentDropZone(ListRenderer, listRendererProps) {
+export class ExpenseListRenderer extends ListRenderer {
     static template = "hr_expense.ListRenderer";
+
+    setup() {
+        super.setup();
+        useUploadOnHelperClick(this.rootRef);
+    }
 }
 
 export class ExpenseDashboardListRenderer extends ExpenseListRenderer {

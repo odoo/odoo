@@ -3,6 +3,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { evaluateExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
 import { useEnv } from "@web/owl2/utils";
+import { getUploadOptions, pickFiles, uploadFiles } from "@web/views/view_button/upload_button";
 
 export async function executeButtonCallback(el, fct) {
     let btns = [];
@@ -40,7 +41,8 @@ function undefinedAsTrue(val) {
 /**
  * @typedef {Object} Options
  * @property {Function} [afterExecuteAction]
- * @property {Function} [beforeExecuteAction]
+ * @property {Function} [beforeExecuteAction] called with the click params and `{ files }` for an
+ *      upload button; returns false to cancel the action (e.g. to upload the files in its own way)
  * @property {Function} [reload]
  */
 
@@ -50,6 +52,7 @@ function undefinedAsTrue(val) {
  *  getResParams(): any;
  *  beforeExecute?(): Promise<void | boolean>;
  *  newWindow?: boolean;
+ *  files?: File[]; // upload buttons: the files to upload (e.g. dropped), asked to the user if missing
  * }} ViewButtonHandlerParams
  * @typedef {(params: ViewButtonHandlerParams) => (void | Promise<void>)} ViewButtonHandler
  */
@@ -84,12 +87,21 @@ export function useViewButtons(ref, options = {}) {
 
     // Resolved lazily: the element only exists once the component is mounted.
     const getRefEl = () => ref?.() ?? null;
-    provideViewButtonHandler(async function onClickViewButton({
+    async function onClickViewButton({
         clickParams,
         getResParams,
         beforeExecute,
         newWindow,
+        files,
     }) {
+        const isUpload = clickParams.type === "upload";
+        if (isUpload && !files) {
+            // Asked first, while the browser still considers the click as a user gesture
+            files = await pickFiles(getUploadOptions(clickParams));
+            if (!files.length) {
+                return;
+            }
+        }
         async function execute() {
             let _continue = true;
             if (beforeExecute) {
@@ -97,11 +109,14 @@ export function useViewButtons(ref, options = {}) {
             }
 
             _continue =
-                _continue && undefinedAsTrue(await options.beforeExecuteAction?.(clickParams));
+                _continue &&
+                undefinedAsTrue(await options.beforeExecuteAction?.(clickParams, { files }));
             if (!_continue) {
                 return;
             }
-            const closeDialog = (clickParams.close || clickParams.special) && env.dialogData?.close;
+            const closeDialog =
+                (clickParams.close || (clickParams.special && clickParams.special !== "upload")) &&
+                env.dialogData?.close;
             const params = getResParams();
             let buttonContext = {};
             if (clickParams.context) {
@@ -128,7 +143,22 @@ export function useViewButtons(ref, options = {}) {
             });
             let error;
             try {
-                await action.doActionButton(doActionParams, { newWindow });
+                if (isUpload) {
+                    const result = await uploadFiles(env.services, {
+                        clickParams,
+                        resModel: params.resModel,
+                        resIds: params.resId ? [params.resId] : params.resIds,
+                        context: Object.assign({}, params.context, buttonContext),
+                        files,
+                    });
+                    if (result) {
+                        await action.doAction(result, { onClose: doActionParams.onClose });
+                    } else if (result !== null) {
+                        await doActionParams.onClose();
+                    }
+                } else {
+                    await action.doActionButton(doActionParams, { newWindow });
+                }
             } catch (_e) {
                 error = _e;
             }
@@ -164,7 +194,8 @@ export function useViewButtons(ref, options = {}) {
         } else {
             return executeButtonCallback(getEl(), execute);
         }
-    });
+    }
+    provideViewButtonHandler(onClickViewButton);
 
     function getEl() {
         const el = getRefEl();
@@ -174,4 +205,6 @@ export function useViewButtons(ref, options = {}) {
             return el;
         }
     }
+
+    return onClickViewButton;
 }
