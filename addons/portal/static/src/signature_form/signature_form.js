@@ -76,13 +76,16 @@ export class SignatureForm extends Component {
         const button = document.querySelector('.o_portal_sign_submit')
         const icon = button.removeChild(button.firstChild)
         const restoreBtnLoading = addLoadingEffect(button);
+        const restoreButton = () => {
+            restoreBtnLoading();
+            button.prepend(icon);
+        };
 
         const name = this.signature.name;
         const signature = this.signature.getSignatureImage().split(",")[1];
         const data = await rpc(this.props.callUrl, { name, signature });
+        restoreButton();
         if (data.force_refresh) {
-            restoreBtnLoading();
-            button.prepend(icon)
             if (data.redirect_url) {
                 redirect(data.redirect_url);
             } else {
