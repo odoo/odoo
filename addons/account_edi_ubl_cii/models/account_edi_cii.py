@@ -251,12 +251,16 @@ class AccountEdiCii(models.AbstractModel):
         return nodes
 
     def _cii_get_included_supply_chain_trade_line_item_node(self, vals, line_idx, base_line):
+        trade_references = {}
+        if self._cii_export_line_trade_references(vals):
+            trade_references = self._get_line_trade_references(vals, base_line)
         return {
             'ram:AssociatedDocumentLineDocument': {
                 'ram:LineID': {'_text': line_idx},
             },
             'ram:SpecifiedTradeProduct': self._cii_get_line_specified_trade_product_node(vals, base_line),
             'ram:SpecifiedLineTradeAgreement': {
+                'ram:BuyerOrderReferencedDocument': self._cii_get_line_buyer_order_referenced_document_node(vals, trade_references),
                 'ram:GrossPriceProductTradePrice': self._cii_get_gross_price_product_trade_price_node(vals, base_line),
                 'ram:NetPriceProductTradePrice': self._cii_get_net_price_product_trade_price_node(vals, base_line),
             },
@@ -265,8 +269,41 @@ class AccountEdiCii(models.AbstractModel):
                     'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
                     '_text': base_line['quantity'],
                 },
+                'ram:ShipToTradeParty': self._cii_get_line_ship_to_trade_party_node(vals, trade_references),
+                'ram:DespatchAdviceReferencedDocument': self._cii_get_line_despatch_advice_referenced_document_node(vals, trade_references),
             },
             'ram:SpecifiedLineTradeSettlement': self._cii_get_specified_line_trade_settlement_node(vals, base_line),
+        }
+
+    def _cii_export_line_trade_references(self, vals):
+        return False
+
+    def _cii_get_line_buyer_order_referenced_document_node(self, vals, trade_references):
+        if not trade_references.get('order_ref'):
+            return None
+        return {
+            'ram:IssuerAssignedID': {'_text': trade_references['order_ref']},
+        }
+
+    def _cii_get_line_ship_to_trade_party_node(self, vals, trade_references):
+        # Only when the line is delivered elsewhere than the invoice's delivery address.
+        ship_to = trade_references.get('ship_to')
+        if not ship_to or ship_to == vals['partner_shipping']:
+            return None
+        node = self._cii_get_ship_to_trade_party_node_from_partner(vals, ship_to, gln=False)
+        node['ram:DefinedTradeContact'] = None
+        if 'global_location_number' in ship_to._fields and ship_to.global_location_number:
+            node['ram:GlobalID'] = {'schemeID': '0088', '_text': ship_to.global_location_number}
+        if ship_to.state_id:
+            node['ram:PostalTradeAddress']['ram:CountrySubDivisionName'] = {'_text': ship_to.state_id.name}
+        return node
+
+    def _cii_get_line_despatch_advice_referenced_document_node(self, vals, trade_references):
+        if not trade_references.get('despatch_ref'):
+            return None
+        return {
+            'ram:IssuerAssignedID': {'_text': trade_references['despatch_ref']},
+            'ram:LineID': {'_text': trade_references.get('despatch_line_ref')},
         }
 
     def _cii_get_line_specified_trade_product_node(self, vals, base_line):
@@ -584,9 +621,15 @@ class AccountEdiCii(models.AbstractModel):
 
     def _cii_get_ship_to_trade_party_node(self, vals):
         invoice = vals['invoice']
-        partner_shipping = vals['partner_shipping']
+        return self._cii_get_ship_to_trade_party_node_from_partner(
+            vals,
+            vals['partner_shipping'],
+            'global_location_number' in invoice.partner_shipping_id._fields and invoice.partner_shipping_id.global_location_number,
+        )
+
+    def _cii_get_ship_to_trade_party_node_from_partner(self, vals, partner_shipping, gln):
         return self._cii_get_partner_trade_party_node(vals, {
-            'gln': 'global_location_number' in invoice.partner_shipping_id._fields and invoice.partner_shipping_id.global_location_number,
+            'gln': gln,
             'name': partner_shipping.name,
             'partner_specified_legal_organization': False,
             'partner_specified_legal_organization_scheme': None,
@@ -907,7 +950,7 @@ class AccountEdiCii(models.AbstractModel):
 
     def _import_cii_invoice_add_invoice_origin(self, collected_values):
         tree = collected_values['tree']
-        if invoice_origin := tree.findtext('.//{*}BuyerOrderReferencedDocument/{*}IssuerAssignedID'):
+        if invoice_origin := tree.findtext('./{*}SupplyChainTradeTransaction/{*}ApplicableHeaderTradeAgreement/{*}BuyerOrderReferencedDocument/{*}IssuerAssignedID'):
             collected_values['to_write']['invoice_origin'] = invoice_origin
 
     def _import_cii_invoice_add_issue_date(self, collected_values):
@@ -922,7 +965,7 @@ class AccountEdiCii(models.AbstractModel):
 
     def _import_cii_invoice_add_invoice_delivery_date(self, collected_values):
         tree = collected_values['tree']
-        if delivery_date_str := tree.findtext(".//{*}ActualDeliverySupplyChainEvent/{*}OccurrenceDateTime/{*}DateTimeString"):
+        if delivery_date_str := tree.findtext("./{*}SupplyChainTradeTransaction/{*}ApplicableHeaderTradeDelivery/{*}ActualDeliverySupplyChainEvent/{*}OccurrenceDateTime/{*}DateTimeString"):
             collected_values['to_write']['delivery_date'] = datetime.strptime(delivery_date_str.strip(), DEFAULT_CII_DATE_FORMAT)
 
     def _import_cii_invoice_add_narration(self, collected_values):
@@ -1117,6 +1160,9 @@ class AccountEdiCii(models.AbstractModel):
             self._import_cii_invoice_line_add_name(line_collected_values)
             self._import_cii_invoice_line_add_price_unit_quantity_discount(line_collected_values)
             self._import_cii_invoice_line_add_deferred_dates(line_collected_values)
+
+            # order / delivery order / delivery address of the line (multi-order / multi-delivery invoices)
+            self._import_cii_invoice_line_add_trade_references(line_collected_values)
 
             # product / product_uom / taxes
             self._import_cii_invoice_line_add_product_values(line_collected_values)
@@ -1317,6 +1363,50 @@ class AccountEdiCii(models.AbstractModel):
                 # only checking the existence of the first of the enterprise fields
                 to_write['deferred_start_date'] = datetime.strptime(start_date_str.strip(), DEFAULT_CII_DATE_FORMAT)
                 to_write['deferred_end_date'] = datetime.strptime(end_date_str.strip(), DEFAULT_CII_DATE_FORMAT)
+
+    def _import_cii_get_ship_to_address_values(self, ship_to_tree):
+        if ship_to_tree is None:
+            return {}
+        # GlobalID on the lines, ID on the header.
+        location_id_tree = ship_to_tree.find('./{*}GlobalID[@schemeID="0088"]')
+        if location_id_tree is None:
+            location_id_tree = ship_to_tree.find('./{*}ID[@schemeID="0088"]')
+        return {
+            'name': ship_to_tree.findtext('./{*}Name'),
+            'gln': location_id_tree.text if location_id_tree is not None else None,
+            'street': ship_to_tree.findtext('./{*}PostalTradeAddress/{*}LineOne'),
+            'street2': ship_to_tree.findtext('./{*}PostalTradeAddress/{*}LineTwo'),
+            'street3': ship_to_tree.findtext('./{*}PostalTradeAddress/{*}LineThree'),
+            'zip': ship_to_tree.findtext('./{*}PostalTradeAddress/{*}PostcodeCode'),
+            'city': ship_to_tree.findtext('./{*}PostalTradeAddress/{*}CityName'),
+            'state': ship_to_tree.findtext('./{*}PostalTradeAddress/{*}CountrySubDivisionName'),
+            'country_code': ship_to_tree.findtext('./{*}PostalTradeAddress/{*}CountryID'),
+        }
+
+    def _import_cii_invoice_line_add_trade_references(self, collected_values):
+        tree = collected_values['tree']
+        line_tree = collected_values['line_tree']
+        line_id = (
+            line_tree.findtext('./{*}AssociatedDocumentLineDocument/{*}LineID')
+            or str(len(collected_values['lines_collected_values']) + 1)
+        )
+        order_tree = line_tree.find('./{*}SpecifiedLineTradeAgreement/{*}BuyerOrderReferencedDocument')
+        despatch_tree = line_tree.find('./{*}SpecifiedLineTradeDelivery/{*}DespatchAdviceReferencedDocument')
+        self._import_invoice_line_add_trade_references(
+            collected_values,
+            line_id,
+            {
+                'order_ref': order_tree.findtext('./{*}IssuerAssignedID') if order_tree is not None else None,
+                'despatch_ref': despatch_tree.findtext('./{*}IssuerAssignedID') if despatch_tree is not None else None,
+                'despatch_line_ref': despatch_tree.findtext('./{*}LineID') if despatch_tree is not None else None,
+                'ship_to': self._import_cii_get_ship_to_address_values(
+                    line_tree.find('./{*}SpecifiedLineTradeDelivery/{*}ShipToTradeParty'),
+                ),
+            },
+            self._import_cii_get_ship_to_address_values(
+                tree.find('./{*}SupplyChainTradeTransaction/{*}ApplicableHeaderTradeDelivery/{*}ShipToTradeParty'),
+            ),
+        )
 
     def _import_cii_invoice_line_add_product_values(self, collected_values):
         line_tree = collected_values['line_tree']
@@ -1532,6 +1622,7 @@ class AccountEdiCii(models.AbstractModel):
 
         # Invoice lines values.
         self._import_cii_invoice_add_invoice_line_values(collected_values)
+        self._import_invoice_add_lines_order_refs(collected_values)
         self._import_cii_invoice_retrieve_products(collected_values)
         self._import_cii_invoice_retrieve_product_uoms(collected_values)
         self._import_cii_invoice_retrieve_accounts(collected_values)

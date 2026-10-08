@@ -14,6 +14,10 @@ class L10nFRAccountEdiCii(models.AbstractModel):
             }
         super()._cii_add_exchanged_document_context_node(vals)
 
+    def _cii_export_line_trade_references(self, vals):
+        # Order, delivery order and delivery address per line (multi-order / multi-delivery invoices).
+        return super()._cii_export_line_trade_references(vals) or vals['company']._get_peppol_proxy_type() == 'pdp'
+
     def _cii_add_exchanged_document_node(self, vals):
         invoice = vals['invoice']
         if invoice._is_downpayment() and vals['company']._get_peppol_proxy_type() == 'pdp':

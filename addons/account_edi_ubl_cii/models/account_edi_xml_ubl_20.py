@@ -1399,6 +1399,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         self._add_invoice_line_tax_category_nodes(line_node, vals)
         self._add_invoice_line_price_nodes(line_node, vals)
         self._add_invoice_line_pricing_reference_nodes(line_node, vals)
+        self._add_invoice_line_reference_nodes(line_node, vals)
+        self._add_invoice_line_delivery_nodes(line_node, vals)
         self._add_invoice_line_optional_nodes(line_node, vals)
         return line_node
 
@@ -1457,6 +1459,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         self._add_document_line_price_nodes(line_node, vals)
 
     def _add_invoice_line_pricing_reference_nodes(self, line_node, vals):
+        pass
+
+    def _add_invoice_line_reference_nodes(self, line_node, vals):
+        pass
+
+    def _add_invoice_line_delivery_nodes(self, line_node, vals):
         pass
 
     def _add_invoice_line_optional_nodes(self, line_node, vals):

@@ -1574,8 +1574,7 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_accounting_customer_party_legal_entity_nodes(sub_vals)
         self._ubl_add_accounting_customer_party_contact_node(sub_vals)
 
-    def _ubl_get_delivery_node_from_delivery_address(self, vals):
-        delivery_partner = vals['delivery']
+    def _ubl_get_delivery_node_from_partner(self, vals, delivery_partner):
         node = {
             'cbc:ActualDeliveryDate': {'_text': None},
             'cac:DeliveryLocation': {
@@ -1596,6 +1595,11 @@ class AccountEdiUBL(models.AbstractModel):
             node['cac:DeliveryLocation']['cbc:ID']['schemeID'] = '0088'
             node['cac:DeliveryLocation']['cbc:ID']['_text'] = delivery_partner.global_location_number
 
+        return node
+
+    def _ubl_get_delivery_node_from_delivery_address(self, vals):
+        node = self._ubl_get_delivery_node_from_partner(vals, vals['delivery'])
+
         if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
             invoice = vals['invoice']
             if invoice.delivery_date:
@@ -1609,6 +1613,38 @@ class AccountEdiUBL(models.AbstractModel):
         if vals.get('delivery'):
             nodes.append(self._ubl_get_delivery_node_from_delivery_address(vals))
 
+    def _ubl_export_line_trade_references(self, vals):
+        return False
+
+    def _ubl_add_line_reference_nodes(self, vals):
+        if not self._ubl_export_line_trade_references(vals):
+            return
+        trade_references = self._get_line_trade_references(vals, vals['line_vals']['base_line'])
+        line_node = vals['line_node']
+        if trade_references.get('order_ref'):
+            line_node['cac:OrderLineReference'] = {
+                'cbc:LineID': {'_text': 'NA'},
+                'cac:OrderReference': {
+                    'cbc:ID': {'_text': trade_references['order_ref']},
+                },
+            }
+        if trade_references.get('despatch_ref'):
+            line_node['cac:DespatchLineReference'] = {
+                'cbc:LineID': {'_text': trade_references.get('despatch_line_ref') or 'NA'},
+                'cac:DocumentReference': {
+                    'cbc:ID': {'_text': trade_references['despatch_ref']},
+                },
+            }
+
+    def _ubl_add_line_delivery_nodes(self, vals):
+        nodes = vals['line_node']['cac:Delivery'] = []
+        if not self._ubl_export_line_trade_references(vals):
+            return
+        ship_to = self._get_line_trade_references(vals, vals['line_vals']['base_line']).get('ship_to')
+        # Only when the line is delivered elsewhere than the invoice's delivery address.
+        if ship_to and ship_to != vals.get('delivery'):
+            nodes.append(self._ubl_get_delivery_node_from_partner(vals, ship_to))
+
     def _ubl_add_invoice_line_node(self, vals):
         self._ubl_add_line_id_node(vals)
         self._ubl_add_line_note_nodes(vals)
@@ -1617,6 +1653,8 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_extension_amount_node(vals)
         self._ubl_add_line_period_nodes(vals)
         self._ubl_add_line_pricing_reference_node(vals)
+        self._ubl_add_line_reference_nodes(vals)
+        self._ubl_add_line_delivery_nodes(vals)
         self._ubl_add_line_tax_totals_nodes(vals)
         self._ubl_add_line_item_node(vals)
         self._ubl_add_line_price_node(vals)
@@ -1635,6 +1673,8 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_extension_amount_node(vals)
         self._ubl_add_line_period_nodes(vals)
         self._ubl_add_line_pricing_reference_node(vals)
+        self._ubl_add_line_reference_nodes(vals)
+        self._ubl_add_line_delivery_nodes(vals)
         self._ubl_add_line_tax_totals_nodes(vals)
         self._ubl_add_line_item_node(vals)
         self._ubl_add_line_price_node(vals)
@@ -2679,7 +2719,7 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_ubl_invoice_add_delivery(self, collected_values):
         tree = collected_values['tree']
-        delivery_date_str = tree.findtext('.//{*}Delivery/{*}ActualDeliveryDate')
+        delivery_date_str = tree.findtext('./{*}Delivery/{*}ActualDeliveryDate')
         if delivery_date_str:
             collected_values['to_write']['delivery_date'] = fields.Date.from_string(delivery_date_str)
 
@@ -3062,6 +3102,41 @@ class AccountEdiUBL(models.AbstractModel):
                 to_write['deferred_start_date'] = fields.Date.from_string(start_date_str)
                 to_write['deferred_end_date'] = fields.Date.from_string(end_date_str)
 
+    def _import_ubl_get_delivery_address_values(self, delivery_tree):
+        if delivery_tree is None:
+            return {}
+        return {
+            'name': (
+                delivery_tree.findtext('./{*}DeliveryLocation/{*}Name')
+                or delivery_tree.findtext('./{*}DeliveryParty/{*}PartyName/{*}Name')
+            ),
+            'gln': delivery_tree.findtext('./{*}DeliveryLocation/{*}ID[@schemeID="0088"]'),
+            'street': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}StreetName'),
+            'street2': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}AdditionalStreetName'),
+            'street3': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}AddressLine/{*}Line'),
+            'zip': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}PostalZone'),
+            'city': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}CityName'),
+            'state': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}CountrySubentity'),
+            'country_code': delivery_tree.findtext('./{*}DeliveryLocation/{*}Address/{*}Country/{*}IdentificationCode'),
+        }
+
+    def _import_ubl_invoice_line_add_trade_references(self, collected_values):
+        tree = collected_values['tree']
+        line_tree = collected_values['line_tree']
+        line_id = line_tree.findtext('./{*}ID') or str(len(collected_values['lines_collected_values']) + 1)
+        despatch_line_ref = line_tree.findtext('./{*}DespatchLineReference/{*}LineID')
+        self._import_invoice_line_add_trade_references(
+            collected_values,
+            line_id,
+            {
+                'order_ref': line_tree.findtext('./{*}OrderLineReference/{*}OrderReference/{*}ID'),
+                'despatch_ref': line_tree.findtext('./{*}DespatchLineReference/{*}DocumentReference/{*}ID'),
+                'despatch_line_ref': despatch_line_ref if despatch_line_ref != 'NA' else None,
+                'ship_to': self._import_ubl_get_delivery_address_values(line_tree.find('./{*}Delivery')),
+            },
+            self._import_ubl_get_delivery_address_values(tree.find('./{*}Delivery')),
+        )
+
     def _import_ubl_invoice_line_prepare_classified_tax_category_tax_values(self, collected_values, tax_category_tree):
         percentage = tax_category_tree.findtext('./{*}Percent')
         category_code = tax_category_tree.findtext('./{*}ID')
@@ -3191,6 +3266,9 @@ class AccountEdiUBL(models.AbstractModel):
                 self._import_ubl_invoice_line_add_name(line_collected_values)
                 self._import_ubl_invoice_line_add_price_unit_quantity_discount(line_collected_values)
                 self._import_ubl_invoice_line_add_deferred_dates(line_collected_values)
+
+                # order / delivery order / delivery address of the line (multi-order / multi-delivery invoices)
+                self._import_ubl_invoice_line_add_trade_references(line_collected_values)
 
                 # product / product_uom / taxes
                 self._import_ubl_invoice_line_add_product_values(line_collected_values)
@@ -3338,6 +3416,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         # Invoice lines values.
         self._import_ubl_invoice_add_invoice_line_values(collected_values)
+        self._import_invoice_add_lines_order_refs(collected_values)
         self._import_ubl_invoice_retrieve_products(collected_values)
         self._import_ubl_invoice_retrieve_product_uoms(collected_values)
         self._import_ubl_invoice_retrieve_accounts(collected_values)
