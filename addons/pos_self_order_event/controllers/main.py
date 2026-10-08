@@ -22,8 +22,10 @@ class PosSelfEventController(PosSelfOrderController):
         if not order_id or not event_ticket_id:
             raise NotFound()
 
+        pos_order = self._verify_pos_order(pos_config, order_id, kwargs.get('order_access_token'))
+
         event_regs = pos_config.env['event.registration'].search([
-            ('pos_order_id', '=', int(order_id)),
+            ('pos_order_id', '=', pos_order.id),
             ('event_ticket_id', '=', int(event_ticket_id)),
         ])
         if not event_regs:
