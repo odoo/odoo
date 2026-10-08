@@ -86,6 +86,21 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
                 "Salesperson should get assigned when sending payment confirmation mail",
             )
 
+    def test_line_items_urls_only_for_products_published_on_order_website(self):
+        """Test that the page URL is only added to the line items of the products published on
+        the website of the order."""
+        other_website = self.env["website"].create({"name": "Other Website"})
+        self.service_product.website_id = other_website
+        product_line, service_line = self.cart.order_line
+
+        line_items = self.tx._get_line_items()
+
+        self.assertEqual(
+            line_items[product_line]["url"],
+            f"{self.cart.get_base_url()}{self.product.website_url}",
+        )
+        self.assertNotIn("url", line_items[service_line])
+
     def _create_abandoned_order_with_transaction(self, tx_state):
         order = self.env["sale.order"].create({
             "partner_id": self.portal_user.partner_id.id,
