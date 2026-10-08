@@ -6,7 +6,7 @@
     <div class="d-flex h-100 w-100" t-att-class="{'flex-column': show_404_page_message}" t-ref="this.containerRef">
         <CreatePageMessage t-if="show_404_page_message" createPage="() => this.onNewPage(true)"/>
         <div class="o_website_preview flex-grow-1" t-att-class="this.state.isEditing ? '' : 'border-top'" t-ref="this.websitePreviewRef">
-            <div class="o_iframe_container">
+            <div class="o_iframe_container" t-ref="this.iframeContainerRef">
                 <iframe t-if="!this.testMode" t-att-src="this.iframeFallbackUrl"
                     class="o_ignore_in_tour"
                     t-ref="this.iframefallback"/>

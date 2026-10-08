@@ -139,13 +139,29 @@ function computePosition(popper, target, { container, flip, margin, position, sh
 
     // Boxes
     const popBox = popper.getBoundingClientRect();
-    const targetBox = target.getBoundingClientRect();
-    const contBox = container.getBoundingClientRect();
+    let targetBox = target.getBoundingClientRect();
+    let contBox = container.getBoundingClientRect();
     const iframeBox = iframe?.getBoundingClientRect() ?? { top: 0, left: 0 };
 
     const containerIsHTMLNode = container === container.ownerDocument.firstElementChild;
     const containerIsInIframe =
         shouldAccountForIFrame && target.ownerDocument === container.ownerDocument;
+
+    // The iframe may be visually scaled (e.g. CSS transform).
+    const iframeScale = iframe ? iframeBox.width / iframe.offsetWidth || 1 : 1;
+    if (iframeScale !== 1) {
+        const scaleBox = (box) =>
+            new DOMRect(
+                box.x * iframeScale,
+                box.y * iframeScale,
+                box.width * iframeScale,
+                box.height * iframeScale
+            );
+        targetBox = scaleBox(targetBox);
+        if (containerIsInIframe) {
+            contBox = scaleBox(contBox);
+        }
+    }
 
     // Compute positioning data
     const directionsData = {
