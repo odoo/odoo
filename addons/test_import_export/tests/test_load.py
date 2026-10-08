@@ -903,6 +903,86 @@ class TestInvalidStrings(ImporterCase):
         self.assertIn('NUL', result['messages'][0]['message'])
 
 
+class TestM2oImportDefaultIsolation(ImporterCase):
+    """ Regression for #283041: default_* from import context must not leak
+        into RelatedModel.name_create() via the relational converter.
+
+        Path: Model.load() -> ir.fields.converter.db_id_for()
+              -> RelatedModel.with_context(clean_context(...)).name_create()
+    """
+    model_name = 'export.m2o.str'
+
+    def test_related_defaults_are_isolated(self):
+        Child = self.env['export.m2o.str.child']
+        unique_name = 'NEW_CHILD_LEAK_TEST_%s' % self.env.cr.dbname
+        Child.search([('name', '=', unique_name)]).unlink()
+        ctx = {
+            'name_create_enabled_fields': {'child_id': True},
+            'default_value': 9999,
+            'default_extra': 'LEAKED_VIA_CONTEXT',
+        }
+        result = self.import_(['child_id'], [[unique_name]], context=ctx)
+        self.assertFalse(result['messages'], result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+        child = Child.search([('name', '=', unique_name)])
+        self.assertEqual(len(child), 1)
+        self.assertEqual(child.value, 0, "Leaked default_value must not reach related name_create")
+        self.assertFalse(child.extra, "Leaked default_extra must not reach related name_create")
+
+    def test_target_defaults_still_apply(self):
+        Child = self.env['export.m2o.str.child']
+        unique_name = 'TARGET_DEFAULT_KEEP_%s' % self.env.cr.dbname
+        Child.search([('name', '=', unique_name)]).unlink()
+        model = self.env['export.m2o.str.child']
+        res = model.with_context(import_file=True, default_value=777, default_extra='KEEP_ME').load(
+            ['name'], [[unique_name]]
+        )
+        self.assertFalse(res['messages'], res['messages'])
+        child = Child.search([('name', '=', unique_name)])
+        self.assertEqual(child.value, 777)
+        self.assertEqual(child.extra, 'KEEP_ME')
+
+    def test_existing_related_value_unchanged(self):
+        Child = self.env['export.m2o.str.child']
+        existing = Child.create({'name': 'EXISTING_CHILD_283041', 'value': 11, 'extra': 'orig'})
+        ctx = {
+            'name_create_enabled_fields': {'child_id': True},
+            'default_value': 9999,
+            'default_extra': 'LEAKED',
+        }
+        result = self.import_(['child_id'], [[existing.name]], context=ctx)
+        self.assertFalse(result['messages'], result['messages'])
+        self.assertEqual(Child.search_count([('name', '=', existing.name)]), 1)
+        existing.invalidate_recordset()
+        self.assertEqual(existing.value, 11)
+        self.assertEqual(existing.extra, 'orig')
+        imported = self.browse(domain=[('id', 'in', result['ids'])])
+        self.assertEqual(imported.child_id.id, existing.id)
+
+    def test_unknown_related_creation_disabled_unchanged(self):
+        result = self.import_(['child_id'], [['NON_EXISTENT_NO_CREATE']])
+        self.assertTrue(result['messages'])
+        self.assertIs(result['ids'], False)
+        self.assertIn("No matching record found", result['messages'][0]['message'])
+
+    def test_multiple_rows_no_cumulative_leak(self):
+        Child = self.env['export.m2o.str.child']
+        names = ['MULTI_LEAK_A_283041', 'MULTI_LEAK_B_283041']
+        Child.search([('name', 'in', names)]).unlink()
+        ctx = {
+            'name_create_enabled_fields': {'child_id': True},
+            'default_value': 555,
+            'default_extra': 'LEAK_MULTI',
+        }
+        result = self.import_(['child_id'], [[names[0]], [names[1]]], context=ctx)
+        self.assertFalse(result['messages'], result['messages'])
+        self.assertEqual(len(result['ids']), 2)
+        for n in names:
+            child = Child.search([('name', '=', n)])
+            self.assertEqual(child.value, 0)
+            self.assertFalse(child.extra)
+
+
 class test_m2m(ImporterCase):
     model_name = 'export.many2many'
 
