@@ -18,6 +18,8 @@ export class ImageToolbarDropdown extends Component {
         onSelected: t.function(),
         items: t.array(),
         getDisplay: t.function().optional(),
+        // Marks the current item, as the style and alignment menus do.
+        isSelected: t.function().optional(),
     });
     static template = "html_editor.ImageToolbarDropdown";
 
@@ -37,5 +39,9 @@ export class ImageToolbarDropdown extends Component {
     onSelected(item) {
         this.props.onSelected(item);
         this.props.focusEditable();
+    }
+
+    isSelected(item) {
+        return !!this.props.isSelected?.(item);
     }
 }

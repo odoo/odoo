@@ -10,6 +10,13 @@ import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
 import { expandToolbar } from "./_helpers/toolbar";
 
+async function resizeIcon(size) {
+    await click("button[name='icon_size']");
+    await animationFrame();
+    await click(`.icon_size_selector [name='icon_size_${size}']`);
+    await animationFrame();
+}
+
 async function setupIcon(icon = "local_bar", extraClass = "") {
     extraClass = (icon.startsWith("fa-") ? extraClass : `oi ${extraClass}`).trim();
     const attr =
@@ -88,41 +95,51 @@ test("toolbar should not be namespaced for icon (2)", async () => {
 test("Can resize an icon", async () => {
     await setupIcon("local_bar");
     expect("span[data-icon='local_bar']").toHaveCount(1);
-    await click("button[name='icon_size_2']");
+    await resizeIcon(2);
     expect("span[data-icon='local_bar'].oi-2x").toHaveCount(1);
-    await click("button[name='icon_size_3']");
+    await resizeIcon(3);
     expect("span[data-icon='local_bar'].oi-2x").toHaveCount(0);
     expect("span[data-icon='local_bar'].oi-3x").toHaveCount(1);
-    await click("button[name='icon_size_4']");
+    await resizeIcon(4);
     expect("span[data-icon='local_bar'].oi-3x").toHaveCount(0);
     expect("span[data-icon='local_bar'].oi-4x").toHaveCount(1);
-    await click("button[name='icon_size_5']");
+    await resizeIcon(5);
     expect("span[data-icon='local_bar'].oi-4x").toHaveCount(0);
     expect("span[data-icon='local_bar'].oi-5x").toHaveCount(1);
-    await click("button[name='icon_size_1']");
+    await resizeIcon(1);
     expect("span[data-icon='local_bar'].oi-5x").toHaveCount(0);
 });
 
 test("Can resize an oi icon", async () => {
     await setupIcon("oi-pastafarianism");
-    await click("button[name='icon_size_2']");
+    expect("button[name='icon_size']").toHaveText("1x");
+    await resizeIcon(2);
     expect("span.oi-pastafarianism.oi-2x").toHaveCount(1);
-    await expectElementCount("button[name='icon_size_2'].active", 1);
-    await click("button[name='icon_size_3']");
+    expect("button[name='icon_size']").toHaveText("2x");
+    await resizeIcon(3);
     expect("span.oi-pastafarianism.oi-2x").toHaveCount(0);
     expect("span.oi-pastafarianism.oi-3x").toHaveCount(1);
-    await expectElementCount("button[name='icon_size_3'].active", 1);
-    await click("button[name='icon_size_4']");
+    expect("button[name='icon_size']").toHaveText("3x");
+    await resizeIcon(4);
     expect("span.oi-pastafarianism.oi-3x").toHaveCount(0);
     expect("span.oi-pastafarianism.oi-4x").toHaveCount(1);
-    await expectElementCount("button[name='icon_size_4'].active", 1);
-    await click("button[name='icon_size_5']");
+    expect("button[name='icon_size']").toHaveText("4x");
+    await resizeIcon(5);
     expect("span.oi-pastafarianism.oi-4x").toHaveCount(0);
     expect("span.oi-pastafarianism.oi-5x").toHaveCount(1);
-    await expectElementCount("button[name='icon_size_5'].active", 1);
-    await click("button[name='icon_size_1']");
+    expect("button[name='icon_size']").toHaveText("5x");
+    await resizeIcon(1);
     expect("span.oi-pastafarianism.oi-5x").toHaveCount(0);
-    await expectElementCount("button[name='icon_size_5'].active", 0);
+    expect("button[name='icon_size']").toHaveText("1x");
+});
+
+test("The size menu marks the current size of the icon", async () => {
+    await setupIcon("local_bar");
+    await resizeIcon(3);
+    await click("button[name='icon_size']");
+    await animationFrame();
+    expect(".icon_size_selector .dropdown-item.selected").toHaveCount(1);
+    expect(".icon_size_selector .dropdown-item.selected").toHaveText("3x");
 });
 
 test("Can spin an icon", async () => {
@@ -149,7 +166,7 @@ test("Can set icon color", async () => {
 test("Can undo to 1x size after applying 2x size", async () => {
     const { editor } = await setupIcon("local_bar");
     expect("span[data-icon='local_bar']").toHaveCount(1);
-    await click("button[name='icon_size_2']");
+    await resizeIcon(2);
     expect("span[data-icon='local_bar'].oi-2x").toHaveCount(1);
     undo(editor);
     expect("span[data-icon='local_bar']").toHaveCount(1);
@@ -415,13 +432,11 @@ test("icon toolbar when only an icon is selected", async () => {
         queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_color'] .o-select-color-background")
     ).toHaveCount(1);
 
-    // icon_size: exactly 5 buttons to resize the icon from 1x to 5x
-    expect(queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_size'] button")).toHaveCount(5);
-    for (const size of [1, 2, 3, 4, 5]) {
-        expect(
-            queryAll(`.o-we-toolbar .o-we-toolbar-group[name='icon_size'] button[name='icon_size_${size}']`)
-        ).toHaveCount(1);
-    }
+    // icon_size: exactly 1 menu to resize the icon from 1x to 5x
+    expect(queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_size'] button")).toHaveCount(1);
+    expect(
+        queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_size'] button[name='icon_size']")
+    ).toHaveCount(1);
 
     // icon_spin: exactly 1 button to toggle the icon spin animation
     expect(queryAll(".o-we-toolbar .o-we-toolbar-group[name='icon_spin'] button")).toHaveCount(1);
