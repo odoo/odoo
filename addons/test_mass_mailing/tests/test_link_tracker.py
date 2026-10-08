@@ -59,3 +59,19 @@ class TestLinkTracker(common.TestMassMailCommon):
         self.assertTrue(trace.trace_status, 'open')
         self.assertTrue(trace.links_click_datetime)
         self.assertEqual(trace.links_click_ids, click)
+
+    def test_untracked_res_ids_partner_fallback(self):
+        """ Models without 'country_id' use their partners' country to know
+        whether tracking is disabled (see '_get_untracked_res_ids'). """
+        partner_fr = self.env['res.partner'].create({'name': 'FR', 'email': 'fr@test.example.com', 'country_id': self.env.ref('base.fr').id})
+        partner_be = self.env['res.partner'].create({'name': 'BE', 'email': 'be@test.example.com', 'country_id': self.env.ref('base.be').id})
+        records = self.env['mailing.test.partner'].create([
+            {'name': 'Rec FR', 'partner_id': partner_fr.id},
+            {'name': 'Rec BE', 'partner_id': partner_be.id},
+        ])
+        self.assertNotIn('country_id', records._fields)
+        self.env['ir.config_parameter'].sudo().set_param('mass_mailing.disable_tracking', 'FR')
+        self.assertEqual(
+            self.env['mailing.mailing']._get_untracked_res_ids('mailing.test.partner', records.ids),
+            set(records[0].ids),
+        )
