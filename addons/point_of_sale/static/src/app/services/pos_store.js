@@ -1573,7 +1573,11 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         if (this.config.use_presets && !data["preset_id"] && !order.isRefund) {
-            this.selectPreset(this.config.default_preset_id, order, this.shouldSelectPreset(order));
+            this.selectPreset(
+                this.session.default_preset_id,
+                order,
+                this.shouldSelectPreset(order)
+            );
         }
         this.customerDisplay.rediscoverDisplays();
 
@@ -2317,6 +2321,7 @@ export class PosStore extends WithLazyGetterTrap {
                 isSelected: order.preset_id && preset.id === order.preset_id.id,
                 item: preset,
                 color: preset.color,
+                isStarred: preset.id === this.session.default_preset_id?.id,
             }));
 
             if (selectionList.length <= 1) {
@@ -2331,6 +2336,18 @@ export class PosStore extends WithLazyGetterTrap {
                           list: selectionList,
                           size: "md",
                           bodyClass: "pb-4",
+                          stars: true,
+                          onStarClick: async (presetId) => {
+                              const selectedPreset = this.config.available_preset_ids.find(
+                                  (p) => p.id === presetId
+                              );
+                              if (selectedPreset) {
+                                  this.session.default_preset_id = selectedPreset;
+                                  await this.data.write("pos.session", [this.session.id], {
+                                      default_preset_id: selectedPreset.id,
+                                  });
+                              }
+                          },
                       });
             // Keep the existing preset if the user cancels the selection popup.
             if (!preset && order.preset_id) {
