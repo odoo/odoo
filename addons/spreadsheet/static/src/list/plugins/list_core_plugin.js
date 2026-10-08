@@ -179,6 +179,9 @@ export class ListCorePlugin extends OdooCorePlugin {
         const lists = { ...this.lists };
         delete lists[cmd.listId];
         this.history.update("lists", lists);
+        const compiledColumnFormulas = { ...this.compiledColumnFormulas };
+        delete compiledColumnFormulas[cmd.listId];
+        this.history.update("compiledColumnFormulas", compiledColumnFormulas);
     }
 
     onUpdateOdooListDomain(cmd) {
@@ -301,6 +304,7 @@ export class ListCorePlugin extends OdooCorePlugin {
 
     _compileCalculatedColumns(listId, definition) {
         const computedColumns = definition.columns.filter((col) => col.computedBy);
+        this.history.update("compiledColumnFormulas", listId, {});
         for (const column of computedColumns) {
             const compiledFormula = CompiledFormula.Compile(
                 column.computedBy.formula,
