@@ -312,10 +312,32 @@ class Store:
         return self
 
     def _add_field_list(self, field_list, *, as_thread=False, ignore_empty):
-        """Add the given field list to the store. This is an internal implementation method.
+        """Add the given field list to the store, with its target blocks evaluated for the target
+        of this store. This is an internal implementation method.
         In business code, Store.add() should be called instead.
         """
         self.__try_update_version_from_records(field_list.records)
+        records = field_list.records
+        internal_field_list = Store.FieldList(records)
+        if any(isinstance(field, Store.TargetBlock) for field in field_list.data):
+            fields = []
+            target_field_list = Store.FieldList(records, target=self.target)
+
+            def resolve(entries):
+                for field in entries.data:
+                    if not isinstance(field, Store.TargetBlock):
+                        fields.append(field)
+                    elif field.condition(target_field_list, *field.params):
+                        if not field.internal_store_only:
+                            resolve(Store._format_fields(field.fields, records))
+                    elif field.is_for_internal_users() and self._internal_store:
+                        internal_field_list.append(
+                            Store.TargetBlock(field.fields, condition=field.condition),
+                        )
+
+            resolve(field_list)
+            field_list = Store.FieldList(records)
+            field_list.extend(fields)
         if field_list and field_list.records:
             for record, record_data_list in self._get_records_data_list(
                 field_list,
@@ -335,7 +357,7 @@ class Store:
                     )
         if self._internal_store:
             self._internal_store._add_field_list(
-                field_list._internal_field_list,
+                internal_field_list,
                 as_thread=as_thread,
                 ignore_empty=ignore_empty,
             )
@@ -433,18 +455,17 @@ class Store:
             else:
                 target[key] = val
 
-    def _format_fields(self, fields, records=None, fields_params=None):
-        field_list = Store.FieldList(self, records)
+    @staticmethod
+    def _format_fields(fields, records=None, fields_params=None):
+        field_list = Store.FieldList(records)
         if isinstance(fields, str) and (method := Store._get_fields_method(records, fields)):
             method(field_list, **(fields_params or {}))
         elif callable(fields):
             fields(field_list)
         elif isinstance(fields, dict):
-            field_list.extend(Store.Attr(self, key, value) for key, value in fields.items())
+            field_list.extend(Store.Attr(key, value) for key, value in fields.items())
         elif isinstance(fields, (list, tuple, Store.FieldList)):
             field_list.extend(fields)  # prevent mutation of original list
-            if isinstance(fields, Store.FieldList) and fields._internal_field_list:
-                field_list.extend(fields._internal_field_list, internal=True)
         else:
             raise TypeError(f"unexpected fields format: '{fields}' for records: '{records}'")
         return field_list
@@ -503,7 +524,7 @@ class Store:
     def _deep_freeze(obj):
         """Recursively convert a data structure into an immutable version that can be hashed and
         compared for identity."""
-        if isinstance(obj, (Store.FieldList, Store.Attr)):
+        if isinstance(obj, (Store.FieldList, Store.Attr, Store.TargetBlock)):
             return Store._deep_freeze(obj._identity())
         if isinstance(obj, dict):
             return (
@@ -577,8 +598,7 @@ class Store:
         Note: when a static value is given to a recordset, the same value is set on all records.
         """
 
-        def __init__(self, store, field_name, value=NO_VALUE, *, predicate=None, sudo=False):
-            self.store = store
+        def __init__(self, field_name, value=NO_VALUE, *, predicate=None, sudo=False):
             self.field_name = field_name
             self.predicate = predicate
             self.sudo = sudo
@@ -609,7 +629,6 @@ class Store:
 
         def __init__(
             self,
-            store,
             records_or_field_name,
             fields,
             /,
@@ -623,7 +642,7 @@ class Store:
             value=NO_VALUE,
         ):
             field_name = records_or_field_name if isinstance(records_or_field_name, str) else None
-            super().__init__(store, field_name, predicate=predicate, sudo=sudo, value=value)
+            super().__init__(field_name, predicate=predicate, sudo=sudo, value=value)
             assert (
                 not records_or_field_name
                 or isinstance(records_or_field_name, (str, models.Model))
@@ -645,7 +664,7 @@ class Store:
             self.only_data = only_data
             # format fields early to ensure the final shape is used for identity whenever possible
             if self.records:
-                self.fields = self.store._format_fields(self.fields, self.records, self.fields_params)
+                self.fields = Store._format_fields(self.fields, self.records, self.fields_params)
                 self.fields_params = None
 
         def _get_value(self, record):
@@ -663,7 +682,7 @@ class Store:
             assert not self.dynamic_fields or calling_record
             is_fake_field = self.value is not NO_VALUE and not isinstance(records, models.Model)
             if not is_fake_field and records:
-                field_list = self.store._format_fields(self.fields, records, self.fields_params)
+                field_list = Store._format_fields(self.fields, records, self.fields_params)
                 if self.dynamic_fields:
                     if (
                         isinstance(self.dynamic_fields, str)
@@ -678,7 +697,6 @@ class Store:
             else:
                 field_list = []  # avoid calling field methods (which potentially does queries) on empty records
             return self.__class__(
-                self.store,
                 None if is_fake_field else records,
                 field_list,
                 as_thread=self.as_thread,
@@ -713,7 +731,6 @@ class Store:
 
         def __init__(
             self,
-            store,
             record_or_field_name,
             fields,
             /,
@@ -727,7 +744,6 @@ class Store:
             value=NO_VALUE,
         ):
             super().__init__(
-                store,
                 record_or_field_name,
                 fields,
                 as_thread=as_thread,
@@ -751,7 +767,6 @@ class Store:
 
         def __init__(
             self,
-            store,
             records_or_field_name,
             fields,
             /,
@@ -767,7 +782,6 @@ class Store:
             value=NO_VALUE,
         ):
             super().__init__(
-                store,
                 records_or_field_name,
                 fields,
                 as_thread=as_thread,
@@ -829,68 +843,80 @@ class Store:
 
     class FieldList(UserList):
         """Helper to provide short syntax for building a list of field definitions for a specific
-        store.add call (with given records and target)."""
+        store.add call (with given records). Fields depending on the target go in
+        for_current_user(), for_internal_users() or for_group(), whose conditions are the only
+        places where the target can be read."""
 
-        def __init__(self, store, records):
+        def __init__(self, records, *, target=None):
             super().__init__()
             # records for which the field list will apply. Useful to pre-compute values in batch.
             self.records = records
-            self.store = store
-            self._internal_field_list = None
-            if store._internal_store:
-                self._internal_field_list = Store.FieldList(store._internal_store, records)
+            self._target = target
 
         @property
         def target(self):
             """Store.Target of the field list. Useful to adapt fields depending on the receivers."""
-            return self.store.target
+            assert self._target is not None, (
+                "The target of a field list can only be read by the condition of "
+                "for_current_user(), for_internal_users() or for_group()."
+            )
+            return self._target
 
-        def append(self, field, *, internal=False):
-            if not internal or self.is_for_internal_users():
-                super().append(field)
-            elif self._internal_field_list is not None:
-                self._internal_field_list.append(field)
+        def clear(self):
+            """Remove the fields. The fields for internal users are kept for the internal store of
+            a channel target."""
+            kept_fields = [
+                Store.TargetBlock(field.fields, condition=field.condition, internal_store_only=True)
+                for field in self.data
+                if isinstance(field, Store.TargetBlock) and field.is_for_internal_users()
+            ]
+            super().clear()
+            super().extend(kept_fields)
 
-        def extend(self, fields, *, internal=False):
-            if not internal or self.is_for_internal_users():
-                super().extend(fields)
-            elif self._internal_field_list is not None:
-                self._internal_field_list.extend(fields)
-
-        def attr(self, field_name, value=NO_VALUE, *, predicate=None, sudo=False, internal=False):
+        def attr(self, field_name, value=NO_VALUE, *, predicate=None, sudo=False):
             """Add an attribute to the field list."""
             if self.records is not None and value is NO_VALUE and predicate is None and not sudo:
-                self.append(field_name, internal=internal)
+                self.append(field_name)
             else:
-                self.append(
-                    Store.Attr(self.store, field_name, value=value, predicate=predicate, sudo=sudo),
-                    internal=internal,
-                )
+                self.append(Store.Attr(field_name, value=value, predicate=predicate, sudo=sudo))
 
-        def from_method(self, method_name, *, internal=False, **fields_params):
+        def from_method(self, method_name, **fields_params):
             """Add fields coming from a method on the records to the field list."""
             if (method := Store._get_fields_method(self.records, method_name)):
-                if not internal or self.is_for_internal_users():
-                    method(self, **fields_params)
-                elif self._internal_field_list is not None:
-                    method(self._internal_field_list, **fields_params)
+                method(self, **fields_params)
             else:
                 raise TypeError(
                     f"unexpected method name format: '{method_name}' for records: '{self.records}'",
                 )
 
-        def one(self, record_or_field_name, fields, /, *args, internal=False, **kwargs):
+        def one(self, record_or_field_name, fields, /, *args, **kwargs):
             """Add a x2one relation to the field list."""
-            self.append(
-                Store.One(self.store, record_or_field_name, fields, *args, **kwargs),
-                internal=internal,
-            )
+            self.append(Store.One(record_or_field_name, fields, *args, **kwargs))
 
-        def many(self, records_or_field_name, fields, /, *args, internal=False, **kwargs):
+        def many(self, records_or_field_name, fields, /, *args, **kwargs):
             """Add a x2many relation to the field list."""
+            self.append(Store.Many(records_or_field_name, fields, *args, **kwargs))
+
+        def for_current_user(self, fields):
+            """Add fields only when the target is the current user or guest, see
+            is_for_current_user()."""
+            self.append(Store.TargetBlock(fields, condition=Store.FieldList.is_for_current_user))
+
+        def for_internal_users(self, fields):
+            """Add fields only when the target implies the information will only be sent to
+            internal users, see is_for_internal_users(). For a channel target, the fields are
+            sent to the internal users of the channel through its internal store."""
+            self.append(Store.TargetBlock(fields, condition=Store.FieldList.is_for_internal_users))
+
+        def for_group(self, group_xmlid, fields):
+            """Add fields only when the target user belongs to the given group, see
+            is_for_group()."""
             self.append(
-                Store.Many(self.store, records_or_field_name, fields, *args, **kwargs),
-                internal=internal,
+                Store.TargetBlock(
+                    fields,
+                    condition=Store.FieldList.is_for_group,
+                    params=(group_xmlid,),
+                ),
             )
 
         def is_for_current_user(self):
@@ -932,6 +958,12 @@ class Store:
                 and env.ref("base.group_user") in bus_record.all_implied_ids
             )
 
+        def is_for_group(self, group_xmlid):
+            """Return whether the target user belongs to the given group. False when the target
+            is not a user, see target_user()."""
+            user = self.target_user()
+            return bool(user) and user.has_group(group_xmlid)
+
         def target_guest(self):
             """Return target guest (if any). Target guest is either the current bus target if the
             bus is actually targetting a guest, or the current guest from env if there is no bus
@@ -954,17 +986,33 @@ class Store:
             return records if isinstance(records, env.registry["res.users"]) else env["res.users"]
 
         def _identity(self):
+            return (self.__class__.__name__, self.records.env, self.records, tuple(self))
+
+    class TargetBlock:
+        """Fields depending on the target, evaluated for each store the field list is added to,
+        when the target satisfies the given condition."""
+
+        def __init__(self, fields, *, condition, params=(), internal_store_only=False):
+            self.condition = condition
+            self.fields = fields
+            self.internal_store_only = internal_store_only
+            self.params = params
+
+        def is_for_internal_users(self):
+            return self.condition is Store.FieldList.is_for_internal_users
+
+        def _identity(self):
             return (
-                "FieldList",
-                self.records.env,
-                self.records,
-                tuple(self),
-                *(self._internal_field_list._identity() if self._internal_field_list is not None else ()),
+                self.__class__.__name__,
+                self.condition,
+                self.params,
+                self.internal_store_only,
+                self.fields,
             )
 
     class FieldListManager:
         """Similar API as Store.FieldList but for multiple field lists at once.
-        This is necessary because FieldList is tied to a specific Store, and Store is tied
+        This is necessary because each field list is added to a specific Store, and Store is tied
         to a specific (bus_channel, sub_channel), and there can be multiple bus_channel for one
         record depending on the result of _bus_channels()."""
 
@@ -986,7 +1034,7 @@ class Store:
             for record in records:
                 target = record[field_name] if field_name else record
                 self._field_lists_by_record[record] = [
-                    Store.FieldList(stores[bus_channel, bus_subchannel], record)
+                    (stores[bus_channel, bus_subchannel], Store.FieldList(record))
                     for bus_channel in target._bus_channels()
                 ]
 
@@ -999,7 +1047,7 @@ class Store:
                     f"'FieldListManager' object has no attribute '{name}'",
                 )
             for field_lists in self._field_lists_by_record.values():
-                for field_list in field_lists:
+                for _store, field_list in field_lists:
                     assert isinstance(field_list, Store.FieldList)
                     # getattr: only allowed methods of Store.FieldList are forwarded
                     getattr(field_list, name)(*args, **kwargs)
@@ -1010,7 +1058,7 @@ class Store:
             values of the fields in the managers indexed by store and by record."""
             res = defaultdict(lambda: defaultdict(dict))
             for record, manager in product(records, manager_list):
-                for field_list in manager._field_lists_by_record[record]:
+                for store, field_list in manager._field_lists_by_record[record]:
                     for field in field_list:
                         if isinstance(field, Store.Attr) and field.predicate and not field.predicate(record):
                             result = None
@@ -1020,5 +1068,5 @@ class Store:
                             result = field._get_value(record)
                         else:
                             result = record[field]
-                        res[record][field_list.store][field] = result
+                        res[record][store][field] = result
             return res
