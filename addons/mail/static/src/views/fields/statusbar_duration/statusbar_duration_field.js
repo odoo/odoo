@@ -37,6 +37,7 @@ export class StatusBarDurationField extends StatusBarField {
 export const statusBarDurationField = {
     ...statusBarField,
     component: StatusBarDurationField,
+    additionalClasses: ["o_field_statusbar"],
     displayName: _t("Status with time"),
     supportedTypes: ["many2one"],
     fieldDependencies: [{ name: "duration_tracking", type: "JSON" }],
