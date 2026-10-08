@@ -1,5 +1,5 @@
 import { useExternalListener, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, onWillDestroy } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { registry } from "@web/core/registry";
 import { ImageTransformation } from "./image_transformation";
@@ -86,6 +86,7 @@ export class ImageTransformButton extends Component {
             closeImageTransformation: this.closeImageTransformation.bind(this),
             buttonSelector: '[name="image_transform"], [name="image_transform"] *',
         });
+        onWillDestroy(this.closeImageTransformation);
     }
 
     onButtonClick() {
