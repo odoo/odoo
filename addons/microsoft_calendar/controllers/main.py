@@ -8,7 +8,7 @@ from odoo.addons.calendar.controllers.main import CalendarController
 class MicrosoftCalendarController(CalendarController):
 
     @http.route('/microsoft_calendar/sync_data', type='jsonrpc', auth='user')
-    def microsoft_calendar_sync_data(self, model, **kw):
+    def microsoft_calendar_sync_data(self, model, force_auth=False, **kw):
         """ This route/function is called when we want to synchronize Odoo
             calendar with Microsoft Calendar.
             Function return a dictionary with the status :  need_config_from_admin, need_auth,
@@ -33,7 +33,8 @@ class MicrosoftCalendarController(CalendarController):
                 }
 
             # Checking that user have already accepted Odoo to access his calendar !
-            if not MicrosoftCal.is_authorized(request.env.user):
+            # Force auth can be used if we need to switch accounts
+            if not MicrosoftCal.is_authorized(request.env.user) or force_auth:
                 url = MicrosoftCal._microsoft_authentication_url(from_url=kw.get('fromurl'))
                 return {
                     "status": "need_auth",

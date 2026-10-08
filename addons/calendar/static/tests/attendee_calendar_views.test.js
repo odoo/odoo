@@ -102,6 +102,7 @@ test("Linked record rendering", async () => {
     onRpc("res.users", "has_group", () => true);
     onRpc("res.users", "check_synchronization_status", () => ({}));
     onRpc("res.partner", "get_attendee_detail", () => []);
+    onRpc("res.users", "get_calendar_email", () => false);
     onRpc("/calendar/check_credentials", () => ({}));
     const { id: modelId, display_name } = pyEnv["ir.model"].search_read(
         [["model", "=", "res.partner"]],
@@ -128,6 +129,7 @@ test("Linked record rendering", async () => {
 test("Default duration rendering", async () => {
     onRpc("res.users", "has_group", () => true);
     onRpc("res.users", "check_synchronization_status", () => ({}));
+    onRpc("res.users", "get_calendar_email", () => false);
     onRpc("res.partner", "get_attendee_detail", () => []);
     onRpc("/calendar/check_credentials", () => ({}));
     await mountView({ type: "calendar", resModel: "calendar.event", arch });
