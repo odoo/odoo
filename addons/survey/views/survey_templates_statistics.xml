@@ -215,7 +215,7 @@
                 <!-- Question Description -->
                 <div class="o_survey_question_description ms-3 text-muted d-none" t-field="question.description"/>
                 <!-- Answers -->
-                <div t-if="not question_answered" class="o_survey_no_answers text-center fw-bold">
+                <div t-if="not question_answered" class="o_survey_no_answers o_empty_folder_image text-center fw-bold">
                     <p>No answers yet!</p>
                 </div>
                 <t t-elif="question.question_type in ['text_box', 'char_box']"
