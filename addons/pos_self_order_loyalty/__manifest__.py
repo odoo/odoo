@@ -5,6 +5,7 @@
     'depends': ['pos_self_order', 'pos_loyalty'],
     'auto_install': ['pos_self_order', 'pos_loyalty'],
     'data': [
+        'security/ir.access.csv',
         'data/mail_template_data.xml',
         'views/loyalty_reward_views.xml',
         'views/res_config_settings_views.xml',
