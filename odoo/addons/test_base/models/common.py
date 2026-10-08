@@ -28,7 +28,7 @@ class TestOrmMixed(models.Model):
 
     # Reference Fields
     reference = fields.Reference(selection='_get_reference_selection')
-    many2one_reference = fields.Many2oneReference(model_field='res_model')
+    many2one_reference = fields.Many2oneReference(model_field='res_model', ondelete=None)
 
     # Relational Fields
     many2one_id = fields.Many2one('test_orm.mixed_relations')

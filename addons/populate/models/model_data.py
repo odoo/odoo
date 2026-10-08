@@ -12,7 +12,7 @@ class ModelData(models.Model):
     _log_access = False
 
     res_model = fields.Char('Model', related='job_id.model_name')
-    res_id = fields.Many2oneReference('Record', model_field='res_model', required=True)
+    res_id = fields.Many2oneReference('Record', model_field='res_model', required=True, ondelete='cascade')
 
     job_id = fields.Many2one('populate.job', required=True, ondelete='cascade')
     ref = fields.Char(related='job_id.ref')

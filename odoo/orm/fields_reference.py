@@ -1,4 +1,6 @@
+from __future__ import annotations
 
+import typing
 from collections import defaultdict
 from operator import attrgetter
 
@@ -8,6 +10,9 @@ from .fields import Field
 from .fields_numeric import Integer
 from .fields_selection import Selection
 from .models import BaseModel
+
+if typing.TYPE_CHECKING:
+    from .fields_relational import OnDelete
 
 
 class Reference(Selection):
@@ -65,11 +70,24 @@ class Many2oneReference(Integer):
     `model_field` attribute for the current :class:`Many2oneReference` field.
 
     :param str model_field: name of the :class:`Char` where the model name is stored.
+
+    :param str ondelete: what to do when the referred record is deleted
+
+        Possible values are: like in a ``Many2one`` field and ``None``.
+        By default: set to null or restrict if the field is required.
+
+        When deleting records, models defining a ``Many2oneReference`` may
+        define a method ``_res_model_check_model(model_name)`` to indicate
+        whether when deleting records of that model, should we search the
+        defining model. It indicates what values are expected in
+        ``model_field``.
+
     """
     type = 'many2one_reference'
 
     model_field = None
     aggregator = None
+    ondelete: OnDelete | None = 'set null'  # see Model._delete_extra
 
     _related_model_field = property(attrgetter('model_field'))
 
@@ -81,6 +99,9 @@ class Many2oneReference(Integer):
             "Field %s with unknown model_field %r" % (self, self.model_field)
 
     def setup_nonrelated(self, model):
+        assert self.ondelete in ('restrict', 'set null', 'cascade', None), self
+        if self.ondelete == 'set null' and self.required:
+            self.ondelete = 'restrict'
         super().setup_nonrelated(model)
         assert self.model_field in model._fields, \
             "Field %s with unknown model_field %r" % (self, self.model_field)

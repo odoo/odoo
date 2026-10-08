@@ -2324,13 +2324,16 @@ class IrModelData(models.Model):
     complete_name = fields.Char(compute='_compute_complete_name', string='Complete ID')
     model = fields.Char(string='Model Name', required=True)
     module = fields.Char(default='', required=True)
-    res_id = fields.Many2oneReference(string='Record ID', help="ID of the target record in the database", model_field='model')
+    res_id = fields.Many2oneReference(string='Record ID', help="ID of the target record in the database", model_field='model', ondelete='cascade')
     noupdate = fields.Boolean(string='Non Updatable', default=False)
     reference = fields.Char(string='Reference', compute='_compute_reference', readonly=True, store=False)
 
     _name_nospaces = models.Constraint("CHECK(name NOT LIKE '% %')", "External IDs cannot contain spaces")
     _module_name_uniq_index = models.UniqueIndex('(module, name)')
     _model_res_id_index = models.Index('(model, res_id)')
+
+    def _res_model_check_model(self, model_name):
+        return model_name != self._name
 
     @api.depends('module', 'name')
     def _compute_complete_name(self):

@@ -26,7 +26,7 @@ class MailFollowers(models.Model):
     res_model = fields.Char(
         'Related Document Model Name', required=True, index=True)
     res_id = fields.Many2oneReference(
-        'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model')
+        'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model', ondelete='cascade')
     partner_id = fields.Many2one(
         'res.partner', string='Related Partner', index=True, ondelete='cascade', required=True)
     subtype_ids = fields.Many2many(
@@ -47,6 +47,9 @@ class MailFollowers(models.Model):
             # sudo: res.partner - can read partners of accessible followers, in particular allows
             # by-passing multi-company ACL for portal partners
             follower.display_name = follower.partner_id.sudo().display_name
+
+    def _res_model_check_model(self, model_name):
+        return issubclass(self.env.registry[model_name], self.env.registry['mail.thread'])
 
     # --------------------------------------------------
     # Private tools methods to fetch followers data

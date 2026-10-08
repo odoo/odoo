@@ -193,7 +193,7 @@ class MailMessage(models.Model):
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
     # related document
     model = fields.Char('Related Document Model')
-    res_id = fields.Many2oneReference('Related Document ID', model_field='model')
+    res_id = fields.Many2oneReference('Related Document ID', model_field='model', ondelete='cascade')
     res_access_read = fields.Boolean(
         groups=fields.NO_ACCESS,
         compute=lambda self: self._compute_res_access('read'),
@@ -892,6 +892,9 @@ class MailMessage(models.Model):
         yield self.attachment_ids.filtered(
             lambda attach: attach.res_model == 'mail.message' and (attach.res_id in ids or not attach.res_id)
         )
+
+    def _res_model_check_model(self, model_name):
+        return issubclass(self.env.registry[model_name], self.env.registry['mail.thread'])
 
     def export_data(self, fields_to_export):
         if not self.env.is_admin():

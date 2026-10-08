@@ -192,7 +192,9 @@ class BaseAutomation(models.Model):
         help="Some triggers need a reference to a selection field. This field is used to store it.")
     trg_field_ref_model_name = fields.Char(
         string='Trigger Field Model',
-        compute='_compute_trg_field_ref_model_name')
+        compute='_compute_trg_field_ref_model_name',
+        search='_search_trg_field_ref_model_name',
+    )
     trg_field_ref = fields.Many2oneReference(
         model_field='trg_field_ref_model_name',
         compute='_compute_trg_field_ref',
@@ -374,6 +376,9 @@ class BaseAutomation(models.Model):
                 automation.trg_field_ref_model_name = False
                 continue
             automation.trg_field_ref_model_name = relation
+
+    def _search_trg_field_ref_model_name(self, operator, value):
+        return [('trigger', 'in', ['on_stage_set', 'on_tag_set']), ('model_id.name', operator, value)]
 
     # doesn't depends on filter_domain on purpose
     # since it is a backup for onchange when filter_domain is changed
