@@ -1895,6 +1895,193 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         self.assertTrue(all([line.full_reconcile_id for line in reversed_lines]))
 
+    def _get_partners(self):
+        """ Return [partner_a, partner_b, partner_c] with a freshly created
+        partner_c, for tests exercising reconciliation across several partners.
+        """
+        partner_c = self.env['res.partner'].create({'name': 'partner_c'})
+        return [self.partner_a, self.partner_b, partner_c]
+
+    def _create_posted_move_with_multiple_partners(self, partners, amount=1000.0):
+        """ Create and post a journal entry crediting `amount` on the payable
+        account once per partner in `partners`, balanced by a single debit
+        line on the expense account for the total amount.
+        """
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'line_ids': [
+                Command.create({
+                    'debit': 0.0,
+                    'credit': amount,
+                    'account_id': self.payable_account.id,
+                    'partner_id': partner.id,
+                }) for partner in partners
+            ] + [
+                Command.create({
+                    'debit': amount * len(partners),
+                    'credit': 0.0,
+                    'account_id': self.expense_account.id,
+                }),
+            ],
+        })
+        move.action_post()
+        return move
+
+    def _assert_no_cross_partner_partials(self, lines):
+        """ Assert that every partial reconciliation involving any of `lines`
+        pairs a debit move and a credit move belonging to the same partner.
+        """
+        partials = lines.matched_credit_ids | lines.matched_debit_ids
+        for partial in partials:
+            self.assertEqual(
+                partial.debit_move_id.partner_id,
+                partial.credit_move_id.partner_id,
+                "A partial reconciliation must not mix lines from different partners",
+            )
+
+    def test_reverse_with_multiple_partners(self):
+        """
+        Test that when an entry crediting/debiting several partners on the same
+        account is reversed, each partner's line on the reversal is reconciled
+        with its own corresponding line on the original move, not with another
+        partner's line.
+        """
+        partners = self._get_partners()
+        move = self._create_posted_move_with_multiple_partners(partners)
+
+        lines_to_reconcile = move.line_ids.filtered(lambda x: (
+            x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card')
+        ))
+        self.assertRecordValues(lines_to_reconcile, [
+            {'partner_id': partner.id, 'debit': 0.0, 'credit': 1000.0, 'reconciled': False, 'amount_residual': -1000.0}
+            for partner in partners
+        ])
+        reversed_move = move._reverse_moves(cancel=True)
+
+        original_lines = move.line_ids.filtered(lambda x: (
+            x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card')
+        ))
+        reversed_lines = reversed_move.line_ids.filtered(lambda x: (
+            x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card')
+        ))
+
+        # After the reversal, every line on both sides must be fully reconciled
+        self.assertRecordValues(original_lines, [
+            {'partner_id': partner.id, 'reconciled': True, 'amount_residual': 0.0}
+            for partner in partners
+        ])
+        self.assertRecordValues(reversed_lines, [
+            {'partner_id': partner.id, 'debit': 1000.0, 'credit': 0.0, 'reconciled': True, 'amount_residual': 0.0}
+            for partner in partners
+        ])
+        self.assertTrue(all(line.full_reconcile_id for line in original_lines + reversed_lines))
+
+        # Each partner's original line must be reconciled exclusively with
+        # its own partner's reversal line (same full_reconcile_id, same partner
+        # on both sides of every partial reconciliation).
+        for partner in partners:
+            orig_line = original_lines.filtered(lambda l: l.partner_id == partner)
+            rev_line = reversed_lines.filtered(lambda l: l.partner_id == partner)
+            self.assertEqual(orig_line.full_reconcile_id, rev_line.full_reconcile_id)
+            self._assert_no_cross_partner_partials(orig_line)
+
+    def test_reconcile_reversed_moves_edit_and_repost_multiple_partners(self):
+        """
+        a journal entry crediting several partners
+        on the same payable account is reversed (cancel=True, auto-reconciled
+        and auto-posted). The reversal is then reset to draft, the amount on
+        each partner's line is edited (simulating a partial reversal/refund),
+        and the move is reposted. Reconciliation must only match each
+        partner's own lines together: it must never create a partial
+        reconciliation between two different partners.
+        """
+        partners = self._get_partners()
+
+        move = self._create_posted_move_with_multiple_partners(partners)
+        reversed_move = move._reverse_moves(cancel=True)
+        self.assertEqual(reversed_move.state, 'posted')
+
+        reversed_move.button_draft()
+
+        reversed_payable_lines = reversed_move.line_ids.filtered(lambda x: (
+            x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card')
+        ))
+        other_line = reversed_move.line_ids - reversed_payable_lines
+        # Edit each partner's debit down to 100 (simulating the user only
+        # wanting to "reverse" a partial amount for each partner) and
+        # rebalance the counterpart line so the move stays balanced.
+        for line in reversed_payable_lines:
+            line.with_context(check_move_validity=False).write({'debit': 100.0})
+        other_line.with_context(check_move_validity=False).write({'credit': 300.0})
+
+        reversed_move.action_post()
+        self.assertEqual(reversed_move.state, 'posted')
+
+        original_lines = move.line_ids.filtered(lambda x: (
+            x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card')
+        ))
+
+        # Each partner's original line is now partially reconciled (-900 left)
+        # and each partner's edited reversal line is fully consumed (0 left),
+        # each one against its OWN partner - never against another partner's line.
+        self.assertRecordValues(original_lines, [
+            {'partner_id': partner.id, 'reconciled': False, 'amount_residual': -900.0}
+            for partner in partners
+        ])
+        self.assertRecordValues(reversed_payable_lines, [
+            {'partner_id': partner.id, 'debit': 100.0, 'credit': 0.0, 'reconciled': True, 'amount_residual': 0.0}
+            for partner in partners
+        ])
+
+        for partner in partners:
+            orig_line = original_lines.filtered(lambda l: l.partner_id == partner)
+            rev_line = reversed_payable_lines.filtered(lambda l: l.partner_id == partner)
+
+            # Every partial reconciliation touching this partner's lines must
+            # stay within the same partner on both sides.
+            self._assert_no_cross_partner_partials(orig_line | rev_line)
+
+    def test_reconcile_reversed_moves_remove_one_partner_before_repost(self):
+        """
+        When editing the draft reversal before reposting, removing one
+        partner's line entirely must leave that partner's original line
+        completely untouched (not reconciled with another partner).
+        """
+        partners = self._get_partners()
+        partner_c = partners[2]
+
+        move = self._create_posted_move_with_multiple_partners(partners)
+
+        reversed_move = move._reverse_moves(cancel=True)
+        reversed_move.button_draft()
+
+        reversed_payable_lines = reversed_move.line_ids.filtered(lambda x: (
+            x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card')
+        ))
+        line_to_remove = reversed_payable_lines.filtered(lambda l: l.partner_id == partner_c)
+        other_line = reversed_move.line_ids - reversed_payable_lines
+
+        line_to_remove.with_context(check_move_validity=False).unlink()
+        other_line.with_context(check_move_validity=False).write({'credit': 2000.0})
+
+        reversed_move.action_post()
+
+        original_lines = move.line_ids.filtered(lambda x: (
+            x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card')
+        ))
+        orig_line_a = original_lines.filtered(lambda l: l.partner_id == self.partner_a)
+        orig_line_b = original_lines.filtered(lambda l: l.partner_id == self.partner_b)
+
+        # partner_c's line was never reconciled since its reversal counterpart was removed,
+        # while partner_a and partner_b are still fully reconciled with their own lines only.
+        self.assertRecordValues(original_lines, [
+            {'partner_id': self.partner_a.id, 'reconciled': True, 'amount_residual': 0.0},
+            {'partner_id': self.partner_b.id, 'reconciled': True, 'amount_residual': 0.0},
+            {'partner_id': partner_c.id,      'reconciled': False, 'amount_residual': -1000.0},
+        ])
+
+        self._assert_no_cross_partner_partials(orig_line_a | orig_line_b)
+
     def test_reconcile_foreign_currency_rounding_issue(self):
         comp_curr = self.company_data['currency']
         foreign_currency = self.env['res.currency'].create({
