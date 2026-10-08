@@ -6,7 +6,6 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, proxy, useProps, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { parseFloat } from "@web/views/fields/parsers";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PaymentMethodBreakdown } from "@point_of_sale/app/components/payment_method_breakdown/payment_method_breakdown";
@@ -153,14 +152,14 @@ export class ClosePosPopup extends Component {
     handleCashCountBlur() {
         const counted = this.state.payments[this.props.default_cash_details.id].counted;
         this.setManualCashInput(counted);
-        const parsed = parseFloat(counted);
+        const parsed = this.pos.parseCurrency(counted);
         const currency = this.pos.formatCurrency(parsed, this.pos.config.currency_id.id, {
             noSymbol: true,
         });
         this.state.payments[this.props.default_cash_details.id].counted = currency;
     }
     handlePaymentCountBlur(paymentId) {
-        const parsed = parseFloat(this.state.payments[paymentId].counted);
+        const parsed = this.pos.parseCurrency(this.state.payments[paymentId].counted);
         this.state.payments[paymentId].counted = this.pos.formatCurrency(
             parsed,
             this.pos.config.currency_id.id,
@@ -179,7 +178,11 @@ export class ClosePosPopup extends Component {
                 ? this.props.default_cash_details.amount
                 : this.props.non_cash_payment_methods.find((pm) => pm.id === paymentId).amount;
 
-        return parseFloat(counted) - expectedAmount;
+        return this.pos.parseCurrency(counted) - expectedAmount;
+    }
+
+    parseValidCounted(counted) {
+        return this.pos.isValidFloat(counted) ? this.pos.parseCurrency(counted) : 0;
     }
 
     getMaxDifference() {
@@ -215,7 +218,7 @@ export class ClosePosPopup extends Component {
             };
             const amountByPaymentMethod = Object.entries(this.state.payments).reduce(
                 (acc, [id, { counted }]) => {
-                    acc[id] = parseFloat(counted);
+                    acc[id] = this.pos.parseCurrency(counted);
                     return acc;
                 },
                 {}

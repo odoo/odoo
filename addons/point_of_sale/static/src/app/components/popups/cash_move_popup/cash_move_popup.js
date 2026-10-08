@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { parseFloat } from "@web/views/fields/parsers";
 import { Component, onWillStart, proxy, useProps, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { CashMoveListPopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup";
@@ -55,7 +54,7 @@ export class CashMovePopup extends Component {
     }
 
     async confirm() {
-        const amount = parseFloat(this.state.amount);
+        const amount = this.pos.parseCurrency(this.state.amount);
         const formattedAmount = this.pos.formatCurrency(amount);
         if (!amount) {
             this.notification.add(_t("Cash in/out of %s is ignored.", formattedAmount));
@@ -107,7 +106,9 @@ export class CashMovePopup extends Component {
         this.inputRef?.()?.focus();
     }
     format(value) {
-        return this.pos.isValidFloat(value) ? this.pos.formatCurrency(parseFloat(value)) : "";
+        return this.pos.isValidFloat(value)
+            ? this.pos.formatCurrency(this.pos.parseCurrency(value))
+            : "";
     }
     _prepareTryCashInOutPayload(type, amount, reason, partnerId) {
         return [[this.pos.session.id], type, amount, reason, partnerId];
@@ -146,7 +147,7 @@ export class CashMovePopup extends Component {
     }
     handleAmountBlur() {
         this.state.amount = this.pos.formatCurrency(
-            parseFloat(this.state.amount),
+            this.pos.parseCurrency(this.state.amount),
             this.pos.config.currency_id.id,
             { noSymbol: true }
         );
