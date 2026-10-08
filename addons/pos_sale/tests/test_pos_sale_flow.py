@@ -2649,6 +2649,66 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         # The PoS order brought the stock from 10 to 6: 4 units are needed to reach the max of the reordering rule
         self.assertEqual(sum(replenishment_moves.mapped('product_uom_qty')), 4.0)
 
+    def test_downpayment_goods_product_no_stock_move(self):
+        """ A down payment paid in the PoS is not a delivery: even when the down payment
+        product is a goods product, no stock move should be created for its sale order line.
+        """
+        self.main_pos_config.down_payment_product_id = self.env['product.product'].create({
+            'name': 'Down Payment Goods',
+            'type': 'consu',
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': False,
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        current_session = self.main_pos_config.current_session_id
+        self.env['pos.order'].sync_from_ui([{
+            'amount_paid': 20.0,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 20.0,
+            'company_id': self.env.company.id,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+            'lines': [Command.create({
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 20.0,
+                'product_id': self.main_pos_config.down_payment_product_id.id,
+                'price_subtotal': 20.0,
+                'price_subtotal_incl': 20.0,
+                'sale_order_origin_id': sale_order.id,
+                'qty': 1.0,
+                'tax_ids': [],
+            })],
+            'name': 'Order 00044-003-0016',
+            'session_id': current_session.id,
+            'sequence_number': 1,
+            'payment_ids': [Command.create({
+                'amount': 20.0,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.main_pos_config.payment_method_ids[0].id,
+            })],
+            'user_id': self.env.uid,
+            'uuid': str(uuid.uuid4()),
+        }])
+
+        downpayment_line = sale_order.order_line.filtered('is_downpayment')
+        self.assertTrue(downpayment_line.pos_order_line_ids)
+        self.assertFalse(downpayment_line.move_ids)
+
     def test_variant_popup_qty_free(self):
         """
         Tests that the variant popup will correctly display the qty_free instead
