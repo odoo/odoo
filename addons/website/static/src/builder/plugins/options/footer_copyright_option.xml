@@ -50,6 +50,12 @@
                 </BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
+        <BuilderRow t-if="!this.isActiveItem('language_selector_none_opt')" level="1" label.translate="Show Icon">
+            <BuilderCheckbox
+                action="'websiteConfig'"
+                actionParam="{ views: ['website.footer_language_selector_show_translate_icon'] }"
+            />
+        </BuilderRow>
     </t>
 </t>
 
