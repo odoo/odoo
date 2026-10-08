@@ -1,8 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
+from odoo import Command
 from odoo.tests.common import new_test_user
 
 from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.mail.models.discuss.discuss_channel import DiscussChannel
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
 
@@ -455,6 +459,33 @@ class TestDiscussTools(MailCase):
                 ],
             },
         )
+
+    def test_370_bus_batch_reuses_field_lists(self):
+        """Test that the stores of a bus batch reuse the field list built for the same records."""
+        group = self.env["res.groups"].create({"name": "Group 370"})
+        users = new_test_user(self.env, "user_370_a") | new_test_user(self.env, "user_370_b")
+        users.group_ids = [Command.link(group.id)]
+        channel = self.env["discuss.channel"].create({"name": "Channel 370"})
+        with (
+            patch.object(
+                DiscussChannel,
+                "_store_channel_fields",
+                autospec=True,
+                side_effect=DiscussChannel._store_channel_fields,
+            ) as store_channel_fields,
+            self.assertBus(
+                lambda: [
+                    BusResult(channel, "mail.record/insert"),
+                    *(
+                        BusResult(member.partner_id.user_ids, "mail.record/insert")
+                        for member in channel.channel_member_ids.sorted("id")
+                        if member.partner_id in users.partner_id
+                    ),
+                ],
+            ),
+        ):
+            channel.group_ids = group
+        self.assertEqual(store_channel_fields.call_count, 1)
 
     def test_390_add_no_loop(self):
         """Test that store.add() does not loop indefinitely but it is still allowed to process

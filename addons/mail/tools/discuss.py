@@ -267,8 +267,12 @@ class Store:
         if not records:
             return self
         # call _format_fields before checking identifier to always compare the final shape
-        field_list = self._format_fields(fields, records, fields_params)
-        identifier = Store._deep_freeze((records.env, records, field_list, as_thread))
+        field_list, identifier = Store._format_fields_with_identity(
+            fields,
+            records,
+            fields_params,
+            as_thread,
+        )
         if identifier in self.already_done:
             return self
         self.already_done.add(identifier)
@@ -475,6 +479,30 @@ class Store:
         else:
             raise TypeError(f"unexpected fields format: '{fields}' for records: '{records}'")
         return field_list
+
+    @staticmethod
+    def _format_fields_with_identity(fields, records, fields_params, as_thread):
+        """Return the expanded field list and the identity used to deduplicate `add` calls. Both
+        are reused between the stores of a bus batch, as a field list does not depend on the
+        target of the store it is added to."""
+        cache = records.env.cr.precommit.data.get("mail.store.field_lists")
+        key = None
+        if cache is not None and isinstance(fields, str):
+            key = (
+                records.env,
+                records._name,
+                records._ids,
+                fields,
+                Store._deep_freeze(fields_params),
+                as_thread,
+            )
+            if key in cache:
+                return cache[key]
+        field_list = Store._format_fields(fields, records, fields_params)
+        result = field_list, Store._deep_freeze((records.env, records, field_list, as_thread))
+        if key is not None:
+            cache[key] = result
+        return result
 
     @staticmethod
     def _get_fields_method(records, method_name):
