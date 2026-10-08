@@ -54,6 +54,7 @@
                                             invisible="trigger not in ['on_stage_set', 'on_tag_set']"
                                             required="trigger in ['on_stage_set', 'on_tag_set']"
                                         />
+                                        <field name="trg_field_ref_model_name" invisible="1"/> <!-- model_field of the trg_field_ref Many2oneReference, read by the widget to resolve its comodel -->
                                     </div>
                                     <div class="text-muted" invisible="trigger != 'on_change'"><i class="oi" data-icon="warning"/> Automation rules triggered by UI changes will be executed <em>every time</em> the watched fields change, <em>whether you save or not</em>.</div>
                                 </div>

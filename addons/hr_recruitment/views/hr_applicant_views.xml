@@ -53,6 +53,7 @@
                 <field name="salary_proposed" optional="hide"/>
                 <field name="availability" optional="hide"/>
                 <field name="department_id" readonly="1" column_invisible="context.get('invisible_department', True)" optional="hide"/>
+                <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this list; the one below is only for multi-company users -->
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
             </list>
         </field>

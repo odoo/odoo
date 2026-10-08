@@ -435,6 +435,7 @@
                 <field name="no_of_hired_employee" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
+                <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this list; the one above is only for multi-company users -->
                 <field name="alias_name" column_invisible="True"/> <!-- drives invisible of the alias_id column -->
                 <field name="alias_id" invisible="not alias_name" optional="hide"
                     groups="hr_recruitment.group_hr_recruitment_interviewer"/>

@@ -6,6 +6,7 @@
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
                 <form string="department">
+                    <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields of this form; the one below is only for multi-company users -->
                     <sheet>
                         <div class="oe_button_box" name="button_box" invisible="not id">
                             <button class="oe_stat_button" name="action_employee_from_department" type="object" icon="group" icon_class="oi-filled">
