@@ -173,6 +173,9 @@ export class ListArchParser {
                         });
                     }
                 }
+                if (!columnFields.length) {
+                    return false;
+                }
                 const labelAttr = node.getAttribute("string");
                 const widthAttr = node.getAttribute("width");
                 columns.push({
