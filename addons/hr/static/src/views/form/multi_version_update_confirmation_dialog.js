@@ -12,6 +12,7 @@ export class MultiVersionUpdateConfirmationDialog extends Component {
         change_multi: t.function().optional(),
         cancel: t.function().optional(),
         version_changes: t.object().optional(),
+        record: t.object(),
     });
 
     currentButtonRef = signal.ref(HTMLButtonElement);
