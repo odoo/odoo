@@ -71,7 +71,7 @@
                     </group>
                     <notebook>
                         <page name="pricelist_rules" string="Price Rules">
-                            <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
+                            <field name="item_ids" nolabel="1" context="{'default_base':'list_price', 'default_compute_price': 'percentage'}">
                                 <list string="Pricelist Rules">
                                     <field name="product_tmpl_id" column_invisible="True"/>
                                     <field name="name" string="Apply on"/>
