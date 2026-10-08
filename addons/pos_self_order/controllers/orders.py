@@ -245,6 +245,18 @@ class PosSelfOrderController(http.Controller):
     def _verify_config_constraint(self, pos_config_sudo, check_active_session=True):
         return not pos_config_sudo or (pos_config_sudo.self_ordering_mode != 'mobile' and pos_config_sudo.self_ordering_mode != 'kiosk') or (check_active_session and not pos_config_sudo.has_active_session)
 
+    def _verify_pos_order(self, pos_config, order_id, order_access_token):
+        """Verify the POS order and its access token for the given POS config."""
+        pos_order = pos_config.env['pos.order'].browse(int(order_id))
+        if (
+            not pos_order.exists()
+            or pos_order.config_id != pos_config
+            or not order_access_token
+            or not consteq(pos_order.access_token, order_access_token)
+        ):
+            raise NotFound()
+        return pos_order
+
     def _verify_authorization(self, access_token, table_identifier, order):
         """
         Similar to _verify_pos_config but also looks for the restaurant.table of the given identifier.

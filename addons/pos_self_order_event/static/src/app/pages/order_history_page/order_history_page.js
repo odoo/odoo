@@ -17,6 +17,7 @@ patch(OrdersHistoryPage.prototype, {
                 access_token: this.selfOrder.access_token,
                 order_id: line.order_id.id,
                 event_ticket_id: line.event_ticket_id?.id,
+                order_access_token: line.order_id.access_token,
             });
 
             const { event_id, registration_ids, tickets_hash } = ticketInfo;
