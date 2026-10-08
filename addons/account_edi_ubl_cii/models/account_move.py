@@ -312,8 +312,8 @@ class AccountMove(models.Model):
             return child_models
 
         importable_models = [
-            *_get_child_models('account.edi.xml.ubl_20'),
-            *_get_child_models('account.edi.xml.cii'),
+            *_get_child_models('account.edi.ubl'),
+            *_get_child_models('account.edi.cii'),
         ]
 
         if file_data['import_file_type'] in importable_models:
