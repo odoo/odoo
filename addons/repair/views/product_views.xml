@@ -29,4 +29,23 @@
             </xpath>
         </field>
     </record>
+
+    <record id="product_view_help_catalog" model="ir.ui.view">
+        <field name="name">product.view.help.catalog.inherit.repair</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_view_help_catalog"/>
+        <field name="arch" type="xml">
+            <!-- products created from the catalog of repair services are services -->
+            <button name="%(product.product_product_action_catalog_create)d" position="attributes">
+                <attribute name="invisible">context.get('active_model') == 'repair.service.line'</attribute>
+            </button>
+            <button name="%(product.product_product_action_catalog_create)d" position="after">
+                <button name="%(product.product_product_action_catalog_create)d" type="action" class="btn-primary mt-2"
+                        context="{'default_type': 'service'}" invisible="context.get('active_model') != 'repair.service.line'">
+                    Create a product
+                </button>
+            </button>
+        </field>
+    </record>
+
 </odoo>
