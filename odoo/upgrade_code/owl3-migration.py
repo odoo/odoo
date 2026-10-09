@@ -1121,6 +1121,7 @@ SERVICES_MAPPING = {
     "bus_service": ['BusPlugin', '@bus/services/bus_plugin'],
     "calendarNotification": ['CalendarNotificationPlugin', '@calendar/js/services/calendar_notification_plugin'],
     "color_scheme": ['ColorSchemePlugin', '@web_enterprise/webclient/color_scheme/color_scheme_plugin'],
+    "command": ['CommandPlugin', '@web/core/commands/command_plugin'],
     "currency": ['CurrencyPlugin', '@web/webclient/currency_plugin'],
     "dialog": ['DialogPlugin', '@web/core/dialog/dialog_plugin'],
     "discuss.upgrade": ['DiscussUpgradePlugin', '@mail/core/common/upgrade/upgrade_plugin'],
