@@ -2495,8 +2495,8 @@ test("toolbar update should be run only once", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
     counter = 0;
-    click(".o-we-toolbar .btn[name='bold']");
-    await waitFor(".btn[name='bold'].active");
+    click(".o-we-toolbar .btn[name='bold'][aria-pressed='false']");
+    await waitFor(".btn[name='bold'][aria-pressed='true'].active");
     expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
     expect(counter).toBe(1);
 });
@@ -2506,16 +2506,16 @@ test("toolbar strikethrough buttons should not be active when checked list is st
         '<ul class="o_checklist"><li class="o_checked">[test]</li></ul>'
     );
     await expandToolbar();
-    expect(".o-we-toolbar .btn[name='strikethrough']").toHaveCount(1);
+    expect(".o-we-toolbar .btn[name='strikethrough'][aria-pressed='false']").toHaveCount(1);
     expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
     await contains(".o-we-toolbar .btn[name='strikethrough']").click();
-    await waitFor(".btn[name='strikethrough'].active");
+    await waitFor(".btn[name='strikethrough'][aria-pressed='true'].active");
     expect(getContent(el)).toBe(
         '<ul class="o_checklist"><li class="o_checked"><s>[test]</s></li></ul>'
     );
     expect(".o-we-toolbar .btn[name='strikethrough']").toHaveClass("active");
     await contains(".o-we-toolbar .btn[name='strikethrough']").click();
-    await waitFor(".btn[name='strikethrough']:not(.active)");
+    await waitFor(".btn[name='strikethrough'][aria-pressed='false']:not(.active)");
     expect(getContent(el)).toBe('<ul class="o_checklist"><li class="o_checked">[test]</li></ul>');
     expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
 });
@@ -2635,22 +2635,22 @@ test("should highlight text color button on color picker opened", async () => {
     await setupEditor(`<div><p>[abc]</p></div>`);
     await waitFor(".o-we-toolbar");
     await expandToolbar();
-    expect(".o-select-color-foreground").not.toHaveClass("active");
+    expect(".o-select-color-foreground[aria-expanded='false']").not.toHaveClass("active");
     await click(".o-select-color-foreground");
     await waitFor(".o_font_color_selector");
-    expect(".o-select-color-foreground").toHaveClass("active");
+    expect(".o-select-color-foreground[aria-expanded='true']").toHaveClass("active");
 });
 
 test("formats should be enabled when inline code selected", async () => {
     await setupEditor(`<div class="o-paragraph">[ab<code class="o_inline_code">code</code>]</div>`);
     await expectElementCount(".o-we-toolbar", 1);
     await click(`[name="bold"]`);
-    await waitFor(`[name="bold"].active`);
+    await waitFor(`[name="bold"][aria-pressed="true"].active`);
 
     expect("strong").toHaveCount(1);
 
     await click(`[name="bold"].active`);
-    await waitFor(`[name="bold"]:not(.active)`);
+    await waitFor(`[name="bold"][aria-pressed="false"]:not(.active)`);
 
     expect("strong").toHaveCount(0);
 });
@@ -2697,4 +2697,123 @@ test("font-size should be preserved when replacing HTML element text", async () 
     await insertText(editor, "a");
     await animationFrame();
     expect(getContent(el)).toBe(`<p><span style="font-size: 21px;">a[]</span></p>`);
+});
+
+/**
+ * Checks the `aria-pressed` and `aria-expanded` attributes of every button
+ * currently displayed in the toolbar, based on the toolbar items declared by
+ * the plugins:
+ * - buttons opening a popup (dropdowns, color selectors) rely on
+ *   `aria-expanded` instead of `aria-pressed`: it must match whether the popup
+ *   is open (`show` class for dropdowns, `active` class for color selectors),
+ * - buttons whose item defines `isActive` are toggle buttons: they must have
+ *   `aria-pressed` matching their `active` state,
+ * - other buttons are not toggle buttons and must not have `aria-pressed`.
+ *
+ * @param {import("@html_editor/editor").Editor} editor
+ */
+function expectConsistentAriaStates(editor) {
+    const toggleButtonIds = new Set(
+        editor
+            .getResource("toolbar_items")
+            .filter((item) => !item.Component && "isActive" in item)
+            .map((item) => item.id)
+    );
+    const buttons = queryAll(".o-we-toolbar .btn");
+    expect(buttons.length).toBeGreaterThan(0, { message: "toolbar should have buttons" });
+    for (const el of buttons) {
+        const name = el.getAttribute("name");
+        const label = name || el.className;
+        if (el.hasAttribute("aria-expanded")) {
+            const isOpen = el.classList.contains("show") || el.classList.contains("active");
+            expect(el).toHaveAttribute("aria-expanded", isOpen ? "true" : "false", {
+                message: `"${label}" popup should be ${isOpen ? "open" : "closed"}`,
+            });
+            expect(el).not.toHaveAttribute("aria-pressed", undefined, {
+                message: `"${label}" opens a popup and is not a toggle button`,
+            });
+        } else if (toggleButtonIds.has(name)) {
+            expect(el).toHaveAttribute(
+                "aria-pressed",
+                el.classList.contains("active") ? "true" : "false",
+                { message: `"${label}" is a toggle button` }
+            );
+        } else {
+            expect(el).not.toHaveAttribute("aria-pressed", undefined, {
+                message: `"${label}" is not a toggle button`,
+            });
+        }
+    }
+}
+
+test("text toolbar items should have consistent aria states", async () => {
+    const { editor } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    expectConsistentAriaStates(editor);
+
+    await expandToolbar();
+    expectConsistentAriaStates(editor);
+
+    // Toggling a button should update aria-pressed
+    await click(".o-we-toolbar .btn[name='bold']");
+    await waitFor(".btn[name='bold'][aria-pressed='true'].active");
+    expectConsistentAriaStates(editor);
+
+    // Opening a dropdown should update aria-expanded
+    await click(".o-we-toolbar .btn[name='list_selector']");
+    await waitFor(".btn[name='list_selector'][aria-expanded='true'].show");
+    expectConsistentAriaStates(editor);
+
+    // Opening a color selector should update aria-expanded
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await waitFor(".o-select-color-foreground[aria-expanded='true'].active");
+    expectConsistentAriaStates(editor);
+});
+
+test("table toolbar items should have consistent aria states", async () => {
+    const table = unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td><p>[a<br></p></td><td><p>b]<br></p></td>
+                </tr>
+            </tbody>
+        </table>`);
+    const { editor } = await setupEditor(table);
+    await waitFor(".o-we-toolbar");
+    expectConsistentAriaStates(editor);
+
+    await expandToolbar();
+    expectConsistentAriaStates(editor);
+});
+
+test("image toolbar items should have consistent aria states", async () => {
+    const base64Image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+
+    // Mock backend image RPCs
+    onRpc("/html_editor/get_image_info", async () => {
+        await delay(50);
+        return {
+            original: { image_src: base64Image },
+        };
+    });
+
+    const { editor } = await setupEditor(`<p>[<img src="${base64Image}">]</p>`);
+    await waitFor(".o-we-toolbar");
+    expectConsistentAriaStates(editor);
+
+    // Be ready if an expanded image toolbar appears
+    if (queryAll(".o-we-toolbar .btn[name='expand_toolbar']").length) {
+        await expandToolbar();
+        expectConsistentAriaStates(editor);
+    }
+});
+
+test("non toggle toolbar buttons should not have aria-pressed", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    expect(".o-we-toolbar .btn[name='remove_format']").toHaveCount(1);
+    expect(".o-we-toolbar .btn[name='remove_format']").not.toHaveAttribute("aria-pressed");
 });

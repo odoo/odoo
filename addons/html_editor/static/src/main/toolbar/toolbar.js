@@ -16,7 +16,7 @@ const genericButtonSchema = {
     icon: t.string().optional(),
     iconClass: t.string().optional(),
     id: t.string(),
-    isActive: t.boolean(),
+    isActive: t.boolean().optional(),
     isDisabled: t.boolean(),
     opensUi: t.boolean().optional(),
     run: t.function(),
