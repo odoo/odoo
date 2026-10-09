@@ -21,6 +21,7 @@ import {
     underline,
     strikeThrough,
     setColor,
+    setFontSizeClassName,
 } from "./_helpers/user_actions";
 import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
@@ -50,6 +51,30 @@ describe("date command", () => {
         expect('[data-embedded="date"]').toHaveCount(1);
         await animationFrame();
         expect('[data-embedded="date"] span').toHaveText("April 5, 2026");
+    });
+
+    test("should also apply formats on newly created date list", async () => {
+        const { el, editor } = await setupEditor(
+            '<ul><li style="color: rgb(255, 0, 0)" class="h3-fs">abc[]</li></ul>',
+            {
+                config: configWithEmbeddings,
+            }
+        );
+        await insertText(editor, "/today");
+        await expectElementCount(".o-we-powerbox .o-we-command-name:contains('Today')", 1);
+        await press("Enter");
+
+        expect('[data-embedded="date"]').toHaveCount(1);
+        await animationFrame();
+
+        const li = el.querySelector("li");
+        const date = el.querySelector('[data-embedded="date"]');
+
+        expect(li).toHaveClass("h3-fs");
+        expect(li).toHaveStyle({ color: "rgb(255, 0, 0)" });
+        expect(date).toHaveText("April 5, 2026");
+        expect(date).toHaveClass("h3-fs");
+        expect(date).toHaveStyle({ color: "rgb(255, 0, 0)" });
     });
 
     test.tags("desktop");
@@ -341,6 +366,20 @@ describe("date command", () => {
             execCommand(editor, "removeFormat");
             expect(getContent(el)).toBe(
                 `<p>\ufeff[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</p>`
+            );
+        });
+        test("should be able to apply and remove font-size on date nodes inside list", async () => {
+            const { el, editor } = await setupEditor(
+                `<ul><li><span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}'></span></li>[]</ul>`,
+                {
+                    config: configWithEmbeddings,
+                }
+            );
+            press(["ctrl", "a"]);
+            await animationFrame();
+            setFontSizeClassName("h3-fs")(editor);
+            expect(getContent(el)).toBe(
+                `<ul><li class="h3-fs">\ufeff[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false" class="h3-fs"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</li></ul>`
             );
         });
     });
