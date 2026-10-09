@@ -138,13 +138,10 @@ patch(OrderPaymentValidation.prototype, {
                     );
                     if (!paymentResult) {
                         this.cancelOnlinePayment(this.order);
-                        onlinePaymentLine.payment_status = undefined;
+                        onlinePaymentLine.payment_status = "retry";
                         return false;
                     }
                     qrCodePopupCloser();
-                    if (onlinePaymentLine.payment_status === "waiting") {
-                        onlinePaymentLine.payment_status = undefined;
-                    }
                     prevOnlinePaymentLine = onlinePaymentLine;
                 }
             }

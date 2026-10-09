@@ -10,4 +10,13 @@ patch(PaymentScreenPaymentLines.prototype, {
         }
         return controls;
     },
+    getPaymentActionState(line) {
+        if (
+            line.payment_method_id.type === "online" &&
+            ["pending", "retry"].includes(line.payment_status)
+        ) {
+            return null;
+        }
+        return super.getPaymentActionState(line);
+    },
 });
