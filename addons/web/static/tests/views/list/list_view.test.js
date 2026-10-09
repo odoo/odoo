@@ -2822,7 +2822,7 @@ test(`grouped list rendering with default_group_by m2o: add group`, async () => 
         type: "list",
         arch: `<list default_group_by="m2o"><field name="foo"/></list>`,
     });
-    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 3 records", "Value 2 1 record"]);
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1\n3 records", "Value 2\n1 record"]);
     expect(`.o_list_footer td > button`).toHaveText("Add a M2o");
     await contains(`.o_list_footer td > button`).click();
     expect(`.o_list_footer td > button`).toHaveCount(0);
@@ -2831,9 +2831,9 @@ test(`grouped list rendering with default_group_by m2o: add group`, async () => 
     await contains(`.o_list_footer .o_list_group_confirm`).click();
     expect.verifySteps(["name_create"]);
     expect(queryAllTexts(".o_group_name")).toEqual([
-        "Value 1 3 records",
-        "Value 2 1 record",
-        "New group 0 record",
+        "Value 1\n3 records",
+        "Value 2\n1 record",
+        "New group\n0 record",
     ]);
 });
 
@@ -5339,16 +5339,16 @@ test(`monetary aggregates in grouped list: add a new group`, async () => {
             </list>
         `,
     });
-    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 3 records", "Value 2 1 record"]);
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1\n3 records", "Value 2\n1 record"]);
     expect(`.o_list_footer td > button`).toHaveText("Add a M2o");
     await contains(`.o_list_footer td > button`).click();
     await contains(`.o_list_footer td input`).edit("New group", { confirm: false });
     await contains(`.o_list_footer .o_list_group_confirm`).click();
     expect.verifySteps(["name_create"]);
     expect(queryAllTexts(".o_group_name")).toEqual([
-        "Value 1 3 records",
-        "Value 2 1 record",
-        "New group 0 record",
+        "Value 1\n3 records",
+        "Value 2\n1 record",
+        "New group\n0 record",
     ]);
 });
 
@@ -8368,12 +8368,12 @@ test(`list grouped by m2o with sample data with more than 5 real groups`, async 
     expect(`.o_list_table`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(6);
     expect(queryAllTexts(`.o_group_header`)).toEqual([
-        "Value 1 3 records",
-        "Value 2 3 records",
-        "Value 3 3 records",
-        "Value 4 3 records",
-        "Value 5 2 records",
-        "Value 6 2 records",
+        "Value 1\n3 records",
+        "Value 2\n3 records",
+        "Value 3\n3 records",
+        "Value 4\n3 records",
+        "Value 5\n2 records",
+        "Value 6\n2 records",
     ]);
 });
 
@@ -17784,9 +17784,9 @@ test(`keep order after grouping`, async () => {
     await toggleSearchBarMenu();
     await toggleMenuItem("Foo");
     expect(queryAllTexts`.o_group_name`).toEqual([
-        "yop 1 record",
-        "gnap 1 record",
-        "blip 2 records",
+        "yop\n1 record",
+        "gnap\n1 record",
+        "blip\n2 records",
     ]);
 
     await toggleMenuItem("Foo");
