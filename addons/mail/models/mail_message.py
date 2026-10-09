@@ -788,7 +788,7 @@ class MailMessage(models.Model):
                 if vals_lst:
                     self.env['mail.tracking.value'].sudo().create(vals_lst)
                 if other_cmd:
-                    message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+                    message.write({'tracking_value_ids': other_cmd})
 
             if message._is_thread_message_visible(vals=values):
                 message._invalidate_documents(values.get('model'), values.get('res_id'))
