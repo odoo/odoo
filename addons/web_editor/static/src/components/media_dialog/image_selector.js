@@ -202,9 +202,12 @@ export class ImageSelector extends FileSelector {
         });
     }
 
-    validateUrl(...args) {
-        const { isValidUrl, path } = super.validateUrl(...args);
+    async validateUrl(...args) {
+        let { isValidUrl, path } = super.validateUrl(...args);
         const isValidFileFormat = IMAGE_EXTENSIONS.some(format => path.endsWith(format));
+        if (isValidFileFormat && path.endsWith(".webp") && this.isValidForConvertInline) {
+            isValidUrl = await this.isValidForConvertInline(path);
+        }
         return { isValidFileFormat, isValidUrl };
     }
 

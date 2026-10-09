@@ -62,6 +62,24 @@ export class MassMailingHtmlField extends HtmlField {
             },
             dropImageAsAttachment: false,
             useResponsiveFontSizes: false,
+            isValidForConvertInline: (url) =>
+                new Promise((resolve) => {
+                    const image = new Image();
+                    image.onload = () => {
+                        try {
+                            const canvas = document.createElement("canvas");
+                            canvas.width = image.naturalWidth || 1;
+                            canvas.height = image.naturalHeight || 1;
+                            canvas.getContext("2d").drawImage(image, 0, 0);
+                            canvas.toDataURL(); // throws SecurityError if tainted
+                            resolve(true);
+                        } catch {
+                            resolve(false);
+                        }
+                    };
+                    image.onerror = () => resolve(false);
+                    image.src = url;
+                }),
             ...this.props.wysiwygOptions,
         };
     }
