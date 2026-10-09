@@ -8,7 +8,21 @@ from odoo.tests import common, Form
 @common.tagged('post_install', '-at_install')
 class TestSaleMrpAccount(TestMultistepManufacturing):
 
-    _test_user_groups = None  # FIXME list needed groups
+    # A manufacturing order triggered by a sales order posts its costs on the
+    # analytic account of the project.
+    _test_user_groups = (
+        'mrp.group_mrp_manager',  # FIXME: use mrp.group_mrp_user
+        'mrp.group_mrp_routings',  # view visibility (workorder fields)
+        'stock.group_stock_manager',  # FIXME: use stock.group_stock_user
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'account.group_account_manager',  # FIXME: use account.group_account_invoice
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'uom.group_uom',  # view visibility (uom_id)
+        'project.group_project_manager',  # FIXME: use project.group_project_user
+        'analytic.group_analytic_accounting',  # view visibility (analytic_distribution)
+    )
+
+    _test_user_name = 'Test Project Manufacturing Manager'
 
     @classmethod
     def setUpClass(cls):

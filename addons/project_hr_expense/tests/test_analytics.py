@@ -7,12 +7,27 @@ from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 @tagged('-at_install', 'post_install')
 class TestAnalytics(TestExpenseCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    # An expense booked on a project carries the analytic distribution of that
+    # project.
+    _test_user_groups = (
+        'hr_expense.group_hr_expense_manager',  # FIXME: use hr_expense.group_hr_expense_user
+        'account.group_account_manager',  # FIXME: use account.group_account_invoice
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'uom.group_uom',  # view visibility (uom_id)
+        'project.group_project_manager',  # FIXME: use project.group_project_user
+        'analytic.group_analytic_accounting',  # view visibility (analytic_distribution)
+    )
+
+    _test_user_name = 'Test Project Expense Manager'
+
+    @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('project.group_project_manager')
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.group_ids += cls.env.ref('project.group_project_manager')
         cls.project_plan, _other_plans = cls.env['account.analytic.plan']._get_all_plans()
         cls.analytic_account1, cls.analytic_account2 = cls.env['account.analytic.account'].create([
             {

@@ -11,8 +11,6 @@ from odoo.tests import Form, tagged
 @tagged('-at_install', 'post_install')
 class TestReInvoice(TestCommonSaleTimesheet):
 
-    _test_user_groups = None  # FIXME list needed groups
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -57,15 +55,19 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'project_id': cls.project.id,
         })
 
-        cls.Invoice = cls.env['account.move'].with_context(
+    def _new_vendor_bill_form(self):
+        """Return an empty vendor bill form.
+
+        The default context cannot be carried by a class attribute: the test
+        user environment re-binds those records, which drops their context.
+        """
+        return Form(self.env['account.move'].with_context(
             default_move_type='in_invoice',
-            default_invoice_date=cls.sale_order.date_order,
-        )
+            default_invoice_date=self.sale_order.date_order,
+        ))
 
     def test_at_cost(self):
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """
-        # Required for `analytic_distribution` to be visible in the view
-        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         # create SO line and confirm SO (with only one line)
         sale_order_line1 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_order_cost'].id,
@@ -96,7 +98,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'company_id': self.company_data['company'].id,
         })
 
-        move_form = Form(self.Invoice)
+        move_form = self._new_vendor_bill_form()
         move_form.partner_id = self.partner_a
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_cost']
@@ -131,7 +133,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         self.assertEqual(sale_order_line4.qty_delivered_method, 'analytic', "Delivered quantity of 'expense' SO line should be computed by analytic amount")
 
         # create second invoice lines and validate it
-        move_form = Form(self.Invoice)
+        move_form = self._new_vendor_bill_form()
         move_form.partner_id = self.partner_a
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_cost']
@@ -160,8 +162,6 @@ class TestReInvoice(TestCommonSaleTimesheet):
         """ Test invoicing vendor bill at sales price for products based on delivered and ordered quantities. Check no existing SO line is incremented, but when invoicing a
             second time, increment only the delivered so line.
         """
-        # Required for `analytic_distribution` to be visible in the view
-        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         # create SO line and confirm SO (with only one line)
         sale_order_line1 = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_delivery_sales_price'].id,
@@ -190,7 +190,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         })
 
         # create invoice lines and validate it
-        move_form = Form(self.Invoice)
+        move_form = self._new_vendor_bill_form()
         move_form.partner_id = self.partner_a
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_sales_price']
@@ -225,7 +225,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         self.assertEqual(sale_order_line4.qty_delivered_method, 'analytic', "Delivered quantity of 'expense' SO line 4 should be computed by analytic amount")
 
         # create second invoice lines and validate it
-        move_form = Form(self.Invoice)
+        move_form = self._new_vendor_bill_form()
         move_form.partner_id = self.partner_a
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_delivery_sales_price']
@@ -251,8 +251,6 @@ class TestReInvoice(TestCommonSaleTimesheet):
 
     def test_no_expense(self):
         """ Test invoicing vendor bill with no policy. Check nothing happen. """
-        # Required for `analytic_distribution` to be visible in the view
-        self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
         # confirm SO
         sale_order_line = self.env['sale.order.line'].create({
             'product_id': self.company_data['product_order_no'].id,
@@ -264,7 +262,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
         self.sale_order.action_confirm()
 
         # create invoice lines and validate it
-        move_form = Form(self.Invoice)
+        move_form = self._new_vendor_bill_form()
         move_form.partner_id = self.partner_a
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.company_data['product_order_no']

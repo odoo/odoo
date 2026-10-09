@@ -6,15 +6,28 @@ from odoo.addons.sale.tests.common import TestSaleCommon
 
 
 class TestSaleProjectCommon(TestSaleCommon):
-    _test_user_groups = None  # FIXME list needed groups
+    # Services are sold, then delivered as projects and tasks: the flows under
+    # test span the sales side, the project side and the invoicing of both.
+    _test_user_groups = (
+        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        'account.group_account_manager',  # FIXME: use account.group_account_invoice
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'uom.group_uom',  # view visibility (uom_id)
+        'project.group_project_manager',  # FIXME: use project.group_project_user
+        'project.group_project_milestone',  # feature: milestone-based services
+        'analytic.group_analytic_accounting',  # view visibility (account_id on projects)
+    )
+
+    _test_user_name = 'Test Sale Project Manager'
+
+    @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('project.group_project_manager') | cls.quick_ref('project.group_project_milestone')
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.group_ids += cls.quick_ref('project.group_project_manager')
-
-        cls.env.user.group_ids |= cls.env.ref('project.group_project_milestone')
-
         cls.uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.account_sale = cls.company_data['default_account_revenue']
 

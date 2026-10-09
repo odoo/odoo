@@ -8,7 +8,16 @@ from odoo.addons.stock.tests.common import TestStockCommon
 
 class TestAnalytics(TestStockCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    # Stock moves done for a project post their cost on the analytic accounts
+    # of that project.
+    _test_user_groups = (
+        'stock.group_stock_manager',  # FIXME: use stock.group_stock_user
+        'product.group_product_manager',  # FIXME: use base.group_user
+        'project.group_project_manager',  # FIXME: use project.group_project_user
+        'analytic.group_analytic_accounting',  # view visibility (account_id on projects)
+    )
+
+    _test_user_name = 'Test Project Stock Analytics Manager'
 
     @classmethod
     def setUpClass(cls):

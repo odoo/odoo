@@ -17,8 +17,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         For that, we check the task/project created, the invoiced amounts, the delivered
         quantities changes,  ...
     """
-    _test_user_groups = None  # FIXME list needed groups
-
     def test_compute_commercial_partner(self):
         """Ensure user without project access can compute commercial partner without AccessError.
             Steps:
@@ -1297,7 +1295,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         invoice.write({'invoice_date': '2026-01-08'})
         invoice.action_post()
 
-        self.env['res.config.settings'].create({
+        # the general settings are administrator data
+        self.env['res.config.settings'].sudo().create({
             'invoicing_switch_threshold': '2026-01-31'
         }).execute()
         self.env['account.analytic.line'].create({
@@ -1376,7 +1375,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         Ensure that invoice quantities are correctly computed when the
         sale order line UoM differs from the timesheet UoM.
         """
-        self.env.company.timesheet_encode_uom_id = self.uom_hour.id
+        # the timesheet encoding unit is a company setting: administrator data
+        self.env.company.sudo().timesheet_encode_uom_id = self.uom_hour.id
         product = self.env['product.product'].create({
             'name': "Test service product",
             'standard_price': 30,
@@ -1771,8 +1771,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
 @tagged('-at_install', 'post_install')
 class TestSaleTimesheetAnalyticPlan(TestCommonSaleTimesheet):
-
-    _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):
