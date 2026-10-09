@@ -11,8 +11,21 @@
                 <p class="text-muted" t-out="this.permissionNote"/>
             </t>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-if="this.props.suggestAllMedias and this.rtc.cameraPermission !== 'granted' and this.rtc.microphonePermission !== 'granted'" t-on-click="this.onClickUseMicAndCamera">Use microphone and camera</button>
-                <button class="btn btn-secondary" t-on-click="this.props.media === 'microphone' ? this.onClickUseMicrophone : this.onClickUseCamera" t-out="this.secondaryActionText"/>
+                <!-- PEPC controls need button CSS variables inherited from a parent. display: contents supplies them without adding a layout box. -->
+                <span t-if="this.showUserMediaElement" t-att-lang="this.lang" class="btn btn-primary" style="display: contents;">
+                    <usermedia t-ref="this.userMediaElementRef" class="btn btn-primary" tabindex="0" t-on-stream="this.onUserMediaStream" t-on-error="this.onMediaCaptureError"/>
+                </span>
+                <button t-elif="!this.rtc.supportsMediaCaptureElement('usermedia') and this.props.suggestAllMedias and this.rtc.cameraPermission === 'prompt' and this.rtc.microphonePermission === 'prompt'" class="btn btn-primary" t-on-click="this.onClickUseMicAndCamera">
+                    <i class="oi me-1" data-icon="videocam" role="img" aria-hidden="true"/>Use microphone and camera
+                </button>
+                <span t-if="this.rtc.supportsMediaCaptureElement(this.props.media)" t-att-lang="this.lang" class="btn btn-secondary" style="display: contents;">
+                    <microphone t-if="this.props.media === 'microphone'" t-ref="this.singleMediaElementRef" class="btn btn-secondary" tabindex="0" t-on-track="this.onSingleMediaTrack" t-on-error="this.onMediaCaptureError"/>
+                    <camera t-else="" t-ref="this.singleMediaElementRef" class="btn btn-secondary" tabindex="0" t-on-track="this.onSingleMediaTrack" t-on-error="this.onMediaCaptureError"/>
+                </span>
+                <button t-else="" class="btn btn-secondary" t-on-click="this.props.media === 'microphone' ? this.onClickUseMicrophone : this.onClickUseCamera">
+                    <i class="oi me-1" t-att-data-icon="this.props.media === 'microphone' ? 'mic' : 'videocam'" role="img" aria-hidden="true"/>
+                    <t t-out="this.secondaryActionText"/>
+                </button>
             </t>
         </PermissionPromptDialog>
     </t>

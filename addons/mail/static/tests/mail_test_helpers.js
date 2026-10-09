@@ -522,7 +522,7 @@ export async function patchUiSize({ height, size, width }) {
     await resize({ width, height });
 }
 
-function createAudioStream() {
+export function createAudioStream() {
     const ctx = new SilentAudioContext();
     const dest = ctx.createMediaStreamDestination();
     after(() => {
@@ -577,6 +577,29 @@ export function mockGetMedia() {
         },
     });
     return streams;
+}
+
+export function mockMediaCaptureElements() {
+    const supportedMediaElements = new Set();
+    patch(Rtc.prototype, {
+        supportsMediaCaptureElement(media) {
+            return supportedMediaElements.has(media);
+        },
+    });
+    return {
+        dispatchMedia(element, media) {
+            const eventName = element.localName === "usermedia" ? "stream" : "track";
+            Object.defineProperty(element, eventName, { configurable: true, value: media });
+            element.dispatchEvent(new Event(eventName));
+        },
+        /** @param {("camera"|"microphone"|"usermedia")[]} */
+        setSupported: (...mediaElements) => {
+            supportedMediaElements.clear();
+            for (const mediaElement of mediaElements) {
+                supportedMediaElements.add(mediaElement);
+            }
+        },
+    };
 }
 
 /**
