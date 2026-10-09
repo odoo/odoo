@@ -26,6 +26,7 @@ import { loadBundle } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Registry, registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
+import { patch } from "@web/core/utils/patch";
 import { WebClient } from "@web/webclient/webclient";
 import { EditInteractionPlugin } from "@website/builder/plugins/edit_interaction_plugin";
 import { WebsiteBridgePlugin } from "@website/builder/plugins/website_bridge_plugin";
@@ -84,8 +85,63 @@ export function defineWebsiteModels({ includeMailModels = true } = {}) {
 }
 
 /**
+ * Restricts the edit and preview interactions to the given keys: the others
+ * are kept as abstract so that their mixins still apply to subclasses.
+ *
+ * @param {string[]} interactions
+ */
+function setupBuilderInteractionWhiteList(interactions) {
+    const unknownInteractions = interactions.filter(
+        (key) =>
+            !registry.category("public.interactions").contains(key) &&
+            !registry.category("public.interactions.edit").contains(key)
+    );
+    if (unknownInteractions.length) {
+        throw new Error(`White-listed Interaction does not exist: ${unknownInteractions}.`);
+    }
+    for (const category of ["public.interactions.edit", "public.interactions.preview"]) {
+        for (const [key, builder] of registry.category(category).getEntries()) {
+            if (!interactions.includes(key)) {
+                patch(builder, { isAbstract: true });
+            }
+        }
+    }
+}
+
+/**
+ * Plays the role of the public root of the iframe: the interactions run in the
+ * test window, so Hoot mocks and patches apply to them, but on the iframe
+ * content.
+ *
+ * @param {HTMLIFrameElement} iframe
+ * @param {string[]} interactions
+ */
+async function startIframeInteractions(iframe, interactions) {
+    const core = getService("public.interactions");
+    core.scope.onDestroy(() => core.stopInteractions());
+    core.el = iframe.contentDocument.querySelector("#wrapwrap");
+    core.activate(
+        registry
+            .category("public.interactions")
+            .getEntries()
+            .filter(([key]) => interactions.includes(key))
+            .map(([, Interaction]) => Interaction)
+    );
+    await core.isReady;
+    iframe.contentWindow.dispatchEvent(
+        new CustomEvent("PUBLIC-ROOT-READY", { detail: { rootInstance: { env: core.env } } })
+    );
+}
+
+/**
  * This helper will be moved to website. Prefer using setupHTMLBuilder
  * for builder-specific tests
+ *
+ * `interactions` lists the interactions (`public.interactions` and
+ * `public.interactions.edit` keys) to run on the iframe content. If empty, no
+ * interaction runs and the website_edit service is replaced by a stub.
+ * Otherwise, setup waits for public interactions to start and stops them when
+ * the test app is destroyed.
  */
 export async function setupWebsiteBuilder(
     websiteContent,
@@ -105,20 +161,29 @@ export async function setupWebsiteBuilder(
         withIframeRegistry,
         onIframeLoaded = () => {},
         delayReload = async () => {},
+        interactions = [],
     } = {}
 ) {
     loadIframeBuilderTemplates ||= withIframeRegistry;
+    const enableInteractions = interactions.length > 0;
     // TODO: fix when the iframe is reloaded and become empty (e.g. discard button)
     if (hasToCreateWebsite) {
         const pyEnv = await startServer();
         pyEnv["website"].create({});
     }
     mockImageRequests();
-    registry.category("services").remove("website_edit");
+    if (enableInteractions) {
+        setupBuilderInteractionWhiteList(interactions);
+        // Only activate interactions once the iframe content is available.
+        mockService("public.interactions", { Interactions: [] });
+    } else {
+        registry.category("services").remove("website_edit");
+    }
     let editor;
     let editableContent;
     const comp = await mountWithCleanup(WebClient);
     let originalIframeLoaded;
+    let interactionsReady;
     let resolveIframeLoaded = async () => {};
     const bodyHTML = `${beforeWrapwrapContent}
         <div id="wrapwrap">${headerContent} <div id="wrap" class="oe_structure oe_empty" ${
@@ -170,17 +235,24 @@ export async function setupWebsiteBuilder(
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         setIframeLoaded() {
             super.setIframeLoaded();
-            this.publicRootReady.resolve();
             originalIframeLoaded = this.iframeLoaded;
-            this.iframeLoaded = iframeLoaded;
+            if (enableInteractions) {
+                interactionsReady = iframeLoaded.then(async (iframe) => {
+                    this.preparePublicRootReady();
+                    await startIframeInteractions(iframe, interactions);
+                    return iframe;
+                });
+                this.iframeLoaded = interactionsReady;
+            } else {
+                this.publicRootReady.resolve();
+                this.iframeLoaded = iframeLoaded;
+            }
         },
-        // Override for Firefox. Chrome doesn't load the initial iframe and
-        // never goes through this method. As Firefox does, it means it re-
-        // assigns `this.publicRootReady` to a deferred that is never resolved
-        // in tests, which prevents any Hoot builder test from working.
-        // Reimplement this method the day interactions within the iframe work
-        // with Hoot.
-        preparePublicRootReady() {},
+        // Without interactions, no public root signals it is ready. Chrome
+        // doesn't load the initial iframe and never goes through this method,
+        // but Firefox does and would re-assign `this.publicRootReady` to a
+        // deferred that is never resolved.
+        ...(!enableInteractions && { preparePublicRootReady() {} }),
         async loadAssetsEditBundle() {
             const { contentDocument: targetDoc, contentWindow } = queryOne(
                 "iframe[data-src^='/website/force/1']"
@@ -228,19 +300,21 @@ export async function setupWebsiteBuilder(
         type: "ir.actions.client",
     });
 
-    patchWithCleanup(EditInteractionPlugin.prototype, {
-        setup() {
-            super.setup();
-            // See loadAssetsEditBundle override in WebsiteBuilderClientAction
-            // patch.
-            this.websiteEditService = {
-                update: () => {},
-                refresh: () => {},
-                stop: () => {},
-                stopInteraction: () => {},
-            };
-        },
-    });
+    if (!enableInteractions) {
+        patch(EditInteractionPlugin.prototype, {
+            setup() {
+                super.setup();
+                // See loadAssetsEditBundle override in WebsiteBuilderClientAction
+                // patch.
+                this.websiteEditService = {
+                    update: () => {},
+                    refresh: () => {},
+                    stop: () => {},
+                    stopInteraction: () => {},
+                };
+            },
+        });
+    }
 
     let lastUpdatePromise;
     const waitSidebarUpdated = async () => {
@@ -333,6 +407,10 @@ export async function setupWebsiteBuilder(
         });
     }
     await resolveIframeLoaded(iframe);
+    if (enableInteractions) {
+        await interactionsReady;
+    }
+    await loadBundle("website.website_builder_assets");
     await animationFrame();
     if (openEditor) {
         await openBuilderSidebar(editAssetsLoaded);
@@ -354,7 +432,6 @@ async function openBuilderSidebar(editAssetsLoaded) {
     // The next line allow us to await asynchronous fetches and cache them before it is used
     await Promise.all([
         getWebsiteSnippets(),
-        loadBundle("website.website_builder_assets"),
         loadBundle("html_editor.assets_image_cropper"),
     ]);
 
