@@ -169,6 +169,7 @@
                                     <field
                                         name="product_tag_ids"
                                         widget="many2many_tags"
+                                        options="{'on_tag_click': 'open_form'}"
                                         context="{'product_template_id': id}"
                                     />
                                     <field name="company_id"
@@ -596,6 +597,7 @@
                     <field
                         name="additional_product_tag_ids"
                         widget="many2many_tags"
+                        options="{'on_tag_click': 'open_form'}"
                         invisible="product_variant_count == 1"
                     />
                 </field>
