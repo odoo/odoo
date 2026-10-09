@@ -26,6 +26,7 @@ import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch, withSearchProps } from "@web/search/with_search/with_search";
 import { session } from "@web/session";
 import { useActionLinks } from "@web/views/view_hook";
+import { extractHelpArchInfo, HelpArchParser } from "@web/views/help/help_arch_parser";
 import { computeViewClassName } from "./utils";
 import { ViewPlugin } from "./view_plugin";
 
@@ -68,6 +69,8 @@ import { ViewPlugin } from "./view_plugin";
  *
  * @property {boolean} [useSampleModel]
  * @property {string} [noContentHelp]
+ * @property {string} [noContentHelpArch] arch of the action's help view, used
+ *   if the view doesn't reference its own help view
  *
  * @property {Record<string, any>} [display={}] to rework
  *
@@ -176,6 +179,7 @@ const STANDARD_PROPS = [
 
     "useSampleModel",
     "noContentHelp",
+    "noContentHelpArch",
     "className",
 
     "display",
@@ -365,6 +369,12 @@ export class View extends Component {
         }
 
         const archXmlDoc = parseXML(arch.replace(/&amp;nbsp;/g, nbsp));
+        // the view's own help view takes precedence over the action's one
+        const noContentHelpArchInfo =
+            extractHelpArchInfo(archXmlDoc) ||
+            (props.noContentHelpArch
+                ? new HelpArchParser().parse(parseXML(props.noContentHelpArch))
+                : null);
         for (const action of ACTIONS) {
             if (action in context && !context[action]) {
                 archXmlDoc.setAttribute(action, "0");
@@ -398,6 +408,7 @@ export class View extends Component {
             viewType: type,
             viewSubType: jsClass,
             noBreadcrumbs: props.noBreadcrumbs,
+            noContentHelpArchInfo,
             ...extractLayoutComponents(descr),
         });
         const info = {
