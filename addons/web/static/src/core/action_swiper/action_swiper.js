@@ -57,10 +57,13 @@ export class ActionSwiper extends Component {
         this.isVerticalScroll = undefined;
         this.swipedDistance = 0;
         this.isSwipeStarted = false;
+        this.isActionPending = false;
+        const _onTouchStart = (ev) => this._onTouchStartCapture(ev);
         const _onTouchMove = (ev) => this._onTouchMoveSwipe(ev);
         const _onTouchEnd = (ev) => this._onTouchEndSwipe(ev);
         onMounted(() => {
             if (this.localizedProps) {
+                this.root().addEventListener("touchstart", _onTouchStart, { capture: true });
                 this.root().addEventListener("touchmove", _onTouchMove, { capture: true });
                 this.root().addEventListener("touchend", _onTouchEnd, { capture: true });
             }
@@ -87,6 +90,11 @@ export class ActionSwiper extends Component {
      * @param {TouchEvent} ev
      */
     _onTouchEndSwipe(ev) {
+        if (this.isActionPending) {
+            // a touch started during the swipe animation: the swipe is already done
+            ev.stopPropagation();
+            return;
+        }
         if (this.isVerticalScroll) {
             ev.stopPropagation();
             this.isVerticalScroll = undefined;
@@ -184,6 +192,18 @@ export class ActionSwiper extends Component {
         }
     }
     /**
+     * Once a swipe has started, the swiped content is about to be replaced by the action: don't
+     * let a new touch start an interaction on it, as it would be interrupted by the action.
+     *
+     * @private
+     * @param {TouchEvent} ev
+     */
+    _onTouchStartCapture(ev) {
+        if (this.isSwipeStarted) {
+            ev.stopPropagation();
+        }
+    }
+    /**
      * @private
      * @param {TouchEvent} ev
      */
@@ -227,6 +247,7 @@ export class ActionSwiper extends Component {
         this.swipedDistance = 0;
         this.isSwipeEnabled = false;
         this.isSwipeStarted = false;
+        this.isActionPending = false;
         this.applyStyle(0);
         if (this.targetContainer()) {
             this.targetContainer().classList.add("o_actionswiper_transition_enabled");
@@ -250,6 +271,7 @@ export class ActionSwiper extends Component {
     }
 
     handleSwipe(action) {
+        this.isActionPending = true;
         this.applyStyle(this.swipedDistance);
         this.actionTimeoutId = browser.setTimeout(async () => {
             if (this.props.animationType === "bounce") {
