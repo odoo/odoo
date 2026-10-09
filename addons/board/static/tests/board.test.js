@@ -169,6 +169,57 @@ describe("board_desktop", () => {
         expect.verifySteps(["edit custom"]);
     });
 
+    test("saveBoard keeps style attribute after layout change", async () => {
+        onRpc("/web/action/load", () => ({
+            res_model: "partner",
+            views: [[4, "list"]],
+        }));
+        onRpc("/web/view/edit_custom", async (request) => {
+            const { params } = await request.json();
+            // OWL3 used to drop non-CSS style values (e.g. "1-1") when saving board.arch
+            expect(params.arch).toInclude('style="1-1"');
+            expect.step("edit custom");
+            return true;
+        });
+        await mountView({
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form string="My Dashboard" js_class="board">
+                    <board style="2-1">
+                        <column>
+                            <action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>
+                        </column>
+                    </board>
+                </form>`,
+        });
+
+        await contains(".o-dashboard-header .dropdown img").click();
+        await contains(".dropdown-item:nth-child(2)").click();
+        expect.verifySteps(["edit custom"]);
+    });
+
+    test("board without style attribute does not crash", async () => {
+        onRpc("/web/action/load", () => ({
+            res_model: "partner",
+            views: [[4, "list"]],
+        }));
+        await mountView({
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form string="My Dashboard" js_class="board">
+                    <board>
+                        <column>
+                            <action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>
+                        </column>
+                    </board>
+                </form>`,
+        });
+        expect(".o-dashboard-layout-1").toHaveCount(1);
+        expect("h3 span:contains(ABC)").toHaveCount(1);
+    });
+
     test("views in the dashboard do not have a control panel", async () => {
         onRpc("/web/action/load", () => ({
             res_model: "partner",
