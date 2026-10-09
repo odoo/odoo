@@ -592,7 +592,7 @@ class DiscussChannel(models.Model):
                 for member_vals in member_vals_list
             ],
         )
-        channels._subscribe_users_automatically()
+        channels._subscribe_users_automatically(send_channel_to_groups=True)
         if not self.env.context.get("install_mode") and not self.env.user._is_public():
             Store(bus_channel=self.env.user).add(channels, "_store_channel_fields")
         return channels
@@ -707,7 +707,7 @@ class DiscussChannel(models.Model):
         old_names = {channel: channel.name for channel in self} if "name" in vals else {}
         result = super().write(vals)
         if vals.get('group_ids'):
-            self._subscribe_users_automatically()
+            self._subscribe_users_automatically(send_channel_to_groups=True)
         if old_names:
             for channel in self:
                 if (
@@ -855,7 +855,12 @@ class DiscussChannel(models.Model):
     # MEMBERS MANAGEMENT
     # ------------------------------------------------------------
 
-    def _subscribe_users_automatically(self):
+    def _subscribe_users_automatically(self, *, send_channel_to_groups=False):
+        """
+        :param send_channel_to_groups: send the channel once on the bus of each group of
+            ``group_ids``, not to each new member. Only when the groups of the channel
+            change: a user that just joined a group does not listen to its bus yet.
+        """
         if not (new_members_to_create := self._subscribe_users_automatically_get_members()):
             return
         to_create = [
@@ -865,14 +870,34 @@ class DiscussChannel(models.Model):
         ]
         # sudo: discuss.channel.member - adding member of other users based on channel auto-subscribe
         new_members = self.env["discuss.channel.member"].sudo().create(to_create)
+        channels_by_group = defaultdict(lambda: self.env["discuss.channel"])
+        if send_channel_to_groups:
+            group_user = self.env.ref("base.group_user")
+            for channel in new_members.channel_id:
+                # Keep the groups of internal users, for a channel any internal user can read:
+                # the bus of a group gives the same data to its users and to those who just left.
+                if channel.group_public_id <= group_user.all_implied_ids:
+                    for group in channel.group_ids & group_user.all_implied_by_ids:
+                        channels_by_group[group] |= channel
+        group_user_ids_by_channel = defaultdict(set)
+        for group, channels in channels_by_group.items():
+            for channel in channels:
+                group_user_ids_by_channel[channel].update(group.all_user_ids.ids)
         for member, store in new_members._get_member_store_list():
-            store.add(member.channel_id, "_store_channel_fields").add(
+            user = store.target.channel
+            if user == self.env.user or user.id not in group_user_ids_by_channel[member.channel_id]:
+                store.add(member.channel_id, "_store_channel_fields")
+            store.add(
                 member,
                 lambda res: (
                     res.from_method("_store_persona_default_fields"),
                     res.attr("unpin_dt"),
                 ),
             )
+        # Send to the groups after the members, as a websocket that subscribes again gets, for
+        # a group its user just joined, the notifications that follow the last one it received.
+        for group, channels in channels_by_group.items():
+            Store(bus_channel=group).add(channels, "_store_channel_fields")
 
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
