@@ -3,6 +3,33 @@ import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
 
+const RECENTLY_USED_URL = "website.recently_used_url";
+
+/**
+ * Stores the URL that was just set on a link, a button or an image, so that it
+ * can be suggested first the next time a URL has to be chosen.
+ *
+ * @param {string} url
+ */
+function setRecentlyUsedUrl(url) {
+    // Only remember internal page URLs, not anchors (#...) or external links.
+    if (!url.startsWith("/")) {
+        return;
+    }
+    localStorage.setItem(RECENTLY_USED_URL, url);
+}
+
+/**
+ * Removes a URL from the recently used URL if it is the one being deleted.
+ *
+ * @param {string} url
+ */
+function invalidateRecentlyUsedUrl(url) {
+    if (localStorage.getItem(RECENTLY_USED_URL) === url) {
+        localStorage.removeItem(RECENTLY_USED_URL);
+    }
+}
+
 /**
  * Allows to load anchors from a page.
  *
@@ -88,7 +115,7 @@ export function mountAutocompleteComponent(app, ComponentClass, props) {
 function autocompleteWithPages(app, input, options = {}) {
     return mountAutocompleteComponent(app, UrlAutoComplete, {
         options,
-        loadAnchors,
+        loadOptionsSource,
         targetDropdown: input,
     });
 }
@@ -100,8 +127,16 @@ function autocompleteWithPages(app, input, options = {}) {
  * - If it starts with `#`, returns anchor suggestions found in the given DOM.
  * - If it starts with `http` or is empty, returns no suggestions to avoid
  *   unnecessary RPC calls.
- * - Otherwise, fetches suggested internal links from the backend and formats
- *   them into selectable autocomplete items, including optional categories.
+ * - Otherwise, fetches suggested internal links from the backend via a single
+ *   `/website/get_suggested_links` RPC and formats them as selectable items.
+ *
+ * The backend filters each group on the term. Items are returned in this
+ * order:
+ * 1. the recently used URL, when it contains the term,
+ * 2. the last modified pages,
+ * 3. the pages matching the term,
+ * 4. the app urls.
+ * Each URL is returned once, with its most descriptive label.
  *
  * @param {string} term Current value of the URL input.
  * @param {HTMLElement} body Document body used to search for anchor targets.
@@ -114,7 +149,6 @@ async function loadOptionsSource(term, body, onSelect) {
         cssClass: "ui-autocomplete-item",
         label: item.label,
         onSelect: () => onSelect(item.value),
-        data: { icon: item.icon || false, isCategory: false },
     });
 
     if (term[0] === "#") {
@@ -129,15 +163,42 @@ async function loadOptionsSource(term, body, onSelect) {
         needle: term,
         limit: 15,
     });
-    const choices = res.matching_pages.map(makeItem);
-    for (const other of res.others) {
-        if (other.values.length) {
-            choices.push({
-                cssClass: "ui-autocomplete-category",
-                label: other.title,
-                data: { icon: false, isCategory: true },
-            });
-            choices.push(...other.values.map(makeItem));
+    // `others` is built by the controller with the last modified pages first,
+    // then the apps urls. The controller already filters out app URLs that don't
+    // exist on this website, so we can use them directly.
+    const [lastModifiedPages, ...appsUrls] = res.others;
+    const isMeaningfulLabel = (link) => link.label && link.label !== link.value;
+    const uniqueLinksMap = new Map();
+    const existingControllerLinks = appsUrls[0]?.values || [];
+
+    for (const link of [
+        ...(lastModifiedPages.values),
+        ...res.matching_pages,
+        ...existingControllerLinks,
+    ]) {
+        const existing = uniqueLinksMap.get(link.value);
+        if (!existing || (!isMeaningfulLabel(existing) && isMeaningfulLabel(link))) {
+            uniqueLinksMap.set(link.value, link);
+        }
+    }
+    const links = [...uniqueLinksMap.values()];
+
+    const choices = [];
+    const recentlyUsedUrl = localStorage.getItem(RECENTLY_USED_URL);
+    const knownLink = links.find((link) => link.value === recentlyUsedUrl);
+    if (
+        knownLink &&
+        (
+            knownLink.value.toLowerCase().includes(term.toLowerCase()) ||
+            knownLink.label.toLowerCase().includes(term.toLowerCase())
+        )
+    ) {
+        choices.push(makeItem(knownLink));
+    }
+
+    for (const link of links) {
+        if (link.value !== recentlyUsedUrl) {
+            choices.push(makeItem(link));
         }
     }
 
@@ -375,6 +436,8 @@ export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
     loadOptionsSource: loadOptionsSource,
+    setRecentlyUsedUrl: setRecentlyUsedUrl,
+    invalidateRecentlyUsedUrl: invalidateRecentlyUsedUrl,
     svgToPNG: svgToPNG,
     webpToPNG: webpToPNG,
     generateGMapLink: generateGMapLink,
