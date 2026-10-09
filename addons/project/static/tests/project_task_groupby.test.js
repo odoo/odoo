@@ -27,6 +27,7 @@ beforeEach(() => {
     ];
 });
 
+test.tags("desktop");
 test("project.task (kanban): Can create stage if we are in tasks of specific project", async () => {
     await mountView({
         ...kanbanViewParams,
