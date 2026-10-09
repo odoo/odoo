@@ -1,4 +1,4 @@
-import { productProps, Product } from "@sale/js/product/product";
+import { productProps, Product } from "@sale/components/product/product";
 import { patch } from "@web/core/utils/patch";
 import { t } from "@odoo/owl";
 

@@ -1,7 +1,7 @@
 import { patch } from '@web/core/utils/patch';
 import {
     ComboConfiguratorDialog
-} from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
+} from '@sale/configurator/combo/combo_configurator_dialog';
 
 patch(ComboConfiguratorDialog.prototype, {
     async selectComboItem(comboId, comboItem) {

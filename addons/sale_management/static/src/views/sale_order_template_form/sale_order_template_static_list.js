@@ -2,7 +2,7 @@ import {
     getSectionRecords,
     DISPLAY_TYPES,
 } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
-import { SectionLineRecord } from "@sale/js/section_line_record/section_line_record";
+import { SectionLineRecord } from "@sale/configurator/models/section_line_record/section_line_record";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { StaticList } from "@web/model/relational_model/static_list";
 

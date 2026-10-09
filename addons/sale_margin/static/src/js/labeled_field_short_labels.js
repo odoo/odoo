@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { shortLabels } from "@sale/js/labeled_field_short_labels";
+import { shortLabels } from "@sale/labeled_field_short_labels";
 
 patch(shortLabels, {
     getShortLabels() {

@@ -1,4 +1,4 @@
-import configuratorTourUtils from '@sale/js/tours/combo_configurator_tour_utils';
+import configuratorTourUtils from '@sale/tours/combo_configurator_tour_utils';
 
 function assertQuantityNotAvailable(productName) {
     return {
