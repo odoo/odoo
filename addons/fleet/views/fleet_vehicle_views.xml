@@ -463,6 +463,7 @@
             <search>
                 <field name="name"/>
                 <field name="category"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group>
                     <filter name="groupby_category" context="{'group_by' : 'category'}"/>
                 </group>
