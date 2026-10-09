@@ -29,8 +29,9 @@ patch(Message.prototype, {
      * All consecutive elements are joined in one 'ellipsis button'.
      *
      * @param {HTMLElement} bodyEl
+     * @param {string} quoteSelector
      */
-    insertEllipsisbtn(bodyEl) {
+    insertEllipsisbtn(bodyEl, quoteSelector = "[data-o-mail-quote]") {
         /**
          * @param {HTMLElement} e
          * @param {string} selector
@@ -79,6 +80,28 @@ patch(Message.prototype, {
             }
         }
 
+        // Attribution headers belong to the quote they introduce, rather than
+        // representing another reply level. Stop at blockquotes to avoid scanning
+        // the entire nested history when checking a wrapper's own content.
+        function hasReplyContent(el) {
+            return Array.from(el.childNodes).some((node) => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    return Boolean(node.textContent.trim());
+                }
+                if (node.nodeType !== Node.ELEMENT_NODE) {
+                    return false;
+                }
+                if (
+                    node.matches(
+                        "blockquote, .gmail_attr, .o_mail_reply_container > .o_mail_reply_content > div:first-child"
+                    )
+                ) {
+                    return false;
+                }
+                return node.matches("img, video, audio, hr") || hasReplyContent(node);
+            });
+        }
+
         const groups = [];
         let ellipsisNodes;
         const ELEMENT_NODE = 1;
@@ -107,18 +130,33 @@ patch(Message.prototype, {
             }
             // Create array for each 'read more' with nodes to toggle
             if (
-                (childEl.nodeType === ELEMENT_NODE && childEl.getAttribute("data-o-mail-quote")) ||
-                (childEl.nodeName === "BR" && prev(childEl, '[data-o-mail-quote="1"]'))
+                (childEl.nodeType === ELEMENT_NODE && childEl.matches(quoteSelector)) ||
+                (quoteSelector === "[data-o-mail-quote]" &&
+                    childEl.nodeName === "BR" &&
+                    prev(childEl, '[data-o-mail-quote="1"]'))
             ) {
                 if (!ellipsisNodes) {
                     ellipsisNodes = [];
                     groups.push(ellipsisNodes);
                 }
+                // Inherited quote markers on paragraphs are not reply boundaries.
+                // Skip a wrapper's blockquote only when the wrapper has no reply
+                // content of its own (apart from the mail client's attribution).
+                if (childEl.matches("blockquote") || hasReplyContent(childEl)) {
+                    this.insertEllipsisbtn(childEl, "blockquote[data-o-mail-quote]");
+                } else {
+                    const quotes = Array.from(childEl.querySelectorAll("blockquote")).filter(
+                        (quote) => !childEl.contains(quote.parentElement.closest("blockquote"))
+                    );
+                    for (const quote of quotes) {
+                        this.insertEllipsisbtn(quote, "blockquote[data-o-mail-quote]");
+                    }
+                }
                 hide(childEl);
                 ellipsisNodes.push(childEl);
             } else {
                 ellipsisNodes = undefined;
-                this.insertEllipsisbtn(childEl);
+                this.insertEllipsisbtn(childEl, quoteSelector);
             }
         }
 
