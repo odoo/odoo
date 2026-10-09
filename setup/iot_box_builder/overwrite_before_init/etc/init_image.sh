@@ -177,7 +177,6 @@ echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
 xargs -r -a /home/pi/odoo/setup/iot_box_builder/configuration/packages.txt \
     apt-get -y -qq \
-    --no-install-recommends \
     -o Dpkg::Options::="--force-confdef" \
     -o Dpkg::Options::="--force-confold" \
     -o Acquire::Retries=16 \
