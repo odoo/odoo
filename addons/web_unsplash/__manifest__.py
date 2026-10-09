@@ -20,6 +20,10 @@
             'web_unsplash/static/src/unsplash_error/**/*',
             'web_unsplash/static/src/unsplash_service.js',
         ],
+        # already in web.assets_frontend, with html_editor.assets_media_dialog
+        'html_editor.assets_editor_frontend': [
+            ('remove', 'web_unsplash/static/src/**/*'),
+        ],
         'web.assets_unit_tests': [
             'web_unsplash/static/tests/**/*',
         ],
