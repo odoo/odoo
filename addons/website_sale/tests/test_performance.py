@@ -77,8 +77,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "res_currency": 1,
             "res_partner": 1,
             "res_users": 1,
-            "website_menu": 1,
-            "website_page": 1,
         })
         if self._has_demo_data():
             if "website_sale_stock" in self.installed_modules:
@@ -122,8 +120,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "res_currency": 1,
             "res_partner": 1,
             "res_users": 1,
-            "website_menu": 1,
-            "website_page": 1,
             "website_sale_extra_field": 1,
         })
         if "website_helpdesk" in self.installed_modules:

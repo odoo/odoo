@@ -324,8 +324,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'ir_attachment': 2,
             'product_image': 2,
             'ir_ui_view': 2,
-            'website_menu': 1,
-            'website_page': 1,
         }
 
         addons = tuple(self.env.registry._init_modules) + (self.env.context.get('install_module'),)

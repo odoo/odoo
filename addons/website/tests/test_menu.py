@@ -477,3 +477,24 @@ class TestMenuHttp(common.HttpCase):
         self.assertIn(b"french_mega_menu_content", page.content)
         page = self.url_open('/%s?edit_translations=1' % fr.url_code)
         self.assertIn(b"french_mega_menu_content", page.content)
+
+    def test_04_menu_cache_invalidation(self):
+        def menu_names():
+            page = html.fromstring(self.url_open('/?nocache').content)
+            return page.xpath('//header//a[@role="menuitem"]//span/text()')
+
+        self.menu.parent_id = self.env.ref('base.default_website').menu_id
+        self.page.is_published = True
+        self.assertIn(self.menu.name, menu_names())
+
+        self.page.is_published = False
+        self.assertNotIn(self.menu.name, menu_names())
+
+        self.page.is_published = True
+        self.menu.name = 'Renamed menu'
+        self.assertIn('Renamed menu', menu_names())
+
+        self.menu.group_ids = self.env.ref('base.group_user')
+        self.assertNotIn('Renamed menu', menu_names())
+        self.authenticate('admin', 'admin')
+        self.assertIn('Renamed menu', menu_names())

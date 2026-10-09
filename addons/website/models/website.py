@@ -228,8 +228,7 @@ class Website(models.CachedModel):
             website.language_count = len(website.language_ids)
 
     def _compute_menu(self):
-        # prefetch all accessible menus at once
-        all_menus = self.env['website.menu'].search_fetch(Domain('website_id', 'in', self.ids + [False]))
+        all_menus = self._load_menus()
 
         # use field parent_id (1 query) to determine field child_id (2 queries by level)
         children = dict.fromkeys(all_menus, ())
@@ -256,6 +255,41 @@ class Website(models.CachedModel):
 
             top_menus = menus.filtered(lambda m: not m.parent_id)
             website.menu_id = top_menus[:1].id
+
+    def _load_menus(self):
+        """ Return all accessible menus, after putting them and their pages in
+        cache from the values cached across requests, as the menu is rendered
+        on every page. """
+        menus = self.env['website.menu']
+        pages = self.env['website.page']
+        (menu_ids, menu_values), (page_ids, page_values) = self._get_menus_cache_values()
+        for records, values in ((menus.browse(menu_ids), menu_values), (pages.browse(page_ids), page_values)):
+            for fname, column in values.items():
+                records._fields[fname]._insert_cache(records, column)
+        # the menus come from a search, like in `search_fetch`
+        menus = menus.browse(menu_ids)
+        self.env._add_to_access_cache(menus)
+        return menus
+
+    # Same invalidation as the page cache, which also renders the menus.
+    @api.ormcache(
+        'self._ids', 'self.env.su', 'self.env._access_context', 'self.env._lang',
+        cache='templates.cached_values',
+    )
+    def _get_menus_cache_values(self):
+        """ Return the raw cache values of all accessible menus and of their
+        pages, as fetched by the ORM. """
+        menus = self.env['website.menu'].search_fetch(Domain('website_id', 'in', self.ids + [False]))
+        pages = menus.page_id.sudo()
+        pages.fetch()
+        return tuple(
+            (records._ids, {
+                field.name: tuple(map(field._get_cache(records.env).__getitem__, records._ids))
+                for field in records._determine_fields_to_fetch()
+                if field.column_type
+            })
+            for records in (menus, pages)
+        )
 
     @api.depends('custom_blocked_third_party_domains')
     def _compute_blocked_third_party_domains(self):
