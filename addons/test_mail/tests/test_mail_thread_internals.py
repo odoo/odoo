@@ -513,6 +513,33 @@ class TestNoThread(MailCommon, TestRecipients):
     """ Specific tests for cross models thread features """
 
     @users('employee')
+    def test_mail_composer_layout(self):
+        """ Test email layout rendering for non-thread models. Should work
+        even if not inheriting from thread, thread notification methods being
+        called on mixin itself instead of record. """
+        test_records, test_partners = self._create_records_for_batch('mail.test.nothread', 2)
+        test_template = self.env['mail.template'].sudo().create({
+            'body_html': '<p>TemplateBody</p>',
+            'email_layout_xmlid': 'mail.mail_notification_light',
+            'model_id': self.env['ir.model']._get_id('mail.test.nothread'),
+            'partner_to': '{{ object.customer_id.id }}',
+        })
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_mail_composer_web_context(test_records, default_template_id=test_template.id)
+        ).create({})
+
+        with self.mock_mail_gateway():
+            composer._action_send_mail()
+
+        for partner in test_partners:
+            self.assertMailMail(
+                partner,
+                'sent',
+                author=self.partner_employee,
+                email_values={'body_content': 'Your NoThread Model'},
+            )
+
+    @users('employee')
     def test_mail_sending_on_non_thread_model(self):
         """ This test simulates scenarios where a required method called `_process_attachments_for_post` is missing,
         in such case composer should fallback to the method implementation in mail.thread. """
