@@ -1056,6 +1056,8 @@ class HrLeave(models.Model):
                         days = ceil(days)
                 elif leave.work_entry_type_request_unit == 'half_day':
                     days = float_round(days, precision_rounding=0.5)
+            if leave._plans_hours_on_the_clock(hours):
+                hours = ceil((leave.date_to - leave.date_from).total_seconds()) / 3600
             result[leave.id] = (days, hours)
         return result
 
@@ -1206,10 +1208,11 @@ class HrLeave(models.Model):
         self._inverse_number_of_hours()
 
     def _plans_hours_on_the_clock(self, worked_hours):
-        """ Hours with no working time to sit in run on from their start. """
+        """ Hours with no working time to sit in, or asked on a single day, run on from their start. """
         self.ensure_one()
         return (self.work_entry_type_id.count_as != 'absence' and self.work_entry_type_id.request_unit == 'hour'
-                and float_is_zero(worked_hours, precision_digits=2))
+                and (self.request_date_from and self.request_date_from == self.request_date_to
+                     or float_is_zero(worked_hours, precision_digits=2)))
 
     def _inverse_number_of_hours(self):
         # a duration is counted in worked hours, so the end is planned in them too
@@ -1244,6 +1247,9 @@ class HrLeave(models.Model):
                         "A duration of %s per day does not fit in the working time of the selected dates.",
                         format_duration(leave.number_of_hours)))
                 date_hour_to_user_tz = request_date_hour_to.astimezone(leave_tz).replace(tzinfo=None)
+                if date_hour_to_user_tz.time() == time.min and date_hour_to_user_tz.date() > leave.request_date_from:
+                    # an end at midnight ends the day before, not the next one
+                    date_hour_to_user_tz -= timedelta(microseconds=1)
                 new_request_date_to = date_hour_to_user_tz.date()
                 new_request_hour_to = time_to_float(date_hour_to_user_tz.time())
                 changes = {}
@@ -2508,17 +2514,23 @@ class HrLeave(models.Model):
         If there are no attendances on the exact days of the request, return
         the earliest hour_from and latest hour_to that exist in the schedule.
         """
-        if self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time" \
-                and self.request_hour_to > self.request_hour_from:
+        working_time_in_hours = self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time"
+        if working_time_in_hours and self.request_hour_to > self.request_hour_from:
             # explicit hours given
             hour_from, hour_to = self.request_hour_from, self.request_hour_to
         else:
             hour_from, _ = self.employee_id.sudo()._get_hours_for_date(request_date_from, day_period, count_non_working_days)
             _, hour_to = self.employee_id.sudo()._get_hours_for_date(request_date_to, day_period, count_non_working_days)
-            if self.work_entry_type_id.request_unit == "hour" and self.work_entry_type_id.count_as == "working_time" \
-                    and hour_to - hour_from >= 24:
+            if working_time_in_hours and hour_to - hour_from >= 24:
                 half_day = HOURS_PER_DAY / 2
                 hour_from, hour_to = 12.0 - half_day, 12.0 + half_day
+            elif working_time_in_hours and self.employee_id and request_date_from == request_date_to and not day_period:
+                # a day of work is counted on the clock, so by default it lasts its planned hours from its start
+                calendar = self.employee_id.sudo()._get_version(request_date_from).resource_calendar_id
+                day_start = self._to_utc(request_date_from, 0, self.employee_id).replace(tzinfo=UTC)
+                day_end = self._to_utc(request_date_from + timedelta(days=1), 0, self.employee_id).replace(tzinfo=UTC)
+                planned_hours = calendar.get_work_hours_count(day_start, day_end, compute_leaves=False)
+                hour_to = min(hour_from + (planned_hours or calendar.hours_per_day or HOURS_PER_DAY), 24)
 
         return (hour_from, hour_to)
 
