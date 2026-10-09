@@ -25,7 +25,6 @@
         <field name="model">calendar.alarm</field>
         <field name="arch" type="xml">
             <list string="Calendar Alarm" sample="1">
-                <field name="name" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="alarm_type"/>
                 <field name="duration" string="Duration" width="75px"/>
                 <field name="interval"/>
@@ -114,7 +113,6 @@
                 <field name="show_as" optional="hide" readonly="recurrency"/>
                 <field name="location" optional="show" readonly="recurrency" width="250px"/>
                 <field name="description" optional="hide" readonly="recurrency"/>
-                <field name="allday" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="is_draft" column_invisible="1"/> <!--Required to check if cancellation emails must be sent.-->
             </list>
         </field>

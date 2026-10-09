@@ -38,10 +38,6 @@
         <field name="model">resource.calendar.attendance</field>
         <field name="inherit_id" ref="resource.view_resource_calendar_multi_create_form"/>
         <field name="arch" type="xml">
-            <group position="before">
-                <field name="color" invisible="1"/> <!-- kept for the calendar's color="color" attribute set by this module on the records created here -->
-                <field name="display_code" invisible="1"/> <!-- related display code of the work entry type, loaded with color for the records created here -->
-            </group>
             <field name="recurrency" position="before">
                 <field name="work_entry_type_id" widget="many2one_work_entry_type" placeholder="Attendance" domain="[('resource_calendar_selectable', '=', True)]"/>
             </field>

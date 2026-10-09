@@ -64,13 +64,10 @@
             <list multi_edit="1">
                 <field name="company_id" column_invisible="True"/> <!-- passed as default_company_id in the context of operation_id and needed by the company-dependent domain of the check_company fields -->
                 <field name="is_user_working" column_invisible="True"/> <!-- read by the mrp_timer widget of duration and drives invisible of the Start/Pause/Done buttons -->
-                <field name="uom_id" readonly="0" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="production_state" column_invisible="True"/> <!-- drives invisible of duration, of state and of the Start/Pause/Done buttons -->
                 <field name="production_bom_id" column_invisible="True"/> <!-- used in the domain of operation_id -->
-                <field name="qty_producing" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
-                <field name="time_ids" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="working_state" column_invisible="True"/> <!-- drives invisible of the two Start buttons -->
-                <field name="operation_id" column_invisible="True" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/> <!-- kept loaded with its domain and context for the records created in this list -->
+                <field name="operation_id" column_invisible="True" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/> <!-- set by _compute_workorder_ids on the work orders generated from the BoM operations, loaded here so the value is posted back when the MO is saved -->
                 <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
                 <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                 <field name="product_id" optional="show"/>
@@ -345,8 +342,8 @@
         <field name="arch" type="xml">
             <form string="Production Workcenter" delete="0" create="0">
             <field name="production_state" invisible="1"/> <!-- drives invisible of the state badge and readonly of qty_produced -->
-            <field name="operation_id" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
-            <field name="sequence" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+            <field name="operation_id" invisible="1"/> <!-- set by _compute_workorder_ids on the work orders generated from the BoM operations, and posted back through this form, which is the editing view of the MO's workorder_ids list -->
+            <field name="sequence" invisible="1"/> <!-- posted back through this form like operation_id, which _compute_sequence derives it from to put the kit operations first -->
             <sheet>
                 <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields of this form -->
                 <field name="product_tracking" invisible="1"/> <!-- drives invisible of production_lot_producing_id -->
