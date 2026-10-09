@@ -154,9 +154,6 @@ class ReturnPicking(models.TransientModel):
         return vals
 
     def _create_return(self):
-        for return_move in self.product_return_moves.move_id:
-            return_move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
-
         # create new picking for returned products
         new_picking = self.picking_id.copy(self._prepare_picking_default_values())
         new_picking.user_id = False

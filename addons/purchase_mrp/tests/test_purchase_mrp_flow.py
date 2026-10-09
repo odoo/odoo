@@ -982,6 +982,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         return_pick = self.env['stock.picking'].browse(res['res_id'])
 
         # Process all components and validate the return
+        return_pick.move_ids.quantity = 10
         return_pick.button_validate()
         self.assertEqual(po.order_line.qty_received, 15 / 5 * 6)
 
