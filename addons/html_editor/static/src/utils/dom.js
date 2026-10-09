@@ -327,3 +327,15 @@ export function mergeAdjacentTextNodes(node, cursor) {
         }
     }
 }
+
+/**
+ * Parse an HTML string into a DocumentFragment.
+ *
+ * @param {string} html - The HTML string to parse.
+ * @returns {DocumentFragment} The fragment containing the parsed nodes.
+ */
+export function htmlToFragment(html) {
+    const template = document.createElement("template");
+    template.innerHTML = html;
+    return template.content;
+}
