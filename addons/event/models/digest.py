@@ -17,6 +17,7 @@ class Digest(models.Model):
 
     def _get_kpi_custom_settings(self, company, user):
         res = super()._get_kpi_custom_settings(company, user)
-        res['kpi_action']['kpi_nbr_of_registrations'] = 'event.action_registration'
+        menu_id = self.env.ref('event.event_main_menu').id
+        res['kpi_action']['kpi_nbr_of_registrations'] = f'event.action_event_registration?menu_id={menu_id}'
         res['kpi_sequence']['kpi_nbr_of_registrations'] = 10500
         return res
