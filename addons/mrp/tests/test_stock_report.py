@@ -681,6 +681,7 @@ class TestMrpStockReports(TestReportsCommon):
         bom_baguette.operation_ids.filtered(lambda o: o.cost_mode == 'estimated').cost_mode = 'actual'
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(overview_values['data']['operations']['details'][0]['mo_cost'], 5.5)
+        self.assertEqual(overview_values['data']['operations']['details'][0]['name'], "Lumière: MO - Get on a boat")
         self.assertEqual(overview_values['data']['operations']['details'][1]['mo_cost'], 33.0)
 
     def test_mo_overview_decorators(self):

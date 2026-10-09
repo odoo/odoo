@@ -280,9 +280,12 @@ class MrpWorkorder(models.Model):
             wo.barcode = f"{wo.production_id.name}/{wo.id}"
 
     @api.depends('production_id', 'product_id')
-    @api.depends_context('display_complete_name')
+    @api.depends_context('display_complete_name', 'display_product_qty')
     def _compute_display_name(self):
         for wo in self:
+            if not (self.env.context.get('display_complete_name') or self.env.context.get('display_product_qty')):
+                wo.display_name = f"{wo.production_id.name} - {wo.name}"
+                continue
             product_name = wo.product_id.name
             if variant := wo.product_id.product_template_attribute_value_ids._get_combination_name():
                 product_name = f"{product_name} ({variant})"
