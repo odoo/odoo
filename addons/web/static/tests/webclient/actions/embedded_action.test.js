@@ -748,3 +748,48 @@ test("an action containing embedded actions should reload if the page is refresh
             "After refresh, we should still have 2 embedded actions in the embedded + the dropdown button",
     });
 });
+
+test("form-based embedded action cannot be set as first priority", async () => {
+    defineActions([
+        {
+            id: 105,
+            name: "Form Only Action",
+            res_model: "pony",
+            views: [[false, "form"]],
+        },
+        {
+            id: 106,
+            name: "Form Embedded Action",
+            parent_res_model: "partner",
+            type: "ir.embedded.actions",
+            parent_action_id: 1,
+            action_id: 105,
+            default_view_mode: "form",
+        },
+    ]);
+
+    mockTouch(true);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+
+    await contains(".o_control_panel_navigation > button > i.fa-sliders").click();
+    await waitFor(".o_popover.dropdown-menu");
+    await contains(
+        ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Embedded Action 2')"
+    ).click();
+    await contains(
+        ".o_popover.dropdown-menu .dropdown-item > div > span:contains('Form Embedded Action')"
+    ).click();
+
+    expect(".o_embedded_actions > button:not(.dropdown-toggle)").toHaveCount(3);
+
+    await contains(".o_embedded_actions > button:nth-child(3)").dragAndDrop(
+        ".o_embedded_actions > button:nth-child(1)",
+    );
+
+    await waitFor(".o_notification");
+    expect(".o_notification_content").toHaveText("Form Embedded Action cannot be set as priority.");
+    expect(".o_embedded_actions > button:first-child > span").toHaveText("Partners Action 1", {
+        message: "Form-based action should not have been moved to the first position",
+    });
+});
