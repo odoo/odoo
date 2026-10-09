@@ -88,6 +88,10 @@ class ResPartner(models.Model):
 
     def _l10n_fr_pdp_get_base_identifier(self):
         self.ensure_one()
+
+        if not self._peppol_is_french_partner():
+            return None, None
+
         candidates = [
             self.additional_identifiers['FR_SIRET'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIRET', '')) else '',
             self.additional_identifiers['FR_SIREN'] if self.additional_identifiers and siren_siret_re.match(self.additional_identifiers.get('FR_SIREN', '')) else '',
@@ -266,3 +270,27 @@ class ResPartner(models.Model):
                     partner.peppol_eas = '0225'
 
         super(ResPartner, partners_to_compute)._compute_peppol_eas()
+
+    @api.model
+    @handle_demo
+    def _fetch_active_annuaire_lines(self, siren):
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
+        query = parse.urlencode({'pdp_endpoint': siren, 'active_only': True})
+        endpoint = f'{origin}/api/pdp/1/pdp_annuaire_lookup?{query}'
+
+        try:
+            response = requests.get(endpoint, timeout=10)
+            decoded_response = response.json()
+        except (requests.exceptions.RequestException, ValueError) as e:
+            _logger.warning("failed to query active annuaire lines for identifier %s: %s", siren, e)
+            return {}
+
+        lines = decoded_response.get('annuaire_lines', [])
+        identifiers = list({line['identifier'] for line in lines})
+
+        return {
+            'in_annuaire': bool(identifiers),
+            'identifiers': identifiers,
+            'count': len(identifiers),
+        }
