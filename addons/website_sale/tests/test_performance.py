@@ -184,7 +184,7 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
 
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
-        res["product_pricelist"] += 3
+        res["product_pricelist"] += 2
         res["product_category"] += 1
         res["product_pricelist_item"] += 1
         return res
@@ -197,7 +197,7 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
 
     def _get_product_page_queries(self):
         res = super()._get_product_page_queries()
-        res["product_pricelist"] += 3
+        res["product_pricelist"] += 2
         res["product_category"] += 1
         res["product_pricelist_item"] += 2
         return res

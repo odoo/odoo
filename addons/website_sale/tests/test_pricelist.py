@@ -614,6 +614,41 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
             " should be returned",
         )
 
+    def test_get_pricelist_available_cache_invalidation(self):
+        """The pricelists of the website are cached across requests: changes on them, or on the
+        website company, must be visible on the next request."""
+
+        def get_visible_pricelists():
+            self.env.invalidate_all()  # as in a new request
+            return self.website.get_pricelist_available(show_visible=True)
+
+        visible_pls = (
+            self.generic_pl_select
+            + self.generic_pl_code_select
+            + self.w1_pl_select
+            + self.w1_pl_code_select
+        )
+        self.assertEqual(get_visible_pricelists(), visible_pls)
+
+        self.w1_pl_select.action_archive()
+        visible_pls -= self.w1_pl_select
+        self.assertEqual(get_visible_pricelists(), visible_pls)
+
+        self.w1_pl.selectable = True
+        self.w1_pl_code_select.website_id = self.website2
+        visible_pls += self.w1_pl
+        visible_pls -= self.w1_pl_code_select
+        self.assertEqual(get_visible_pricelists(), visible_pls)
+
+        self.w1_pl.name = "Renamed Pricelist"
+        self.assertIn("Renamed Pricelist", get_visible_pricelists().mapped("name"))
+
+        company2 = self.env["res.company"].sudo().create({"name": "Company 2"})
+        self.generic_pl_select.sudo().company_id = company2
+        self.assertNotIn(self.generic_pl_select, get_visible_pricelists())
+        self.website.sudo().company_id = company2
+        self.assertIn(self.generic_pl_select, get_visible_pricelists())
+
     def test_property_product_pricelist_for_inactive_partner(self):
         # `_get_partner_pricelist_multi` should consider inactive users when searching for
         # pricelists.

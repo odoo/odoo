@@ -306,7 +306,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         # To add queries here you must ask the permission to al
         queries = {
             'res_company': 1,
-            'product_pricelist': 3,
+            'product_pricelist': 2,
             'product_template': 3,
             'product_tag': 1,
             'product_public_category': 2,

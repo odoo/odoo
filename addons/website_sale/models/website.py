@@ -330,12 +330,31 @@ class Website(models.Model):
     # === COMPUTE METHODS ===#
 
     def _compute_pricelist_ids(self):
+        ProductPricelist = self.env["product.pricelist"]
         for website in self:
-            website = website.with_company(website.company_id)
-            ProductPricelist = website.env["product.pricelist"]  # with correct company in env
-            website.pricelist_ids = ProductPricelist.sudo().search_fetch(
-                ProductPricelist._get_website_pricelists_domain(website)
-            )
+            pricelist_ids, values = website._get_pricelists_cache_values()
+            pricelists = ProductPricelist.browse(pricelist_ids)
+            for fname, column in values.items():
+                pricelists._fields[fname]._insert_cache(pricelists, column)
+            website.pricelist_ids = pricelists
+
+    # invalidated by the `_clear_cache_name` of `product.pricelist` and `website`
+    @api.ormcache("self.id", "self.company_id.id", "self.env._lang")
+    def _get_pricelists_cache_values(self):
+        """Return the ids and the raw cache values of the pricelists available on the website, as
+        fetched by the ORM, as they are needed on every page showing prices or the pricelist
+        selector.
+        """
+        website = self.with_company(self.company_id)
+        ProductPricelist = website.env["product.pricelist"]  # with correct company in env
+        pricelists = ProductPricelist.sudo().search_fetch(
+            ProductPricelist._get_website_pricelists_domain(website)
+        )
+        return pricelists._ids, {
+            field.name: tuple(map(field._get_cache(pricelists.env).__getitem__, pricelists._ids))
+            for field in pricelists._determine_fields_to_fetch()
+            if field.column_type
+        }
 
     def _compute_pricelist_id(self):
         self.pricelist_id = self.env["product.pricelist"].browse(
