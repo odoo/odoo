@@ -93,10 +93,7 @@ class LoyaltyRule(models.Model):
         total_qty = sum(qualifying.mapped('qty'))
         if total_qty < self.minimum_qty:
             return False
-        if self.minimum_amount_tax_mode == 'incl':
-            amount = sum(qualifying.mapped('price_subtotal_incl'))
-        else:
-            amount = sum(qualifying.mapped('price_subtotal'))
+        amount = qualifying._get_loyalty_price(tax_included=self.minimum_amount_tax_mode == 'incl')
         if order.is_refund:
             amount = -amount
         return amount >= self.minimum_amount
@@ -123,7 +120,7 @@ class LoyaltyRule(models.Model):
             money_lines = order_lines.filtered(
                 lambda l: self._counts_for_points(l) and self._in_domain(l) and not is_excluded_reward(l)
             )
-            money_amount = sum(money_lines.mapped('price_subtotal_incl'))
+            money_amount = money_lines._get_loyalty_price()
             # Only refunds to cards should reach this
             if order.is_refund:
                 money_amount = -money_amount
