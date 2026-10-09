@@ -342,7 +342,66 @@ class StockMove(models.Model):
             total_qty = sum(m._get_valued_qty(signed=True) for m in self)
         return total_value / total_qty if total_qty else 0
 
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
     def _set_value(self, recompute_date=None, skip_check=False):
+||||||| 7b5a3f53a824d86fe6cb4002637299813cd81881
+    def _get_cogs_price_unit(self, quantity=0):
+        """ Returns the COGS unit price to value this stock move
+        quantity should be given in product uom """
+
+        if len(self.product_id) > 1:
+            return 0
+        total_qty = sum(m._get_valued_qty() * (-1 if m.is_in else 1) for m in self)
+        valued_consigned_qty = self._get_valued_consigned_qty()
+        total_valued_qty = total_qty + valued_consigned_qty
+        if total_valued_qty and (self.product_id.cost_method == 'fifo' or valued_consigned_qty or
+            (self.product_id.lot_valuated and self.product_id.cost_method == 'average')):
+            total_value = sum(m.value * (-1 if m.is_in else 1) for m in self)
+            return total_value / total_valued_qty
+        else:
+            return self.product_id.standard_price
+
+    @api.model
+    def _get_valued_types(self):
+        """Returns a list of `valued_type` as strings. During `action_done`, we'll call
+        `_is_[valued_type]'. If the result of this method is truthy, we'll consider the move to be
+        valued.
+
+        :returns: a list of `valued_type`
+        :rtype: list
+        """
+        return ['in', 'out', 'dropshipped', 'dropshipped_returned']
+
+    def _set_value(self, correction_quantity=None):
+=======
+    def _get_cogs_price_unit(self, quantity=0):
+        """ Returns the COGS unit price to value this stock move
+        quantity should be given in product uom """
+
+        if len(self.product_id) > 1:
+            return 0
+        total_qty = sum(m._get_valued_qty() * (-1 if m.is_in else 1) for m in self)
+        valued_consigned_qty = self._get_valued_consigned_qty()
+        total_valued_qty = total_qty + valued_consigned_qty
+        if total_valued_qty and (self.product_id.cost_method in ['fifo', 'average'] or valued_consigned_qty):
+            total_value = sum(m.value * (-1 if m.is_in else 1) for m in self)
+            return total_value / total_valued_qty
+        else:
+            return self.product_id.standard_price
+
+    @api.model
+    def _get_valued_types(self):
+        """Returns a list of `valued_type` as strings. During `action_done`, we'll call
+        `_is_[valued_type]'. If the result of this method is truthy, we'll consider the move to be
+        valued.
+
+        :returns: a list of `valued_type`
+        :rtype: list
+        """
+        return ['in', 'out', 'dropshipped', 'dropshipped_returned']
+
+    def _set_value(self, correction_quantity=None):
+>>>>>>> 56fc8aed2edfe119ee2d200f2f661369264a755f
         """Set the value of the move.
 
         :param recompute_date: if provided, valuation runs in correction mode. The given
