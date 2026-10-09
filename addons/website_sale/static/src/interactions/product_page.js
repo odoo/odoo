@@ -11,7 +11,7 @@ import { insertThousandsSep, formatFloat } from '@web/core/utils/numbers';
 import { renderToFragment } from '@web/core/utils/render';
 import { isEmail } from '@web/core/utils/strings';
 import { throttleForAnimation } from '@web/core/utils/timing';
-import { htmlEscape, markup, usePlugin } from '@odoo/owl';
+import { markup, usePlugin } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import { ProductImageViewer } from '@website_sale/js/components/website_sale_image_viewer';
 import { BootstrapInstance } from '@web/core/utils/bootstrap_plugin';
@@ -372,8 +372,8 @@ export class ProductPage extends Interaction {
         // ready).
         if (images && !isEditorEnabled && newImages) {
             this.services["public.interactions"].stopInteractions(images);
-            images.insertAdjacentHTML('beforebegin', markup(newImages));
-            images.remove();
+            const tempDiv = createElementWithContent('div', newImages);
+            images.replaceWith(...tempDiv.children);
 
             // Re-query the latest images.
             images = productContainer.querySelector(this._getProductImageContainerSelector());
@@ -475,16 +475,18 @@ export class ProductPage extends Interaction {
             'product_template_id': productTemplateId,
             'combination': combination,
         }));
-        if (combinationInfo.product_tags) {
-            combinationInfo.product_tags = markup(combinationInfo.product_tags);
+        const htmlKeys = [
+            'product_tags',
+            'out_of_stock_message',
+            'documents',
+            'carousel',
+            'packaging_selector',
+        ];
+        for (const key of htmlKeys) {
+            if (combinationInfo[key]) {
+                combinationInfo[key] = markup(combinationInfo[key]);
+            }
         }
-        if (combinationInfo.out_of_stock_message) {
-            combinationInfo.out_of_stock_message = markup(combinationInfo.out_of_stock_message);
-        }
-        if (combinationInfo.documents) {
-            combinationInfo.documents = markup(combinationInfo.documents);
-        }
-        combinationInfo.packaging_selector = markup(combinationInfo.packaging_selector);
 
         this._onChangeCombination(ev, parent, combinationInfo, attributeValueImages);
         this._checkExclusions(parent, combination);
@@ -811,15 +813,15 @@ export class ProductPage extends Interaction {
             this._updateProductImages(parent.closest('#product_detail_main'), combination.carousel);
             this._updateDocumentsSection(parent.closest('#product_detail_main'), combination.documents);
             const productTags = parent.querySelector('.o_product_tags');
-            productTags?.insertAdjacentHTML('beforebegin', htmlEscape(combination.product_tags));
-            productTags?.remove();
+            if (productTags) {
+                const newProductTags = createElementWithContent('div', combination.product_tags);
+                productTags.replaceWith(...newProductTags.children);
+            }
 
             const packagingSelector = parent.querySelector('[name="packaging_selector"]');
             if (packagingSelector) {
-                packagingSelector.insertAdjacentHTML(
-                    'beforebegin', htmlEscape(combination.packaging_selector)
-                );
-                packagingSelector.remove();
+                const newPackagingSelector = createElementWithContent('div', combination.packaging_selector);
+                packagingSelector.replaceWith(...newPackagingSelector.children);
             }
             // Toggle variant section visibility when UOM availability changes (edge case:
             // template has no attributes, only some variants have UOMs).

@@ -3,7 +3,7 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc } from "@web/core/network/rpc";
 import { createElementWithContent, setElementContent } from '@web/core/utils/html';
 import { redirect } from '@web/core/utils/urls';
-import { markup } from "@odoo/owl";
+import { markup } from '@odoo/owl';
 
 /**
  * Updates both navbar cart
@@ -30,7 +30,9 @@ function updateCartNavBar(data) {
     }
 
     const cartLines = document.querySelectorAll('.js_cart_lines');
-    cartLines[0]?.insertAdjacentHTML('beforebegin', data['website_sale.cart_lines']);
+    cartLines[0]?.before(
+        ...createElementWithContent('div', data['website_sale.cart_lines']).children
+    );
     cartLines.forEach(el => el.remove());
 
     updateCartSummary(data);
@@ -61,7 +63,7 @@ function updateCartSummary(data) {
     }
     if (data['website_sale.total']) {
         document.querySelectorAll('div.o_cart_total').forEach(
-            div => div.innerHTML = data['website_sale.total']
+            div => setElementContent(div, data['website_sale.total'])
         );
     }
 }
@@ -75,9 +77,12 @@ function updateCartSummary(data) {
 function updateQuickReorderSidebar(data) {
     const quickReorderButton  = document.getElementById('quick_reorder_button');
     document.querySelectorAll('.o_wsale_quick_reorder_line_group').forEach(el => el.remove());
-    if (data['website_sale.quick_reorder_history'].trim()) {
-        document.querySelector('#quick_reorder_sidebar .offcanvas-body').insertAdjacentHTML(
-            'afterbegin', data['website_sale.quick_reorder_history']
+    const reorderHistoryEl = createElementWithContent(
+        'div', data['website_sale.quick_reorder_history']
+    );
+    if (reorderHistoryEl.children.length) {
+        document.querySelector('#quick_reorder_sidebar .offcanvas-body').prepend(
+            ...reorderHistoryEl.children
         );
         quickReorderButton.removeAttribute('disabled');
         quickReorderButton.parentElement.title = "";
