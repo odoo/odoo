@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="stock.ForecastWidget">
-        <span t-if="this.product_qty > 0 and this.resId"
+        <span t-if="this.product_qty > 0"
             title="Forecasted Report"
             t-on-click="this._openReport"
             class="badge rounded-pill align-middle"
