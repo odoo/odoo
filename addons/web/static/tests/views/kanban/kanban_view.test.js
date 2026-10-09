@@ -56,6 +56,7 @@ import {
     makeServerError,
     mockOffline,
     mockService,
+    mockUpload,
     models,
     mountView,
     mountWithCleanup,
@@ -101,9 +102,7 @@ async function createFileInput({ mockPost, mockAdd, props }) {
     mockService("notification", {
         add: mockAdd || (() => {}),
     });
-    mockService("http", {
-        post: mockPost || (() => {}),
-    });
+    mockUpload(mockPost || (() => "[]"));
     await mountWithCleanup(FileInput, { props });
 }
 
