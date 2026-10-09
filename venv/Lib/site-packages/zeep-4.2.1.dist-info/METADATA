@@ -1,0 +1,115 @@
+Metadata-Version: 2.1
+Name: zeep
+Version: 4.2.1
+Summary: A Python SOAP client
+Home-page: https://docs.python-zeep.org
+Author: Michael van Tellingen
+Author-email: michaelvantellingen@gmail.com
+License: MIT
+Project-URL: Source, https://github.com/mvantellingen/python-zeep
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.7
+Requires-Dist: attrs (>=17.2.0)
+Requires-Dist: isodate (>=0.5.4)
+Requires-Dist: lxml (>=4.6.0)
+Requires-Dist: platformdirs (>=1.4.0)
+Requires-Dist: requests (>=2.7.0)
+Requires-Dist: requests-toolbelt (>=0.7.1)
+Requires-Dist: requests-file (>=1.5.1)
+Requires-Dist: pytz
+Requires-Dist: cached-property (>=1.3.0) ; python_version < "3.8"
+Provides-Extra: async
+Requires-Dist: httpx (>=0.15.0) ; extra == 'async'
+Provides-Extra: docs
+Requires-Dist: sphinx (>=1.4.0) ; extra == 'docs'
+Provides-Extra: test
+Requires-Dist: coverage[toml] (==5.2.1) ; extra == 'test'
+Requires-Dist: freezegun (==0.3.15) ; extra == 'test'
+Requires-Dist: pretend (==1.0.9) ; extra == 'test'
+Requires-Dist: pytest-cov (==2.8.1) ; extra == 'test'
+Requires-Dist: pytest-httpx ; extra == 'test'
+Requires-Dist: pytest-asyncio ; extra == 'test'
+Requires-Dist: pytest (==6.2.5) ; extra == 'test'
+Requires-Dist: requests-mock (>=0.7.0) ; extra == 'test'
+Requires-Dist: isort (==5.3.2) ; extra == 'test'
+Requires-Dist: flake8 (==3.8.3) ; extra == 'test'
+Requires-Dist: flake8-blind-except (==0.1.1) ; extra == 'test'
+Requires-Dist: flake8-debugger (==3.2.1) ; extra == 'test'
+Requires-Dist: flake8-imports (==0.1.1) ; extra == 'test'
+Provides-Extra: xmlsec
+Requires-Dist: xmlsec (>=0.6.1) ; extra == 'xmlsec'
+
+========================
+Zeep: Python SOAP client
+========================
+
+A Python SOAP client
+
+Highlights:
+ * Compatible with Python 3.7, 3.8, 3.9, 3.10, 3.11 and PyPy3
+ * Build on top of lxml, requests and httpx
+ * Support for Soap 1.1, Soap 1.2 and HTTP bindings
+ * Support for WS-Addressing headers
+ * Support for WSSE (UserNameToken / x.509 signing)
+ * Support for asyncio using the httpx module
+ * Experimental support for XOP messages
+
+
+Please see for more information the documentation at
+http://docs.python-zeep.org/
+
+
+
+
+Installation
+------------
+
+.. code-block:: bash
+
+    pip install zeep
+
+Note that the latest version to support Python 2.7, 3.3, 3.4 and 3.5 is Zeep
+3.4, install via `pip install zeep==3.4.0`
+
+Zeep uses the lxml library for parsing xml. See
+https://lxml.de/installation.html for the installation requirements.
+
+Usage
+-----
+.. code-block:: python
+
+    from zeep import Client
+
+    client = Client('tests/wsdl_files/example.rst')
+    client.service.ping()
+
+
+To quickly inspect a WSDL file use::
+
+    python -m zeep <url-to-wsdl>
+
+
+Please see the documentation at http://docs.python-zeep.org for more
+information.
+
+
+Support
+=======
+
+If you want to report a bug then please first read
+http://docs.python-zeep.org/en/master/reporting_bugs.html
+
+Please only report bugs and not support requests to the GitHub issue tracker.
+
+
