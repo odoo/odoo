@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command, models, fields, api
+from odoo import Command, models, fields, api, _
+from odoo.exceptions import UserError
 from odoo.tools import float_round
 
 
@@ -85,11 +86,22 @@ class PosOrder(models.Model):
             command = Command.CREATE if line[0] == Command.CREATE else Command.UPDATE
             id_to_use = line[1] if line[0] == Command.UPDATE else 0
 
+            no_variant_lines = product.product_tmpl_id.attribute_line_ids.filtered(lambda l: l.attribute_id.create_variant == 'no_variant')
+            valid_ptav_ids = set(product.product_template_attribute_value_ids.ids) | set(no_variant_lines.product_template_value_ids._only_active().ids)
+            attribute_value_ids = [data for data in line_data.get('attribute_value_ids', []) if isinstance(data[1], int) and data[0] == 4 and data[1] in valid_ptav_ids]
+
+            # Only 'multi' attributes accept several values; any other no_variant
+            # attribute must carry at most one value per line.
+            selected_ptavs = pos_config.env['product.template.attribute.value'].browse([data[1] for data in attribute_value_ids])
+            for attribute_line in no_variant_lines.filtered(lambda l: l.attribute_id.display_type != 'multi'):
+                if len(selected_ptavs & attribute_line.product_template_value_ids) > 1:
+                    raise UserError(_("Invalid product configuration"))
+
             return [command, id_to_use, {
                 'combo_id': line_data.get('combo_id'),
                 'product_id': line_data.get('product_id'),
                 'tax_ids': tax_ids.ids,
-                'attribute_value_ids': [data for data in line_data.get('attribute_value_ids', []) if isinstance(data[1], int) and data[0] == 4],
+                'attribute_value_ids': attribute_value_ids,
                 'price_unit': line_data.get('price_unit'),
                 'qty': line_data.get('qty'),
                 'price_subtotal': line_data.get('price_subtotal'),
