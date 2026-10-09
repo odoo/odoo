@@ -16,3 +16,18 @@ class TestResConfig(TransactionCase):
             self.env['res.config.test'].create({}).execute()
 
         set_param_mock.assert_not_called()
+
+    def test_config_parameter_falsy_values(self):
+        settings = self.env['res.config.test'].create({
+            'param1': 0,
+            'param_bool': False,
+        })
+        settings.execute()
+
+        IrConfigParameter = self.env['ir.config_parameter'].sudo()
+        self.assertEqual(IrConfigParameter.get_param('resConfigTest.parameter1'), '0')
+        self.assertEqual(IrConfigParameter.get_param('resConfigTest.parameter_bool'), 'False')
+
+        settings = self.env['res.config.test'].create({})
+        self.assertEqual(settings.param1, 0)
+        self.assertFalse(settings.param_bool)
