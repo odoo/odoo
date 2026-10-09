@@ -28,7 +28,7 @@
         <field name="name">account.move.list2</field>
         <field name="model">account.move</field>
         <field name="arch" type="xml">
-            <list decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
+            <list decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree" help_id="%(account.view_account_move_help)d">
                 <field name="l10n_latam_document_type_id_code"/>
                 <field name="l10n_latam_document_number" string="Folio" readonly="state != 'draft'"/>
                 <field name="partner_id_vat"/>
