@@ -12,9 +12,11 @@
                         <t t-foreach="items" t-as="item" t-key="item._id">
                             <tr class="o_row_draggable" t-att-data-id="item._id">
                                 <td t-if="this.props.sortable" class="o_handle_cell w-0">
-                                    <button type="button" class="btn">
+                                    <button type="button" class="btn"
+                                        aria-label="Drag or use the arrow keys to reorder"
+                                        title="Drag or use the arrow keys to reorder"
+                                        t-on-keydown="(ev) => this.keyboardReorder.onHandleKeyDown(ev, item._id)">
                                         <i class="oi" data-icon="drag_indicator" aria-hidden="true"/>
-                                        <span class="visually-hidden">Drag and sort field</span>
                                     </button>
                                 </td>
                                 <t t-foreach="Object.entries(this.props.itemShape).filter(([key,_]) => !this.props.hiddenProperties.includes(key))" t-as="entry" t-key="entry[0]">
