@@ -31,6 +31,44 @@ class TestMenu(common.TransactionCase):
 
         self.assertEqual(total_menu_items + self.nb_website * 2, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id")
 
+    def test_menu_visible_password_view_skips_handle_visibility(self):
+        """ When a password protected page is accessed, the request contains a
+        password. This test ensures that if a menu contains a link to another
+        password protected page, the password in the current request is never
+        tested against the linked page. """
+        View = self.env['ir.ui.view']
+        Page = self.env['website.page']
+        Menu = self.env['website.menu']
+        website_1 = self.env['website'].browse(1)
+
+        view = View.create({
+            'name': 'Protected',
+            'type': 'qweb',
+            'arch': '<div>protected</div>',
+            'key': 'test.menu_protected_view',
+            'visibility': 'password',
+        })
+        page = Page.create({
+            'view_id': view.id,
+            'url': '/menu-protected',
+            'is_published': True,
+            'website_id': website_1.id,
+        })
+        menu = Menu.create({
+            'name': 'Protected menu',
+            'page_id': page.id,
+            'website_id': website_1.id,
+        })
+
+        public_user = self.env.ref('base.public_user')
+        with MockRequest(self.env(user=public_user), website=website_1) as mock_request:
+            mock_request.params = {'visibility_password': 'secret'}
+            menu_pub = mock_request.env['website.menu'].browse(menu.id)
+            with patch.object(self.registry['ir.ui.view'], '_handle_visibility') as mocked_handle_visibility:
+                is_visible = menu_pub.is_visible
+                mocked_handle_visibility.assert_not_called()
+            self.assertTrue(is_visible)
+
     def test_02_menu_count(self):
         Menu = self.env['website.menu']
         total_menu_items = Menu.search_count([])
