@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_return_slip" inherit_id="stock.report_return_slip" primary="True">
+        <xpath expr="//t[@t-call='web.external_layout']" position="before">
+            <t t-set="jp_document_date" t-value="o.date_done if o.state == 'done' else o.scheduled_date"/>
+            <t t-set="layout_document_title">
+                <t t-out="o.with_context(lang=o._get_report_lang())._get_return_slip_report_title()"/> <t t-out="o.name"/>
+            </t>
+            <t t-if="o.partner_id" t-set="address">
+                <t t-call="l10n_jp.recipient_name" partner="o.partner_id"/>
+                <div t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-call='stock.return_label_header']" position="attributes">
+            <attribute name="t-call">l10n_jp_stock.return_label_header</attribute>
+        </xpath>
+    </template>
+
+    <template id="return_label_header" inherit_id="stock.return_label_header" primary="True">
+        <xpath expr="//h1" position="replace"/>
+    </template>
+
+    <template id="report_return_document" inherit_id="stock.report_return_document">
+        <xpath expr="//t[@t-call='stock.report_return_slip']" position="attributes">
+            <attribute name="t-if" add="o.company_id.account_fiscal_country_id.code != 'JP'" separator=" and "/>
+        </xpath>
+        <xpath expr="//t[@t-call='stock.report_return_slip']" position="after">
+            <t t-elif="o.company_id.account_fiscal_country_id.code == 'JP'" t-call="l10n_jp_stock.report_return_slip" t-lang="o._get_report_lang()"/>
+        </xpath>
+    </template>
+</odoo>

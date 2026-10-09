@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_payment_receipt_document" inherit_id="account.report_payment_receipt_document" primary="True">
+        <xpath expr="//t[@t-call='web.external_layout']" position="before">
+            <t t-set="jp_document_date" t-value="o.date"/>
+            <t t-if="o.partner_id" t-set="address">
+                <t t-call="l10n_jp.recipient_name" partner="o.partner_id"/>
+                <div t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+            </t>
+        </xpath>
+        <xpath expr="//div[@t-if='o.partner_type']" position="replace"/>
+    </template>
+
+    <template id="report_payment_receipt" inherit_id="account.report_payment_receipt">
+        <xpath expr="//t[@t-call='account.report_payment_receipt_document']" position="attributes">
+            <attribute name="t-if" add="o.country_code != 'JP'" separator=" and "/>
+        </xpath>
+        <xpath expr="//t[@t-call='account.report_payment_receipt_document']" position="after">
+            <t t-elif="o.country_code == 'JP'" t-call="l10n_jp.report_payment_receipt_document" t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>
