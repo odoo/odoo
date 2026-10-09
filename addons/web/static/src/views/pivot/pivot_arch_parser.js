@@ -1,6 +1,7 @@
 import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { getDecoration } from "../utils";
 
 export class PivotArchParser {
     parse(arch) {
@@ -38,6 +39,7 @@ export class PivotArchParser {
                     let fieldName = node.getAttribute("name"); // exists (rng validation)
 
                     archInfo.fieldAttrs[fieldName] = {};
+                    archInfo.fieldAttrs[fieldName].decorations = getDecoration(node);
                     if (node.hasAttribute("string")) {
                         archInfo.fieldAttrs[fieldName].string = node.getAttribute("string");
                     }
@@ -49,7 +51,12 @@ export class PivotArchParser {
                         break;
                     }
                     for (const { name, value } of node.attributes) {
-                        if (["name", "type", "operator", "interval", "string", "widget"].includes(name)) {
+                        if (
+                            ["name", "type", "operator", "interval", "string", "widget"].includes(
+                                name
+                            ) ||
+                            name.startsWith("decoration-")
+                        ) {
                             continue;
                         }
                         if (name === "options") {
