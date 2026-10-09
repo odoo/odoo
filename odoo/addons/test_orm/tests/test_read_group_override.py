@@ -30,3 +30,25 @@ class TestReadGroupOverride(TransactionCase):
                         'must be added to the query.groupby when query.groupby '
                         'is not empty to avoid GroupingError.'
                     )
+
+    def test_groupby_many2one_with_null_ordering(self):
+        orders = self.env['test_read_group.null.order'].create([
+            {'name': 'Order 1', 'country_id': self.env.ref('base.us').id},
+            {'name': 'Order 2', 'country_id': False},
+        ])
+        self.env['test_read_group.null.order.line'].create([
+            {'null_order_id': orders[0].id},
+            {'null_order_id': orders[1].id},
+            {'null_order_id': orders[1].id},
+            {'null_order_id': orders[0].id},
+            {'null_order_id': orders[0].id},
+        ])
+
+        result = self.env['test_read_group.null.order.line']._read_group(
+            [],
+            groupby=['null_order_id'],
+            aggregates=['__count'],
+            order='null_order_id',
+        )
+        # as the order is nulls first, the order with no country_id should be first
+        self.assertEqual(result, [(orders[1], 2), (orders[0], 3)])
