@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document" primary="True">
+        <xpath expr="//t[@t-call='web.external_layout']" position="before">
+            <t t-set="jp_document_date" t-value="o.date_order"/>
+        </xpath>
+
+        <!-- The recipient's name heads the address with its honorific. -->
+        <xpath expr="//div[@t-field='o.partner_id']" position="attributes">
+            <attribute name="t-options">{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True, "jp_honorific": True}</attribute>
+        </xpath>
+    </template>
+
+    <template id="report_purchasequotation" inherit_id="purchase.report_purchasequotation">
+        <xpath expr="//t[@t-call='purchase.report_purchasequotation_document']" position="attributes">
+            <attribute name="t-if" add="o.country_code != 'JP'" separator=" and "/>
+        </xpath>
+        <xpath expr="//t[@t-call='purchase.report_purchasequotation_document']" position="after">
+            <t t-elif="o.country_code == 'JP'" t-call="l10n_jp_purchase.report_purchasequotation_document" t-lang="o.partner_id.lang"/>
+        </xpath>
+    </template>
+</odoo>
