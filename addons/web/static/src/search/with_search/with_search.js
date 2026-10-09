@@ -96,7 +96,8 @@ export class WithSearch extends Component {
             }
             // Disables the defaultGroupBy stage_id on Mobile
             if (this.ui.isSmall){
-                config.defaultGroupBy = config.defaultGroupBy.filter((field) => field !== 'stage_id');
+                // console.log(Array.isArray(config.defaultGroupBy), typeof config.defaultGroupBy, config.defaultGroupBy)
+                config.defaultGroupBy = (config.defaultGroupBy ?? []).filter((field) => field !== 'stage_id');
             }
 
             await this.searchModel.load(config);
