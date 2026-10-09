@@ -27,7 +27,7 @@ const DEFAULT_EMPTY_MESSAGE = _t("No result found");
 const FUZZY_NAMESPACES = ["default"];
 
 /**
- * @typedef {import("./command_service").Command} Command
+ * @typedef {import("./command_plugin").Command} Command
  */
 
 /**

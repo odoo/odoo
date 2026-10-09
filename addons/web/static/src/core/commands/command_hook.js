@@ -2,7 +2,7 @@ import { useService } from "@web/core/utils/hooks";
 import { onMounted, onWillUnmount } from "@odoo/owl";
 
 /**
- * @typedef {import("./command_service").CommandOptions} CommandOptions
+ * @typedef {import("./command_plugin").CommandOptions} CommandOptions
  */
 
 /**
