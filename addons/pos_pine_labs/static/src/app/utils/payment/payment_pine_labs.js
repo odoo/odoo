@@ -169,7 +169,7 @@ export class PaymentPineLabs extends PaymentInterface {
         const sequenceNumber = order.payment_ids.filter(
             (pi) => pi.payment_method_id.payment_provider === "pine_labs"
         ).length;
-        if (paymentLine.amount < 0) {
+        if (paymentLine.isRefund) {
             this._showError(_t("Cannot process transactions with negative amount."));
             return false;
         }

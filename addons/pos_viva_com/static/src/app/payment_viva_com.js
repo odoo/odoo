@@ -103,8 +103,9 @@ export class PaymentVivaCom extends PaymentInterface {
             tipAmount: 0,
         };
 
-        const action =
-            line.amount < 0 ? "viva_com_send_refund_request" : "viva_com_send_payment_request";
+        const action = line.isRefund
+            ? "viva_com_send_refund_request"
+            : "viva_com_send_payment_request";
 
         return this._call_viva_com(data, action, line).then((data) =>
             this._viva_com_handle_response(data, line)

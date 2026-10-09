@@ -106,11 +106,16 @@ export class PosPayment extends Base {
             "waiting_card",
             "waiting_scan",
             "waiting_capture",
+            "force_done",
         ].includes(this.payment_status);
     }
 
     get isAmountEditable() {
         return !this.payment_interface || ["pending", "retry"].includes(this.payment_status);
+    }
+
+    get isRefund() {
+        return this.amount < 0;
     }
 
     // ----- Payment Request -----

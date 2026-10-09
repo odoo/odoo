@@ -283,10 +283,6 @@ export default class OrderPaymentValidation {
     }
 
     async isOrderValid(isForceValidate) {
-        if (this.order.isRefundInProcess()) {
-            return false;
-        }
-
         if (this.order.getOrderlines().length === 0 && this.order.isToInvoice()) {
             this.pos.dialog.add(AlertDialog, {
                 title: _t("Empty Order"),

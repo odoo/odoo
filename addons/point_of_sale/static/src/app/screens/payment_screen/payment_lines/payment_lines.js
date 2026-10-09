@@ -17,7 +17,6 @@ export const paymentScreenPaymentLinesProps = {
     sendPaymentCancel: t.function(),
     sendPaymentRequest: t.function(),
     updateSelectedPaymentline: t.function(),
-    isRefundOrder: t.boolean(),
 };
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
@@ -85,7 +84,7 @@ export class PaymentScreenPaymentLines extends Component {
      */
     getPaymentActionState(line) {
         const status = line.payment_status;
-        const isRefund = this.props.isRefundOrder;
+        const isRefund = line.isRefund;
         const SPINNER_ICON = "autorenew";
         const SPINNER_ICON_CLASS = "oi-spin";
         const ACTIONS = {
@@ -140,9 +139,9 @@ export class PaymentScreenPaymentLines extends Component {
 
         // --- Pending
         if (status === "pending") {
-            state.id = "pending";
-            state.title = _t("Payment request pending");
-            state.actions = [ACTIONS.send];
+            state.id = isRefund ? "refund_available" : "pending";
+            state.title = isRefund ? _t("Refund available") : _t("Payment request pending");
+            state.actions = [isRefund ? ACTIONS.refund : ACTIONS.send];
         }
 
         // --- Retry
@@ -189,13 +188,6 @@ export class PaymentScreenPaymentLines extends Component {
         else if (status === "done") {
             state.id = isRefund ? "refunded" : "paid";
             state.title = isRefund ? _t("Refund Successful") : _t("Payment Successful");
-        }
-
-        // --- Refund available
-        else if (!status && isRefund && line.payment_interface) {
-            state.id = "refund_available";
-            state.title = _t("Refund available");
-            state.actions = [ACTIONS.refund];
         }
 
         // --- Non-electronic payment: no status to show
