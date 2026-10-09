@@ -14,6 +14,8 @@
                     </div>
                     <group>
                         <group>
+                            <field name="pos_config_ids" invisible="use_type != 'receipt'" widget="many2many_tags" placeholder="None" string="Point of Sale"/>
+                            <field name="preparation_pos_config_ids" invisible="use_type != 'preparation'" widget="many2many_tags" placeholder="None" string="Point of Sale"/>
                             <field name="use_type" widget="radio" options="{'horizontal': True}" class="pb-1"/>
                             <field name="printer_type" widget="radio" options="{'horizontal': True}" class="pb-1" invisible="True" />  <!-- Invisble to be overrided -->
                             <field name="printer_ip" invisible="printer_type != 'epson_epos'" placeholder="10.100.50.87" required="printer_type == 'epson_epos'"/>
