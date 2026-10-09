@@ -172,6 +172,7 @@ class CalendarEvent(models.Model):
         domain=lambda self: self._get_calendar_id_domain())
     calendar_owner = fields.Many2one(related='calendar_id.owner_id')
     calendar_color = fields.Integer(related='calendar_id.color')
+    show_calendar_field = fields.Boolean(compute='_compute_show_calendar_field')
     description = fields.Html('Description',
         help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \
@@ -351,6 +352,10 @@ class CalendarEvent(models.Model):
             ("user_id", "=", self.env.uid),
             ("access_role", "in", ["writer", "owner"]),
         ])
+
+    @api.depends('user_id.calendar_ids')
+    def _compute_show_calendar_field(self):
+        self.show_calendar_field = len(self.env.user.calendar_ids) > 1
 
     @api.depends("attendee_ids")
     def _compute_should_show_status(self):

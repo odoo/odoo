@@ -424,7 +424,7 @@
                     <i class="oi oi-filled" data-icon="circle" title="Show as"/>
                     <field name="show_as" nolabel="1" class="w-100"/>
                 </div>
-                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
+                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2" invisible="not show_calendar_field">
                     <i class="oi" data-icon="calendar_today" title="Calendar"/>
                     <field name="calendar_id" string="Calendar" nolabel="1" class="w-100" options="{'no_open': True}" placeholder="No calendar"/>
                 </div>
@@ -475,7 +475,7 @@
                 <field name="partner_id" string="Organizer" options="{'icon': 'person'}"/>
                 <field name="calendar_id" filters="1" write_model="calendar.user" write_field="calendar_id"
                        filter_field="is_filter_checked" color="filter_color" options="{'icon': 'calendar_today', 'no_open': True}"
-                       string="Calendar" readonly="user_id != uid" invisible="not calendar_id"/>
+                       string="Calendar" readonly="user_id != uid" invisible="not calendar_id or user_id == uid and not show_calendar_field"/>
                 <field name="calendar_owner" string="Calendar owner" options="{'icon': 'account_circle'}" invisible="not calendar_owner or calendar_owner == user_id"/>
                 <field name="description" class="text-wrap" invisible="not display_description" options="{'icon': 'sticky_note_2', 'icon_class': 'oi-filled'}"/>
             </calendar>
