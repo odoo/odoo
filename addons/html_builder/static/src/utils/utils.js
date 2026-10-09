@@ -32,6 +32,14 @@ export function getSnippetName(snippetEl, snippetModel) {
             }
         }
     }
+    for (const c of snippetEl.classList) {
+        if (c.startsWith("s_")) {
+            const nameFromSnippetPart = snippetModel.namesMaps.snippet_part?.[c];
+            if (nameFromSnippetPart) {
+                return nameFromSnippetPart;
+            }
+        }
+    }
     const snippetNameRules = [
         { selector: "img", name: _t("Image") },
         { selector: ".oi", name: _t("Icon") },
