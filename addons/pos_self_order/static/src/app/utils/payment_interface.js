@@ -3,11 +3,11 @@ import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
 patch(PaymentInterface.prototype, {
-    async callPaymentMethod(method, params) {
-        params = {
+    async callPaymentMethod(method, args, kwargs = {}) {
+        const params = {
             access_token: this.pos.access_token,
-            args: params,
-            kwargs: {},
+            args,
+            kwargs,
         };
         return await rpc(`/kiosk/payment_method_action/${method}`, params, {
             silent: true,
