@@ -559,3 +559,23 @@ class TestWebsiteSaleCart(BaseUsersCommon, ProductAttributesCommon, WebsiteSaleC
             "sale",
             "An empty cart should never be confirmed as a sale order.",
         )
+
+    def test_confirmed_order_in_session_is_not_reassigned(self):
+        partner = self.env['res.partner'].create({'name': 'Customer A'})
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'sale_ok': True,
+            'website_published': True,
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'website_id': self.website.id,
+            'order_line': [Command.create({'product_id': product.id})],
+        })
+        order.action_confirm()
+
+        website = self.website.with_user(self.user_portal)
+        with MockRequest(website.env, website=website, sale_order_id=order.id):
+            website.sale_get_order()
+
+        self.assertEqual(order.partner_id, partner)
