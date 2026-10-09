@@ -411,6 +411,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.assertEqual(partner_2.phone, '123456789')
         self.assertEqual(partner_2.vat, 'VAT_TEST_NUMBER_124')
         self.assertEqual(partner_2.zip, '12345')
+<<<<<<< ebdae3c57f17e0dd4093fb9f64433614aa7b590f
 
     def test_self_invoicing_refused_on_unpaid_order(self):
         """An order that has not been paid yet must not be invoiceable from the customer portal"""
@@ -477,3 +478,35 @@ class TestPoSController(TestPointOfSaleHttpCommon):
 
         self.assertFalse(self.pos_order.account_move, "No invoice should have been created for an unpaid order")
         self.assertEqual(self.pos_order.state, 'draft', "The order should still be waiting for its payment")
+||||||| d8bd366aa145511afe96ad65950d53db52e514a0
+=======
+
+    def test_pos_ticket_whitespace_pos_reference(self):
+        """Test that a whitespace-only pos_reference is rejected, while an unstripped real reference is successfully found."""
+        self.authenticate(None, None)
+        self.main_pos_config.open_ui()
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'pos_reference': 'Order 00001-001-0001',
+            'ticket_code': '12345',
+            'access_token': '1234567890',
+            'amount_tax': 0.0,
+            'amount_total': 10.0,
+            'amount_paid': 10.0,
+            'amount_return': 0.0,
+        })
+
+        form_data = {
+            'date_order': order.date_order.strftime('%Y-%m-%d'),
+            'ticket_code': order.ticket_code,
+            'csrf_token': odoo.http.Request.csrf_token(self),
+        }
+
+        res = self.url_open('/pos/ticket', data={**form_data, 'pos_reference': ' ' * 14})
+        self.assertIn("Please fill all the required fields.", res.content.decode('utf-8'))
+
+        res = self.url_open('/pos/ticket', data={**form_data, 'pos_reference': f'  {order.pos_reference}  '}, allow_redirects=False)
+        self.assertEqual(res.status_code, 303)
+        self.assertIn(f'/pos/ticket/validate?access_token={order.access_token}', res.headers['Location'])
+>>>>>>> 0c5ea7c7966e82ef45f6283fcf0b46560ac482b0
