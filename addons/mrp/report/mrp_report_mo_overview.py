@@ -237,7 +237,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
 
     def _get_operations_data(self, production, level=0, current_index=False):
         if production.state == "done":
-            return self._get_finished_operation_data(production, level, current_index)
+            return self._get_finished_operation_data(production.with_context(display_qty_produced=True), level, current_index)
         currency = (production.company_id or self.env.company).currency_id
         operations = []
         total_expected_time = 0.0
