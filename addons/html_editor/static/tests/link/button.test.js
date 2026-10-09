@@ -322,17 +322,33 @@ describe("Custom button style", () => {
 
         // test fill + rounded
         await click('select[name="link_style_shape"]');
-        await select("fill rounded-circle");
+        await select("fill rounded-pill");
         await animationFrame();
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="https://test.com/" class="rounded-circle btn btn-fill-custom" style="color: rgb(0, 0, 0); background-color: rgb(166, 227, 226); border-width: 1px; border-color: rgb(0, 143, 140); border-style: dashed; ">linkLabel</a></p>'
+            '<p><a href="https://test.com/" class="rounded-pill btn btn-fill-custom" style="color: rgb(0, 0, 0); background-color: rgb(166, 227, 226); border-width: 1px; border-color: rgb(0, 143, 140); border-style: dashed; ">linkLabel</a></p>'
         );
 
         await click(".o_we_apply_link");
         await animationFrame();
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="https://test.com/" class="rounded-circle btn btn-fill-custom" style="color: rgb(0, 0, 0); background-color: rgb(166, 227, 226); border-width: 1px; border-color: rgb(0, 143, 140); border-style: dashed; ">link[]Label</a></p>'
+            '<p><a href="https://test.com/" class="rounded-pill btn btn-fill-custom" style="color: rgb(0, 0, 0); background-color: rgb(166, 227, 226); border-width: 1px; border-color: rgb(0, 143, 140); border-style: dashed; ">link[]Label</a></p>'
         );
+    });
+
+    test("Editor should replace rounded-circle with rounded-pill", async () => {
+        await setupEditor(
+            '<p><a href="https://test.com/" class="btn btn-fill-primary rounded-circle">link[]Label</a></p>'
+        );
+        const a = queryOne("p > a");
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+        expect('select[name="link_style_shape"]').toHaveValue("fill rounded-pill");
+
+        await click(".o_we_apply_link");
+        await animationFrame();
+        expect(a).toHaveClass("btn btn-fill-primary rounded-pill");
+        expect(a).not.toHaveClass("rounded-circle");
     });
 });
 
