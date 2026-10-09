@@ -567,6 +567,22 @@ class TestItEdiImport(TestItEdi):
         alpha_partner.invalidate_recordset(['is_company'])
         self.assertFalse(alpha_partner.is_company)
 
+    def test_receive_bill_bank_account_riba(self):
+        iban = "IT75F0200839061000400xxxxx"
+        invoice = self._assert_import_invoice('IT01234567889_FPR03.xml', [{
+            'l10n_it_payment_method': 'MP12',
+        }], f"""
+            <xpath expr="//DatiPagamento/DettaglioPagamento/ModalitaPagamento" position="replace">
+                <ModalitaPagamento>MP12</ModalitaPagamento>
+            </xpath>
+            <xpath expr="//DatiPagamento/DettaglioPagamento" position="inside">
+                <IBAN>{iban}</IBAN>
+            </xpath>
+        """)
+
+        self.assertFalse(invoice.partner_bank_id)
+        self.assertFalse(self.env['res.partner.bank'].search([('acc_number', '=', iban)]))
+
     def test_import_due_date_on_issued_invoice(self):
         """ DataScadenzaPagamento and CodicePagamento populate
         invoice_date_due and payment_reference on out_invoice and
