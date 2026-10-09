@@ -40,6 +40,19 @@ class PosOrderLine(models.Model):
         program_id = (self.gift_card_vals or {}).get('program_id')
         return self.env['loyalty.program'].browse(program_id) if program_id else self.env['loyalty.program']
 
+    def _get_loyalty_price(self, tax_included=True):
+        """
+        Total price of these lines, a combo being priced through its child lines (the
+        combo line itself carries no price).
+        mirror of *static/src/app/models/pos_order_line.js* PosOrderline.linePriceTaxIncluded
+        and PosOrderline.linePriceTaxExcluded
+        """
+        priced_lines, lines = self.browse(), self
+        while lines:
+            priced_lines |= lines.filtered(lambda l: not l.combo_line_ids)
+            lines = lines.combo_line_ids
+        return sum(priced_lines.mapped('price_subtotal_incl' if tax_included else 'price_subtotal'))
+
     def _has_discount(self):
         return super()._has_discount() or (self.is_reward_line and self.reward_id.reward_type == 'discount')
 
