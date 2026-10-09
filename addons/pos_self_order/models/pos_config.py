@@ -117,7 +117,8 @@ class PosConfig(models.Model):
 
     def _update_access_token(self):
         self.access_token = uuid.uuid4().hex[:16]
-        self.floor_ids.table_ids._update_identifier()
+        for table in self.floor_ids.table_ids:
+            table.identifier = self._get_identifier()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -170,6 +171,7 @@ class PosConfig(models.Model):
         product_delivery_template = self.env.ref('pos_self_order.product_delivery_template', raise_if_not_found=False)
         if vals.get('self_ordering_mode') in ('kiosk', 'mobile') and not product_delivery_template.active:
             product_delivery_template.active = True
+        access_token_to_update = []
         for record in self:
             mode = vals.get('self_ordering_mode', record.self_ordering_mode)
 
@@ -200,9 +202,15 @@ class PosConfig(models.Model):
             elif mode == 'mobile' and vals.get('self_ordering_pay_after') == 'meal':
                 vals['self_ordering_service_mode'] = 'table'
 
+            if mode != record.self_ordering_mode and mode == 'kiosk':
+                access_token_to_update.append(record)
         res = super().write(vals)
         self._ensure_public_attachments()
         self._prepare_self_order_custom_btn()
+        # When switching to kiosk mode, update the access token so it does
+        # not reuse an access_token that might be public.
+        for record in access_token_to_update:
+            record._update_access_token()
         return res
 
     def _ensure_public_attachments(self):
@@ -326,7 +334,8 @@ class PosConfig(models.Model):
             'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'res.currency', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
             'decimal.precision', 'uom.uom', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
-            'res.country', 'res.country.state', 'mail.template', 'pos.snooze', 'pos.prep.order', 'pos.prep.line', 'ir.ui.view']
+            'res.country', 'res.country.state', 'mail.template', 'pos.snooze', 'pos.prep.order', 'pos.prep.line', 'ir.ui.view', 'barcode.nomenclature',
+            'barcode.rule']
 
     @api.model
     def _load_pos_self_data_domain(self, data):

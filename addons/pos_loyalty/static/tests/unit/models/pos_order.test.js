@@ -343,4 +343,69 @@ describe("pos.order - loyalty", () => {
         expect(order.lines[1].prices.total_included).toBe(-37.5);
         expect(order.lines[2].prices.total_included).toBe(-100);
     });
+
+    test("a reward for a no_variant/custom attribute product carries the selected attributes onto the order line", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [7]);
+
+        // Product 51 (Cake, Chocolate) has attribute line 4: attribute 11 "Customization" is
+        // no_variant and its only value (7, "Yes") is_custom.
+        const product = models["product.product"].get(51);
+        const customizationValue = models["product.template.attribute.value"].get(7);
+
+        // Reward 3 (program 7) costs 1 point; give it product 51 as its free product.
+        const reward = models["loyalty.reward"].get(3);
+        reward.update({ reward_product_id: product, reward_product_ids: [product] });
+
+        // Card 4 gives partner 1 exactly the 3 (>= 1 required) points program 7 needs.
+        store.setPartnerToCurrentOrder(models["res.partner"].get(1));
+
+        order.active_rewards = [
+            {
+                reward_id: reward.id,
+                attribute_value_ids: [customizationValue.id],
+                attribute_custom_values: { [customizationValue.id]: "Happy Birthday" },
+            },
+        ];
+        order.recomputeRewards();
+        await tick();
+
+        const rewardLine = order.getOrderlines().find((line) => line.is_reward_line);
+        expect(rewardLine).not.toBe(undefined);
+        expect(rewardLine.product_id.id).toBe(product.id);
+        expect(rewardLine.attribute_value_ids.map((v) => v.id)).toInclude(customizationValue.id);
+        expect(rewardLine.custom_attribute_value_ids.length).toBe(1);
+        expect(
+            rewardLine.custom_attribute_value_ids[0].custom_product_template_attribute_value_id.id
+        ).toBe(customizationValue.id);
+        expect(rewardLine.custom_attribute_value_ids[0].custom_value).toBe("Happy Birthday");
+    });
+
+    test("a multi-product reward saved with its product id is rebuilt on that product", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [7]);
+
+        // Reward 3 (program 7) costs 1 point, card 4 gives partner 1 the 3 points it needs.
+        const defaultProduct = models["product.product"].get(5);
+        const chosenProduct = models["product.product"].get(6);
+        const reward = models["loyalty.reward"].get(3);
+        reward.update({
+            multi_product: true,
+            reward_product_id: defaultProduct,
+            reward_product_ids: [defaultProduct, chosenProduct],
+        });
+        store.setPartnerToCurrentOrder(models["res.partner"].get(1));
+
+        // As saved on the order (IndexedDB, server, another POS): a JSON id, not a record
+        order.active_rewards = [{ reward_id: reward.id, reward_product_id: chosenProduct.id }];
+        order.recomputeRewards();
+        await tick();
+
+        const rewardLine = order.getOrderlines().find((line) => line.is_reward_line);
+        expect(rewardLine?.product_id?.id).toBe(chosenProduct.id);
+    });
 });

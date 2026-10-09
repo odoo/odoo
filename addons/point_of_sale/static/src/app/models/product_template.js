@@ -35,7 +35,6 @@ export class ProductTemplate extends ProductTemplateAccounting {
         return (
             this.isCombo() ||
             (this.isConfigurable() &&
-                activeLines.length > 0 &&
                 activeLines.some((l) => l.attribute_id.create_variant === "no_variant"))
         );
     }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.ProductListPage" t-inherit="pos_self_order.ProductListPage" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('category_container')]" position="inside">
+            <div t-if="!this.selfOrder.kioskMode" class="o_self_reward_corner flex-shrink-0 align-self-center ms-2 me-2">
+                <RewardButton/>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-set-slot='left']" position="inside">
+            <RewardButton t-if="this.selfOrder.kioskMode"/>
+        </xpath>
+    </t>
+</templates>
