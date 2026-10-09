@@ -162,6 +162,7 @@ class IrUiView(models.Model):
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
                              ('card', "Card"),
+                             ('help', "Help"),
                              ('qweb', 'QWeb')], string='View Type')
     arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture',
                        help="""This field should be used when accessing view arch. It will use translation.
@@ -1468,6 +1469,9 @@ actual arch.
 
         name_manager = NameManager(model, parent=parent_name_manager, model_groups=model_groups)
 
+        if node_info is None and root.get('help_id'):
+            self._inline_help_view(root, model_name)
+
         root_info = {
             'view_type': root.tag,
             'view_editable': editable and self._editable_node(root, name_manager),
@@ -1749,6 +1753,31 @@ actual arch.
         node_info['children'] = []
         self._postprocess_view(node, name_manager.model._name, editable=False, node_info=node_info)
 
+    def _postprocess_tag_help(self, node, name_manager, node_info):
+        # Same as cards: when called as the root of the nested sub-view below,
+        # let the inner stack process the children normally.
+        if node_info.get('view_type') == 'help':
+            return
+        # help nodes (inlined from a help view, see `_inline_help_view`) are
+        # processed as nested sub-views, so that nothing they contain leaks into
+        # the parent view.
+        node_info['children'] = []
+        self._postprocess_view(node, name_manager.model._name, editable=False, node_info=node_info)
+
+    def _inline_help_view(self, node, model_name):
+        """ Inline the help view referenced by the ``help_id`` attribute of the
+        given root node, as a ``<help>`` child of that node. The web client
+        renders it when the view has no record to display, instead of the
+        action's help.
+        """
+        help_arch, help_view = self._get_view(view_id=int(node.get('help_id')), view_type='help')
+        if help_view.model != model_name:
+            self._raise_view_error(_(
+                "The help view %(help_view)s is defined on model %(help_model)s, not %(model)s",
+                help_view=help_view.xml_id or help_view.id, help_model=help_view.model, model=model_name,
+            ), node)
+        node.append(help_arch)
+
     def _postprocess_tag_label(self, node, name_manager, node_info):
         if not node.get('for'):
             return
@@ -1849,6 +1878,14 @@ actual arch.
 
         if model_name not in self.env:
             self._raise_view_error(_('Model not found: %(model)s', model=model_name), node)
+
+        if node_info is None and (help_id := node.get('help_id')):
+            help_view = self.browse(int(help_id)).sudo()
+            if not help_view.exists() or help_view.type != 'help' or help_view.model != model_name:
+                self._raise_view_error(_(
+                    "Attribute help_id must reference a help view on model %(model)s",
+                    model=model_name,
+                ), node)
 
         group_definitions = self.env['res.groups']._get_group_definitions()
 
@@ -2091,8 +2128,10 @@ actual arch.
                     )
                     self._raise_view_error(msg, node)
                 try:
-                    inspect.signature(func).bind()
-                except TypeError:
+                    # buttons may pass additional positional arguments with the 'args' attribute
+                    nb_args = len(ast.literal_eval(node.get('args') or '[]'))
+                    inspect.signature(func).bind(*range(nb_args))
+                except (TypeError, ValueError, SyntaxError):
                     msg = "%s on %s has parameters and cannot be called from a button"
                     self._log_view_warning(msg % (name, name_manager.model._name), node)
             elif type_ == 'action':

@@ -83,7 +83,7 @@
                     <t t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
                 </t>
                 <t t-if="this.model.isReady() and this.model.data">
-                    <t t-if="!this.model.hasData() or this.model.useSampleModel and this.props.info.noContentHelp">
+                    <t t-if="!this.model.hasData() or this.model.useSampleModel and (this.props.info.noContentHelp or (this.env.config and this.env.config.noContentHelpArchInfo))">
                         <ActionHelper noContentHelp="this.props.info.noContentHelp" />
                     </t>
                     <t t-component="this.props.Renderer" model="this.model" buttonTemplate="this.props.buttonTemplate" />

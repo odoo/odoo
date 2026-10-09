@@ -2343,7 +2343,8 @@ export class ListRenderer extends Component {
 
     get showNoContentHelper() {
         const { model } = this.props.list;
-        return this.props.noContentHelp && (model.useSampleModel || !model.hasData());
+        const hasHelp = this.props.noContentHelp || this.env.config?.noContentHelpArchInfo;
+        return hasHelp && (model.useSampleModel || !model.hasData());
     }
 
     /**

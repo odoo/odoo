@@ -4058,6 +4058,82 @@ class TestViewTranslations(common.TransactionCase):
             view.write({'mode': 'extension'})
 
 
+class TestHelpViews(ViewCase):
+
+    def _create_view(self, arch, model='res.partner'):
+        return self.View.create({'name': 'test view', 'model': model, 'arch': arch})
+
+    def test_help_view_type(self):
+        help_view = self._create_view('<help><p>No partner yet</p><t t-out="action_help"/></help>')
+        self.assertEqual(help_view.type, 'help')
+
+    def test_help_id_inlined(self):
+        help_view = self._create_view('<help><p>No partner yet</p><t t-out="action_help"/></help>')
+        list_view = self._create_view(f'<list help_id="{help_view.id}"><field name="name"/></list>')
+        arch = etree.fromstring(self.env['res.partner'].get_view(list_view.id)['arch'])
+        help_nodes = arch.findall('help')
+        self.assertEqual(len(help_nodes), 1)
+        self.assertEqual(help_nodes[0].find('p').text, 'No partner yet')
+        self.assertEqual(help_nodes[0].find('t').get('t-out'), 'action_help')
+
+    def test_help_id_groups(self):
+        help_view = self._create_view("""
+            <help>
+                <p>Everyone</p>
+                <p groups="base.group_system">Admins only</p>
+            </help>
+        """)
+        list_view = self._create_view(f'<list help_id="{help_view.id}"><field name="name"/></list>')
+
+        arch = etree.fromstring(self.env['res.partner'].get_view(list_view.id)['arch'])
+        self.assertEqual([p.text for p in arch.find('help')], ['Everyone', 'Admins only'])
+
+        arch = etree.fromstring(self.env['res.partner'].with_user(self.user_demo).get_view(list_view.id)['arch'])
+        self.assertEqual([p.text for p in arch.find('help')], ['Everyone'])
+
+    def test_help_id_shared_by_view_types(self):
+        help_view = self._create_view('<help><p>No partner yet</p></help>')
+        list_view = self._create_view(f'<list help_id="{help_view.id}"><field name="name"/></list>')
+        kanban_view = self._create_view(f"""
+            <kanban help_id="{help_view.id}">
+                <templates><t t-name="card"><field name="name"/></t></templates>
+            </kanban>
+        """)
+        for view in (list_view, kanban_view):
+            arch = etree.fromstring(self.env['res.partner'].get_view(view.id)['arch'])
+            self.assertEqual(arch.find('help').find('p').text, 'No partner yet')
+
+    def test_help_id_invalid(self):
+        form_view = self._create_view('<form><field name="name"/></form>')
+        self.assertInvalid(
+            f'<list help_id="{form_view.id}"><field name="name"/></list>',
+            "Attribute help_id must reference a help view on model res.partner",
+            model='res.partner',
+        )
+        other_model_help_view = self._create_view('<help><p>No user</p></help>', model='res.users')
+        self.assertInvalid(
+            f'<list help_id="{other_model_help_view.id}"><field name="name"/></list>',
+            "Attribute help_id must reference a help view on model res.partner",
+            model='res.partner',
+        )
+
+    def test_help_buttons(self):
+        # buttons are validated as in any other view
+        self.assertInvalid(
+            '<help><button name="does_not_exist" type="object"/></help>',
+            "does_not_exist is not a valid action on res.partner",
+            model='res.partner',
+        )
+        # methods with parameters can be called if the button provides them
+        self.assertWarning(
+            '<help><button name="write" type="object"/></help>',
+            "write on res.partner has parameters and cannot be called from a button",
+            model='res.partner',
+        )
+        with self.assertNoLogs('odoo.addons.base.models.ir_ui_view', level='WARNING'):
+            self._create_view('<help><button name="write" type="object" args="[{}]"/></help>')
+
+
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class ViewModeField(ViewCase):
     """
