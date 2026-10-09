@@ -36,6 +36,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 1;
+export const SMOOTH_SCROLLING_CHECK_DELAY = 250;
 /**
  * @typedef {Object} Props
  * @property {number} [jumpPresent=0]
@@ -807,7 +808,23 @@ export class Thread extends Component {
                 });
             } else {
                 // To remove when safari will support the "scrollend" event.
-                this.smoothScrollingTimeout = setTimeout(onSmoothScrollingEnd, 250);
+                let lastScrollTop = this.scrollableRef().scrollTop;
+                const checkSmoothScrollingEnd = () => {
+                    const el = this.scrollableRef();
+                    if (!el || el.scrollTop === lastScrollTop) {
+                        onSmoothScrollingEnd();
+                        return;
+                    }
+                    lastScrollTop = el.scrollTop;
+                    this.smoothScrollingTimeout = setTimeout(
+                        checkSmoothScrollingEnd,
+                        SMOOTH_SCROLLING_CHECK_DELAY
+                    );
+                };
+                this.smoothScrollingTimeout = setTimeout(
+                    checkSmoothScrollingEnd,
+                    SMOOTH_SCROLLING_CHECK_DELAY
+                );
             }
         }
         this.scrollableRef().scrollTo({ behavior: smooth ? "smooth" : undefined, top: value });
