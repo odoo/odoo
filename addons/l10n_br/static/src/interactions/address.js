@@ -1,7 +1,14 @@
 import { patch } from '@web/core/utils/patch';
 import { CustomerAddress } from '@portal/interactions/address';
+import { _t } from "@web/core/l10n/translation";
 
 patch(CustomerAddress.prototype, {
+
+    setup() {
+        // Set main street2 label before updating it
+        this.street2LabelText = document.querySelector('label[for="o_street2"]').textContent;
+        super.setup();
+    },
 
     _selectState(id) {
         this.addressForm.querySelector(
@@ -51,24 +58,6 @@ patch(CustomerAddress.prototype, {
         }
     },
 
-    _setVisibility(selector, should_show) {
-        this.addressForm.querySelectorAll(selector).forEach((el) => {
-            if (should_show) {
-                el.classList.remove('d-none');
-            } else {
-                el.classList.add('d-none');
-            }
-
-            // Disable hidden inputs to avoid sending back e.g. an empty street when street_name and street_number is
-            // filled. It causes street_name and street_number to be lost.
-            if (el.tagName === 'INPUT') {
-                el.disabled = !should_show;
-            }
-
-            el.querySelectorAll('input').forEach((input) => (input.disabled = !should_show));
-        });
-    },
-
     async onChangeState() {
         // For BR: don't want the standard behavior of reloading cities based on state
         if (this._getSelectedCountryCode() == 'BR') {
@@ -88,5 +77,23 @@ patch(CustomerAddress.prototype, {
             this._setVisibility('.o_standard_address', true); // show
             this._setVisibility('.o_extended_address', false); // hide
         }
+    },
+
+    _updateAddressLayout() {
+        super._updateAddressLayout();
+        const street2Label = this.addressForm.querySelector('label[for="o_street2"]');
+        street2Label.textContent =
+            this._getSelectedCountryCode() === "BR" ? _t("Neighborhood") : this.street2LabelText;
+    },
+
+    _setVisibility(selector, shouldShow) {
+        const fields = [...this.addressForm.querySelectorAll(selector)].map((field) => field.name);
+        fields.forEach((fieldName) => {
+            if (shouldShow) {
+                this._showInput(fieldName);
+            } else {
+                this._hideInput(fieldName);
+            }
+        });
     },
 });
