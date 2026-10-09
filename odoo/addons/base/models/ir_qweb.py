@@ -1083,17 +1083,16 @@ class IrQweb(models.AbstractModel):
             return {'not_found_template': not_found_template}, 'not_found_template', frozendict(options), ''
 
         wrap_code = '\n'.join([
-            "def generate_functions():",
+            "def generate_functions(code):",
             indent_code(code, 1),
-            f"    code = {code!r}",
-            "    return template_functions, code",
+            "    return template_functions",
         ])
         compiled = compile(wrap_code, f"<{ref}>", 'exec')
         globals_dict = self.__prepare_globals()
         globals_dict['__builtins__'] = globals_dict  # So that unknown/unsafe builtins are never added.
         unsafe_eval(compiled, globals_dict)
 
-        template_functions, code = globals_dict['generate_functions']()
+        template_functions = globals_dict['generate_functions'](code)
         return template_functions, def_name, frozendict(options), code
 
     def _generate_code(self, template: int | str | etree._Element):
@@ -1202,7 +1201,6 @@ class IrQweb(models.AbstractModel):
         code_lines = []
         json_options = json.scriptsafe.loads(json.scriptsafe.dumps(options, default=str))
         code_lines.append(f'template_options = {pprint.pformat(json_options, indent=4)}')
-        code_lines.append('code = None')
         code_lines.append('template_functions = {}')
 
         for lines in compile_context['template_functions'].values():
@@ -1465,7 +1463,7 @@ class IrQweb(models.AbstractModel):
         attributes.
         """
         return el.tag != 't' and 'groups' not in el.attrib and not any(
-            att.startswith('t-') and att not in ('t-tag-open', 't-inner-content')
+            att.startswith('t-') and att not in ('t-tag-open', 't-tag-close', 't-inner-content')
             for att in el.attrib
         )
 
@@ -2107,18 +2105,12 @@ class IrQweb(models.AbstractModel):
         # Generates the part of the code that prost process and output the
         # attributes from ``attrs`` dictionary. Consumes `attrs` dictionary
         # and reset it.
-        #
-        # Use str(value) to change Markup into str and escape it, then use str
-        # to avoid the escaping of the other html content.
 
         if compile_context.get('qweb_attrs_created'):
             code = self._flush_text(compile_context, level)
             code.append(indent_code(f"""
                 if attrs:
-                    tagName = {el.tag!r}
-                    for name, value in self._post_processing_att(tagName, attrs).items():
-                        if value or isinstance(value, str):
-                            yield f' {{escape(str(name))}}="{{escape(str(value))}}"'
+                    yield from self._render_attributes({el.tag!r}, attrs)
                     attrs = None
             """, level))
         else:
@@ -2783,9 +2775,7 @@ class IrQweb(models.AbstractModel):
                 yield '<'
                 yield tagName
 
-                for name, value in self._post_processing_att(tagName, asset_attrs).items():
-                    if value or isinstance(value, str):
-                        yield f' {escape(str(name))}="{escape(str(value))}"'
+                yield from self._render_attributes(tagName, asset_attrs)
 
                 if tagName in VOID_ELEMENTS:
                     yield '/>'
@@ -2841,6 +2831,20 @@ class IrQweb(models.AbstractModel):
             __import__(debugger).set_trace()
         else:
             raise ValueError(f"unsupported t-debug value: {debugger}")
+
+    def _render_attributes(self, tagName, atts):
+        """ Post-processes the ``attrs`` dictionary of an element into strings of
+            HTML attributes to output.
+
+            Called at rendering time by the compiled templates.
+
+            :returns: generator of strings representing HTML attributes
+        """
+        # Use str(value) to change Markup into str and escape it, then use str
+        # to avoid the escaping of the other html content.
+        for name, value in self._post_processing_att(tagName, atts).items():
+            if value or isinstance(value, str):
+                yield f' {escape(str(name))}="{escape(str(value))}"'
 
     def _post_processing_att(self, tagName, atts):
         """ Method called at compile time for the static node and called at
