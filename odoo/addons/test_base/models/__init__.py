@@ -8,6 +8,7 @@ from . import (
     test_convert,
     test_domain_expression,
     test_fields,
+    test_fields_conversion,
     test_inherits,
     test_ir_qweb_fields,
     test_orm,
