@@ -87,6 +87,7 @@ class ResPartner(models.Model):
                             ("email_to", "=", email),
                             ("model", "=", "discuss.channel"),
                             ("res_id", "=", channel.id),
+                            ("state", "in", ("outgoing", "sent")),
                         ]
                     )
                     > 0
