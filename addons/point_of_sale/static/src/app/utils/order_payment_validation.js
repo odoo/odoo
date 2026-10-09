@@ -115,7 +115,7 @@ export default class OrderPaymentValidation {
             // remove pending payments before finalizing the validation
             const toRemove = [];
             for (const line of this.paymentLines) {
-                if (!line.isDone() || line.amount === 0) {
+                if (!line.isSettled || line.amount === 0) {
                     toRemove.push(line);
                 }
             }

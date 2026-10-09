@@ -17,7 +17,7 @@ export class PaymentMollie extends PaymentInterface {
 
                 if (
                     paymentLine &&
-                    !paymentLine.isDone() &&
+                    !paymentLine.isSettled &&
                     paymentLine.payment_status !== "retry"
                 ) {
                     paymentLine.payment_method_id.payment_interface.handleMollieStatusResponse(
