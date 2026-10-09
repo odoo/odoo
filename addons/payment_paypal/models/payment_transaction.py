@@ -189,7 +189,7 @@ class PaymentTransaction(models.Model):
             invoice_address_vals = {"address": {"country_code": self.company_id.country_code}}
             shipping_address_vals = {}
         else:
-            invoice_address_vals = paypal_utils.format_partner_address(self.partner_id)
+            invoice_address_vals = paypal_utils.format_partner_address(self.billing_partner_id)
             shipping_address_vals = paypal_utils.format_shipping_address(self)
 
         # See https://developer.paypal.com/docs/api/orders/v2/#orders_create!ct=application/json

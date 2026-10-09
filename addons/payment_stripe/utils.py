@@ -52,12 +52,9 @@ def include_shipping_address(tx_sudo):
     """
     tx_sudo.ensure_one()
 
-    if "sale_order_ids" in tx_sudo._fields and tx_sudo.sale_order_ids:
-        order = tx_sudo.sale_order_ids[:1]
-        return format_shipping_address(order.partner_shipping_id)
-    if "invoice_ids" in tx_sudo._fields and tx_sudo.invoice_ids:
-        invoice = tx_sudo.invoice_ids[:1]
-        return format_shipping_address(invoice.partner_shipping_id)
+    if tx_sudo.delivery_partner_id:
+        return format_shipping_address(tx_sudo.delivery_partner_id)
+
     return {}
 
 
