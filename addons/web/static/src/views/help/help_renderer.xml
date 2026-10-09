@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.HelpRenderer">
+        <div class="o_nocontent_help" t-att-class="this.helpArchInfo.className" t-ref="this.rootRef">
+            <t t-call="{{ this.helpTemplate }}" t-call-context="this.renderingContext"/>
+        </div>
+    </t>
+
+</templates>
