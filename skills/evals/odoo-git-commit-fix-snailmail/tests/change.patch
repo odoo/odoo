@@ -1,0 +1,85 @@
+diff --git a/addons/snailmail/models/snailmail_letter.py b/addons/snailmail/models/snailmail_letter.py
+index 9f179db20f9a..f308a9758753 100644
+--- a/addons/snailmail/models/snailmail_letter.py
++++ b/addons/snailmail/models/snailmail_letter.py
+@@ -497,13 +497,19 @@ class SnailmailLetter(models.Model):
+         return all(record[key] for key in required_keys)
+ 
+     def _get_cover_address_split(self):
+-        address_split = self.partner_id.with_context(show_address=True, lang='en_US').display_name.split('\n')
+         if self.country_id.code == 'DE':
+-            # Germany requires specific address formatting for Pingen
+-            if self.street2:
+-                address_split[1] = f'{self.street} // {self.street2}'
+-            address_split[2] = f'{self.zip} {self.city}'
+-        return address_split
++            return self._snailmail_cover_address_split_de()
++        return self.partner_id.with_context(show_address=True, lang='en_US').display_name.split('\n')
++
++    def _snailmail_cover_address_split_de(self):
++        """ Germany requires specific address formatting for Pingen: both street
++        lines on a single line, followed by zip/city. Empty parts are skipped. """
++        address_lines = [
++            ' // '.join(filter(None, [self.street, self.street2])),
++            ' '.join(filter(None, [self.zip, self.city])),
++            self.country_id.with_context(lang='en_US').name,
++        ]
++        return [self.partner_id.with_context(lang='en_US').display_name] + [line for line in address_lines if line]
+ 
+     def _append_cover_page(self, invoice_bin: bytes):
+         out_writer = PdfFileWriter()
+diff --git a/addons/snailmail/tests/__init__.py b/addons/snailmail/tests/__init__.py
+index 713257330df9..1518dd1af652 100644
+--- a/addons/snailmail/tests/__init__.py
++++ b/addons/snailmail/tests/__init__.py
+@@ -3,4 +3,5 @@
+ 
+ from .import common
+ from . import test_attachment_access
++from . import test_snailmail_letter
+ from . import test_snailmail_webhook
+diff --git a/addons/snailmail/tests/test_snailmail_letter.py b/addons/snailmail/tests/test_snailmail_letter.py
+new file mode 100644
+index 000000000000..a79fb882b9ca
+--- /dev/null
++++ b/addons/snailmail/tests/test_snailmail_letter.py
+@@ -0,0 +1,39 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++from odoo.tests import TransactionCase
++
++
++class TestSnailmailLetter(TransactionCase):
++
++    @classmethod
++    def setUpClass(cls):
++        super().setUpClass()
++        cls.partner_de = cls.env['res.partner'].create({
++            'name': 'Max Mustermann',
++            'zip': '10115',
++            'city': 'Musterstadt',
++            'country_id': cls.env.ref('base.de').id,
++        })
++
++    def test_cover_address_split_germany(self):
++        """ German cover addresses put both street lines on a single line separated by ' // '
++        (Pingen requirement) and must keep a single zip/city line. """
++        for street, street2, street_lines in [
++            ('Hauptstrasse 6', False, ['Hauptstrasse 6']),
++            ('Hauptstrasse 6', 'OT Nebenort', ['Hauptstrasse 6 // OT Nebenort']),
++            (False, 'OT Nebenort', ['OT Nebenort']),
++            (False, False, []),
++        ]:
++            with self.subTest(street=street, street2=street2):
++                self.partner_de.write({'street': street, 'street2': street2})
++                # display_name (with show_address) does not depend on the street fields
++                self.partner_de.invalidate_recordset(['display_name'])
++                letter = self.env['snailmail.letter'].create({
++                    'model': self.partner_de._name,
++                    'res_id': self.partner_de.id,
++                    'partner_id': self.partner_de.id,
++                })
++                self.assertEqual(
++                    letter._get_cover_address_split(),
++                    ['Max Mustermann', *street_lines, '10115 Musterstadt', 'Germany'],
++                )

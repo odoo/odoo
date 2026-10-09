@@ -1,0 +1,91 @@
+# LLM judge on the commit message. The agent had no ticket, task, or description:
+# only the uncommitted diff and the code. The reference is the message of the
+# merged fix with its ticket trailer removed; the agent could not know the
+# ticket's scenario, so the judge grades what can be derived and whether
+# anything was invented.
+[judge]
+judge = "anthropic/claude-sonnet-5"
+files = ["/logs/verifier/commit_message.txt", "/logs/verifier/commit.diff"]
+reference = "/tests/reference_message.txt"
+reasoning_effort = "medium"
+guard = "flag"
+
+[[criterion]]
+name = "why_first"
+type = "binary"
+description = """
+The body explains what was wrong and for whom before it describes the change.
+A body that only narrates the diff (which lines were replaced by which) does
+not pass. The commit message is in /logs/verifier/commit_message.txt; the diff
+it describes is /logs/verifier/commit.diff.
+"""
+
+[[criterion]]
+name = "reproduction_steps"
+type = "rubric"
+description = """
+A bug fix message gives the steps that reproduce the bug: what to do, what
+happens, what should happen instead. Here the agent had no report, so steps
+derived from the code and the new test are acceptable as long as they are
+real cases the old code got wrong (a German partner with a Street 2 got the
+zip/city line twice; a German partner without a street got the wrong lines).
+"""
+levels = [
+  "No reproduction steps; the symptom is at most implied.",
+  "Steps or a scenario are present but one of what-to-do, what-happens, what-should-happen is missing, or the scenario is not one the old code actually got wrong.",
+  "What to do, what happens, and what should happen are all stated for a scenario the old code actually got wrong.",
+]
+
+[[criterion]]
+name = "no_fabricated_report"
+type = "binary"
+description = """
+The message does not present invented context as fact: no customer, reporter,
+ticket, task, issue number, version list, date, or claim such as "a customer
+reported" or "Pingen rejected the letter" that the diff cannot support. The
+Pingen formatting requirement itself appears in the code comment and may be
+cited. Scenarios derived from the code are fine when stated as scenarios.
+"""
+
+[[criterion]]
+name = "cause_explained"
+type = "binary"
+description = """
+The message states the cause: the German cover layout was produced by
+overwriting fixed line positions of the partner's address, so the positions
+were wrong whenever the partner's address did not have exactly the assumed
+lines (a Street 2 set, or no street). Any accurate wording of that mechanism
+passes; a message that names no cause, or a wrong one, fails.
+"""
+
+[[criterion]]
+name = "summary_states_the_outcome"
+type = "binary"
+description = """
+The header summary (after '[FIX] snailmail: ') is an imperative sentence that
+completes 'if applied, this commit will ...' and tells a reader of the log
+what the fix achieves for the user or which symptom it removes. Vague
+summaries ('fix bug', 'improvements', 'update cover address') fail.
+"""
+
+[[criterion]]
+name = "no_unsupported_claims"
+type = "binary"
+description = """
+Every factual statement in the message is supported by the diff in
+/logs/verifier/commit.diff or by the code it shows. Describing the new
+behaviour the diff implements is fine; measurements, affected versions, other
+modules, customers, or references are not.
+"""
+
+[[criterion]]
+name = "reviewer_acceptance"
+type = "likert"
+points = 5
+description = """
+Compare the message with the reference message. The agent had no ticket, so
+do not penalise the absence of a ticket trailer or of details only the ticket
+holds (that Pingen rejected the letter). Would an Odoo reviewer merge the
+agent's message as it is? 1 = would send it back for a rewrite, 3 = would ask
+for a change or two, 5 = as good as or better than the reference.
+"""

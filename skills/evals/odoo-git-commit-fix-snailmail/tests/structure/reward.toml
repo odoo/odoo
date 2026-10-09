@@ -1,0 +1,11 @@
+# A commit that is missing, duplicated, or carries a different diff fails the whole
+# structure dimension; the message format checks give partial credit.
+[scoring.commit_exists]
+aggregation = "all-pass"
+
+[scoring.message_format]
+aggregation = "weighted-mean"
+
+[[reward]]
+aggregation = "weighted-mean"
+weights = { commit_exists = 1.0, message_format = 1.0 }

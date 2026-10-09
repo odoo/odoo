@@ -1,0 +1,21 @@
+[FIX] snailmail: avoid duplicate zip/city on German cover
+
+Steps to reproduce:
+- Enable the snailmail cover page on the company
+- Send a letter by post to a German partner having a Street 2
+- Open the generated document
+
+Issue:
+The zip/city line is printed twice on the cover page, so Pingen
+rejects the letter as it does not meet the Deutsche Post address
+requirements.
+
+Cause:
+For German addresses, the cover address lines are adapted by
+overwriting fixed positions of the partner's address lines. When a
+Street 2 is set, the street line is merged with Street 2 but the
+former Street 2 line is overwritten with zip/city instead of being
+removed, leaving the original zip/city line in place.
+
+Build the German cover address explicitly from the letter address
+instead of patching line positions.
