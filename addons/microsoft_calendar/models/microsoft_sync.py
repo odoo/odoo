@@ -399,7 +399,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
         microsoft_service = self._get_microsoft_service()
         sender_user = self._get_event_user_m(user_id).sudo()
         with microsoft_calendar_token(sender_user) as token:
-            if token and not sender_user.microsoft_synchronization_stopped:
+            if token:
                 microsoft_service.delete(event_id, token=token, timeout=timeout)
 
     @after_commit
