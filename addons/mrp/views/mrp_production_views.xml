@@ -573,6 +573,7 @@
                                         force_save="1"/>
                                     <field name="uom_id" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
                                     <field name="picked" optional="hide"/>
+                                    <field name="workorder_id" string="Consumed in Operation" optional="hide" groups="mrp.group_mrp_routings" readonly="state in ('done', 'cancel')" domain="[('production_id', '=', parent.id)]" context="{'display_operation_name': True}" options="{'no_create': True}"/>
                                     <field name="show_details_visible" column_invisible="True"/>
                                     <field name="lot_ids" widget="many2many_tags"
                                         optional="hide"

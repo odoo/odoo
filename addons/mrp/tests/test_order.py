@@ -3835,6 +3835,26 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(len(mo.workorder_ids), 2)
 
+    def test_component_consumed_in_manual_workorder(self):
+        """ A component can be linked to a work order added manually on the MO, and the link survives planning.
+        """
+        self.bom_3.bom_line_ids[0].operation_id = self.bom_3.operation_ids[0]
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+        manual_wo = self.env['mrp.workorder'].create({
+            'name': 'Manual Operation',
+            'workcenter_id': self.workcenter_2.id,
+            'production_id': mo.id,
+        })
+        with Form(mo) as mo_form:
+            with mo_form.move_raw_ids.edit(0) as move:
+                move.workorder_id = manual_wo
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertEqual(mo.move_raw_ids[0].workorder_id, manual_wo)
+        self.assertFalse(mo.move_raw_ids[0].operation_id)
+
     def test_unlink_update_workcenter_productivity(self):
         """ Test that workcenter_productivity entries for deleted work order has end date set
         """
