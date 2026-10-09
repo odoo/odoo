@@ -7139,7 +7139,7 @@ class AccountMove(models.Model):
             )
 
         def filter_found(partner):
-            return not company or partner.company_id.id in [False, company.id] or partner.partner_share
+            return not company or partner.company_id.id in [False, company.id] or partner.user_ids
 
         # Search for partner that sent the mail.
         from_mail_addresses = email_split(msg_dict.get('from', ''))
