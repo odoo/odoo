@@ -1,10 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 from collections import defaultdict
+from datetime import datetime
 from pprint import pformat
 from random import randrange
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
+from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
@@ -21,6 +24,7 @@ from odoo.tools import (
 )
 
 _logger = logging.getLogger(__name__)
+TRACKING_NUMBER_SEQUENCE_CODE = 'pos.order.tracking.number'
 
 
 class PosOrder(models.Model):
@@ -254,6 +258,46 @@ class PosOrder(models.Model):
             .sorted(lambda x: x.date)
         return moves._get_price_unit()
 
+    @api.model
+    def _default_tracking_number(self):
+        sequence = self.env['ir.sequence'].sudo().search([
+            ('code', '=', TRACKING_NUMBER_SEQUENCE_CODE),
+            ('company_id', '=', self.env.company.id)
+        ])
+        if not sequence.exists():
+            sequence = self.env['ir.sequence'].sudo().create({
+                'name': 'PoS Order Tracking Number',
+                'implementation': 'standard',
+                'use_date_range': True,
+                'company_id': self.env.company.id,
+                'code': TRACKING_NUMBER_SEQUENCE_CODE,
+            })
+        tz = ZoneInfo(self.env.company.partner_id.tz or 'UTC')
+        today = datetime.now(tz).date()
+        in_range = self.env['ir.sequence.date_range'].sudo().search_count([
+            ('sequence_id', '=', sequence.id),
+            ('date_from', '<=', today),
+            ('date_to', '>=', today),
+        ])
+        if not in_range:
+            self.env['ir.sequence.date_range'].sudo().create({
+                'sequence_id': sequence.id,
+                'date_from': today,
+                'date_to': today,
+            })
+        return sequence._next(sequence_date=today)
+
+    @api.autovacuum
+    def _gc_tracking_number_date_ranges(self):
+        sequence = self.env['ir.sequence'].sudo().search([
+            ('code', '=', TRACKING_NUMBER_SEQUENCE_CODE),
+        ])
+        if sequence.exists():
+            self.env['ir.sequence.date_range'].search([
+                ('sequence_id', 'in', sequence.ids),
+                ('date_to', '<', fields.Date.today() - relativedelta(days=2))
+            ]).unlink()
+
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
@@ -312,7 +356,7 @@ class PosOrder(models.Model):
     refunded_order_id = fields.Many2one('pos.order', compute='_compute_refund_related_fields', help="Order from which items were refunded in this order")
     has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
     ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
-    tracking_number = fields.Char(string="Order Number", readonly=True, copy=False)
+    tracking_number = fields.Char(string="Order Number", readonly=True, copy=False, default=lambda self: self._default_tracking_number())
     uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
     email = fields.Char(string='Email', compute="_compute_contact_details", readonly=False, store=True)
     mobile = fields.Char(string='Mobile', compute="_compute_contact_details", readonly=False, store=True)
@@ -507,9 +551,8 @@ class PosOrder(models.Model):
             values.setdefault('preset_id', session.config_id.default_preset_id.id)
 
         if not values.get('pos_reference'):
-            reference, tracking_number = session.config_id._get_next_order_refs()
+            reference = session.config_id._get_next_order_refs()
             values['pos_reference'] = reference
-            values['tracking_number'] = tracking_number
 
         if not values.get('sequence_number'):
             self._update_sequence_number(session, values)
@@ -967,7 +1010,7 @@ class PosOrder(models.Model):
 
     def _prepare_refund_values(self, current_session):
         self.ensure_one()
-        pos_reference, tracking_number = current_session.config_id._get_next_order_refs()
+        pos_reference = current_session.config_id._get_next_order_refs()
         return {
             'name': _('%(name)s REFUND', name=self.name),
             'session_id': current_session.id,
@@ -977,7 +1020,6 @@ class PosOrder(models.Model):
             'amount_paid': 0,
             'is_total_cost_computed': False,
             'is_refund': True,
-            'tracking_number': tracking_number,
         }
 
     def _prepare_mail_values(self, email, ticket, basic_ticket):
