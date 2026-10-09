@@ -15,7 +15,7 @@ registry.category("web_tour.tours").add("SellingMultiSlotEventInPos", {
             Dialog.confirm("Open Register"),
 
             // Confirm popup - Not enough tickets available for this choice
-            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            ProductScreen.clickDisplayedProduct("My Awesome MultiSlot Event"),
             SlotSelectionScreen.clickDisplayedSlot("08:00"),
             Dialog.is({ title: "Select a slot for" }),
             Dialog.confirm("Confirm"),
@@ -26,8 +26,9 @@ registry.category("web_tour.tours").add("SellingMultiSlotEventInPos", {
             Dialog.confirm("ok"),
 
             // Confirm popup - Not enough tickets available for this ticket
-            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            ProductScreen.clickDisplayedProduct("My Awesome MultiSlot Event"),
             SlotSelectionScreen.clickDisplayedSlot("10:00"),
+<<<<<<< e8fb0586fdaa6ad51ef6ea7bd7db61e98f648fe7
             Dialog.is({ title: "Select a slot for" }),
             Dialog.confirm("Confirm"),
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
@@ -36,9 +37,21 @@ registry.category("web_tour.tours").add("SellingMultiSlotEventInPos", {
             Dialog.confirm("Confirm"),
             Dialog.is({ title: "Oh snap !" }),
             Dialog.confirm("ok"),
+||||||| 8b469dea31757bdbc228df7daf77c4e424453f0b
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            Dialog.confirm(),
+=======
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket VIP", 2),
+            Dialog.confirm(),
+            Dialog.confirm(),
+>>>>>>> 7c14f93d8a397c5000b980b27c49ec4c9f651207
 
             // Confirm popup - Enough availability
-            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            ProductScreen.clickDisplayedProduct("My Awesome MultiSlot Event"),
             SlotSelectionScreen.clickDisplayedSlot("08:00"),
             Dialog.is({ title: "Select a slot for" }),
             Dialog.confirm("Confirm"),
@@ -59,21 +72,149 @@ registry.category("web_tour.tours").add("SellingMultiSlotEventInPos", {
             FeedbackScreen.clickNextOrder(),
 
             // Slot is now unavailable
-            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            ProductScreen.clickDisplayedProduct("My Awesome MultiSlot Event"),
             SlotSelectionScreen.assertDisabledSlot("08:00"),
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("test_multislot_unlimited_qty", {
+registry.category("web_tour.tours").add("CheckMultiSlotEventAvailability", {
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            // Check slots seats limited (seats_max = 2), basic ticket unlimited, vip ticket max 1
+            // Slot from 8-9AM
+            // - Taking 3 basic tickets should show error
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Limited"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket Basic", 3),
+            Dialog.confirm(),
+            Dialog.is({ title: "Slot limit exceeded" }),
+            Dialog.confirm(),
+            // - Taking 3 different tickets should show error
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Limited"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket Basic", 2),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            Dialog.is({ title: "Slot limit exceeded" }),
+            Dialog.confirm(),
+            // - Taking 2 vip tickets should show error
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Limited"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket VIP", 2),
+            Dialog.confirm(),
+            Dialog.is({ title: "Ticket limit exceeded" }),
+            Dialog.confirm(),
+            // - Taking 1 vip ticket should work
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Limited"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            // - Taking 1 vip ticket (1 vip already in cart) should show error
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Limited"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            Dialog.is({ title: "Ticket limit exceeded" }),
+            Dialog.confirm(),
+            // - Taking 1 basic ticket (1 vip already in cart) should work
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Limited"),
             SlotSelectionScreen.clickDisplayedSlot("08:00"),
             Dialog.confirm(),
             EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
             Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
             Dialog.confirm(),
+            // - Slot from 8-9AM should be sold out
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Limited"),
+            SlotSelectionScreen.assertDisabledSlot("08:00"),
+            // - Slot from 10-11AM should still be available
+            SlotSelectionScreen.clickDisplayedSlot("10:00"),
+            Dialog.confirm(),
+            // - Taking every available tickets for the 10-11AM slot should work
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            // - Both slots are sold out -> Event should be sold out (danger notification)
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Limited"),
+            {
+                trigger: ".o_notification_bar.bg-danger",
+            },
+            // - Ending with 2 basic + 2 vip in cart
+
+            // --------------------------------------------------------------------
+
+            // Check slots seats unlimited, basic ticket unlimited, vip ticket max 1
+            // Slot from 8-9AM
+            // - Taking 4 basic tickets should show error (limit max per order = 3)
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Unlimited"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket Basic", 4),
+            Dialog.confirm(),
+            Dialog.is({ title: "Ticket limit exceeded" }),
+            Dialog.confirm(),
+            // - Taking 2 vip tickets should show error
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Unlimited"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket VIP", 2),
+            Dialog.confirm(),
+            Dialog.is({ title: "Ticket limit exceeded" }),
+            Dialog.confirm(),
+            // - Taking 3 basic tickets and 1 vip ticket should work
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Unlimited"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            EventTourUtils.increaseQuantityOfTicketBy("Ticket Basic", 3),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            // - Slot from 8-9AM shouldn't be sold out
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Unlimited"),
+            SlotSelectionScreen.clickDisplayedSlot("08:00"),
+            Dialog.confirm(),
+            // - Taking 1 more vip ticket for the slot should show error (1 vip for the slot already in cart)
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            Dialog.is({ title: "Ticket limit exceeded" }),
+            Dialog.confirm(),
+            // - Slot from 10-11AM should be available
+            ProductScreen.clickDisplayedProduct("MultiSlot Event Unlimited"),
+            SlotSelectionScreen.clickDisplayedSlot("10:00"),
+            Dialog.confirm(),
+            // - Taking 1 basic ticket and 1 vip ticket for the 10-11AM slot should work
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            Dialog.confirm(),
+            // - Ending with 4 basic + 2 vip in cart
+
+            // Pay order
+            ProductScreen.totalAmountIs("1,400.00"), // (6 basic + 4 vip)
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.printTicket("Full Page"),
+            FeedbackScreen.printTicket("Badge"),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
