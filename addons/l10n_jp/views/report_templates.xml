@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="external_layout_jp_standard">
+            <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
+                <div class="o_jp_standard_header mb-3">
+                    <div class="text-end text-muted" t-if="jp_document_date">
+                        <span t-out="jp_document_date" t-options='{"widget": "date"}'/>
+                    </div>
+                    <h2 class="text-center mb-4" t-if="layout_document_title" t-out="layout_document_title"/>
+                    <div class="row">
+                        <div class="col-6">
+                            <div t-if="address" t-out="address"/>
+                        </div>
+                        <div class="col-6 text-end">
+                            <img t-if="company.logo" class="o_company_logo_big mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <t t-call="web.company_address_list"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3" t-if="information_block" t-out="information_block"/>
+                <t t-out="0"/>
+            </t>
+
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+                <t t-call="web.external_layout_footer_content" is_tagline_footer="True" footer_content_classes="'border-top pt-2'"/>
+            </div>
+        </template>
+
+        <!-- The recipient's name heads its address: a contact comes under the name of its company,
+             with 様 for a person, 御中 for a company or an address of one that names nobody. -->
+        <template id="recipient_name">
+            <div name="recipient_name" class="mb-3" t-if="partner">
+                <t t-set="jp_recipient_company" t-value="partner.parent_id.commercial_partner_id"/>
+                <t t-set="jp_honorific" t-value="(partner.lang or '').startswith('ja') and (' 御中' if partner.is_company or not partner.name else ' 様') or ''"/>
+                <div t-if="jp_recipient_company">
+                    <span t-out="jp_recipient_company.name"/><span t-if="not partner.name" t-out="jp_honorific"/>
+                </div>
+                <div t-if="partner.name">
+                    <span t-out="partner.name"/><span t-out="jp_honorific"/>
+                </div>
+            </div>
+        </template>
+
+        <!-- The contact widget prints its name that way when given the jp_honorific option. -->
+        <template id="contact_name" inherit_id="base.contact_name">
+            <xpath expr="//div[@t-if=&quot;'name' in fields&quot;]" position="after">
+                <t t-if="'name' in fields and options.get('jp_honorific')" t-call="l10n_jp.recipient_name" partner="object"/>
+            </xpath>
+            <xpath expr="//div[@t-if=&quot;'name' in fields&quot;]" position="attributes">
+                <attribute name="t-if" add="not options.get('jp_honorific')" separator=" and "/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
