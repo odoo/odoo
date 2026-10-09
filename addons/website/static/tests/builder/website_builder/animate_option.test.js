@@ -1,5 +1,5 @@
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
-import { describe, expect, test, waitFor } from "@odoo/hoot";
+import { describe, expect, press, test, waitFor, waitForNone } from "@odoo/hoot";
 import { queryFirst, queryOne } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
@@ -437,6 +437,25 @@ describe("animate text in toolbar", () => {
         // undo removes the span
         editor.shared.history.undo();
         expect(":iframe span").toHaveCount(0);
+    });
+
+    test("animate text button aria-expanded should match whether its popover is open", async () => {
+        const websiteBuilder = await setupWebsiteBuilder(`<p class="test">abcd</p>`);
+        const editable = websiteBuilder.getEditableContent();
+        const selection = editable.ownerDocument.getSelection();
+        const textNode = editable.querySelector(".test").childNodes[0];
+        selection.setBaseAndExtent(textNode, 1, textNode, 3);
+
+        await expandToolbar();
+        expect("button[title='Animate Text']").toHaveAttribute("aria-haspopup", "dialog");
+        expect("button[title='Animate Text']").toHaveAttribute("aria-expanded", "false");
+        await contains("button[title='Animate Text']").click();
+        await waitFor(".o_animate_text_popover");
+        expect("button[title='Animate Text']").toHaveAttribute("aria-expanded", "true");
+
+        await press("Escape");
+        await waitForNone(".o_animate_text_popover");
+        expect("button[title='Animate Text']").toHaveAttribute("aria-expanded", "false");
     });
 
     test("create one animated span per selected block", async () => {
