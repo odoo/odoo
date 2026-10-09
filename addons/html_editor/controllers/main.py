@@ -696,19 +696,19 @@ class HTML_Editor(Controller):
             raise UserError(_("Oops, it looks like our AI is unreachable!"))
 
     @route(["/web_editor/google_translate", "/html_editor/google_translate"], type="jsonrpc", auth="user")
-    def google_translate(self, originalText, targetLang):
+    def google_translate(self, originalHtml, targetLang):
         try:
             IrConfigParameter = request.env['ir.config_parameter'].sudo()
             gtl_api_endpoint = DEFAULT_OTS_ENDPOINT
             db_uuid = IrConfigParameter.get_str('database.uuid')
-            response = iap_tools.iap_jsonrpc(gtl_api_endpoint + "/api/html_editor_translate/1/google_translate", params={
-                'original_text': originalText,
+            response = iap_tools.iap_jsonrpc(gtl_api_endpoint + "/api/html_editor_translate/2/google_translate", params={
+                'original_html': originalHtml,
                 'target_lang': targetLang,
                 'db_uuid': db_uuid,
             }, timeout=30)
 
             if response['status'] == 'success':
-                return {'translated_text': response['translated_text'], 'isError': False}
+                return {'translated_html': response['translated_html'], 'isError': False}
             if response['status'] == 'limit_call_reached':
                 raise UserError(_("You have reached the maximum number of requests for this service. Try again later."))
             if response['status'] == 'text_too_long':
