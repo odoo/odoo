@@ -1109,6 +1109,7 @@ MISC_WHITELIST = {
 }
 # serviceName: [PluginClass, ImportPath]
 SERVICES_MAPPING = {
+    "accountNotification": ['AccountNotificationPlugin', '@account/services/account_notification_plugin'],
     "action": ['ActionPlugin', '@web/webclient/actions/action_plugin'],
     "allowed_qweb_expressions": ['AllowedQwebExpressionsPlugin', '@web/views/fields/allowed_qweb_expressions_plugin'],
     "assetsWatchdog": ['AssetsWatchdogPlugin', '@bus/services/assets_watchdog_plugin'],
