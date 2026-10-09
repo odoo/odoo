@@ -112,7 +112,9 @@ export class DurationParseError extends Error {}
  * @returns {number} a float
  */
 export function parseFloat(value, { allowOperation = false } = {}) {
-    const operation = allowOperation ? ArithmeticOperation.parse(value, parseFloat) : null;
+    const operation = allowOperation
+        ? ArithmeticOperation.parse(value, evaluateMathematicalExpression)
+        : null;
     if (operation) {
         return operation;
     }
@@ -138,10 +140,8 @@ export function parseFloat(value, { allowOperation = false } = {}) {
 export function parseFloatTime(value, unit = "hours") {
     // Tolerate a trailing operator (e.g. "1h+"): the user is still typing.
     const evaluateDurationFormula = (expr) => {
-        const result = evaluateMathematicalExpression(
-            expr.replace(/[-+*/]\s*$/, ""),
-            {},
-            (v) => parseFloatTime(v, unit)
+        const result = evaluateMathematicalExpression(expr.replace(/[-+*/]\s*$/, ""), {}, (v) =>
+            parseFloatTime(v, unit)
         );
         if (!Number.isFinite(result)) {
             throw new InvalidNumberError(`"${value}" is not a correct duration`);
@@ -267,7 +267,11 @@ function parseDuration(value, unit = "hours") {
  * @returns {number} an integer
  */
 export function parseInteger(value, { allowOperation = false } = {}) {
-    const operation = allowOperation ? ArithmeticOperation.parse(value, parseInteger) : null;
+    const operation = allowOperation
+        ? ArithmeticOperation.parse(value, (expr) =>
+              evaluateMathematicalExpression(expr, {}, parseInteger)
+          )
+        : null;
     if (operation) {
         return operation;
     }
