@@ -46,12 +46,17 @@ export class X2ManyField extends Component {
 
     setup() {
         this.field = this.props.record.fields[this.props.name];
+        this.archInfo = this.props.views?.[this.props.viewMode] || {};
+        const position =
+            this.props.viewMode === "kanban" && this.archInfo.editable === "top"
+                ? "top"
+                : undefined;
         const { saveRecord, updateRecord, removeRecord } = useX2ManyCrud(
             () => this.list,
-            this.isMany2Many
+            this.isMany2Many,
+            position
         );
 
-        this.archInfo = this.props.views?.[this.props.viewMode] || {};
         const classes = this.props.viewMode
             ? ["o_field_x2many", `o_field_x2many_${this.props.viewMode}`]
             : ["o_field_x2many"];
