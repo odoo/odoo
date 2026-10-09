@@ -530,3 +530,21 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         rewards = order._get_claimable_rewards()[coupon]
         msg = "The discount reward should still be applicable as only the shipping one was claimed."
         self.assertEqual(rewards, discount_reward, msg)
+
+    def test_free_shipping_reward_line_is_named_after_the_reward(self):
+        self.immediate_promotion_program.active = False
+        program = self.env["loyalty.program"].create({
+            "name": "Free shipping",
+            "trigger": "auto",
+            "rule_ids": [Command.create({"minimum_amount": 1})],
+            "reward_ids": [Command.create({"reward_type": "shipping"})],
+        })
+        order = self._create_so()
+        self.env["choose.delivery.carrier"].create({
+            "order_id": order.id,
+            "carrier_id": self.carrier.id,
+        }).button_confirm()
+        self._auto_rewards(order, program)
+        self.assertEqual(
+            order.order_line.filtered("is_reward_line").name, program.reward_ids.description
+        )

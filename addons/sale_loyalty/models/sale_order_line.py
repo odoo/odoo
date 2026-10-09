@@ -21,6 +21,20 @@ class SaleOrderLine(models.Model):
         reward = self.filtered("reward_id")
         super(SaleOrderLine, self - reward)._compute_name()
 
+    @api.depends("reward_id.reward_type")
+    def _compute_label(self):
+        """Override of `sale` to label a reward line with its description only.
+
+        A discount or shipping reward line carries the generic product "Discount", thus the
+        product name adds nothing to the description.
+        """
+        rewards = self.filtered(
+            lambda line: line.reward_id and line.reward_id.reward_type != "product"
+        )
+        for line in rewards:
+            line.label = line.name
+        super(SaleOrderLine, self - rewards)._compute_label()
+
     def _compute_discount(self):
         rewards = self.filtered("reward_id")
         return super(SaleOrderLine, self - rewards)._compute_discount()
