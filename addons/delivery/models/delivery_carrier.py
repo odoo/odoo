@@ -574,7 +574,7 @@ class DeliveryCarrier(models.Model):
         for line in order.order_line:
             if line.state == "cancel":
                 continue
-            if not line.product_id or line.is_delivery:
+            if line.is_delivery:
                 continue
             if line.product_id.type in {"service", "combo"}:
                 continue
