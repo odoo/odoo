@@ -66,7 +66,7 @@ access_hr_skill,hr.skill,hr.skill,hr.group_hr_user,crud,
 access_hr_skill_employee,hr.skill.employee,hr.skill,base.group_user,cr,
 hr_skill_rule_hr_user,Employee skill: HR user: read all,hr.employee.skill,hr.group_hr_user,crud,
 hr_skill_rule_employee,Employee skill: employee: read all,hr.employee.skill,base.group_user,r,
-hr_skill_rule_employee_update,Employee skill: employee: create/write/unlink own,hr.employee.skill,base.group_user,cud,"[('employee_id.user_id','=',user.id)]"
+hr_skill_rule_employee_update,Employee skill: employee: create/write/unlink own,hr.employee.skill,base.group_user,cud,"[('employee_id.user_id','=',user.id),('employee_id.company_id.hr_skills_self_edit','=',True)]"
 hr_employee_skill_report_hr_user,Employee Skill Report: HR user,hr.employee.skill.report,hr.group_hr_user,r,
 hr_employee_skill_report_manager,Employee Skill Report: employee's manager,hr.employee.skill.report,base.group_user,r,"[('has_department_manager_access', '=', True)]"
 hr_employee_skill_report_multicompany,Employee Skill Report: Multi-Company Rule,hr.employee.skill.report,,crud,"[('company_id', 'in', company_ids + [False])]"
