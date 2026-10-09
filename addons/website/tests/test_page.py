@@ -16,6 +16,8 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.controllers.main import Website
 
+import werkzeug
+
 
 @tagged('-at_install', 'post_install')
 class TestPage(common.TransactionCase):
@@ -268,6 +270,45 @@ class TestPage(common.TransactionCase):
         action = self.page_1.with_context(website_id=default_website.id).open_website_url()
         self.assertEqual(action.get('type'), 'ir.actions.act_url',
             "Page on non-default website with domain should redirect to real domain")
+
+    def test_copy_password_protected_view(self):
+        """ Tests that the duplication of a password-protected view also copies
+        the password. Tests that it works for designers, who cannot read the
+        password. """
+        designer = common.new_test_user(self.env, login='designer', groups='base.group_user,website.group_website_designer')
+        View = self.env['ir.ui.view'].with_user(designer)
+        protected_view = View.create({
+            'name': 'Protected',
+            'type': 'qweb',
+            'arch': '<div>protected</div>',
+            'key': 'test.protected_view',
+            'visibility': 'password',
+        })
+        protected_view.visibility_password_display = 'secret'
+        cloned_view = protected_view.copy()
+        self.assertTrue(protected_view.sudo().visibility_password)
+        self.assertEqual(cloned_view.sudo().visibility_password, protected_view.sudo().visibility_password)
+
+    def test_no_crypt_context_crash_if_password_is_falsy(self):
+        """ Tests that _handle_visibility does not crash if a password-protected
+        view has a falsy visibility_password. Old databases can contain such
+        views, because duplication of a password-protected page did not copy
+        the password. """
+        View = self.env['ir.ui.view']
+        empty_password_view = View.create({
+            'name': 'Broken clone',
+            'type': 'qweb',
+            'arch': '<div>clone</div>',
+            'key': 'test.broken_clone_view',
+            'visibility': 'password',
+        })
+        public_user = self.env.ref('base.public_user')
+        default_website = self.env.ref('base.default_website')
+        with MockRequest(self.env(user=public_user), website=default_website) as mock_request:
+            mock_request.params = {'visibility_password': 'secret'}
+            self.assertFalse(empty_password_view._handle_visibility(do_raise=False))
+            with self.assertRaises(werkzeug.exceptions.Forbidden):
+                empty_password_view._handle_visibility(do_raise=True)
 
 
 @tagged('-at_install', 'post_install')
