@@ -406,7 +406,16 @@ class AccountAnalyticPlan(models.Model):
                     accounts=self.env['account.analytic.account'].search([('plan_id', 'child_of', plan.id)]),
                 )
 
+        prev_related = self.env['ir.model.fields']
+        if 'parent_id' in vals:
+            # Related fields of the hierarchy levels the moved plans (and their sub plans) were on
+            prev_related = self.search([('id', 'child_of', self.ids)])._find_related_field()
+
         res = super().write(vals)
+
+        # Remove the related fields of the hierarchy levels left empty by the move (see `unlink`). The ones of a
+        # demoted root plan are already gone with its column.
+        prev_related.exists().filtered(lambda f: not self._is_subplan_field_used(f)).unlink()
 
         if 'parent_id' in vals and not new_parent:
             # Update accounts in analytic lines after _sync_plan_column() creates the new column
