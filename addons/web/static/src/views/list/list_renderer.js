@@ -53,7 +53,7 @@ import { user } from "@web/core/user";
 import { odoomark } from "@web/core/utils/html";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_list";
-import { ActionHelper } from "@web/views/action_helper";
+import { ActionHelper } from "@web/views/help/action_helper";
 import { GroupConfigMenu } from "@web/views/view_components/group_config_menu";
 import { MultiCurrencyPopover } from "@web/views/view_components/multi_currency_popover";
 
@@ -2352,7 +2352,8 @@ export class ListRenderer extends Component {
 
     get showNoContentHelper() {
         const { model } = this.props.list;
-        return this.props.noContentHelp && (model.useSampleModel || !model.hasData());
+        const hasHelp = this.props.noContentHelp || this.env.config.noContentHelpArchInfo;
+        return hasHelp && (model.useSampleModel || !model.hasData());
     }
 
     /**

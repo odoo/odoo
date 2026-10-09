@@ -9,7 +9,7 @@ import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
-import { ActionHelper } from "@web/views/action_helper";
+import { ActionHelper } from "@web/views/help/action_helper";
 
 export class HierarchyController extends Component {
     static components = {

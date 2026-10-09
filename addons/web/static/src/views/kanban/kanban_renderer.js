@@ -28,7 +28,7 @@ import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 import { Widget } from "@web/views/widgets/widget";
-import { ActionHelper } from "@web/views/action_helper";
+import { ActionHelper } from "@web/views/help/action_helper";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 
