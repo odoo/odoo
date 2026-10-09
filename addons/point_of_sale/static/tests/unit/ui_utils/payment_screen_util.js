@@ -1,17 +1,22 @@
 import { animationFrame, tick, waitFor, queryAll } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
-import { normalizeText } from "./common";
+import { isMobile, normalizeText } from "./common";
 
 export async function clickPaymentMethod(name) {
     await contains(`.paymentmethod:contains("${name}")`).click();
     await animationFrame();
 }
 
-export async function clickCurrencyWisePaymentMethod(name, currencyCode, amount) {
-    await contains(
-        `.paymentmethod:contains("${name}") + div .currency-wise-method:contains("${currencyCode}"):contains("${amount}")`
-    ).click();
-    await animationFrame();
+export async function clickCurrencyWisePaymentMethod(name, currencyCode) {
+    if (!isMobile()) {
+        await contains(
+            `.paymentmethod:contains("${name}") button.currency-wise-method:contains("${currencyCode}")`
+        ).click();
+    }
+    clickPaymentMethod(name);
+    if (!countPaymentlines().length) {
+        await contains(`.modal-body .selection-item:contains(${currencyCode})`).click();
+    }
 }
 
 export async function clickValidatePayment() {
