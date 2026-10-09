@@ -1832,6 +1832,57 @@ class HrEmployee(models.Model):
         return vals.pop('current_employee_skill_ids', []) + vals.pop('certification_ids', []) \
             + vals.get('employee_skill_ids', [])
 
+    def _get_current_skills_summary(self):
+        """ Snapshot of the current skills of the employees, see `_log_skill_changes`. """
+        return {
+            employee: {
+                skill.id: {
+                    'skill_id': skill.skill_id.id,
+                    'skill_name': skill.skill_id.name,
+                    'level_name': skill.skill_level_id.name,
+                    'is_certification': skill.is_certification,
+                    'label': skill._get_chatter_label(),
+                }
+                for skill in employee.current_employee_skill_ids
+            }
+            for employee in self
+        }
+
+    def _log_skill_changes(self, previous_skills_summary):
+        """ Log in the chatter of the employees the difference between the given summary of their
+        previous skills and their current ones. A regular skill whose level changed is logged as
+        a single update. """
+        # the validity of the skills is not part of the dependencies of the compute
+        self.invalidate_recordset(['current_employee_skill_ids'])
+        for employee, current_skills in self._get_current_skills_summary().items():
+            previous_skills = previous_skills_summary.get(employee, {})
+            removed_skills = {
+                skill_id: skill for skill_id, skill in previous_skills.items() if skill_id not in current_skills
+            }
+            removed_regular_skill_id_per_skill = {
+                skill['skill_id']: skill_id for skill_id, skill in removed_skills.items() if not skill['is_certification']
+            }
+            lines = []
+            for skill_id, skill in current_skills.items():
+                if skill_id in previous_skills:
+                    continue
+                previous_skill_id = not skill['is_certification'] and removed_regular_skill_id_per_skill.get(skill['skill_id'])
+                if previous_skill_id:
+                    lines.append(self.env._(
+                        "Updated: %(skill)s: %(previous_level)s → %(level)s",
+                        skill=skill['skill_name'],
+                        previous_level=removed_skills.pop(previous_skill_id)['level_name'],
+                        level=skill['level_name'],
+                    ))
+                else:
+                    lines.append(self.env._("Added: %(skill)s", skill=skill['label']))
+            lines += [self.env._("Removed: %(skill)s", skill=skill['label']) for skill in removed_skills.values()]
+            if lines:
+                employee._message_log(body=Markup("%(title)s<ul>%(lines)s</ul>") % {
+                    'title': self.env._("Skills updated"),
+                    'lines': Markup().join(Markup("<li>%s</li>") % line for line in lines),
+                })
+
     @api.model_create_multi
     def create(self, vals_list):
         vals_per_company = defaultdict(list)
@@ -1895,7 +1946,9 @@ class HrEmployee(models.Model):
         return employees
 
     def write(self, vals):
+        previous_skills_summary = {}
         if skill_commands := self._pop_employee_skill_commands(vals):
+            previous_skills_summary = self._get_current_skills_summary()
             vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(skill_commands, self)
         if 'work_contact_id' in vals:
             self.message_unsubscribe(self.work_contact_id.ids)
@@ -1922,6 +1975,8 @@ class HrEmployee(models.Model):
         new_vals = vals.copy()
         version_vals = {val: new_vals.pop(val) for val in vals if val in self._fields and self._fields[val].inherited}
         res = super().write(new_vals)
+        if previous_skills_summary:
+            self._log_skill_changes(previous_skills_summary)
         if 'work_contact_id' in vals:
             account_ids = self.bank_account_ids.ids
             if account_ids:
