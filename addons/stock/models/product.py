@@ -936,8 +936,8 @@ class ProductTemplate(models.Model):
     def _compute_show_qty_update_button(self):
         for product in self:
             product.show_qty_update_button = (
-                product._should_open_product_quants()
-                or product.product_variant_count > 1
+                product.product_variant_count > 1
+                or product._should_open_product_quants()
             )
 
     @api.depends(
@@ -1200,10 +1200,20 @@ class ProductTemplate(models.Model):
             'stock.group_tracking_owner',
             'stock.group_tracking_lot',
         ]
-        return (
-            any(self.env.user.has_group(g) for g in advanced_option_groups)
-            or bool(self.tracking)
-        )
+        if bool(self.tracking) or any(self.env.user.has_group(g) for g in advanced_option_groups):
+            return True
+        return bool(self.env['stock.quant'].search_count([
+            ('quantity', '!=', 0),
+            ('product_id', 'in', self.product_variant_ids.ids),
+            ('location_id.usage', '=', 'internal'),
+            '|',
+                ('lot_id', '!=', False),
+            '|',
+                ('package_id', '!=', False),
+            '|',
+                ('owner_id', '!=', False),
+                ('location_id', '!=', self.env.user._get_default_warehouse_id().lot_stock_id.id),
+        ], limit=1))
 
     # Be aware that the exact same function exists in product.product
     def action_open_quants(self):
