@@ -7,7 +7,7 @@ import { patch } from '@web/core/utils/patch';
 
 import { PaymentForm } from '@payment/interactions/payment_form';
 
-const PAYPAL_SDK_METHODS = ["venmo", "paypal_paylater", "card","google_pay"];
+const PAYPAL_SDK_METHODS = ["venmo", "paypal_paylater", "card", "google_pay"];
 const CARD_INPUT_STYLE = {
     "body": {
         "padding": "0",
@@ -150,6 +150,7 @@ patch(PaymentForm.prototype, {
             if (radio) {
                 inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
             }
+            this.providerIsLive = this._getProviderIsLive(radio);
 
             // https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
             const { client_id, merchant_id, currency_code, country_code } = inlineFormValues;
@@ -166,121 +167,23 @@ patch(PaymentForm.prototype, {
             this.paypalData[paymentOptionId]['sdkURL'] = paypalSDKURL;
             await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
 
-            if (isCard && paypal.CardFields !== undefined) {
-                // Render the card inputs
-                const paypalData = this.paypalData[paymentOptionId];
-                const cardFieldsOptions = {
-                    style: CARD_INPUT_STYLE,
-                    onApprove: this._paypalOnApprove.bind(this),
-                };
-                if (this.paymentContext['mode'] === 'validation') {
-                    cardFieldsOptions.createVaultSetupToken = () => paypalData.paypalSetupTokenId;
-                } else {
-                    cardFieldsOptions.createOrder = () => paypalData.paypalOrderId;
-                }
-                const cardFields = paypal.CardFields(cardFieldsOptions);
-                this.paypalData[paymentOptionId].cardFields = cardFields;
-                cardFields
-                  .NameField({ placeholder: "" })
-                  .render(document.getElementById("o_paypal_card_name"));
-                cardFields
-                  .NumberField({ placeholder: "" })
-                  .render(document.getElementById("o_paypal_card_number"));
-                cardFields
-                  .ExpiryField({ placeholder: "" })
-                  .render(document.getElementById("o_paypal_card_expiry"));
-                cardFields
-                  .CVVField({ placeholder: "" })
-                  .render(document.getElementById("o_paypal_card_cvv"));
-            } else if (paymentMethodCode === 'google_pay') {
-                if (paypal.Googlepay !== undefined) {
-                    this.paypalData[paymentOptionId].googlePayConfig = await this.waitFor(
-                        paypal.Googlepay().config()
-                    );
-                    const isLive = this._getProviderIsLive(radio);
-                    await this.waitFor(this._paypalRenderGooglePayButton(paymentOptionId, isLive));
-                }
-            } else {
-                // Check if the selected payment method is eligible for the account
-                const METHOD_CONFIG = {
-                    "paypal_paylater": {
-                        fundingSource: paypal.FUNDING.PAYLATER,
-                        label: "pay",
-                        color: "gold"
-                    },
-                    "venmo": {
-                        fundingSource: paypal.FUNDING.VENMO,
-                        label: "paypal",
-                        color: "blue"
-                    },
-                };
-                const activeConfig = METHOD_CONFIG[paymentMethodCode];
-                if (!paypal.isFundingEligible(activeConfig.fundingSource)){
-                    this._displayErrorDialog(
-                        _t("Cannot display the payment form"),
-                        "This payment method is not available.",
-                    );
-                } else {
-                    // Create the two sets of standard PayPal buttons.
-                    // See https://developer.paypal.com/sdk/js/reference.
-                    this.paypalData[paymentOptionId]['enabledButtons'] = [];
-                    document
-                        .querySelectorAll('[id^="o_paypal_enabled_button"]')
-                        .forEach(domButton => {
-                            const enabledButton = paypal.Buttons({
-                                fundingSource: activeConfig.fundingSource,
-                                enableVenmoSandbox: !this._getProviderIsLive(radio),
-                                // https://developer.paypal.com/sdk/js/reference/#link-style
-                                style: {
-                                    layout: 'vertical',
-                                    label: activeConfig.label,
-                                    color: activeConfig.color,
-                                    disableMaxWidth: true,
-                                    borderRadius: 6,
-                                },
-                                createOrder: this._paypalOnClick.bind(this),
-                                onApprove: this._paypalOnApprove.bind(this),
-                                onCancel: this._paypalOnCancel.bind(this),
-                                onError: this._paypalOnError.bind(this),
-                            });
-                            enabledButton.render(`#${domButton.id}`);
-                            this.paypalData[paymentOptionId]['enabledButtons'].push(enabledButton);
-                        });
-
-                    this.paypalData[paymentOptionId]['disabledButtons'] = [];
-                    document
-                        .querySelectorAll('[id^="o_paypal_disabled_button"]')
-                        .forEach(domButton => {
-                            const disabledButton = paypal.Buttons({
-                                fundingSource: activeConfig.fundingSource,
-                                // https://developer.paypal.com/sdk/js/reference/#link-style
-                                style: {
-                                    layout: "vertical",
-                                    color: "white",
-                                    label: activeConfig.label,
-                                    disableMaxWidth: true,
-                                    borderRadius: 6,
-                                },
-                                // Permanently disable the button
-                                onInit: (data, actions) => actions.disable(),
-                            });
-                            disabledButton.render(`#${domButton.id}`);
-                            this.paypalData[paymentOptionId]['disabledButtons']
-                                .push(disabledButton);
-                        });
-                }
+            switch (paymentMethodCode) {
+                case "card":
+                    this._paypalRenderCardFields(paymentOptionId);
+                    break;
+                case "google_pay":
+                    await this.waitFor(this._paypalRenderGooglePayButton(paymentOptionId));
+                    break;
+                default:
+                    this._paypalRenderButtons(paymentOptionId, paymentMethodCode);
             }
         }
         for (const paypalLoading of paypalLoadingList) {
             paypalLoading.classList.add('d-none');
         }
         // Show the container of the selected payment method and hide the other one.
-        const isGooglePay = paymentMethodCode === 'google_pay';
-        for (const container of document.querySelectorAll('#o_paypal_button_container')) {
-            container.classList.toggle('d-none', isCard || isGooglePay);
-        }
-        for (const container of document.querySelectorAll('#o_paypal_googlepay_container')) {
-            container.classList.toggle('d-none', !isGooglePay);
+        for (const buttonContainer of document.querySelectorAll('#o_paypal_button_container')) {
+            buttonContainer.classList.toggle('d-none', isCard);
         }
         this.selectedOptionId = paymentOptionId;
     },
@@ -302,18 +205,166 @@ patch(PaymentForm.prototype, {
     },
 
     /**
-     * Hide both the standard PayPal and the Google Pay button containers.
+     * Hide both the PayPal button containers.
      *
      * @private
      * @return {void}
      */
     _paypalHideButtonContainers() {
-        const containers = document.querySelectorAll(
-            '#o_paypal_button_container, #o_paypal_googlepay_container'
-        );
-        for (const container of containers) {
-            container.classList.add('d-none');
+        for (const container of document.querySelectorAll("#o_paypal_button_container")) {
+            container.classList.add("d-none");
         }
+    },
+
+    /**
+     * Render the PayPal card fields in their containers.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @return {void}
+     */
+    _paypalRenderCardFields(paymentOptionId) {
+        if (paypal.CardFields === undefined) {
+            return;
+        }
+        const paypalData = this.paypalData[paymentOptionId];
+        const cardFieldsOptions = {
+            style: CARD_INPUT_STYLE,
+            onApprove: this._paypalOnApprove.bind(this),
+        };
+        if (this.paymentContext["mode"] === "validation") {
+            cardFieldsOptions.createVaultSetupToken = () => paypalData.paypalSetupTokenId;
+        } else {
+            cardFieldsOptions.createOrder = () => paypalData.paypalOrderId;
+        }
+        const cardFields = paypal.CardFields(cardFieldsOptions);
+        paypalData.cardFields = cardFields;
+        cardFields
+            .NameField({ placeholder: "" })
+            .render(document.getElementById("o_paypal_card_name"));
+        cardFields
+            .NumberField({ placeholder: "" })
+            .render(document.getElementById("o_paypal_card_number"));
+        cardFields
+            .ExpiryField({ placeholder: "" })
+            .render(document.getElementById("o_paypal_card_expiry"));
+        cardFields
+            .CVVField({ placeholder: "" })
+            .render(document.getElementById("o_paypal_card_cvv"));
+    },
+
+    /**
+     * Render the Google Pay button provided by the Google Pay SDK in its container.
+     *
+     * The button must be created by Google's SDK, as required by Google's terms of service, and
+     * only after `isReadyToPay` confirms that the device and browser support Google Pay.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @return {void}
+     */
+    async _paypalRenderGooglePayButton(paymentOptionId) {
+        if (paypal.Googlepay === undefined) {
+            return;
+        }
+        const googlePayConfig = await this.waitFor(paypal.Googlepay().config());
+        this.paypalData[paymentOptionId].googlePayConfig = googlePayConfig;
+        await this.waitFor(loadJS('https://pay.google.com/gp/p/js/pay.js'));
+
+        const paymentsClient = this._paypalGetGooglePaymentsClient(paymentOptionId);
+        const readyToPay = await this.waitFor(paymentsClient.isReadyToPay({
+            apiVersion: 2,
+            apiVersionMinor: 0,
+            allowedPaymentMethods: googlePayConfig.allowedPaymentMethods,
+        }));
+        if (!readyToPay.result) {
+            this._paypalDisplayNotAvailablePMDialog();
+            return;
+        }
+        for (const container of document.querySelectorAll('#o_paypal_button_container')) {
+            const button = paymentsClient.createButton({
+                onClick: () => this._paypalOnGooglePayButtonClicked(paymentOptionId),
+                allowedPaymentMethods: googlePayConfig.allowedPaymentMethods,
+                buttonSizeMode: 'fill',
+            });
+            container.replaceChildren(button);
+        }
+    },
+
+    /**
+     * Render the PayPal buttons of the selected payment method if the payment method is eligible
+     * for the account.
+     *
+     * See https://developer.paypal.com/sdk/js/reference.
+     * For style options see // https://developer.paypal.com/sdk/js/reference/#link-style
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @param {string} paymentMethodCode - The code of the selected payment method.
+     * @return {void}
+     */
+    _paypalRenderButtons(paymentOptionId, paymentMethodCode) {
+        const METHOD_CONFIG = {
+            paypal_paylater: {
+                fundingSource: paypal.FUNDING.PAYLATER,
+                label: "pay",
+                color: "gold",
+            },
+            venmo: {
+                fundingSource: paypal.FUNDING.VENMO,
+                label: "paypal",
+                color: "blue",
+            },
+        };
+        const activeConfig = METHOD_CONFIG[paymentMethodCode];
+        const BUTTON_STYLE = {
+            layout: "vertical",
+            color: activeConfig.color,
+            label: activeConfig.label,
+            disableMaxWidth: true,
+            borderRadius: 6,
+        }
+        if (!paypal.isFundingEligible(activeConfig.fundingSource)) {
+            this._paypalDisplayNotAvailablePMDialog();
+            return;
+        }
+        const paypalData = this.paypalData[paymentOptionId];
+        paypalData.enabledButtons = [];
+        for (const domButton of document.querySelectorAll('[id^="o_paypal_enabled_button"]')) {
+            const enabledButton = paypal.Buttons({
+                fundingSource: activeConfig.fundingSource,
+                enableVenmoSandbox: !this.providerIsLive,
+                style: BUTTON_STYLE,
+                createOrder: this._paypalOnClick.bind(this),
+                onApprove: this._paypalOnApprove.bind(this),
+                onCancel: this._paypalOnCancel.bind(this),
+                onError: this._paypalOnError.bind(this),
+            });
+            enabledButton.render(`#${domButton.id}`);
+            paypalData.enabledButtons.push(enabledButton);
+        }
+
+        paypalData.disabledButtons = [];
+        for (const domButton of document.querySelectorAll('[id^="o_paypal_disabled_button"]')) {
+            const disabledButton = paypal.Buttons({
+                fundingSource: activeConfig.fundingSource,
+                style: {
+                    ...BUTTON_STYLE,
+                    color: "white",
+                },
+                // Permanently disable the button
+                onInit: (data, actions) => actions.disable(),
+            });
+            disabledButton.render(`#${domButton.id}`);
+            paypalData.disabledButtons.push(disabledButton);
+        }
+    },
+
+    _paypalDisplayNotAvailablePMDialog(){
+        this._displayErrorDialog(
+            _t("Cannot display the payment form"),
+            "This payment method is not available.",
+        );
     },
 
     // #=== PAYMENT FLOW ===#
@@ -350,161 +401,6 @@ patch(PaymentForm.prototype, {
         }
     },
 
-    // #=== GOOGLE PAY FLOW ===#
-
-    /**
-     * Render the Google Pay button provided by the Google Pay SDK in its container.
-     *
-     * The button must be created by Google's SDK, as required by Google's terms of service, and
-     * only after `isReadyToPay` confirms that the device and browser support Google Pay.
-     *
-     * @private
-     * @param {number} paymentOptionId - The id of the selected payment option.
-     * @param {string} isLive - Whether the provider is in production mode.
-     * @return {void}
-     */
-    async _paypalRenderGooglePayButton(paymentOptionId, isLive) {
-        await this.waitFor(loadJS('https://pay.google.com/gp/p/js/pay.js'));
-
-        const googlePayConfig = this.paypalData[paymentOptionId].googlePayConfig;
-        const paymentsClient = this._paypalGetGooglePaymentsClient(paymentOptionId, isLive);
-        const readyToPay = await this.waitFor(paymentsClient.isReadyToPay({
-            apiVersion: 2,
-            apiVersionMinor: 0,
-            allowedPaymentMethods: googlePayConfig.allowedPaymentMethods,
-        }));
-        if (!readyToPay.result) {
-            return;
-        }
-        for (const container of document.querySelectorAll('#o_paypal_googlepay_container')) {
-            const button = paymentsClient.createButton({
-                onClick: () => this._paypalOnGooglePayButtonClicked(paymentOptionId),
-                allowedPaymentMethods: googlePayConfig.allowedPaymentMethods,
-                buttonSizeMode: 'fill',
-            });
-            container.replaceChildren(button);
-        }
-    },
-
-    /**
-     * Return the Google Pay `PaymentsClient`, creating it on the first call.
-     *
-     * The `onPaymentAuthorized` callback is registered here, as required by the Google Pay SDK, to
-     * create, confirm, and capture the order once the payer authorizes the payment.
-     *
-     * @private
-     * @param {number} paymentOptionId - The id of the selected payment option.
-     * @param {string} isLive - Whether the provider is in production mode.
-     * @return {object} The Google Pay `PaymentsClient`.
-     */
-    _paypalGetGooglePaymentsClient(paymentOptionId, isLive) {
-        if (!this.paypalData[paymentOptionId].googlePaymentsClient) {
-            this.paypalData[paymentOptionId].googlePaymentsClient =
-                new google.payments.api.PaymentsClient({
-                    environment: isLive ? 'PRODUCTION' : 'TEST',
-                    paymentDataCallbacks: {
-                        onPaymentAuthorized: paymentData =>
-                            this._paypalOnGooglePaymentAuthorized(paymentOptionId, paymentData),
-                    },
-                });
-        }
-        return this.paypalData[paymentOptionId].googlePaymentsClient;
-    },
-
-    /**
-     * Show the Google Pay payment sheet when the Google Pay button is clicked.
-     *
-     * @private
-     * @param {number} paymentOptionId - The id of the selected payment option.
-     * @return {void}
-     */
-    async _paypalOnGooglePayButtonClicked(paymentOptionId) {
-        const paymentsClient = this._paypalGetGooglePaymentsClient(paymentOptionId);
-        const googlePayConfig = this.paypalData[paymentOptionId].googlePayConfig;
-        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-        const { currency_code } = JSON.parse(radio.dataset['paypalInlineFormValues']);
-        const paymentDataRequest = {
-            apiVersion: 2,
-            apiVersionMinor: 0,
-            allowedPaymentMethods: googlePayConfig.allowedPaymentMethods,
-            merchantInfo: googlePayConfig.merchantInfo,
-            transactionInfo: {
-                countryCode: googlePayConfig.countryCode,
-                currencyCode: currency_code,
-                totalPriceStatus: 'FINAL',
-                totalPrice: String(this.paymentContext['amount'] ?? '0'),
-            },
-            callbackIntents: ['PAYMENT_AUTHORIZATION'],
-        };
-        try {
-            const paymentData = await this.waitFor(paymentsClient.loadPaymentData(paymentDataRequest));
-            window.location = '/payment/status';
-        } catch (error) {
-            this._enableButton();
-        }
-    },
-
-    /**
-     * Create, confirm, and capture the order once the payer authorizes the Google Pay payment.
-     *
-     * @private
-     * @param {number} paymentOptionId - The id of the selected payment option.
-     * @param {object} paymentData - The payment data returned by the Google Pay SDK.
-     * @return {object} The resulting Google Pay transaction state.
-     */
-    async _paypalOnGooglePaymentAuthorized(paymentOptionId, paymentData) {
-        try {
-            await this.waitFor(this.submitForm(new Event('GooglePayAuthorizedEvent')));
-            const orderId = this.paypalData[paymentOptionId].paypalOrderId;
-            if (!orderId) {
-                return { transactionState: 'ERROR' };
-            }
-
-            const confirmOrderParams = {
-                orderId: orderId,
-                paymentMethodData: paymentData.paymentMethodData,
-            };
-            const confirmOrderResponse = await this.waitFor(
-                paypal.Googlepay().confirmOrder(confirmOrderParams)
-            );
-            const { status } = confirmOrderResponse;
-            if (status === 'PAYER_ACTION_REQUIRED') {
-                const { liabilityShift } = await this.waitFor(
-                    paypal.Googlepay().initiatePayerAction({ orderId: orderId })
-                );
-
-                if (liabilityShift !== 'POSSIBLE') {
-                    return {
-                        transactionState: 'ERROR',
-                        error: {
-                            intent: 'PAYMENT_AUTHORIZATION',
-                            message: _t("Payment authentication failed. Please try a different payment method."),
-                        },
-                    };
-                }
-            } else if (status !== 'APPROVED') {
-                return {
-                    transactionState: 'ERROR',
-                    error: {
-                        intent: 'PAYMENT_AUTHORIZATION',
-                        message: _t("The payment could not be authorized."),
-                    },
-                };
-            }
-
-            await this.waitFor(rpc('/payment/paypal/complete_order', {
-                'order_id': orderId,
-                'reference': this.paypalData[paymentOptionId].paypalTxRef,
-            }));
-            return { transactionState: 'SUCCESS' };
-        } catch (error) {
-            return {
-                transactionState: 'ERROR',
-                error: { intent: 'PAYMENT_AUTHORIZATION', message: error.message },
-            };
-        }
-    },
-
     /**
      * Handle the approval event of the component and complete the payment.
      *
@@ -522,7 +418,6 @@ patch(PaymentForm.prototype, {
                 for (const enabledButton of enabledButtons) {
                     enabledButton.close();
                 }
-
             }
             window.location = '/payment/status';
         } catch (error) {
@@ -557,5 +452,122 @@ patch(PaymentForm.prototype, {
         if (message !== "Detected popup close" && !(error instanceof RPCError)) {
             this._displayErrorDialog(_t("Payment processing failed"), message);
         }
+    },
+
+    // #=== GOOGLE PAY FLOW ===#
+
+    /**
+     * Return the Google Pay `PaymentsClient`, creating it on the first call.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @return {object} The Google Pay `PaymentsClient`.
+     */
+    _paypalGetGooglePaymentsClient(paymentOptionId) {
+        if (!this.paypalData[paymentOptionId].googlePaymentsClient) {
+            this.paypalData[paymentOptionId].googlePaymentsClient =
+                new google.payments.api.PaymentsClient({
+                    environment: this.providerIsLive ? "PRODUCTION" : "TEST",
+                    paymentDataCallbacks: {
+                        onPaymentAuthorized: (paymentData) =>
+                            this._paypalOnGooglePaymentAuthorized(paymentOptionId, paymentData),
+                    },
+                });
+        }
+        return this.paypalData[paymentOptionId].googlePaymentsClient;
+    },
+
+    /**
+     * Show the Google Pay payment modal when the Google Pay button is clicked.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @return {void}
+     */
+    async _paypalOnGooglePayButtonClicked(paymentOptionId) {
+        const paymentsClient = this._paypalGetGooglePaymentsClient(paymentOptionId);
+        const googlePayConfig = this.paypalData[paymentOptionId].googlePayConfig;
+        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+        const { currency_code } = JSON.parse(radio.dataset["paypalInlineFormValues"]);
+        const paymentDataRequest = {
+            apiVersion: 2,
+            apiVersionMinor: 0,
+            allowedPaymentMethods: googlePayConfig.allowedPaymentMethods,
+            merchantInfo: googlePayConfig.merchantInfo,
+            transactionInfo: {
+                countryCode: googlePayConfig.countryCode,
+                currencyCode: currency_code,
+                totalPriceStatus: "FINAL",
+                totalPrice: String(this.paymentContext["amount"] ?? "0"),
+            },
+            callbackIntents: ["PAYMENT_AUTHORIZATION"],
+        };
+        try {
+            await this.waitFor(paymentsClient.loadPaymentData(paymentDataRequest));
+            window.location = "/payment/status";
+        } catch (error) {
+            if (error instanceof RPCError) {
+                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._enableButton(); // The button has been disabled before initiating the flow.
+            }
+            return Promise.reject(error);
+        }
+    },
+
+    /**
+     * Create, confirm, and capture the order once the payer authorizes the Google Pay payment.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @param {object} paymentData - The payment data returned by the Google Pay SDK.
+     * @return {object} The resulting Google Pay transaction state.
+     */
+    async _paypalOnGooglePaymentAuthorized(paymentOptionId, paymentData) {
+        try {
+            await this.waitFor(this.submitForm(new Event("GooglePayAuthorizedEvent")));
+            const orderId = this.paypalData[paymentOptionId].paypalOrderId;
+            if (!orderId) {
+                return this._paypalGetGoogleErrorResponse();
+            }
+
+            const confirmOrderParams = {
+                orderId: orderId,
+                paymentMethodData: paymentData.paymentMethodData,
+            };
+            const confirmOrderResponse = await this.waitFor(
+                paypal.Googlepay().confirmOrder(confirmOrderParams),
+            );
+            const { status } = confirmOrderResponse;
+            switch (status) {
+                case "PAYER_ACTION_REQUIRED": {
+                    await this.waitFor(
+                        paypal.Googlepay().initiatePayerAction({ orderId: orderId }),
+                    );
+                }
+                case "APPROVED":
+                    await this.waitFor(
+                        rpc("/payment/paypal/complete_order", {
+                            order_id: orderId,
+                            reference: this.paypalData[paymentOptionId].paypalTxRef,
+                        }),
+                    );
+                    return { transactionState: "SUCCESS" };
+                default:
+                    return this._paypalGetGoogleErrorResponse(
+                        _t("The payment could not be authorized."),
+                    );
+            }
+        } catch (error) {
+            return this._paypalGetGoogleErrorResponse(error.message);
+        }
+    },
+
+    _paypalGetGoogleErrorResponse(message) {
+        const errorResponse = { transactionState: "ERROR" };
+        if (message) {
+            debugger;
+            errorResponse.error = { intent: "PAYMENT_AUTHORIZATION", message };
+        }
+        return errorResponse;
     },
 });
