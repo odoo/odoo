@@ -296,12 +296,18 @@
                 padding-bottom: 5px;
             }
             .o_group_name {
+<<<<<<< c2b4532fd89e0786b4058d355aff763e69c7cfbb
                 display: table-cell;
                 max-width: 100%;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 vertical-align: top;
+||||||| 01d3c8a3f10f341d50e668cbdb3abce68589f312
+                @include o-text-overflow(table-cell);
+=======
+                @include o-text-overflow($display: table-cell, $vertical-align: middle);
+>>>>>>> d22cae1f1790cd276b93344d726ba2c50d916842
             }
             .o_group_buttons {
                 display: inline-block;
