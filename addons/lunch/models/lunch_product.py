@@ -37,6 +37,14 @@ class LunchProduct(models.Model):
     # This field is used only for searching
     is_available_at = fields.Many2one('lunch.location', 'Product Availability', compute='_compute_is_available_at', search='_search_is_available_at')
 
+    @api.model
+    def get_help_data(self, domain):
+        # used by the help view (see `lunch_product_view_help`): products are
+        # only displayed for a location (see `LunchSearchModel`)
+        return {'has_location': any(
+            cond.field_expr == 'is_available_at' for cond in Domain(domain).iter_conditions()
+        )}
+
     @api.depends('image_128', 'category_id.image_128')
     def _compute_product_image(self):
         for product in self:
