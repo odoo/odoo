@@ -24,6 +24,9 @@ class TestController(HttpCase):
         cls.portal = portal_user.login
         admin_user = new_test_user(cls.env, login='admin_user', groups='base.group_user,base.group_system')
         cls.admin = admin_user.login
+        test_user_record = new_test_user(cls.env, login='test_user', groups='base.group_user,base.group_partner_manager')
+        cls.test_user = test_user_record.login
+        cls.test_user_partner_id = test_user_record.partner_id.id
         cls.headers = {"Content-Type": "application/json"}
         cls.pixel = 'R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
 
@@ -171,3 +174,40 @@ class TestController(HttpCase):
         # Image is a play button
         img_reference = Image.open(file_open("web_editor/tests/play.png", "rb"))
         self.assertEqual(img, img_reference, "Result image should be the play button")
+
+    def test_05_modify_image_non_admin(self):
+        """ Test that a non-admin user can modify an image on a non-view model """
+
+        # Authenticate first using the globally committed user from setUpClass
+        self.authenticate(self.test_user, self.test_user)
+
+        # Create a dummy image attachment on a non-view model (res.partner)
+        attachment = self.env['ir.attachment'].create({
+            'name': 'test_image.png',
+            'type': 'binary',
+            'datas': self.pixel,
+            'res_model': 'res.partner',
+            'res_id': self.test_user_partner_id,
+            'mimetype': 'image/png',
+        })
+
+        # Use the class helper to build the JSON-RPC payload
+        payload = self._build_payload({
+            'res_model': 'res.partner',
+            'res_id': self.test_user_partner_id,
+            'name': 'modified_test_image.png',
+            'data': self.pixel,
+            'mimetype': 'image/png',
+        })
+
+        # Simulate the JSON-RPC call using url_open and json_safe
+        response = self.url_open(
+            f'/web_editor/modify_image/{attachment.id}',
+            headers=self.headers,
+            data=json_safe.dumps(payload)
+        ).json()
+
+        # The controller returns an 'error' key if an AccessError is caught by the RPC layer.
+        # If successful, it returns the string URL in the 'result' key.
+        self.assertNotIn('error', response, 'Modify image failed: %s' % response.get('error', {}).get('message'))
+        self.assertTrue(isinstance(response.get('result'), str), "The response should be the URL string of the modified image.")
