@@ -1571,6 +1571,10 @@ class HrEmployee(models.Model):
         )
 
     @api.model
+    def get_help_data(self, domain):
+        # used by the help view (see `hr_employee_view_help`)
+        return {'is_onboarding': self.is_onboarding(self.env.companies.ids)}
+
     def load_demo_data(self):
         if not self.has_access('create'):
             raise UserError(self.env._("You do not have the rights to load the Employees sample data."))
