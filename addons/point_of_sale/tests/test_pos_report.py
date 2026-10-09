@@ -8,7 +8,7 @@ from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestReportSession(CommonPosTest):
+class TestPosSession(CommonPosTest):
 
     @classmethod
     def setUpClass(cls):
@@ -22,7 +22,7 @@ class TestReportSession(CommonPosTest):
             'amount': 10,
             'price_include_override': 'tax_included',
         })
-        self.product1 = self.create_product('Product A', self.categ_basic, 110, tax_ids=self.tax1.ids)
+        self.product1 = self.create_product('Product A', 110, tax_ids=self.tax1.ids)
 
         second_bank_pm = self.bank_pm.copy({'name': 'Second Bank'})
         self.config.payment_method_ids |= second_bank_pm
@@ -44,8 +44,7 @@ class TestReportSession(CommonPosTest):
         self.assertEqual(report['products'][0]['total_paid'], 110, "Category total paid should be 110, as it matches the price paid for its products")
 
     def test_report_session_2(self):
-
-        self.product1 = self.create_product('Product A', self.categ_basic, 100)
+        self.product1 = self.create_product('Product A', 100)
 
         for _ in range(2):
             session = self.open_new_session()
@@ -66,8 +65,8 @@ class TestReportSession(CommonPosTest):
         self.assertTrue(pdf)
 
     def test_report_listing(self):
-        product1 = self.create_product('Product 1', self.categ_basic, 150)
-        product2 = self.create_product('Product 2', self.categ_basic, 150)
+        product1 = self.create_product('Product 1', 150)
+        product2 = self.create_product('Product 2', 150)
 
         (product1 | product2).taxes_id = self.taxes['tax10']
         self.open_new_session()
@@ -93,7 +92,7 @@ class TestReportSession(CommonPosTest):
         self.assertEqual(order_report_lines_count_product2, 1)
 
     def test_report_session_3(self):
-        self.product1 = self.create_product('Product A', self.categ_basic, 100)
+        self.product1 = self.create_product('Product A', 100)
         self.open_new_session()
         self.create_orders([
             {
@@ -117,7 +116,7 @@ class TestReportSession(CommonPosTest):
             'amount': 10,
             'price_include_override': 'tax_included',
         })
-        self.product1 = self.create_product('Product A', self.categ_basic, 100, tax_ids=self.tax1.ids)
+        self.product1 = self.create_product('Product A', 100, tax_ids=self.tax1.ids)
 
         self.bank_pm.outstanding_account_id = self.outstanding_bank.id
         self.config.open_ui()
@@ -161,7 +160,7 @@ class TestReportSession(CommonPosTest):
             'amount': 15,
             'price_include_override': 'tax_included',
         })
-        self.product1 = self.create_product('Product A', self.categ_basic, 125, tax_ids=(self.tax1 | self.tax2).ids)
+        self.product1 = self.create_product('Product A', 125, tax_ids=(self.tax1 | self.tax2).ids)
 
         self.open_new_session()
         self.create_pos_order(
@@ -176,7 +175,7 @@ class TestReportSession(CommonPosTest):
     def test_report_session_category_qty_round(self):
         self.config.open_ui()
         quantities = [12.45, 88.21, 45.09, 7.33, 56.12, 92.84, 31.56, 19.47, 64.91, 5.02, 77.38, 41.65, 23.19, 99.72, 10.88]
-        products = [self.create_product(f'Product {i}', self.categ_basic, 100) for i in range(len(quantities))]
+        products = [self.create_product(f'Product {i}', 100) for i in range(len(quantities))]
         total = sum(quantities)
         self.create_orders([
             {
@@ -209,7 +208,7 @@ class TestReportSession(CommonPosTest):
             'fiscal_position_ids': [Command.link(fiscal_position.id)],
             'original_tax_ids': [Command.link(self.tax1.id)],
         })
-        self.product1 = self.create_product('Vanela Gathiya', self.categ_basic, 100, tax_ids=self.tax1.ids)
+        self.product1 = self.create_product('Vanela Gathiya', 100, tax_ids=self.tax1.ids)
         self.config.open_ui()
         order = self.create_pos_order(
             [[self.product1, 1, 10]],
@@ -225,7 +224,7 @@ class TestReportSession(CommonPosTest):
 
     def test_session_report_discount_with_refund(self):
         """A refunded discount must be subtracted, not added, in the report."""
-        product = self.create_product('Discounted Book', self.categ_basic, 100)
+        product = self.create_product('Discounted Book', 100)
         self.config.open_ui()
 
         # Sell 2 units at 10% discount: subtotal 200 -> 180, discount 20.
@@ -254,7 +253,7 @@ class TestReportSession(CommonPosTest):
         displaying the closed session's name as if it were a single-session Z
         report.
         """
-        product = self.create_product('Test Product', self.categ_basic, 100)
+        product = self.create_product('Test Product', 100)
         # Session 1: open, create an order, close.
         self.open_new_session()
         self.create_pos_order([[product]], payments=[[self.bank_pm, 100]], customer=self.partner_a)
@@ -311,7 +310,7 @@ class TestReportSession(CommonPosTest):
             'cash_rounding': True,
             'rounding_method': rounding_method.id,
         })
-        product = self.create_product('Product Rounding', self.categ_basic, 10.42)
+        product = self.create_product('Product Rounding', 10.42)
 
         self.config.open_ui()
 
@@ -326,7 +325,7 @@ class TestReportSession(CommonPosTest):
 
     def test_report_pos_order_0(self):
         """Test the margin and price_total of a PoS Order with no taxes."""
-        product1 = self.create_product('Product 1', self.categ_basic, 150)
+        product1 = self.create_product('Product 1', 150)
         self.categ_all = self.env['pos.category'].search([])
         product1.write({'pos_categ_ids': [odoo.Command.set(self.categ_all.ids)]})
 
@@ -343,7 +342,7 @@ class TestReportSession(CommonPosTest):
     def test_report_pos_order_1(self):
         """Test the margin and price_total of a PoS Order with taxes."""
 
-        product1 = self.create_product('Product 1', self.categ_basic, 150, tax_ids=self.taxes['tax10'].ids)
+        product1 = self.create_product('Product 1', 150, tax_ids=self.taxes['tax10'].ids)
 
         self.open_new_session()
 
@@ -358,7 +357,7 @@ class TestReportSession(CommonPosTest):
     def test_report_pos_order_2(self):
         """Test the margin and price_total of a PoS Order with discount and no taxes"""
 
-        product1 = self.create_product('Product 1', self.categ_basic, 150)
+        product1 = self.create_product('Product 1', 150)
 
         self.open_new_session()
 
@@ -373,7 +372,7 @@ class TestReportSession(CommonPosTest):
     def test_report_pos_order_margin_other_currency(self):
         """Test that the currency_rate set on the order is correctly taken into account when generating the report"""
 
-        product1 = self.create_product('Product 1', self.categ_basic, 150)
+        product1 = self.create_product('Product 1', 150)
         self.open_new_session()
 
         self.create_pos_order([[product1, 1, 0, {'price_unit': 300}]], payments=[], state='draft', currency_rate=2)

@@ -8,7 +8,7 @@ from odoo.addons.point_of_sale.tests.common import CommonPosTest
 # TODO-PARP: Move tests and remove File
 
 @tagged('post_install', '-at_install')
-class TestPosInvoiceConsolidation(CommonPosTest):
+class TestPosOrder(CommonPosTest):
 
     @classmethod
     def setUpClass(cls):
@@ -17,8 +17,8 @@ class TestPosInvoiceConsolidation(CommonPosTest):
         cls.user1 = cls.env.user
         cls.user2 = cls.simple_accountman
         cls.user2.group_ids = [Command.link(cls.env.ref('point_of_sale.group_pos_user').id)]
-        cls.product1 = cls.create_product('Product 1', cls.categ_basic, 10.0)
-        cls.product2 = cls.create_product('Product 2', cls.categ_basic, 20.0)
+        cls.product1 = cls.create_product('Product 1', 10.0)
+        cls.product2 = cls.create_product('Product 2', 20.0)
 
     def _consolidate(self, orders):
         self.env['pos.make.invoice'].create({'consolidated_billing': True}).with_context(active_ids=orders.ids).action_create_invoices()
@@ -237,3 +237,222 @@ class TestPosInvoiceConsolidation(CommonPosTest):
         self.assertEqual(orders.mapped('amount_return'), [0.0, 0.0])
         self.env['pos.make.invoice'].create({'consolidated_billing': True}).with_context(active_ids=orders.ids).action_create_invoices()
         self.assertEqual(len(orders.account_move), 1)
+
+    def test_positive_margin(self):
+        """
+        Test margin where it should be more than zero
+        """
+
+        product1 = self.create_product('Product 1', 10, standard_price=5)
+        product2 = self.create_product('Product 2', 50, standard_price=30)
+
+        # open a session
+        self.open_new_session()
+
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]]},
+            {'lines': [[product2, 1]]},
+            {'lines': [[product1, 2], [product2, 2]]},
+        ]).values())
+
+        # check margins
+        self.assertEqual(orders[0].margin, 5)
+        self.assertEqual(orders[1].margin, 20)
+        self.assertEqual(orders[2].margin, 50)
+
+        # check margins percent
+        self.assertEqual(orders[0].margin_percent, 0.5)
+        self.assertEqual(orders[1].margin_percent, 0.4)
+        self.assertEqual(round(orders[2].margin_percent, 2), 0.42)
+
+        # close session
+        self.close_pos_session(config=self.config)
+
+    def test_negative_margin(self):
+        """
+        Test margin where it should be less than zero
+        """
+
+        product1 = self.create_product('Product 1', 10, standard_price=15)
+        product2 = self.create_product('Product 2', 50, standard_price=100)
+
+        # open a session
+        self.open_new_session()
+
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]]},
+            {'lines': [[product2, 1]]},
+            {'lines': [[product1, 2], [product2, 2]]},
+        ]).values())
+
+        # check margins
+        self.assertEqual(orders[0].margin, -5)
+        self.assertEqual(orders[1].margin, -50)
+        self.assertEqual(orders[2].margin, -110)
+
+        # check margins percent
+        self.assertEqual(orders[0].margin_percent, -0.5)
+        self.assertEqual(orders[1].margin_percent, -1)
+        self.assertEqual(round(orders[2].margin_percent, 2), -0.92)
+
+        # close session
+        self.close_pos_session(config=self.config)
+
+    def test_full_margin(self):
+        """
+        Test margin where the product cost is always 0
+        """
+
+        product1 = self.create_product('Product 1', 10)
+        product2 = self.create_product('Product 2', 50)
+
+        # open a session
+        self.open_new_session()
+
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]]},
+            {'lines': [[product2, 1]]},
+            {'lines': [[product1, 2], [product2, 2]]},
+        ]).values())
+
+        # check margins
+        self.assertEqual(orders[0].margin, 10)
+        self.assertEqual(orders[1].margin, 50)
+        self.assertEqual(orders[2].margin, 120)
+
+        # check margins percent
+        self.assertEqual(orders[0].margin_percent, 1)
+        self.assertEqual(orders[1].margin_percent, 1)
+        self.assertEqual(orders[2].margin_percent, 1)
+
+        # close session
+        self.close_pos_session(config=self.config)
+
+    def test_tax_margin(self):
+        """
+        Test margin with tax on products
+        Product 1 price without tax = 10
+        Product 2 price without tax = 50
+        """
+
+        product1 = self.create_product('Product 1', 10, self.taxes['tax7'].ids, standard_price=5)
+        product2 = self.create_product('Product 2', 55, self.taxes['tax10_incl'].ids, standard_price=30)
+
+        # open a session
+        self.open_new_session()
+
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]]},
+            {'lines': [[product2, 1]]},
+            {'lines': [[product1, 2], [product2, 2]]},
+        ]).values())
+
+        # check margins
+        self.assertEqual(orders[0].margin, 5)
+        self.assertEqual(orders[1].margin, 20)
+        self.assertEqual(orders[2].margin, 50)
+
+        # check margins percent
+        self.assertEqual(orders[0].margin_percent, 0.5)
+        self.assertEqual(orders[1].margin_percent, 0.4)
+        self.assertEqual(round(orders[2].margin_percent, 2), 0.42)
+
+        # close session
+        self.close_pos_session(config=self.config)
+
+    def test_other_currency_margin(self):
+        """
+        Test margin with tax on products and with different currency
+        The currency rate is 0.5 so the product price is halved in this currency.
+        """
+        config = self.pos_config_eur
+
+        # same parameters as test_positive_margin
+        product1 = self.create_product('Product 1', 10, standard_price=5)
+        product2 = self.create_product('Product 2', 50, standard_price=30)
+
+        # open a session
+        self.open_new_session(config=self.config)
+
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]], 'config': config},
+            {'lines': [[product2, 1]], 'config': config},
+            {'lines': [[product1, 2], [product2, 2]], 'config': config},
+        ]).values())
+
+        # check margins in the config currency
+        self.assertEqual(orders[0].margin, 2.5)
+        self.assertEqual(orders[1].margin, 10)
+        self.assertEqual(orders[2].margin, 25)
+
+        # check margins percent which should be the same as test_positive_margin
+        self.assertEqual(orders[0].margin_percent, 0.5)
+        self.assertEqual(orders[1].margin_percent, 0.4)
+        self.assertEqual(round(orders[2].margin_percent, 2), 0.42)
+
+        # close session
+        self.close_pos_session(config=config)
+
+    def test_tax_and_other_currency_margin(self):
+        """
+        Test margin with different currency between products and config with taxes.
+        Product 1 price without tax = 10
+        Product 2 price without tax = 50
+        The currency rate is 0.5 so the product price is halved in this currency.
+        """
+        config = self.pos_config_eur
+
+        product1 = self.create_product('Product 1', 10, self.taxes['tax7'].ids, standard_price=5)
+        product2 = self.create_product('Product 2', 55, self.taxes['tax10_incl'].ids, standard_price=30)
+
+        # open a session
+        self.open_new_session(config=config)
+
+        orders = list(self.create_orders([
+            {'lines': [[product1, 1]], 'config': config},
+            {'lines': [[product2, 1]], 'config': config},
+            {'lines': [[product1, 2], [product2, 2]], 'config': config},
+        ]).values())
+
+        # check margins in the config currency
+        self.assertEqual(orders[0].margin, 2.5)
+        self.assertEqual(orders[1].margin, 10)
+        self.assertEqual(orders[2].margin, 25)
+
+        # check margins percent which should be the same as test_tax_margin
+        self.assertEqual(orders[0].margin_percent, 0.5)
+        self.assertEqual(orders[1].margin_percent, 0.4)
+        self.assertEqual(orders[2].margin_percent, 0.4167)
+
+        # close session
+        self.close_pos_session(config=config)
+
+    def test_return_margin(self):
+        """
+        Test margin where we return product (negative line quantity)
+        """
+
+        product1 = self.create_product('Product 1', 10, standard_price=5)
+        product2 = self.create_product('Product 2', 50, standard_price=30)
+
+        # open a session
+        self.open_new_session()
+
+        orders = list(self.create_orders([
+            {'lines': [[product1, -1]], 'is_refund': True},
+            {'lines': [[product2, -1]], 'is_refund': True},
+            {'lines': [[product1, -2], [product2, -2]], 'is_refund': True},
+        ]).values())
+
+        # check margins
+        self.assertEqual(orders[0].margin, -5)
+        self.assertEqual(orders[1].margin, -20)
+        self.assertEqual(orders[2].margin, -50)
+
+        # check margins percent
+        self.assertEqual(orders[0].margin_percent, 0.5)
+        self.assertEqual(orders[1].margin_percent, 0.4)
+        self.assertEqual(round(orders[2].margin_percent, 2), 0.42)
+
+        # close session
+        self.close_pos_session(config=self.config)

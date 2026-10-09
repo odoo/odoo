@@ -229,10 +229,12 @@ class CommonPosTest(AccountTestInvoicingCommon):
         })
         # TODO-PARP: Remove this alias after all modules are migrated.
         cls.basic_config = cls.pos_config_usd
+        cls.config = cls.pos_config_usd
 
     @classmethod
     def create_product_template(cls, name, list_price, pos_categ_ids=[], tax_ids=[], **kwargs):
         return cls.env['product.template'].create({
+            'is_storable': True,
             'available_in_pos': True,
             'name': name,
             'list_price': list_price,
@@ -242,20 +244,16 @@ class CommonPosTest(AccountTestInvoicingCommon):
         })
 
     @classmethod
-    def create_product(cls, name, category, lst_price, standard_price=None, tax_ids=[], sale_account=None):
-        product = cls.env['product.product'].create({
+    def create_product(cls, name, lst_price, tax_ids=[], **kwargs):
+        return cls.env['product.product'].create({
             'is_storable': True,
             'available_in_pos': True,
             'taxes_id': [Command.set(list(tax_ids))],
             'name': name,
-            'categ_id': category.id,
             'lst_price': lst_price,
-            'standard_price': standard_price or 0.0,
             'company_id': cls.env.company.id,
+            **kwargs,
         })
-        if sale_account:
-            product.property_account_income_id = sale_account
-        return product
 
     def open_new_session(self, opening_cash=0, config=None):
         """ Used to open new pos session in each configuration.
@@ -485,6 +483,12 @@ class CommonPosTest(AccountTestInvoicingCommon):
 
         return order, refund
 
+    def _get_loaded_product_ids(self, session):
+        data = session.load_data()
+        special_product = session.config_id._get_special_products().ids
+        return [p['product_variant_ids'][0] for p in data['product.template']['records']
+                if p['active'] and p['product_variant_ids'][0] not in special_product]
+
 
 # TODO-PARP: Replace usage of this with `CommonPosTest`
 class TestPoSCommon(CommonPosTest):
@@ -602,6 +606,19 @@ class TestPoSCommon(CommonPosTest):
         for order_id in self.env["pos.order"].browse(order_ids):
             result[order_id.uuid] = order_id
         return result
+
+    @classmethod
+    def create_product(cls, name, category, lst_price, standard_price=None, tax_ids=[], sale_account=None):
+        product = super().create_product(
+            name,
+            lst_price,
+            tax_ids,
+            categ_id=category.id,
+            standard_price=standard_price or 0.0
+        )
+        if sale_account:
+            product.property_account_income_id = sale_account
+        return product
 
 
 # TODO-PARP: Remove usage of `archive_products` from other `setUpClass` (use the existing products)

@@ -8,13 +8,9 @@ from . import test_order_receipt
 from . import test_performances
 from . import test_point_of_sale_flow
 from . import test_pos_accounting
-from . import test_pos_basic_config
-from . import test_pos_cash_rounding
+from . import test_pos_config
 from . import test_pos_controller
-from . import test_pos_data_loading
-from . import test_pos_invoice_consolidation
-from . import test_pos_margin
-from . import test_pos_other_currency_config
-from . import test_pos_product_variants
-from . import test_pos_products_with_tax
+from . import test_pos_data
+from . import test_pos_order
 from . import test_pos_report
+from . import test_pos_ui_products

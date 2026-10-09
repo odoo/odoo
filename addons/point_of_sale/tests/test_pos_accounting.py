@@ -42,16 +42,8 @@ class TestPosAccounting(CommonPosTest):
         cls.product_6 = cls.ten_dollars_no_tax.product_variant_id
         cls.product_12 = cls.ten_dollars_with_10_incl.product_variant_id
         cls.product_21 = cls.ten_dollars_with_15_incl.product_variant_id
-        (cls.product_6 | cls.product_12 | cls.product_21).is_storable = True
         cls.partner_1 = cls.partner_mobt
 
-        # A new branch is required because an existing company's parent cannot change.
-        cls.branch = cls.env['res.company'].create({
-            'name': 'Sub Company',
-            'parent_id': cls.company.id,
-            'chart_template': cls.company.chart_template,
-            'country_id': cls.company.country_id.id,
-        })
         cls.env.cr.precommit.run()
 
     # TODO-PARP: Remove legacy helper adapters after all modules are migrated.
@@ -1461,11 +1453,18 @@ class TestPosAccounting(CommonPosTest):
         self.assertFalse(session.move_ids)
 
     def test_pos_order_with_company_branch(self):
-        self.other_cash_journal.write({'company_id': self.branch.id, 'currency_id': False})
-        self.cash_pm2.company_id = self.branch
+        # A new branch is required because an existing company's parent cannot change.
+        branch = self.env['res.company'].create({
+            'name': 'Sub Company',
+            'parent_id': self.company.id,
+            'chart_template': self.company.chart_template,
+            'country_id': self.company.country_id.id,
+        })
+        self.other_cash_journal.write({'company_id': branch.id, 'currency_id': False})
+        self.cash_pm2.company_id = branch
         config = self.pos_config_eur
         config.write({
-            'company_id': self.branch.id,
+            'company_id': branch.id,
             'journal_id': self.company_data['default_journal_sale'].id,
             'payment_method_ids': [Command.set(self.cash_pm2.ids)],
             'use_pricelist': False,
