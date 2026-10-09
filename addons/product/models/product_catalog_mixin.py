@@ -99,7 +99,7 @@ class ProductCatalogMixin(models.AbstractModel):
         for product in products:
             res[product.id] = {
                 "quantity": 0,
-                "readOnly": catalog_is_readonly,
+                **({"readOnly": True} if catalog_is_readonly else {}),
                 **({"price": default_prices[product.id]} if product.id in default_prices else {}),
                 **self._get_product_catalog_product_data(product, **kwargs),
             }
@@ -134,8 +134,6 @@ class ProductCatalogMixin(models.AbstractModel):
         :param dict kwargs: additional values forwarded to called methods.
         """
         return {
-            "productType": product.type,
-            "code": product.code or "",
             **self._get_product_catalog_uom_data(product, product.uom_id, **kwargs),
         }
 
@@ -147,14 +145,12 @@ class ProductCatalogMixin(models.AbstractModel):
         :param dict kwargs: additional values available for overrides.
         """
         if not self.env["res.groups"]._is_feature_enabled("uom.group_uom"):
-            return {"uomId": uom.id}
+            return {}
 
         return {
-            "availableUoms": product._get_available_uoms().read(["name", "factor"]),
+            "availableUoms": product._get_available_uoms().read(["display_name", "factor"]),
+            "productUomId": product.uom_id.id,
             "uomId": uom.id,
-            "uomDisplayName": uom.display_name,
-            "productUomFactor": product.uom_id.factor / uom.factor,
-            "productUomDisplayName": product.uom_id.display_name,
         }
 
     def _get_product_catalog_record_lines(self, product_ids, child_field, **kwargs) -> dict:
