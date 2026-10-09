@@ -10,12 +10,6 @@ export class AttendanceListRenderer extends ListRenderer {
         ...AttendanceListRenderer.components,
         AttendanceActionHelper,
     };
-
-    /** @override **/
-    get showNoContentHelper() {
-        // Rows's length need to be lower than 6 to avoid nocontent overlapping
-        return super.showNoContentHelper && this.props.list.count < 6;
-    }
 }
 
 export class AttendanceListModel extends listView.Model {
