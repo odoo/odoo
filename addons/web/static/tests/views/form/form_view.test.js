@@ -49,6 +49,7 @@ import {
     mockOffline,
     MockServer,
     mockService,
+    mockUpload,
     models,
     mountView,
     mountViewInDialog,
@@ -13278,14 +13279,12 @@ test("attach_document widget also works inside a dropdown", async () => {
             fileInput = this.fileInput;
         },
     });
-    mockService("http", {
-        post: (route, params) => {
-            expect.step("post");
-            expect(route).toBe("/web/binary/upload_attachment");
-            expect(params.model).toBe("partner");
-            expect(params.id).toBe(1);
-            return '[{ "id": 5 }, { "id": 2 }]';
-        },
+    mockUpload((route, params) => {
+        expect.step("post");
+        expect(route).toBe("/web/binary/upload_attachment");
+        expect(params.model).toBe("partner");
+        expect(params.id).toBe("1");
+        return '[{ "id": 5 }, { "id": 2 }]';
     });
 
     await mountView({

@@ -1,7 +1,8 @@
-import { beforeEach, expect, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import {
     contains,
     mockService,
+    mockUpload,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -20,9 +21,7 @@ async function createFileInput({ mockPost, mockAdd, props }) {
     mockService("notification", {
         add: mockAdd || (() => {}),
     });
-    mockService("http", {
-        post: mockPost || (() => {}),
-    });
+    mockUpload(mockPost || (() => "[]"));
     await mountWithCleanup(FileInput, { props });
 }
 
@@ -30,19 +29,12 @@ async function createFileInput({ mockPost, mockAdd, props }) {
 // Tests
 // -----------------------------------------------------------------------------
 
-beforeEach(() => {
-    patchWithCleanup(odoo, { csrf_token: "dummy" });
-});
-
 test("Upload a file: default props", async () => {
     expect.assertions(5);
 
     await createFileInput({
         mockPost: (route, params) => {
-            expect(params).toEqual({
-                csrf_token: "dummy",
-                ufile: [],
-            });
+            expect(params).toEqual({ ufile: [] });
             expect.step(route);
             return "[]";
         },
@@ -83,9 +75,8 @@ test("Upload a file: custom attachment", async () => {
         },
         mockPost: (route, params) => {
             expect(params).toEqual({
-                id: 5,
+                id: "5",
                 model: "res.model",
-                csrf_token: "dummy",
                 ufile: [],
             });
             expect.step(route);
@@ -99,6 +90,7 @@ test("Upload a file: custom attachment", async () => {
 
     await contains(".o_file_input input", { visible: false }).click();
     await setInputFiles([]);
+    await animationFrame();
 
     expect(".o_file_input input").toHaveAttribute("multiple", null, {
         message: "'multiple' attribute should be set",
@@ -210,11 +202,10 @@ test("support preprocessing of files via props", async () => {
 });
 
 test("an upload that ends after the component is destroyed does not call onUpload", async () => {
-    // The FileInput posts through the http service, which is not protected
-    // against a destroyed component. A dialog that closes while the upload is
-    // in flight must not have its onUpload callback fired afterwards: the
-    // owner of that callback (e.g. a many2many_binary field) is gone, and its
-    // record can no longer be updated.
+    // The upload is not bound to the component. A dialog that closes while the
+    // upload is in flight must not have its onUpload callback fired afterwards:
+    // the owner of that callback (e.g. a many2many_binary field) is gone, and
+    // its record can no longer be updated.
     const uploadedPromise = Promise.withResolvers();
     class Parent extends Component {
         static components = { FileInput };
@@ -227,11 +218,9 @@ test("an upload that ends after the component is destroyed does not call onUploa
         }
     }
     mockService("notification", { add: () => {} });
-    mockService("http", {
-        post: async () => {
-            await uploadedPromise.promise;
-            return "[]";
-        },
+    mockUpload(async () => {
+        await uploadedPromise.promise;
+        return "[]";
     });
     const parent = await mountWithCleanup(Parent);
 
