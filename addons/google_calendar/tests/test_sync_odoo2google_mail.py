@@ -56,7 +56,7 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
 
         with self.mock_mail_app():
             # Not synced: no message should be send
-            self.assertFalse(user.is_google_calendar_synced())
+            (user | self.env.user).google_calendar_token = False
             existing_event_over_limit = self.env['calendar.event'].create({**base_vals, 'alarm_ids': all_alarms})
             assert_alarm_message(existing_event_over_limit, 0)
             # Synced: message should be send when the synchronization is restarted
@@ -66,7 +66,7 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
             })
             # Restart google synchronization
             self.env['calendar.event'].with_user(user)._check_synced_events_alarm_limit()
-            self.env.user.google_synchronization_stopped = False
+            (user | self.env.user).google_calendar_token = 'token'
             assert_alarm_message(existing_event_over_limit, 1)
             # Create
             event_under_limit = self.env['calendar.event'].create({**base_vals, 'alarm_ids': [(4, alarms[0].id)]})

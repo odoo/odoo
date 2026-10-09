@@ -42,16 +42,12 @@ class CalendarEvent(models.Model):
     microsoft_recurrence_master_id = fields.Char('Microsoft Recurrence Master Id')
     microsoft_sync_active = fields.Boolean('Microsoft Sync Active', compute='_compute_microsoft_sync_active')
 
-    @api.depends('user_id.microsoft_calendar_rtoken', 'user_id.microsoft_synchronization_stopped')
+    @api.depends('user_id.microsoft_calendar_token')
     def _compute_microsoft_sync_active(self):
         # Check token and sync status manually to avoid calling
         # _check_microsoft_sync_status, which may trigger a token refresh
         for event in self:
-            sync_active = (
-                bool(event.user_id.sudo().microsoft_calendar_rtoken)
-                and not event.user_id.sudo().microsoft_synchronization_stopped
-            )
-            event.microsoft_sync_active = sync_active
+            event.microsoft_sync_active = bool(event.user_id.sudo().microsoft_calendar_token)
 
     @api.depends('microsoft_sync_active', 'recurrency')
     def _compute_user_can_edit(self):
@@ -70,13 +66,11 @@ class CalendarEvent(models.Model):
     def _check_microsoft_sync_status(self):
         """
         Returns True if synchronization with Outlook Calendar is active and False otherwise.
-        The 'microsoft_synchronization_stopped' variable needs to be 'False' and Outlook account must be connected.
         """
-        outlook_connected = self.env.user._get_microsoft_calendar_token()
-        return outlook_connected and self.env.user.sudo().microsoft_synchronization_stopped is False
+        return self.env.user._get_microsoft_calendar_token()
 
     def _skip_send_mail_status_update(self):
-        """If microsoft calendar is not syncing, don't send a mail."""
+        """If the event is synchronized with Outlook, we let outlook send the mail status update."""
         user_id = self._get_event_user_m()
         if self.with_user(user_id)._check_microsoft_sync_status() and user_id._get_microsoft_sync_status() == "sync_active":
             return self.calendar_id and (self.microsoft_id or self.need_sync_m)

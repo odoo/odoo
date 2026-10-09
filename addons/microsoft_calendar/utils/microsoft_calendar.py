@@ -199,9 +199,6 @@ class MicrosoftCalendarService():
     ##  MANAGE CONNEXION TO MICROSOFT  ##
     #####################################
 
-    def is_authorized(self, user):
-        return bool(user.sudo().microsoft_calendar_rtoken) and not user.sudo().microsoft_synchronization_stopped
-
     def _get_calendar_scope(self):
         return 'offline_access openid profile email User.Read Calendars.ReadWrite'
 

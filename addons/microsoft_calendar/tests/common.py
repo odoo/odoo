@@ -53,6 +53,7 @@ class TestCommon(HttpCase):
                 'login': 'mike@organizer.com',
                 'partner_id': partner.id,
             })
+        self.organizer_user.microsoft_calendar_token = "fake_token"
 
         self.attendee_user = self.env["res.users"].search([("name", "=", "John Attendee")])
         if not self.attendee_user:
@@ -469,8 +470,8 @@ class TestCommon(HttpCase):
 
         # Currently, it is forbidden to create recurrences in Odoo. A trick for deactivating the checking
         # is needed below in this test setup: deactivating the synchronization during recurrences creation.
-        sync_previous_state = self.env.user.microsoft_synchronization_stopped
-        self.env.user.microsoft_synchronization_stopped = False
+        sync_previous_token = self.env.user.microsoft_calendar_token
+        self.env.user.microsoft_calendar_token = False
 
         if not already_created:
             self.recurrent_base_event = self.env["calendar.event"].with_context(dont_notify=True).with_user(self.organizer_user).create(
@@ -497,7 +498,7 @@ class TestCommon(HttpCase):
             self.recurrent_events_count = len(self.recurrent_events)
 
         # Rollback the synchronization status after setup.
-        self.env.user.microsoft_synchronization_stopped = sync_previous_state
+        self.env.user.microsoft_calendar_token = sync_previous_token
 
     def assert_odoo_event(self, odoo_event, expected_values):
         """

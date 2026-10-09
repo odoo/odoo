@@ -8,7 +8,6 @@ from odoo import fields
 from odoo.exceptions import UserError
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
-from odoo.addons.microsoft_calendar.models.res_users import ResUsers
 from odoo.tests import tagged
 
 from odoo.addons.microsoft_calendar.tests.common import (
@@ -19,13 +18,14 @@ from odoo.addons.microsoft_calendar.tests.common import (
 )
 
 
-@patch.object(ResUsers, '_get_microsoft_calendar_token', mock_get_token)
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDeleteEvents(TestCommon):
 
     @patch_api
     def setUp(self):
         super(TestDeleteEvents, self).setUp()
+        self.organizer_user.microsoft_calendar_token = mock_get_token(self.organizer_user)
+        self.attendee_user.microsoft_calendar_token = mock_get_token(self.attendee_user)
         self.create_events_for_tests()
 
     @patch.object(MicrosoftCalendarService, 'delete')
@@ -98,7 +98,7 @@ class TestDeleteEvents(TestCommon):
         # arrange
         several_simple_events = self.several_events.filtered(lambda ev: not ev.recurrency and ev.microsoft_id)
         # act
-        several_simple_events.action_archive()
+        several_simple_events.with_user(self.organizer_user).action_archive()
         self.call_post_commit_hooks()
         several_simple_events.invalidate_recordset()
 
@@ -316,7 +316,6 @@ class TestDeleteEvents(TestCommon):
         Deletes an event with the Outlook Calendar synchronization paused, the event must be archived completely.
         """
         # Set user synchronization configuration as active and pause it.
-        self.organizer_user.microsoft_synchronization_stopped = False
         self.organizer_user.pause_microsoft_synchronization()
 
         # Try to delete a simple event in Odoo Calendar.
@@ -325,7 +324,7 @@ class TestDeleteEvents(TestCommon):
         self.simple_event.invalidate_recordset()
 
         # Ensure that synchronization is paused, delete wasn't called and record doesn't exist anymore.
-        self.assertFalse(self.organizer_user.microsoft_synchronization_stopped)
+        self.assertTrue(bool(self.organizer_user.microsoft_calendar_token))
         self.assertEqual(self.organizer_user._get_microsoft_sync_status(), "sync_paused")
         self.assertFalse(self.simple_event.exists(), "Event must be deleted from Odoo even though sync configuration is off")
         mock_delete.assert_not_called()
@@ -350,14 +349,14 @@ class TestDeleteEvents(TestCommon):
         # Forbid recurrence unlinking from list view with sync on.
         self.assertTrue(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
         with self.assertRaises(UserError):
-            self.recurrent_events.unlink()
+            self.recurrent_events.with_user(self.organizer_user).unlink()
 
         # Allow recurrence unlinking when update comes from Microsoft (dont_notify=True).
         self.recurrent_events[2:].with_context(dont_notify=True).unlink()
         self.assertTrue(all(not event.exists() for event in self.recurrent_events[2:]), "Recurrent event must be deleted after unlink from Microsoft.")
 
         # Allow unlinking recurrence when sync is off for the current user.
-        self.organizer_user.microsoft_synchronization_stopped = True
+        self.organizer_user.microsoft_calendar_token = False
         self.assertFalse(self.env['calendar.event'].with_user(self.organizer_user)._check_microsoft_sync_status())
         self.recurrent_events[1].with_user(self.organizer_user).unlink()
         self.assertFalse(self.recurrent_events[1].exists(), "Recurrent event must be deleted after unlink with sync off.")
