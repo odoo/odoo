@@ -132,6 +132,10 @@ export class PaymentScreenPaymentLines extends Component {
      * @type {PaymentActionState}
      */
     getPaymentActionState(line) {
+        if (line.useBankQrCode && line.payment_status === "waiting") {
+            return null;
+        }
+
         const status = line.payment_status;
         const isRefund = line.isRefund;
         const SPINNER_ICON = "autorenew";

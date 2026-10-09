@@ -233,6 +233,12 @@ test("addPaymentline", async () => {
     const result2 = order.addPaymentline(cashPaymentMethod);
     expect(result2.data.payment_method_id.id).toBe(cashPaymentMethod.id);
     expect(result2.data.amount).toBe(585);
+
+    // A line paid through a payment interface starts as pending
+    const cardPaymentMethod = store.models["pos.payment.method"].get(2);
+    cardPaymentMethod.payment_interface = {};
+    const result3 = order.addPaymentline(cardPaymentMethod);
+    expect(result3.data.payment_status).toBe("pending");
 });
 
 test("toBeValidate", async () => {

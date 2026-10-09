@@ -92,10 +92,10 @@ patch(PaymentScreen.prototype, {
 
         return await super.addNewPaymentLine(pm, args);
     },
-    deletePaymentLine(lineUuid) {
+    async deletePaymentLine(lineUuid) {
         const line = this.currentOrder.getPaymentlineByUuid(lineUuid);
         if (!this.vivaApp.use(line.payment_method_id) && !this.integrated()) {
-            return super.deletePaymentLine(lineUuid);
+            return await super.deletePaymentLine(lineUuid);
         }
 
         this.currentOrder.removePaymentline(line);

@@ -28,6 +28,7 @@ export class PaymentInterface {
         this.dialog = pos.dialog;
         this.payment_method_id = payment_method_id;
         this.supports_refunds = true;
+        this.auto_send_request = false;
     }
 
     /**
