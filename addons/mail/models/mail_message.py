@@ -782,7 +782,7 @@ class MailMessage(models.Model):
                 if vals_lst:
                     self.env['mail.tracking.value'].sudo().create(vals_lst)
                 if other_cmd:
-                    message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+                    message.write({'tracking_value_ids': other_cmd})
 
         messages.filtered(lambda msg: msg._is_thread_message() and msg.message_type != 'user_notification')._invalidate_documents()
 
