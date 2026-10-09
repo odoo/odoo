@@ -418,13 +418,26 @@ class SurveyQuestion(models.Model):
                 and not answer \
                 and not (self.comments_allowed and self.comment_count_as_answer and comment):
             return {self.id: self.constr_error_msg or _('This question requires an answer.')}
+        answers = answer if isinstance(answer, list) else ([answer] if answer else [])
+        if not self._are_valid_answers(answers, self.suggested_answer_ids):
+            return {self.id: _('The answer you entered is not valid.')}
         return {}
 
     def _validate_matrix(self, answers):
         # Validate that each line has been answered
         if self.constr_mandatory and len(self.matrix_row_ids) != len(answers):
             return {self.id: self.constr_error_msg or _('This question requires an answer.')}
+        if not self._are_valid_answers(answers, self.matrix_row_ids) or any(
+                not self._are_valid_answers(row_answers, self.suggested_answer_ids)
+                for row_answers in answers.values()):
+            return {self.id: _('The answer you entered is not valid.')}
         return {}
+
+    def _are_valid_answers(self, answer_ids, question_answers):
+        try:
+            return set(map(int, answer_ids)) <= set(question_answers.ids)
+        except (TypeError, ValueError):
+            return False
 
     def _index(self):
         """We would normally just use the 'sequence' field of questions BUT, if the pages and questions are
