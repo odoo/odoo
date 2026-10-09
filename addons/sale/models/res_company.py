@@ -127,6 +127,10 @@ class ResCompany(models.Model):
         extra_domain = Domain([
             ('company_id', '=', self.id),
             ('product_id.is_storable', '=', True),
+            ('accrual_move_ids', 'not any', [
+                ('state', '=', 'posted'),
+                ('reversal_move_ids', 'not any', [('state', '=', 'posted')]),
+            ]),
         ])
         order_lines = self.env['sale.order.line']._get_accrual_line_ids(date=date, extra_domain=extra_domain)
         candidates['invoice_to_be_issued'] = order_lines.filtered(lambda l: l.amount_to_invoice_at_date > 0)
