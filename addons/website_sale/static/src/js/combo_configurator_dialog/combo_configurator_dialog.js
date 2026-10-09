@@ -1,5 +1,5 @@
 import { t, useProps } from "@odoo/owl";
-import { ComboConfiguratorDialog } from "@sale/js/combo_configurator_dialog/combo_configurator_dialog";
+import { ComboConfiguratorDialog } from "@sale/configurator/combo/combo_configurator_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 

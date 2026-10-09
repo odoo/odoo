@@ -1,4 +1,4 @@
-import { ProductList } from '@sale/js/product_list/product_list';
+import { ProductList } from '@sale/components/product_list/product_list';
 import { _t } from "@web/core/l10n/translation";
 import { patch } from '@web/core/utils/patch';
 
