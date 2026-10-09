@@ -2,6 +2,7 @@
 <odoo>
     <template id="report_delivery_document">
         <t t-call="web.html_container">
+            <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())" />
             <t t-set="partner" t-value="o.partner_id or (o.move_ids and o.move_ids[0].partner_id) or False"/>
             <t t-set="address">
                 <div name="div_outgoing_address">
@@ -42,7 +43,6 @@
                 partner="partner"
                 address="address"
                 information_block="information_block">
-                <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())" />
                 <div class="page">
                     <h2 style="margin-top: 15px;">
                         <span t-out="o.picking_type_id._get_code_report_name()"/>
