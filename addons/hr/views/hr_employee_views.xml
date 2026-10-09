@@ -111,7 +111,7 @@
                         <button string="Invite" name="action_send_invitation" type="object"
                                 class="btn btn-primary" invisible="user_id" groups="base.group_erp_manager"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" class="o_button_plan_wizard_action"
-                            groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
+                            groups="hr.group_hr_user" invisible="1" context="{'sort_by_responsible': True}"/>
                         <field name="user_state" widget="employee_user_status"/>
                         <field name="version_id" widget="versions_timeline" context="{'version_revision': version_revision}" invisible="not id" options="{'clickable': True}" readonly="False"/>
                         <field name="version_revision" invisible="1"/>
@@ -186,7 +186,7 @@
                                                 nolabel="1"/>
                                             </div>
                                         <field name="employee_type_id" string="Employee Type" placeholder="Select employee type"
-                                                domain="[('country_id', 'in', [company_country_id, False]), '|', ('company_id', 'in', [company_id, False]), ('company_id', '=', parent_company_id)]"/>
+                                                domain="[('name', '!=', 'Thesis'), ('country_id', 'in', [company_country_id, False]), '|', ('company_id', 'in', [company_id, False]), ('company_id', '=', parent_company_id)]"/>
                                         <label for="contract_date_start" string="Contract"/>
                                         <div class="o_row" name="contract_dates">
                                             <field name="contract_date_start" string="Start Date" placeholder="Not Employed" class="o_hr_narrow_field me-3"/>
@@ -544,7 +544,7 @@
                     <field name="contract_date_end" optional="hide"/>
                     <field name="currency_id" column_invisible="1"/>
                     <field name="wage" widget="monetary" optional="hide"/>
-                    <field name="employee_type_id" optional="hide"/>
+                    <field name="employee_type_id" optional="hide" domain="[('name', '!=', 'Thesis')]"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="department_id" optional="show"/>

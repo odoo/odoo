@@ -34,7 +34,8 @@
                             <field name="currency_id" invisible="1"/> <!-- for monetary fields -->
                             <group name="salary_info">
                                 <group name="contract" string="Contract Overview" groups="hr.group_hr_user">
-                                    <field name="employee_type_id" string="Employee Type" placeholder="Select employee type"/>
+                                    <field name="employee_type_id" string="Employee Type" placeholder="Select employee type"
+                                            domain="[('name', '!=', 'Thesis')]"/>
                                     <label for="wage"/>
                                     <div class="o_row" name="wage">
                                         <field name="wage" class="o_hr_narrow_field"/>
