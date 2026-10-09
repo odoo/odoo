@@ -563,7 +563,7 @@ export class Composer extends Component {
     }
 
     get showComposerAvatar() {
-        return !this.compact && this.props.sidebar;
+        return !this.compact && this.props.sidebar && !this.ancestors.inSideChannel;
     }
 
     get showComposerAvatarImage() {
