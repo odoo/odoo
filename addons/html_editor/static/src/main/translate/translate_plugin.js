@@ -1,11 +1,12 @@
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { TranslateDialog } from "@html_editor/main/translate/translate_dialog";
 import { LanguageSelector } from "@html_editor/main/translate/language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
 import { isContentEditable } from "@html_editor/utils/dom_info";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 
 export class TranslatePlugin extends Plugin {
     static id = "translate";
@@ -90,7 +91,12 @@ export class TranslatePlugin extends Plugin {
             },
             ...params,
         };
-        dialogParams.baseContainer = this.dependencies.baseContainer.getDefaultNodeName();
+        const block = closestBlock(selection.commonAncestorContainer);
+        if (descendants(block).some((el) => isBlock(el))) {
+            dialogParams.baseContainer = this.dependencies.baseContainer.getDefaultNodeName();
+        } else {
+            dialogParams.baseContainer = block.nodeName;
+        }
         // collapse to end
         const sanitize = this.dependencies.sanitize.sanitize;
         const originalText = selection.toString() || "";
