@@ -692,6 +692,7 @@ export class AnalyticDistribution extends Component {
             ".o_popover",
             ".modal:not(.o_inactive_modal):not(:has(.o_act_window))",
         ];
+<<<<<<< 12cad5c5fbdeb22d499cf5389c194d6902a9ef76
         const widgetEl = this.widgetRef();
         if (
             this.isDropdownOpen &&
@@ -701,6 +702,21 @@ export class AnalyticDistribution extends Component {
                 document.querySelector(".modal:not(.o_inactive_modal)").contains(widgetEl)) &&
             !ev.target.isSameNode(document.documentElement)
         ) {
+||||||| 2773139f315d15abf617e765360c36f2831ac04e
+        if (this.isDropdownOpen
+            && !this.widgetRef.el.contains(ev.target)
+            && (!ev.target.closest(selectors.join(",")) ||
+                document.querySelector(".modal:not(.o_inactive_modal)").contains(this.widgetRef.el))
+            && !ev.target.isSameNode(document.documentElement)
+           ) {
+=======
+        if (this.isDropdownOpen
+            && !this.widgetRef.el.contains(ev.target)
+            && (!ev.target.closest(selectors.join(",")) ||
+                document.querySelector(".modal:not(.o_inactive_modal)")?.contains(this.widgetRef.el))
+            && !ev.target.isSameNode(document.documentElement)
+           ) {
+>>>>>>> ed7fa74903518bc6ebb2d2d655c8c5b0a71e5ead
             this.forceCloseEditor();
         }
     }
