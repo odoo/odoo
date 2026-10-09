@@ -372,7 +372,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             display_currency=website.currency_id,
             extra_domain=Domain.OR([
                 Domain('public_categ_ids', '=', False),
-                Domain('public_categ_ids.not_in_shop', '=', False),
+                # Use "any!" to bypass `empty_public_categories_rule` which is
+                # redundant in this context and costly with a lot of products.
+                Domain('public_categ_ids', 'any!', Domain('not_in_shop', '=', False)),
             ])
             if not (category or search)
             else None,
