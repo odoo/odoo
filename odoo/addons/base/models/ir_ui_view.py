@@ -2934,6 +2934,19 @@ class Base(models.AbstractModel):
         return E.kanban(templates, string=self._description)
 
     @api.model
+    def _get_default_card_view(self):
+        """ Generates a single-field card view, based on _rec_name.
+
+        :returns: a card view as an lxml document
+        :rtype: etree._Element
+        """
+
+        field = E.field(name=self._rec_name_fallback())
+        kanban_card = E.t(field, {'t-name': "card"})
+        templates = E.templates(kanban_card)
+        return E.card(templates, string=self._description)
+
+    @api.model
     def _get_default_graph_view(self):
         """ Generates a single-field graph view, based on _rec_name.
 
