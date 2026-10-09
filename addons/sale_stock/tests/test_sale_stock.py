@@ -2964,6 +2964,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         shown to users having access to the Sales app. """
         stock_user = new_test_user(self.env, login='stock_user_no_sale', groups='stock.group_stock_user')
         salesman = self.company_data['default_user_salesman']
-        Picking = self.env['stock.picking'].with_context(restricted_picking_type_code='outgoing')
-        self.assertNotIn('sale.action_orders', Picking.with_user(stock_user).get_empty_list_help(''))
-        self.assertIn('sale.action_orders', Picking.with_user(salesman).get_empty_list_help(''))
+        view_id = self.env.ref('stock.vpicktree').id
+        Picking = self.env['stock.picking']
+        self.assertNotIn('Sales Orders', Picking.with_user(stock_user).get_view(view_id)['arch'])
+        self.assertIn('Sales Orders', Picking.with_user(salesman).get_view(view_id)['arch'])
