@@ -90,10 +90,11 @@ class PosController(PortalAccount):
         form_values = {}
         if request.httprequest.method == 'POST':
             for field in ['pos_reference', 'date_order', 'ticket_code']:
-                if not kwargs.get(field):
+                value = (kwargs.get(field) or '').strip()
+                if not value:
                     errors[field] = " "
                 else:
-                    form_values[field] = kwargs.get(field)
+                    form_values[field] = value
 
             if errors:
                 errors['generic'] = _("Please fill all the required fields.")
@@ -102,7 +103,7 @@ class PosController(PortalAccount):
             else:
                 date_order = datetime(*[int(i) for i in form_values['date_order'].split('-')])
                 order = request.env['pos.order'].sudo().search([
-                    ('pos_reference', '=like', '%' + form_values['pos_reference'].strip().replace('%', r'\%').replace('_', r'\_')),
+                    ('pos_reference', '=like', '%' + form_values['pos_reference'].replace('%', r'\%').replace('_', r'\_')),
                     ('date_order', '>=', date_order - timedelta(days=1)),
                     ('date_order', '<', date_order + timedelta(days=2)),
                     ('ticket_code', '=', form_values['ticket_code']),
