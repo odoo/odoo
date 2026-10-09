@@ -9,7 +9,7 @@
             </div>
             <t t-foreach="this.groupedCategories(this.categories())" t-as="group" t-key="group_index">
                 <t t-set="groupHasMembers" t-value="group.categories.some((c) => c.filtered.length > 0)"/>
-                <div t-if="group.sequenceGroup and groupHasMembers" class="o-discuss-ChannelMemberList-group border bg-100 rounded-4 mt-2 p-2">
+                <div t-if="group.sequenceGroup and groupHasMembers" class="o-discuss-ChannelMemberList-group border bg-100 rounded-4 mt-2 p-2" t-att-class="this.groupClass(group)">
                     <t t-foreach="group.categories" t-as="category" t-key="category_index">
                         <t t-call="discuss.ChannelMemberList.category"/>
                     </t>

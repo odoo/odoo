@@ -28,7 +28,7 @@
 }
 
 .o-discuss-badge.o-mail-MessagingMenu-tabUnread {
-    --o-discuss-badge-bg: #{transparent};
+    --o-discuss-badge-bg: transparent;
     opacity: 50%;
     color: unset !important;
 }
@@ -49,16 +49,16 @@
 
 .o-mail-MessagingMenu-filter {
     --btn-hover-color: var(--o-bs-body-color);
-    --btn-border-color: #{var(--mail-MessagingMenu-filterBorderColor, #{$border-color})};
-    --btn-hover-border-color: #{var(--mail-MessagingMenu-filterBorderColor, #{$border-color})};
+    --btn-border-color: var(--mail-MessagingMenu-filterBorderColor, #{$border-color});
+    --btn-hover-border-color: var(--mail-MessagingMenu-filterBorderColor, #{$border-color});
 
     &.o-active {
         --btn-color: var(--o-enterprise-action-color);
         --btn-hover-color: var(--o-enterprise-action-color);
-        --btn-bg: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBgOpacity, 0.12))};
-        --btn-hover-bg: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBgOpacity, 0.12))};
-        --btn-border-color: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBorderOpacity, 0.35))};
-        --btn-hover-border-color: #{rgba($o-enterprise-action-color, var(--mail-MessagingMenu-filterActiveBorderOpacity, 0.35))};
+        --btn-bg: color-mix(in srgb, var(--o-enterprise-action-color) calc(var(--mail-MessagingMenu-filterActiveBgOpacity, 0.12) * 100%), transparent);
+        --btn-hover-bg: color-mix(in srgb, var(--o-enterprise-action-color) calc(var(--mail-MessagingMenu-filterActiveBgOpacity, 0.12) * 100%), transparent);
+        --btn-border-color: color-mix(in srgb, var(--o-enterprise-action-color) calc(var(--mail-MessagingMenu-filterActiveBorderOpacity, 0.35) * 100%), transparent);
+        --btn-hover-border-color: color-mix(in srgb, var(--o-enterprise-action-color) calc(var(--mail-MessagingMenu-filterActiveBorderOpacity, 0.35) * 100%), transparent);
     }
 }
 

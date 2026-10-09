@@ -1,9 +1,8 @@
-$o-bus-ConnectionAlert-color: mix($white, $warning, 60%);
-
 .o-bus-ConnectionAlert {
+    --o-bus-ConnectionAlert-color: color-mix(in srgb, var(--white) 60%, var(--warning));
     z-index: 1056;
     animation: o-bus-ConnectionAlert-borderAnimation ease-in-out .5s forwards;
-    border: 2px solid $o-bus-ConnectionAlert-color;
+    border: 2px solid var(--o-bus-ConnectionAlert-color);
 }
 
 .o-bus-ConnectionAlert-failure {
@@ -36,23 +35,23 @@ $o-bus-ConnectionAlert-color: mix($white, $warning, 60%);
 
 @keyframes o-bus-ConnectionAlert-borderAnimation {
     from {
-        border-color: rgba($o-bus-ConnectionAlert-color, 0);
+        border-color: color-mix(in srgb, var(--o-bus-ConnectionAlert-color) 0%, transparent);
 
     }
 
     to {
-        border-color: $o-bus-ConnectionAlert-color;
+        border-color: var(--o-bus-ConnectionAlert-color);
     }
 }
 
 @keyframes o-bus-ConnectionAlert-failureAnimation {
     from {
         opacity: 0%;
-        background-color: rgba($o-bus-ConnectionAlert-color, .5);
+        background-color: color-mix(in srgb, var(--o-bus-ConnectionAlert-color) 50%, transparent);
     }
 
     to {
         opacity: 100%;
-        background-color: $o-bus-ConnectionAlert-color;
+        background-color: var(--o-bus-ConnectionAlert-color);
     }
 }

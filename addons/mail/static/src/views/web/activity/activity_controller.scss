@@ -14,7 +14,7 @@
             }
 
             th {
-                --table-bg: linear-gradient(to bottom, #{$o-webclient-background-color}, color-mix(in srgb, var(--o-webclient-background-color) 75%, transparent));
+                --table-bg: linear-gradient(to bottom, var(--o-webclient-background-color), color-mix(in srgb, var(--o-webclient-background-color) 75%, transparent));
 
                 /* Temporary workaround: We replace the border with a box-shadow to simulate the border bottom so it keeps visible when scrolling. */
                 border: 0;
@@ -38,33 +38,33 @@
     }
     .o_activity_summary_cell {
         .o-mail-ActivityCell-counter {
-            color: map-get($theme-colors, 'dark');
+            color: var(--dark);
         }
         &.planned {
-            background-color: map-get($theme-colors, 'success');
-            color: map-get($theme-colors, 'light');
+            background-color: var(--success);
+            color: var(--light);
             a {
-                color: map-get($theme-colors, 'light');
+                color: var(--light);
                 &:hover {
                     text-decoration: underline;
                 }
             }
         }
         &.overdue {
-            background-color: map-get($theme-colors, 'danger');
-            color: map-get($theme-colors, 'light');
+            background-color: var(--danger);
+            color: var(--light);
             a {
-                color: map-get($theme-colors, 'light');
+                color: var(--light);
                 &:hover {
                     text-decoration: underline;
                 }
             }
         }
         &.today {
-            background-color: map-get($theme-colors, 'warning');
-            color: map-get($theme-colors, 'light');
+            background-color: var(--warning);
+            color: var(--light);
             a {
-                color: map-get($theme-colors, 'light');
+                color: var(--light);
                 &:hover {
                     text-decoration: underline;
                 }
@@ -73,7 +73,7 @@
         &.done {
             background-color: var(--gray-300);
             a {
-                color: map-get($theme-colors, 'dark');
+                color: var(--dark);
                 &:hover {
                     text-decoration: underline;
                 }
@@ -139,13 +139,13 @@
     }
 
     .o_activity_filter_planned {
-        background-color: mix(map-get($theme-colors, 'success'), $o-webclient-background-color, 5%);
+        background-color: color-mix(in srgb, var(--success) 5%, var(--o-webclient-background-color));
     }
     .o_activity_filter_today {
-        background-color: mix(map-get($theme-colors, 'warning'), $o-webclient-background-color, 5%);
+        background-color: color-mix(in srgb, var(--warning) 5%, var(--o-webclient-background-color));
     }
     .o_activity_filter_overdue {
-        background-color: mix(map-get($theme-colors, 'danger'), $o-webclient-background-color, 5%);
+        background-color: color-mix(in srgb, var(--danger) 5%, var(--o-webclient-background-color));
     }
     .o_activity_type_cell {
         min-width:100px;
@@ -172,7 +172,7 @@
         }
     }
     .o_activity_view_table_footer {
-        background-color: map-get($grays, '100' );
+        background-color: var(--gray-100);
     }
 }
 

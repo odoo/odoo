@@ -22,14 +22,16 @@ const SEARCH_RESULT_LIMIT = 100;
  * @property {number} [sequenceGroup] categories sharing this key are rendered inside a common container.
  * @property {string} [icon] class of an icon shown before the section label.
  * @property {string} [headerClass] extra class applied to the section header.
+ * @property {string} [groupClass] extra class applied to the `sequenceGroup` container
+ * while this category has members.
  */
 
 /**
  * A {@link MemberCategory} resolved against a search term: the definition fields
- * are carried over (minus the source-only `getMembers`/`sequence`) and enriched
+ * are carried over (minus the source-only `getMembers`) and enriched
  * with the members it matched.
  *
- * @typedef {Omit<MemberCategory, "getMembers" | "sequence"> & ResolvedMembers} ComputedMemberCategory
+ * @typedef {Omit<MemberCategory, "getMembers"> & ResolvedMembers} ComputedMemberCategory
  */
 
 /**
@@ -113,7 +115,7 @@ export class ChannelMemberList extends Component {
         const shownMemberIds = new Set();
         return [...MEMBER_CATEGORIES]
             .sort((a, b) => a.sequence - b.sequence)
-            .map(({ getMembers, label, showCount = true, sequenceGroup, icon, headerClass }) => {
+            .map(({ getMembers, showCount = true, ...definition }) => {
                 const all = getMembers(this.props.channel).filter((m) => {
                     if (shownMemberIds.has(m.id)) {
                         return false;
@@ -126,7 +128,7 @@ export class ChannelMemberList extends Component {
                     : all;
                 const filtered = term ? matching.slice(0, Math.max(0, remaining)) : matching;
                 remaining -= filtered.length;
-                return { label, matching, filtered, showCount, sequenceGroup, icon, headerClass };
+                return { ...definition, matching, filtered, showCount };
             });
     }
 
@@ -147,5 +149,15 @@ export class ChannelMemberList extends Component {
             }
         }
         return groups;
+    }
+
+    /**
+     * @param {{ categories: ComputedMemberCategory[] }} group
+     */
+    groupClass(group) {
+        return group.categories
+            .filter((category) => category.filtered.length > 0 && category.groupClass)
+            .map((category) => category.groupClass)
+            .join(" ");
     }
 }
