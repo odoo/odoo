@@ -6,8 +6,17 @@
     z-index: $o-mail-NavigableList-zIndex - 2;
     background-color: $o-webclient-background-color;
 
-    &.shadow-sm {
-        background-image: linear-gradient(90deg, transparent, $o-view-background-color, transparent);
+    &.o-is-sticky {
+        &:after {
+            position: absolute;
+            left: 0;
+            top: 100%;
+            display: block;
+            width: 100%;
+            height: map-get($spacers, 1);
+            background: radial-gradient(ellipse 50% 100% at 50% 0%, rgba(0, 0, 0, .1) 0%, transparent 100%);
+            content: '';
+        }
     }
 }
 
