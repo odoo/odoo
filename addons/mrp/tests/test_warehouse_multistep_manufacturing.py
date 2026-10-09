@@ -47,7 +47,6 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         ])
         # Create bom for manufactured product
         bom_product_form = Form(cls.env['mrp.bom'])
-        bom_product_form.product_id = cls.finished_product
         bom_product_form.product_tmpl_id = cls.finished_product.product_tmpl_id
         bom_product_form.product_qty = 1.0
         bom_product_form.type = 'normal'
@@ -56,6 +55,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             bom_line.product_qty = 2.0
 
         cls.bom = bom_product_form.save()
+        cls.bom.product_id = cls.finished_product
 
     def _check_location_and_routes(self):
         # Check manufacturing pull rule.
@@ -436,7 +436,6 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         # Create bom for manufactured product
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.raw_product
         bom_product_form.product_tmpl_id = self.raw_product.product_tmpl_id
         bom_product_form.product_qty = 1.0
         bom_product_form.type = 'normal'
