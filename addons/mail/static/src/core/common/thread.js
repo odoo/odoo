@@ -72,10 +72,6 @@ export class Thread extends Component {
         this.onParentMessageClick = this.onParentMessageClick.bind(this);
         this.startMessageAvatarRef = signal.ref(HTMLDivElement);
         this.messageRefs = useChildRefs();
-        useOnChange(
-            () => [this.messageRefs.size],
-            () => this.scrollToHighlighted()
-        );
         this.store = useService("mail.store");
         this.props = useProps({
             autofocus: t.or([t.number(), t.boolean()]).optional(),
@@ -109,14 +105,17 @@ export class Thread extends Component {
         this.ui = useService("ui");
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.scrollingToHighlight = false;
-        // scrolled on the patched messages, which render the highlight
-        let lastHighlightedMessageId;
+        // from the patch rendering the highlight, or its message (e.g. after loading around it):
+        // the scroll restored by a patch (`applyScroll`) would stop a scroll started before
+        let scrolledFor = []; // [highlightedMessageId, messageEl]
         const scrollToNewHighlighted = () => {
             const highlightedMessageId = this.messageHighlight?.highlightedMessageId();
-            if (highlightedMessageId !== lastHighlightedMessageId) {
-                lastHighlightedMessageId = highlightedMessageId;
-                this.scrollToHighlighted();
+            const messageEl = this.messageRefs.get(highlightedMessageId)?.();
+            if (scrolledFor[0] === highlightedMessageId && scrolledFor[1] === messageEl) {
+                return;
             }
+            scrolledFor = [highlightedMessageId, messageEl];
+            this.scrollToHighlighted();
         };
         onMounted(scrollToNewHighlighted);
         onPatched(scrollToNewHighlighted);
