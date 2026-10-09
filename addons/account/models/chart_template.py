@@ -713,7 +713,10 @@ class AccountChartTemplate(models.AbstractModel):
                         del record_vals[key]
 
                 # Manage ids given as database id or xml_id
+                english_name = {}
                 if isinstance(xml_id, str) and (record := self.ref(xml_id, raise_if_not_found=False)):
+                    if 'name' in record._fields:
+                        english_name = {'name': record.name}
                     xml_id = record.id
 
                 if isinstance(xml_id, int):
@@ -722,9 +725,13 @@ class AccountChartTemplate(models.AbstractModel):
                 else:
                     xml_id = self.company_xmlid(xml_id)
 
+                values = deref_values(record_vals, self.env[model])
+                # Makes sure that if the english name is different from the default value, it wouldn't be changed.
+                values.update(english_name)
+
                 all_records_vals.append({
                     'xml_id': xml_id,
-                    'values': deref_values(record_vals, self.env[model]),
+                    'values': values,
                     'noupdate': True,
                 })
             created_records[model] = self.with_context(lang='en_US').env[model]._load_records(all_records_vals)
