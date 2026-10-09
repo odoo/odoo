@@ -286,6 +286,12 @@
                                 <field name="subformula">if_above(XOF(0))</field>
                                 <field name="formula">NE_GROSS_VAT.balance + NE_REPAY.balance - NE_DEDUCTIBLE_TOTAL.balance - NE_DEDUCTIBLE_ADDITION.balance</field>
                             </record>
+                            <record id="account_tax_report_line_ne_net_to_pay_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">NE_TO_PAY.balance</field>
+                                <field name="subformula">if_above(XOF(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="account_tax_report_line_ne_credit_to_report" model="account.report.line">
@@ -305,6 +311,12 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">NE_CREDIT_TO_REPORT.balance</field>
                                 <field name="carryover_target">NE_REPORTED._applied_carryover_balance</field>
+                            </record>
+                            <record id="account_tax_report_line_ne_credit_to_report_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">NE_CREDIT_TO_REPORT.balance</field>
+                                <field name="subformula">if_above(XOF(0))</field>
                             </record>
                         </field>
                     </record>

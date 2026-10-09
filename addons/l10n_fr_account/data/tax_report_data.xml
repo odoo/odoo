@@ -2436,6 +2436,15 @@
                                 <field name="formula">sum</field>
                                 <field name="subformula">editable;rounding=0</field>
                             </record>
+                            <!-- Credit leg of the declared amount: in a credit period box_32 is 0 and the
+                                 VAT credit shows here (whether carried forward or reimbursed), so the return
+                                 declares it (payable negative) and the closing reconciles the cleared tax
+                                 accounts to it instead of dumping the credit into the rounding line. -->
+                            <record id="tax_report_25_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-box_25.balance</field>
+                            </record>
                         </field>
                     </record>
                     <record id="tax_report_TD" model="account.report.line">
@@ -2891,6 +2900,31 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">box_28.balance + box_29.balance + box_Z5.balance</field>
                                 <field name="subformula">round(0)</field>
+                            </record>
+                            <record id="tax_report_32_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_32.balance</field>
+                            </record>
+                            <!-- Grouped by account_id, the actual VAT posted to the tax accounts (from the
+                                 tax tags), which the closing entry clears. box_32 itself is base * rate, so it
+                                 sits on the base accounts; these tag values sit on the tax accounts. Collected
+                                 (box_16) minus deductible (box_23); carryover (box_22 credit) is left out as it
+                                 is not a balance on the tax accounts. -->
+                            <record id="tax_report_32_closing_account_balance" model="account.report.expression">
+                                <field name="label">_closing_account_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_08_taxe.balance_from_tags + box_09_taxe.balance_from_tags + box_9B_taxe.balance_from_tags + box_10_taxe.balance_from_tags + box_11_taxe.balance_from_tags + box_13_taxe.balance_from_tags + box_14_taxe.balance_from_tags + box_T1_taxe.balance_from_tags + box_T2_taxe.balance_from_tags + box_T3_taxe.balance_from_tags + box_T4_taxe.balance_from_tags + box_T5_taxe.balance_from_tags + box_T6_taxe.balance_from_tags + box_T7_taxe.balance_from_tags + box_P1_taxe.balance_from_tags + box_P2_taxe.balance_from_tags + box_I1_taxe.balance_from_tags + box_I2_taxe.balance_from_tags + box_I3_taxe.balance_from_tags + box_I4_taxe.balance_from_tags + box_I5_taxe.balance_from_tags + box_I6_taxe.balance_from_tags + box_15.balance_from_tags + box_5B.balance_from_tags - box_19.balance_from_tags - box_20.balance_from_tags - box_21.balance_from_tags - box_22.tag - box_2C.balance_from_tags</field>
+                            </record>
+                            <!-- Rounding-difference target: the current-period per-line-rounded net (gross VAT
+                                 due minus deductible). box_23 folds in box_22, the credit carried from the
+                                 previous return, so it is added back to leave only the current period.
+                                 Reconciling the cleared accounts to this keeps the rounding to actual per-line
+                                 rounding and leaves the carryover to the tax-group carryover lines. -->
+                            <record id="tax_report_32_closing_rounding_target" model="account.report.expression">
+                                <field name="label">_closing_rounding_target</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_16.balance - box_23.balance + box_22._applied_carryover_balance</field>
                             </record>
                         </field>
                     </record>

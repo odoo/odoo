@@ -57,7 +57,15 @@
                     </record>
                     <record id="account_tax_report_line_vat_box5" model="account.report.line">
                         <field name="name">[BOX 5] VAT to pay/reclaim</field>
+                        <field name="code">UKTAX_5</field>
                         <field name="aggregation_formula">UKTAX_1.balance + UKTAX_2.balance - UKTAX_4.balance</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_vat_box5_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">UKTAX_5.balance</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>

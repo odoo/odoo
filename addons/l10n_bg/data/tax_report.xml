@@ -355,6 +355,12 @@
                                 <field name="formula">BG_TR_20.balance - BG_TR_40.balance</field>
                                 <field name="subformula">if_above(BGN(0))</field>
                             </record>
+                            <record id="l10n_bg_tax_report_50_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BG_TR_50.balance</field>
+                                <field name="subformula">if_above(BGN(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_bg_tax_report_60" model="account.report.line">
@@ -366,6 +372,12 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">BG_TR_40.balance - BG_TR_20.balance</field>
+                                <field name="subformula">if_above(BGN(0))</field>
+                            </record>
+                            <record id="l10n_bg_tax_report_60_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BG_TR_60.balance</field>
                                 <field name="subformula">if_above(BGN(0))</field>
                             </record>
                         </field>
