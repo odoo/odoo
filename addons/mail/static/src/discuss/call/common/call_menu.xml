@@ -4,7 +4,7 @@
     <t t-name="discuss.CallMenu">
         <div class="dropdown" t-attf-class="{{ this.className }}" t-ref="this.root">
             <button t-if="this.rtc.channel" class="user-select-none dropdown-toggle o-no-caret o-dropdown--narrow px-0 rounded-pill border-0 position-relative" t-att-title="this.buttonTitle" t-on-click="this.rtc.channel.open">
-                <div class="o-discuss-CallMenu-buttonContent d-flex align-items-center btn-group rounded-pill overflow-visible" t-att-class="{ 'o-isOdooCommunity': !this.isEnterprise }">
+                <div class="o-discuss-CallMenu-buttonContent o-mail-callBordered d-flex align-items-center btn-group rounded-pill overflow-visible" t-att-class="{ 'o-isOdooCommunity': !this.isEnterprise }">
                     <div class="o-discuss-CallMenu-channelInfo text-truncate btn btn-group-item border-0 m-0 p-0 d-flex align-items-center gap-1 ps-2 pe-1 rounded-4 rounded-end-0 align-self-stretch bg-inherit" role="button" title="Open Conversation">
                         <span class="position-relative small bg-transparent">
                             <img class="rounded-2 object-fit-cover" t-att-src="this.rtc.channel.avatarUrl" alt="Thread Image" style="width: 20px; height: 20px"/>
@@ -29,7 +29,7 @@
                         </t>
                     </Dropdown>
                 </div>
-                <span class="o-discuss-inCallIcon fw-bold rounded-circle d-flex justify-content-center align-items-center position-absolute z-3 bg-white" style="font-size: 0.6rem; top: -4px; left: -2px; padding: 1px;">
+                <span class="o-discuss-inCallIcon o-mail-callBordered fw-bold rounded-circle d-flex justify-content-center align-items-center position-absolute z-3 bg-white" style="font-size: 0.6rem; top: -4px; left: -2px; padding: 1px;">
                     <i class="oi oi-fw bg-inherit rounded-circle opacity-75" data-icon="volume_up_f"/>
                 </span>
             </button>
