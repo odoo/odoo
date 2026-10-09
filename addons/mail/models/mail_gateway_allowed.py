@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from markupsafe import Markup
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
 
 
 class MailGatewayAllowed(models.Model):
@@ -30,20 +29,9 @@ class MailGatewayAllowed(models.Model):
             record.email_normalized = tools.email_normalize(record.email)
 
     @api.model
-    def get_empty_list_help(self, help_message):
+    def get_help_data(self, domain):
         get_int = self.env['ir.config_parameter'].sudo().get_int
-        LOOP_MINUTES = get_int('mail.gateway.loop.minutes') or 120
-        LOOP_THRESHOLD = get_int('mail.gateway.loop.threshold') or 20
-
-        return Markup(_('''
-            <p class="o_view_nocontent_smiling_face">
-                Add addresses to the Allowed List
-            </p><p>
-                To protect you from spam and reply loops, Odoo automatically blocks emails
-                coming to your gateway past a threshold of <b>%(threshold)i</b> emails every <b>%(minutes)i</b>
-                minutes. If there are some addresses from which you need to receive very frequent
-                updates, you can however add them below and Odoo will let them go through.
-            </p>''')) % {
-            'threshold': LOOP_THRESHOLD,
-            'minutes': LOOP_MINUTES,
+        return {
+            'minutes': get_int('mail.gateway.loop.minutes') or 120,
+            'threshold': get_int('mail.gateway.loop.threshold') or 20,
         }
