@@ -20,10 +20,11 @@
                                     active: button.isActive,
                                     disabled: button.isDisabled,
                                 }"
+                                t-att-aria-pressed="button.isActive === undefined ? undefined : (button.isActive ? 'true' : 'false')"
                                 t-att-disabled="button.isDisabled"
                                 t-att-title="button.description"
                                 t-att-name="button.id"
-                                t-on-click="() => this.onButtonClick(button)"
+                                t-on-click="(ev) => this.onButtonClick(button, ev)"
                             >
                                 <t t-if="button.icon">
                                     <t t-if="button.icon.includes('.')" t-call="{{ button.icon }}"/>

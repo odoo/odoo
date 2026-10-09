@@ -16,7 +16,7 @@ const genericButtonSchema = {
     icon: t.string().optional(),
     iconClass: t.string().optional(),
     id: t.string(),
-    isActive: t.boolean(),
+    isActive: t.boolean().optional(),
     isDisabled: t.boolean(),
     opensUi: t.boolean().optional(),
     run: t.function(),
@@ -92,11 +92,24 @@ export class Toolbar extends Component {
         }
     }
 
-    onButtonClick(button) {
+    /**
+     * @param {Object} button
+     * @param {MouseEvent} ev
+     */
+    onButtonClick(button, ev) {
+        const buttonEl = ev.currentTarget;
         button.run();
+        // A click triggered by the keyboard (Enter or Space) has no `detail`.
+        // In that case, a toggle button keeps the focus so that screen readers
+        // announce its new state (`aria-pressed`). The command may have moved
+        // the focus to the editable along with the selection (Chrome does), so
+        // it is given back to the button.
+        const isToggledFromKeyboard = button.isActive !== undefined && ev.detail === 0;
         if (button.id === "expand_toolbar") {
             // Toolbar update is async, defer focus until after OWL re-renders the DOM.
             this.shouldFocusFirstButton = true;
+        } else if (isToggledFromKeyboard) {
+            buttonEl.focus();
         } else if (!button.opensUi) {
             this.props.focusEditable();
         }

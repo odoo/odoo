@@ -48,7 +48,7 @@ export class AnimateText extends Component {
     root = signal.ref();
 
     setup() {
-        this.state = proxy({});
+        this.state = proxy({ isOpen: false });
         this.updateState();
 
         useSubEnv({
@@ -62,6 +62,7 @@ export class AnimateText extends Component {
         });
         this.popover = usePopover(AnimateTextPopover, {
             onClose: () => {
+                this.state.isOpen = false;
                 if (!this.props.config.editor.isDestroyed) {
                     this.updateState();
                 }
@@ -88,6 +89,7 @@ export class AnimateText extends Component {
                 this.popover.close();
             },
         });
+        this.state.isOpen = true;
     }
 
     updateState() {

@@ -25,9 +25,9 @@
                 </t>
                 <t t-else="">
                     <span class="d-flex justify-content-between">
-                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'linear' ? 'active' : ''}}" t-on-click="() => this.selectType('linear')"> Linear </button>
-                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'radial' ? 'active' : ''}}" t-on-click="() => this.selectType('radial')"> Radial </button>
-                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'conic' ? 'active' : ''}}" t-on-click="() => this.selectType('conic')"> Conic </button>
+                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'linear' ? 'active' : ''}}" t-att-aria-pressed="this.state.type === 'linear' ? 'true' : 'false'" t-on-click="() => this.selectType('linear')"> Linear </button>
+                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'radial' ? 'active' : ''}}" t-att-aria-pressed="this.state.type === 'radial' ? 'true' : 'false'" t-on-click="() => this.selectType('radial')"> Radial </button>
+                        <button t-attf-class="btn btn-sm btn-light {{ this.state.type === 'conic' ? 'active' : ''}}" t-att-aria-pressed="this.state.type === 'conic' ? 'true' : 'false'" t-on-click="() => this.selectType('conic')"> Conic </button>
                     </span>
                 </t>
             </div>
@@ -38,16 +38,16 @@
                         <div style="margin-right: auto;">
                             Size
                         </div>
-                        <button t-on-click="() => this.onSizeChange('closest-side')" t-att-data-color="this.getRadialGradient('closest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-side' ? `active` : ''}}" title="Extend to the closest side">
+                        <button t-on-click="() => this.onSizeChange('closest-side')" t-att-aria-pressed="this.state.size === 'closest-side' ? 'true' : 'false'" t-att-data-color="this.getRadialGradient('closest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-side' ? `active` : ''}}" title="Extend to the closest side">
                             <img src="/html_editor/static/src/img/gradient-closest-side.svg"/>
                         </button>
-                        <button t-on-click="() => this.onSizeChange('closest-corner')" t-att-data-color="this.getRadialGradient('closest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-corner' ? `active` : ''}}" title="Extend to the closest corner">
+                        <button t-on-click="() => this.onSizeChange('closest-corner')" t-att-aria-pressed="this.state.size === 'closest-corner' ? 'true' : 'false'" t-att-data-color="this.getRadialGradient('closest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'closest-corner' ? `active` : ''}}" title="Extend to the closest corner">
                             <img src="/html_editor/static/src/img/gradient-closest-corner.svg"/>
                         </button>
-                        <button t-on-click="() => this.onSizeChange('farthest-side')" t-att-data-color="this.getRadialGradient('farthest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-side' ? `active` : ''}}" title="Extend to the farthest side">
+                        <button t-on-click="() => this.onSizeChange('farthest-side')" t-att-aria-pressed="this.state.size === 'farthest-side' ? 'true' : 'false'" t-att-data-color="this.getRadialGradient('farthest-side')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-side' ? `active` : ''}}" title="Extend to the farthest side">
                             <img src="/html_editor/static/src/img/gradient-farthest-side.svg"/>
                         </button>
-                        <button t-on-click="() => this.onSizeChange('farthest-corner')" t-att-data-color="this.getRadialGradient('farthest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-corner' ? `active`: ''}}" title="Extend to the farthest corner">
+                        <button t-on-click="() => this.onSizeChange('farthest-corner')" t-att-aria-pressed="this.state.size === 'farthest-corner' ? 'true' : 'false'" t-att-data-color="this.getRadialGradient('farthest-corner')" t-attf-class="btn btn-light p-0 {{ this.state.size === 'farthest-corner' ? `active`: ''}}" title="Extend to the farthest corner">
                             <img src="/html_editor/static/src/img/gradient-farthest-corner.svg"/>
                         </button>
                     </div>
