@@ -61,6 +61,55 @@ export class PaymentScreenPaymentLines extends Component {
     }
 
     /**
+     * Get the controls displayed around the payment info of the given line.
+     * Controls with an `action` are rendered as buttons, the others as indicators.
+     * @returns {{start: Array<PaymentLineControl>, end: Array<PaymentLineControl>}}
+     *
+     * @typedef {Object} PaymentLineControl
+     * @property {string} id                      - Unique identifier for the control.
+     * @property {string} icon                    - Icon displayed in the control.
+     * @property {string} [iconClass]             - Additional classes for the icon.
+     * @property {string} [classes]               - Additional CSS classes to apply to the control.
+     * @property {string} [title]                 - Title and aria-label of the control.
+     * @property {Function} [action]              - Callback executed when the control is clicked.
+     * @property {boolean} [disabled]             - Whether the button is disabled.
+     */
+    getLineControls(line) {
+        const controls = { start: [], end: [] };
+
+        if (line.useQr) {
+            controls.start.push({
+                id: "qr_code",
+                icon: "qr_code",
+                classes: "paymentline_show_qr_code ms-2 ps-3",
+                title: _t("Show QR Code"),
+                action: () => this.showQrCode(line),
+                disabled: !line.qr_code || !line.isProcessing,
+            });
+        }
+
+        if (!line.isSelected() && line.isProcessing) {
+            controls.end.push({
+                id: "spinner",
+                icon: "autorenew",
+                iconClass: "oi-spin",
+                classes: "payment-spinner mx-2 px-3",
+            });
+        } else if (line.payment_status !== "done") {
+            controls.end.push({
+                id: "delete",
+                icon: "close_small",
+                iconClass: "text-danger",
+                classes: "delete-button mx-2 px-3",
+                title: _t("Delete"),
+                action: () => this.props.deleteLine(line.uuid),
+            });
+        }
+
+        return controls;
+    }
+
+    /**
      * Get the payment action state for the given payment line.
      * @returns {PaymentActionState}
      *
