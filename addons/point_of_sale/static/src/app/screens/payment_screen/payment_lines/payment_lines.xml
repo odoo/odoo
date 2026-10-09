@@ -7,7 +7,7 @@
                 <div class="paymentline d-flex align-items-center rounded-3" t-att-class="{ 'selected': line.isSelected() }">
                     <!-- Show QR Code -->
                     <t t-if="line.useQr">
-                        <button class="paymentline_show_qr_code btn btn-link ms-2 ps-3" t-on-click="() => this.showQrCode(line)" t-att-disabled="!line.qr_code || !line.isProcessing()" aria-label="Show QR Code" title="Show QR Code">
+                        <button class="paymentline_show_qr_code btn btn-link ms-2 ps-3" t-on-click="() => this.showQrCode(line)" t-att-disabled="!line.qr_code || !line.isProcessing" aria-label="Show QR Code" title="Show QR Code">
                             <i class="oi" data-icon="qr_code" role="img" />
                         </button>
                     </t>
@@ -23,11 +23,11 @@
                     </div>
 
                     <!-- Delete or Spinner -->
-                    <div t-if="(!line.isSelected() and line.isProcessing())"
+                    <div t-if="(!line.isSelected() and line.isProcessing)"
                         class="payment-spinner mx-2 px-3">
                         <i class="oi oi-spin" data-icon="autorenew" role="img" />
                     </div>
-                    <button t-elif="(!line.isDone() or !line.payment_status)"
+                    <button t-elif="line.payment_status !== 'done'"
                             class="delete-button btn btn-link mx-2 px-3"
                             t-on-click="() => this.props.deleteLine(line.uuid)"
                             aria-label="Delete"

@@ -27,7 +27,7 @@ patch(PosPaymentMethod.prototype, {
                 (pl) =>
                     pl.payment_method_id.id === this.id &&
                     pl.uuid !== paymentline?.uuid &&
-                    pl.isProcessing()
+                    pl.isProcessing
             );
             if (hasProcessingPaymentSameSticker) {
                 return {

@@ -10,13 +10,4 @@ patch(PaymentScreen.prototype, {
         }
         return configMethods;
     },
-    updateSelectedPaymentline() {
-        if (
-            this.selectedPaymentLine?.payment_method_id?.type === "online" &&
-            this.currentOrder.state === "paid"
-        ) {
-            return;
-        }
-        super.updateSelectedPaymentline(...arguments);
-    },
 });

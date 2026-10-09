@@ -12,7 +12,7 @@ patch(PaymentScreen.prototype, {
             const pendingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
                     paymentLine.payment_method_id.payment_provider === "viva_com" &&
-                    !paymentLine.isDone() &&
+                    !paymentLine.isSettled &&
                     paymentLine.payment_status !== "pending"
             );
             if (!pendingPaymentLine) {
@@ -62,7 +62,7 @@ patch(PaymentScreen.prototype, {
             if (previousAnswer === "true") {
                 for (const lineUuid of this.currentOrder.payment_ids.map((line) => line.uuid)) {
                     const paymentLine = this.currentOrder.getPaymentlineByUuid(lineUuid);
-                    if (this.vivaApp.use(paymentLine.payment_method_id) && !paymentLine.isDone()) {
+                    if (this.vivaApp.use(paymentLine.payment_method_id) && !paymentLine.isSettled) {
                         paymentLine.delete();
                     }
                 }

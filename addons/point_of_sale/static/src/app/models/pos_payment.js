@@ -95,24 +95,22 @@ export class PosPayment extends Base {
         return this.amount || 0;
     }
 
-    isDone() {
-        return this.payment_status ? this.payment_status === "done" : true;
+    get isSettled() {
+        return !this.payment_status || this.payment_status === "done";
     }
 
-    isProcessing() {
-        return this.payment_status
-            ? [
-                  "waiting",
-                  "waiting_cancel",
-                  "waiting_card",
-                  "waiting_scan",
-                  "waiting_capture",
-              ].includes(this.payment_status)
-            : false;
+    get isProcessing() {
+        return [
+            "waiting",
+            "waiting_cancel",
+            "waiting_card",
+            "waiting_scan",
+            "waiting_capture",
+        ].includes(this.payment_status);
     }
 
-    isElectronic() {
-        return Boolean(this.payment_status);
+    get isAmountEditable() {
+        return !this.payment_interface || ["pending", "retry"].includes(this.payment_status);
     }
 
     // ----- Payment Request -----

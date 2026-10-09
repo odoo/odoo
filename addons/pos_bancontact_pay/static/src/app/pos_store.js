@@ -16,7 +16,7 @@ patch(PosStore.prototype, {
         const paymentline = this.models["pos.payment"].find(
             (line) => line.bancontact_id === bancontact_id
         );
-        if (!paymentline || paymentline.isDone()) {
+        if (!paymentline || paymentline.isSettled) {
             return;
         }
 

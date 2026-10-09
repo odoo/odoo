@@ -44,7 +44,7 @@ export class PosPaymentMethod extends Base {
             (pl) =>
                 this.payment_method_type === pl.payment_method_id.payment_method_type &&
                 pl.uuid !== paymentline?.uuid &&
-                pl.isProcessing()
+                pl.isProcessing
         );
         if (hasProcessingPayment) {
             return {

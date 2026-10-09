@@ -1973,7 +1973,7 @@ export class PosStore extends WithLazyGetterTrap {
             const paymentLine = order.payment_ids.find(
                 (paymentLine) =>
                     paymentLine.payment_provider === provider &&
-                    !paymentLine.isDone() &&
+                    !paymentLine.isSettled &&
                     paymentLine.payment_status !== "retry"
             );
             if (paymentLine) {
@@ -3139,7 +3139,7 @@ export class PosStore extends WithLazyGetterTrap {
         // No QR was explicitly pushed: default to the selected payment line's own
         // QR code while it's mid-processing (e.g. a terminal waiting to be scanned).
         const payment = this.getOrder()?.getSelectedPaymentline();
-        return payment?.isProcessing() && payment.qr_code
+        return payment?.isProcessing && payment.qr_code
             ? { title: _t("Scan the QR for payment"), ...payment.getQrPopupProps() }
             : null;
     }

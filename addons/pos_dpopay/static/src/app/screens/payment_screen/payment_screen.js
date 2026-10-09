@@ -9,7 +9,7 @@ patch(PaymentScreen.prototype, {
             const waitingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
                     paymentLine.payment_method_id.payment_provider === "dpopay" &&
-                    !paymentLine.isDone() &&
+                    !paymentLine.isSettled &&
                     paymentLine.payment_status !== "pending"
             );
             if (waitingPaymentLine) {
