@@ -274,6 +274,16 @@ export class SnippetModel {
             }
         }
         this.snippetsByCategory["snippet_custom_content"] = customInnerContent;
+
+        // Extract the names map
+        this.namesMaps = {};
+        for (const namesEl of snippetsBody.querySelectorAll("names")) {
+            const names = {};
+            for (const nameEl of namesEl.children) {
+                names[nameEl.getAttribute("key")] = nameEl.getAttribute("name");
+            }
+            this.namesMaps[namesEl.id] = names;
+        }
     }
 
     async deleteCustomSnippet(snippet) {
@@ -497,6 +507,14 @@ export class SnippetModel {
                 const nameFromSnippet = this.getOriginalSnippet(c)?.title;
                 if (nameFromSnippet) {
                     return nameFromSnippet;
+                }
+            }
+        }
+        for (const c of snippetEl.classList) {
+            if (c.startsWith("s_")) {
+                const nameFromSnippetPart = this.namesMaps.snippet_part?.[c];
+                if (nameFromSnippetPart) {
+                    return nameFromSnippetPart;
                 }
             }
         }
