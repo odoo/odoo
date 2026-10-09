@@ -564,7 +564,7 @@ export class FormController extends Component {
     }
 
     async beforeLeave({ forceLeave } = {}) {
-        if (forceLeave) {
+        if (forceLeave || this.skipSaveOnLeave) {
             return true;
         }
         const isDirty = await this.model.root.isDirty();
@@ -709,6 +709,7 @@ export class FormController extends Component {
             confirm: async () => {
                 await this.model.root.delete();
                 if (!this.model.root.resId) {
+                    this.skipSaveOnLeave = true;
                     this.env.config.historyBack();
                 }
             },
