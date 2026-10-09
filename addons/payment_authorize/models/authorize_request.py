@@ -82,12 +82,18 @@ class AuthorizeAPI:
             }
         else:
             tx_response = response.get('transactionResponse', {})
-            return {
+            result = {
                 'x_response_code': tx_response.get('responseCode'),
                 'x_trans_id': tx_response.get('transId'),
                 'x_type': operation,
                 'payment_method_code': tx_response.get('accountType'),
             }
+            errors = tx_response.get('errors')
+            if errors:
+                result['x_response_reason_text'] = '\n'.join(
+                    [e.get('errorText', '') for e in errors]
+                )
+            return result
 
     # Customer profiles
     def create_customer_profile(self, partner, transaction_id):
@@ -236,12 +242,7 @@ class AuthorizeAPI:
             'createTransactionRequest',
             self._prepare_authorization_transaction_request('authCaptureTransaction', tx_data, tx)
         )
-
-        result = self._format_response(response, 'auth_capture')
-        errors = response.get('transactionResponse', {}).get('errors')
-        if errors:
-            result['x_response_reason_text'] = '\n'.join([e.get('errorText') for e in errors])
-        return result
+        return self._format_response(response, 'auth_capture')
 
     def _prepare_tx_data(self, token=None, opaque_data=False):
         """

@@ -55,6 +55,15 @@ class WebsiteSaleCartPayment(PaymentHttpCommon):
                         f"the linked order.",
                 )
 
+    def test_confirmation_displays_reason_of_canceled_payment(self):
+        """ Test that the confirmation page shows why the provider canceled the payment. """
+        self.tx.write({'state': 'cancel', 'state_message': "This transaction has been declined."})
+        html = self.env['ir.qweb']._render('website_sale.payment_confirmation_status', {
+            'order': self.order,
+            'order_tracking_info': {},
+        })
+        self.assertIn("This transaction has been declined.", str(html))
+
     @mute_logger('odoo.http')
     def test_transaction_route_rejects_unexpected_kwarg(self):
         url = self._build_url(f'/shop/payment/transaction/{self.order.id}')
