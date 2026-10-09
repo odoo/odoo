@@ -1221,7 +1221,35 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
         ].flat(),
 });
 
+<<<<<<< e74fd9959692c40fef55c4fdf8663b1def1c2d2b:addons/point_of_sale/static/tests/pos/tours/product_screen_tour.js
 registry.category("web_tour.tours").add("test_preset_customer_selection", {
+||||||| 4adf9ebea1f39dc2d42461e1a92f55cb5b64f3e8:addons/point_of_sale/static/tests/tours/product_screen_tour.js
+registry.category("web_tour.tours").add("test_product_ref_displayed", {
+=======
+registry.category("web_tour.tours").add("test_tax_included_price_with_global_rounding", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Tax Included Candy", true, "1.0", "0.50"),
+            ProductScreen.totalAmountIs("0.50"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            {
+                isActive: ["desktop"],
+                content: "Make sure receipt orderline displays 0.50",
+                trigger: ".pos-receipt .orderline:contains('0.50')",
+            },
+            ReceiptScreen.receiptAmountTotalIs("0.50"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_product_ref_displayed", {
+>>>>>>> cdbe17b15cdc19f37818d66cca9a1a16423aba4b:addons/point_of_sale/static/tests/tours/product_screen_tour.js
     steps: () =>
         [
             Chrome.startPoS(),
