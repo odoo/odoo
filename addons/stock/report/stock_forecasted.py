@@ -131,6 +131,15 @@ class StockForecasted(models.AbstractModel):
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         product = product or (move_out.product_id if move_out else move_in.product_id)
+
+        if self.env.context.get('forecast_minimal_lines'):
+            return {
+                        'move_out': move_out,
+                        'move_in': move_in,
+                        'replenishment_filled': replenishment_filled,
+                        'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
+                    }
+
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
 
         move_to_match_ids = self.env.context.get('move_to_match_ids') or []
@@ -290,9 +299,14 @@ class StockForecasted(models.AbstractModel):
 
         linked_moves_per_out = {}
         ins_ids = set(ins._ids)
+
+        outs.fetch(['product_id', 'product_qty', 'date', 'state'])
+
+        outs_per_product = defaultdict(list)
         for out in outs:
             linked_move_ids = out._rollup_move_origs() - ins_ids
             linked_moves_per_out[out] = self.env['stock.move'].browse(linked_move_ids)
+            outs_per_product[out.product_id.id].append(out)
 
         # Gather all linked moves
         all_linked_move_ids = {
@@ -301,7 +315,7 @@ class StockForecasted(models.AbstractModel):
         all_linked_moves = self.env['stock.move'].browse(all_linked_move_ids)
 
         # Prewarm cache with sibling move's state/quantity
-        all_linked_moves.fetch(['move_orig_ids'])
+        all_linked_moves.fetch(['move_orig_ids', 'state', 'product_uom', 'quantity', 'product_id', 'product_qty', 'location_id'])
         all_linked_moves.move_orig_ids.fetch(['move_dest_ids'])
         all_linked_moves.move_orig_ids.move_dest_ids.fetch(['state', 'quantity'])
 
@@ -310,10 +324,6 @@ class StockForecasted(models.AbstractModel):
             linked_moves_per_out[out] = linked_moves.with_prefetch(
                 all_linked_moves._prefetch_ids
             )
-
-        outs_per_product = defaultdict(list)
-        for out in outs:
-            outs_per_product[out.product_id.id].append(out)
 
         dest_ids_to_in_ids, in_id_to_in_data = defaultdict(OrderedSet), {}
         ins_per_product = defaultdict(OrderedSet)
@@ -408,6 +418,12 @@ class StockForecasted(models.AbstractModel):
                 if not float_is_zero(demand, precision_rounding=product_rounding):
                     # Not reconciled
                     lines.append(self._prepare_report_line(demand, move_out=out, replenishment_filled=False, read=read))
+
+            # None of the lines below carry a `move_out`, and callers asking for minimal lines
+            # discard those, so don't build them at all. See `minimal` in this method's docstring.
+            if self.env.context.get('forecast_minimal_lines', False):
+                continue
+
             # Stock in transit
             if not float_is_zero(transit_stock, precision_rounding=product_rounding):
                 lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
