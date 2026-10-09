@@ -154,6 +154,45 @@ class TestSaleSections(SaleCommon):
         self.assertEqual(len(subsection_summary_lines), 1)
         self.assertEqual(subsection_summary_lines[0]["price_subtotal"], 10.00)
 
+    def test_duplicate_section_with_combo(self):
+        """Duplicating a section keeps copied combo items linked to their copied parent."""
+        fries = self._create_product(name="Fries")
+        side_combo = self.env["product.combo"].create({
+            "name": "Side",
+            "combo_item_ids": [Command.create({"product_id": fries.id})],
+        })
+        meal = self._create_product(
+            name="Meal", type="combo", combo_ids=[Command.link(side_combo.id)]
+        )
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({"name": "Section", "display_type": "line_section"}),
+                Command.create({"product_id": meal.id, "virtual_id": "combo-parent"}),
+            ],
+        })
+        combo_line = order.order_line.filtered("virtual_id")
+        order.order_line = [
+            Command.create({
+                "product_id": fries.id,
+                "combo_item_id": side_combo.combo_item_ids.id,
+                "linked_virtual_id": combo_line.virtual_id,
+            }),
+        ]
+
+        result = order.duplicate_section("order_line", order.order_line[0].id)
+
+        duplicated_section = order.order_line.browse(result["duplicated_section_id"])
+        duplicated_combo_line = order.order_line.filtered(
+            lambda line: line.virtual_id and line.virtual_id != combo_line.virtual_id
+        ).ensure_one()
+        duplicated_combo_items = order.order_line.filtered(
+            lambda line: line.linked_virtual_id == duplicated_combo_line.virtual_id
+        )
+        self.assertEqual(len(duplicated_combo_items), 1)
+        self.assertEqual(duplicated_combo_items._get_linked_line(), duplicated_combo_line)
+        self.assertLess(duplicated_section.sequence, duplicated_combo_line.sequence)
+
     def test_sale_order_sections_totals(self):
         """Ensure section totals are computed correctly.
 
