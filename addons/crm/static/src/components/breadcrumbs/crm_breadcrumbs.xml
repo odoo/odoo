@@ -2,12 +2,16 @@
 <templates xml:space="preserve">
 
     <t t-name="crm.Breadcrumbs">
-        <t t-if="this.hasTeamSwitcher">
+        <t t-if="this.hasTeamSwitcher and this.props.breadcrumbs.length &lt;= 1">
             <TeamSwitcher/>
             <t t-call="web.Breadcrumb.Actions"/>
             <t t-call-slot="breadcrumb-status-indicator"/>
         </t>
-        <t t-else="" t-call="web.Breadcrumbs"/>
+        <t t-else="">
+            <t t-call="web.Breadcrumbs"/>
+            <!-- With previous breadcrumbs, display the switcher after them -->
+            <TeamSwitcher t-if="this.hasTeamSwitcher"/>
+        </t>
     </t>
 
 </templates>
