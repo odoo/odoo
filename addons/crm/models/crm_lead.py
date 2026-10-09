@@ -430,7 +430,7 @@ class Lead(models.Model):
     @api.depends('partner_id.email')
     def _compute_email_from(self):
         for lead in self:
-            if lead.partner_id.email and lead._get_partner_email_update():
+            if lead._get_partner_email_update():
                 lead.email_from = lead.partner_id.email
 
     def _inverse_email_from(self):
@@ -449,7 +449,7 @@ class Lead(models.Model):
     @api.depends('partner_id.phone')
     def _compute_phone(self):
         for lead in self:
-            if lead.partner_id.phone and lead._get_partner_phone_update():
+            if lead._get_partner_phone_update():
                 lead.phone = lead.partner_id.phone
 
     def _inverse_phone(self):
@@ -659,11 +659,10 @@ class Lead(models.Model):
 
     def _prepare_address_values_from_partner(self, partner):
         # Sync all address fields from partner, or none, to avoid mixing them.
-        if any(partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC):
-            values = {f: partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
-        else:
-            values = {f: self[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
-        return values
+        return {
+            f: partner[f] or False
+            for f in PARTNER_ADDRESS_FIELDS_TO_SYNC
+        }
 
     def _prepare_contact_name_from_partner(self, partner):
         contact_name = False if partner.is_company else partner.name
