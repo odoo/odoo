@@ -453,7 +453,10 @@ class Website(models.Model):
             request.session['website_sale_cart_quantity'] = sale_order_sudo.cart_quantity
 
         # check for change of partner_id ie after signup
-        if partner_sudo.id not in (sale_order_sudo.partner_id.id, self.partner_id.id):
+        if (
+            sale_order_sudo.state == 'draft'
+            and partner_sudo.id not in (sale_order_sudo.partner_id.id, self.partner_id.id)
+        ):
             sale_order_sudo._update_address(partner_sudo.id, ['partner_id'])
 
         return sale_order_sudo
