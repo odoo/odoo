@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="view_settlement_tree">
+        <field name="name">Settlements tree - Invoice decoration</field>
+        <field name="model">commission.settlement</field>
+        <field name="inherit_id" ref="commission.view_settlement_tree" />
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="decoration-muted">state == 'invoiced'</attribute>
+                <attribute
+                    name="decoration-danger"
+                >state == 'except_invoice'</attribute>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_settlement_form">
+        <field name="name">Settlements - Add invoice stuff</field>
+        <field name="model">commission.settlement</field>
+        <field name="inherit_id" ref="commission.view_settlement_form" />
+        <field name="arch" type="xml">
+            <button name="action_cancel" position="before">
+                <button
+                    string="Make invoice"
+                    attrs="{'invisible': ['|', ('state', '!=', 'settled'), ('agent_type', '!=', 'agent')]}"
+                    class="oe_highlight"
+                    type="object"
+                    name="action_invoice"
+                    groups="account.group_account_invoice"
+                />
+                <button
+                    string="Reset to draft"
+                    attrs="{'invisible': [('state', '!=', 'except_invoice')]}"
+                    type="object"
+                    name="action_draft"
+                    groups="account.group_account_invoice"
+                />
+            </button>
+            <field name="settlement_type" position="after">
+                <field
+                    name="invoice_id"
+                    attrs="{'invisible': [('state', '!=', 'invoiced')]}"
+                    groups="account.group_account_invoice"
+                />
+            </field>
+            <xpath
+                expr="//field[@name='line_ids']/tree/field[@name='date']"
+                position="after"
+            >
+                <field
+                    name="invoice_line_id"
+                    attrs="{'column_invisible': [('parent.settlement_type', '!=', 'sale_invoice')]}"
+                    groups="account.group_account_invoice"
+                />
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_settlement_line_tree_inherit">
+        <field name="name">Settlement lines</field>
+        <field name="model">commission.settlement.line</field>
+        <field name="inherit_id" ref="commission.view_settlement_line_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="field[@name='agent_id']" position="after">
+                <field name="invoice_line_id" />
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_invoicing_commission_settlement">
+        <field name="name">Invoices Settlements</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">commission.settlement</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('settlement_type', '=', 'sale_invoice')]</field>
+    </record>
+    <menuitem
+        id="menu_invoicing_settlements"
+        parent="menu_invoicing_commission"
+        action="action_invoicing_commission_settlement"
+        sequence="10"
+    />
+</odoo>

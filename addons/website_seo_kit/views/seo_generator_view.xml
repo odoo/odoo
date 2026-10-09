@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--View of generate seo menu -->
+    <record id="generate_seo_form_view" model="ir.ui.view">
+        <field name="name">seo.generate.view.form</field>
+        <field name="model">seo.generate</field>
+        <field name="arch" type="xml">
+            <form string="seo_generator">
+                <header>
+                    <button string="Generate Now" type="object"
+                            name="action_save_seo_info" class="oe_highlight"
+                            attrs="{'invisible': [('state','=','activated')]}"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="activated,deactivated"/>
+                </header>
+                <sheet>
+                    <label for="model_name"/>
+                    <field name="model_name" class="oe_inline"/>
+                    <separator string="Meta Tags"/>
+                    <group>
+                        <field name="meta_title_ids" widget="many2many_tags"
+                               domain="[('id', 'in', meta_ids)]"
+                               options="{'no_create': True}"/>
+                        <field name="meta_ids" invisible="1"/>
+                        <field name="meta_description_ids"
+                               widget="many2many_tags"
+                               domain="[('id', 'in', meta_ids)]"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <div class="text-muted">
+                        According to the product and the category, a meta
+                        keyword is generated automatically.
+                    </div>
+                    <separator string="Meta Tags Settings"/>
+                    <label for="attribute_separator"/>
+                    <field name="attribute_separator" class="oe_inline"/>
+                    <br/>
+                    <label for="company_id"/>
+                    <field name="company_id" class="oe_inline"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+<!--    Tree view of seo.generate model-->
+    <record id="generate_seo_tree_view" model="ir.ui.view">
+        <field name="name">seo.generate.view.tree</field>
+        <field name="model">seo.generate</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="model_name"/>
+                <field name="meta_title_ids" widget="many2many_tags"/>
+                <field name="meta_description_ids" widget="many2many_tags"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'activated'"
+                />
+            </tree>
+        </field>
+    </record>
+    <!--     Action of generate seo menu -->
+    <record id="action_website_generate_seo" model="ir.actions.act_window">
+        <field name="name">Website SEO</field>
+        <field name="res_model">seo.generate</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="menu_seo_generate"
+              name="Generate SEO"
+              sequence="70"
+              parent="website.menu_site"
+              action="action_website_generate_seo"
+              groups="website.group_website_designer"/>
+</odoo>

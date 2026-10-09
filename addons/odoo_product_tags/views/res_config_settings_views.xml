@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_product_tags" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.product.tags</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='catalog_setting_container']" position="inside">
+                                <div class="col-12 col-lg-6 o_setting_box" id="product_tag">
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Product Tags</span>
+                        <div class="row mt16" >
+                            <label for="product_tag_ids" class="col-lg-4 o_light_label"/>
+                            <field name="product_tag_ids" widget="many2many_tags" class="oe_inline"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

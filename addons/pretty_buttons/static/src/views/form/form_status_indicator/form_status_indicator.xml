@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Save and Discard Button-->
+<templates>
+    <t
+            t-name="web_save_discard_button.FormStatusIndicator"
+            t-inherit="web.FormStatusIndicator"
+            t-inherit-mode="extension"
+            owl="1"
+    >
+        <xpath expr="//button[(hasclass('o_form_button_save'))]" position="replace">
+            <button type="button"
+                    class="btn btn-outline-success px-2 py-2 lh-sm o_form_button_save ms-2"
+                    data-hotkey="s"
+                    t-on-click.stop="save"
+                    data-tooltip="Save manually"
+                    aria-label="Save manually"
+                    t-ref="save">
+                Save
+            </button>
+        </xpath>
+        <xpath expr="//button[(hasclass('o_form_button_cancel'))]" position="replace">
+            <button type="button"
+                    class="btn btn-outline-danger px-2 py-2 lh-sm o_form_button_cancel ms-2"
+                    data-hotkey="j"
+                    t-on-click.stop="discard"
+                    data-tooltip="Discard changes"
+                    aria-label="Discard changes">
+                Cancel
+            </button>
+        </xpath>
+    </t>
+</templates>
+
+
+        <!--<?xml version="1.0" encoding="UTF-8" ?>-->
+        <!--&lt;!&ndash; Save and Discard Button&ndash;&gt;-->
+        <!--<templates>-->
+        <!--    <t-->
+        <!--        t-name="web_save_discard_button.FormStatusIndicator"-->
+        <!--        t-inherit="web.FormStatusIndicator"-->
+        <!--        t-inherit-mode="extension"-->
+        <!--        owl="1"-->
+        <!--    >-->
+        <!--        <xpath expr="//button/i[(hasclass('fa-cloud-upload'))]" position="replace">-->
+        <!--            <span class="save_button">Save</span>-->
+        <!--        </xpath>-->
+        <!--        <xpath expr="//button/i[(hasclass('fa-undo'))]" position="replace">-->
+        <!--            <span class="discard_button">Discard</span>-->
+        <!--        </xpath>-->
+        <!--    </t>-->
+        <!--</templates>-->
+
+        <!--<?xml version="1.0" encoding="UTF-8"?>-->
+        <!--<templates xml:space="preserve">-->
+        <!--    <t t-name="custom_change_buttons.FormStatusIndicator" t-inherit="web.FormStatusIndicator">-->
+        <!--        <xpath expr="//div[hasclass('o_form_status_indicator_buttons')]" position="replace">-->
+        <!--           <div class="o_form_status_indicator_buttons d-flex" t-att-class="{ invisible: !(props.model.root.isNew or displayButtons) }">-->
+        <!--                <button type="button"-->
+        <!--                            class="btn btn-outline-success px-2 py-2 lh-sm o_form_button_save ms-2"-->
+        <!--                            data-hotkey="s"-->
+        <!--                            t-on-click.stop="save"-->
+        <!--                            data-tooltip="Save manually"-->
+        <!--                            aria-label="Save manually"-->
+        <!--                    t-ref="save">-->
+        <!--                        Save-->
+        <!--                    </button>-->
+        <!--                    <button type="button"-->
+        <!--                            class="btn btn-outline-danger px-2 py-2 lh-sm o_form_button_cancel ms-2"-->
+        <!--                            data-hotkey="j"-->
+        <!--                            t-on-click.stop="discard"-->
+        <!--                            data-tooltip="Discard changes"-->
+        <!--                            aria-label="Discard changes">-->
+        <!--                        Cancel-->
+        <!--                    </button>-->
+        <!--            </div>-->
+        <!--        </xpath>-->
+        <!--    </t>-->
+        <!--</templates>-->
+
+        <!--<?xml version="1.0" encoding="utf-8"?>-->
+        <!--<odoo>-->
+        <!--        <template id="form_status_indicator_custom_style" inherit_id="web.FormStatusIndicator">-->
+        <!--            <xpath expr="//div[1]/div[1]/button[hasclass='o_form_button_save']" position="replace">-->
+        <!--                    <button type="button"-->
+        <!--                            class="btn btn-outline-success px-2 py-2 lh-sm o_form_button_save ms-2"-->
+        <!--                            data-hotkey="s"-->
+        <!--                            t-on-click.stop="save"-->
+        <!--                            data-tooltip="Save manually"-->
+        <!--                            aria-label="Save manually">-->
+        <!--                        Save-->
+        <!--                    </button>-->
+        <!--            </xpath>-->
+        <!--            <xpath expr="//div[1]/div[1]/button[hasclass='o_form_button_cancel']" position="replace">-->
+        <!--                    <button type="button"-->
+        <!--                            class="btn btn-outline-danger px-2 py-2 lh-sm o_form_button_cancel ms-2"-->
+        <!--                            data-hotkey="j"-->
+        <!--                            t-on-click.stop="discard"-->
+        <!--                            data-tooltip="Discard changes"-->
+        <!--                            aria-label="Discard changes">-->
+        <!--                        Cancel-->
+        <!--                    </button>-->
+        <!--            </xpath>-->
+        <!--        </template>-->
+        <!--</odoo>-->
+
+        <!--<?xml version="1.0" encoding="UTF-8"?>-->
+        <!--<templates xml:space="preserve">-->
+        <!--    <t t-name="custom_change_buttons.FormStatusIndicator" t-inherit="web.FormStatusIndicator">-->
+        <!--        <xpath expr="//div[hasclass('o_form_status_indicator_buttons')]" position="replace">-->
+        <!--            <div class="o_form_status_indicator_buttons d-flex"-->
+        <!--                     t-att-class="{ invisible: !(props.model.root.isNew or displayButtons) }">-->
+        <!--                    <button type="button"-->
+        <!--                            class="btn btn-outline-success px-2 py-2 lh-sm o_form_button_save ms-2"-->
+        <!--                            data-hotkey="s"-->
+        <!--                            t-on-click.stop="save"-->
+        <!--                            data-tooltip="Save manually"-->
+        <!--                            aria-label="Save manually"-->
+        <!--                    t-ref="save">-->
+        <!--                        Save-->
+        <!--                    </button>-->
+        <!--                    <button type="button"-->
+        <!--                            class="btn btn-outline-danger px-2 py-2 lh-sm o_form_button_cancel ms-2"-->
+        <!--                            data-hotkey="j"-->
+        <!--                            t-on-click.stop="discard"-->
+        <!--                            data-tooltip="Discard changes"-->
+        <!--                            aria-label="Discard changes">-->
+        <!--                        Cancel-->
+        <!--                    </button>-->
+        <!--                </div>-->
+        <!--        </xpath>-->
+        <!--    </t>-->
+        <!--</templates>-->

@@ -1,0 +1,60 @@
+<odoo>
+
+    <record id="stock_card_report_wizard_form" model="ir.ui.view">
+        <field name="name">stock.card.report.wizard.form</field>
+        <field name="model">stock.card.report.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group name="criteria">
+                    <group>
+                        <field name="date_range_id" />
+                        <field name="date_from" />
+                        <field name="date_to" />
+                    </group>
+                    <group>
+                        <field name="product_ids" widget="many2many_tags" />
+                        <field name="location_id" />
+                    </group>
+                </group>
+                <footer>
+                    <button
+                        name="button_export_html"
+                        string="View"
+                        type="object"
+                        default_focus="1"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button
+                        name="button_export_pdf"
+                        string="Export PDF"
+                        type="object"
+                    />
+                    or
+                    <button
+                        name="button_export_xlsx"
+                        string="Export XLSX"
+                        type="object"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_card_report_action" model="ir.actions.act_window">
+        <field name="name">Stock Card</field>
+        <field name="res_model">stock.card.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="stock_card_report_menu"
+        action="stock_card_report_action"
+        parent="stock.menu_warehouse_report"
+        sequence="30"
+    />
+
+</odoo>

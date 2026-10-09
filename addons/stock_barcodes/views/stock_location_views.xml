@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--
+    Odoo v13.0 has been removed barcode field from location view, so we need to
+    add the field to allow to assign a value
+     -->
+    <record id="stock_location_form_inherit" model="ir.ui.view">
+        <field name="name">stock.location.inherit</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form" />
+        <field name="arch" type="xml">
+            <group name="additional_info" position="after">
+                <group name="barcode" string="Barcode">
+                    <field name="barcode" />
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

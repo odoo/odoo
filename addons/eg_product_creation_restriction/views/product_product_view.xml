@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_product_creation_restriction_kanban_view" model="ir.ui.view">
+        <field name="name">product.product.creation.restriction.kanban.view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_kanban_view"/>
+        <field name="mode">primary</field>
+        <field name="groups_id" eval="[(4, ref('eg_product_creation_restriction.product_creation_restriction'))]"/>
+        <field name="arch" type="xml">
+            <kanban position="attributes">
+                <attribute name="create">false</attribute>
+            </kanban>
+        </field>
+    </record>
+    <record id="product_product_creation_restriction_tree_view" model="ir.ui.view">
+        <field name="name">product.product.creation.restriction.tree.view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="groups_id" eval="[(4, ref('eg_product_creation_restriction.product_creation_restriction'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">false</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

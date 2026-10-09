@@ -1,0 +1,171 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/customers/237660088
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                "id": 237660088,
+                "email": "john.doe@example.com",
+                "first_name": "John",
+                "last_name": "Doe",
+                "role": "customer",
+                "username": "John Doe",
+                "billing": {
+                    "first_name": "john",
+                    "last_name": "doe",
+                    "company": "abc",
+                    "address_1": "house 1",
+                    "address_2": "california",
+                    "postcode": "555555",
+                    "city":"california city",
+                    "country": "USA",
+                    "state": "CA",
+                    "email": "john@example.com",
+                    "phone": "999555999"
+                },
+                "shipping": {
+                    "first_name": "john",
+                    "last_name": "doe",
+                    "company": "abc",
+                    "address_1": "house 2",
+                    "address_2": "california",
+                    "city": "california city",
+                    "postcode": "565656",
+                    "country": "USA",
+                    "state": "CA",
+                    "phone": "999555999"
+                },
+                "is_paying_customer": false,
+                "avatar_url": "https://secure.gravatar.com/avatar/9efb2045a29a88d95f966b9451425c03?s=96&d=identicon&r=g",
+                "meta_data": [
+                    {
+                        "id": 51,
+                        "key": "_aw_user_registered",
+                        "value": "1"
+                    }
+                ],
+                "_links": {
+                    "self": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/customers/237660088"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/customers"
+                        }
+                    ]
+                }
+              }
+            ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/customers?page=1&per_page=10&record_count=0
+    response:
+      body:
+        {
+          string:
+            '
+              [
+              {
+                "id": 237660088,
+                "email": "john.doe@example.com",
+                "first_name": "John",
+                "last_name": "Doe",
+                "role": "customer",
+                "username": "John Doe",
+                "billing": {
+                  "first_name": "john",
+                  "last_name": "doe",
+                  "company": "abc",
+                  "address_1": "house 1",
+                  "address_2": "california",
+                  "postcode": "555555",
+                  "city": "california city",
+                  "country": "USA",
+                  "state": "CA",
+                  "email": "john@example.com",
+                  "phone": "999555999"
+                },
+                "shipping": {
+                  "first_name": "john",
+                  "last_name": "doe",
+                  "company": "abc",
+                  "address_1": "house 2",
+                  "address_2": "california",
+                  "city": "california city",
+                  "postcode": "565656",
+                  "country": "USA",
+                  "state": "CA",
+                  "phone": "999555999"
+                },
+                "is_paying_customer": false,
+                "avatar_url": "https://secure.gravatar.com/avatar/9efb2045a29a88d95f966b9451425c03?s=96&d=identicon&r=g",
+                "meta_data": [
+                  {
+                    "id": 51,
+                    "key": "_aw_user_registered",
+                    "value": "1"
+                  }
+                ],
+                "_links": {
+                  "self": [
+                    {
+                      "href": "https://localhost/wp-json/wc/v3/customers/237660088"
+                    }
+                  ],
+                  "collection": [
+                    {
+                      "href": "https://localhost/wp-json/wc/v3/customers"
+                    }
+                  ]
+                }
+              }
+             ]
+            ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}

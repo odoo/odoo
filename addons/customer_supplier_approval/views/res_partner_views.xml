@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Add new field customer supplier and new buttons in res partner-->
+<odoo>
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">
+            res.partner.view.form.inherit.customer.supplier.approval
+        </field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/*" position="before">
+                <header>
+                    <button name="action_validate" string="Validate"
+                            class="oe_highlight" type="object"
+                            groups="customer_supplier_approval.customer_supplier_approval_group_validation,base.user_admin"
+                            attrs="{'invisible':['|',('state', 'in', ['approved']),('hide_button_validate', '=', True)]}"/>
+                    <button name="action_approve" string="Approve"
+                            class="oe_highlight" type="object"
+                            groups="customer_supplier_approval.customer_supplier_approval_group_approval"
+                            attrs="{'invisible':['|',('state', 'not in', ['validated']),('hide_button', '=', True)]}"/>
+                    <field name="state" widget="statusbar"/>
+                    <field name="hide_button" invisible="1"/>
+                    <field name="hide_button_validate" invisible="1"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <group>
+                    <field name="customer_supplier"
+                           groups="customer_supplier_approval.customer_supplier_approval_group_approval,base.group_admin"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="res_partner_kanban_view" model="ir.ui.view">
+        <field name="name">
+            res.partner.view.kanban.inherit.customer.supplier.approval
+        </field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_kanban_partner_categories')]"
+                   position="inside">
+                <span class="oe_kanban_list_many2many">
+                    <field name="state" widget="badge"
+                           decoration-info="state == 'draft'"
+                           decoration-success="state == 'approved'"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_res_partner_filter" model="ir.ui.view">
+        <field name="name">
+            res.partner.view.search.inherit.customer.supplier.approval
+        </field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/group" position="inside">
+                <filter string="Approve" name="Approve"
+                        domain="[('state','=','approved')]"/>
+                <filter string="Validate" name="Validate"
+                        domain="[('state','=','validated')]"/>
+                <filter string="State" name="state"
+                        context="{'group_by':'state'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

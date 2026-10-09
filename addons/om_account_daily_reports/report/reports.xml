@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="action_report_day_book" model="ir.actions.report">
+            <field name="name">Day Book</field>
+            <field name="model">account.daybook.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">om_account_daily_reports.report_daybook</field>
+            <field name="report_file">om_account_daily_reports.report_daybook</field>
+        </record>
+
+        <record id="action_report_cash_book" model="ir.actions.report">
+            <field name="name">Cash Book</field>
+            <field name="model">account.cashbook.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">om_account_daily_reports.report_cashbook</field>
+            <field name="report_file">om_account_daily_reports.report_cashbook</field>
+        </record>
+
+        <record id="action_report_bank_book" model="ir.actions.report">
+            <field name="name">Bank Book</field>
+            <field name="model">account.bankbook.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">om_account_daily_reports.report_bankbook</field>
+            <field name="report_file">om_account_daily_reports.report_bankbook</field>
+        </record>
+
+    </data>
+</odoo>

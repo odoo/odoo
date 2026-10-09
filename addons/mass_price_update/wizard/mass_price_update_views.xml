@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--    Form view of the wizard-->
+    <record id="mass_price_update_view_form" model="ir.ui.view">
+        <field name="name">mass.price.update.view.form</field>
+        <field name="model">mass.price.update</field>
+        <field name="arch" type="xml">
+            <form string="Mass Price Update">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="apply_to" widget="radio"/>
+                            <field name="category_ids" widget="many2many_tags"
+                                   options="{'no_create_edit': True, 'no_create': True}"
+                                   attrs="{'invisible': [('apply_to', '!=', 'category')], 'required': [('apply_to', '=', 'category')]}"/>
+                            <field name="product_ids" widget="many2many_tags"
+                                   options="{'no_create_edit': True, 'no_create': True}"
+                                   attrs="{'invisible': [('apply_to', '!=', 'selected')], 'required': [('apply_to', '=', 'selected')]}"/>
+                            <field name="apply_on" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="change" widget="percentage"/>
+                            <field name="apply_type" widget="radio"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="line_ids"
+                                   attrs="{'invisible': [('product_ids', '=', False), ('change', '=', 0)]}">
+                                <tree string="Product List" editable="bottom">
+                                    <field name="mass_price_update_id"
+                                           invisible="1"/>
+                                    <field name="product_id"/>
+                                    <field name="current_price"
+                                           widget="monetary"
+                                           options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                           attrs="{'column_invisible': [('parent.apply_on', '=', 'cost')]}"/>
+                                    <field name="new_price" widget="monetary"
+                                           options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                           attrs="{'column_invisible': [('parent.apply_on', '=', 'cost')]}"/>
+                                    <field name="current_cost" widget="monetary"
+                                           options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                           attrs="{'column_invisible': [('parent.apply_on', '=', 'price')]}"/>
+                                    <field name="new_cost" widget="monetary"
+                                           options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                           attrs="{'column_invisible': [('parent.apply_on', '=', 'price')]}"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button name="action_change_price" string="Change Cost"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': [('apply_on', '=', 'price')]}"
+                                confirm="Are you sure you want to change the cost?"/>
+                        <button name="action_change_price" string="Change Price"
+                                type="object" class="oe_highlight"
+                                attrs="{'invisible': [('apply_on', '=', 'cost')]}"
+                                confirm="Are you sure you want to change the sales price?"/>
+                        <button string="Cancel" class="btn btn-default"
+                                special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Action for mass product update-->
+    <record id="mass_price_update_action" model="ir.actions.act_window">
+        <field name="name">Mass Price Update</field>
+        <field name="res_model">mass.price.update</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <!--    Menu for mass product update-->
+    <menuitem id="menu_mass_price_update" name="Mass Price Update"
+              parent="stock.menu_stock_inventory_control"
+              action="mass_price_update_action" sequence="5"
+              groups="mass_price_update.mass_price_update_group_admin"/>
+</odoo>

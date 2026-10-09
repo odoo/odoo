@@ -1,0 +1,211 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * connector
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2018
+# Nicolas JEUDY <njeudy@panda-chi.io>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2024-11-06 16:06+0000\n"
+"Last-Translator: samibc2c <sami.bouzidi@camptocamp.com>\n"
+"Language-Team: French (https://www.transifex.com/oca/teams/23907/fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.6.2\n"
+
+#. module: connector
+#: model:ir.module.category,name:connector.module_category_connector
+msgid "Connector"
+msgstr "Connecteur"
+
+#. module: connector
+#: model:ir.model,name:connector.model_connector_backend
+msgid "Connector Backend"
+msgstr "Backend de connecteur"
+
+#. module: connector
+#: model:res.groups,name:connector.group_connector_manager
+msgid "Connector Manager"
+msgstr "Responsable connecteurs"
+
+#. module: connector
+#: model:ir.ui.menu,name:connector.menu_connector
+#: model:ir.ui.menu,name:connector.menu_connector_root
+#: model_terms:ir.ui.view,arch_db:connector.view_partner_connector_form
+msgid "Connectors"
+msgstr "Connecteurs"
+
+#. module: connector
+#: model:ir.model,name:connector.model_external_binding
+msgid "External Binding (abstract)"
+msgstr "Lien Externe (abstrait)"
+
+#. module: connector
+#: model:ir.model.fields,field_description:connector.field_external_binding__sync_date
+msgid "Last synchronization date"
+msgstr "Dernière date de synchronisation"
+
+#. module: connector
+#. odoo-python
+#: code:addons/connector/components/synchronizer.py:0
+#, python-format
+msgid "Nothing to export."
+msgstr "Rien à exporter."
+
+#. module: connector
+#: model:ir.model,name:connector.model_queue_job
+msgid "Queue Job"
+msgstr "Queue de jobs"
+
+#. module: connector
+#. odoo-python
+#: code:addons/connector/components/synchronizer.py:0
+#, python-format
+msgid "Record exported with ID %s on Backend."
+msgstr "Enregistrement exporté avec l'ID %s dans le Backend."
+
+#. module: connector
+#. odoo-python
+#: code:addons/connector/models/queue_job.py:0
+#, python-format
+msgid "Related Record"
+msgstr "Enregistrement lié"
+
+#~ msgid "Display Name"
+#~ msgstr "Nom affiché"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Dernière modification le"
+
+#~ msgid "A %s needs a review."
+#~ msgstr "Un %s a besoin d'un contrôle."
+
+#~ msgid "Cancel"
+#~ msgstr "Annuler"
+
+#~ msgid "Checkpoint"
+#~ msgstr "Points de contrôle"
+
+#~ msgid "Checkpoints"
+#~ msgstr "Points de contrôle"
+
+#~ msgid "Checkpoints Review"
+#~ msgstr "Points de contrôle"
+
+#~ msgid "Click on the"
+#~ msgstr "Cliquer sur le"
+
+#~ msgid "Connector Checkpoint"
+#~ msgstr "Point de contrôle"
+
+#~ msgid "Created by"
+#~ msgstr "Créé par"
+
+#~ msgid "Created on"
+#~ msgstr "Créé le"
+
+#~ msgid "Group By..."
+#~ msgstr "Grouper par..."
+
+#~ msgid "Imported from"
+#~ msgstr "Importé depuis"
+
+#~ msgid "Last Updated by"
+#~ msgstr "Dernière mise à jour par"
+
+#~ msgid "Last Updated on"
+#~ msgstr "Dernière mise à jour le"
+
+#~ msgid "Model"
+#~ msgstr "Modèle"
+
+#~ msgid "Name of the record to review"
+#~ msgstr "Nom de l'enregistrement à contrôler"
+
+#~ msgid "Need Review"
+#~ msgstr "Nécessite un contrôle"
+
+#~ msgid "No record to check."
+#~ msgstr "Pas d'enregistrement à contrôler."
+
+#~ msgid "Record"
+#~ msgstr "Enregistrement"
+
+#~ msgid "Record ID"
+#~ msgstr "ID de ressource"
+
+#~ msgid "Record Name"
+#~ msgstr "Nom d'enregistrement"
+
+#~ msgid "Review Checkpoints"
+#~ msgstr "Contrôler"
+
+#~ msgid "Reviewed"
+#~ msgstr "Contrôlé"
+
+#~ msgid "Set as reviewed"
+#~ msgstr "Passer en contrôlé"
+
+#~ msgid "Status"
+#~ msgstr "État"
+
+#~ msgid ""
+#~ "The connectors list the new records to verify\n"
+#~ "                based on their type.  Only some need a manual\n"
+#~ "                review."
+#~ msgstr ""
+#~ "Les connecteurs listent les nouveaux enregistrements pour vérifier\n"
+#~ " leur type. Seulement certaines nécessitent un contrôle\n"
+#~ " manuel."
+
+#~ msgid "The record has been imported from this backend"
+#~ msgstr "La ressource a été importée depuis ce backend"
+
+#~ msgid "The record to review."
+#~ msgstr "L'enregistrement à contrôler."
+
+#~ msgid "The selected checkpoints will be set as reviewed."
+#~ msgstr ""
+#~ "Les points de contrôle sélectionnés vont être considérés comme contrôlés."
+
+#~ msgid ""
+#~ "When a connector imports new records which have\n"
+#~ "                configuration or reviews to do manually, they\n"
+#~ "                will appear in this list.  Once a record has been\n"
+#~ "                checked, click on the 'Reviewed' button."
+#~ msgstr ""
+#~ "Lorsqu'un connecteur importe de nouveaux enregistrements qui doivent être "
+#~ "configurés ou révisés manuellement, ils apparaissent dans cette liste. "
+#~ "Une fois qu'un enregistrement a été vérifié, cliquez sur le bouton "
+#~ "\"Controlé\"."
+
+#~ msgid "to verify it:"
+#~ msgstr "pour le vérifier :"
+
+#~ msgid "Apply"
+#~ msgstr "Appliquer"
+
+#~ msgid "Backends"
+#~ msgstr "Backends"
+
+#~ msgid "Configure Connector"
+#~ msgstr "Configurer les connecteurs"
+
+#~ msgid "Connector Configuration"
+#~ msgstr "Configuration du connecteur"
+
+#~ msgid "Open Connector Menu"
+#~ msgstr "Ouvrir le menu du connecteur"
+
+#~ msgid "or"
+#~ msgstr "ou"

@@ -1,0 +1,48 @@
+<odoo>
+    <data>
+        <record id="hide_user_menu" model="ir.ui.view">
+            <field name="name">hide.menu</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Restrict Specific Menu"  attrs="{'invisible': [('is_admin','=', True)]}">
+                        <tree>
+                            <field name="restrict_menu_ids"/>
+                        </tree>
+                    </page>
+                </xpath>
+                <field name="name" position="after">
+                    <field name="is_admin" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="ir_ui_menu_users" model="ir.ui.view">
+            <field name="name">restrict.menu</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="inherit_id" ref="base.edit_menu_access"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Restrict users" name="restrict_users">
+                        <tree>
+                            <field name="restrict_user_ids"/>
+                        </tree>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="edit_menu_access_search_inherit" model="ir.ui.view">
+            <field name="name">ir.ui.menu.search.inherit</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="inherit_id" ref="base.edit_menu_access_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <filter name="group_root_id" string="Application" context="{'group_by':'root_id'}"/>
+                </xpath>
+                </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,63 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * report_xlsx
+#
+# Translators:
+# Peter Hageman <hageman.p@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-06-23 00:28+0000\n"
+"PO-Revision-Date: 2017-06-23 00:28+0000\n"
+"Last-Translator: Peter Hageman <hageman.p@gmail.com>, 2017\n"
+"Language-Team: Dutch (Netherlands) (https://www.transifex.com/oca/"
+"teams/23907/nl_NL/)\n"
+"Language: nl_NL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: report_xlsx
+#: model:ir.model,name:report_xlsx.model_report_report_xlsx_abstract
+msgid "Abstract XLSX Report"
+msgstr ""
+
+#. module: report_xlsx
+#: model:ir.model,name:report_xlsx.model_report_report_xlsx_partner_xlsx
+msgid "Partner XLSX Report"
+msgstr ""
+
+#. module: report_xlsx
+#: model:ir.actions.report,name:report_xlsx.partner_xlsx
+msgid "Print to XLSX"
+msgstr ""
+
+#. module: report_xlsx
+#: model:ir.model,name:report_xlsx.model_ir_actions_report
+msgid "Report Action"
+msgstr ""
+
+#. module: report_xlsx
+#: model:ir.model.fields,field_description:report_xlsx.field_ir_actions_report__report_type
+msgid "Report Type"
+msgstr ""
+
+#. module: report_xlsx
+#: model:ir.model.fields,help:report_xlsx.field_ir_actions_report__report_type
+msgid ""
+"The type of the report that will be rendered, each one having its own "
+"rendering method. HTML means the report will be opened directly in your "
+"browser PDF means the report will be rendered using Wkhtmltopdf and "
+"downloaded by the user."
+msgstr ""
+
+#. module: report_xlsx
+#: model:ir.model.fields.selection,name:report_xlsx.selection__ir_actions_report__report_type__xlsx
+msgid "XLSX"
+msgstr ""
+
+#, fuzzy
+#~ msgid "ir.actions.report"
+#~ msgstr "ir.actions.report.xml"

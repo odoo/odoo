@@ -1,0 +1,49 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_sale_order_woocommerce_form_view_for_woo_integration_pro">
+        <field name="name">eg.sale.order.woocommerce.form.view</field>
+        <field name="model">eg.sale.order</field>
+        <field name="inherit_id" ref="eg_ecommerce_base.eg_sale_order_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="woo_update_order_state" string="Update order State" type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                </header>
+            </xpath>
+            <xpath expr="//sheet/group[1]" position="after">
+                <notebook attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}">
+                    <page string="Other Info">
+                        <group>
+                            <group>
+                                <field name="created_via"/>
+                                <field name="woo_version"/>
+                                <field name="status"/>
+                                <field name="prices_include_tax"/>
+                                <field name="discount_total"/>
+                                <field name="discount_tax"/>
+                            </group>
+                            <group>
+                                <field name="shipping_total"/>
+                                <field name="shipping_tax"/>
+                                <field name="cart_tax"/>
+                                <field name="total"/>
+                                <field name="total_tax"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Payment Info">
+                        <group>
+                            <group>
+                                <field name="transaction_id"/>
+                                <field name="date_paid"/>
+                                <field name="date_completed"/>
+                                <field name="payment_method_title"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="mis_report_instance_result_view_form">
+        <field name="name">mis.report.instance.result.view.form</field>
+        <field name="model">mis.report.instance</field>
+        <field name="priority" eval="20 " />
+        <field name="arch" type="xml">
+            <form
+                string="MIS Report Preview"
+                edit="false"
+                create="false"
+                delete="false"
+            >
+                <sheet>
+                    <field
+                        name="id"
+                        widget="mis_report_widget"
+                        nolabel="1"
+                        style="width:100%"
+                    />
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="mis_report_instance_view_tree">
+        <field name="name">mis.report.instance.view.tree</field>
+        <field name="model">mis.report.instance</field>
+        <field name="arch" type="xml">
+            <tree>
+                <button
+                    type="object"
+                    name="preview"
+                    string="Preview"
+                    icon="fa-search"
+                />
+                <button type="object" name="print_pdf" string="Print" icon="fa-print" />
+                <button
+                    type="object"
+                    name="export_xls"
+                    string="Export"
+                    icon="fa-download"
+                />
+                <field name="name" />
+                <field name="report_id" string="Template" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="multi_company" groups="base.group_multi_company" />
+                <field name="currency_id" groups="base.group_multi_currency" />
+                <field name="target_move" />
+                <field name="pivot_date" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="mis_report_instance_view_form">
+        <field name="name">mis.report.instance.view.form</field>
+        <field name="model">mis.report.instance</field>
+        <field name="priority" eval="15" />
+        <field name="arch" type="xml">
+            <form string="MIS Report Instance">
+                <sheet>
+                    <field name="temporary" invisible="1" />
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button
+                            type="object"
+                            name="preview"
+                            string="Preview"
+                            icon="fa-search"
+                        />
+                        <button
+                            type="object"
+                            name="print_pdf"
+                            string="Print"
+                            icon="fa-print"
+                        />
+                        <button
+                            type="object"
+                            name="export_xls"
+                            string="Export"
+                            icon="fa-download"
+                        />
+                        <button
+                            type="action"
+                            name="%(mis_report_instance_add_to_dashboard_action)d"
+                            string="Add to dashboard"
+                            icon="fa-plus"
+                            attrs="{'invisible': [('temporary', '=', True)]}"
+                        />
+                        <button
+                            type="object"
+                            name="save_report"
+                            string="Save"
+                            icon="fa-save"
+                            attrs="{'invisible': [('temporary', '=', False)]}"
+                        />
+                    </div>
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="name" />
+                        </div>
+                        <h1>
+                            <field name="name" placeholder="Name" />
+                        </h1>
+                        <field name="description" />
+                    </div>
+                    <group>
+                        <group>
+                            <field name="report_id" string="Template" />
+                            <field
+                                name="currency_id"
+                                groups="base.group_multi_currency"
+                            />
+                            <field name="comparison_mode" />
+                        </group>
+                        <group>
+                            <group
+                                name="simple_mode"
+                                attrs="{'invisible': [('comparison_mode', '=', True)]}"
+                                colspan="4"
+                            >
+                                <field name="date_range_id" />
+                                <field
+                                    name="date_from"
+                                    attrs="{'required': [('comparison_mode', '=', False)]}"
+                                />
+                                <field
+                                    name="date_to"
+                                    attrs="{'required': [('comparison_mode', '=', False)]}"
+                                />
+                            </group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page
+                            string="Columns"
+                            attrs="{'invisible': [('comparison_mode', '=', False)]}"
+                        >
+                            <group>
+                                <group>
+                                    <field name="date" />
+                                </group>
+                                <group>
+
+                                </group>
+                                <field
+                                    name="period_ids"
+                                    nolabel="1"
+                                    colspan="4"
+                                    attrs="{'required': [('comparison_mode', '=', True)]}"
+                                    context="{'default_report_instance_id': id}"
+                                >
+                                    <tree decoration-danger="not valid">
+                                        <field name="sequence" widget="handle" />
+                                        <field name="name" />
+                                        <field name="source" />
+                                        <field name="source_aml_model_id" />
+                                        <field name="date_from" />
+                                        <field name="date_to" />
+                                        <field name="valid" invisible="1" />
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                        <page string="Filters">
+                            <group name="filters">
+                                <field name="target_move" widget="radio" />
+                                <field
+                                    name="multi_company"
+                                    groups="base.group_multi_company"
+                                />
+                                <field
+                                    name="company_id"
+                                    groups="base.group_multi_company"
+                                    attrs="{'required': [('multi_company', '=', False)], 'invisible': [('multi_company', '=', True)]}"
+                                />
+                                <field
+                                    name="company_ids"
+                                    groups="base.group_multi_company"
+                                    widget="many2many_tags"
+                                    attrs="{'invisible': [('multi_company', '=', False)]}"
+                                />
+                                <field
+                                    name="query_company_ids"
+                                    groups="base.group_multi_company"
+                                    widget="many2many_tags"
+                                />
+                                <field name="source_aml_model_name" invisible="1" />
+                                <field
+                                    name="analytic_domain"
+                                    widget="domain"
+                                    options="{'model': 'source_aml_model_name'}"
+                                />
+                            </group>
+                        </page>
+                        <page string="Layout">
+                            <group name="layout">
+                                <field name="landscape_pdf" />
+                                <field name="no_auto_expand_accounts" />
+                                <field name="display_columns_description" />
+                            </group>
+                        </page>
+                        <page string="Widget">
+                            <group name="widget">
+                                <field name="widget_show_filters" />
+                                <field
+                                    name="widget_search_view_id"
+                                    attrs="{'invisible': [('widget_show_filters', '=', False)]}"
+                                />
+                                <field name="widget_show_settings_button" />
+                                <field name="widget_show_pivot_date" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="mis_report_instance_view_action">
+        <field name="name">MIS Reports</field>
+        <field name="view_id" ref="mis_report_instance_view_tree" />
+        <field name="res_model">mis.report.instance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('temporary', '=', False)]</field>
+    </record>
+    <menuitem
+        id="mis_report_finance_menu"
+        parent="account.menu_finance_reports"
+        name="MIS Reporting"
+        sequence="101"
+        groups="account.group_account_manager"
+    />
+    <menuitem
+        id="mis_report_instance_view_menu"
+        parent="mis_report_finance_menu"
+        name="MIS Reports"
+        action="mis_report_instance_view_action"
+        sequence="10"
+    />
+    <record id="wizard_mis_report_instance_view_form" model="ir.ui.view">
+        <field name="model">mis.report.instance</field>
+        <field name="priority">99</field>
+        <field name="inherit_id" ref="mis_builder.mis_report_instance_view_form" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <label for="name" position="replace" />
+            <field name="report_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <div name="buttons" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </div>
+            <sheet position="after">
+                <footer>
+                    <button
+                        type="object"
+                        name="save_report"
+                        string="Save"
+                        icon="fa-save"
+                    />
+                    <button
+                        type="object"
+                        name="preview"
+                        string="Preview"
+                        icon="fa-search"
+                    />
+                    <button
+                        type="object"
+                        name="print_pdf"
+                        string="Print"
+                        icon="fa-print"
+                    />
+                    <button
+                        type="object"
+                        name="export_xls"
+                        string="Export"
+                        icon="fa-download"
+                    /> or <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </sheet>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="last_mis_report_instance_view_action">
+        <field name="name">Last Reports Generated</field>
+        <field name="view_id" ref="mis_report_instance_view_tree" />
+        <field name="res_model">mis.report.instance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('temporary', '=', True)]</field>
+    </record>
+    <menuitem
+        id="last_wizard_mis_report_instance_view_menu"
+        parent="mis_report_finance_menu"
+        name="Last Reports Generated"
+        action="last_mis_report_instance_view_action"
+        sequence="20"
+    />
+    <record model="ir.ui.view" id="mis_report_instance_period_view_form">
+        <field name="model">mis.report.instance.period</field>
+        <field name="priority" eval="16" />
+        <field name="arch" type="xml">
+            <form>
+                <group col="4">
+                    <field name="name" placeholder="Name" />
+                    <field
+                        name="subkpi_ids"
+                        domain="[('report_id', '=', parent.report_id)]"
+                        widget="many2many_tags"
+                        options="{'no_create': True}"
+                    />
+                    <field name="valid" invisible="1" />
+                    <field
+                        name="report_instance_id"
+                        invisible="1"
+                        attrs="{'required': [('id', '!=', False)]}"
+                    />
+                    <field name="report_id" invisible="1" />
+                    <field name="id" invisible="1" />
+                </group>
+                <group string="Source" col="4">
+                    <group colspan="2" name="source">
+                        <field name="source" />
+                    </group>
+                    <group col="2" colspan="2" name="source_data">
+                        <field
+                            name="source_aml_model_id"
+                            attrs="{'invisible': [('source', '!=', 'actuals_alt')], 'required': [('source', '==', 'actuals_alt')]}"
+                        />
+                        <field name="source_aml_model_name" invisible="1" />
+                        <field
+                            name="source_sumcol_ids"
+                            attrs="{'invisible': [('source', '!=', 'sumcol')]}"
+                            nolabel="1"
+                            colspan="2"
+                        >
+                            <tree editable="bottom">
+                                <field name="sign" />
+                                <field
+                                    name="period_to_sum_id"
+                                    domain="[('report_instance_id', '=', parent.report_instance_id), ('id', '!=', parent.id)]"
+                                    options="{'no_create': True, 'no_open': True}"
+                                />
+                            </tree>
+                        </field>
+                        <field
+                            name="source_sumcol_accdet"
+                            attrs="{'invisible': [('source', '!=', 'sumcol')]}"
+                        />
+                        <field name="allowed_cmpcol_ids" invisible="1" />
+                        <field
+                            name="source_cmpcol_to_id"
+                            attrs="{'invisible': [('source', '!=', 'cmpcol')], 'required': [('source', '=', 'cmpcol')]}"
+                            domain="[('id', 'in', allowed_cmpcol_ids)]"
+                            options="{'no_create': True, 'no_open': True}"
+                        />
+                        <field
+                            name="source_cmpcol_from_id"
+                            attrs="{'invisible': [('source', '!=', 'cmpcol')], 'required': [('source', '=', 'cmpcol')]}"
+                            domain="[('id', 'in', allowed_cmpcol_ids)]"
+                            options="{'no_create': True, 'no_open': True}"
+                        />
+                    </group>
+                </group>
+                <group string="Dates">
+                    <group colspan="4">
+                        <field name="mode" widget="radio" />
+                    </group>
+                    <group
+                        name="relative"
+                        attrs="{'invisible': [('mode', '!=', 'relative')]}"
+                        colspan="4"
+                    >
+                        <group>
+                            <field
+                                name="type"
+                                attrs="{'required': [('mode', '=', 'relative')]}"
+                            />
+                            <field name="is_ytd" />
+                            <field
+                                name="date_range_type_id"
+                                attrs="{'invisible': [('type', '!=', 'date_range')], 'required': [('type', '=', 'date_range'), ('mode', '=', 'relative')]}"
+                            />
+                            <field name="offset" />
+                            <field name="duration" />
+                        </group>
+                        <group>
+                            <field name="date_from" />
+                            <field name="date_to" />
+                        </group>
+                    </group>
+                    <group
+                        name="fix"
+                        attrs="{'invisible': [('mode', '!=', 'fix')]}"
+                        colspan="4"
+                    >
+                        <group>
+                            <field name="date_range_id" />
+                        </group>
+                        <group>
+                            <field
+                                name="manual_date_from"
+                                attrs="{'required': [('mode', '=', 'fix')]}"
+                            />
+                            <field
+                                name="manual_date_to"
+                                attrs="{'required': [('mode', '=', 'fix')]}"
+                            />
+                        </group>
+                    </group>
+                </group>
+                <group string="Filters">
+                    <field
+                        name="analytic_domain"
+                        widget="domain"
+                        options="{'model': 'source_aml_model_name'}"
+                        attrs="{'invisible': [('source_aml_model_name', '=', False)]}"
+                    />
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

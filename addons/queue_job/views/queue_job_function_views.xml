@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_queue_job_function_form" model="ir.ui.view">
+        <field name="name">queue.job.function.form</field>
+        <field name="model">queue.job.function</field>
+        <field name="arch" type="xml">
+            <form string="Job Functions">
+                <group>
+                    <field name="name" readonly="1" />
+                    <field name="model_id" required="1" />
+                    <field name="method" required="1" />
+                    <field name="channel_id" />
+                    <field name="edit_retry_pattern" widget="ace" />
+                    <field name="edit_related_action" widget="ace" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_queue_job_function_tree" model="ir.ui.view">
+        <field name="name">queue.job.function.tree</field>
+        <field name="model">queue.job.function</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="channel_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_queue_job_function_search" model="ir.ui.view">
+        <field name="name">queue.job.function.search</field>
+        <field name="model">queue.job.function</field>
+        <field name="arch" type="xml">
+            <search string="Job Functions">
+                <field name="name" />
+                <field name="channel_id" />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="group_by_channel"
+                        string="Channel"
+                        context="{'group_by': 'channel_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_queue_job_function" model="ir.actions.act_window">
+        <field name="name">Job Functions</field>
+        <field name="res_model">queue.job.function</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="view_id" ref="view_queue_job_function_tree" />
+    </record>
+
+</odoo>

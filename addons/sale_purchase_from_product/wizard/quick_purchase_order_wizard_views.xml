@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="quick_purchase_create_wizard_form">
+        <field name="name">Quick Purchase Order Create</field>
+        <field name="model">quick.purchase.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Quick Create">
+                <group>
+                    <field name="type" widget="radio"/>
+                </group>
+                <group>
+                    <group>
+                        <field name="partner_id" attrs="{'invisible':[('type','=','existing_order')]}"/>
+                        <field name="purchase_ids" widget="many2many_tags" attrs="{'invisible':[('type','=','new_order')]}"/>
+                    </group>
+                    <group>
+                        <field name="order_date" attrs="{'invisible':[('type','=','existing_order')]}"/>
+                        <field name="user_id" attrs="{'invisible':[('type','=','existing_order')]}"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Order Line">
+                        <field name="line_ids">
+                            <tree editable="bottom">
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="price_unit"/>
+                                <field name="tax_id" widget="many2many_tags"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="action_create" type="object" string="Create" class="oe_highlight" confirm="Purchase order created successfully"
+                            attrs="{'invisible':[('type','=','existing_order')]}"/>
+                    <button name="action_update_order" type="object" string="Update Order" class="oe_highlight" confirm="Purchase orders updated successfully"
+                            attrs="{'invisible':[('type','=','new_order')]}"/>
+                    <button name="action_create_view" type="object" string="Create and View" class="oe_highlight"
+                            attrs="{'invisible':[('type','=','existing_order')]}"/>
+                    <button string="Cancel" class="oe_link" special="cancel" confirm="Do you want to Discard?"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_purchase_quick_create">
+        <field name="name">Purchase Quick Create</field>
+        <field name="res_model">quick.purchase.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

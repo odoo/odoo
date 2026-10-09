@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="participants">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="transport">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure" />
+                        <div class="text-center" style="margin-top:25px;">
+                            <h1>Transport Information</h1>
+                        </div>
+                        <br />
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <span />
+                                </td>
+                                <td>
+                                    <span />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    width="20%"
+                                    style="font-family: 'Helvetica';font-size: 16px;"
+                                >
+                                    <b>Route Name</b>
+                                </td>
+                                <td width="5%">
+                                    <b>:</b>
+                                </td>
+                                <td
+                                    width="75%"
+                                    style="font-family: 'Helvetica';font-size: 16px;"
+                                >
+                                    <span t-field="transport.name" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    width="20%"
+                                    style="font-family: 'Helvetica';font-size: 16px;"
+                                >
+                                    <b>Contact person</b>
+                                </td>
+                                <td width="5%">
+                                    <b>:</b>
+                                </td>
+                                <td
+                                    width="75%"
+                                    style="font-family: 'Helvetica';font-size: 16px;"
+                                >
+                                    <span t-field="transport.contact_per_id.name" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    width="20%"
+                                    style="font-family: 'Helvetica';font-size: 16px;"
+                                >
+                                    <b>Start date</b>
+                                </td>
+                                <td width="5%">
+                                    <b>:</b>
+                                </td>
+                                <td
+                                    width="75%"
+                                    style="font-family: 'Helvetica';font-size: 16px;"
+                                >
+                                    <span t-field="transport.start_date" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    width="20%"
+                                    style="font-family: 'Helvetica';font-size: 16px;"
+                                >
+                                    <b>End Date</b>
+                                </td>
+                                <td width="5%">
+                                    <b>:</b>
+                                </td>
+                                <td
+                                    width="75%"
+                                    style="font-family: 'Helvetica';font-size: 16px;"
+                                >
+                                    <span t-field="transport.end_date" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td
+                                    width="20%"
+                                    style="font-family: 'Helvetica';font-size: 16px;"
+                                >
+                                    <b>Total Participants</b>
+                                </td>
+                                <td width="5%">
+                                    <b>:</b>
+                                </td>
+                                <td
+                                    width="75%"
+                                    style="font-family: 'Helvetica';font-size: 16px;"
+                                >
+                                    <span t-field="transport.total_participantes" />
+                                </td>
+                            </tr>
+                        </table>
+                        <br />
+                        <div
+                            class="row"
+                            align="left"
+                            style="font-family: 'Helvetica';font-size: 18px;"
+                        >
+                            <b>1. Participated vehicle information.</b>
+                        </div>
+                        <br />
+                        <t
+                            t-foreach="transport.trans_vehicle_ids"
+                            t-as="trans_vehicle_ids"
+                        >
+                            <table width="100%">
+                                <tr>
+                                    <td
+                                        width="20%"
+                                        style="font-family: 'Helvetica';font-size: 16px;"
+                                    >
+                                        <b>Vehicle No</b>
+                                    </td>
+                                    <td width="5%">
+                                        <b>:</b>
+                                    </td>
+                                    <td
+                                        width="75%"
+                                        style="font-family: 'Helvetica';font-size: 16px;"
+                                    >
+                                        <span
+                                            t-field="trans_vehicle_ids.license_plate"
+                                        />
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                        <br />
+                        <div
+                            class="row"
+                            align="left"
+                            style="font-family: 'Helvetica';font-size: 18px;"
+                        >
+                            <b>2. Participated Student information.</b>
+                        </div>
+                        <br />
+                        <table width="100%" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <td
+                                        width="20%"
+                                        style="font-family: 'Helvetica';font-size: 18px;"
+                                    >
+                                        <b>Name</b>
+                                    </td>
+                                    <td
+                                        align="center"
+                                        width="15%"
+                                        style="font-family: 'Helvetica';font-size: 18px;"
+                                    >
+                                        <b>Standard</b>
+                                    </td>
+                                    <td
+                                        align="center"
+                                        width="10%"
+                                        style="font-family: 'Helvetica';font-size: 18px;"
+                                    >
+                                        <b>Division</b>
+                                    </td>
+                                    <td
+                                        align="center"
+                                        width="20%"
+                                        style="font-family: 'Helvetica';font-size: 18px;"
+                                    >
+                                        <b>Vehicle No</b>
+                                    </td>
+                                    <td
+                                        align="center"
+                                        width="20%"
+                                        style="font-family: 'Helvetica';font-size: 18px;"
+                                    >
+                                        <b>Registration End date</b>
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t
+                                    t-foreach="transport.trans_participants_ids"
+                                    t-as="trans_participants_ids"
+                                >
+                                    <tr>
+                                        <td
+                                            width="20%"
+                                            style="font-family: 'Helvetica';font-size: 16px;"
+                                        >
+                                            <span
+                                                t-field="trans_participants_ids.name.name"
+                                            />
+                                        </td>
+                                        <td
+                                            align="center"
+                                            width="15%"
+                                            style="font-family: 'Helvetica';font-size: 16px;"
+                                        >
+                                            <span
+                                                t-field="trans_participants_ids.name.sudo().standard_id.standard_id.name"
+                                            />
+                                        </td>
+                                        <td
+                                            align="center"
+                                            width="10%"
+                                            style="font-family: 'Helvetica';font-size: 16px;"
+                                        >
+                                            <span
+                                                t-field="trans_participants_ids.name.sudo().standard_id.division_id.name"
+                                            />
+                                        </td>
+                                        <td
+                                            align="center"
+                                            width="20%"
+                                            style="font-family: 'Helvetica';font-size: 16px;"
+                                        >
+                                            <span
+                                                t-field="trans_participants_ids.sudo().vehicle_id.license_plate"
+                                            />
+                                        </td>
+                                        <td
+                                            align="center"
+                                            width="20%"
+                                            style="font-family: 'Helvetica';font-size: 16px;"
+                                        >
+                                            <span
+                                                t-field="trans_participants_ids.tr_end_date"
+                                            />
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

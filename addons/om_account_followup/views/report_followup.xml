@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_followup">
+            <t t-call="web.html_container">
+                <t t-foreach="ids_to_objects(data['partner_ids'])" t-as="o">
+                    <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <p>
+                                <span t-field="o.invoice_partner_id"/>
+                                <br/>
+                                <t t-if="o.partner_id.vat">
+                                    <span t-field="o.partner_id.vat"/>
+                                    <br/>
+                                </t>
+                                Document: Customer account statement
+                                <br/>
+                                Date:
+                                <span t-esc="data['date']"/>
+                                <br/>
+                                Customer ref:
+                                <span t-field="o.partner_id.ref"/>
+                            </p>
+
+                            <p t-raw="get_text(o,data['followup_id']).replace('\n', '&lt;br&gt;')"/>
+
+                            <t t-foreach="getLines(o)" t-as="cur_lines">
+                                <table class="table table-condensed"
+                                       style="margin-top: 50px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Invoice Date</th>
+                                            <th>Description</th>
+                                            <th class="text-center">Ref</th>
+                                            <th class="text-center">Maturity Date</th>
+                                            <th class="text-end">Amount</th>
+                                            <th class="text-center">Due</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr t-foreach="cur_lines['line']"
+                                            t-as="line">
+                                            <td>
+                                                <span t-esc="line['date']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['name']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['ref']"/>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-esc="line['date_maturity']"/>
+                                            </td>
+                                            <td class="text-end">
+                                                <span t-esc="line['balance']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="line['blocked'] and 'X' or ''"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <p>Total:
+                                    <span t-esc="cur_lines['total']"/>
+                                </p>
+                            </t>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- These widget templates are intended for read-only mode only -->
+
+    <t t-name="spinner_widget" owl="1">
+        <span>
+            <div class="spinner-border spinner-border-sm text-success" role="status" t-att-data-tooltip="getSpinnerTitle" t-if="props.value">
+            </div>
+            <div class="spinner-border spinner-border-sm text-warning" style="animation: none;" role="status" t-att-data-tooltip="getSpinnerTitle" t-if="!props.value">
+            </div>
+        </span>
+    </t>
+
+</templates>

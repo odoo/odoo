@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+        <report
+        id="report_student_student"
+        string="Identity Card"
+        model="student.student"
+        report_type="qweb-pdf"
+        file="school.identity_card"
+        name="school.identity_card"
+        groups="school.group_school_administration,school.group_school_teacher,school.group_school_student"
+    />
+</odoo>

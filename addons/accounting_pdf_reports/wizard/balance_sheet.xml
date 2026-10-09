@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_financial_report_profitandloss0" model="account.financial.report">
+        <field name="name">Profit and Loss</field>
+        <field name="sign">-1</field>
+        <field name="type">sum</field>
+    </record>
+
+    <record id="account_financial_report_income0" model="account.financial.report">
+        <field name="name">Income</field>
+        <field name="sign">-1</field>
+        <field name="parent_id" ref="account_financial_report_profitandloss0"/>
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="type">account_type</field>
+        <field name="account_type_ids" eval="[(4,ref('accounting_pdf_reports.data_account_type_other_income')),
+        (4,ref('accounting_pdf_reports.data_account_type_revenue'))]"/>
+    </record>
+
+    <record id="account_financial_report_expense0" model="account.financial.report">
+        <field name="name">Expense</field>
+        <field name="sign">-1</field>
+        <field name="parent_id" ref="account_financial_report_profitandloss0"/>
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="type">account_type</field>
+        <field name="account_type_ids" eval="[(4,ref('accounting_pdf_reports.data_account_type_expenses')),
+        (4,ref('accounting_pdf_reports.data_account_type_direct_costs')), (4,ref('accounting_pdf_reports.data_account_type_depreciation'))]"/>
+    </record>
+
+    <record id="account_financial_report_balancesheet0" model="account.financial.report">
+        <field name="name">Balance Sheet</field>
+        <field name="type">sum</field>
+    </record>
+
+    <record id="account_financial_report_assets0" model="account.financial.report">
+        <field name="name">Assets</field>
+        <field name="parent_id" ref="account_financial_report_balancesheet0"/>
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="type">account_type</field>
+        <field name="account_type_ids" eval="[(4,ref('accounting_pdf_reports.data_account_type_receivable')),
+        (4,ref('accounting_pdf_reports.data_account_type_liquidity')), (4,ref('accounting_pdf_reports.data_account_type_current_assets')),
+        (4,ref('accounting_pdf_reports.data_account_type_non_current_assets'), (4,ref('accounting_pdf_reports.data_account_type_prepayments'))),
+        (4,ref('accounting_pdf_reports.data_account_type_fixed_assets'))]"/>
+    </record>
+
+    <record id="account_financial_report_liabilitysum0" model="account.financial.report">
+        <field name="name">Liability</field>
+        <field name="parent_id" ref="account_financial_report_balancesheet0"/>
+        <field name="display_detail">no_detail</field>
+        <field name="type">sum</field>
+    </record>
+
+    <record id="account_financial_report_liability0" model="account.financial.report">
+        <field name="name">Liability</field>
+        <field name="parent_id" ref="account_financial_report_liabilitysum0"/>
+        <field name="display_detail">detail_with_hierarchy</field>
+        <field name="type">account_type</field>
+        <field name="account_type_ids" eval="[(4,ref('accounting_pdf_reports.data_account_type_payable')),
+        (4,ref('accounting_pdf_reports.data_account_type_equity')), (4,ref('accounting_pdf_reports.data_account_type_current_liabilities')),
+        (4,ref('accounting_pdf_reports.data_account_type_non_current_liabilities'))]"/>
+    </record>
+
+    <record id="account_financial_report_profitloss_toreport0" model="account.financial.report">
+        <field name="name">Profit (Loss) to report</field>
+        <field name="parent_id" ref="account_financial_report_liabilitysum0"/>
+        <field name="display_detail">no_detail</field>
+        <field name="type">account_report</field>
+        <field name="account_report_id" ref="account_financial_report_profitandloss0"/>
+    </record>
+
+    <record id="accounting_report_view" model="ir.ui.view">
+        <field name="name">Accounting Report</field>
+        <field name="model">accounting.report</field>
+        <field name="inherit_id" ref="accounting_pdf_reports.account_common_report_view"/>
+        <field name="arch" type="xml">
+            <field name="target_move" position="before">
+                <field name="account_report_id" domain="[('parent_id','=',False)]"/>
+            </field>
+            <field name="target_move" position="after">
+                <field name="enable_filter"/>
+                <field name="debit_credit" attrs="{'invisible': [('enable_filter','=',True)]}"/>
+            </field>
+            <field name="journal_ids" position="after">
+                <notebook tabpos="up" colspan="4">
+                    <page string="Comparison" name="comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
+                        <group>
+                            <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
+                            <field name="filter_cmp"/>
+                        </group>
+                        <group string="Dates" attrs="{'invisible':[('filter_cmp', '!=', 'filter_date')]}">
+                            <field name="date_from_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                            <field name="date_to_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_account_report_bs" model="ir.actions.act_window">
+        <field name="name">Balance Sheet</field>
+        <field name="res_model">accounting.report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="accounting_report_view"/>
+        <field name="target">new</field>
+        <field name="context" eval="{'default_account_report_id':ref('accounting_pdf_reports.account_financial_report_balancesheet0')}"/>
+    </record>
+
+    <menuitem id="menu_account_report_bs"
+              name="Balance Sheet"
+              sequence="5"
+              action="action_account_report_bs"
+              parent="menu_finance_legal_statement"
+              groups="account.group_account_user,account.group_account_manager"/>
+
+</odoo>

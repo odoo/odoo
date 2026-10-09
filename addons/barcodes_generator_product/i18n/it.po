@@ -1,0 +1,181 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* barcodes_generator_product
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2023-11-24 17:34+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: barcodes_generator_product
+#: model:ir.model.fields,help:barcodes_generator_product.field_product_product__generate_type
+#: model:ir.model.fields,help:barcodes_generator_product.field_product_template__generate_type
+msgid ""
+"Allow to generate barcode, including a number  (a base) in the final "
+"barcode.\n"
+"\n"
+" - 'Base Set Manually' : User should set manually the value of the barcode "
+"base\n"
+" - 'Base managed by Sequence': System will generate the base via a sequence"
+msgstr ""
+"Consente di generare un codice a barre, incluso un numero  (una base) nel "
+"codice a barre finale.\n"
+"\n"
+" 'Base impostata manualmente' : l'utente deve impostare manualmente il "
+"valore della base del codice a barre\n"
+" 'Base gestita da sequenza': l'utente utilizzerà un pulsante per generare "
+"una nuova base. Questa base sarà generata da una sequenza"
+
+#. module: barcodes_generator_product
+#: model:ir.model.fields,field_description:barcodes_generator_product.field_product_product__barcode_base
+#: model:ir.model.fields,field_description:barcodes_generator_product.field_product_template__barcode_base
+msgid "Barcode Base"
+msgstr "Base codice a barre"
+
+#. module: barcodes_generator_product
+#: model:ir.model,name:barcodes_generator_product.model_barcode_rule
+#: model:ir.model.fields,field_description:barcodes_generator_product.field_product_product__barcode_rule_id
+#: model:ir.model.fields,field_description:barcodes_generator_product.field_product_template__barcode_rule_id
+msgid "Barcode Rule"
+msgstr "Regola codice a barre"
+
+#. module: barcodes_generator_product
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.product_variant_easy_edit_view
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.view_product_product_form
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.view_product_template_form
+msgid "Generate Barcode"
+msgstr "Genera codice a barre"
+
+#. module: barcodes_generator_product
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.product_variant_easy_edit_view
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.view_product_product_form
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.view_product_template_form
+msgid "Generate Barcode (Using Barcode Rule)"
+msgstr "Genera codice a barre (usa regola codice a barre)"
+
+#. module: barcodes_generator_product
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.product_variant_easy_edit_view
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.view_product_product_form
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.view_product_template_form
+msgid "Generate Base"
+msgstr "Genera base"
+
+#. module: barcodes_generator_product
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.product_variant_easy_edit_view
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.view_product_product_form
+#: model_terms:ir.ui.view,arch_db:barcodes_generator_product.view_product_template_form
+msgid "Generate Base (Using Sequence)"
+msgstr "Genera base (usando sequenza)"
+
+#. module: barcodes_generator_product
+#: model:ir.model.fields,field_description:barcodes_generator_product.field_barcode_rule__generate_model
+msgid "Generate Model"
+msgstr "Genera modello"
+
+#. module: barcodes_generator_product
+#: model:ir.model.fields,field_description:barcodes_generator_product.field_product_product__generate_type
+#: model:ir.model.fields,field_description:barcodes_generator_product.field_product_template__generate_type
+msgid "Generate Type"
+msgstr "Genera tipo"
+
+#. module: barcodes_generator_product
+#: model:ir.model.fields,help:barcodes_generator_product.field_barcode_rule__generate_model
+msgid "If 'Generate Type' is set, mention the model related to this rule."
+msgstr ""
+"Se \"Genera tipo\" è impostato, indica il modello relativo a questa regola."
+
+#. module: barcodes_generator_product
+#: model:ir.model,name:barcodes_generator_product.model_product_template
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: barcodes_generator_product
+#: model:ir.model,name:barcodes_generator_product.model_product_product
+msgid "Product Variant"
+msgstr "Variante prodotto"
+
+#. module: barcodes_generator_product
+#: model:ir.model.fields.selection,name:barcodes_generator_product.selection__barcode_rule__generate_model__product_product
+msgid "Products"
+msgstr "Prodotti"
+
+#. module: barcodes_generator_product
+#: model:ir.model.fields,help:barcodes_generator_product.field_product_product__barcode_rule_id
+msgid "Select a rule to generate a barcode"
+msgstr "Selezionare una regola per generare il codice a barre"
+
+#. module: barcodes_generator_product
+#: model:product.template,name:barcodes_generator_product.product_template_mono_variant
+msgid "Template with Generated Barcode (Mono Variant)"
+msgstr "Modello con codice a barre generato (monovariante)"
+
+#. module: barcodes_generator_product
+#: model:product.template,name:barcodes_generator_product.product_template_multi_variant
+msgid "Template with Generated Barcode (Multi Variant)"
+msgstr "Modello con codice a barre generato (multivariante)"
+
+#. module: barcodes_generator_product
+#: model:ir.model.fields,help:barcodes_generator_product.field_product_product__barcode_base
+msgid ""
+"This value is used to generate barcode according to the setting of the "
+"barcode rule."
+msgstr ""
+"Questo valore è utilizzato per generare il codice a barre in accordo alle "
+"impostazioni della regola del codice a barre."
+
+#~ msgid ""
+#~ "Allow to generate barcode, including a number  (a base) in the final "
+#~ "barcode.\n"
+#~ " 'Base Set Manually' : User should set manually the value of the barcode "
+#~ "base\n"
+#~ " 'Base managed by Sequence': User will use a button to generate a new "
+#~ "base. This base will be generated by a sequence"
+#~ msgstr ""
+#~ "Consenti di generare un codice a barre, incluso un numero  (a base) nel "
+#~ "codice a barre finale.\n"
+#~ " 'Base impostata manualmente' : L'utente deve impostare manualmente il "
+#~ "valore della base del codice a barre\n"
+#~ " 'Base gestita da Sequence': L'utente utilizzerà un pulsante per generare "
+#~ "una nuova base. Questa base sarà generata da una sequenza"
+
+#~ msgid "Black"
+#~ msgstr "Nero"
+
+#~ msgid "Display Name"
+#~ msgstr "Nome visualizzato"
+
+#~ msgid "ID"
+#~ msgstr "ID"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Ultima Modifica il"
+
+#~ msgid "Product Template"
+#~ msgstr "Modello Prodotto"
+
+#~ msgid "Units"
+#~ msgstr "Unità"
+
+#~ msgid "White"
+#~ msgstr "kg"
+
+#~ msgid "Partners"
+#~ msgstr "Clienti"
+
+#~ msgid "Stock Location"
+#~ msgstr "Ubicazione Stock"
+
+#~ msgid "Unit(s)"
+#~ msgstr "Unità"
+
+#~ msgid "kg"
+#~ msgstr "kg"

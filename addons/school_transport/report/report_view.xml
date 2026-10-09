@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+        <record id="paperformat_margin" model="report.paperformat">
+            <field name="name">Report margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">50</field>
+            <field name="margin_bottom">30</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">45</field>
+            <field name="dpi">80</field>
+        </record>
+
+        <record id="report_student_transport_qweb" model="ir.actions.report">
+            <field name="name">Transport Root Detail</field>
+            <field name="model">student.transport</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">school_transport.participants</field>
+            <field name="report_file">school_transport.participants</field>
+            <field
+            name="binding_model_id"
+            ref="school_transport.model_student_transport"
+        />
+            <field name="paperformat_id" ref="school_transport.paperformat_margin" />
+            <field name="binding_type">report</field>
+            <field
+            name="groups_id"
+            eval="[(4, ref('school_transport.group_transportation_manager'))]"
+        />
+        </record>
+
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- User audit clear log form view -->
+    <record id="clear_user_log_view_form" model="ir.ui.view">
+        <field name="name">clear.user.log.view.form</field>
+        <field name="model">clear.user.log</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="full_log"/>
+                            <field name="to_date"/>
+                        </group>
+                        <group>
+                            <field name="is_read"/>
+                            <field name="is_write"/>
+                            <field name="is_create"/>
+                            <field name="is_delete"/>
+                        </group>
+                    </group>
+                    <group name="Object" string="object">
+                        <field name="model_id"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_clear_user_logs" string="Clear Logs"
+                            class="btn-primary" type="object"/>
+                    <button string="cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <!-- User audit clear log window action -->
+    <record id="clear_audit_log_action"
+            model="ir.actions.act_window">
+        <field name="name">Clear Audit Logs</field>
+        <field name="res_model">clear.user.log</field>
+        <field name="target">new</field>
+        <field name="view_mode">form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Clear Audit Logs
+            </p>
+        </field>
+    </record>
+</odoo>

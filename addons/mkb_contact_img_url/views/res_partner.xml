@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_partner_form_view_image_url" model="ir.ui.view">
+        <field name="name">Contact Image Using URL</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="category_id" position="after">
+                <field name="image_url"/>
+            </field>
+        </field>
+    </record>
+</odoo>

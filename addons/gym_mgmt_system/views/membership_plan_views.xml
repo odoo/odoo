@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Views for membership plan -->
+    <record id="membership_plan_action" model="ir.actions.act_window">
+        <field name="name">Membership Plan</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_id" ref="membership.membership_products_tree"/>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Trainer!
+            </p>
+        </field>
+    </record>
+<!--Menu -->
+    <menuitem name="Membership plan"
+              id="membership_products_menu"
+              parent="gym_member_root"
+            action="membership.action_membership_products"/>
+
+</odoo>

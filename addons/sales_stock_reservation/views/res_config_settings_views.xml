@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The view is used to display a form that allows users to configure stock settings for a company. Specifically, the XML code extends an existing view, 'stock.res_config_settings_view_form', by adding two new settings fields: 'source_location_id' and 'destination_location_id'.-->
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">
+            res.config.settings.view.form.inherit.sales.stock.reservation
+        </field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="0"/>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='barcode_setting_container']"
+                   position="after">
+                <h2>Stock Reserve Location</h2>
+                <div class="row mt16 o_settings_container"
+                     name="stock_reserve_setting_container">
+                    <div class="col-12 col-lg-6 o_setting_box"
+                         id="stock_reserve_source_location">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane"
+                             id="stock_reserve_source_location_setting">
+                            <label for="source_location_id"/>
+                            <div class="text-muted" name="source_location_id">
+                                Choose source location to reserve the stock.
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="source_location_id"
+                                           widget="selection"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box"
+                         id="stock_reserve_destination_location">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane"
+                             id="stock_reserve_destination_location_setting">
+                            <label for="destination_location_id"/>
+                            <div class="text-muted"
+                                 name="destination_location_id">
+                                Choose destination location to reserve the
+                                stock.
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16">
+                                    <field name="destination_location_id"
+                                           widget="selection"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

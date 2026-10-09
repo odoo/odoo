@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Category for managing the access for product price update-->
+    <record id="module_category_mass_price_update" model="ir.module.category">
+        <field name="name">Mass Price Update</field>
+        <field name="description">Helps to manage access to the mass price
+            update wizard
+        </field>
+    </record>
+<!--    Group for Administrator-->
+    <record id="mass_price_update_group_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="comment">Access to the mass price update wizard menu
+        </field>
+        <field name="category_id"
+               ref="mass_price_update.module_category_mass_price_update"/>
+    </record>
+</odoo>

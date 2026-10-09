@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+      <!--Room facility tree view-->
+    <record id="room_facility_view_tree" model="ir.ui.view">
+        <field name="name">Room Facilities</field>
+        <field name="model">room.facility</field>
+        <field name="arch" type="xml">
+            <tree create="1" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Room facility menu action-->
+    <record id="room_facility_action" model='ir.actions.act_window'>
+        <field name="name">Room Facility</field>
+        <field name="res_model">room.facility</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <!--    Room facilities menu-->
+    <menuitem id="room_facility_menu" name="Facilities" sequence="20"
+              parent="hospital_menu_configuration" action="room_facility_action"/>
+</odoo>

@@ -1,0 +1,22 @@
+<odoo>
+    <record id="eg_product_attribute_woocommerce_form_view" model="ir.ui.view">
+        <field name="name">eg.product.attribute.woocommerce.form.view</field>
+        <field name="model">eg.product.attribute</field>
+        <field name="inherit_id" ref="eg_ecommerce_base.eg_product_attribute_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Other Data"
+                      attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}">
+                    <group>
+                        <group>
+                            <field name="slug"/>
+                            <field name="type"/>
+                            <field name="order_by"/>
+                            <field name="has_archives"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

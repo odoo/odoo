@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_product_attribute_tree_inherit" model="ir.ui.view">
+        <field name="name">product.attribute.inherit.tree.view</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.attribute_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">woo_import_product_attribute_button</attribute>
+            </xpath>
+            <xpath expr="//field[@name='create_variant']" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="slug"/>
+                <field name="is_exported" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_attribute_form_inherit" model="ir.ui.view">
+        <field name="name">product.attribute.inherit.form.view</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_variant']" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+                <field name="slug"/>
+                <field name="is_exported" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_product_attribute_search_inherit" model="ir.ui.view">
+        <field name="name">view.product.attribute.search.inherit</field>
+        <field name="model">product.attribute</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Woo Synced Attributes" name="woo_imported_attributes"
+                        domain="[('is_exported', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_product_attribute_woo" model="ir.actions.act_window">
+        <field name="name">Product Attributes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.attribute</field>
+        <field name="view_id" ref="product.attribute_tree_view"/>
+        <field name="context">{'search_default_woo_imported_attributes': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>
+

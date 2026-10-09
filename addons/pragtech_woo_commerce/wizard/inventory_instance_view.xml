@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_import_inventory_instance_form" model="ir.ui.view">
+        <field name="name">inventory.instance.import.form.view</field>
+        <field name="model">woo.inventory.instance.imp</field>
+        <field name="arch" type="xml">
+            <form string="Select Instance">
+                <sheet>
+
+                    <div>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <u>
+                                <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                            </u>
+                            <b>
+                                Are you sure to import quantity from this instance?
+                            </b>
+                        </p>
+                    </div>
+
+                    <group>
+                        <field name="woo_instance_id" required="1" options="{'no_create':True,'no_create_edit':True}"/>
+                    </group>
+
+                    <footer>
+                        <button name="import_woo_inventory" string="Update Stock Quantity" type="object"
+                                class="oe_highlight"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wizard_woo_import_inventory" model="ir.actions.act_window">
+        <field name="name">Update Stock Quantity</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">woo.inventory.instance.imp</field>
+        <field name="view_id" ref="view_import_inventory_instance_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
+

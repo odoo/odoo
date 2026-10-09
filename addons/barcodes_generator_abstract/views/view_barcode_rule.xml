@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (C) 2016-Today: GRAP (http://www.grap.coop)
+Copyright (C) 2016-Today La Louve (http://www.lalouve.net)
+Copyright 2017 LasLabs Inc.
+@author Sylvain LE GAL (https://twitter.com/legalsylvain)
+License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <record id="view_barcode_rule_form" model="ir.ui.view">
+        <field name="model">barcode.rule</field>
+        <field name="inherit_id" ref="barcodes.view_barcode_rule_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form/group" position="after">
+                <group
+                    string="Barcode Generation"
+                    attrs="{'invisible': ['|', ('encoding', '=', 'any'), ('padding', '=', 0)]}"
+                >
+                    <field name="generate_type" />
+                    <field
+                        name="padding"
+                        attrs="{'invisible': [('generate_type', '=', 'no')]}"
+                    />
+                    <field
+                        name="generate_model"
+                        attrs="{
+                            'invisible': [('generate_type', '=', 'no')],
+                            'required': [('generate_type', '!=', 'no')]
+                        }"
+                    />
+                    <field
+                        name="generate_automate"
+                        attrs="{'invisible': [('generate_type', '!=', 'sequence')]}"
+                    />
+                    <div
+                        class="alert alert-info oe_button_box"
+                        role="alert"
+                        colspan="2"
+                        attrs="{'invisible': [
+                            '|',
+                            ('sequence_id', '!=', False),
+                            ('generate_type', '!=', 'sequence')]
+                        }"
+                    >
+                            If you leave the sequence field blank, a sequence will be created automatically when the barcode rule is saved, based on the padding of the barcode.
+                    </div>
+                    <field
+                        name="sequence_id"
+                        attrs="{'invisible': [('generate_type', '!=', 'sequence')]}"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

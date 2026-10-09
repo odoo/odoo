@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="partner_chatgpt" model="res.partner">
+            <field name="name">ChatGPT</field>
+            <field name="image_1920" type="base64" file="is_chatgpt_integration/static/description/chatgpt.png"/>
+        </record>
+            <record id="user_chatgpt" model="res.users">
+            <field name="login">chatgpt</field>
+            <field name="password">chatgpt</field>
+            <field name="partner_id" ref="is_chatgpt_integration.partner_chatgpt"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="company_ids" eval="[Command.link(ref('base.main_company'))]"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+        </record>
+    </data>
+</odoo>

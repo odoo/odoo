@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.module.category" id="module_management">
+        <field name="name">Odoo Developer</field>
+        <field name="description">User access level for Package module</field>
+        <field name="sequence">20</field>
+    </record>
+
+        <record id="odoo_developer_group" model="res.groups">
+            <field name="name">Odoo Developer</field>
+            <field name="category_id" ref="module_management"/>
+
+            <field name="implied_ids" eval="[(4, ref('base.group_system')),(4, ref('base.group_no_one'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+</odoo>

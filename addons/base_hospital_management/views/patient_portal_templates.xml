@@ -1,0 +1,275 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Inherited portal_my_home template for adding Vaccination details of
+    portal user-->
+    <template id="portal_my_home_vaccine"
+              name="Vaccinations" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="10">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Vaccinations</t>
+                <t t-set="url" t-value="'/my/vaccinations'"/>
+                <t t-set="placeholder_count" t-value="'vaccination_count'"/>
+            </t>
+        </xpath>
+    </template>
+    <!--    Inherited portal_my_home template for adding test results-->
+    <template id="portal_my_test_results"
+              name="Lab tests" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="30">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Lab Tests</t>
+                <t t-set="url" t-value="'/my/tests'"/>
+                <t t-set="placeholder_count" t-value="'lab_test_count'"/>
+            </t>
+        </xpath>
+    </template>
+    <!--    Inherited portal_my_home template for Viewing OP-->
+    <template id="portal_my_home_op"
+              name="OP" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="30">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">OP</t>
+                <t t-set="url" t-value="'/my/op'"/>
+                <t t-set="placeholder_count" t-value="'op_count'"/>
+            </t>
+        </xpath>
+    </template>
+    <!--  Inherited portal_my_home template for adding Lab tests of portal
+     user-->
+    <template id="portal_my_home_menu_labtests"
+              name="Portal layout : lab tests menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'lab_test'" t-attf-class="breadcrumb-item">
+                <a t-if="tests" t-attf-href="/my/tests?{{ keep_query() }}">Lab
+                    Tests
+                </a>
+                <t t-else="">Lab Tests</t>
+            </li>
+        </xpath>
+    </template>
+    <!--   Inherited portal_my_home template for adding Test results of portal
+    user-->
+    <template id="portal_my_home_menu_testsresult"
+              name="Portal layout : test results menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'test_results'"
+                t-attf-class="breadcrumb-item">
+                <a t-if="results" t-attf-href="/my/tests/?{{ keep_query() }}">
+                    Results
+                </a>
+                <t t-else="">Results</t>
+            </li>
+        </xpath>
+    </template>
+    <!--    Inherited portal_my_home template for adding vaccinations of
+    portal user-->
+    <template id="portal_my_home_menu_vaccine"
+              name="Portal layout : vaccine menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'vaccination'"
+                t-attf-class="breadcrumb-item">
+                <a t-if="vaccinations">Vaccinations</a>
+            </li>
+        </xpath>
+    </template>
+    <!--    Inherited portal_my_home template for adding op of
+    portal user-->
+    <template id="portal_my_home_menu_op"
+              name="Portal layout : op menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'op'" t-attf-class="breadcrumb-item">
+                <a t-if="tests" t-attf-href="/my/op?{{ keep_query() }}">
+                    OP
+                </a>
+                <t t-else="">OP</t>
+            </li>
+        </xpath>
+    </template>
+    <!--    Inherited portal_my_home template for adding Vaccination
+    template-->
+    <template id="portal_my_vaccines" name="My Vaccinations">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Vaccinations</t>
+            </t>
+            <t t-if="not vaccinations">
+                <p>There are currently no vaccinations for your account.</p>
+            </t>
+            <t t-if="vaccinations" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Vaccination ID</th>
+                        <th class="text-right">Vaccine</th>
+                        <th class="text-right">Dose</th>
+                        <th class="text-right">Date</th>
+                        <th class="text-right">Price</th>
+                        <th class="text-right">Certificate</th>
+                    </tr>
+                </thead>
+                <t t-foreach="vaccinations" t-as="vaccine">
+                    <tr>
+                        <td>
+                            <t t-esc="vaccine['name']"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="vaccine['vaccine_product_id']"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="vaccine['dose']"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="vaccine['vaccine_date']"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="vaccine['vaccine_price']"/>
+                        </td>
+                         <td class="text-right">
+                            <t t-if="vaccine['attachment_id']">
+                                <span class="btn btn-outline-info">
+                                    <a t-attf-href="/web/content/{{vaccine['attachment_id']}}?download=true&amp;access_token=">
+                                        <i class="fa fa-download"/>
+                                    </a>
+                                </span>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+    <!--    Lab test template-->
+    <template id="portal_my_tests" name="My Lab Test">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Lab Tests</t>
+            </t>
+            <t t-if="not tests">
+                <p>There are currently no Tests for your account.</p>
+            </t>
+            <t t-if="tests" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Lab test</th>
+                        <th class="text-right">Date</th>
+                    </tr>
+                </thead>
+                <t t-foreach="tests" t-as="data">
+                    <tr>
+                        <td>
+                            <a t-attf-href="/my/tests/{{data['id']}}">
+                                <t t-esc="data['name']"/>
+                            </a>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="data['date']"/>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+    <!--    Lab test result template-->
+    <template id="portal_my_tests_results" name="My Lab Test Result">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Lab Test Results</t>
+            </t>
+            <t t-if="not results">
+                <p>Test results have not been added yet. Apologies for any
+                    inconvenience.
+                </p>
+            </t>
+            <t t-if="results" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Test Name</th>
+                        <th class="text-right">Result</th>
+                        <th class="text-right">Price</th>
+                        <th class="text-right">Download</th>
+                    </tr>
+                </thead>
+                <t t-foreach="results" t-as="data">
+                    <tr>
+                        <td>
+                            <t t-esc="data['name']"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="data['result']"/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="data['price']"/>
+                        </td>
+                        <td class="text-right">
+                            <t t-if="data['attachment_id']">
+                                <span class="btn btn-outline-info">
+                                    <a t-attf-href="/web/content/{{data['attachment_id']}}?download=true&amp;access_token=">
+                                        <i class="fa fa-download"/>
+                                    </a>
+                                </span>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+    <!--    OP template-->
+    <template id="portal_my_op" name="My OP">
+        <t t-call="portal.portal_layout">
+            <div id="my_prescriptions">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">OP</t>
+                </t>
+                <t t-if="not op">
+                    <p>There are currently no OP for your account.</p>
+                </t>
+                <t t-if="op" t-call="portal.portal_table">
+                    <thead>
+                        <tr class="active">
+                            <th>OP Number</th>
+                            <th class="text-right">Date</th>
+                            <th class="text-right">Doctor</th>
+                            <th class="text-right">Slot</th>
+                            <th class="text-right">Prescription</th>
+                        </tr>
+                    </thead>
+                    <t t-foreach="op" t-as="data">
+                        <tr>
+                            <td>
+                                <span t-esc="data['op_reference']"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="data['op_date']"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="data['doctor_id'][1]"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="data['slot']"/>
+                            </td>
+                            <td>
+                                <t t-if="data['prescription_ids']">
+                                    <span class="btn pr_download btn-outline-info"
+                                          t-att-data-id="data['id']">
+                                        <i class="fa fa-download"/>
+                                    </span>
+                                </t>
+                            </td>
+                        </tr>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

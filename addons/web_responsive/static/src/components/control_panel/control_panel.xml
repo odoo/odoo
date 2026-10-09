@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2021 Sergey Shebanin
+     Copyright 2023 Onestein - Anjeel Haria
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<templates>
+    <!-- Legacy control panel templates -->
+    <t t-inherit="web.Legacy.ControlPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//nav[hasclass('o_cp_switch_buttons')]" position="replace">
+            <t t-if="props.views.length gt 1">
+                <t t-if="ui.size lt= ui.SIZES.LG">
+                    <Dropdown
+                        position="'bottom-end'"
+                        menuClass="'d-inline-flex o_cp_switch_buttons'"
+                        togglerClass="'btn btn-link'"
+                    >
+                        <t t-set-slot="toggler">
+                            <i
+                                class="fa fa-lg o_switch_view"
+                                t-attf-class="o_{{env.view.type}} {{env.view.icon}} {{ props.views.filter(view => view.type === env.view.type)[0].icon }} {{env.view.active ? 'active' : ''}}"
+                            />
+                        </t>
+                        <t t-foreach="props.views" t-as="view" t-key="view.type">
+                            <t t-call="web.ViewSwitcherButton" />
+                        </t>
+                    </Dropdown>
+                </t>
+                <t t-else="">
+                    <nav
+                        class="btn-group o_cp_switch_buttons"
+                        role="toolbar"
+                        aria-label="View switcher"
+                    >
+                        <t t-foreach="props.views" t-as="view" t-key="view.type">
+                            <t t-call="web.ViewSwitcherButton" />
+                        </t>
+                    </nav>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('o_searchview')]" position="replace">
+            <div
+                t-if="props.withSearchBar"
+                class="o_searchview"
+                t-att-class="state.mobileSearchMode == 'quick' ? 'o_searchview_quick' : 'o_searchview_mobile'"
+                role="search"
+                aria-autocomplete="list"
+                t-on-click.self="() => { state.mobileSearchMode = ui.isSmall ? 'quick' : '' }"
+            >
+                <t t-if="!ui.isSmall">
+                    <i
+                        class="o_searchview_icon fa fa-search"
+                        title="Search..."
+                        role="img"
+                        aria-label="Search..."
+                    />
+                    <SearchBar fields="fields" />
+                </t>
+                <t t-if="ui.isSmall">
+                    <t t-if="state.mobileSearchMode == 'quick'">
+                        <button
+                            t-if="props.withBreadcrumbs"
+                            class="btn btn-link fa fa-arrow-left"
+                            t-on-click.stop="() => { state.mobileSearchMode = '' }"
+                        />
+                        <SearchBar fields="fields" />
+                        <button
+                            class="btn fa fa-filter"
+                            t-on-click.stop="() => { state.mobileSearchMode = 'full' }"
+                        />
+                    </t>
+                    <t
+                        t-if="state.mobileSearchMode == 'full'"
+                        t-call="web_responsive.LegacyMobileSearchView"
+                    />
+                    <t t-if="state.mobileSearchMode == ''">
+                        <button
+                            class="btn btn-link fa fa-search"
+                            t-on-click.stop="() => { state.mobileSearchMode = 'quick' }"
+                        />
+                    </t>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_cp_top_left')]" position="attributes">
+            <attribute
+                name="t-att-class"
+                t-translation="off"
+            >ui.isSmall and state.mobileSearchMode == 'quick' ? 'o_hidden' : ''</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_search_options')]" position="attributes">
+            <attribute name="t-if" t-translation="off">!ui.isSmall</attribute>
+            <attribute
+                name="t-att-class"
+                t-translation="off"
+            >ui.size == ui.SIZES.MD ? 'o_search_options_hide_labels' : ''</attribute>
+        </xpath>
+    </t>
+    <t t-name="web_responsive.LegacyMobileSearchView" owl="1">
+        <div class="o_cp_mobile_search">
+            <div class="o_mobile_search_header">
+                <button
+                    type="button"
+                    class="o_mobile_search_button btn"
+                    t-on-click="() => state.mobileSearchMode = false"
+                >
+                    <i class="fa fa-arrow-left" />
+                    <strong class="ms-2">FILTER</strong>
+                </button>
+                <button
+                    type="button"
+                    class="o_mobile_search_button btn"
+                    t-on-click="() => this.model.dispatch('clearQuery')"
+                >
+                    CLEAR
+                </button>
+            </div>
+            <SearchBar fields="fields" />
+            <div class="o_mobile_search_filter o_search_options mb8 mt8 ml16 mr16">
+                <FilterMenu
+                    t-if="props.searchMenuTypes.includes('filter')"
+                    class="o_filter_menu"
+                    fields="fields"
+                />
+                <GroupByMenu
+                    t-if="props.searchMenuTypes.includes('groupBy')"
+                    class="o_group_by_menu"
+                    fields="fields"
+                />
+                <ComparisonMenu
+                    t-if="props.searchMenuTypes.includes('comparison') and model.get('filters', f => f.type === 'comparison').length"
+                    class="o_comparison_menu"
+                />
+                <FavoriteMenu
+                    t-if="props.searchMenuTypes.includes('favorite')"
+                    class="o_favorite_menu"
+                />
+            </div>
+            <div
+                class="btn btn-primary o_mobile_search_show_result fixed-bottom"
+                t-on-click="() => { state.mobileSearchMode = (props.withBreadcrumbs ? '' : 'quick') }"
+            >
+                <t>SEE RESULT</t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web_responsive.SearchBar" owl="1">
+        <div>
+            <t t-if="!env.isSmall" t-call="web.SearchBar" />
+            <t t-if="env.isSmall">
+                <t t-if="props.mobileSearchMode == 'quick'">
+                    <div class="o_searchview o_searchview_quick">
+                        <button
+                            t-if="props.withBreadcrumbs"
+                            class="btn btn-link fa fa-arrow-left"
+                            t-on-click.stop="() => this.trigger('set-mobile-view', '')"
+                        />
+                        <div class="o_searchview_input_container">
+                            <t t-call="web.SearchBar.Facets" />
+                            <t t-call="web.SearchBar.Input" />
+                            <t t-if="items.length">
+                                <t t-call="web.SearchBar.Items" />
+                            </t>
+                        </div>
+                        <button
+                            class="btn fa fa-filter"
+                            t-on-click.stop="() => this.trigger('set-mobile-view', 'full')"
+                        />
+                    </div>
+                </t>
+                <t
+                    t-if="props.mobileSearchMode == 'full'"
+                    t-call="web_responsive.MobileSearchView"
+                />
+                <t t-if="props.mobileSearchMode == ''">
+                    <div
+                        class="o_searchview o_searchview_mobile"
+                        role="search"
+                        aria-autocomplete="list"
+                        t-on-click.stop="() => this.trigger('set-mobile-view', 'quick')"
+                    >
+                            <button class="btn btn-link fa fa-search" />
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+    <t t-name="web_responsive.MobileSearchView" owl="1">
+        <div class="o_searchview">
+            <div class="o_cp_mobile_search">
+                <div class="o_mobile_search_header">
+                    <span
+                        class="o_mobile_search_close float-left mt16 mb16 mr8 ml16"
+                        t-on-click.stop="() => this.trigger('set-mobile-view', 'quick')"
+                    >
+                        <i class="fa fa-arrow-left" />
+                        <strong class="float-right ml8">FILTER</strong>
+                    </span>
+                    <span
+                        class="float-right o_mobile_search_clear_facets mt16 mr16"
+                        t-on-click.stop="() => env.searchModel.clearQuery()"
+                    >
+                        <t>CLEAR</t>
+                    </span>
+                </div>
+                <div class="o_searchview_input_container">
+                    <t t-call="web.SearchBar.Facets" />
+                    <t t-call="web.SearchBar.Input" />
+                    <t t-if="items.length">
+                        <t t-call="web.SearchBar.Items" />
+                    </t>
+                </div>
+                <div class="o_mobile_search_filter o_search_options mb8 mt8 ml16 mr16">
+                    <t t-foreach="props.searchMenus" t-as="menu" t-key="menu.key">
+                        <t t-component="menu.Component" />
+                    </t>
+                </div>
+                <div
+                    class="btn btn-primary o_mobile_search_show_result fixed-bottom"
+                    t-on-click.stop="() => this.trigger('set-mobile-view', '')"
+                >
+                    <t>SEE RESULT</t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

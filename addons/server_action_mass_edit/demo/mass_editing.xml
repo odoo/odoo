@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (C) 2020 - Iván Todorovich (https://twitter.com/ivan.todorovich)
+Copyright (C) 2019 - Today: GRAP (http://www.grap.coop)
+@author: Sylvain LE GAL (https://twitter.com/legalsylvain)
+License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <!-- Mass Edit User -->
+    <record id="mass_editing_user" model="ir.actions.server">
+        <field name="state">mass_edit</field>
+        <field name="name">Mass Edit</field>
+        <field name="model_id" ref="base.model_res_users" />
+    </record>
+    <record id="mass_editing_user_line_1" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__email" />
+    </record>
+    <record id="mass_editing_user_line_2" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__phone" />
+    </record>
+    <record id="mass_editing_user_line_3" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__category_id" />
+    </record>
+    <record id="mass_editing_user_line_4" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__comment" />
+    </record>
+    <record id="mass_editing_user_line_5" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__country_id" />
+    </record>
+    <record id="mass_editing_user_line_6" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__is_company" />
+    </record>
+    <record id="mass_editing_user_line_7" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__lang" />
+    </record>
+    <record id="mass_editing_user_line_8" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__title" />
+    </record>
+    <record id="mass_editing_user_line_9" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__company_type" />
+    </record>
+    <record id="mass_editing_user_line_10" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__image_1920" />
+        <field name="widget_option">image</field>
+    </record>
+    <record id="mass_editing_user_line_11" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_user" />
+        <field name="field_id" ref="base.field_res_users__bank_ids" />
+    </record>
+
+    <!-- Mass Edit Partner Title -->
+    <record id="mass_editing_partner_title" model="ir.actions.server">
+        <field name="state">mass_edit</field>
+        <field name="name">Mass Edit</field>
+        <field name="model_id" ref="base.model_res_partner_title" />
+    </record>
+    <record
+        id="mass_editing_partner_title_line_1"
+        model="ir.actions.server.mass.edit.line"
+    >
+        <field name="server_action_id" ref="mass_editing_partner_title" />
+        <field name="field_id" ref="base.field_res_partner_title__shortcut" />
+    </record>
+
+    <!-- Mass Edit Partner -->
+    <record id="mass_editing_partner" model="ir.actions.server">
+        <field name="state">mass_edit</field>
+        <field name="name">Mass Edit</field>
+        <field name="model_id" ref="base.model_res_partner" />
+    </record>
+    <record id="mass_editing_partner_line_1" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_partner" />
+        <field name="field_id" ref="base.field_res_partner__parent_id" />
+    </record>
+    <record id="mass_editing_partner_line_2" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_partner" />
+        <field name="field_id" ref="base.field_res_partner__type" />
+    </record>
+    <record id="mass_editing_partner_line_3" model="ir.actions.server.mass.edit.line">
+        <field name="server_action_id" ref="mass_editing_partner" />
+        <field name="field_id" ref="base.field_res_partner__name" />
+    </record>
+    <!-- Add context actions -->
+    <function model="ir.actions.server" name="create_action">
+        <value
+            eval="[ref('mass_editing_user'), ref('mass_editing_partner_title'), ref('mass_editing_partner')]"
+        />
+    </function>
+</odoo>

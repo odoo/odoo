@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_property_label">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t>
+                        <div class="page">
+                            <div class="oe_structure"/>
+                            <div class="row">
+                                <div class="col-xs-2" style="margin:auto;">
+                                </div>
+                                <center>
+                                    <div class="col-xs-8" style="margin:auto">
+                                        <table class="table table-condensed"
+                                               style="border: 3px solid black !important;">
+                                            <tr>
+                                                <td width="100%">
+                                                    <p style="text-align:center;padding-top:10px;">
+                                                        <img t-if="not o.employee.image_1920"
+                                                             t-att-src="'/web/static/src/img/placeholder.png'"
+                                                             height="120"
+                                                             border="1"
+                                                             width="120"/>
+                                                        <img t-if="o.employee.image_1920"
+                                                             t-att-src="image_data_uri( o.employee.image_1920)"
+                                                             class="float-left"
+                                                             alt="Logo"
+                                                             height="120"
+                                                             border="1"
+                                                             width="120"/>
+                                                    </p>
+                                                    <p style="text-align:center;">
+                                                        Name :
+                                                        <strong>
+                                                            <span t-field="o.employee.name"/>
+                                                        </strong>
+                                                    </p>
+                                                    <p style="text-align:center;">
+                                                        Department :
+                                                        <strong>
+                                                            <span t-field="o.employee.department_id.name"/>
+                                                        </strong>
+                                                    </p>
+                                                    <h4 style="margin-left:50px">
+                                                        <b>Personal
+                                                            Belongings
+                                                        </b>
+                                                    </h4>
+                                                    <table width="90%"
+                                                           style="border:1px solid black;margin-left:15px">
+                                                        <thead>
+                                                            <th style="border:1px solid black;"
+                                                                width="13%">
+                                                                Name
+                                                            </th>
+                                                            <th style="border:1px solid black;"
+                                                                width="13%">
+                                                                Count
+                                                            </th>
+                                                        </thead>
+                                                        <tbody>
+                                                            <t t-foreach="o.visitor_belongings"
+                                                               t-as="l">
+                                                                <t t-if="l.permission=='1'">
+                                                                    <tr>
+                                                                        <td style="border:1px solid black;">
+                                                                            <span t-esc="l.property_name"
+                                                                                  style="font-size:16px;"/>
+                                                                        </td>
+                                                                        <td style="border:1px solid black;">
+                                                                            <span t-esc="l.property_count"
+                                                                                  style="font-size:16px;"/>
+                                                                        </td>
+                                                                    </tr>
+                                                                </t>
+                                                            </t>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </center>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

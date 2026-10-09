@@ -1,0 +1,112 @@
+header, footer {
+	padding: 20px;
+	background-image: url('header.png');
+	background-size: 256px 256px;
+}
+footer {
+	color: #fff;
+	text-align: center;
+}
+.nyt-logo {
+	max-height: 40px;
+	margin-top: 5px;
+	margin-right: 5px;
+}
+
+nav.navbar {
+	margin-bottom: 10px;
+	background-color: #fff;
+	border: 0px;
+	border-radius: 2px;
+}
+#navbar {
+	margin: 0px;
+}
+#navbar .navbar-nav li iframe {
+	margin-top: 15px;
+}
+#navbar .navbar-nav li:last-child iframe {
+	margin-right: 15px;
+}
+
+@media screen and (max-width: 767px) {
+	#navbar .navbar-nav li iframe {
+		display: none;
+	}
+}
+
+.mast-head {
+	margin: 10px 0;
+}
+.mast-head h1 {
+	margin-bottom: 15px;
+	color: #fff;
+}
+.mast-head p {
+	color: #fff;
+}
+
+.mast-links {
+	padding-top: 10px;
+}
+
+.mast-links > * {
+	vertical-align: middle;
+	margin-bottom: 10px;
+}
+
+.mast-links > .btn {
+	margin-right: 30px;
+}
+main {
+	margin: 10px 20px;
+}
+main .container {
+	margin-bottom: 40px;
+}
+
+code.hljs {
+	border: 1px solid #ccc;
+	padding: 1em;
+	white-space: pre;
+	margin-bottom: 10px;
+}
+
+.example {
+	position: relative;
+	border: 1px solid #ccc;
+	padding: 1em 1em 0.5em 1em;
+	border-radius: 4px 4px 0 0;
+}
+
+.example:after {
+	content: "Example";
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	padding: 3px 7px;
+	font-size: 12px;
+	font-weight: bold;
+	background-color: #f5f5f5;
+	border: 1px solid #ccc;
+	color: #9da0a4;
+	border-radius: 0px 4px 0px 4px;
+	border-width: 0px 0px 1px 1px;
+}
+
+.example + code.hljs {
+	border-top: 0;
+	border-radius: 0px 0px 4px 4px;
+}
+
+.example > * {
+	margin-bottom: 10px;
+}
+
+.example > div.toggle {
+	margin-right: 10px;
+}
+
+.table-striped code {
+	background-color: inherit;
+}

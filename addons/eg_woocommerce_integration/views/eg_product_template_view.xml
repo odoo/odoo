@@ -1,0 +1,91 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_product_template_woo_form_view_for_woo_integration_pro">
+        <field name="name">eg.product.template.woo.form.for.woo.integration.pro</field>
+        <field name="model">eg.product.template</field>
+        <field name="inherit_id" ref="eg_ecommerce_base.eg_product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="set_image_odoo" type="object" class="oe_highlight"
+                            string="Image Set in Odoo"
+                            attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='variant_count']" position="after">
+                <field name="no_export_woo" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="is_woocommerce_tmpl_product"
+                       attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="woo_product_tmpl_type"
+                       attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="virtual" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="status"
+                       attrs="{'required': [('provider', '=', 'eg_woocommerce')], 'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="sale_ok" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="purchase_ok" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='update_required']" position="after">
+                <field name="slug" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="permalink" widget="url"
+                       attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="catalog_visibility"
+                       attrs="{'required': [('provider', '=', 'eg_woocommerce')], 'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="external_url" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="woo_product_tmpl_image_src"
+                       attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="button_text" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='price']" position="after">
+                <field name="product_price" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+                <field name="regular_price" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Dimension" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}">
+                    <group>
+                        <field name="product_tmpl_length"/>
+                        <field name="product_tmpl_height"/>
+                        <field name="product_tmpl_width"/>
+                    </group>
+                </page>
+                <page string="Tax and Stock" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}">
+                    <group>
+                        <group string="Tax">
+                            <field name="tax_status"
+                                   attrs="{'required': [('provider', '=', 'eg_woocommerce')]}"/>
+                            <field name="tax_class"/>
+                        </group>
+                        <group string="Stock">
+                            <field name="manage_stock"/>
+                            <field name="stock_status"
+                                   attrs="{'required': [('provider', '=', 'eg_woocommerce')]}"/>
+                            <field name="sold_individually"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Shipping and Backorder"
+                      attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}">
+                    <group>
+                        <group string="Shipping">
+                            <field name="shipping_required"/>
+                            <field name="shipping_taxable"/>
+                            <field name="shipping_class"/>
+                            <field name="shipping_class_id"/>
+                        </group>
+                        <group string="Backorder">
+                            <field name="backorders"
+                                   attrs="{'required': [('provider', '=', 'eg_woocommerce')]}"/>
+                            <field name="backorders_allowed"/>
+                            <field name="backordered"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Review" attrs="{'invisible': [('provider', '!=', 'eg_woocommerce')]}">
+                    <group>
+                        <field name="reviews_allowed"/>
+                        <field name="average_rating"/>
+                        <field name="rating_count"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

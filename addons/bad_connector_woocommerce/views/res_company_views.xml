@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!-- Inherited res.company form view to add backend -->
+        <record id="res_company_view_company_form" model="ir.ui.view">
+            <field name="name">res.company.form.odoo</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="arch" type="xml">
+                <xpath
+                    expr="//notebook//page[@name='general_info']//field[@name='favicon']"
+                    position="after"
+                >
+                    <field
+                        name="woo_backend_id"
+                        widget="selection"
+                        groups="connector.group_connector_manager"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

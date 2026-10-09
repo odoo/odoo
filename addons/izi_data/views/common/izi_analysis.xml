@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Tree view for the menuitem -->
+        <record id="izi_analysis_tree" model="ir.ui.view">
+            <field name="name">izi.analysis.tree</field>
+            <field name="model">izi.analysis</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="table_id"/>
+                    <field name="source_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view for the menuitem -->
+        <record id="izi_data.izi_analysis_form" model="ir.ui.view">
+            <field name="name">izi.analysis.form</field>
+            <field name="model">izi.analysis</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Fill the analysis name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group name="left-side">
+                                <field name="source_id" placeholder="Choose the data source" invisible="1"/>
+                                <field name="source_type" invisible="1"/>
+                                <field name="method" placeholder="Choose the method to fetch the data"/>
+                                <field name="kpi_id" attrs="{'invisible': [('method', '!=', 'kpi')]}" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                <field name="kpi_auto_calculate" attrs="{'invisible': [('method', '!=', 'kpi')]}"/>
+                                <field name="table_model_id" placeholder="Choose the data table" domain="[('source_id', '=', source_id), ('is_query', '=', False), ('is_stored', '=', False), ('model_id', '!=', False)]" attrs="{'invisible': [('method', '!=', 'model')]}" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                <field name="table_view_id" placeholder="Choose the table view" domain="[('source_id', '=', source_id), ('is_query', '=', False), ('is_stored', '=', False), ('model_id', '=', False)]" attrs="{'invisible': [('method', '!=', 'table_view')]}" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                <field name="table_id" placeholder="Choose the data table" domain="[('source_id', '=', source_id), ('is_query', '=', False), ('is_stored', '=', True), ('model_id', '=', False)]" attrs="{'invisible': [('method', '!=', 'table')]}" options="{'no_create': False, 'no_quick_create': True, 'no_create_edit': False}"/>
+                                <field name="field_ids" invisible="1"/>
+                                <field name="detail_config" widget="boolean_toggle"/>
+                                <field name="show_popup" widget="boolean_toggle" invisible="1"/>
+                            </group>
+                            <group name="right-side" invisible="1">
+                            </group>
+                        </group>
+                        <notebook attrs="{'invisible': [('detail_config', '=', False)]}">
+                            <page string="Query" attrs="{'invisible': [('method', 'in', ('model', 'kpi', 'table'))]}">
+                                <button attrs="{'invisible': ['|', ('method', '!=', 'query'), ('table_id', '!=', False)]}" name="build_query" string="Build Query" type="object" class="mb16 btn btn-primary" icon="fa-cog"/>
+                                <button attrs="{'invisible': [('table_id', '=', False)]}" name="get_table_datas" context="{'test_query': True}" string="Test Query" type="object" class="mb16 btn btn-primary" icon="fa-bug"/>
+                                <field name="db_query" widget="ace" options="{'mode':'python'}"/>
+                            </page>
+                            <page string="Metrics Dimensions">
+                                <h4 class="mb4">Metrics</h4>
+                                <p>Metrics are the quantitative measurements of the data. Metrics are always expressed by numbers (integer, float, %, $, etc)</p>
+                                <field name="metric_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="table_id" optional="hide"/>
+                                        <field name="calculation"/>
+                                        <field name="field_id" domain="[('table_id', '=', parent.table_id), ('field_type', 'in', ('numeric', 'number'))]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                        <field name="field_type" readonly="1"/>
+                                        <field name="prefix"/>
+                                        <field name="suffix"/>
+                                        <field name="locale_code"/>
+                                        <field name="decimal_places"/>
+                                        <field name="name_alias"/>
+                                    </tree>
+                                </field>
+
+                                <h4 class="mt16 mb4">Dimensions</h4>
+                                <p>Dimensions are the attributes that can be used to describe, group, aggregate, segment, organize, and sort the data. Dimensions are expressed by non-numerical values.</p>
+                                <field name="dimension_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="table_id" optional="hide"/>
+                                        <!-- <field name="field_id" domain="[('table_id', '=', parent.table_id), ('field_type', 'not in', ('numeric', 'number'))]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/> -->
+                                        <field name="field_id" domain="[('table_id', '=', parent.table_id)]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                        <field name="field_type" readonly="1"/>
+                                        <field name="field_format" attrs="{'readonly': [('field_type', 'not in', ['date', 'datetime'])]}" force_save="1"/>
+                                        <field name="name_alias"/>
+                                    </tree>
+                                </field>
+
+                                <h4 class="mt16 mb4">Sorts</h4>
+                                <p>Fields from metrics and dimensions can be used to sort the data.</p>
+                                <field name="sort_ids" force_save="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="table_id" optional="hide"/>
+                                        <field name="source_type" optional="hide"/>
+                                        <field name="field_calculation" optional="hide"/>
+                                        <field name="field_format" optional="hide"/>
+                                        <field name="field_id" domain="[('table_id', '=', parent.table_id), ('id', 'in', parent.field_ids)]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                        <field name="field_type"/>
+                                        <field name="sort"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Domain">
+                                <group>
+                                    <field name="limit"/>
+                                    <field name="date_field_id" domain="[('field_type', '=', ['date', 'datetime']), ('table_id', '=', table_id)]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                    <field name="identifier_field_id" domain="[('field_type', '=', ['number']), ('table_id', '=', table_id)]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                    <field name="model_id" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                    <field name="model_name" invisible="1"/>
+                                    <field name="domain" widget="domain" options="{'model': 'model_name'}" attrs="{'invisible': [('method', 'not in', ('model'))]}"/>
+                                    <field name="action_model" invisible="1"/>
+                                    <field name="action_id" domain="[('res_model', '=', action_model)]" invisible="1"/>
+                                </group>
+                            </page>
+                            <page string="Filters" attrs="{'invisible': [('method', '=', 'model')]}">
+                                <field name="filter_ids">
+                                    <tree editable="bottom">
+                                        <field name="table_id" optional="hide"/>
+                                        <field name="source_type" optional="hide"/>
+                                        <field name="condition"/>
+                                        <field name="open_bracket" optional="hide"/>
+                                        <field name="field_id" domain="[('table_id', '=', parent.table_id)]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                        <field name="field_type"/>
+                                        <field name="operator_id" domain="[('source_type', '=', parent.source_type)]"/>
+                                        <field name="value"/>
+                                        <field name="close_bracket" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Groups">
+                                <group>
+                                    <field name="category_id"/>
+                                </group>
+                                <p>Specific groups to access the dashboards.</p>
+                                <field name="group_ids">
+                                    <tree>
+                                        <field name="display_name"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page string="Drill Down" invisible="1">
+                                <p>Configure drill down action when the user click the chart.</p>
+                                <div>
+                                    <field name="drilldown_dimension_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="table_id" optional="hide"/>
+                                            <field name="field_id" domain="[('table_id', '=', parent.table_id), ('field_type', 'not in', ('numeric', 'number'))]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                            <field name="field_type" optional="hide"/>
+                                            <field name="field_format" attrs="{'readonly': [('field_type', 'not in', ['date', 'datetime'])]}" force_save="1"/>
+                                            <field name="name_alias" optional="hide"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </page>
+                            
+                            <page string="Debug">
+                                <button name="get_analysis_data" context="{'test_analysis': True}" string="Test Query" type="object" class="mb16 btn btn-primary" icon="fa-bug"/>
+                                <field name="query_preview" widget="ace" options="{'mode':'python'}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <footer class="izi_replace_footer">
+                        <button class="btn btn-primary" string="Save" name="action_save_and_close" type="object"/>
+                        <button invisible="1" class="btn btn-secondary" string="Visualize" name="action_open" type="object" data-dismiss="modal"/>
+                        <button invisible="1" string="Duplicate" name="action_duplicate" type="object"/>
+                        <button special="cancel" string="Cancel" class="btn-secondary"/>
+                        <!-- <button class="btn btn-secondary" string="Refresh" name="action_refresh_table_list" type="object" context="{'from_ui': True}"/> -->
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Form view for the menuitem -->
+        <record id="izi_data.izi_analysis_form_without_footer" model="ir.ui.view">
+            <field name="name">izi.analysis.form.without.footer</field>
+            <field name="model">izi.analysis</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Fill the analysis name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group name="left-side">
+                                <field name="source_id" placeholder="Choose the data source" invisible="1"/>
+                                <field name="source_type" invisible="1"/>
+                                <field name="method" placeholder="Choose the method to fetch the data"/>
+                                <field name="kpi_id" attrs="{'invisible': [('method', '!=', 'kpi')]}" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                <field name="kpi_auto_calculate" attrs="{'invisible': [('method', '!=', 'kpi')]}"/>
+                                <field name="table_model_id" placeholder="Choose the data table" domain="[('source_id', '=', source_id), ('is_query', '=', False), ('is_stored', '=', False), ('model_id', '!=', False)]" attrs="{'invisible': [('method', '!=', 'model')]}" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                <field name="table_view_id" placeholder="Choose the table view" domain="[('source_id', '=', source_id), ('is_query', '=', False), ('is_stored', '=', False), ('model_id', '=', False)]" attrs="{'invisible': [('method', '!=', 'table_view')]}" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                <field name="table_id" placeholder="Choose the data table" domain="[('source_id', '=', source_id), ('is_query', '=', False), ('is_stored', '=', True), ('model_id', '=', False)]" attrs="{'invisible': [('method', '!=', 'table')]}" options="{'no_create': False, 'no_quick_create': True, 'no_create_edit': False}"/>
+                                <field name="field_ids" invisible="1"/>
+                                <field name="detail_config" widget="boolean_toggle"/>
+                            </group>
+                            <group name="right-side" invisible="1">
+                            </group>
+                        </group>
+                        <notebook attrs="{'invisible': [('detail_config', '=', False)]}">
+                            <page string="Query" attrs="{'invisible': [('method', 'in', ('model', 'kpi', 'table'))]}">
+                                <button attrs="{'invisible': ['|', ('method', '!=', 'query'), ('table_id', '!=', False)]}" name="build_query" string="Build Query" type="object" class="mb16 btn btn-primary" icon="fa-cog"/>
+                                <button attrs="{'invisible': [('table_id', '=', False)]}" name="get_table_datas" context="{'test_query': True}" string="Test Query" type="object" class="mb16 btn btn-primary" icon="fa-bug"/>
+                                <field name="db_query" widget="ace" options="{'mode':'python'}"/>
+                            </page>
+                            <page string="Metrics Dimensions">
+                                <h4 class="mb4">Metrics</h4>
+                                <p>Metrics are the quantitative measurements of the data. Metrics are always expressed by numbers (integer, float, %, $, etc)</p>
+                                <field name="metric_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="table_id" optional="hide"/>
+                                        <field name="calculation"/>
+                                        <field name="field_id" domain="[('table_id', '=', parent.table_id), ('field_type', 'in', ('numeric', 'number'))]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                        <field name="field_type" readonly="1"/>
+                                        <field name="prefix"/>
+                                        <field name="suffix"/>
+                                        <field name="locale_code"/>
+                                        <field name="decimal_places"/>
+                                        <field name="name_alias"/>
+                                    </tree>
+                                </field>
+
+                                <h4 class="mt16 mb4">Dimensions</h4>
+                                <p>Dimensions are the attributes that can be used to describe, group, aggregate, segment, organize, and sort the data. Dimensions are expressed by non-numerical values.</p>
+                                <field name="dimension_ids">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="table_id" optional="hide"/>
+                                        <!-- <field name="field_id" domain="[('table_id', '=', parent.table_id), ('field_type', 'not in', ('numeric', 'number'))]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/> -->
+                                        <field name="field_id" domain="[('table_id', '=', parent.table_id)]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                        <field name="field_type" readonly="1"/>
+                                        <field name="field_format" attrs="{'readonly': [('field_type', 'not in', ['date', 'datetime'])]}" force_save="1"/>
+                                        <field name="name_alias"/>
+                                    </tree>
+                                </field>
+
+                                <h4 class="mt16 mb4">Sorts</h4>
+                                <p>Fields from metrics and dimensions can be used to sort the data.</p>
+                                <field name="sort_ids" force_save="1">
+                                    <tree editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="table_id" optional="hide"/>
+                                        <field name="source_type" optional="hide"/>
+                                        <field name="field_calculation" optional="hide"/>
+                                        <field name="field_format" optional="hide"/>
+                                        <field name="field_id" domain="[('table_id', '=', parent.table_id), ('id', 'in', parent.field_ids)]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                        <field name="field_type"/>
+                                        <field name="sort"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Domain">
+                                <group>
+                                    <field name="limit"/>
+                                    <field name="date_field_id" domain="[('field_type', '=', ['date', 'datetime']), ('table_id', '=', table_id)]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                    <field name="identifier_field_id" domain="[('field_type', '=', ['number']), ('table_id', '=', table_id)]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                    <field name="model_id" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                    <field name="model_name" invisible="1"/>
+                                    <field name="domain" widget="domain" options="{'model': 'model_name'}" attrs="{'invisible': [('method', 'not in', ('model'))]}"/>
+                                    <field name="action_model" invisible="1"/>
+                                    <field name="action_id" domain="[('res_model', '=', action_model)]" invisible="1"/>
+                                </group>
+                            </page>
+                            <page string="Filters" attrs="{'invisible': [('method', '=', 'model')]}">
+                                <field name="filter_ids">
+                                    <tree editable="bottom">
+                                        <field name="table_id" optional="hide"/>
+                                        <field name="source_type" optional="hide"/>
+                                        <field name="condition"/>
+                                        <field name="open_bracket" optional="hide"/>
+                                        <field name="field_id" domain="[('table_id', '=', parent.table_id)]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                        <field name="field_type"/>
+                                        <field name="operator_id" domain="[('source_type', '=', parent.source_type)]"/>
+                                        <field name="value"/>
+                                        <field name="close_bracket" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Groups">
+                                <group>
+                                    <field name="category_id"/>
+                                </group>
+                                <p>Specific groups to access the dashboards.</p>
+                                <field name="group_ids">
+                                    <tree>
+                                        <field name="display_name"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page string="Drill Down" invisible="1">
+                                <p>Configure drill down action when the user click the chart.</p>
+                                <div>
+                                    <field name="drilldown_dimension_ids">
+                                        <tree editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="table_id" optional="hide"/>
+                                            <field name="field_id" domain="[('table_id', '=', parent.table_id), ('field_type', 'not in', ('numeric', 'number'))]" options="{'no_create': True, 'no_quick_create': True, 'no_create_edit':True}"/>
+                                            <field name="field_type" optional="hide"/>
+                                            <field name="field_format" attrs="{'readonly': [('field_type', 'not in', ['date', 'datetime'])]}" force_save="1"/>
+                                            <field name="name_alias" optional="hide"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </page>
+                            
+                            <page string="Debug">
+                                <button name="get_analysis_data" context="{'test_analysis': True}" string="Test Query" type="object" class="mb16 btn btn-primary" icon="fa-bug"/>
+                                <field name="query_preview" widget="ace" options="{'mode':'python'}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

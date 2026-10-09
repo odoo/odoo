@@ -1,0 +1,595 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_commission
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2024-08-26 14:06+0000\n"
+"Last-Translator: Metin GÜLSOY <metin.gulsoy@kitayazilim.com>\n"
+"Language-Team: none\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.6.2\n"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__quantity
+msgid "# of Qty"
+msgstr "adet sayısı"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.commission_make_invoice_form
+msgid "(keep empty for invoicing all the pending settlements)"
+msgstr "(bekleyen tüm ödemeleri faturalandırmak için boş tutun)"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+msgid "<strong>Settlement invoice:</strong>"
+msgstr "<strong>Anlaşma faturası:</strong>"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__agent_id
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__agent_id
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Agent"
+msgstr "Temsiilci"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_account_invoice_line_agent
+msgid "Agent detail of commission line in invoice lines"
+msgstr "Fatura satırlarında komisyon satırının temsilci detayı"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_bank_statement_line__partner_agent_ids
+#: model:ir.model.fields,field_description:account_commission.field_account_move__partner_agent_ids
+#: model:ir.model.fields,field_description:account_commission.field_account_payment__partner_agent_ids
+msgid "Agents"
+msgstr "Temsilciler"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__agent_ids
+msgid "Agents & commissions"
+msgstr "Temsilciler ve Komisyonlar"
+
+#. module: account_commission
+#: model:ir.model.fields,help:account_commission.field_account_move_line__agent_ids
+msgid "Agents/Commissions related to the invoice line."
+msgstr "Fatura satırıyla ilgili temsilciler/komisyonlar."
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__amount
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+msgid "Amount"
+msgstr "Miktar"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__any_settled
+msgid "Any Settled"
+msgstr "Herhangi bir anlaşma"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__balance
+msgid "Balance"
+msgstr "Bakiye"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.commission_make_invoice_form
+msgid "Cancel"
+msgstr "İptal"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/commission_settlement.py:0
+#, python-format
+msgid "Cannot cancel an invoiced settlement."
+msgstr ""
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__categ_id
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Category of Product"
+msgstr "Ürünün kategorisi"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__commission_free
+msgid "Comm. free"
+msgstr "Komisyonsuz"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__commission_id
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__commission_status
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__commission_id
+msgid "Commission"
+msgstr "Komisyon"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__amount
+msgid "Commission Amount"
+msgstr "Komisyon Miktarı"
+
+#. module: account_commission
+#: model:ir.actions.act_window,name:account_commission.action_invoice_commission_analysis_report
+#: model:ir.ui.menu,name:account_commission.menu_invoice_commissions_analysis
+msgid "Commission Analysis"
+msgstr "Komisyon Analizi"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_bank_statement_line__commission_total
+#: model:ir.model.fields,field_description:account_commission.field_account_move__commission_total
+#: model:ir.model.fields,field_description:account_commission.field_account_payment__commission_total
+#: model:ir.ui.menu,name:account_commission.menu_invoicing_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_move_line_form
+msgid "Commissions"
+msgstr "Komisyonlar"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__company_id
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__company_id
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__company_id
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Company"
+msgstr "Şirket"
+
+#. module: account_commission
+#: model:ir.model.fields,help:account_commission.field_commission_make_invoice__company_id
+msgid "Company related to this journal"
+msgstr "Bu yevmiyeyle ilgili şirket"
+
+#. module: account_commission
+#: model:ir.actions.act_window,name:account_commission.action_commission_make_invoices
+#: model:ir.ui.menu,name:account_commission.menu_invoicing_settlements_make_invoice
+msgid "Create Commission Invoices"
+msgstr "Komisyon Faturaları Oluştur"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.commission_make_invoice_form
+msgid "Create invoices"
+msgstr "Faturalar oluştur"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/wizards/wizard_invoice.py:0
+#, python-format
+msgid "Created Invoices"
+msgstr "Oluşturulmuş Faturalar"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__create_uid
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__create_uid
+msgid "Created by"
+msgstr "Tarafından oluşturuldu"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__create_date
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__create_date
+msgid "Created on"
+msgstr "Tarihinde oluşturuldu"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__currency_id
+msgid "Currency"
+msgstr "Kur"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Customer"
+msgstr "Müşteri"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__date
+msgid "Date"
+msgstr "Tarih"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+msgid "Description"
+msgstr "Açıklama"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__display_name
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__display_name
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__display_name
+msgid "Display Name"
+msgstr "Görünen İsim"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Draft"
+msgstr "Taslak"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_move_form
+msgid "Edit agents"
+msgstr "Temsilcileri düzenle"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Extended Filters"
+msgstr "Genişletilmiş Filtreler"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__from_settlement
+msgid "From Settlement"
+msgstr "Anlaşmadan"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement__invoice_id
+msgid "Generated Invoice"
+msgstr "Oluşturulmuş Fatura"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement__invoice_line_ids
+msgid "Generated invoice lines"
+msgstr "Oluşturulmuş fatura satırları"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Group By"
+msgstr "Gruplandır"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__grouped
+msgid "Group invoices"
+msgstr "Faturaları gruplandır"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__id
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__id
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__id
+msgid "ID"
+msgstr "Kimlik"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__invoice_id
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+msgid "Invoice"
+msgstr "Fatura"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement_line__invoice_agent_line_id
+msgid "Invoice Agent Line"
+msgstr "Fatura Temsilci Satırı"
+
+#. module: account_commission
+#: model:ir.model.fields.selection,name:account_commission.selection__commission__invoice_state__open
+msgid "Invoice Based"
+msgstr "Fatura Bazlı"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_invoice_commission_analysis_report
+msgid "Invoice Commission Analysis Report"
+msgstr "Fatura Komisyon Analizi Raporu"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__date_invoice
+msgid "Invoice Date"
+msgstr "Fatura Tarihi"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__invoice_line_id
+msgid "Invoice Line"
+msgstr "Fatura Satırı"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Invoice Month"
+msgstr "Fatura Ayı"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission__invoice_state
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__invoice_state
+msgid "Invoice Status"
+msgstr "Fatura Durumu"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__invoice_date
+msgid "Invoice date"
+msgstr "Fatura tarihi"
+
+#. module: account_commission
+#: model:ir.model.fields.selection,name:account_commission.selection__commission_settlement__state__except_invoice
+msgid "Invoice exception"
+msgstr "Fatura istisnası"
+
+#. module: account_commission
+#: model:ir.model.fields.selection,name:account_commission.selection__commission_settlement__state__invoiced
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Invoiced"
+msgstr "Faturalanmış"
+
+#. module: account_commission
+#: model:ir.actions.act_window,name:account_commission.action_invoicing_commission_settlement
+#: model:ir.ui.menu,name:account_commission.menu_invoicing_settlements
+msgid "Invoices Settlements"
+msgstr "Fatura Ödemeleri"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__journal_id
+msgid "Journal"
+msgstr "Yevmiye"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_account_move
+msgid "Journal Entry"
+msgstr "Yevmiye Kaydı"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_account_move_line
+msgid "Journal Item"
+msgstr "Yevmiye öğesi"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent____last_update
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice____last_update
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report____last_update
+msgid "Last Modified on"
+msgstr "Son Değiştirilme Tarihi"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__write_uid
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__write_uid
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__write_date
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__write_date
+msgid "Last Updated on"
+msgstr "Son Güncelleme Tarihi"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_commission_settlement_line
+msgid "Line of a commission settlement"
+msgstr "Komisyon anlaşması satırı"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/commission_settlement.py:0
+#: model_terms:ir.ui.view,arch_db:account_commission.view_settlement_form
+#, python-format
+msgid "Make invoice"
+msgstr "Fatura kes"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.commission_make_invoice_form
+msgid "Make invoices"
+msgstr "Faturalar kes"
+
+#. module: account_commission
+#: model:res.groups,name:account_commission.group_invoicing_commission
+msgid "Manage invoices commissions"
+msgstr "Fatura komisyonlarını yönetin"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/wizards/wizard_invoice.py:0
+#, python-format
+msgid "No valid settlements to invoice."
+msgstr ""
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Not Settled"
+msgstr "Anlaşılmamış"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__object_id
+msgid "Parent"
+msgstr "Üst"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__partner_id
+msgid "Partner"
+msgstr "İş Ortağı"
+
+#. module: account_commission
+#: model:ir.model.fields.selection,name:account_commission.selection__commission__invoice_state__paid
+msgid "Payment Based"
+msgstr "Ödeme Bazlı"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__percentage
+msgid "Percentage of commission"
+msgstr "Komisyon yüzdesi"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/commission_settlement.py:0
+#, python-format
+msgid "Period: from %(date_from)s to %(date_to)s"
+msgstr ""
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__product_id
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__product_id
+msgid "Product"
+msgstr "Ürün"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__product_id
+msgid "Product for invoicing"
+msgstr "Faturalandırma için ürün"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+msgid "Quantity"
+msgstr "Miktar"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_move_form
+msgid "Regenerate agents"
+msgstr "Temsilcileri yeniden oluşturun"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_settlement_form
+msgid "Reset to draft"
+msgstr "Taslağa sıfırla"
+
+#. module: account_commission
+#: model:ir.model.fields.selection,name:account_commission.selection__commission_make_settle__settlement_type__sale_invoice
+#: model:ir.model.fields.selection,name:account_commission.selection__commission_settlement__settlement_type__sale_invoice
+msgid "Sales Invoices"
+msgstr "Satış Faturaları"
+
+#. module: account_commission
+#: model:ir.model.fields,help:account_commission.field_commission__invoice_state
+msgid ""
+"Select the invoice status for settling the commissions:\n"
+"* 'Invoice Based': Commissions are settled when the invoice is issued.\n"
+"* 'Payment Based': Commissions are settled when the invoice is paid (or refunded)."
+msgstr ""
+"Komisyonların ödenmesi için fatura durumunu seçin:\n"
+"* 'Fatura Bazlı': Fatura düzenlendiğinde komisyonlar ödenir.\n"
+"* 'Ödeme Bazlı': Komisyonlar fatura ödendiğinde ödenir."
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__settled
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__settled
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Settled"
+msgstr "Anlaşılmış"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_commission_settlement
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__settlement_id
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__settlement_ids
+msgid "Settlement"
+msgstr "Anlaşma"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_bank_statement_line__settlement_count
+#: model:ir.model.fields,field_description:account_commission.field_account_move__settlement_count
+#: model:ir.model.fields,field_description:account_commission.field_account_payment__settlement_count
+msgid "Settlement Count"
+msgstr "Anlaşma Sayısı"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__settlement_line_ids
+msgid "Settlement Line"
+msgstr "Anlaşma Satırı"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_settle__settlement_type
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement__settlement_type
+msgid "Settlement Type"
+msgstr "Anlaşma Türü"
+
+#. module: account_commission
+#: model:ir.model.fields,help:account_commission.field_account_move_line__settlement_id
+msgid "Settlement that generates this invoice line"
+msgstr "Bu fatura satırını oluşturan anlaşma"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_bank_statement_line__settlement_ids
+#: model:ir.model.fields,field_description:account_commission.field_account_move__settlement_ids
+#: model:ir.model.fields,field_description:account_commission.field_account_payment__settlement_ids
+#: model_terms:ir.ui.view,arch_db:account_commission.commission_make_invoice_form
+#: model_terms:ir.ui.view,arch_db:account_commission.view_in_invoice_bill_tree_inherit
+#: model_terms:ir.ui.view,arch_db:account_commission.view_move_form
+msgid "Settlements"
+msgstr "Anlaşmalar"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement_line__invoice_line_id
+msgid "Source invoice line"
+msgstr "Kaynak Fatura Satırı"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement__state
+msgid "State"
+msgstr "Durum"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Status"
+msgstr "Durum"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__price_subtotal
+msgid "Subtotal"
+msgstr "Aratoplam"
+
+#. module: account_commission
+#: model:ir.model.fields,help:account_commission.field_commission_settlement__settlement_type
+msgid ""
+"The source of the settlement, e.g. 'Sales invoice', 'Sales order', 'Purchase"
+" order'..."
+msgstr ""
+"Anlaşmanın kaynağı, ör. 'Satış faturası', 'Satış siparişi', 'Alış "
+"siparişi'..."
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "This Year"
+msgstr "Bu Yıl"
+
+#. module: account_commission
+#: model_terms:ir.actions.act_window,help:account_commission.action_invoice_commission_analysis_report
+msgid ""
+"This report performs analysis on your commissions added in invoice lines. "
+"You can check the amount and lines that will be settled by date, product, "
+"product category, aget, etc. Use this report to perform analysis on invoice "
+"lines agents not beeing settled yet."
+msgstr ""
+"Bu rapor fatura satırlarına eklenen komisyonlarınızın analizini yapar. "
+"Tarihe, ürüne, ürün kategorisine, temsilci vb. göre ödenecek tutarı ve "
+"satırları kontrol edebilirsiniz. Henüz Anlaşılmamış fatura satırları "
+"üzerinde analiz yapmak için bu raporu kullanın."
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__price_unit
+msgid "Unit Price"
+msgstr "Birim Fiyatı"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__uom_id
+msgid "Unit of Measure"
+msgstr "Ölçü Birimi"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_commission_make_invoice
+msgid "Wizard for making an invoice from a settlement"
+msgstr "Anlaşma üzerinden fatura oluşturmak için sihirbaz"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_commission_make_settle
+msgid "Wizard for settling commissions"
+msgstr "Komisyonları ayarlamak için sihirbaz"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/account_move.py:0
+#, python-format
+msgid "You can't cancel an invoice with settled lines"
+msgstr ""
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/commission_settlement.py:0
+#, python-format
+msgid "You can't delete invoiced settlements."
+msgstr ""
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/account_move.py:0
+#, python-format
+msgid "You can't modify a settled line"
+msgstr ""
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_graph
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_pivot
+msgid "invoice Commission Analysis"
+msgstr "fatura Komisyon Analizi"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "invoices Commission Analysis"
+msgstr "fatura Komisyon Analizi"
