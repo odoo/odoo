@@ -201,6 +201,27 @@
         </record>
 
         <!-- Product catalog -->
+        <record id="product_view_help_catalog_purchase" model="ir.ui.view">
+            <field name="name">product.view.help.catalog.purchase</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <help>
+                    <p class="o_view_nocontent_smiling_face">
+                        No Products for the selected Vendor.
+                    </p>
+                    <p>
+                        Try removing the top filter to broaden your search
+                        <br/>
+                        <!-- the created product is supplied by the vendor of the catalog -->
+                        <button name="%(product.product_product_action_catalog_create)d" type="action" class="btn-primary mt-2"
+                                context="{'default_seller_ids': [(0, 0, {'partner_id': context.get('partner_id')})]}">
+                            Create a product
+                        </button>
+                    </p>
+                </help>
+            </field>
+        </record>
+
         <record id="product_view_kanban_catalog_purchase_only" model="ir.ui.view">
             <field name="name">product.view.kanban.catalog.purchase</field>
             <field name="model">product.product</field>
@@ -209,6 +230,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//kanban" position="attributes">
                     <attribute name="js_class">purchase_product_kanban_catalog</attribute>
+                    <attribute name="help_id">%(purchase.product_view_help_catalog_purchase)d</attribute>
                     <attribute name="sample">1</attribute>
                 </xpath>
             </field>
