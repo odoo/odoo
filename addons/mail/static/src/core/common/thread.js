@@ -700,7 +700,17 @@ export class Thread extends Component {
                 });
             } else {
                 // To remove when safari will support the "scrollend" event.
-                this.smoothScrollingTimeout = setTimeout(onSmoothScrollingEnd, 250);
+                let lastScrollTop = this.scrollableRef.el.scrollTop;
+                const checkSmoothScrollingEnd = () => {
+                    const el = this.scrollableRef.el;
+                    if (!el || el.scrollTop === lastScrollTop) {
+                        onSmoothScrollingEnd();
+                        return;
+                    }
+                    lastScrollTop = el.scrollTop;
+                    this.smoothScrollingTimeout = setTimeout(checkSmoothScrollingEnd, 250);
+                };
+                this.smoothScrollingTimeout = setTimeout(checkSmoothScrollingEnd, 250);
             }
         }
         this.scrollableRef.el.scrollTo({ behavior: smooth ? "smooth" : undefined, top: value });
