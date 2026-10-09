@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:38+0000\n"
-"PO-Revision-Date: 2026-08-11 22:47+0000\n"
+"PO-Revision-Date: 2026-10-06 07:25+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-1/sale/"
 "cs/>\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -82,7 +82,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'PROFORMA - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -956,6 +956,61 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        <t t-set=\"transaction_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/>\n"
+"        Dobrý den,\n"
+"        <br/><br/>\n"
+"        Platba s referencí\n"
+"        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
+"or ''\">SOOO49</span>\n"
+"        ve výši\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"        za vaši objednávku\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
+"            čeká na zpracování.\n"
+"            <br/>\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
+"+ transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in "
+"('draft', 'sent')\">\n"
+"                Vaše objednávka bude potvrzena, jakmile bude potvrzena "
+"platba.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Po potvrzení bude zbývat\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
+"                k úhradě.\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            byla potvrzena.\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
+"object.amount_total) &lt; 0\">\n"
+"                <br/>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ "
+"10.00</span>\n"
+"                zbývá k uhradě.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Děkujeme za vaši důvěru!\n"
+"        <br/>\n"
+"        Pokud máte jakékoli dotazy, neváhejte nás kontaktovat.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
@@ -1005,6 +1060,50 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'nabídka' if object.state in "
+"('draft', 'sent') else 'objednávka'\"/>\n"
+"        Dobrý den,\n"
+"        <br/><br/>\n"
+"        Vaše <t t-out=\"doc_name or ''\">nabídka</t> <span style=\"font-"
+"weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (s referencí: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        ve výši <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10.00</span> je "
+"připravena k nahlédnutí.\n"
+"        <br/>\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
+"\n"
+"        <t t-if=\"documents\">\n"
+"            <br/>\n"
+"            <t t-if=\"len(documents)&gt;1\">\n"
+"                Zde jsou další dokumenty, které by vás mohly zajímat:\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Zde je další dokument, který by vás mohl zajímat:\n"
+"            </t>\n"
+"            <ul style=\"margin-bottom: 0;\">\n"
+"                <t t-foreach=\"documents\" t-as=\"document\">\n"
+"                    <li style=\"font-size: 13px;\">\n"
+"                        <a t-out=\"document.ir_attachment_id.name\" t-att-"
+"href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-"
+"target=\"target\"/>\n"
+"                    </li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </t>\n"
+"        <br/>\n"
+"        Pokud máte jakékoli dotazy, neváhejte nás kontaktovat.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_proforma
@@ -1034,6 +1133,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"'nabídce' if object.state in "
+"('draft', 'sent') else 'objednávce'\"/>\n"
+"        Dobrý den,\n"
+"        <br/><br/>\n"
+"        Vaše proforma faktura k <t t-out=\"doc_name or ''\">nabídce</t> "
+"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>"
+"\n"
+"        <t t-if=\"object.origin\">\n"
+"            (s referencí: <t t-out=\"object.origin or ''\"/> )\n"
+"        </t>\n"
+"        ve výši <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 10.00</span> je k "
+"dispozici.\n"
+"        <br/><br/>\n"
+"        Pokud máte jakékoli dotazy, neváhejte nás kontaktovat.\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1157,6 +1280,9 @@ msgid ""
 "                                Outgoing\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                Odchozí\n"
+"                            </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1503,12 +1629,12 @@ msgstr "Povolené MJ"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro Forma Invoice to your customers"
-msgstr ""
+msgstr "Umožňuje zasílat zákazníkům proforma faktury"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro forma invoice."
-msgstr ""
+msgstr "Umožňuje zasílat proforma faktury."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on_sale
@@ -1751,6 +1877,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Modrá: nedodáno/zahájeno\n"
+"            Oranžová: částečně dodáno\n"
+"            Zelená: plně dodáno"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1848,12 +1977,14 @@ msgid ""
 "Cancelling this order will set its status to 'Cancelled' and will update "
 "related documents and processes. Are you sure?"
 msgstr ""
+"Zrušením této objednávky se její stav změní na „Zrušeno“ a aktualizují se "
+"související doklady a procesy. Opravdu chcete pokračovat?"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Cannot close %(orders_name)s: must be in 'Sales Order' state."
-msgstr ""
+msgstr "Nelze uzavřít %(orders_name)s: musí být ve stavu „Prodejní objednávka“."
 
 #. module: sale
 #. odoo-python
@@ -1943,7 +2074,7 @@ msgstr "Klepnutím definujete cíl fakturace"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
 msgid "Client's most used account"
-msgstr ""
+msgstr "Nejčastěji používaný účet klienta"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1955,7 +2086,7 @@ msgstr "Zavřít"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_close_invoicing
 msgid "Close Invoicing"
-msgstr ""
+msgstr "Uzavřít fakturaci"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_composition
@@ -2123,7 +2254,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "Připojit Stripe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2435,7 +2566,7 @@ msgstr "Smazat"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Deliver"
-msgstr ""
+msgstr "Dodat"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2928,7 +3059,7 @@ msgstr "Celá částka <br/>"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__full
 msgid "Fully Delivered"
-msgstr ""
+msgstr "Plně dodáno"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -3106,6 +3237,8 @@ msgstr "Pokud zaškrtnuto, některé zprávy mají chybu při doručení."
 #: model:ir.model.fields,help:sale.field_sale_order__invoicing_closed
 msgid "If enabled, the order is considered fully invoiced regardless of lines."
 msgstr ""
+"Je-li povoleno, považuje se objednávka za plně vyfakturovanou bez ohledu na "
+"řádky."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__journal_id
@@ -3405,13 +3538,13 @@ msgstr "Fakturační a dodací adresa"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Invoicing closed"
-msgstr ""
+msgstr "Fakturace uzavřena"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Invoicing reopened"
-msgstr ""
+msgstr "Fakturace znovu otevřena"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
@@ -3594,7 +3727,7 @@ msgstr "Ruční platba"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoicing_closed
 msgid "Manually Closed For Invoicing"
-msgstr ""
+msgstr "Ručně uzavřeno pro fakturaci"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__service_type__manual
@@ -4103,7 +4236,7 @@ msgstr "Tvůrce cenových nabídek PDF"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO FORMA Invoice"
-msgstr ""
+msgstr "PROFORMA FAKTURA"
 
 #. module: sale
 #. odoo-javascript
@@ -4296,17 +4429,17 @@ msgstr "Tisk"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro Forma Invoice"
-msgstr ""
+msgstr "Proforma faktura"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro Forma Invoice #"
-msgstr ""
+msgstr "Proforma faktura č."
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro Forma Invoices"
-msgstr ""
+msgstr "Proforma faktury"
 
 #. module: sale
 #. odoo-javascript
@@ -4421,7 +4554,7 @@ msgstr "Produkty"
 #: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Promised Delivery"
-msgstr ""
+msgstr "Přislíbené dodání"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4651,7 +4784,7 @@ msgstr "Odebrat jeden"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reopen Invoicing"
-msgstr ""
+msgstr "Znovu otevřít fakturaci"
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_actions_report
@@ -4735,7 +4868,7 @@ msgstr ""
 #. module: sale
 #: model:portal.entry,description:sale.portal_quotations_to_review
 msgid "Review your quotations"
-msgstr ""
+msgstr "Zkontrolujte své nabídky"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -5012,7 +5145,7 @@ msgstr "Prodej: Platba provedena"
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
 msgid "Sales: Send Pro Forma"
-msgstr ""
+msgstr "Prodej: Odeslat proformu"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -5103,7 +5236,7 @@ msgstr "Odeslat"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO FORMA Invoice"
-msgstr ""
+msgstr "Odeslat proforma fakturu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5196,7 +5329,7 @@ msgstr "Synchronizace Shopee"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_deliver_button
 msgid "Show Deliver Button"
-msgstr ""
+msgstr "Zobrazit tlačítko „Dodat“"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5266,6 +5399,8 @@ msgid ""
 "Sold in the last 365 days. Outgoing represents confirmed sales orders not "
 "delivered, or partially delivered"
 msgstr ""
+"Prodáno za posledních 365 dní. Odchozí představuje potvrzené prodejní "
+"objednávky, které nebyly dodány nebo byly dodány jen částečně"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -5324,7 +5459,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__started
 msgid "Started"
-msgstr ""
+msgstr "Zahájeno"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -5618,6 +5753,8 @@ msgid ""
 "The following sale orders %(invalid_orders)s can't be delivered. Cancelled "
 "all deliveries."
 msgstr ""
+"Následující prodejní objednávky %(invalid_orders)s nelze dodat. Všechna "
+"dodání byla zrušena."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5717,7 +5854,7 @@ msgstr "Produkt (%(product)s) má nekompatibilní hodnoty: %(value_list)s"
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
 msgid "The sale order has expired."
-msgstr ""
+msgstr "Platnost prodejní objednávky vypršela."
 
 #. module: sale
 #. odoo-python
@@ -6110,7 +6247,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send pro forma to prospects"
-msgstr ""
+msgstr "Používají obchodníci při zasílání proformy potenciálním zákazníkům"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -6247,7 +6384,7 @@ msgstr "Webová historie komunikace"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Yes, cancel order"
-msgstr ""
+msgstr "Ano, zrušit objednávku"
 
 #. module: sale
 #. odoo-python
@@ -6507,6 +6644,9 @@ msgid ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
 "== 'pending') and 'Pending Order' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Čekající objednávka' or 'Objednávka' }} {{ object.name or "
+"'n/a' }}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_proforma
@@ -6514,6 +6654,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Pro "
 "Forma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Proforma' or 'Objednávka'}} (Ref {{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -6521,6 +6663,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"'Nabídka' or 'Objednávka' }} {{ object.name or 'n/a' }}"
 
 #~ msgid "with"
 #~ msgstr "s"
