@@ -1317,9 +1317,10 @@ class Meeting(models.Model):
 
     def _get_updated_recurrence_values(self, new_start_date):
         """ Copy values from current recurrence and update the start date weekday. """
-        [previous_recurrence_values] = self.recurrence_id.copy_data()
-        if self.start.weekday() != new_start_date.weekday():
-            previous_recurrence_values.pop(weekday_to_field(self.start.weekday()), None)
+        previous_recurrence_values = self.recurrence_id.copy_data()[0]
+        start_date = self._get_local_date(self.start)
+        if start_date.weekday() != new_start_date.weekday():
+            previous_recurrence_values.pop(weekday_to_field(start_date.weekday()), None)
         return previous_recurrence_values
 
     def _update_future_events(self, values, time_values, recurrence_values):
@@ -1332,7 +1333,7 @@ class Meeting(models.Model):
         update_dict = self._get_time_update_dict(base_event, time_values)
         time_values.update(update_dict)
         # Get base values from the previous recurrence and update the start date weekday field.
-        start_date = time_values['start'].date() if 'start' in time_values else self.start.date()
+        start_date = self._get_local_date(time_values.get('start', self.start), recurrence_values.get('event_tz'))
         previous_recurrence_values = self._get_updated_recurrence_values(start_date)
 
         # Trim previous recurrence at current event, deleting following events except for the updated event.
@@ -1371,7 +1372,7 @@ class Meeting(models.Model):
 
         if self._check_values_to_sync(values) or time_values or recurrence_values:
             # Get base values from the previous recurrence and update the start date weekday field.
-            start_date = time_values['start'].date() if 'start' in time_values else self.start.date()
+            start_date = self._get_local_date(time_values.get('start', self.start), recurrence_values.get('event_tz'))
             old_recurrence_values = self._get_updated_recurrence_values(start_date)
 
             # Archive all events and delete recurrence, reactivate base event and apply updated values.
@@ -1464,6 +1465,12 @@ class Meeting(models.Model):
             start = self.start if not self.allday else self.start.replace(hour=12)
             return pytz.utc.localize(start).astimezone(tz).date()
         return self.start.date()
+
+    def _get_local_date(self, start, event_tz=False):
+        event_tz = event_tz or self.event_tz
+        if self.allday or not event_tz:
+            return start.date()
+        return pytz.utc.localize(start).astimezone(pytz.timezone(event_tz)).date()
 
     def _range(self):
         self.ensure_one()
