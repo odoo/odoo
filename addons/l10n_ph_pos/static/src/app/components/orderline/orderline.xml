@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_ph_pos.Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
+        <xpath expr="//li[hasclass('customer-note')]" position="after">
+            <li t-if="this.line.l10n_ph_holder_name" class="l10n_ph_discount_privilege_holder w-100 rounded text-break bg-opacity-25" t-att-class="{'bg-info text-info-emphasis p-2': vals.isDisplay}">
+                <i class="oi oi-filled me-1" data-icon="badge" role="img" aria-label="ID Holder" title="ID Holder"/>
+                <t t-out="this.line.l10n_ph_holder_name"/> - <t t-out="this.line.l10n_ph_discount_privilege_id.l10n_ph_id_type_label"/>: <t t-out="this.line.l10n_ph_holder_id_number"/>
+                <div t-if="this.line.l10n_ph_holder_representative_name" class="small">
+                    Representative: <t t-out="this.line.l10n_ph_holder_representative_name"/> (<t t-out="this.line.l10n_ph_holder_representative_id"/>)
+                </div>
+            </li>
+        </xpath>
+    </t>
+</templates>
