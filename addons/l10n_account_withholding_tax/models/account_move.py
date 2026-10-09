@@ -45,7 +45,6 @@ class AccountMove(models.Model):
                         continue
                     base_line = AccountTax._prepare_base_line_for_taxes_computation(
                         line,
-                        tax_ids=withholding_taxes,
                         price_unit=line.price_unit,
                         quantity=line.quantity,
                         currency_id=move.currency_id,
