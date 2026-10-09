@@ -7,7 +7,7 @@ import { formatCurrency } from "@web/core/currency";
 import { renderToMarkup } from "@web/core/utils/render";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { QuantityButtons } from "@sale/js/quantity_buttons/quantity_buttons";
+import { QuantityButtons } from "@sale/components/quantity_buttons/quantity_buttons";
 
 export class ReturnOrderDialog extends Component {
     static components = { Dialog, WarningDialog, QuantityButtons };
