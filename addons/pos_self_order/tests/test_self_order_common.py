@@ -69,6 +69,7 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
             self.pos_config.write({"self_ordering_mode": mode})
             with self.assertRaises(UserError):
                 self.pos_config.write({"self_ordering_default_user_id": False})
+<<<<<<< dc2f9415c76505390739a062b96e8cb6b6f7e8a7
 
     def test_self_order_product_availability(self):
         """Test product visibility and cart behavior for kiosk and mobile self-ordering modes."""
@@ -105,3 +106,33 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
             'self_ordering_mode': 'mobile',
         })
         self.start_tour(self.pos_config._get_self_order_route(floor.table_ids[0].id), "test_self_order_product_availability")
+||||||| d9c6fff9ca31c31168a29dab50cb91c3b06e951a
+=======
+
+    def test_get_orders_unknown_table_identifier(self):
+        """An identifier matching no table must not return tableless draft orders."""
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_service_mode': 'table',
+            'self_ordering_pay_after': 'meal',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        session = self.pos_config.current_session_id
+        session.set_opening_control(0, "")
+
+        self.env['pos.order'].create({
+            'session_id': session.id,
+            'company_id': self.pos_config.company_id.id,
+            'amount_tax': 0,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+
+        result = self.make_jsonrpc_request('/pos-self-order/get-orders', {
+            'access_token': self.pos_config.access_token,
+            'order_access_tokens': [],
+            'table_identifier': 'unknown',
+            })
+        self.assertEqual(result, {})
+>>>>>>> 4298caa0efe2d08815739b955ff4f8d4968c88d8

@@ -127,7 +127,13 @@ class PosSelfOrderController(http.Controller):
         table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
         domain = False
 
+<<<<<<< dc2f9415c76505390739a062b96e8cb6b6f7e8a7
         if not table_identifier or pos_config.self_ordering_pay_after == 'each':
+||||||| d9c6fff9ca31c31168a29dab50cb91c3b06e951a
+        if not table_identifier:
+=======
+        if not table:
+>>>>>>> 4298caa0efe2d08815739b955ff4f8d4968c88d8
             domain = [(False, '=', True)]
         else:
             domain = ['&', '&',
