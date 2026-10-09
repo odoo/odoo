@@ -176,11 +176,9 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
      * @param {Record<string,FieldMatching>} chartFieldMatches
      */
     _setOdooChartFieldMatching(filterId, chartFieldMatches) {
-        const charts = { ...this.charts };
         for (const [chartId, fieldMatch] of Object.entries(chartFieldMatches)) {
-            charts[chartId].fieldMatching[filterId] = fieldMatch;
+            this.history.update("charts", chartId, "fieldMatching", filterId, fieldMatch);
         }
-        this.history.update("charts", charts);
     }
 
     _onFilterDeletion(filterId) {

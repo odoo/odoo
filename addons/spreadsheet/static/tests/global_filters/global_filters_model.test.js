@@ -1143,6 +1143,60 @@ test("Can undo-redo a EDIT_GLOBAL_FILTER", async function () {
     expect(model.getters.getGlobalFilters()[0].label).toBe("Arthouuuuuur");
 });
 
+test("Can undo-redo the list field matching of a EDIT_GLOBAL_FILTER", async function () {
+    const { model } = await createSpreadsheetWithList();
+    const [listId] = model.getters.getListIds();
+    const filterId = THIS_YEAR_GLOBAL_FILTER.id;
+    await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {
+        list: { [listId]: { chain: "date", type: "date" } },
+    });
+    model.dispatch("EDIT_GLOBAL_FILTER", {
+        filter: THIS_YEAR_GLOBAL_FILTER,
+        list: { [listId]: { chain: "create_date", type: "datetime" } },
+    });
+    expect(model.getters.getListFieldMatching(listId, filterId)).toEqual({
+        chain: "create_date",
+        type: "datetime",
+    });
+    model.dispatch("REQUEST_UNDO");
+    expect(model.getters.getListFieldMatching(listId, filterId)).toEqual({
+        chain: "date",
+        type: "date",
+    });
+    model.dispatch("REQUEST_REDO");
+    expect(model.getters.getListFieldMatching(listId, filterId)).toEqual({
+        chain: "create_date",
+        type: "datetime",
+    });
+});
+
+test("Can undo-redo the Odoo chart field matching of a EDIT_GLOBAL_FILTER", async function () {
+    const { model } = await createSpreadsheetWithChart();
+    const [chartId] = model.getters.getChartIds(model.getters.getActiveSheetId());
+    const filterId = THIS_YEAR_GLOBAL_FILTER.id;
+    await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {
+        chart: { [chartId]: { chain: "date", type: "date" } },
+    });
+    model.dispatch("EDIT_GLOBAL_FILTER", {
+        filter: THIS_YEAR_GLOBAL_FILTER,
+        chart: { [chartId]: { chain: "create_date", type: "datetime" } },
+    });
+    expect(model.getters.getOdooChartFieldMatching(chartId, filterId)).toEqual({
+        chain: "create_date",
+        type: "datetime",
+    });
+    model.dispatch("REQUEST_UNDO");
+    expect(model.getters.getOdooChartFieldMatching(chartId, filterId)).toEqual({
+        chain: "date",
+        type: "date",
+    });
+    model.dispatch("REQUEST_REDO");
+    expect(model.getters.getOdooChartFieldMatching(chartId, filterId)).toEqual({
+        chain: "create_date",
+        type: "datetime",
+    });
+});
+
 test("Can undo-redo a MOVE_GLOBAL_FILTER", async function () {
     const model = await createModelWithDataSource();
     addGlobalFilter(model, LAST_YEAR_GLOBAL_FILTER, {});
