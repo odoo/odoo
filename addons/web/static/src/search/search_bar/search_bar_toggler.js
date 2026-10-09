@@ -9,6 +9,7 @@ import {
     useProps,
 } from "@odoo/owl";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { useEnv } from "@web/owl2/utils";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
@@ -36,8 +37,11 @@ export class OfflineSearchBarToggler extends SearchBarToggler {
 
 export function useSearchBarToggler() {
     const ui = useService("ui");
+    const env = useEnv();
 
-    let isToggled = false;
+    // display the search bar by default when there are active search items
+    // (default filters, search values, ...), even on small screens
+    let isToggled = Boolean(env.searchModel?.query?.length);
     const state = proxy({
         isSmall: ui.isSmall,
         showSearchBar: false,
