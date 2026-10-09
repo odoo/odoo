@@ -1,4 +1,4 @@
-import { Component, useExternalListener, useState } from "@odoo/owl";
+import { Component, onWillDestroy, useExternalListener, useState } from "@odoo/owl";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { registry } from "@web/core/registry";
 import { ImageTransformation } from "./image_transformation";
@@ -27,6 +27,7 @@ export function useImageTransform({ document, closeImageTransformation, buttonSe
             if (!isNodeInsideTransform(ev.target) && !pointerDownInsideTransform) {
                 closeImageTransformation();
             }
+<<<<<<< b08aa20c5143bd2fbea80c8eaba660d36f1a8021
             pointerDownInsideTransform = false;
         },
         { capture: true }
@@ -36,6 +37,36 @@ export function useImageTransform({ document, closeImageTransformation, buttonSe
     useExternalListener(document, "selectionchange", (ev) => {
         closeImageTransformation();
     });
+||||||| f5cfde8452698eb3ed939d30cfff828e83c28d37
+        });
+        useExternalListener(
+            this.props.document,
+            "click",
+            (ev) => {
+                if (!this.isNodeInsideTransform(ev.target) && !this.mouseDownInsideTransform) {
+                    this.closeImageTransformation();
+                }
+                this.mouseDownInsideTransform = false;
+            },
+            { capture: true }
+        );
+    }
+=======
+        });
+        useExternalListener(
+            this.props.document,
+            "click",
+            (ev) => {
+                if (!this.isNodeInsideTransform(ev.target) && !this.mouseDownInsideTransform) {
+                    this.closeImageTransformation();
+                }
+                this.mouseDownInsideTransform = false;
+            },
+            { capture: true }
+        );
+        onWillDestroy(this.closeImageTransformation);
+    }
+>>>>>>> 86e39c2fc1744aca1ce5230c37cc64d59122d3db
 
     function isNodeInsideTransform(node) {
         if (!node) {
