@@ -3,6 +3,10 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
+# res.partner additional identifier holding the ID number of each statutory
+# privilege type (registered in res_partner.py).
+PARTNER_IDENTIFIER_KEYS = {"sc": "PH_SC_ID", "pwd": "PH_PWD_ID"}
+
 
 class L10nPhDiscountPrivilege(models.Model):
     _name = "l10n_ph.discount.privilege"
@@ -54,11 +58,28 @@ class L10nPhDiscountPrivilege(models.Model):
         default=lambda self: self.env.company,
     )
     active = fields.Boolean("Active", default=True)
+    l10n_ph_id_type_label = fields.Char(
+        string="ID Type",
+        compute="_compute_l10n_ph_id_type_label",
+        help="Name of the ID document presented for this privilege.",
+    )
 
     _l10n_ph_discount_privilege_name_company_uniq = models.Constraint(
         "unique(name, company_id)",
         "A discount privilege with this name already exists for this company.",
     )
+
+    @api.depends("discount_type", "name")
+    @api.depends_context("lang")
+    def _compute_l10n_ph_id_type_label(self):
+        # Statutory privileges are named after their ID document (e.g.
+        # "Senior Citizen ID"); non-statutory ("special") ones after themselves.
+        Partner = self.env["res.partner"]
+        identifiers_metadata = Partner._get_all_additional_identifiers_metadata()
+        for privilege in self:
+            metadata = identifiers_metadata.get(PARTNER_IDENTIFIER_KEYS.get(privilege.discount_type), {})
+            label = Partner._lazy_translate_additional_identifiers_metadata(metadata).get("label")
+            privilege.l10n_ph_id_type_label = label or privilege.name
 
     @api.constrains("discount_amount")
     def _check_discount_amount(self):
@@ -83,3 +104,10 @@ class L10nPhDiscountPrivilege(models.Model):
                 [("id", "child_of", categories.ids)],
             )
         return categories
+
+    def _l10n_ph_get_partner_id_number(self, partner):
+        """ID number of this privilege's ID document on ``partner``'s
+        additional identifiers, if any."""
+        self.ensure_one()
+        identifier_key = PARTNER_IDENTIFIER_KEYS.get(self.discount_type)
+        return identifier_key and (partner.additional_identifiers or {}).get(identifier_key)
