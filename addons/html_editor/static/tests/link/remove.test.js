@@ -204,6 +204,28 @@ describe("range not collapsed", () => {
                 contentAfter: "<p>a<i>[bcd]</i>e</p>",
             });
         });
+        test("should replace link with span preserving class when unlinked by toolbar", async () => {
+            await testEditor({
+                contentBefore: '<p>a<a href="#" class="display-2-fs">[bcd]</a>e</p>',
+                stepFunction: unlinkFromToolbar,
+                contentAfter: '<p>a<span class="display-2-fs">[bcd]</span>e</p>',
+            });
+        });
+        test("should remove button classes (btn, btn-primary) when unlinking button link", async () => {
+            await testEditor({
+                contentBefore: '<p>a<a href="#" class="btn btn-primary">[bcd]</a>e</p>',
+                stepFunction: unlinkFromToolbar,
+                contentAfter: "<p>a[bcd]e</p>",
+            });
+        });
+        test("should remove button classes but keep format class when unlinking button link", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p>a<a href="#" class="btn btn-primary display-2-fs">[bcd]</a>e</p>',
+                stepFunction: unlinkFromToolbar,
+                contentAfter: '<p>a<span class="display-2-fs">[bcd]</span>e</p>',
+            });
+        });
     });
     describe("remove by command", () => {
         test("should remove the link in the selected range at the end of a link", async () => {

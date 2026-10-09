@@ -1154,6 +1154,23 @@ export class LinkPlugin extends Plugin {
         );
         if (links.size) {
             for (const link of links) {
+                const styleClasses = [...link.classList].filter(
+                    (c) => !c.startsWith("btn") && !this.getResource("system_classes").includes(c)
+                );
+                const hasStyle = styleClasses.length || link.style.length;
+                const hasContent = link.textContent.replaceAll("\ufeff", "");
+
+                if (hasStyle && hasContent) {
+                    const span = this.document.createElement("span");
+                    link.after(span);
+                    cursors.update(callbacksForCursorUpdate.after(link, span));
+                    span.append(link);
+                    cursors.update(callbacksForCursorUpdate.append(span, link));
+                    span.classList.add(...styleClasses);
+                    if (link.style.length) {
+                        span.style.cssText = link.style.cssText;
+                    }
+                }
                 cursors.update(callbacksForCursorUpdate.unwrap(link));
                 unwrapContents(link);
             }
