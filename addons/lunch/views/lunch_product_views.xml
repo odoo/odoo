@@ -49,6 +49,27 @@
         </field>
     </record>
 
+    <record id="lunch_product_view_help" model="ir.ui.view">
+        <field name="name">lunch.product.help</field>
+        <field name="model">lunch.product</field>
+        <field name="type">help</field>
+        <field name="arch" type="xml">
+            <help data_method="get_help_data">
+                <t invisible="not data.get('has_location')">
+                    <t t-out="action_help"/>
+                </t>
+                <t invisible="data.get('has_location')">
+                    <p class="o_view_nocontent_smiling_face">
+                        No location found
+                    </p>
+                    <p>
+                        Please create a location to start ordering.
+                    </p>
+                </t>
+            </help>
+        </field>
+    </record>
+
     <record id="lunch_product_view_tree_order" model="ir.ui.view">
         <field name="name">lunch.product.list.order</field>
         <field name="inherit_id" ref="lunch_product_view_tree"/>
@@ -57,6 +78,7 @@
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
                 <attribute name="js_class">lunch_list</attribute>
+                <attribute name="help_id">%(lunch.lunch_product_view_help)d</attribute>
                 <attribute name="create">0</attribute>
             </xpath>
         </field>
@@ -104,7 +126,7 @@
         <field name="model">lunch.product</field>
         <field name="priority">999</field>
         <field name="arch" type="xml">
-            <kanban js_class="lunch_kanban" create="0" edit="0" group_create="0" class="o_kanban_mobile">
+            <kanban js_class="lunch_kanban" create="0" edit="0" group_create="0" class="o_kanban_mobile" help_id="%(lunch.lunch_product_view_help)d">
                 <field name="currency_id"/>
                 <field name="is_new"/>
                 <templates>
