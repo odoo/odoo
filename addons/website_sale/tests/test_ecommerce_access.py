@@ -54,6 +54,39 @@ class TestEcommerceAccess(HttpCaseWithUserDemo, WebsiteSaleCommon):
         response = self.url_open("/shop")
         self.assertEqual(response.status_code, 200)  # Check that customers can access
 
+    def test_shop_hides_products_of_categories_not_in_shop(self):
+        # Unpublish the published demo products to keep the test products on
+        # the first /shop page.
+        self.env["product.template"].search([("website_published", "=", True)]).website_published = False
+        Category = self.env["product.public.category"]
+        hidden_category = Category.create({"name": "Hidden", "not_in_shop": True})
+        hidden_subcategory = Category.create({"name": "Hidden Sub", "parent_id": hidden_category.id})
+        shown_subcategory = Category.create({"name": "Shown Sub", "parent_id": hidden_category.id})
+        shown_subcategory.not_in_shop = False
+        visible_category = Category.create({"name": "Visible"})
+        for name, categories in [
+            ("Uncategorized Product", Category),
+            ("Hidden Root Product", hidden_category),
+            ("Hidden Nested Product", hidden_subcategory),
+            ("Unhidden Child Product", shown_subcategory),
+            ("Mixed Product", hidden_subcategory | visible_category),
+        ]:
+            self._create_product(name=name, public_categ_ids=categories.ids)
+
+        html = self.url_open("/shop").text
+        self.assertIn("Uncategorized Product", html)
+        self.assertNotIn("Hidden Root Product", html)
+        self.assertNotIn("Hidden Nested Product", html)
+        self.assertIn("Unhidden Child Product", html)
+        self.assertIn("Mixed Product", html)
+
+        # Hidden categories stay reachable through their own page and the search
+        category_slug = self.env["ir.http"]._slug(hidden_category)
+        html = self.url_open(f"/shop/category/{category_slug}").text
+        self.assertIn("Hidden Nested Product", html)
+        html = self.url_open("/shop?search=Hidden Nested Product").text
+        self.assertIn("Hidden Nested Product", html)
+
     def test_ecommerce_access_logged_user(self):
         # By default, everyone has access to the ecommerce
         self.assertTrue(self.website.has_ecommerce_access())
