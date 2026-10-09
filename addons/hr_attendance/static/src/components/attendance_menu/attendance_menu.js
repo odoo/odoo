@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, providePlugins, proxy, usePlugin } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -12,6 +12,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Record } from "@web/model/record";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useSubEnv } from "@web/owl2/utils";
+import { ReminderPlugin } from "@hr/plugins/reminder_plugin";
 import { AttendanceInlineForm } from "@hr_attendance/components/attendance_inline_form/attendance_inline_form";
 import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
 
@@ -67,7 +68,17 @@ export class ActivityMenu extends Component {
         this.attendanceRecord = null;
         this.dropdown = useDropdownState();
 
+        providePlugins([ReminderPlugin]);
+        this.reminderButtonRef = usePlugin(ReminderPlugin).schedule(
+            () => this.isReminderEligible(),
+            () => this.getReminderMessage(),
+            () => this.dropdown.open()
+        );
+
         onWillStart(() => {
+            this.lazySession.getValue("attendance_based", (value) => {
+                this.attendanceBased = value;
+            });
             this.lazySession.getValue("attendance_check_in_ability", (hasAbility) => {
                 this.state.isDisplayed = hasAbility;
             });
@@ -84,6 +95,14 @@ export class ActivityMenu extends Component {
                 this.state.breakManagementEnabled = enabled;
             });
         });
+    }
+
+    isReminderEligible() {
+        return this.state.isDisplayed && !this.state.checkedIn && this.attendanceBased;
+    }
+
+    getReminderMessage() {
+        return _t("Looks like you're working. Don't forget to check in.");
     }
 
     async searchReadEmployee() {

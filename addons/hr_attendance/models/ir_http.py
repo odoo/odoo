@@ -13,6 +13,7 @@ class IrHttp(models.AbstractModel):
             employee = self.env.user.employee_id
             company = employee.company_id
             res.update({
+                'attendance_based': employee.attendance_based,
                 'attendance_state': employee.attendance_state,
                 'attendance_check_in_ability': employee._has_attendance_check_in_ability(),
                 'attendance_device_tracking': company.attendance_device_tracking,
