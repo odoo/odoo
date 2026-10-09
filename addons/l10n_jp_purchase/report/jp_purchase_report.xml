@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <t t-set="jp_hide_zero_decimals"
+                   t-value="o.company_id._l10n_jp_hide_zero_decimals(
+                       o.order_line.filtered(lambda l: l.display_type or l.product_qty != 0).mapped('price_unit'))"/>
+            </xpath>
+
+            <xpath expr="//div[@t-field='o.partner_id']" position="attributes">
+                <attribute name="t-options">{"widget": "contact", "fields": ["address", "phone", "vat"], "no_marker": True, "phone_icons": True}</attribute>
+            </xpath>
+
+            <!-- The column drops its decimals only when every unit price in it is whole. -->
+            <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
+                <attribute name="t-options">{'min_precision': 0} if jp_hide_zero_decimals else {}</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('page')]" position="before">
+                <t t-set="jp_layout" t-value="company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'"/>
+                <t t-set="jp_currency_header" t-value="jp_layout and company.l10n_jp_currency_in_headers
+                    and ' (%s)' % (o.currency_id.currency_unit_label if o.currency_id.name == 'JPY' else o.currency_id.name)"/>
+            </xpath>
+
+            <xpath expr="//th[@name='th_price_unit']" position="attributes">
+                <attribute name="t-att-class">'text-end text-nowrap' if jp_layout else 'text-end'</attribute>
+            </xpath>
+            <xpath expr="//th[@name='th_price_unit']/strong" position="inside"><t t-out="jp_currency_header"/></xpath>
+
+            <xpath expr="//th[@name='th_subtotal']" position="attributes">
+                <attribute name="t-att-class">'text-end text-nowrap' if jp_layout else 'text-end'</attribute>
+            </xpath>
+            <xpath expr="//th[@name='th_subtotal']/strong" position="inside"><t t-out="jp_currency_header"/></xpath>
+        </template>
+
+        <template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">
+            <xpath expr="//div[@t-field='o.partner_id']" position="attributes">
+                <attribute name="t-options">{"widget": "contact", "fields": ["address", "phone", "vat"], "no_marker": True, "phone_icons": True}</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document" priority="10">
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <t t-set="jp_order_lines" t-value="doc._get_order_lines_to_report()"/>
+                <t t-set="jp_hide_zero_decimals"
+                   t-value="doc.company_id._l10n_jp_hide_zero_decimals(jp_order_lines.mapped('price_unit'))
+                            and not any(line.discount &lt; 0 for line in jp_order_lines)"/>
+            </xpath>
+
+            <xpath expr="//div[@t-field='doc.partner_id']" position="attributes">
+                <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            </xpath>
+
+            <xpath expr="//td[@name='td_product_priceunit']/span[@t-field='line.price_unit']" position="attributes">
+                <attribute name="t-options">{'min_precision': 0} if jp_hide_zero_decimals else {}</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('page')]" position="before">
+                <t t-set="jp_layout" t-value="company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'"/>
+                <t t-set="jp_currency_header" t-value="jp_layout and company.l10n_jp_currency_in_headers
+                    and ' (%s)' % (doc.currency_id.currency_unit_label if doc.currency_id.name == 'JPY' else doc.currency_id.name)"/>
+            </xpath>
+
+            <xpath expr="//th[@name='th_priceunit']" position="inside"><t t-out="jp_currency_header"/></xpath>
+
+            <xpath expr="//th[@name='th_subtotal']" position="attributes">
+                <attribute name="t-att-class">'text-end text-nowrap' if jp_layout else 'text-end'</attribute>
+            </xpath>
+            <xpath expr="//th[@name='th_subtotal']/span" position="inside"><t t-out="jp_currency_header"/></xpath>
+        </template>
+    </data>
+</odoo>

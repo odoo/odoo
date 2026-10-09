@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_base_document_layout" model="ir.ui.view">
+        <field name="name">base.document.layout.form.l10n_jp</field>
+        <field name="model">base.document.layout</field>
+        <field name="inherit_id" ref="web.view_base_document_layout"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='report_layout_id']" position="after">
+                <field name="l10n_jp_currency_in_headers" invisible="not l10n_jp_is_jp_layout"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
