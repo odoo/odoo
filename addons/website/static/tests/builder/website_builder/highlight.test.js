@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
@@ -43,6 +43,23 @@ test("Can highlight a selected text", async () => {
     await click(".o_popover .o_text_highlight_underline");
     expect("p>.o_text_highlight_underline").toHaveCount(1);
     checkHighlightColor("o_text_highlight_freehand_2");
+});
+
+test("highlight button aria-expanded should match whether its popover is open", async () => {
+    await setupEditor("<p>This is [highlighted]</p>", {
+        config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] },
+    });
+
+    await expandToolbar();
+    expect(".o_hb_select_highlight").toHaveAttribute("aria-haspopup", "dialog");
+    expect(".o_hb_select_highlight").toHaveAttribute("aria-expanded", "false");
+    await click(".o-we-toolbar .o_hb_select_highlight");
+    await waitFor(".o_popover .o_text_highlight_underline");
+    expect(".o_hb_select_highlight").toHaveAttribute("aria-expanded", "true");
+
+    await press("Escape");
+    await waitForNone(".o_popover .o_text_highlight_underline");
+    expect(".o_hb_select_highlight").toHaveAttribute("aria-expanded", "false");
 });
 
 test("Check no highlight color is displayed in colorpicker when text with multiple highlight color is selected", async () => {
