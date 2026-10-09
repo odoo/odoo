@@ -97,6 +97,18 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
                 activeColumns = activeColumns.filter((col) => col.name !== "sol_uom");
             }
         }
+        // Hide the delivered column if all its fields are optional and not active
+        const deliveredCol = activeColumns.find((col) => col.name === "sol_delivered");
+        if (deliveredCol) {
+            const activeDeliveredFields = deliveredCol.fields.find(
+                (field) =>
+                    !this.evalColumnInvisible(field.column_invisible) &&
+                    (!field.optional || this.optionalActiveFields[field.name])
+            );
+            if (!activeDeliveredFields) {
+                activeColumns = activeColumns.filter((col) => col.name !== "sol_delivered");
+            }
+        }
 
         return activeColumns;
     }
