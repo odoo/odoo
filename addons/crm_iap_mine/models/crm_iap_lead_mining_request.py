@@ -6,7 +6,6 @@ import logging
 from odoo import api, fields, models, _, release
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError
-from odoo.tools import is_html_empty
 
 _logger = logging.getLogger(__name__)
 
@@ -152,17 +151,6 @@ class CrmIapLeadMiningRequest(models.Model):
     def _onchange_company_size_max(self):
         if self.company_size_max < self.company_size_min:
             self.company_size_max = self.company_size_min
-
-    @api.model
-    def get_empty_list_help(self, help_message):
-        if not is_html_empty(help_message):
-            return help_message
-
-        help_title = _('Create a Lead Mining Request')
-        sub_title = _('Generate new leads based on their country, industry, size, etc.')
-        return super().get_empty_list_help(
-            f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'
-        )
 
     def _prepare_iap_payload(self):
         """
