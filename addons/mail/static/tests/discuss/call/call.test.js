@@ -9,6 +9,7 @@ import {
     makeMockRtcNetwork,
     mockBrowserFullscreen,
     mockGetMedia,
+    mockMediaCaptureElements,
     mockPermissionsPrompt,
     mockPipWindow,
     onRpcAfter,
@@ -1912,6 +1913,7 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
         }),
         channel_id: channelId,
     });
+    mockMediaCaptureElements();
     await start();
     const rtc = getService("discuss.rtc");
     rtc.microphonePermission = "denied";
