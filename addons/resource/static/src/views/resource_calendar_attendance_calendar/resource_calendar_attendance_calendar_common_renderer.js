@@ -145,6 +145,7 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
                     default_date: serializeDate(start),
                     default_hour_from: start.hour + start.minute / 60,
                     default_hour_to: end.hour + end.minute / 60,
+                    default_duration_hours: this.resourceCalendarPlugin.record?.data.hours_per_day || 1,
                 },
             },
             `o_calendar_popover card o_calendar_color_0`
@@ -166,7 +167,8 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
      */
     onDateClick(info) {
         const date = luxon.DateTime.fromJSDate(info.date);
-        info?.view?.calendar.select(date.toISO(), date.plus({ hours: 1 }).toISO());
+        const hoursPerDay = this.resourceCalendarPlugin.record?.data.hours_per_day || 1;
+        info?.view?.calendar.select(date.toISO(), date.plus({ hours: hoursPerDay }).toISO());
     }
 
     /**
