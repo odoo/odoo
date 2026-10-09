@@ -606,7 +606,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         self._root_object[NameObject("/StructTreeRoot")] = struct_tree_root
 
         # Set odoo as producer
-        self.addMetadata({
+        self.add_metadata({
             '/Creator': "Odoo",
             '/Producer': "Odoo",
         })
