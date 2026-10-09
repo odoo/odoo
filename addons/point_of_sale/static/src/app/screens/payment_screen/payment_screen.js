@@ -160,14 +160,7 @@ export class PaymentScreen extends Component {
         }
 
         const result = this.currentOrder.addPaymentline(paymentMethod, args);
-        if (result.status) {
-            this.numberBuffer.set(result.data.amount.toString());
-            if (!this.isRefundOrder && paymentMethod.useBankQrCode) {
-                const newPaymentLine = this.paymentLines.at(-1);
-                this.sendPaymentRequest(newPaymentLine);
-            }
-            return true;
-        } else {
+        if (!result.status) {
             this.dialog.add(AlertDialog, {
                 title: _t("Oh snap !"),
                 body: result.data,
@@ -175,8 +168,14 @@ export class PaymentScreen extends Component {
             });
             return false;
         }
+
+        this.numberBuffer.set(result.data.amount.toString());
+        if (!this.isRefundOrder && paymentMethod.payment_interface?.auto_send_request) {
+            this.sendPaymentRequest(result.data);
+        }
+        return true;
     }
-    updateSelectedPaymentline(amount = false) {
+    async updateSelectedPaymentline(amount = false) {
         if (this.paymentLines.every((line) => line.paid)) {
             this.currentOrder.addPaymentline(this.payment_methods_from_config[0]);
         }
@@ -205,7 +204,7 @@ export class PaymentScreen extends Component {
             this.showMaxValueError();
         }
         if (amount === null) {
-            this.deletePaymentLine(this.selectedPaymentLine.uuid);
+            await this.deletePaymentLine(this.selectedPaymentLine.uuid);
         } else {
             this.selectedPaymentLine.setAmount(amount, this.selectedPaymentLine.currency);
         }
@@ -281,26 +280,23 @@ export class PaymentScreen extends Component {
         }
         return this.pos.currency.round(tip);
     }
-    deletePaymentLine(uuid) {
+    async deletePaymentLine(uuid) {
         const line = this.paymentLines.find((line) => line.uuid === uuid);
-        if (line.payment_method_id.useBankQrCode) {
-            this.currentOrder.removePaymentline(line);
-            this.numberBuffer.reset();
+        if (line.payment_status === "waiting_cancel") {
+            this.notification.add(_t("This payment is being cancelled, please wait."), {
+                type: "warning",
+            });
             return;
         }
-        // If a paymentline with a payment terminal linked to
-        // it is removed, the terminal should get a cancel
-        // request.
-        const finalizeDeletion = () => {
-            this.currentOrder.removePaymentline(line);
-            this.numberBuffer.reset();
-        };
-        const cancelableStatuses = ["waiting", "waiting_card", "waiting_scan"];
-        if (cancelableStatuses.includes(line.payment_status)) {
-            line.cancelPayment(this.currentOrder).then((success) => success && finalizeDeletion());
-        } else if (line.payment_status !== "waiting_cancel") {
-            finalizeDeletion();
+        // A payment still in progress on the provider side must be cancelled before the line is removed
+        if (["waiting", "waiting_card", "waiting_scan"].includes(line.payment_status)) {
+            const isCancelled = await line.cancelPayment();
+            if (!isCancelled) {
+                return;
+            }
         }
+        this.currentOrder.removePaymentline(line);
+        this.numberBuffer.reset();
     }
     selectPaymentLine(uuid) {
         const line = this.paymentLines.find((line) => line.uuid === uuid);
@@ -336,13 +332,7 @@ export class PaymentScreen extends Component {
         }
 
         this.numberBuffer.capture();
-        let isPaymentSuccessful = false;
-        if (line.payment_method_id.useBankQrCode) {
-            const resp = await this.pos.showQR(line);
-            isPaymentSuccessful = line.handlePaymentResponse(resp);
-        } else {
-            isPaymentSuccessful = await line.pay();
-        }
+        const isPaymentSuccessful = await line.pay();
 
         // Automatically validate the order when after an electronic payment,
         // the current order is fully paid and due is zero.

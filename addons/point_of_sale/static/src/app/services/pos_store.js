@@ -599,7 +599,7 @@ export class PosStore extends WithLazyGetterTrap {
         for (const pm of this.config.payment_method_ids) {
             const PaymentInterface = registry
                 .category("pos_payment_providers")
-                .get(pm.payment_provider, null);
+                .get(pm.paymentProviderKey, null);
             pm.payment_interface = PaymentInterface ? new PaymentInterface(this, pm) : null;
         }
 
@@ -2478,7 +2478,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
             return false;
         }
-        payment.payment_status = "waiting";
         let qrCodeValue;
         try {
             qrCodeValue = await this.data.call("pos.payment.method", "get_qr_code_value", [
