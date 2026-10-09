@@ -1120,6 +1120,7 @@ SERVICES_MAPPING = {
     "bus_service": ['BusPlugin', '@bus/services/bus_plugin'],
     "color_scheme": ['ColorSchemePlugin', '@web_enterprise/webclient/color_scheme/color_scheme_plugin'],
     "currency": ['CurrencyPlugin', '@web/webclient/currency_plugin'],
+    "datetime_picker": ['DateTimePickerPlugin', '@web/core/datetime/datetimepicker_plugin'],
     "dialog": ['DialogPlugin', '@web/core/dialog/dialog_plugin'],
     "discuss.upgrade": ['DiscussUpgradePlugin', '@mail/core/common/upgrade/upgrade_plugin'],
     "effect": ['EffectPlugin', '@web/core/effects/effect_plugin'],
