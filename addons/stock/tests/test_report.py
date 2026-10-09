@@ -2166,3 +2166,26 @@ class TestReports(TestReportsCommon):
 
         html = self.env['ir.actions.report']._render_qweb_html('stock.report_deliveryslip', [picking_out.id])[0]
         self.assertEqual(len(findall(rb'Customizable Desk', html)), 1)
+
+    def test_incoming_qty_follows_operation_type_change(self):
+        """ Changing the operation type of a receipt to another warehouse's one must also move
+        the final location of its moves, so the forecasted incoming qty is counted there. """
+        wh_1 = self.env.ref('stock.warehouse0')
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.ref('stock.picking_type_in'),
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 1,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'location_final_id': self.stock_location.id,
+            })],
+        })
+        picking.action_confirm()
+
+        picking.picking_type_id = self.wh_2.in_type_id
+        self.assertEqual(picking.move_ids.location_final_id, self.wh_2.lot_stock_id)
+        self.assertEqual(self.product.with_context(warehouse_id=wh_1.id).incoming_qty, 0)
+        self.assertEqual(self.product.with_context(warehouse_id=self.wh_2.id).incoming_qty, 1)

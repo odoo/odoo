@@ -1167,6 +1167,7 @@ class StockPicking(models.Model):
     def write(self, vals):
         if vals.get('picking_type_id') and any(picking.state in ('done', 'cancel') for picking in self):
             raise UserError(_("Changing the operation type of this record is forbidden at this point."))
+        moves_to_sync_final_location = {}
         if vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
             for picking in self:
@@ -1174,6 +1175,14 @@ class StockPicking(models.Model):
                     picking.name = picking_type.sequence_id.next_by_id()
                     vals['location_id'] = picking_type.default_location_src_id.id
                     vals['location_dest_id'] = picking_type.default_location_dest_id.id
+                    # The moves whose destination is already their final one must follow the new
+                    # destination to reflect in the incoming_qty forecast.
+                    moves_to_sync_final_location[picking] = picking.move_ids.filtered(
+                        lambda m: m.state not in ('done', 'cancel')
+                        and m.location_dest_usage != 'inventory'
+                        and m.location_final_id
+                        and m.location_final_id._child_of(m.location_dest_id)
+                    )
         res = super().write(vals)
         if vals.get('date_done'):
             self.filtered(lambda p: p.state == 'done').move_ids.date = vals['date_done']
@@ -1190,6 +1199,8 @@ class StockPicking(models.Model):
             after_vals['partner_id'] = vals['partner_id']
         if after_vals:
             self.move_ids.filtered(lambda move: move.location_dest_usage != 'inventory').write(after_vals)
+        for picking, moves in moves_to_sync_final_location.items():
+            moves.location_final_id = picking.location_dest_id
         if vals.get('move_ids'):
             self._autoconfirm_picking()
 
