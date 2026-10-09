@@ -282,8 +282,10 @@ class TestAutomation(TransactionCaseWithUserDemo):
 
     def test_search_time_based_automation_records_with_no_working_days(self):
         """Test time-based automation with a calendar having no working days."""
-        calendar = self.env.ref('resource.resource_calendar_std')
-        date = datetime(2026, 6, 24, 18)
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test Calendar',
+        })
+        date = datetime(2025, 6, 24, 18)
         self.env['resource.calendar.leaves'].create({
             'name': "Long Leaves",
             'calendar_id': calendar.id,
