@@ -635,7 +635,8 @@ class ReportMoOverview(models.AbstractModel):
             replenishment = {}
             forecast_uom_id = forecast_line['uom_id']
             line_quantity = min(quantity, forecast_uom_id._compute_quantity(forecast_line['quantity'], move_raw.product_uom))  # Avoid over-rounding
-            bom_quantity = production.product_uom_qty * move_raw.bom_line_id.product_qty - (quantity - line_quantity)
+            qty_in_bom_uom = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
+            bom_quantity = qty_in_bom_uom / production.bom_id.product_qty * move_raw.bom_line_id.product_qty - (quantity - line_quantity)
             replenishment['summary'] = {
                 'level': level + 1,
                 'index': replenishment_index,
@@ -691,7 +692,7 @@ class ReportMoOverview(models.AbstractModel):
         missing_quantity = quantity - available_qty
         if move_raw.bom_line_id:
             qty_in_bom_uom = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
-            bom_missing_quantity = qty_in_bom_uom * move_raw.bom_line_id.product_qty - (reserved_quantity + free_qty + total_ordered)
+            bom_missing_quantity = qty_in_bom_uom / production.bom_id.product_qty * move_raw.bom_line_id.product_qty - (reserved_quantity + free_qty + total_ordered)
         else:
             bom_missing_quantity = 0
 
