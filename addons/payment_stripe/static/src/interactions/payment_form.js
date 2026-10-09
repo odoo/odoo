@@ -81,7 +81,7 @@ patch(PaymentForm.prototype, {
             appearance: { theme: 'stripe' },
             currency: this.stripeInlineFormValues['currency_name'],
             captureMethod: this.stripeInlineFormValues['capture_method'],
-            paymentMethodTypes: [
+            allowedPaymentMethodTypes: [
                 this.stripeInlineFormValues['payment_methods_mapping'][paymentMethodCode]
                 ?? paymentMethodCode
             ],
