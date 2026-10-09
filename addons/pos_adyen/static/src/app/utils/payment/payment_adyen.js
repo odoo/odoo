@@ -58,7 +58,7 @@ export class PaymentAdyen extends PaymentInterface {
     canBeAdjusted(uuid) {
         var order = this.pos.getOrder();
         var line = order.getPaymentlineByUuid(uuid);
-        return ["mc", "visa", "amex", "discover"].includes(line.card_type);
+        return ["mc", "visa", "amex", "discover"].includes(line.card_brand);
     }
 
     _handleOdooConnectionFailure(data = {}) {
@@ -384,7 +384,7 @@ export class PaymentAdyen extends PaymentInterface {
         }
 
         line.transaction_id = payment_response.POIData.POITransactionID.TransactionID;
-        line.card_type = additional_response.get("cardType");
+        line.card_brand = additional_response.get("cardType");
         line.cardholder_name = additional_response.get("cardHolderName") || "";
     }
 

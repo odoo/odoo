@@ -17,7 +17,7 @@
             'pos_stripe/static/src/overrides/models/pos_payment.js',
         ],
         'web.assets_unit_tests': [
-            'pos_stripe/static/tests/unit/data/**/*'
+            'pos_stripe/static/tests/unit/**/*'
         ],
     },
     'author': 'Odoo S.A.',
