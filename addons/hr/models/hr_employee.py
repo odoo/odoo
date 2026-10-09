@@ -801,7 +801,7 @@ class HrEmployee(models.Model):
         filtered_versions = versions.filtered_domain([('date_version', '<=', date)])
         return max(filtered_versions, key=lambda v: v.date_version) if filtered_versions else versions[0]
 
-    def create_version(self, values):
+    def create_version(self, values, version_to_copy=None):
         self.ensure_one()
 
         date = values.get('date_version', False)
@@ -813,7 +813,7 @@ class HrEmployee(models.Model):
         elif isinstance(date, datetime):
             date = date.date()
 
-        version_to_copy = self._get_version(date)
+        version_to_copy = version_to_copy or self._get_version(date)
         if not version_to_copy:
             version_to_copy = self.env['hr.version'].search([
                 ('employee_id', '=', self.id),
