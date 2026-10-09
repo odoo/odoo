@@ -16,6 +16,12 @@
         <field name="model">calendar.event</field>
         <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_confirm']" position="after">
+                <div class="alert alert-info mb-0" role="status" invisible="not microsoft_calendar_alert_message">
+                    <field name="microsoft_calendar_alert_message" nolabel="1"/>
+                </div>
+            </xpath>
+
             <xpath
                 expr="//div[./field[@name='recurrence_update']][@role='status']"
                 position="attributes">

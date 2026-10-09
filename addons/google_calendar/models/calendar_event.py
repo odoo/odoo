@@ -23,6 +23,7 @@ class CalendarEvent(models.Model):
     guests_readonly = fields.Boolean(
         'Guests Event Modification Permission', default=False)
     videocall_source = fields.Selection(selection_add=[('google_meet', 'Google Meet')], ondelete={'google_meet': 'set discuss'})
+    google_unsynced_organizer_message = fields.Char(compute='_compute_google_unsynced_organizer_message')
 
     def _get_calendar_id_domain(self):
         domain = super()._get_calendar_id_domain()
@@ -52,6 +53,21 @@ class CalendarEvent(models.Model):
         self.filtered(
             lambda event: event.calendar_id and event.calendar_id.user_access_role in ['reader', 'freeBusyReader']
         ).user_can_edit = False
+
+    @api.depends_context('uid')
+    @api.depends('user_id')
+    def _compute_google_unsynced_organizer_message(self):
+        for event in self:
+            # replace token check with _get_google_sync_status() == 'sync_active' after task 6620119 is merged
+            if (self.env.user.google_calendar_token
+                and event.user_id
+                and not event.user_id.sudo().google_calendar_token):
+                event.google_unsynced_organizer_message = _(
+                    "%s is not synchronized with Google Calendar. This event is only visible in Odoo.",
+                    event.user_id.name,
+                )
+            else:
+                event.google_unsynced_organizer_message = False
 
     @api.model
     def _get_google_synced_fields(self):

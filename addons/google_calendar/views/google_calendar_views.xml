@@ -11,6 +11,19 @@
         </field>
     </record>
 
+    <record id="view_calendar_event_form_google_inherit_google_calendar" model="ir.ui.view">
+    <field name="name">calendar.event.form.google.inherit.google.calendar</field>
+    <field name="model">calendar.event</field>
+    <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//header/button[@name='action_confirm']" position="after">
+            <div class="alert alert-info mb-0" role="status" invisible="not google_unsynced_organizer_message">
+                <field name="google_unsynced_organizer_message" nolabel="1"/>
+            </div>
+        </xpath>
+    </field>
+</record>
+
     <record id="calendar_calendar_view_form_inherit_google_calendar" model="ir.ui.view">
         <field name="name">calendar.calendar.view.form.inherit.google.calendar</field>
         <field name="model">calendar.calendar</field>
