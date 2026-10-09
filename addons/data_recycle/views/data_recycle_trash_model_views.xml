@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_data_recycle_trash_model_list" model="ir.ui.view">
+        <field name="name">data_recycle.trash.model.list</field>
+        <field name="model">data_recycle.trash.model</field>
+        <field name="arch" type="xml">
+            <list string="Tracked Models" editable="bottom">
+                <field name="res_model_id"/>
+                <field name="retention_days"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_data_recycle_trash_model_form" model="ir.ui.view">
+        <field name="name">data_recycle.trash.model.form</field>
+        <field name="model">data_recycle.trash.model</field>
+        <field name="arch" type="xml">
+            <form string="Tracked Model">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="open_trash_records"
+                                type="object" icon="fa-trash-o">
+                            <field name="trash_record_count" string="Deleted Records" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="res_model_id"/>
+                            <field name="res_model_name" invisible="1"/>
+                            <field name="retention_days"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group invisible="not res_model_id">
+                        <field name="domain" widget="domain" options="{'model': 'res_model_name'}"/>
+                    </group>
+                    <group string="Excluded Fields"
+                           help="Fields listed here are not stored in the snapshot (e.g. sensitive data).">
+                        <field name="excluded_field_ids" nolabel="1"
+                               context="{'default_model_id': res_model_id}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_data_recycle_trash_config" model="ir.actions.act_window">
+        <field name="name">Trash Rules</field>
+        <field name="res_model">data_recycle.trash.model</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+    </record>
+</odoo>
