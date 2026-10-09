@@ -31,8 +31,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-31 17:38+0000\n"
-"PO-Revision-Date: 2026-07-01 01:15+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-08 10:14+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-3/"
 "stock_picking_batch/pl/>\n"
 "Language: pl\n"
@@ -42,7 +42,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -284,7 +284,7 @@ msgstr "Partia"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch & Wave Transfers"
-msgstr "Transfery falowe i wsadowe"
+msgstr "Pobranie zbiorcze i wsadowe"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -309,61 +309,61 @@ msgstr "Właściwości partii"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
 msgid "Batch Transfer"
-msgstr "Tranfer wsadowy"
+msgstr "Pobranie zbiorcze"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Line"
-msgstr "Pozycja transferu wsadowego"
+msgstr "Pozycja pobrania zbiorczego"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 msgid "Batch Transfers"
-msgstr "Transfery wsadowe"
+msgstr "Pobrania zbiorcze"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
-msgstr "Transfer wsadowy nie został zakończony"
+msgstr "Pobranie zbiorcze nie zostało zakończone"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this transfer"
-msgstr "Partia powiązana z tym transferem"
+msgstr "Partia powiązana z tym pobraniem"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Batch transfers"
-msgstr "Transfery wsadowe"
+msgstr "Pobranie zbiorcze"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch transfers cannot be merged with wave transfers and vice versa."
 msgstr ""
-"Transfery wsadowe nie mogą być scalane z transferami falowymi i odwrotnie."
+"Pobrania zbiorcze nie mogą być scalane z transferami falowymi i odwrotnie."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch/Wave transfers have been merged into the following transfer"
-msgstr "Transfery wsadowe/falowe zostały scalone w następujący transfer"
+msgstr "Pobrania zbiorcze/falowe zostały scalone w następujący transfer"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch/Wave transfers with different operation types cannot be merged."
 msgstr ""
-"Transfery wsadowe/falowe z różnymi typami operacji nie mogą zostać scalone."
+"Pobrania zbiorcze/falowe z różnymi typami operacji nie mogą zostać scalone."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Batch/Wave transfers with different states cannot be merged."
-msgstr "Transfery wsadowe/falowe o różnych stanach nie mogą zostać scalone."
+msgstr "Pobrania zbiorcze/falowe o różnych stanach nie mogą zostać scalone."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -856,7 +856,7 @@ msgstr "Typ pobrania"
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "Please select at least two batch/wave transfers to merge."
-msgstr "Wybierz co najmniej dwa transfery wsadowe/falowe do scalenia."
+msgstr "Wybierz co najmniej dwa pobrania zbiorcze/falowe do scalenia."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -999,7 +999,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr "Wyszukiwanie transferu wsadowego"
+msgstr "Wyszukiwanie pobrania zbiorczego"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
@@ -1101,7 +1101,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
-msgstr "Transfer wsadowy zapasów"
+msgstr "Pobranie zbiorcze zapasów"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move
@@ -1127,13 +1127,13 @@ msgstr "Podsumowanie:"
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 msgid "The following batch transfer has been created"
-msgstr "Utworzono następujący transfer wsadowy"
+msgstr "Utworzono następujące pobranie zbiorcze"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 msgid "The following batch transfer has been updated"
-msgstr "Zaktualizowano następujący transfer wsadowy"
+msgstr "Zaktualizowano następujące pobranie zbiorcze"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1144,8 +1144,8 @@ msgid ""
 "\n"
 "Incompatibilities: %(incompatible_transfers)s"
 msgstr ""
-"Następujące transfery nie mogą zostać dodane do transferu wsadowego %"
-"(batch)s. Sprawdź ich statusy i typy operacji.\n"
+"Następujące transfery nie mogą zostać dodane do pobrania zbiorczego %(batch)"
+"s. Sprawdź ich statusy i typy operacji.\n"
 "\n"
 "Niezgodności: %(incompatible_transfers)s"
 
@@ -1327,14 +1327,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "You cannot delete Done batch transfers."
-msgstr "Nie można usunąć ukończonych transferów partii."
+msgstr "Nie można usunąć ukończonych pobrań zbiorczych."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 msgid "You cannot merge done or cancelled batch/wave transfers."
-msgstr ""
-"Nie można scalić gotowych ani anulowanych transferów wsadowych/falowych."
+msgstr "Nie można scalić gotowych ani anulowanych pobrań zbiorczych/falowych."
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -1345,7 +1344,7 @@ msgstr "Należy ustawić jakieś kompletację na partię."
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr "nowy transfer wsadowy"
+msgstr "nowe pobranie zbiorcze"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
@@ -1355,7 +1354,7 @@ msgstr "nowy transfer falowy"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr "istniejący transfer wsadowy"
+msgstr "istniejące pobranie zbiorcze"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing
