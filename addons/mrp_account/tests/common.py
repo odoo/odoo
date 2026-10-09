@@ -93,7 +93,6 @@ class TestBomPriceCommon(TestStockValuationCommon):
         # -------------------------------------------------------------------------------
 
         bom_form = Form(cls.Bom)
-        bom_form.product_id = cls.dining_table
         bom_form.product_tmpl_id = cls.dining_table.product_tmpl_id
         bom_form.product_qty = 1.0
         bom_form.uom_id = cls.uom
@@ -111,6 +110,7 @@ class TestBomPriceCommon(TestStockValuationCommon):
             line.product_id = cls.glass
             line.product_qty = 1
         cls.bom_1 = bom_form.save()
+        cls.bom_1.product_id = cls.dining_table
 
         # Table Head's components.
         cls.plywood_sheet = cls._create_product('Plywood Sheet', 200)
@@ -129,7 +129,6 @@ class TestBomPriceCommon(TestStockValuationCommon):
         # -----------------------------------------------------------------
 
         bom_form2 = Form(cls.Bom)
-        bom_form2.product_id = cls.table_head
         bom_form2.product_tmpl_id = cls.table_head.product_tmpl_id
         bom_form2.product_qty = 1.0
         bom_form2.uom_id = cls.dozen
@@ -147,6 +146,7 @@ class TestBomPriceCommon(TestStockValuationCommon):
             line.product_id = cls.corner_slide
             line.product_qty = 57
         cls.bom_2 = bom_form2.save()
+        cls.bom_2.product_id = cls.table_head
         cls._use_production_accounting()
 
 
