@@ -310,6 +310,47 @@ class TestDateRangeFunction(BaseCase):
 
         self.assertEqual(list(date_range(start, end)), expected)
 
+    def test_date_range_with_mixed_date_and_datetime(self):
+        for tz in (None, pytz.utc):
+            for start, end in (
+                (date(2018, 3, 25), datetime(2018, 3, 26, tzinfo=tz)),
+                (datetime(2018, 3, 25, tzinfo=tz), date(2018, 3, 26)),
+            ):
+                with self.subTest(start=start, end=end):
+                    with self.assertRaisesRegex(ValueError, 'start/end should be both date or both datetime type'):
+                        list(date_range(start, end))
+
+    def test_date_range_with_date_and_time_step(self):
+        start = date(2018, 3, 25)
+        end = date(2018, 3, 26)
+        for step in (
+            relativedelta(hours=1),
+            relativedelta(minutes=1),
+            relativedelta(seconds=1),
+            relativedelta(microseconds=1),
+            relativedelta(days=1, hours=1),
+            relativedelta(days=1, hour=0),
+        ):
+            with self.subTest(step=step):
+                with self.assertRaisesRegex(ValueError, 'the step interval must add only entire days'):
+                    list(date_range(start, end, step))
+
+    def test_date_range_with_date_and_day_step(self):
+        start = date(2018, 3, 25)
+        end = date(2018, 3, 27)
+        expected = [start, date(2018, 3, 26), end]
+        for step in (relativedelta(days=1), relativedelta(hours=24)):
+            with self.subTest(step=step):
+                self.assertEqual(list(date_range(start, end, step)), expected)
+
+    def test_date_range_with_utc_datetimes(self):
+        start = datetime(2018, 3, 25, tzinfo=pytz.utc)
+        end = datetime(2018, 3, 25, 2, tzinfo=pytz.utc)
+        self.assertEqual(
+            list(date_range(start, end, relativedelta(hours=1))),
+            [start, datetime(2018, 3, 25, 1, tzinfo=pytz.utc), end],
+        )
+
     def test_date_range_with_timezone_aware_datetimes_other_than_utc(self):
         """ Check date_range with timezone-aware datetimes other than UTC."""
         timezone = pytz.timezone('Europe/Brussels')

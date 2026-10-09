@@ -408,8 +408,11 @@ def date_range(start: D, end: D, step: relativedelta = relativedelta(months=1)) 
             start = start.replace(tzinfo=None)
             end = end.replace(tzinfo=None)
 
-    elif isinstance(start, date) and isinstance(end, date):
-        if not isinstance(start + step, date):
+    elif (
+        isinstance(start, date) and not isinstance(start, datetime)
+        and isinstance(end, date) and not isinstance(end, datetime)
+    ):
+        if isinstance(start + step, datetime):
             raise ValueError("the step interval must add only entire days")  # noqa: TRY004
     else:
         raise ValueError("start/end should be both date or both datetime type")  # noqa: TRY004
