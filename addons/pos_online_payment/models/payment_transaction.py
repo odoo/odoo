@@ -54,6 +54,7 @@ class PaymentTransaction(models.Model):
                     'payment_method_id': payment_method.id,
                     'online_account_payment_id': tx.payment_id.id,
                     'pos_order_id': pos_order.id,
+                    'payment_status': 'done',
                 })
                 tx.payment_id.update({
                     'pos_payment_method_id': payment_method.id,
