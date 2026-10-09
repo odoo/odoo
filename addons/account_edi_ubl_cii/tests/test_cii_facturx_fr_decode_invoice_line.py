@@ -228,3 +228,18 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
             'price_unit': 2.0,
             'discount': 25.0,
         }])
+
+    def test_partial_import_invoice_line_price_per_basis_quantity_decimals(self):
+        # Fuel card style line: price per 100 L, so the unit price has 4 decimals.
+        # net_price = 190.68 per 100 LTR -> 1.9068 per LTR (must not be rounded to 1.91)
+        # billed_qty = 94.05
+        # charge = 4.25
+        # line_total_amount = 190.68 * 94.05 / 100 + 4.25 = 179.33 + 4.25 = 183.58
+        # price_unit = 1.9068 + 4.25 / 94.05 = 1.951988...
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_price_per_basis_quantity_decimals')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'quantity': 94.05,
+            'price_unit': 1.9068 + 4.25 / 94.05,
+            'discount': 0.0,
+            'price_subtotal': 183.58,
+        }])
