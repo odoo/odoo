@@ -409,6 +409,13 @@ export class Partner extends models.Model {
         searchable: true,
         groupable: false,
     });
+    ref = fields.Reference({
+        string: "Reference",
+        selection: [
+            ["product", "Product"],
+            ["res.currency", "Currency"],
+        ],
+    });
 
     _records = [
         {
@@ -424,6 +431,7 @@ export class Partner extends models.Model {
             tag_ids: [42, 67],
             currency_id: 1,
             pognon: 74.4,
+            ref: "product,37",
         },
         {
             id: 2,
@@ -438,6 +446,7 @@ export class Partner extends models.Model {
             tag_ids: [42, 67],
             currency_id: 2,
             pognon: 74.8,
+            ref: "res.currency,1",
         },
         {
             id: 3,
