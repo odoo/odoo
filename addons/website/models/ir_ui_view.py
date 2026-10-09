@@ -341,7 +341,8 @@ class IrUiView(models.Model):
 
         views = super(IrUiView, self.with_context(active_test=False))._get_inheriting_views()
         # prefer inactive website-specific views over active generic ones
-        return views.filter_duplicate().filtered('active')
+        previewed = dict(self.env.context.get('website_preview_views') or ())
+        return views.filter_duplicate().filtered(lambda view: previewed.get(view.key, view.active))
 
     @api.model
     def _get_filter_xmlid_query(self, *, modules):

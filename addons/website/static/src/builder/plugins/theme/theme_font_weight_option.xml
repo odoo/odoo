@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.FontWeightPicker">
-    <BuilderSelect action="'customizeWebsiteFontWeight'" actionParam="{ mainParam: this.props.variables }" disabled="this.props.disabled">
+    <BuilderSelect action="'previewWebsiteFontWeight'" preview="true" actionParam="{ mainParam: this.props.variables }" disabled="this.props.disabled">
         <BuilderSelectItem actionValue="null">
             Auto
         </BuilderSelectItem>

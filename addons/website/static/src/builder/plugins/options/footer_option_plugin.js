@@ -37,6 +37,7 @@ export class FooterOptionPlugin extends Plugin {
             }
         },
         immutable_link_selectors: [".o_cookie_policy_link_container a.oe_unremovable"],
+        on_ready_to_save_document_handlers: this.saveFooterTemplate.bind(this),
         footer_templates_providers: [
             () =>
                 [
@@ -65,6 +66,23 @@ export class FooterOptionPlugin extends Plugin {
         ],
     };
 
+    /**
+     * A footer template switched in the builder (previewed, see
+     * `WebsiteConfigFooterAction`): the server also aligns the copyright's
+     * width on its template.
+     */
+    async saveFooterTemplate() {
+        const views = (await this.getFooterTemplates()).map(({ props }) => props.view);
+        const pendingViews = this.dependencies.customizeWebsite.getPendingViews();
+        const view = views.find((view) => pendingViews[view] === true);
+        if (view) {
+            await rpc("/website/update_footer_template", {
+                template_key: view,
+                possible_values: views,
+            });
+        }
+    }
+
     prepareDrag() {
         // Remove the footer scroll effect if it has one (because the footer
         // dropzone flickers otherwise when it is in grid mode).
@@ -88,11 +106,16 @@ export class FooterOptionPlugin extends Plugin {
     }
 }
 
+/**
+ * Switches the footer template: previewed (see `previewViews`), written on
+ * save.
+ */
 export class WebsiteConfigFooterAction extends BuilderAction {
     static id = "websiteConfigFooter";
-    static dependencies = ["builderActions", "customizeWebsite"];
+    static dependencies = ["builderActions", "customizeWebsite", "websiteViewsPreview"];
     setup() {
-        this.reload = {};
+        // No hover preview: the footer shows once the server rendered it.
+        this.preview = false;
     }
     isApplied({ params: { vars } }) {
         for (const [name, value] of Object.entries(vars)) {
@@ -106,25 +129,18 @@ export class WebsiteConfigFooterAction extends BuilderAction {
         }
         return true;
     }
-    async apply({ params: { vars, view }, selectableContext }) {
-        const possibleValues = new Set();
+    apply({ params: { vars, view }, selectableContext }) {
+        const views = {};
         for (const item of selectableContext.items) {
             for (const a of item.getActions()) {
                 if (a.actionId === "websiteConfigFooter") {
-                    possibleValues.add(a.actionParam.view);
+                    views[a.actionParam.view] = false;
                 }
             }
         }
-        await Promise.all([
-            this.dependencies.customizeWebsite.makeSCSSCusto(
-                "/website/static/src/scss/options/user_values.scss",
-                vars
-            ),
-            rpc("/website/update_footer_template", {
-                template_key: view,
-                possible_values: [...possibleValues],
-            }),
-        ]);
+        views[view] = true;
+        this.dependencies.customizeWebsite.previewWebsiteVariables(vars);
+        return this.dependencies.websiteViewsPreview.previewViews(views);
     }
 }
 

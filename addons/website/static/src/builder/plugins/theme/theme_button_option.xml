@@ -4,7 +4,7 @@
 <t t-name="website.ThemeButtonOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Primary Style">
-            <BuilderSelect action="'customizeButtonStyle'" actionParam="'primary'">
+            <BuilderSelect action="'previewButtonStyle'" actionParam="'primary'" preview="true">
                 <BuilderSelectItem actionValue="'fill'">Fill</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'outline'" id="'btn_primary_outline_opt'">Outline</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'flat'">Flat</BuilderSelectItem>
@@ -12,12 +12,13 @@
         </BuilderRow>
         <BuilderRow t-if="this.isActiveItem('btn_primary_outline_opt')"
             level="1" label.translate="Border Width"
-            action="'customizeWebsiteVariable'"
+            action="'previewWebsiteVariable'" preview="true"
         >
-            <BuilderNumberInput actionParam="'btn-primary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
+            <BuilderRange actionParam="'btn-primary-outline-border-width'" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-primary-outline-border-width']"/>
         </BuilderRow>
         <BuilderRow label.translate="Secondary Style">
-            <BuilderSelect action="'customizeButtonStyle'" actionParam="'secondary'">
+            <BuilderSelect action="'previewButtonStyle'" actionParam="'secondary'" preview="true">
                 <BuilderSelectItem actionValue="'fill'">Fill</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'outline'" id="'btn_secondary_outline_opt'">Outline</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'flat'">Flat</BuilderSelectItem>
@@ -25,9 +26,10 @@
         </BuilderRow>
         <BuilderRow t-if="this.isActiveItem('btn_secondary_outline_opt')"
             level="1" label.translate="Border Width"
-            action="'customizeWebsiteVariable'"
+            action="'previewWebsiteVariable'" preview="true"
         >
-            <BuilderNumberInput actionParam="'btn-secondary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
+            <BuilderRange actionParam="'btn-secondary-outline-border-width'" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-secondary-outline-border-width']"/>
         </BuilderRow>
         <BuilderRow label.translate="Font Family">
             <ThemeFontFamilyOption
@@ -36,28 +38,15 @@
                 buttonIconClass="'oi-filled'"
                 buttonTitle.translate="Reset to Default Font Family"/>
         </BuilderRow>
-        <BuilderRow label.translate="Padding" tooltip.translate="Vertical and Horizontal padding" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'btn-padding-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-            <BuilderNumberInput actionParam="'btn-padding-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
-            <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'btn-padding-y-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-                    <BuilderNumberInput actionParam="'btn-padding-x-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Large" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'btn-padding-y-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-                    <BuilderNumberInput actionParam="'btn-padding-x-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
-                </BuilderRow>
-            </t>
-        </BuilderRow>
-        <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'btn-font-size'" unit="'px'" saveUnit="'rem'"/>
+        <BuilderRow label.translate="Font Size" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'btn-font-size'" unit="'px'" saveUnit="'rem'" min="10" max="32" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-font-size', 'btn-font-size-sm', 'btn-font-size-lg']"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'btn-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="'btn-font-size-sm'" unit="'px'" saveUnit="'rem'" min="8" max="28" withNumberInput="true"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'btn-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="'btn-font-size-lg'" unit="'px'" saveUnit="'rem'" min="12" max="40" withNumberInput="true"/>
                 </BuilderRow>
             </t>
         </BuilderRow>
@@ -66,19 +55,44 @@
             boldVariables="['btn-font-weight-bold']"
             fontVariable="'buttons-font'"
         />
-        <BuilderRow label.translate="Round Corners" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'btn-border-radius'" unit="'px'" saveUnit="'rem'"/>
+        <BuilderRow label.translate="Vertical Padding" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'btn-padding-y'" unit="'px'" saveUnit="'rem'" min="0" max="40" withNumberInput="true" prefixIcon="'height'"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-padding-y', 'btn-padding-y-sm', 'btn-padding-y-lg']"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="'btn-padding-y-sm'" unit="'px'" saveUnit="'rem'" min="0" max="40" withNumberInput="true" prefixIcon="'height'"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'btn-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="'btn-padding-y-lg'" unit="'px'" saveUnit="'rem'" min="0" max="40" withNumberInput="true" prefixIcon="'height'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Horizontal Padding" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'btn-padding-x'" unit="'px'" saveUnit="'rem'" min="0" max="80" withNumberInput="true" prefixIcon="'arrow_range'"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-padding-x', 'btn-padding-x-sm', 'btn-padding-x-lg']"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderRange actionParam="'btn-padding-x-sm'" unit="'px'" saveUnit="'rem'" min="0" max="80" withNumberInput="true" prefixIcon="'arrow_range'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderRange actionParam="'btn-padding-x-lg'" unit="'px'" saveUnit="'rem'" min="0" max="80" withNumberInput="true" prefixIcon="'arrow_range'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Round Corners" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'btn-border-radius'" unit="'px'" saveUnit="'rem'" min="0" max="100" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['btn-border-radius', 'btn-border-radius-sm', 'btn-border-radius-lg']"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderRange actionParam="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'" min="0" max="100" withNumberInput="true"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderRange actionParam="'btn-border-radius-lg'" unit="'px'" saveUnit="'rem'" min="0" max="100" withNumberInput="true"/>
                 </BuilderRow>
             </t>
         </BuilderRow>
         <BuilderRow label.translate="On Click Effect">
-            <BuilderSelect action="'websiteConfig'">
+            <BuilderSelect action="'previewWebsiteConfig'">
                 <!-- TODO implicit removal of assets -->
                 <BuilderSelectItem actionParam="{vars: {'btn-ripple': 'false'}, assets: []}">None</BuilderSelectItem>
                 <BuilderSelectItem

@@ -24,3 +24,23 @@ header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
         }
     }
 }
+
+// While theme values are previewed, the page shows them at once rather than
+// animating to them (see `customizeWebsite`'s `setPreviewState`).
+html.o_we_theme_previewing * {
+    transition: none !important;
+}
+
+// A header or footer waiting for the server's render of a views switch (see
+// `customizeWebsite`'s `updateChrome`).
+.o_we_chrome_loading {
+    opacity: .5;
+    pointer-events: none;
+
+    @media (prefers-reduced-motion: no-preference) {
+        animation: o_we_chrome_loading .8s ease-in-out infinite alternate;
+    }
+}
+@keyframes o_we_chrome_loading {
+    to { opacity: .25; }
+}

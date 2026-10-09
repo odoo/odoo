@@ -37,9 +37,9 @@
     <BuilderRow label.translate="Background">
         <BuilderColorPicker
             enabledTabs="['theme', 'custom', 'gradient']"
-            preview="false"
+            preview="true"
             defaultColor="''"
-            action="'customizeWebsiteColor'"
+            action="'previewAreaColor'"
             actionParam="{
                 mainParam: 'footer-custom',
                 gradientColor: 'footer-gradient',
@@ -51,7 +51,7 @@
 
 <t t-name="website.FooterSlideoutOption">
     <BuilderRow label.translate="Slideout Effect">
-        <BuilderSelect preview="false" action="'websiteConfig'">
+        <BuilderSelect preview="false" action="'previewWebsiteConfig'">
             <BuilderSelectItem actionParam="{ views: [], vars: { 'footer-effect': '' } }">
                 Regular
             </BuilderSelectItem>
@@ -67,26 +67,26 @@
 
 <t t-name="website.ToggleFooterCopyrightOption">
     <BuilderRow label.translate="Copyright">
-        <BuilderCheckbox action="'websiteConfig'" preview="false"
+        <BuilderCheckbox action="'previewWebsiteConfig'" preview="false"
                 actionParam="{ views: ['!website.footer_no_copyright'] }"/>
     </BuilderRow>
 </t>
 
 <t t-name="website.ToggleFooterCookiePolicyLinkOption">
     <BuilderRow label.translate="Cookie Policy Link">
-        <BuilderCheckbox action="'websiteConfig'" preview="false"
+        <BuilderCheckbox action="'previewWebsiteConfig'" preview="false"
                 actionParam="{ views: ['website.footer_cookie_policy_link'], resetViewArch: true }"/>
     </BuilderRow>
 </t>
 
 <t t-name="website.FooterBorder">
-    <BorderConfigurator label.translate="Border"/>
+    <BorderConfigurator label.translate="Border" withSliders="true"/>
     <ShadowOption/>
 </t>
 
 <t t-name="website.FooterScrollToTopOption">
     <BuilderRow label.translate="Scroll Top Button">
-        <BuilderCheckbox id="'footer_scrolltop_opt'" action="'websiteConfig'" actionParam="{
+        <BuilderCheckbox id="'footer_scrolltop_opt'" action="'previewWebsiteConfig'" actionParam="{
             views: ['website.option_footer_scrolltop'],
             vars: {'footer-scrolltop': 'true'},
             varsOnClean: {'footer-scrolltop': 'false'}

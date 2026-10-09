@@ -40,6 +40,7 @@ export class CoreBuilderActionPlugin extends Plugin {
             ClassAction,
             AttributeAction,
             StyleAction,
+            BorderWidthSliderAction,
             DataAttributeAction,
             SetClassRangeAction,
         },
@@ -323,5 +324,37 @@ export class StyleAction extends BuilderAction {
     }
     _getValueWithoutTransition(el, styleName) {
         return withoutTransition(el, () => getStyleValue(el, styleName));
+    }
+}
+
+/**
+ * A border's width as one value, for a slider: its widest side's. A new width
+ * goes to the sides that have a border (all of them when none has), so that
+ * e.g. a top border stays a top border.
+ */
+export class BorderWidthSliderAction extends StyleAction {
+    static id = "borderWidthSlider";
+    getValue(context) {
+        return `${Math.max(...this.getSideWidths(context))}px`;
+    }
+    apply(context) {
+        const width = parseFloat(context.value) || 0;
+        const sideWidths = this.getSideWidths(context);
+        const hasBorder = sideWidths.some(Boolean);
+        super.apply({
+            ...context,
+            value: sideWidths
+                .map((sideWidth) => `${!hasBorder || sideWidth ? width : 0}px`)
+                .join(" "),
+        });
+    }
+    /**
+     * @returns {number[]} the top, right, bottom and left widths
+     */
+    getSideWidths(context) {
+        const [top, right = top, bottom = top, left = right] = (super.getValue(context) || "0")
+            .split(/\s+/)
+            .map((width) => parseFloat(width) || 0);
+        return [top, right, bottom, left];
     }
 }

@@ -157,7 +157,7 @@
     }
 
     &:hover, &:hover .form-check-input:not(:disabled) {
-        border-color: $form-check-input-checked-border-color;
+        border-color: o-component-active-bg-var($form-check-input-checked-border-color);
     }
 }
 
@@ -312,6 +312,36 @@
 // ----------------------------------------------------------------------------
 // CSS Variables
 // ----------------------------------------------------------------------------
+
+// Bootstrap's `font-size()` (rfs) for a size only known at runtime (e.g. a CSS
+// variable): rfs needs a number at compile time. Same result: the size as is
+// up to `$rfs-base-value`, else a fluid size below `$rfs-breakpoint`.
+// `tan(atan2(a, b))` is `a / b` as a number (`calc()` can't divide lengths).
+// rfs keeps its base value and breakpoint in px, without the unit.
+@mixin o-font-size-var($size, $property: font-size) {
+    @if $enable-rfs {
+        $-base: $rfs-base-value * 1px;
+        $-min: "#{$-base} + (#{$size} - #{$-base}) / #{$rfs-factor}";
+        // Browsers without trigonometric functions (before Chrome 111, Safari
+        // 15.4, Firefox 108) keep the size declared before, compiled: with
+        // `var()`, the declaration is only checked where it's used, so they
+        // would keep it, then drop it.
+        @supports (width: calc(tan(atan2(1px, 1px)) * 1px)) {
+            #{$property}: #{"min(#{$size}, calc(#{$-min} + (#{$size} - (#{$-min})) * tan(atan2(100vw, #{$rfs-breakpoint * 1px}))))"};
+        }
+        @include _rfs-media-query-rule {
+            #{$property}: #{$size};
+        }
+    } @else {
+        #{$property}: #{$size};
+    }
+}
+
+// Bootstrap's `$component-active-bg` (or `$color`, if different) as its custom
+// property, which a module can print to change it at runtime.
+@function o-component-active-bg-var($color) {
+    @return if($color == $component-active-bg, var(--o-component-active-bg, #{$color}), $color);
+}
 
 // Print a document property the right way (depending on the type of the
 // printed variable).

@@ -9,6 +9,16 @@
 // content of the "bootstrap.scss" files but do not import functions, variables
 // and mixins which will be handled "by hand" in _assets_helpers.
 
+// Rules that read the values of a part of Bootstrap at runtime (e.g. from CSS
+// variables) belong right after it: further down, they would also win over
+// the later components on elements that combine both (`.btn.h4`,
+// `.navbar-brand.h1`). A module defines `o-after-bootstrap($part)` for that.
+@mixin o-bootstrap-hook($part) {
+    @if mixin-exists(o-after-bootstrap) {
+        @include o-after-bootstrap($part);
+    }
+}
+
 // scss-docs-start import-stack
 // Configuration
 // @import "functions";
@@ -18,13 +28,17 @@
 
 // Layout & components
 @import "root";
+@include o-bootstrap-hook(root);
 @import "reboot";
+@include o-bootstrap-hook(reboot);
 @import "type";
+@include o-bootstrap-hook(type);
 @import "images";
 @import "containers";
 @import "grid";
 @import "tables";
 @import "forms";
+@include o-bootstrap-hook(forms);
 
 // Small hack in bootstrap (see bootstrap_review.scss): prevent it to generate
 // primary, secondary, and other color/outline classes by itself to be able to
@@ -33,25 +47,37 @@ $-tmp: $theme-colors;
 $theme-colors: ();
 @import "buttons";
 $theme-colors: $-tmp;
+@include o-bootstrap-hook(buttons);
 
 @import "transitions";
 @import "dropdown";
+@include o-bootstrap-hook(dropdown);
 @import "button-group";
 @import "nav";
+@include o-bootstrap-hook(nav);
 @import "navbar";
+@include o-bootstrap-hook(navbar);
 @import "card";
+@include o-bootstrap-hook(card);
 @import "accordion";
+@include o-bootstrap-hook(accordion);
 @import "breadcrumb";
 @import "pagination";
+@include o-bootstrap-hook(pagination);
 @import "badge";
 @import "alert";
 @import "progress";
+@include o-bootstrap-hook(progress);
 @import "list-group";
+@include o-bootstrap-hook(list-group);
 @import "close";
+@include o-bootstrap-hook(close);
 @import "toasts";
 @import "modal";
+@include o-bootstrap-hook(modal);
 @import "tooltip";
 @import "popover";
+@include o-bootstrap-hook(popover);
 @import "carousel";
 @import "spinners";
 @import "offcanvas";
@@ -59,6 +85,7 @@ $theme-colors: $-tmp;
 
 // Helpers
 @import "helpers";
+@include o-bootstrap-hook(helpers);
 
 // Utilities
 // Moved into bundle after bs_utilities_custom.scss file to allow to extend

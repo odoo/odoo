@@ -33,6 +33,16 @@ export class BuilderNumberInputBase extends BuilderInputBase {
         }
     }
 
+    onInput(ev) {
+        // While the user types an incomplete number ("1.", "-"), the number
+        // input reports an empty value: previewing it would reset the value,
+        // and the re-render would erase what was typed.
+        if (ev.target.validity.badInput) {
+            return;
+        }
+        super.onInput(...arguments);
+    }
+
     onBeforeInput(e) {
         if (!this.props.composable) {
             return;

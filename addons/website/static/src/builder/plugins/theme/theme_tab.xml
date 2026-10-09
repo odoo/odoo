@@ -28,7 +28,7 @@
             <BuilderButton action="'addLanguage'">Add a Language</BuilderButton>
         </BuilderRow>
         <BuilderRow label.translate="Page Layout">
-            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'layout'">
+            <BuilderSelect action="'previewWebsiteVariable'" actionParam="'layout'" preview="true">
                 <BuilderSelectItem actionValue="'full'" id="'layout_full_opt'" label.translate="Full">
                     <Image attrs="{ style: 'margin-top: 10px !important;' }"
                          src="'/website/static/src/img/snippets_options/page_layout_full.svg'"/>
@@ -62,7 +62,8 @@
         </BuilderRow>
         <BuilderRow label.translate="Background" level="1" t-if="!this.isActiveItem('layout_full_opt')">
             <BuilderColorPicker enabledTabs="['solid', 'custom']"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'"
+                preview="true"
                 actionParam="'body'"/>
         </BuilderRow>
         <BuilderRow label.translate="Image" level="1" t-if="this.isActiveItem('body_bg_image_opt')">
@@ -73,13 +74,13 @@
             <ImageSize/>
         </BuilderRow>
         <BuilderRow label.translate="Position" level="1" t-if="this.isActiveItem('body_bg_image_opt')">
-            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'body-image-type'" preview="false">
+            <BuilderSelect action="'previewBodyImage'" actionParam="'body-image-type'" preview="false">
                 <BuilderSelectItem actionValue="'image'">Cover</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'pattern'" id="'body_bg_repeat_opt'">Repeat pattern</BuilderSelectItem>
             </BuilderSelect>
             <BuilderButton icon="'my_location'" title.translate="Background Position" preview="false" action="'bodyBgPositionOverlay'"/>
         </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('body_bg_repeat_opt')" action="'customizeWebsiteVariable'">
+        <BuilderContext t-if="this.isActiveItem('body_bg_repeat_opt')" action="'previewBodyImage'">
             <BuilderRow label.translate="Width" level="2">
                 <BuilderNumberInput actionParam="'body-image-pattern-width'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>
@@ -90,34 +91,52 @@
     </BuilderContext>
 </t>
 
+<t t-name="website.ThemeResetButton">
+    <BuilderButton
+        action="'resetWebsiteVariables'"
+        actionParam="resetParam"
+        preview="false"
+        icon="'close_small'"
+        className="'o_we_theme_reset btn-danger-color-hover'"
+        title.translate="Reset to default"/>
+</t>
+
 <t t-name="website.ThemeParagraphOption">
     <BuilderContext preview="false">
-        <BuilderRow label.translate="Font Size">
-            <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'font-size-base'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
-            <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'small-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
-                </BuilderRow>
-            </t>
-        </BuilderRow>
         <BuilderRow label.translate="Font Family">
             <BuilderFontFamilyPicker
-                action="'customizeWebsiteFontFamily'"
+                action="'previewWebsiteFontFamily'"
+                preview="true"
                 actionParam="'font'"
                 valueParamName="'actionValue'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Font Size" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'font-size-base'" unit="'px'" saveUnit="'rem'" min="10" max="32" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['font-size-base']"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderRange actionParam="'small-font-size'" unit="'px'" saveUnit="'rem'" min="8" max="24" withNumberInput="true"/>
+                    <t t-call="website.ThemeResetButton" resetParam="['small-font-size']"/>
+                </BuilderRow>
+            </t>
         </BuilderRow>
         <ThemeFontWeightOption
             regularVariables="['font-weight-normal']"
             lightVariables="['lead-font-weight']"
             boldVariables="['font-weight-bolder']"
             fontVariable="'font'"/>
-        <BuilderRow label.translate="Line Height">
+        <BuilderRow label.translate="Line Height" action="'previewWebsiteVariable'" preview="true">
             <!-- "×": \u00D7\u2000 -->
-            <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'body-line-height'" default="null" unit="'✕'" saveUnit="''"/>
+            <BuilderRange actionParam="'body-line-height'" unit="'✕'" saveUnit="''" min="1" max="2.5" step="0.05" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['body-line-height']"/>
         </BuilderRow>
-        <BuilderRow label.translate="Margins" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput title.translate="Top" actionParam="'paragraph-margin-top'" unit="'px'" saveUnit="'px'"/>
-            <BuilderNumberInput title.translate="Bottom" actionParam="'paragraph-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+        <BuilderRow label.translate="Space Above" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'paragraph-margin-top'" unit="'px'" saveUnit="'px'" min="0" max="64" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['paragraph-margin-top']"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Space Below" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'paragraph-margin-bottom'" unit="'px'" saveUnit="'px'" min="0" max="64" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['paragraph-margin-bottom']"/>
         </BuilderRow>
     </BuilderContext>
 </t>
@@ -125,7 +144,7 @@
 <t t-name="website.ThemeLinkOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Link Style">
-            <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'link-underline'">
+            <BuilderSelect action="'previewLinkStyle'" actionParam="'link-underline'" preview="true">
                 <BuilderSelectItem actionValue="'never'">No Underline</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'hover'">Underline On Hover</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'always'">Always Underline</BuilderSelectItem>
@@ -136,64 +155,78 @@
 
 <t t-name="website.ThemeInputOption">
     <BuilderContext preview="false">
-        <BuilderRow label.translate="Padding" tooltip.translate="Vertical and Horizontal padding" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-            <BuilderNumberInput actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
+        <BuilderRow label.translate="Font Size" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'input-font-size'" unit="'px'" saveUnit="'rem'" min="10" max="32" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['input-font-size', 'input-font-size-sm', 'input-font-size-lg']"/>
             <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-                    <BuilderNumberInput actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderRange actionParam="'input-font-size-sm'" unit="'px'" saveUnit="'rem'" min="8" max="28" withNumberInput="true"/>
                 </BuilderRow>
-                <BuilderRow label.translate="Large" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'height'"/>
-                    <BuilderNumberInput actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'arrow_range'"/>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderRange actionParam="'input-font-size-lg'" unit="'px'" saveUnit="'rem'" min="10" max="40" withNumberInput="true"/>
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'input-font-size'" unit="'px'" saveUnit="'rem'"/>
+        <BuilderRow label.translate="Vertical Padding" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'" min="0" max="32" withNumberInput="true" prefixIcon="'height'"/>
+            <t t-call="website.ThemeResetButton" resetParam="['input-padding-y', 'input-padding-y-sm', 'input-padding-y-lg']"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'input-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="'input-padding-y-sm'" unit="'px'" saveUnit="'rem'" min="0" max="32" withNumberInput="true" prefixIcon="'height'"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'input-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="'input-padding-y-lg'" unit="'px'" saveUnit="'rem'" min="0" max="32" withNumberInput="true" prefixIcon="'height'"/>
+                </BuilderRow>
+            </t>
+        </BuilderRow>
+        <BuilderRow label.translate="Horizontal Padding" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'input-padding-x'" unit="'px'" saveUnit="'rem'" min="0" max="48" withNumberInput="true" prefixIcon="'arrow_range'"/>
+            <t t-call="website.ThemeResetButton" resetParam="['input-padding-x', 'input-padding-x-sm', 'input-padding-x-lg']"/>
+            <t t-set-slot="collapse">
+                <BuilderRow label.translate="Small" level="1">
+                    <BuilderRange actionParam="'input-padding-x-sm'" unit="'px'" saveUnit="'rem'" min="0" max="48" withNumberInput="true" prefixIcon="'arrow_range'"/>
+                </BuilderRow>
+                <BuilderRow label.translate="Large" level="1">
+                    <BuilderRange actionParam="'input-padding-x-lg'" unit="'px'" saveUnit="'rem'" min="0" max="48" withNumberInput="true" prefixIcon="'arrow_range'"/>
                 </BuilderRow>
             </t>
         </BuilderRow>
         <t t-set="subVariablesConfig" t-value="{'input-border-width': ['input-border-top-width', 'input-border-right-width', 'input-border-bottom-width', 'input-border-left-width']}"/>
-        <BuilderRow label.translate="Border Width" action="'customizeWebsiteSubVariables'">
-            <BuilderNumberInput actionParam="{mainParam: 'input-border-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" default="null"/>
+        <BuilderRow label.translate="Border Width" action="'previewWebsiteSubVariables'" preview="true">
+            <BuilderRange actionParam="{mainParam: 'input-border-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['input-border-width', 'input-border-top-width', 'input-border-right-width', 'input-border-bottom-width', 'input-border-left-width']"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Top" level="1">
-                    <BuilderNumberInput actionParam="{mainParam: 'input-border-top-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="{mainParam: 'input-border-top-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Right" level="1">
-                    <BuilderNumberInput actionParam="{mainParam: 'input-border-right-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="{mainParam: 'input-border-right-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Bottom" level="1">
-                    <BuilderNumberInput actionParam="{mainParam: 'input-border-bottom-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="{mainParam: 'input-border-bottom-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Left" level="1">
-                    <BuilderNumberInput actionParam="{mainParam: 'input-border-left-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="{mainParam: 'input-border-left-width', subVariablesConfig}" unit="'px'" saveUnit="'rem'" min="0" max="10" withNumberInput="true"/>
                 </BuilderRow>
             </t>
         </BuilderRow>
-        <BuilderRow label.translate="Border Radius" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'input-border-radius'" unit="'px'" saveUnit="'rem'"/>
+        <BuilderRow label.translate="Round Corners" action="'previewWebsiteVariable'" preview="true">
+            <BuilderRange actionParam="'input-border-radius'" unit="'px'" saveUnit="'rem'" min="0" max="50" withNumberInput="true"/>
+            <t t-call="website.ThemeResetButton" resetParam="['input-border-radius', 'input-border-radius-sm', 'input-border-radius-lg']"/>
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'input-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="'input-border-radius-sm'" unit="'px'" saveUnit="'rem'" min="0" max="50" withNumberInput="true"/>
                 </BuilderRow>
                 <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'input-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+                    <BuilderRange actionParam="'input-border-radius-lg'" unit="'px'" saveUnit="'rem'" min="0" max="50" withNumberInput="true"/>
                 </BuilderRow>
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Background">
             <BuilderColorPicker noTransparency="true"
                 enabledTabs="['solid', 'custom']"
-                action="'customizeWebsiteColor'"
+                action="'previewWebsiteColor'"
+                preview="true"
                 actionParam="'input'"
             />
         </BuilderRow>

@@ -65,6 +65,8 @@ export function defineWebsiteModels({ includeMailModels = true } = {}) {
     defineModels([Website, IrUiView]);
     onRpc("/website/get_current_website_id", () => 1);
     onRpc("/website/theme_customize_data_get", () => []);
+    // The colors computed while previewing colors.
+    onRpc("/website/theme_computed_colors", () => ({ values: {}, gates: {} }));
     onRpc("website", "get_search_scopes", () => [
         { search_type: "all", label: "Everything", url: "/website/search" },
         { search_type: "pages", label: "Pages", url: "/pages" },

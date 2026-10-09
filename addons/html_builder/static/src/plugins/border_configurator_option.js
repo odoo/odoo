@@ -12,6 +12,11 @@ export class BorderConfigurator extends BaseOptionComponent {
         // TODO remove, and actually configure propertly in caller
         withBSClass: t.boolean().optional(true),
         action: t.string().optional("styleAction"),
+        // The color's action, when it differs.
+        colorAction: t.string().optional(),
+        // Sliders for the width and the radius, one value each (with
+        // `styleAction`, the width of the sides that have a border).
+        withSliders: t.boolean().optional(false),
         level: t.number().optional(),
     });
 

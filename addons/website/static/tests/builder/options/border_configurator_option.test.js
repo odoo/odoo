@@ -122,3 +122,23 @@ test("Elements with withBSClass = false don't reset their style when width is ch
         "border-top": "10px dotted rgb(255, 255, 255)",
     });
 });
+
+test("a border slider sets the width of the sides that have a border", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BorderConfigurator label="'Border'" withSliders="true"/>`,
+    });
+    await setupWebsiteBuilder(
+        `<section class="test-options-target border" style="--box-border-left-width: 0px; --box-border-right-width: 0px;">Bordered block</section>`,
+        { loadIframeBundles: true }
+    );
+    await contains(":iframe section").click();
+    expect(".options-container [data-label=Border] input[type=number]").toHaveValue(1);
+    await contains(".options-container [data-label=Border] input[type=number]").edit("3");
+    expect(":iframe section").toHaveStyle({
+        borderTopWidth: "3px",
+        borderRightWidth: "0px",
+        borderBottomWidth: "3px",
+        borderLeftWidth: "0px",
+    });
+});

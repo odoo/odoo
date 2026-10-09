@@ -34,6 +34,7 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
         on_target_shown_handlers: this.onTargetVisibilityToggle.bind(this, true),
         on_target_hidden_handlers: this.onTargetVisibilityToggle.bind(this, false),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
+        on_chrome_replaced_handlers: this.keepPageOptions.bind(this),
     };
 
     /**
@@ -146,6 +147,38 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
         return this.document.querySelector(
             `[data-main-object]:has(input.o_page_option_data[name='${pageOptionName}'])`
         );
+    }
+
+    /**
+     * The page options are on the live header and footer, and written to the
+     * page on save: a header or footer the builder swaps in for a views
+     * preview (see `websiteViewsPreview.updateChrome`) keeps them.
+     *
+     * @param {{ oldEl: HTMLElement, newEl: HTMLElement }} parts
+     */
+    keepPageOptions({ oldEl, newEl }) {
+        for (const cls of ["o_snippet_invisible", "d-none"]) {
+            newEl.classList.toggle(cls, oldEl.classList.contains(cls));
+        }
+        if (oldEl.dataset.invisible) {
+            newEl.dataset.invisible = oldEl.dataset.invisible;
+        } else {
+            delete newEl.dataset.invisible;
+        }
+        if (newEl.matches("#wrapwrap > header")) {
+            for (const [property, classPrefix] of [
+                ["background-color", "bg-o-color-"],
+                ["color", "text-o-color-"],
+            ]) {
+                newEl.style.setProperty(property, oldEl.style.getPropertyValue(property));
+                newEl.classList.remove(
+                    ...[...newEl.classList].filter((cls) => cls.startsWith(classPrefix))
+                );
+                newEl.classList.add(
+                    ...[...oldEl.classList].filter((cls) => cls.startsWith(classPrefix))
+                );
+            }
+        }
     }
 
     setFooterVisible(show) {

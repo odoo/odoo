@@ -3,8 +3,9 @@
     <t t-name="website.PortalOption">
         <BuilderRow label.translate="Background Color">
             <BuilderColorPicker
+                preview="true"
                 defaultColor="''"
-                action="'customizeWebsiteColor'"
+                action="'previewAreaColor'"
                 actionParam="{
                     mainParam: 'portal-card-custom',
                     gradientColor: 'portal-gradient',
@@ -14,7 +15,8 @@
         </BuilderRow>
         <BuilderRow label.translate="Gap">
             <BuilderRange
-                action="'setPortalCardGap'"
+                action="'previewWebsiteVariable'"
+                actionParam="'portal-card-gap'"
                 unit="'px'"
                 saveUnit="'rem'"
                 min="0"
@@ -22,7 +24,7 @@
                 step="1"
                 withNumberInput="true"/>
         </BuilderRow>
-        <BorderConfigurator label.translate="Border" withBSClass="false" action="'setStylePortalCard'"/>
+        <BorderConfigurator label.translate="Border" withBSClass="false" action="'setStylePortalCard'" colorAction="'setStylePortalCardColor'"/>
     </t>
 
     <t t-name="website.PortalCardDisplayOption">

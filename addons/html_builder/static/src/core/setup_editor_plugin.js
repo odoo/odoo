@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 /**
  * @typedef { Object } SetupEditorShared
  * @property { SetupEditorPlugin['getSavableAreas'] } getSavableAreas
+ * @property { SetupEditorPlugin['markSavableAreas'] } markSavableAreas
  */
 
 /**
@@ -18,7 +19,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class SetupEditorPlugin extends Plugin {
     static id = "setup_editor_plugin";
-    static shared = ["getSavableAreas"];
+    static shared = ["getSavableAreas", "markSavableAreas"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),
@@ -43,13 +44,7 @@ export class SetupEditorPlugin extends Plugin {
         );
         welcomeMessageEl?.remove();
         this.trigger("on_will_setup_editor_handlers");
-        const savableSelectors = this.getResource("savable_selectors").join(", ");
-        const savableEls = [...this.editable.querySelectorAll(savableSelectors)].filter((el) =>
-            this.isSavableElement(el)
-        );
-        for (const savableEl of savableEls) {
-            savableEl.classList.add("o_savable");
-        }
+        this.markSavableAreas();
         if (this.delegateTo("after_setup_editor_overrides")) {
             return;
         }
@@ -82,6 +77,22 @@ export class SetupEditorPlugin extends Plugin {
             savableEl.classList.remove("o_savable");
         }
         return root;
+    }
+
+    /**
+     * Marks the savable elements contained in the given root element (or the
+     * editable if none is specified), e.g. for content replaced after setup.
+     *
+     * @param {HTMLElement|undefined} rootEl
+     */
+    markSavableAreas(rootEl = this.editable) {
+        const savableSelectors = this.getResource("savable_selectors").join(", ");
+        for (const savableEl of selectElements(rootEl, savableSelectors)) {
+            if (!this.isSavableElement(savableEl)) {
+                continue;
+            }
+            savableEl.classList.add("o_savable");
+        }
     }
 
     /**

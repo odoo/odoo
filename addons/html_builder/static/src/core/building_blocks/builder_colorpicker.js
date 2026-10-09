@@ -44,6 +44,13 @@ function useColorPickerBuilderComponent(props) {
         }
     );
     function getState(editingElement) {
+        // Keep the applied color selected while a hovered one is previewed
+        // (as `useSelectableComponent` does): a preview that updates the DOM
+        // asynchronously would otherwise move the selection to the hovered
+        // color, then back between two colors.
+        if (env.editor.shared.history.getIsPreviewing() && "selectedColor" in state) {
+            return {};
+        }
         // if (!editingElement || !editingElement.isConnected) {
         //     // TODO try to remove it. We need to move hook in BuilderComponent
         //     return {};

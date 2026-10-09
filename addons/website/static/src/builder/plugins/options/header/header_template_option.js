@@ -17,10 +17,6 @@ export class HeaderTemplateOption extends BaseOptionComponent {
             isBlurAvailable: isHeaderBgBlurAvailable(editingElement),
         }));
     }
-
-    hasSomeOptions(opts) {
-        return opts.some((opt) => this.isActiveItem(opt));
-    }
 }
 
 registry.category("website-options").add(HeaderTemplateOption.id, HeaderTemplateOption);

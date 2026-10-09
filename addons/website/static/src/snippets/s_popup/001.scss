@@ -13,7 +13,11 @@
         width: $font-size-lg * 2;
         height: $font-size-lg * 2;
         line-height: $font-size-lg * 2;
-        @include o-bg-color(color-contrast(o-color('primary')), o-color('primary'), $with-extras: false);
+        // `o-bg-color()`, from the colors' variables.
+        --background-color: var(--primary-contrast);
+        --color: var(--primary);
+        background-color: var(--primary-contrast) !important;
+        color: var(--primary);
         box-shadow: $box-shadow-sm;
         cursor: pointer;
         @include font-size($font-size-lg);

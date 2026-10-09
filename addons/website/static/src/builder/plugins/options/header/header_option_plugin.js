@@ -3,7 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { HeaderTemplateChoice } from "./header_template_option";
 import { HeaderTopOptions } from "./header_top_options";
-import { WebsiteConfigAction } from "../../customize_website_plugin";
+import { PreviewWebsiteConfigAction } from "../../customize_website_plugin";
+import { MENU_BOX_SHADOWS } from "./header_box_option_plugin";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 
@@ -114,7 +115,7 @@ export class HeaderOptionPlugin extends Plugin {
     }
 }
 
-export class HeaderTemplateConfigAction extends WebsiteConfigAction {
+export class HeaderTemplateConfigAction extends PreviewWebsiteConfigAction {
     static id = "headerTemplateConfig";
 
     async apply(applySpec) {
@@ -123,6 +124,11 @@ export class HeaderTemplateConfigAction extends WebsiteConfigAction {
         applySpec.params.views.push(...alignmentViews);
         await super.apply(applySpec);
         return;
+    }
+    _customizeVariables(variables, clean) {
+        // The shadow the layout's shadow class gives (see `website.scss`).
+        const shadow = !clean && MENU_BOX_SHADOWS[variables["menu-shadow-class"]];
+        super._customizeVariables(variables, clean, shadow ? { "o-menu-box-shadow": shadow } : {});
     }
 }
 

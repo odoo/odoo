@@ -54,13 +54,8 @@ registerWebsitePreviewTour(
         ...goToTheme(),
         {
             content: "Change font size",
-            trigger: "[data-action-param='font-size-base'] input",
+            trigger: "[data-action-param='font-size-base'] input.o-hb-input-number",
             run: `edit ${TARGET_FONT_SIZE} && click body`,
-        },
-        {
-            // Waiting the CSS to be reloaded: the code adds a new assets bundle
-            // with a #t=... at the end then removes the old one.
-            trigger: ':iframe html:not(:has(link[href$="web.assets_frontend.min.css"]))',
         },
         {
             content: "Check the font size was properly adapted",

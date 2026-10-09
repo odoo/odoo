@@ -52,6 +52,37 @@
 
     @include print-variable('palette-names', $o-selected-color-palettes-names);
 
+    /* What a palette switch gives the colors it doesn't set (the base palette */
+    /* and the color presets' defaults), and each palette's status colors and */
+    /* grays, if it sets them: the builder previews a palette switch with them. */
+    $-base-palette: $o-base-color-palette;
+    @for $index from 1 through length($o-color-combinations) {
+        @each $key, $value in map-merge($o-base-color-combination, nth($o-color-combinations, $index)) {
+            $-base-palette: map-merge($-base-palette, ('o-cc#{$index}-#{$key}': $value));
+        }
+    }
+    $-keys: join((), map-keys($-base-palette), space);
+    @each $key, $value in $-base-palette {
+        @include print-variable('o-base-palette-#{$key}', $value);
+    }
+    @each $-selected-palette-name in $o-selected-color-palettes-names {
+        @if $-selected-palette-name != 'user-palette' {
+            @each $key in map-keys(map-get($o-color-palettes, $-selected-palette-name) or ()) {
+                @if not index($-keys, $key) {
+                    $-keys: append($-keys, $key, space);
+                }
+            }
+            $-theme-palette: map-get($o-theme-color-palettes, $-selected-palette-name) or ();
+            @each $key in ('success', 'info', 'warning', 'danger') {
+                @include print-variable('o-palette-#{$-selected-palette-name}-#{$key}', map-get($-theme-palette, $key));
+            }
+            @each $key, $value in map-get($o-gray-color-palettes, $-selected-palette-name) or () {
+                @include print-variable('o-palette-#{$-selected-palette-name}-#{$key}', $value);
+            }
+        }
+    }
+    --o-palette-keys: "#{$-keys}";
+
     /* Need info about the base grays which are used to compute the final grays */
     @each $name, $color in $o-base-gray-color-palette {
         @include print-variable('base-#{$name}', $color);

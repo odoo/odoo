@@ -5,14 +5,16 @@
 // Extend bootstrap to create background and text utilities for gray colors too
 // Note: the card-body rule below needs those grays utilities to be defined
 // before so that the related o-bg-color text-muted rules work.
+// The colors are read from their custom properties, which a module can print
+// to change them at runtime (see `o-print-variant-colors`).
 @each $color, $value in $grays {
-    @include bg-variant(".bg-#{$color}", $value);
-    @include text-emphasis-variant(".text-#{$color}", $value);
+    @include o-bg-variant-var(".bg-#{$color}", $color, $value);
+    @include o-text-emphasis-variant-var(".text-#{$color}", $color, $value);
 }
 
 // Restore text-X from BS4 that use text-emphasis-variant
 @each $color, $value in $theme-colors {
-    @include text-emphasis-variant(".text-#{$color}", $value);
+    @include o-text-emphasis-variant-var(".text-#{$color}", $color, $value);
 }
 
 // Cards
@@ -47,7 +49,7 @@
     // generate these classes differently, this pseudo-class is called in the
     // respective 'bootstrap_review_x' file immediately after gray classes
     // generation.
-    @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity), $important: false);
+    @include o-bg-color-var('o-card-body-bg', rgba($card-bg, $o-card-body-bg-opacity), $important: false);
 
     &:first-child {
         @include border-top-radius($card-inner-border-radius);
@@ -65,24 +67,29 @@
 // background color.
 $o-btn-bg-colors: () !default;
 $o-btn-border-colors: () !default;
+// Their colors are read from custom properties (`--o-btn-fill-<color>` and
+// `--o-btn-outline-<color>`, see `o-button-variant-var`).
 @each $color, $value in $theme-colors {
     $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
     $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
-    .btn-fill-#{$color} {
-        @include button-variant($-bg-color, $-border-color);
+    @include o-button-style-rule('fill', $color) {
+        @include o-button-variant-var('o-btn-fill-#{$color}', $-bg-color, $-border-color);
     }
 }
 @each $color, $value in $theme-colors {
     $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
     $-border-color: increase-contrast(map-get($o-btn-border-colors, $color) or $-bg-color, $body-bg);
-    .btn-outline-#{$color} {
-        @include button-outline-variant($-border-color);
+    @include o-button-style-rule('outline', $color) {
+        @include o-button-outline-variant-var('o-btn-outline-#{$color}', $-border-color);
     }
 }
 $o-btn-flat-defaults: () !default;
 $o-btn-outline-defaults: () !default;
 $o-btn-outline-border-width-defaults: () !default;
-@each $color, $value in $theme-colors {
+// The colors whose style a module switches at runtime get the styles' rules
+// instead (see `o-button-style-rule`).
+$o-btn-style-gated-colors: () !default;
+@each $color, $value in map-remove($theme-colors, $o-btn-style-gated-colors...) {
     .btn-#{$color} {
         @if index($o-btn-outline-defaults, $color) {
             @extend .btn-outline-#{$color};
@@ -99,9 +106,9 @@ $o-btn-outline-border-width-defaults: () !default;
 
 // Highlight '.btn-group's active buttons
 .btn-group .btn-light.active {
-    box-shadow: inset 0 0 0 $border-width $component-active-bg;
+    box-shadow: inset 0 0 0 $border-width o-component-active-bg-var($component-active-bg);
     border-color: transparent;
-    background-color: mix($component-active-bg, $light, 10%);
+    @include o-color-mix(background-color, 'color-mix(in srgb, var(--#{$prefix}light, #{$light}), #{o-component-active-bg-var($component-active-bg)} 10%)', mix($component-active-bg, $light, 10%));
 }
 
 // Compensate navbar brand padding if no visible border
@@ -309,8 +316,8 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
     // an active class from the active state. This allows a discreet effect for
     // the active state while keeping an active navigation element prominent.
     .dropdown-item.active {
-        --dropdown-link-active-bg: #{$component-active-bg};
-        --dropdown-link-active-color: #{$component-active-color};
+        --dropdown-link-active-bg: #{o-component-active-bg-var($component-active-bg)};
+        --dropdown-link-active-color: var(--o-component-active-color, #{$component-active-color});
     }
 }
 
@@ -329,14 +336,26 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
     }
 }
 
+// The inputs' colors are read from custom properties (`--o-input-bg` and
+// `--o-input-color`), which a module can print to change them at runtime.
+$-input-bg: var(--o-input-bg, #{$input-bg});
+$-input-color: var(--o-input-color, #{$input-color});
 .form-control {
     &:disabled, &[readonly] {
-        color: $form-select-disabled-color;
+        @if $form-select-disabled-color == mix($input-color, $input-bg) {
+            @include o-color-mix(color, 'color-mix(in srgb, #{$-input-bg}, #{$-input-color})', $form-select-disabled-color);
+        } @else {
+            color: $form-select-disabled-color;
+        }
     }
 }
 
 .form-check-input:disabled:not(:checked) {
-    background-color: $input-disabled-bg;
+    @if $input-disabled-bg == mix($input-color, $input-bg, 10%) {
+        @include o-color-mix(background-color, 'color-mix(in srgb, #{$-input-bg}, #{$-input-color} 10%)', $input-disabled-bg);
+    } @else {
+        background-color: $input-disabled-bg;
+    }
 
     .form-switch & {
         background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$form-select-disabled-color}'/></svg>"));
