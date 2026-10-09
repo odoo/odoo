@@ -17,7 +17,6 @@ from odoo.tools.misc import OrderedSet, hash_sign, limited_field_access_token
 from odoo.tools.sql import SQL
 
 from odoo.addons.base.models.avatar_mixin import generate_text_avatar_svg, get_random_ui_color_from_seed
-from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.models.discuss.discuss_channel_member import POST_LEAVE_MESSAGE
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
@@ -1039,7 +1038,8 @@ class DiscussChannel(models.Model):
 
         :param emails: List of email addresses to invite.
         :type emails: list[str]
-
+        :return: Normalized email addresses whose invitation could not be sent.
+        :rtype: list[str]
         """
         if not self.env.user._is_internal() or not self.has_access("read"):
             raise AccessError(self.env._("You don't have access to invite users to this channel."))
@@ -1099,20 +1099,12 @@ class DiscussChannel(models.Model):
                 },
             )
         if not to_create:
-            return
-        try:
-            # sudo - mail.mail: internal users having read access to the channel can invite others.
-            self.env["mail.mail"].sudo().create(to_create).send(raise_exception=True)
-        except MailDeliveryException as mde:
-            error_msg = self.env._(
-                "There was an error when trying to deliver your Email, please check your configuration."
-            )
-            if len(mde.args) == 2 and isinstance(mde.args[1], ConnectionRefusedError):
-                error_msg = self.env._(
-                    "Could not contact the mail server, please check your outgoing email server configuration."
-                )
-            raise UserError(error_msg) from mde
-        invited_emails = list(eligible_emails)
+            return []
+        # sudo - mail.mail: internal users having read access to the channel can invite others.
+        mails = self.env["mail.mail"].sudo().create(to_create)
+        mails.send()
+        failed_emails = mails.filtered(lambda mail: mail.state == "exception").mapped("email_to")
+        invited_emails = list(eligible_emails - set(failed_emails))
         found_partners = self.env["res.partner"]._find_or_create_from_emails(
             invited_emails, no_create=True
         )
@@ -1144,6 +1136,7 @@ class DiscussChannel(models.Model):
             ["invitation_sent_dt"],
         )
         resent_members.invitation_sent_dt = invitation_sent_dt
+        return failed_emails
 
     # ------------------------------------------------------------
     # RTC

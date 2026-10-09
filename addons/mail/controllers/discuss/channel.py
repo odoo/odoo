@@ -4,7 +4,7 @@ from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
 
@@ -181,7 +181,9 @@ class DiscussChannelWebclientController(WebclientController):
                     *partners.filtered(lambda p: p.partner_share).mapped("email"),
                 ]
             ):
-                channel.invite_by_email(emails=all_emails)
+                if failed_emails := channel.invite_by_email(emails=all_emails):
+                    users = users.filtered(lambda u: u.email_normalized not in failed_emails)
+                    partners = partners.filtered(lambda p: p.email_normalized not in failed_emails)
         else:
             # Non-internal users can only add themselves as guest.
             _, guest = self.env["res.users"]._get_current_persona()
@@ -350,7 +352,10 @@ class ChannelController(http.Controller):
         channel = channel_member.channel_id
         if not channel.self_member_id:
             raise AccessError(self.env._("Only members can send the invitation link again."))
-        channel.invite_by_email([channel_member.guest_id.email or channel_member.partner_id.email])
+        if channel.invite_by_email([channel_member.guest_id.email or channel_member.partner_id.email]):
+            raise UserError(
+                self.env._("There was an error when trying to deliver your Email, please check your configuration."),
+            )
 
     @mail_route("/discuss/channel/member/set_role", methods=["POST"], type="jsonrpc", auth="public")
     def discuss_channel_set_channel_member_role(self, member_id, channel_role):
