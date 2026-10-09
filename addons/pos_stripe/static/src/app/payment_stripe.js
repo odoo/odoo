@@ -328,7 +328,7 @@ export class PaymentStripe extends PaymentInterface {
          * Override
          */
         await super.sendPaymentRequest(...arguments);
-        const isRefund = line.amount < 0;
+        const isRefund = line.isRefund;
 
         if (isRefund && !line.uiState.stripePaymentIdToRefund) {
             this._showError(_t("You cannot refund a non-Stripe payment via Stripe"));

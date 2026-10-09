@@ -131,7 +131,7 @@ export class PaymentRazorpay extends PaymentInterface {
         const order = this.pos.getOrder();
         const line = order.getSelectedPaymentline();
 
-        if (line.amount < 0 && !order.isRefund) {
+        if (line.isRefund && !order.isRefund) {
             this._showError(_t("Cannot process transactions with negative amount."));
             return Promise.resolve();
         }

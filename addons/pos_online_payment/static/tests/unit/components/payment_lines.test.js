@@ -26,7 +26,6 @@ describe("delete button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline button.delete-button").toHaveCount(0);
@@ -51,7 +50,6 @@ describe("delete button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline button.delete-button").toHaveCount(1);

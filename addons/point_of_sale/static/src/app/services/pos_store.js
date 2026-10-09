@@ -2799,11 +2799,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     async autoValidateOrder(args = {}) {
         const { order = this.getOrder() } = args;
-        if (
-            order.toBeValidate() &&
-            this.config.auto_validate_electronic_payment &&
-            !order.isRefundInProcess()
-        ) {
+        if (order.toBeValidate() && this.config.auto_validate_electronic_payment) {
             return await this.validateOrder({ ...args, order });
         }
         return false;

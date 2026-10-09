@@ -134,7 +134,7 @@ export class PaymentSafaricom extends PaymentInterface {
             return false;
         }
 
-        if (line.amount < 0) {
+        if (line.isRefund) {
             this._show_error(_t("Cannot process transactions with negative amount."));
             return false;
         }

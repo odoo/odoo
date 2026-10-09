@@ -171,12 +171,12 @@ export class PaymentAdyen extends PaymentInterface {
         const order = this.pos.getOrder();
         const line = order.payment_ids.find((paymentLine) => paymentLine.uuid === uuid);
 
-        if (line.amount < 0 && !line.uiState.adyenRefundTransactionId) {
+        if (line.isRefund && !line.uiState.adyenRefundTransactionId) {
             this._show_error(_t("Cannot refund non-Adyen transactions via Adyen."));
             return false;
         }
 
-        const data = line.amount < 0 ? this._adyenReversalData() : this._adyenPayData();
+        const data = line.isRefund ? this._adyenReversalData() : this._adyenPayData();
         line.setTerminalServiceId(this.most_recent_service_id);
         return this._callAdyen(data).then((data) => this._adyenHandleResponse(data));
     }

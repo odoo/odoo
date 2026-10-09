@@ -26,7 +26,6 @@ test("getPaymentActionState", async () => {
         sendPaymentCancel: () => {},
         sendPaymentRequest: () => {},
         updateSelectedPaymentline: () => {},
-        isRefundOrder: false,
     });
     const comp = await mountWithCleanup(PaymentScreenPaymentLines, { props });
 
@@ -61,7 +60,6 @@ test("getPaymentActionState", async () => {
 
     // Done + canBeAdjusted + amountPaid (10) < priceIncl (15)
     // --> adjust_amount action
-    props.isRefundOrder = false;
     paymentline.canBeAdjusted = () => true;
     order.prices.taxDetails.total_amount_no_rounding = 15;
     expectDoneAdjustAmountAction(comp.getPaymentActionState(paymentline));

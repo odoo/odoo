@@ -26,7 +26,6 @@ test("getPaymentActionState", async () => {
             sendPaymentCancel: () => {},
             sendPaymentRequest: () => {},
             updateSelectedPaymentline: () => {},
-            isRefundOrder: false,
         },
     });
 

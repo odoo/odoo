@@ -436,7 +436,7 @@ export class PosOrder extends PosOrderAccounting {
         this.selectPaymentline(newPaymentLine);
         newPaymentLine.setAmount(totalAmountDue);
 
-        if ((payment_method.payment_interface && !this.isRefund) || payment_method.useBankQrCode) {
+        if (payment_method.payment_interface || payment_method.useBankQrCode) {
             newPaymentLine.payment_status = "pending";
         }
         return { status: true, data: newPaymentLine };
@@ -490,19 +490,16 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     toBeValidate() {
+        // A payment request is out, its outcome is not known yet
+        if (this.payment_ids.some((p) => p.isProcessing)) {
+            return false;
+        }
         // Return true if order has payment lines and no due is remaining.
         if (this.payment_ids.length > 0) {
             return this.orderHasZeroRemaining;
         }
         // Check if multiple payment methods are configured.
         return this.config_id.payment_method_ids.length;
-    }
-
-    isRefundInProcess() {
-        return (
-            this.isRefund &&
-            this.payment_ids.some((pl) => pl.payment_provider && pl.payment_status !== "done")
-        );
     }
 
     isPaidWithCash() {
