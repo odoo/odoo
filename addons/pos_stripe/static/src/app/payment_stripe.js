@@ -322,10 +322,16 @@ export class PaymentStripe extends PaymentInterface {
 
     async capturePayment(paymentIntentId, amount = null, context = {}) {
         try {
-            const data = await this.callPaymentMethod("stripe_capture_payment", [paymentIntentId], {
-                amount,
-                context,
-            });
+            // The kiosk patch of callPaymentMethod drops kwargs, only a tip capture needs them
+            const data =
+                amount === null
+                    ? await this.callPaymentMethod("stripe_capture_payment", [paymentIntentId])
+                    : await this.env.services.orm.silent.call(
+                          "pos.payment.method",
+                          "stripe_capture_payment",
+                          [paymentIntentId],
+                          { amount, context }
+                      );
             if (data.error) {
                 throw data.error;
             }
