@@ -1,16 +1,6 @@
 import { registry } from "@web/core/registry";
 
 import { listView } from "@web/views/list/list_view";
-import { ListRenderer } from "@web/views/list/list_renderer";
-import { AttendanceActionHelper } from "@hr_attendance/views/attendance_helper_view";
-
-export class AttendanceListRenderer extends ListRenderer {
-    static template = "hr_attendance.AttendanceListRenderer";
-    static components = {
-        ...AttendanceListRenderer.components,
-        AttendanceActionHelper,
-    };
-}
 
 export class AttendanceListModel extends listView.Model {
     /** @override **/
@@ -27,7 +17,6 @@ export class AttendanceListModel extends listView.Model {
 
 export const attendanceListView = {
     ...listView,
-    Renderer: AttendanceListRenderer,
     Model: AttendanceListModel,
 };
 
