@@ -13,6 +13,7 @@ class ResCompany(models.Model):
     hr_presence_control_email = fields.Boolean(string="Based on number of emails sent")
     hr_presence_control_ip = fields.Boolean(string="Based on IP Address")
     hr_presence_control_attendance = fields.Boolean(string="Based on attendances", default=lambda self: self._default_hr_presence_control_attendance())
+    hr_skills_self_edit = fields.Boolean(string="Skills Self-Edit")
     contract_expiration_notice_period = fields.Integer("Contract Expiry Notice Period", default=7)
     work_permit_expiration_notice_period = fields.Integer("Work Permit Expiry Notice Period", default=60)
 

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from odoo import fields, models
+from odoo.tools import format_date
 
 
 class HrEmployeeSkill(models.Model):
@@ -14,6 +15,17 @@ class HrEmployeeSkill(models.Model):
 
     def _linked_field_name(self):
         return 'employee_id'
+
+    def _get_chatter_label(self):
+        self.ensure_one()
+        if not self.is_certification:
+            return self.display_name
+        return self.env._(
+            "%(skill)s (from %(valid_from)s to %(valid_to)s)",
+            skill=self.display_name,
+            valid_from=format_date(self.env, self.valid_from),
+            valid_to=format_date(self.env, self.valid_to) if self.valid_to else self.env._("no end date"),
+        )
 
     def get_current_skills_by_employee(self):
         emp_skill_grouped = dict(self.grouped(lambda emp_skill: (emp_skill.employee_id, emp_skill.skill_id)))

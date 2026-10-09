@@ -15,6 +15,7 @@ class ResConfigSettings(models.TransientModel):
     hr_presence_control_attendance = fields.Boolean(related='company_id.hr_presence_control_attendance', readonly=False)
     hr_presence_control_email_amount = fields.Integer(related="company_id.hr_presence_control_email_amount", readonly=False)
     hr_presence_control_ip_list = fields.Char(related="company_id.hr_presence_control_ip_list", readonly=False)
+    hr_skills_self_edit = fields.Boolean(related='company_id.hr_skills_self_edit', readonly=False)
     contract_expiration_notice_period = fields.Integer(string="Contract Expiry Notice Period", related='company_id.contract_expiration_notice_period', readonly=False)
     work_permit_expiration_notice_period = fields.Integer(string="Work Permit Expiry Notice Period", related='company_id.work_permit_expiration_notice_period', readonly=False)
 
