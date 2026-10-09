@@ -1,15 +1,10 @@
-import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
-import { checkFileSize } from "@web/core/utils/files";
+import { useFileUploader } from "@web/core/utils/files";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { Component, t, useProps } from "@odoo/owl";
 
 export class AttachDocumentWidget extends Component {
     static template = "web.AttachDocument";
-    static components = {
-        FileInput,
-    };
     props = useProps({
         ...standardWidgetProps,
         acceptedFileExtensions: t.string().optional(),
@@ -19,8 +14,7 @@ export class AttachDocumentWidget extends Component {
     });
 
     setup() {
-        this.http = useService("http");
-        this.notification = useService("notification");
+        this.uploadFiles = useFileUploader();
         this.fileInput = document.createElement("input");
         this.fileInput.type = "file";
         this.fileInput.accept = this.props.acceptedFileExtensions || "*";
@@ -29,27 +23,14 @@ export class AttachDocumentWidget extends Component {
     }
 
     async onInputChange() {
-        const ufile = [...this.fileInput.files];
-        for (const file of ufile) {
-            if (!checkFileSize(file.size, this.notification)) {
-                return null;
-            }
+        const files = await this.uploadFiles("/web/binary/upload_attachment", {
+            ufile: [...this.fileInput.files],
+            model: this.props.record.resModel,
+            id: this.props.record.resId,
+        });
+        if (files) {
+            await this.onFileUploaded(files);
         }
-        const fileData = await this.http.post(
-            "/web/binary/upload_attachment",
-            {
-                csrf_token: odoo.csrf_token,
-                ufile: ufile,
-                model: this.props.record.resModel,
-                id: this.props.record.resId,
-            },
-            "text"
-        );
-        const parsedFileData = JSON.parse(fileData);
-        if (parsedFileData.error) {
-            throw new Error(parsedFileData.error);
-        }
-        await this.onFileUploaded(parsedFileData);
     }
 
     async triggerUpload() {
