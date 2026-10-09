@@ -982,6 +982,7 @@ test("keyboard navigation scroll", async () => {
     // element out of bounds
     queryAll(".o_command").forEach((e) => (e.style.height = "50px"));
     queryOne(".o_command_palette_listbox").style.maxHeight = "150px";
+    queryOne(".o_command_palette_listbox").style.padding = "0";
     queryOne(".o_command_category").style.padding = "0";
     expect(".o_command_palette").toHaveCount(1);
     expect(".o_command").toHaveCount(4);
