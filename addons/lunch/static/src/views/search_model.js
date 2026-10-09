@@ -61,13 +61,12 @@ export class LunchSearchModel extends SearchModel {
 
     _getDomain(params = {}) {
         const domain = super._getDomain(params);
-
-        if (!this.lunchState.locationId) {
-            return domain;
-        }
+        // without location, there is no product to display (see the help view)
         const result = Domain.and([
             domain,
-            [['is_available_at', '=', this.lunchState.locationId]]
+            this.lunchState.locationId
+                ? [['is_available_at', '=', this.lunchState.locationId]]
+                : Domain.FALSE,
         ]);
         return params.raw ? result : result.toList();
     }
