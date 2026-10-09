@@ -10,6 +10,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { AnalyticDistribution } from "@analytic/components/analytic_distribution/analytic_distribution";
+import { useService } from "@web/core/utils/hooks";
 import { defineAnalyticModels } from "./analytic_test_helpers";
 
 defineAnalyticModels();
@@ -414,4 +415,32 @@ test("editable list save flushes pending dropdown pick before web_save", async (
     def.resolve();
     await animationFrame();
     expect(savedVals.analytic_distribution).toEqual({ 1: 100 });
+});
+
+test.tags("desktop");
+test("analytic batched read does not depend on a destroyed widget", async () => {
+    // The mail test helpers make calls from destroyed components hang silently:
+    // restore the production error so that the crash is detected.
+    patchWithCleanup(useService, {
+        handleCallWhenDestroyed() {
+            return Promise.reject(new Error("Component is destroyed"));
+        },
+    });
+    await mountView({
+        type: "form",
+        resModel: "move",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="line_ids">
+                    <list>
+                        <field name="label"/>
+                        <field name="analytic_distribution" widget="analytic_distribution"/>
+                    </list>
+                </field>
+            </form>`,
+        context: { list_optional_show: ["label"] },
+    });
+    expect(".o_data_row:eq(0) .o_field_analytic_distribution .badge").toHaveCount(2);
+    expect(".o_data_row:eq(0) .badge:eq(0) .o_tag_badge_text").toHaveText("30.3% RD | 69.7% FI");
 });
