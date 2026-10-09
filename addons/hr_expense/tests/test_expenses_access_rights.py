@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
+from odoo import Command, http
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import HttpCase, new_test_user, tagged
+from odoo.tests import Form, HttpCase, new_test_user, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
@@ -297,3 +297,29 @@ class TestExpensesAccessRights(TestExpenseCommon, HttpCase):
             with self.subTest(case_name=case_name):
                 employees = self.env['hr.employee'].with_user(user).search([('filter_for_expense', '=', True)])
                 self.assertEqual(employees, expected_employees)
+
+    def test_expense_create_without_employee_in_current_company(self):
+        """ A user whose employee belongs to another company than the current one must be able
+            to open a new expense and switch its company to retrieve their employee.
+        """
+        company_1 = self.env.company
+        company_2 = self.company_data_2['company']
+        user = new_test_user(
+            self.env,
+            login='team_approver_company_1',
+            groups='base.group_user,base.group_multi_company,hr_expense.group_hr_expense_team_approver',
+            company_id=company_1.id,
+            company_ids=[Command.set((company_1 + company_2).ids)],
+        )
+        employee = self.env['hr.employee'].sudo().create({
+            'name': 'team_approver_company_1',
+            'user_id': user.id,
+            'company_id': company_1.id,
+        })
+
+        expense_form = Form(self.env['hr.expense'].with_user(user).with_context(allowed_company_ids=(company_2 + company_1).ids))
+        self.assertFalse(expense_form.employee_id)
+        self.assertTrue(expense_form.is_editable)
+        expense_form.company_id = company_1
+        self.assertEqual(expense_form.employee_id, employee)
+        self.assertTrue(expense_form.is_editable)
