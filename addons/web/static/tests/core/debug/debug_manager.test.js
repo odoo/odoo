@@ -1,4 +1,5 @@
 import {
+    afterEach,
     animationFrame,
     beforeEach,
     click,
@@ -37,10 +38,12 @@ import {
 } from "@web/core/debug/debug_menu_items";
 import { isRPCCacheDisabled } from "@web/core/network/rpc_cache";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { user } from "@web/core/user";
 import { redirect } from "@web/core/utils/urls";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { openViewItem } from "@web/webclient/debug/debug_items";
+import { ProfilingItemPlugin } from "@web/webclient/debug/profiling/profiling_item";
 import { WebClient } from "@web/webclient/webclient";
 
 class DebugMenuParent extends Component {
@@ -59,10 +62,13 @@ onRpc("ir.attachment", "regenerate_assets_bundles", () => {
     return true;
 });
 beforeEach(() => {
-    // Remove this service to clear the debug menu from anything else than what the test insert into
-    registry.category("services").remove("profiling");
+    // Remove this plugin to clear the debug menu from anything else than what the test insert into
+    services.delete(ProfilingItemPlugin);
     clearRegistry(debugRegistry.category("default"));
     clearRegistry(debugRegistry.category("custom"));
+});
+afterEach(() => {
+    services.add(ProfilingItemPlugin);
 });
 
 describe.tags("desktop");
