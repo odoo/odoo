@@ -1128,6 +1128,8 @@ class MrpProduction(models.Model):
                 production.move_raw_ids.write({'date': production.date_start, 'date_deadline': production.date_start})
             if vals.get('date_finished'):
                 production.move_finished_ids.write({'date': production.date_finished})
+            if any(field in ['move_raw_ids', 'move_finished_ids', 'workorder_ids'] for field in vals) and production.state == 'draft' and production.workorder_ids:
+                production._set_moves_workorder_from_operation()
             if any(field in ['move_raw_ids', 'move_finished_ids', 'workorder_ids'] for field in vals) and production.state != 'draft':
                 production.with_context(no_procurement=True)._autoconfirm_production()
                 if production in production_to_replan:
@@ -1197,6 +1199,8 @@ class MrpProduction(models.Model):
                   and not vals.get('date_finished')):
                 # if no value is specified, do take the workorder duration (etc) into account
                 rec.move_finished_ids.write({'date': rec.date_finished})
+            if rec.state == 'draft' and rec.workorder_ids:
+                rec._set_moves_workorder_from_operation()
         if reference_vals_list:
             self.env['stock.reference'].create(reference_vals_list)
         return res
@@ -1815,6 +1819,11 @@ class MrpProduction(models.Model):
                     workorder.blocked_by_workorder_ids = [Command.clear(), Command.link(previous_workorder.id)]
                 previous_workorder = workorder
                 last_workorder_per_bom[workorder.operation_id.bom_id] = workorder
+        self._set_moves_workorder_from_operation()
+
+    def _set_moves_workorder_from_operation(self):
+        self.ensure_one()
+        workorder_per_operation = {workorder.operation_id: workorder for workorder in self.workorder_ids}
         for move in (self.move_raw_ids | self.move_finished_ids):
             if move.operation_id:
                 move.write({
