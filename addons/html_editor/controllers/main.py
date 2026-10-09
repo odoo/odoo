@@ -542,7 +542,76 @@ class HTML_Editor(Controller):
             'name': name or attachment.name,
             'res_id': 0,
         }
+<<<<<<< db1e51fc87ae0860ab5ae84c24c6b0aa8c074501
         attachment = get_or_create_modified_attachment(attachment, fields)
+||||||| 0faf35b5ff680a172a73fc22230957c2771d32c9
+        if fields['res_model'] == 'ir.ui.view':
+            fields['res_id'] = 0
+        elif res_id:
+            fields['res_id'] = res_id
+        if fields['mimetype'] == 'image/webp':
+            fields['name'] = re.sub(r'\.(jpe?g|png)$', '.webp', fields['name'], flags=re.I)
+
+        existing_attachment = get_existing_attachment(request.env['ir.attachment'], fields)
+        if existing_attachment and not existing_attachment.url:
+            attachment = existing_attachment
+        else:
+            # Restricted editors can handle attachments related to records to
+            # which they have access.
+            # Would user be able to read fields of original record?
+            if attachment.res_model and attachment.res_id:
+                request.env[attachment.res_model].browse(attachment.res_id).check_access('read')
+
+            # Would user be able to write fields of target record?
+            # Rights check works with res_id=0 because browse(0) returns an
+            # empty record set.
+            request.env[fields['res_model']].browse(fields['res_id']).check_access('write')
+
+            mimetype_exempt = any(
+                request.env.user.has_group(group) for group in attachment._get_mimetype_exempt_groups()
+            )
+            if not mimetype_exempt:
+                request.env['ir.ui.view'].sudo(False).check_access('write')
+
+            # Sudo because restricted editor will not be able to copy the record
+            attachment = attachment.sudo().copy(fields).sudo(False)
+            # Override mimetype with SUPERUSER if it was forced to plain text
+            if attachment.mimetype == 'text/plain' != fields['mimetype']:
+                attachment.with_user(SUPERUSER_ID).mimetype = fields['mimetype']
+=======
+        if fields['res_model'] == 'ir.ui.view':
+            fields['res_id'] = 0
+        elif res_id:
+            fields['res_id'] = res_id
+        if fields['mimetype'] == 'image/webp':
+            fields['name'] = re.sub(r'\.(jpe?g|png)$', '.webp', fields['name'], flags=re.I)
+
+        existing_attachment = get_existing_attachment(request.env['ir.attachment'], fields)
+        if existing_attachment and not existing_attachment.url:
+            attachment = existing_attachment
+        else:
+            # Restricted editors can handle attachments related to records to
+            # which they have access.
+            # Would user be able to read fields of original record?
+            if attachment.res_model and attachment.res_id:
+                request.env[attachment.res_model].browse(attachment.res_id).check_access('read')
+
+            # Would user be able to write fields of target record?
+            # Rights check works with res_id=0 because browse(0) returns an
+            # empty record set.
+            request.env[fields['res_model']].browse(fields['res_id']).check_access('write')
+
+            # Sudo because restricted editor will not be able to copy the record
+            attachment = attachment.sudo().copy(fields).sudo(False)
+            # Override mimetype with SUPERUSER if it was forced to plain text
+            if attachment.mimetype == 'text/plain' != fields['mimetype']:
+                mimetype_exempt = any(
+                    request.env.user.has_group(group) for group in attachment._get_mimetype_exempt_groups()
+                )
+                if not mimetype_exempt:
+                    request.env['ir.ui.view'].sudo(False).check_access_rights('write')
+                attachment.with_user(SUPERUSER_ID).mimetype = fields['mimetype']
+>>>>>>> 2d2463baeef94c5f3c4471da80cc71ccbb4d166e
 
         if alt_data:
             for size, per_type in alt_data.items():
