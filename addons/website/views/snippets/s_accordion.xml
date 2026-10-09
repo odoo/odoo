@@ -3,7 +3,7 @@
 
 <template id="s_accordion" name="Accordion">
 <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
-    <div t-attf-class="s_accordion" data-name="Accordion">
+    <div t-attf-class="s_accordion">
         <div id="myCollapse" t-attf-class="{{extra_classes}} accordion">
             <div class="accordion-item position-relative z-1" data-name="Accordion Item">
                 <button type="button" t-attf-id="accordion-button{{uniq}}_1" class="accordion-header accordion-button justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" t-attf-data-bs-target="#myCollapseTab{{uniq}}_1" t-attf-aria-controls="myCollapseTab{{uniq}}_1" data-bs-toggle="collapse" aria-expanded="true"><span class="flex-grow-1">What services does your company offer ?</span></button>
