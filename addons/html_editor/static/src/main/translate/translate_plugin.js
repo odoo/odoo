@@ -48,12 +48,16 @@ export class TranslatePlugin extends Plugin {
 
     openDialog(params = {}) {
         const selection = this.dependencies.selection.getEditableSelection();
-        const dialogParams = {
-            insert: (content) => {
-                const insertedNodes = this.dependencies.dom.insert(content);
+        // collapse to end
+        const sanitize = this.dependencies.sanitize.sanitize;
+        const fragment = selection.cloneContents();
+        this.dependencies.dialog.addDialog(TranslateDialog, {
+            fragment,
+            sanitize,
+            onConfirm: (translatedContent) => {
+                this.dependencies.sanitize.sanitize(translatedContent);
+                const insertedNodes = this.dependencies.dom.insert(translatedContent);
                 this.dependencies.history.commit();
-                // Add a frame around the inserted content to highlight it for 2
-                // seconds.
                 const start = insertedNodes?.length && closestElement(insertedNodes[0]);
                 const end =
                     insertedNodes?.length &&
@@ -88,17 +92,6 @@ export class TranslatePlugin extends Plugin {
                     setTimeout(() => div.remove(), 2000);
                 }
             },
-            ...params,
-        };
-        dialogParams.baseContainer = this.dependencies.baseContainer.getDefaultNodeName();
-        // collapse to end
-        const sanitize = this.dependencies.sanitize.sanitize;
-        const originalText = selection.toString() || "";
-        this.dependencies.dialog.addDialog(TranslateDialog, {
-            ...dialogParams,
-            originalText,
-            sanitize,
-            document: this.document,
         });
         if (this.services.ui.isSmall) {
             // TODO: Find a better way and avoid modifying range
