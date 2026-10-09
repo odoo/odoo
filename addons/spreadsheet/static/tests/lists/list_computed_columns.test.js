@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { setCellContent, redo, undo } from "@spreadsheet/../tests/helpers/commands";
+import { addRows, setCellContent, redo, undo } from "@spreadsheet/../tests/helpers/commands";
 import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
 import { createSpreadsheetWithList } from "@spreadsheet/../tests/helpers/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
@@ -565,4 +565,70 @@ test("computed column header is its string name", async () => {
 
     setCellContent(model, "A1", '=ODOO.LIST.HEADER(1, "computed")');
     expect(getCellValue(model, "A1")).toBe("My Computed Column");
+});
+
+test("inserting a row after removing a list with a computed column", async () => {
+    const { model } = await createSpreadsheetWithList({
+        columns: [{ name: "foo", string: "Foo" }],
+        linesNumber: 4,
+    });
+    const [listId] = model.getters.getListIds();
+    const sheetId = model.getters.getActiveSheetId();
+    const listDef = model.getters.getListDefinition(listId);
+    model.dispatch("UPDATE_ODOO_LIST", {
+        listId,
+        list: {
+            ...listDef,
+            columns: [
+                ...listDef.columns,
+                {
+                    name: "computed",
+                    string: "Computed",
+                    computedBy: { formula: "=foo*A20", sheetId },
+                },
+            ],
+        },
+    });
+    await waitForDataLoaded(model);
+    model.dispatch("REMOVE_ODOO_LIST", { listId });
+    expect(model.getters.getListCompiledColumnFormula(listId, "computed")).toBe(undefined);
+
+    const rowsBefore = model.getters.getNumberRows(sheetId);
+    addRows(model, "before", 0, 1);
+    expect(model.getters.getNumberRows(sheetId)).toBe(rowsBefore + 1);
+
+    undo(model); // undo add rows
+    undo(model); // undo remove list
+    const compiledFormula = model.getters.getListCompiledColumnFormula(listId, "computed");
+    expect(compiledFormula.toFormulaString(model.getters)).toBe("=foo*A20");
+});
+
+test("renaming a computed column drops the compiled formula of the old name", async () => {
+    const { model } = await createSpreadsheetWithList({
+        columns: [{ name: "foo", string: "Foo" }],
+        linesNumber: 4,
+    });
+    const [listId] = model.getters.getListIds();
+    const sheetId = model.getters.getActiveSheetId();
+    const listDef = model.getters.getListDefinition(listId);
+    const computedColumn = {
+        name: "computed",
+        string: "Computed",
+        computedBy: { formula: "=foo*A20", sheetId },
+    };
+    model.dispatch("UPDATE_ODOO_LIST", {
+        listId,
+        list: { ...listDef, columns: [...listDef.columns, computedColumn] },
+    });
+    model.dispatch("UPDATE_ODOO_LIST", {
+        listId,
+        list: { ...listDef, columns: [...listDef.columns, { ...computedColumn, name: "renamed" }] },
+    });
+    await waitForDataLoaded(model);
+    expect(model.getters.getListCompiledColumnFormula(listId, "computed")).toBe(undefined);
+
+    addRows(model, "before", 0, 1);
+    const columns = model.getters.getListDefinition(listId).columns;
+    expect(columns.map((c) => c.name)).toEqual(["foo", "renamed"]);
+    expect(columns[1].computedBy.formula).toBe("=foo*A21");
 });
