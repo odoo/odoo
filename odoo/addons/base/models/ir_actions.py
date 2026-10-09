@@ -108,10 +108,16 @@ class IrActionsActions(models.Model):
         for record in self:
             record.xml_id = res.get(record.id)
 
-    def _delete_extra(self):
-        yield from super()._delete_extra()
-        yield self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
-        yield self.env['ir.filters'].search([('action_id', 'in', self.ids)])
+    @api.ondelete(at_uninstall=True)
+    def _unlink_reset_todo_open_menu(self):
+        try:
+            todo_open_menu = self.env.ref('base.open_menu')
+            todo_default_action = self.env.ref('base.action_client_base_menu')
+            todo_default_action_id = todo_default_action.id  # different model, same id
+        except ValueError:
+            return
+        if todo_open_menu.action_id.id in self.ids:
+            todo_open_menu.action_id = todo_default_action_id
 
     @api.ondelete(at_uninstall=True)
     def _unlink_check_home_action(self):
@@ -1395,7 +1401,7 @@ class IrActionsTodo(models.Model):
     _order = "sequence, id"
     _allow_sudo_commands = False
 
-    action_id = fields.Many2one('ir.actions.actions', string='Action', required=True, index=True)
+    action_id = fields.Many2one('ir.actions.actions', string='Action', required=True, index=True, ondelete='cascade')
     sequence = fields.Integer(default=10)
     state = fields.Selection([('open', 'To Do'), ('done', 'Done')], string='Status', default='open', required=True)
     name = fields.Char()
