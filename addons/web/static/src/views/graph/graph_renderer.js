@@ -911,4 +911,9 @@ export class GraphRenderer extends Component {
         const { cumulated } = this.model.metaData;
         this.model.updateMetaData({ cumulated: !cumulated });
     }
+
+    toggleAllDates() {
+        const { allDates } = this.model.metaData;
+        this.model.updateMetaData({ allDates: !allDates });
+    }
 }

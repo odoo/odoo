@@ -191,6 +191,18 @@ defineModels([Foo, Color, Product, Currency]);
 
 setupChartJsForTests();
 
+function mockFilledTemporalReadGroup() {
+    // the MockServer doesn't handle fill_temporal: simulate it with an empty day in the range
+    onRpc("formatted_read_group", ({ kwargs }) => {
+        expect.step(`fill_temporal: ${kwargs.context.fill_temporal}`);
+        return ["2016-01-01", "2016-01-02", "2016-01-03"].map((day, index) => ({
+            "date:day": [day, day],
+            __extra_domain: [["date", "=", day]],
+            __count: index === 1 ? 0 : 1,
+        }));
+    });
+}
+
 test('graph view with "class" attribute', async () => {
     await mountView({
         type: "graph",
@@ -715,7 +727,7 @@ test("Cumulative prop and default line chart", async () => {
         message: "should not be cumulative by default.",
     });
 
-    await contains('#switchCumulated').click();
+    await contains("#switchCumulated").click();
 
     expect(getGraphModel(view).metaData.cumulated).toBe(true, {
         message: "should be in cumulative",
@@ -796,6 +808,107 @@ test("Cumulative prop and cumulated start", async () => {
         },
     ];
     checkDatasets(view, ["data"], expectedDatasets);
+});
+
+test("bar chart: all dates switch is not visible when the x-axis is not a date", async () => {
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph>
+                <field name="product_id" />
+            </graph>
+        `,
+    });
+    expect("#switchAllDates").toHaveCount(0);
+});
+
+test("bar chart: all dates switch is only visible in bar mode when grouped by date", async () => {
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        groupBy: ["date:month"],
+        arch: /* xml */ `<graph/>`,
+    });
+    expect("#switchAllDates").toHaveCount(1);
+    expect("#switchAllDates").not.toBeChecked();
+
+    await selectMode("line");
+    expect("#switchAllDates").toHaveCount(0);
+    await selectMode("pie");
+    expect("#switchAllDates").toHaveCount(0);
+    await selectMode("bar");
+    expect("#switchAllDates").toHaveCount(1);
+});
+
+test("bar chart: all dates switch is visible when grouped by datetime", async () => {
+    Foo._fields.datetime = fields.Datetime();
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        groupBy: ["datetime:month"],
+        arch: /* xml */ `<graph/>`,
+    });
+    expect("#switchAllDates").toHaveCount(1);
+});
+
+test("bar chart: all dates switch displays empty dates", async () => {
+    mockFilledTemporalReadGroup();
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        groupBy: ["date:day"],
+        arch: /* xml */ `<graph/>`,
+    });
+    expect.verifySteps(["fill_temporal: true"]);
+    expect(getGraphModelMetaData(view).allDates).toBe(false);
+    checkLabels(view, ["2016-01-01", "2016-01-03"]);
+    checkDatasets(view, ["data"], { data: [1, 1] });
+
+    await contains("#switchAllDates").click();
+    expect("#switchAllDates").toBeChecked();
+    expect(getGraphModelMetaData(view).allDates).toBe(true);
+    checkLabels(view, ["2016-01-01", "2016-01-02", "2016-01-03"]);
+    checkDatasets(view, ["data"], { data: [1, 0, 1] });
+
+    await contains("#switchAllDates").click();
+    expect(getGraphModelMetaData(view).allDates).toBe(false);
+    checkLabels(view, ["2016-01-01", "2016-01-03"]);
+    // toggling the switch doesn't reload the data
+    expect.verifySteps([]);
+});
+
+test("bar chart: all dates can be activated through the context", async () => {
+    mockFilledTemporalReadGroup();
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        groupBy: ["date:day"],
+        arch: /* xml */ `<graph/>`,
+        context: { graph_all_dates: true },
+    });
+    expect.verifySteps(["fill_temporal: true"]);
+    expect("#switchAllDates").toBeChecked();
+    checkLabels(view, ["2016-01-01", "2016-01-02", "2016-01-03"]);
+});
+
+test("bar chart: all dates context key is saved in favorites", async () => {
+    onRpc("create_filter", ({ args }) => {
+        expect.step("create_filter");
+        expect(args[0].context.graph_all_dates).toBe(true);
+        return [1];
+    });
+    await mountView({
+        type: "graph",
+        resModel: "foo",
+        groupBy: ["date:day"],
+        arch: /* xml */ `<graph/>`,
+    });
+    await contains("#switchAllDates").click();
+    await toggleSaveFavorite();
+    await editFavoriteName("All dates");
+    await saveFavorite();
+    expect.verifySteps(["create_filter"]);
 });
 
 test("displaying line chart with only 1 data point", async () => {
@@ -1325,6 +1438,7 @@ test("save params succeeds", async () => {
             graph_groupbys: ["product_id"],
             graph_order: null,
             graph_stacked: true,
+            graph_all_dates: false,
             group_by: [],
         },
         {
@@ -1333,6 +1447,7 @@ test("save params succeeds", async () => {
             graph_groupbys: ["product_id"],
             graph_order: null,
             graph_stacked: true,
+            graph_all_dates: false,
             group_by: [],
         },
         {
@@ -1342,6 +1457,7 @@ test("save params succeeds", async () => {
             graph_groupbys: ["product_id"],
             graph_order: null,
             graph_stacked: true,
+            graph_all_dates: false,
             group_by: [],
         },
         {
@@ -1351,6 +1467,7 @@ test("save params succeeds", async () => {
             graph_groupbys: ["product_id", "color_id"],
             graph_order: null,
             graph_stacked: true,
+            graph_all_dates: false,
             group_by: ["product_id", "color_id"],
         },
     ];
