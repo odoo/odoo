@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
-from markupsafe import Markup
 from collections import defaultdict
 
 from odoo import api, fields, models, tools
@@ -730,27 +729,16 @@ class HrApplicant(models.Model):
         return super().copy(default=default)
 
     @api.model
-    def get_empty_list_help(self, help_message):
-        if 'active_id' in self.env.context and self.env.context.get('active_model') == 'hr.job':
-            hr_job = self.env['hr.job'].browse(self.env.context['active_id'])
-        elif self.env.context.get('default_job_id'):
-            hr_job = self.env['hr.job'].browse(self.env.context['default_job_id'])
+    def get_help_data(self, domain):
+        # used by the help view (see `hr_applicant_view_help`)
+        context = self.env.context
+        if 'active_id' in context and context.get('active_model') == 'hr.job':
+            hr_job = self.env['hr.job'].browse(context['active_id'])
+        elif context.get('default_job_id'):
+            hr_job = self.env['hr.job'].browse(context['default_job_id'])
         else:
             hr_job = self.env['hr.job']
-
-        nocontent_body = Markup("""
-<p class="o_view_nocontent_smiling_face">%(help_title)s</p>
-""") % {
-            'help_title': _("No applications found."),
-        }
-
-        if hr_job.alias_email:
-            nocontent_body += Markup('<p class="o_copy_paste_email oe_view_nocontent_alias">%(helper_email)s <a href="mailto:%(email)s">%(email)s</a></p>') % {
-                'helper_email': _("Send applications to"),
-                'email': hr_job.alias_email,
-            }
-
-        return super().get_empty_list_help(nocontent_body)
+        return {'alias_email': hr_job.alias_email}
 
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):

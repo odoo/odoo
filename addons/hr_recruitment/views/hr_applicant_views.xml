@@ -1,10 +1,24 @@
 <?xml version="1.0"?>
 <odoo>
+    <record id="hr_applicant_view_help" model="ir.ui.view">
+        <field name="name">hr.applicant.help</field>
+        <field name="model">hr.applicant</field>
+        <field name="type">help</field>
+        <field name="arch" type="xml">
+            <help data_method="get_help_data">
+                <p class="o_view_nocontent_smiling_face">No applications found.</p>
+                <p class="o_copy_paste_email oe_view_nocontent_alias" invisible="not data.get('alias_email')">
+                    Send applications to <a t-att-href="'mailto:' + data.alias_email" t-out="data.alias_email"/>
+                </p>
+            </help>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'" default_order="priority DESC" default_group_by="stage_id">
+            <list string="Applicants" class="o_search_matching_applicant" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'" default_order="priority DESC" default_group_by="stage_id" help_id="%(hr_recruitment.hr_applicant_view_help)d">
                 <header>
                     <button
                         name="action_talent_pool_add_applicants"
@@ -245,7 +259,7 @@
         <field name="name">Jobs - Recruitment</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <pivot string="Job Applications" sample="1">
+            <pivot string="Job Applications" sample="1" help_id="%(hr_recruitment.hr_applicant_view_help)d">
                 <field name="job_id" type="row"/>
                 <field name="stage_id" type="col"/>
                 <!-- Hide message_bounce, color, probability from the measures used in the pivot view-->
@@ -260,7 +274,7 @@
         <field name="name">Jobs - Recruitment Graph</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <graph string="Cases By Stage and Estimates" sample="1">
+            <graph string="Cases By Stage and Estimates" sample="1" help_id="%(hr_recruitment.hr_applicant_view_help)d">
                 <field name="stage_id"/>
                 <!-- Hide message_bounce, color, probability from the measures used in the graph view-->
                 <field name="message_bounce" invisible="1"/>
@@ -387,7 +401,7 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
             <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1" 
-                js_class="rotting_kanban">
+                js_class="rotting_kanban" help_id="%(hr_recruitment.hr_applicant_view_help)d">
                 <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Requirements"}}'/>
                 <field name="date_closed"/>
                 <field name="color"/>
@@ -595,7 +609,7 @@
         <field name="name">hr.applicant.pivot</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <pivot string="Recruitment Analysis" sample="1">
+            <pivot string="Recruitment Analysis" sample="1" help_id="%(hr_recruitment.hr_applicant_view_help)d">
                 <field name="stage_id" type="row"/>
                 <field name="job_id" type="col"/>
                 <field name="partner_name"/>
@@ -607,7 +621,7 @@
         <field name="name">hr.applicant.graph</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <graph string="Recruitment Analysis" sample="1">
+            <graph string="Recruitment Analysis" sample="1" help_id="%(hr_recruitment.hr_applicant_view_help)d">
                 <field name="stage_id"/>
                 <field name="job_id"/>
             </graph>
