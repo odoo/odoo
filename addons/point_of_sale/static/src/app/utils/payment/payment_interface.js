@@ -100,10 +100,11 @@ export class PaymentInterface {
      * that it can be overridden in e.g. `pos_self_order`.
      *
      * @param {string} method - The action to call on `pos.payment.method`
-     * @param {any[]} params - The action params to send
+     * @param {any[]} args - The action args to send
+     * @param {Record<string, any>} [kwargs] - The action kwargs to send
      */
-    async callPaymentMethod(method, params) {
-        return await this.env.services.orm.silent.call("pos.payment.method", method, params);
+    async callPaymentMethod(method, args, kwargs = {}) {
+        return await this.env.services.orm.silent.call("pos.payment.method", method, args, kwargs);
     }
 
     /**
