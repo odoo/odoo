@@ -236,11 +236,13 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
     reloadBundles = debounce(this._reloadBundles.bind(this), 0);
     async _reloadBundles() {
-        const bundles = await rpc("/website/theme_customize_bundle_reload");
+        const { font_urls: fontURLs = [], ...bundles } = await rpc(
+            "/website/theme_customize_bundle_reload"
+        );
         const documents = [this.document, this.config.extraPreviewDocument].filter(Boolean);
         const allLinksIframeEls = [];
         const proms = [];
-        const createLinksProms = (bundleURLs, insertionEl, document) => {
+        const createLinksProms = (bundleURLs, insertionEl, document, position = "afterend") => {
             const newLinkEls = [];
             for (const url of bundleURLs) {
                 const linkEl = document.createElement("link");
@@ -256,10 +258,16 @@ export class CustomizeWebsitePlugin extends Plugin {
                 );
             }
             for (const el of newLinkEls) {
-                insertionEl.insertAdjacentElement("afterend", el);
+                insertionEl.insertAdjacentElement(position, el);
             }
         };
         for (const document of documents) {
+            const fontLinkEls = document.head.querySelectorAll(
+                'link[rel="stylesheet"][href^="https://fonts.googleapis.com/css"], ' +
+                    'link[rel="stylesheet"][href*="/google-font-"]'
+            );
+            allLinksIframeEls.push(...fontLinkEls);
+            createLinksProms(fontURLs, document.head, document, "beforeend");
             for (const [bundleName, bundleURLs] of Object.entries(bundles)) {
                 const selector = `link[href*="${bundleName}"]`;
                 const linksIframeEls = document.querySelectorAll(selector);
