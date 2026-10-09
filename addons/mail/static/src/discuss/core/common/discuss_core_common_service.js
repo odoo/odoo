@@ -1,3 +1,5 @@
+import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
+
 import { proxy } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
@@ -37,6 +39,30 @@ export class DiscussCoreCommon {
                 }
             }
         });
+        window.addEventListener("blur", () => {
+            clearTimeout(this.hideNewMessageSeparatorsTimeout);
+            this.hideNewMessageSeparatorsTimeout = setTimeout(
+                () => this.hideReadNewMessageSeparators(),
+                ChannelMember.NEW_MESSAGE_SEPARATOR_STALE_DELAY
+            );
+        });
+        window.addEventListener("focus", () => clearTimeout(this.hideNewMessageSeparatorsTimeout));
+    }
+
+    /**
+     * Hide the new message separators of the displayed channels that only mark
+     * read messages, as the user has been away from the page for a while.
+     */
+    hideReadNewMessageSeparators() {
+        if (document.hasFocus()) {
+            // focus moved inside the page, e.g. to an iframe
+            return;
+        }
+        for (const channel of this.store["discuss.channel"].records.values()) {
+            if (channel.isDisplayed) {
+                channel.self_member_id?.hideReadNewMessageSeparatorUi();
+            }
+        }
     }
 
     /**
@@ -69,7 +95,7 @@ export class DiscussCoreCommon {
             if (message.isSelfAuthored) {
                 channel.onNewSelfMessage(message);
             } else {
-                if (channel.isDisplayed && channel.self_member_id?.new_message_separator_ui === 0) {
+                if (channel.self_member_id?.shouldMoveNewMessageSeparatorUi(message)) {
                     channel.self_member_id.new_message_separator_ui = message.id;
                 }
                 if (!channel.isDisplayed && channel.self_member_id) {
