@@ -65,7 +65,7 @@ class MailMessage(models.Model):
                     track_vals_lst.append(track_values)
             other_cmd = [cmd for cmd in tracking_values_cmd if len(cmd) != 3 or cmd[0] != 0]
             if other_cmd:
-                message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+                message.write({'tracking_value_ids': other_cmd})
         if track_vals_lst:
             self.env['mail.tracking.value'].sudo().create(track_vals_lst)
 
