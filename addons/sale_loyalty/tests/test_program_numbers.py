@@ -58,24 +58,26 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             len(order.order_line.ids), 1, "Free Large Cabinet should have been removed"
         )
 
-        # Free product in cart will be considered as paid product when changing quantity of paid
-        # product, so the free product quantity computation will be wrong.
-        # 75 Large Cabinet in cart, 25 free, set quantity to 6 Large Cabinet, you should have 2 free
-        # Large Cabinet, but you get 8 because it adds the 25 initial free Large Cabinet to the
-        # total paid Large Cabinet when computing (25+10 > 35 > /4 = 8 free Large Cabinet).
+        # A reward claim grants reward_product_qty (1 here) per claim, regardless of
+        # how many points are available.
         sol1.product_uom_qty = 75
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
             sum(order.order_line.filtered(lambda x: x.is_reward_line).mapped("product_uom_qty")),
-            25,
-            "We should have 25 Free Large Cabinet",
+            1,
+            "The claim should have created a single line of 1 Free Large Cabinet",
         )
         sol1.product_uom_qty = 6
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
             sum(order.order_line.filtered(lambda x: x.is_reward_line).mapped("product_uom_qty")),
             2,
-            "We should have 2 Free Large Cabinet",
+            "We should have 2 Free Large Cabinet lines, one per claim",
+        )
+        self.assertEqual(
+            len(order.order_line.filtered(lambda x: x.is_reward_line)),
+            2,
+            "We should have 2 separate reward lines, one per claim",
         )
 
     def test_program_numbers_check_eligibility(self):
@@ -497,7 +499,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             12,
             "Recomputing tax on sale order lines should not change number of order line",
         )
-        self._auto_rewards(order, self.all_programs)
+        order._update_programs_and_rewards()
         self.assertRecordValues(order, [{"amount_total": 1711.0, "amount_untaxed": 1435.45}])
         self.assertEqual(
             len(order.order_line.ids),
@@ -507,7 +509,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # -- End test inside the test
 
         # Now we want to apply a 20% discount only on Large Cabinet
-        self.all_programs |= self.env["loyalty.program"].create({
+        p_large_cabinet_discount = self.env["loyalty.program"].create({
             "name": "20% reduction on Large Cabinet in cart",
             "trigger": "auto",
             "program_type": "promotion",
@@ -524,7 +526,8 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 })
             ],
         })
-        self._auto_rewards(order, self.all_programs)
+        self.all_programs |= p_large_cabinet_discount
+        self._auto_rewards(order, p_large_cabinet_discount)
 
         # 20% on large cabinet which are already discounted by 10%
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
@@ -554,13 +557,13 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         # Add back the coupon to continue the test flow
         self._apply_promo_code(order, "test_10pc")
-        self._auto_rewards(order, self.all_programs)
+        order._update_programs_and_rewards()
         self.assertEqual(len(order.order_line.ids), 13, "The 10% discount line should be back")
 
         # Check that if you change a product qty, his discount tax line got updated
         self.p_conference_chair.rule_ids.reward_point_amount = 0.752
         sol2.product_uom_qty = 4
-        self._auto_rewards(order, self.all_programs)
+        order._update_programs_and_rewards()
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
         # Large Cabinet        |  4  |    100.00  | 15% excl |  400.00 |  460.00 |   60.00
@@ -591,7 +594,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # Check that if you remove a product, his reward lines got removed, especially the discount
         # per tax one.
         sol2.unlink()
-        self._auto_rewards(order, self.all_programs)
+        order._update_programs_and_rewards()
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
         # Pedal Bins           |  5  |    100.00  | /        |  500.00 |  500.00 |       /
