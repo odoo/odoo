@@ -8,7 +8,10 @@ MessagingMenuItem.components = { ...MessagingMenuItem.components, MessagingMenuC
 /** @type {MessagingMenuItem} */
 const messagingMenuItemPatch = {
     get attClass() {
-        return { ...super.attClass, "o-p-1_5": this.channel?.hasRtcSessionActive };
+        return {
+            ...super.attClass,
+            "o-p-1_5 o-mail-callBordered": this.channel?.hasRtcSessionActive,
+        };
     },
 };
 patch(MessagingMenuItem.prototype, messagingMenuItemPatch);

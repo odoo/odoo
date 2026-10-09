@@ -25,7 +25,7 @@
 .o-mail-NotificationItem-badge {
     padding: 3px 6px !important;
     &.o-discuss-badge:not(.o-important) {
-        --o-discuss-badge-bg: #{var(--mail-Notification-badgeMutedBg, $gray-500)};
+        --o-discuss-badge-bg: var(--mail-Notification-badgeMutedBg, var(--gray-500));
     }
 }
 
@@ -60,14 +60,14 @@
 .o-mail-NotificationItem-markAsRead {
     background-color: var(--o-view-background-color);
     color: var(--success) !important;
-    outline: 1px solid rgba($success, .75);
+    outline: 1px solid color-mix(in srgb, var(--success) 75%, transparent);
     outline-offset: -1px;
     padding: calc(var(--o-bs-spacer-1) / 2);
 
     &:hover {
-        outline-color: rgba(darken($success, 10%), 1);
-        color: darken($success, 10%) !important;
-        background-color: mix($o-view-background-color, $success, 75%);
+        outline-color: hsl(from var(--success) h s calc(l - 10));
+        color: hsl(from var(--success) h s calc(l - 10)) !important;
+        background-color: color-mix(in srgb, var(--o-view-background-color) 75%, var(--success));
         filter: brightness(1.1);
         box-shadow: var(--box-shadow-sm)
     }

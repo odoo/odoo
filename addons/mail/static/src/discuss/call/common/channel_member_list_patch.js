@@ -9,6 +9,7 @@ MEMBER_CATEGORIES.push(
         sequenceGroup: 10,
         icon: "volume_up_f",
         headerClass: "text-success pt-0 o-discuss-ChannelMemberList-groupInCallHeader",
+        groupClass: "o-mail-callBordered",
         /** @param {import("models").DiscussChannel} channel */
         getMembers: (channel) =>
             channel.rtc_session_ids
