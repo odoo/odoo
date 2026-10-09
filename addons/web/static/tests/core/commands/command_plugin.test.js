@@ -12,6 +12,7 @@ import {
 import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
 
 import { useCommand } from "@web/core/commands/command_hook";
+import { CommandPlugin } from "@web/core/commands/command_plugin";
 import { HotkeyCommandItem } from "@web/core/commands/default_providers";
 import { HotkeyPlugin } from "@web/core/hotkeys/hotkey_plugin";
 import { registry } from "@web/core/registry";
@@ -53,19 +54,19 @@ beforeEach(async () => {
 
 test("commands evilness 👹", async () => {
     expect(function () {
-        getService("command").add();
+        getService(CommandPlugin).add();
     }).toThrow(/A Command must have a name and an action function/);
     expect(function () {
-        getService("command").add(null);
+        getService(CommandPlugin).add(null);
     }).toThrow(/A Command must have a name and an action function/);
     expect(function () {
-        getService("command").add("");
+        getService(CommandPlugin).add("");
     }).toThrow(/A Command must have a name and an action function/);
     expect(function () {
-        getService("command").add("", function action() {});
+        getService(CommandPlugin).add("", function action() {});
     }).toThrow(/A Command must have a name and an action function/);
     expect(function () {
-        getService("command").add("command", null);
+        getService(CommandPlugin).add("command", null);
     }).toThrow(/A Command must have a name and an action function/);
 });
 
@@ -155,7 +156,7 @@ test("useCommand hook with isAvailable", async () => {
 
 test("command with hotkey", async () => {
     const hotkey = "a";
-    getService("command").add("test", () => expect.step(hotkey), {
+    getService(CommandPlugin).add("test", () => expect.step(hotkey), {
         hotkey,
     });
     await animationFrame();
@@ -166,12 +167,12 @@ test("command with hotkey", async () => {
 
 test("global command with hotkey", async () => {
     const globalHotkey = "a";
-    getService("command").add("testA", () => expect.step(globalHotkey), {
+    getService(CommandPlugin).add("testA", () => expect.step(globalHotkey), {
         global: true,
         hotkey: globalHotkey,
     });
     const hotkey = "b";
-    getService("command").add("testB", () => expect.step(hotkey), {
+    getService(CommandPlugin).add("testB", () => expect.step(hotkey), {
         hotkey,
     });
     await animationFrame();
@@ -198,7 +199,7 @@ test("global command with hotkey", async () => {
 test("command with hotkey and isAvailable", async () => {
     const hotkey = "a";
     let isAvailable = false;
-    getService("command").add("test", () => expect.step(hotkey), {
+    getService(CommandPlugin).add("test", () => expect.step(hotkey), {
         hotkey,
         isAvailable: () => isAvailable,
     });
@@ -326,7 +327,7 @@ test("open command palette with command config", async () => {
         },
     ];
     const providers = [{ provide }];
-    getService("command").add(
+    getService(CommandPlugin).add(
         "test",
         () => ({
             providers,
@@ -388,7 +389,7 @@ test("data-hotkey added to command palette", async () => {
 
 test("access to hotkeys from the command palette", async () => {
     const hotkey = "a";
-    getService("command").add("A", () => expect.step("A"), {
+    getService(CommandPlugin).add("A", () => expect.step("A"), {
         hotkey,
     });
 
@@ -449,7 +450,7 @@ test("can be searched", async () => {
     // Register some commands
     const names = ["Cersei Lannister", "Jaime Lannister", "Tyrion Lannister", "Tywin Lannister"];
     for (const name of names) {
-        getService("command").add(name, function action() {});
+        getService(CommandPlugin).add(name, function action() {});
     }
     await animationFrame();
 
@@ -827,10 +828,10 @@ test("command categories", async () => {
 
     // Register some commands
     function action() {}
-    getService("command").add("a", action, { category: "custom-nolabel" });
-    getService("command").add("b", action, { category: "custom" });
-    getService("command").add("c", action);
-    getService("command").add("d", action, { category: "invalid-category" });
+    getService(CommandPlugin).add("a", action, { category: "custom-nolabel" });
+    getService(CommandPlugin).add("b", action, { category: "custom" });
+    getService(CommandPlugin).add("c", action);
+    getService(CommandPlugin).add("d", action, { category: "invalid-category" });
     await animationFrame();
 
     // Open palette
@@ -888,13 +889,13 @@ test("display shortcuts correctly for non-MacOS ", async () => {
 
     // Register some commands
     function action() {}
-    getService("command").add("a", action);
-    getService("command").add("b", action, { hotkey: "alt+b" });
-    getService("command").add("c", action, { hotkey: "c" });
-    getService("command").add("d", action, {
+    getService(CommandPlugin).add("a", action);
+    getService(CommandPlugin).add("b", action, { hotkey: "alt+b" });
+    getService(CommandPlugin).add("c", action, { hotkey: "c" });
+    getService(CommandPlugin).add("d", action, {
         hotkey: "control+d",
     });
-    getService("command").add("e", action, {
+    getService(CommandPlugin).add("e", action, {
         hotkey: "alt+control+e",
     });
     await animationFrame();
@@ -930,13 +931,13 @@ test("display shortcuts correctly for MacOS ", async () => {
 
     // Register some commands
     function action() {}
-    getService("command").add("a", action);
-    getService("command").add("b", action, { hotkey: "alt+b" });
-    getService("command").add("c", action, { hotkey: "c" });
-    getService("command").add("d", action, {
+    getService(CommandPlugin).add("a", action);
+    getService(CommandPlugin).add("b", action, { hotkey: "alt+b" });
+    getService(CommandPlugin).add("c", action, { hotkey: "c" });
+    getService(CommandPlugin).add("d", action, {
         hotkey: "control+d",
     });
-    getService("command").add("e", action, {
+    getService(CommandPlugin).add("e", action, {
         hotkey: "alt+control+e",
     });
     await animationFrame();
@@ -1002,7 +1003,7 @@ test("display shortcuts correctly for MacOS with a new overlayModifier", async (
 });
 
 test("openMainPalette with onClose", async () => {
-    const command = getService("command");
+    const command = getService(CommandPlugin);
     command.openMainPalette({}, () => {
         expect.step("onClose");
     });
@@ -1018,7 +1019,7 @@ test("openMainPalette with onClose", async () => {
 
 test("uses openPalette to modify the config used by the command palette", async () => {
     const action = () => {};
-    getService("command").add("Command1", action);
+    getService(CommandPlugin).add("Command1", action);
 
     await mountWithCleanup(TestComponent);
 
@@ -1039,7 +1040,7 @@ test("uses openPalette to modify the config used by the command palette", async 
         searchValue: "Command",
         providers,
     };
-    getService("command").openPalette(configCustom);
+    getService(CommandPlugin).openPalette(configCustom);
     await animationFrame();
     expect(".o_command").toHaveCount(1);
     expect(queryAllTexts(".o_command .o_command_name")).toEqual(["Command2"]);
@@ -1082,10 +1083,10 @@ test("ensure that calling openPalette multiple times successfully loads the last
         providers: [{ provide: provide[1] }],
     };
 
-    getService("command").openPalette(configCustom1);
+    getService(CommandPlugin).openPalette(configCustom1);
     await animationFrame();
     expect(".o_command_palette").toHaveCount(0);
-    getService("command").openPalette(configCustom2);
+    getService(CommandPlugin).openPalette(configCustom2);
     await animationFrame();
     expect(".o_command_palette").toHaveCount(0);
     providePromise1.resolve();
