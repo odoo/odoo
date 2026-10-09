@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+        <record id="hr_expense_view_help" model="ir.ui.view">
+            <field name="name">hr.expense.help</field>
+            <field name="model">hr.expense</field>
+            <field name="arch" type="xml">
+                <help data_method="get_help_data">
+                    <t t-out="action_help"/>
+                    <div name="alias_tip" class="text-muted mt-4" invisible="not data.get('alias_email')">
+                        Tip: try sending receipts by email <a class="text-body" t-att-href="data.alias_mailto" t-out="data.alias_email"/>
+                    </div>
+                </help>
+            </field>
+        </record>
+
         <record id="hr_expense_view_expenses_analysis_tree" model="ir.ui.view">
             <field name="name">hr.expense.list</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <list string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'">
+                <list string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'" help_id="%(hr_expense.hr_expense_view_help)d">
                     <field name="is_editable" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
                     <field name="company_currency_id" column_invisible="True"/>
@@ -395,7 +408,7 @@
             <field name="name">hr.expense.kanban</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" sample="1" js_class="hr_expense_kanban" quick_create="false">
+                <kanban class="o_kanban_mobile" sample="1" js_class="hr_expense_kanban" quick_create="false" help_id="%(hr_expense.hr_expense_view_help)d">
                     <field name="currency_id"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
