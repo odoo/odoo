@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("SellingMultiSlotEventInPos", {
             EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
             Dialog.is({ title: "Select tickets for" }),
             Dialog.confirm("Confirm"),
-            Dialog.is({ title: "Oh snap !" }),
+            Dialog.is({ title: "Ticket limit exceeded" }),
             Dialog.confirm("ok"),
 
             // Confirm popup - Not enough tickets available for this ticket
@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add("SellingMultiSlotEventInPos", {
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
             Dialog.is({ title: "Select tickets for" }),
             Dialog.confirm("Confirm"),
-            Dialog.is({ title: "Oh snap !" }),
+            Dialog.is({ title: "Ticket limit exceeded" }),
             Dialog.confirm("ok"),
 
             // Confirm popup - Enough availability
