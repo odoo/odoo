@@ -1,12 +1,15 @@
 import typing
 
 from pypdf import errors, filters, generic, PageObject, PdfReader as _Reader, PdfWriter as _Writer
-from pypdf.generic import create_string_object
+from pypdf.annotations import Link
+from pypdf.generic import create_string_object, Fit
 from pypdf import __version__  # noqa: F401
 
 from odoo.tools.func import deprecated
 
 __all__ = [
+    "Fit",
+    "Link",
     "PageObject",
     "PdfReader",
     "PdfWriter",
