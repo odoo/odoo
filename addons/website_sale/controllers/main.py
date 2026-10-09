@@ -455,9 +455,27 @@ class WebsiteSale(payment_portal.PaymentPortal):
             attribute_value_dict,
             tags=tags if filter_by_tags_enabled else None,
         )
-        shop_query = request.env["product.template"]._search(shop_domain)
         filters_domain = self._get_shop_domain(search_term, category, attribute_value_dict={})
-        filters_query = request.env["product.template"]._search(filters_domain)
+        # Match the costly search domain once for all the facet queries, unless there are
+        # too many ids, which would make those queries slower than the subqueries.
+        IN_MAX = 10_000
+        if search_term and product_count <= IN_MAX:
+            filters_ids = (
+                self.env["product.template"]
+                ._search(filters_domain, limit=IN_MAX + 1)
+                .get_result_ids()
+            )
+            if len(filters_ids) <= IN_MAX:
+                filters_domain = Domain("id", "in", filters_ids)
+                # `shop_domain` is `filters_domain` restricted to the attributes and tags
+                shop_domain = filters_domain & self._get_shop_domain(
+                    search=None,
+                    category=None,
+                    attribute_value_dict=attribute_value_dict,
+                    tags=tags if filter_by_tags_enabled else None,
+                )
+        shop_query = self.env["product.template"]._search(shop_domain)
+        filters_query = self.env["product.template"]._search(filters_domain)
 
         filter_by_price_enabled = website.is_view_active("website_sale.filter_products_price")
         if filter_by_price_enabled:
