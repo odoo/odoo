@@ -32,11 +32,7 @@ patch(router, {
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        this.rtc = fields.One("Rtc", {
-            compute() {
-                return {};
-            },
-        });
+        this.rtc = this.computed(() => this.Rtc.insert({}));
         this.ringingChannels = fields.Many("discuss.channel");
         this.onChange(
             () => [this.ringingChannels.length > 0],

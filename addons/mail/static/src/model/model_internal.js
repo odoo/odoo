@@ -1,5 +1,5 @@
 import { markRaw } from "@odoo/owl";
-import { ATTR_SYM, MANY_SYM, ONE_SYM } from "./misc";
+import { ATTR_SYM, MANY_SYM, ONE_SYM, untrackFunctions } from "./misc";
 
 export class ModelInternal {
     /** @type {Map<string, boolean>} */
@@ -14,10 +14,6 @@ export class ModelInternal {
     fieldsHtml = new Map();
     /** @type {Map<string, string>} */
     fieldsTargetModel = new Map();
-    /** @type {Map<string, () => Function[]>} */
-    fieldsCompute = new Map();
-    /** @type {Map<string, boolean>} */
-    fieldsEager = new Map();
     /**
      * Names declared with `computed()`. Each record holds the
      * declaration as its own property until its first read replaces it with an
@@ -72,6 +68,11 @@ export class ModelInternal {
         }
         for (const key in data) {
             const value = data[key];
+            if (!["asProxy", "default", "html", "type"].includes(key) && data[ATTR_SYM]) {
+                throw new Error(
+                    `Unsupported option "${key}" on Attr field "${fieldName}". Attr fields only support "asProxy", "html" and "type".`
+                );
+            }
             switch (key) {
                 case "html": {
                     if (!value) {
@@ -82,17 +83,6 @@ export class ModelInternal {
                 }
                 case "targetModel": {
                     this.fieldsTargetModel.set(fieldName, value);
-                    break;
-                }
-                case "compute": {
-                    this.fieldsCompute.set(fieldName, value);
-                    break;
-                }
-                case "eager": {
-                    if (!value) {
-                        break;
-                    }
-                    this.fieldsEager.set(fieldName, value);
                     break;
                 }
                 case "inverse": {
@@ -114,3 +104,5 @@ export class ModelInternal {
         }
     }
 }
+
+untrackFunctions(ModelInternal.prototype, ["prepareField"]);
