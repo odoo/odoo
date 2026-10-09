@@ -51,11 +51,22 @@
 
     <!-- Dashboard -->
 
+    <record id="pos_config_view_help" model="ir.ui.view">
+        <field name="name">pos.config.help</field>
+        <field name="model">pos.config</field>
+        <field name="type">help</field>
+        <field name="arch" type="xml">
+            <help>
+                <widget name="pos_onboarding_scenarios"/>
+            </help>
+        </field>
+    </record>
+
     <record id="view_pos_config_kanban" model="ir.ui.view">
         <field name="name">pos.config.kanban.view</field>
         <field name="model">pos.config</field>
         <field name="arch" type="xml">
-            <kanban create="false" can_open="0" class="o_pos_kanban" js_class="pos_config_kanban_view">
+            <kanban create="false" can_open="0" class="o_pos_kanban" help_id="%(point_of_sale.pos_config_view_help)d">
                 <field name="cash_control"/>
                 <field name="current_session_id"/>
                 <field name="current_session_state"/>
