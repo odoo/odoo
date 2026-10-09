@@ -335,6 +335,95 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         self.assertEqual(self.product1.total_value, 380)
         self.assertEqual(self.product1.qty_available, 19)
 
+    def test_alreadyout_posts_sold_share_to_cogs(self):
+        """Late landed costs must capitalize remaining qty and expense sold qty.
+
+        Receive 10, deliver 2, validate LC 1000 → Dr valuation 800 + Dr COGS 200.
+        """
+        cogs_account = self.env['account.account'].create({
+            'code': 'COGS.LC.TEST',
+            'name': 'COGS - Landed Cost Test',
+            'account_type': 'expense',
+        })
+        freight_account = self.env['account.account'].create({
+            'code': 'FRGT.LC.TEST',
+            'name': 'Freight - Landed Cost Test',
+            'account_type': 'expense',
+        })
+        self.product1.categ_id.property_account_expense_categ_id = cogs_account
+
+        move_in = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
+        self._make_out_move(self.product1, 2)
+
+        lc = Form(self.env['stock.landed.cost'])
+        lc.account_journal_id = self.stock_journal
+        lc.picking_ids.add(move_in.picking_id)
+        with lc.cost_lines.new() as cost_line:
+            cost_line.product_id = self.productlc1
+            cost_line.price_unit = 1000
+        lc = lc.save()
+        lc.cost_lines.account_id = freight_account
+        lc.compute_landed_cost()
+        lc.button_validate()
+
+        self.assertTrue(lc.account_move_id)
+        amls = lc.account_move_id.line_ids
+        valuation_account = self.company_data['default_account_stock_valuation']
+        self.assertAlmostEqual(
+            sum(amls.filtered(lambda line: line.account_id == valuation_account).mapped('debit')),
+            800.0,
+        )
+        self.assertAlmostEqual(
+            sum(amls.filtered(lambda line: line.account_id == cogs_account).mapped('debit')),
+            200.0,
+        )
+        self.assertAlmostEqual(
+            sum(amls.filtered(lambda line: line.account_id == freight_account).mapped('credit')),
+            1000.0,
+        )
+
+    def test_alreadyout_fully_sold_creates_cogs_entry(self):
+        """When the whole receipt is already delivered, still create a JE to COGS."""
+        cogs_account = self.env['account.account'].create({
+            'code': 'COGS.LC.FULL',
+            'name': 'COGS - Fully Sold LC Test',
+            'account_type': 'expense',
+        })
+        freight_account = self.env['account.account'].create({
+            'code': 'FRGT.LC.FULL',
+            'name': 'Freight - Fully Sold LC Test',
+            'account_type': 'expense',
+        })
+        self.product1.categ_id.property_account_expense_categ_id = cogs_account
+
+        move_in = self._make_in_move(self.product1, 10, unit_cost=10, create_picking=True)
+        self._make_out_move(self.product1, 10)
+
+        lc = Form(self.env['stock.landed.cost'])
+        lc.account_journal_id = self.stock_journal
+        lc.picking_ids.add(move_in.picking_id)
+        with lc.cost_lines.new() as cost_line:
+            cost_line.product_id = self.productlc1
+            cost_line.price_unit = 100
+        lc = lc.save()
+        lc.cost_lines.account_id = freight_account
+        lc.compute_landed_cost()
+        lc.button_validate()
+
+        self.assertTrue(lc.account_move_id, "Fully sold receipts must still create a journal entry")
+        amls = lc.account_move_id.line_ids
+        self.assertAlmostEqual(
+            sum(amls.filtered(lambda line: line.account_id == cogs_account).mapped('debit')),
+            100.0,
+        )
+        self.assertAlmostEqual(
+            sum(amls.filtered(lambda line: line.account_id == freight_account).mapped('credit')),
+            100.0,
+        )
+        self.assertFalse(amls.filtered(
+            lambda line: line.account_id == self.company_data['default_account_stock_valuation']
+        ))
+
     def test_lc_generated_from_bill_multi_comapnies(self):
         """
         In a multi-company environment:
