@@ -64,6 +64,7 @@
         <field name="group_ids" eval="[(4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
         <field name="arch" type="xml">
             <kanban
+                help_id="%(project.project_task_view_help)d"
                 highlight_color="color"
                 class="o_kanban_small_column o_kanban_project_tasks"
                 default_group_by="stage_id"
