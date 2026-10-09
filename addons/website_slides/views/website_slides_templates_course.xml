@@ -184,7 +184,7 @@
                             <div class="tab-content py-4 o_wslides_tabs_content mb-4" id="courseMainTabContent">
                                 <div t-att-class="'tab-pane fade %s' % ('show active' if active_tab == 'home' else '')" id="home" role="tabpanel" aria-labelledby="home-tab">
                                     <!-- ==== Error notification ==== -->
-                                    <div t-if="access_error == 'course_content'" class="alert alert-danger alert-dismissable mb-1" role="alert">
+                                    <div t-if="access_error == 'course_content'" class="alert alert-danger alert-dismissible mb-1" role="alert">
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         You need to join this course to access "<t t-out="access_error_content_name"/>".
                                     </div>
