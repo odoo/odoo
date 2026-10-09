@@ -2098,6 +2098,23 @@ actual arch.
                     )
                     self._raise_view_error(msg, node)
 
+    def _validate_tag_help(self, node, name_manager, node_info):
+        if not node_info['validate'] or not (method := node.get('data_method')):
+            return
+        # the method is called by the web client, without record
+        func = getattr(name_manager.model, method, None)
+        if (
+            not callable(func)
+            or method.startswith('_')
+            or getattr(func, '_api_private', False)
+            or not getattr(func, '_api_model', False)
+        ):
+            msg = _(
+                "Attribute data_method of help views must be the name of a public @api.model method of %(model)s (%(method)s)",
+                model=name_manager.model._name, method=method,
+            )
+            self._raise_view_error(msg, node)
+
     def _validate_tag_button(self, node, name_manager, node_info):
         if not node_info['validate']:
             return
@@ -2260,7 +2277,7 @@ actual arch.
                 self._log_view_warning(msg, node)
 
     def _is_qweb_based_view(self, view_type):
-        return view_type == 'kanban' or view_type == 'card' or view_type == 'calendar'
+        return view_type in ('kanban', 'card', 'calendar', 'help')
 
     def _validate_attributes(self, node, name_manager, node_info):
         """ Generic validation of node attributes. """
@@ -3481,6 +3498,9 @@ class NameManager:
         access_groups = node_info['model_groups'] & node_info['view_groups']
         for name in names:
             if name == 'id':
+                continue
+            if name == 'data' and node_info.get('view_type') == 'help':
+                # values returned by the `data_method` of help views
                 continue
             if not name.startswith('parent.'):
                 self.used_fields[name][access_groups] = (use, node)
