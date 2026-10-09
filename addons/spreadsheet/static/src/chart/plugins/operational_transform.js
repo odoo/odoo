@@ -1,6 +1,14 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 const { otRegistry } = spreadsheet.registries;
 
+function isLinkedToDataSource(odooLink, dataSourceType, dataSourceCoreId) {
+    return (
+        odooLink?.type === "dataSource" &&
+        odooLink.dataSourceType === dataSourceType &&
+        odooLink.dataSourceCoreId === dataSourceCoreId
+    );
+}
+
 otRegistry.addTransformation(
     "DELETE_CHART",
     ["UPDATE_ODOO_LINK_TO_CHART"],
@@ -8,8 +16,7 @@ otRegistry.addTransformation(
         if (executed.chartId === toTransform.chartId) {
             return undefined;
         }
-        const { dataSourceCoreId, type } = toTransform.odooDataSource;
-        if (type === "chart" && executed.figureId === dataSourceCoreId) {
+        if (isLinkedToDataSource(toTransform.odooLink, "chart", executed.chartId)) {
             return undefined;
         }
         return toTransform;
@@ -20,8 +27,7 @@ otRegistry.addTransformation(
     "REMOVE_PIVOT",
     ["UPDATE_ODOO_LINK_TO_CHART"],
     (toTransform, executed) => {
-        const { dataSourceCoreId, type } = toTransform.odooDataSource;
-        if (type === "pivot" && dataSourceCoreId === executed.pivotId) {
+        if (isLinkedToDataSource(toTransform.odooLink, "pivot", executed.pivotId)) {
             return undefined;
         }
         return toTransform;
@@ -32,8 +38,7 @@ otRegistry.addTransformation(
     "REMOVE_ODOO_LIST",
     ["UPDATE_ODOO_LINK_TO_CHART"],
     (toTransform, executed) => {
-        const { dataSourceCoreId, type } = toTransform.odooDataSource;
-        if (type === "list" && dataSourceCoreId === executed.listId) {
+        if (isLinkedToDataSource(toTransform.odooLink, "list", executed.listId)) {
             return undefined;
         }
         return toTransform;
