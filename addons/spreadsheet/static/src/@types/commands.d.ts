@@ -132,7 +132,7 @@ declare module "@spreadsheet" {
             | {
                 type: "dataSource";
                 dataSourceCoreId: string;
-                datasourceType: string;
+                dataSourceType: string;
               }
             | undefined;
     }
