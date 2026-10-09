@@ -50,7 +50,7 @@ class MailMessage(models.Model):
             if track_vals_lst:
                 self.env['mail.tracking.value'].sudo().create(track_vals_lst)
             if other_cmd:
-                message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+                message.write({'tracking_value_ids': other_cmd})
 
     def _is_empty(self):
         # override to support mail.tracking.value records in addition to tracking

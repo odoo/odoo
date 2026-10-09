@@ -7,6 +7,7 @@ from markupsafe import Markup
 
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.exceptions import AccessError
 from odoo.addons.mail.models.mail_track_mixin import MailTrackMixin
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.tests import Form, tagged, users
@@ -1425,6 +1426,55 @@ class TestTrackingInternals(TestTrackingCommon):
                 '', '<p>Html</p>',
                 'html_field', {'string': 'HTML', 'type': 'html'},
             )
+
+    def test_tracking_value_mixed_commands(self):
+        existing_message = self.env['mail.message'].create({
+            'body': '<p>Existing tracking</p>',
+            'message_type': 'comment',
+            'tracking_value_ids': [(0, 0, {
+                'new_value_char': 'Original',
+                'old_value_char': False,
+            })],
+        })
+        existing_tracking = existing_message.tracking_value_ids
+
+        message = self.env['mail.message'].create({
+            'body': '<p>Mixed tracking commands</p>',
+            'message_type': 'comment',
+            'tracking_value_ids': [
+                (0, 0, {
+                    'new_value_char': 'Created',
+                    'old_value_char': False,
+                }),
+                (1, existing_tracking.id, {'new_value_char': 'Updated'}),
+            ],
+        })
+
+        self.assertEqual(len(message.tracking_value_ids), 1)
+        self.assertEqual(existing_tracking.new_value_char, 'Updated')
+
+    @users('employee')
+    def test_tracking_value_command_access(self):
+        message = self.env['mail.message'].create({
+            'body': '<p>New tracking</p>',
+            'message_type': 'comment',
+            'tracking_value_ids': [(0, 0, {
+                'new_value_char': 'Created',
+                'old_value_char': False,
+            })],
+        })
+        self.assertEqual(len(message.sudo().tracking_value_ids), 1)
+        existing_tracking = message.sudo().tracking_value_ids
+
+        with self.assertRaises(AccessError):
+            self.env['mail.message'].create({
+                'body': '<p>Update tracking</p>',
+                'message_type': 'comment',
+                'tracking_value_ids': [
+                    (1, existing_tracking.id, {'new_value_char': 'Updated'}),
+                ],
+            })
+        self.assertEqual(existing_tracking.new_value_char, 'Created')
 
     @users('employee')
     def test_track_multi_models(self):
