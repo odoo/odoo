@@ -755,7 +755,7 @@ class Website(models.Model):
             fpos_sudo = AccountFiscalPositionSudo.browse(
                 request.session[FISCAL_POSITION_SESSION_CACHE_KEY]
             )
-            if fpos_sudo and fpos_sudo.exists():
+            if not fpos_sudo or fpos_sudo.exists():
                 return fpos_sudo
 
         partner_sudo = self.env.user.partner_id
