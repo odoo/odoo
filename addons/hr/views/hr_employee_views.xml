@@ -625,12 +625,100 @@
             </field>
         </record>
 
+        <record id="hr_employee_action_new" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+        </record>
+
+        <record id="hr_employee_view_help" model="ir.ui.view">
+            <field name="name">hr.employee.help</field>
+            <field name="model">hr.employee</field>
+            <field name="type">help</field>
+            <field name="arch" type="xml">
+                <help data_method="get_help_data">
+                    <t invisible="data.get('is_onboarding')">
+                        <t t-out="action_help"/>
+                    </t>
+                    <t invisible="not data.get('is_onboarding')">
+                        <!-- small screens: no onboarding helper (it doesn't really suit them) -->
+                        <div class="d-md-none">
+                            <t t-out="action_help"/>
+                        </div>
+                        <div class="d-none d-md-flex h-100 w-100 flex-column align-items-center">
+                            <p class="text-center fs-1 mt-auto mb-0">
+                                Ready to start your experience?
+                            </p>
+                            <div class="d-flex flex-column align-self-center justify-content-center mb-auto mt-4">
+                                <div class="d-flex justify-content-center gap-4">
+                                    <button name="load_demo_data" type="object" class="btn-primary text-nowrap px-3">Load sample data</button>
+                                    <button name="%(hr.hr_employee_action_new)d" type="action" class="btn-secondary text-nowrap px-3">Create an employee</button>
+                                </div>
+                                <div class="my-3 py-1">
+                                    <hr style="width: 520px;"/>
+                                </div>
+                <div class="container mt-2">
+                            <div class="row justify-content-center text-center">
+                                <div class="col-auto align-items-center mb-4 ms-3 me-4 ps-0">
+                                    <p class="fs-2 mb-3">
+                                        Hiring
+                                    </p>
+                                    <div class="d-flex flex-column gap-2 flex-nowrap">
+                                        <div class="vstack"><div class="col align-self-center mb-1"><img src="/hr_recruitment/static/description/icon.png" width="60" alt="Hiring"/></div><small>Hiring</small></div>
+                                        <div class="vstack"><div class="col align-self-center mb-1"><img src="/sign/static/description/icon.png" width="60" alt="Sign"/></div><small>Sign</small></div>
+                                        <div class="vstack"><div class="col align-self-center mb-1"><img src="/hr_referral/static/description/icon.png" width="60" alt="Referral"/></div><small>Referral</small></div>
+                                    </div>
+                                </div>
+                                <div class="col-auto justify-content-center mb-4 mx-2">
+                                    <p class="fs-2 mb-3">
+                                        Experience
+                                    </p>
+                                    <div class="d-flex flex-row flex-nowrap">
+                                        <div class="d-flex flex-column gap-2 flex-nowrap me-4">
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/ai/static/description/icon.png" width="60" alt="AI"/></div><small>AI</small></div>
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/planning/static/description/icon.png" width="60" alt="Planning"/></div><small>Planning</small></div>
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/fleet/static/description/icon.png" width="60" alt="Fleet"/></div><small>Fleet</small></div>
+                                        </div>
+                                        <div class="d-flex flex-column gap-2 flex-nowrap">
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/hr_payroll/static/description/icon.png" width="60" alt="Payroll"/></div><small>Payroll</small></div>
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/hr_holidays/static/description/icon.png" width="60" alt="Leaves"/></div><small>Leaves</small></div>
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/lunch/static/description/icon.png" width="60" alt="Lunch"/></div><small>Lunch</small></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto justify-content-center mb-4 ms-2 me-0 pe-0">
+                                    <p class="fs-2 mb-3">
+                                        Development
+                                    </p>
+                                    <div class="d-flex flex-row flex-nowrap">
+                                        <div class="d-flex flex-column gap-2 flex-nowrap me-3">
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/hr_appraisal/static/description/icon.png" width="60" alt="Performance"/></div><small>Performance</small></div>
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/website_slides/static/description/icon.png" width="60" alt="eLearning"/></div><small>eLearning</small></div>
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/documents/static/description/icon.png" width="60" alt="Documents"/></div><small>Documents</small></div>
+                                        </div>
+                                        <div class="d-flex flex-column gap-2 flex-nowrap">
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/hr_skills/static/description/icon.png" width="60" alt="Talent"/></div><small>Talent</small></div>
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/event/static/description/icon.png" width="60" alt="Trainings"/></div><small>Trainings</small></div>
+                                            <div class="vstack"><div class="col align-self-center mb-1"><img src="/board/static/description/icon.png" width="60" alt="Dashboard"/></div><small>Dashboard</small></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            </div>
+                        </div>
+                    </t>
+                </help>
+            </field>
+        </record>
+
         <record id="hr_kanban_view_employees" model="ir.ui.view">
             <field name="name">hr.employee.kanban</field>
             <field name="model">hr.employee</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban class="o_hr_employee_kanban" sample="1" duplicate="false" js_class="hr_employee_kanban">
+                <kanban class="o_hr_employee_kanban" sample="1" duplicate="false" js_class="hr_employee_kanban" help_id="%(hr.hr_employee_view_help)d">
                     <header>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action" groups="hr.group_hr_user"/>
                     </header>
