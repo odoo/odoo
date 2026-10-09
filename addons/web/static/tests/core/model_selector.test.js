@@ -47,7 +47,6 @@ class IrModel extends models.Model {
 }
 
 defineModels([IrModel]);
-describe.current.tags("desktop");
 
 onRpc("ir.model", "display_name_for", function ({ args }) {
     const models = args[0];
@@ -208,6 +207,30 @@ test("model_selector: select a model", async () => {
     });
     await contains(".o-autocomplete--input").click();
     await contains(".o_model_selector_model_2").click();
+    expect.verifySteps(["model selected"]);
+});
+
+test("model_selector: remains interactive on mobile", async () => {
+    await mountWithCleanup(ModelSelector, {
+        props: {
+            models: ["model.1"],
+            placeholder: "No linked record",
+            onModelSelected: (selected) => {
+                expect.step("model selected");
+                expect(selected).toEqual({
+                    label: "Model 1",
+                    technical: "model.1",
+                });
+            },
+        },
+    });
+
+    expect(".o-autocomplete--input").not.toHaveAttribute("readonly");
+    expect(".o-autocomplete--input").toHaveAttribute("placeholder", "No linked record");
+
+    await contains(".o-autocomplete--input").click();
+    await contains(".o_model_selector_model_1").click();
+
     expect.verifySteps(["model selected"]);
 });
 
