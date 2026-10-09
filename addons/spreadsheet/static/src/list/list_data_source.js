@@ -176,6 +176,7 @@ export class ListDataSource extends OdooViewsDataSource {
             case "many2one":
             case "many2many":
             case "one2many":
+            case "reference":
                 spec[field.name] = {
                     fields: {
                         display_name: {},
@@ -365,6 +366,7 @@ export class ListDataSource extends OdooViewsDataSource {
     _parseServerValue(field, value) {
         switch (field.type) {
             case "many2one":
+            case "reference":
                 return value.display_name ?? "";
             case "one2many":
             case "many2many": {
