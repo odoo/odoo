@@ -437,7 +437,7 @@ export class PosOrder extends PosOrderAccounting {
         newPaymentLine.setAmount(totalAmountDue);
 
         if ((payment_method.payment_interface && !this.isRefund) || payment_method.useBankQrCode) {
-            newPaymentLine.setPaymentStatus("pending");
+            newPaymentLine.payment_status = "pending";
         }
         return { status: true, data: newPaymentLine };
     }

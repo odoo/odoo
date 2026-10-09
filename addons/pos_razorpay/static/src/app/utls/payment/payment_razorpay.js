@@ -40,7 +40,7 @@ export class PaymentRazorpay extends PaymentInterface {
         // handle timeout
         const line = this.pendingRazorpayline();
         if (line) {
-            line.setPaymentStatus("retry");
+            line.payment_status = "retry";
         }
         this._showError(
             _t(
@@ -58,17 +58,17 @@ export class PaymentRazorpay extends PaymentInterface {
     _razorpayHandleResponse(response) {
         const line = this.pendingRazorpayline();
         if (response.error) {
-            line.setPaymentStatus("force_done");
+            line.payment_status = "force_done";
             this.payment_stopped
                 ? this._showError(_t("Transaction failed due to inactivity"))
                 : this._showError(response.error);
             if (response.payment_messageCode === "P2P_DEVICE_CANCELED") {
-                line.setPaymentStatus("retry");
+                line.payment_status = "retry";
             }
             this._removePaymentHandler();
             return Promise.resolve(false);
         }
-        line.setPaymentStatus("waitingCard");
+        line.payment_status = "waiting_card";
         line.razorpay_p2p_request_id = response.p2pRequestId;
         return this._waitForPaymentConfirmation();
     }
@@ -90,7 +90,7 @@ export class PaymentRazorpay extends PaymentInterface {
     _razorpayHandleRefundResponse(response) {
         const paymentLine = this.pendingRazorpayline();
         if (response?.error) {
-            paymentLine.setPaymentStatus("retry");
+            paymentLine.payment_status = "retry";
             this._showError(response.error);
             this._removePaymentHandler();
             return false;
@@ -106,7 +106,7 @@ export class PaymentRazorpay extends PaymentInterface {
         } else if (resultCode === "REFUNDED" || resultCode === "VOIDED") {
             this._updatePaymentLine(paymentLine, response);
             paymentLine.payment_date = this._getPaymentDate(response?.postingDate - 19800000);
-            paymentLine.setPaymentStatus("done");
+            paymentLine.payment_status = "done";
             this._removePaymentHandler();
         }
         return Promise.resolve(true);
@@ -141,7 +141,7 @@ export class PaymentRazorpay extends PaymentInterface {
         line.payment_ref_no =
             referencePrefix + "/" + orderId + "/" + crypto.randomUUID().replaceAll("-", "");
         if (order.isRefund) {
-            line.setPaymentStatus("waitingCard");
+            line.payment_status = "waiting_card";
             const data = {
                 amount: Math.abs(line.amount),
                 externalRefNumber: line.payment_ref_no,
@@ -235,7 +235,7 @@ export class PaymentRazorpay extends PaymentInterface {
             //Within 90 seconds, inactivity will result in transaction cancellation and payment termination.
             if (this.payment_stopped) {
                 this._razorpayCancel().then(() => {
-                    paymentLine.setPaymentStatus("retry");
+                    paymentLine.payment_status = "retry";
                     this.payment_stopped = false;
                 });
                 return resolve(false);

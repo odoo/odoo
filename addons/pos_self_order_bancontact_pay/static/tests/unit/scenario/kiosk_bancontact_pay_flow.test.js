@@ -18,7 +18,7 @@ test("kiosk_bancontact_pay_success: scanning the QR code pays the kiosk order", 
     const payment = Utils.lastPaymentline(store);
     expect(payment.payment_method_id.name).toBe(Utils.DISPLAY);
     expect(payment.bancontact_id).toBe("kiosk_bancontact_success_0");
-    expect(payment.payment_status).toBe("waitingScan");
+    expect(payment.payment_status).toBe("waiting_scan");
     expect.verifySteps([]);
 
     await Utils.mockCallbackBancontactPay(store, "kiosk_bancontact_success_0", "SUCCEEDED");
@@ -52,7 +52,7 @@ test("kiosk_bancontact_pay_failed: a failed payment can be retried", async () =>
 
     const payment = Utils.lastPaymentline(store);
     expect(payment.bancontact_id).toBe("kiosk_bancontact_failed_1");
-    expect(payment.payment_status).toBe("waitingScan");
+    expect(payment.payment_status).toBe("waiting_scan");
     expect(store.paymentError).toBe(false);
 
     await Utils.mockCallbackBancontactPay(store, "kiosk_bancontact_failed_1", "SUCCEEDED");

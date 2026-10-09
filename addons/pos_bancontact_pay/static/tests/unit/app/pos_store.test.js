@@ -74,7 +74,7 @@ describe("handleBancontactPayNotification", () => {
         });
 
         const reset = (orderSelected, paymentlineSelected, id) => {
-            paymentline.payment_status = "waitingScan";
+            paymentline.payment_status = "waiting_scan";
             paymentline.qr_code = "bancontact_qr_code";
             paymentline.bancontact_id = "bancontact_id";
             notificationMessage = null;
@@ -204,7 +204,7 @@ describe("handleBancontactPayNotification", () => {
         });
 
         const reset = (orderSelected, paymentlineSelected, id) => {
-            paymentline.payment_status = "waitingScan";
+            paymentline.payment_status = "waiting_scan";
             paymentline.qr_code = "bancontact_qr_code";
             paymentline.bancontact_id = "bancontact_id";
             notificationMessage = null;
@@ -283,16 +283,16 @@ describe("handleBancontactPayNotification", () => {
         const order = await getFilledOrder(store);
         const display = store.models["pos.payment.method"].get(4);
         const paymentline = createPaymentLine(store, order, display);
-        paymentline.setPaymentStatus = () => {
-            expect.step("paymentline.setPaymentStatus");
-        };
+        paymentline.qr_code = "bancontact_qr_code";
+        const initialStatus = paymentline.payment_status;
 
         // not found
         await store.handleBancontactPayNotification({
             bancontact_id: "not_found_bancontact_id",
             bancontact_status: "SUCCEEDED",
         });
-        expect.verifySteps([]);
+        expect(paymentline.payment_status).toBe(initialStatus);
+        expect(paymentline.qr_code).toBe("bancontact_qr_code");
 
         // already done
         paymentline.bancontact_id = "bancontact_id";
@@ -301,16 +301,17 @@ describe("handleBancontactPayNotification", () => {
             bancontact_id: "bancontact_id",
             bancontact_status: "SUCCEEDED",
         });
-        expect.verifySteps([]);
+        expect(paymentline.qr_code).toBe("bancontact_qr_code");
 
         // order finalized
-        paymentline.payment_status = "waitingScan";
+        paymentline.payment_status = "waiting_scan";
         order.state = "done";
         await store.handleBancontactPayNotification({
             bancontact_id: "bancontact_id",
             bancontact_status: "SUCCEEDED",
         });
-        expect.verifySteps([]);
+        expect(paymentline.payment_status).toBe("waiting_scan");
+        expect(paymentline.qr_code).toBe("bancontact_qr_code");
 
         // success
         order.state = "draft";
@@ -318,6 +319,7 @@ describe("handleBancontactPayNotification", () => {
             bancontact_id: "bancontact_id",
             bancontact_status: "SUCCEEDED",
         });
-        expect.verifySteps(["paymentline.setPaymentStatus"]);
+        expect(paymentline.payment_status).toBe("done");
+        expect(paymentline.qr_code).toBe(null);
     });
 });
