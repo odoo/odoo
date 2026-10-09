@@ -608,6 +608,12 @@ export class PosOrder extends PosOrderAccounting {
         return this.to_invoice;
     }
 
+    get hasCabaTax() {
+        return this.getOrderlines().some((line) =>
+            (line.tax_ids || []).some((tax) => tax && tax.tax_exigibility === "on_payment")
+        );
+    }
+
     /* ---- Partner --- */
     // the partner related to the current order.
     setPartner(partner) {
