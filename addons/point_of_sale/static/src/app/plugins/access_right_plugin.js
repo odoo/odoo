@@ -97,7 +97,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get disablePartner() {
-        return true;
+        return false;
     }
 
     get canEditDetails() {
@@ -105,7 +105,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get disableClickPayment() {
-        return true;
+        return false;
     }
 
     get canAccessDebugMode() {
@@ -117,7 +117,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get disableValidateOrder() {
-        return true;
+        return false;
     }
 
     get canAccessButton() {
@@ -129,7 +129,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get disableToggleFavorite() {
-        return true;
+        return false;
     }
 
     get canAccessQuotation() {
@@ -169,11 +169,11 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get disableLinediscount() {
-        return true;
+        return !this.config.manual_discount;
     }
 
     get disablePriceButton() {
-        return this.config.restrict_price_control || this.loggedCashier?._role !== "manager";
+        return this.config.restrict_price_control && this.loggedCashier?._role !== "manager";
     }
 
     get canCancelOrder() {
@@ -209,7 +209,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get disableToggleOrder() {
-        return true;
+        return false;
     }
 
     get canClickOrderLine() {
@@ -217,7 +217,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get disableBackSpaceButton() {
-        return true;
+        return false;
     }
 
     get canSwitchSign() {

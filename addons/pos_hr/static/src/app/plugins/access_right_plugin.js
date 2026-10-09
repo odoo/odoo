@@ -100,19 +100,25 @@ patch(PosAccessRightPlugin.prototype, {
         return this.hasEmployeeRole(["manager"]);
     },
     get disablePartner() {
-        return this.hasEmployeeRole(["cashier", "manager", "restrictive"]);
+        return super.disablePartner || !this.hasEmployeeRole(["cashier", "manager", "restrictive"]);
     },
     get canEditDetails() {
         return this.hasEmployeeRole(["cashier", "manager"]);
     },
     get disableClickPayment() {
-        return this.hasEmployeeRole(["cashier", "manager", "restrictive"]);
+        return (
+            super.disableClickPayment ||
+            !this.hasEmployeeRole(["cashier", "manager", "restrictive"])
+        );
     },
     get canSplitOrder() {
         return this.hasEmployeeRole(["cashier", "manager"]);
     },
     get disableValidateOrder() {
-        return this.hasEmployeeRole(["cashier", "manager", "restrictive"]);
+        return (
+            super.disableValidateOrder ||
+            !this.hasEmployeeRole(["cashier", "manager", "restrictive"])
+        );
     },
     get canAccessButton() {
         return this.hasEmployeeRole(["cashier", "manager", "restrictive"]);
@@ -121,7 +127,7 @@ patch(PosAccessRightPlugin.prototype, {
         return this.hasEmployeeRole(["manager", "cashier"]);
     },
     get disableToggleFavorite() {
-        return this.hasEmployeeRole(["manager", "cashier"]);
+        return super.disableToggleFavorite || !this.hasEmployeeRole(["manager", "cashier"]);
     },
     get canAccessQuotation() {
         return this.hasEmployeeRole(["manager", "cashier"]);
@@ -151,10 +157,10 @@ patch(PosAccessRightPlugin.prototype, {
         return this.hasEmployeeRole(["manager", "cashier"]);
     },
     get disableLinediscount() {
-        return this.hasEmployeeRole(["manager", "cashier"]);
+        return super.disableLinediscount || !this.hasEmployeeRole(["manager", "cashier"]);
     },
     get disablePriceButton() {
-        return this.hasEmployeeRole(["manager", "cashier"]);
+        return super.disablePriceButton || !this.hasEmployeeRole(["manager", "cashier"]);
     },
     get canCancelOrder() {
         return this.hasEmployeeRole(["manager", "cashier"]);
@@ -184,16 +190,21 @@ patch(PosAccessRightPlugin.prototype, {
         return this.hasEmployeeRole(["manager", "cashier", "restrictive"]);
     },
     get disableToggleOrder() {
-        return this.hasEmployeeRole(["manager", "cashier", "restrictive"]);
+        return (
+            super.disableToggleOrder || !this.hasEmployeeRole(["manager", "cashier", "restrictive"])
+        );
     },
     get canClickOrderLine() {
         return this.hasEmployeeRole(["manager", "cashier"]);
     },
     get disableBackSpaceButton() {
-        return this.hasEmployeeRole(["manager", "cashier", "restrictive"]);
+        return (
+            super.disableBackSpaceButton ||
+            !this.hasEmployeeRole(["manager", "cashier", "restrictive"])
+        );
     },
     get canSwitchSign() {
-        return this.hasEmployeeRole(["manager", "cashier"]);
+        return super.canSwitchSign && this.hasEmployeeRole(["manager", "cashier"]);
     },
     get showEditPlanButton() {
         return this.hasEmployeeRole(["manager"]);
