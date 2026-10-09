@@ -102,13 +102,24 @@ class StockLot(models.Model):
 
     @api.constrains('name', 'product_id', 'company_id')
     def _check_unique_lot(self):
-        domain = [('product_id', 'in', self.product_id.ids),
-                  ('name', 'in', self.mapped('name'))]
+        """Ensure uniqueness only for serial-number tracked products.
+
+        Lots for products tracked "by lots" are allowed to reuse the same
+        lot name across multiple records/shipments.
+        """
+        serial_lots = self.filtered(lambda lot: lot.product_id.tracking == 'serial')
+        if not serial_lots:
+            return
+
+        domain = [
+            ('product_id', 'in', serial_lots.product_id.ids),
+            ('name', 'in', serial_lots.mapped('name')),
+        ]
         groupby = ['company_id', 'product_id', 'name']
-        if any(not lot.company_id for lot in self):
+        if any(not lot.company_id for lot in serial_lots):
             # We need to check across other companies to not have duplicates between 'no-company' and a company.
-            self = self.sudo()
-        records = self.with_context(skip_preprocess_gs1=True)._read_group(domain, groupby, ['__count'], order='company_id DESC')
+            serial_lots = serial_lots.sudo()
+        records = serial_lots.with_context(skip_preprocess_gs1=True)._read_group(domain, groupby, ['__count'], order='company_id DESC')
         error_message_lines = set()
         cross_lots = {}
         for company, product, name, count in records:
