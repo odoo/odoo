@@ -4198,13 +4198,13 @@ class TestHelpViews(ViewCase):
         # buttons always pass record ids as first argument, so they can't call
         # @api.model methods (their first argument would be the ids)
         self.assertInvalid(
-            '<list><field name="name"/><header><button name="get_empty_list_help" type="object" args="[\'\']" display="always"/></header></list>',
-            "get_empty_list_help on res.partner is decorated with @api.model and cannot be called from a button",
+            '<list><field name="name"/><header><button name="name_create" type="object" args="[\'\']" display="always"/></header></list>',
+            "name_create on res.partner is decorated with @api.model and cannot be called from a button",
             model='res.partner',
         )
         self.assertInvalid(
-            '<help><button name="get_empty_list_help" type="object" args="[\'\']"/></help>',
-            "get_empty_list_help on res.partner is decorated with @api.model and cannot be called from a button",
+            '<help><button name="name_create" type="object" args="[\'\']"/></help>',
+            "name_create on res.partner is decorated with @api.model and cannot be called from a button",
             model='res.partner',
         )
 

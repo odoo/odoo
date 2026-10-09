@@ -2872,18 +2872,6 @@ class Base(models.AbstractModel):
         self.ensure_one()
         return self.get_record_default_action(access_uid=access_uid)
 
-    @api.model
-    def get_empty_list_help(self, help_message: str) -> str:
-        """ Hook method to customize the help message in empty list/kanban views.
-
-        By default, it returns the help received as parameter.
-
-        :param help_message: ir.actions.act_window help content
-        :return: help message displayed when there is no result to display
-          in a list/kanban view (by default, it returns the action help)
-        """
-        return help_message
-
     #
     # Override this method if you need a window title that depends on the context
     #

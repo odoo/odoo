@@ -12,7 +12,7 @@ import { ViewCompiler } from "@web/views/view_compiler";
  *  - <button>/<a> with type "object" or "action" (compiled into ViewButtons,
  *    executed on an empty recordset)
  *  - <widget name="..."/> (from the "view_widgets" registry, without record)
- *  - `action_help`, the help of the action (after `get_empty_list_help`), to insert with <t t-out="action_help"/>
+ *  - `action_help`, the help of the action, to insert with <t t-out="action_help"/>
  *
  * Groups are applied server-side, as for any view.
  */
