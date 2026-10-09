@@ -5,11 +5,9 @@
         <div t-if="this.paymentLines.length" class="paymentlines flex-grow-1 d-flex flex-column overflow-y-auto gap-2" t-att-class="{'mb-3': !this.ui.isSmall}">
             <t t-foreach="this.paymentLines" t-as="line" t-key="line.uuid">
                 <div class="paymentline d-flex align-items-center rounded-3" t-att-class="{ 'selected': line.isSelected() }">
-                    <!-- Show QR Code -->
-                    <t t-if="line.useQr">
-                        <button class="paymentline_show_qr_code btn btn-link ms-2 ps-3" t-on-click="() => this.showQrCode(line)" t-att-disabled="!line.qr_code || !line.isProcessing" aria-label="Show QR Code" title="Show QR Code">
-                            <i class="oi" data-icon="qr_code" role="img" />
-                        </button>
+                    <t t-set="controls" t-value="this.getLineControls(line)" />
+                    <t t-foreach="controls.start" t-as="control" t-key="control.id">
+                        <t t-call="point_of_sale.PaymentScreenPaymentLines.Control" />
                     </t>
 
                     <!-- Payment Info -->
@@ -22,18 +20,9 @@
                         </div>
                     </div>
 
-                    <!-- Delete or Spinner -->
-                    <div t-if="(!line.isSelected() and line.isProcessing)"
-                        class="payment-spinner mx-2 px-3">
-                        <i class="oi oi-spin" data-icon="autorenew" role="img" />
-                    </div>
-                    <button t-elif="line.payment_status !== 'done'"
-                            class="delete-button btn btn-link mx-2 px-3"
-                            t-on-click="() => this.props.deleteLine(line.uuid)"
-                            aria-label="Delete"
-                            title="Delete">
-                        <i class="oi text-danger" data-icon="close_small"/>
-                    </button>
+                    <t t-foreach="controls.end" t-as="control" t-key="control.id">
+                        <t t-call="point_of_sale.PaymentScreenPaymentLines.Control" />
+                    </t>
                 </div>
 
                 <!-- Payment Status -->
@@ -62,6 +51,21 @@
                     </t>
                 </div>
             </t>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.PaymentScreenPaymentLines.Control">
+        <button t-if="control.action"
+                class="btn btn-link"
+                t-att-class="control.classes"
+                t-on-click="control.action"
+                t-att-disabled="control.disabled"
+                t-att-aria-label="control.title"
+                t-att-title="control.title">
+            <i class="oi" t-att-class="control.iconClass" t-att-data-icon="control.icon" role="img" />
+        </button>
+        <div t-else="" t-att-class="control.classes">
+            <i class="oi" t-att-class="control.iconClass" t-att-data-icon="control.icon" role="img" />
         </div>
     </t>
 
