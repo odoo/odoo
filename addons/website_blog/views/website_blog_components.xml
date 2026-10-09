@@ -215,7 +215,7 @@ Options:
     <xpath expr="//div[@id='o_wblog_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-4" t-ignore="true">
             <h2 class="h6">Follow Us</h2>
-            <t t-snippet-call="website.s_social_media" string="Social Media"
+            <t t-snippet-call="website.s_social_media"
                 _ignore.f="true"
                 _classes.f="no_icon_color oe_unremovable oe_unmovable"
                 _icon_classes.f="rounded-circle o_sm_custom_size"
@@ -301,7 +301,7 @@ Display a sidebar beside the post content.
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4" t-ignore="true">
             <h2 class="small mb-3">Share this post</h2>
-            <t t-snippet-call="website.s_share" string="Share"
+            <t t-snippet-call="website.s_share"
                 _classes.f="no_icon_color oe_unremovable oe_unmovable"
                 _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
                 _style.f="--fa-icon-size: 40px;"
