@@ -275,3 +275,34 @@ class TestStructure(TransactionCase):
         self.assertEqual(test_partner.vat, '12ABC34501DE35')
         test_partner.write({'vat': '51.494.569/0131-70'})
         self.assertEqual(test_partner.vat, '51494569013170')
+
+    def test_vat_uz(self):
+        """Test Uzbekistan VAT validation for companies and individuals."""
+        uz_country = self.env.ref('base.uz')
+
+        company_partner = self.env['res.partner'].create({
+            'name': 'UZ Company',
+            'country_id': uz_country.id,
+            'vat': '123456789',
+            'is_company': True,
+        })
+
+        # Child contact inherits the company's 9-digit TIN
+        company_contact = self.env['res.partner'].create({
+            'name': 'UZ Company Contact',
+            'parent_id': company_partner.id,
+            'country_id': uz_country.id,
+            'vat': '123456789',
+        })
+
+        self.assertTrue(company_partner.is_company)
+        self.assertFalse(company_contact.is_company)
+
+        # Individual with a 14-digit PINFL
+        contact = self.env['res.partner'].create({
+        'name': 'UZ Contact',
+        'country_id': uz_country.id,
+        'vat': '12345678901234',
+        })
+
+        self.assertFalse(contact.is_company)
