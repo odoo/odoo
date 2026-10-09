@@ -1,9 +1,9 @@
-import { Component, onWillStart, proxy, signal, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, usePlugin, useProps } from "@odoo/owl";
 import { useDropzone } from "@web/core/dropzone/dropzone_hook";
 import { FileInput } from "@web/core/file_input/file_input";
+import { FileUploadPlugin } from "@web/core/file_upload/file_upload_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useFileUploader } from "@web/core/utils/files";
 import { useService } from "@web/core/utils/hooks";
 import { localization } from "@web/core/l10n/localization";
 import { Layout } from "@web/search/layout";
@@ -52,7 +52,7 @@ export class ImportAction extends Component {
             previewError: "",
         });
 
-        this.uploadFiles = useFileUploader();
+        this.fileUpload = usePlugin(FileUploadPlugin);
         useDropzone(this.rootRef, async (event) => {
             const { files } = event.dataTransfer;
             if (files.length === 0) {
@@ -80,7 +80,7 @@ export class ImportAction extends Component {
                         }
                     );
                 } else {
-                    await this.uploadFiles(this.uploadFilesRoute, {
+                    await this.fileUpload.sendFiles(this.uploadFilesRoute, {
                         csrf_token: odoo.csrf_token,
                         ufile: [file],
                         model: this.resModel,
