@@ -86,10 +86,9 @@ class PrinterDriver(PrinterDriverBase):
                 self.device_name,
                 str(file_name),
                 "-silent",
-                "-print-settings",
             ]
             if duplex:
-                args.append("duplex")
+                args.extend(["-print-settings", "duplex"])
 
             _logger.debug("Printing report with SumatraPDF using %s", args)
 
