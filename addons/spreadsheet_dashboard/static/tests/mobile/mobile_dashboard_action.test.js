@@ -6,7 +6,7 @@ import {
     defineSpreadsheetDashboardModels,
     getDashboardServerData,
 } from "@spreadsheet_dashboard/../tests/helpers/data";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, mockService } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
 defineSpreadsheetDashboardModels();
@@ -26,6 +26,14 @@ const TEST_SCORECARD_CHART_DATA = {
     keyValue: "A1",
     background: "#fff",
     baselineMode: "absolute",
+};
+
+const TEST_GEO_CHART_DATA = {
+    type: "geo",
+    dataSource: { type: "range", dataSets: [], dataSetsHaveTitle: false },
+    dataSetStyles: {},
+    legendPosition: "top",
+    title: { text: "test" },
 };
 
 test("is empty with no figures", async () => {
@@ -171,6 +179,43 @@ test("double clicking on a figure doesn't open the side panel", async () => {
     await animationFrame();
     expect(".o-chart-container").toHaveCount(1);
     expect(".o-sidePanel").toHaveCount(0);
+});
+
+test("region switcher is visible on geo chart figures", async () => {
+    mockService("geo_json_service", {
+        getTopoJson: async () => ({ type: "FeatureCollection", features: [] }),
+    });
+    const figure = {
+        tag: "chart",
+        height: 500,
+        width: 500,
+        col: 0,
+        row: 0,
+        offset: { x: 100, y: 100 },
+        data: TEST_GEO_CHART_DATA,
+    };
+    const spreadsheetData = {
+        sheets: [{ id: "sheet1", figures: [{ ...figure, id: "figure1" }] }],
+    };
+    const serverData = getDashboardServerData();
+    serverData.models["spreadsheet.dashboard.group"].records = [
+        {
+            published_dashboard_ids: [789],
+            id: 1,
+            name: "Chart",
+        },
+    ];
+    serverData.models["spreadsheet.dashboard"].records = [
+        {
+            id: 789,
+            name: "Spreadsheet with geo chart figure",
+            json_data: JSON.stringify(spreadsheetData),
+            spreadsheet_data: JSON.stringify(spreadsheetData),
+            dashboard_group_id: 1,
+        },
+    ];
+    await createSpreadsheetDashboard({ serverData });
+    expect(".o-chart-dashboard-item.o-select").toBeVisible();
 });
 
 test("can switch dashboard", async () => {
