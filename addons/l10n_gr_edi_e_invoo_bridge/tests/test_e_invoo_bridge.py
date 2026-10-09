@@ -121,12 +121,12 @@ class TestMyDATAInvoiceEInvooDirect(AccountTestInvoicingCommon):
         self.assert_mydata_error(invoice, 'Missing myDATA Invoice Type.')
 
         # No classification category
-        invoice = self._create_mydata_invoice(cls_category='')
+        invoice = self._create_mydata_invoice(cls_category=False)
         invoice.l10n_gr_edi_try_send_invoices()
         self.assert_mydata_error(invoice, 'Missing myDATA classification category on line 1.')
 
         # No classification type, and inv_type + cls_category combination doesn't allow empty cls_type
-        invoice = self._create_mydata_invoice(cls_type='')
+        invoice = self._create_mydata_invoice(cls_type=False)
         invoice.l10n_gr_edi_try_send_invoices()
         self.assert_mydata_error(invoice, 'Missing myDATA classification type on line 1.')
 
@@ -134,7 +134,7 @@ class TestMyDATAInvoiceEInvooDirect(AccountTestInvoicingCommon):
         """Allow no cls_type on some combinations with available cls_type"""
         allowed_inv_type_category = (('1.1', 'category1_95'), ('3.2', 'category1_95'), ('5.1', 'category1_95'))
         for inv_type, category in allowed_inv_type_category:
-            invoice = self._create_mydata_invoice(inv_type=inv_type, cls_category=category, cls_type='')
+            invoice = self._create_mydata_invoice(inv_type=inv_type, cls_category=category, cls_type=False)
             self.assertFalse(invoice._l10n_gr_edi_get_pre_error_string())
 
     def test_l10n_gr_edi_try_send_invoices_invalid_tax_amount(self):

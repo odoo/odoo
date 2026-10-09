@@ -112,6 +112,8 @@ class AccountMove(models.Model):
                 continue
 
             for invoice in invoices:
+                invoice.lock_for_update()
+
                 submission = invoice._l10n_gr_edi_prepare_invoice_submission()
                 if not submission:
                     continue
