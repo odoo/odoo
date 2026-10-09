@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add("SellingEventInPosWithChoiceAnswers", {
             EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
             Dialog.is({ title: "Tickets" }),
             Dialog.confirm("Confirm"),
-            Dialog.is({ title: "Oh snap !" }),
+            Dialog.is({ title: "Ticket limit exceeded" }),
             Dialog.confirm("Ok"),
 
             // Buy a VIP Ticket
