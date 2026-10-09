@@ -33,7 +33,7 @@
 
     <template id="return_label_header">
         <div class="col-8">
-            <h1>RETURN OF <t t-out="picking.name"/></h1>
+            <h1><t t-out="picking._get_return_slip_report_title()"/> <t t-out="picking.name"/></h1>
             <p>Please put this document inside your return parcel.<br/></p>
             <p class="mt-4 mb-0 fw-bold">
                 Your parcel must be sent to this address:
