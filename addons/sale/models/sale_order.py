@@ -2460,11 +2460,6 @@ class SaleOrder(models.Model):
 
     # === CORE METHODS OVERRIDES ===#
 
-    @api.model
-    def get_empty_list_help(self, help_message):
-        self = self.with_context(empty_list_help_document_name=self.env._("sale order"))
-        return super().get_empty_list_help(help_message)
-
     def _compute_field_value(self, field):
         if field.name != "invoice_status" or self.env.context.get("mail_activity_automation_skip"):
             return super()._compute_field_value(field)

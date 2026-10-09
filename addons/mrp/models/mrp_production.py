@@ -2615,13 +2615,6 @@ class MrpProduction(models.Model):
         action['context'] = context
         return action
 
-    @api.model
-    def get_empty_list_help(self, help_message):
-        self = self.with_context(
-            empty_list_help_document_name=_("manufacturing order"),
-        )
-        return super(MrpProduction, self).get_empty_list_help(help_message)
-
     def _log_downside_manufactured_quantity(self, moves_modification, cancel=False):
 
         def _keys_in_groupby(move):
