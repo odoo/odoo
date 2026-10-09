@@ -4,9 +4,6 @@
         <field name="model">mrp.production</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_id']" position="before">
-                <field name="show_valuation" invisible="1" groups="stock.group_stock_manager"/> <!-- drives invisible of the Valuation stat button -->
-            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_view_move_wip" type="object" class="oe_stat_button" icon="book"
                         groups="account.group_account_user" invisible="wip_move_count == 0">

@@ -114,9 +114,7 @@
                                     <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this components list -->
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_is_storable': True}"/>
-                                    <field name="product_tmpl_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                                     <field name="product_qty"/>
-                                    <field name="parent_product_tmpl_id" column_invisible="True" /> <!-- kept loaded for record data though not shown in this list -->
                                     <field name="uom_id" options="{'no_open': True, 'no_create': True, 'quantity_field': 'product_qty'}" groups="uom.group_uom" widget="many2one_uom"/>
                                     <field name="possible_bom_product_template_attribute_value_ids" column_invisible="True"/> <!-- used in the python-declared domain of bom_product_template_attribute_value_ids -->
                                     <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" column_invisible="parent.product_id" groups="product.group_product_variant"/>

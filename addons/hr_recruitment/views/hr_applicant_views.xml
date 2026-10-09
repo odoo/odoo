@@ -25,8 +25,6 @@
                         invisible="context.get('default_talent_pool_ids', False)"
                     />
                 </header>
-                <field name="last_stage_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
-                <field name="date_last_stage_update" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="partner_name" string="Name" readonly="1" optional="show"/>
                 <field name="create_date" readonly="1" optional="show" options="{'show_time': False}"/>
                 <field name="email_from" readonly="1" optional="show"/>
@@ -81,9 +79,7 @@
             <field name="company_id" invisible="1"/> <!-- passed as default_company_id in the context of partner_name -->
             <field name="application_status" invisible="1"/> <!-- drives invisible of the Refused/Archived/Hired web_ribbon widgets and of kanban_state -->
             <field name="employee_id" invisible="1"/> <!-- drives invisible of the Create Employee button, of stage_id and of the Employee stat button -->
-            <field name="meeting_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
-            <field name="email_normalized" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
-            <field name="partner_phone_sanitized" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+            <field name="partner_phone_sanitized" invisible="1"/> <!-- dial field of the partner_phone phone widget -->
             <field name="emp_is_active" invisible="1"/> <!-- drives invisible of the Employee stat button -->
             <field name="is_rotting" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
             <field name="rotting_days" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
@@ -154,7 +150,6 @@
                 </div>
                 <group>
                     <group>
-                        <field name="partner_id" invisible="1" /> <!-- kept loaded for record data though not shown in this form -->
                         <field name="refuse_reason_id" invisible="active"/>
                         <field name="email_from" placeholder="e.g. john.doe@example.com" widget="email"/>
                         <field name="partner_phone" widget="phone"/>
@@ -364,7 +359,7 @@
                 <group>
                     <field name="partner_name" options="{'no_create_edit': True}" placeholder="e.g. John Doe"/>
                     <field name="job_id" options="{'no_open': True}"/>
-                    <field name="company_id" invisible="1"/> <!-- kept loaded for record data though not shown in this quick create form -->
+                    <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of job_id, and recomputed from it by the onchange of this quick create -->
                 </group>
             </form>
         </field>

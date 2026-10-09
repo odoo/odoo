@@ -446,7 +446,7 @@
                                         <i class="oi" data-icon="east" aria-label="to" title="To"/>
                                         <field name="request_date_to_period" invisible="work_entry_type_request_unit != 'half_day'" required="work_entry_type_request_unit == 'half_day'" readonly="state != 'confirm'"/>
                                     </div>
-                                    <field name="is_time_rule_trimmed" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                                    <field name="is_time_rule_trimmed" invisible="1"/> <!-- read by _compute_date_from_to, which preserves the sub-day end written by the time rule instead of snapping it back to the schedule boundary -->
                                     <!-- trimmed source / output: show exact time range set by the rule engine -->
                                     <field name="time_rule_time_range" nolabel="1" readonly="1" class="text-muted"
                                            invisible="not time_rule_time_range"/>
@@ -757,7 +757,6 @@
                 <field name="duration_display" string="Duration"/>
                 <field name="name" optional="hidden"/>
                 <field name="state" widget="badge" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'" decoration-danger="state == 'refuse'"/>
-                <field name="user_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="time_rule_id" column_invisible="1"/> <!-- drives decoration-it of the list -->
                 <button string="Approve" name="action_approve" type="object"
                     icon="thumb_up" icon_class="oi-filled"
