@@ -2482,7 +2482,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
             return false;
         }
-        payment.payment_status = "waiting";
         let qrCodeValue;
         try {
             qrCodeValue = await this.data.call("pos.payment.method", "get_qr_code_value", [

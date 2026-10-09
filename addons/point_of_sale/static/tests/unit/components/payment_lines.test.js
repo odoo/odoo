@@ -198,6 +198,11 @@ test("getPaymentActionState", async () => {
         ],
     });
 
+    // waiting on a bank QR line: the transfer is confirmed in the QR popup
+    card.payment_method_type = "bank_qr_code";
+    expect(comp.getPaymentActionState(paymentline)).toBe(null);
+    card.payment_method_type = "none";
+
     // waiting_cancel
     paymentline.payment_status = "waiting_cancel";
     const stateWaitingCancel = comp.getPaymentActionState(paymentline);
