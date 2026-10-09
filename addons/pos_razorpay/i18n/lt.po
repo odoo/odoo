@@ -1,14 +1,15 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_razorpay
+# * pos_razorpay
 #
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-03 00:56+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-06 09:37+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "pos_razorpay/lt/>\n"
 "Language: lt\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > "
 "19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? "
 "1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -35,6 +36,7 @@ msgid ""
 "Adding a new Razorpay payment line is not allowed under the current "
 "conditions."
 msgstr ""
+"Pagal dabartines sąlygas naujos „Razorpay“ mokėjimo eilutės pridėti negalima."
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__all
@@ -69,6 +71,8 @@ msgid ""
 "Choose allow payment mode: \n"
 " All/Card/UPI or QR"
 msgstr ""
+"Pasirinkite leidžiamą mokėjimo būdą: \n"
+" Visi/Kortelė/UPI arba QR"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -89,7 +93,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Rodomas vardas"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__id
@@ -104,16 +108,18 @@ msgid ""
 "Payment has been queued. You may choose to wait for the payment to initiate "
 "on terminal or proceed to cancel this transaction"
 msgstr ""
+"Mokėjimas įtrauktas į eilę. Galite palaukti, kol mokėjimas bus inicijuotas "
+"terminale, arba atšaukti šią operaciją"
 
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Pardavimo taško mokėjimo būdai"
 
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_payment
 msgid "Point of Sale Payments"
-msgstr ""
+msgstr "Pardavimų Taško Mokėjimai"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
@@ -123,7 +129,7 @@ msgstr ""
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
 msgid "Razorpay Allowed Payment Modes"
-msgstr ""
+msgstr "„Razorpay“ leidžiami mokėjimo būdai"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
@@ -143,6 +149,8 @@ msgid ""
 "Razorpay POS payment cancel request expected errorCode not found in the "
 "response"
 msgstr ""
+"„Razorpay POS“ mokėjimo atšaukimo prašyme nurodytas numatytas klaidos kodas "
+"nerastas atsakyme"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -150,6 +158,7 @@ msgstr ""
 msgid ""
 "Razorpay POS payment request expected errorCode not found in the response"
 msgstr ""
+"„Razorpay POS“ mokėjimo prašymo numatoma klaida: atsakymuose nerastas kodas"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -158,6 +167,8 @@ msgid ""
 "Razorpay POS payment status request expected errorCode not found in the "
 "response"
 msgstr ""
+"„Razorpay POS“ mokėjimo būsenos užklausos laukiamas „errorCode“ nerastas "
+"atsakyme"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -184,7 +195,7 @@ msgstr ""
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
 msgid "Razorpay Username"
-msgstr ""
+msgstr "„Razorpay“ vartotojo vardas"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
@@ -204,6 +215,8 @@ msgid ""
 "Related transaction has already been Refunded. Please try using another "
 "payment method."
 msgstr ""
+"Susijusi operacija jau buvo grąžinta. Prašome pabandyti naudoti kitą "
+"mokėjimo būdą."
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -212,11 +225,13 @@ msgid ""
 "Related transaction has already been voided. Please try using another "
 "payment method."
 msgstr ""
+"Susijusi operacija jau buvo anuliuota. Prašome pabandyti naudoti kitą "
+"mokėjimo būdą."
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment__razorpay_p2p_request_id
 msgid "Required to fetch payment status during the refund order process"
-msgstr ""
+msgstr "Būtina gauti mokėjimo būseną vykdant grąžinimo užsakymo procesą"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -229,7 +244,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "This Payment Terminal is only valid for INR Currency"
-msgstr ""
+msgstr "Šis mokėjimo terminalas galioja tik INR valiutai"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -253,6 +268,8 @@ msgid ""
 "Used when connecting to Razorpay: https://razorpay.com/docs/payments/"
 "dashboard/account-settings/api-keys/"
 msgstr ""
+"Naudojama prisijungiant prie „Razorpay“: https://razorpay.com/docs/payments/"
+"dashboard/account-settings/api-keys/"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_username
@@ -260,3 +277,5 @@ msgid ""
 "Username(Device Login) \n"
 " ex: 1234500121"
 msgstr ""
+"Vartotojo vardas (prisijungimas prie įrenginio) \n"
+" pvz.: 1234500121"

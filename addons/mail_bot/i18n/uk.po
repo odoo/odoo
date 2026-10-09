@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-04 11:53+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-10-07 10:33+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "mail_bot/uk/>\n"
 "Language: uk\n"
@@ -24,7 +24,7 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: mail_bot
 #. odoo-python
@@ -51,7 +51,7 @@ msgstr "Канал обговорення"
 #: model:ir.model.fields,field_description:mail_bot.field_mail_bot__display_name
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Відобразити назву"
 
 #. module: mail_bot
 #. odoo-python
@@ -60,6 +60,8 @@ msgid ""
 "Great! You can customize %(bold_start)scanned responses%(bold_end)s in the "
 "Discuss app."
 msgstr ""
+"Чудово! Ви можете налаштувати %(bold_start)s скановані відповіді%(bold_end)s "
+"у модулі Обговорення."
 
 #. module: mail_bot
 #. odoo-python
@@ -98,13 +100,16 @@ msgid ""
 "I'm not smart enough to answer your question.%(new_line)sTo follow my guide, "
 "ask: %(command_start)sstart the tour%(command_end)s."
 msgstr ""
+"Я недостатньо розумний, щоб відповісти на ваше запитання.%(new_line)sЩоб "
+"пройти мій посібник, запитайте: %(command_start)sпочати екскурсію%"
+"(command_end)s."
 
 #. module: mail_bot
 #: model:ir.model.fields,field_description:mail_bot.field_discuss_channel__id
 #: model:ir.model.fields,field_description:mail_bot.field_mail_bot__id
 #: model:ir.model.fields,field_description:mail_bot.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__idle
@@ -123,6 +128,8 @@ msgid ""
 "Not exactly. To continue the tour, send an emoji: %(bold_start)stype%"
 "(bold_end)s%(command_start)s :)%(command_end)s and press enter."
 msgstr ""
+"Не зовсім так. Щоб продовжити тур, надішліть емодзі: %(bold_start)stype%"
+"(bold_end)s%(command_start)s :)%(command_end)sі натисніть Enter."
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__not_initialized
@@ -137,6 +144,9 @@ msgid ""
 "and wait for the propositions. Select %(command_start)shelp%(command_end)s "
 "and press enter."
 msgstr ""
+"Не впевнений, що саме ви робите. Будь ласка, введіть %(command_start)s/%"
+"(command_end)s і зачекайте на варіанти. Виберіть %(command_start)shelp%"
+"(command_end)s і натисніть Enter."
 
 #. module: mail_bot
 #. odoo-python
@@ -145,6 +155,9 @@ msgid ""
 "Not sure what you are doing. Please, type %(command_start)s:%(command_end)s "
 "and wait for the propositions. Select one of them and press enter."
 msgstr ""
+"Не впевнений, що саме ви робите. Будь ласка, введіть %(command_start)s:%"
+"(command_end)s і зачекайте на варіанти. Оберіть один із них і натисніть "
+"Enter."
 
 #. module: mail_bot
 #. odoo-python
@@ -174,7 +187,7 @@ msgstr "Вхідне прикріплення"
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_canned
 msgid "Onboarding canned"
-msgstr ""
+msgstr "Стандартизований процес онбордингу"
 
 #. module: mail_bot
 #: model:ir.model.fields.selection,name:mail_bot.selection__res_users__odoobot_state__onboarding_command
@@ -199,6 +212,9 @@ msgid ""
 "human language...%(new_line)sI can show you features if you write: %"
 "(command_start)sstart the tour%(command_end)s."
 msgstr ""
+"Вибачте, я сонний. Або й ні! Можливо, я просто намагаюся приховати, що не "
+"розумію людської мови...%(new_line)sЯ можу показати вам можливості, якщо ви "
+"напишете: %(command_start)sstart the tour%(command_end)s."
 
 #. module: mail_bot
 #. odoo-python
@@ -208,18 +224,21 @@ msgid ""
 "him%(bold_end)s. Write %(command_start)s@OdooBot%(command_end)s and select "
 "me."
 msgstr ""
+"Вибачте, я не слухаю. Щоб привернути чиюсь увагу, %(bold_start)sзгадайте "
+"його%(bold_end)s. Напишіть %(command_start)s@OdooBot%(command_end)s і "
+"виберіть мене."
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "Thanks"
-msgstr ""
+msgstr "Дякую"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "Thanks for your feedback. Goodbye!"
-msgstr ""
+msgstr "Дякуємо за ваш відгук. До побачення!"
 
 #. module: mail_bot
 #. odoo-python
@@ -235,12 +254,17 @@ msgid ""
 "conversation%(bold_end)s or type %(command_start)sstart the tour%"
 "(command_end)s to see it again. Enjoy exploring Odoo!"
 msgstr ""
+"На цьому огляд завершено. Ви можете %(bold_start)sзакрити цю розмову%"
+"(bold_end)s або ввести %(command_start)sstart the tour%(command_end)s, щоб "
+"переглянути її знову. Приємного знайомства з Odoo!"
 
 #. module: mail_bot
 #. odoo-python
 #: code:addons/mail_bot/models/mail_bot.py:0
 msgid "This is a temporary canned response to see how canned responses work."
 msgstr ""
+"Це тимчасова шаблонна відповідь, щоб перевірити, як працюють шаблонні "
+"відповіді."
 
 #. module: mail_bot
 #. odoo-python
@@ -249,6 +273,8 @@ msgid ""
 "To %(bold_start)ssend an attachment%(bold_end)s, click on the %"
 "(paperclip_icon)s icon and select a file."
 msgstr ""
+"Щоб %(bold_start)sнадіслати вкладення%(bold_end)s, натисніть значок %"
+"(paperclip_icon)s і виберіть файл."
 
 #. module: mail_bot
 #. odoo-python
@@ -271,6 +297,10 @@ msgid ""
 "documentation%(document_link_end)s or %(slides_link_start)sour videos%"
 "(slides_link_end)s."
 msgstr ""
+"На жаль, я лише бот 😞 Я не розумію! Якщо вам потрібна допомога в "
+"ознайомленні з нашим продуктом, будь ласка, перегляньте %"
+"(document_link_start)sнашу документацію%(document_link_end)s або %"
+"(slides_link_start)sнаші відео%(slides_link_end)s."
 
 #. module: mail_bot
 #: model:ir.model,name:mail_bot.model_res_users
@@ -284,6 +314,9 @@ msgid ""
 "Wonderful! 😇%(new_line)sTry typing %(command_start)s::%(command_end)s to "
 "use canned responses. I've created a temporary one for you."
 msgstr ""
+"Чудово! 😇 %(command_start)s:Спробуйте ввести%(command_start)s::%"
+"(command_end)s щоб скористатися готовими відповідями. Я створив для вас одну "
+"тимчасову."
 
 #. module: mail_bot
 #. odoo-python
@@ -304,6 +337,8 @@ msgid ""
 "Yep, I am here! 🎉 %(new_line)sNow, try %(bold_start)ssending an attachment%"
 "(bold_end)s, like a picture of your cute dog..."
 msgstr ""
+"Так, я тут! 🎉 %(new_line)sА тепер спробуй %(bold_start)sнадіслати вкладення%"
+"(bold_end)s — наприклад, фото свого милого песика..."
 
 #. module: mail_bot
 #. odoo-python

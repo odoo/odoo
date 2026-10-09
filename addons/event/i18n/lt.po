@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-10-02 16:33+0000\n"
+"PO-Revision-Date: 2026-10-05 22:33+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/event/"
 "lt/>\n"
@@ -69,13 +69,13 @@ msgstr "%(event_name)s (Išparduota)"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "%(event_name)s - Registration #%(registration_id)s"
-msgstr ""
+msgstr "%(event_name)s - Registracijos Nr.%(registration_id)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "%(event_name)s - Registration for %(attendee_name)s"
-msgstr ""
+msgstr "%(event_name)s - Registracija %(attendee_name)s"
 
 #. module: event
 #. odoo-python
@@ -93,7 +93,7 @@ msgstr "%(slot_name)s (Išparduota)"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s: trūksta „ %(count)s “ vietų"
 
 #. module: event
 #. odoo-python
@@ -141,11 +141,14 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
+"'Visos puslapio bilietas – %s – %s' % ((object.event_id.name arba 'Event')"
+".replace('/',''), (object.name arba '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
+"'Visos puslapio bilietas – %s' % (object.name arba 'Event').replace('/','')"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
@@ -207,6 +210,11 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>Visas renginys atviras plačiajai visuomenei!</b> <br>Prašome sumokėti "
+"49,50 € dalyvio mokestį, skirtą padengti 3 dienų išlaidas (kavos pertraukos, "
+"maitinimas, gėrimai, taip pat netikėtas koncertas ir alaus vakarėlis).<br> "
+"Tiems, kurie nenori prisidėti, yra nemokamas bilietas, tačiau maitinimas ir "
+"patekimas į vakarinius renginius į jį neįskaičiuoti."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -252,6 +260,11 @@ msgid ""
 "community module, a case study, methodology feedback, technical, etc. Each "
 "presentation must be in English.</em>"
 msgstr ""
+"<em>Jei norite surengti pristatymą, kuo greičiau atsiųskite savo temos "
+"pasiūlymą patvirtinti p. Famke Jenssens adresu ngh [at] yourcompany [dot] "
+"com. Pristatymai turėtų būti, pavyzdžiui, bendruomenės modulio pristatymas, "
+"atvejo analizė, atsiliepimai apie metodiką, techniniai klausimai ir pan. "
+"Kiekvienas pristatymas turi būti anglų kalba.</em>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
@@ -291,7 +304,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -2905,6 +2918,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Leiskite kelis laiko intervalus. Komunikacija, maksimalus dalyvių skaičius "
+"ir maksimalus bilietų registracijų skaičius nustatomi kiekvienam laiko "
+"intervalui, o ne visam renginiui."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_reusable
@@ -3099,7 +3115,7 @@ msgstr "Ženklelis"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
 msgid "Badge Background"
-msgstr ""
+msgstr "Ženklo fonas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_format
@@ -3257,6 +3273,8 @@ msgid ""
 "Choose a template to auto-fill tickets, communications, descriptions and "
 "other fields."
 msgstr ""
+"Pasirinkite šabloną, kad bilietai, pranešimai, aprašymai ir kiti laukai būtų "
+"užpildomi automatiškai."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
@@ -3549,7 +3567,7 @@ msgstr "Atvaizdavimo tvarka"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets"
-msgstr ""
+msgstr "Atsisiųsti bilietus"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -4070,12 +4088,12 @@ msgstr ""
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_full_page_ticket
 msgid "Full Page Ticket"
-msgstr ""
+msgstr "Visos puslapio bilietas"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_full_page_ticket
 msgid "Full Page Ticket Example"
-msgstr ""
+msgstr "Visos puslapio bilieto pavyzdys"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -4242,7 +4260,7 @@ msgstr "Piktograma"
 #. odoo-javascript
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 msgid "Icon Selection"
-msgstr ""
+msgstr "Piktogramų pasirinkimas"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_icon
@@ -4326,7 +4344,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Insert dynamic Google Maps in your email templates"
-msgstr ""
+msgstr "Įterpkite dinamiškus „Google Maps“ žemėlapius į savo el. pašto šablonus"
 
 #. module: event
 #. odoo-javascript
@@ -4361,7 +4379,7 @@ msgstr "Netinkamas renginio / bilieto pasirinkimas"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.js:0
 msgid "Invalid ticket"
-msgstr ""
+msgstr "Neteisingas bilietas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
@@ -5225,6 +5243,10 @@ msgid ""
 "- there are seats available on event\n"
 "- the tickets are sellable (if ticketing is used)"
 msgstr ""
+"Registracija yra atvira, jei:\n"
+"- renginys nėra pasibaigęs arba atšauktas\n"
+"- renginyje yra laisvų vietų\n"
+"- bilietai yra parduodami (jei naudojama bilietų pardavimo sistema)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
@@ -5263,7 +5285,7 @@ msgstr "Atsakingas vartotojas"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_responsive_html_ticket
 msgid "Responsive Html Full Page Ticket"
-msgstr ""
+msgstr "Atsakingas HTML viso puslapio bilietas"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -5346,7 +5368,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Select Attendee"
-msgstr ""
+msgstr "Pasirinkite dalyvių"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
@@ -5366,7 +5388,7 @@ msgstr "Parduokite bilietus savo svetainėje"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with Point of Sale"
-msgstr ""
+msgstr "Parduokite bilietus naudodami Prekybos sistemą"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -5684,6 +5706,9 @@ msgid ""
 "The event is sold out if no more seats are available on event. If ticketing "
 "is used and all tickets are sold out, the event will be sold out."
 msgstr ""
+"Renginys laikomas išparduotu, jei jame nebėra laisvų vietų. Jei naudojama "
+"bilietų pardavimo sistema ir visi bilietai išparduoti, renginys bus laikomas "
+"išparduotu."
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -5720,6 +5745,8 @@ msgid ""
 "The limit per order cannot be greater than %(limit_orderable)s. Please check "
 "ticket %(ticket_name)s"
 msgstr ""
+"Vieno užsakymo riba negali viršyti %(limit_orderable)s. Prašome patikrinti "
+"užklausą %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5728,6 +5755,8 @@ msgid ""
 "The limit per order cannot be greater than the maximum seats number. Please "
 "check ticket %(ticket_name)s"
 msgstr ""
+"Vieno užsakymo riba negali viršyti maksimalaus vietų skaičiaus. Prašome "
+"patikrinti bilietą %(ticket_name)s"
 
 #. module: event
 #. odoo-python
@@ -5735,6 +5764,8 @@ msgstr ""
 msgid ""
 "The limit per order must be positive. Please check ticket %(ticket_name)s"
 msgstr ""
+"Ribinis skaičius vienam užsakymui turi būti teigiamas. Prašome patikrinti "
+"užklausą %(ticket_name)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1
@@ -5858,13 +5889,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is for another event!"
-msgstr ""
+msgstr "Šis bilietas skirtas kitam renginiui!"
 
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "This ticket is not for an ongoing event"
-msgstr ""
+msgstr "Šis užklausimas nėra susijęs su vykstančiu renginiu"
 
 #. module: event
 #. odoo-python
@@ -5895,7 +5926,7 @@ msgstr "Bilieto tipas"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket already scanned!"
-msgstr ""
+msgstr "Bilietas jau nuskaitytas!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -5916,7 +5947,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "Bilietas pirmą kartą nuskaitytas"
 
 #. module: event
 #. odoo-python
@@ -5937,12 +5968,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_pos_event
 msgid "Tickets with PoS"
-msgstr ""
+msgstr "Bilietai su POS"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets with Sale"
-msgstr ""
+msgstr "Bilietai su nuolaida"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
@@ -6115,6 +6146,8 @@ msgstr ""
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
 msgstr ""
+"Naudokite „ <b>“ navigacijos grandinę</b>, kad grįžtumėte į savo „kanban“ "
+"apžvalgą."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used

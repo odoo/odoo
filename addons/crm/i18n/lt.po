@@ -24,13 +24,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Greta Šeštokė <greta@vialaurea.com>, 2026.
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:35+0000\n"
-"PO-Revision-Date: 2026-08-02 14:23+0000\n"
-"Last-Translator: Greta Šeštokė <greta@vialaurea.com>\n"
+"PO-Revision-Date: 2026-10-05 22:33+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/crm/"
 "lt/>\n"
 "Language: lt\n"
@@ -40,7 +41,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
 ": n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -73,7 +74,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "%(attach_name)s (from %(lead_name)s)"
-msgstr ""
+msgstr "%(attach_name)s (iš %(lead_name)s)"
 
 #. module: crm
 #. odoo-python
@@ -131,7 +132,7 @@ msgstr "<b>Įveskite kelias raides</b> įmonės paieškai arba sukurkite naują.
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "<i class=\"fa fa-briefcase\" title=\"Opportunity Name\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-briefcase\" title=\"Opportunity Name\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
@@ -383,6 +384,114 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 24px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"   <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\"> \n"
+"           <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"100%\" style=\"background-color: white; padding: 0; border-"
+"collapse:separate;\">\n"
+"                <tr> <td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\"> Jūsų potencialus "
+"klientas / galimybė</span><br/>\n"
+"                   <span style=\"font-size: 20px; font-weight: bold;\" t-"
+"out=\"object.name or ''\"> Susidomėjimas jūsų produktais</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ "
+"object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" "
+"t-att-alt=\"object.company_id.name\"/> \n"
+"               </td></tr> \n"
+"               <tr><td colspan=\"2\" style=\"text-align:center;\"> \n"
+"                   <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
+"                </td> </tr>\n"
+"            </table> \n"
+"       </td>\n"
+"    </tr> \n"
+"   <!-- CONTENT -->\n"
+"    <tr> \n"
+"       <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\"> \n"
+"               <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\"> \n"
+"                       <div> \n"
+"                            Sveiki, <t t-out=\"object.partner_id and "
+"object.partner_id.name or ''\">„Acme Corporation“</t>,<br/><br/>\n"
+"                            Sveiki atvykę į „ <t t-"
+"out=\"object.company_id.name or ''\">“ „My Company“ (San Franciskas)</t>.\n"
+"                            Malonu su jumis susipažinti! Dabar, kai jau "
+"prisijungėte, galėsite atrasti, ką siūlo „ <t t-out=\"object.company_id.name "
+"or ''\">“ „My Company“ (San Franciskas)</t>. Mano vardas yra <t t-"
+"out=\"object.user_id.name or ''\">Marc Demo</t> ir aš padėsiu jums išnaudoti "
+"visas „Odoo“ galimybes. Ar galėtume netrukus suorganizuoti trumpą "
+"demonstravimą?<br/>\n"
+"                            Nesivaržykite susisiekti bet kuriuo metu!<br/>"
+"<br/>\n"
+"                            Su pagarba,<br/>\n"
+"                            <t t-if=\"object.user_id\">\n"
+"                               <b><t t-out=\"object.user_id.name or ''\"> "
+"Marc Demo</t></b>\n"
+"                               <br/> El. paštas: <t t-"
+"out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Telefonas: <t t-"
+"out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                            </t>\n"
+"                           <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\"> „"
+"My Company“ (San Franciskas)</t>\n"
+"                            </t>\n"
+"                       </div>\n"
+"                    </td> \n"
+"               </tr>\n"
+"            </table> \n"
+"       </td>\n"
+"    </tr> \n"
+"   <!-- FOOTER -->\n"
+"    <tr> \n"
+"       <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; "
+"font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204)"
+";border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/> \n"
+"           <b t-out=\"object.company_id.name or ''\"> Mano įmonė (San "
+"Franciskas)</b><br/>\n"
+"           <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\"> +1 650-123-4567</"
+"t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    | <a t-attf-href=\"'mailto:%s' % {{ "
+"object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" "
+"t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                </t>\n"
+"               <t t-if=\"object.company_id.website\"> \n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}"
+"\" style=\"text-decoration:none; color: #999999;\" t-"
+"out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                </t>\n"
+"           </div>\n"
+"        </td> \n"
+"   </tr>\n"
+"</tbody> \n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY --> \n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Sukurta naudojant „ <a target=\"_blank\" href=\"https://"
+"www.odoo.com?utm_source=db&amp;utm_medium=email\" t-attf-style=\"color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}};;\">“ „Odoo“</a>\n"
+"</td></tr>\n"
+"</table> \n"
+"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -402,6 +511,11 @@ msgid ""
 "Click on the grey area of the progress bar to see all opportunities that "
 "have no next activity."
 msgstr ""
+"Puiki patarimas, kaip padidinti pardavimų efektyvumą, – visada apibrėžti "
+"kitą žingsnį kiekvienai galimybei. Norėdami valdyti vykstančias veiklas, "
+"spustelėkite bet kurį pažangos juostos statusą, kad filtruotumėte galimybes "
+"pagal jų kitų veiklų statusą. Spustelėkite pilką pažangos juostos sritį, kad "
+"pamatytumėte visas galimybes, kurioms nenumatytas kitas veiksmas."
 
 #. module: crm
 #. odoo-python
@@ -921,6 +1035,8 @@ msgid ""
 "Click on the breadcrumb to go back to your Pipeline. Odoo will save all "
 "modifications as you navigate."
 msgstr ""
+"Spustelėkite navigacijos takelį, kad grįžtumėte į savo „Pipeline“. „Odoo“ "
+"išsaugos visus pakeitimus, kol naršysite."
 
 #. module: crm
 #. odoo-javascript
@@ -1381,7 +1497,7 @@ msgstr "Aprašymas"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Did you know emails sent to"
-msgstr ""
+msgstr "Ar žinojote, kad elektroniniai laiškai, siunčiami į"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -1389,6 +1505,8 @@ msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
 msgstr ""
+"Ar žinojote, kad elektroniniai laiškai, siunčiami pardavimo komandos "
+"aliasui, sukuria pardavimo galimybes jūsų pardavimo procese?"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
@@ -1518,12 +1636,12 @@ msgstr "El. pašto pseudonimas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_domain_criterion
 msgid "Email Domain Criterion"
-msgstr ""
+msgstr "El. pašto domeno kriterijus"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
 msgid "Email Quality"
-msgstr ""
+msgstr "El. laiškų kokybė"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
@@ -1533,7 +1651,7 @@ msgstr "El. Pašto CC"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email cc:"
-msgstr ""
+msgstr "El. Pašto CC:"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_domain
@@ -1566,11 +1684,15 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address."
 msgstr ""
+"Automatiškai papildykite savo potencialių klientų duomenis įmonės "
+"informacija, remdamiesi jų el. pašto adresu."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
 msgstr ""
+"Papildykite savo potencialių klientų duomenis įmonės informacija, remdamiesi "
+"jų el. pašto adresais"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1719,7 +1841,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "From %(source_name)s: %(source_subject)s"
-msgstr ""
+msgstr "Iš „ %(source_name)s “: %(source_subject)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2085,7 +2207,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "Lead Assignment requested by %(user_name)s"
-msgstr ""
+msgstr "Užduotį užsakė %(user_name)s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_max
@@ -2409,6 +2531,9 @@ msgid ""
 "Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
 "messages, and get AI-powered transcripts of your conversations."
 msgstr ""
+"Skambinkite ir priimkite skambučius iš „Odoo“ naudodami „Ringover“ "
+"skambinimo programą. Sekite skambučius, SMS žinutes ir gaukite dirbtinio "
+"intelekto sukurtas pokalbių transkripcijas."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2758,7 +2883,7 @@ msgstr "Nepriskirtas pardavėjas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normalizuotas el. laiškas"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
@@ -3045,7 +3170,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_email_update
 msgid "Partner Email will Update"
-msgstr ""
+msgstr "Partnerio el. paštas bus atnaujintas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_phone_update
@@ -3453,13 +3578,15 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Select a Lost Reason..."
-msgstr ""
+msgstr "Pasirinkite praradimo priežastį..."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Select at least two Leads/Opportunities from the list to merge them."
 msgstr ""
+"Iš sąrašo pasirinkite bent du potencialius klientus / pardavimo galimybes, "
+"kad juos sujungtumėte."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3811,6 +3938,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
+"Šis el. paštas įtrauktas į juodąjį sąrašą dėl masinių laiškų siuntimo. "
+"Spustelėkite, kad pašalintumėte iš juodojo sąrašo."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
@@ -3818,6 +3947,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can "
 "contain more than strictly an email address."
 msgstr ""
+"Šis laukas naudojamas paieškai pagal el. pašto adresą, nes pagrindiniame el. "
+"pašto lauke gali būti įrašyta ne tik el. pašto adresas."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__lang_code
@@ -3880,7 +4011,7 @@ msgstr ""
 #: model:digest.tip,name:crm.digest_tip_crm_0
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Tip: Convert incoming emails into opportunities"
-msgstr ""
+msgstr "Patarimas: Paversti gaunamus el. laiškus į galimybes"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_1
@@ -3923,7 +4054,7 @@ msgstr ""
 #: model:digest.tip,name:crm.digest_tip_crm_5
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
 msgid "Tip: Turn a selection of opportunities into a map"
-msgstr ""
+msgstr "Patarimas: Paversti atrinktas galimybes į žemėlapį"
 
 #. module: crm
 #. odoo-python
@@ -3972,7 +4103,7 @@ msgstr ""
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try sending an email"
-msgstr ""
+msgstr "Pabandykite išsiųsti el. laišką"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -4441,12 +4572,13 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "to test the email gateway."
-msgstr ""
+msgstr "norėdami išbandyti el. pašto šliuzą."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
 msgstr ""
+"į jūsų CRM. Šį el. pašto adresą gali konfigūruoti pardavimo komandos nariai."
 
 #. module: crm
 #. odoo-python

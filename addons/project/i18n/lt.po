@@ -23,13 +23,14 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-08-02 18:03+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-10-05 22:33+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "project/lt/>\n"
 "Language: lt\n"
@@ -39,7 +40,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
 ": n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -87,25 +88,25 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Burndown Chart"
-msgstr ""
+msgstr "%(name)s„Burndown“ diagramos"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Milestones"
-msgstr ""
+msgstr "%(name)s's svarbiausi įvykiai"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Rating"
-msgstr ""
+msgstr "%(name)sVertinimas"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "%(name)s's Tasks Analysis"
-msgstr ""
+msgstr "%(name)sUžduočių analizė"
 
 #. module: project
 #. odoo-python
@@ -290,6 +291,113 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
+"   <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"width:100%; margin:0px auto;\"> \n"
+"   <tbody>\n"
+"        <tr> <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\"> \n"
+"                Sveiki, <t t-out=\"partner.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
+"           </t>\n"
+"            <t t-else=\"\"> \n"
+"                Sveiki,<br/><br/>\n"
+"           </t> \n"
+"            Prašome skirti šiek tiek laiko ir įvertinti mūsų paslaugas, "
+"susijusias su užduotimi „ <strong t-out=\"object.name or ''\">“ Planavimas "
+"ir biudžetas</strong>           <t t-if=\"object._rating_get_operator()"
+".name\"> \n"
+"                priskirta <strong t-out=\"object._rating_get_operator().name "
+"or ''\">Mitchell Admin</strong>.<br/>\n"
+"            </t>\n"
+"           <t t-else=\"\"> \n"
+"                .<br/>\n"
+"            </t>\n"
+"       </td></tr> \n"
+"       <tr><td style=\"text-align: center;\"> \n"
+"           <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
+"table;\">\n"
+"                <tr> <td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong> Pasakykite, kaip vertinate mūsų paslaugas</"
+"strong><br/>\n"
+"                   <span style=\"font-size: 12px; opacity: 0.5; color: "
+"#454748;\"> (spustelėkite vieną iš šių šypsenėlių)</span>\n"
+"                </td></tr>\n"
+"                <tr> <td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-"
+"top:2rem;\"> \n"
+"                       <tr>\n"
+"                            <td> \n"
+"                               <a t-attf-href=\"/rate/{{ access_token }}/5\" "
+"t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Happy\" src=\"/rating/static/"
+"src/img/rating_5.png\" title=\"Happy\"/> \n"
+"                               </a>\n"
+"                            </td> \n"
+"                           <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\"> \n"
+"                                   <img alt=\"Neutral\" src=\"/rating/static/"
+"src/img/rating_3.png\" title=\"Neutral\"/>\n"
+"                                </a> \n"
+"                           </td>\n"
+"                            <td> \n"
+"                               <a t-attf-href=\"/rate/{{ access_token }}/1\" "
+"t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Unhappy\" src=\"/rating/"
+"static/src/img/rating_1.png\" title=\"Unhappy\"/> \n"
+"                               </a>\n"
+"                            </td> \n"
+"                       </tr>\n"
+"                    </table> \n"
+"               </td></tr> \n"
+"           </table>\n"
+"        </td> </tr>\n"
+"        <tr> <td valign=\"top\" style=\"font-size: 13px;\"> \n"
+"            Dėkojame už jūsų atsiliepimą. Jis padeda mums nuolat tobulėti.\n"
+"           <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
+"                <br/> <span style=\"margin: 0; font-size: 12px; opacity: "
+"0.5; color: #454748;\"> Ši pasitenkinimo apklausa buvo išsiųsta, nes jūsų "
+"užduotis buvo perkelta į „ <b t-out=\"object.stage_id.name or ''\">“ etapą „"
+"Vykdoma“</b></span>\n"
+"            </t> \n"
+"           <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
+"                <br/> <span style=\"margin: 0; font-size: 12px; opacity: "
+"0.5; color: #454748;\"> Ši pasitenkinimo apklausa siunčiama <b t-"
+"out=\"object.stage_id.rating_status_period or ''\">kas savaitę</b> tol, kol "
+"užduotis yra „ <b t-out=\"object.stage_id.name or ''\">“ etape „Vykdoma“</b>"
+".</span>\n"
+"            </t>\n"
+"       </td></tr> \n"
+"       <tr><td> <br/> Su pagarba,</td></tr>\n"
+"       <tr><td> \n"
+"          <t t-out=\"object.project_id.company_id.name or ''\"> YourCompany</"
+"t>\n"
+"        </td></tr>\n"
+"        <tr> <td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\"> 1 650-123-"
+"4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@yourcompany.com</a>\n"
+"            </t>\n"
+"           <t t-if=\"object.project_id.company_id.website\"> \n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
+"\n"
+"            </t>\n"
+"       </td></tr> \n"
+"   </tbody>\n"
+"    </table> \n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -367,7 +475,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Grįžti į redagavimo režimą"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -923,6 +1031,9 @@ msgid ""
 "                When creating a new project from the template, choose who "
 "will take on each role."
 msgstr ""
+"Paskirkite vaidmenis užduotims savo projekto šablonuose.\n"
+"                Kuriant naują projektą pagal šabloną, pasirinkite, kas "
+"atliks kiekvieną vaidmenį."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1013,6 +1124,12 @@ msgid ""
 " * Neutral or bad feedback will set the kanban state to 'Changes Requested' "
 "(orange bullet).\n"
 msgstr ""
+"Automatiškai pakeiskite būseną, kai klientas atsako į šio etapo "
+"atsiliepimą.\n"
+" * Gera kliento atsiliepimas atnaujins būseną į „Patvirtinta“ (žalias taškas)"
+".\n"
+" * Neutrali arba bloga atsiliepimas nustatys kanban būseną į „Reikalaujami "
+"pakeitimai“ (oranžinis taškas).\n"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
@@ -1158,6 +1275,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the "
 "name of a customer, of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
+"Pasirinkite savo projektui „ <b>“ pavadinimą</b>. <i>Tai gali būti bet kas, "
+"ko norite: kliento, produkto, komandos, statybvietės pavadinimas ir pan.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1165,11 +1284,13 @@ msgstr ""
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
 msgstr ""
+"Pasirinkite užduotį <b>pavadinimą</b> <i>(pvz., Svetainės dizainas, Prekių "
+"pirkimas...)</i>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Choose one of the following access modes for your collaborators:"
-msgstr ""
+msgstr "Pasirinkite vieną iš šių prieigos režimų savo bendradarbiams:"
 
 #. module: project
 #. odoo-javascript
@@ -1246,6 +1367,13 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"Rinkite klientų atsiliepimus, siųsdami jiems vertinimo prašymą, kai užduotis "
+"pasiekia tam tikrą etapą. Norėdami tai padaryti, nustatykite vertinimo el. "
+"laiško šabloną tam etapui.\n"
+"Vertinimas pasikeitus etapui: el. laiškas bus automatiškai išsiųstas, kai "
+"užduotis pasieks tą etapą.\n"
+"Periodinis vertinimas: el. laiškas bus automatiškai siunčiamas reguliariais "
+"intervalais, kol užduotis išliks tame etape."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -1579,6 +1707,9 @@ msgid ""
 "you can\n"
 "      communicate on the task directly."
 msgstr ""
+"Klientai siunčia atsiliepimus el. paštu; „Odoo“ automatiškai sukuria "
+"užduotis, ir jūs galite\n"
+"      bendrauti tiesiogiai per užduotį."
 
 #. module: project
 #. odoo-python
@@ -1943,6 +2074,8 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Redaguoti: bendradarbiai gali peržiūrėti ir redaguoti visas užduotis „Kanban"
+"“ peržiūroje. Be to, jie gali pasirinkti, kurias užduotis nori stebėti."
 
 #. module: project
 #. odoo-javascript
@@ -1973,6 +2106,8 @@ msgid ""
 "Email addresses that were in the CC of the incoming emails from this task "
 "and that are not currently linked to an existing customer."
 msgstr ""
+"El. pašto adresai, kurie buvo įtraukti į šios užduoties gaunamų el. laiškų "
+"kopijų sąrašą (CC) ir kurie šiuo metu nėra susieti su esamu klientu."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -2139,13 +2274,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Give the sub-task a <b>name</b>"
-msgstr ""
+msgstr "Pavadinkite užduotį „ <b>“ pavadinimu</b>"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/search/control_panel/control_panel.xml:0
 msgid "Go back to 'My Projects'"
-msgstr ""
+msgstr "Grįžti į „Mano projektai“"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_confirm_form
@@ -2438,7 +2573,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
 msgid "Invalid Display Name"
-msgstr ""
+msgstr "Neteisingas rodomasis vardas"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
@@ -2646,6 +2781,8 @@ msgid ""
 "Let's go back to the <b>kanban view</b> to have an overview of your next "
 "tasks."
 msgstr ""
+"Grįžkime prie „ <b>“ kanban peržiūros</b>, kad galėtumėte peržiūrėti savo "
+"artimiausias užduotis."
 
 #. module: project
 #. odoo-javascript
@@ -2885,7 +3022,7 @@ msgstr "Pavadinimas"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the Tasks"
-msgstr ""
+msgstr "Užduočių pavadinimai"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
@@ -2894,6 +3031,8 @@ msgid ""
 "Name used to refer to the tasks of your project e.g. tasks, tickets, "
 "sprints, etc..."
 msgstr ""
+"Pavadinimas, naudojamas jūsų projekto užduotims apibūdinti, pvz., užduotys, "
+"užklausos, sprintai ir pan..."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3596,6 +3735,30 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"Projektų ir užduočių matomumas:\n"
+"- Pakviestieji vidiniai vartotojai: gali pasiekti tik tuos projektus ar "
+"užduotis, kuriuos seka. Paskyrimų gavėjai prieigą gauna automatiškai.\n"
+"- Pakviestieji vidiniai ir portalo vartotojai: kaip nurodyta aukščiau, "
+"taikoma ir portalo vartotojams.\n"
+"- Visi vidiniai vartotojai: visiška prieiga prie projekto ir visų jo "
+"užduočių.\n"
+"- Visi vidiniai ir pakviestieji portalo vartotojai: vidiniai vartotojai "
+"gauna visišką prieigą. Portalo vartotojai gali pasiekti tik tuos projektus "
+"ar užduotis, kuriuos seka.\n"
+"\n"
+"Portalo prieigos lygiai:\n"
+"- Tik skaityti: portalo vartotojai mato užduotis per savo portalą, bet "
+"negali jų redaguoti.\n"
+"- Redaguoti (ribotai): portalo vartotojai turi prieigą prie „kanban“ / "
+"sąrašo peržiūrų ir gali redaguoti ribotą skaičių laukelių stebimose "
+"užduotyse.\n"
+"- Redaguoti: kaip nurodyta aukščiau, su prieiga prie visų užduočių.\n"
+"\n"
+"Kitos taisyklės:\n"
+"- Vidiniai vartotojai gali atidaryti užduotį iš tiesioginės nuorodos, "
+"neturėdami prieigos prie projekto.\n"
+"- Projekto administratoriai turi prieigą prie privačių projektų, net jei "
+"nėra jų stebėtojų.\n"
 
 #. module: project
 #. odoo-javascript
@@ -3607,7 +3770,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Project created from template %(name)s."
-msgstr ""
+msgstr "Projektas sukurtas pagal šabloną %(name)s."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3645,7 +3808,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Project: %(project_name)s, Stage: %(stage_name)s"
-msgstr ""
+msgstr "Projektas: „ %(project_name)s “, etapas: %(stage_name)s"
 
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
@@ -3833,11 +3996,16 @@ msgid ""
 "Edit: collaborators can view and edit all tasks in the Kanban view. "
 "Additionally, they can choose which tasks they want to follow."
 msgstr ""
+"Skaityti: bendradarbiai gali peržiūrėti užduotis, bet negali jų redaguoti.\n"
+"Redaguoti su ribota prieiga: bendradarbiai gali peržiūrėti ir redaguoti "
+"užduotis, kurias seka Kanban peržiūroje.\n"
+"Redaguoti: bendradarbiai gali peržiūrėti ir redaguoti visas užduotis Kanban "
+"peržiūroje. Be to, jie gali pasirinkti, kurias užduotis nori sekti."
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
 msgid "Reception of {{ object.name }}"
-msgstr ""
+msgstr "Priėmimas {{ object.name }}"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__partner_ids
@@ -4123,7 +4291,7 @@ msgstr "Apsaugos prieigos raktas"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Select an assignee from the menu"
-msgstr ""
+msgstr "Iš meniu pasirinkite vykdytoją"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
@@ -4183,6 +4351,8 @@ msgid ""
 "Set this template on a project stage to request feedback from your "
 "customers. Enable the \"customer ratings\" feature on the project"
 msgstr ""
+"Nustatykite šį šabloną Projektų etape, kad galėtumėte paprašyti klientų "
+"atsiliepimų. Įjunkite „klientų vertinimų“ funkciją Projektuose"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4293,7 +4463,7 @@ msgstr "Specifikacijos"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Sprint Backlog"
-msgstr ""
+msgstr "Sprintų užduočių sąrašas"
 
 #. module: project
 #. odoo-javascript
@@ -4711,13 +4881,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Template converted back to regular project."
-msgstr ""
+msgstr "Šablonas vėl konvertuotas į įprastą projektą."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Template converted back to regular task"
-msgstr ""
+msgstr "Šablonas vėl paverstas į įprastą užduotį"
 
 #. module: project
 #. odoo-python
@@ -4879,6 +5049,11 @@ msgid ""
 "on your website. This includes leads/opportunities, quotations/sales orders, "
 "purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
+"Jie gali redaguoti bendras projekto užduotis ir peržiūrėti konkrečius "
+"dokumentus skaitymo režimu jūsų svetainėje. Tai apima potencialius klientus/"
+"pardavimo galimybes, pasiūlymus/pardavimo užsakymus, pirkimo užsakymus, "
+"sąskaitas faktūras ir sąskaitas, Darbo laiko žiniaraščių lenteles bei "
+"užklausas."
 
 #. module: project
 #. odoo-python
@@ -4944,6 +5119,8 @@ msgid ""
 "This project is currently a template. Would you like to convert it back into "
 "a regular project?"
 msgstr ""
+"Šis projektas šiuo metu yra šablonas. Ar norėtumėte jį vėl paversti į "
+"įprastą projektą?"
 
 #. module: project
 #. odoo-python
@@ -4974,6 +5151,8 @@ msgid ""
 "This task is currently a template. Would you like to convert it back into a "
 "regular task?"
 msgstr ""
+"Ši užduotis šiuo metu yra šablonas. Ar norėtumėte ją vėl paversti į įprastą "
+"užduotį?"
 
 #. module: project
 #. odoo-javascript
@@ -5435,6 +5614,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"Kuriant projektą pagal šabloną, galite pasirinkti, kuris darbuotojas atliks "
+"kiekvieną vaidmenį. Šie darbuotojai bus pridėti prie užduočių kartu su jau "
+"paskirtais asmenimis."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -5493,7 +5675,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 msgid "Write a task name"
-msgstr ""
+msgstr "Parašykite užduoties pavadinimą"
 
 #. module: project
 #. odoo-javascript
@@ -5615,7 +5797,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "Jūsų vadovai nusprendžia, kokie atsiliepimai bus priimti"
 
 #. module: project
 #. odoo-javascript
@@ -5647,6 +5829,8 @@ msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
 msgstr ""
+"ir kuri atsiliepimas yra\n"
+"      perkeliamas į stulpelį „Atmesta“."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
@@ -5734,6 +5918,9 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
 msgstr ""
+"Paspauskite piktogramą, kad pamatytumėte užduotis, kurios laukia kitų "
+"užduočių įvykdymo. Kai užduotis pažymima kaip užbaigta arba atšaukta, visos "
+"jos priklausomybės bus atblokuotos."
 
 #. module: project
 #. odoo-javascript

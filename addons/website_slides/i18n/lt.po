@@ -34,7 +34,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:35+0000\n"
-"PO-Revision-Date: 2026-09-14 17:33+0000\n"
+"PO-Revision-Date: 2026-10-05 22:33+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "website_slides/lt/>\n"
@@ -305,6 +305,37 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: "
+"13px;\">\n"
+"                       <p style=\"margin: 0px;\"> Sveiki, <t t-"
+"out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                       <p><b> Sveikiname!</b></p>\n"
+"                       <p> Jūs baigėte kursą <b t-"
+"out=\"object.channel_id.name or ''\">Sodininkystės pagrindai</b></p>\n"
+"                       <p> Peržiūrėkite kitus siūlomus kursus.</p><br/>\n"
+"\n"
+"                       <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a href=\"/slides\" t-attf-style=\"background-"
+"color: {{object.channel_id.user_id.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.channel_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
+"border-radius: 5px;\"> \n"
+"                                Naršykite kursus\n"
+"                           </a>\n"
+"                        </div> \n"
+"                        Mėgaukitės šiuo išskirtiniu turiniu!\n"
+"                       <t t-if=\"object.channel_id.user_id.signature\" data-"
+"o-mail-quote-container=\"1\">\n"
+"                            <br/> \n"
+"                           <div data-o-mail-quote=\"1\"> --<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.channel_id.user_id.signature or ''\" data-o-"
+"mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                       </t>\n"
+"                    </div> \n"
+"               </div> \n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_shared
@@ -344,6 +375,41 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Sveiki, „<br/><br/>“ \n"
+"                       <t t-out=\"user.name or ''\"> „Mitchell Admin“</t> "
+"pasidalino su jumis dokumentu „ <strong t-out=\"object.name or ''\">“</"
+"strong>!\n"
+"                       </p><div style=\"margin: 16px 8px 16px 8px; text-"
+"align: center;\"> \n"
+"                           <a t-att-href=\"object.website_absolute_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{"
+"{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" "
+"style=\"height:auto; width:150px; margin: 16px;\"/> \n"
+"                           </a>\n"
+"                        </div> \n"
+"                       <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\" t-"
+"attf-style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px;                                 "
+"text-decoration: none; color: {{user.company_id.email_primary_color or "
+"'#FFFFFF'}}; border-radius: 5px;\"> \n"
+"                                Peržiūrėti „ <strong t-out=\"object.name or "
+"''\">“ dokumentą</strong></a>\n"
+"                       </div>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-"
+"container=\"1\"> \n"
+"                           <br/>\n"
+"                            <div data-o-mail-quote=\"1\"> --<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">„"
+"Mitchell Admin“</t></div>\n"
+"                       </t>\n"
+"                    \n"
+"                </div> \n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -384,6 +450,41 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Sveiki, „<br/><br/>“ \n"
+"                       <t t-out=\"user.name or ''\"> „Mitchell Admin“</t> "
+"pasidalino su jumis dokumentu „ <t t-out=\"object.slide_category or ''\">“</"
+"t> <strong t-out=\"object.name or ''\">„Trees“</strong>!\n"
+"                       </p><div style=\"margin: 16px 8px 16px 8px; text-"
+"align: center;\"> \n"
+"                           <a t-att-href=\"(object.website_share_url + "
+"'?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{"
+"{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" "
+"style=\"height:auto; width:150px; margin: 16px;\"/> \n"
+"                           </a>\n"
+"                        </div> \n"
+"                       <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + "
+"'?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" t-"
+"attf-style=\"background-color: {{user.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\"> "
+"Peržiūrėkite „ <strong t-out=\"object.name or ''\">“ „Trees“</strong></a>\n"
+"                       </div>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-"
+"container=\"1\"> \n"
+"                           <br/>\n"
+"                            <div data-o-mail-quote=\"1\"> --<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">„"
+"Mitchell Admin“</t></div>\n"
+"                       </t>\n"
+"                    \n"
+"                </div> \n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -428,6 +529,44 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">"
+"\n"
+"                        Sveiki, „<br/><br/>“ \n"
+"                        Jūsų sekamame kurse „ <strong t-"
+"out=\"object.channel_id.name or ''\">“ („Medžiai, mediena ir sodai“)</"
+"strong> yra naujienų:<br/><br/>\n"
+"                       </p><center> <strong t-out=\"object.name or ''\"> „"
+"Medžiai“</strong></center>\n"
+"                       <t t-if=\"object.image_1024\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-"
+"align: center;\"> \n"
+"                               <a t-att-href=\"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{"
+"{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" "
+"style=\"height:auto; width:150px; margin: 16px;\"/> \n"
+"                           </a>\n"
+"                        </div> \n"
+"                       </t>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\"> \n"
+"                           <a t-att-href=\"object.website_share_url\" t-attf-"
+"style=\"background-color: {{object.user_id.company_id.email_secondary_color "
+"or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px;\"> Peržiūrėti turinį</a>\n"
+"                        </div>\n"
+"                        Mėgaukitės šiuo išskirtiniu turiniu!\n"
+"                       <t t-if=\"user.signature\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                            <br/> \n"
+"                           <div data-o-mail-quote=\"1\"> --<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
+"                       </t>\n"
+"                    \n"
+"                </div> \n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -938,6 +1077,18 @@ msgid ""
 "sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i "
 "class=\"fa fa-step-forward\"/></span>"
 msgstr ""
+"<span id=\"first\" class=\"me-1 me-sm-2\" title=\"First slide\" aria-"
+"label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></"
+"span>\n"
+"                                        <span id=\"previous\" class=\"mx-1 "
+"mx-sm-2\" title=\"Previous slide\" aria-label=\"Previous slide\" "
+"role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"                                       <span id=\"next\" class=\"mx-1 mx-sm-"
+"2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i "
+"class=\"fa fa-arrow-circle-right\"/></span>\n"
+"                                        <span id=\"last\" class=\"mx-1 mx-sm-"
+"2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i "
+"class=\"fa fa-step-forward\"/></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -976,6 +1127,8 @@ msgid ""
 "<span name=\"members_completed_count_label\" class=\"o_stat_text\">Finished</"
 "span>"
 msgstr ""
+"<span name=\"members_completed_count_label\" class=\"o_stat_text\">Baigta</"
+"span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -1645,7 +1798,7 @@ msgstr "Grįžti į kursą"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_default_background_image_url
 msgid "Background image URL"
-msgstr ""
+msgstr "Fono paveikslėlio URL"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
@@ -1863,7 +2016,7 @@ msgstr "Pasirinkite PDF"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "Choose a layout"
-msgstr ""
+msgstr "Pasirinkite išdėstymą"
 
 #. module: website_slides
 #. odoo-javascript
@@ -1874,7 +2027,7 @@ msgstr "Pasrinkite paveikslėlį"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_3_furn0
 msgid "Choose your wood!"
-msgstr ""
+msgstr "Pasirinkite medieną!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -1920,7 +2073,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 msgid "Click on your <b>Course</b> to go back to the table of content."
-msgstr ""
+msgstr "Spustelėkite savo „ <b>“ kurso nuorodą</b>, kad grįžtumėte į turinį."
 
 #. module: website_slides
 #. odoo-javascript
@@ -1952,12 +2105,12 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
 msgid "Come back later to check the feedbacks given by your Attendees."
-msgstr ""
+msgstr "Grįžkite vėliau, kad peržiūrėtumėte dalyvių pateiktus atsiliepimus."
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "Come back later to oversee how well your Attendees are doing."
-msgstr ""
+msgstr "Grįžkite vėliau, kad galėtumėte įvertinti, kaip sekasi jūsų dalyviams."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__comment
@@ -2926,7 +3079,7 @@ msgstr "Mėgaukitės turiniu!"
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid "Enroll Attendees to %(course_name)s"
-msgstr ""
+msgstr "Užregistruokite dalyvius į %(course_name)s"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_msg
@@ -3216,7 +3369,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "Go through all its content to see a Course in this section. <br/>"
-msgstr ""
+msgstr "Peržiūrėkite visą turinį, kad pamatytumėte šio skirsnio kursą. <br/>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
@@ -3510,6 +3663,8 @@ msgid ""
 "Impossible to send emails. Select a \"Channel Share Template\" for courses %"
 "(course_names)s first"
 msgstr ""
+"Neįmanoma siųsti el. laiškų. Pirmiausia pasirinkite „Kanalo dalijimosi "
+"šabloną“ kursams %(course_names)s "
 
 #. module: website_slides
 #. odoo-python
@@ -3518,6 +3673,8 @@ msgid ""
 "Impossible to send emails. Select a \"Share Template\" for courses %"
 "(course_names)s first"
 msgstr ""
+"Neįmanoma siųsti el. laiškų. Pirmiausia pasirinkite „Dalytis šablonu“ "
+"kursams %(course_names)s "
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_1
@@ -3636,7 +3793,7 @@ msgstr "Kviesti"
 #. odoo-python
 #: code:addons/website_slides/models/slide_channel.py:0
 msgid "Invite Attendees to %(course_name)s"
-msgstr ""
+msgstr "Pakvieskite dalyvius į %(course_name)s"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel_partner__member_status__invited
@@ -3876,12 +4033,12 @@ msgstr "Paskutinį kartą atnaujinta"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__latest
 msgid "Latest Created"
-msgstr ""
+msgstr "Naujausi"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
 msgid "Latest achievements"
-msgstr ""
+msgstr "Naujausi pasiekimai"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5167,7 +5324,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 msgid "Select <b>Course</b> to create it and manage it."
-msgstr ""
+msgstr "Pasirinkite „ <b>“ kursą „</b> “, kad jį sukurtumėte ir tvarkytumėte."
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__specific
@@ -5178,31 +5335,31 @@ msgstr "Pasirinkite rankiniu būdu"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Select or create a category"
-msgstr ""
+msgstr "Pasirinkite arba sukurkite kategoriją"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.js:0
 msgid "Select or create a tag"
-msgstr ""
+msgstr "Pasirinkite arba sukurkite žymę"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/course_tag_add_dialog/course_tag_add_dialog.js:0
 msgid "Select or create a tag group"
-msgstr ""
+msgstr "Pasirinkite arba sukurkite žymių grupę"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Select or create tags"
-msgstr ""
+msgstr "Pasirinkite arba sukurkite žymes"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 msgid "Select the correct answer below:"
-msgstr ""
+msgstr "Pasirinkite teisingą atsakymą žemiau:"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -5642,6 +5799,9 @@ msgid ""
 "kanban or front-end, to distinguish internal tags from public categorization "
 "tags"
 msgstr ""
+"Žymės spalva naudojama tiek užkulisiuose, tiek svetainėje. Jei spalvos nėra, "
+"tai reiškia, kad žymė nerodoma kanbane ar vartotojo sąsajoje, siekiant "
+"atskirti vidines žymes nuo viešų kategorizavimo žymų"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5834,7 +5994,7 @@ msgstr "Trečias bandymas"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_answer__comment
 msgid "This comment will be displayed to the user if they select this answer"
-msgstr ""
+msgstr "Šis komentaras bus rodomas vartotojui, jei jis pasirinks šį atsakymą"
 
 #. module: website_slides
 #. odoo-python

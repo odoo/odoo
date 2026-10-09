@@ -18,8 +18,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-09-01 13:10+0000\n"
-"Last-Translator: Gvar <gvar@odoo.com>\n"
+"PO-Revision-Date: 2026-10-08 08:41+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/base/"
 "uk/>\n"
 "Language: uk\n"
@@ -300,6 +300,85 @@ msgid ""
 "\n"
 "**Købskonto:**      4010 Restaurationsbesøg\n"
 msgstr ""
+"\n"
+"\n"
+"Модуль локалізації для Данії\n"
+"===============================\n"
+"\n"
+"Це модуль для управління **планом рахунків для Данії**. Покриває як "
+"індивідуальне підприємництво, так і I/S, IVS, ApS та A/S\n"
+"\n"
+"**Налаштування модуля:**\n"
+"\n"
+"- **Данський план рахунків**\n"
+"\n"
+"- Данський ПДВ\n"
+"        - 25 % moms\n"
+"        - ПДВ на ресторанні послуги 6,25 %\n"
+"        - Зворотне зобов’язання щодо сплати\n"
+"\n"
+"- Групи рахунків\n"
+"        - ЄС (підприємство)\n"
+"        - ЄС (приватна особа)\n"
+"        - Треті країни\n"
+"\n"
+"- Фінансові звіти\n"
+"        - Звіт про фінансові результати\n"
+"        - Баланс\n"
+"        - Розрахунок ПДВ\n"
+"            - Розрахунок\n"
+"            - Графи A, B та C\n"
+"\n"
+"- **Англосаксонська методологія бухгалтерського обліку**\n"
+"\n"
+".\n"
+"\n"
+"Налаштування товару:\n"
+"=================\n"
+"\n"
+"**Товар**\n"
+"\n"
+"**ПДВ з продажу:**      ПДВ з продажу 25 %\n"
+"\n"
+"**Рахунок продажів:**     1.010 Продаж товарів, включаючи ПДВ\n"
+"\n"
+"**ПДВ з купівлі:**       ПДВ з купівлі 25 %\n"
+"\n"
+"**Рахунок купівлі:**      2.010 Прямі витрати на товари, включаючи ПДВ\n"
+"\n"
+".\n"
+"\n"
+"**Послуги**\n"
+"\n"
+"**ПДВ з продажу:**      ПДВ з продажу 25 %, послуги\n"
+"\n"
+"**Рахунок продажів:**     1.011 Продаж послуг, включаючи ПДВ\n"
+"\n"
+"**ПДВ з купівлі:**       ПДВ з купівлі 25 %, послуги\n"
+"\n"
+"**Рахунок закупівлі:**      2.011 Прямі витрати на послуги, включаючи ПДВ\n"
+"\n"
+".\n"
+"\n"
+"**Товари з перевернутим обов’язком сплати ПДВ**\n"
+"\n"
+"**ПДВ з продажу:**      Продаж з перевернутим обов’язком сплати ПДВ\n"
+"\n"
+"**Рахунок з продажу:**     1 012 Продаж товарів без ПДВ\n"
+"\n"
+"**ПДВ на купівлю:**       Купівля з перекладеним обов’язком сплати ПДВ\n"
+"\n"
+"**Рахунок з купівлі:**      2 012 Прямі витрати на товари без ПДВ\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Ресторанне обслуговування**\n"
+"\n"
+"**ПДВ на закупівлю:**       ПДВ на ресторанне обслуговування 6,25 %, ПДВ на "
+"закупівлю\n"
+"\n"
+"**Рахунок-каса:**      4010 Відвідування ресторанів\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -457,6 +536,10 @@ msgid ""
 "Note: this might be a multi-company issue. Switching company may help - in "
 "Odoo, not in real life!"
 msgstr ""
+"\n"
+"\n"
+"Примітка: це може бути проблема кількох компаній. Зміна компанії може "
+"допомогти — в Odoo, а не в реальному житті!"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -573,6 +656,11 @@ msgid ""
 "formats.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Цей модуль надає допоміжні функції для експорту замовлень PoS у різних "
+"форматах UBL 2.1.\n"
+"\n"
 
 #. module: base
 #. odoo-python
@@ -583,6 +671,10 @@ msgid ""
 "This seems to be a multi-company issue, but you do not have access to the "
 "proper company to access the record anyhow."
 msgstr ""
+"\n"
+"\n"
+"Схоже, що це проблема кількох компаній, але у вас все одно немає доступу до "
+"належної компанії для доступу до запису."
 
 #. module: base
 #. odoo-python
@@ -593,6 +685,10 @@ msgid ""
 "This seems to be a multi-company issue, you might be able to access the "
 "record by switching to the company: %s."
 msgstr ""
+"\n"
+"\n"
+"Схоже, що це проблема кількох компаній, можливо, ви зможете отримати доступ "
+"до запису, перейшовши до компанії: %s."
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_imin
@@ -601,6 +697,9 @@ msgid ""
 "\n"
 "Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"Використовуйте принтери Epson ePOS без IoT Box у точці продажу\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
@@ -609,6 +708,9 @@ msgid ""
 "            Egypt Tax Authority Invoice Integration\n"
 "        "
 msgstr ""
+"\n"
+"            Інтеграція рахунків-фактур Податкової служби Єгипту\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ke_edi_oscu
@@ -639,6 +741,9 @@ msgid ""
 "        A Html Editor component and plugin system\n"
 "    "
 msgstr ""
+"\n"
+"        Компонент та система плагінів HTML-редактора\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_app
@@ -647,6 +752,10 @@ msgid ""
 "        A powerful suite of AI tools and agents\n"
 "        integrated directly into your Odoo environment."
 msgstr ""
+"\n"
+"        Потужний набір інструментів та агентів на основі штучного "
+"інтелекту,\n"
+"        інтегрованих безпосередньо у ваше середовище Odoo."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_ai_livechat
@@ -655,6 +764,9 @@ msgid ""
 "        Augment Livechat with AI Agents.\n"
 "    "
 msgstr ""
+"\n"
+"        Розширте можливості Livechat за допомогою AI-агентів.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
@@ -718,6 +830,33 @@ msgid ""
 "Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* Додати звіт «Книга ПДВ», який є законодавчою вимогою в Аргентині та "
+"містить детальну інформацію про ПДВ за продажами або закупівлями, "
+"здійсненими протягом певного періоду.\n"
+"* Додати зведений звіт з ПДВ, який використовується для аналізу виставлення "
+"рахунків-фактур\n"
+"* Додати функціонал цифрової книги ПДВ, що дозволяє генерувати TXT-файли для "
+"імпорту в ARCA. Ми реалізуємо такі:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"Офіційна документація ARCA\n"
+"\n"
+"* Цифрова книга ПДВ — структура запису https://www.afip.gob.ar/libro-iva-"
+"digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI — структура запису (така сама, як у цифровій книзі ПДВ): https://"
+"www.afip.gob.ar/comprasyventas/documentos/"
+"RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI — технічні вимоги (містять додаткову інформацію щодо форматування "
+"чисел та заповнення числових/буквено-числових полів): https://"
+"www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-"
+"Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports_simple
@@ -725,6 +864,8 @@ msgid ""
 "\n"
 "* Add export of IVA Simple Tax Report.\n"
 msgstr ""
+"\n"
+"* Додати експорт простого податкового звіту з ПДВ.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_app
@@ -736,6 +877,15 @@ msgid ""
 "* Enhance customer service with AI-powered responses\n"
 "* Automate routine tasks with intelligent workflows\n"
 msgstr ""
+"\n"
+"* Створюйте та керуйте агентами штучного інтелекту для виконання різних "
+"бізнес-завдань\n"
+"* Інтегруйте з популярними моделями та сервісами штучного інтелекту\n"
+"* Автоматично обробляйте документи та витягуйте інформацію\n"
+"* Покращуйте обслуговування клієнтів за допомогою відповідей на основі "
+"штучного інтелекту\n"
+"* Автоматизуйте рутинні завдання за допомогою інтелектуальних робочих "
+"процесів\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu_edi
@@ -746,6 +896,11 @@ msgid ""
 "* Perform the Tax Audit Export (Adóhatósági Ellenőrzési Adatszolgáltatás) in "
 "NAV 3.0 format.\n"
 msgstr ""
+"\n"
+"* Електронний звіт про рахунки-фактури в NAV (Податкове агентство Угорщини) "
+"під час видачі фізичних (паперових) рахунків-фактур.\n"
+"* Виконайте експорт податкового аудиту (Adóhatósági Ellenőrzési "
+"Adatszolgáltatás) у форматі NAV 3.0.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -788,6 +943,9 @@ msgid ""
 "\n"
 "- Send and receive documents via Nemhandel network in OIOUBL 2.1 format\n"
 msgstr ""
+"\n"
+"- Надсилайте та отримуйте документи через мережу Nemhandel у форматі OIOUBL "
+"2.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -852,6 +1010,9 @@ msgid ""
 "A chatbot to help the user be guided through recruitment process on the "
 "website and land on the right jobs position.\n"
 msgstr ""
+"\n"
+"Чат-бот, який допомагає користувачеві орієнтуватися в процесі підбору "
+"персоналу на веб-сайті та знайти підходящу вакансію.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -1136,6 +1297,10 @@ msgid ""
 "===========================\n"
 "A helper model for managing transfers between accounts.\n"
 msgstr ""
+"\n"
+"Перекази між рахунками\n"
+"===========================\n"
+"Допоміжна модель для управління переказами між рахунками.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant
@@ -1166,6 +1331,9 @@ msgid ""
 "Accounting Asset for India\n"
 "==========================\n"
 msgstr ""
+"\n"
+"Бухгалтерські активи для Індії\n"
+"================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_hr_payroll_account
@@ -1185,6 +1353,9 @@ msgid ""
 "Accounting Data for Bangladesh Payroll Rules\n"
 "============================================\n"
 msgstr ""
+"\n"
+"Бухгалтерські дані для правил нарахування заробітної плати в Бангладеш\n"
+"============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_account
@@ -1205,6 +1376,10 @@ msgid ""
 "=======================================================\n"
 "\n"
 msgstr ""
+"\n"
+"Бухгалтерські дані для правил нарахування заробітної плати в Єгипті.\n"
+"=======================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll_account
@@ -1216,6 +1391,13 @@ msgid ""
 "we won't support this module.\n"
 "--------------------------------------------------------------------------------------------------------\n"
 msgstr ""
+"\n"
+"Бухгалтерські дані для французьких правил нарахування заробітної плати.\n"
+"\n"
+"Цей модуль базується на непідтримуваному французькому модулі. Зверніть "
+"увагу, що ми не підтримуватимемо цей модуль.\n"
+"--------------------------------------------------------------------------------------------------------"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll_account
@@ -1246,6 +1428,9 @@ msgid ""
 "Accounting Data for Indonesian Payroll Rules\n"
 "============================================\n"
 msgstr ""
+"\n"
+"Бухгалтерські дані для індонезійських правил нарахування заробітної плати\n"
+"============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_hr_payroll_account
@@ -1254,6 +1439,9 @@ msgid ""
 "Accounting Data for Jordan Payroll Rules\n"
 "========================================\n"
 msgstr ""
+"\n"
+"Бухгалтерські дані для правил нарахування заробітної плати в Йорданії\n"
+"========================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_hr_payroll_account
@@ -1295,6 +1483,9 @@ msgid ""
 "Accounting Data for Malaysian Payroll Rules\n"
 "===========================================\n"
 msgstr ""
+"\n"
+"Бухгалтерські дані для правил нарахування заробітної плати в Малайзії\n"
+"===========================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_account
@@ -1336,6 +1527,9 @@ msgid ""
 "Accounting Data for Pakistan Payroll Rules\n"
 "==========================================\n"
 msgstr ""
+"\n"
+"Бухгалтерські дані для правил нарахування заробітної плати в Пакистані\n"
+"==========================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_hr_payroll_account
@@ -1402,6 +1596,9 @@ msgid ""
 "Accounting Data for Türkiye Payroll Rules\n"
 "==========================================\n"
 msgstr ""
+"\n"
+"Бухгалтерські дані для правил нарахування заробітної плати в Туреччині\n"
+"==========================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll_account
@@ -1433,6 +1630,8 @@ msgid ""
 "\n"
 "Accounting Expense Bridge\n"
 msgstr ""
+"\n"
+"Моствоий модуль між Бухобліком і Витратами\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant_fleet
@@ -1440,6 +1639,8 @@ msgid ""
 "\n"
 "Accounting Fleet Bridge\n"
 msgstr ""
+"\n"
+"Мостовий модуль між Бухобліком та Автопарком\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_base_import
@@ -1460,6 +1661,10 @@ msgid ""
 "===========================================\n"
 "This provides a base chart of accounts and taxes template for use in Odoo.\n"
 msgstr ""
+"\n"
+"Модуль бухгалтерського обліку для Республіки Корея\n"
+"===========================================\n"
+"Це надає базовий шаблон плану рахунків та податків для використання в Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports
@@ -1527,6 +1732,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Бахрейну\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bd_reports
@@ -1536,6 +1745,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Бангладеш\n"
+"============================================\n"
+"- Звіт про податок на прибуток підприємств\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -1554,6 +1767,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Беніну\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bf_reports
@@ -1563,6 +1780,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Буркіна-Фасо\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cm_reports
@@ -1572,6 +1793,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Камеруну\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_reports
@@ -1590,6 +1815,10 @@ msgid ""
 "===============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Фінансові звіти для Центральноафриканської Республіки\n"
+"===============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_reports
@@ -1607,6 +1836,9 @@ msgid ""
 "Accounting reports for China\n"
 "============================\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Китаю\n"
+"============================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -1627,6 +1859,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Коморських островів\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cg_reports
@@ -1636,6 +1872,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Конго\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr_reports
@@ -1652,6 +1892,8 @@ msgid ""
 "\n"
 "Accounting reports for Croatia (Kuna)\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Хорватії (куна)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cz_reports
@@ -1669,6 +1911,19 @@ msgid ""
 "- Tax report (XML export). For more information, see https://adisspr.mfcr.cz/"
 "dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Чеської Республіки\n"
+"=====================================\n"
+"Цей модуль містить бухгалтерські звіти для Чеської Республіки, зокрема:\n"
+"- Звіт про контроль ПДВ (створення та експорт у форматі XML). Докладнішу "
+"інформацію див. за посиланням https://adisspr.mfcr.cz/dpr/adis/idpr_pub/"
+"epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"- Зведений звіт VIES (створення та експорт у форматі XML). Докладнішу "
+"інформацію див. за посиланням https://adisspr.mfcr.cz/dpr/adis/idpr_pub/"
+"epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"- Податкова звітність (експорт у форматі XML). Докладнішу інформацію див. за "
+"посиланням https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/"
+"popis_struktury_detail.faces?zkratka=DPHDP3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cd_reports
@@ -1678,6 +1933,10 @@ msgid ""
 "=======================================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Фінансові звіти для Демократичної Республіки Конго\n"
+"=======================================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk_reports
@@ -1722,6 +1981,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Єгипту\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et_reports
@@ -1731,6 +1994,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Ефіопії\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -1778,6 +2045,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Габону\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_reports
@@ -1813,6 +2084,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Гвінеї\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gq_reports
@@ -1822,6 +2097,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Фінансові звіти для Екваторіальної Гвінеї\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gw_reports
@@ -1831,6 +2110,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Фінансові звіти для Гвінеї-Бісау\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_reports
@@ -1838,6 +2121,8 @@ msgid ""
 "\n"
 "Accounting reports for Hong Kong\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Гонконгу\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu_reports
@@ -1865,6 +2150,8 @@ msgid ""
 "\n"
 "Accounting reports for Israel\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Ізраїлю\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_reports
@@ -1887,6 +2174,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Кот-д’Івуару\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_reports
@@ -1896,6 +2187,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Японії\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo_reports
@@ -1905,6 +2200,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Йорданії\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kz_reports
@@ -1973,6 +2272,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Малі\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mu_reports
@@ -1982,6 +2285,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Маврикія\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ma_reports
@@ -2003,6 +2310,9 @@ msgid ""
 "Accounting reports for Netherlands\n"
 "Submit your Tax Reports to the Dutch tax authorities\n"
 msgstr ""
+"\n"
+"Бухгалтерська звітність для Нідерландів\n"
+"Подайте свої податкові звіти до податкових органів Нідерландів\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nz_reports
@@ -2012,6 +2322,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Нової Зеландії\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ne_reports
@@ -2021,6 +2335,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Нігерії\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -2114,6 +2432,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Саудівської Аравії\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs_reports
@@ -2160,6 +2482,11 @@ msgid ""
 "This module includes accounting reports for Slovakia, including:\n"
 "-Balance Sheet + Profit and Loss (XML export)\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Словаччини\n"
+"=====================================\n"
+"Цей модуль містить бухгалтерські звіти для Словаччини, зокрема:\n"
+"- Баланс + Звіт про прибутки та збитки (експорт у форматі XML)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za_reports
@@ -2169,6 +2496,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Фінансові звіти для Південної Африки\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports
@@ -2185,6 +2516,8 @@ msgid ""
 "\n"
 "Accounting reports for Sri Lanka\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Шрі-Ланки\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_reports
@@ -2212,6 +2545,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Фінансові звіти для Сенегалу\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw_reports
@@ -2241,6 +2578,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Чаду\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th_reports
@@ -2261,6 +2602,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Того\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tn_reports
@@ -2284,6 +2629,11 @@ msgid ""
 "- Balance Sheet\n"
 "- Profit and Loss\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Туреччини\n"
+"\n"
+"- Баланс\n"
+"- Доходи і витрати\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports
@@ -2317,6 +2667,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Уганди\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy_reports
@@ -2326,6 +2680,10 @@ msgid ""
 "============================================\n"
 "- Corporate tax report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти для Уругваю\n"
+"============================================\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_zm_reports
@@ -2358,6 +2716,9 @@ msgid ""
 "Accounting reports for the Vietnam\n"
 "    "
 msgstr ""
+"\n"
+"Бухгалтерські звіти для В'єтнаму\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_reports
@@ -2366,6 +2727,9 @@ msgid ""
 "Accounting reports:\n"
 "- Corporate Tax Report\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти:\n"
+"- Звіт про корпоративний податок\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_faf
@@ -2374,6 +2738,9 @@ msgid ""
 "Accounting reports:\n"
 "- FTA VAT Audit\n"
 msgstr ""
+"\n"
+"Бухгалтерські звіти:\n"
+"- Аудит ПДВ у рамках Угоди про вільну торгівлю (FTA)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_returns
@@ -2381,6 +2748,8 @@ msgid ""
 "\n"
 "Accounting returns for Sweden\n"
 msgstr ""
+"\n"
+"Податкові декларації для Швеції\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -2473,6 +2842,74 @@ msgid ""
 "validate VAT numbers for each country that have or not have the possibility "
 "to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Додайте нову модель під назвою «Тип ідентифікації», яка розширює "
+"функціональність поля ПДВ у партнерській базі та дозволяє користувачеві "
+"ідентифікувати (у разі необхідності — у рахунку-фактурі) контакти не лише за "
+"їхнім податковим ідентифікаційним номером (ПДВ), а й за іншими типами "
+"ідентифікації, такими як національний документ, паспорт, іноземний "
+"ідентифікаційний номер тощо. Після встановлення цього модуля у формі "
+"партнера ви побачите два поля:\n"
+"\n"
+"* Тип ідентифікації\n"
+"* Ідентифікаційний номер\n"
+"\n"
+"Така функціональність є типовою вимогою для деяких країн Латинської Америки, "
+"таких як Аргентина та Чилі. Якщо ваша локалізація має такі вимоги, вам "
+"потрібно використовувати цей модуль і визначити у вашому модулі локалізації "
+"типи ідентифікації, що використовуються у вашій країні. Зазвичай ці типи "
+"ідентифікації визначаються державними органами, що регулюють податкові "
+"операції. Наприклад:\n"
+"\n"
+"* ARCA в Аргентині визначає DNI, CUIT (ПДВ для юридичних осіб), CUIL (ПДВ "
+"для фізичних осіб) та ще 80 дійсних типів ідентифікації.\n"
+"\n"
+"Кожен тип ідентифікації містить таку інформацію:\n"
+"\n"
+"* name: коротка назва типу ідентифікації\n"
+"* description: може бути тією самою короткою назвою або повною назвою\n"
+"* country_id: країна, до якої належить цей тип ідентифікації\n"
+"* is_vat: ідентифікує цей запис як відповідний ПДВ для конкретної країни.\n"
+"* sequence: дозволяє сортувати типи ідентифікаторів залежно від тих, що "
+"використовуються найчастіше.\n"
+"* active: ми можемо активувати/деактивувати ідентифікатори, щоб полегшити "
+"роботу наших клієнтів\n"
+"\n"
+"Щоб зробити цей модуль сумісним із середовищами з кількома компаніями, де є "
+"компанії, які не потребують або не підтримують цю вимогу, ми додали загальні "
+"типи ідентифікаторів та загальні правила для управління контактною "
+"інформацією, щоб зробити її прозорою для користувача, коли використовується "
+"лише ПДВ, як це було раніше.\n"
+"\n"
+"Загальні ідентифікатори:\n"
+"\n"
+"* ПДВ: податковий ідентифікаційний номер або номер ПДВ за замовчуванням буде "
+"обрано як тип ідентифікації, тому користувачеві потрібно буде лише додати "
+"відповідний номер ПДВ.\n"
+"* Паспорт\n"
+"* Ідентифікаційний документ іноземця (документ іноземного громадянина)\n"
+"\n"
+"Правила під час створення нового партнера: ми бачитимемо лише ті типи "
+"ідентифікації, які є релевантними, з урахуванням таких правил:\n"
+"\n"
+"* Якщо у партнера не вказано адресу в країні: будуть показані загальні типи "
+"ідентифікації, а також ті, що визначені для країни, до якої належить "
+"пов’язана з партнером компанія (якщо у партнера немає конкретної компанії, "
+"то будуть показані типи ідентифікації, пов’язані з компанією поточного "
+"користувача)\n"
+"\n"
+"* Якщо у партнера вказано адресу в країні: будуть показані загальні типи "
+"ідентифікації, а також ті, що визначені для країни партнера.\n"
+"\n"
+"Під час створення нової компанії для пов’язаного партнера завжди "
+"встановлюватиметься тип ідентифікації is_vat відповідної країни.\n"
+"\n"
+"Усі визначені типи ідентифікації можна переглянути та активувати/"
+"деактивувати в меню «Контакти / Конфігурація / Тип ідентифікації».\n"
+"\n"
+"Цей модуль сумісний із модулем base_vat, що дозволяє перевіряти номери ПДВ "
+"для кожної країни, незалежно від того, чи має вона можливість керувати "
+"кількома типами ідентифікації.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_accountant
@@ -2481,6 +2918,9 @@ msgid ""
 "Add accrued menus and specific filters on purchase order lines for an easier "
 "closing process.\n"
 msgstr ""
+"\n"
+"Додайте накопичувальні меню та конкретні фільтри до рядків замовлення на "
+"закупівлю для спрощення процесу закриття.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_website_sale
@@ -2500,6 +2940,20 @@ msgid ""
 "- the option 'automatic_invoice' is enabled in the website settings "
 "(\"Invoice automatically on payment\")\n"
 msgstr ""
+"\n"
+"Додайте додаткову вкладку в процесі оформлення замовлення на веб-сайті/в "
+"електронній комерції з полями для Мексики:\n"
+"\n"
+"- l10n_mx_edi_cfdi_to_public (sale.order/account.move)\n"
+"- l10n_mx_edi_fiscal_regime (res.partner)\n"
+"- l10n_mx_edi_usage (sale.order/account.move)\n"
+"- l10n_mx_edi_ieps_breakdown (res.partner)\n"
+"\n"
+"Додаткова вкладка з’являється лише за таких умов:\n"
+"\n"
+"- компанія, пов’язана з веб-сайтом, є мексиканською\n"
+"- у налаштуваннях веб-сайту увімкнено опцію «automatic_invoice» («"
+"Автоматично виставляти рахунок-фактуру після оплати»)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm
@@ -2572,6 +3026,10 @@ msgid ""
 "Add support to fill three fields used when using Chorus Pro, especially when "
 "invoicing public services.\n"
 msgstr ""
+"\n"
+"Додайте підтримку для заповнення трьох необов’язкових полів, які "
+"використовуються під час використання Chorus Pro, особливо під час "
+"виставлення рахунків за державні послуги.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -2601,6 +3059,8 @@ msgid ""
 "\n"
 "Adds Arabic as a secondary language for the lots and serial numbers\n"
 msgstr ""
+"\n"
+"Додано арабську мову як додаткову для лотів та серійних номерів\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_invoice
@@ -2609,6 +3069,9 @@ msgid ""
 "Adds Arabic as a secondary language on your invoice, credit note, debit "
 "note, vendor bill, and refund bill\n"
 msgstr ""
+"\n"
+"Додає арабську мову як додаткову мову у ваших рахунках-фактурах, кредитних "
+"та дебетових нотах, рахунках постачальників та рахунках-поверненнях\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -2616,6 +3079,8 @@ msgid ""
 "\n"
 "Adds Arabic as a secondary language on your receipt\n"
 msgstr ""
+"\n"
+"Додає арабську мову як другу мову у вашій квитанції\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_iot
@@ -2688,6 +3153,8 @@ msgid ""
 "\n"
 "Adds repair orders to Quality Control\n"
 msgstr ""
+"\n"
+"Додає замовлення на ремонт до контролю якості\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_product
@@ -2706,6 +3173,8 @@ msgid ""
 "\n"
 "Adds the ability to set folder templates on products.\n"
 msgstr ""
+"\n"
+"Додано можливість встановлювати шаблони папок для товарів.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -2745,6 +3214,21 @@ msgid ""
 "Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, American Express etc.\n"
 msgstr ""
+"\n"
+"Дозволити платежі через точки продажу DPO\n"
+"==============================\n"
+"\n"
+"Підтримує всі валюти, які підтримує термінал — переважно для використання в "
+"**африканському регіоні**.\n"
+"Це дає змогу клієнтам оплачувати свої замовлення за допомогою дебетових/"
+"кредитних карток та мобільних грошей через точки продажу DPO.\n"
+"Для обробки транзакцій необхідний торговий рахунок DPO.\n"
+"Функції включають:\n"
+"\n"
+"* Швидкі платежі шляхом просування, сканування або дотику вашої кредитної/"
+"дебетової картки або Mobile Money (Airtel Money / M-Pesa) до платіжного "
+"терміналу.\n"
+"* Підтримувані картки: Visa, MasterCard, American Express тощо.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_pine_labs
@@ -2763,6 +3247,19 @@ msgid ""
 "UPI QR code at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, RuPay.\n"
 msgstr ""
+"\n"
+"Дозволити платежі через точки продажу Pine Labs\n"
+"==============================\n"
+"\n"
+"Цей модуль доступний лише для компаній, які використовують валюту INR.\n"
+"Він дозволяє клієнтам оплачувати свої замовлення за допомогою дебетових/"
+"кредитних карток та UPI через точки продажу Pine Labs.\n"
+"Для обробки транзакцій необхідний торговий рахунок Pine Labs.\n"
+"Функції включають:\n"
+"\n"
+"* Швидкі платежі шляхом просування, сканування або дотику вашої кредитної/"
+"дебетової картки або QR-коду UPI до платіжного терміналу.\n"
+"* Підтримувані картки: Visa, MasterCard, RuPay.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_razorpay
@@ -2869,6 +3366,9 @@ msgid ""
 "Allow users to add a product to wishlist if the product is not available for "
 "the selected pickup location.\n"
 msgstr ""
+"\n"
+"Дозволити користувачам додавати товар до списку бажань, якщо він недоступний "
+"у вибраному місці самовивозу.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -2900,6 +3400,10 @@ msgid ""
 "during the checkout\n"
 "process.\n"
 msgstr ""
+"\n"
+"Дозволяє анонімним покупцям вашої електронної комерції підписатися на "
+"розсилку новин під час оформлення \n"
+"замовлення.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_collect
@@ -2908,6 +3412,9 @@ msgid ""
 "Allows customers to check in-store stock, pay on site, and pick up their "
 "orders at the shop.\n"
 msgstr ""
+"\n"
+"Дозволяє клієнтам перевіряти наявність товару в магазині, оплачувати на "
+"місці та забирати свої замовлення в магазині.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account
@@ -2948,6 +3455,8 @@ msgid ""
 "\n"
 "Allows the users to integrate with JoFotara.\n"
 msgstr ""
+"\n"
+"Дозволяє користувачам інтегруватися з JoFotara.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_margin
@@ -2997,6 +3506,11 @@ msgid ""
 "xml for all UBL formats. This allows the\n"
 "receiver to retrieve the PDF with only the xml file.\n"
 msgstr ""
+"\n"
+"Дозволяє експортувати та імпортувати формати: UBL Bis 3.\n"
+"Під час створення PDF-файлу для замовлення, PDF-файл буде вбудований в XML "
+"для всіх форматів UBL. Це дозволяє\n"
+"одержувачу отримати PDF-файл, маючи лише XML-файл.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet
@@ -3081,6 +3595,9 @@ msgid ""
 "\n"
 "Allows using a compatible printer to print Event badges upon checking in.\n"
 msgstr ""
+"\n"
+"Дозволяє використовувати сумісний принтер для друку бейджів події під час "
+"реєстрації.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_delivery
@@ -3522,6 +4039,61 @@ msgid ""
 "- Configuration note: The .pfx certificate should be set on the payroll "
 "configuration.\n"
 msgstr ""
+"\n"
+"Автоматичні декларації DIMONA\n"
+"=============================\n"
+"\n"
+"Необхідні умови:\n"
+"--------------\n"
+"\n"
+"- Вам потрібен цифровий сертифікат, що відповідає вимогам уряду Бельгії, "
+"виданий компанією Global\n"
+"  Sign. Див.: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Створіть з вашого SSL-сертифіката (файл .pfx) файли сертифікатів, "
+"необхідні для створення\n"
+"  технічного користувача (файл .cer) та для віддаленої автентифікації в ONSS "
+"(файл .pfx). У системі UNIX\n"
+"  ви можете використовувати такі команди:\n"
+"\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"- Перш ніж почати користуватися веб-сервісом REST соціального страхування, "
+"ви повинні створити обліковий запис\n"
+"  для себе або для свого клієнта та налаштувати параметри безпеки. (Повна "
+"процедура\n"
+"  доступна за адресою https://www.socialsecurity.be/site_fr/employer/applics/"
+"dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Управління обліковими записами користувачів: дотримуйтесь інструкції "
+"https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Створення технічного користувача: Ваш клієнт повинен створити технічного "
+"користувача в онлайн-сервісі «Управління доступом»\n"
+"    . Для цього слід виконати цю процедуру: https://www.socialsecurity.be/"
+"site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Активуйте канал веб-сервісу: Після створення технічного користувача ваш "
+"клієнт повинен\n"
+"    активувати канал веб-сервісу в системі управління доступом. У наступному "
+"посібнику описано\n"
+"    кроки, які необхідно виконати для активації каналу: https://"
+"www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - Після завершення процедури ви отримаєте «Номер експедитора ONSS», який "
+"можна\n"
+"    ввести в налаштуваннях розрахунку заробітної плати разом із файлом .pem "
+"та відповідним паролем, якщо такий є.\n"
+"\n"
+"- Примітка щодо конфігурації: сертифікат у форматі .pfx слід вказати в "
+"налаштуваннях розрахунку заробітної плати.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_accountant
@@ -3551,6 +4123,12 @@ msgid ""
 "well.\n"
 "It should be renamed later to ai_documents_automation.\n"
 msgstr ""
+"\n"
+"Автоматично сортуйте свої документи.\n"
+"Цей модуль використовується лише для автоматичного сортування документів і "
+"не може використовуватися для будь-яких функцій, пов’язаних із ai-documents, "
+"оскільки він також спирається на base_automation.\n"
+"Пізніше його слід перейменувати на ai_documents_automation.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fsm
@@ -3567,6 +4145,8 @@ msgid ""
 "\n"
 "Backports the tax return functionalities in the Spanish localization\n"
 msgstr ""
+"\n"
+"Перенесено функціонал подання податкових декларацій у іспанську локалізацію\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bd_hr_payroll
@@ -3578,6 +4158,12 @@ msgid ""
 "- Income tax credits handling\n"
 "- Introduced the income tax slabs calculations\n"
 msgstr ""
+"\n"
+"Правила нарахування заробітної плати в Бангладеш.\n"
+"===========================\n"
+"- Розрахунок правил нарахування заробітної плати\n"
+"- Обробка податкових пільг на прибуток\n"
+"- Введено розрахунок податкових пільг на прибуток\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -3672,6 +4258,12 @@ msgid ""
 "external\n"
 "api from different job boards like indeed, monster, linkedin, etc.\n"
 msgstr ""
+"\n"
+"Базовий модуль для інтеграції рекрутингу.\n"
+"========================================\n"
+"Цей модуль забезпечує основу для інтеграції рекрутингу із зовнішніми\n"
+"API від різних сайтів з вакансіями, таких як Indeed, Monster, LinkedIn "
+"тощо.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -3720,6 +4312,53 @@ msgid ""
 "-------------------------------------------------\n"
 "Create electronic sales invoices with Avatax.\n"
 msgstr ""
+"\n"
+"Базовий модуль для бразильської локалізації\n"
+"==========================================\n"
+"\n"
+"Цей модуль складається з:\n"
+"\n"
+"- Загального бразильського плану рахунків\n"
+"- Бразильських податків, таких як:\n"
+"\n"
+"  - IPI\n"
+"  - ICMS\n"
+"  - PIS\n"
+"  - COFINS\n"
+"  - ISS\n"
+"  - IR\n"
+"  - CSLL\n"
+"\n"
+"- Типів документів, таких як NFC-e, NFS-e тощо.\n"
+"- Ідентифікаційні документи, такі як CNPJ та CPF\n"
+"\n"
+"Окрім цього модуля, бразильська локалізація також\n"
+"розширена та доповнена кількома додатковими модулями.\n"
+"\n"
+"Бразилія — бухгалтерські звіти (l10n_br_reports)\n"
+"---------------------------------------------\n"
+"Додає простий податковий звіт, який допомагає перевірити суму податку за "
+"кожною податковою групою\n"
+"за певний період часу. Також додає звіт про прибутки та збитки (P&L) та "
+"баланс (BS), адаптовані до\n"
+"бразильського ринку.\n"
+"\n"
+"Avatax Бразилія (l10n_br_avatax)\n"
+"------------------------------\n"
+"Додає розрахунок бразильських податків за допомогою Avatax та всі необхідні "
+"поля, потрібні для\n"
+"налаштування Odoo з метою правильного використання Avatax та надсилання "
+"необхідної податкової\n"
+"інформації для отримання правильних сум податків.\n"
+"\n"
+"Avatax для замовлень на продаж у Бразилії (l10n_br_avatax_sale)\n"
+"----------------------------------------------\n"
+"Те саме, що й модуль l10n_br_avatax, але з розширенням для модуля замовлень "
+"на продаж.\n"
+"\n"
+"Електронне виставлення рахунків через Avatax (l10n_br_edi)\n"
+"-------------------------------------------------\n"
+"Створення електронних рахунків-фактур за допомогою Avatax.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kh_reports
@@ -3727,6 +4366,8 @@ msgid ""
 "\n"
 "Base module for the Cambodian reports\n"
 msgstr ""
+"\n"
+"Базовий модуль для звітів про Камбоджу\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kr_reports
@@ -3734,6 +4375,8 @@ msgid ""
 "\n"
 "Base module for the Republic of Korea reports\n"
 msgstr ""
+"\n"
+"Базовий модуль для звітів Республіки Корея\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iot_base
@@ -3742,6 +4385,10 @@ msgid ""
 "Base tools required by all IoT related modules.\n"
 "===============================================\n"
 msgstr ""
+"\n"
+"Базові інструменти, необхідні для всіх модулів, пов’язаних з Інтернетом "
+"речей (IoT).\n"
+"===============================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cy
@@ -3865,6 +4512,92 @@ msgid ""
 "requirements and reduces manual interaction with the SFTP portal.\n"
 "\n"
 msgstr ""
+"\n"
+"Правила нарахування заробітної плати в Бельгії.\n"
+"======================\n"
+"\n"
+"    * Дані про співробітника\n"
+"    * Трудові договори\n"
+"    * Договір на основі паспортних даних\n"
+"    * Допомога/відрахування\n"
+"    * Можливість налаштування базової/брутто/нетто заробітної плати\n"
+"    * Розрахунковий лист співробітника\n"
+"    * Щомісячний реєстр нарахування заробітної плати\n"
+"    * Інтеграція з управлінням відпустками\n"
+"    * Основна заробітна плата, ONSS, податок, що утримується у джерела, "
+"допомога на дитину, ...\n"
+"\n"
+"Автоматичне підписання DmfA\n"
+"========================\n"
+"\n"
+"Необхідні умови:\n"
+"--------------\n"
+"\n"
+"- Вам потрібен цифровий сертифікат, що відповідає вимогам уряду Бельгії, "
+"виданий компанією Global\n"
+"  Sign. Див.: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Створіть з вашого SSL-сертифіката (файл .pfx) файли, необхідні для "
+"створення\n"
+"  технічного користувача (файл .cer) та для віддаленої аутентифікації в ONSS "
+"(файл .pem). У системі UNIX\n"
+"  ви можете скористатися такими командами:\n"
+"\n"
+"  - PFX → CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
+"clcerts\n"
+"\n"
+"  - CRT → CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
+"my_cert.cer\n"
+"\n"
+"  - PFX → PEM: openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX → KEY: openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts\n"
+"\n"
+"- Перш ніж почати користуватися веб-сервісом REST соціального страхування, "
+"вам необхідно створити обліковий запис\n"
+"  для себе або для свого клієнта та налаштувати параметри безпеки. (Повна "
+"процедура\n"
+"  доступна за адресою https://www.socialsecurity.be/site_fr/general/"
+"helpcentre/batch/sftp/previewstep.htm)\n"
+"\n"
+"  - Створити технічного користувача + активувати канал SFTP: Ваш клієнт "
+"повинен створити технічного користувача в онлайн-сервісі управління "
+"доступом\n"
+"    . Дотримуйтесь цієї процедури: https://www.socialsecurity.be/site_fr/"
+"general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Налаштуйте свій SFTP-клієнт: https://www.socialsecurity.be/site_fr/"
+"general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - Після завершення процедури ви повинні отримати «Номер експедитора ONSS», "
+"який можна\n"
+"    ввести в налаштуваннях системи Зарплати разом із файлом .pem та "
+"відповідним паролем, якщо такий є.\n"
+"\n"
+"Синхронізація DmfA з порталом ONSS\n"
+"===============================\n"
+"\n"
+"Автоматизує синхронізацію декларацій DmfA ONSS\n"
+"з офіційним бельгійським SFTP-порталом.\n"
+"\n"
+"- Завантажте файли FO, FS та GO у відповідну папку середовища ONSS\n"
+"  (IN, INTEST, INTEST-S).\n"
+"- Перевіряйте папки OUT (OUT, OUTTEST, OUTTEST-S) на наявність повернутих "
+"файлів.\n"
+"- Прив’язування отриманих файлів до відповідних декларацій та "
+"співробітників,\n"
+"  якщо це доречно.\n"
+"\n"
+"Технічні особливості включають:\n"
+"- Безпечне з’єднання з використанням приватного ключа та технічних облікових "
+"даних користувача.\n"
+"- Аналіз XML-файлів для ACRF та файлів повідомлень.\n"
+"- Обробка помилок та ведення журналу у разі відсутності каталогів або "
+"неправильно сформованих файлів.\n"
+"\n"
+"Ця функція забезпечує дотримання вимог ONSS щодо електронних декларацій\n"
+"та зменшує необхідність ручної взаємодії з порталом SFTP.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -3886,6 +4619,23 @@ msgid ""
 "\n"
 "No modified version is certified and supported by Odoo SA.\n"
 msgstr ""
+"\n"
+"Бельгійський сертифікований касовий апарат\n"
+"================================\n"
+"\n"
+"Цей модуль перетворює модуль «Точка продажу» на сертифікований бельгійський "
+"касовий апарат.\n"
+"\n"
+"Додаткова інформація:\n"
+"  * http://www.systemedecaisseenregistreuse.be/\n"
+"  * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Юридична інформація\n"
+"-----\n"
+"Перед встановленням модуля pos_blackbox_be зверніться до Odoo SA.\n"
+"\n"
+"Жодна модифікована версія не сертифікована та не підтримується компанією "
+"Odoo SA.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -3932,6 +4682,11 @@ msgid ""
 "================================\n"
 "Provides electronic invoicing for Brazil through Avatax in the POS.\n"
 msgstr ""
+"\n"
+"EDI для бухгалтерського обліку в Бразилії для POS\n"
+"=================================\n"
+"Забезпечує електронне виставлення рахунків-фактур для Бразилії через Avatax "
+"у POS.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_edi_sale

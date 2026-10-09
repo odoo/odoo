@@ -15,13 +15,14 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:36+0000\n"
-"PO-Revision-Date: 2026-08-05 04:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-06 09:37+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "account_payment/lt/>\n"
 "Language: lt\n"
@@ -31,7 +32,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
 ": n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_payment
 #. odoo-python
@@ -95,7 +96,7 @@ msgstr "<i class=\"fa fa-fw fa-check-circle\"/>Laukia"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-fw fa-check-circle\"/> Processing Payment"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Mokėjimo apdorojimas"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -123,6 +124,11 @@ msgid ""
 "                        few minutes, please check your payment provider "
 "configuration."
 msgstr ""
+"<strong>Įspėjimas!</strong> Šiam mokėjimui laukia grąžinimas.\n"
+"                        Palaukite akimirką, kol jis bus apdorotas. Jei po "
+"kelių minučių grąžinimas vis dar laukia,\n"
+"                        patikrinkite savo mokėjimo paslaugų teikėjo "
+"nustatymus."
 
 #. module: account_payment
 #. odoo-python
@@ -136,12 +142,14 @@ msgid ""
 "A payment has already been made on this invoice, please make sure to not pay "
 "twice."
 msgstr ""
+"Už šią sąskaitą jau buvo atliktas mokėjimas, todėl prašome įsitikinti, kad "
+"nemokėsite du kartus."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Jau egzistuoja mokėjimo operacija su nuoroda „ %s “."
 
 #. module: account_payment
 #. odoo-python
@@ -259,12 +267,12 @@ msgstr "Jūsų mokėjimas buvo sėkmingai apdorotas. Dėkojame už užsakymą."
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__epd_info
 msgid "Early Payment Discount Information"
-msgstr ""
+msgstr "Informacija apie nuolaidą už išankstinį mokėjimą"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Early Payment Discount of"
-msgstr ""
+msgstr "Nuolaida už išankstinį mokėjimą"
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
@@ -321,6 +329,9 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"Bandymo režimu fiktyvus mokėjimas apdorojamas per bandomąją mokėjimo "
+"sąsają.\n"
+"Šis režimas rekomenduojamas nustatant paslaugų teikėją."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.res_config_settings_view_form
@@ -402,7 +413,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/wizards/payment_link_wizard.py:0
 msgid "Online payment option is not enabled in Configuration."
-msgstr ""
+msgstr "Konfigūracijoje nėra įjungta galimybė mokėti internetu."
 
 #. module: account_payment
 #. odoo-python
@@ -496,7 +507,7 @@ msgstr "Mokėjimo paslaugos tiekėjas"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Mokėjimo grąžinimo vedlys"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
@@ -576,7 +587,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Išsaugotas mokėjimo žetonas"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
@@ -586,7 +597,7 @@ msgstr "Išsaugotas mokėjimo raktas"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Šaltinis: Mokėjimas"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -597,7 +608,7 @@ msgstr "Būsena"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Tinkamas mokėjimo žetonas"
 
 #. module: account_payment
 #. odoo-python
@@ -621,7 +632,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 msgid "The payment related to transaction %(ref)s has been posted: %(link)s"
-msgstr ""
+msgstr "Mokėjimas, susijęs su sandoriu „ %(ref)s “, buvo įskaitytas: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -632,7 +643,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "Susijusių grąžinamųjų mokėjimų šaltinis"
 
 #. module: account_payment
 #. odoo-python
@@ -716,7 +727,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Naudokite elektroninį mokėjimo būdą"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -731,6 +742,9 @@ msgid ""
 "enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
+"Negalima ištrinti mokėjimo būdo, kuris yra susietas su paslaugų teikėju, "
+"kurio būsena yra „įjungta“ arba „bandomoji“.\n"
+"Susieti paslaugų teikėjai: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -749,6 +763,9 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Prieš ištrindami mokėjimo paslaugų teikėjo žurnalą, pirmiausia turite jį "
+"deaktyvuoti.\n"
+"Susieti paslaugų teikėjai: %s"
 
 #. module: account_payment
 #. odoo-javascript

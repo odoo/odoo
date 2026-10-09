@@ -3,13 +3,14 @@
 # * payment_mercado_pago
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2026-08-05 00:42+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-10-06 09:37+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "payment_mercado_pago/lt/>\n"
 "Language: lt\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > "
 "19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? "
 "1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
@@ -49,7 +50,7 @@ msgstr ""
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.authorization_error
 msgid "Back to the Mercado Pago provider"
-msgstr ""
+msgstr "Grįžti prie „Mercado Pago“ paslaugų teikėjo"
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -58,6 +59,8 @@ msgid ""
 "Call your card issuer to activate your card or use another payment method. "
 "The phone number is on the back of your card."
 msgstr ""
+"Paskambinkite kortelės išdavėjui, kad aktyvuotumėte kortelę, arba naudokite "
+"kitą mokėjimo būdą. Telefono numeris nurodytas kortelės reverse."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -115,7 +118,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr "Rodomas pavadinimas"
+msgstr "Rodomas vardas"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__id
@@ -128,7 +131,7 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/payment_mercado_pago/static/src/interactions/payment_form.js:0
 msgid "Incorrect payment details"
-msgstr ""
+msgstr "Neteisingi mokėjimo duomenys"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields.selection,name:payment_mercado_pago.selection__payment_provider__code__mercado_pago
@@ -185,6 +188,8 @@ msgid ""
 "Mercado Pago is not available in your country; please use another payment "
 "provider."
 msgstr ""
+"„Mercado Pago“ jūsų šalyje nėra prieinama; prašome naudoti kitą mokėjimo "
+"paslaugų teikėją."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -196,7 +201,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
 msgid "Other Payment Providers"
-msgstr ""
+msgstr "Kiti mokėjimo paslaugų teikėjai"
 
 #. module: payment_mercado_pago
 #: model:ir.model,name:payment_mercado_pago.model_payment_provider
@@ -217,13 +222,15 @@ msgstr "Mokėjimo operacija"
 #. odoo-javascript
 #: code:addons/payment_mercado_pago/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Mokėjimo apdorojimas nepavyko"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "Payment was not processed, use another card or contact issuer."
 msgstr ""
+"Mokėjimas nebuvo apdorotas, naudokite kitą kortelę arba susisiekite su "
+"kortelės išdavėju."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -235,7 +242,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 msgid "Received data with missing payment id."
-msgstr ""
+msgstr "Gauti duomenys, kuriuose trūksta mokėjimo identifikatoriaus."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -259,13 +266,13 @@ msgstr ""
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Šio mokėjimo paslaugų teikėjo techninis kodas."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "This payment method does not process payments in installments."
-msgstr ""
+msgstr "Šis mokėjimo būdas neapdoroja mokėjimų dalimis."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -274,6 +281,8 @@ msgid ""
 "We are processing your payment. Don't worry, in less than 2 business days, "
 "we will notify you by e-mail if your payment has been credited."
 msgstr ""
+"Šiuo metu apdorojame jūsų mokėjimą. Nesijaudinkite, per mažiau nei 2 darbo "
+"dienas el. paštu pranešime jums, ar jūsų mokėjimas buvo įskaitytas."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -283,6 +292,9 @@ msgid ""
 "will notify you by e-mail if your payment has been credited or if we need "
 "more information."
 msgstr ""
+"Šiuo metu apdorojame jūsų mokėjimą. Nesijaudinkite, per mažiau nei 2 darbo "
+"dienas el. paštu pranešime jums, ar jūsų mokėjimas buvo įskaitytas, ar mums "
+"reikia daugiau informacijos."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -290,12 +302,13 @@ msgstr ""
 msgid ""
 "We were unable to process your payment, please check your card information."
 msgstr ""
+"Nepavyko apdoroti jūsų mokėjimo, prašome patikrinti savo kortelės duomenis."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "We were unable to process your payment, please use another card."
-msgstr ""
+msgstr "Nepavyko apdoroti jūsų mokėjimo, prašome naudoti kitą kortelę."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -304,6 +317,8 @@ msgid ""
 "You have already made a payment for that value. If you need to pay again, "
 "use another card or another payment method."
 msgstr ""
+"Jūs jau atlikote mokėjimą už šią sumą. Jei reikia sumokėti dar kartą, "
+"naudokite kitą kortelę arba kitą mokėjimo būdą."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -312,12 +327,14 @@ msgid ""
 "You have reached the limit of allowed attempts. Choose another card or other "
 "means of payment."
 msgstr ""
+"Pasiekėte leistinų bandymų limitą. Pasirinkite kitą kortelę arba kitą "
+"mokėjimo būdą."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
 msgid "You must authorize the payment with this card."
-msgstr ""
+msgstr "Turite patvirtinti mokėjimą šia kortele."
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
@@ -327,6 +344,11 @@ msgid ""
 "payment details for\n"
 "                        recurring payments."
 msgstr ""
+"Turite atnaujinti savo prisijungimą prie „Mercado Pago“, kad galėtumėte "
+"naudotis nauja\n"
+"                        kortelės mokėjimo funkcija, leidžiančia išsaugoti "
+"mokėjimo duomenis\n"
+"                        periodiniams mokėjimams."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -341,3 +363,5 @@ msgid ""
 "Your payment has been credited. In your summary you will see the charge as a "
 "statement descriptor."
 msgstr ""
+"Jūsų mokėjimas buvo įskaitytas. Savo sąskaitos išraše šį mokėjimą pamatysite "
+"kaip mokėjimo aprašymą."

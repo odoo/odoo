@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-09-14 15:32+0000\n"
+"PO-Revision-Date: 2026-10-05 22:33+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/lt/>\n"
@@ -196,6 +196,92 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\">\n"
+"    <tr>\n"
+"       <td align=\"center\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\"> \n"
+"               <!-- HEADER -->\n"
+"                <tr> \n"
+"                   <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\"> \n"
+"                           <tr>\n"
+"                                <td valign=\"middle\"> \n"
+"                                   <span style=\"font-size: 10px;\"> "
+"Pranešimas</span>\n"
+"                                    <br/>\n"
+"                                   <span style=\"font-size: 20px; font-"
+"weight: bold;\"> \n"
+"                                        Sveiki atvykę į „Peppol“\n"
+"                                   </span>\n"
+"                                    <div style=\"margin-bottom: 5px; margin-"
+"top: 18px;\"> \n"
+"                                       <a t-attf-href=\"/odoo/accounting/\" "
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\"> \n"
+"                                            Siųsti sąskaitas faktūras\n"
+"                                       </a>\n"
+"                                    </div> \n"
+"                               </td>\n"
+"                                <td valign=\"middle\" align=\"right\"> \n"
+"                                   <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src=\"'/"
+"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+"right: 10px;\" t-att-alt=\"'%s' % object.name\"/> \n"
+"                                   </t>\n"
+"                                </td> \n"
+"                           </tr>\n"
+"                            <tr> \n"
+"                               <td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
+"                                    <hr style=\"background-color:#CCCCCC; "
+"border:none; height:1px; margin:16px 0;\"/> \n"
+"                               </td>\n"
+"                            </tr> \n"
+"                       </table>\n"
+"                    </td> \n"
+"               </tr>\n"
+"                <!-- BODY --> \n"
+"               <tr>\n"
+"                    <td align=\"center\"> \n"
+"                       <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
+"                            <tr> \n"
+"                               <td style=\"font-size: 14px;\">\n"
+"                                    <p> Gerb. <t t-out=\"object.name or ''\">"
+"YourCompany</t>,</p>\n"
+"\n"
+"                                    <p>Sėkmingai įtraukėme jūsų įmonę į „ "
+"<strong>“ „Peppol“ tinklą</strong>.</p>\n"
+"\n"
+"                                    <p>Dabar galite <strong>siųsti<t t-"
+"if=\"object.account_peppol_proxy_state == 'receiver'\"> ir gauti</t></"
+"strong> elektronines sąskaitas faktūras per „Odoo“ — visiškai nemokamai.</p>"
+"\n"
+"\n"
+"                                    <p>Su pagarba,</p>\n"
+"\n"
+"                                    <p style=\"margin-bottom: 24px;\">„Odoo“ "
+"komanda</p>\n"
+"                                </td>\n"
+"                           </tr>\n"
+"                        </table> \n"
+"                   </td>\n"
+"                </tr> \n"
+"           </table>\n"
+"        </td> \n"
+"   </tr>\n"
+"</table> \n"
+"            "
 
 #. module: account_peppol
 #. odoo-python
@@ -376,7 +462,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
 msgid "Active Parent Company Name"
-msgstr ""
+msgstr "Veikianti patronuojančios bendrovės pavadinimas"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -772,7 +858,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
 msgid "Display Use Parent Connection Selection"
-msgstr ""
+msgstr "Rodyti tėvų ryšio pasirinkimą"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -899,6 +985,11 @@ msgid ""
 "please go to Settings > Accounting > Peppol Settings and click on 'Reconnect "
 "this database'."
 msgstr ""
+"Nepavyko prisijungti prie „Peppol“ prieigos taško. Tai gali atsitikti, jei "
+"atkūrėte duomenų bazę iš atsarginės kopijos arba ją nukopijavote be "
+"neutralizavimo. Norėdami išspręsti šią problemą, eikite į „Nustatymai“ > „"
+"Apskaita“ > „Peppol nustatymai“ ir spustelėkite „Prisijungti prie šios "
+"duomenų bazės iš naujo“."
 
 #. module: account_peppol
 #. odoo-python
@@ -1221,7 +1312,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.actions.client,name:account_peppol.action_peppol_auth_callback
 msgid "Peppol Auth Callback action"
-msgstr ""
+msgstr "„Peppol Auth Callback“ veiksmas"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_can_connect_data
@@ -1308,7 +1399,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_parent_company_name
 msgid "Peppol Parent Company Name"
-msgstr ""
+msgstr "„Peppol“ patronuojančiosios bendrovės pavadinimas"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_participation_role
@@ -1430,7 +1521,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Please select a country for your company."
-msgstr ""
+msgstr "Prašome pasirinkti šalį, kurioje veikia jūsų įmonė."
 
 #. module: account_peppol
 #. odoo-python
@@ -1539,13 +1630,13 @@ msgstr "Išsaugoti"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
 msgid "Selected Company"
-msgstr ""
+msgstr "Pasirinkta įmonė"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Selected authentication method is not available."
-msgstr ""
+msgstr "Pasirinktas autentifikavimo būdas nėra prieinamas."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2082,7 +2173,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection_selection
 msgid "Use Parent Connection Selection"
-msgstr ""
+msgstr "Naudokite tėvų ryšio pasirinkimą"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2128,7 +2219,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why it's great ?"
-msgstr ""
+msgstr "Kas yra „Peppol“ ir kodėl jis toks puikus?"
 
 #. module: account_peppol
 #. odoo-python

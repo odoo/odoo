@@ -44,7 +44,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-10-01 09:33+0000\n"
+"PO-Revision-Date: 2026-10-09 11:33+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/stock/"
 "fi/>\n"
@@ -1172,7 +1172,7 @@ msgstr "Toimenpiteen tila"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_icon
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Toimenpiteen ikoni"
+msgstr "Toimenpidetyypin kuvake"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2121,7 +2121,7 @@ msgstr "Valitse päivämäärä"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Clear"
-msgstr "Pyyhi"
+msgstr "Tyhjennä"
 
 #. module: stock
 #. odoo-javascript
@@ -6087,7 +6087,7 @@ msgstr "Seuraavan toimenpiteen eräpäivä"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_summary
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_summary
 msgid "Next Activity Summary"
-msgstr "Seuraavan toimenpiteen kuvaus"
+msgstr "Seuraavan toimenpiteen yhteenveto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_id
@@ -6400,7 +6400,7 @@ msgstr "Toimistotuoli"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
 msgid "On Hand"
-msgstr "Varastossa"
+msgstr "Käytettävissä"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__product_qty
@@ -7785,7 +7785,7 @@ msgstr "Määrä"
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity On Hand"
-msgstr "Varastosaldo"
+msgstr "Käytettävissä oleva määrä"
 
 #. module: stock
 #. odoo-javascript
@@ -10567,7 +10567,7 @@ msgstr "Pakkauksen kokonaispaino."
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Traceability"
-msgstr "Seuranta"
+msgstr "Jäljitettävyys"
 
 #. module: stock
 #. odoo-javascript
@@ -10577,7 +10577,7 @@ msgstr "Seuranta"
 #: model:ir.model,name:stock.model_stock_traceability_report
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 msgid "Traceability Report"
-msgstr "Seurantaraportti"
+msgstr "Jäljitettävyysraportti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__is_storable
@@ -10594,10 +10594,10 @@ msgid ""
 " Such dates are set automatically at lot/serial number creation based on "
 "values set on the product (in days)."
 msgstr ""
-"Seuraa seuraavia päivämääriä erissä ja sarjanumeroissa: parasta ennen, "
-"poisto, käyttöiän loppu, hälytys. Tällaiset päivämäärät asetetaan "
-"automaattisesti erän / sarjanumeron luomiselle tuotteelle asetettujen "
-"arvojen perusteella (päivinä)."
+"Seuraa päivämääriä erissä ja sarjanumeroissa: parasta ennen, poisto, "
+"käyttöiän loppu, hälytys. \n"
+"Tällaiset päivämäärät määritetään automaattisesti erän/sarjanumeron luomisen "
+"yhteydessä, tuotteelle määritettyjen arvojen perusteella (päivinä)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10606,10 +10606,10 @@ msgid ""
 "life, alert. Such dates are set automatically at lot/serial number creation "
 "based on values set on the product (in days)."
 msgstr ""
-"Seuraa seuraavia päivämääriä erissä ja sarjanumeroissa: parasta ennen, "
-"poisto, käyttöiän loppu, hälytys. Tällaiset päivämäärät asetetaan "
-"automaattisesti erän / sarjanumeron luomiselle tuotteelle asetettujen "
-"arvojen perusteella (päivinä)."
+"Seuraa päivämääriä erissä ja sarjanumeroissa: parasta ennen, poisto, "
+"käyttöiän loppu, hälytys. \n"
+"Tällaiset päivämäärät määritetään automaattisesti erän/sarjanumeron luomisen "
+"yhteydessä, tuotteelle määritettyjen arvojen perusteella (päivinä)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10771,7 +10771,7 @@ msgstr "Toiminnon tyyppi"
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Poikkeusaktiviteetin tyyppi tietueella."
+msgstr "Kirjatun poikkeustoimenpiteen tyyppi."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups_rest
@@ -10880,7 +10880,7 @@ msgstr "Ei-toivottu täydennys"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
 msgid "Update Quantities"
-msgstr "Päivitä määrä"
+msgstr "Päivitä määrät"
 
 #. module: stock
 #. odoo-javascript

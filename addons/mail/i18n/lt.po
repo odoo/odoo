@@ -34,7 +34,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-09-14 17:33+0000\n"
+"PO-Revision-Date: 2026-10-05 22:33+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/mail/"
 "lt/>\n"
@@ -58,6 +58,12 @@ msgid ""
 "will be added/removed from followers.\n"
 "        "
 msgstr ""
+"\n"
+"            - Konkretūs sekėjai: pasirinkite konkrečius kontaktus, kuriuos "
+"norite pridėti prie įrašo sekėjų arba iš jų pašalinti.\n"
+"            - Dinaminiai sekėjai: visi pasirinktame įrašo lauke esantys "
+"kontaktai bus pridėti prie sekėjų arba iš jų pašalinti.\n"
+"        "
 
 #. module: mail
 #. odoo-python
@@ -77,6 +83,19 @@ msgid ""
 "them go through.\n"
 "            </p>"
 msgstr ""
+"\n"
+"           <p class=\"o_view_nocontent_smiling_face\"> \n"
+"                Pridėkite adresus į leidžiamų sąrašą\n"
+"           </p><p> \n"
+"                Siekiant apsaugoti jus nuo šlamšto ir atsakymų kilpų, „Odoo“ "
+"automatiškai blokuoja el. laiškus,\n"
+"                kurie patenka į jūsų vartus, viršijus ribą – <b>%(threshold)"
+"i</b> el. laiškų kas <b>%(minutes)i</b> \n"
+"                minučių. Jei yra adresų, iš kurių jums reikia gauti labai "
+"dažnus\n"
+"                atnaujinimus, galite juos įtraukti žemiau, ir „Odoo“ leis "
+"jiems praeiti.\n"
+"           </p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_document_unfollowed
@@ -87,7 +106,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "\"%(activity_name)s: %(summary)s\" assigned to you"
-msgstr ""
+msgstr "„%(activity_name)s: %(summary)s “ jums priskirta"
 
 #. module: mail
 #. odoo-javascript
@@ -99,7 +118,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/utils/common/hooks.js:0
 msgid "\"%(hostname)s\" requires microphone access"
-msgstr ""
+msgstr "„%(hostname)s “ reikalauja prieigos prie mikrofono"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_count
@@ -116,7 +135,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/out_of_focus_service.js:0
 msgid "%(author name)s from %(channel name)s"
-msgstr ""
+msgstr "%(author name)s iš %(channel name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -302,7 +321,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
-msgstr ""
+msgstr "%(user)s pradėjo temą: %(goto)s%(thread_name)s%(goto_end)s ."
 
 #. module: mail
 #. odoo-javascript
@@ -608,7 +627,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_ice_server_kanban
 msgid "<span class=\"fw-bold me-1\">Username:</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold me-1\">Vartotojo vardas:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -849,7 +868,7 @@ msgstr "Prieigos raktas"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_model.js:0
 msgid "Access restricted to group \"%(groupFullName)s\""
-msgstr ""
+msgstr "Prieiga ribota tik grupės „%(groupFullName)s “ nariams"
 
 #. module: mail
 #. odoo-python
@@ -1068,7 +1087,7 @@ msgstr "Veiklos tipo ikona"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_kanban
 msgid "Activity Type Name"
-msgstr ""
+msgstr "Veiklos tipo pavadinimas"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_type_action
@@ -1416,7 +1435,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
 msgid "Alias domain name"
-msgstr ""
+msgstr "Aliaso domeno vardas"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
@@ -1441,6 +1460,8 @@ msgid ""
 "Aliases %(alias_names)s is already used as bounce or catchall address. "
 "Please choose another alias."
 msgstr ""
+"Aliasas „ %(alias_names)s “ jau naudojamas kaip grąžinimo arba universali "
+"adresas. Prašome pasirinkti kitą aliasą."
 
 #. module: mail
 #. odoo-javascript
@@ -1857,13 +1878,13 @@ msgstr "Išėjęs"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/blur_performance_warning.xml:0
 msgid "Background Blur Performance Warning"
-msgstr ""
+msgstr "Įspėjimas dėl fono suliejimo našumo"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Background blur intensity"
-msgstr ""
+msgstr "Fono suliejimo intensyvumas"
 
 #. module: mail
 #. odoo-javascript
@@ -1933,7 +1954,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_blacklist_action
 msgid "Blacklisted Email Addresses"
-msgstr ""
+msgstr "Į juodąjį sąrašą įtraukti el. pašto adresai"
 
 #. module: mail
 #. odoo-python
@@ -1947,19 +1968,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
 msgid "Blur Background"
-msgstr ""
+msgstr "Fono suliejimas"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/quick_video_settings.xml:0
 msgid "Blur background"
-msgstr ""
+msgstr "Fono suliejimas"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Blur video background"
-msgstr ""
+msgstr "Išblukinti vaizdo įrašo foną"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -2024,6 +2045,9 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by %"
 "(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
+"Peradresavimas/universali nuoroda „%(matching_alias_name)s “ jau naudojama %"
+"(document_name)s. Pasirinkite kitą aliasą arba pakeiskite jį kitame "
+"dokumente."
 
 #. module: mail
 #. odoo-python
@@ -2032,6 +2056,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used. Choose another "
 "alias or change it on the linked model."
 msgstr ""
+"Peradresavimas/universalusis „%(matching_alias_name)s “ jau naudojamas. "
+"Pasirinkite kitą aliasą arba pakeiskite jį susietame modelyje."
 
 #. module: mail
 #. odoo-javascript
@@ -2052,19 +2078,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring back"
-msgstr ""
+msgstr "Grąžinti"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring call back"
-msgstr ""
+msgstr "Paskambinti atgal"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/pip_banner.xml:0
 msgid "Bring the call back here"
-msgstr ""
+msgstr "Grįžkite čia"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -2395,7 +2421,7 @@ msgstr "Keisti nustatymus"
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
 #: model:ir.model.fields,help:mail.field_mail_activity_type__decoration_type
 msgid "Change the background color of the related activities of this type."
-msgstr "Pakeiskite su šiuo tipu susijusių veiklų fono spalvą."
+msgstr "Pakeiskite šio tipo susijusių veiklų fono spalvą."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__channel_id
@@ -2427,7 +2453,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_name_member_ids
 msgid "Channel Name Member"
-msgstr ""
+msgstr "Kanalo pavadinimas Narys"
 
 #. module: mail
 #. odoo-javascript
@@ -2457,7 +2483,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
 msgid "Channel must have a name."
-msgstr ""
+msgstr "Kanalas privalo turėti pavadinimą."
 
 #. module: mail
 #. odoo-javascript
@@ -2530,28 +2556,30 @@ msgstr "Dukteriniai pranešimai"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a contact..."
-msgstr ""
+msgstr "Pasirinkite kontaktą..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a template..."
-msgstr ""
+msgstr "Pasirinkite šabloną..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a user..."
-msgstr ""
+msgstr "Pasirinkite vartotoją..."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid "Choose another value or change it on the other document."
-msgstr ""
+msgstr "Pasirinkite kitą reikšmę arba pakeiskite ją kitame dokumente."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_schedule__plan_on_demand_user_id
 msgid "Choose assignation for activities with on demand assignation."
 msgstr ""
+"Pasirinkite užduočių paskirstymą veikloms, kurioms taikomas užduočių "
+"paskirstymas pagal poreikį."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -2607,7 +2635,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.js:0
 msgid "Close all conversations"
-msgstr ""
+msgstr "Uždaryti visus pokalbius"
 
 #. module: mail
 #. odoo-javascript
@@ -2654,7 +2682,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy of recipients addresses"
-msgstr ""
+msgstr "Kableliais atskirtas gavėjų adresų sąrašas"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2830,6 +2858,8 @@ msgstr "Ryšio testas nepavyko: %s"
 msgid ""
 "Connection to SFU server closed by the server, falling back to peer-to-peer"
 msgstr ""
+"Ryšys su SFU serveriu nutrauktas serverio iniciatyva, perėjimas prie „peer-"
+"to-peer“ režimo"
 
 #. module: mail
 #. odoo-javascript
@@ -2924,7 +2954,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Conversations"
-msgstr ""
+msgstr "Pokalbiai"
 
 #. module: mail
 #. odoo-javascript
@@ -3213,7 +3243,7 @@ msgstr "Pritaikyti šablonai"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__custom_channel_name
 msgid "Custom channel name"
-msgstr ""
+msgstr "Pasirinktinis kanalo pavadinimas"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_required
@@ -3748,7 +3778,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/many2one_avatar_user_field/kanban_many2one_avatar_user_field.js:0
 msgid "Display avatar name"
-msgstr ""
+msgstr "Rodyti avataro vardą"
 
 #. module: mail
 #. odoo-javascript
@@ -3983,7 +4013,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/follower_subtype_dialog.js:0
 msgid "Edit Subscription of %(name)s"
-msgstr ""
+msgstr "Redaguoti prenumeratą %(name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -4079,7 +4109,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.js:0
 msgid "Email Failure: %(modelName)s"
-msgstr ""
+msgstr "El. pašto siuntimo klaida: %(modelName)s"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
@@ -4154,7 +4184,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
 msgid ""
 "Email addresses that are blacklisted won't receive Email mailings anymore."
-msgstr ""
+msgstr "Į juodąjį sąrašą įtraukti el. pašto adresai nebegaus el. laiškų."
 
 #. module: mail
 #. odoo-python
@@ -4441,7 +4471,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
 msgid "Failed to load the SFU server, falling back to peer-to-peer"
-msgstr ""
+msgstr "Nepavyko įkelti SFU serverio, grįžtama prie „peer-to-peer“"
 
 #. module: mail
 #. odoo-javascript
@@ -4528,7 +4558,7 @@ msgstr "Atsiliepimas"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "Feedback:"
-msgstr ""
+msgstr "Atsiliepimas:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -4919,7 +4949,7 @@ msgstr "Sietuvas"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Go to conversation"
-msgstr ""
+msgstr "Eiti į pokalbį"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -4974,13 +5004,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/mail_guest.py:0
 msgid "Guest's name cannot be empty."
-msgstr ""
+msgstr "Svečio vardas negali būti tuščias."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/mail_guest.py:0
 msgid "Guest's name is too long."
-msgstr ""
+msgstr "Svečio vardas per ilgas."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_guest_action
@@ -5125,7 +5155,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.js:0
 msgid "Hide all conversations"
-msgstr ""
+msgstr "Paslėpti visus pokalbius"
 
 #. module: mail
 #. odoo-javascript
@@ -5750,6 +5780,8 @@ msgid ""
 "Invalid server name!\n"
 " %s"
 msgstr ""
+"Neteisingas serverio pavadinimas!\n"
+" %s"
 
 #. module: mail
 #. odoo-python
@@ -5826,7 +5858,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "Invitation to follow %(document_model)s: %(document_name)s"
-msgstr ""
+msgstr "Kvietimas sekti „ %(document_model)s “: %(document_name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -6359,7 +6391,7 @@ msgstr "Palikti kanalą"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/thread_model_patch.js:0
 msgid "Leave Conversation"
-msgstr ""
+msgstr "Išeiti iš pokalbio"
 
 #. module: mail
 #. odoo-javascript
@@ -6927,7 +6959,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message %(thread name)s…"
-msgstr ""
+msgstr "Pranešimas %(thread name)s…"
 
 #. module: mail
 #. odoo-javascript
@@ -7286,7 +7318,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Mute Conversation"
-msgstr ""
+msgstr "Pokalbio nutildymas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__mute_until_dt
@@ -7541,13 +7573,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "No conversation found"
-msgstr ""
+msgstr "Pokalbio nerasta"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_content.xml:0
 msgid "No conversation selected."
-msgstr ""
+msgstr "Pokalbis nepasirinktas."
 
 #. module: mail
 #. odoo-javascript
@@ -7559,7 +7591,7 @@ msgstr "Dar nėra pokalbio..."
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "No documents found for the selected records."
-msgstr ""
+msgstr "Pasirinktiems įrašams nerasta jokių dokumentų."
 
 #. module: mail
 #. odoo-javascript
@@ -7645,7 +7677,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.js:0
 msgid "No thread named \"%(thread_name)s\""
-msgstr ""
+msgstr "Nėra temos pavadinimu „%(thread_name)s “"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to_force_new
@@ -7866,6 +7898,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 msgid "Notify multiple people at once by @-mentioning roles in conversations."
 msgstr ""
+"Praneškite keliems žmonėms iš karto, pokalbiuose pažymėdami vaidmenis su @."
 
 #. module: mail
 #. odoo-javascript
@@ -9709,7 +9742,7 @@ msgstr "Suplanuoti veiklą"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 msgid "Schedule Activity On Selected Records"
-msgstr ""
+msgstr "Veiklos planavimas pagal pasirinktus įrašus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_schedule_line_ids
@@ -9744,7 +9777,7 @@ msgstr "Suplanuoti veiklą"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 msgid "Schedule an activity on selected records"
-msgstr ""
+msgstr "Užduoties planavimas pasirinktuose įrašuose"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_cron
@@ -9879,7 +9912,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "Search a conversation"
-msgstr ""
+msgstr "Ieškoti pokalbio"
 
 #. module: mail
 #. odoo-javascript
@@ -9892,13 +9925,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/sub_channel_list.xml:0
 msgid "Search by name"
-msgstr ""
+msgstr "Paieška pagal pavadinimą"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
 msgid "Search conversations"
-msgstr ""
+msgstr "Ieškoti pokalbių"
 
 #. module: mail
 #. odoo-javascript
@@ -9961,7 +9994,7 @@ msgstr "Saugos atnaujinimas: Slaptažodis pakeistas"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "See all pinned messages."
-msgstr ""
+msgstr "Peržiūrėkite visus įtvirtintus pranešimus."
 
 #. module: mail
 #. odoo-javascript
@@ -10009,31 +10042,33 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.js:0
 msgid "Select a Record To Link"
-msgstr ""
+msgstr "Pasirinkite įrašą, kurį norite susieti"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.js:0
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "Select a Template"
-msgstr ""
+msgstr "Pasirinkite šabloną"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Select a language"
-msgstr ""
+msgstr "Pasirinkite kalbą"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Select a user..."
-msgstr ""
+msgstr "Pasirinkite vartotoją..."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
 msgstr ""
+"Pasirinktas vartotojas „%(user)s “ negali įkelti dokumentų į modelį „%(model)"
+"s “"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
@@ -10541,19 +10576,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Start a Conversation"
-msgstr ""
+msgstr "Pradėkite pokalbį"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app_model_patch.js:0
 msgid "Start a conversation"
-msgstr ""
+msgstr "Pradėkite pokalbį"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Started by %(authorName)s"
-msgstr ""
+msgstr "Pradėjo %(authorName)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -10784,7 +10819,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 msgid "Switching back to the default server."
-msgstr ""
+msgstr "Grįžtama prie numatytojo serverio."
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
@@ -10858,7 +10893,7 @@ msgstr "Šabloninis aprašymas"
 #: model:ir.model.fields,field_description:mail.field_mail_template__template_fs
 #: model:ir.model.fields,field_description:mail.field_template_reset_mixin__template_fs
 msgid "Template Filename"
-msgstr ""
+msgstr "Šablono failo pavadinimas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__template_name
@@ -10880,7 +10915,7 @@ msgstr "Šablono peržiūros kalba"
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid "Template Preview: \"%(template_name)s\""
-msgstr ""
+msgstr "Šablono peržiūra: „%(template_name)s “"
 
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
@@ -10897,7 +10932,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Template name not identified"
-msgstr ""
+msgstr "Šablono pavadinimas nenustatytas"
 
 #. module: mail
 #. odoo-python
@@ -11016,7 +11051,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.xml:0
 msgid "The conversation is empty."
-msgstr ""
+msgstr "Pokalbis yra tuščias."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__can_write
@@ -11304,19 +11339,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/attachment_panel.xml:0
 msgid "This conversation doesn't have any attachments."
-msgstr ""
+msgstr "Šiame pokalbyje nėra jokių prisegtukų."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/pinned_messages_panel.js:0
 msgid "This conversation doesn't have any pinned messages."
-msgstr ""
+msgstr "Šiame pokalbyje nėra jokių pažymėtų pranešimų."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "This conversation isn’t available."
-msgstr ""
+msgstr "Šis pokalbis nėra prieinamas."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -11346,7 +11381,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of %(conversationName)s group"
-msgstr ""
+msgstr "Tai yra „ %(conversationName)s “ grupės pradžia"
 
 #. module: mail
 #. odoo-javascript
@@ -11972,7 +12007,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Unmute Conversation"
-msgstr ""
+msgstr "Įjungti pokalbio garsą"
 
 #. module: mail
 #. odoo-javascript
@@ -11988,19 +12023,19 @@ msgstr "Be pavadinimo"
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
-msgstr ""
+msgstr "Nenurodytas „ %(record_model_name)s “ (%(record_id)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "Nepavadintas el. pašto šablonas"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "Nepavadintas laiškas"
 
 #. module: mail
 #. odoo-javascript
@@ -12013,7 +12048,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 msgid "Unpin Conversation"
-msgstr ""
+msgstr "Atkabinti pokalbį"
 
 #. module: mail
 #. odoo-javascript
@@ -12045,7 +12080,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.xml:0
 msgid "Unselect person"
-msgstr ""
+msgstr "Atžymėti asmenį"
 
 #. module: mail
 #. odoo-javascript
@@ -12069,7 +12104,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/settings_model.js:0
 msgid "Until I turn it back on"
-msgstr ""
+msgstr "Kol vėl neįjungsiu"
 
 #. module: mail
 #. odoo-javascript
@@ -12135,6 +12170,9 @@ msgid ""
 "Use 'Specific User' to always assign the same user on the next activity. Use "
 "'Dynamic User' to specify the field name of the user to choose on the record."
 msgstr ""
+"Naudokite „Konkretus vartotojas“, kad kitame veiksme visada būtų priskirtas "
+"tas pats vartotojas. Naudokite „Dinaminis vartotojas“, kad nurodytumėte "
+"lauko pavadinimą, pagal kurį bus pasirenkamas vartotojas įraše."
 
 #. module: mail
 #. odoo-javascript
@@ -12396,6 +12434,7 @@ msgid ""
 "Users are notified whenever one of their roles is @-mentioned in a "
 "conversation."
 msgstr ""
+"Vartotojai gauna pranešimą, kai pokalbyje @paminimas vienas iš jų vaidmenų."
 
 #. module: mail
 #. odoo-python
@@ -12535,7 +12574,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "View chat with %(channel_name)s"
-msgstr ""
+msgstr "Peržiūrėti pokalbį su %(channel_name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -12547,7 +12586,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_invitation.js:0
 msgid "View the %(channel_name)s channel"
-msgstr ""
+msgstr "Peržiūrėkite kanalą „ %(channel_name)s “"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
@@ -12639,6 +12678,7 @@ msgid ""
 "Want to spice up your conversations with GIFs? Activate the feature in the "
 "settings!"
 msgstr ""
+"Norite paįvairinti pokalbius GIF failais? Įjunkite šią funkciją nustatymuose!"
 
 #. module: mail
 #. odoo-javascript
@@ -12687,7 +12727,7 @@ msgstr "Savaitės"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Welcome to #%(channelName)s!"
-msgstr ""
+msgstr "Sveiki atvykę į #%(channelName)s!"
 
 #. module: mail
 #. odoo-javascript
@@ -12700,7 +12740,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "What's the email address of"
-msgstr ""
+msgstr "Koks yra el. pašto adresas"
 
 #. module: mail
 #. odoo-javascript
@@ -12730,6 +12770,8 @@ msgstr ""
 msgid ""
 "When selecting \"Default user\" assignment, you must specify a responsible."
 msgstr ""
+"Pasirinkus užduotį „Numatytasis vartotojas“, būtina nurodyti atsakingą "
+"asmenį."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__original
@@ -12779,7 +12821,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_message.py:0
 msgid "Wrong operation name (%s)"
-msgstr ""
+msgstr "Neteisingas operacijos pavadinimas (%s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -12830,12 +12872,14 @@ msgid ""
 "You are about to leave this group conversation and will no longer have "
 "access to it unless you are invited again. Are you sure you want to continue?"
 msgstr ""
+"Jūs ruošiatės palikti šią grupės pokalbių sesiją ir nebeturėsite prieigos "
+"prie jos, nebent būsite pakviestas dar kartą. Ar tikrai norite tęsti?"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You are alone in a private conversation."
-msgstr ""
+msgstr "Jūs esate vieni privačiame pokalbyje."
 
 #. module: mail
 #. odoo-python
@@ -12847,13 +12891,13 @@ msgstr "Šiame kanale esate vieni."
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You are in a private conversation with %(member_names)s."
-msgstr ""
+msgstr "Jūs dalyvaujate privačiame pokalbyje su „ %(member_names)s “."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "You are in channel %(bold_start)s#%(channel_name)s%(bold_end)s."
-msgstr ""
+msgstr "Jūs esate kanale „ %(bold_start)s “ #%(channel_name)s%(bold_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -12939,7 +12983,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias_domain.py:0
 msgid "You cannot assign an empty domain name."
-msgstr ""
+msgstr "Negalima priskirti tuščio domeno vardo."
 
 #. module: mail
 #. odoo-python
@@ -13034,6 +13078,8 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid "You sure want this message pinned to %(conversation)s forever and ever?"
 msgstr ""
+"Ar tikrai norite, kad šis pranešimas būtų amžinai pritvirtintas prie „ %"
+"(conversation)s “?"
 
 #. module: mail
 #. odoo-javascript
@@ -13146,7 +13192,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "alias %(name)s: %(error)s"
-msgstr ""
+msgstr "alias %(name)s: %(error)s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -13213,7 +13259,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 msgid "conversations"
-msgstr ""
+msgstr "Pokalbiai"
 
 #. module: mail
 #. odoo-python
@@ -13638,6 +13684,8 @@ msgid ""
 "reply to missing document (%(model)s,%(thread)s), fall back on document "
 "creation"
 msgstr ""
+"atsakyti į trūkstamą dokumentą (%(model)s,%(thread)s), grįžti prie dokumento "
+"kūrimo"
 
 #. module: mail
 #. odoo-python
@@ -13646,6 +13694,8 @@ msgid ""
 "reply to model %s that does not accept document update, fall back on "
 "document creation"
 msgstr ""
+"atsakyti į modelį „ %s “, kuris nepriima dokumento atnaujinimo, grįžti prie "
+"dokumento kūrimo"
 
 #. module: mail
 #. odoo-python
@@ -13669,7 +13719,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_alias.py:0
 msgid "some specific addresses"
-msgstr ""
+msgstr "kai kurie konkretūs adresai"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_ice_server__server_type__stun
@@ -13766,7 +13816,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
-msgstr ""
+msgstr "„%(member_name)s“ knygoje „%(channel_name)s“"
 
 #. module: mail
 #. odoo-javascript

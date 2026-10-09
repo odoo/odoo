@@ -47,7 +47,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-09-14 17:33+0000\n"
+"PO-Revision-Date: 2026-10-06 09:37+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "account/lt/>\n"
@@ -836,6 +836,59 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Gerb.\n"
+"       <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-if=\"object.partner_id.name\"> \n"
+"               <t t-out=\"object.partner_id.name\"> Brandon Freeman</t> (<t "
+"t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"           </t>\n"
+"            <t t-else=\"\"> \n"
+"               <t t-out=\"object.partner_id.parent_id.name or ''\"> Azure "
+"Interior</t>,\n"
+"           </t>\n"
+"        </t> \n"
+"       <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\"> Brandon Freeman</t>,\n"
+"       </t>\n"
+"        <br/> <br/> \n"
+"        Čia yra jūsų\n"
+"       <t t-if=\"object.name\"> \n"
+"            savarankiškai išrašyta sąskaita <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
+"        </t>\n"
+"       <t t-else=\"\"> \n"
+"            savarankiškai išrašyta sąskaita\n"
+"       </t>\n"
+"        <t t-if=\"object.invoice_origin\"> \n"
+"            (nuoroda: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"       </t> \n"
+"        sumos dydis: <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143 750,00</span>\n"
+"        iš <t t-out=\"object.company_id.name or ''\">„YourCompany“</t>.\n"
+"       <t t-if=\"object.payment_state in ('paid', 'in_payment')\"> \n"
+"            Ši savarankiškai išrašyta sąskaita jau apmokėta.\n"
+"       </t>\n"
+"        <t t-if=\"hasattr(object, 'timesheet_count') and "
+"object.timesheet_count\"> \n"
+"           <br/><br/> \n"
+"            P.S.: savo darbo laiko apskaitos lenteles galite peržiūrėti <a t-"
+"att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">"
+"portale.</a>\n"
+"        </t>\n"
+"       <br/><br/> \n"
+"        Jei turite klausimų, nedvejodami susisiekite su mumis.\n"
+"       <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-"
+"o-mail-quote-container=\"1\">\n"
+"            <br/> <br/>\n"
+"            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
+"       </t>\n"
+"    </p> \n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -909,6 +962,30 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Gerb. <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
+"<br/><br/> \n"
+"        Dėkojame už jūsų mokėjimą.\n"
+"        Čia rasite mokėjimo kvitą <span style=\"font-weight:bold;\" t-out=\""
+"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span>, kurio "
+"suma\n"
+"        yra <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10,00</span> iš <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"       <br/><br/> \n"
+"        Jei turite klausimų, nedvejodami susisiekite su mumis.\n"
+"       <br/><br/> \n"
+"        Su pagarba,\n"
+"       <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-"
+"container=\"1\">\n"
+"            <br/> <br/>\n"
+"            <div data-o-mail-quote=\"1\"> --<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
+"       </t>\n"
+"    </p> \n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1779,6 +1856,145 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<t t-set=\"invoices\" t-value=\"ctx.get('einvoices', [])\"/>\n"
+"<t t-set=\"invoice_preview_ids\" t-value=\"','.join([str(i) for i in "
+"invoices.ids]) if invoices else ''\"/>\n"
+"<t t-set=\"invoice_count\" t-value=\"len(invoices)\"/>\n"
+"<t t-set=\"MAX_INVOICES_TO_DISPLAY\" t-value=\"5\"/>\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
+"serif; color: #454748;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-"
+"collapse:separate;\">\n"
+"       <tr>\n"
+"            <td align=\"center\"> \n"
+"               <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"background-color: white; border-collapse:separate;\">\n"
+"                    <!-- HEADER --> \n"
+"                   <tr>\n"
+"                        <td align=\"center\"> \n"
+"                           <table width=\"100%\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"background-color: #875A7B; color: #FFFFFF; font-"
+"size: 14px; padding: 14px 0; border-radius: 3px;\">\n"
+"                                <tr> \n"
+"                                   <td align=\"left\" style=\"padding-left: "
+"16px;\"> \n"
+"                                        Jūs gavote <t t-if=\"invoice_count "
+"&gt; 1\">naujas elektronines sąskaitas faktūras!</t><t t-else=\"\">naują "
+"elektroninę sąskaitą faktūrą!</t>\n"
+"                                    </td>\n"
+"                                   <td align=\"right\" style=\"padding-"
+"right: 16px;\">\n"
+"                                        <img alt=\"Odoo\" src=\"/web/static/"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
+"contain;\" class=\"align-baseline w-auto\"/> \n"
+"                                   </td>\n"
+"                                </tr> \n"
+"                           </table>\n"
+"                        </td> \n"
+"                   </tr>\n"
+"                    <!-- BODY --> \n"
+"                   <tr>\n"
+"                        <td align=\"center\"> \n"
+"                           <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 16px 32px; background-color: white; "
+"border-collapse:separate;\">\n"
+"                                <tr> \n"
+"                                   <td style=\"font-size: 14px;\">\n"
+"                                        <h3 style=\"font-size: 20px; margin-"
+"bottom: 20px;\"> \n"
+"                                           <t t-"
+"if=\"object.company_id.name\"> \n"
+"                                                Sveiki, <t t-"
+"out=\"object.company_id.name\"/>,\n"
+"                                           </t>\n"
+"                                            <t t-else=\"\"> \n"
+"                                                Sveiki,\n"
+"                                           </t>\n"
+"                                        </h3> \n"
+"                                       <p style=\"margin-top: 12px;\"> \n"
+"                                            Jūs gavote <t t-"
+"if=\"invoice_count &gt; 1\">naujas elektronines sąskaitas faktūras</t><t t-"
+"else=\"\">naują elektroninę sąskaitą faktūrą</t>!\n"
+"                                       </p>\n"
+"                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
+"t-value=\"5\"/> \n"
+"                                       <t t-"
+"foreach=\"invoices[:MAX_INVOICES_TO_DISPLAY]\" t-as=\"inv\">\n"
+"                                            <t t-if=\"not inv_first\"> \n"
+"                                               <div style=\"background-"
+"color:#EEEEEE; height:1px; width: 60%; margin: 16px auto; border:none;\"/>\n"
+"                                            </t> \n"
+"                                           <p style=\"line-height: 1.7em; "
+"padding-top: 16px;\">\n"
+"                                                <t t-if=\"inv.name or "
+"inv.ref\"> \n"
+"                                                   <span style=\"font-"
+"weight:bold;\"> Sąskaitos faktūros numeris:</span> <t t-out=\"inv.name or "
+"inv.ref\"/><br/>\n"
+"                                                </t> \n"
+"                                               <t t-"
+"if=\"inv.partner_id.name\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\"> Tiekėjas:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
+"                                                </t> \n"
+"                                               <t t-if=\"inv.amount_total\">"
+"\n"
+"                                                    <span style=\"font-"
+"weight:bold;\"> Suma:</span> <t t-out=\"inv.amount_total\" t-options=\""
+"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"object.company_id.currency_id}\"/><br/>\n"
+"                                                </t> \n"
+"                                               <t t-"
+"if=\"inv.invoice_date_due\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\"> Mokėjimo terminas:</span> <t t-out=\"inv.invoice_date_due\"/>"
+"\n"
+"                                               </t>\n"
+"                                            </p> \n"
+"                                       </t>\n"
+"\n"
+"                                        <div style=\"text-align: center; "
+"padding-top: 24px;\"> \n"
+"                                           <a t-if=\"invoice_count != 1\" t-"
+"attf-href=\"/odoo/accounting/action-"
+"account.action_account_moves_email_preview?active_ids={{ "
+"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
+"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
+"none !important; background-color: #008384; border-radius:3px; display: "
+"inline-block;\"> \n"
+"                                               Peržiūrėti sąskaitas "
+"faktūras\n"
+"                                           </a>\n"
+"                                            <a t-else=\"\" t-attf-href=\"/"
+"odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}\" "
+"target=\"_blank\" t-attf-style=\"padding: 12px 24px; font-size: 14px; font-"
+"weight: bold; color: #FFFFFF; text-decoration: none !important; background-"
+"color: #008384; border-radius:3px; display: inline-block;\"> \n"
+"                                               Peržiūrėti sąskaitą faktūrą\n"
+"                                           </a>\n"
+"                                            <p style=\"font-size: 11px; "
+"margin-top: 8px; color: #777;\"> Laikas paskaičiuoti</p>\n"
+"                                        </div>\n"
+"                                       <br/>\n"
+"                                        <p style=\"text-align: center; "
+"margin-top: 16px;\"> \n"
+"                                            Jei norite atsisakyti gauti el. "
+"laiškus apie gautas sąskaitas faktūras, spustelėkite <a t-attf-href=\"/my/"
+"journal/{{ object.id }}/unsubscribe\">čia</a>.\n"
+"                                       </p>\n"
+"                                    </td> \n"
+"                               </tr>\n"
+"                            </table> \n"
+"                       </td>\n"
+"                    </tr> \n"
+"               </table>\n"
+"            </td> \n"
+"       </tr>\n"
+"    </table> \n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_invoice_subscriber
@@ -2013,6 +2229,237 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<t t-set=\"portal_url\" t-value=\"object.get_portal_url()\"/>\n"
+"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/>"
+"\n"
+"\n"
+"<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
+"    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+"style=\"width:100%; background:#f7f4f8; padding:40px 0;\">\n"
+"       <tr>\n"
+"            <td align=\"center\"> \n"
+"               <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
+"width=\"640\" style=\"width:100%; max-width:640px; background:#ffffff; "
+"border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, "
+"0.12);\">\n"
+"                    <tr> \n"
+"                       <td colspan=\"2\" style=\"background:linear-gradient"
+"(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;\">"
+"\n"
+"                            <table cellpadding=\"0\" cellspacing=\"0\" "
+"border=\"0\" style=\"width:100%;\"> \n"
+"                               <tr>\n"
+"                                    <td style=\"font-size:13px; letter-"
+"spacing:0.3px; text-transform:uppercase; opacity:0.78;\"> \n"
+"                                       <t t-if=\"object.is_sale_document"
+"(include_receipts=True)\"> Išeinanti sąskaita</t>\n"
+"                                        <t t-else=\"\">Įeinanti sąskaita</t>"
+"\n"
+"                                    </td>\n"
+"                                   <td align=\"right\">\n"
+"                                        <img alt=\"Odoo\" src=\"/web/static/"
+"img/logo_inverse_white_206px.png\" style=\"height:30px; width:92px; object-"
+"fit:contain;\"/> \n"
+"                                   </td>\n"
+"                                </tr> \n"
+"                               <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding-"
+"top:22px; font-size:26px; line-height:1.45; font-weight:600; "
+"color:#ffffff;\"> \n"
+"                                        Nauja sąskaita <t t-"
+"out=\"object.journal_id.display_name\"/>\n"
+"                                    </td>\n"
+"                               </tr>\n"
+"                                <tr> \n"
+"                                   <td colspan=\"2\" style=\"padding-"
+"top:18px; font-size:14px; opacity:0.85; line-height:1.6; color:#ffffff;\"> \n"
+"                                        Nauja sąskaita sukurta <t t-"
+"out=\"object.journal_id.display_name\"/> žurnale <t t-"
+"out=\"object.company_id.name\"/>!\n"
+"                                   </td>\n"
+"                                </tr> \n"
+"                           </table>\n"
+"                        </td> \n"
+"                   </tr>\n"
+"                    <tr> \n"
+"                       <td colspan=\"2\" style=\"padding:34px 38px;\">\n"
+"                            <table cellpadding=\"0\" cellspacing=\"0\" "
+"border=\"0\" style=\"width:100%; border-collapse:separate; border-spacing:0 "
+"16px;\"> \n"
+"                               <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding:0;\"> "
+"\n"
+"                                       <table cellpadding=\"0\" "
+"cellspacing=\"0\" border=\"0\" style=\"width:100%; background:#fbf7fc; "
+"border-radius:16px;\">\n"
+"                                            <tr> \n"
+"                                               <td style=\"padding:24px "
+"26px;\">\n"
+"                                                    <div style=\"font-"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\"> Dokumentas</div>\n"
+"                                                    <div style=\"margin-"
+"top:8px; font-size:20px; font-weight:600; color:#2c2431; word-break:break-"
+"word;\">\n"
+"                                                       <t t-"
+"out=\"object._get_move_display_name()\"/>\n"
+"                                                    </div> \n"
+"                                                   <t t-if=\"object.ref\">\n"
+"                                                        <div style=\"margin-"
+"top:6px; color:#7f6c84;\"> Nuoroda: <t t-out=\"object.ref\"/></div>\n"
+"                                                   </t>\n"
+"                                                </td> \n"
+"                                               <t t-if=\"not "
+"object.currency_id.is_zero(object.amount_total)\">\n"
+"                                                    <td style=\"padding:24px "
+"26px; border-left:1px solid #efe6f3;\" align=\"right\"> \n"
+"                                                       <div style=\"font-"
+"size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\"> Iš viso</div>\n"
+"                                                        <div style=\"margin-"
+"top:8px; font-size:22px; font-weight:600; color:#2c2431;\">\n"
+"                                                           <t t-"
+"out=\"format_amount(object.amount_total, object.currency_id)\"/>\n"
+"                                                        </div> \n"
+"                                                   </td>\n"
+"                                                </t> \n"
+"                                           </tr>\n"
+"                                        </table> \n"
+"                                   </td>\n"
+"                                </tr> \n"
+"                               <tr>\n"
+"                                    <td colspan=\"2\" style=\"padding:0;\"> "
+"\n"
+"                                       <table cellpadding=\"0\" "
+"cellspacing=\"0\" border=\"0\" style=\"width:100%; margin-top:18px;\">\n"
+"                                            <tr> \n"
+"                                               <td style=\"padding:0;\">\n"
+"                                                    <div "
+"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-"
+"start;\"> \n"
+"                                                       <t t-"
+"if=\"object.partner_id\">\n"
+"                                                            <div "
+"style=\"flex:0 1 180px; min-width:160px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\"> \n"
+"                                                               <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\"> Partneris</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; font-weight:500; color:#2c2431; word-"
+"break:break-word;\">\n"
+"                                                                   <t t-"
+"out=\"object.partner_id.display_name\"/>\n"
+"                                                                </div> \n"
+"                                                           </div>\n"
+"                                                        </t> \n"
+"                                                       <div style=\"flex:0 1 "
+"150px; min-width:140px; background:#fff; border:1px solid #efe6f3; border-"
+"radius:12px; padding:12px 16px;\">\n"
+"                                                            <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\"> Sąskaitos faktūros data</div>\n"
+"                                                            <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                               <t t-"
+"out=\"format_date(object.invoice_date or object.date)\"/>\n"
+"                                                            </div> \n"
+"                                                       </div>\n"
+"                                                        <t t-"
+"if=\"object.invoice_date_due\"> \n"
+"                                                           <div "
+"style=\"flex:0 1 150px; min-width:140px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\"> Mokėjimo terminas</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                   <t t-"
+"out=\"format_date(object.invoice_date_due)\"/>\n"
+"                                                                </div> \n"
+"                                                           </div>\n"
+"                                                        </t> \n"
+"                                                       <t t-"
+"if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"                                                            <div "
+"style=\"flex:0 1 180px; min-width:160px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\"> \n"
+"                                                               <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\"> Mokėjimo būsena</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431; text-"
+"transform:capitalize;\">\n"
+"                                                                    Ši "
+"sąskaita faktūra jau apmokėta\n"
+"                                                               </div>\n"
+"                                                            </div> \n"
+"                                                       </t>\n"
+"                                                        <t t-"
+"if=\"object.currency_id != object.company_currency_id\"> \n"
+"                                                           <div "
+"style=\"flex:0 1 150px; min-width:140px; background:#fff; border:1px solid "
+"#efe6f3; border-radius:12px; padding:12px 16px;\">\n"
+"                                                                <div "
+"style=\"font-size:12px; color:#8d7a92; text-transform:uppercase; letter-"
+"spacing:0.45px;\"> Valiuta</div>\n"
+"                                                                <div "
+"style=\"margin-top:6px; font-size:15px; color:#2c2431;\">\n"
+"                                                                   <t t-"
+"out=\"object.currency_id.display_name\"/>\n"
+"                                                                </div> \n"
+"                                                           </div>\n"
+"                                                        </t> \n"
+"                                                   </div>\n"
+"                                                </td> \n"
+"                                           </tr>\n"
+"                                        </table> \n"
+"                                   </td>\n"
+"                                </tr> \n"
+"                           </table>\n"
+"\n"
+"                            <div style=\"margin:18px 0 0; padding:18px 22px; "
+"background:#f9f2f9; border-radius:12px; border:1px solid #eadff0; font-"
+"size:13px; color:#6f5c73; line-height:1.6;\"> \n"
+"                               <strong style=\"color:#2c2431;\"> Pridėti "
+"failai:</strong> Jūsų patogumui pridedami originalūs dokumentai.\n"
+"                           </div>\n"
+"\n"
+"                            <div style=\"margin-top:32px; text-"
+"align:center;\" t-if=\"object.move_type != 'in_invoice'\"> \n"
+"                               <a t-if=\"portal_url\" t-attf-href=\"{{ "
+"portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
+"padding:13px 30px; min-width:210px; background:linear-gradient"
+"(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; "
+"border-radius:12px; font-weight:600; font-size:14px;\" target=\"_blank\"> \n"
+"                                    Peržiūrėti portale\n"
+"                               </a>\n"
+"                            </div> \n"
+"\n"
+"                           <p style=\"margin:28px 0 0; font-size:12px; "
+"color:#8f8596; text-align:center;\"> \n"
+"                                Šį pranešimą gavote, nes esate įtrauktas į "
+"stebėtojų sąrašą adresu\n"
+"                               <strong t-"
+"out=\"object.journal_id.display_name or 'this journal'\"/> .\n"
+"                               <span style=\"display:block; margin:18px "
+"auto; height:1px; max-width:420px; background:#ece3ed;\"/>\n"
+"                                <t t-if=\"unsubscribe_url\"> \n"
+"                                    Norite atsisakyti šių pranešimų? <a t-"
+"attf-href=\"{{ unsubscribe_url }}\" style=\"color:#8f8596; text-"
+"decoration:underline;\" target=\"_blank\">Atsisakyti prenumeratos galite "
+"čia:</a>.\n"
+"                               </t>\n"
+"                            </p> \n"
+"                       </td>\n"
+"                    </tr> \n"
+"               </table>\n"
+"            </td> \n"
+"       </tr>\n"
+"    </table> \n"
+"</div>\n"
+"            "
 
 #. module: account
 #. odoo-python
@@ -4397,7 +4844,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank transactions and payments:"
-msgstr ""
+msgstr "Banko operacijos ir mokėjimai:"
 
 #. module: account
 #. odoo-python
@@ -6782,7 +7229,7 @@ msgstr "Dedikuota kreditinių sąskaitų seka"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
 msgid "Dedicated Payment Sequence"
-msgstr ""
+msgstr "Speciali mokėjimo seka"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__deductible_amount
@@ -7071,6 +7518,8 @@ msgstr "Aprašymas"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Description on invoice (e.g. Payment terms: 30 days after invoice date)"
 msgstr ""
+"Aprašymas sąskaitoje (pvz., Mokėjimo sąlygos: per 30 dienų nuo sąskaitos "
+"išrašymo datos)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__note
@@ -7572,6 +8021,8 @@ msgid ""
 "Downpayments posted on this account will be considered by the Tax Closing "
 "Entry."
 msgstr ""
+"Į šią sąskaitą įskaityti avansiniai mokėjimai bus įtraukti į mokesčių "
+"uždarymo įrašą."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__draft
@@ -7752,7 +8203,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_payment_register__duplicate_payment_ids
 msgid "Duplicate Payment"
-msgstr ""
+msgstr "Dvigubas mokėjimas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -7763,7 +8214,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Duplicated Payments"
-msgstr ""
+msgstr "Pakartotiniai mokėjimai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__duplicated_ref_ids
@@ -7830,35 +8281,35 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__epd
 msgid "Early Payment Discount"
-msgstr ""
+msgstr "Nuolaida už išankstinį mokėjimą"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move_line.py:0
 msgid "Early Payment Discount (%s)"
-msgstr ""
+msgstr "Nuolaida už išankstinį mokėjimą (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Early Payment Discount (Exchange Difference)"
-msgstr ""
+msgstr "Nuolaida už išankstinį mokėjimą (valiutų kurso skirtumas)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__early_payment_discount_mode
 msgid "Early Payment Discount Mode"
-msgstr ""
+msgstr "Ankstyvo mokėjimo nuolaidos režimas"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term__discount_percentage
 msgid "Early Payment Discount granted for this payment term"
-msgstr ""
+msgstr "Už šį mokėjimo terminą suteikiama nuolaida už išankstinį mokėjimą"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Early Payment Discount of"
-msgstr ""
+msgstr "Nuolaida už išankstinį mokėjimą"
 
 #. module: account
 #. odoo-python
@@ -7866,11 +8317,13 @@ msgstr ""
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
 msgstr ""
+"Nuolaida už išankstinį mokėjimą: <b>%(amount)s</b> , jei sumokėta iki <b>%"
+"(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Early payment discounts:"
-msgstr ""
+msgstr "Nuolaidos už išankstinį mokėjimą:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
@@ -7926,6 +8379,8 @@ msgid ""
 "Email addresses that will receive copy for sent and received invoices. "
 "Separate entries with ';'."
 msgstr ""
+"El. pašto adresai, į kuriuos bus siunčiamos išsiųstų ir gautų sąskaitų "
+"kopijos. Įrašus atskirkite simboliu „;“."
 
 #. module: account
 #. odoo-javascript
@@ -8134,7 +8589,7 @@ msgstr "Kapitalas"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Error importing attachment %(filename)s:"
-msgstr ""
+msgstr "Klaida importuojant prisegtuką „ %(filename)s “:"
 
 #. module: account
 #. odoo-python
@@ -8842,7 +9297,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Foreign tax account advance payment (%s)"
-msgstr ""
+msgstr "Išankstinis mokėjimas už užsienio mokesčių sąskaitą (%s)"
 
 #. module: account
 #. odoo-python
@@ -9134,7 +9589,7 @@ msgstr "Sugupuoti mokėjimus"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Group Payments Number Sequence"
-msgstr ""
+msgstr "Grupinių mokėjimų numerių seka"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__is_group_by_name
@@ -9349,7 +9804,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
 #: model:ir.model.fields,field_description:account.field_account_move__highest_name
 msgid "Highest Name"
-msgstr ""
+msgstr "Aukščiausias vardas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highlight_send_button
@@ -9524,6 +9979,8 @@ msgid ""
 "If a payment is still outstanding more than sixty (60) days after the due "
 "payment date,"
 msgstr ""
+"Jei mokėjimas vis dar nėra atliktas praėjus daugiau nei šešiasdešimt (60) "
+"dienų po mokėjimo termino,"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__filter_aml_ir_filters
@@ -9531,8 +9988,8 @@ msgid ""
 "If activated, user-defined filters on journal items can be selected on this "
 "report"
 msgstr ""
-"Jei aktyvuota, šioje ataskaitoje galima pasirinkti vartotojo apibrėžtus "
-"filtrus žurnalo eilutėms"
+"Jei ši funkcija įjungta, šioje ataskaitoje galima pasirinkti vartotojo "
+"nustatytus žurnalo įrašų filtrus"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -9664,6 +10121,10 @@ msgid ""
 "sequence from the entry back to the last hashed entry. The hash can also be "
 "performed on demand by the Secure Entries wizard."
 msgstr ""
+"Jei pažymėta, kai įrašas paskelbiamas, mes atgaline data sugeneruojame visų "
+"veiksmų sekos, pradedant nuo šio įrašo ir baigiant paskutiniu įrašu, kuriam "
+"jau buvo sugeneruotas hash. Hash taip pat galima sugeneruoti pagal užklausą "
+"naudojant „Saugių įrašų“ vedlį."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9839,7 +10300,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "In payment"
-msgstr ""
+msgstr "Apmokėjimas"
 
 #. module: account
 #. odoo-python
@@ -9891,7 +10352,7 @@ msgstr "Įeinantys"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_line_ids
 msgid "Inbound Payment Methods"
-msgstr ""
+msgstr "Įeinančių mokėjimų būdai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
@@ -9934,7 +10395,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Incoming Payments"
-msgstr ""
+msgstr "Gautieji mokėjimai"
 
 #. module: account
 #. odoo-python
@@ -10356,7 +10817,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr ""
+msgstr "Sąskaitos faktūros partnerio rodomasis vardas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -10521,7 +10982,7 @@ msgstr "Sąskaitų statistika"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Invoices are being sent in the background."
-msgstr ""
+msgstr "Sąskaitos faktūros siunčiamos fone."
 
 #. module: account
 #. odoo-python
@@ -10568,6 +11029,8 @@ msgstr ""
 #: model:res.groups,comment:account.group_account_invoice
 msgid "Invoices, payments and basic invoice reporting."
 msgstr ""
+"Sąskaitos faktūros, mokėjimai ir pagrindinė sąskaitų faktūrų ataskaitų "
+"rengimo sistema."
 
 #. module: account
 #. odoo-python
@@ -10725,7 +11188,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__is_selected
 msgid "Is Selected"
-msgstr ""
+msgstr "Pasirinkta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_sent
@@ -10772,6 +11235,8 @@ msgid ""
 "It indicates that the invoice/payment has been sent or the PDF has been "
 "generated."
 msgstr ""
+"Tai reiškia, kad sąskaita faktūra / mokėjimo pavedimas buvo išsiųstas arba "
+"buvo sukurtas PDF failas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -11268,6 +11733,8 @@ msgid ""
 "Last date at which the discounted amount must be paid in order for the Early "
 "Payment Discount to be granted"
 msgstr ""
+"Paskutinė data, iki kurios turi būti sumokėta suma su nuolaida, kad būtų "
+"suteikta nuolaida už išankstinį mokėjimą"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -11676,6 +12143,21 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Vadovas: Mokėkite arba gaukite mokėjimus bet kokiu būdu už „Odoo“ ribų.\n"
+"Mokėjimų teikėjai: Kiekvienas mokėjimų teikėjas turi savo mokėjimo būdą. "
+"Prašykite atlikti operaciją su kortele, naudodami mokėjimo žetoną, kurį "
+"partneris išsaugojo pirkimo ar prenumeratos užsakymo metu internete.\n"
+"Čekis: Mokėkite sąskaitas čekiu ir atsispausdinkite jį iš „Odoo“.\n"
+"Partijos įnešimas: Surinkite kelis klientų čekius iš karto, sugeneruodami ir "
+"pateikdami partijos įnešimą savo bankui. Būtinas modulis „"
+"account_batch_payment“.\n"
+"SEPA kredito pervedimas: Mokėkite SEPA zonoje, pateikdami SEPA kredito "
+"pervedimo failą savo bankui. Būtinas modulis „account_iso20022“.\n"
+"SEPA tiesioginis debetas: Gaukite mokėjimus SEPA zonoje naudodamiesi "
+"įgaliojimu, kurį jums suteiks jūsų partneris. Būtinas modulis „"
+"account_iso20022“.\n"
+"JAV ISO20022: Atlikite mokėjimus JAV pateikdami ISO20022 failą savo bankui. "
+"Būtinas modulis „account_iso20022“.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__payment_method_line_id
@@ -11788,7 +12270,7 @@ msgstr "Susieti žurnalo įrašai"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__matched_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__matched_payment_ids
 msgid "Matched Payments"
-msgstr ""
+msgstr "Atitinkami mokėjimai"
 
 #. module: account
 #. odoo-python
@@ -12358,7 +12840,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "No Payment Method"
-msgstr ""
+msgstr "Nėra mokėjimo būdo"
 
 #. module: account
 #. odoo-python
@@ -12390,7 +12872,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_moves_email_preview
 msgid "No journal entries selected"
-msgstr ""
+msgstr "Nėra pasirinktų dienoraščio įrašų"
 
 #. module: account
 #. odoo-python
@@ -12406,6 +12888,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 msgid "No outstanding account could be found to make the payment"
 msgstr ""
+"Nerasta jokios neapmokėtos sąskaitos, į kurią būtų galima atlikti mokėjimą"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -12416,7 +12899,7 @@ msgstr "Nesukurti jokie mokėjimo įrašai"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "No possible action found with the selected lines."
-msgstr ""
+msgstr "Nerasta jokių galimų veiksmų su pasirinktomis eilutėmis."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
@@ -12754,7 +13237,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
 msgid "On early payment"
-msgstr ""
+msgstr "Apie išankstinį mokėjimą"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_fiscal_year
@@ -12859,6 +13342,8 @@ msgstr ""
 msgid ""
 "Only one payment will be created by partner (bank), instead of one per bill."
 msgstr ""
+"Kiekvienas partneris (bankas) atliks tik vieną mokėjimą, o ne po vieną už "
+"kiekvieną sąskaitą."
 
 #. module: account
 #. odoo-python
@@ -13106,6 +13591,9 @@ msgid ""
 "timeframe is indicated on either the invoice or the order. In the event of "
 "non-payment by the due date,"
 msgstr ""
+"Mūsų sąskaitos faktūros turi būti apmokėtos per 21 darbo dieną, nebent "
+"sąskaitoje faktūroje arba užsakyme būtų nurodytas kitas mokėjimo terminas. "
+"Jei iki nustatytos datos nebus atliktas mokėjimas,"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__outbound
@@ -13115,12 +13603,12 @@ msgstr "Išeinantys"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_line_ids
 msgid "Outbound Payment Methods"
-msgstr ""
+msgstr "Išeinančių mokėjimų būdai"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outgoing Payments"
-msgstr ""
+msgstr "Išeinantys mokėjimai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
@@ -13133,12 +13621,12 @@ msgstr ""
 #: model:account.account,name:account.1_account_journal_payment_credit_account_id
 #: model:account.account,name:account.2_account_journal_payment_credit_account_id
 msgid "Outstanding Payments"
-msgstr ""
+msgstr "Neapmokėti mokėjimai"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
-msgstr ""
+msgstr "Neapmokėtų mokėjimų sąskaitos"
 
 #. module: account
 #. odoo-python
@@ -13239,7 +13727,7 @@ msgstr "PDF Failas"
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "PDF without Payment"
-msgstr ""
+msgstr "PDF be mokėjimo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -13288,7 +13776,7 @@ msgstr "Sumokėta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__paired_internal_transfer_payment_id
 msgid "Paired Internal Transfer Payment"
-msgstr ""
+msgstr "Poriniai vidiniai pervedimai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__parent_id
@@ -13481,12 +13969,12 @@ msgstr "Mokėjimas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__payment_account_id
 msgid "Payment Account"
-msgstr ""
+msgstr "Mokėjimo sąskaita"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Amount:"
-msgstr ""
+msgstr "Mokėjimo suma:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -13502,7 +13990,7 @@ msgstr "Mokėjimo Paskirtis"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_count
 #: model:ir.model.fields,field_description:account.field_account_move__payment_count
 msgid "Payment Count"
-msgstr ""
+msgstr "Mokėjimo skaičius"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
@@ -13518,7 +14006,7 @@ msgstr "Sąskaitos faktūros data"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Date:"
-msgstr ""
+msgstr "Mokėjimo data:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_difference
@@ -13533,7 +14021,7 @@ msgstr "Mokėjimo skirtumo tvarkymas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 msgid "Payment Items"
-msgstr ""
+msgstr "Mokėjimo elementai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_method_line_id
@@ -13549,12 +14037,12 @@ msgstr "Mokėjimo būdas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payment Method Line"
-msgstr ""
+msgstr "Mokėjimo būdo eilutė"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_method_line_tree
 msgid "Payment Method Name"
-msgstr ""
+msgstr "Mokėjimo būdo pavadinimas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -13572,7 +14060,7 @@ msgstr "Mokėjimo būdai"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__qr_code_method
 #: model:ir.model.fields,field_description:account.field_account_move__qr_code_method
 msgid "Payment QR-code"
-msgstr ""
+msgstr "Mokėjimo QR kodas"
 
 #. module: account
 #. odoo-python
@@ -13585,7 +14073,7 @@ msgstr "Mokėjimo kvitas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_receipt_title
 msgid "Payment Receipt Title"
-msgstr ""
+msgstr "Mokėjimo kvito pavadinimas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -13605,13 +14093,13 @@ msgstr "Mokėjimo statusas"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__payment_term
 msgid "Payment Term"
-msgstr ""
+msgstr "Mokėjimo sąlygos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_move__payment_term_details
 msgid "Payment Term Details"
-msgstr ""
+msgstr "Mokėjimo sąlygų detalės"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -13650,7 +14138,7 @@ msgstr "Mokėjimo sąlygos"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30_days_end_month_the_10
 msgid "Payment terms: 10 Days after End of Next Month"
-msgstr ""
+msgstr "Apmokėjimo sąlygos: per 10 dienų po kito mėnesio pabaigos"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_15days
@@ -13672,6 +14160,8 @@ msgstr "Apmokėjimo terminas: 30 dienų"
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
 msgid "Payment terms: 30 Days, 2% Early Payment Discount under 7 days"
 msgstr ""
+"Apmokėjimo sąlygos: 30 dienų, 2% Eankstyvo apmokėjimo nuolaida, jei sumokama "
+"per 7 dienas"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance
@@ -13681,7 +14171,7 @@ msgstr "Mokėjimo sąlygos: 30% avansas sekančio mėnesio pabaiga"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr ""
+msgstr "Mokėjimo sąlygos: 30% N, likutis – 60 dienų"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_45days
@@ -13691,7 +14181,7 @@ msgstr "Mokėjimo sąlygos: 45 dienos"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_90days_on_the_10th
 msgid "Payment terms: 90 days, on the 10th"
-msgstr ""
+msgstr "Apmokėjimo sąlygos: 90 dienų, 10-ąją dieną"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_end_following_month
@@ -13706,12 +14196,12 @@ msgstr "Mokėjimo sąlygos: apmokėjimas iš karto"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment within 30 calendar day"
-msgstr ""
+msgstr "Apmokėjimas per 30 kalendorinių dienų"
 
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
 msgid "Payment: Payment Receipt"
-msgstr ""
+msgstr "Apmokėjimas: Apmokėjimo kvitas"
 
 #. module: account
 #. odoo-python
@@ -13744,12 +14234,14 @@ msgstr ""
 msgid ""
 "Payments related to partners with no bank account specified will be skipped."
 msgstr ""
+"Mokėjimai, susiję su partneriais, kurie nenurodė banko sąskaitos, bus "
+"praleisti."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Mokėjimai, kurie buvo suderinti su šia sąskaita faktūra."
 
 #. module: account
 #: model:account.group,name:account.2_us_group_61
@@ -13859,7 +14351,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Please define a payment method line on your payment."
-msgstr ""
+msgstr "Prašome mokėjimo formoje nurodyti mokėjimo būdą."
 
 #. module: account
 #. odoo-python
@@ -13880,7 +14372,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Please use the following communication for your payment:"
-msgstr ""
+msgstr "Atlikdami mokėjimą, prašome nurodyti šią informaciją:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__pos_receipt_label
@@ -13913,7 +14405,7 @@ msgstr "Registruoti skirtumą į"
 #. module: account
 #: model:ir.actions.server,name:account.action_account_confirm_payments
 msgid "Post Payments"
-msgstr ""
+msgstr "Mokėjimai po paslaugos suteikimo"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_postage
@@ -13956,7 +14448,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__preferred_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_account_move__preferred_payment_method_line_id
 msgid "Preferred Payment Method Line"
-msgstr ""
+msgstr "Pageidaujamas mokėjimo būdas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__prefix_groups_threshold
@@ -14263,13 +14755,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_inbound_payment_method_line_id
 msgid "Property Inbound Payment Method Line"
-msgstr ""
+msgstr "Nuosavybės įeinančio mokėjimo būdo eilutė"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_outbound_payment_method_line_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_outbound_payment_method_line_id
 msgid "Property Outbound Payment Method Line"
-msgstr ""
+msgstr "Nuosavybės išeinančių mokėjimų metodo eilutė"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_property_tax
@@ -14564,7 +15056,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Suderinti mokėjimai"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -14817,7 +15309,7 @@ msgstr "Ataskaitos eilutė"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__report_line_name
 msgid "Report Line Name"
-msgstr ""
+msgstr "Pranešimo eilutės pavadinimas"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_report_folder
@@ -14980,7 +15472,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "Reversal of: %(move_name)s, %(reason)s"
-msgstr ""
+msgstr "Pakeista iš: %(move_name)s, %(reason)s"
 
 #. module: account
 #. odoo-python
@@ -15317,7 +15809,7 @@ msgstr "Išsaugoti"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Save this page and come back here to set up the feature."
-msgstr "Išsaugokite šį puslapį ir grįžkite čia nustatyti funkcionalumui."
+msgstr "Išsaugokite šį puslapį ir grįžkite čia, kad nustatytumėte šią funkciją."
 
 #. module: account
 #. odoo-python
@@ -15452,6 +15944,7 @@ msgstr ""
 msgid ""
 "Securing these entries will also secure entries after the selected date."
 msgstr ""
+"Užtikrinus šiuos įrašus, taip pat bus užtikrinti įrašai po pasirinktos datos."
 
 #. module: account
 #. odoo-python
@@ -15492,18 +15985,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Select a type"
-msgstr ""
+msgstr "Pasirinkite tipą"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Select an old purchase document"
-msgstr ""
+msgstr "Pasirinkite seną pirkimo dokumentą"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/js/tours/account.js:0
 msgid "Select first partner"
-msgstr ""
+msgstr "Pasirinkite pirmąjį partnerį"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -15588,7 +16081,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Send invoices and payment follow-ups by post"
-msgstr ""
+msgstr "Siųskite sąskaitas faktūras ir priminimus apie mokėjimus paštu"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_account_move_send_ir_actions_server
@@ -15978,7 +16471,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
 #: model:ir.model.fields,field_description:account.field_account_move__show_name_warning
 msgid "Show Name Warning"
-msgstr ""
+msgstr "Rodyti pavadinimo įspėjimą"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__show_partner_bank_account
@@ -15989,13 +16482,13 @@ msgstr "Rodyti partnerio banko sąskaitą"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__show_payment_difference
 msgid "Show Payment Difference"
-msgstr ""
+msgstr "Rodyti mokėjimo skirtumą"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_payment_term_details
 #: model:ir.model.fields,field_description:account.field_account_move__show_payment_term_details
 msgid "Show Payment Term Details"
-msgstr ""
+msgstr "Rodyti mokėjimo sąlygų detales"
 
 #. module: account
 #. odoo-javascript
@@ -16108,6 +16601,8 @@ msgid ""
 "Some payment methods supposed to be unique already exists somewhere else.\n"
 "(%s)"
 msgstr ""
+"Kai kurie mokėjimo būdai, kurie turėtų būti unikalūs, jau egzistuoja kitur.\n"
+"(%s)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -16236,7 +16731,7 @@ msgstr "Išrašai"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_line_ids
 msgid "Statements lines matched to this payment"
-msgstr ""
+msgstr "Šiam mokėjimui priskirtos sąskaitos eilutės"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__states_count
@@ -16262,7 +16757,7 @@ msgstr "Būsena"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__status_in_payment
 #: model:ir.model.fields,field_description:account.field_account_move__status_in_payment
 msgid "Status In Payment"
-msgstr ""
+msgstr "Mokėjimo būsena"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__activity_state
@@ -16931,6 +17426,9 @@ msgid ""
 "Taxes exigible on payment and on invoice cannot be mixed on the same journal "
 "item if they share some tag."
 msgstr ""
+"Mokesčiai, mokėtini mokėjimo metu, ir sąskaitoje faktūroje nurodyti "
+"mokesčiai negali būti sumaišyti toje pačioje žurnalo eilutėje, jei jie turi "
+"bendrą žymą."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
@@ -17143,7 +17641,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid "The Early Payment Discount days must be strictly positive."
-msgstr ""
+msgstr "Ankstyvo mokėjimo nuolaidos dienų skaičius turi būti tik teigiamas."
 
 #. module: account
 #. odoo-python
@@ -17152,12 +17650,14 @@ msgid ""
 "The Early Payment Discount functionality can only be used with payment terms "
 "using a single 100% line. "
 msgstr ""
+"Ankstyvo mokėjimo nuolaidos funkcija gali būti naudojama tik su mokėjimo "
+"sąlygomis, kuriose nurodytas vienas 100% line. "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
 msgid "The Early Payment Discount must be strictly positive."
-msgstr ""
+msgstr "Nuolaida už išankstinį mokėjimą turi būti griežtai teigiama."
 
 #. module: account
 #. odoo-python
@@ -17200,6 +17700,8 @@ msgid ""
 "The Payment Term must have at least one percent line and the sum of the "
 "percent must be 100%."
 msgstr ""
+"Mokėjimo sąlygose turi būti nurodyta bent viena procentinė eilutė, o "
+"procentų suma turi sudaryti 100%."
 
 #. module: account
 #. odoo-python
@@ -17351,7 +17853,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_method_name_code_unique
 msgid "The combination code/payment type already exists!"
-msgstr ""
+msgstr "Kodo ir mokėjimo būdo derinys jau egzistuoja!"
 
 #. module: account
 #. odoo-python
@@ -17445,7 +17947,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "The date selected is protected by: %(lock_date_info)s."
-msgstr ""
+msgstr "Pasirinkta data apsaugota: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__fiscalyear_lock_date
@@ -17674,7 +18176,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
 msgid "The last day of the month will be used if the chosen day doesn't exist."
-msgstr ""
+msgstr "Jei pasirinktos dienos nėra, bus naudojama paskutinė mėnesio diena."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_group_check_length_prefix
@@ -17741,12 +18243,12 @@ msgstr "Mokėjimo suma negali būti neigiama."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,help:account.field_account_move__payment_reference
 msgid "The payment reference to set on journal items."
-msgstr ""
+msgstr "Mokėjimo nuoroda, kurią reikia nustatyti žurnalo įrašuose."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
 msgid "The payment that created this entry"
-msgstr ""
+msgstr "Mokėjimas, dėl kurio buvo sukurta ši įrašas"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
@@ -17868,12 +18370,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "The selected"
-msgstr ""
+msgstr "Pasirinkta"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date
 msgid "The selected Date"
-msgstr ""
+msgstr "Pasirinkta data"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -17890,6 +18392,8 @@ msgid ""
 "The selected payment method is not available for this payment, please select "
 "the payment method again."
 msgstr ""
+"Pasirinktas mokėjimo būdas nėra prieinamas šiam mokėjimui, prašome vėl "
+"pasirinkti mokėjimo būdą."
 
 #. module: account
 #. odoo-python
@@ -17983,6 +18487,8 @@ msgid ""
 "The sequences of this journal are different for Payments and non-Payments "
 "but you selected some of both types."
 msgstr ""
+"Šio žurnalo sekos skiriasi mokėjimų ir nemokėjimų atveju, tačiau jūs "
+"pasirinkote po keletą abiejų tipų."
 
 #. module: account
 #. odoo-python
@@ -18057,13 +18563,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "There are payments in progress. Make sure you don't pay twice."
-msgstr ""
+msgstr "Šiuo metu vyksta mokėjimai. Įsitikinkite, kad nemokėsite du kartus."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "There are still draft entries before the selected date."
-msgstr ""
+msgstr "Iki pasirinktos datos vis dar yra nebaigtų įrašų."
 
 #. module: account
 #. odoo-python
@@ -18153,6 +18659,8 @@ msgid ""
 "registration is necessary. You've got your finances under control like a "
 "boss!"
 msgstr ""
+"Už pasirinktus žurnalo straipsnius nebereikia mokėti, todėl mokėjimo "
+"registracija nereikalinga. Jūs puikiai valdote savo finansus!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -18223,9 +18731,9 @@ msgid ""
 "reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Tai leidžia jums grupuoti mokėjimus į vieną rinkinį ir palengvina sudengimo "
+"Tai leidžia sugrupuoti mokėjimus į vieną partiją ir palengvina suderinimo "
 "procesą.\n"
-"- Tai įdiegia modulį \"account_batch_payment\"."
+"-Tai įdiegia „account_batch_payment“ modulį."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__account_prefix
@@ -18317,7 +18825,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This invoice is being sent in the background."
-msgstr ""
+msgstr "Ši sąskaita faktūra siunčiama fone."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -18547,6 +19055,9 @@ msgid ""
 "manually validated. You should go on the partner bank account of %(partner)s "
 "in order to validate it."
 msgstr ""
+"Norint įregistruoti mokėjimus naudojant „ %(method_name)s “, gavėjo banko "
+"sąskaita turi būti patvirtinta rankiniu būdu. Norėdami ją patvirtinti, "
+"turite pereiti į partnerio banko sąskaitą „ %(partner)s “."
 
 #. module: account
 #. odoo-python
@@ -18556,6 +19067,9 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to "
 "validate it."
 msgstr ""
+"Norint įregistruoti mokėjimus naudojant „ %(payment_method)s “, gavėjo banko "
+"sąskaita turi būti patvirtinta rankiniu būdu. Norėdami ją patvirtinti, "
+"turite pereiti į partnerio banko sąskaitą."
 
 #. module: account
 #. odoo-python
@@ -18649,7 +19163,7 @@ msgstr "Bendra mokėtina suma"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "Bendra mokėjimų suma"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__credit
@@ -18824,7 +19338,7 @@ msgstr "Pervesti į %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Išverstas produkto pavadinimas"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -18887,6 +19401,9 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
+"QR kodo tipas, kuris bus sukurtas šios sąskaitos apmokėjimui, ją "
+"spausdinant. Jei laukelis paliktas tuščias, bus naudojamas pirmasis galimas "
+"ir tinkamas metodas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__activity_exception_decoration
@@ -18907,6 +19424,9 @@ msgid ""
 "there are still some records referencing them. How about archiving them "
 "instead?"
 msgstr ""
+"Oi, oi! Šios mokėjimo sąlygos yra gana populiarios ir negali būti ištrintos, "
+"nes vis dar yra įrašų, kuriuose į jas daroma nuoroda. Gal geriau jas "
+"archyvuoti?"
 
 #. module: account
 #. odoo-python
@@ -19100,7 +19620,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__untrusted_payments_count
 msgid "Untrusted Payments Count"
-msgstr ""
+msgstr "Neįtikimų mokėjimų skaičius"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
@@ -19182,7 +19702,7 @@ msgstr "Naudoti grynųjų pinigų principą"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__selector
 msgid "Use Company Selector"
-msgstr ""
+msgstr "Naudokite įmonės pasirinkimo funkciją"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa_direct_debit
@@ -19672,6 +20192,8 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced through this field"
 msgstr ""
+"Kai įrašomas vidinis pervedimas, sukuriama porinė mokėjimo operacija. Jos "
+"susiejamos per šį lauką"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -19807,6 +20329,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
+"Kiekvienam nuorodų tipui galite pasirinkti skirtingus modelius. Numatytasis "
+"modelis yra „Odoo“ nuoroda."
 
 #. module: account
 #. odoo-python
@@ -19918,6 +20442,9 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
+"Negalima sukurti naujo mokėjimo, jei žurnale „ %(journal)s “ nėra nustatyta "
+"nei įmonės, nei mokėjimo būdo „ %(payment_method)s “ sąskaita, skirta "
+"neapmokėtiems mokėjimams ir gautoms įmokoms."
 
 #. module: account
 #. odoo-python
@@ -19934,12 +20461,14 @@ msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
+"Negalima sukurti mokėjimų už įrašus, priklausančius skirtingiems filialams, "
+"neturint prieigos prie patronuojančios bendrovės."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You can't create payments for entries belonging to different companies."
-msgstr ""
+msgstr "Negalima kurti mokėjimų už įrašus, priklausančius skirtingoms įmonėms."
 
 #. module: account
 #. odoo-python
@@ -19968,6 +20497,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type (%"
 "(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
+"Viename žurnalo įraše negali būti dviejų to paties mokėjimo tipo (%"
+"(payment_type)s) ir to paties pavadinimo (%(name)s) mokėjimo būdų eilučių."
 
 #. module: account
 #. odoo-python
@@ -20031,7 +20562,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
-msgstr ""
+msgstr "Jei turite kelias likvidumo linijas, mokėjimo sumos keisti negalima."
 
 #. module: account
 #. odoo-python
@@ -20088,6 +20619,8 @@ msgid ""
 "You cannot delete a payable/receivable line as it would not be consistent "
 "with the payment terms"
 msgstr ""
+"Jūs negalite ištrinti mokėtinos/gautinos sumos eilutės, nes tai neatitiktų "
+"mokėjimo sąlygų"
 
 #. module: account
 #. odoo-python
@@ -20494,7 +21027,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "You must select at least 2 accounts."
-msgstr ""
+msgstr "Turite pasirinkti mažiausiai 2 paskyras."
 
 #. module: account
 #. odoo-python
@@ -20995,6 +21528,8 @@ msgid ""
 "reserves the right to request a fixed interest payment amounting to 10% of "
 "the sum remaining due."
 msgstr ""
+"pasilieka teisę reikalauti fiksuotų palūkanų, sudarančių 10% olikusios "
+"sumokėtinos sumos."
 
 #. module: account
 #. odoo-python
@@ -21075,6 +21610,8 @@ msgid ""
 "will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"turės teisę be išankstinio įspėjimo sustabdyti bet kokių paslaugų teikimą, "
+"jei vėluojama sumokėti."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view

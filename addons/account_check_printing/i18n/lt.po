@@ -12,13 +12,14 @@
 # Martin Trigaux, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Ulevičienė <vilma.uleviciene@mededu.lt>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-04 03:31+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-10-06 09:37+0000\n"
+"Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/lt/>\n"
 "Language: lt\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
 ": n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_check_printing
 #. odoo-python
@@ -262,6 +263,21 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Vadovas: Mokėkite arba gaukite mokėjimus bet kokiu būdu už „Odoo“ ribų.\n"
+"Mokėjimų teikėjai: Kiekvienas mokėjimų teikėjas turi savo mokėjimo būdą. "
+"Prašykite atlikti operaciją su kortele, naudodami mokėjimo žetoną, kurį "
+"partneris išsaugojo pirkimo ar prenumeratos užsakymo metu internete.\n"
+"Čekis: Mokėkite sąskaitas čekiu ir atsispausdinkite jį iš „Odoo“.\n"
+"Partijos įnešimas: Surinkite kelis klientų čekius iš karto, sugeneruodami ir "
+"pateikdami partijos įnešimą savo bankui. Būtinas modulis „"
+"account_batch_payment“.\n"
+"SEPA kredito pervedimas: Mokėkite SEPA zonoje, pateikdami SEPA kredito "
+"pervedimo failą savo bankui. Būtinas modulis „account_iso20022“.\n"
+"SEPA tiesioginis debetas: Gaukite mokėjimus SEPA zonoje naudodamiesi "
+"įgaliojimu, kurį jums suteiks jūsų partneris. Būtinas modulis „"
+"account_iso20022“.\n"
+"JAV ISO20022: Atlikite mokėjimus JAV pateikdami ISO20022 failą savo bankui. "
+"Būtinas modulis „account_iso20022“.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -309,8 +325,8 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
-"Mokėjimai, kuriuos spausdinsite kaip kvitus, turi turėti pažymėtą mokėjimo "
-"būdą \"Kvitas\" ir jis neturi būti sudengtas"
+"Mokėjimai, kuriuos reikia atspausdinti kaip čekius, turi turėti pasirinktą "
+"mokėjimo būdą „Čekis“ ir neturi būti jau suderinti"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -474,6 +490,9 @@ msgid ""
 "You have to choose a check layout. For this, go in Invoicing/Accounting "
 "Settings, search for 'Checks layout' and set one."
 msgstr ""
+"Turite pasirinkti čekių išdėstymą. Tam eikite į „Sąskaitų išrašymo / "
+"apskaitos nustatymus“, ieškokite „Čekių išdėstymas“ ir nustatykite vieną iš "
+"variantų."
 
 #. module: account_check_printing
 #. odoo-python

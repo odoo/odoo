@@ -3,13 +3,14 @@
 # * pos_stripe
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-03 17:36+0000\n"
-"PO-Revision-Date: 2026-08-08 00:59+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-07 19:39+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "pos_stripe/uk/>\n"
 "Language: uk\n"
@@ -18,13 +19,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Capture Payment"
-msgstr ""
+msgstr "Отримати платіж"
 
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__display_name
@@ -41,7 +42,7 @@ msgstr "Немає доступу до fetch token зі Stripe"
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid "Do not have access to refund Stripe payment"
-msgstr ""
+msgstr "Немає доступу до повернення платежу через Stripe"
 
 #. module: pos_stripe
 #: model_terms:ir.ui.view,arch_db:pos_stripe.pos_payment_method_view_form_inherit_pos_stripe
@@ -67,13 +68,13 @@ msgstr "Не вдалося завантажити ресурс: net::ERR_INTERN
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Fetch Secret"
-msgstr ""
+msgstr "Отримати секрет"
 
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Fetch Token"
-msgstr ""
+msgstr "Отримати токен"
 
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__id
@@ -90,7 +91,7 @@ msgstr "Немає доступних зчитувачів Stripe."
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "Payment cancelled because not reader connected"
-msgstr ""
+msgstr "Платіж скасовано, оскільки зчитувач не підключено"
 
 #. module: pos_stripe
 #: model:ir.model,name:pos_stripe.model_pos_payment_method
@@ -146,6 +147,8 @@ msgstr ""
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "You cannot refund a non-Stripe payment via Stripe"
 msgstr ""
+"Ви не можете повернути кошти за платіж, здійснений не через Stripe, за "
+"допомогою Stripe"
 
 #. module: pos_stripe
 #: model:ir.model.fields,help:pos_stripe.field_pos_payment_method__stripe_serial_number
