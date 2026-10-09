@@ -1244,6 +1244,25 @@ export class Rtc extends Record {
         }
     }
 
+    /** @param {"camera" | "microphone" | "usermedia"} elementName */
+    supportsMediaCaptureElement(elementName) {
+        const constructorName = {
+            camera: "HTMLCameraElement",
+            microphone: "HTMLMicrophoneElement",
+            usermedia: "HTMLUserMediaElement",
+        }[elementName];
+        return typeof window[constructorName] === "function";
+    }
+
+    /** @param {"camera" | "microphone"} media */
+    shouldShowMediaPermissionDialog(media) {
+        const permission = media === "camera" ? this.cameraPermission : this.microphonePermission;
+        return (
+            permission === "prompt" ||
+            (permission === "denied" && this.supportsMediaCaptureElement(media))
+        );
+    }
+
     /**
      * @param {"microphone" | "camera"} media
      * @param {Object} [configuration]
@@ -1252,7 +1271,7 @@ export class Rtc extends Record {
      */
     showMediaPermissionDialog(media, { props = {}, options = {} } = {}) {
         const permission = media === "camera" ? this.cameraPermission : this.microphonePermission;
-        if (permission === "denied") {
+        if (permission === "denied" && !this.supportsMediaCaptureElement(media)) {
             // Bypass the permission dialog in this case: we still need to do
             // the potential thing that was supposed to be done once it closes.
             options.onClose?.();
@@ -1295,7 +1314,7 @@ export class Rtc extends Record {
      */
     async startMeetingCall(channel, { fullscreen = false } = {}) {
         await this.mediaPermissionsPromise;
-        const isMicrophonePermissionPending = this.microphonePermission === "prompt";
+        const isMicrophonePermissionPending = this.shouldShowMediaPermissionDialog("microphone");
         await this.toggleCall(channel, {
             camera: this.cameraPermission === "granted" || !isMicrophonePermissionPending,
             fullscreen,
@@ -1310,9 +1329,9 @@ export class Rtc extends Record {
      */
     async showMeetingMediaPermissionDialog() {
         await this.mediaPermissionsPromise;
-        if (this.microphonePermission === "prompt") {
+        if (this.shouldShowMediaPermissionDialog("microphone")) {
             this.showMediaPermissionDialog("microphone");
-        } else if (this.cameraPermission === "prompt") {
+        } else if (this.shouldShowMediaPermissionDialog("camera")) {
             this.showMediaPermissionDialog("camera");
         }
     }
@@ -1394,7 +1413,7 @@ export class Rtc extends Record {
             this._remoteAction({ is_muted: false });
             return;
         }
-        if (this.microphonePermission === "prompt") {
+        if (this.shouldShowMediaPermissionDialog("microphone")) {
             this.showMediaPermissionDialog("microphone", { options });
             return;
         }
@@ -2395,7 +2414,7 @@ export class Rtc extends Record {
         }
         switch (type) {
             case "camera": {
-                if (this.cameraPermission === "prompt" && !this.cameraTrack) {
+                if (!this.cameraTrack && this.shouldShowMediaPermissionDialog("camera")) {
                     this.showMediaPermissionDialog("camera", { options });
                     return;
                 }

@@ -531,7 +531,7 @@ export async function patchUiSize({ height, size, width }) {
     await resize({ width, height });
 }
 
-function createAudioStream() {
+export function createAudioStream() {
     const ctx = new SilentAudioContext();
     const dest = ctx.createMediaStreamDestination();
     after(() => {
@@ -589,14 +589,48 @@ export function mockGetMedia() {
 }
 
 /**
+ * Media capture elements (`<usermedia>`, `<camera>`, `<microphone>`) that tests
+ * report as supported. Empty by default so tests do not depend on the browser
+ * running them: see `preventActualMediaUsage`.
+ *
+ * @type {Set<"camera"|"microphone"|"usermedia">}
+ */
+const supportedMediaCaptureElements = new Set();
+
+export function mockMediaCaptureElements() {
+    after(() => supportedMediaCaptureElements.clear());
+    return {
+        dispatchMedia(element, media) {
+            const eventName = element.localName === "usermedia" ? "stream" : "track";
+            Object.defineProperty(element, eventName, { configurable: true, value: media });
+            element.dispatchEvent(new Event(eventName));
+        },
+        /** @param {("camera"|"microphone"|"usermedia")[]} */
+        setSupported: (...mediaElements) => {
+            supportedMediaCaptureElements.clear();
+            for (const mediaElement of mediaElements) {
+                supportedMediaCaptureElements.add(mediaElement);
+            }
+        },
+    };
+}
+
+/**
  * Prevents tests from using the actual microphone, camera, screen and speakers:
  * media requests that are not mocked by the test get synthetic streams, and
- * audio is processed without being rendered to an output device.
+ * audio is processed without being rendered to an output device. Media capture
+ * elements are reported as unsupported unless the test opts in with
+ * `mockMediaCaptureElements`.
  *
  * The prototype is patched so that the test's own mocks on `navigator.mediaDevices`
  * (e.g. `mockGetMedia`, denied permissions) take precedence regardless of order.
  */
 function preventActualMediaUsage() {
+    patch(Rtc.prototype, {
+        supportsMediaCaptureElement(elementName) {
+            return supportedMediaCaptureElements.has(elementName);
+        },
+    });
     patch(MediaDevices.prototype, {
         async getUserMedia(constraints) {
             return constraints?.audio ? createAudioStream() : createVideoStream();
