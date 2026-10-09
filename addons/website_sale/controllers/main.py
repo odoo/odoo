@@ -450,7 +450,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             display_currency=website.currency_id,
             extra_domain=Domain.OR([
                 Domain("public_categ_ids", "=", False),
-                Domain("public_categ_ids.not_in_shop", "=", False),
+                # Bypass the category record rule: a category of a published product
+                # always has published products, and the rule makes the query costly.
+                Domain("public_categ_ids", "any!", Domain("not_in_shop", "=", False)),
             ])
             if not (category or search)
             else None,
