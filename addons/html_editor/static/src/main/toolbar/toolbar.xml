@@ -20,6 +20,7 @@
                                     active: button.isActive,
                                     disabled: button.isDisabled,
                                 }"
+                                t-att-aria-pressed="button.isActive ? 'true': 'false'"
                                 t-att-disabled="button.isDisabled"
                                 t-att-title="button.description"
                                 t-att-name="button.id"
