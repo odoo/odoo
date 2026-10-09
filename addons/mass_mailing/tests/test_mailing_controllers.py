@@ -6,6 +6,7 @@ from markupsafe import Markup
 from requests import Session, PreparedRequest, Response
 
 import datetime
+import json
 
 from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -626,6 +627,48 @@ class TestMailingControllers(TestMailingControllersCommon):
             )
         )
         self.assertEqual(res.status_code, 200)
+
+    def test_modify_image_non_admin(self):
+        """ Test that a non-admin user can modify an image on a non-view model """
+        self.authenticate(self.user_marketing.login, self.user_marketing.login)
+
+        # 1x1 transparent PNG base64
+        pixel = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+
+        # Create a dummy image attachment on a non-view model (res.partner)
+        attachment = self.env['ir.attachment'].create({
+            'name': 'test_image.png',
+            'type': 'binary',
+            'datas': pixel,
+            'res_model': 'res.partner',
+            'res_id': self.user_marketing.partner_id.id,
+            'mimetype': 'image/png',
+        })
+
+        # Build the JSON-RPC payload inline
+        payload = {
+            "jsonrpc": "2.0",
+            "method": "call",
+            "params": {
+                'res_model': 'res.partner',
+                'res_id': self.user_marketing.partner_id.id,
+                'name': 'modified_test_image.png',
+                'data': pixel,
+                'mimetype': 'image/png',
+            },
+            "id": 1,
+        }
+
+        # Simulate the JSON-RPC call using url_open and standard json
+        response = self.url_open(
+            f'/web_editor/modify_image/{attachment.id}',
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(payload)
+        ).json()
+
+        # The controller returns an 'error' key if an AccessError is caught by the RPC layer.
+        self.assertNotIn('error', response, 'Modify image failed: %s' % response.get('error', {}).get('message'))
+        self.assertTrue(isinstance(response.get('result'), str), "The response should be the URL string of the modified image.")
 
 
 @tagged('link_tracker', 'mailing_portal')
