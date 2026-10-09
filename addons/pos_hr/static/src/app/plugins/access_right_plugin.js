@@ -153,8 +153,8 @@ patch(PosAccessRightPlugin.prototype, {
     get disableLinediscount() {
         return this.hasEmployeeRole(["manager", "cashier"]);
     },
-    get disablePriceButton() {
-        return this.hasEmployeeRole(["manager", "cashier"]);
+    get canEditPrice() {
+        return this.hasEmployeeRole(["manager", "cashier"]) && super.canEditPrice;
     },
     get canCancelOrder() {
         return this.hasEmployeeRole(["manager", "cashier"]);
@@ -196,7 +196,7 @@ patch(PosAccessRightPlugin.prototype, {
         return this.hasEmployeeRole(["manager", "cashier"]);
     },
     get showEditPlanButton() {
-        return this.hasEmployeeRole(["manager"]);
+        return super.showEditPlanButton && this.hasEmployeeRole(["manager"]);
     },
     get canAccessDebugMode() {
         return this.hasEmployeeRole(["manager", "cashier"]);
