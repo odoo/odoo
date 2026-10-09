@@ -614,12 +614,13 @@ class StockPicking(models.Model):
                 return True
 
     @api.model
-    def get_empty_list_help(self, help_message):
-        return self.env['ir.ui.view']._render_template(
-            'stock.help_message_template', {
-                'picking_type_code': self.env.context.get('restricted_picking_type_code') or self.picking_type_code,
-            }
-        )
+    def get_help_data(self, domain):
+        # used by the help view (see `stock_picking_view_help`)
+        context = self.env.context
+        picking_type_code = context.get('restricted_picking_type_code')
+        if not picking_type_code and isinstance(context.get('default_picking_type_id'), int):
+            picking_type_code = self.env['stock.picking.type'].browse(context['default_picking_type_id']).exists().code
+        return {'picking_type_code': picking_type_code}
 
     @api.model
     def _search_delay_alert_date(self, operator, value):
@@ -1603,13 +1604,6 @@ class StockPicking(models.Model):
         context = dict(self.env.context)
         context.update(literal_eval(action['context']))
         action['context'] = context
-
-        action['help'] = self.env['ir.ui.view']._render_template(
-            'stock.help_message_template', {
-                'picking_type_code': context.get('restricted_picking_type_code') or self.picking_type_code,
-            }
-        )
-
         return action
 
     @api.model
