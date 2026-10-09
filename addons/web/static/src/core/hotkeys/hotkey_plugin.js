@@ -265,6 +265,7 @@ export class HotkeyPlugin extends Plugin {
     addHotkeyOverlays(activeElement) {
         // Gather the hotkeys to overlay registered through the useHotkey hook.
         const hotkeysFromHookToHighlight = [];
+        const globalHotkeys = new Map();
         for (const [, registration] of this.registrations) {
             const overlayElement = registration.withOverlay?.();
             if (overlayElement) {
@@ -272,6 +273,13 @@ export class HotkeyPlugin extends Plugin {
                     hotkey: registration.hotkey.replace(`${this.overlayModifier}+`, ""),
                     el: overlayElement,
                 });
+            }
+
+            if (
+                !registration.withOverlay &&
+                (registration.global || registration.activeElement === activeElement)
+            ) {
+                globalHotkeys.set(registration.hotkey, registration);
             }
         }
 
@@ -281,11 +289,32 @@ export class HotkeyPlugin extends Plugin {
             "[data-hotkey]:not(:disabled)"
         ).map((el) => ({ hotkey: el.dataset.hotkey, el }));
 
-        const items = [...hotkeysFromDomToHighlight, ...hotkeysFromHookToHighlight];
-        if (!items.length) {
+        const targetForAvailabe = document.activeElement;
+        const items = new Map();
+        for (const item of [...hotkeysFromDomToHighlight, ...hotkeysFromHookToHighlight]) {
+            const hotkey = `${this.overlayModifier}+${item.hotkey}`.toLowerCase();
+            if (items.has(hotkey)) {
+                continue;
+            }
+
+            const registration = globalHotkeys.get(hotkey);
+            if (
+                registration &&
+                (!registration.isAvailable || registration.isAvailable(targetForAvailabe))
+            ) {
+                console.warn(
+                    `The hotkey "${item.hotkey}" is being shadowed by a global hotkey, no overlay will be displayed.`
+                );
+                continue;
+            }
+
+            items.set(hotkey, item);
+        }
+
+        if (!items.size) {
             return false;
         }
-        for (const item of items) {
+        for (const item of items.values()) {
             const hotkey = item.hotkey;
             const overlay = document.createElement("div");
             overlay.classList.add(
