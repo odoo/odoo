@@ -92,7 +92,7 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
 
         # template with void values: should not force void (TODO)
         composer.template_id = template_void.id
-        self.assertEqual(composer.body, '<p>CustomBody for <t t-out="object.name"/></p>')
+        self.assertEqual(composer.body, '<p>CustomBody for <t t-out="object.name"></t></p>')
         self.assertFalse(composer.body_has_template_value)
         self.assertEqual(composer.lang, template.lang)
         self.assertEqual(composer.subject, 'CustomSubject for {{ object.name }}')
@@ -145,7 +145,7 @@ class TestMailComposerMixin(MailCommon, TestRecipients):
             'name': 'Invite',
             'subject': 'SpecificSubject for {{ object.name }}',
         })
-        self.assertEqual(composer.body, '<p>SpecificBody from <t t-out="user.name"/></p>')
+        self.assertEqual(composer.body, '<p>SpecificBody from <t t-out="user.name"></t></p>')
         self.assertEqual(composer.subject, 'SpecificSubject for {{ object.name }}')
 
         subject = composer._render_field('subject', source.ids)[source.id]
