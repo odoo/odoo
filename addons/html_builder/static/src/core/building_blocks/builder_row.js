@@ -9,6 +9,9 @@ import {
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 
+const EXPAND_ANIM_DELAY = 150;
+const HIGHLIGHT_DURATION = 2000;
+
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
     static components = { BuilderComponent };
@@ -21,6 +24,7 @@ export class BuilderRow extends Component {
         level: t.number().optional(),
         expand: t.boolean().optional(false),
         initialExpandAnim: t.boolean().optional(),
+        highlight: t.boolean().optional(false),
         extraLabelClass: t.string().optional(),
         observeCollapseContent: t.boolean().optional(false),
         disabled: t.boolean().optional(),
@@ -49,10 +53,16 @@ export class BuilderRow extends Component {
         let isMounted = false;
 
         onMounted(() => {
+            const highlight = this.props.highlight;
             if (this.props.initialExpandAnim) {
                 setTimeout(() => {
                     this.toggleCollapseContent();
-                }, 150);
+                    if (highlight) {
+                        this.highlightRow();
+                    }
+                }, EXPAND_ANIM_DELAY);
+            } else if (highlight) {
+                this.highlightRow();
             }
         });
 
@@ -112,6 +122,16 @@ export class BuilderRow extends Component {
     toggleCollapseContent() {
         this.state.expanded = !this.state.expanded;
         this.transition.shouldMount = this.state.expanded;
+    }
+
+    highlightRow() {
+        const rootEl = this.rootRef();
+        if (!rootEl?.isConnected) {
+            return;
+        }
+        rootEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        rootEl.classList.add("o-hb-row-highlight");
+        setTimeout(() => rootEl.classList.remove("o-hb-row-highlight"), HIGHLIGHT_DURATION);
     }
 
     get displayCollapseContent() {

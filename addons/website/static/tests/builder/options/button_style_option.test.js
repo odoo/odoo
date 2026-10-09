@@ -2,6 +2,7 @@ import { animationFrame, describe, expect, queryFirst, queryOne, test } from "@o
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
+    waitForThemeReveal,
 } from "@website/../tests/builder/website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
@@ -123,7 +124,8 @@ test("should have a button linking to theme tab", async () => {
     );
 
     await contains(":iframe p > a.test-target").click();
-    await contains("a.o-hb-theme-tab-link").click();
+    await contains("[data-label='Type'] .o-hb-select-toggle").click();
+    await contains(".o_popover a.o-hb-theme-tab-link").click();
 
     // Hoot disables transitions by default, so the tab switch relies on the
     // fallback instead of a transitionend event.
@@ -131,6 +133,27 @@ test("should have a button linking to theme tab", async () => {
     await animationFrame();
     expect("button[data-name='customize']").not.toHaveClass("active");
     expect("button[data-name='theme']").toHaveClass("active");
+});
+
+test("highlights the colors of the button type that was edited", async () => {
+    await setupWebsiteBuilder(
+        `<p>
+            <a href="#" class="btn btn-custom test-target">clickme</a>
+        </p>`,
+        {
+            loadIframeBundles: true,
+        }
+    );
+
+    await contains(":iframe p > a.test-target").click();
+    await contains("[data-label='Type'] .o-hb-select-toggle").click();
+    await contains(
+        ".o_popover .o-hb-select-dropdown-item:contains('Button Secondary') a.o-hb-theme-tab-link"
+    ).click();
+
+    await waitForThemeReveal();
+    expect(".hb-row[data-label='Secondary Buttons']").toHaveClass("o-hb-row-highlight");
+    expect(".hb-row.o-hb-row-highlight").toHaveCount(1);
 });
 
 test("button border width is not previewed", async () => {

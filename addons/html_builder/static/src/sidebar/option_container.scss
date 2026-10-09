@@ -39,22 +39,30 @@
     }
 }
 
-.o_theme_tab:has(.o-options-container-highlight) {
-    .options-container:not(.o-options-container-highlight) {
+.o-tab-content:has(.o-hb-row-highlight) {
+    .options-container {
         position: relative;
+
         &::before {
             content: "";
             @include o-position-absolute(0, 0, 0, 0);
             z-index: 10;
             opacity: 0;
-            animation: options-container-highlight-grey 2s ease;
+            animation: options-row-highlight-dim 2s ease;
             background-color: rgba(0, 0, 0, 0.5);
             pointer-events: none;
         }
     }
+
+    .hb-row.o-hb-row-highlight,
+    .hb-row.o-hb-row-highlight + .hb-collapse-content {
+        position: relative;
+        z-index: 11;
+        background-color: $o-we-bg-lighter;
+    }
 }
 
-@keyframes options-container-highlight-grey {
+@keyframes options-row-highlight-dim {
     25%, 75% {
        opacity: 1;
     }

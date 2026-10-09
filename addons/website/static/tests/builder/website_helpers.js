@@ -543,3 +543,13 @@ export async function toggleMobilePreview() {
     // will need one more animation frame to have their changes reflected
     await animationFrame();
 }
+
+export async function waitForThemeReveal() {
+    // Transitions are disabled in tests, so the tab switch falls back to its
+    // timer (400 ms). Rendering the tab is what mounts the targeted row, hence
+    // the frame: a row only asks for its unfold (150 ms) once mounted.
+    await advanceTime(500);
+    await animationFrame();
+    await advanceTime(200);
+    await animationFrame();
+}
