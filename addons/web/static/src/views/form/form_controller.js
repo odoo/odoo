@@ -560,7 +560,7 @@ export class FormController extends Component {
     }
 
     async beforeLeave({ forceLeave } = {}) {
-        if (forceLeave) {
+        if (forceLeave || this.isRecordDeleted) {
             return true;
         }
         const isDirty = await this.model.root.isDirty();
@@ -698,6 +698,7 @@ export class FormController extends Component {
             confirm: async () => {
                 await this.model.root.delete();
                 if (!this.model.root.resId) {
+                    this.isRecordDeleted = true;
                     this.env.config.historyBack();
                 }
             },

@@ -6447,6 +6447,42 @@ test("delete the last record (without previous action)", async () => {
     expect.verifySteps(["__DEFAULT_ACTION__ called"]);
 });
 
+test("delete the last record (with previous action, dirty form)", async () => {
+    Partner._views = {
+        list: `<list><field name="foo"/></list>`,
+        form: `
+            <form>
+                <field name="foo"/>
+            </form>`,
+        search: `<search/>`,
+    };
+
+    onRpc("partner", "unlink", () => expect.step("unlink"));
+    onRpc("partner", "web_save", () => expect.step("web_save"));
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        type: "ir.actions.act_window",
+        res_model: "partner",
+        views: [[false, "list"]],
+    });
+    await getService("action").doAction({
+        type: "ir.actions.act_window",
+        res_model: "partner",
+        res_id: 1,
+        views: [[false, "form"]],
+    });
+    await contains(`.o_field_widget[name=foo] input`).edit("making it dirty", {
+        confirm: false,
+    });
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+    await contains(`.modal-footer button.btn-danger`).click();
+
+    expect.verifySteps(["unlink"]);
+    expect(`.o_list_view`).toHaveCount(1);
+});
+
 test(`empty required fields cannot be saved`, async () => {
     Partner._fields.foo = fields.Char({ required: true });
 
