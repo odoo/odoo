@@ -132,6 +132,12 @@ export class Composer extends Component {
     extraActionsRef = signal.ref(HTMLDivElement);
     moreActionsRef = signal.ref(HTMLDivElement);
     quickActionsRef = signal.ref(HTMLDivElement);
+    /** @type {import("@odoo/owl").Signal<import("@html_editor/editor").Editor>} */
+    lastReadyEditor = signal(undefined);
+    /** The editor of the HTML composer once ready, i.e. attached to its editable. */
+    readyEditor = computed(() =>
+        this.composerService.htmlEnabled ? this.lastReadyEditor() : undefined
+    );
 
     setup() {
         super.setup();
@@ -210,7 +216,7 @@ export class Composer extends Component {
                 );
             },
         });
-        this.suggestion = useSuggestion(computed(() => this.editor));
+        this.suggestion = useSuggestion(this.readyEditor);
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
         this.saveContentDebounced = useDebounced(this.saveContent.bind(this), 5000, {
@@ -353,18 +359,18 @@ export class Composer extends Component {
                 }
             }
         );
-        // not before mounted: the actions are only complete once the setup (and its patches) ran
-        const isMounted = signal(false);
-        onMounted(() => isMounted.set(true));
+        // not before rendered: the actions are only complete once the setup (and its patches) ran
         useOnChange(
             () =>
-                isMounted()
+                this.rootRef()
                     ? [
                           this.state.isFullComposerOpen,
                           this.props.composer.restoredFromFullComposer,
                           this.props.composer.message
                               ? this.moreAction()?.actionRef()
-                              : this.rootRef()?.querySelector("button[name='open-full-composer']"),
+                              : this.composerActions.actions
+                                    .find((action) => action.id === "open-full-composer")
+                                    ?.actionRef(),
                       ]
                     : [],
             (isFullComposerOpen, restoredFromFullComposer, fullComposerButtonEl) => {
@@ -508,6 +514,7 @@ export class Composer extends Component {
             onEditorReady: () => {
                 this.setEditorCursorEnd();
                 this.editor.shared.history.commit();
+                this.lastReadyEditor.set(this.editor);
             },
         };
     }
@@ -1108,6 +1115,7 @@ export class Composer extends Component {
 
     onLoadWysiwyg(editor) {
         this.editor = editor;
+        this.lastReadyEditor.set(undefined);
     }
 
     addEmoji(str) {

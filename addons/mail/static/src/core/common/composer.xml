@@ -4,8 +4,6 @@
 <t t-name="mail.Composer">
     <!-- rendering observes the focus requests, applied once patched -->
     <t t-set="focusRequest" t-value="this.focusRequest"/>
-    <!-- and the composer state suggestions are detected from, once patched -->
-    <t t-set="suggestionDetectionDeps" t-value="this.suggestion.detectionDeps"/>
     <t t-set="isChatterComposer" t-value="this.extended and !this.props.composer.message"/>
     <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex rounded-4 flex-shrink-0'"/>
     <div class="d-print-none" t-ref="this.rootRef">

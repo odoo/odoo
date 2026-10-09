@@ -467,14 +467,11 @@ export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => 
             direction: el.selectionDirection,
         });
     });
-    onMounted(() => {
-        document.addEventListener("selectionchange", onSelectionChange);
-        document.addEventListener("input", onSelectionChange);
-    });
-    onWillUnmount(() => {
-        document.removeEventListener("selectionchange", onSelectionChange);
-        document.removeEventListener("input", onSelectionChange);
-    });
+    onMounted(() => document.addEventListener("selectionchange", onSelectionChange));
+    onWillUnmount(() => document.removeEventListener("selectionchange", onSelectionChange));
+    // on the element, like `t-model`: the selection is synced with the text, even from an
+    // `input` event that does not bubble (`selectionchange` only follows asynchronously)
+    useListener(elRef, "input", onSelectionChange);
     return {
         restore() {
             getEl()?.setSelectionRange(model.start, model.end, model.direction);

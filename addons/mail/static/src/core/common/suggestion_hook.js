@@ -7,7 +7,7 @@ import {
 } from "@mail/utils/common/format";
 import { useSearch } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
-import { onMounted, onPatched, proxy, shallowEqual, t, useProps, useScope } from "@odoo/owl";
+import { proxy, t, useOnChange, useProps, useScope } from "@odoo/owl";
 import { emojiType } from "@web/core/emoji_picker/emoji_loader";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -79,20 +79,17 @@ export class UseSuggestion {
             deps: () => [this.detection.delimiter, this.detection.position],
             isActive: () => !!this.detection.delimiter,
         });
-        // on the patched composer (`detectionDeps` is observed by its rendering): the editor
-        // is only loaded once rendered, and detecting once per patch rather than once per
-        // keystroke avoids a fetch for each intermediate term
-        let detectedFor;
-        const detectOnChange = () => {
-            const deps = this.detectionDeps;
-            if (detectedFor && shallowEqual(deps, detectedFor)) {
-                return;
-            }
-            detectedFor = deps;
-            this.detect();
-        };
-        onMounted(detectOnChange);
-        onPatched(detectOnChange);
+        // on a change only: the initial content (e.g. of an edited message) is not being typed
+        useOnChange(
+            () => this.detectionDeps,
+            () => {
+                if (this.composerService.htmlEnabled && !this.editor()) {
+                    return;
+                }
+                this.detect();
+            },
+            { initialRun: false }
+        );
     }
     /** The composer state {@link detect} depends on. */
     get detectionDeps() {
