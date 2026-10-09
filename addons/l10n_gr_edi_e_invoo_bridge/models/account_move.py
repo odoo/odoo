@@ -108,10 +108,12 @@ class AccountMove(models.Model):
             if not api_token:
                 error_message = str(E_INVOO_TOKEN_NOT_SET)
                 for invoice in invoices:
-                    invoice._l10n_gr_edi_create_error_document({'error': error_message})
+                    self.env['l10n_gr_edi.document']._l10n_gr_edi_create_error_document(invoice, {'error': error_message})
                 continue
 
             for invoice in invoices:
+                invoice.lock_for_update()
+
                 submission = invoice._l10n_gr_edi_prepare_invoice_submission()
                 if not submission:
                     continue

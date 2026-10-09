@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests import freeze_time, tagged
+from odoo.addons.l10n_gr_edi import utils
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_gr_edi_e_invoo_bridge.models.account_move import E_INVOO_TOKEN_NOT_SET
 
@@ -121,12 +122,12 @@ class TestMyDATAInvoiceEInvooDirect(AccountTestInvoicingCommon):
         self.assert_mydata_error(invoice, 'Missing myDATA Invoice Type.')
 
         # No classification category
-        invoice = self._create_mydata_invoice(cls_category='')
+        invoice = self._create_mydata_invoice(cls_category=False)
         invoice.l10n_gr_edi_try_send_invoices()
         self.assert_mydata_error(invoice, 'Missing myDATA classification category on line 1.')
 
         # No classification type, and inv_type + cls_category combination doesn't allow empty cls_type
-        invoice = self._create_mydata_invoice(cls_type='')
+        invoice = self._create_mydata_invoice(cls_type=False)
         invoice.l10n_gr_edi_try_send_invoices()
         self.assert_mydata_error(invoice, 'Missing myDATA classification type on line 1.')
 
@@ -134,8 +135,8 @@ class TestMyDATAInvoiceEInvooDirect(AccountTestInvoicingCommon):
         """Allow no cls_type on some combinations with available cls_type"""
         allowed_inv_type_category = (('1.1', 'category1_95'), ('3.2', 'category1_95'), ('5.1', 'category1_95'))
         for inv_type, category in allowed_inv_type_category:
-            invoice = self._create_mydata_invoice(inv_type=inv_type, cls_category=category, cls_type='')
-            self.assertFalse(invoice._l10n_gr_edi_get_pre_error_string())
+            invoice = self._create_mydata_invoice(inv_type=inv_type, cls_category=category, cls_type=False)
+            self.assertFalse(utils.get_pre_error_string(invoice._l10n_gr_edi_get_pre_error_dict()))
 
     def test_l10n_gr_edi_try_send_invoices_invalid_tax_amount(self):
         """ Invalid tax amount should raises error. """
@@ -147,7 +148,7 @@ class TestMyDATAInvoiceEInvooDirect(AccountTestInvoicingCommon):
         }])
         invoice = self._create_mydata_invoice(tax_ids=[Command.set(invalid_tax.ids)])
         invoice.l10n_gr_edi_try_send_invoices()
-        self.assert_mydata_error(invoice, 'Invalid tax amount for line 1. The valid values are 24, 13, 6, 17, 9, 4, 0.')
+        self.assert_mydata_error(invoice, 'Invalid tax amount for line 1. The valid values are 24, 13, 6, 17, 9, 4, 3, 0.')
 
     def test_l10n_gr_edi_try_send_invoices_invalid_tax_multi(self):
         """ Multiple tax should raises error. """
