@@ -121,12 +121,13 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'params': {
                     'attachment_id': create_res['id'],
                     'access_token': "wrong",
+                    "raw_access_token": create_res["raw_access_token"],
                 },
             },
         )
         self.assertEqual(res.status_code, 200)
         self.assertTrue(self.env['ir.attachment'].sudo().search([('id', '=', create_res['id'])]))
-        self.assertIn("The requested URL was not found on the server.", res.text)
+        self.assertEqual("odoo.exceptions.AccessError", res.json()["error"]["data"]["name"])
 
         # Test attachment can be removed with token if "pending" state
         res = self.url_open(
@@ -135,6 +136,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'params': {
                     'attachment_id': create_res['id'],
                     "access_token": create_res["ownership_token"],
+                    "raw_access_token": create_res["raw_access_token"],
                 },
             },
         )
@@ -151,6 +153,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'params': {
                     'attachment_id': attachment.id,
                     "access_token": attachment._get_ownership_token(),
+                    "raw_access_token": attachment._get_raw_access_token(),
                 },
             },
         )
@@ -173,6 +176,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
                 'params': {
                     'attachment_id': attachment.id,
                     "access_token": attachment._get_ownership_token(),
+                    "raw_access_token": attachment._get_raw_access_token(),
                 },
             },
         )
