@@ -94,24 +94,40 @@ patch(ProductScreen.prototype, {
             avaibilityByTicket = slotTicketAvailabilities.reduce((acc, availability, idx) => {
                 const [slotId, ticketId] = slotTickets[idx];
                 const currentCount = countRegs(slotId, ticketId);
+                // Maximum number of ticket the user can select in the selection box.
+                // NB: This number doesn't refer to a global limit for the order.
+                const ticketSelectionMax =
+                    tickets.find((t) => t.id === ticketId)?.limit_max_per_order ?? 0;
+
                 acc[ticketId] ??= {};
+                let slotTicketAvailability;
                 if (availability === null) {
-                    acc[ticketId][slotId] = "unlimited";
+                    slotTicketAvailability = "unlimited";
                 } else if (typeof availability === "number") {
-                    acc[ticketId][slotId] = availability - currentCount;
+                    slotTicketAvailability = availability - currentCount;
                     if (event.seats_limited && event.seats_max) {
                         // The slot limit is considered into the 'availability' but only the unsynced registrations
                         // for this ticket 'currentCount' were subtracted. Also considering that the other tickets
                         // unsynced registrations can reduce the slot limit.
                         const slotSeats = slots.find((slot) => slot.id === slotId).seats_available;
-                        acc[ticketId][slotId] = Math.min(
-                            acc[ticketId][slotId],
+                        slotTicketAvailability = Math.min(
+                            slotTicketAvailability,
                             slotSeats - countRegs(slotId)
                         );
                     }
                 } else {
-                    acc[ticketId][slotId] = 0;
+                    slotTicketAvailability = 0;
                 }
+                if (ticketSelectionMax > 0) {
+                    slotTicketAvailability =
+                        slotTicketAvailability === "unlimited"
+                            ? ticketSelectionMax
+                            : Math.min(ticketSelectionMax, slotTicketAvailability);
+                }
+                if (slotTicketAvailability !== "unlimited") {
+                    slotTicketAvailability = Math.max(0, slotTicketAvailability);
+                }
+                acc[ticketId][slotId] = slotTicketAvailability;
                 return acc;
             }, {});
             const isAvailable = Object.values(avaibilityByTicket).some((av) =>
@@ -169,13 +185,27 @@ patch(ProductScreen.prototype, {
         } else {
             avaibilityByTicket = tickets.reduce((acc, ticket) => {
                 const openOrdersTicketRegCount = countRegs(null, ticket.id);
+                // Maximum number of ticket the user can select in the selection box.
+                // NB: This number doesn't refer to a global limit for the order
+                const ticketSelectionMax = ticket.limit_max_per_order ?? 0;
+                let availability;
                 if (ticket.seats_max === 0) {
                     // Ticket = unlimited seats
-                    acc[ticket.id] = "unlimited";
+                    availability = "unlimited";
                 } else {
                     // Ticket = limited seats
-                    acc[ticket.id] = ticket.seats_available - openOrdersTicketRegCount;
+                    availability = ticket.seats_available - openOrdersTicketRegCount;
                 }
+                if (ticketSelectionMax > 0) {
+                    availability =
+                        availability === "unlimited"
+                            ? ticketSelectionMax
+                            : Math.min(ticketSelectionMax, availability);
+                }
+                if (availability !== "unlimited") {
+                    availability = Math.max(0, availability);
+                }
+                acc[ticket.id] = availability;
                 return acc;
             }, {});
             const isAvailable = Object.values(avaibilityByTicket).some(
