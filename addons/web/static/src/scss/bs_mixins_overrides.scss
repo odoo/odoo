@@ -184,20 +184,25 @@ $o-color-extras-nesting-selector: '&' !default;
 // `bg-variant()` and (frontend's) `text-emphasis-variant()`, reading the
 // colors from custom properties: `--<name>`, and the colors computed from it
 // (`--<name>-contrast`, the hover ones), with the compiled colors as
-// fallbacks.
-@mixin o-bg-color-var($name, $color, $with-extras: true, $important: true, $background: $body-bg) {
+// fallbacks. A color too translucent for a contrast gets no text color, or
+// `$translucent-text`, for a runtime color that can be either (the runtime
+// `--<name>-contrast` wins).
+@mixin o-bg-color-var($name, $color, $with-extras: true, $important: true, $background: $body-bg, $translucent-text: null) {
     $-text: if(alpha($color) > $o-yiq-min-opacity-threshold, var(--#{$name}-contrast, #{color-contrast($color, $main-background: $background)}), null);
     --background-color: var(--#{$name}, #{$color});
     --color: #{$-text};
     background-color: var(--#{$name}, #{$color})#{if($important, ' !important', '')};
-    color: $-text;
-    @if $with-extras and $-text {
+    $-runtime-text: if($-text or not $translucent-text, $-text, var(--#{$name}-contrast, #{$translucent-text}));
+    color: $-runtime-text;
+    @if $with-extras and $-runtime-text {
         #{$o-color-extras-nesting-selector} {
-            @extend %o-bg-color-component-color-reset;
+            @if $-text {
+                @extend %o-bg-color-component-color-reset;
+            }
 
             .text-muted {
                 // `mute-color()`
-                @include o-color-mix(color, 'color-mix(in srgb, #{$-text} 70%, transparent)', mute-color(color-contrast($color, $main-background: $background)), $important: true);
+                @include o-color-mix(color, 'color-mix(in srgb, #{$-runtime-text} 70%, transparent)', mute-color(color-contrast(if($-text, $color, $background), $main-background: $background)), $important: true);
             }
         }
     }

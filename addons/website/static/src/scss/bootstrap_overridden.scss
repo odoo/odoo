@@ -458,20 +458,19 @@ $--enable-no-overflow-of-text-columns: false !default;
 // for the elements the builder marks with `data-o-cc-area` while it previews
 // the preset: they get it as a class (`o_cc<N>`), like a snippet.
 // Its custom color: a theme gate, compiled even when not set, so that it
-// previews from there.
+// previews from there (as `o-apply-colors`). Too translucent for a text color
+// of its own, it keeps the area's text: its preset's, else its parent's (the
+// builder's computed contrast says the same while previewing, see
+// `color_system.py`).
 @mixin o-area-colors($area, $background: $body-bg) {
     &:where(:not([data-o-cc-area])) {
         @include o-apply-colors($area, $background: $background);
     }
     $-custom: o-color('#{$area}-custom');
+    $-preset: o-color($area);
     @include o-theme-gate('#{$area}-custom', $-custom != null) {
-        @if $-custom {
-            @include o-apply-colors('#{$area}-custom', $background: $background);
-        } @else {
-            // As `o-apply-colors`, with a color for when it's previewed.
-            background-image: none;
-            @include o-bg-color-var('#{$area}-custom', o-color(o-color($area)) or $background, $important: false, $background: $background);
-        }
+        background-image: none;
+        @include o-bg-color-var('#{$area}-custom', $-custom or o-color($-preset) or $background, $important: false, $background: $background, $translucent-text: if(type-of($-preset) == 'number', var(--o-cc#{$-preset}-text), currentColor));
     }
 }
 
@@ -656,8 +655,13 @@ $--enable-no-overflow-of-text-columns: false !default;
             }
         }
         $-user-keys: ();
-        @each $name in map-keys($o-user-color-palette) {
+        @each $name, $value in $o-user-color-palette {
             $-user-keys: append($-user-keys, $name, space);
+            // The areas' colors as set (a color's name, unlike its printed
+            // reference), which a palette switch keeps.
+            @if index($o-area-color-keys, $name) {
+                --o-user-#{$name}: "#{$value}";
+            }
         }
         --o-user-color-keys: "#{$-user-keys}";
         // html_editor prints the links' colors made readable under their own

@@ -13,12 +13,6 @@ defineWebsiteModels();
 const PALETTE_SAVED = `/website/static/src/scss/options/user_values.scss ${JSON.stringify({
     "color-palettes-name": "'default-light-1'",
     ...Object.fromEntries([1, 2, 3, 4, 5].map((i) => [`o-cc${i}-bg-gradient`, "null"])),
-    ...Object.fromEntries(
-        ["menu", "menu-secondary", "footer", "copyright", "breadcrumb"].map((name) => [
-            `${name}-gradient`,
-            "null",
-        ])
-    ),
 })}`;
 
 function mockThemeRpcs() {
@@ -145,4 +139,26 @@ test("theme tab: a shape with its default colors follows a palette switch", asyn
     await save();
     // Saved, it takes its image from the CSS again.
     expect.verifySteps(["view", PALETTE_SAVED]);
+});
+
+test("theme tab: a palette switch keeps the areas' saved colors", async () => {
+    mockThemeRpcs();
+    await openColors({
+        styleContent: `:root {
+            --o-user-color-keys: "menu footer-custom";
+            --o-user-menu: "3"; --o-user-footer-custom: "o-color-2";
+            --footer-gradient: linear-gradient(red, blue);
+        }`,
+    });
+    await switchPalette();
+    expect(".o_dialog").toHaveCount(0);
+    await save();
+    expect.verifySteps([
+        `/website/static/src/scss/options/user_values.scss ${JSON.stringify({
+            "color-palettes-name": "'default-light-1'",
+            ...Object.fromEntries([1, 2, 3, 4, 5].map((i) => [`o-cc${i}-bg-gradient`, "null"])),
+            "footer-gradient": "linear-gradient(red, blue)",
+        })}`,
+        `/website/static/src/scss/options/colors/user_color_palette.scss {"menu":"3","footer-custom":"'o-color-2'"}`,
+    ]);
 });

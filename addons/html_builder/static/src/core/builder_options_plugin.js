@@ -54,6 +54,7 @@ import { omit } from "@web/core/utils/objects";
  * @property { BuilderOptionsPlugin['closestWithOption'] } closestWithOption
  * @property { BuilderOptionsPlugin['findOption'] } findOption
  * @property { BuilderOptionsPlugin['getContainers'] } getContainers
+ * @property { BuilderOptionsPlugin['replaceContainerElements'] } replaceContainerElements
  * @property { BuilderOptionsPlugin['updateContainers'] } updateContainers
  * @property { BuilderOptionsPlugin['deactivateContainers'] } deactivateContainers
  * @property { BuilderOptionsPlugin['getTarget'] } getTarget
@@ -134,6 +135,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "closestWithOption",
         "findOption",
         "getContainers",
+        "replaceContainerElements",
         "updateContainers",
         "deactivateContainers",
         "getTarget",
@@ -464,6 +466,20 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getContainers() {
         return this.lastContainers;
+    }
+
+    /**
+     * Gives the current containers of elements that were replaced (e.g. a part
+     * of the page rendered again) to their replacements, so that the next
+     * `updateContainers` updates their options in place rather than rebuilding
+     * them: an open dropdown and the folded state are kept.
+     *
+     * @param {Map<HTMLElement, HTMLElement>} replacements
+     */
+    replaceContainerElements(replacements) {
+        for (const container of this.lastContainers) {
+            container.element = replacements.get(container.element) ?? container.element;
+        }
     }
 
     hasOverlayOptions(el) {

@@ -323,6 +323,11 @@ def _compute_areas(colors, contrast, areas):
         if custom and custom[3] > 0.3:
             background = (footer or TRANSPARENT) if area == 'copyright' else body_background
             values[f'{area}-custom-contrast'] = contrast(custom, main_background=background)
+        elif custom:
+            # Too translucent for a contrast: the area's text, its preset's
+            # else its parent's (see `o-area-colors`).
+            preset = str(areas.get(area) or '')
+            values[f'{area}-custom-contrast'] = f'var(--o-cc{preset}-text)' if preset.isdigit() else 'currentColor'
     # The footer's scroll-to-top button.
     footer_fill = opaque(body_background, footer or TRANSPARENT)
     copyright_fill = opaque(footer_fill, area_color('copyright') or TRANSPARENT)

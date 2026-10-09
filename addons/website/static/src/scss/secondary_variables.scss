@@ -129,8 +129,14 @@ $o-has-customized-13-0-color-system:
     or map-get($o-user-theme-color-palette, 'delta')
     or map-get($o-user-theme-color-palette, 'epsilon'));
 
+// The areas' colors (header, footer...) stay through a palette switch: they
+// aren't customizations it would reset.
+$o-area-color-keys: ('menu-border-color',);
+@each $area in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'copyright', 'breadcrumb', 'portal-card') {
+    $o-area-color-keys: join($o-area-color-keys, ($area, '#{$area}-custom'));
+}
 $o-has-customized-colors:
-    not not (length(map-keys($o-user-color-palette)) > 0
+    not not (length(map-keys(map-remove($o-user-color-palette, $o-area-color-keys...))) > 0
     or map-get($o-user-theme-color-palette, 'success')
     or map-get($o-user-theme-color-palette, 'info')
     or map-get($o-user-theme-color-palette, 'warning')

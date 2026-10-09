@@ -147,3 +147,71 @@ test("the portal cards' color preset is previewed as their class", async () => {
         `${PALETTE} {"portal-card-custom":"NULL","portal-card":"4"}`,
     ]);
 });
+
+test("resetting an area color previews no color, over the palette's", async () => {
+    mockThemeRpcs();
+    // The palette gives the area a preset and a custom color.
+    await setupBreadcrumb(`:root {
+        --breadcrumb: 3; --o-default-breadcrumb: 3;
+        --breadcrumb-custom: #FF0000; --o-default-breadcrumb-custom: #FF0000;
+    }`);
+    const htmlEl = queryFirst(":iframe html");
+    await contains(".o_popover .o_color_picker_reset").click();
+    // Marked without a preset: the compiled one stops applying.
+    expect(":iframe .o_page_breadcrumb nav").toHaveAttribute("data-o-cc-area", "breadcrumb");
+    expect(queryFirst(":iframe .o_page_breadcrumb nav").className).not.toMatch(/o_cc\d/);
+    expect(htmlEl.style.getPropertyValue("--breadcrumb-custom")).toBe("initial");
+    expect(htmlEl.dataset.oThemeGates || "").not.toInclude("breadcrumb-custom");
+    await save();
+    expect.verifySteps([
+        `${USER_VALUES} {"breadcrumb-gradient":"NULL"}`,
+        `${PALETTE} {"breadcrumb-custom":"NULL","breadcrumb":"NULL"}`,
+    ]);
+});
+
+test("a preset over the palette's custom color of an area turns that color off", async () => {
+    mockThemeRpcs();
+    await setupWebsiteBuilder("", {
+        styleContent: `:root {
+            --breadcrumb: 1;
+            --breadcrumb-custom: rgba(0, 0, 0, 0.15); --o-default-breadcrumb-custom: rgba(0, 0, 0, 0.15);
+        }`,
+        onIframeLoaded: (iframe) => {
+            const doc = iframe.contentDocument;
+            doc.documentElement.dataset.oThemeGates = "breadcrumb-custom";
+            const main = doc.createElement("main");
+            main.innerHTML = `<div class="o_page_breadcrumb" data-name="Breadcrumb"><nav>Breadcrumb</nav></div>`;
+            doc.querySelector("#wrap").before(main);
+        },
+    });
+    await contains(":iframe .o_page_breadcrumb").click();
+    await contains("[data-label='Background Color'] button.o_we_color_preview").click();
+    await contains(".o_popover [data-color='o_cc2']").hover();
+    const htmlEl = queryFirst(":iframe html");
+    expect(":iframe .o_page_breadcrumb nav").toHaveClass("o_cc2");
+    expect(htmlEl.dataset.oThemeGates).not.toInclude("breadcrumb-custom");
+    expect(htmlEl.style.getPropertyValue("--breadcrumb-custom")).toBe("initial");
+    await contains(".o-snippets-top-actions").hover();
+    expect(htmlEl.dataset.oThemeGates).toInclude("breadcrumb-custom");
+});
+
+test("an area's color stays through a palette switch, which doesn't ask for it", async () => {
+    mockThemeRpcs();
+    await setupBreadcrumb(":root { --breadcrumb: 1; }");
+    await contains(".o_popover [data-color='o_cc3']").click();
+    await contains(".o-snippets-tabs button[data-name=theme]").click();
+    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
+    await contains(".o_theme_tab [data-icon='palette']").click();
+    await contains(`[data-action-value="'default-light-1'"] .o-color-palette-card span`).click();
+    expect(".o_dialog").toHaveCount(0);
+    expect(":iframe .o_page_breadcrumb nav").toHaveClass("o_cc3");
+    await save();
+    expect.verifySteps([
+        `${USER_VALUES} ${JSON.stringify({
+            "breadcrumb-gradient": "NULL",
+            "color-palettes-name": "'default-light-1'",
+            ...Object.fromEntries([1, 2, 3, 4, 5].map((i) => [`o-cc${i}-bg-gradient`, "null"])),
+        })}`,
+        `${PALETTE} {"breadcrumb-custom":"NULL","breadcrumb":"3"}`,
+    ]);
+});

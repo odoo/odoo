@@ -44,9 +44,3 @@ html.o_we_theme_previewing * {
 @keyframes o_we_chrome_loading {
     to { opacity: .25; }
 }
-
-// Hidden on this page (a page option), but kept in view while editing it (see
-// `websitePageConfigOptionPlugin`'s `setPartVisible`).
-:is(#wrapwrap > header, #wrapwrap > footer, .o_page_breadcrumb).o_snippet_invisible:not(.d-none) {
-    opacity: .5;
-}

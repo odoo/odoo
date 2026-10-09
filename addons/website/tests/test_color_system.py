@@ -51,6 +51,20 @@ class TestColorSystem(BaseCase):
             scss_value = cs.format_color(cs.parse_color(scss_value))
         self.assertEqual(scss_value, python_value, message)
 
+    def test_translucent_area_color_keeps_the_area_text(self):
+        """Too translucent for a contrast, an area's custom color keeps the
+        area's text (as the compile, see `o-area-colors`): its preset's, else
+        its parent's."""
+        contrast = cs.ColorContrast(cs.WHITE, cs.parse_color('#212529'), cs.WHITE, 2.9)
+        colors = {name: cs.parse_color(value) for name, value in {
+            'o-cc1-bg': '#FFFFFF', 'o-cc3-bg': '#222222', 'footer-custom': '#000000',
+            'copyright-custom': 'rgba(0, 0, 0, 0.15)', 'menu-custom': 'rgba(0, 0, 0, 0.15)',
+        }.items()}
+        values, _gates = cs._compute_areas(colors, contrast, {'menu': '3'})
+        self.assertEqual(values['copyright-custom-contrast'], 'currentColor')
+        self.assertEqual(values['menu-custom-contrast'], 'var(--o-cc3-text)')
+        self.assertEqual(values['footer-custom-contrast'], cs.WHITE)
+
     def test_matches_scss(self):
         with file_open('website/static/src/scss/primary_variables.scss') as f:
             colors = sorted({color.upper() for color in re.findall(r'#[0-9a-fA-F]{6}\b', f.read())})

@@ -7,7 +7,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * @typedef { Object } WebsitePageConfigOptionShared
  * @property { WebsitePageConfigOptionPlugin['setDirty'] } setDirty
  * @property { WebsitePageConfigOptionPlugin['setFooterVisible'] } setFooterVisible
- * @property { WebsitePageConfigOptionPlugin['setPartVisible'] } setPartVisible
  * @property { WebsitePageConfigOptionPlugin['getVisibilityItem'] } getVisibilityItem
  * @property { WebsitePageConfigOptionPlugin['getFooterVisibility'] } getFooterVisibility
  * @property { WebsitePageConfigOptionPlugin['doesPageOptionExist'] } doesPageOptionExist
@@ -15,11 +14,10 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
-    static dependencies = ["history", "visibility", "builderActions", "domObserver"];
+    static dependencies = ["history", "visibility", "builderActions"];
     static shared = [
         "setDirty",
         "setFooterVisible",
-        "setPartVisible",
         "getVisibilityItem",
         "getFooterVisibility",
         "doesPageOptionExist",
@@ -154,7 +152,7 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
     /**
      * The page options are on the live header and footer, and written to the
      * page on save: a header or footer the builder swaps in for a views
-     * preview (see `customizeWebsite.updateChrome`) keeps them.
+     * preview (see `websiteViewsPreview.updateChrome`) keeps them.
      *
      * @param {{ oldEl: HTMLElement, newEl: HTMLElement }} parts
      */
@@ -184,36 +182,41 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
     }
 
     setFooterVisible(show) {
-        this.setPartVisible(this.document.querySelector("#wrapwrap > footer"), show);
-    }
-
-    /**
-     * Shows or hides the header, the breadcrumb or the footer on this page (a
-     * page option, written on save). Hidden, it stays in view while editing,
-     * faded (`website.edit.scss`), and selected, so that its options stay at
-     * hand: the eye of the invisible elements panel takes it out of view.
-     *
-     * @param {HTMLElement} el
-     * @param {boolean} show
-     */
-    setPartVisible(el, show) {
-        el.classList.toggle("o_snippet_invisible", !show);
-        el.classList.remove("d-none");
-        this.dependencies.visibility.onOptionVisibilityUpdate(el, true);
+        const footerEl = this.document.querySelector("#wrapwrap > footer");
+        footerEl.classList.toggle("d-none", !show);
+        footerEl.classList.toggle("o_snippet_invisible", !show);
+        this.dependencies.visibility.onOptionVisibilityUpdate(footerEl, show);
     }
 
     onTargetVisibilityToggle(show, target) {
-        if (target.matches("#wrapwrap > header, #wrapwrap > footer, .o_page_breadcrumb")) {
-            // Only in or out of view while editing: the page option stays.
-            this.dependencies.domObserver.ignore(() => target.classList.toggle("d-none", !show));
+        if (show && target.matches("#wrapwrap > header")) {
+            this.dependencies.builderActions.applyAction("setWebsiteHeaderVisibility", {
+                editingElement: target,
+                value: "regular",
+                isPreviewing: false,
+            });
+        }
+        if (show && target.matches(".o_page_breadcrumb")) {
+            this.dependencies.builderActions.applyAction("setWebsiteBreadcrumbVisibility", {
+                editingElement: target,
+                value: "regular",
+                isPreviewing: false,
+            });
+        }
+        if (show && target.matches("#wrapwrap > footer")) {
+            this.dependencies.builderActions.applyAction("setWebsiteFooterVisible", {
+                editingElement: target,
+                isPreviewing: false,
+            });
         }
     }
 }
 export class BaseWebsitePageConfigAction extends BuilderAction {
     static id = "baseWebsitePageConfig";
-    static dependencies = ["websitePageConfigOptionPlugin", "domObserver"];
+    static dependencies = ["websitePageConfigOptionPlugin", "domObserver", "visibility"];
     setup() {
         this.websitePageConfig = this.dependencies.websitePageConfigOptionPlugin;
+        this.visibility = this.dependencies.visibility;
         this.domObserver = this.dependencies.domObserver;
         this.headerVisibilityHandlers = this.getVisibilityHandlers("header");
         this.breadcrumbVisibilityHandlers = this.getVisibilityHandlers("breadcrumb");
@@ -260,7 +263,10 @@ export class BaseWebsitePageConfigAction extends BuilderAction {
      * @param {boolean} shouldHide true to hide, false to show.
      */
     setVisible(type, shouldHide) {
-        this.websitePageConfig.setPartVisible(this.websitePageConfig.getTarget(type), !shouldHide);
+        const el = this.websitePageConfig.getTarget(type);
+        el.classList.toggle("d-none", shouldHide);
+        el.classList.toggle("o_snippet_invisible", shouldHide);
+        this.visibility.onOptionVisibilityUpdate(el, !shouldHide);
     }
 
     /**

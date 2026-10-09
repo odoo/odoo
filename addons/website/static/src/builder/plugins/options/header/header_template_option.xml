@@ -70,19 +70,19 @@
             <BuilderRange action="'previewWebsiteVariable'" actionParam="'header-bg-blur'" min="0" max="10" step="0.5" />
         </BuilderRow>
         <BuilderRow t-if="!this.isActiveItem('header_sidebar_opt')" label.translate="Content Width" level="1">
-            <BuilderButtonGroup action="'previewWebsiteConfig'">
+            <BuilderButtonGroup applyTo="'.o_header_content_width'" action="'previewableWebsiteConfig'">
                 <BuilderButton
                     title.translate="Small"
                     iconImg="'/website/static/src/img/snippets_options/content_width_small.svg'"
-                    actionParam="{ views: ['website.header_width_small'] }"/>
+                    actionParam="{ views: ['website.header_width_small'], previewClass: 'o_container_small' }"/>
                 <BuilderButton
                     title.translate="Regular"
                     iconImg="'/website/static/src/img/snippets_options/content_width_normal.svg'"
-                    actionParam="{ views: [] }"/>
+                    actionParam="{ views: [], previewClass: 'container' }"/>
                 <BuilderButton
                     title.translate="Full"
                     iconImg="'/website/static/src/img/snippets_options/content_width_full.svg'"
-                    actionParam="{ views: ['website.header_width_full'] }"/>
+                    actionParam="{ views: ['website.header_width_full'], previewClass: 'container-fluid' }"/>
             </BuilderButtonGroup>
         </BuilderRow>
 

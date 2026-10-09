@@ -7,7 +7,7 @@ import { ThemeColorsPreviewDialog } from "./theme_colors_preview_dialog";
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";
-    static dependencies = ["customizeWebsite"];
+    static dependencies = ["themeComputedPreview"];
     isThemeColorsPreviewOpen = signal(false);
 
     setup() {
@@ -102,7 +102,7 @@ export class ThemeColorsOption extends BaseOptionComponent {
             {
                 onIframeLoad: (previewDocument) => {
                     this.config.extraPreviewDocument = previewDocument;
-                    this.dependencies.customizeWebsite.updatePreviewCopies();
+                    this.dependencies.themeComputedPreview.updatePreviewCopies();
                 },
             },
             {
