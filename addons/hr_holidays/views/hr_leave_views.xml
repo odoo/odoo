@@ -382,6 +382,7 @@
                 <field name="dashboard_warning_message" class="alert alert-danger d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not dashboard_warning_message"/>
                 <field name="work_entry_type_increases_duration" class="alert alert-info d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not work_entry_type_increases_duration"/>
                 <div class="alert alert-info d-flex mt-2"
+                        name="support_document_info"
                         role="alert"
                         invisible="state in ['validate', 'refuse', 'cancel'] or not work_entry_type_support_document">
                     A supporting document is required for this type of time type.
@@ -534,8 +535,12 @@
             <xpath expr="//field[@name='number_of_hours']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <div name="support_document_info" position="replace"/>
             <xpath expr="//group[@name='attachments_relapse']" position="inside">
-                <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1" invisible="not attachment_is_visible or state != 'confirm'" colspan="2"/>
+                <div class="d-flex align-items-center gap-2" invisible="not attachment_is_visible or state != 'confirm'" colspan="2">
+                    <field name="supported_attachment_ids" widget="many2many_binary" class="w-auto mw-100"/>
+                    <span class="text-danger" invisible="not work_entry_type_support_document or supported_attachment_ids">Required</span>
+                </div>
             </xpath>
         </field>
     </record>
