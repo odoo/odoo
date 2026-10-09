@@ -4091,6 +4091,34 @@ class TestHelpViews(ViewCase):
         arch = etree.fromstring(self.env['res.partner'].with_user(self.user_demo).get_view(list_view.id)['arch'])
         self.assertEqual([p.text for p in arch.find('help')], ['Everyone'])
 
+    def test_help_view_data(self):
+        # help views are qweb-based, and may use the values returned by their data_method
+        help_view = self._create_view("""
+            <help data_method="name_search">
+                <p>Threshold: <b t-out="data.threshold"/></p>
+                <p t-if="data.get('more')" invisible="not data.get('more')">More</p>
+            </help>
+        """)
+        list_view = self._create_view(f'<list help_id="{help_view.id}"><field name="name"/></list>')
+        arch = etree.fromstring(self.env['res.partner'].get_view(list_view.id)['arch'])
+        self.assertEqual(arch.find('help').get('data_method'), 'name_search')
+        self.assertEqual(arch.find('help/p/b').get('t-out'), 'data.threshold')
+        # but not other views
+        with self.assertRaises(ValidationError), mute_logger('odoo.addons.base.models.ir_ui_view'):
+            self._create_view('<list><field name="name" t-out="data.threshold"/></list>')
+        with self.assertRaises(ValidationError), mute_logger('odoo.addons.base.models.ir_ui_view'):
+            self._create_view('<list><field name="name" invisible="data"/></list>')
+
+    def test_help_view_invalid_data_method(self):
+        # the data_method must be a public @api.model method
+        for method in ('not_a_method', '_get_view', 'write'):
+            with self.subTest(method=method):
+                self.assertInvalid(
+                    f'<help data_method="{method}"><p>No partner yet</p></help>',
+                    f"Attribute data_method of help views must be the name of a public @api.model method of res.partner ({method})",
+                    model='res.partner',
+                )
+
     def test_help_id_shared_by_view_types(self):
         help_view = self._create_view('<help><p>No partner yet</p></help>')
         list_view = self._create_view(f'<list help_id="{help_view.id}"><field name="name"/></list>')
