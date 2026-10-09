@@ -36,7 +36,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="sale_line_id" optional="hide" readonly="1"/>
-                <field name="allow_billable" column_invisible="True"/>
+                <field name="allow_billable" column_invisible="True"/> <!-- used in the invisible attribute(s) this view sets on other fields -->
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible">not allow_billable or is_template</attribute>
@@ -51,9 +51,9 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='project_update_all_action']" position="after">
-                <field name="display_sales_stat_buttons" invisible="1"/>
-                <field name="allow_billable" invisible="1" />
-                <field name="privacy_visibility" invisible="1" />
+                <field name="display_sales_stat_buttons" invisible="1"/> <!-- drives invisible of the action_view_sos button, the action_view_sols button -->
+                <field name="allow_billable" invisible="1" /> <!-- drives invisible of the action_real_margin button, the action_customer_preview button and 3 more -->
+                <field name="privacy_visibility" invisible="1" /> <!-- drives invisible of the action_customer_preview button, the block and 1 more -->
                 <button
                     class="oe_stat_button"
                     type="object"
@@ -102,7 +102,7 @@
                             <field name="sale_order_count" nolabel="1" class="d-inline"/> Sales
                         </span>
                         <span class="o_stat_value">
-                            <field name="currency_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/> <!-- currency_field option of the sale_order_amount_total monetary widget -->
                             <field name="sale_order_amount_total" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </span>
                     </div>
@@ -112,7 +112,6 @@
                     invisible="is_template or not allow_billable"
                     groups="project.group_project_manager"
                     class="oe_stat_button">
-                    <field name="real_cost" invisible="1"/>
                     <field name="real_cost_ratio" widget="costs_percentpie" string="Real Costs" cost_field_name="real_cost"/>
                 </button>
             </xpath>
@@ -130,8 +129,6 @@
                 </button>
             </xpath>
             <xpath expr="//header" position="inside">
-                <field name="has_any_so_to_invoice" invisible="1"/>
-                <field name="has_any_so_with_nothing_to_invoice" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="invisible">not allow_billable or is_template</attribute>
@@ -164,7 +161,7 @@
                         title="The sales order associated with this project has been cancelled. We recommend either updating the sales order item or cancelling this project in alignment with the cancellation of the sales order."
                         invisible="sale_order_state != 'cancel'"/>
                 </div>
-                <field name="sale_order_state" invisible="1"/>
+                <field name="sale_order_state" invisible="1"/> <!-- drives invisible of the oi text -->
             </xpath>
         </field>
     </record>
@@ -219,8 +216,7 @@
                 <attribute name="invisible">not allow_billable or has_template_ancestor or has_project_template</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="project_sale_order_id" invisible="1"/>
-                <field name="sale_order_id" invisible="True" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_order_id" invisible="True" groups="sales_team.group_sale_salesman"/> <!-- drives invisible of the action_view_so button -->
                 <label for="sale_line_id" invisible="not allow_billable or not project_id or not partner_id or has_template_ancestor or has_project_template"/>
                 <div
                     name="sale_line_div"
@@ -254,8 +250,8 @@
                         title="The sales order associated with this task has been cancelled. We recommend either updating the sales order item or cancelling this task in alignment with the cancellation of the sales order."
                         invisible="sale_order_state != 'cancel'"/>
                 </div>
-                <field name="allow_billable" invisible="1"/>
-                <field name="sale_order_state" invisible="1"/>
+                <field name="allow_billable" invisible="1"/> <!-- drives invisible of the alert block, the label and 2 more -->
+                <field name="sale_order_state" invisible="1"/> <!-- drives invisible of the oi text -->
             </xpath>
             <xpath expr="//field[@name='child_ids']/list/field[@name='partner_id']" position="after">
                 <field name="sale_line_id"
@@ -267,7 +263,7 @@
                        invisible="not allow_billable"
                        column_invisible="parent.has_template_ancestor or parent.has_project_template"/>
                 <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman" column_invisible="parent.has_template_ancestor or parent.has_project_template"/>
-                <field name="allow_billable" column_invisible="True"/>
+                <field name="allow_billable" column_invisible="True"/> <!-- drives invisible of the alert block, the label and 2 more -->
             </xpath>
             <xpath expr="//field[@name='child_ids']/list/field[@name='partner_id']" position="attributes">
                 <attribute name="column_invisible">not parent.allow_billable</attribute>
@@ -276,7 +272,7 @@
             <xpath expr="//field[@name='depend_on_ids']/list/field[@name='partner_id']" position="after">
                 <field name="sale_line_id" optional="hide" readonly="1" groups="sales_team.group_sale_salesman" column_invisible="parent.has_template_ancestor or parent.has_project_template"/>
                 <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman" column_invisible="parent.has_template_ancestor or parent.has_project_template"/>
-                <field name="allow_billable" column_invisible="True"/>
+                <field name="allow_billable" column_invisible="True"/> <!-- drives invisible of the alert block, the label and 2 more -->
             </xpath>
             <xpath expr="//field[@name='depend_on_ids']/list/field[@name='partner_id']" position="attributes">
                 <attribute name="column_invisible">not parent.allow_billable</attribute>
@@ -294,7 +290,7 @@
         <field name="inherit_id" ref="project.project_task_view_tree_main_base"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
-                <field name="allow_billable" column_invisible="True"/>
+                <field name="allow_billable" column_invisible="True"/> <!-- used in the invisible attribute(s) this view sets on other fields -->
             </field>
             <field name="partner_id" position="attributes">
                 <attribute name="column_invisible">context.get('hide_partner') or context.get('default_is_template')</attribute>
@@ -332,9 +328,9 @@
         <field name="inherit_id" ref="project.project_milestone_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='main_details']" position="after">
-                <field name="allow_billable" invisible="1"/>
+                <field name="allow_billable" invisible="1"/> <!-- drives invisible of the group -->
                 <group invisible="not allow_billable">
-                    <field name="project_partner_id" invisible="1"/>
+                    <field name="project_partner_id" invisible="1"/> <!-- used in the python-declared domain of sale_line_id -->
                     <field name="sale_line_id" groups="!sales_team.group_sale_salesman" placeholder="Non-billable" options="{'no_open': True}" readonly="1"/>
                     <field name="sale_line_id" groups="sales_team.group_sale_salesman" options="{'no_create': True}" placeholder="Non-billable" readonly="0"/>
                     <label for="quantity_percentage" string="Quantity" invisible="not sale_line_id"/>
@@ -367,8 +363,8 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="project_partner_id" column_invisible="True"/>
-                <field name="allow_billable" column_invisible="True"/>
+                <field name="project_partner_id" column_invisible="True"/> <!-- used in the python-declared domain of sale_line_id -->
+                <field name="allow_billable" column_invisible="True"/> <!-- read by the project form controller added by this module -->
                 <field name="sale_line_id" options="{'no_open': True}" placeholder="Non-billable" column_invisible="context.get('is_project_template')" readonly="1" groups="!sales_team.group_sale_salesman"/>
                 <field name="sale_line_id" options="{'no_create': True}" placeholder="Non-billable" column_invisible="context.get('is_project_template')" groups="sales_team.group_sale_salesman"/>
                 <field name="quantity_percentage" string="Quantity (%)" widget="percentage"/>

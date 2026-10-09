@@ -12,11 +12,11 @@
                     Ban the author of the message (<field name="email_from_normalized"/>) <span invisible="not send_email">and send them an email</span>.
                 </div>
                 <group>
-                    <field name="send_email" invisible="1"/>
-                    <field name="mail_group_message_id" invisible="1"/>
+                    <field name="send_email" invisible="1"/> <!-- drives invisible of the text, the action_send_mail button -->
+                    <field name="mail_group_message_id" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
                     <field name="subject"/>
                     <field name="body"/>
-                    <field name="action" invisible="1"/>
+                    <field name="action" invisible="1"/> <!-- drives invisible of the alert block, the action_send_mail button -->
                 </group>
                 <footer>
                     <button string="Reject Silently" name="action_send_mail" type="object" class="btn-primary"

@@ -6,10 +6,10 @@
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
             <form string="Survey" class="o_survey_form">
-                <field name="id" invisible="1"/>
-                <field name="session_state" invisible="1"/>
-                <field name="question_ids" invisible="1"/>
-                <field name="session_available" invisible="1"/>
+                <field name="id" invisible="1"/> <!-- passed as default_survey_id in the context of question_and_page_ids -->
+                <field name="session_state" invisible="1"/> <!-- drives invisible of the action_start_session button, the action_open_session_manager button and 1 more and readonly of questions_layout -->
+                <field name="question_ids" invisible="1"/> <!-- drives invisible of the action_test_survey button -->
+                <field name="session_available" invisible="1"/> <!-- drives invisible of the action_start_session button, is_time_limited and 2 more -->
                 <header>
                     <button name="action_send_survey" string="Share" type="object" class="btn-primary" invisible="not active"/>
                     <button name="action_result_survey" string="See results" type="object" class="btn-primary"
@@ -49,7 +49,6 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="background_image" widget="image" class="oe_avatar" filename="background_image_filename"/>
-                    <field name="allowed_survey_types" invisible="True"/>
                     <field name="survey_type" widget="badges_selection" nolabel="1" class="w-auto mb-3"
                         options="{
                             'allowed_selection_field': 'allowed_survey_types',
@@ -72,9 +71,8 @@
                             <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                             <field name="background_image" filename="background_image_filename" widget="binary"
                                 string="Background" options="{'use_replace_button': True}"/>
-                            <field name="background_image_filename" invisible="1"/>
-                            <field name="active" invisible="1"/>
-                            <field name="has_conditional_questions" invisible="1"/>
+                            <field name="background_image_filename" invisible="1"/> <!-- filename of the background_image binary widget -->
+                            <field name="active" invisible="1"/> <!-- drives invisible of the action_send_survey button, the action_start_session button and 4 more -->
                         </group>
                         <group>
                             <field name="restrict_user_ids" widget="many2many_tags_avatar" string="Shared with"/>
@@ -88,21 +86,21 @@
                                 <list decoration-bf="is_page">
                                     <field name="sequence" widget="handle"/>
                                     <field name="title" widget="survey_description_page"/>
-                                    <field name="background_image" column_invisible="True"/>
+                                    <field name="background_image" column_invisible="True"/> <!-- read by the survey form and session manage interactions -->
                                     <field name="question_type" />
                                     <field name="is_time_limited" string="Time Limit" optional="hide"
                                         column_invisible="not parent.session_available"/>
                                     <field name="time_limit" optional="hide" invisible="not is_time_limited"
                                         column_invisible="not parent.session_available"/>
-                                    <field name="is_time_customized" column_invisible="True"/>
+                                    <field name="is_time_customized" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                                     <field name="constr_mandatory" optional="hide" widget="boolean_toggle"/>
-                                    <field name="is_page" column_invisible="True"/>
-                                    <field name="questions_selection" column_invisible="True"/>
-                                    <field name="survey_id" column_invisible="True"/>
+                                    <field name="is_page" column_invisible="True"/> <!-- drives invisible of random_questions_count -->
+                                    <field name="questions_selection" column_invisible="True"/> <!-- drives invisible of random_questions_count -->
+                                    <field name="survey_id" column_invisible="True"/> <!-- used in the domain of certification_badge_id -->
                                     <field name="random_questions_count"
                                         column_invisible="parent.questions_selection == 'all'"
                                         invisible="not is_page"/>
-                                    <field name="triggering_question_ids" column_invisible="True"/>
+                                    <field name="triggering_question_ids" column_invisible="True"/> <!-- read by the survey question trigger widget of the question list -->
                                     <field name="triggering_answer_ids" column_invisible="True" widget="many2many_tags"/> <!-- widget to fetch display_name -->
                                     <widget name="survey_question_trigger" width="30px"/>
                                     <button name="copy" type="object" icon="content_copy" title="Duplicate Question"/>
@@ -231,8 +229,8 @@
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
             <list string="Survey" js_class="survey_view_tree">
-                <field name="active" column_invisible="True"/>
-                <field name="certification" column_invisible="True"/>
+                <field name="active" column_invisible="True"/> <!-- enables the Archive/Unarchive action in this list -->
+                <field name="certification" column_invisible="True"/> <!-- drives invisible of the certification button -->
                 <field name="title"/>
                 <button name="certification" type="button" disabled="disabled"
                     icon="trophy" icon_class="oi-filled" title="Certification" aria-label="Certification"

@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <field name="partner_id" position="replace">
-                <field name="requisition_type" invisible="1"/>
+                <field name="requisition_type" invisible="1"/> <!-- drives readonly of partner_id -->
                 <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_identifier': True}" readonly="requisition_type == 'blanket_order' or state in ['purchase', 'cancel']" placeholder="Name, TIN, Email, or Reference" force_save="1"/>
             </field>
             <field name="partner_ref" position="after">

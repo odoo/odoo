@@ -61,7 +61,7 @@
                 <page string="Point of Sale" name="pos" invisible="not available_in_pos">
                     <group>
                         <group name="pos" string="Point of Sale">
-                            <field name="color" invisible="True"/>
+                            <field name="color" invisible="True"/> <!-- color_field option of the pos_categ_ids and pos_optional_product_ids tags -->
                             <field name="to_weight" invisible="type=='service'" widget="boolean_toggle"/>
                             <field name="pos_categ_ids"
                                    widget="many2many_tags"

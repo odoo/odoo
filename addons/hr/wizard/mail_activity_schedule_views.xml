@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="mail.mail_activity_schedule_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='plan_available_ids']" position="after">
-                    <field name="department_id" invisible="1"/>
+                    <field name="department_id" invisible="1"/> <!-- department of the employees the plan is scheduled for, the plan_available_ids domain depends on it -->
                 </xpath>
             </field>
         </record>

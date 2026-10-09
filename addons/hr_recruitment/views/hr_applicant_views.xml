@@ -25,9 +25,8 @@
                         invisible="context.get('default_talent_pool_ids', False)"
                     />
                 </header>
-                <field name="message_needaction" column_invisible="True"/>
-                <field name="last_stage_id" column_invisible="True"/>
-                <field name="date_last_stage_update" column_invisible="True"/>
+                <field name="last_stage_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="date_last_stage_update" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="partner_name" string="Name" readonly="1" optional="show"/>
                 <field name="create_date" readonly="1" optional="show" options="{'show_time': False}"/>
                 <field name="email_from" readonly="1" optional="show"/>
@@ -38,8 +37,8 @@
                 <field name="priority" widget="priority" nolabel="1" optional="show"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="show"/>
                 <field name="recruiter_id" widget="many2one_avatar_employee" optional="show"/>
-                <field name="is_rotting" column_invisible="True"/>
-                <field name="rotting_days" column_invisible="True"/>
+                <field name="is_rotting" column_invisible="True"/> <!-- read by the rotting widget of stage_id -->
+                <field name="rotting_days" column_invisible="True"/> <!-- read by the rotting widget of stage_id -->
                 <field name="type_id" optional="hide"/>
                 <field name="talent_pool_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                 <field name="application_status" optional="hide" invisible="application_status == 'ongoing'"/>
@@ -54,7 +53,7 @@
                 <field name="salary_proposed" optional="hide"/>
                 <field name="availability" optional="hide"/>
                 <field name="department_id" readonly="1" column_invisible="context.get('invisible_department', True)" optional="hide"/>
-                <field name="company_id" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this list; the one below is only for multi-company users -->
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
             </list>
         </field>
@@ -80,16 +79,15 @@
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" class="o_applicant_form">
-            <field name="company_id" invisible="1"/>
-            <field name="application_status" invisible="1"/>
-            <field name="employee_id" invisible="1"/>
-            <field name="meeting_ids" invisible="1"/>
-            <field name="refuse_reason_id" invisible="1"/>
-            <field name="email_normalized" invisible="1"/>
-            <field name="partner_phone_sanitized" invisible="1"/>
-            <field name="emp_is_active" invisible="1"/>
-            <field name="is_rotting" invisible="1"/>
-            <field name="rotting_days" invisible="1"/>
+            <field name="company_id" invisible="1"/> <!-- passed as default_company_id in the context of partner_name -->
+            <field name="application_status" invisible="1"/> <!-- drives invisible of the Refused/Archived/Hired web_ribbon widgets and of kanban_state -->
+            <field name="employee_id" invisible="1"/> <!-- drives invisible of the Create Employee button, of stage_id and of the Employee stat button -->
+            <field name="meeting_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+            <field name="email_normalized" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+            <field name="partner_phone_sanitized" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+            <field name="emp_is_active" invisible="1"/> <!-- drives invisible of the Employee stat button -->
+            <field name="is_rotting" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
+            <field name="rotting_days" invisible="1"/> <!-- read by the rotting_statusbar_duration widget of stage_id -->
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr.group_hr_user"
                         class="o_create_employee" invisible="employee_id or not active or not date_closed"/>
@@ -146,7 +144,7 @@
                 <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger" invisible="application_status != 'refused'"/>
                 <widget name="web_ribbon" title="Archived" bg_color="text-bg-300" invisible="application_status != 'archived'"/>
                 <widget name="web_ribbon" title="Hired" invisible="application_status != 'hired'" />
-                <field name="active" invisible="1"/>
+                <field name="active" invisible="1"/> <!-- drives invisible of the Create Employee/Refuse/Restore buttons, of stage_id and of refuse_reason_id -->
                 <field name="kanban_state" widget="hr_applicant_state_selection" invisible="application_status == 'refused' or application_status == 'archived' or is_pool_applicant" class="o_field_state_selection"/>
                 <div class="oe_title pe-0">
                     <label for="partner_name" class="oe_edit_only" string="Applicant" invisible="is_pool_applicant"/>
@@ -157,8 +155,7 @@
                 </div>
                 <group>
                     <group>
-                        <field name="partner_name" invisible="1"/>
-                        <field name="partner_id" invisible="1" />
+                        <field name="partner_id" invisible="1" /> <!-- kept loaded for record data though not shown in this form -->
                         <field name="refuse_reason_id" invisible="active"/>
                         <field name="email_from" placeholder="e.g. john.doe@example.com" widget="email"/>
                         <field name="partner_phone" widget="phone"/>
@@ -193,7 +190,7 @@
                         <group>
                             <group string="Salary Package" name="recruitment_contract" groups="hr_recruitment.group_hr_recruitment_user">
                                 <label for="salary_expected"/>
-                                <field name="currency_id" invisible="1"/>
+                                <field name="currency_id" invisible="1"/> <!-- currency of the salary monetary widgets below -->
                                 <div class="d-flex gap-2 align-items-baseline">
                                     <field name="salary_expected" placeholder="Expected" class="oe_inline" widget="monetary"/>
                                     <span> / </span>
@@ -368,7 +365,7 @@
                 <group>
                     <field name="partner_name" options="{'no_create_edit': True}" placeholder="e.g. John Doe"/>
                     <field name="job_id" options="{'no_open': True}"/>
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/> <!-- kept loaded for record data though not shown in this quick create form -->
                 </group>
             </form>
         </field>

@@ -25,7 +25,7 @@
         <field name="model">calendar.alarm</field>
         <field name="arch" type="xml">
             <list string="Calendar Alarm" sample="1">
-                <field name="name" column_invisible="True"/>
+                <field name="name" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="alarm_type"/>
                 <field name="duration" string="Duration" width="75px"/>
                 <field name="interval"/>
@@ -40,7 +40,7 @@
             <form string="Calendar Alarm">
                 <sheet>
                     <group>
-                        <field name="name" invisible="1"/>
+                        <field name="name" invisible="1"/> <!-- required name silently built by the _onchange_duration_interval onchange, kept writable so the value is saved -->
                         <field name="alarm_type" widget="badges_selection" colspan="2" nolabel="1"/>
                         <label for="duration" string="Reminder"/>
                         <div class="d-flex gap-2">
@@ -114,9 +114,8 @@
                 <field name="show_as" optional="hide" readonly="recurrency"/>
                 <field name="location" optional="show" readonly="recurrency" width="250px"/>
                 <field name="description" optional="hide" readonly="recurrency"/>
-                <field name="allday" column_invisible="True"/>
+                <field name="allday" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <field name="is_draft" column_invisible="1"/> <!--Required to check if cancellation emails must be sent.-->
-                <field name="message_needaction" column_invisible="True"/>
             </list>
         </field>
     </record>
@@ -147,9 +146,9 @@
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" class="o_calendar_archived_web_ribbon" invisible="active"/>
                     <widget name="web_ribbon" title="Draft" bg_color="text-bg-500" invisible="not active or not is_draft"/>
-                    <field name="active" invisible="1"/>
+                    <field name="active" invisible="1"/> <!-- drives invisible of the Archived and Cancelled web_ribbon widgets -->
                     <field name="is_draft" invisible="1"/> <!--Required to compute the names of the activities.-->
-                    <field name="user_can_edit" invisible="1"/>
+                    <field name="user_can_edit" invisible="1"/> <!-- drives readonly of almost every field of this form and invisible of its buttons and attendees page -->
                     <field name="invalid_email_partner_ids" invisible="1"/> <!-- this field will be used in
                         many2many_attendees widget -->
                     <div class="oe_title">
@@ -162,8 +161,8 @@
                         <group>
                             <field name="start_date" widget="daterange" options="{'end_date_field': 'stop_date'}" invisible="not allday" required="allday" readonly="not user_can_edit"/>
                             <field name="start" widget="daterange" options="{'end_date_field': 'stop'}" invisible="allday" required="not allday" readonly="not user_can_edit"/>
-                            <field name="stop_date" required="allday" invisible="1"/>
-                            <field name="stop" required="not allday" invisible="1" />
+                            <field name="stop_date" required="allday" invisible="1"/> <!-- end date of the start_date daterange widget (end_date_field option) -->
+                            <field name="stop" required="not allday" invisible="1" /> <!-- end datetime of the start daterange widget (end_date_field option) -->
                             <field name="unavailable_partner_ids" invisible="1" /> <!-- this field will be used in many2many_attendees widget -->
                             <label for="duration"/>
                             <div class="d-flex gap-2">
@@ -193,9 +192,9 @@
                                 </button>
                             </div>
                             <field name="res_record" readonly="not user_can_edit"/>
-                            <field name="res_model" invisible="1"/>
-                            <field name="videocall_source" invisible="1"/>
-                            <field name="access_token" invisible="1" force_save="1"/>
+                            <field name="res_model" invisible="1"/> <!-- used by hr_holidays.view_calendar_event_form_inherit to hide the fields of the time off events -->
+                            <field name="videocall_source" invisible="1"/> <!-- drives readonly of videocall_location -->
+                            <field name="access_token" invisible="1" force_save="1"/> <!-- set by the front-end only video call actions, force_save to persist the generated token -->
                         </group>
                         <group>
                             <field name="current_status" class="o_calendar_form_status_selection_badge" string="Going?"
@@ -207,7 +206,7 @@
                                 <field name="privacy" class="oe_inline me-2" readonly="not user_can_edit" nolabel="1" options="{'placeholder_field': 'privacy_placeholder'}"
                                     help="Set whether you're available for other simultaneous events and the privacy of this event to others. Manage your default privacy in your user preferences."/>
                             </div>
-                            <field name="should_show_status" invisible="1"/>
+                            <field name="should_show_status" invisible="1"/> <!-- drives required/readonly/invisible of current_status -->
                             <div class="w-100 py-2" colspan="2">
                                 <div class="d-flex flex-nowrap gap-2 fw-normal w-100">
                                     <span><field name="attendees_count" class="w-auto oe_inline" nolabel="1"/> guests</span>
@@ -259,8 +258,8 @@
                                 </group>
                                 <group>
                                     <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True, 'on_tag_click': 'open_form'}" readonly="not user_can_edit"/>
-                                    <field name="recurrence_id" invisible="1" />
-                                    <field name="rrule_type" invisible="1" />
+                                    <field name="recurrence_id" invisible="1" /> <!-- drives invisible of the recurrence update warning and readonly of calendar_id -->
+                                    <field name="rrule_type" invisible="1" /> <!-- drives invisible/required of the custom recurrence widgets below -->
                                     <field name="recurrency" invisible="is_draft" widget="boolean_toggle" readonly="not user_can_edit"/>
                                     <field name="rrule_type_ui" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
                                     <label for="interval" class="fw-bold text-900" invisible="not recurrency or rrule_type_ui != 'custom'"/>
@@ -270,7 +269,6 @@
                                     </div>
                                     <span class="fw-bold text-nowrap" invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')">Repeat on</span>
                                     <div invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')" ><widget name="calendar_week_days" readonly="not user_can_edit"/></div>
-                                    <field name="recurrence_id" invisible="1" />
 
                                     <label string="Day of Month" for="month_by" class="fw-bold text-900" style="width: fit-content;" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')"/>
                                     <div class="d-flex gap-2" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')">
@@ -368,7 +366,7 @@
                     when it changes-->
                     <!--field is also used for custom behavior in default_get, check before removing-->
                     <i class="oi oi-filled mt-1" data-icon="schedule" title="Dates"/>
-                    <field name="duration" invisible="1" force_save="1"/>
+                    <field name="duration" invisible="1" force_save="1"/> <!-- last computed duration kept by the front-end and posted with start, also read in default_get -->
                     <field name="start" nolabel="1" class="text-nowrap flex-grow-1"
                         widget="daterange" options="{'end_date_field': 'stop'}"
                         placeholder="Dates"
@@ -383,7 +381,7 @@
                         <label for="allday" string="All day" class="fw-normal me-md-2"/>
                         <field name="allday" nolabel="1"/>
                     </span>
-                    <field name="stop" invisible="1"/>
+                    <field name="stop" invisible="1"/> <!-- end datetime of the start daterange widget (end_date_field option) -->
                 </div>
                 <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="oi oi-filled" data-icon="person" title="Participants"/>
@@ -400,10 +398,10 @@
                         placeholder="Room or Location"
                     />
                     <!--fields set via the fake front-end only actions must be force saved (see calendar_event_form)-->
-                    <field name="recurrence_update" invisible="1"/>
-                    <field name="access_token" force_save="1" invisible="1"/>
-                    <field name="videocall_location" force_save="1" invisible="1"/>
-                    <field name="videocall_source" force_save="1" invisible="1"/>
+                    <field name="recurrence_update" invisible="1"/> <!-- passed in the context of the set_discuss_videocall_location button -->
+                    <field name="access_token" force_save="1" invisible="1"/> <!-- set by the front-end only video call actions, force_save to persist the generated token -->
+                    <field name="videocall_location" force_save="1" invisible="1"/> <!-- drives invisible of the video conference button and of the videocall url block below, force_save to persist the url set by the front-end only action -->
+                    <field name="videocall_source" force_save="1" invisible="1"/> <!-- set with videocall_location by the front-end only video call action, force_save to persist it -->
                     <button name="set_discuss_videocall_location" type="object" class="btn btn-link visible text-nowrap"
                         invisible="videocall_location" context="{'recurrence_update': recurrence_update}">
                         <span class="oi me-1" data-icon="add"/>Video conference

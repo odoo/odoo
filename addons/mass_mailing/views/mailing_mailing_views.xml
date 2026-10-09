@@ -96,15 +96,15 @@
                                     <field name="next_departure" class="oe_inline"/>.
                                 </strong>
                                 <strong invisible="not next_departure_is_past or schedule_type == 'now'" class="d-flex align-items-center">
-                                    <field name="next_departure_is_past" invisible="1"/>
+                                    <field name="next_departure_is_past" invisible="1"/> <!-- drives invisible of the strong -->
                                     <span name="refresh_text">This mailing will be sent as soon as possible.</span>
                                     <button name="action_reload" type="object" class="btn btn-link pe-0">
                                         <u>Refresh <i class="oi ms-1" data-icon="refresh"/></u>
                                     </button>
                                 </strong>
                                 <strong invisible="schedule_type != 'now'" class="d-flex align-items-center">
-                                    <field name="next_departure_is_past" invisible="1"/>
-                                    <field name="schedule_type" invisible="1"/>
+                                    <field name="next_departure_is_past" invisible="1"/> <!-- drives invisible of the strong -->
+                                    <field name="schedule_type" invisible="1"/> <!-- drives invisible of the strong -->
                                     <span name="mailing_schedule_type_now_text">This mailing will be sent as soon as possible.</span>
                                     <button name="action_reload" type="object" class="btn btn-link pe-0">
                                         <u>Refresh <i class="oi ms-1" data-icon="refresh"/></u>
@@ -138,7 +138,7 @@
                         </div>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,sending,done" invisible="is_template"/>
                     </header>
-                    <field name="is_template" invisible="1"/>
+                    <field name="is_template" invisible="1"/> <!-- drives invisible of the action_new_mailing_from_template button, the action_launch button and 15 more and required of body_arch, email_from and 1 more -->
                     <div class="alert alert-info" role="alert" invisible="is_template or not warning_message">
                         <strong><field name="warning_message"/></strong>
                     </div>
@@ -149,7 +149,6 @@
                                 type="object"
                                 invisible="state in ('draft', 'test')"
                                 class="oe_stat_button">
-                                <field name="delivered" invisible="1"/>
                                 <field name="received_ratio" widget="deliverance_percentpie"
                                     top_field="delivered" bottom_field="failed"/>
                             </button>
@@ -195,11 +194,11 @@
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group class="o_mass_mailing_mailing_group">
-                            <field name="active" invisible="1"/>
-                            <field name="create_uid" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
+                            <field name="create_uid" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}"
                                 invisible="1"
-                                readonly="state != 'draft'" force_save="1"/>
+                                readonly="state != 'draft'" force_save="1"/> <!-- drives invisible of the email_content group, ab_testing_winner_selection and required of email_from, ab_testing_winner_selection -->
                             <field class="text-break w-75" name="subject"
                                 options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
                                 readonly="state in ('sending', 'done')"
@@ -254,9 +253,9 @@
                                         options="{'model': 'mailing_model_real', 'foldable': True, 'model_id': 'mailing_model_id'}"
                                         readonly="state in ('sending', 'done')"/>
                             </div>
-                            <field name="mailing_model_name" invisible="1"/>
-                            <field name="mailing_on_mailing_list" invisible="1"/>
-                            <field name="mailing_model_real" invisible="1"/>
+                            <field name="mailing_model_name" invisible="1"/> <!-- drives invisible of reply_to_mode, the oe_edit_only small -->
+                            <field name="mailing_on_mailing_list" invisible="1"/> <!-- drives invisible of the o_mass_mailing_contact_list_ids block, the block and 1 more -->
+                            <field name="mailing_model_real" invisible="1"/> <!-- dynamic_placeholder_model_reference_field option of preview, subject -->
                         </group>
                         <notebook>
                             <page string="Mail Body" name="mail_body">
@@ -268,8 +267,8 @@
                                             'dynamic_placeholder_model_reference_field': 'mailing_model_real',
                                             'filterTemplates': true,
                                         }" readonly="state in ('sending', 'done')"/>
-                                    <field name="body_html" invisible="1" required="body_arch"/>
-                                    <field name="is_body_empty" invisible="1"/>
+                                    <field name="body_html" invisible="1" required="body_arch"/> <!-- drives invisible of the action_preview button, the action_test button -->
+                                    <field name="is_body_empty" invisible="1"/> <!-- drives invisible of the action_preview button, the action_test button -->
                                 </div>
                             </page>
                             <page string="Settings" name="settings" invisible="is_template">
@@ -320,7 +319,7 @@
                                             domain="[('share', '=', False)]"/>
                                     </group>
                                     <group string="Advanced">
-                                        <field name="mail_server_available" invisible="1"/>
+                                        <field name="mail_server_available" invisible="1"/> <!-- drives invisible of mail_server_id -->
                                         <field name="mail_server_id"
                                             invisible="not mail_server_available"
                                             readonly="state in ('sending', 'done')"
@@ -348,11 +347,11 @@
                                             invisible="not ab_testing_enabled or ab_testing_winner_selection == 'manual'"
                                             readonly="not ab_testing_enabled or state != 'draft'"
                                             required="ab_testing_enabled and ab_testing_winner_selection != 'manual'"/>
-                                        <field name="is_ab_test_sent" invisible="1"/>
+                                        <field name="is_ab_test_sent" invisible="1"/> <!-- drives invisible of the action_send_winner_mailing button -->
                                     </group>
                                     <div class="col-12 col-md-6">
-                                        <field name="ab_testing_mailings_count" invisible="1"/>
-                                        <field name="ab_testing_completed" invisible="1"/>
+                                        <field name="ab_testing_mailings_count" invisible="1"/> <!-- drives invisible of the mailing_form_ab_buttons block, the action_duplicate button -->
+                                        <field name="ab_testing_completed" invisible="1"/> <!-- drives invisible of the action_duplicate button, the action_send_winner_mailing button and 1 more -->
                                         <field name="ab_testing_description" nolabel="1"/>
                                         <div id="mailing_form_ab_buttons" invisible="ab_testing_mailings_count &lt; 2 or not ab_testing_enabled">
                                             <button name="action_compare_versions" type="object" class="btn btn-link d-block">

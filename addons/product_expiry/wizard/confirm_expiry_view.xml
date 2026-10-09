@@ -8,7 +8,7 @@
                 <p>
                     <field name="description"/>
                 </p>
-                <field name="show_lots" invisible="1"/>
+                <field name="show_lots" invisible="1"/> <!-- drives invisible of lot_ids -->
                 <field name="lot_ids" invisible="not show_lots">
                     <list string="Expired Lot(s)">
                         <field name="product_id"/>

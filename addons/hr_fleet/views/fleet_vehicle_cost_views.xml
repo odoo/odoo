@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_log_contract_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='purchaser_id']" position="after">
-                <field name="purchaser_employee_id" string="Driver" invisible="1"/>
+                <field name="purchaser_employee_id" string="Driver" invisible="1"/> <!-- drives invisible of the action_open_employee button -->
             </xpath>
             <sheet position="inside">
                 <div class="oe_button_box" name="button_box">
@@ -50,7 +50,7 @@
         <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='purchaser_id']" position="after">
-                <field name="purchaser_employee_id" string="Driver (Employee)" invisible="1"/>
+                <field name="purchaser_employee_id" string="Driver (Employee)" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
             </xpath>
         </field>
     </record>

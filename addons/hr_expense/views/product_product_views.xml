@@ -32,19 +32,17 @@
                 <form string="Expense Products" js_class="hr_expense_product_form">
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <field name='product_variant_count' invisible='1'/>
-                        <field name="id" invisible="1"/>
+                        <field name="id" invisible="1"/> <!-- used in the python-declared domain of additional_product_tag_ids, extra_uom_ids -->
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'zoom': True, 'image_preview': 'image_128'}"/>
-                        <field name="type" invisible="1"/>
+                        <field name="type" invisible="1"/> <!-- product type forced to service for expense products, kept loaded for record data -->
                         <div class="oe_title px-3">
                             <label for="name" string="Product Name"/>
                             <h1><field name="name" placeholder="e.g. Lunch"/></h1>
                         </div>
                         <group name="product_details">
                             <group>
-                                <field name="active" invisible="1"/>
-                                <field name="type" invisible="1"/>
-                                <field name="currency_id" invisible="1"/>
+                                <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
+                                <field name="currency_id" invisible="1"/> <!-- currency_field option of the standard_price monetary widget -->
                                 <label for="standard_price"/>
                                 <div class="o_row" groups="base.group_user">
                                     <field name="standard_price"
@@ -75,7 +73,7 @@
                                 <field name="expense_job_position_limit_ids" nolabel="1" colspan="2">
                                     <list editable="bottom" class="o_expense_job_position_limits">
                                         <field name="sequence" widget="handle"/>
-                                        <field name="company_currency_id" column_invisible="1"/>
+                                        <field name="company_currency_id" column_invisible="1"/> <!-- currency of the monetary columns of this list -->
                                         <field name="job_ids" widget="many2many_tags"/>
                                         <field name="limit_amount" widget="monetary"/>
                                     </list>
@@ -140,7 +138,7 @@
             <field name="arch" type="xml">
                 <list class="o_expense_categories" default_order="is_favorite desc, default_code, name, id">
                     <field name="name" readonly="1"/>
-                    <field name="currency_id" column_invisible="True"/>
+                    <field name="currency_id" column_invisible="True"/> <!-- currency_field option of the lst_price monetary widget -->
                     <field name="default_code" optional="show" string="Reference" readonly="1"/>
                     <field name="description" string="Note" optional="show" readonly="1"/>
                     <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}" optional="show" string="Sales Price"/>

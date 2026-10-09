@@ -5,7 +5,7 @@
         <field name="model">choose.delivery.carrier</field>
         <field name="arch" type="xml">
             <form>
-                <field name="available_carrier_ids" invisible="1"/>
+                <field name="available_carrier_ids" invisible="1"/> <!-- used in the python-declared domain of carrier_id -->
                 <group>
                     <group>
                         <label name="carried_weight_label" for="total_weight" groups="uom.group_uom"/>
@@ -31,11 +31,11 @@
                             />
                             <widget name="delivery_carrier_rates_loader" class="w-100" invisible="not show_delivery_rates_button"/>
                         </div>
-                        <field name="carrier_prices" invisible="1"/>
-                        <field name="delivery_type" invisible="1"/>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="order_id" invisible="1"/>
-                        <field name='delivery_price' invisible="1"/>
+                        <field name="carrier_prices" invisible="1"/> <!-- read by the carrier rates loader widget -->
+                        <field name="delivery_type" invisible="1"/> <!-- drives invisible of the button_confirm button -->
+                        <field name="currency_id" invisible="1"/> <!-- currency_field option of the display_price monetary widget -->
+                        <field name="order_id" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
+                        <field name='delivery_price' invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                         <label for="display_price"/>
                         <div class="o_row" name="price_container">
                             <field name='display_price' widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not carrier_id" force_save="1"/>

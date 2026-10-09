@@ -49,8 +49,8 @@
                             <field name="event_slot_count" widget="statinfo" string="Slots"/>
                         </button>
                     </div>
-                    <field name="active" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
+                    <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
+                    <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of address_id, organizer_id -->
                     <widget name="web_ribbon" text="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="kanban_state" widget="event_state_selection" class="ms-auto float-end"/>
                     <div class="oe_title">
@@ -59,9 +59,9 @@
                     </div>
                     <group>
                         <group>
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
                             <field name="date_begin" string="Date" widget="daterange" options="{'end_date_field': 'date_end'}" />
-                            <field name="date_end" invisible="1" />
+                            <field name="date_end" invisible="1" /> <!-- end of the date_begin daterange widget (end_date_field option) -->
                             <field name="date_tz"/>
                             <label for="is_multi_slots"/>
                             <div class="o_row">
@@ -186,7 +186,6 @@
                 <field name="seats_max" string="Maximum Seats" sum="Total" readonly="1" optional="hide"/>
                 <field name="seats_reserved" sum="Total" readonly="1" optional="hide"/>
                 <field name="stage_id" readonly="1"/>
-                <field name="message_needaction" readonly="1" column_invisible="True"/>
                 <field name="activity_exception_decoration" widget="activity_exception" readonly="1"/>
             </list>
         </field>
@@ -219,7 +218,7 @@
                 <group>
                     <field name="name" placeholder="e.g. Conference for Architects"/>
                     <field name="date_begin" string="Date" widget="daterange" options="{'end_date_field': 'date_end'}" />
-                    <field name="date_end" invisible="1" />
+                    <field name="date_end" invisible="1" /> <!-- end of the date_begin daterange widget (end_date_field option) -->
                 </group>
             </form>
         </field>

@@ -8,14 +8,14 @@
                 <form string="Compose Email" class="o_mail_composer_form" js_class="survey_invite_form">
                     <group col="1">
                         <group col="2">
-                            <field name="author_id" invisible="1"/>
-                            <field name="survey_access_mode" invisible="1"/>
-                            <field name="survey_users_login_required" invisible="1"/>
-                            <field name="survey_users_can_signup" invisible="1"/>
-                            <field name="survey_id" invisible="1"/>
-                            <field name="existing_mode" widget="radio" invisible="1" />
-                            <field name="lang" invisible="1"/>
-                            <field name="render_model" invisible="1"/>
+                            <field name="author_id" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
+                            <field name="survey_access_mode" invisible="1"/> <!-- drives invisible of the Survey Link label, survey_start_url and 2 more -->
+                            <field name="survey_users_login_required" invisible="1"/> <!-- drives invisible of emails -->
+                            <field name="survey_users_can_signup" invisible="1"/> <!-- used in the python-declared domain of partner_ids -->
+                            <field name="survey_id" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
+                            <field name="existing_mode" widget="radio" invisible="1" /> <!-- target of the <label for="existing_mode"> of this form -->
+                            <field name="lang" invisible="1"/> <!-- mail.render.mixin lang, editable compute persisted when the invite is sent; never shown -->
+                            <field name="render_model" invisible="1"/> <!-- used in the python-declared domain of template_id -->
                             <label class="o_survey_label_survey_start_url" for="survey_start_url" string="Survey Link"
                                  invisible="survey_access_mode != 'public'"/>
                             <field name="survey_start_url" nolabel="1" widget="CopyClipboardChar"
@@ -34,8 +34,7 @@
                                 invisible="survey_users_login_required or not send_email"
                                 placeholder="e.g.  'Rick Sanchez' &lt;rick_sanchez@example.com&gt;, hictor_vugo@example.com"/>
                         </group>
-                        <field name="existing_partner_ids" invisible="1"/>
-                        <field name="existing_emails" invisible="1"/>
+                        <field name="existing_partner_ids" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
                         <div col="2" class="alert alert-warning pb-0" role="alert"
                             invisible="survey_access_mode == 'public' or not existing_text">
                             <field name="existing_text"/>
@@ -52,7 +51,7 @@
                             <field name="subject" invisible="not send_email" placeholder="Subject..." widget="char_emojis"/>
                         </group>
                         <hr invisible="not send_email"/>
-                        <field name="can_edit_body" invisible="1"/>
+                        <field name="can_edit_body" invisible="1"/> <!-- drives readonly of body -->
                         <field name="body" class="oe-bordered-editor"
                             widget="html_mail"
                             options="{'height': 300}"

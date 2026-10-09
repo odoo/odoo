@@ -12,7 +12,7 @@
                     force_save="1"
                     required="1"
                     readonly="partner_id"/>
-                <field name="email_normalized" column_invisible="True" force_save="1"/>
+                <field name="email_normalized" column_invisible="True" force_save="1"/> <!-- normalised email kept with force_save so the value computed from email is saved -->
                 <field name="partner_id"/>
                 <field name="mail_group_id"/>
             </list>

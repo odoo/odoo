@@ -37,7 +37,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget -->
                             <field name="email" required="send_by == 'mail'"/>
                             <field name="phone" class="o_force_ltr" required="send_by == 'phone'"/>
                             <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
@@ -48,7 +48,7 @@
                         <group string="Availability">
                             <field name="tz" groups="base.group_no_one"/>
                             <label for="sun" class="d-none"/>
-                            <field name="sun" invisible="1"/>
+                            <field name="sun" invisible="1"/> <!-- target of the hidden label above, the week days themselves are rendered by the week_days widget -->
                             <widget name="week_days"/>
                             <field name="recurrency_end_date" groups="base.group_no_one"/>
                         </group>
@@ -61,7 +61,6 @@
                     </group>
                     <group>
                         <group>
-                            <field name="active" invisible="1"/>
                             <field name="topping_label_1"/>
                             <field name="topping_quantity_1" class="w-50"/>
                         </group>
@@ -69,8 +68,8 @@
                             <field name="topping_ids_1" nolabel="1">
                                 <list editable="bottom">
                                     <field name="name"/>
-                                    <field name="company_id" column_invisible="True"/>
-                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="company_id" column_invisible="True"/> <!-- company the related currency_id is read from -->
+                                    <field name="currency_id" column_invisible="True"/> <!-- currency of the price monetary widget -->
                                     <field name="price" widget="monetary"/>
                                 </list>
                             </field>
@@ -83,8 +82,8 @@
                             <field name="topping_ids_2" nolabel="1">
                                 <list editable="bottom">
                                     <field name="name"/>
-                                    <field name="company_id" column_invisible="True"/>
-                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="company_id" column_invisible="True"/> <!-- company the related currency_id is read from -->
+                                    <field name="currency_id" column_invisible="True"/> <!-- currency of the price monetary widget -->
                                     <field name="price" widget="monetary"/>
                                 </list>
                             </field>
@@ -97,8 +96,8 @@
                             <field name="topping_ids_3" nolabel="1">
                                 <list editable="bottom">
                                     <field name="name"/>
-                                    <field name="company_id" column_invisible="True"/>
-                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="company_id" column_invisible="True"/> <!-- company the related currency_id is read from -->
+                                    <field name="currency_id" column_invisible="True"/> <!-- currency of the price monetary widget -->
                                     <field name="price" widget="monetary"/>
                                 </list>
                             </field>

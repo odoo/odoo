@@ -106,10 +106,10 @@
                     </div>
                     <group>
                         <group name="provider_details">
-                            <field name="active" invisible="1"/>
-                            <field name="company_id" invisible="1"/>
-                            <field name="prod_environment" invisible="1"/>
-                            <field name="debug_logging" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
+                            <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields of this form -->
+                            <field name="prod_environment" invisible="1"/> <!-- drives invisible of the toggle_prod_environment button -->
+                            <field name="debug_logging" invisible="1"/> <!-- drives invisible of the toggle_debug button -->
                             <label for="delivery_type"/>
                             <div>
                                 <field name="delivery_type" />
@@ -120,7 +120,7 @@
                             <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         </group>
                         <group name="delivery_details">
-                            <field name="currency_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/> <!-- currency of the monetary fields of this form -->
                             <field name="fixed_price"
                                     widget="monetary"
                                     class="oe_inline"
@@ -151,7 +151,7 @@
                             }"/>
                             <field name="tracking_url" placeholder="i.e. https://ekartlogistics.com/shipmenttrack/&lt;shipmenttrackingnumber&gt;" invisible="delivery_type not in ('fixed', 'base_on_rule')"/>
                             <field name="invoice_policy" widget="radio" invisible="delivery_type in ('fixed', 'base_on_rule') or integration_level == 'rate'"/>
-                            <field name="supports_shipping_insurance" invisible="1"/>
+                            <field name="supports_shipping_insurance" invisible="1"/> <!-- drives invisible of the label, the block -->
                             <label for="shipping_insurance" String="Shipping Insurance" invisible="not supports_shipping_insurance"/>
                             <div invisible="not supports_shipping_insurance">
                                 <field name="shipping_insurance" class="oe_inline"/>%

@@ -27,11 +27,11 @@
                                     options="{'no_create': True}"/>
                             </group>
                             <group col="2">
-                                <field name="lang" invisible="1"/>
-                                <field name="render_model" invisible="1"/>
+                                <field name="lang" invisible="1"/> <!-- mail.render.mixin lang, editable compute persisted when the mail is sent; never shown -->
+                                <field name="render_model" invisible="1"/> <!-- read by the mail_composer_template_selector widget of template_id to filter the templates -->
                                 <field name="subject" required="send_mail" placeholder="Subject..."/>
                             </group>
-                            <field name="can_edit_body" invisible="1"/>
+                            <field name="can_edit_body" invisible="1"/> <!-- drives readonly of body and invisible of attachment_ids and of the template selector -->
                             <field name="body" nolabel="1" class="oe-bordered-editor" widget="html_mail" readonly="not can_edit_body" placeholder="Email Body..." force_save="1"/>
                             <field name="attachment_ids" widget="many2many_binary" invisible="not can_edit_body"/>
                         </group>
@@ -85,8 +85,7 @@
                         </group>
                         <group col="1" invisible="not send_mail">
                             <group col="2">
-                                <field name="lang" invisible="1"/>
-                                <field name="render_model" invisible="1"/>
+                                <field name="lang" invisible="1"/> <!-- mail.render.mixin lang, editable compute persisted when the mail is sent; never shown -->
                                 <field name="subject" required="send_mail" placeholder="Subject..."/>
                             </group>
                             <field name="body" nolabel="1" class="oe-bordered-editor" widget="html_mail" placeholder="Email Body..." force_save="1"/>

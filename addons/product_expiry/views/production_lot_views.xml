@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
         <xpath expr="//group[@name='description']" position="before">
             <group string="Dates" name="expiration_dates" invisible="not use_expiration_date">
-                <field name="use_expiration_date" invisible="1"/>
+                <field name="use_expiration_date" invisible="1"/> <!-- drives invisible of the expiration_dates group, expiration_date -->
                 <group>
                     <field string="Expiration" name="expiration_date"/>
                     <field string="Alert from" name="alert_date"/>
@@ -17,7 +17,7 @@
             </group>
         </xpath>
         <xpath expr="//div[hasclass('oe_title')]" position="before">
-            <field name="product_expiry_alert" invisible="1"/>
+            <field name="product_expiry_alert" invisible="1"/> <!-- drives invisible of the badge text -->
             <span class="badge rounded-pill float-end text-bg-warning"
                   invisible="not (alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)">Expiring</span>
             <span class="badge rounded-pill float-end text-bg-danger"
@@ -46,7 +46,7 @@
         <field name="inherit_id" ref="stock.view_production_lot_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='create_date']" position="after">
-                <field name="product_qty" column_invisible="True"/>
+                <field name="product_qty" column_invisible="True"/> <!-- drives invisible of alert_date -->
                 <field name="alert_date" optional="hide" widget='relative_date' invisible="product_qty &lt;= 0"/>
                 <field name="use_date" optional="hide"/>
                 <field name="removal_date" optional="hide"/>

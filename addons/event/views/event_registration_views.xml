@@ -9,8 +9,8 @@
             <list string="Registration" multi_edit="1" sample="1"
                   expand="1" default_order="create_date desc"
                   class="o_event_registration_view_tree" js_class="registration_summary_dialog_list">
-                <field name="barcode" column_invisible="True"/>
-                <field name="active" column_invisible="True"/>
+                <field name="barcode" column_invisible="True"/> <!-- read by the event barcode client action -->
+                <field name="active" column_invisible="True"/> <!-- drives invisible of the action_confirm button, the action_attend_event button and 1 more -->
                 <field name="create_date" optional="show" string="Registration Date"/>
                 <field name="name"/>
                 <field name="partner_id" optional="hide"/>
@@ -25,7 +25,6 @@
                        decoration-success="state == 'done'"
                        decoration-muted="state == 'cancel'" widget="badge"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="state != 'draft'"/>
-                <field name="message_needaction" column_invisible="True"/>
                 <button name="action_confirm" string="Registered" type="object" icon="check"
                         invisible="not active or state != 'draft'"/>
                 <button name="action_attend_event" string="Mark as Attending" type="object" icon="subdirectory_arrow_right"
@@ -43,7 +42,7 @@
         <field name="model">event.registration</field>
         <field name="arch" type="xml">
             <form string="Event Registration">
-                <field name="active" invisible="1"/>
+                <field name="active" invisible="1"/> <!-- drives invisible of the action_send_badge_email button, the action_confirm button and 3 more -->
                 <header>
                     <button name="action_send_badge_email" string="Send by Email" type="object" class="oe_highlight"
                             invisible="not active or state != 'open' and state != 'done'"/>
@@ -96,7 +95,7 @@
                         <page string="Questions" name="questions">
                             <field name="registration_answer_ids" widget="one2many">
                                 <list editable="bottom">
-                                    <field name="event_id" column_invisible="True" />
+                                    <field name="event_id" column_invisible="True" /> <!-- drives invisible of event_ticket_id -->
                                     <field name="question_id" domain="[('event_ids', 'in', event_id)]" options="{'no_create': True}"/>
                                     <field name="question_type" string="Type" />
                                     <field name="value_answer_id"

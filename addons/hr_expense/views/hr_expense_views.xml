@@ -5,14 +5,14 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <list string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'">
-                    <field name="is_editable" column_invisible="True"/>
-                    <field name="company_id" column_invisible="True"/>
-                    <field name="company_currency_id" column_invisible="True"/>
-                    <field name="nb_attachment" column_invisible="True"/>
-                    <field name="is_multiple_currency" column_invisible="True"/>
-                    <field name="product_has_cost" column_invisible="True"/>
-                    <field name="selectable_payment_method_line_ids" column_invisible="True"/>
-                    <field name="can_edit_account" column_invisible="True"/>
+                    <field name="is_editable" column_invisible="True"/> <!-- drives readonly of employee_id, name and 12 more -->
+                    <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of account_id, employee_id, existing_bill_id -->
+                    <field name="company_currency_id" column_invisible="True"/> <!-- currency_field option of the price_unit monetary widget -->
+                    <field name="nb_attachment" column_invisible="True"/> <!-- read by the nb_attachment widget of this list -->
+                    <field name="is_multiple_currency" column_invisible="True"/> <!-- drives readonly of total_amount_currency -->
+                    <field name="product_has_cost" column_invisible="True"/> <!-- drives readonly of quantity, tax_ids and 3 more -->
+                    <field name="selectable_payment_method_line_ids" column_invisible="True"/> <!-- used in the python-declared domain of payment_method_line_id -->
+                    <field name="can_edit_account" column_invisible="True"/> <!-- drives readonly of analytic_distribution, account_id -->
 
                     <!--  Always Shown start -->
                     <field name="employee_id" widget="many2one_avatar_employee" readonly="not is_editable"/>
@@ -220,22 +220,20 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_has_cost" invisible="1"/>
-                            <field name="product_has_tax" invisible="1"/>
-                            <field name="is_multiple_currency" invisible="1"/>
-                            <field name="is_editable" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="company_currency_id" invisible="1"/>
-                            <field name="tax_amount" invisible="1"/>
-                            <field name="price_unit" invisible="1"/>
-                            <field name="nb_attachment" invisible="1"/>
-                            <field name="total_amount" invisible="1"/>
-                            <field name="duplicate_expense_ids" invisible="1"/>
-                            <field name="currency_rate" invisible="1"/>
-                            <field name="selectable_payment_method_line_ids" invisible="1"/>
-                            <field name="can_edit_account" invisible="1"/>
-                            <field name="is_own_expense" invisible="1"/>
-                            <field name="is_expense_exceeding_job_position_limit" invisible="1"/>
+                            <field name="product_has_cost" invisible="1"/> <!-- drives invisible of the action_split_wizard button, price_unit and 4 more and readonly of total_amount -->
+                            <field name="is_multiple_currency" invisible="1"/> <!-- drives invisible of the text, the total_amount_product_cost_label label and 2 more -->
+                            <field name="is_editable" invisible="1"/> <!-- drives invisible of the fst-italic block and readonly of name, product_id and 16 more -->
+                            <field name="currency_id" invisible="1"/> <!-- currency_field option of the expense_job_position_limit_amount_currency monetary widget -->
+                            <field name="company_currency_id" invisible="1"/> <!-- currency_field option of the expense_job_position_limit_amount monetary widget -->
+                            <field name="tax_amount" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                            <field name="price_unit" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                            <field name="nb_attachment" invisible="1"/> <!-- drives invisible of the action_submit button, the action_approve button and 1 more -->
+                            <field name="total_amount" invisible="1"/> <!-- target of the <label for="total_amount"> of this form -->
+                            <field name="duplicate_expense_ids" invisible="1"/> <!-- drives invisible of the warning_duplicate_expense block -->
+                            <field name="selectable_payment_method_line_ids" invisible="1"/> <!-- used in the python-declared domain of payment_method_line_id -->
+                            <field name="can_edit_account" invisible="1"/> <!-- drives readonly of account_id, analytic_distribution -->
+                            <field name="is_own_expense" invisible="1"/> <!-- drives invisible of the warning_expense_job_position_limit block, the warning_manager_expense_job_position_limit block -->
+                            <field name="is_expense_exceeding_job_position_limit" invisible="1"/> <!-- drives invisible of the warning_expense_job_position_limit block, the warning_manager_expense_job_position_limit block -->
 
                             <label for="product_id"/>
                             <div>
@@ -309,7 +307,7 @@
                             <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
                             <field name="manager_id" widget="many2one_avatar_user" readonly="state != 'draft'" placeholder="Auto-validation"/>
                             <field name="department_id" invisible="1" readonly="not is_editable"
-                                   context="{'default_company_id': company_id}"/>
+                                   context="{'default_company_id': company_id}"/> <!-- department kept loaded with its own readonly expression though it is only shown in the list view -->
                             <field name="vendor_id" readonly="not is_editable"/>
 
                             <label for="has_existing_bill"/>

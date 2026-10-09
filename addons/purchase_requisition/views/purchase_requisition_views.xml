@@ -30,9 +30,9 @@
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <form string="Purchase Agreements">
-            <field name="company_id" invisible="1"/>
-            <field name="currency_id" invisible="1"/>
-            <field name="active" invisible="1"/>
+            <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of picking_type_id, user_id, vendor_id -->
+            <field name="currency_id" invisible="1"/> <!-- passed as default_currency_id in the context of the New Quotation button -->
+            <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
             <header>
                 <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
@@ -86,8 +86,8 @@
                                     <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
                                     <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                 </control>
-                                <field name="display_type" column_invisible="True"/>
-                                <field name="currency_id" column_invisible="True"/>
+                                <field name="display_type" column_invisible="True"/> <!-- drives invisible of the group, the Section Name label and 2 more and required of product_id, product_qty and 1 more -->
+                                <field name="currency_id" column_invisible="True"/> <!-- passed as default_currency_id in the context of the New Quotation button -->
                                 <field name="sequence" widget="handle"/>
                                 <column>
                                     <field name="product_id"
@@ -109,7 +109,7 @@
                             </list>
                             <form string="Products">
                                 <group>
-                                    <field name="display_type" invisible="1"/>
+                                    <field name="display_type" invisible="1"/> <!-- drives invisible of the group, the Section Name label and 2 more and required of product_id, product_qty and 1 more -->
                                     <group invisible="display_type">
                                         <field name="product_id"
                                                required="not display_type"
@@ -145,7 +145,6 @@
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
             <list string="Purchase Agreements" sample="1">
-                <field name="message_needaction" column_invisible="True"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="vendor_id" optional="show"/>
                 <field name="requisition_type" optional="show"/>

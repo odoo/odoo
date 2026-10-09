@@ -114,7 +114,7 @@
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
                         <field name="user_state" class="align-self-center d-none d-md-block" widget="employee_user_status"/>
                         <field name="version_id" class="align-self-center" widget="versions_timeline" context="{'version_revision': version_revision}" invisible="not id" options="{'clickable': True}" readonly="False"/>
-                        <field name="version_revision" invisible="1"/>
+                        <field name="version_revision" invisible="1"/> <!-- passed as version_revision in the context of version_id -->
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
@@ -137,7 +137,7 @@
                             <div class="o_employee_avatar d-none d-md-block">
                                 <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
                                 <field name="image_1920" widget="image" options="{'size': [128,158], 'zoom': true, 'preview_image':'image_1024', 'img_class': 'border rounded vw-100 vh-100 object-fit-cover'}"/>
-                                <field name="show_hr_icon_display" invisible="1" />
+                                <field name="show_hr_icon_display" invisible="1" /> <!-- drives invisible of hr_icon_display -->
                             </div>
                             <div class="d-flex gap-3 w-100 d-block d-md-none mt-n2">
                                 <div class="o_employee_avatar position-relative flex-shrink-0"
@@ -164,15 +164,15 @@
                                     <label for="work_phone" class="d-md-none"/>
                                     <div class="d-flex align-items-baseline w-md-50 gap-2">
                                         <i class="oi oi-filled d-none d-md-inline-flex" data-icon="phone" title="Work Phone"/>
-                                        <field name="work_phone_sanitized" invisible="1"/>
-                                        <field name="work_phone_formatted" invisible="1"/>
+                                        <field name="work_phone_sanitized" invisible="1"/> <!-- read by the phone widget of work_phone for the tel: link -->
+                                        <field name="work_phone_formatted" invisible="1"/> <!-- read by the phone widget of work_phone for the displayed format -->
                                         <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
                                     </div>
                                     <label for="mobile_phone" class="d-md-none"/>
                                     <div class="d-flex align-items-baseline w-md-50 gap-2">
                                         <i class="oi d-none d-md-inline-flex" data-icon="smartphone" title="Work Mobile"/>
-                                        <field name="mobile_phone_sanitized" invisible="1"/>
-                                        <field name="mobile_phone_formatted" invisible="1"/>
+                                        <field name="mobile_phone_sanitized" invisible="1"/> <!-- read by the phone widget of mobile_phone for the tel: link -->
+                                        <field name="mobile_phone_formatted" invisible="1"/> <!-- read by the phone widget of mobile_phone for the displayed format -->
                                         <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
                                     </div>
                                     <label for="category_ids" class="d-md-none"/>
@@ -189,7 +189,7 @@
                         <field name="employee_properties" columns="2"/>
                         <notebook>
                             <page name="payroll_information" string="Payroll" groups="hr.group_hr_manager">
-                                <field name="currency_id" invisible="1"/>
+                                <field name="currency_id" invisible="1"/> <!-- currency of the wage monetary field below -->
                                 <group name="payroll_group">
                                     <group name="contract" groups="hr.group_hr_user">
                                         <div colspan="2" class="col-lg-6 w-100 mt-4 mb-3 o_horizontal_separator text-uppercase fw-bolder small d-flex">
@@ -209,7 +209,7 @@
                                                 class="o_hr_narrow_field ms-3" invisible="not contract_date_start"/>
                                             <widget name="button_new_contract"/>
                                         </div>
-                                        <field name="fixed_term" string="Fixed Term" invisible="1"/>
+                                        <field name="fixed_term" string="Fixed Term" invisible="1"/> <!-- set by the contract end dialog of the hr_employee_form js class, must be in the view to be saved -->
                                         <label for="wage"/>
                                         <div class="o_row" name="wage">
                                             <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
@@ -235,7 +235,7 @@
                                         <group name="work_location" string="Location">
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
-                                                options='{"highlight_first_line": True}' invisible="1"/>
+                                                options='{"highlight_first_line": True}' invisible="1"/> <!-- passed as default_address_id in the context of work_location_id -->
                                             <field name="work_location_id"
                                                 string="Usual Work Location"
                                                 context="{'default_address_id': address_id}"
@@ -281,13 +281,13 @@
                                 <group>
                                     <group string="Private Contact">
                                         <field name="private_email" placeholder="e.g. myprivateemail@example.com" string="Email"/>
-                                        <field name="private_phone_sanitized" invisible="1"/>
-                                        <field name="private_phone_formatted" invisible="1"/>
+                                        <field name="private_phone_sanitized" invisible="1"/> <!-- read by the phone widget of private_phone for the tel: link -->
+                                        <field name="private_phone_formatted" invisible="1"/> <!-- read by the phone widget of private_phone for the displayed format -->
                                         <field name="private_phone" widget="phone" string="Phone"/>
-                                        <field name="has_multiple_bank_accounts" invisible="1"/>
-                                        <field name="is_trusted_bank_account" invisible="1"/>
+                                        <field name="has_multiple_bank_accounts" invisible="1"/> <!-- drives invisible of the two bank account blocks below -->
+                                        <field name="is_trusted_bank_account" invisible="1"/> <!-- drives invisible of the trusted/untrusted labels and of the trust toggle button -->
                                         <field name="bank_account_ids" invisible="1"
-                                            widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
+                                            widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/> <!-- target of the label above and drives invisible of the bank account block -->
                                         <label for="bank_account_ids"/>
                                         <div class="d-flex align-items-start justify-content-between" invisible="not has_multiple_bank_accounts">
                                                 <field name="bank_account_ids"
@@ -365,13 +365,13 @@
                                             <label for="work_permit_expiration_date" class="flex-shrink-0" invisible="not permit_no" string="Expires on"/>
                                             <field name="work_permit_expiration_date" invisible="not permit_no"/>
                                         </div>
-                                        <field name="work_permit_name" invisible="1"/>
+                                        <field name="work_permit_name" invisible="1"/> <!-- filename of the has_work_permit binary widget -->
                                         <field name="has_work_permit" widget="binary" filename="work_permit_name" string="Document"/>
                                     </group>
                                     <group string="Emergency Contact">
                                         <field name="emergency_contact" string="Contact Name"/>
-                                        <field name="emergency_phone_sanitized" invisible="1"/>
-                                        <field name="emergency_phone_formatted" invisible="1"/>
+                                        <field name="emergency_phone_sanitized" invisible="1"/> <!-- read by the phone widget of emergency_phone for the tel: link -->
+                                        <field name="emergency_phone_formatted" invisible="1"/> <!-- read by the phone widget of emergency_phone for the displayed format -->
                                         <field name="emergency_phone" widget="phone" class="o_force_ltr" string="Phone"/>
                                     </group>
                                     <group string="Location" name="hr_location_group">
@@ -403,8 +403,8 @@
                                         <field name="study_field" placeholder="e.g. Engineering, Commerce, Business Administration, ..."/>
                                     </group>
                                     <group string="Documents" name="hr_document_group">
-                                        <field name="id_card_name" invisible="1"/>
-                                        <field name="driving_license_name" invisible="1"/>
+                                        <field name="id_card_name" invisible="1"/> <!-- filename of the id_card binary widget -->
+                                        <field name="driving_license_name" invisible="1"/> <!-- filename of the driving_license binary widget -->
                                         <field name="id_card" filename="id_card_name"/>
                                         <field name="driving_license" filename="driving_license_name"/>
                                     </group>
@@ -485,7 +485,7 @@
                                         <label for="hourly_cost"/>
                                         <div name="hourly_cost">
                                             <field name="hourly_cost" class="oe_inline"/>
-                                            <field name="currency_id" invisible="1"/>
+                                            <field name="currency_id" invisible="1"/> <!-- currency of the hourly_cost field of this hidden settings group -->
                                         </div>
                                     </group>
                                     <group string="Attendance/Point of Sale" name="identification_group">
@@ -549,14 +549,14 @@
                     </header>
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name" string="Name" readonly="1"/>
-                    <field name="work_phone_sanitized" column_invisible="1"/>
-                    <field name="work_phone_formatted" column_invisible="1"/>
+                    <field name="work_phone_sanitized" column_invisible="1"/> <!-- read by the phone widget of work_phone for the tel: link -->
+                    <field name="work_phone_formatted" column_invisible="1"/> <!-- read by the phone widget of work_phone for the displayed format -->
                     <field name="work_phone" widget="phone" class="o_force_ltr" readonly="1" optional="show"/>
                     <field name="work_email" optional="hide"/>
                     <field name="work_location_name" readonly="0" string="Work Location" optional="hide"/>
                     <field name="contract_date_start" optional="hide"/>
                     <field name="contract_date_end" optional="hide"/>
-                    <field name="currency_id" column_invisible="1"/>
+                    <field name="currency_id" column_invisible="1"/> <!-- currency of the wage monetary widget -->
                     <field name="wage" widget="monetary" optional="hide"/>
                     <field name="employee_type_id" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
@@ -564,12 +564,12 @@
                     <field name="department_id" optional="show"/>
                     <field name="job_title" string="Job" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="show"/>
                     <field name="parent_id" widget="many2one_avatar_employee" optional="show"/>
-                    <field name="address_id" column_invisible="True"/>
-                    <field name="company_id" column_invisible="True"/>
+                    <field name="address_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="company_id" column_invisible="True"/> <!-- duplicate hidden column kept to load the required company_id for users without base.group_multi_company -->
                     <field name="birthday" optional="hide"/>
                     <field name="hr_responsible_id" optional="hide"/>
-                    <field name="work_location_id" column_invisible="True"/>
-                    <field name="active" column_invisible="True"/>
+                    <field name="work_location_id" column_invisible="True"/> <!-- xpath anchor of hr_attendance, hr_expense, hr_holidays and timesheet_grid which add their columns after it -->
+                    <field name="active" column_invisible="True"/> <!-- enables the Archive/Unarchive action in this list -->
                     <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                     <field name="country_id" optional="hide"/>
                 </list>
@@ -599,13 +599,13 @@
                 <list string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="hr_employee_list">
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'rounded-3'}" width="30" nolabel="1"/>
                     <field name="name" readonly="1"/>
-                    <field name="work_phone_sanitized" column_invisible="1"/>
-                    <field name="work_phone_formatted" column_invisible="1"/>
+                    <field name="work_phone_sanitized" column_invisible="1"/> <!-- read by the phone widget of work_phone for the tel: link -->
+                    <field name="work_phone_formatted" column_invisible="1"/> <!-- read by the phone widget of work_phone for the displayed format -->
                     <field name="work_phone" widget="phone" class="o_force_ltr" readonly="1" optional="hide"/>
                     <field name="work_email" optional="hide"/>
                     <field name="contract_date_start" optional="hide"/>
                     <field name="contract_date_end" optional="hide"/>
-                    <field name="currency_id" column_invisible="1"/>
+                    <field name="currency_id" column_invisible="1"/> <!-- currency of the wage monetary widget -->
                     <field name="wage" widget="monetary" optional="hide"/>
                     <field name="employee_type_id" optional="hide"/>
                     <field name="structure_type_id" optional="hide"/>
@@ -616,13 +616,13 @@
                     <field name="department_id" optional="show"/>
                     <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="show"/>
                     <field name="parent_id" widget="many2one_avatar_employee" optional="hide"/>
-                    <field name="address_id" column_invisible="True"/>
-                    <field name="company_id" column_invisible="True"/>
+                    <field name="address_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                    <field name="company_id" column_invisible="True"/> <!-- duplicate hidden column kept to load the required company_id for users without base.group_multi_company -->
                     <field name="birthday" optional="hide"/>
                     <field name="work_location_id" optional="hide"/>
                     <field name="coach_id" widget="many2one_avatar_employee" optional="hide"/>
                     <field name="user_id" string="Related User" widget="many2one_avatar_user" optional="hide"/>
-                    <field name="active" column_invisible="True"/>
+                    <field name="active" column_invisible="True"/> <!-- enables the Archive/Unarchive action in this list -->
                     <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                     <field name="country_id" optional="hide"/>
                 </list>

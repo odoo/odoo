@@ -7,8 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='res_model']" position="after">
                 <field name="utm_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
-                    invisible="1"/>
-                <field name="mailing_id" invisible="1"/>
+                    invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
+                <field name="mailing_id" invisible="1"/> <!-- source record(s) the wizard works on, filled from the context -->
             </xpath>
         </field>
     </record>

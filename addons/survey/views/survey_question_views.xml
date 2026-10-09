@@ -7,14 +7,14 @@
         <field name="model">survey.question</field>
         <field name="arch" type="xml">
             <form string="Survey Question" create="false" class="o_survey_question_view_form">
-                <field name="is_placed_before_trigger" invisible="1"/>
+                <field name="is_placed_before_trigger" invisible="1"/> <!-- drives invisible of the alert block -->
                 <div class="alert alert-warning text-center" role="alert" invisible="not is_placed_before_trigger">
                     ⚠️ This question is positioned before some or all of its triggers and could be skipped.
                 </div>
-                <field name="is_page" invisible="1"/>
-                <field name="page_id" invisible="1" required="False"/>
-                <field name="sequence" invisible="1"/>
-                <field name="scoring_type" invisible="1"/>
+                <field name="is_page" invisible="1"/> <!-- drives invisible of the float-end block, the block and 5 more and required of question_type -->
+                <field name="page_id" invisible="1" required="False"/> <!-- read by the survey question trigger widget and the survey form interaction -->
+                <field name="sequence" invisible="1"/> <!-- used in the python-declared domain of triggering_answer_ids -->
+                <field name="scoring_type" invisible="1"/> <!-- drives invisible of the answers page, the group and 2 more -->
                 <sheet>
                     <field name="survey_id" invisible="not context.get('show_survey_field')" readonly="1"/>
                     <div class="float-end d-flex flex-column text-center" invisible="not is_page">
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="w-100 mw-100">
-                        <field name="questions_selection" invisible="1"/>
+                        <field name="questions_selection" invisible="1"/> <!-- drives invisible of the o_label_nowrap group, the paragraph and 1 more -->
                         <field name="description"
                             options="{'embedded_components': false}"
                             placeholder="Optional: provide extra guidelines, instructions, pictures... here, to help attendees answer"
@@ -71,8 +71,8 @@
                                     </div>
                                     
                                     <label for="scale_min_label" string="Labels"/>
-                                    <field name="scale_min_label_placeholder" invisible="1"/>
-                                    <field name="scale_max_label_placeholder" invisible="1"/>
+                                    <field name="scale_min_label_placeholder" invisible="1"/> <!-- placeholder_field option of scale_min_label -->
+                                    <field name="scale_max_label_placeholder" invisible="1"/> <!-- placeholder_field option of scale_max_label -->
                                     <div class="o_row">
                                         <field name="scale_min_label" nolabel="1" 
                                             options="{'placeholder_field': 'scale_min_label_placeholder'}"/>
@@ -122,7 +122,7 @@
                                         column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
                                     <field name="answer_score"
                                         column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
-                                    <field name="value_image_filename" column_invisible="True"/>
+                                    <field name="value_image_filename" column_invisible="True"/> <!-- filename of the value_image binary widget -->
                                     <field name="value_image" width="200px" widget="binary" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
                                         column_invisible="parent.question_type in ['matrix', 'scale']" required="not value"/>
                                 </list>
@@ -191,7 +191,7 @@
                                     <p class="text-muted" colspan="2" invisible="questions_selection == 'all'">
                                         Conditional display is not available when questions are randomly picked.
                                     </p>
-                                    <field name="allowed_triggering_question_ids" invisible="1"/>
+                                    <field name="allowed_triggering_question_ids" invisible="1"/> <!-- used in the domain of triggering_answer_ids -->
                                     <field name="triggering_answer_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"
                                            domain="[('question_id', 'in', allowed_triggering_question_ids)]"
                                            invisible="questions_selection == 'random'"
@@ -207,8 +207,8 @@
                                         placeholder="This question requires an answer."/>
                                 </group>
                                 <group string="Live Sessions" invisible="not session_available">
-                                    <field name="is_time_customized" invisible="True"/>
-                                    <field name="session_available" invisible="True"/>
+                                    <field name="is_time_customized" invisible="True"/> <!-- kept loaded for record data though not shown in this form -->
+                                    <field name="session_available" invisible="True"/> <!-- drives invisible of the Live Sessions group -->
                                     <label for="is_time_limited" string="Time Limit (seconds)"/>
                                     <div>
                                         <field name="is_time_limited" nolabel="1" class="oe_inline"
@@ -293,10 +293,10 @@
         <field name="arch" type="xml">
             <form string="Question Answer Form" create="False">
                 <sheet>
-                    <field name="question_type" invisible="1"/>
+                    <field name="question_type" invisible="1"/> <!-- drives invisible of answer_score, matrix_question_id -->
                     <group>
                         <group>
-                            <field name="scoring_type" invisible="1"/>
+                            <field name="scoring_type" invisible="1"/> <!-- drives invisible of is_correct, answer_score -->
                             <field name="question_id"/>
                             <field name="is_correct" invisible="scoring_type == 'no_scoring'"/>
                             <field name="answer_score" invisible="scoring_type == 'no_scoring' or question_type == 'matrix'"/>

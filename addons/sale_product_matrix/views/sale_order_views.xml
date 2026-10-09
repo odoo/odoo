@@ -8,9 +8,9 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <!-- Technical non stored fields for Order Grid Entry -->
-                <field name="grid" invisible="1"/>
-                <field name="grid_product_tmpl_id" invisible="1"/>
-                <field name="grid_update" invisible="1"/>
+                <field name="grid" invisible="1"/> <!-- serialized matrix exchanged with the product matrix dialog -->
+                <field name="grid_product_tmpl_id" invisible="1"/> <!-- product template the matrix dialog was opened for -->
+                <field name="grid_update" invisible="1"/> <!-- flag telling the server the matrix dialog returned a new grid -->
             </field>
             <group name="sales_person" position="inside">
                 <field name="report_grids" groups="base.group_no_one"/>

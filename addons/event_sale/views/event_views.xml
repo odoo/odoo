@@ -8,7 +8,7 @@
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='%(event.act_event_registration_from_event)d']" position="after">
-                <field name="currency_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/> <!-- currency_field option of the sale_price_total monetary widget -->
                 <button name="action_view_linked_orders"
                         type="object" class="oe_stat_button" icon="edit_square"
                         groups="sales_team.group_sale_salesman"

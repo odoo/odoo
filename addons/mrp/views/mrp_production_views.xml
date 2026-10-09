@@ -49,9 +49,8 @@
                             confirm="Are you sure you want to cancel these manufacturing orders?&#10;This action cannot be undone."
                             confirm-title="Cancel Manufacturing Orders" confirm-label="Cancel these Orders"/>
                     </header>
-                    <field name="company_id" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this multi-edit list -->
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
-                    <field name="message_needaction" column_invisible="True"/>
                     <field name="name" decoration-bf="1"/>
                     <field name="date_start" optional="show" widget="relative_date"/>
                     <field name="date_finished" optional="hide" widget="relative_date"/>
@@ -64,7 +63,7 @@
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
-                    <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
+                    <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/> <!-- drives decoration-success/warning/danger of components_availability -->
                     <field name="components_availability" options='{"lazy": true}'
                         invisible="state not in ['confirmed', 'progress']"
                         optional="show"
@@ -85,8 +84,7 @@
                            decoration-info="state == 'draft'"
                            optional="show" widget="badge" class="text-dark"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
-                    <field name="delay_alert_date" column_invisible="True"/>
-                    <field name="is_delayed" column_invisible="True"/>
+                    <field name="is_delayed" column_invisible="True"/> <!-- drives decoration-danger/decoration-bf of date_deadline -->
                     <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                 </list>
             </field>
@@ -112,7 +110,7 @@
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
                     <field name="origin" optional="show" readonly="state in ['cancel', 'done']"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user" readonly="state in ['cancel', 'done']"/>
-                    <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
+                    <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/> <!-- drives decoration-success/warning/danger of components_availability -->
                     <field name="components_availability" options='{"lazy": true}'
                         invisible="state not in ['confirmed', 'progress']"
                         optional="show"
@@ -273,7 +271,6 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                 <header>
-                    <field name="show_lock" invisible="1"/>
                     <button name="button_mark_done" type="object" string="Produce" class="oe_highlight" data-hotkey="g"
                             invisible="not move_raw_ids or validate_button_style != 'primary'"/>
                     <button name="button_mark_done" type="object" string="Produce" class="btn-secondary" data-hotkey="g"
@@ -299,14 +296,11 @@
                     <button name="action_reset_to_progress" type="object" string="Set to In Progress" invisible="state != 'done'" groups="mrp.group_mrp_manager"/>
                 </header>
                 <sheet>
-                    <field name="reservation_state" invisible="1"/>
-                    <field name="is_locked" invisible="1"/>
-                    <field name="qty_produced" invisible="1"/>
-                    <field name="unreserve_visible" invisible="1"/>
-                    <field name="reserve_visible" invisible="1"/>
-                    <field name="is_planned" invisible="1"/>
-                    <field name="show_allocation" invisible="1"/>
-                    <field name="workorder_ids" invisible="1"/>
+                    <field name="reservation_state" invisible="1"/> <!-- drives decoration-success/warning/danger of components_availability -->
+                    <field name="is_locked" invisible="1"/> <!-- drives readonly of qty_producing, date_finished and of the move lists -->
+                    <field name="is_planned" invisible="1"/> <!-- drives invisible of the Plan/Unplan buttons and readonly of the component quantities -->
+                    <field name="show_allocation" invisible="1"/> <!-- drives invisible of the Allocation stat button -->
+                    <field name="workorder_ids" invisible="1"/> <!-- drives invisible of the Plan button and of the two state statusbars -->
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_allocation_report" string="Allocation" type="object"
                             class="oe_stat_button" icon="format_list_bulleted"
@@ -391,19 +385,19 @@
                     </div>
                     <group>
                         <group>
-                            <field name="id" invisible="1"/>
-                            <field name="use_create_components_lots" invisible="1"/>
-                            <field name="show_lot_ids" invisible="1"/>
-                            <field name="product_tracking" invisible="1"/>
-                            <field name="allow_workorder_dependencies" invisible="1"/>
+                            <field name="id" invisible="1"/> <!-- drives invisible of the header buttons and feeds the default_*_production_id of the component and by-product contexts -->
+                            <field name="use_create_components_lots" invisible="1"/> <!-- drives the create attribute of lot_ids in the component and by-product lists -->
+                            <field name="show_lot_ids" invisible="1"/> <!-- drives column_invisible of lot_ids in the component and by-product lists -->
+                            <field name="product_tracking" invisible="1"/> <!-- drives readonly of qty_producing and invisible of the lot/serial block and its buttons -->
+                            <field name="allow_workorder_dependencies" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
                             <field name="product_id" context="{'default_is_storable': True}" readonly="state != 'draft'" default_focus="1" placeholder="Product to build..."/>
-                            <field name="product_tmpl_id" invisible="1"/>
-                            <field name="forecasted_issue" invisible="1"/>
-                            <field name="company_id" invisible="1"/>
+                            <field name="product_tmpl_id" invisible="1"/> <!-- passed as default_product_tmpl_id in the context of bom_id -->
+                            <field name="forecasted_issue" invisible="1"/> <!-- drives invisible of the two forecast report buttons -->
+                            <field name="company_id" invisible="1"/> <!-- passed as default_company_id in the context of move_raw_ids and move_byproduct_ids -->
                             <field name="product_description_variants" invisible="product_description_variants in (False, '')" readonly="state != 'draft'"/>
                             <label for="bom_id" name="bom_label"/>
                             <div class='o_row' name="bom_div">
-                                <field name='is_outdated_bom' invisible='1'/>
+                                <field name='is_outdated_bom' invisible='1'/> <!-- drives invisible of the Update BoM button -->
                                 <field name="bom_id"
                                     context="{'default_product_tmpl_id': product_tmpl_id}"
                                     invisible="state != 'draft' and not bom_id"
@@ -459,19 +453,17 @@
                                     help="Date at which you plan to start.
                                           Red if the scheduled end is forecasted after the production order deadline.
                                           Orange if the scheduled date is in the past."/>
-                                <field name="delay_alert_date" invisible="1"/>
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" invisible="not json_popover"/>
                             </div>
                             <field name="date_finished" string="End Date" readonly="is_locked" invisible="state != 'done'" help="Date at which you finished production."/>
-                            <field name="components_availability_state" invisible="1"/>
+                            <field name="components_availability_state" invisible="1"/> <!-- drives decoration-success/warning/danger of components_availability -->
                             <field name="components_availability" invisible="state not in ['confirmed', 'progress']"
                                 decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
                                 decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
                                 decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
                             <field name="user_id" widget="many2one_avatar" readonly="state in ['cancel', 'done']"/>
-                            <field name="show_final_lots" invisible="1"/>
-                            <field name="production_location_id" invisible="1" readonly="1"/>
-                            <field name="move_finished_ids" invisible="1" readonly="state == 'cancel' or (state == 'done' and is_locked)">
+                            <field name="production_location_id" invisible="1" readonly="1"/> <!-- passed as default_location_dest_id/default_location_id in the context of the move lists -->
+                            <field name="move_finished_ids" invisible="1" readonly="state == 'cancel' or (state == 'done' and is_locked)"> <!-- kept loaded for record data, only the move_byproduct_ids subset is displayed in its own page -->
                                 <list editable="bottom">
                                     <field name="product_id" readonly="state == 'done'"/>
                                     <field name="product_uom_qty" readonly="state == 'done'"/>
@@ -532,27 +524,26 @@
                                     <field name="forecast_availability" column_invisible="parent.state in ['done', 'cancel']" string="" widget="forecast_widget"/>
                                     <field name="location_id" string="From" readonly="1" force_save="1" groups="stock.group_stock_multi_locations" optional="hide"/>
                                     <!-- test_immediate_validate_uom_2, test_product_produce_different_uom -->
-                                    <field name="uom_id" column_invisible="True"/>
-                                    <field name="propagate_cancel" column_invisible="True"/>
-                                    <field name="price_unit" column_invisible="True"/>
-                                    <field name="company_id" column_invisible="True"/>
-                                    <field name="allowed_operation_ids" column_invisible="True"/>
-                                    <field name="unit_factor" column_invisible="True"/>
-                                    <field name="date_deadline" column_invisible="True" force_save="1"/>
-                                    <field name="date" column_invisible="True"/>
-                                    <field name="additional" column_invisible="True"/>
-                                    <field name="picking_type_id" column_invisible="True"/>
-                                    <field name="is_storable" column_invisible="True"/>
-                                    <field name="has_tracking" column_invisible="True"/>
-                                    <field name="operation_id" column_invisible="True"/>
-                                    <field name="bom_line_id" column_invisible="True"/>
-                                    <field name="sequence" column_invisible="True"/>
-                                    <field name="warehouse_id" column_invisible="True"/>
-                                    <field name="is_locked" column_invisible="True"/>
-                                    <field name="move_lines_count" column_invisible="True"/>
-                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" column_invisible="True"/>
-                                    <field name="state" column_invisible="True" force_save="1"/>
-                                    <field name="should_consume_qty" column_invisible="True"/>
+                                    <field name="uom_id" column_invisible="True"/> <!-- duplicate hidden column kept to load uom_id for users without uom.group_uom, and input of the should_consume_qty compute -->
+                                    <field name="propagate_cancel" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                    <field name="price_unit" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                    <field name="company_id" column_invisible="True"/> <!-- required company filled from the default_company_id of the context when a component line is added -->
+                                    <field name="allowed_operation_ids" column_invisible="True"/> <!-- used in the python-declared domain of operation_id -->
+                                    <field name="unit_factor" column_invisible="True"/> <!-- input of the should_consume_qty compute shown by the mrp_should_consume widget -->
+                                    <field name="date_deadline" column_invisible="True" force_save="1"/> <!-- filled from the default_date_deadline of the context and read by the forecast_widget of forecast_availability -->
+                                    <field name="date" column_invisible="True"/> <!-- filled from the default_date of the context when a component line is added -->
+                                    <field name="additional" column_invisible="True"/> <!-- drives readonly of product_id -->
+                                    <field name="picking_type_id" column_invisible="True"/> <!-- filled from the default_picking_type_id of the context when a component line is added -->
+                                    <field name="is_storable" column_invisible="True"/> <!-- read by the forecast_widget of forecast_availability to open the forecast report -->
+                                    <field name="has_tracking" column_invisible="True"/> <!-- drives readonly of quantity and invisible of the two Details buttons -->
+                                    <field name="operation_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                    <field name="bom_line_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                    <field name="warehouse_id" column_invisible="True"/> <!-- filled from the default_warehouse_id of the context when a component line is added -->
+                                    <field name="is_locked" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                    <field name="move_lines_count" column_invisible="True"/> <!-- drives readonly of product_id -->
+                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" column_invisible="True"/> <!-- filled from the default_location_dest_id of the context, the domain restricts it to the production destination -->
+                                    <field name="state" column_invisible="True" force_save="1"/> <!-- filled from the default_state of the context, drives readonly of product_id and the decorations of quantity -->
+                                    <field name="should_consume_qty" column_invisible="True"/> <!-- drives decoration-success/danger/warning of quantity and displayed by the mrp_should_consume widget -->
                                     <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume"
                                            column_invisible="parent.qty_producing in (0, parent.product_qty)"
                                            readonly="parent.state != 'draft'
@@ -563,8 +554,8 @@
                                            readonly="parent.state != 'draft'
                                                      and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned)
                                                           or (parent.is_locked and state != 'draft'))"/>
-                                    <field name="product_qty" readonly="1" column_invisible="True"/>
-                                    <field name="forecast_expected_date" column_invisible="True"/>
+                                    <field name="product_qty" readonly="1" column_invisible="True"/> <!-- read by the forecast_widget of forecast_availability to tell whether the need is fulfilled -->
+                                    <field name="forecast_expected_date" column_invisible="True"/> <!-- read by the forecast_widget of forecast_availability -->
                                     <field name="quantity" string="Consumed"
                                         decoration-success="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) == 0)"
                                         decoration-danger="(state not in ['done', 'cancel']) and (quantity - (should_consume_qty if parent.qty_producing else product_uom_qty) &gt; 0)"
@@ -573,7 +564,7 @@
                                         force_save="1"/>
                                     <field name="uom_id" readonly="state != 'draft' and id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
                                     <field name="picked" optional="hide"/>
-                                    <field name="show_details_visible" column_invisible="True"/>
+                                    <field name="show_details_visible" column_invisible="True"/> <!-- drives invisible of lot_ids and of the two Details buttons -->
                                     <field name="lot_ids" widget="many2many_tags"
                                         optional="hide"
                                         string="Lot/Serial Numbers"
@@ -608,29 +599,28 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id" context="{'default_is_storable': True}" domain="[('type', '=', 'consu'), ('id', '!=', parent.product_id)]" required="1" readonly="move_lines_count &gt; 0 or state == 'cancel' or (state != 'draft' and not additional)"/>
                                     <field name="location_dest_id" string="To" readonly="1" force_save="1" groups="stock.group_stock_multi_locations"/>
-                                    <field name="company_id" column_invisible="True"/>
-                                    <field name="allowed_operation_ids" column_invisible="True"/>
-                                    <field name="unit_factor" column_invisible="True"/>
-                                    <field name="date" column_invisible="True"/>
-                                    <field name="date_deadline" column_invisible="True" force_save="1"/>
-                                    <field name="additional" column_invisible="True"/>
-                                    <field name="picking_type_id" column_invisible="True"/>
-                                    <field name="has_tracking" column_invisible="True"/>
-                                    <field name="operation_id" column_invisible="True"/>
-                                    <field name="bom_line_id" column_invisible="True"/>
-                                    <field name="byproduct_id" column_invisible="True"/>
-                                    <field name="sequence" column_invisible="True"/>
-                                    <field name="location_id" column_invisible="True"/>
-                                    <field name="warehouse_id" column_invisible="True"/>
-                                    <field name="is_locked" column_invisible="True"/>
-                                    <field name="move_lines_count" column_invisible="True"/>
-                                    <field name="state" column_invisible="True" force_save="1"/>
+                                    <field name="company_id" column_invisible="True"/> <!-- required company filled from the default_company_id of the context when a by-product line is added -->
+                                    <field name="allowed_operation_ids" column_invisible="True"/> <!-- used in the python-declared domain of operation_id -->
+                                    <field name="unit_factor" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                    <field name="date" column_invisible="True"/> <!-- filled from the default_date of the context when a by-product line is added -->
+                                    <field name="date_deadline" column_invisible="True" force_save="1"/> <!-- filled from the default_date_deadline of the context when a by-product line is added -->
+                                    <field name="additional" column_invisible="True"/> <!-- drives readonly of product_id -->
+                                    <field name="picking_type_id" column_invisible="True"/> <!-- filled from the default_picking_type_id of the context when a by-product line is added -->
+                                    <field name="has_tracking" column_invisible="True"/> <!-- drives readonly of quantity and invisible of the two Details buttons -->
+                                    <field name="operation_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                    <field name="bom_line_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                    <field name="byproduct_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                    <field name="location_id" column_invisible="True"/> <!-- filled from the default_location_id of the context when a by-product line is added -->
+                                    <field name="warehouse_id" column_invisible="True"/> <!-- filled from the default_warehouse_id of the context when a by-product line is added -->
+                                    <field name="is_locked" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                                    <field name="move_lines_count" column_invisible="True"/> <!-- drives readonly of product_id -->
+                                    <field name="state" column_invisible="True" force_save="1"/> <!-- filled from the default_state of the context and drives decoration-muted of this list -->
                                     <field name="product_uom_qty" string="To Produce" force_save="1" readonly="parent.state != 'draft' and ((parent.state not in ('confirmed', 'progress', 'to_close') and not parent.is_planned) or parent.is_locked)"/>
                                     <field name="quantity" column_invisible="parent.state == 'draft'" readonly="has_tracking in ['lot', 'serial']"/>
                                     <field name="picked" string="Produced" column_invisible="parent.state == 'draft'" optional="show"/>
                                     <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                                     <field name="cost_share" optional="hide"/>
-                                    <field name="show_details_visible" column_invisible="True"/>
+                                    <field name="show_details_visible" column_invisible="True"/> <!-- drives invisible of lot_ids and of the two Details buttons -->
                                     <field name="lot_ids" widget="many2many_tags"
                                         optional="hide"
                                         string="Lot/Serial Numbers"
@@ -652,15 +642,15 @@
                                 <group>
                                     <field name="picking_type_id" options="{'no_quick_create': True}" readonly="state not in ('draft', 'confirmed')"/>
                                     <field name="location_src_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" readonly="state != 'draft'"/>
-                                    <field name="location_src_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
-                                    <field name="warehouse_id" invisible="1"/>
+                                    <field name="location_src_id" groups="!stock.group_stock_multi_locations" invisible="1"/> <!-- passed as default_location_id in the context of move_raw_ids for users without stock.group_stock_multi_locations -->
+                                    <field name="warehouse_id" invisible="1"/> <!-- passed as default_warehouse_id in the context of the move lists -->
                                     <field name="location_dest_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" readonly="state != 'draft'"/>
-                                    <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1"/>
+                                    <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1"/> <!-- passed as default_location_dest_id in the context of move_byproduct_ids for users without stock.group_stock_multi_locations -->
                                 </group>
                                 <group>
                                     <field name="origin" readonly="state in ['cancel', 'done']"/>
                                     <field name="date_deadline"/>
-                                    <field name="is_delayed" invisible="True"/>
+                                    <field name="is_delayed" invisible="True"/> <!-- xpath anchor of project_mrp which adds its field after it -->
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state != 'draft'" force_save="1"/>
                                     <field name="note" readonly="False"/>
                                 </group>

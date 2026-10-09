@@ -32,8 +32,8 @@
                             </div>
                         </button>
                     </div>
-                    <field name="active" invisible="1"/>
-                    <field name="applies_on" invisible="1"/>
+                    <field name="active" invisible="1"/> <!-- drives invisible of the web_ribbon widget -->
+                    <field name="applies_on" invisible="1"/> <!-- drives invisible of the communications page -->
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="e.g. 10% discount on laptops"/>
@@ -127,9 +127,9 @@
                                 invisible="program_type in ('gift_card', 'ewallet')"
                                 options="{'end_date_field': 'date_to'}"
                             />
-                            <field name="date_to" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="currency_symbol" invisible="1"/>
+                            <field name="date_to" invisible="1"/> <!-- end of the date_from daterange widget (end_date_field option) -->
+                            <field name="currency_id" invisible="1"/> <!-- used in the python-declared domain of pricelist_ids -->
+                            <field name="currency_symbol" invisible="1"/> <!-- passed as currency_symbol in the context of rule_ids -->
                         </group>
                         <group>
                             <field
@@ -202,7 +202,7 @@
                         <page string="Settings">
                             <group>
                                 <label class="o_form_label" for="available_on" string="Available On" invisible="1"/>
-                                <field name="available_on" invisible="1"/>
+                                <field name="available_on" invisible="1"/> <!-- target of the <label for="available_on"> of this form -->
                                 <div id="o_loyalty_program_availabilities" invisible="1"/>
                                 <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                             </group>

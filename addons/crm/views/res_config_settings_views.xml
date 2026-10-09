@@ -33,8 +33,8 @@
                         </setting>
                     </block>
                     <block>
-                        <field name="predictive_lead_scoring_fields_str" invisible="1"/>
-                        <field name="predictive_lead_scoring_start_date_str" invisible="1"/>
+                        <field name="predictive_lead_scoring_fields_str" invisible="1"/> <!-- string form of the scoring fields, written back by the settings on save -->
+                        <field name="predictive_lead_scoring_start_date_str" invisible="1"/> <!-- string form of the scoring start date, written back by the settings on save -->
                         <setting title="This can be used to compute statistical probability to close a lead" name="predictive_lead_setting_container" string="Predictive Lead Scoring">
                             <div class="text-muted crm_settings_block">
                                 The success rate is computed based on <b>

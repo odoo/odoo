@@ -6,9 +6,9 @@
         <field name="inherit_id" ref="product_expiry.confirm_expiry_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='description']" position="after">
-                <field name="picking_ids" invisible="1"/>
-                <field name="production_ids" invisible="1"/>
-                <field name="workorder_id" invisible="1"/>
+                <field name="picking_ids" invisible="1"/> <!-- used in the invisible attribute(s) this view sets on other fields -->
+                <field name="production_ids" invisible="1"/> <!-- drives invisible of the confirm_produce button, the btn-secondary button -->
+                <field name="workorder_id" invisible="1"/> <!-- drives invisible of the confirm_workorder button -->
             </xpath>
             <xpath expr="//button[@name='process']" position="attributes">
                 <attribute name="invisible">not picking_ids</attribute>

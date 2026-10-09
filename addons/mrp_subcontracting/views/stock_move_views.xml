@@ -7,16 +7,16 @@
         <field name="priority">1000</field>
         <field name="arch" type="xml">
             <list editable="bottom">
-                <field name="company_id" column_invisible="True"/>
-                <field name="owner_id" column_invisible="True"/>
-                <field name="tracking" column_invisible="True"/>
-                <field name="package_id" column_invisible="True"/>
-                <field name="result_package_id" column_invisible="True"/>
-                <field name="location_id" column_invisible="True"/>
-                <field name="location_dest_id" column_invisible="True"/>
-                <field name="state" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of location_dest_id, location_id, lot_id -->
+                <field name="owner_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="tracking" column_invisible="True"/> <!-- drives invisible of lot_id and required of lot_id -->
+                <field name="package_id" column_invisible="True"/> <!-- used in the python-declared domain of result_package_id -->
+                <field name="result_package_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="location_id" column_invisible="True"/> <!-- used in the python-declared domain of package_id, result_package_id -->
+                <field name="location_dest_id" column_invisible="True"/> <!-- used in the python-declared domain of result_package_id -->
+                <field name="state" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
                 <!-- Don't put move_id here to avoid that the framework send falsy move_id -->
-                <field name="id" column_invisible="True"/>
+                <field name="id" column_invisible="True"/> <!-- used in the python-declared domain of result_package_id, uom_id -->
                 <field name="product_id" required="1" domain="[('id', 'in', context.get('bom_product_ids'))] if context.get('is_subcontracting_portal') else []"/>
                 <field name="lot_id" groups="stock.group_production_lot"
                     invisible="tracking not in ('serial', 'lot')"
@@ -77,15 +77,15 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <field name="company_id" invisible="1"/>
-                    <field name="product_id" invisible="1" readonly="state == 'done'"/>
-                    <field name="sequence" invisible="1"/>
-                    <field name="location_id" invisible="1"/>
-                    <field name="picking_id" invisible="1" readonly="state == 'done'"/>
-                    <field name="location_dest_id" invisible="1"/>
-                    <field name="has_tracking" invisible="1"/>
-                    <field name="uom_id" invisible="1"/>
-                    <field name="product_uom_qty" invisible="1" readonly="state == 'done'"/>
+                    <field name="company_id" invisible="1"/> <!-- used in the python-declared domain of bom_line_id, byproduct_id, consume_unbuild_id -->
+                    <field name="product_id" invisible="1" readonly="state == 'done'"/> <!-- used in the python-declared domain of lot_ids -->
+                    <field name="sequence" invisible="1"/> <!-- kept loaded for record data though not shown in this form -->
+                    <field name="location_id" invisible="1"/> <!-- passed as default_location_id in the context of move_line_ids -->
+                    <field name="picking_id" invisible="1" readonly="state == 'done'"/> <!-- passed as default_picking_id in the context of move_line_ids -->
+                    <field name="location_dest_id" invisible="1"/> <!-- used in the context of move_line_ids -->
+                    <field name="has_tracking" invisible="1"/> <!-- drives invisible of lot_id -->
+                    <field name="uom_id" invisible="1"/> <!-- passed as default_uom_id in the context of move_line_ids -->
+                    <field name="product_uom_qty" invisible="1" readonly="state == 'done'"/> <!-- demand kept loaded with its readonly expression though it is only shown in the list -->
                     <group>
                         <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>
                         <field name="quantity" string="Total Consumed" readonly="1"/>
@@ -94,14 +94,14 @@
                         readonly="state in ['done', 'cancel']"
                         context="{'default_uom_id': uom_id, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}">
                         <list editable="bottom" decoration-muted="state in ('done', 'cancel')">
-                            <field name="company_id" column_invisible="True"/>
-                            <field name="state" column_invisible="True"/>
-                            <field name="tracking" column_invisible="True"/>
-                            <field name="uom_id" column_invisible="True"/>
-                            <field name="picking_id" column_invisible="True"/>
-                            <field name="move_id" column_invisible="True"/>
-                            <field name="location_id" column_invisible="True"/>
-                            <field name="location_dest_id" column_invisible="True"/>
+                            <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of bom_line_id, byproduct_id, consume_unbuild_id -->
+                            <field name="state" column_invisible="True"/> <!-- drives readonly of product_id, picking_id and 2 more -->
+                            <field name="tracking" column_invisible="True"/> <!-- drives required of lot_id -->
+                            <field name="uom_id" column_invisible="True"/> <!-- passed as default_uom_id in the context of move_line_ids -->
+                            <field name="picking_id" column_invisible="True"/> <!-- passed as default_picking_id in the context of move_line_ids -->
+                            <field name="move_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                            <field name="location_id" column_invisible="True"/> <!-- passed as default_location_id in the context of move_line_ids -->
+                            <field name="location_dest_id" column_invisible="True"/> <!-- used in the context of move_line_ids -->
                             <field name="product_id" readonly="1" force_save="1"/>
                             <field name="quantity"/>
                             <field name="lot_id" column_invisible="parent.has_tracking not in ('serial', 'lot')" required="tracking in ('serial', 'lot')" context="{'default_product_id': product_id}" groups="stock.group_production_lot"/>
@@ -132,20 +132,19 @@
         <field name="priority">1000</field>
         <field name="arch" type="xml">
             <list delete="0" create="0" decoration-muted="state in ['done', 'cancel']" decoration-warning="quantity - product_uom_qty &gt; 0.0001" decoration-success="state not in ['done', 'cancel'] and quantity - product_uom_qty &lt; 0.0001" js_class="subcontracting_portal_move_list_view">
-                <field name="company_id" column_invisible="True"/>
-                <field name="sequence" column_invisible="True"/>
-                <field name="unit_factor" column_invisible="True"/>
-                <field name="date" column_invisible="True"/>
-                <field name="picking_type_id" column_invisible="True"/>
-                <field name="has_tracking" column_invisible="True"/>
-                <field name="operation_id" column_invisible="True"/>
-                <field name="bom_line_id" column_invisible="True"/>
-                <field name="location_id" column_invisible="True"/>
-                <field name="warehouse_id" column_invisible="True"/>
-                <field name="product_uom_qty" column_invisible="True" readonly="state == 'done'"/>
-                <field name="location_dest_id" column_invisible="True"/>
-                <field name="state" column_invisible="True" force_save="1"/>
-                <field name="raw_material_production_id" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/> <!-- used in the python-declared domain of bom_line_id, byproduct_id, consume_unbuild_id -->
+                <field name="sequence" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="unit_factor" column_invisible="True"/> <!-- input of the should_consume_qty compute of the component lines -->
+                <field name="date" column_invisible="True"/> <!-- filled from the default_date of the context when a line is added here -->
+                <field name="picking_type_id" column_invisible="True"/> <!-- filled from the default_picking_type_id of the context when a line is added here -->
+                <field name="operation_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="bom_line_id" column_invisible="True"/> <!-- kept loaded for record data though not shown in this list -->
+                <field name="location_id" column_invisible="True"/> <!-- filled from the default_location_id of the context when a line is added here -->
+                <field name="warehouse_id" column_invisible="True"/> <!-- filled from the default_warehouse_id of the context when a line is added here -->
+                <field name="product_uom_qty" column_invisible="True" readonly="state == 'done'"/> <!-- drives decoration-success/warning of the list -->
+                <field name="location_dest_id" column_invisible="True"/> <!-- filled from the default_location_dest_id of the context when a line is added here -->
+                <field name="state" column_invisible="True" force_save="1"/> <!-- drives readonly of product_uom_qty, product_id -->
+                <field name="raw_material_production_id" column_invisible="True"/> <!-- filled from the default_raw_material_production_id of the context when a line is added here -->
                 <field name="product_id" required="1" readonly="state == 'done'"/>
                 <field name="quantity" string="Consumed" readonly="1"/>
                 <field name="uom_id" groups="uom.group_uom" widget="many2one_uom"/>

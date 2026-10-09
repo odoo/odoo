@@ -8,8 +8,8 @@
             <field name="model">mrp.consumption.warning</field>
             <field name="arch" type="xml">
                 <form string="Consumption Warning">
-                    <field name="mrp_production_ids" invisible="1"/>
-                    <field name="mrp_production_count" invisible="1"/>
+                    <field name="mrp_production_ids" invisible="1"/> <!-- kept loaded for record data though not shown in this wizard -->
+                    <field name="mrp_production_count" invisible="1"/> <!-- drives column_invisible of the mrp_production_id column -->
                     <div class="m-2">
                         You consumed a different quantity than expected for the following products
                         and/or consumed a product that is not included in the bill of materials.
@@ -19,7 +19,7 @@
                         <list create="0" delete="0" editable="top">
                             <field name="mrp_production_id" column_invisible="parent.mrp_production_count == 1" force_save="1"/>
                             <field name="product_id" force_save="1"/>
-                            <field name="move_id" force_save="1" column_invisible="1"/>
+                            <field name="move_id" force_save="1" column_invisible="1"/> <!-- move the warning line refers to, force_save so it is posted back when the quantities are updated -->
                             <field name="uom_id" groups="uom.group_uom" force_save="1" widget="many2one_uom"/>
                             <field name="product_expected_qty_uom" force_save="1"/>
                             <field name="product_consumed_qty_uom" force_save="1"/>

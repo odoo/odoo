@@ -6,7 +6,7 @@
             <field name="model">hr.work.location</field>
             <field name="arch" type="xml">
                 <list string="Work Location">
-                    <field name="active" column_invisible="True" />
+                    <field name="active" column_invisible="True" /> <!-- enables the Archive/Unarchive action in this list -->
                     <field name="name" />
                     <field name="address_id" />
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
@@ -21,7 +21,7 @@
                     <sheet>
                         <group>
                             <group>
-                                <field name="active" invisible="1" />
+                                <field name="active" invisible="1" /> <!-- enables the Archive/Unarchive action of this form -->
                                 <field name="name" />
                                 <field name="address_id" invisible="location_type == 'home'" required="location_type != 'home'"/>
                                 <field name="location_type"
@@ -34,7 +34,7 @@
                             </group>
                             <group>
                                 <field name="company_id" groups="base.group_multi_company" />
-                                <field name="company_id" groups="!base.group_multi_company" invisible="1" />
+                                <field name="company_id" groups="!base.group_multi_company" invisible="1" /> <!-- duplicate hidden field kept to post the required company_id for users without base.group_multi_company -->
                             </group>
                         </group>
                     </sheet>
