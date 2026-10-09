@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_ph_pos.OrderSummary" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension">
+        <xpath expr="//OrderDisplay/t[@t-set-slot='details']" position="inside">
+            <t t-set="l10nPhDiscountBreakdown" t-value="this.l10nPhGetDiscountBreakdown()"/>
+            <div t-if="l10nPhDiscountBreakdown.length" class="l10n_ph_discount_privileges_summary px-2 py-2">
+                <div t-foreach="l10nPhDiscountBreakdown" t-as="row" t-key="row.privilege.id"
+                        class="d-flex justify-content-between fw-bold">
+                    <span t-out="row.privilege.name"/>
+                    <span t-out="this.pos.formatCurrency(row.amount)"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
