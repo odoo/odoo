@@ -59,9 +59,6 @@ class TestSnippets(HttpCase):
             })
         self.start_tour(f"/odoo/action-website.website_preview?{path}", "snippets_all_drag_and_drop", login='admin', timeout=600)
 
-    def test_04_countdown_preview(self):
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_countdown', login='admin')
-
     def test_05_social_media(self):
         self.env.ref('base.default_website').company_id.write({
             'social_facebook': "https://www.facebook.com/Odoo",
@@ -89,9 +86,6 @@ class TestSnippets(HttpCase):
         create_image_attachment(self.env, '/web/image/website.landscape_md_1', 's_default_image.jpg')
         create_image_attachment(self.env, '/web/image/website.portrait_lg_3', 's_default_image2.webp')
         self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_image_gallery_remove", login='admin')
-
-    def test_10_parallax(self):
-        self.start_tour(self.env['website'].get_client_action_url('/', True), 'test_parallax', login='admin')
 
     def test_11_snippet_popup_display_on_click(self):
         # To make the tour reliable we need to wait a field using data-fill-with

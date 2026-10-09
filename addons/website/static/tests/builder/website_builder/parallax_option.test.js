@@ -1,10 +1,10 @@
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
-import { waitFor } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, queryOne, waitFor } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -124,6 +124,75 @@ test("parallax scroll effect 'none' doesn't remove the color filter", async () =
     await contains("[data-action-value='none']").click();
     expect(":iframe section .o_we_bg_filter").toHaveCount(1);
 });
+
+describe("scroll effect", () => {
+    beforeEach(async () => {
+        await setupWebsiteBuilder(
+            `<section style="background-image: url('/web/image/123/transparent.png'); height: 500px">
+                <div class="container"><p>Content</p></div>
+            </section>`,
+            { interactions: ["website.parallax"] }
+        );
+        await contains(":iframe section").click();
+    });
+
+    test("filtered image follows the scroll effect target", async () => {
+        await setScrollEffect("fixed");
+        await contains("[data-label='Filter'] .dropdown-toggle").click();
+        await contains("[data-action-id='glFilter'][data-action-param='blur']").click();
+        await waitFor(":iframe .s_parallax_bg[data-gl-filter='blur']");
+        expect(":iframe .s_parallax_bg").toHaveClass("o_modified_image_to_save");
+
+        // Without parallax, the section holds the image
+        await setScrollEffect("none");
+        expect(":iframe .s_parallax_bg").toHaveCount(0);
+        expect(":iframe section").toHaveAttribute("data-gl-filter", "blur");
+        expect(":iframe section").toHaveClass("o_modified_image_to_save");
+
+        await setScrollEffect("fixed");
+        expect(":iframe section").not.toHaveAttribute("data-gl-filter");
+        expect(":iframe section").not.toHaveClass("o_modified_image_to_save");
+        expect(":iframe .s_parallax_bg").toHaveAttribute("data-gl-filter", "blur");
+        expect(":iframe .s_parallax_bg").toHaveClass("o_modified_image_to_save");
+    });
+
+    test("interaction moves the background in edit mode", async () => {
+        await setScrollEffect("top");
+        // Styles set by the interaction, not by the option
+        expect(":iframe .s_parallax_bg").toHaveStyle("top; bottom; transform", { inline: true });
+
+        await setScrollEffect("zoomIn");
+        expect(":iframe .s_parallax_bg").toHaveStyle({ transform: /^scale\(/ }, { inline: true });
+    });
+});
+
+test("parallax interaction does not mark the page as dirty", async () => {
+    // Changing the option marks the page as dirty, and the test reload
+    // restores the initial content: start from a saved "Parallax to Top".
+    const backgroundImageUrl = "url('/web/image/123/transparent.png')";
+    await setupWebsiteBuilder(
+        `<section class="parallax" data-scroll-background-ratio="1.5" style="height: 500px">
+            <span class="s_parallax_bg_wrap">
+                <span class="s_parallax_bg oe_img_bg" style="background-image: ${backgroundImageUrl}"></span>
+            </span>
+        </section>`,
+        { interactions: ["website.parallax"] }
+    );
+    // The interaction first applies its style before the editor observes the
+    // DOM: make it update the style in edit mode by moving the section from
+    // outside the editable, then scrolling.
+    const { transform } = (await waitFor(":iframe .s_parallax_bg[style*='translateY(']")).style;
+    const iframeBody = queryOne(":iframe body");
+    iframeBody.style.paddingTop = "200px";
+    await manuallyDispatchProgrammaticEvent(iframeBody.ownerDocument, "scroll");
+    expect(":iframe .s_parallax_bg").not.toHaveStyle({ transform }, { inline: true });
+    expect(":iframe #wrap").not.toHaveClass("o_dirty");
+});
+
+async function setScrollEffect(value) {
+    await contains("[data-label='Scroll Effect'] button.o-dropdown").click();
+    await contains(`[data-action-value='${value}']`).click();
+}
 
 async function setupWebsiteAndOpenParallaxOptions(
     { editingElClasses = "" } = {},
