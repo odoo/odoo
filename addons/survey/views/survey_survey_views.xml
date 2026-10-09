@@ -226,11 +226,62 @@
             </form>
         </field>
     </record>
+    <record id="survey_survey_view_help" model="ir.ui.view">
+        <field name="name">survey.survey.view.help</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <help>
+                <div class="o_survey_not_found">
+                    <h1>No Survey Found</h1>
+                    <p class="lead">
+                        Pick a sample or
+                        <a name="action_load_sample_custom" type="object" class="o_survey_load_sample">Start from scratch</a>.
+                    </p>
+                </div>
+                <div class="o_survey_sample_cards row g-2 g-md-3 mx-auto mt-2 justify-content-center">
+                    <div class="col-12 col-md-4 col-xl-3">
+                        <a name="action_load_survey_template_sample" type="object" args="['survey']"
+                                class="o_survey_load_sample o_survey_sample_card card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                                aria-label="Select Survey template">
+                            <img class="o_image_64_contain mx-auto" src="/survey/static/src/img/survey_sample_survey.png" alt="Survey"/>
+                            <div class="card-body p-0 text-start text-md-center">
+                                <h3 class="card-title">Survey</h3>
+                                <p class="card-text">Gather feedbacks from your employees and customers</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-4 col-xl-3">
+                        <a name="action_load_survey_template_sample" type="object" args="['assessment']"
+                                class="o_survey_load_sample o_survey_sample_card card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                                aria-label="Select Assessment template">
+                            <img class="o_image_64_contain mx-auto" src="/survey/static/src/img/survey_sample_assessment.png" alt="Assessment"/>
+                            <div class="card-body p-0 text-start text-md-center">
+                                <h3 class="card-title">Assessment</h3>
+                                <p class="card-text">Handle quiz &amp; certifications</p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-12 col-md-4 col-xl-3">
+                        <a name="action_load_survey_template_sample" type="object" args="['live_session']"
+                                class="o_survey_load_sample o_survey_sample_card card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                                aria-label="Select Live Session template">
+                            <img class="o_image_64_contain mx-auto" src="/survey/static/src/img/survey_sample_live_session.png" alt="Live Session"/>
+                            <div class="card-body p-0 text-start text-md-center">
+                                <h3 class="card-title">Live Session</h3>
+                                <p class="card-text">Make your presentations more fun by sharing questions live</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </help>
+        </field>
+    </record>
+
     <record id="survey_survey_view_tree" model="ir.ui.view">
         <field name="name">survey.survey.view.list</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <list string="Survey" js_class="survey_view_tree">
+            <list string="Survey" help_id="%(survey.survey_survey_view_help)d">
                 <field name="active" column_invisible="True"/>
                 <field name="certification" column_invisible="True"/>
                 <field name="title"/>
@@ -252,7 +303,7 @@
         <field name="name">survey.survey.view.kanban</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban highlight_color="color" js_class="survey_view_kanban" class="o_kanban_list">
+            <kanban highlight_color="color" js_class="survey_view_kanban" class="o_kanban_list" help_id="%(survey.survey_survey_view_help)d">
                 <field name="active"/>
                 <field name="certification"/>
                 <field name="create_date"/>
