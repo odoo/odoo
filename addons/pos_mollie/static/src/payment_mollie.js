@@ -30,7 +30,7 @@ export class PaymentMollie extends PaymentInterface {
     }
 
     async sendPaymentRequest(line) {
-        if (line.amount < 0) {
+        if (line.isRefund) {
             const originalPaymentId = this._findOriginalPaymentId(line);
             if (!originalPaymentId) {
                 this._showMollieError(
