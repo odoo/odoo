@@ -229,8 +229,6 @@ class ProductProduct(models.Model):
                 'quantity': quantity,
                 'old_cost': old_value,
                 'new_cost': value,
-                'old_value': (old_value or 0) * quantity,
-                'new_value': value * quantity,
                 'value': value,
                 'company_id': product.company_id.id or self.env.company.id,
                 'date': date,
@@ -374,6 +372,8 @@ class ProductProduct(models.Model):
         value_by_product_id = defaultdict(float)
         quantity_by_product_id = {}
         date_by_product_id = {}
+        price_changes_by_product_id = {}
+        next_change_by_product_id = {}
 
         if not at_date and not force_recompute:
             std_price_by_product_id = {p.id: p.standard_price for p in self}
@@ -455,14 +455,24 @@ class ProductProduct(models.Model):
                 value = value_by_product_id.get(move.product_id.id, 0.0)
                 if move.product_id != product:
                     product = move.product_id
-                    price_changes = iter(std_price_history_by_product_id.get(product, self.env['product.value']) if correction else self.env['product.value'])
-                    next_change = next(price_changes, None)
+                    if product in price_changes_by_product_id:
+                        price_changes = price_changes_by_product_id[product]
+                        next_change = next_change_by_product_id[product]
+                    else:
+                        price_changes = iter(std_price_history_by_product_id.get(product, self.env['product.value']) if correction else self.env['product.value'])
+                        next_change = next(price_changes, None)
                 while next_change and next_change.date <= move.date:
+                    if average_cost != next_change.old_cost:
+                        next_change.write({"old_cost": average_cost})
                     average_cost = next_change.value
                     value = average_cost * quantity
                     next_change = next(price_changes, None)
                 if move.is_in:
                     in_qty = move._get_valued_qty()
+                    if move.is_inventory and quantity:
+                        expected_value = in_qty * average_cost
+                        if move.value != expected_value:
+                            move.value = expected_value
                     in_value = move.value
                     if lot:
                         lot_qty = move._get_valued_qty(lot)
@@ -483,7 +493,7 @@ class ProductProduct(models.Model):
                         lot_qty = move._get_valued_qty(lot)
                         out_value = (out_value * lot_qty / out_qty) if out_qty else 0
                         out_qty = lot_qty
-                    if correction and move.date > at_date and move.is_out:
+                    if correction and move.date > at_date:
                         if lot:
                             move.value -= out_value
                         elif move.value != -out_value:
@@ -494,9 +504,22 @@ class ProductProduct(models.Model):
                 quantity_by_product_id[move.product_id.id] = quantity
                 std_price_by_product_id[move.product_id.id] = average_cost
                 value_by_product_id[move.product_id.id] = value
+                price_changes_by_product_id[move.product_id.id] = price_changes
+                next_change_by_product_id[move.product_id.id] = next_change
 
             self.env['stock.move'].invalidate_model()  # Avoid keeping too many records in cache
             self.env['stock.move.line'].invalidate_model()
+
+        for product_id, price_changes in price_changes_by_product_id.items():
+            next_change = next_change_by_product_id[product_id]
+            while next_change:
+                if average_cost != next_change.old_cost:
+                    next_change.write({"old_cost": average_cost})
+                average_cost = next_change.value
+                value = average_cost * quantity
+                next_change = next(price_changes, None)
+            std_price_by_product_id[product.id] = average_cost
+            value_by_product_id[product.id] = value
 
         return std_price_by_product_id, value_by_product_id
 

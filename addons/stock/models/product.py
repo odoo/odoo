@@ -136,7 +136,7 @@ class ProductProduct(models.Model):
             if product.barcode:
                 product.valid_ean = check_barcode_encoding(product.barcode.rjust(14, '0'), 'gtin14')
 
-    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.quantity')
+    @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state', 'stock_move_ids.quantity', 'stock_move_ids.date')
     @api.depends_context(
         'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
         'location', 'warehouse_id', 'allowed_company_ids', 'is_storable'
