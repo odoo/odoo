@@ -18,6 +18,10 @@ class PosCategory(models.Model):
         fields += ['hour_until', 'hour_after']
         return fields
 
+    @api.model
+    def _load_pos_self_data_fields(self, config_id):
+        return ['name', 'has_image', 'hour_until', 'hour_after', 'sequence']
+
     @api.constrains('hour_until', 'hour_after')
     def _check_hour(self):
         for category in self:
