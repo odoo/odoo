@@ -142,6 +142,29 @@ class PosPaymentMethod(models.Model):
     def _load_pos_data_fields(self, config):
         return [*super()._load_pos_data_fields(config), 'viva_com_terminal_id']
 
+    @api.model
+    def _viva_com_process_app_payment(self, pos_order, params):
+        transaction_id = params.get('transactionId')
+        session_id = params.get('clientTransactionId')
+
+        # Update payment line
+        if not session_id:
+            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.payment_provider == 'viva_com')
+        else:
+            payment_line = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.payment_provider == 'viva_com' and p.viva_com_session_id == session_id)[-1:]
+
+        if params.get('status') == 'success':
+            payment_line.write({
+                'transaction_id': transaction_id,
+                'payment_status': 'done',
+            })
+            if pos_order.amount_difference == 0 and all(p.payment_status == 'done' for p in pos_order.payment_ids):
+                pos_order.write({'state': 'paid'})
+                return True
+        else:
+            payment_line.write({'payment_status': 'error', 'transaction_id': transaction_id})
+        return False
+
     def viva_com_send_payment_request(self, data):
         if not self.env.user.has_group('point_of_sale.group_pos_user'):
             raise AccessError(_("Only 'group_pos_user' are allowed to send a Viva.com payment request"))

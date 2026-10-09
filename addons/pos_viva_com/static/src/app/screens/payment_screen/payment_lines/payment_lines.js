@@ -17,6 +17,12 @@ patch(PaymentScreenPaymentLines.prototype, {
                 icon: "smartphone",
                 actions: [
                     {
+                        id: "viva_retry",
+                        label: _t("Retry"),
+                        title: _t("Retry Payment Request"),
+                        action: () => this.vivaApp.retry(line),
+                    },
+                    {
                         id: "viva_reset_integration",
                         label: _t("Reset Integration"),
                         title: _t("Reset Viva Integration"),
