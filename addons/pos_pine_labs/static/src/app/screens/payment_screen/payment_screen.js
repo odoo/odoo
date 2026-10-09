@@ -10,18 +10,18 @@ patch(PaymentScreen.prototype, {
                 (paymentLine) =>
                     paymentLine.payment_method_id.payment_provider === "pine_labs" &&
                     !paymentLine.isDone() &&
-                    paymentLine.setPaymentStatus() !== "pending"
+                    paymentLine.payment_status !== "pending"
             );
             if (waitingPaymentLine) {
-                waitingPaymentLine.setPaymentStatus("waitingCard");
+                waitingPaymentLine.payment_status = "waiting_card";
                 const payment_status =
                     await waitingPaymentLine.payment_method_id.payment_interface._waitForPaymentToConfirm();
                 if (payment_status?.status === "TXN APPROVED") {
-                    waitingPaymentLine.setPaymentStatus("done");
+                    waitingPaymentLine.payment_status = "done";
                 } else if (payment_status?.status === "TXN UPLOADED") {
-                    waitingPaymentLine.setPaymentStatus("waitingCard");
+                    waitingPaymentLine.payment_status = "waiting_card";
                 } else {
-                    waitingPaymentLine.setPaymentStatus("retry");
+                    waitingPaymentLine.payment_status = "retry";
                 }
             }
         });
