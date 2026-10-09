@@ -60,13 +60,13 @@ patch(PosOrderline.prototype, {
         if (saleOrderLine.is_downpayment) {
             // Down payment lines carry their amount as a negative `qty_to_invoice`
             this.set_quantity(saleOrderLine.qty_to_invoice);
-        } else if (!saleOrderLine.has_valued_move_ids) {
-            this.set_quantity(saleOrderLine.product_uom_qty);
         } else if (
             this.product_id.type === "service" &&
             !["sent", "draft"].includes(this.sale_order_origin_id.state)
         ) {
             this.set_quantity(saleOrderLine.qty_to_invoice);
+        } else if (!saleOrderLine.has_valued_move_ids) {
+            this.set_quantity(saleOrderLine.product_uom_qty);
         } else {
             this.set_quantity(
                 saleOrderLine.product_uom_qty -
