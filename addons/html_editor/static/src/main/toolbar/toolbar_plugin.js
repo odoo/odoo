@@ -44,6 +44,7 @@ import { removeStyle } from "@html_editor/utils/dom";
  * @property {string} [text] Can be used with (or instead of) `icon`
  * @property {(selection: EditorSelection) => boolean} [isAvailable] ? *
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
+ *   Only define it for toggle buttons: its presence sets `aria-pressed` on the button.
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
  * @property {boolean} [opensUi] The button opens some UI (dialog, popover...) that takes the focus
  *
@@ -557,7 +558,11 @@ export class ToolbarPlugin extends Plugin {
                             ? pick(button, "Component", "props")
                             : {
                                   ...pick(button, "run", "icon", "iconClass", "text", "opensUi"),
-                                  isActive: !!button.isActive?.(selection, targetedNodes),
+                                  // Buttons without `isActive` are not toggle buttons:
+                                  // keep it undefined so that no `aria-pressed` is set.
+                                  isActive: button.isActive
+                                      ? !!button.isActive(selection, targetedNodes)
+                                      : undefined,
                               }),
                     })),
             }))
