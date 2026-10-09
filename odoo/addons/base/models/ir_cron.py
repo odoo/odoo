@@ -498,6 +498,15 @@ class IrCron(models.Model):
                 loop_count < MIN_RUNS_PER_JOB
                 or time.monotonic() < env.context['cron_end_time']
             ):
+                if cls.pool is not env.registry:
+                    # registry changed, retry later
+                    status = CompletionStatus.PARTIALLY_DONE
+                    _logger.info(
+                        'Job %r (%s) %s (registry changed)',
+                        job['cron_name'], job['id'], status,
+                    )
+                    return status
+
                 cron, progress = cron._add_progress(timed_out_counter=timed_out_counter)
                 job_cr.commit()
 
@@ -875,6 +884,8 @@ class IrCron(models.Model):
         if not progress:
             # not called during a cron, just commit
             self.env.cr.commit()
+            if self.env.registry is not self.pool:
+                return 0  # registry changed, no time left
             return float('inf')
         assert processed >= 0, 'processed must be positive'
         assert (remaining or 0) >= 0, "remaining must be positive"
@@ -890,6 +901,8 @@ class IrCron(models.Model):
             vals['deactivate'] = True
         progress.write(vals)
         self.env.cr.commit()
+        if self.env.registry is not self.pool:
+            return 0  # registry changed, no time left
         return max(ctx.get('cron_end_time', float('inf')) - time.monotonic(), 0)
 
     @api.model
