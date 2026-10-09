@@ -102,22 +102,23 @@ class Goal(models.Model):
 
     def _get_write_values(self, new_value):
         """Generate values to write after recomputation of a goal score"""
-        if new_value == self.current:
-            # avoid useless write if the new value is the same as the old one
-            return {}
+        result = {}
 
-        result = {'current': new_value}
-        if (self.definition_id.condition == 'higher' and new_value >= self.target_goal) \
-          or (self.definition_id.condition == 'lower' and new_value <= self.target_goal):
+        if new_value != self.current:
+            result['current'] = new_value
+
+        if self.state != 'reached' and (
+                (self.definition_id.condition == 'higher' and new_value >= self.target_goal)
+                or (self.definition_id.condition == 'lower' and new_value <= self.target_goal)):
             # success, do no set closed as can still change
             result['state'] = 'reached'
 
-        elif self.end_date and fields.Date.today() > self.end_date:
+        elif self.state != 'failed' and self.end_date and fields.Date.today() > self.end_date:
             # check goal failure
             result['state'] = 'failed'
             result['closed'] = True
 
-        return {self: result}
+        return {self: result} if result else {}
 
     def update_goal(self):
         """Update the goals to recomputes values and change of states
@@ -136,6 +137,7 @@ class Goal(models.Model):
             if definition.computation_mode == 'manually':
                 for goal in goals:
                     goals_to_write[goal] = goal._check_remind_delay()
+                    goals_to_write.update(goal._get_write_values(goal.current))
             elif definition.computation_mode == 'python':
                 # TODO batch execution
                 for goal in goals:
