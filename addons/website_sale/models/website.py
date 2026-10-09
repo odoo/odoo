@@ -793,8 +793,12 @@ class Website(models.Model):
                 request.session[PRICELIST_SESSION_CACHE_KEY]
             )
             if pricelist_sudo and (
-                pricelist_sudo.exists()
-                and pricelist_sudo._is_available_on_website(self)
+                (
+                    # `pricelist_ids` is cached across requests, unlike `exists()`. It skips the
+                    # archived generic pricelists that `_is_available_on_website` accepts.
+                    pricelist_sudo in self.sudo().pricelist_ids
+                    or (pricelist_sudo.exists() and pricelist_sudo._is_available_on_website(self))
+                )
                 and pricelist_sudo._is_available_in_country(self._get_geoip_country_code())
             ):
                 return pricelist_sudo.sudo()

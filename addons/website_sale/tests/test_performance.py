@@ -184,7 +184,6 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
 
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
-        res["product_pricelist"] += 2
         res["product_category"] += 1
         res["product_pricelist_item"] += 1
         return res
@@ -197,7 +196,6 @@ class TestWebsiteSalePerformanceWithPricelistNoRules(TestWebsiteSalePerformanceN
 
     def _get_product_page_queries(self):
         res = super()._get_product_page_queries()
-        res["product_pricelist"] += 2
         res["product_category"] += 1
         res["product_pricelist_item"] += 2
         return res
@@ -286,7 +284,6 @@ class TestWebsiteSalePerformanceWithPricelistDepth(TestWebsiteSalePerformanceWit
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
         res["product_pricelist_item"] += 8
-        res["product_pricelist"] += 1
         return res
 
     def test_shop_page_generation(self):
@@ -298,7 +295,6 @@ class TestWebsiteSalePerformanceWithPricelistDepth(TestWebsiteSalePerformanceWit
     def _get_product_page_queries(self):
         res = super()._get_product_page_queries()
         res["product_pricelist_item"] += 5
-        res["product_pricelist"] += 1
         return res
 
     def test_product_page_generation(self):
