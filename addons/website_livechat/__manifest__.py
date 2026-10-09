@@ -40,7 +40,7 @@
             'website_livechat/static/src/js/**/*',
         ],
         'web.assets_frontend': [
-            "website_livechat/static/src/core/common/**/*",
+            "website_livechat/static/src/core/common/**/*.scss",
         ],
         'web.assets_backend': [
             "website_livechat/static/src/core/common/**/*",
