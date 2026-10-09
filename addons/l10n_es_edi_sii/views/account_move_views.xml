@@ -90,6 +90,18 @@
             </field>
         </record>
 
+        <record id="view_move_form_account_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_es.view_move_form_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='l10n_es_original_invoice_credited']" position="after">
+                    <field name="first_invoice" invisible="l10n_es_invoice_type != 'F4'"/>
+                    <field name="last_invoice" invisible="l10n_es_invoice_type != 'F4'"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_invoice_tree_inherit_l10n_es_edi_sii" model="ir.ui.view">
             <field name="name">account.move.tree.inherit.l10n_es_edi_sii</field>
             <field name="model">account.move</field>
