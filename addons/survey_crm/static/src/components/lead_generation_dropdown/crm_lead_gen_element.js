@@ -23,7 +23,7 @@ patch(LeadGenerationDropdown.prototype, {
         const action = await this.orm.call(
             'survey.survey',
             'action_load_survey_template_sample',
-            ['lead_qualification'],
+            [[], 'lead_qualification'],
             { context },
         );
         await this.action.doAction(action);
