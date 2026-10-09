@@ -178,6 +178,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return Domain.AND(domains)
 
+    def _materialize_shop_domain(self, domain, limit):
+        """Return a domain on the ids matching `domain`, unless they exceed `limit`.
+
+        The search domain is costly to evaluate and is used in several queries (facets,
+        price range); matching it once avoids evaluating it in each of them. Too many ids
+        would however make those queries slow to parse, so `domain` is kept in that case.
+        """
+        ids = request.env["product.template"].search(domain, order="id", limit=limit + 1).ids
+        return Domain("id", "in", ids) if len(ids) <= limit else domain
+
     def sitemap_shop(env, _rule, qs):  # noqa: N805
         if env.website and env.website.ecommerce_access == "logged_in" and not qs:
             # Make sure urls are not listed in sitemap when restriction is active
@@ -450,7 +460,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             display_currency=website.currency_id,
             extra_domain=Domain.OR([
                 Domain("public_categ_ids", "=", False),
-                Domain("public_categ_ids.not_in_shop", "=", False),
+                # Bypass the category record rule: a category of a published product
+                # always has published products, and the rule makes the query costly.
+                Domain("public_categ_ids", "any!", Domain("not_in_shop", "=", False)),
             ])
             if not (category or search)
             else None,
@@ -467,9 +479,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
             attribute_value_dict,
             tags=tags if filter_by_tags_enabled else None,
         )
-        shop_query = request.env["product.template"]._search(shop_domain)
-
         filters_domain = self._get_shop_domain(search_term, category, attribute_value_dict={})
+        materialize_limit = 1000
+        if search_term and product_count <= materialize_limit:
+            filters_is_shop_domain = filters_domain == shop_domain
+            shop_domain = self._materialize_shop_domain(shop_domain, materialize_limit)
+            filters_domain = (
+                shop_domain
+                if filters_is_shop_domain
+                else self._materialize_shop_domain(filters_domain, materialize_limit)
+            )
+        shop_query = request.env["product.template"]._search(shop_domain)
         filters_query = request.env["product.template"]._search(filters_domain)
 
         filter_by_price_enabled = website.is_view_active("website_sale.filter_products_price")
