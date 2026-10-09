@@ -186,7 +186,7 @@
                                                 nolabel="1"/>
                                             </div>
                                         <field name="employee_type_id" string="Employee Type" placeholder="Select employee type"
-                                                domain="[('country_id', 'in', [company_country_id, False]), '|', ('company_id', 'in', [company_id, False]), ('company_id', '=', parent_company_id)]"/>
+                                                domain="[('name', '!=', 'Thesis'), ('country_id', 'in', [company_country_id, False]), '|', ('company_id', 'in', [company_id, False]), ('company_id', '=', parent_company_id)]"/>
                                         <label for="contract_date_start" string="Contract"/>
                                         <div class="o_row" name="contract_dates">
                                             <field name="contract_date_start" string="Start Date" placeholder="Not Employed" class="o_hr_narrow_field me-3"/>
@@ -544,7 +544,7 @@
                     <field name="contract_date_end" optional="hide"/>
                     <field name="currency_id" column_invisible="1"/>
                     <field name="wage" widget="monetary" optional="hide"/>
-                    <field name="employee_type_id" optional="hide"/>
+                    <field name="employee_type_id" optional="hide" domain="[('name', '!=', 'Thesis')]"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
                     <field name="department_id" optional="show"/>
