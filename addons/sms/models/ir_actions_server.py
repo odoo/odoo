@@ -9,7 +9,7 @@ class IrActionsServer(models.Model):
     _inherit = 'ir.actions.server'
 
     state = fields.Selection(selection_add=[
-        ('log_note',), ('sms', 'Send SMS')
+        ('log_note',), ('sms', 'Send SMS'), ('followers',),
     ], ondelete={'sms': 'cascade'})
     # SMS
     sms_template_id = fields.Many2one(
