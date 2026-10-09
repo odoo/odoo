@@ -59,8 +59,7 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
             self.env['res.users'].sudo().env, 'temp_mrp_manager', 'mrp.group_mrp_manager,product.group_product_variant',  # setup master-data: user creation
         )
 
-        bom_form = Form(self.env['mrp.bom'].with_user(mrp_manager))
-        bom_form.product_id = self.dining_table
+        Form(self.env['mrp.bom'].with_user(mrp_manager))
 
     def test_mrp_manager_without_account_permissions_can_duplicate_mo(self):
         mrp_manager = new_test_user(

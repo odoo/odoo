@@ -38,6 +38,7 @@ class MrpBom(models.Model):
         check_company=True, index=True,
         domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', '=', 'consu')]",
         help="If a product variant is defined the BOM is available only for this product.")
+    product_variant_count = fields.Integer(related='product_tmpl_id.product_variant_count', string="Number of Variants")
     bom_line_ids = fields.One2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True)
     byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'By-products', copy=True)
     product_qty = fields.Float(
