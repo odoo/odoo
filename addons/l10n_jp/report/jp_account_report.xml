@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_document" inherit_id="account.report_invoice_document" priority="10">
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <t t-set="jp_hide_zero_decimals"
+                   t-value="o.company_id._l10n_jp_hide_zero_decimals(o._get_move_lines_to_report().mapped('price_unit'))"/>
+            </xpath>
+
+            <!-- The layout heads the block with the recipient name and its honorific,
+                 so the address drops the name in each of the three shipping cases. -->
+            <xpath expr="//t[@name='address_not_same_as_shipping']/address" position="attributes">
+                <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            </xpath>
+            <xpath expr="//t[@name='address_same_as_shipping']/address" position="attributes">
+                <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            </xpath>
+            <xpath expr="//t[@name='no_shipping']/address" position="attributes">
+                <attribute name="t-options">{"widget": "contact", "fields": ["address"], "no_marker": True}</attribute>
+            </xpath>
+
+            <xpath expr="//td[@name='td_price_unit']/span" position="attributes">
+                <attribute name="t-options">{'min_precision': 0} if jp_hide_zero_decimals else {}</attribute>
+            </xpath>
+
+            <xpath expr="//div[hasclass('page')]" position="before">
+                <t t-set="jp_layout" t-value="company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'"/>
+                <t t-set="jp_currency_header" t-value="jp_layout and company.l10n_jp_currency_in_headers
+                    and ' (%s)' % (o.currency_id.currency_unit_label if o.currency_id.name == 'JPY' else o.currency_id.name)"/>
+            </xpath>
+
+            <xpath expr="//th[@name='th_priceunit']/span" position="inside"><t t-out="jp_currency_header"/></xpath>
+
+            <xpath expr="//th[@name='th_subtotal']" position="attributes">
+                <attribute name="t-att-class">'text-end text-nowrap' if jp_layout else 'text-end'</attribute>
+            </xpath>
+            <xpath expr="//th[@name='th_subtotal']/span" position="inside"><t t-out="jp_currency_header"/></xpath>
+        </template>
+
+        <template id="report_payment_receipt_document" inherit_id="account.report_payment_receipt_document">
+            <!-- The Amount column is in each invoice's currency, so it is labeled only when they all share one. -->
+            <xpath expr="//table[@name='invoices']/thead" position="before">
+                <t t-set="jp_layout" t-value="company.external_report_layout_id.key == 'l10n_jp.external_layout_jp_standard'"/>
+                <t t-set="jp_currency_header" t-value="jp_layout and company.l10n_jp_currency_in_headers and len(invoices.currency_id) == 1
+                    and ' (%s)' % (invoices.currency_id.currency_unit_label if invoices.currency_id.name == 'JPY' else invoices.currency_id.name)"/>
+            </xpath>
+
+            <xpath expr="//table[@name='invoices']/thead/tr/th[last()]" position="attributes">
+                <attribute name="t-att-class">'text-end text-nowrap' if jp_layout else 'text-end'</attribute>
+            </xpath>
+            <xpath expr="//table[@name='invoices']/thead/tr/th[last()]/span" position="inside"><t t-out="jp_currency_header"/></xpath>
+        </template>
+    </data>
+</odoo>
