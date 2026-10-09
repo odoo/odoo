@@ -140,7 +140,7 @@ class PaypalController(http.Controller):
         :rtype: None
         """
         order_id = tx_sudo.provider_reference
-        if tx_sudo.payment_method_code == "card":
+        if tx_sudo.payment_method_code in ["card", "googlepay"]:
             order_details = tx_sudo._send_api_request("GET", f"/v2/checkout/orders/{order_id}")
             card_info = order_details.get("payment_source", {}).get("card", {})
             auth_result = card_info.get("authentication_result", {})

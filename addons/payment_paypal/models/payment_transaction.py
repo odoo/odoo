@@ -26,7 +26,7 @@ class PaymentTransaction(models.Model):
     def _get_specific_processing_values(self, processing_values):
         """Override of `payment` to return the Paypal-specific processing values.
 
-        This is used by the Card, Venmo, and PayPal Pay Later payment methods.
+        This is used by the Card, Venmo, PayPal Pay Later, Apple/Google Pay payment methods.
 
         Note: self.ensure_one() from `_get_processing_values`
 
@@ -185,19 +185,6 @@ class PaymentTransaction(models.Model):
         :return: The requested payload to create a Paypal order.
         :rtype: dict
         """
-        if self.payment_method_code == "google_pay":
-            return {
-                "intent": "CAPTURE",
-                "purchase_units": [
-                    {
-                        "reference_id": self.reference,
-                        "amount": {
-                            "currency_code": self.currency_id.name,
-                            "value": str(self.amount),
-                        },
-                    }
-                ],
-            }
         if self.partner_id.is_public:
             invoice_address_vals = {"address": {"country_code": self.company_id.country_code}}
             shipping_address_vals = {}
