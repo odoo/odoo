@@ -143,7 +143,7 @@ export const useVivaApp = (validateCallback) => {
                 }
             }
 
-            line.setPaymentStatus("waitingCard");
+            line.payment_status = "waiting_card";
             window.open(url, "_self");
         } catch {
             line.delete();
