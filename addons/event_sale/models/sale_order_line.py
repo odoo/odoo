@@ -98,6 +98,18 @@ class SaleOrderLine(models.Model):
         """
         super()._compute_name()
 
+    @api.depends('event_ticket_id')
+    def _compute_label(self):
+        super()._compute_label()
+
+    def _get_product_display_name(self):
+        """Override of sale to add ticket's display_name as product's display_name for event ticket
+        SOL."""
+        self.ensure_one()
+        if self.event_ticket_id:
+            return self.event_ticket_id.name
+        return super()._get_product_display_name()
+
     def _get_sale_order_line_multiline_description_sale(self):
         """ We override this method because we decided that:
                 The default description of a sales order line containing a ticket must be different than the default description when no ticket is present.
