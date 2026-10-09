@@ -4,12 +4,13 @@ import json
 import os
 
 from io import BytesIO
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 
 import odoo.tests
 from odoo.tests import new_test_user
 
 
+from unittest import SkipTest
 from unittest.mock import patch
 
 from odoo import release
@@ -534,3 +535,30 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
             })
         dependencies_names = import_module.get_dependencies_to_install_names()
         self.assertEqual(dependencies_names, [])
+
+
+@odoo.tests.standalone('install_through_import')
+def test_install_from_import(env):
+    module_id = env.ref('base.module_uom').id
+    module = env['ir.module.module'].browse(module_id)
+
+    if module.state == 'installed':
+        raise SkipTest("Module installed, no need to test its installation")
+
+    manifest_content = json.dumps({
+        'name': 'foo',
+        'data': ['test.xml'],
+        'license': 'LGPL-3',
+        'author': 'Odoo S.A.',
+    })
+    stream = BytesIO()
+    with ZipFile(stream, 'w', compression=ZIP_DEFLATED) as archive:
+        archive.writestr('foo/__manifest__.py', manifest_content)
+        archive.writestr('foo/test.xml', b"""
+        <data>
+            <function name="button_install" model="ir.module.module" eval="[ref('base.module_uom')]"/>
+        </data>
+        """)
+    env['ir.module.module']._import_zipfile(stream)
+
+    assert module.state == 'installed'
