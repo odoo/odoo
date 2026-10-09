@@ -1514,3 +1514,34 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         line = invoice.invoice_line_ids.filtered(lambda l: l.product_id == self.product_a)[:1]
         self.assertEqual(line.name, "product_a\nBouteille d'eau")
+
+    def test_invoice_bank_account_computation(self):
+        eur_currency = self.env.ref('base.EUR')
+        usd_currency = self.env.ref('base.USD')
+        eur_journal, usd_journal = self.env['account.journal'].create([{
+            'name': 'EUR Journal',
+            'currency_id': eur_currency.id,
+            'type': 'bank',
+            'company_id': self.company.id,
+            'bank_account_id': self.env['res.partner.bank'].create({
+                'account_number': 'BE15001559627230',
+                'partner_id': self.company.partner_id.id,
+            }).id,
+        }, {
+            'name': 'USD Journal',
+            'currency_id': usd_currency.id,
+            'type': 'bank',
+            'company_id': self.company.id,
+            'bank_account_id': self.env['res.partner.bank'].create({
+                'account_number': 'DE24500105171688544432',
+                'partner_id': self.company.partner_id.id,
+            }).id,
+        }])
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': eur_currency.id,
+        })
+        self.assertEqual(invoice.partner_bank_id, eur_journal.bank_account_id)
+        invoice.currency_id = usd_currency
+        self.assertEqual(invoice.partner_bank_id, usd_journal.bank_account_id)

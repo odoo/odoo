@@ -1053,6 +1053,12 @@ class AccountMove(models.Model):
 
     @api.depends('bank_partner_id', 'currency_id', 'preferred_payment_method_line_id')
     def _compute_partner_bank_id(self):
+        company_bank_journals = self.env['account.journal'].search([
+            ('type', '=', 'bank'),
+            ('company_id', 'in', self.company_id.ids),
+            ('currency_id', 'in', self.currency_id.ids),
+            ('bank_account_id', '!=', False),
+        ]).grouped(lambda journal: (journal.company_id, journal.currency_id))
         for move in self:
             if move.is_inbound() and (
                 payment_method := (
@@ -1063,10 +1069,13 @@ class AccountMove(models.Model):
                 move.partner_bank_id = payment_method.journal_id.bank_account_id
                 continue
 
-            move.partner_bank_id = move.bank_partner_id.bank_ids.filtered_domain([
-                *self.env['res.partner.bank']._check_company_domain(move.company_id),
-                ('active', '=', True),  # active_test could be False in the context
-            ]).sorted(lambda b: not b.allow_out_payment)[:1]
+            if journal := company_bank_journals.get((move.company_id, move.currency_id)):
+                move.partner_bank_id = journal.bank_account_id
+            else:
+                move.partner_bank_id = move.bank_partner_id.bank_ids.filtered_domain([
+                    *self.env['res.partner.bank']._check_company_domain(move.company_id),
+                    ('active', '=', True),  # active_test could be False in the context
+                ]).sorted(lambda b: not b.allow_out_payment)[:1]
 
     @api.depends('partner_id')
     def _compute_invoice_payment_term_id(self):
