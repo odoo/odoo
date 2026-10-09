@@ -10,6 +10,12 @@ patch(PosPayment.prototype, {
             return super.canBeAdjusted();
         }
     },
+    get isAmountEditable() {
+        if (this.payment_method_id.type === "online" && this.pos_order_id.state === "paid") {
+            return false;
+        }
+        return super.isAmountEditable;
+    },
     get currency() {
         if (this.payment_method_id.type === "online") {
             return this.config.currency_id;

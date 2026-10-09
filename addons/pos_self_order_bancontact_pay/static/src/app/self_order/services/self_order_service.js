@@ -21,7 +21,7 @@ patch(SelfOrder.prototype, {
         const payment = this.currentOrder?.payment_ids.find(
             (p) => p.bancontact_id === args.bancontact_id
         );
-        if (!this.currentOrder || !payment || this.currentOrder.finalized || payment.isDone()) {
+        if (!this.currentOrder || !payment || this.currentOrder.finalized || payment.isSettled) {
             return;
         }
 

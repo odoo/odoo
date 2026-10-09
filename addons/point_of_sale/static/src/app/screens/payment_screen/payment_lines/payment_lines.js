@@ -41,7 +41,7 @@ export class PaymentScreenPaymentLines extends Component {
 
     async selectLine(paymentline) {
         this.props.selectLine(paymentline.uuid);
-        if (this.ui.isSmall) {
+        if (this.ui.isSmall && paymentline.isAmountEditable) {
             this.dialog.add(NumberPopup, {
                 title: _t("New amount"),
                 buttons: enhancedButtons(),

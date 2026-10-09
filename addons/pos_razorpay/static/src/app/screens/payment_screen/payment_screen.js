@@ -10,7 +10,7 @@ patch(PaymentScreen.prototype, {
             const pendingPaymentLine = this.currentOrder.payment_ids.find(
                 (paymentLine) =>
                     paymentLine.payment_method_id.payment_provider === "razorpay" &&
-                    !paymentLine.isDone() &&
+                    !paymentLine.isSettled &&
                     paymentLine.payment_status !== "pending"
             );
             if (pendingPaymentLine) {
