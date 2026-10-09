@@ -3,12 +3,116 @@
 
     <!-- views -->
 
+    <!-- actions used by the help view -->
+
+    <record id="action_try_kiosk" model="ir.actions.server">
+        <field name="name">Try kiosk</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_try_kiosk()</field>
+    </record>
+
+    <record id="action_load_demo_data" model="ir.actions.server">
+        <field name="name">Load demo data</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="state">code</field>
+        <field name="code">action = model._load_demo_data()</field>
+    </record>
+
+    <record id="hr_attendance_view_help" model="ir.ui.view">
+        <field name="name">hr.attendance.help</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <help>
+                <!-- onboarding, for attendance and hr users -->
+                <div groups="hr.group_hr_user">
+                    <div groups="hr_attendance.group_hr_attendance_user">
+                        <!-- small screens -->
+                        <div class="d-flex d-md-none flex-column py-2 gap-4 oe_view_nocontent_attendance_mobile">
+                            <h3>Ready to track attendances ?</h3>
+                            <div>
+                            <a name="%(hr_attendance.action_try_kiosk)d" type="action" aria-label="Try the kiosk">
+                                <img src="/hr_attendance/static/img/mock-tablet.png" height="180" class="mb-2" alt="Kiosk"/>
+                            </a>
+                            <div class="row justify-content-center mt-1">
+                                <a name="%(hr_attendance.action_try_kiosk)d" type="action" role="button" class="btn btn-primary d-block col-6">Try the kiosk</a>
+                            </div>
+                        </div>
+                        <div>
+                            <img src="/hr_attendance/static/img/attendance_dot.gif" height="180" class="mb-2" alt="Attendance icon"/>
+                            <h3 class="mt-2">
+                                <em>Try the top
+                                    <i class="oi oi-filled text-danger" data-icon="circle" role="img" aria-label="Attendance" title="Attendance"/>
+                                    icon (e.g for work from home)</em>
+                            </h3>
+                        </div>
+                            <div class="d-flex gap-3 align-items-center or-separator">
+                            <hr class="flex-grow-1"/> or <hr class="flex-grow-1"/>
+                        </div>
+                        <div class="px-2 py-2">
+                            <h3 class="pb-1">Try the backend and reporting:</h3>
+                            <div class="row justify-content-center">
+                                <button name="%(hr_attendance.action_load_demo_data)d" type="action" class="btn-secondary d-block col-6"
+                                        confirm="This action will generate several fake records across multiple apps. Are you sure you want to proceed?"
+                                        confirm-label="Load Sample Data" cancel-label="Cancel">
+                                    Load sample data
+                                </button>
+                            </div>
+                        </div>
+                        </div>
+                        <!-- regular screens -->
+                        <div class="d-none d-md-block oe_view_nocontent_attendance">
+                            <h3 class="py-2">Ready to track attendances ?</h3>
+                            <div class="d-flex justify-content-center py-2">
+                                <div class="mx-5">
+                            <a name="%(hr_attendance.action_try_kiosk)d" type="action" aria-label="Try the kiosk">
+                                <img src="/hr_attendance/static/img/mock-tablet.png" height="180" class="mb-2" alt="Kiosk"/>
+                            </a>
+                            <div class="row justify-content-center mt-1">
+                                <a name="%(hr_attendance.action_try_kiosk)d" type="action" role="button" class="btn btn-primary d-block col-6">Try the kiosk</a>
+                            </div>
+                        </div>
+                        <div class="mx-5">
+                            <img src="/hr_attendance/static/img/attendance_dot.gif" height="180" class="mb-2" alt="Attendance icon"/>
+                            <h3 class="mt-2">
+                                <em>Try the top
+                                    <i class="oi oi-filled text-danger" data-icon="circle" role="img" aria-label="Attendance" title="Attendance"/>
+                                    icon (e.g for work from home)</em>
+                            </h3>
+                        </div>
+                            </div>
+                            <div class="d-flex gap-3 align-items-center or-separator">
+                            <hr class="flex-grow-1"/> or <hr class="flex-grow-1"/>
+                        </div>
+                        <div class="px-2 py-2">
+                            <h3 class="m-2 py-2">Try the backend and reporting:</h3>
+                            <div class="row justify-content-center">
+                                <button name="%(hr_attendance.action_load_demo_data)d" type="action" class="btn-secondary d-block col-2"
+                                        confirm="This action will generate several fake records across multiple apps. Are you sure you want to proceed?"
+                                        confirm-label="Load Sample Data" cancel-label="Cancel">
+                                    Load sample data
+                                </button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- other users -->
+                <div groups="!hr.group_hr_user,!hr_attendance.group_hr_attendance_user">
+                    <p class="o_view_nocontent_empty_folder">No attendance records found</p>
+                    <p>The attendance records of your employees will be displayed here.</p>
+                </div>
+            </help>
+        </field>
+    </record>
+
     <record id="view_attendance_tree" model="ir.ui.view">
         <field name="name">hr.attendance.list</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
             <list
                 js_class="attendance_list_view"
+                help_id="%(hr_attendance.hr_attendance_view_help)d"
                 string="Employee attendances"
                 decoration-success="color == 10"
                 decoration-danger="color == 1"
@@ -417,20 +521,6 @@
     </record>
 
     <!-- actions -->
-
-    <record id="action_try_kiosk" model="ir.actions.server">
-        <field name="name">Try kiosk</field>
-        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
-        <field name="state">code</field>
-        <field name="code">action = model.action_try_kiosk()</field>
-    </record>
-
-    <record id="action_load_demo_data" model="ir.actions.server">
-        <field name="name">Load demo data</field>
-        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
-        <field name="state">code</field>
-        <field name="code">action = model._load_demo_data()</field>
-    </record>
 
     <record id="hr_attendance_action" model="ir.actions.act_window">
         <field name="name">Attendances</field>
