@@ -147,7 +147,6 @@ test("Background position overlay layout", async () => {
     );
 
     const iframe = getEditor().editable.ownerDocument.defaultView.frameElement;
-    const body = queryOne(":iframe body");
     const section = queryOne(":iframe .container section");
 
     const testLayout = async (mobile) => {
@@ -163,22 +162,22 @@ test("Background position overlay layout", async () => {
         }
         await openBgPositionOverlay(section, waitSidebarUpdated);
 
-        // The overlay should cover exactly the iframe
+        // The overlay should cover the whole builder viewport.
         const iframeRect = iframe.getBoundingClientRect();
         const bgOverlayRect = queryOne(".o_we_image_position_overlay").getBoundingClientRect();
-        expect(bgOverlayRect.left).toBeCloseTo(iframeRect.left);
-        expect(bgOverlayRect.top).toBeCloseTo(iframeRect.top);
-        expect(bgOverlayRect.width).toBeCloseTo(body.clientWidth * iframeContainerScale);
-        expect(bgOverlayRect.height).toBeCloseTo(body.clientHeight * iframeContainerScale);
+        expect(bgOverlayRect.left).toBe(0);
+        expect(bgOverlayRect.top).toBe(0);
+        expect(bgOverlayRect.width).toBe(window.innerWidth);
+        expect(bgOverlayRect.height).toBe(window.innerHeight);
 
         // The content of the overlay should cover the editing element
         const editingElementRect = section.getBoundingClientRect();
         const overlayContentStyle = getComputedStyle(queryOne(".o_we_overlay_content"));
         expect(parseFloat(overlayContentStyle.left)).toBeCloseTo(
-            editingElementRect.left * iframeContainerScale
+            iframeRect.left + editingElementRect.left * iframeContainerScale
         );
         expect(parseFloat(overlayContentStyle.top)).toBeCloseTo(
-            editingElementRect.top * iframeContainerScale
+            iframeRect.top + editingElementRect.top * iframeContainerScale
         );
         expect(parseFloat(overlayContentStyle.width)).toBeCloseTo(
             editingElementRect.width * iframeContainerScale

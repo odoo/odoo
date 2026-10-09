@@ -160,13 +160,16 @@ export class ImagePositionOverlay extends Component {
         const iframeRect = this.iframeEl.getBoundingClientRect();
         const targetContainerRect = this.props.targetEl.getBoundingClientRect();
         const scale = this.getIframeContainerScale();
+        const visibleTop = Math.max(scale * targetContainerRect.top, 0);
+        const visibleBottom = Math.min(scale * targetContainerRect.bottom, iframeRect.height);
+        // scaledRect: target element visible in the iframe, so the cut-out
+        // doesn't overflow the iframe (e.g. in mobile preview).
         const scaledRect = new DOMRect(
-            scale * targetContainerRect.x,
-            scale * targetContainerRect.y,
+            iframeRect.left + scale * targetContainerRect.left,
+            iframeRect.top + visibleTop,
             scale * targetContainerRect.width,
-            scale * targetContainerRect.height
+            visibleBottom - visibleTop
         );
-
         // Make a cut-out in the overlay mask to highlight the editing element.
         // "polygon" is used because "rect" would do the inverse.
         const clipPath = `polygon(
@@ -183,12 +186,12 @@ export class ImagePositionOverlay extends Component {
             this.builderOverlayContainerEl.style.clipPath = clipPath;
         }
 
-        // The overlay covers the whole iframe excluding the scrollbar.
+        // The overlay covers the whole window including builder sidebar.
         Object.assign(this.overlayRef.el.style, {
-            left: `${iframeRect.left}px`,
-            top: `${iframeRect.top}px`,
-            height: `${this.props.editable.ownerDocument.body.clientHeight * scale}px`,
-            width: `${this.props.editable.ownerDocument.body.clientWidth * scale}px`,
+            left: "0px",
+            top: "0px",
+            width: `${window.innerWidth}px`,
+            height: `${window.innerHeight}px`,
         });
 
         // The overlay content covers the editing element.
