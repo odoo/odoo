@@ -768,6 +768,28 @@ registry.category("web_tour.tours").add("test_pos_ui_round_globally", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_tax_included_price_with_global_rounding", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Tax Included Candy", true, "1.0", "0.50"),
+            ProductScreen.totalAmountIs("0.50"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            {
+                isActive: ["desktop"],
+                content: "Make sure receipt orderline displays 0.50",
+                trigger: ".pos-receipt .orderline:contains('0.50')",
+            },
+            ReceiptScreen.receiptAmountTotalIs("0.50"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_product_ref_displayed", {
     steps: () =>
         [
