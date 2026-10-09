@@ -49,7 +49,7 @@ class User(models.Model):
         # Optimization: Only search users with a valid token
         users = self.search([('google_calendar_token', '!=', False)])
         for user in users:
-            if user.is_google_calendar_synced():
+            if user._get_google_sync_status() == 'sync_active':
                 events = self._fetch_week_gevents(user)
                 if events:
                     self.env['calendar.event'].with_user(user)._pre_process_google_events(events)

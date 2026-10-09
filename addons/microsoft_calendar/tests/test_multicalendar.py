@@ -17,6 +17,8 @@ class TestMultiCalendar(TestCommon, MailCase):
 
     def setUp(self):
         super().setUp()
+        self.organizer_user.microsoft_calendar_token = mock_get_token(self.organizer_user)
+        self.attendee_user.microsoft_calendar_token = mock_get_token(self.attendee_user)
         self.secondary_calendar = self.env["calendar.calendar"].with_user(self.organizer_user).create({"name": "Secondary Calendar"})
 
     @patch_api
