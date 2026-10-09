@@ -4,6 +4,7 @@ import { Component, useEnv, useRef } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { exprToBoolean } from "@web/core/utils/strings";
 
 export class ActivityButton extends Component {
     static props = {
@@ -18,6 +19,14 @@ export class ActivityButton extends Component {
         this.env = useEnv();
         this.defaultActivityStateClass = "text-muted";
         this.defaultActivityDecorationClass = "fa-clock-o btn-link text-dark";
+    }
+
+    get canCreate() {
+        return exprToBoolean(this.env.config?.viewArch?.getAttribute("create"), true);
+    }
+
+    get hasActivityButton() {
+        return this.canCreate || this.props.record.data.activity_ids.records.length;
     }
 
     get buttonClass() {
@@ -94,6 +103,7 @@ export class ActivityButton extends Component {
                 resId,
                 resIds,
                 resModel: this.props.record.resModel,
+                canCreate: this.canCreate,
             });
         }
     }
