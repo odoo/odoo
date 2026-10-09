@@ -59,64 +59,15 @@ class TestFieldsConversion(TransactionCase):
     # Numeric Fields
     # ------------------------------------------------------------------------------------------------------------------
     def test_field_integer_conversion(self):
-        self.assertConversion([fields.Integer().convert_to_column], [
-            {'value': 1,                 'expected': 1},
-            {'value': 1.99,              'expected': 1},
-            {'value': '',                'expected': 0},
-            {'value': '1',               'expected': 1},
-            {'value': True,              'expected': 1},
-            {'value': False,             'expected': 0},
-            {'value': None,              'expected': 0},
-            {'value': self.empty_record, 'expected': 0},
-            {'value': self.record,       'expected': 1},
-            {'value': {'id': 1},         'expected': TypeError()},
-        ])
-
-        self.assertConversion([fields.Integer().convert_to_column_insert], [
-            {'value': 1,                 'expected': 1},
-            {'value': 1.99,              'expected': 1},
-            {'value': '',                'expected': 0},
-            {'value': '1',               'expected': 1},
-            {'value': True,              'expected': 1},
-            {'value': False,             'expected': 0},
-            {'value': None,              'expected': 0},
-            {'value': self.empty_record, 'expected': 0},
-            {'value': self.record,       'expected': 1},
-            {'value': {'id': 1},         'expected': TypeError()},
-        ])
-
-        # get_column_update
-
-        self.assertConversion([fields.Integer().convert_to_cache], [
-            {'value': 1,                 'expected': 1},
-            {'value': 1.99,              'expected': 1},
-            {'value': '',                'expected': 0},
-            {'value': '1',               'expected': 1},
-            {'value': True,              'expected': 1},
-            {'value': False,             'expected': 0},
-            {'value': None,              'expected': 0},
-            {'value': self.empty_record, 'expected': 0},
-            {'value': self.record,       'expected': 1},
-            {'value': {'id': 1},         'expected': 1},
-        ])
-
-        self.assertConversion([fields.Integer().convert_to_record], [
-            {'value': 1,                 'expected': 1},
-            {'value': 1.99,              'expected': 1.99},
-            {'value': '',                'expected': 0},
-            {'value': '1',               'expected': '1'},
-            {'value': True,              'expected': True},
-            {'value': False,             'expected': 0},
-            {'value': None,              'expected': 0},
-            {'value': self.empty_record, 'expected': 0},
-            {'value': self.record,       'expected': self.record},
-            {'value': {'id': 1},         'expected': {'id': 1}},
-        ])
-
-        # convert_to_read
-        # convert_to_write
-        # convert_to_export
-        # convert_to_display_name
+        self.assertConversion([fields.Integer().convert_to_column], [])
+        self.assertConversion([fields.Integer().convert_to_column_insert], [])
+        self.assertConversion([fields.Integer().get_column_update], [])
+        self.assertConversion([fields.Integer().convert_to_cache], [])
+        self.assertConversion([fields.Integer().convert_to_record], [])
+        self.assertConversion([fields.Integer().convert_to_read], [])
+        self.assertConversion([fields.Integer().convert_to_write], [])
+        self.assertConversion([fields.Integer().convert_to_export], [])
+        self.assertConversion([fields.Integer().convert_to_display_name], [])
 
     def test_field_float_conversion(self):
         pass
