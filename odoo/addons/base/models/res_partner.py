@@ -1760,7 +1760,7 @@ class ResPartner(models.Model):
 
     def _is_geolocalized(self):
         self.ensure_one()
-        return self.partner_latitude and self.partner_longitude
+        return bool(self.partner_latitude or self.partner_longitude)
 
     def _get_preferred_legal_entity_identifier_vals(self):
         """Return a dict {'scheme': scheme, 'value': value, ...metadata} of the preferred legal entity identifier for the given partner.
