@@ -233,6 +233,16 @@
         <t t-call="website.placeholder_header_disclaimer"/>
     </xpath>
 
+    <xpath expr="//header/t[@t-cache]" position="attributes">
+        <!-- The menus visibility depends on the user groups, and the active
+        menus depend on the current page. The user and request dependent parts
+        are in t-nocache (cart, user menu, search, language selector...). -->
+        <attribute name="t-cache">None if editable or translatable or website.is_menu_cache_disabled() else (website, env.user._get_group_ids(), website._get_active_menu_ids())</attribute>
+    </xpath>
+    <xpath expr="//footer/t[@t-cache]" position="attributes">
+        <attribute name="t-cache">None if editable or translatable else (website, no_copyright, no_footer)</attribute>
+    </xpath>
+
     <xpath expr="//footer" position="attributes">
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
@@ -3496,17 +3506,19 @@ Disallow: /*/my/*
 <template id="website.placeholder_header_search_box" name="Placeholder Header Search Bar"/>
 <template id="website.header_search_box" inherit_id="website.placeholder_header_search_box" name="Header Search Bar" active="True">
     <xpath expr="." position="inside">
-        <li t-attf-class="#{_item_class}">
-            <t t-set="_search_scope" t-value="website._get_header_search_scope()"/>
-            <t
-                t-call="website.website_search_box_input"
-                _form_classes.f="o_header_searchbar o_no_save {{_form_classes}}"
-                search_type="_search_scope['search_type']"
-                action="_search_scope['url']"
-                order_by="website.header_search_order_by"
-                limit="website.header_search_limit"
-            />
-        </li>
+        <t t-nocache="The searchbox should not cache previous searches.">
+            <li t-attf-class="#{_item_class}">
+                <t t-set="_search_scope" t-value="website._get_header_search_scope()"/>
+                <t
+                    t-call="website.website_search_box_input"
+                    _form_classes.f="o_header_searchbar o_no_save {{_form_classes}}"
+                    search_type="_search_scope['search_type']"
+                    action="_search_scope['url']"
+                    order_by="website.header_search_order_by"
+                    limit="website.header_search_limit"
+                />
+            </li>
+        </t>
     </xpath>
 </template>
 

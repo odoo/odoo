@@ -68,6 +68,11 @@
                                 </div>
                             </div>
                         </setting>
+                        <setting id="website_cache_setting" string="Cache" help="Parts of the pages are kept in cache and may not show your latest changes (prices, products, menus...).">
+                            <div class="mt8">
+                                <button type="object" name="action_reset_website_cache" string="Reset Cache" icon="fa-refresh" class="btn-link" noSaveDialog="true"/>
+                            </div>
+                        </setting>
                         <setting string="Company" title="The company this website is linked to" groups="base.group_multi_company">
                             <field name="website_company_id" required="website_id"/>
                         </setting>

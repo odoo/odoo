@@ -551,9 +551,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if on_sale_active or in_stock_active:
             product_count = len(search_product)
 
+        # The tags, categories and attributes are lazy: they are not computed when the filters
+        # are rendered from the cache (t-cache).
         ProductTag = self.env["product.tag"]
         if filter_by_tags_enabled:
-            all_tags = ProductTag.search_fetch(
+            all_tags = lazy(lambda: ProductTag.search_fetch(
                 Domain.AND([
                     Domain("visible_to_customers", "=", True),
                     Domain.OR([
@@ -562,92 +564,125 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     ]),
                     website_domain,
                 ])
-            )
+            ))
         else:
             all_tags = ProductTag
 
         # categories
 
-        Category = self.env["product.public.category"]
-        categs_domain = (
-            Domain("parent_id", "=", False) & Domain("not_in_shop", "=", False) & website_domain
-        )
-        if search:
-            # using a sub-query is more efficient than using a query in the shape of "ids in (...)"
-            # when there are 100k product ids to match.
-            search_categories = Category.search(
-                Domain("product_tmpl_ids", "in", shop_query)
-            ).parents_and_self
-            categs_domain &= Domain("id", "in", search_categories.ids)
-        else:
-            search_categories = Category
-        categs = Category.search_fetch(categs_domain)
-
-        category_entries = Category
-        if category:
-            available_categories = category.child_id.filtered(
-                lambda c: c.website_id.id in (website.id, False)
+        def get_categories():
+            Category = self.env["product.public.category"]
+            categs_domain = (
+                Domain("parent_id", "=", False) & Domain("not_in_shop", "=", False) & website_domain
             )
-            category_entries = (
-                not search and available_categories
-            ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
-            if not category_entries:
-                parent = category.parent_id
-                available_categories = parent.child_id.filtered(
+            if search:
+                # using a sub-query is more efficient than using a query in the shape of
+                # "ids in (...)" when there are 100k product ids to match.
+                search_categories = Category.search(
+                    Domain("product_tmpl_ids", "in", shop_query)
+                ).parents_and_self
+                categs_domain &= Domain("id", "in", search_categories.ids)
+            else:
+                search_categories = Category
+            categs = Category.search_fetch(categs_domain)
+
+            category_entries = Category
+            if category:
+                available_categories = category.child_id.filtered(
                     lambda c: c.website_id.id in (website.id, False)
                 )
                 category_entries = (
                     not search and available_categories
                 ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
-            if not search and not self.env.user._is_internal():
-                # We know the user has access to `categs` and `search_categories` because they come
-                # from a regular `search`, but we have not checked access to `category`'s children,
-                # nor its siblings or itself.
-                category_entries = category_entries.filtered("has_published_products")
-        else:
-            category_entries = categs
+                if not category_entries:
+                    parent = category.parent_id
+                    available_categories = parent.child_id.filtered(
+                        lambda c: c.website_id.id in (website.id, False)
+                    )
+                    category_entries = (
+                        not search and available_categories
+                    ) or available_categories.filtered(lambda c: c.id in search_categories.ids)
+                if not search and not self.env.user._is_internal():
+                    # We know the user has access to `categs` and `search_categories` because
+                    # they come from a regular `search`, but we have not checked access to
+                    # `category`'s children, nor its siblings or itself.
+                    category_entries = category_entries.filtered("has_published_products")
+            else:
+                category_entries = categs
+            return search_categories, categs, category_entries
+
+        categories_data = lazy(get_categories)
+        search_categories_ids = lazy(lambda: categories_data[0].ids)
+        categs = lazy(lambda: categories_data[1])
+        category_entries = lazy(lambda: categories_data[2])
 
         # products for current pager
 
+        # Only the shop params are kept in the pager links (like `keep`), the page can be cached
+        # (t-cache) without the other params of the url.
+        pager_url_args = {
+            key: value
+            for key, value in self._shop_get_query_url_kwargs(**{
+                **post,
+                "search": search,
+                "min_price": min_price,
+                "max_price": max_price,
+                "on_sale": on_sale,
+                "in_stock": in_stock,
+            }).items()
+            if value
+        }
         pager = website.pager(
-            url=url, total=product_count, page=page, step=ppg, scope=5, url_args=post
+            url=url, total=product_count, page=page, step=ppg, scope=5, url_args=pager_url_args
         )
         offset = pager["offset"]
         products = search_product[offset : offset + ppg].with_prefetch()
         products.fetch()
 
         # map each product to its variant, and prefetch the variants
-        Product = self.env["product.product"]
-        product_variant_ids = [product._get_first_possible_variant_id() for product in products]
-        variants = Product.sudo().browse(vid for vid in product_variant_ids if vid)
-        variants.fetch()
-        variant_by_id = {v.id: v for v in variants}
-        product_variants = dict(
-            zip(products, (variant_by_id.get(vid, Product) for vid in product_variant_ids))
-        )
+        def get_product_variants():
+            Product = self.env["product.product"]
+            product_variant_ids = [product._get_first_possible_variant_id() for product in products]
+            variants = Product.sudo().browse(vid for vid in product_variant_ids if vid)
+            variants.fetch()
+            variant_by_id = {v.id: v for v in variants}
+            return dict(
+                zip(products, (variant_by_id.get(vid, Product) for vid in product_variant_ids))
+            )
 
-        ProductAttribute = self.env["product.attribute"]
-        ProductAttributeValue = self.env["product.attribute.value"]
-        pavs_per_attribute = defaultdict(lambda: ProductAttributeValue)
+        # lazy: not computed when the product tiles are rendered from the cache (t-cache)
+        product_variants = lazy(get_product_variants)
 
-        grouped_pavs = ProductAttributeValue._read_group(
-            domain=[
-                ("pav_attribute_line_ids.product_tmpl_id", "in", filters_query),
-                ("attribute_id.visibility", "=", "visible"),
-            ],
-            groupby=["attribute_id"],
-            order="attribute_id",
-            aggregates=["id:recordset"],
-        )
-        pavs_per_attribute.update({attribute: pavs.sorted() for attribute, pavs in grouped_pavs})
-        # Return attributes as recordset of `product.attribute`
-        attributes = ProductAttribute.union(pavs_per_attribute.keys())
-        products_prices = products._get_sales_prices(
+        def get_attributes():
+            ProductAttribute = self.env["product.attribute"]
+            ProductAttributeValue = self.env["product.attribute.value"]
+            pavs_per_attribute = defaultdict(lambda: ProductAttributeValue)
+
+            grouped_pavs = ProductAttributeValue._read_group(
+                domain=[
+                    ("pav_attribute_line_ids.product_tmpl_id", "in", filters_query),
+                    ("attribute_id.visibility", "=", "visible"),
+                ],
+                groupby=["attribute_id"],
+                order="attribute_id",
+                aggregates=["id:recordset"],
+            )
+            pavs_per_attribute.update({
+                attribute: pavs.sorted() for attribute, pavs in grouped_pavs
+            })
+            # Return attributes as recordset of `product.attribute`
+            return ProductAttribute.union(pavs_per_attribute.keys()), pavs_per_attribute
+
+        attributes_data = lazy(get_attributes)
+        attributes = lazy(lambda: attributes_data[0])
+        pavs_per_attribute = lazy(lambda: attributes_data[1])
+        # lazy: not computed when the product tiles are rendered from the cache (t-cache)
+        products_prices = lazy(lambda: products._get_sales_prices(
             # Make sure latest context is applied (see update_context calls in overrides)
             request.pricelist.with_context(self.env.context),
             request.fiscal_position.with_context(self.env.context),
             website.with_context(self.env.context),
-        )
+        ))
         product_query_params = self._get_product_query_params(**post)
 
         reset_attribute_value_params, reset_filters = self._get_shop_filter_reset_params()
@@ -676,7 +711,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "category_entries": category_entries,
             "attributes": attributes,
             "keep": keep,
-            "search_categories_ids": search_categories.ids,
+            "search_categories_ids": search_categories_ids,
             "get_product_prices": lambda product: products_prices[product.id],
             "float_round": float_round,
             "shop_path": SHOP_PATH,
@@ -689,18 +724,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
             ),
             "pavs_per_attribute": pavs_per_attribute,
         }
-        nb_filter_sections = len(attributes)
         if filter_by_price_enabled:
             values["min_price"] = min_price or available_min_price
             values["max_price"] = max_price or available_max_price
             values["available_min_price"] = float_round(available_min_price, 2)
             values["available_max_price"] = float_round(available_max_price, 2)
-            if available_min_price != available_max_price:
-                nb_filter_sections += 1
         if filter_by_tags_enabled:
             values.update({"all_tags": all_tags, "tags": tags})
-            if all_tags:
+
+        def get_default_expand_filter_sections():
+            nb_filter_sections = len(attributes)
+            if filter_by_price_enabled and available_min_price != available_max_price:
                 nb_filter_sections += 1
+            if filter_by_tags_enabled and all_tags:
+                nb_filter_sections += 1
+            return nb_filter_sections < MAX_EXPANDED_FILTER_SECTIONS
         if category:
             values["main_object"] = category
         values["structured_data"] = products.with_context(
@@ -721,7 +759,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         values.update(self._get_additional_shop_values(values, **post))
 
-        values["default_expand_filter_sections"] = nb_filter_sections < MAX_EXPANDED_FILTER_SECTIONS
+        values["default_expand_filter_sections"] = lazy(get_default_expand_filter_sections)
 
         return request.render("website_sale.products", values)
 

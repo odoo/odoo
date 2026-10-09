@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from unittest.mock import patch
 
 from odoo.fields import Command
 from odoo.tests.common import warmup
 
+from odoo.addons.base.models.ir_qweb import IrQweb
 from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website.tests.test_performance import UtilPerf
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
@@ -51,6 +53,15 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
         # Avoid additional queries when uoms are enabled
         cls._disable_uom()
 
+    def _check_url_hot_query(self, *args, use_t_cache=False, **kwargs):
+        """ Measure the computation of the pages, without the rendered parts
+        kept in cache (t-cache), unless ``use_t_cache``.
+        """
+        if use_t_cache:
+            return super()._check_url_hot_query(*args, **kwargs)
+        with patch.object(IrQweb, '_get_cached_values', lambda self, cache_key, get_value: get_value()):
+            return super()._check_url_hot_query(*args, **kwargs)
+
     @classmethod
     def _has_demo_data(cls):
         return bool(cls.env["ir.module.module"].search_count([("demo", "=", True)]))
@@ -67,7 +78,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_attribute": 1,
             "product_attribute_value": 3,
             "product_image": 1,
-            "product_pricelist": 1,
             "product_product": 1,
             "product_public_category": 1,
             "product_ribbon": 1,
@@ -76,7 +86,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_template_attribute_line": 2,
             "res_company": 2,
             "res_currency": 1,
-            "res_partner": 2,
+            "res_partner": 1,
             "res_users": 1,
             "website_menu": 1,
             "website_page": 1,
@@ -99,6 +109,31 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "/shop", sum(select_queries.values()), select_tables_perf=select_queries
         )
 
+    def _get_shop_page_cached_queries(self):
+        """ Queries of the /shop page rendered from the cache (t-cache): the controller still
+        searches the products (pager, structured data), the rest of the computation is lazy.
+        """
+        res = defaultdict(int)
+        res.update({
+            "ir_ui_view": 2,
+            "product_ribbon": 1,
+            "product_template": 2,
+        })
+        if self._has_demo_data():
+            res["res_company"] += 1
+            if "website_sale_stock" in self.installed_modules:
+                res["product_template"] += 1
+                # Out of Stock Ribbon in demo data
+                res["product_ribbon"] += 1
+        return res
+
+    def test_shop_page_generation_cached(self):
+        select_queries = self._get_shop_page_cached_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries,
+            use_t_cache=True,
+        )
+
     # === PRODUCT PAGE === #
 
     def _get_product_page_queries(self):
@@ -113,7 +148,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_attribute_value": 2,
             "product_document": 2,
             "product_image": 2,
-            "product_pricelist": 1,
             "product_product": 2,
             "product_public_category": 2,
             "product_ribbon": 1,
@@ -123,7 +157,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_template_attribute_value": 4,
             "res_company": 2,
             "res_currency": 1,
-            "res_partner": 2,
+            "res_partner": 1,
             "res_users": 1,
             "website_menu": 1,
             "website_page": 1,
@@ -258,12 +292,6 @@ class TestWebsiteSalePerformanceWithPricelist(TestWebsiteSalePerformanceWithPric
     def _get_product_page_queries(self):
         res = super()._get_product_page_queries()
         res["product_pricelist_item"] += 1
-        if "website_sale_subscription" not in self.installed_modules:
-            # FIXME VFE magic comeback when sub is installed makes no **** sense
-            # Seems to come from the `website_sale` template, not the sub override strangely
-            # The rules are fixed, product currency (through _get_main_company) does not have to be
-            # computed anymore
-            res["res_company"] -= 1
         return res
 
     def test_product_page_generation(self):
@@ -299,7 +327,6 @@ class TestWebsiteSalePerformanceWithPricelistDepth(TestWebsiteSalePerformanceWit
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
         res["product_pricelist_item"] += 8
-        res["product_pricelist"] += 1
         return res
 
     def test_shop_page_generation(self):

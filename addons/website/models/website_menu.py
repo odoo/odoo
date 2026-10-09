@@ -304,27 +304,8 @@ class WebsiteMenu(models.Model):
             # Also, mega menu are never considered active.
             return False
 
-        request_url = url_parse(request.httprequest.url)
-
         if not self.child_id:
-            menu_url = url_parse(self._clean_url())
-            unslug_url = self.env['ir.http']._unslug_url
-            if unslug_url(menu_url.path) == unslug_url(request_url.path):
-                # By default we compare the unslug version of the current URL
-                # with the menu URL but if the menu is linked to a page we don't
-                # consider it active if the paths don't match exactly.
-                if self.page_id and menu_url.path != request_url.path:
-                    return False
-                if not (
-                    set(menu_url.decode_query().items(multi=True))
-                    <= set(request_url.decode_query().items(multi=True))
-                ):
-                    # correct path but query arguments does not match
-                    return False
-                if menu_url.netloc and menu_url.netloc != request_url.netloc:
-                    # correct path but not correct domain
-                    return False
-                return True
+            return self._is_url_active(self._clean_url(), bool(self.page_id), url_parse(request.httprequest.url))
         else:
             # Child match (dropdown menu), `self` is just a parent/container,
             # don't check its URL, consider only its children
@@ -332,6 +313,35 @@ class WebsiteMenu(models.Model):
                 return True
 
         return False
+
+    @api.model
+    def _is_url_active(self, url, is_page, request_url):
+        """ Whether the URL of a menu without children matches the request
+        URL, see `_is_active`.
+
+        :param str url: the cleaned URL of the menu
+        :param bool is_page: whether the menu is linked to a page
+        :param request_url: the parsed URL of the request
+        """
+        menu_url = url_parse(url or '')
+        unslug_url = self.env['ir.http']._unslug_url
+        if unslug_url(menu_url.path) != unslug_url(request_url.path):
+            return False
+        # By default we compare the unslug version of the current URL
+        # with the menu URL but if the menu is linked to a page we don't
+        # consider it active if the paths don't match exactly.
+        if is_page and menu_url.path != request_url.path:
+            return False
+        if not (
+            set(menu_url.decode_query().items(multi=True))
+            <= set(request_url.decode_query().items(multi=True))
+        ):
+            # correct path but query arguments does not match
+            return False
+        if menu_url.netloc and menu_url.netloc != request_url.netloc:
+            # correct path but not correct domain
+            return False
+        return True
 
     # would be better to take a menu_id as argument
     @api.model
