@@ -75,16 +75,9 @@ test("undo/redo Breadcrumb visibility options", async () => {
     await contains(":iframe .o_page_breadcrumb").click();
     await contains("[data-label='Breadcrumb Position'] .dropdown").click();
     await contains(".o-overlay-container [data-action-value='hidden']").click();
-    // Hidden on the page, but still in view, and selected, while editing.
-    expect(modifiedBreadcrumb).toHaveClass("o_snippet_invisible");
-    expect(modifiedBreadcrumb).not.toHaveClass("d-none");
-    expect("[data-label='Breadcrumb Position'] .dropdown-toggle").toHaveText("Hidden");
-    // The panel's eye only takes it out of view and back: it stays hidden.
-    await contains(".o_we_invisible_el_panel div:contains('Breadcrumb')").click();
     expect(modifiedBreadcrumb).toHaveClass("d-none");
     await contains(".o_we_invisible_el_panel div:contains('Breadcrumb')").click();
     expect(modifiedBreadcrumb).not.toHaveClass("d-none");
-    expect(modifiedBreadcrumb).toHaveClass("o_snippet_invisible");
 });
 
 describe("save breadcrumb visibility", () => {

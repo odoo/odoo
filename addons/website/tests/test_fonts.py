@@ -1,6 +1,9 @@
+import json
 import re
 import unittest
 from unittest.mock import patch
+
+from lxml import html
 
 import odoo.tests
 from odoo.tools.config import config
@@ -309,3 +312,24 @@ class TestWebsiteThemePreviewViews(odoo.tests.HttpCase):
         self.assertFalse(self.env['website'].with_context(website_id=1).is_view_active('website.option_layout_hide_header'))
         self.assertIn(header, self.url_open('/').text)
         self.assertIn(header, self.url_open('/?theme_preview_views=nonsense').text)
+
+    def test_header_content_width_marked(self):
+        """ Each header layout marks the elements printing its content width,
+        where the builder previews it (not the mobile header's container). """
+        self.authenticate('admin', 'admin')
+        # The sidebar has no content width (a width of its own).
+        for layout in ['default', 'hamburger', 'vertical', 'search', 'stretch', 'boxed',
+                       'sales_one', 'sales_two', 'sales_three', 'sales_four']:
+            with self.subTest(layout=layout):
+                views = json.dumps({
+                    'website.template_header_default': layout == 'default',
+                    f'website.template_header_{layout}': True,
+                    'website.header_width_full': True,
+                })
+                tree = html.fromstring(self.url_open(f'/?theme_preview_views={views}').content)
+                marked = tree.xpath('//header[@id="top"]//*[contains(concat(" ", @class, " "), " o_header_content_width ")]')
+                self.assertTrue(marked)
+                for el in marked:
+                    self.assertIn('container-fluid', el.get('class').split())
+                mobile = tree.xpath('//header[@id="top"]//*[contains(@class, "o_header_mobile")]//*[contains(@class, "o_header_content_width")]')
+                self.assertFalse(mobile)

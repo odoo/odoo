@@ -12,7 +12,7 @@ defineWebsiteModels();
 const headerContent = `
     <header id="top" data-anchor="true" data-name="Header">
         <nav class="navbar">
-            <div id="o_main_nav" class="container o_main_nav"> content </div>
+            <div id="o_main_nav" class="container o_header_content_width o_main_nav"> content </div>
         </nav>
     </header>`;
 
@@ -82,13 +82,13 @@ describe("header width option", () => {
         ["the default template", []],
         ["templates with several containers", ["website.template_header_boxed"]],
     ]) {
-        test(`the content width renders the header on ${layout}`, async () => {
+        test(`the content width is previewed on ${layout}`, async () => {
             onRpc("/website/theme_customize_data_get", async () => views);
             await setupWebsiteBuilder("", { headerContent });
             await contains(":iframe #wrapwrap > header").click();
             await waitFor("[data-label='Content Width']");
             expect(
-                "[data-label='Content Width'] [data-action-id='previewWebsiteConfig']"
+                "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
             ).toHaveCount(3);
         });
     }

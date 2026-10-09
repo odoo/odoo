@@ -217,7 +217,8 @@
 
     <xpath expr="//header" position="before">
         <t t-set="cta_btn_text" t-value="False"/>
-        <t t-set="header_content_width" t-valuef="container"/>
+        <!-- `o_header_content_width` marks the elements printing the width (the builder previews it there). -->
+        <t t-set="header_content_width" t-valuef="container o_header_content_width"/>
         <t t-set="cta_btn_href">/contactus</t>
         <t t-set="extra_items_toggle_aria_label">Extra items button</t>
         <t t-set="primary_additional_colors" t-value="False"/>
@@ -1752,13 +1753,13 @@
 
 <template id="header_width_small" inherit_id="website.layout" active="False">
     <xpath expr="//t[@t-set='header_content_width']" position="attributes">
-        <attribute name="t-valuef">o_container_small</attribute>
+        <attribute name="t-valuef">o_container_small o_header_content_width</attribute>
     </xpath>
 </template>
 
 <template id="header_width_full" inherit_id="website.layout" active="False">
     <xpath expr="//t[@t-set='header_content_width']" position="attributes">
-        <attribute name="t-valuef">container-fluid</attribute>
+        <attribute name="t-valuef">container-fluid o_header_content_width</attribute>
     </xpath>
 </template>
 

@@ -1,6 +1,6 @@
 import { expect, queryFirst, test } from "@odoo/hoot";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
-import { runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
@@ -307,4 +307,111 @@ test("an edit in a part rendered for a views switch is recorded", async () => {
     getEditor().shared.history.commit();
     await contains(".o-snippets-top-actions button[data-icon='undo']").click();
     expect(newEl).not.toHaveClass("edited");
+});
+
+test("the options of a part rendered for a views switch are updated, not rebuilt", async () => {
+    onRpc("/website/theme_customize_data_get", () => []);
+    onRpc("/blank", (request) => {
+        const views = JSON.parse(new URL(request.url).searchParams.get("theme_preview_views"));
+        return new Response(
+            `<html><body><div id="wrapwrap"><header id="top">${
+                views.other_view ? "New" : "Header"
+            }</header><main></main></div></body></html>`
+        );
+    });
+    addBuilderOption({
+        selector: "#wrapwrap > header",
+        editableOnly: false,
+        template: xml`
+            <BuilderRow label="'Layout'">
+                <BuilderCheckbox action="'previewWebsiteConfig'" actionParam="{views: ['other_view']}"/>
+            </BuilderRow>
+        `,
+    });
+    await setupWebsiteBuilder("", {
+        headerContent: `<header id="top">Header</header><main></main>`,
+    });
+    await contains(":iframe header#top").click();
+    const containerEl = queryFirst(
+        ".o_customize_tab .options-container:has([data-label='Layout'])"
+    );
+    await contains("[data-label='Layout'] input[type='checkbox']").click();
+    await waitFor(":iframe header#top:contains(New)");
+    await waitFor("[data-label='Layout'] input[type='checkbox']:checked");
+    await runAllTimers();
+    await animationFrame();
+    expect(queryFirst(".o_customize_tab .options-container:has([data-label='Layout'])")).toBe(
+        containerEl
+    );
+});
+
+test("after a layout switch, the options go to the same element, not the same position", async () => {
+    onRpc("/website/theme_customize_data_get", () => []);
+    onRpc("/blank", (request) => {
+        const views = JSON.parse(new URL(request.url).searchParams.get("theme_preview_views"));
+        const content = views.other_view
+            ? `<div class="test-logo">Logo</div><div id="test-menu">Menu</div>`
+            : `<div class="test-text">Text</div><div id="test-menu">Menu</div>`;
+        return new Response(
+            `<html><body><div id="wrapwrap"><header id="top">${content}</header><main></main></div></body></html>`
+        );
+    });
+    // Switched from the element the switch takes out.
+    addBuilderOption({
+        selector: ".test-text",
+        editableOnly: false,
+        template: xml`
+            <BuilderRow label="'Layout'">
+                <BuilderCheckbox action="'previewWebsiteConfig'" actionParam="{views: ['other_view']}"/>
+            </BuilderRow>
+        `,
+    });
+    for (const name of ["logo", "text"]) {
+        addBuilderOption({
+            selector: `.test-${name}`,
+            editableOnly: false,
+            template: xml`<BuilderRow label="'${name}'"><BuilderButton classAction="'x'"/></BuilderRow>`,
+        });
+    }
+    await setupWebsiteBuilder("", {
+        headerContent: `<header id="top"><div class="test-text">Text</div><div id="test-menu">Menu</div></header><main></main>`,
+    });
+    // An element without a counterpart: the options go to the header.
+    await contains(":iframe header#top .test-text").click();
+    await contains("[data-label='Layout'] input[type='checkbox']").click();
+    await waitFor(":iframe header#top .test-logo");
+    await waitForNone("[data-label='Layout']");
+    expect("[data-label='logo']").toHaveCount(0);
+    expect("[data-label='text']").toHaveCount(0);
+});
+
+test("after a views switch, the options stay on an element known by its classes", async () => {
+    onRpc("/website/theme_customize_data_get", () => []);
+    onRpc("/blank", (request) => {
+        const views = JSON.parse(new URL(request.url).searchParams.get("theme_preview_views"));
+        return new Response(
+            `<html><body><div id="wrapwrap"><main></main><footer id="bottom"><div class="test-bar">${
+                views.other_view ? "New" : "Bar"
+            }</div></footer></div></body></html>`
+        );
+    });
+    addBuilderOption({
+        selector: ".test-bar",
+        editableOnly: false,
+        template: xml`
+            <BuilderRow label="'Bar'">
+                <BuilderCheckbox action="'previewWebsiteConfig'" actionParam="{views: ['other_view']}"/>
+            </BuilderRow>
+        `,
+    });
+    await setupWebsiteBuilder("", {
+        headerContent: `<main></main>`,
+        footerContent: `<footer id="bottom"><div class="test-bar">Bar</div></footer>`,
+    });
+    await contains(":iframe footer#bottom .test-bar").click();
+    await contains("[data-label='Bar'] input[type='checkbox']").click();
+    await waitFor(":iframe footer#bottom .test-bar:contains(New)");
+    await runAllTimers();
+    await animationFrame();
+    expect("[data-label='Bar'] input[type='checkbox']").toBeChecked();
 });

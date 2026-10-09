@@ -1,6 +1,6 @@
 declare module "plugins" {
     import { CarouselOptionShared } from "@website/builder/plugins/carousel_option_plugin";
-    import { CustomizeWebsiteShared, on_website_color_updated_handlers } from "@website/builder/plugins/customize_website_plugin";
+    import { CustomizeWebsiteShared, on_theme_preview_changed_handlers, on_website_color_updated_handlers } from "@website/builder/plugins/customize_website_plugin";
     import { on_content_manually_updated_handlers, EditInteractionShared } from "@website/builder/plugins/edit_interaction_plugin";
     import { floating_snippet_scope_providers, floating_snippets_selectors } from "@website/builder/plugins/floating_snippets_plugin";
     import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
@@ -30,6 +30,7 @@ declare module "plugins" {
     import { PopupVisibilityShared } from "@website/builder/plugins/popup_visibility_plugin";
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
     import { theme_options, ThemeTabShared } from "@website/builder/plugins/theme/theme_tab_plugin";
+    import { ThemeComputedPreviewShared } from "@website/builder/plugins/theme_computed_preview_plugin";
     import { MediaTranslationShared } from "@website/builder/plugins/translation/options/media_translation_plugin";
     import { TranslateWebpageOptionShared } from "@website/builder/plugins/translation/options/translate_webpage_option_plugin";
     import { on_get_dirty_translations_handlers, on_nodes_marked_translatable_handlers, TranslationShared } from "@website/builder/plugins/translation/translation_plugin";
@@ -37,6 +38,7 @@ declare module "plugins" {
     import { force_background_translation_state_selectors } from "@website/builder/plugins/translation/repeat_translation_state_plugin";
     import { ValueHistoryShared } from "@website/builder/plugins/value_history_plugin";
     import { WebsiteBridgeShared } from "@website/builder/plugins/website_bridge_plugin";
+    import { on_chrome_replaced_handlers, WebsiteViewsPreviewShared } from "@website/builder/plugins/website_views_preview_plugin";
 
     interface SharedMethods {
         animateOption: AnimateOptionShared;
@@ -61,6 +63,7 @@ declare module "plugins" {
         popupVisibilityPlugin: PopupVisibilityShared;
         socialMediaOptionPlugin: SocialMediaOptionShared;
         switchableViews: SwitchableViewsShared;
+        themeComputedPreview: ThemeComputedPreviewShared;
         themeTab: ThemeTabShared;
         translateWebpageOption: TranslateWebpageOptionShared;
         translation: TranslationShared;
@@ -72,6 +75,7 @@ declare module "plugins" {
         websiteParallaxPlugin: WebsiteParallaxShared;
         websiteSavePlugin: WebsiteSaveShared;
         websiteBridge: WebsiteBridgeShared;
+        websiteViewsPreview: WebsiteViewsPreviewShared;
     }
 
     interface GlobalResources extends WebsiteResourcesAccess {}
@@ -79,12 +83,14 @@ declare module "plugins" {
     export type WebsiteResources = ResourcesDeclarationsFactory<WebsiteResourcesAccess>;
     export interface WebsiteResourcesList {
         // Handlers
+        on_chrome_replaced_handlers: on_chrome_replaced_handlers;
         on_content_manually_updated_handlers: on_content_manually_updated_handlers;
         on_dynamic_snippet_template_updated_handlers: on_dynamic_snippet_template_updated_handlers;
         on_get_dirty_translations_handlers: on_get_dirty_translations_handlers;
         on_hover_animation_mode_cleaned_handlers: on_hover_animation_mode_cleaned_handlers;
         on_hover_animation_mode_applied_handlers: on_hover_animation_mode_applied_handlers;
         on_nodes_marked_translatable_handlers: on_nodes_marked_translatable_handlers;
+        on_theme_preview_changed_handlers: on_theme_preview_changed_handlers;
         on_visibility_toggled_handlers: on_visibility_toggled_handlers;
         on_website_color_updated_handlers: on_website_color_updated_handlers;
 

@@ -112,7 +112,7 @@ export class FooterOptionPlugin extends Plugin {
  */
 export class WebsiteConfigFooterAction extends BuilderAction {
     static id = "websiteConfigFooter";
-    static dependencies = ["builderActions", "customizeWebsite"];
+    static dependencies = ["builderActions", "customizeWebsite", "websiteViewsPreview"];
     setup() {
         // No hover preview: the footer shows once the server rendered it.
         this.preview = false;
@@ -140,7 +140,7 @@ export class WebsiteConfigFooterAction extends BuilderAction {
         }
         views[view] = true;
         this.dependencies.customizeWebsite.previewWebsiteVariables(vars);
-        return this.dependencies.customizeWebsite.previewViews(views);
+        return this.dependencies.websiteViewsPreview.previewViews(views);
     }
 }
 

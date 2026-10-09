@@ -27,7 +27,10 @@ import { loadBundle } from "@web/core/assets";
  * @property { CustomizeWebsitePlugin['previewWebsiteVariables'] } previewWebsiteVariables
  * @property { CustomizeWebsitePlugin['previewWebsiteColors'] } previewWebsiteColors
  * @property { CustomizeWebsitePlugin['previewColorPalette'] } previewColorPalette
- * @property { CustomizeWebsitePlugin['previewViews'] } previewViews
+ * @property { CustomizeWebsitePlugin['previewPendingValues'] } previewPendingValues
+ * @property { CustomizeWebsitePlugin['getPendingValues'] } getPendingValues
+ * @property { CustomizeWebsitePlugin['getSavedConfigKey'] } getSavedConfigKey
+ * @property { CustomizeWebsitePlugin['isPreviewingColors'] } isPreviewingColors
  * @property { CustomizeWebsitePlugin['previewBodyImage'] } previewBodyImage
  * @property { CustomizeWebsitePlugin['getPendingViews'] } getPendingViews
  * @property { CustomizeWebsitePlugin['getSCSSColorValue'] } getSCSSColorValue
@@ -41,7 +44,6 @@ import { loadBundle } from "@web/core/assets";
  * @property { CustomizeWebsitePlugin['getConfigKey'] } getConfigKey
  * @property { CustomizeWebsitePlugin['getWebsiteVariableValue'] } getWebsiteVariableValue
  * @property { CustomizeWebsitePlugin['getWebsiteVariableDefault'] } getWebsiteVariableDefault
- * @property { CustomizeWebsitePlugin['updatePreviewCopies'] } updatePreviewCopies
  * @property { CustomizeWebsitePlugin['getPendingThemeRequests'] } getPendingThemeRequests
  * @property { CustomizeWebsitePlugin['setPendingThemeRequests'] } setPendingThemeRequests
  * @property { CustomizeWebsitePlugin['isPluginDestroyed'] } isPluginDestroyed
@@ -50,130 +52,37 @@ import { loadBundle } from "@web/core/assets";
 
 /**
  * @typedef {((colors: string[], options?: { isPreviewing?: boolean }) => void)[]} on_website_color_updated_handlers
- * @typedef {((parts: { oldEl: HTMLElement, newEl: HTMLElement }) => void)[]} on_chrome_replaced_handlers
+ * @typedef {(() => void)[]} on_theme_preview_changed_handlers
  */
 
+export const unquote = (value) => value.replace(/^'(.*)'$/, "$1");
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
-const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
+export const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
 // Theme values that Bootstrap also names the button's own variables after:
 // `website.scss` prints them under another name, the one the CSS reads.
-const PRINTED_NAMES = {
+export const PRINTED_NAMES = {
     "btn-padding-x": "o-btn-padding-x",
     "btn-padding-y": "o-btn-padding-y",
     "btn-font-size": "o-btn-font-size",
     "btn-border-radius": "o-btn-border-radius",
     "btn-font-weight": "o-btn-font-weight",
 };
-// Theme settings that switch CSS rules on (`o-theme-gate` in the SCSS): the
-// server marks the saved ones on `<html data-o-theme-gates>`. While a setting
-// is previewed, its gate follows it:
-// - `set`: on when the setting has a value (that `isOn`, if given);
-// - `apart`: on when the setting differs from the one it otherwise follows;
-// - `color`: on when the color is set (by the user or the palette).
-const THEME_GATES = {};
-for (const key of [
-    "headings-font-weight-bold",
-    "display-font-weight-bold",
-    "btn-font-weight-bold",
-]) {
-    THEME_GATES[key] = { set: key };
-}
-for (const side of ["top", "right", "bottom", "left"]) {
-    THEME_GATES[`input-border-${side}-width`] = {
-        apart: [`input-border-${side}-width`, "input-border-width"],
-    };
-}
-for (const level of [
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6",
-    "display-1",
-    "display-2",
-    "display-3",
-    "display-4",
-]) {
-    THEME_GATES[`${level}-font`] = { apart: [`${level}-font`, "headings-font"] };
-    if (level.startsWith("display")) {
-        for (const property of ["line-height", "margin-top", "margin-bottom"]) {
-            THEME_GATES[`${level}-${property}`] = {
-                apart: [`${level}-${property}`, `headings-${property}`],
-            };
-        }
-    }
-}
-for (const key of [
-    "header-font-size",
-    "menu-border-width",
-    "menu-border-radius",
-    "menu-shadow-class",
-    "portal-card-border-width",
-    "portal-card-border-radius",
-]) {
-    THEME_GATES[key] = { set: key };
-}
-THEME_GATES["header-bg-blur"] = { set: "header-bg-blur", isOn: (value) => value !== "0" };
-THEME_GATES["navbar-font"] = { apart: ["navbar-font", "font"] };
-THEME_GATES["header-text-color"] = { set: "header-text-color" };
-THEME_GATES["body-image"] = { set: "body-image" };
-// The button styles: Fill (also under Flat), Outline, Flat.
-for (const which of ["primary", "secondary"]) {
-    THEME_GATES[`btn-${which}-fill`] = {
-        set: `btn-${which}-outline`,
-        isOn: (value) => value !== "true",
-    };
-    THEME_GATES[`btn-${which}-outline`] = {
-        set: `btn-${which}-outline`,
-        isOn: (value) => value === "true",
-    };
-    THEME_GATES[`btn-${which}-flat`] = {
-        set: `btn-${which}-flat`,
-        isOn: (value) => value === "true",
-    };
-}
-const unquote = (value) => value.replace(/^'(.*)'$/, "$1");
-THEME_GATES["link-underline-always"] = {
-    set: "link-underline",
-    isOn: (value) => unquote(value) === "always",
-};
-// The page layouts: Full, or Boxed and its variants Framed and Postcard.
-THEME_GATES["layout-full"] = { set: "layout", isOn: (value) => unquote(value) === "full" };
-THEME_GATES["layout-boxed"] = { set: "layout", isOn: (value) => unquote(value) !== "full" };
-for (const layout of ["framed", "postcard"]) {
-    THEME_GATES[`layout-${layout}`] = { set: "layout", isOn: (value) => unquote(value) === layout };
-}
-// The areas' custom colors and gradients (their presets are classes, see
-// `updateAreaClasses`).
-for (const area of [
+// The areas' own colors: the user's stay through a palette switch, and aren't
+// color customizations it would reset (see `previewColorPalette`).
+export const AREAS = [
     ...["menu", "header-sales_one", "header-sales_two", "header-sales_three"],
     ...["header-sales_four", "footer", "copyright", "breadcrumb", "portal-card"],
-]) {
-    THEME_GATES[`${area}-custom`] = { color: `${area}-custom` };
-}
-for (const gradient of [
+];
+const AREA_COLOR_KEYS = [...AREAS.flatMap((area) => [area, `${area}-custom`]), "menu-border-color"];
+export const AREA_GRADIENT_KEYS = [
     ...["menu-gradient", "menu-secondary-gradient", "footer-gradient"],
-    ...["copyright-gradient", "breadcrumb-gradient", "portal-gradient"],
-]) {
-    THEME_GATES[gradient] = { set: gradient };
-}
-// The elements of each area, as `o-area-colors` gets them in the SCSS: the
-// builder marks them with `data-o-cc-area` while it previews the area's color
-// preset, which they then get as a class (see `updateAreaClasses`).
-const AREA_SELECTORS = {
-    menu: "#wrapwrap > header .navbar-light",
-    "header-sales_one": "#wrapwrap .o_header_sales_one_bot",
-    "header-sales_two": "#wrapwrap .o_header_sales_two_top",
-    "header-sales_three": "#wrapwrap .o_header_sales_three_top",
-    "header-sales_four": "#wrapwrap .o_header_sales_four_bot",
-    footer: ".o_footer",
-    copyright: ".o_footer .o_footer_copyright",
-    breadcrumb: "#wrapwrap > main:not(.o_breadcrumb_overlay) div.o_page_breadcrumb nav",
-    "portal-card": ".o_portal_index_card > a:not(.alert)",
-};
-const PRESET_CLASSES = ["o_cc1", "o_cc2", "o_cc3", "o_cc4", "o_cc5"];
+    ...["copyright-gradient", "breadcrumb-gradient"],
+];
+// An area color's value meaning "none", over the palette's (`null` falls back
+// to the palette's).
+export const AREA_NONE = "NULL";
 const COLOR_FILES_URL = "/website/static/src/scss/options/colors/";
-const PALETTE_URL = `${COLOR_FILES_URL}user_color_palette.scss`;
+export const PALETTE_URL = `${COLOR_FILES_URL}user_color_palette.scss`;
 const THEME_PALETTE_URL = `${COLOR_FILES_URL}user_theme_color_palette.scss`;
 // Saved after the user values (a palette switch resets them), in this order.
 const COLOR_FILE_URLS = [
@@ -181,12 +90,8 @@ const COLOR_FILE_URLS = [
     THEME_PALETTE_URL,
     `${COLOR_FILES_URL}user_gray_color_palette.scss`,
 ];
+// html_editor prints the links made readable under their names.
 for (let i = 1; i <= 5; i++) {
-    for (const key of ["headings", "h2", "h3", "h4", "h5", "h6"]) {
-        THEME_GATES[`o-cc${i}-${key}`] = { color: `o-cc${i}-${key}` };
-    }
-    THEME_GATES[`o-cc${i}-bg-gradient`] = { set: `o-cc${i}-bg-gradient` };
-    // html_editor prints the links made readable under their names.
     PRINTED_NAMES[`o-cc${i}-link`] = `o-cc${i}-link-base`;
 }
 /**
@@ -212,38 +117,15 @@ function getColorFallback(name) {
     }[key];
     return fallback ? `var(--${fallback})` : "";
 }
-const THEME_GATES_ATTRIBUTE = "data-o-theme-gates";
 // The pending views and assets, in the preview steps, as if they were files.
-const VIEWS = "views";
-const ASSETS = "assets";
-const NULL_VALUES = ["null", "NULL", "''"];
-
-/**
- * @param {HTMLElement} rootEl
- * @param {HTMLElement} el an element in `rootEl`
- * @returns {number[]} the child indexes from `rootEl` to `el`
- */
-function getPath(rootEl, el) {
-    const path = [];
-    for (; el !== rootEl; el = el.parentElement) {
-        path.unshift([...el.parentElement.children].indexOf(el));
-    }
-    return path;
-}
-/**
- * @param {HTMLElement} rootEl
- * @param {number[]} path see `getPath`
- * @returns {HTMLElement|undefined}
- */
-function followPath(rootEl, path) {
-    return path.reduce((el, index) => el?.children[index], rootEl);
-}
+export const VIEWS = "views";
+export const ASSETS = "assets";
+export const NULL_VALUES = ["null", "NULL", "''"];
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
     static dependencies = [
         ...["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"],
-        ...["dom", "setup_editor_plugin", "builderOptions", "domReferenceMap"],
     ];
     static shared = [
         "customizeWebsiteColors",
@@ -251,7 +133,10 @@ export class CustomizeWebsitePlugin extends Plugin {
         "previewWebsiteVariables",
         "previewWebsiteColors",
         "previewColorPalette",
-        "previewViews",
+        "previewPendingValues",
+        "getPendingValues",
+        "getSavedConfigKey",
+        "isPreviewingColors",
         "previewBodyImage",
         "getPendingViews",
         "getSCSSColorValue",
@@ -265,7 +150,6 @@ export class CustomizeWebsitePlugin extends Plugin {
         "getConfigKey",
         "getWebsiteVariableValue",
         "getWebsiteVariableDefault",
-        "updatePreviewCopies",
         "getPendingThemeRequests",
         "setPendingThemeRequests",
         "isPluginDestroyed",
@@ -305,15 +189,14 @@ export class CustomizeWebsitePlugin extends Plugin {
         color_combination_providers: withSequence(5, (el, actionParam) => {
             const combination = actionParam.combinationColor;
             if (combination) {
-                const style = getHtmlStyle(this.document);
-                return `o_cc${getCSSVariableValue(combination, style)}`;
+                const preset = getCSSVariableValue(combination, getHtmlStyle(this.document));
+                // None: an area without a preset (see `AREA_NONE`).
+                if (/^[1-5]$/.test(preset)) {
+                    return `o_cc${preset}`;
+                }
             }
         }),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
-        clean_for_save_processors: (root) => {
-            this.cleanAreaClasses(root);
-            return root;
-        },
 
         // Previewed values (see `previewWebsiteVariables`) are history commit
         // data: each step holds the previous and next state to apply.
@@ -439,28 +322,8 @@ export class CustomizeWebsitePlugin extends Plugin {
     pendingViews = {};
     /** @type {Object<string, boolean>} assets to enable or disable on save */
     pendingAssets = {};
-    /** @type {Object<string, Promise>} the page's renders, by previewed views */
-    chromeRenders = {};
-    /** @type {Object<string, HTMLElement>} the elements a views switch took out, by render */
-    chromeElements = {};
-    /** The previewed views the page shows (see `updateChrome`). */
-    chromeKey = "{}";
-    chromeRequestId = 0;
-    /** @type {Promise|null} the scheduled `updateChrome` */
-    chromeUpdate = null;
-    /** @type {Set<string>} views the page shows by itself (see `previewViews`) */
-    shownViews = new Set();
-    /** @type {Set<string>} views of the page's own content (see `previewViews`) */
-    pageViews = new Set();
     /** Preview steps not committed to the history yet. */
     pendingPreviewSteps = [];
-    /** @type {Set<string>} the theme gates of the saved values */
-    savedThemeGates;
-    /** @type {Set<string>} the computed colors set on the root (see `updateComputedColors`) */
-    computedColorNames = new Set();
-    /** @type {Object<string, boolean>} the theme gates computed from the colors */
-    computedGates = {};
-    computedColorsRequestId = 0;
     colorsToCustomize = {};
     resolves = {};
     getPendingThemeRequests() {
@@ -577,7 +440,8 @@ export class CustomizeWebsitePlugin extends Plugin {
      * Same as `previewWebsiteVariables`, for colors (written in their own
      * files). A color given as another one's name follows it. A reset
      * previews what the color falls back to: the palette's, else the one
-     * it reads when not set (see `getColorFallback`), else none.
+     * it reads when not set (see `getColorFallback`), else none; reset to
+     * `AREA_NONE` (an area's), none.
      *
      * The colors computed from them follow, see `updateComputedColors`.
      *
@@ -604,7 +468,9 @@ export class CustomizeWebsitePlugin extends Plugin {
                 pending: value || nullValue,
                 inline: value
                     ? value.replace(/^'(.*)'$/, "var(--$1)")
-                    : this.getDefaultInlineValue(name) || getColorFallback(name) || "initial",
+                    : (nullValue !== AREA_NONE &&
+                          (this.getDefaultInlineValue(name) || getColorFallback(name))) ||
+                      "initial",
             };
         }
         this.setPreviewState(step.next);
@@ -613,7 +479,8 @@ export class CustomizeWebsitePlugin extends Plugin {
     /**
      * Previews a palette switch: the palette's colors replace the colors (on
      * save, the server resets the user's colors when it writes the palette's
-     * name, and the colors changed afterwards are written after it). The
+     * name, and the colors changed afterwards are written after it), except
+     * the areas' colors the user set (header, footer...), which stay. The
      * palettes' colors are printed in the builder's document (see
      * `color_palettes.scss`).
      *
@@ -630,6 +497,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             return value && !isCSSColor(value) && !/^\d+$/.test(value) ? `var(--${value})` : value;
         };
         const style = this.document.documentElement.style;
+        const pageStyle = getHtmlStyle(this.document);
         const step = { previous: {}, next: {} };
         const add = (name, file, pending, inline) => {
             step.previous[name] = {
@@ -644,16 +512,39 @@ export class CustomizeWebsitePlugin extends Plugin {
         for (let i = 1; i <= 5; i++) {
             add(`o-cc${i}-bg-gradient`, USER_VALUES_URL, "null", "initial");
         }
-        for (const key of [
-            ...["menu-gradient", "menu-secondary-gradient", "footer-gradient"],
-            ...["copyright-gradient", "breadcrumb-gradient"],
-        ]) {
-            add(key, USER_VALUES_URL, "null", "initial");
+        // The areas' colors the user set stay: the server resets them with the
+        // palette, so they're written again after it (see `onSave`).
+        const userKeys = getCSSVariableValue("o-user-color-keys", pageStyle)
+            .replace(/['"]/g, "")
+            .split(" ");
+        const pendingPalette = this.getPendingValues(PALETTE_URL);
+        const keptKeys = AREA_COLOR_KEYS.filter(
+            (key) => key in pendingPalette || userKeys.includes(key)
+        );
+        for (const key of keptKeys.filter((key) => !(key in pendingPalette))) {
+            // As set: a preset's number, a color's name or a color.
+            const value = getCSSVariableValue(`o-user-${key}`, pageStyle).replace(
+                /^["'](.*)["']$/,
+                "$1"
+            );
+            const scssValue =
+                !value || NULL_VALUES.includes(value)
+                    ? AREA_NONE
+                    : /^\d+$/.test(value) || isCSSColor(value)
+                    ? value
+                    : `'${value}'`;
+            add(key, PALETTE_URL, scssValue, style.getPropertyValue(`--${key}`));
         }
-        // No user color anymore: a color is the palette's (its default).
-        add("o-user-color-keys", USER_VALUES_URL, undefined, '""');
+        for (const key of AREA_GRADIENT_KEYS) {
+            const gradient = this.pendingVariables[key] ?? getCSSVariableValue(key, pageStyle);
+            if (gradient && !NULL_VALUES.includes(gradient)) {
+                add(key, USER_VALUES_URL, gradient, style.getPropertyValue(`--${key}`));
+            }
+        }
+        // No other user color anymore: a color is the palette's (its default).
+        add("o-user-color-keys", USER_VALUES_URL, undefined, `"${keptKeys.join(" ")}"`);
         const keys = getCSSVariableValue("o-palette-keys", builderStyle).replace(/['"]/g, "");
-        for (const key of keys.split(" ").filter(Boolean)) {
+        for (const key of keys.split(" ").filter((key) => key && !keptKeys.includes(key))) {
             const value = toCSS(
                 getPaletteValue(key) || getCSSVariableValue(`o-base-palette-${key}`, builderStyle)
             );
@@ -662,7 +553,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 key,
                 PALETTE_URL,
                 undefined,
-                value ? `var(--o-default-${key})` : getColorFallback(key)
+                value ? `var(--o-default-${key})` : getColorFallback(key) || "initial"
             );
         }
         for (const key of ["success", "info", "warning", "danger"]) {
@@ -680,9 +571,9 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
     /**
      * Whether a palette switch would reset color customizations (palette
-     * colors and status colors, as `$o-has-customized-colors`): the saved
-     * ones, unless a palette switch is pending (it resets them already), and
-     * the pending ones.
+     * colors and status colors, as `$o-has-customized-colors`; the areas'
+     * colors stay): the saved ones, unless a palette switch is pending (it
+     * resets them already), and the pending ones.
      *
      * @returns {boolean}
      */
@@ -697,7 +588,9 @@ export class CustomizeWebsitePlugin extends Plugin {
             (!("color-palettes-name" in this.pendingVariables) &&
                 !!savedValue &&
                 savedValue !== "false") ||
-            Object.values(this.getPendingValues(PALETTE_URL)).some(isSet) ||
+            Object.entries(this.getPendingValues(PALETTE_URL)).some(
+                ([key, value]) => !AREA_COLOR_KEYS.includes(key) && isSet(value)
+            ) ||
             ["success", "info", "warning", "danger"].some((key) => isSet(statusColors[key]))
         );
     }
@@ -715,6 +608,15 @@ export class CustomizeWebsitePlugin extends Plugin {
             return this.getWebsiteVariableValue(color.match(/var\(--(.+?)\)/)[1]);
         }
         return isCSSColor(color) ? color : `'${color}'`;
+    }
+    /**
+     * @returns {boolean} whether colors are previewed (a color, a palette)
+     */
+    isPreviewingColors() {
+        return (
+            "color-palettes-name" in this.pendingVariables ||
+            Object.values(this.pendingColors).some((colors) => Object.keys(colors).length)
+        );
     }
     /**
      * @param {string} file
@@ -753,50 +655,35 @@ export class CustomizeWebsitePlugin extends Plugin {
                 style.removeProperty(`--${printedName}`);
             }
         }
-        this.updateThemeGates();
-        this.updateAreaClasses();
-        this.updatePreviewCopies();
-        this.updateComputedColors();
-        this.updateChrome();
+        this.trigger("on_theme_preview_changed_handlers");
     }
     /** No transitions while values are previewed (e.g. dragging a color). */
     endThemePreviewing = debounce(() => {
         this.document.documentElement.classList.remove("o_we_theme_previewing");
     }, 300);
     /**
-     * Previews views switched on or off, written on save: the page shows them
-     * meanwhile (see `updateChrome`).
+     * Previews values written on save that set nothing on the page themselves
+     * (views and assets, see `websiteViewsPreview.previewViews`).
      *
-     * @param {Object<string, boolean|"reset">} views by key, whether it is
-     *        active ("reset": disabled, its arch reset on save)
-     * @param {Object} [options]
-     * @param {boolean} [options.areAssets] assets instead (nothing to show:
-     *        they apply after save)
-     * @param {boolean} [options.areShown] the caller shows the views itself
-     *        (e.g. their class): no render needed for them
-     * @param {boolean} [options.arePage] the views change the page's own
-     *        content (its `main`), not only its header and footer
-     * @returns {Promise} resolved once the page shows the views
+     * @param {string} file `VIEWS` or `ASSETS`
+     * @param {Object<string, *>} values
      */
-    previewViews(views, { areAssets = false, areShown = false, arePage = false } = {}) {
-        const file = areAssets ? ASSETS : VIEWS;
-        for (const view of Object.keys(views)) {
-            if (areShown) {
-                this.shownViews.add(view);
-            }
-            if (arePage) {
-                this.pageViews.add(view);
-            }
-        }
+    previewPendingValues(file, values) {
         const pendingValues = this.getPendingValues(file);
         const step = { previous: {}, next: {} };
-        for (const [view, active] of Object.entries(views)) {
-            step.previous[view] = { file, pending: pendingValues[view] };
-            step.next[view] = { file, pending: active };
+        for (const [name, value] of Object.entries(values)) {
+            step.previous[name] = { file, pending: pendingValues[name] };
+            step.next[name] = { file, pending: value };
         }
         this.setPreviewState(step.next);
         this.pendingPreviewSteps.push(step);
-        return this.updateChrome();
+    }
+    /**
+     * @param {string} key a view or asset
+     * @returns {boolean|undefined} whether it is active, as saved (if loaded)
+     */
+    getSavedConfigKey(key) {
+        return this.activeRecords[key];
     }
     /**
      * Previews the page's background image settings: the values written on
@@ -842,430 +729,6 @@ export class CustomizeWebsitePlugin extends Plugin {
      */
     getPendingViews() {
         return { ...this.pendingViews };
-    }
-    /**
-     * Shows the page's header and footer (and its `main`, for the views of
-     * the page's content) as the server renders them with the previewed views
-     * (`?theme_preview_views`, nothing is written), so that a views switch
-     * needs no reload. The renders are cached by views; the elements a switch
-     * takes out are kept, and come back on undo as they were. Unsaved edits
-     * follow the live page (see `carryEdits`). Not part of the history:
-     * follows the previewed views. Scheduled once per tick.
-     *
-     * @returns {Promise} resolved once the page shows the previewed views
-     */
-    updateChrome() {
-        return (this.chromeUpdate ??= new Promise((resolve) =>
-            setTimeout(() => {
-                this.chromeUpdate = null;
-                resolve(this._updateChrome());
-            })
-        ));
-    }
-    async _updateChrome() {
-        const views = Object.entries(this.pendingViews)
-            .map(([view, pending]) => [view, pending === true])
-            // Unknown saved state: kept, the server knows.
-            .filter(
-                ([view, active]) =>
-                    !(view in this.activeRecords) || active !== this.activeRecords[view]
-            );
-        const key = JSON.stringify(Object.fromEntries(views.sort()));
-        const requestId = ++this.chromeRequestId;
-        // The views the page shows by itself need no render, but are part of
-        // the renders' key: a render shows them too.
-        const withoutShown = (viewsKey) =>
-            JSON.stringify(
-                Object.entries(JSON.parse(viewsKey)).filter(([view]) => !this.shownViews.has(view))
-            );
-        if (withoutShown(key) === withoutShown(this.chromeKey)) {
-            this.chromeKey = key;
-            return;
-        }
-        // The page's content is only swapped for its own views: its render is
-        // never quite the same (tokens...).
-        const pageKey = (viewsKey) =>
-            JSON.stringify(
-                Object.entries(JSON.parse(viewsKey)).filter(([view]) => this.pageViews.has(view))
-            );
-        const [fromPageKey, toPageKey] = [pageKey(this.chromeKey), pageKey(key)];
-        const wrapwrapEl = this.document.getElementById("wrapwrap");
-        const parts = ["header#top", "footer#bottom"];
-        if (fromPageKey !== toPageKey) {
-            parts.push("main");
-        }
-        const targetEl = this.dependencies.builderOptions.getTarget();
-        let loadingEls = [];
-        if (!(this.chromeKey in this.chromeRenders && key in this.chromeRenders)) {
-            // The part being edited (else both) shows that it's on its way.
-            const partEls = parts.map((part) => wrapwrapEl.querySelector(`:scope > ${part}`));
-            loadingEls = partEls.filter((el) => el?.contains(targetEl));
-            loadingEls = loadingEls.length ? loadingEls : partEls.filter(Boolean);
-            this.dependencies.domObserver.ignore(() => {
-                loadingEls.forEach((el) => el.classList.add("o_we_chrome_loading"));
-            });
-        }
-        let from, to;
-        try {
-            [from, to] = await Promise.all(
-                [this.chromeKey, key].map((viewsKey) => this.getChromeRender(viewsKey))
-            );
-        } finally {
-            this.dependencies.domObserver.ignore(() => {
-                loadingEls.forEach((el) => el.classList.remove("o_we_chrome_loading"));
-            });
-        }
-        if (requestId !== this.chromeRequestId || this.isDestroyed) {
-            return;
-        }
-        let mainEl = wrapwrapEl.querySelector(":scope > main");
-        let newTargetEl;
-        this.dependencies.domObserver.ignore(() => {
-            for (const [part, insert] of [
-                ["main", (el) => mainEl.replaceWith(el)],
-                ["header#top", (el) => mainEl.before(el)],
-                ["footer#bottom", (el) => mainEl.after(el)],
-            ]) {
-                if (!parts.includes(part)) {
-                    continue;
-                }
-                // Only a part rendered differently is replaced, and the live
-                // element is kept for when that render shows again (the
-                // page's content: by its views).
-                let [fromKey, toKey] = [from[part]?.outerHTML || "", to[part]?.outerHTML || ""];
-                if (part === "main") {
-                    [fromKey, toKey] = [`main ${fromPageKey}`, `main ${toPageKey}`];
-                } else if (fromKey === toKey) {
-                    continue;
-                }
-                const currentEl = wrapwrapEl.querySelector(`:scope > ${part}`);
-                const nextEl =
-                    this.chromeElements[toKey] ||
-                    (to[part] && this.document.importNode(to[part], true));
-                this.chromeElements[fromKey] = currentEl;
-                delete this.chromeElements[toKey];
-                const targetPath = currentEl?.contains(targetEl) && getPath(currentEl, targetEl);
-                if (currentEl && nextEl) {
-                    this.carryEdits(currentEl, nextEl);
-                }
-                if (part === "main") {
-                    insert(nextEl);
-                    mainEl = nextEl;
-                } else {
-                    currentEl?.remove();
-                    if (nextEl) {
-                        insert(nextEl);
-                    }
-                }
-                if (targetPath && !targetEl.isConnected) {
-                    // The options were on the part taken out: on the new one.
-                    newTargetEl = (nextEl && followPath(nextEl, targetPath)) || nextEl;
-                }
-                if (nextEl) {
-                    // Inserted unobserved: known from now on, so that its
-                    // edits are recorded (undo, save).
-                    this.dependencies.domReferenceMap.register(nextEl);
-                    this.dependencies.setup_editor_plugin.markSavableAreas(nextEl);
-                    this.dependencies.dom.normalize(nextEl);
-                    if (currentEl) {
-                        this.trigger("on_chrome_replaced_handlers", {
-                            oldEl: currentEl,
-                            newEl: nextEl,
-                        });
-                    }
-                }
-            }
-            // Some views set classes on the page's root elements.
-            for (const selector of ["html", "body", "#wrapwrap"]) {
-                const [fromClasses, toClasses] = [from.classes[selector], to.classes[selector]];
-                const el = this.document.querySelector(selector);
-                el.classList.remove(...fromClasses.filter((c) => !toClasses.includes(c)));
-                el.classList.add(...toClasses.filter((c) => !fromClasses.includes(c)));
-            }
-        });
-        this.chromeKey = key;
-        // A new part shows the previewed area presets too.
-        this.updateAreaClasses();
-        if (newTargetEl) {
-            this.dependencies.builderOptions.updateContainers(newTargetEl);
-        }
-        this.dependencies.edit_interaction.restartInteractions();
-        // The page adapts a new header's menu (see `auto_hide_menu.js`).
-        this.document.dispatchEvent(new Event("o_header_rendered"));
-        this.trigger("on_dom_updated_handlers");
-    }
-    /**
-     * Moves the unsaved edits of a part taken out to the part replacing it,
-     * where the same record field is, in exchange for its unedited render (so
-     * that they move back on undo): they are saved from the live page.
-     *
-     * @param {HTMLElement} fromEl
-     * @param {HTMLElement} toEl
-     */
-    carryEdits(fromEl, toEl) {
-        for (const dirtyEl of fromEl.querySelectorAll(".o_dirty[data-oe-model]")) {
-            if (toEl.contains(dirtyEl)) {
-                // Moved with an edited ancestor.
-                continue;
-            }
-            const selector = ["oe-model", "oe-id", "oe-field", "oe-xpath"]
-                .filter((name) => dirtyEl.hasAttribute(`data-${name}`))
-                .map(
-                    (name) => `[data-${name}="${CSS.escape(dirtyEl.getAttribute(`data-${name}`))}"]`
-                )
-                .join("");
-            const counterpartEl = toEl.querySelector(selector);
-            if (counterpartEl) {
-                const markerNode = this.document.createComment("");
-                dirtyEl.replaceWith(markerNode);
-                counterpartEl.replaceWith(dirtyEl);
-                markerNode.replaceWith(counterpartEl);
-            }
-        }
-    }
-    /**
-     * @param {string} key the previewed views, as JSON
-     * @returns {Promise<Object>} the page's header, footer and root classes,
-     *          as rendered with them
-     */
-    getChromeRender(key) {
-        this.chromeRenders[key] ??= (async () => {
-            const { pathname, search } = this.document.defaultView.location;
-            const url = new URL(pathname + search, window.location.origin);
-            url.searchParams.set("theme_preview_views", key);
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`The page's render failed (${response.status})`);
-            }
-            const doc = new DOMParser().parseFromString(await response.text(), "text/html");
-            const classes = {};
-            for (const selector of ["html", "body", "#wrapwrap"]) {
-                classes[selector] = [...(doc.querySelector(selector)?.classList || [])];
-            }
-            return {
-                "header#top": doc.querySelector("#wrapwrap > header#top"),
-                "footer#bottom": doc.querySelector("#wrapwrap > footer#bottom"),
-                main: doc.querySelector("#wrapwrap > main"),
-                classes,
-            };
-        })().catch((error) => {
-            delete this.chromeRenders[key];
-            throw error;
-        });
-        return this.chromeRenders[key];
-    }
-    /**
-     * Previews the areas' color presets (header, footer...): their elements get
-     * the preset as a class, marked `data-o-cc-area` so that the compiled
-     * preset stops applying to them (see `o-area-colors`), while the preset is
-     * previewed (or a palette switch). Not edits of the page: not recorded.
-     */
-    updateAreaClasses() {
-        const pendingPalette = this.getPendingValues(PALETTE_URL);
-        const isPaletteSwitched = "color-palettes-name" in this.pendingVariables;
-        const updates = [];
-        for (const [area, selector] of Object.entries(AREA_SELECTORS)) {
-            let preset =
-                (area in pendingPalette || isPaletteSwitched) && this.getWebsiteVariableValue(area);
-            preset = /^[1-5]$/.test(preset) && preset;
-            for (const el of this.document.querySelectorAll(selector)) {
-                const isMarked = !!el.dataset.oCcArea;
-                if (preset ? !isMarked || !el.classList.contains(`o_cc${preset}`) : isMarked) {
-                    updates.push([el, area, preset]);
-                }
-            }
-        }
-        if (!updates.length) {
-            // `ignore` also records the pending mutations: within an edit,
-            // marking its element dirty out of the history (see `SavePlugin`).
-            return;
-        }
-        this.dependencies.domObserver.ignore(() => {
-            for (const [el, area, preset] of updates) {
-                if (el.dataset.oCcArea) {
-                    el.classList.remove(...PRESET_CLASSES);
-                    delete el.dataset.oCcArea;
-                }
-                if (preset) {
-                    el.classList.add(`o_cc${preset}`);
-                    el.dataset.oCcArea = area;
-                }
-            }
-        });
-    }
-    /**
-     * @param {HTMLElement} root
-     */
-    cleanAreaClasses(root) {
-        for (const el of root.querySelectorAll("[data-o-cc-area]")) {
-            el.classList.remove(...PRESET_CLASSES);
-            delete el.dataset.oCcArea;
-        }
-    }
-    /**
-     * Turns the theme gates of the previewed settings on or off (the others
-     * keep their saved state). Computed from the current values, so they
-     * follow undo and redo without being part of the history steps.
-     */
-    updateThemeGates() {
-        const htmlEl = this.document.documentElement;
-        this.savedThemeGates ??= new Set(
-            (htmlEl.getAttribute(THEME_GATES_ATTRIBUTE) || "").split(" ").filter(Boolean)
-        );
-        const gates = new Set(this.savedThemeGates);
-        const pendingPalette = this.getPendingValues(PALETTE_URL);
-        const isPaletteSwitched = "color-palettes-name" in this.pendingVariables;
-        for (const [gate, { set, isOn: isValueOn, apart, color }] of Object.entries(THEME_GATES)) {
-            let isOn;
-            if (color) {
-                if (!(color in pendingPalette) && !isPaletteSwitched) {
-                    continue;
-                }
-                // A reset color is the palette's, if any.
-                isOn =
-                    (color in pendingPalette && !NULL_VALUES.includes(pendingPalette[color])) ||
-                    !!this.getWebsiteVariableDefault(color);
-            } else if (!(set ? [set] : apart).some((name) => name in this.pendingVariables)) {
-                continue;
-            } else {
-                const value = this.pendingVariables[set];
-                isOn = set
-                    ? !NULL_VALUES.includes(value) && (!isValueOn || isValueOn(value))
-                    : this.getWebsiteVariableValue(apart[0]) !==
-                      this.getWebsiteVariableValue(apart[1]);
-            }
-            if (isOn) {
-                gates.add(gate);
-            } else {
-                gates.delete(gate);
-            }
-        }
-        for (const [gate, isOn] of Object.entries(this.computedGates)) {
-            if (isOn) {
-                gates.add(gate);
-            } else {
-                gates.delete(gate);
-            }
-        }
-        htmlEl.setAttribute(THEME_GATES_ATTRIBUTE, [...gates].join(" "));
-    }
-    /**
-     * While colors are previewed, sets the colors the compile computes from
-     * them (readable text and links, buttons' states...) on the root, as the
-     * server computes them (see `color_system.py`). Not part of the history:
-     * recomputed after the preview changes, the latest answer wins.
-     */
-    updateComputedColors = debounce(this._updateComputedColors.bind(this), 0);
-    async _updateComputedColors() {
-        const requestId = ++this.computedColorsRequestId;
-        let values = {};
-        let gates = {};
-        if (
-            "color-palettes-name" in this.pendingVariables ||
-            Object.values(this.pendingColors).some((colors) => Object.keys(colors).length)
-        ) {
-            ({ values, gates } = await rpc(
-                "/website/theme_computed_colors",
-                this.getComputedColorsInputs(),
-                { silent: true }
-            ));
-            if (requestId !== this.computedColorsRequestId || this.isDestroyed) {
-                return;
-            }
-        }
-        const style = this.document.documentElement.style;
-        for (const name of this.computedColorNames) {
-            if (!(name in values)) {
-                style.removeProperty(`--${name}`);
-            }
-        }
-        for (const [name, value] of Object.entries(values)) {
-            style.setProperty(`--${name}`, value);
-        }
-        this.computedColorNames = new Set(Object.keys(values));
-        this.computedGates = gates;
-        this.updateThemeGates();
-        this.updatePreviewCopies();
-        // The options showing these colors (e.g. a preset's text) follow.
-        this.trigger("on_dom_updated_handlers");
-    }
-    /**
-     * @returns {Object} what the server computes the colors from: the colors
-     *          as currently shown, and which ones are set
-     */
-    getComputedColorsInputs() {
-        const style = getHtmlStyle(this.document);
-        const get = (name) => getCSSVariableValue(name, style);
-        const pendingPalette = this.getPendingValues(PALETTE_URL);
-        const userKeys = new Set(get("o-user-color-keys").replace(/['"]/g, "").split(" "));
-        for (const [name, value] of Object.entries(pendingPalette)) {
-            if (NULL_VALUES.includes(value)) {
-                userKeys.delete(name);
-            } else {
-                userKeys.add(name);
-            }
-        }
-        const isSet = (name) => userKeys.has(name) || !!this.getWebsiteVariableDefault(name);
-        const colors = {};
-        for (const name of [
-            ...["100", "200", "300", "400", "500", "600", "700", "800", "900", "white", "black"],
-            ...["primary", "secondary", "success", "info", "warning", "danger", "light", "dark"],
-            ...["o-color-1", "o-color-2", "o-color-3", "o-color-4", "o-color-5"],
-        ]) {
-            colors[name] = get(name);
-        }
-        for (const name of ["input", "body"].filter(isSet)) {
-            colors[name] = get(name);
-        }
-        for (let i = 1; get(`o-cc${i}-bg`); i++) {
-            colors[`o-cc${i}-bg`] = get(`o-cc${i}-bg`);
-            for (const key of [
-                "link",
-                "btn-primary",
-                "btn-primary-border",
-                "btn-secondary",
-                "btn-secondary-border",
-            ]) {
-                const name = `o-cc${i}-${key}`;
-                if (isSet(name)) {
-                    colors[name] = get(PRINTED_NAMES[name] || name);
-                }
-            }
-        }
-        // The areas (header, footer...): their color preset, their custom
-        // color if set.
-        const areas = {};
-        for (const area of [
-            ...["menu", "header-sales_one", "header-sales_two", "header-sales_three"],
-            ...["header-sales_four", "footer", "copyright", "breadcrumb", "portal-card"],
-        ]) {
-            areas[area] = get(area);
-            if (isSet(`${area}-custom`)) {
-                colors[`${area}-custom`] = get(`${area}-custom`);
-            }
-        }
-        return {
-            colors,
-            areas,
-            user_keys: [...userKeys].filter(Boolean),
-            min_contrast_ratio: parseFloat(get("o-min-contrast-ratio")),
-        };
-    }
-    /**
-     * Copies the previewed values to the colors preview dialog's page and to
-     * the builder's own copies of the colors (color picker).
-     */
-    updatePreviewCopies() {
-        const htmlEl = this.document.documentElement;
-        const previewHtmlEl = this.config.extraPreviewDocument?.documentElement;
-        if (previewHtmlEl) {
-            previewHtmlEl.style.cssText = htmlEl.style.cssText;
-            previewHtmlEl.setAttribute(
-                THEME_GATES_ATTRIBUTE,
-                htmlEl.getAttribute(THEME_GATES_ATTRIBUTE) || ""
-            );
-        }
-        setBuilderCSSVariables(getHtmlStyle(this.document));
     }
     debouncedSCSSVariablesCusto = debounce(async (nullValue) => {
         const variables = this.variablesToCustomize;
@@ -1449,7 +912,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 "ir.ui.view",
                 "render_public_asset",
                 [`${key}`, {}],
-                { context: this.dependencies.websiteBridge.getWebsiteContextLang() },
+                { context: this.dependencies.websiteBridge.getWebsiteContextLang() }
             );
         }
         return this.getTemplateKey(key);
@@ -1839,6 +1302,7 @@ export class WebsiteConfigAction extends BuilderAction {
  */
 export class PreviewWebsiteConfigAction extends WebsiteConfigAction {
     static id = "previewWebsiteConfig";
+    static dependencies = [...WebsiteConfigAction.dependencies, "websiteViewsPreview"];
     // Drop the parent's reload. No hover preview: a switch shows once the
     // server rendered it, which the apply waits for.
     setup() {
@@ -1854,7 +1318,7 @@ export class PreviewWebsiteConfigAction extends WebsiteConfigAction {
         );
     }
     _customizeThemeData(isViewData, shouldReset, toEnable, toDisable) {
-        return this.dependencies.customizeWebsite.previewViews(
+        return this.dependencies.websiteViewsPreview.previewViews(
             {
                 ...Object.fromEntries([...toEnable].map((view) => [view, true])),
                 ...Object.fromEntries(
@@ -1873,7 +1337,7 @@ export class PreviewWebsiteConfigAction extends WebsiteConfigAction {
 export class PreviewPageConfigAction extends PreviewWebsiteConfigAction {
     static id = "previewPageConfig";
     _customizeThemeData(isViewData, shouldReset, toEnable, toDisable) {
-        return this.dependencies.customizeWebsite.previewViews(
+        return this.dependencies.websiteViewsPreview.previewViews(
             {
                 ...Object.fromEntries([...toEnable].map((view) => [view, true])),
                 ...Object.fromEntries(
@@ -1887,7 +1351,7 @@ export class PreviewPageConfigAction extends PreviewWebsiteConfigAction {
 
 export class PreviewableWebsiteConfigAction extends BuilderAction {
     static id = "previewableWebsiteConfig";
-    static dependencies = ["customizeWebsite", "domObserver"];
+    static dependencies = ["websiteViewsPreview"];
     getPriority({ params }) {
         return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
     }
@@ -1915,13 +1379,13 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
     }
     /**
      * The class shows the views: they are written on save, and part of the
-     * page's renders (see `customizeWebsite.previewViews`).
+     * page's renders (see `websiteViewsPreview.previewViews`).
      *
      * @param {string[]} views
      * @param {boolean} active
      */
     previewViews(views = [], active) {
-        this.dependencies.customizeWebsite.previewViews(
+        this.dependencies.websiteViewsPreview.previewViews(
             Object.fromEntries(
                 views.map((view) =>
                     view.startsWith("!") ? [view.slice(1), !active] : [view, active]
@@ -2075,7 +1539,10 @@ export class CustomizeWebsiteSubVariablesAction extends CustomizeWebsiteVariable
             params.nullValue
         );
     }
-    getVariablesToUpdate({ mainParam: variable, nullValue = "null", subVariablesConfig = {} }, value) {
+    getVariablesToUpdate(
+        { mainParam: variable, nullValue = "null", subVariablesConfig = {} },
+        value
+    ) {
         // 1. A single variable with potential sub-variables: update all.
         const variablesToUpdate = [variable, ...(subVariablesConfig[variable] || [])].map(
             (name) => [name, value]
