@@ -117,9 +117,13 @@
                 <field name="write_date" column_invisible="True"/> <!-- compared to create_date by InventoryReportListModel JS to detect duplicate quant creation -->
                 <field name="id" column_invisible="True"/> <!-- used by readonly conditions on sibling fields in this list -->
                 <field name="location_id"
-                       column_invisible="context.get('hide_location', False)"
+                       column_invisible="context.get('hide_location', False) or context.get('create_locations', False)"
                        readonly="id"
                        options="{'no_create': True}"/>
+                <field name="location_id"
+                       column_invisible="context.get('hide_location', False) or not context.get('create_locations', False)"
+                       readonly="id"
+                       options="{'no_create': False}"/>
                 <field name="storage_category_id" optional="hide"/>
                 <field name="product_id"
                        readonly="context.get('single_product', False) or id" force_save="1"
