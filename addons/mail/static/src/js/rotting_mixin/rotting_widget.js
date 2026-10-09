@@ -24,15 +24,31 @@ export function getRottingDaysTitle(modelName, rotDays) {
     });
 }
 
+<<<<<<< ec726e5e6ad089eea03e7a46c960ee0bf2842a6a
 export class RottingDaysField extends Component {
     static template = "mail.RottingDaysField";
+||||||| 0d443888dd88652037cb92e6ba20edc001b44b88
+export class KanbanRottingField extends Component {
+    static props = {
+        ...standardFieldProps,
+    };
+    static template = "mail.KanbanRottingField";
+=======
+export function getRottingDaysCount(numberOfDays) {
+    return _t("%(numberOfDays)sd", { numberOfDays });
+}
+
+export class KanbanRottingField extends Component {
+    static props = {
+        ...standardFieldProps,
+    };
+    static template = "mail.KanbanRottingField";
+>>>>>>> 4aedb09add272f5d65b1649cee97d7a3367efb61
 
     setup() {
         this.props = props({ record: types.instanceOf(Record) });
         // Preprocess all sentences as childless strings so they're easier to format in the DOM
-        this.dayCount = _t("%(numberOfDays)sd", {
-            numberOfDays: this.props.record.data.rotting_days,
-        });
+        this.dayCount = getRottingDaysCount(this.props.record.data.rotting_days);
 
         this.title = getRottingDaysTitle(
             this.props.record.resModel,
@@ -47,9 +63,7 @@ export class Many2OneFieldRotting extends Many2OneField {
     setup() {
         super.setup();
         // As this widget is appended to another field's value, we display no additional title to prevent title overlap
-        this.dayCount = _t("%(numberOfDays)sd", {
-            numberOfDays: this.props.record.data.rotting_days,
-        });
+        this.dayCount = getRottingDaysCount(this.props.record.data.rotting_days);
     }
 }
 
