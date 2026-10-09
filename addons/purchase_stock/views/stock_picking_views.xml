@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="purchase_help_message_template" inherit_id="stock.help_message_template">
-        <xpath expr="//p[@name='top_help_message']/t[@name='receipt_message']" position="replace">
-            <t t-if="picking_type_code == 'incoming'">
-                No receipt yet! Automate them with purchase orders.
-            </t>
-        </xpath>
-        <xpath expr="//p[@name='bottom_help_message']" position="after">
-            <a t-if="picking_type_code == 'incoming'" class="btn btn-secondary" name="purchase.purchase_form_action" type="action">Purchase Orders</a>
-        </xpath>
-    </template>
+    <record id="stock_picking_view_help" model="ir.ui.view">
+        <field name="name">stock.picking.help.inherit.purchase.stock</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.stock_picking_view_help"/>
+        <field name="arch" type="xml">
+            <xpath expr="//p[@name='top_help_message']/t[@name='receipt_message']" position="replace">
+                <t name="receipt_message" invisible="data.get('picking_type_code') != 'incoming'">
+                    No receipt yet! Automate them with purchase orders.
+                </t>
+            </xpath>
+            <xpath expr="//p[@name='bottom_help_message']" position="after">
+                <a invisible="data.get('picking_type_code') != 'incoming'" class="btn btn-secondary" name="%(purchase.purchase_form_action)d" type="action" role="button">Purchase Orders</a>
+            </xpath>
+        </field>
+    </record>
     <record model="ir.ui.view" id="view_picking_form">
         <field name="name">purchase.stock.view.picking.form</field>
         <field name="model">stock.picking</field>

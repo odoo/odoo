@@ -599,13 +599,6 @@ class StockPickingType(models.Model):
         context = {**action_context, **context}
         action['context'] = context
         action['domain'] = [('picking_type_id', '=', self.id)]
-
-        action['help'] = self.env['ir.ui.view']._render_template(
-            'stock.help_message_template', {
-                'picking_type_code': context.get('restricted_picking_type_code') or self.code,
-            }
-        )
-
         return action
 
     def get_action_picking_tree_late(self):
