@@ -343,12 +343,21 @@ class StockForecasted_Product_Product(models.AbstractModel):
         outs._rollup_move_origs_fetch()
         ins._rollup_move_dests_fetch()
 
+        edited_moves = self.env.context.get('_forecast_edited_moves') or self.env['stock.move']
+        replacements = {move._origin.id: move for move in edited_moves if move._origin}
         linked_moves_per_out = {}
         ins_ids = set(ins._ids)
         for out in outs:
             # stop the rollup at the in moves: what feeds them is still outside the warehouse
             linked_move_ids = out._rollup_move_origs(seen=OrderedSet(ins._ids)) - ins_ids
-            linked_moves_per_out[out] = self.env['stock.move'].browse(linked_move_ids)
+            linked_moves = self.env['stock.move'].browse(linked_move_ids)
+            if edited_move := replacements.get(out.id):
+                linked_moves = self.env['stock.move'].concat(*(edited_move if move == out else move for move in linked_moves))
+                out = edited_move
+            linked_moves_per_out[out] = linked_moves
+
+        if replacements:
+            outs = self.env['stock.move'].concat(*(replacements.get(out.id, out) for out in outs))
 
         # Gather all linked moves
         all_linked_move_ids = {
@@ -457,7 +466,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
                     continue
 
                 # Reconcile with the ins.
-                demand_out = _reconcile_out_with_ins(lines, out, dest_ids_to_in_ids[out.id], demand_out, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=read)
+                demand_out = _reconcile_out_with_ins(lines, out, dest_ids_to_in_ids[out._origin.id or out.id], demand_out, product_rounding, in_id_to_in_data, ins_per_product, dest_ids_to_in_ids, read=read)
 
                 if not float_is_zero(demand_out, precision_rounding=product_rounding):
                     unreconciled_outs.append((demand_out, out))
