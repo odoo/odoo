@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { WeekDays, weekDays } from "@web/views/widgets/week_days/week_days";
 import { localization } from "@web/core/l10n/localization";
+import { pyToJsLocale } from "@web/core/l10n/utils/locales";
 
 export class CalendarWeekDays extends WeekDays {
     static template = "calendar.WeekDays";
@@ -11,7 +12,7 @@ export class CalendarWeekDays extends WeekDays {
     getWeekDay(dayIndex) {
         return luxon.Info.weekdays(
             "narrow",
-            { locale: localization.code.replace("_","-") }
+            { locale: pyToJsLocale(localization.code) }
         )[(dayIndex + localization.weekStart - 1) % 7];
     }
 };
