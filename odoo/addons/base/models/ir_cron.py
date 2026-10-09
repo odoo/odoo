@@ -254,7 +254,7 @@ class IrCron(models.Model):
 
     @staticmethod
     def _check_modules_state(cr, jobs):
-        """ Ensure no module is installing or upgrading """
+        """ Ensure no module is marked for changes (installing or upgrading). """
         cr.execute("""
             SELECT COUNT(*)
             FROM ir_module_module
@@ -279,8 +279,16 @@ class IrCron(models.Model):
         # because the db has zombie states and we force a call to
         # reset_module_states.
         from odoo.modules.loading import reset_modules_state  # noqa: PLC0415
-        reset_modules_state(cr)
-        cr.commit()
+        try:
+            # lock to avoid reset during ongoing module installation
+            cr.execute("SELECT pg_advisory_xact_lock(hashtext('registry_loading')) NOWAIT", log_exceptions=False)
+        except psycopg2.OperationalError:
+            _logger.debug("failed to lock registry for reset_modules_state")
+        else:
+            reset_modules_state(cr)
+            cr.commit()
+        # reset done or failed, in any case, raise to re-check other conditions
+        raise BadModuleState()
 
     @staticmethod
     def _get_ready_sql_condition(cr: BaseCursor) -> SQL:
