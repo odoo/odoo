@@ -74,7 +74,12 @@ class TestEInvoo(AccountTestInvoicingCommon):
         )
         return patcher, proxy_user
 
+    def _skip_if_bridge_installed(self):
+        if self.env['ir.module.module']._get('l10n_gr_edi_e_invoo_bridge').state == 'installed':
+            self.skipTest("This test will fail if l10n_gr_edi_e_invoo_bridge is installed.")
+
     def test_invoice_issuance_and_final_pdf_upload(self):
+        self._skip_if_bridge_installed()
         invoice = self._create_invoice()
         pdf_content = b'%PDF-1.4 final invoice'
 
@@ -136,6 +141,7 @@ class TestEInvoo(AccountTestInvoicingCommon):
         self.assertNotIn('error', invoice_data)
 
     def test_unknown_result_reuses_pending_submission(self):
+        self._skip_if_bridge_installed()
         invoice = self._create_invoice()
 
         patcher, proxy_user = self._patch_proxy_user(None, self._success_result())
@@ -169,6 +175,7 @@ class TestEInvoo(AccountTestInvoicingCommon):
         self.assertEqual(retry_request['xml'], first_request['xml'])
 
     def test_tf_errors_start_a_fresh_submission(self):
+        self._skip_if_bridge_installed()
         for error_code in ('tf1', 'tf2'):
             with self.subTest(error_code=error_code):
                 invoice = self._create_invoice()
