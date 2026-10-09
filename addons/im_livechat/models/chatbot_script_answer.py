@@ -43,5 +43,10 @@ class ChatbotScriptAnswer(models.Model):
             return Domain('name', operator, value) | Domain('script_step_id.message', operator, value)
         return super()._search_display_name(operator, value)
 
+    def _get_redirect_link(self):
+        self.ensure_one()
+        return self.redirect_link
+
     def _store_script_answer_fields(self, res: Store.FieldList):
-        res.extend(["name", "redirect_link"])
+        res.extend(["name"])
+        res.attr("redirect_link", lambda answer: answer._get_redirect_link())
