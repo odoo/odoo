@@ -87,6 +87,11 @@ export class ActivityMenu extends Component {
             return;
         }
 
+        // Sets the kanban view as by default on mobile
+        if (this.ui.isSmall){
+            group.view_type = "kanban";
+        }
+
         let domain = [];
         if (group.domain) {
             domain = Domain.and([domain, group.domain]).toList();

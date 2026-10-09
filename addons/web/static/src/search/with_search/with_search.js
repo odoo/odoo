@@ -45,6 +45,7 @@ export class WithSearch extends Component {
     props = useProps(withSearchProps);
 
     setup() {
+        this.ui = useService("ui");
         if (!this.env.__getContext__) {
             useSubEnv({ __getContext__: new CallbackRecorder() });
         }
@@ -93,6 +94,19 @@ export class WithSearch extends Component {
                 config.state = JSON.parse(config.globalState.searchModel);
                 delete config.globalState;
             }
+            // Disables the defaultGroupBy stage_id on Mobile
+            if (this.ui.isSmall){
+                // console.log(Array.isArray(config.defaultGroupBy), typeof config.defaultGroupBy, config.defaultGroupBy)
+                if (config.defaultGroupBy) {
+                    const filtered = config.defaultGroupBy = (config.defaultGroupBy ?? []).filter((field) => field !== 'stage_id');
+                    if (filtered.length) {
+                        config.defaultGroupBy = filtered;
+                    } else {
+                        delete config.defaultGroupBy;
+                    }
+                }
+            }    
+
             await this.searchModel.load(config);
         });
 
