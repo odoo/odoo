@@ -96,6 +96,7 @@ class Im_LivechatReportChannel(models.Model):
         return SQL("%s %s %s", self._select(), self._from(), self._where())
 
     def _select(self) -> SQL:
+        start_date_tz = SQL("timezone(%s, timezone('UTC', C.create_date))", self.env.tz.zone)
         return SQL(
             """
             SELECT
@@ -106,10 +107,10 @@ class Im_LivechatReportChannel(models.Model):
                 C.livechat_channel_id as livechat_channel_id,
                 C.create_date as start_date,
                 channel_member_history.visitor_partner_id AS visitor_partner_id,
-                to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
-                to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
-                to_char(date_trunc('minute', C.create_date), 'YYYY-MM-DD HH:MI:SS') AS start_date_minutes,
-                EXTRACT(dow from C.create_date)::text AS day_number,
+                to_char(date_trunc('hour', %(start_date_tz)s), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
+                to_char(date_trunc('hour', %(start_date_tz)s), 'HH24') as start_hour,
+                to_char(date_trunc('minute', %(start_date_tz)s), 'YYYY-MM-DD HH:MI:SS') AS start_date_minutes,
+                EXTRACT(dow from %(start_date_tz)s)::text AS day_number,
                 EXTRACT('epoch' FROM COALESCE(C.livechat_end_dt, NOW() AT TIME ZONE 'utc') - C.create_date)/60 AS duration,
                 CASE
                     WHEN C.livechat_end_dt IS NOT NULL
@@ -148,6 +149,7 @@ class Im_LivechatReportChannel(models.Model):
                 chatbot_answer_history.chatbot_answers_path_str,
                 expertise_history.expertises session_expertises
             """,
+            start_date_tz=start_date_tz,
         )
 
     def _from(self) -> SQL:
