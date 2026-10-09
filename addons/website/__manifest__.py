@@ -479,6 +479,10 @@
         'html_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/*',
         ],
+        # Already in web.assets_frontend, included by html_editor.assets_media_dialog.
+        'html_editor.assets_editor_frontend': [
+            ('remove', 'website/static/src/components/media_dialog/*'),
+        ],
         'website.assets_editor': [
             ('include', 'web._assets_helpers'),
             'web/static/src/scss/pre_variables.scss',
