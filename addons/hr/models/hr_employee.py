@@ -906,11 +906,12 @@ class HrEmployee(models.Model):
         filtered_versions = versions.filtered_domain([('date_version', '<=', date)])
         return max(filtered_versions, key=lambda v: v.date_version) if filtered_versions else versions[0]
 
-    def create_version(self, values):
+    def create_version(self, values, version_to_copy=None):
         """Create a new version of the employee, effective from ``values['date_version']``.
 
-        The new version is a copy of the version in effect on that date (see
-        :meth:`_get_version`) on which ``values`` are written. If ``values``
+        The new version is a copy of ``version_to_copy``, or by default of the
+        version in effect on that date (see :meth:`_get_version`), on which
+        ``values`` are written. If ``values``
         does not specify them, the contract dates are those of the contract
         running on that date (``(False, False)`` if none). If a
         ``contract_date_end`` different from the running contract's end is
@@ -918,17 +919,22 @@ class HrEmployee(models.Model):
         of that contract. A ``contract_template_id`` in ``values`` is applied
         on the new version. Single employee only.
 
-        Pitfall: if a version already exists with exactly this ``date_version``,
+        Pitfall: if the version to copy already has exactly this ``date_version``,
         it is returned **unchanged** (``values`` are not written).
 
         :param dict values: ``hr.version`` values; ``date_version`` (date,
             datetime or string) is mandatory
+        :param version_to_copy: the version to copy instead of the one in effect on that date
+        :type version_to_copy: hr.version or None
         :return: the new (or already existing) version
         :rtype: hr.version
-        :raise ValueError: if ``date_version`` is missing
+        :raise ValueError: if ``date_version`` is missing, or if ``version_to_copy`` belongs to
+            another employee
         :raise AccessError: if the user cannot write on the employee and the copied version
         """
         self.ensure_one()
+        if version_to_copy and version_to_copy.employee_id != self:
+            raise ValueError("The version to copy must belong to the employee")
 
         date = values.get('date_version', False)
         if not date:
@@ -939,7 +945,7 @@ class HrEmployee(models.Model):
         elif isinstance(date, datetime):
             date = date.date()
 
-        version_to_copy = self._get_version(date)
+        version_to_copy = version_to_copy or self._get_version(date)
         if not version_to_copy:
             version_to_copy = self.env['hr.version'].search([
                 ('employee_id', '=', self.id),
