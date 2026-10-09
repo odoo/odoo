@@ -1284,3 +1284,31 @@ class TestExpenses(TestExpenseCommon):
         expense.unlink()
         self.assertFalse(expense.exists())
         self.assertFalse(attachment.exists())
+
+    def test_autovalidate_for_hr_manager(self):
+        user_manager = self.expense_user_manager
+        user_team_manager = self.expense_user_manager_2
+
+        employee_team_manager, employee_manager = self.env['hr.employee'].sudo().create([{
+                'name': 'employee_team_manager',
+                'user_id': user_team_manager.id,
+                'expense_manager_id': None,
+            }, {
+                'name': 'employee_manager',
+                'user_id': user_manager.id,
+                'expense_manager_id': None,
+            },
+        ])
+        employee_manager.parent_id = employee_team_manager.id
+
+        expense = self.create_expenses({
+            'name': 'AutoValidate',
+            'employee_id': employee_manager.id,
+            'product_id': self.product_c.id,
+            'total_amount_currency': 1000.00,
+            'date': '2021-10-12',
+            'payment_mode': 'company_account',
+            'tax_ids': [Command.set(self.tax_purchase_a.ids)],
+        })
+        expense.with_user(user_manager).action_submit()
+        self.assertEqual(expense.state, 'approved')
