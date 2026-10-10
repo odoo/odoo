@@ -265,6 +265,7 @@ export class HotkeyPlugin extends Plugin {
     addHotkeyOverlays(activeElement) {
         // Gather the hotkeys to overlay registered through the useHotkey hook.
         const hotkeysFromHookToHighlight = [];
+        const globalHotkeys = new Set();
         for (const [, registration] of this.registrations) {
             const overlayElement = registration.withOverlay?.();
             if (overlayElement) {
@@ -272,6 +273,14 @@ export class HotkeyPlugin extends Plugin {
                     hotkey: registration.hotkey.replace(`${this.overlayModifier}+`, ""),
                     el: overlayElement,
                 });
+            }
+
+            if (
+                !registration.area &&
+                !registration.withOverlay &&
+                (registration.global || registration.activeElement === activeElement)
+            ) {
+                globalHotkeys.add(registration.hotkey);
             }
         }
 
@@ -281,7 +290,14 @@ export class HotkeyPlugin extends Plugin {
             "[data-hotkey]:not(:disabled)"
         ).map((el) => ({ hotkey: el.dataset.hotkey, el }));
 
-        const items = [...hotkeysFromDomToHighlight, ...hotkeysFromHookToHighlight];
+        const items = [...hotkeysFromDomToHighlight, ...hotkeysFromHookToHighlight].filter(item => {
+            const isShadowed = globalHotkeys.has(`${this.overlayModifier}+${item.hotkey.toLowerCase()}`);
+            if (isShadowed) {
+                console.warn(`The hotkey "${item.hotkey}" is being shadowed by a global hotkey, no overlay will be displayed.`);
+            }
+            return !isShadowed;
+        });
+        
         if (!items.length) {
             return false;
         }

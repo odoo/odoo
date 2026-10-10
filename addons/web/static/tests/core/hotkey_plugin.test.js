@@ -1074,3 +1074,46 @@ test("Support '<' and '>' in hotkeys", async () => {
     await press(["<"]);
     expect.verifySteps(["<"]);
 });
+
+test("disable hotkey overlay if overridden by global hotkey", async () => {
+    class MyComponent extends Component {
+        static template = xml`
+            <button data-hotkey="a">a</button>
+            <button data-hotkey="b">b</button>
+            <button data-hotkey="control+c">c</button>
+        `;
+    }
+
+    await mountWithCleanup(MyComponent);
+    await animationFrame();
+
+    await keyDown("alt");
+    // All hotkeys displayed
+    expect(".o_web_hotkey_overlay").toHaveCount(3);
+    await keyUp("alt");
+
+    const hotkey = getService(HotkeyPlugin);
+    hotkey.add("alt+a", () => expect.step("global alt+a"), { global: true });
+    hotkey.add("alt+control+c", () => expect.step("global control+b"), { global: true });
+
+    patchWithCleanup(console, {
+        warn: (msg) => expect.step(msg),
+    });
+
+    await keyDown("alt");
+    // Only the non-overridden hotkeys are displayed
+    expect(".o_web_hotkey_overlay").toHaveCount(1);
+    expect.verifySteps([
+        `The hotkey "a" is being shadowed by a global hotkey, no overlay will be displayed.`,
+        `The hotkey "control+c" is being shadowed by a global hotkey, no overlay will be displayed.`,
+    ]);
+    await keyUp("alt");
+
+    patchWithCleanup(console, {
+        warn: () => {},
+    });
+
+    await keyDown(["alt", "a"]);
+    // Only the global hotkey is called
+    expect.verifySteps(["global alt+a"])
+});
