@@ -15,6 +15,7 @@ import {
     getFontSizeDisplayValue,
 } from "@html_editor/utils/formatting";
 import { DIRECTIONS } from "@html_editor/utils/position";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { FontSelector } from "./font_selector";
 import { getBaseContainerSelector } from "@html_editor/utils/base_container";
@@ -336,14 +337,21 @@ export class FontPlugin extends Plugin {
     }
 
     normalize(root) {
-        for (const el of selectElements(
-            root,
-            "strong, b, span[style*='font-weight: bolder'], small"
-        )) {
-            if (isRedundantElement(el)) {
-                unwrapContents(el);
-            }
+        // Check all elements first, then unwrap. Unwrapping changes the DOM,
+        // so checking after each unwrap would make the browser recompute the
+        // styles every time.
+        const redundantElements = [
+            ...selectElements(root, "strong, b, span[style*='font-weight: bolder'], small"),
+        ].filter(isRedundantElement);
+        if (!redundantElements.length) {
+            return;
         }
+        const cursors = this.dependencies.selection.preserveSelection();
+        for (const el of redundantElements) {
+            cursors.update(callbacksForCursorUpdate.unwrap(el));
+            unwrapContents(el);
+        }
+        cursors.restore();
     }
 
     get fontName() {
