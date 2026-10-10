@@ -162,9 +162,18 @@ class ProjectTask(models.Model):
         return tasks
 
     def write(self, vals):
+        tasks_changing_partner = self.browse()
+        if 'partner_id' in vals and 'sale_line_id' not in vals:
+            tasks_changing_partner = self.filtered(lambda t: t.partner_id.id != (vals['partner_id'] or False))
         task = super().write(vals)
         if sol_id := vals.get('sale_line_id'):
             self._ensure_sale_order_linked([sol_id])
+        # _inverse_partner_id cannot detect a SO line of another customer when
+        # sale_order_id has been recomputed in the same write (e.g. when the
+        # project changes too): it is already False.
+        if tasks := tasks_changing_partner.filtered(lambda t: t.allow_billable and t.sale_line_id and not t.sale_order_id):
+            tasks.sale_line_id = False
+            self.env.add_to_compute(self._fields['sale_line_id'], tasks)
         return task
 
     # ---------------------------------------------------
