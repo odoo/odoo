@@ -260,6 +260,8 @@ class StockMove(models.Model):
                         values['state'] = 'done'
                         values['date'] = mo.date_finished
                     continue
+                if values.get('production_id', False) and mo.state == 'done':
+                    values['state'] = 'done'
                 # produced products + byproducts
                 values['location_id'] = mo.production_location_id.id
                 values['date'] = mo.date_finished
@@ -713,3 +715,9 @@ class StockMove(models.Model):
         else:
             res['raw_material_production_id'] = self.production_id.id
         return res
+
+    def _get_production_move_qty_values(self, initial_qty):
+        return self.product_uom_qty / initial_qty, 0
+
+    def has_source_move(self):
+        pass
