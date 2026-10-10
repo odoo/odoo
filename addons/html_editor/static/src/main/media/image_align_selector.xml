@@ -5,20 +5,18 @@
                 <span class="oi" t-att-data-icon="this.state.displayIcon"/>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
-                    <t t-foreach="this.props.items" t-as="item" t-key="item_index">
-                        <DropdownItem
-                            tag="'button'"
-                            attrs="{ title: item.title, 'data-icon': item.icon }"
-                            class="{
-                                'dropdown-item_active_noarrow btn btn-light oi': true,
-                                active: item.icon === this.state.displayIcon
-                            }"
-                            onSelected="() => this.onSelected(item)"
-                            t-on-pointerdown.prevent="() => {}"
-                        />
-                    </t>
-                </div>
+                <t t-foreach="this.props.items" t-as="item" t-key="item_index">
+                    <DropdownItem
+                        tag="'button'"
+                        attrs="{ title: item.title, 'data-icon': item.icon }"
+                        class="{
+                            'dropdown-item_active_noarrow btn btn-light oi': true,
+                            active: item.icon === this.state.displayIcon
+                        }"
+                        onSelected="() => this.onSelected(item)"
+                        t-on-pointerdown.prevent="() => {}"
+                    />
+                </t>
             </t>
         </Dropdown>
     </t>

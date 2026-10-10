@@ -5,7 +5,7 @@
                 <t t-call="html_editor.TableBorderStyleSvg"/>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true" data-vertical="true">
+                <div data-vertical="true">
                     <DropdownItem
                         class="{'dropdown-item_active_noarrow btn btn-light': true, active: this.state.displayName === 'none' }"
                         t-on-pointerdown.prevent="() => {}"

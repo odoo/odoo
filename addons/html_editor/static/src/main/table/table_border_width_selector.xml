@@ -5,7 +5,7 @@
                 <t t-call="html_editor.TableBorderWidthSvg"/>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true" data-vertical="true">
+                <div data-vertical="true">
                     <div t-foreach="this.items" t-as="item" t-key="item.value">
                         <DropdownItem
                             class="{'dropdown-item_active_noarrow btn btn-light': true, active: item.value === this.state.displayName}"

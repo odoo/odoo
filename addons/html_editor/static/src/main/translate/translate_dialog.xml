@@ -73,13 +73,11 @@
                         By : <t t-out="this.state.selectedTranslator.name"/>
                     </button>
                     <t t-set-slot="content">
-                        <div data-prevent-closing-overlay="true">
-                            <t t-foreach="this.translators" t-as="translator" t-key="translator.id">
-                                <DropdownItem class="'user-select-none'" onSelected="() => this.onSelectedTranslator(translator)">
-                                    <div class="translator" t-out="translator.name"/>
-                                </DropdownItem>
-                            </t>
-                        </div>
+                        <t t-foreach="this.translators" t-as="translator" t-key="translator.id">
+                            <DropdownItem class="'user-select-none'" onSelected="() => this.onSelectedTranslator(translator)">
+                                <div class="translator" t-out="translator.name"/>
+                            </DropdownItem>
+                        </t>
                     </t>
                 </Dropdown>
             </t>

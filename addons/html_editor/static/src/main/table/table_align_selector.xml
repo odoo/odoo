@@ -6,19 +6,17 @@
                 <t t-call="{{ selectedItem ? selectedItem.template : 'html_editor.VerticalAlignTop' }}" />
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
-                    <t t-foreach="this.items" t-as="item" t-key="item.mode">
-                        <DropdownItem
-                            tag="'button'"
-                            attrs="{ name: 'vertical_align_' + item.mode }"
-                            class="{'dropdown-item_active_noarrow btn btn-light': true, active: item.mode === this.state.displayName }"
-                            t-on-pointerdown.prevent="() => {}"
-                            onSelected="() => this.onSelected(item)"
-                        >
-                            <t t-call="{{item.template}}" />
-                        </DropdownItem>
-                    </t>
-                </div>
+                <t t-foreach="this.items" t-as="item" t-key="item.mode">
+                    <DropdownItem
+                        tag="'button'"
+                        attrs="{ name: 'vertical_align_' + item.mode }"
+                        class="{'dropdown-item_active_noarrow btn btn-light': true, active: item.mode === this.state.displayName }"
+                        t-on-pointerdown.prevent="() => {}"
+                        onSelected="() => this.onSelected(item)"
+                    >
+                        <t t-call="{{item.template}}" />
+                    </DropdownItem>
+                </t>
             </t>
         </Dropdown>
     </t>
