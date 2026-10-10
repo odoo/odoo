@@ -84,6 +84,37 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/utils/**/*',
             'html_editor/static/src/others/qweb_plugin.scss',
         ],
+        # The editor that is lazy loaded in the frontend, excluding
+        # web.assets_frontend files.
+        'html_editor.assets_editor_frontend': [
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_frontend_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+            ('include', 'html_editor.assets_editor'),
+            # html_editor.assets_media_dialog
+            ('remove', 'html_editor/static/src/components/switch/**/*'),
+            ('remove', 'html_editor/static/src/main/media/media_dialog/**/*'),
+            # html_editor.assets_readonly
+            ('remove', 'html_editor/static/src/components/html_viewer/**/*'),
+            ('remove', 'html_editor/static/src/local_overlay_container.*'),
+            ('remove', 'html_editor/static/src/main/local_overlay.css'),
+            ('remove', 'html_editor/static/src/position_hook.*'),
+            ('remove', 'html_editor/static/src/html_migrations/**/*'),
+            ('remove', 'html_editor/static/src/main/list/list.scss'),
+            ('remove', 'html_editor/static/src/main/media/file.scss'),
+            ('remove', 'html_editor/static/src/others/embedded_component_utils.js'),
+            ('remove', 'html_editor/static/src/others/embedded_components/core/**/*'),
+            ('remove', 'html_editor/static/src/utils/**/*'),
+            ('remove', 'html_editor/static/src/others/qweb_plugin.scss'),
+            ('remove', 'html_editor/static/src/main/selection_placeholder_plugin.css'),
+            # web.assets_frontend_minimal
+            ('remove', 'html_editor/static/src/main/media/video/abstract_third_party_video.js'),
+            ('remove', 'html_editor/static/src/main/media/video/providers/**/*'),
+            ('remove', 'html_editor/static/src/main/media/video/utils.js'),
+        ],
         "web.assets_web_dark": [
             'html_editor/static/src/**/*.dark.scss',
             'html_editor/static/src/**/*.dark.css',

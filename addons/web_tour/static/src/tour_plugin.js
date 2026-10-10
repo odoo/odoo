@@ -6,6 +6,7 @@ import { ORM } from "@web/core/orm_plugin";
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
+import { user } from "@web/core/user";
 import { redirect } from "@web/core/utils/urls";
 import { useEnv } from "@web/owl2/utils";
 import { session } from "@web/session";
@@ -191,6 +192,10 @@ export class TourPlugin extends Plugin {
      *   (name, url, custom, steps, rainbowManMessage), or `false` if not found
      */
     getDBTour(name) {
+        if (!user.isInternalUser) {
+            // only internal users can read the tours stored in the database
+            return Promise.resolve(false);
+        }
         this.dbTours[name] ||= this.orm
             .call("web_tour.tour", "get_tour_json_by_name", [name])
             .catch(() => {

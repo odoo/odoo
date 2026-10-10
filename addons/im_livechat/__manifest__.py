@@ -74,6 +74,19 @@ Help your customers with this chat, and analyse their feedback.
     'application': True,
     'assets': {
         'web.assets_frontend': [
+            'im_livechat/static/src/embed/common/misc.js',
+            'im_livechat/static/src/embed/frontend_loader.js',
+        ],
+        # Lazy loaded on the frontend, after html_editor.assets_editor_frontend
+        'im_livechat.assets_embed_frontend': [
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_frontend_helpers'),
+            'web/static/src/scss/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables-dark.scss',
+            'web/static/lib/bootstrap/scss/_maps.scss',
+            'web/static/src/webclient/icons_mappings/**',
+            'web/static/src/webclient/icons.scss',
             'web/static/src/views/fields/file_handler.*',
             'web/static/src/views/fields/formatters.js',
             ('include', 'im_livechat.assets_embed_core'),

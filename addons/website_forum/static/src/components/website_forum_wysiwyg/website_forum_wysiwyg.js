@@ -1,5 +1,6 @@
 import { removeClass } from "@html_editor/utils/dom";
 import { markup, onMounted, useProps, t, useListener } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 import { BASIC_PLUGINS, FULL_EDIT_PLUGINS } from "../../plugins/plugin_sets";
 import { useResizer } from "./resizer_hook";
 import { Wysiwyg } from "@html_editor/wysiwyg";
@@ -108,3 +109,5 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
         });
     }
 }
+
+registry.category("lazy_components").add("website_forum.WebsiteForumWysiwyg", WebsiteForumWysiwyg);
