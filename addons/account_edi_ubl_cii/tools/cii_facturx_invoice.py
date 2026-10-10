@@ -27,54 +27,6 @@ BillingPeriod = {
     'ram:EndDateTime': DateTimeString,
 }
 
-LineItem = {
-    'ram:AssociatedDocumentLineDocument': {
-        'ram:LineID': {},
-    },
-    'ram:SpecifiedTradeProduct': {
-        'ram:GlobalID': {},
-        'ram:SellerAssignedID': {},
-        'ram:Name': {},
-        'ram:Description': {},
-    },
-    'ram:SpecifiedLineTradeAgreement': {
-        'ram:GrossPriceProductTradePrice': {
-            'ram:ChargeAmount': {},
-            'ram:AppliedTradeAllowanceCharge': {
-                'ram:ChargeIndicator': {
-                    'udt:Indicator': {},
-                },
-                'ram:ActualAmount': {},
-            },
-        },
-        'ram:NetPriceProductTradePrice': {
-            'ram:ChargeAmount': {},
-        },
-    },
-    'ram:SpecifiedLineTradeDelivery': {
-        'ram:BilledQuantity': {},
-    },
-    'ram:SpecifiedLineTradeSettlement': {
-        'ram:ApplicableTradeTax': {
-            'ram:TypeCode': {},
-            'ram:CategoryCode': {},
-            'ram:RateApplicablePercent': {},
-        },
-        'ram:BillingSpecifiedPeriod': BillingPeriod,
-        'ram:SpecifiedTradeAllowanceCharge': {
-            'ram:ChargeIndicator': {
-                'udt:Indicator': {},
-            },
-            'ram:ActualAmount': {},
-            'ram:ReasonCode': {},
-            'ram:Reason': {},
-        },
-        'ram:SpecifiedTradeSettlementLineMonetarySummation': {
-            'ram:LineTotalAmount': {},
-        },
-    },
-}
-
 PartnerParty = {
     'ram:ID': {},
     'ram:Name': {},
@@ -96,6 +48,72 @@ PartnerParty = {
         'ram:LineTwo': {},
         'ram:CityName': {},
         'ram:CountryID': {},
+    },
+}
+
+LineShipToParty = {
+    'ram:ID': {},
+    'ram:GlobalID': {},
+    'ram:Name': {},
+    'ram:PostalTradeAddress': {
+        **PartnerParty['ram:PostalTradeAddress'],
+        'ram:CountrySubDivisionName': {},
+    },
+}
+
+LineItem = {
+    'ram:AssociatedDocumentLineDocument': {
+        'ram:LineID': {},
+    },
+    'ram:SpecifiedTradeProduct': {
+        'ram:GlobalID': {},
+        'ram:SellerAssignedID': {},
+        'ram:Name': {},
+        'ram:Description': {},
+    },
+    'ram:SpecifiedLineTradeAgreement': {
+        'ram:BuyerOrderReferencedDocument': {
+            'ram:IssuerAssignedID': {},
+        },
+        'ram:GrossPriceProductTradePrice': {
+            'ram:ChargeAmount': {},
+            'ram:AppliedTradeAllowanceCharge': {
+                'ram:ChargeIndicator': {
+                    'udt:Indicator': {},
+                },
+                'ram:ActualAmount': {},
+            },
+        },
+        'ram:NetPriceProductTradePrice': {
+            'ram:ChargeAmount': {},
+        },
+    },
+    'ram:SpecifiedLineTradeDelivery': {
+        'ram:BilledQuantity': {},
+        'ram:ShipToTradeParty': LineShipToParty,
+        'ram:DespatchAdviceReferencedDocument': {
+            'ram:IssuerAssignedID': {},
+            'ram:LineID': {},
+        },
+    },
+    'ram:SpecifiedLineTradeSettlement': {
+        'ram:ApplicableTradeTax': {
+            'ram:TypeCode': {},
+            'ram:CategoryCode': {},
+            'ram:RateApplicablePercent': {},
+        },
+        'ram:BillingSpecifiedPeriod': BillingPeriod,
+        'ram:SpecifiedTradeAllowanceCharge': {
+            'ram:ChargeIndicator': {
+                'udt:Indicator': {},
+            },
+            'ram:ActualAmount': {},
+            'ram:ReasonCode': {},
+            'ram:Reason': {},
+        },
+        'ram:SpecifiedTradeSettlementLineMonetarySummation': {
+            'ram:LineTotalAmount': {},
+        },
     },
 }
 
