@@ -529,6 +529,69 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             {'account_id': out_account, 'product_id': self.comp1.id, 'debit': 1.0, 'credit': 0.0},
         ])
 
+    def test_subcontracting_account_valuation_partner(self):
+        """ Test that the partner is correctly set on the valuation journal items
+        during a subcontracting process.
+        """
+        self.supplier_location = self.env.ref('stock.stock_location_suppliers')
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+
+        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all.write({
+            'property_cost_method': 'standard',
+            'property_valuation': 'real_time',
+        })
+        self._setup_category_stock_journals()
+
+        self.comp1.standard_price = 10.0
+        self.comp2.standard_price = 20.0
+        self.finished.standard_price = 30.0
+
+        picking_receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'partner_id': self.subcontractor_partner1.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [
+                Command.create({
+                    'name': self.finished.name,
+                    'product_id': self.finished.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.finished.uom_id.id,
+                    'location_id': self.supplier_location.id,
+                    'location_dest_id': self.stock_location.id,
+                })
+            ],
+        })
+
+        picking_receipt.action_confirm()
+        picking_receipt.move_ids.quantity = 1.0
+        picking_receipt.move_ids.picked = True
+        picking_receipt._action_done()
+
+        mo = picking_receipt._get_subcontract_production()
+        self.assertTrue(mo)
+
+        expected_partner = self.subcontractor_partner1.commercial_partner_id
+
+        finished_amls = mo.move_finished_ids.stock_valuation_layer_ids.account_move_id.line_ids
+        self.assertTrue(finished_amls)
+        for aml in finished_amls:
+            self.assertEqual(
+                aml.partner_id,
+                expected_partner,
+                "The partner should be set on the finished product valuation entries."
+            )
+
+        component_amls = mo.move_raw_ids.stock_valuation_layer_ids.account_move_id.line_ids
+        self.assertTrue(component_amls)
+        for aml in component_amls:
+            self.assertEqual(
+                aml.partner_id,
+                expected_partner,
+                "The partner should be set on the component valuation entries."
+            )
+
 
 class TestBomPriceSubcontracting(TestBomPriceCommon):
 
