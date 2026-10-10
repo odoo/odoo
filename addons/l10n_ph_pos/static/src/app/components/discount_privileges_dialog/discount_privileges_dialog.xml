@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_ph_pos.DiscountPrivilegesDialog">
+        <Dialog title="this.getTitle()" size="'md'">
+            <div class="alert alert-danger" role="alert" t-if="this.state.error" t-out="this.state.error"/>
+
+            <!-- Review: the selected line (or the whole order) is already
+                 privileged: show the BIR Customer Information already on file. -->
+            <t t-if="this.state.step === 'review'">
+                <div class="mb-2 fw-semibold">
+                    Total # of IDs presented: <t t-out="this.state.appliedHolders.length"/>
+                </div>
+                <div class="border rounded p-2 bg-light">
+                    <div class="d-flex justify-content-between" t-foreach="this.state.appliedHolders" t-as="holder" t-key="holder.key">
+                        <span>
+                            ID Holder <t t-out="holder.name"/> - ID Type: <t t-out="holder.privilege.l10n_ph_id_type_label"/> - ID #: <t t-out="holder.id_number"/>
+                        </span>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Step 1: choose what to apply on, privileges, headcount, and IDs presented per type -->
+            <t t-if="this.state.step === 'configure'">
+                <div class="mb-3" t-if="this.canTargetSelectedLine()">
+                    <label class="form-label fw-semibold">Apply on</label>
+                    <div class="d-flex flex-column gap-1">
+                        <label class="d-flex align-items-center gap-2" for="l10n_ph_target_order">
+                            <input id="l10n_ph_target_order" type="radio" name="l10n_ph_target" class="form-check-input"
+                                    t-att-checked="this.state.target === 'order'"
+                                    t-on-change="() => this.setTarget('order')"/>
+                            Whole order
+                        </label>
+                        <label class="d-flex align-items-center gap-2" for="l10n_ph_target_line">
+                            <input id="l10n_ph_target_line" type="radio" name="l10n_ph_target" class="form-check-input"
+                                    t-att-checked="this.state.target === 'line'"
+                                    t-on-change="() => this.setTarget('line')"/>
+                            Selected item: <t t-out="this.props.line.getFullProductName()"/>
+                        </label>
+                    </div>
+                </div>
+                <div class="mb-3" t-foreach="this.getPrivileges()" t-as="privilege" t-key="privilege.id">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <input type="checkbox"
+                                t-att-id="'l10n_ph_privilege_' + privilege.id"
+                                t-att-name="'l10n_ph_privilege_' + privilege.id"
+                                class="form-check-input"
+                                t-att-checked="this.isSelected(privilege)"
+                                t-on-change="() => this.toggleSelected(privilege)"/>
+                        <label class="flex-grow-1 mb-0" t-att-for="'l10n_ph_privilege_' + privilege.id" t-out="privilege.name"/>
+                        <input t-if="this.isSelected(privilege)"
+                                type="number" min="1" class="form-control w-25"
+                                t-att-id="'l10n_ph_privilege_count_' + privilege.id"
+                                t-att-name="'l10n_ph_privilege_count_' + privilege.id"
+                                t-att-value="this.state.selected[privilege.id]"
+                                t-on-change="(ev) => this.setCount(privilege, ev.target.value)"
+                                placeholder="No. of IDs"/>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label fw-semibold" for="l10n_ph_persons_sharing">
+                        No. of Persons (Sharing)
+                    </label>
+                    <input id="l10n_ph_persons_sharing" type="number" min="1" class="form-control"
+                            t-att-value="this.state.numPersonsSharing"
+                            t-on-input="(ev) => this.setNumPersonsSharing(ev.target.value)"/>
+                    <div class="form-text">
+                        Items already split by an earlier discount privilege stay shared among their remaining regular persons.
+                    </div>
+                </div>
+            </t>
+
+            <!-- Step 2: BIR Customer Information: collect one ID holder at a time -->
+            <t t-if="this.state.step === 'collect'">
+                <div class="mb-2 fw-semibold">
+                    Total # of IDs presented: <t t-out="this.state.holders.length"/> / <t t-out="this.state.slots.length"/>
+                </div>
+                <div class="mb-3 border rounded p-2 bg-light" t-if="this.state.holders.length">
+                    <div class="d-flex justify-content-between" t-foreach="this.state.holders" t-as="holder" t-key="holder_index">
+                        <span>
+                            ID Holder <t t-out="holder.name"/> - ID Type: <t t-out="this.getIdTypeLabel(holder.privilege_id)"/> - ID #: <t t-out="holder.id_number"/>
+                        </span>
+                    </div>
+                </div>
+
+                <t t-if="!this.isCollectDone()">
+                    <h6 class="fw-bold mb-2">
+                        Add Customer Information: <t t-out="this.getCurrentSlotPrivilege().name"/>
+                    </h6>
+                    <div class="mb-2">
+                        <label class="form-label" for="l10n_ph_holder_partner">ID Holder</label>
+                        <button id="l10n_ph_holder_partner" class="btn btn-outline-secondary w-100 text-start"
+                                t-on-click="() => this.selectDraftPartner()">
+                            <i class="oi me-2" data-icon="person" aria-hidden="true"/>
+                            <t t-if="this.state.draft.partner" t-out="this.state.draft.partner.name"/>
+                            <span t-else="" class="text-muted">Select the ID holder's contact</span>
+                        </button>
+                    </div>
+                    <t t-if="this.state.draft.partner">
+                        <div t-if="this.isDraftIdNumberMissing()" class="alert alert-warning d-flex align-items-center justify-content-between gap-2 mb-2" role="alert">
+                            <span>
+                                <t t-out="this.state.draft.partner.name"/> has no <t t-out="this.getCurrentSlotPrivilege().l10n_ph_id_type_label"/> on their contact.
+                            </span>
+                            <button class="btn btn-sm btn-secondary" t-on-click="() => this.editDraftPartner()">
+                                Edit Contact
+                            </button>
+                        </div>
+                        <div t-else="" class="mb-2 l10n_ph_holder_id">
+                            <t t-out="this.getCurrentSlotPrivilege().l10n_ph_id_type_label"/>:
+                            <span class="fw-semibold" t-out="this.getPartnerIdNumber(this.state.draft.partner, this.getCurrentSlotPrivilege())"/>
+                        </div>
+                    </t>
+                    <div class="mb-2">
+                        <label class="form-label">Is ID Holder Present?</label>
+                        <div class="d-flex gap-3">
+                            <label class="d-flex align-items-center gap-1" for="l10n_ph_is_present_yes">
+                                <input id="l10n_ph_is_present_yes" type="radio" name="l10n_ph_is_present"
+                                        t-att-checked="this.state.draft.is_present"
+                                        t-on-change="() => this.state.draft.is_present = true"/>
+                                Yes
+                            </label>
+                            <label class="d-flex align-items-center gap-1" for="l10n_ph_is_present_no">
+                                <input id="l10n_ph_is_present_no" type="radio" name="l10n_ph_is_present"
+                                        t-att-checked="!this.state.draft.is_present"
+                                        t-on-change="() => this.state.draft.is_present = false"/>
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <t t-if="!this.state.draft.is_present">
+                        <div class="mb-2">
+                            <label class="form-label" for="l10n_ph_representative_name">Representative Name</label>
+                            <input id="l10n_ph_representative_name" class="form-control" t-model.proxy="this.state.draft.representative_name"/>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label" for="l10n_ph_representative_id">Representative ID</label>
+                            <input id="l10n_ph_representative_id" class="form-control" t-model.proxy="this.state.draft.representative_id"/>
+                        </div>
+                    </t>
+                    <button t-attf-class="btn mb-2 {{this.isDraftValid() ? 'btn-primary' : 'btn-outline-secondary'}}"
+                            t-att-disabled="!this.isDraftValid()" t-on-click="() => this.addHolder()">
+                        Add Customer Information
+                    </button>
+                </t>
+            </t>
+
+            <t t-set-slot="footer">
+                <t t-if="this.state.step === 'review'">
+                    <button t-if="this.orderHasEligibleLines()" class="btn btn-primary btn-lg lh-lg" t-on-click="() => this.applyMore()">
+                        Apply More
+                    </button>
+                    <button class="btn btn-secondary btn-lg lh-lg" t-on-click="this.props.close">
+                        Close
+                    </button>
+                </t>
+                <t t-if="this.state.step === 'configure'">
+                    <button class="btn btn-primary btn-lg lh-lg" t-att-disabled="!this.canProceedToCollect()" t-on-click="() => this.goToCollect()">
+                        Next
+                    </button>
+                    <button class="btn btn-secondary btn-lg lh-lg" t-on-click="this.props.close">
+                        Cancel
+                    </button>
+                </t>
+                <t t-if="this.state.step === 'collect'">
+                    <button class="btn btn-primary btn-lg lh-lg" t-att-disabled="!this.isCollectDone()" t-on-click="() => this.confirm()">
+                        Confirm
+                    </button>
+                    <button class="btn btn-secondary btn-lg lh-lg" t-on-click="() => this.backToConfigure()">
+                        Back
+                    </button>
+                    <button class="btn btn-secondary btn-lg lh-lg" t-on-click="this.props.close">
+                        Cancel
+                    </button>
+                </t>
+            </t>
+        </Dialog>
+    </t>
+</templates>
