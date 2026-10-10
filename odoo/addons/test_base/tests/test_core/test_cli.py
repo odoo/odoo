@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 import re
 import subprocess as sp
@@ -13,6 +14,8 @@ from odoo.cli.i18n import I18n
 from odoo.tests import BaseCase, TransactionCase, tagged
 from odoo.tests.common import Like
 from odoo.tools import config, file_path
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -112,6 +115,31 @@ class TestCommand(BaseCase):
         self.assertIn("usage: ", proc.stdout)
         self.assertIn("Rewrite the entire source code", proc.stdout)
         self.assertFalse(proc.stderr)
+
+    def test_upgrade_code_migrations(self):
+        from odoo import addons  # noqa: PLC0415
+        from odoo.cli.upgrade_code import FileManager, UPGRADE, migrate  # noqa: PLC0415
+        file_manager = FileManager(list(addons.__path__))
+        file_manager.print_progress = file_manager.print_summary = lambda *a, **kw: None  # disable output
+        for script in sorted(UPGRADE.iterdir()):
+            if not re.fullmatch(r'\d.*\.py', script.name):
+                continue
+            script_name = script.name
+            script_content = script.read_text()
+            # Check for tag to skip testing
+            if '# test: skip' in script_content:
+                # skip testing the upgrade_code script entirely
+                _logger.info("  skip upgrade_code %s", script_name)
+                continue
+            # the test may change files because of false-positive changes
+            accept_changes = '# test: false' in script_content
+            # Reset changed files by the previous test
+            file_manager.reset()
+            with self.subTest(script_name, accept_changes=accept_changes):
+                _logger.info("  upgrade_code %s", script_name)
+                result = migrate(file_manager, glob=None, script=script_name, dry_run=True)
+                if not accept_changes and result:
+                    self.fail("files should not be changed")
 
     @unittest.skipIf(os.name != 'posix', '`os.openpty` only available on POSIX systems')
     def test_shell(self):
