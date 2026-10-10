@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-09-09 14:11+0000\n"
+"PO-Revision-Date: 2026-10-09 11:23+0000\n"
 "Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "base_import/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -50,6 +50,33 @@ msgid ""
 "* In a module, so that administrators and users of Odoo who do not\n"
 "  need or want an online import can avoid it being available to users.\n"
 msgstr ""
+"\n"
+"Nouvel import de fichiers extensible pour Odoo\n"
+"======================================\n"
+"\n"
+"Réimplémenter le système d’import de fichiers d’Odoo :\n"
+"\n"
+"* Côté serveur, le système précédent force la majeure partie de la logique "
+"dans le\n"
+"  client, ce qui duplique l’effort (entre clients), rend le\n"
+"  système d’import beaucoup plus difficile à utiliser sans client (RPC "
+"direct ou\n"
+"  autres formes d’automatisation) et rend les connaissances sur le\n"
+"  système d’import/export beaucoup plus difficiles à rassembler, car elles "
+"sont réparties sur\n"
+"  plus de 3 projets différents.\n"
+"\n"
+"* De manière plus extensible, afin que les utilisateurs et partenaires "
+"puissent créer leur\n"
+"  propre front-end pour importer depuis d’autres formats de fichiers (par "
+"ex. fichiers OpenDocument),\n"
+"  qui peuvent être plus simples à gérer dans leur workflow ou depuis\n"
+"  leurs sources de production de données.\n"
+"\n"
+"* Dans un module, afin que les administrateurs et les utilisateurs d’Odoo "
+"qui n’ont pas\n"
+"  besoin ou envie d’un import en ligne puissent éviter qu’il soit disponible "
+"pour les utilisateurs.\n"
 
 #. module: base_import
 #. odoo-javascript
@@ -129,7 +156,7 @@ msgstr "Mapping de l'importation de base"
 #. module: base_import
 #: model:ir.module.module,shortdesc:base.module_base_import
 msgid "Base import"
-msgstr ""
+msgstr "Import de base"
 
 #. module: base_import
 #. odoo-javascript
@@ -536,13 +563,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Lang:"
-msgstr ""
+msgstr "Lang:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Language"
-msgstr ""
+msgstr "Langue"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -697,7 +724,7 @@ msgstr "Rechercher un champ..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a language..."
-msgstr ""
+msgstr "Rechercher une langue..."
 
 #. module: base_import
 #. odoo-javascript

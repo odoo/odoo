@@ -9,10 +9,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 18:13+0000\n"
-"PO-Revision-Date: 2026-08-31 12:56+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-07 16:33+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/l10n_latam_check/pt_BR/>\n"
+"20/l10n_latam_check/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,6 +65,47 @@ msgid ""
 "\n"
 "  * Those operations can be done with multiple checks at once\n"
 msgstr ""
+"\n"
+"Gerenciamento de cheques próprios\n"
+"---------------------\n"
+"\n"
+"Estende o módulo 'Base de impressão de cheque' para gerenciar cheques "
+"próprios com mais recursos:\n"
+"\n"
+"* permite o uso de cheques próprios que não são impressos, mas preenchidos "
+"manualmente pelo usuário\n"
+"* permite o uso de cheques diferidos ou eletrônicos\n"
+"* a impressão é desativada\n"
+"* o número do cheque é definido manualmente pelo usuário\n"
+"* adiciona uma \"data de entrada do cheque\" opcional para cheques pré-"
+"datados (pagamentos diferidos)\n"
+"* adiciona um menu para rastrear cheques próprios\n"
+"\n"
+"Gerenciamento de cheques de terceiros\n"
+"-----------------------------\n"
+"\n"
+"Adiciona o novo recurso \"Gerenciamento de cheques de terceiros\".\n"
+"\n"
+"Há 2 adições principais de métodos de pagamento:\n"
+"\n"
+"* Novos cheques de terceiros:\n"
+"\n"
+"* Os pagamentos desse método de pagamento representam o cheque que você "
+"recebe de um cliente ao ser pago (de uma fatura ou de um pagamento manual)\n"
+"\n"
+"* Cheques de terceiros existentes.\n"
+"\n"
+"* Os pagamentos desse método de pagamento são para rastrear as movimentações "
+"do cheque, por exemplo:\n"
+"\n"
+"* Usar um cheque para pagar um fornecedor\n"
+"* Depositar o cheque no banco\n"
+"* Receber o cheque de volta do banco (rejeição)\n"
+"* Receber o cheque de volta do fornecedor (uma rejeição ou devolução)\n"
+"* Transferir o cheque de um diário de cheques de terceiros para outro (uma "
+"loja para outra)\n"
+"\n"
+"* Essas operações podem ser feitas com vários cheques de uma só vez\n"
 
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.report_payment_receipt_document
@@ -172,18 +213,21 @@ msgstr "Ícone do tipo de atividade"
 #: code:addons/l10n_latam_check/wizard/l10n_latam_payment_mass_transfer.py:0
 msgid "All the selected checks must be linked to posted payments."
 msgstr ""
+"Todas as verificações selecionadas devem estar vinculadas aos pagamentos "
+"lançados."
 
 #. module: l10n_latam_check
 #. odoo-python
 #: code:addons/l10n_latam_check/wizard/l10n_latam_payment_mass_transfer.py:0
 msgid "All the selected checks must be on hand and on the same journal."
 msgstr ""
+"Todas as verificações selecionadas devem estar disponíveis e no mesmo diário."
 
 #. module: l10n_latam_check
 #. odoo-python
 #: code:addons/l10n_latam_check/wizard/l10n_latam_payment_mass_transfer.py:0
 msgid "All the selected checks must use the same currency."
-msgstr ""
+msgstr "Todas as verificações selecionadas devem utilizar a mesma moeda."
 
 #. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__amount
@@ -235,7 +279,7 @@ msgstr "Transferência de cheques"
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_register_form
 msgid "Check amount"
-msgstr ""
+msgstr "Valor do cheque"
 
 #. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_account_move_line__l10n_latam_check_ids
@@ -250,12 +294,12 @@ msgstr "Cheques"
 #: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment__l10n_latam_checks_amount
 #: model:ir.model.fields,field_description:l10n_latam_check.field_account_payment_register__l10n_latam_checks_amount
 msgid "Checks Amount"
-msgstr ""
+msgstr "Valor dos cheques"
 
 #. module: l10n_latam_check
 #: model:ir.module.module,summary:base.module_l10n_latam_check
 msgid "Checks Management"
-msgstr ""
+msgstr "Gerenciamento de cheques"
 
 #. module: l10n_latam_check
 #: model:ir.model,name:l10n_latam_check.model_l10n_latam_payment_mass_transfer
@@ -352,7 +396,7 @@ msgstr "Exibir nome"
 #. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__first_payment_date
 msgid "First Payment Date"
-msgstr ""
+msgstr "Data do primeiro pagamento"
 
 #. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__message_follower_ids
@@ -367,7 +411,7 @@ msgstr "Seguidores (parceiros)"
 #. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_payment_mass_transfer__from_journal_id
 msgid "From Journal"
-msgstr ""
+msgstr "Do Diário"
 
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_search
@@ -538,7 +582,7 @@ msgstr ""
 #. module: l10n_latam_check
 #: model:ir.model.fields,help:l10n_latam_check.field_l10n_latam_check__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Ícone de símbolos de material, por exemplo, lista de verificação"
 
 #. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__memo
@@ -620,7 +664,7 @@ msgstr "Número de mensagens com erro de entrega"
 #. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__on_hand
 msgid "On Hand"
-msgstr ""
+msgstr "Em mãos"
 
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_third_party_checks_search
@@ -640,7 +684,6 @@ msgstr "Operação"
 #. module: l10n_latam_check
 #. odoo-python
 #: code:addons/l10n_latam_check/models/account_payment.py:0
-#, fuzzy
 msgid ""
 "Other checks were found with same number, issuer and bank. Please double "
 "check you are not encoding the same check more than once. List of other "
@@ -717,7 +760,7 @@ msgstr "Registro de pagamentos de cheques"
 #. odoo-python
 #: code:addons/l10n_latam_check/wizard/l10n_latam_payment_mass_transfer.py:0
 msgid "Payment(s)"
-msgstr ""
+msgstr "Pagamento(s)"
 
 #. module: l10n_latam_check
 #. odoo-python
@@ -726,6 +769,8 @@ msgid ""
 "Please add at least one check to create a payment with a check payment "
 "method."
 msgstr ""
+"Adicione pelo menos um cheque para criar um pagamento com o método de "
+"pagamento por cheque."
 
 #. module: l10n_latam_check
 #. odoo-python
@@ -734,12 +779,14 @@ msgid ""
 "Please select at least one check to create a payment with a check payment "
 "method."
 msgstr ""
+"Selecione pelo menos um cheque para criar um pagamento com o método de "
+"pagamento por cheque."
 
 #. module: l10n_latam_check
 #. odoo-python
 #: code:addons/l10n_latam_check/wizard/l10n_latam_payment_mass_transfer.py:0
 msgid "Please select the checks to transfer."
-msgstr ""
+msgstr "Selecione as verificações a serem transferidas."
 
 #. module: l10n_latam_check
 #: model:ir.model.fields,field_description:l10n_latam_check.field_l10n_latam_check__rating_ids
@@ -816,6 +863,9 @@ msgid ""
 "The Inter-Banks Transfer Account of \"%(source_company)s\" and \"%"
 "(destination_company)s\" must be the same to transfer checks between them."
 msgstr ""
+"A conta para transferências interbancárias de “%(source_company)s ” e “%"
+"(destination_company)s ” deve ser a mesma para que seja possível transferir "
+"cheques entre elas."
 
 #. module: l10n_latam_check
 #. odoo-python
@@ -826,7 +876,6 @@ msgstr "O valor do cheque deve ser maior que 0"
 #. module: l10n_latam_check
 #. odoo-python
 #: code:addons/l10n_latam_check/models/account_payment.py:0
-#, fuzzy
 msgid ""
 "The amount of the payment  does not match the amount of the selected check. "
 "Please try to deselect and select the check again."
@@ -839,6 +888,7 @@ msgstr ""
 #: code:addons/l10n_latam_check/wizard/l10n_latam_payment_mass_transfer.py:0
 msgid "The checks must be transferred from the journal they are currently on."
 msgstr ""
+"Os cheques devem ser transferidos da revista em que se encontram atualmente."
 
 #. module: l10n_latam_check
 #. odoo-python
@@ -850,17 +900,17 @@ msgstr "A moeda do pagamento e a moeda do cheque devem ser as mesmas."
 #. module: l10n_latam_check
 #: model:ir.model.fields,help:l10n_latam_check.field_l10n_latam_payment_mass_transfer__from_journal_currency_id
 msgid "The currency used to enter statement"
-msgstr ""
+msgstr "A moeda utilizada para inserir a declaração"
 
 #. module: l10n_latam_check
 #: model:ir.model.fields,help:l10n_latam_check.field_l10n_latam_check__payment_date
 msgid "The date when the check can be collected or cashed."
-msgstr ""
+msgstr "A data em que o cheque pode ser recebido ou descontado."
 
 #. module: l10n_latam_check
 #: model:ir.model.fields,help:l10n_latam_check.field_l10n_latam_check__first_payment_date
 msgid "The date when the check was created."
-msgstr ""
+msgstr "A data em que a verificação foi criada."
 
 #. module: l10n_latam_check
 #: model:ir.model.fields,help:l10n_latam_check.field_l10n_latam_check__currency_id
@@ -879,7 +929,7 @@ msgstr "Cheques de terceiros"
 #. module: l10n_latam_check
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_check
 msgid "Third Party and Deferred/Electronic Checks Management"
-msgstr ""
+msgstr "Gerenciamento de cheques de terceiros e diferidos/eletrônicos"
 
 #. module: l10n_latam_check
 #. odoo-python
@@ -888,6 +938,8 @@ msgid ""
 "This action can only be used on third party checks. Please call it from the "
 "Third Party Checks menu."
 msgstr ""
+"Esta ação só pode ser usada em verificações de terceiros. Por favor, acesse-"
+"a no menu “Verificações de terceiros”."
 
 #. module: l10n_latam_check
 #. odoo-python
@@ -908,7 +960,7 @@ msgstr "Tipo de atividade de exceção registrada."
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_own_check_tree
 msgid "Vendor"
-msgstr ""
+msgstr "Fornecedor"
 
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.l10n_latam_check_view_form
@@ -930,6 +982,11 @@ msgid ""
 "Checks:\n"
 "%s"
 msgstr ""
+"Não é possível cancelar ou reabrir um pagamento se seus cheques tiverem sido "
+"movidos por uma operação posterior. Por favor, desfaça essa operação "
+"primeiro.\n"
+"Cheques:\n"
+"%s"
 
 #. module: l10n_latam_check
 #. odoo-python
@@ -973,6 +1030,8 @@ msgid ""
 "You have selected records which are not third party checks. Please call this "
 "action from the Third Party Checks menu."
 msgstr ""
+"Você selecionou registros que não são verificações de terceiros. Acesse esta "
+"ação pelo menu “Verificações de terceiros”."
 
 #. module: l10n_latam_check
 #: model_terms:ir.ui.view,arch_db:l10n_latam_check.view_account_payment_form_inherited

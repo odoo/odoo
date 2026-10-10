@@ -38,12 +38,13 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-10-01 09:33+0000\n"
+"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"PO-Revision-Date: 2026-10-09 11:23+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
 "point_of_sale/fi/>\n"
@@ -2438,7 +2439,7 @@ msgstr "Sulje istunto ja kirjaa merkinnät"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Close debug widget"
-msgstr "Sulje vianmääritys-widget"
+msgstr "Sulje kehittäjätila-widget"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -3555,7 +3556,7 @@ msgstr "Poista käytöstä \"Uudelleenohjaa HTTP:stä HTTPS:ään\""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Disable debug mode"
-msgstr "Poista vianmääritystila käytöstä"
+msgstr "Ota kehittäjätila pois käytöstä"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -4543,7 +4544,7 @@ msgstr "Kuvake"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Kuvake joka kertoo poikkeustoiminnosta."
+msgstr "Poikkeustoimenpiteeseen viittaava kuvake."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__identification
@@ -5485,7 +5486,7 @@ msgstr "Katteet ja kustannukset"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols -kuvake, esim. muistilista"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5774,7 +5775,7 @@ msgstr "Seuraavan toimenpiteen eräpäivä"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_summary
 msgid "Next Activity Summary"
-msgstr "Seuraavan toimenpiteen kuvaus"
+msgstr "Seuraavan toimenpiteen yhteenveto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_id
@@ -6564,7 +6565,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Open debug widget"
-msgstr "Sulje vianmääritys-widget"
+msgstr "Avaa kehittäjätila-widget"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8680,6 +8681,7 @@ msgstr "Lataa uudelleen"
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Reload Data"
 msgstr "Lataa tiedot uudelleen"
 
@@ -8855,7 +8857,7 @@ msgstr "Runsas voitaikinaleivonnainen, jonka täytteenä on tummaa suklaata."
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_rounding_method
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Rounding Method"
-msgstr "Pyöristys"
+msgstr "Pyöristysmenetelmä"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9607,6 +9609,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/pos_app.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
 "Some paid orders have not been synced to the server yet. Closing or "
 "reloading now may cause data loss."
@@ -11207,7 +11210,7 @@ msgstr "Käytetyn kortin tyyppi"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Poikkeusaktiviteetin tyyppi tietueella."
+msgstr "Kirjatun poikkeustoimenpiteen tyyppi."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11818,8 +11821,8 @@ msgid ""
 "You cannot delete a rounding method that is used in a Point of Sale "
 "configuration."
 msgstr ""
-"Et voi poistaa pyöristyssääntöä, jota käytetään Kassajärjestelmän "
-"kokoonpanossa."
+"Et voi poistaa pyöristysmenetelmää, jota käytetään Kassajärjestelmän "
+"asetuksissa."
 
 #. module: point_of_sale
 #. odoo-python

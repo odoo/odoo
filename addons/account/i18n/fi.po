@@ -50,8 +50,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-10-01 07:57+0000\n"
+"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"PO-Revision-Date: 2026-10-09 09:29+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/account/"
 "fi/>\n"
@@ -198,7 +198,7 @@ msgstr "%(action)s päiväkirjalle %(journal)s"
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "%(amount).2f %(currency)s already paid."
-msgstr ""
+msgstr "%(amount).2f %(currency)s jo maksettu."
 
 #. module: account
 #. odoo-python
@@ -358,7 +358,7 @@ msgstr "'%(filename)s' (tyyppi=%(type)s)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__vat_disabled_available
 msgid "'Not Subject to VAT' Available"
-msgstr ""
+msgstr "'Ei arvonlisäveron alainen' Saatavilla"
 
 #. module: account
 #. odoo-python
@@ -1452,7 +1452,7 @@ msgstr "<span>Uusi</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "<span>Not Subject to VAT</span>"
-msgstr ""
+msgstr "<span>Ei arvonlisäveron alainen</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2862,7 +2862,7 @@ msgstr "Tilin täsmäytysmallirivi"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_return_dashboard
 msgid "Account Return Dashboard Onboarding"
-msgstr ""
+msgstr "Tili-ilmoituksen koontinäytön käyttöönotto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -3242,42 +3242,42 @@ msgstr "Siirtosumma"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_buildings
 msgid "Accumulated Depreciation - Buildings"
-msgstr ""
+msgstr "Kertyneet poistot - Rakennukset"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_furniture
 msgid "Accumulated Depreciation - Furniture & Fixtures"
-msgstr ""
+msgstr "Kertyneet poistot - Huonekalut & kalusteet"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_improvements
 msgid "Accumulated Depreciation - Improvements"
-msgstr ""
+msgstr "Kertyneet poistot - Parannukset"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_machines
 msgid "Accumulated Depreciation - Machines & Tools"
-msgstr ""
+msgstr "Kertyneet poistot - Koneet & työkalut"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_other_property
 msgid "Accumulated Depreciation - Other Property"
-msgstr ""
+msgstr "Kertyneet poistot - Muu omaisuus"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_technology
 msgid "Accumulated Depreciation - Technology"
-msgstr ""
+msgstr "Kertyneet poistot - Teknologia"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_depreciation_vehicles
 msgid "Accumulated Depreciation - Vehicles"
-msgstr ""
+msgstr "Kertyneet poistot - Ajoneuvot"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_acc_depreciation
 msgid "Accumulated Depreciation Misc"
-msgstr ""
+msgstr "Kertyneet poistot, sekalaiset"
 
 #. module: account
 #: model:account.account,name:account.21_retained_earnings
@@ -3314,7 +3314,7 @@ msgstr "Korjattavat virheet"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Activate E-Invoicing"
-msgstr ""
+msgstr "Aktivoi sähköinen laskutus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -6686,7 +6686,7 @@ msgstr "Luo uusi toimituslauseke"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_matching_rules
 msgid "Create a new matching rule"
-msgstr ""
+msgstr "Luo uusi vastaavuussääntö"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
@@ -7055,38 +7055,40 @@ msgstr "Tilin kumulatiivinen saldo."
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_buildings
 msgid "Cumulative depreciation recorded for building assets."
-msgstr ""
+msgstr "Rakennusomaisuuserille kirjattu kumulatiivinen poisto."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_technology
 msgid "Cumulative depreciation recorded for capitalized technology assets."
-msgstr ""
+msgstr "Aktivoiduille teknologiaomaisuuserille kirjattu kumulatiivinen poisto."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_furniture
 msgid "Cumulative depreciation recorded for furniture and fixture assets."
-msgstr ""
+msgstr "Huonekalu- ja kalusteomaisuuserille kirjattu kumulatiivinen poisto."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_improvements
 msgid ""
 "Cumulative depreciation recorded for leasehold or property improvements."
 msgstr ""
+"Vuokrasopimuksille tai kiinteistöparannuksille kirjattu kumulatiivinen "
+"poisto."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_machines
 msgid "Cumulative depreciation recorded for machinery and tool assets."
-msgstr ""
+msgstr "Koneiden ja työkalujen omaisuuserille kirjattu kumulatiivinen poisto."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_other_property
 msgid "Cumulative depreciation recorded for other depreciable property assets."
-msgstr ""
+msgstr "Muiden poistokelpoisten omaisuuserien kumulatiivinen poisto."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_depreciation_vehicles
 msgid "Cumulative depreciation recorded for vehicle assets."
-msgstr ""
+msgstr "Ajoneuvo-omaisuuserille kirjattu kumulatiivinen poisto."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_retained_earnings
@@ -7861,7 +7863,7 @@ msgstr "Poisto"
 #. module: account
 #: model:account.account,name:account.22_account_account_us_deprec_amort_expense
 msgid "Depreciation & Amortization Expense"
-msgstr ""
+msgstr "Poisto- & kuoletuskulut"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_expense_buildings
@@ -10253,7 +10255,7 @@ msgstr "Piilota rakenne"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__hide_payment_method
 msgid "Hide Payment Method"
-msgstr ""
+msgstr "Piilota maksutapa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -10481,7 +10483,7 @@ msgstr "Kuvake"
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_exception_icon
 #: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Poikkeustoimintoon viittaava kuvake."
+msgstr "Poikkeustoimenpiteeseen viittaava kuvake."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -10669,6 +10671,8 @@ msgid ""
 "If you are not subject to VAT, you will have no sale taxes and only non "
 "deductible taxes activated"
 msgstr ""
+"Jos et ole ALV-velvollinen, sinulla ei ole myyntiveroja ja vain "
+"vähennyskelvottomat verot ovat käytössä"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10796,7 +10800,7 @@ msgstr "Maksussa"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__amount
 msgid "In amount"
-msgstr ""
+msgstr "määränä"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -10821,7 +10825,7 @@ msgstr "Maksussa"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 msgid "In percentage"
-msgstr ""
+msgstr "prosentteina"
 
 #. module: account
 #. odoo-python
@@ -13009,13 +13013,13 @@ msgstr "Kohdistus #"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
 msgid "Matching Order"
-msgstr ""
+msgstr "Vastaava tilaus"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_matching_rules
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Matching Rules"
-msgstr ""
+msgstr "Vastaavuussäännöt"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
@@ -13029,13 +13033,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__matching_rule
 msgid "Matching rule"
-msgstr ""
+msgstr "Vastaavuussääntö"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid "Matching rules must be automatic."
-msgstr ""
+msgstr "Vastaavuussääntöjen on oltava automaattisia."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__activity_type_icon
@@ -13046,7 +13050,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_type_icon
 #: model:ir.model.fields,help:account.field_res_partner_bank__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr "Aineellisten symboleiden kuvake, esim. muistilista"
+msgstr "Material Symbols -kuvake, esim. muistilista"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -13513,7 +13517,7 @@ msgstr "Uusi sähköisten laskujen ilmoitus"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 msgid "Newest first"
-msgstr ""
+msgstr "Uusin ensin"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__next_activity_type_id
@@ -13794,7 +13798,7 @@ msgstr "Ei lähetetty"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__vat_disabled
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Not Subject to VAT"
-msgstr ""
+msgstr "Ei arvonlisäveron alainen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__vat_disabled_available
@@ -18503,7 +18507,7 @@ msgstr "Vero 7.25%"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_calculation_rounding_method
 msgid "Tax Calculation Rounding Method"
-msgstr "Verolaskennan pyöristystapa"
+msgstr "Verolaskelman pyöristysmenetelmä"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_rec_id
@@ -18705,7 +18709,7 @@ msgstr "Verotyyppi"
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_calculation_rounding_method
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_calculation_rounding_method
 msgid "Tax calculation rounding method"
-msgstr "Verolaskennan pyöristystapa"
+msgstr "Verolaskelman pyöristysmenetelmä"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
@@ -19289,6 +19293,8 @@ msgid ""
 "The cash rounding method \"%(name)s\" has no Profit/Loss Accounts set, so no "
 "rounding line can be added."
 msgstr ""
+"Käteisen pyöristysmenetelmälle ”%(name)s ” ei ole määritetty voitto- tai "
+"tappiotilejä, joten pyöristysriviä ei voida lisätä."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -21110,7 +21116,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__activity_exception_decoration
 #: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tallennettu poikkeustoimenpiteen tyyppi."
+msgstr "Kirjatun poikkeustoimenpiteen tyyppi."
 
 #. module: account
 #. odoo-python
@@ -22324,6 +22330,14 @@ msgid ""
 msgstr ""
 "Et voi rekisteröidä maksuja  sekä saapuville että lähteville siirroille "
 "samanaikaisesti."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You can't reset to draft those journal entries. You need to request a "
+"cancellation instead."
+msgstr ""
 
 #. module: account
 #. odoo-python

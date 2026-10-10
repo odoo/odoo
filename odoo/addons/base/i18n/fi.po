@@ -41,13 +41,15 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# MAHAMADASIF ANSARI <maan@odoo.com>, 2026.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 17:49+0000\n"
-"PO-Revision-Date: 2026-10-01 07:57+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"PO-Revision-Date: 2026-10-08 08:41+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/base/fi/>"
 "\n"
 "Language: fi\n"
@@ -626,8 +628,8 @@ msgid ""
 "<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
-"<code>log(message, level='info')</code>: kirjausfunktio, joka tallentaa "
-"vikailmoitustiedot <code>ir.logging</code>-taulukkoon"
+"<code>log(message, level='info')</code>: kirjausfunktio viankorjaustietojen "
+"tallentamiseksi <code>ir.logging</code>-taulukkoon"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -7230,13 +7232,13 @@ msgstr "Poista käytöstä"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_debug
 msgid "Debugging"
-msgstr "Vianmääritys"
+msgstr "Viankorjaus"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Debugging information:"
-msgstr "Vianmääritystiedot:"
+msgstr "Viankorjaustiedot:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_decimal_precision_form
@@ -7916,8 +7918,7 @@ msgid ""
 "Domain on non-relational field \"%(name)s\" makes no sense (domain:%"
 "(domain)s)"
 msgstr ""
-"Ei-suhteellisen kentän \"%(name)s\" toimialueessa ei ole järkeä (toimialue:%"
-"(domain)s)"
+"Ei-relaatiokentän \"%(name)s\" domainissa ei ole järkeä (domain:%(domain)s)"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -10807,8 +10808,8 @@ msgid ""
 "If enabled, the full output of SMTP sessions will be written to the server "
 "log at DEBUG level (this is very verbose and may include confidential info!)"
 msgstr ""
-"Jos tämä on käytössä, SMTP-istuntojen kaikki tulosteet kirjoitetaan "
-"palvelimen lokiin DEBUG-tasolla (tämä on hyvin yksityiskohtaista ja voi "
+"Jos otettu käyttöön, SMTP-istuntojen kaikki tulokset kirjoitetaan palvelimen "
+"lokiin viankorjauksen tasolla (tämä on hyvin yksityiskohtaista ja voi "
 "sisältää luottamuksellisia tietoja!)"
 
 #. module: base
@@ -13966,21 +13967,21 @@ msgid ""
 "Non-relational field name \"%(field_name)s\" in related field \"%"
 "(related_field)s\""
 msgstr ""
-"Ei-liittyvän kentän nimi \"%(field_name)s\" liittyvässä kentässä \"%"
+"Ei-relaatiokentän nimi \"%(field_name)s\" liittyvässä kentässä \"%"
 "(related_field)s\""
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 msgid "Non-relational field “%(field)s” in dependency “%(dependency)s”"
-msgstr "Ei-liittyvä kenttä \"%(field)s\" riippuvuudessa \"%(dependency)s\""
+msgstr "Ei-relaatiokenttä \"%(field)s\" riippuvuudessa \"%(dependency)s\""
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Non-relational field “%(field)s” in path “%(field_path)s” in %(use)s)"
 msgstr ""
-"Ei-liittyvä kenttä \"%(field)s\" polussa \"%(field_path)s\" kohdassa %(use)s)"
+"Ei-relaatiokenttä \"%(field)s\" polussa \"%(field_path)s\" kohdassa %(use)s)"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__none
@@ -18806,15 +18807,15 @@ msgid ""
 "                                                <code>partner_id.company_id.name</"
 "code>."
 msgstr ""
-"Kentässä <strong>Riippuvuudet</strong> luetellaan kentät, joista\n"
+"Kenttä <strong>Riippuvuudet</strong> luettelee kentät, joista\n"
 "                                                nykyinen kenttä on "
-"riippuvainen. Se on pilkulla erotettu luettelo\n"
-"                                                kenttien nimistä, kuten "
+"riippuvainen. Se on pilkuilla eroteltu luettelo\n"
+"                                                kenttien nimistä, esim. "
 "<code>nimi, koko</code>. Voit myös viitata\n"
 "                                                kenttiin, joihin pääsee "
-"käsiksi muiden relaatiokenttien kautta, esimerkiksi\n"
-"                                               <code>partner_id.company_id.name</"
-"code>."
+"käsiksi muiden relaatiokenttien kautta. Esimerkiksi\n"
+"                                                <code>"
+"partner_id.company_id.name</code>."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -18828,13 +18829,13 @@ msgid ""
 "relational fields, for instance\n"
 "                                    <code>partner_id.company_id.name</code>."
 msgstr ""
-"Kentässä <strong>Riippuvuudet</strong> luetellaan kentät, joista\n"
+"Kenttä <strong>Riippuvuudet</strong> luettelee kentät, joista\n"
 "                                    nykyinen kenttä on riippuvainen. Se on "
-"pilkulla erotettu luettelo\n"
-"                                    kenttien nimistä, kuten <code>nimi, "
+"pilkuilla eroteltu luettelo\n"
+"                                    kenttien nimistä, esim. <code>nimi, "
 "koko</code>. Voit myös viitata\n"
 "                                    kenttiin, joihin pääsee käsiksi muiden "
-"relaatiokenttien kautta, esimerkiksi\n"
+"relaatiokenttien kautta. Esimerkiksi\n"
 "                                   <code>partner_id.company_id.name</code>."
 
 #. module: base
@@ -19115,6 +19116,10 @@ msgid ""
 "You can't traverse non-relational fields (even in the quantum realm). Make "
 "sure only the last field in the path is non-relational."
 msgstr ""
+"Kentän \"%(searched_field)s\" polku sisältää ei-relatiokentän (%"
+"(current_field)s), joka ei ole polun viimeinen kenttä. Et voi kulkea ei-"
+"relaatiokenttien läpi (et edes kvanttitasolla). Varmista, että vain polun "
+"viimeinen kenttä on ei-relaatiokenttä."
 
 #. module: base
 #. odoo-python
@@ -20163,7 +20168,7 @@ msgid ""
 "Unable to import'%%(field)s' Properties field as a whole, target individual "
 "property instead."
 msgstr ""
-"Ei pysty tuomaan'%%(kenttä)s' Ominaisuudet-kenttää kokonaisuutena, kohdista "
+"Ei pysty tuomaan'%%(field)s' Ominaisuudet-kenttää kokonaisuutena, kohdista "
 "sen sijaan yksittäinen ominaisuus."
 
 #. module: base

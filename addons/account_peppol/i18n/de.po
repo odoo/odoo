@@ -4,13 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-09-21 11:34+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"PO-Revision-Date: 2026-10-08 08:42+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "account_peppol/de/>\n"
 "Language: de\n"
@@ -36,8 +37,8 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid " (Customer not on Peppol)"
-msgstr " (Kunde nicht in Peppol)"
+msgid " (Customer not on %(network_name)s)"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -775,9 +776,8 @@ msgstr "Peppol abbrechen"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
-msgid "Cannot cancel an entry that has already been sent to Peppol"
+msgid "Cannot cancel an entry that has already been sent via %(network_name)s"
 msgstr ""
-"Buchung, die bereits an Peppol gesendet wurde, kann nicht abgebrochen werden"
 
 #. module: account_peppol
 #. odoo-python
@@ -1110,7 +1110,7 @@ msgstr "Vollständig automatisiert"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Go to module"
-msgstr ""
+msgstr "Zum Modul"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1165,9 +1165,10 @@ msgstr "Wenn Sie kein Itsme-Konto haben, wenden Sie sich bitte an"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
-msgid "If you want to be invoiced by Peppol, your configuration must be valid."
+msgid ""
+"If you want to be invoiced via %(network_name)s, your configuration must be "
+"valid."
 msgstr ""
-"Ihre Konfiguration muss gültig sein, um mit Peppol Rechnungen auszustellen."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ip
@@ -1182,10 +1183,10 @@ msgstr "Eingehendes Buchhaltungsjournal"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
+msgid ""
+"Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %"
+"(network_name)s."
 msgstr ""
-"Die Rechnungsdatei „%s“ überschreitet die Größenbeschränkung von 64 MB für "
-"den Versand über Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -1443,8 +1444,8 @@ msgstr "Partner kann Format nicht empfangen"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid "Partner doesn't have a valid Peppol configuration."
-msgstr "Partner hat keine gültige Peppol-Konfiguration."
+msgid "Partner doesn't have a valid configuration for %(network_name)s."
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
@@ -1463,6 +1464,8 @@ msgid "Pending Reception"
 msgstr "Ausstehender Erhalt"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
 #: model:ir.module.module,shortdesc:base.module_account_peppol
 msgid "Peppol"
@@ -1504,7 +1507,7 @@ msgstr "Peppol-Kontakt-E-Mail"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Peppol Disconnected"
-msgstr ""
+msgstr "Peppol nicht verbunden"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1517,6 +1520,12 @@ msgstr "Peppol-Dokumente können nicht gelöscht werden"
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
 msgstr "Peppol-Dokumente: Rechnung kann nicht gelöscht werden"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+msgid "Peppol EAS and/or Endpoint identifier"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
@@ -1594,7 +1603,7 @@ msgstr "Peppol-Einkaufsjournal"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
 msgid "Peppol Purchase Journal Required"
-msgstr ""
+msgstr "Peppol-Einkaufsjournal erforderlich"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -1786,6 +1795,12 @@ msgstr "Bitte geben Sie die Routing-Identifikation des Unternehmens ein."
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Please install the phonenumbers library."
 msgstr "Bitte installieren Sie die Bibliothek der Telefonnummern."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "Please make sure the Contact email is a valid email address."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2058,8 +2073,8 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
-msgid "That country is not available for Peppol."
-msgstr "Dieses Land ist nicht für Peppol gültig."
+msgid "That country is not available with %(network_name)s."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2506,6 +2521,7 @@ msgstr "Die Rechnung wurde auch"
 #: model:ir.module.module,summary:base.module_account_peppol
 msgid "This module is used to send/receive documents with Peppol"
 msgstr ""
+"Dieses Modul wird zum Senden/Empfangen von Dokumenten mit Peppol verwendet"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
@@ -2546,6 +2562,8 @@ msgstr ""
 msgid ""
 "To use the Approved Platform for French E-Invoicing install the module '%s'."
 msgstr ""
+"Um die zugelassene Plattform für die elektronische Rechnungsstellung in "
+"Frankreich zu nutzen, installieren Sie das Modul „%s“."
 
 #. module: account_peppol
 #. odoo-python
@@ -2555,6 +2573,10 @@ msgid ""
 "'%s'.\n"
 "The module was not found. Please update the app list first."
 msgstr ""
+"Um die zugelassene Plattform für die elektronische Rechnungsstellung in "
+"Frankreich zu nutzen, installieren Sie das Modul „%s“.\n"
+"Das Modul wurde nicht gefunden. Bitte aktualisieren Sie zunächst die App-"
+"Liste."
 
 #. module: account_peppol
 #. odoo-python
@@ -2602,7 +2624,7 @@ msgstr "Unbekannter Peppol-Fehler: %s"
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "Update App List"
-msgstr ""
+msgstr "App-Liste aktualisieren"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
@@ -2890,16 +2912,14 @@ msgid "and send invoices via Peppol on their behalf."
 msgstr "und senden Rechnungen über Peppol in ihrem Namen."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__invoice_sending_method__peppol
 msgid "by Peppol"
 msgstr "durch Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid "could not be sent via Peppol"
-msgstr "konnte nicht per Peppol versendet werden"
+msgid "could not be sent via"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2921,8 +2941,8 @@ msgstr "abgelehnt"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid "sent via Peppol"
-msgstr "per Peppol versendet"
+msgid "sent via"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -2938,6 +2958,37 @@ msgstr ", um Rechnungen zu verwenden, aber diese"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "verwendet"
+
+#~ msgid " (Customer not on Peppol)"
+#~ msgstr " (Kunde nicht in Peppol)"
+
+#~ msgid "Cannot cancel an entry that has already been sent to Peppol"
+#~ msgstr ""
+#~ "Buchung, die bereits an Peppol gesendet wurde, kann nicht abgebrochen "
+#~ "werden"
+
+#~ msgid ""
+#~ "If you want to be invoiced by Peppol, your configuration must be valid."
+#~ msgstr ""
+#~ "Ihre Konfiguration muss gültig sein, um mit Peppol Rechnungen "
+#~ "auszustellen."
+
+#~ msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
+#~ msgstr ""
+#~ "Die Rechnungsdatei „%s“ überschreitet die Größenbeschränkung von 64 MB "
+#~ "für den Versand über Peppol."
+
+#~ msgid "Partner doesn't have a valid Peppol configuration."
+#~ msgstr "Partner hat keine gültige Peppol-Konfiguration."
+
+#~ msgid "That country is not available for Peppol."
+#~ msgstr "Dieses Land ist nicht für Peppol gültig."
+
+#~ msgid "could not be sent via Peppol"
+#~ msgstr "konnte nicht per Peppol versendet werden"
+
+#~ msgid "sent via Peppol"
+#~ msgstr "per Peppol versendet"
 
 #~ msgid "Create, send and receive e-invoices for free."
 #~ msgstr ""

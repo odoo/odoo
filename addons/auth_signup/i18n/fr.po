@@ -11,14 +11,15 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # MAHAMADASIF ANSARI <maan@odoo.com>, 2025.
 # Nathan Paternotte <paternottenathan@gmail.com>, 2026.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 16:04+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-06 10:33+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-20/"
 "auth_signup/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -35,6 +36,10 @@ msgid ""
 "Allow users to sign up and reset their password\n"
 "===============================================\n"
 msgstr ""
+"\n"
+"Permettre aux utilisateurs de s’inscrire et de réinitialiser leur mot de "
+"passe\n"
+"===============================================\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -194,6 +199,42 @@ msgid ""
 "--<br/>The <t t-out=\"company_name\"/> Team</t>\n"
 "            "
 msgstr ""
+"<t>\n"
+"<t t-set=\"company_name\" t-value=\"object.company_id.name or ''\"/>\n"
+"<t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
+"Bonjour <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"<em>Ce lien est valable pendant <t t-out=\""
+"(object.env['ir.config_parameter'].sudo().get_int"
+"('auth_signup.signup.validity.hours') or 144)//24\">link_validity_days</t> "
+"jours </em><br/>\n"
+"<b><t t-out=\"company_name\"/></b> utilise <a href=\"https://odoo.com\" t-"
+"attf-style=\"color: {{object.company_id.email_secondary_color or '#875A7B'}}"
+";\">Odoo</a>\n"
+"pour gérer son activité. Vous avez été invité par <b><t t-"
+"out=\"object.create_uid.name or ''\">OdooBot</t></b> à vous connecter.\n"
+"<br/><br/>\n"
+"Une fois l’invitation acceptée, vous pourrez vous reconnecter via : <br/>\n"
+"<ul>\n"
+"    <li>Identifiant : <a t-attf-href=\"/web/login?login={{ object.email }}\" "
+"target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></"
+"li>\n"
+"    <li>Lien : <a t-att-href=\"website_url\" t-out=\"website_url or ''\">"
+"http://yourcompany.odoo.com</a></li>\n"
+"</ul>\n"
+"<br/>\n"
+"<div style=\"margin: 16px 0px 16px 0px;\">\n"
+"    <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
+"        Accepter l'invitation\n"
+"    </a>\n"
+"</div>\n"
+"<br/>\n"
+"Profitez d’Odoo !<br/><br/>\n"
+"--<br/>L'équipe <t t-out=\"company_name\"/></t>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -390,13 +431,13 @@ msgstr ""
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__inactive
 msgid "Inactive"
-msgstr ""
+msgstr "Inactif"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Invalid email; please enter a valid email address."
-msgstr ""
+msgstr "E-mail non valide ; veuillez saisir une adresse e-mail valide."
 
 #. module: auth_signup
 #. odoo-python
@@ -587,12 +628,12 @@ msgstr "S'inscrire"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Sign-up link sent by email!"
-msgstr ""
+msgstr "Lien d’inscription envoyé par e-mail !"
 
 #. module: auth_signup
 #: model:ir.module.module,shortdesc:base.module_auth_signup
 msgid "Signup"
-msgstr ""
+msgstr "Inscription"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type

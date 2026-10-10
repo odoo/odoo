@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_latam_invoice_document
+# * l10n_latam_invoice_document
 #
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 18:21+0000\n"
-"PO-Revision-Date: 2026-08-31 12:56+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-07 16:33+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/l10n_latam_invoice_document/pt_BR/>\n"
+"20/l10n_latam_invoice_document/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,6 +21,7 @@ msgstr ""
 
 #. module: l10n_latam_invoice_document
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
+#, fuzzy
 msgid ""
 "\n"
 "Functional\n"
@@ -51,6 +53,36 @@ msgid ""
 "country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
+"Funcional\n"
+"----------\n"
+"\n"
+"Em alguns países da América Latina, incluindo a Argentina e o Chile, certas "
+"transações financeiras, como faturas e notas fiscais de fornecedores, são "
+"classificadas por tipos de documentos definidos pelas autoridades fiscais "
+"governamentais (no caso da Argentina, a ARCA; no caso do Chile, o SII).\n"
+"\n"
+"Este módulo foi projetado para ser ampliado por localizações, a fim de "
+"gerenciar esses tipos de documentos, e trata-se de uma informação essencial "
+"que precisa ser exibida nos relatórios impressos e facilmente identificada, "
+"tanto no conjunto de faturas quanto nos movimentos financeiros.\n"
+"\n"
+"Cada tipo de documento possui suas próprias regras e número de sequência; "
+"este último está integrado ao número da nota fiscal e à sequência do livro "
+"razão, a fim de facilitar o uso para o usuário da localização. Para "
+"habilitar ou desabilitar esses tipos de documentos, o livro razão possui uma "
+"nova opção que permite usar ou não o documento.\n"
+"\n"
+"Técnico\n"
+"---------\n"
+"\n"
+"Se sua localização precisar dessa lógica, será necessário adicionar este "
+"módulo como dependência e, no seu módulo de localização, estender:\n"
+"\n"
+"* estender o método _localization_use_documents() da empresa.\n"
+"* criar os dados dos tipos de documento existentes para o país específico. O "
+"tipo de documento possui um campo de país\n"
+"\n"
 
 #. module: l10n_latam_invoice_document
 #: model:ir.model,name:l10n_latam_invoice_document.model_account_chart_template
@@ -113,7 +145,7 @@ msgstr "Código usado opor diferentes localizações"
 #. module: l10n_latam_invoice_document
 #: model:ir.model,name:l10n_latam_invoice_document.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: l10n_latam_invoice_document
 #: model:ir.model.fields,field_description:l10n_latam_invoice_document.field_l10n_latam_document_type__country_id
@@ -255,7 +287,7 @@ msgstr "Lançamento de diário"
 #. module: l10n_latam_invoice_document
 #: model:ir.model,name:l10n_latam_invoice_document.model_account_move_reversal
 msgid "Journal Entry Reversal"
-msgstr ""
+msgstr "Reversão de lançamento no diário"
 
 #. module: l10n_latam_invoice_document
 #: model:ir.model,name:l10n_latam_invoice_document.model_account_move_line
@@ -285,12 +317,12 @@ msgstr "L10N Latam - Usar documentos"
 #. module: l10n_latam_invoice_document
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_invoice_document
 msgid "LATAM Document"
-msgstr ""
+msgstr "Documento LATAM"
 
 #. module: l10n_latam_invoice_document
 #: model:ir.module.module,summary:base.module_l10n_latam_invoice_document
 msgid "LATAM Document Types"
-msgstr ""
+msgstr "Tipos de documentos LATAM"
 
 #. module: l10n_latam_invoice_document
 #: model:ir.model.fields,field_description:l10n_latam_invoice_document.field_l10n_latam_document_type__write_uid
@@ -346,6 +378,8 @@ msgid ""
 "Prefix for Documents Codes on Invoices and Journal Entries. For eg. 'FA ' "
 "will build 'FA 0001-0000001' Document Number"
 msgstr ""
+"Prefixo para códigos de documentos em notas fiscais e lançamentos contábeis. "
+"Por exemplo, “FA ” formará o número de documento “FA 0001-0000001”"
 
 #. module: l10n_latam_invoice_document
 #: model:ir.model.fields,field_description:l10n_latam_invoice_document.field_l10n_latam_document_type__sequence

@@ -4,7 +4,7 @@
 #
 # Translators:
 # Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
@@ -12,18 +12,18 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 19:35+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-05 11:22+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-20/"
 "account_check_printing/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_check_printing
@@ -37,6 +37,13 @@ msgid ""
 "The check settings are located in the accounting journals configuration "
 "page.\n"
 msgstr ""
+"\n"
+"Цей модуль забезпечує базовий функціонал для здійснення платежів шляхом "
+"друку чеків.\n"
+"Він має використовуватися як залежність для модулів, що надають шаблони "
+"чеків, адаптовані до вимог конкретних країн.\n"
+"Налаштування чеків знаходяться на сторінці конфігурації бухгалтерських "
+"журналів.\n"
 
 #. module: account_check_printing
 #. odoo-python
@@ -48,7 +55,7 @@ msgstr "%(journal)s: Номер послідовності чеків"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "%(number)s in journal %(journal)s"
-msgstr ""
+msgstr "%(number)s в журналі %(journal)s"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -106,7 +113,7 @@ msgstr "Друк чеку"
 #. module: account_check_printing
 #: model:ir.module.module,shortdesc:base.module_account_check_printing
 msgid "Check Printing Base"
-msgstr ""
+msgstr "Основа для друку чеків"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
@@ -133,14 +140,14 @@ msgstr "Номери чеків можуть містити лише цифри"
 #. module: account_check_printing
 #: model:ir.module.module,summary:base.module_account_check_printing
 msgid "Check printing basic features"
-msgstr ""
+msgstr "Основні функції друку чеків"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
 msgstr ""
-"Виберіть цю опцію, якщо ваші попередньо надруковані чеки не пронумеровані"
+"Виберіть цю опцію, якщо ваші попередньо надруковані чеки не пронумеровані."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -157,7 +164,7 @@ msgstr "Чеки"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr "Порядковий номер чеків"
+msgstr "Порядковий номер чеків."
 
 #. module: account_check_printing
 #. odoo-python
@@ -174,7 +181,7 @@ msgstr "Роздрукувати чеки"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Компанія"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
@@ -215,7 +222,7 @@ msgstr "Перейти до панелі налаштувань"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
 msgid "Has Check Layout"
-msgstr ""
+msgstr "Має макет чека"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
@@ -276,6 +283,22 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Ручний режим: Здійснюйте або отримуйте платежі будь-яким способом поза "
+"межами Odoo.\n"
+"Платіжні провайдери: Кожен платіжний провайдер має власний метод оплати. "
+"Ініціюйте транзакцію з картки (або на неї), використовуючи платіжний токен, "
+"збережений партнером під час онлайн-покупки або оформлення підписки.\n"
+"Чек: Сплачуйте рахунки чеками та друкуйте їх безпосередньо з Odoo.\n"
+"Пакетне внесення чеків: Збирайте кілька чеків від клієнтів, формуйте пакет "
+"для внесення та надсилайте його до банку. Потрібен модуль "
+"account_batch_payment.\n"
+"Кредитовий переказ SEPA: Здійснюйте платежі в зоні SEPA шляхом надсилання "
+"файлу кредитового переказу SEPA до вашого банку. Потрібен модуль "
+"account_iso20022.\n"
+"Пряме дебетування SEPA: Отримуйте платежі в зоні SEPA на підставі мандата, "
+"наданого вам партнером. Потрібен модуль account_iso20022.\n"
+"U.S. ISO20022: Здійснюйте платежі в США шляхом надсилання файлу ISO20022 до "
+"вашого банку. Потрібен модуль account_iso20022.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -304,7 +327,7 @@ msgstr "Немає"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payment"
-msgstr ""
+msgstr "Платіж"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment_method
@@ -385,7 +408,7 @@ msgstr ""
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr "Послідовність номера наступного друкованого чеку"
+msgstr "Послідовність номера наступного друкованого чеку."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
@@ -493,19 +516,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "check_number"
-msgstr ""
+msgstr "check_number"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "out_refund"
-msgstr ""
+msgstr "out_refund"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 msgid "sep"
-msgstr ""
+msgstr "sep"
 
 #~ msgid "Sent"
 #~ msgstr "Надіслано"

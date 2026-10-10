@@ -3,14 +3,15 @@
 # * account_qr_code_emv
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 16:04+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-05 15:41+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-20/"
 "account_qr_code_emv/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
@@ -27,6 +28,9 @@ msgid ""
 "Bridge module addings support for EMV Merchant-Presented QR-code generation "
 "for Payment System.\n"
 msgstr ""
+"\n"
+"Мостовий модуль, що додає підтримку генерації QR-кодів EMV (для пред'явлення "
+"продавцем) у платіжній системі..\n"
 
 #. module: account_qr_code_emv
 #. odoo-python
@@ -38,18 +42,18 @@ msgstr "Для створення QR-коду EMV потрібен банків�
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
 msgid "Account Identifier Type"
-msgstr ""
+msgstr "Тип ідентифікатора рахунку"
 
 #. module: account_qr_code_emv
 #: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
 msgid "Bank Account"
-msgstr ""
+msgstr "Банківський рахунок"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__country_proxy_keys
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__country_proxy_keys
 msgid "Country Proxy Keys"
-msgstr ""
+msgstr "Проксі ключі рахунку"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_name
@@ -60,7 +64,7 @@ msgstr "Назва для відображення"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__company_qr_code
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__company_qr_code
 msgid "Display QR-code on invoices"
-msgstr ""
+msgstr "Показати QR-код на фактурі"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
@@ -83,7 +87,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
 msgid "Identifier Value"
-msgstr ""
+msgstr "Значення ідентифікатора"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
@@ -101,13 +105,13 @@ msgstr "Включно з референсом в QR-коді."
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid "Missing Account Identifier Type."
-msgstr ""
+msgstr "Відсутній тип ідентифікатора рахунку."
 
 #. module: account_qr_code_emv
 #. odoo-python
 #: code:addons/account_qr_code_emv/models/res_bank.py:0
 msgid "Missing Identifier Value."
-msgstr ""
+msgstr "Відсутнє значення ідентифікатора."
 
 #. module: account_qr_code_emv
 #. odoo-python
@@ -138,7 +142,7 @@ msgstr "Немає"
 #. module: account_qr_code_emv
 #: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
 msgid "Payment QR Settings"
-msgstr ""
+msgstr "Налаштування QR платежу"
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
@@ -147,6 +151,9 @@ msgid ""
 "The identification method linked to this bank account (e.g., Mobile Number, "
 "Company ID) used to route QR payments to this account."
 msgstr ""
+"Метод ідентифікації, пов’язаний із цим банківським рахунком (наприклад, "
+"номер мобільного телефону, ідентифікатор компанії), що використовується для "
+"спрямування QR-платежів на цей рахунок."
 
 #. module: account_qr_code_emv
 #: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
@@ -155,8 +162,10 @@ msgid ""
 "The specific number or ID linked to this bank account that matches the "
 "chosen Identifier Type."
 msgstr ""
+"Конкретний номер або ID, пов’язаний із цим банківським рахунком, що "
+"відповідає обраному типу ідентифікатора."
 
 #. module: account_qr_code_emv
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_emv
 msgid "account_qr_code_emv"
-msgstr ""
+msgstr "account_qr_code_emv"

@@ -8,14 +8,15 @@
 # Larissa Manderfeld, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-09-09 13:59+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-10-08 08:42+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "hr_attendance/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +35,12 @@ msgid ""
 "Keeps account of the attendances of the employees on the basis of the\n"
 "actions(Check in/Check out) performed by them.\n"
 msgstr ""
+"\n"
+"Dieses Modul verwaltet die Anwesenheitszeiten der Mitarbeiter.\n"
+"=========================================================\n"
+"\n"
+"Führt Buch über die Anwesenheiten der Mitarbeiter auf Basis ihrer An- und "
+"Abmeldungen.\n"
 
 #. module: hr_attendance
 #. odoo-python
@@ -210,7 +217,7 @@ msgstr "Abwesend"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Zugriffsgruppen"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction
@@ -239,7 +246,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Add my break times"
-msgstr ""
+msgstr "Meine Pausenzeiten hinzufügen"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
@@ -390,6 +397,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Attendance saved, but the display could not be refreshed."
 msgstr ""
+"Anwesenheiten gespeichert, aber die Anzeige konnte nicht aktualisiert werden."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -566,39 +574,39 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/components/attendance_inline_form/attendance_inline_form.xml:0
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Break"
-msgstr ""
+msgstr "Pause"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.js:0
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__break_duration
 msgid "Break Duration"
-msgstr ""
+msgstr "Pausendauer"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_break_management
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_break_management
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Break Management on Checkout"
-msgstr ""
+msgstr "Pausenverwaltung bei Abmeldung"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "Break duration cannot be negative."
-msgstr ""
+msgstr "Die Dauer einer Pause darf nicht negativ sein."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.xml:0
 msgid "Break duration in minutes"
-msgstr ""
+msgstr "Pausendauer in Minuten"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Break:"
-msgstr ""
+msgstr "Pause:"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -630,7 +638,7 @@ msgstr "Kann bearbeiten"
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.xml:0
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.js:0
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #. module: hr_attendance
 #. odoo-python
@@ -818,18 +826,20 @@ msgstr "Verbindung getrennt. An-/Abmeldung konnte nicht erfasst werden."
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 msgid "Could not save break duration. Please identify again."
 msgstr ""
+"Die Pausendauer konnte nicht gespeichert werden. Bitte geben Sie sie erneut "
+"an."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Could not update this attendance."
-msgstr ""
+msgstr "Diese Anwesenheit konnte nicht aktualisiert werden."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/calendar/attendance_calendar_controller.js:0
 msgid "Create"
-msgstr ""
+msgstr "Erstellen"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -895,7 +905,7 @@ msgstr "Legen Sie fest, wie der Benutzer von der Anwendung identifiziert wird."
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_create_view_form
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
@@ -915,7 +925,7 @@ msgstr "Gerät- & Standordverfolgung"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_inline_form/attendance_inline_form.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "Verwerfen"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_attendances
@@ -1017,19 +1027,19 @@ msgstr "Mitarbeiter"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.js:0
 msgid "Enter a valid break duration in whole minutes."
-msgstr ""
+msgstr "Geben Sie eine gültige Pausendauer in ganzen Minuten ein."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.js:0
 msgid "Enter the total break duration (in minutes) for %s."
-msgstr ""
+msgstr "Geben Sie die Gesamtdauer der Pause (in Minuten) für %s ein."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.js:0
 msgid "Enter the total break duration in minutes."
-msgstr ""
+msgstr "Geben Sie die Gesamtdauer der Pause in Minuten ein."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1069,7 +1079,7 @@ msgstr "Überstunden"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__break_duration
 msgid "Extra unpaid break duration (hours)"
-msgstr ""
+msgstr "Dauer der zusätzlichen unbezahlten Pausen (Stunden)"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1258,6 +1268,8 @@ msgid ""
 "If enabled, employees can record their total break duration after checking "
 "out."
 msgstr ""
+"Wenn diese Funktion aktiviert ist, können Mitarbeiter nach der Abmeldung "
+"ihre gesamte Pausendauer erfassen."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_time_rule__condition_work_entry_type_ids
@@ -1390,7 +1402,7 @@ msgstr "Breitengrad (Anmeldung)"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.js:0
 msgid "Load Sample Data"
-msgstr ""
+msgstr "Beispieldaten laden"
 
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.action_load_demo_data
@@ -1552,12 +1564,12 @@ msgstr "Neue Einrichtung (Mitarbeiter/Ausweis)"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Next"
-msgstr ""
+msgstr "Weiter"
 
 #. module: hr_attendance
 #: model:res.groups.privilege,placeholder:hr_attendance.res_groups_privilege_attendances
 msgid "No"
-msgstr ""
+msgstr "Nein"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1577,7 +1589,7 @@ msgstr "Kein Barcode erhalten"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "No break"
-msgstr ""
+msgstr "Keine Pause"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1694,7 +1706,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Pending"
-msgstr ""
+msgstr "Ausstehend"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1823,12 +1835,12 @@ msgstr "Samstag"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_inline_form/attendance_inline_form.xml:0
 msgid "Save"
-msgstr ""
+msgstr "Speichern"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_create_view_form
 msgid "Save & Close"
-msgstr ""
+msgstr "Speichern & schließen"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2017,6 +2029,8 @@ msgid ""
 "This action will generate several fake records across multiple apps. Are you "
 "sure you want to proceed?"
 msgstr ""
+"Diese Aktion wird mehrere falsche Datensätze in verschiedenen Apps "
+"generieren. Möchten Sie wirklich fortfahren?"
 
 #. module: hr_attendance
 #. odoo-python
@@ -2120,7 +2134,7 @@ msgstr "Überstunden gesamt"
 #. module: hr_attendance
 #: model:ir.module.module,summary:base.module_hr_attendance
 msgid "Track employee attendance"
-msgstr ""
+msgstr "Anwesenheit Ihrer Mitarbeiter verfolgen"
 
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.action_try_kiosk
@@ -2274,7 +2288,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Worked"
-msgstr ""
+msgstr "Gearbeitet"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
@@ -2339,6 +2353,8 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "You can only set a break duration once the employee has checked out."
 msgstr ""
+"Die Dauer einer Pause kann erst festgelegt werden, nachdem sich der "
+"Mitarbeiter abgemeldet hat."
 
 #. module: hr_attendance
 #. odoo-python
@@ -2400,7 +2416,7 @@ msgstr "(z. B. für Home-Office)"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.xml:0
 msgid "minutes"
-msgstr ""
+msgstr "Minuten"
 
 #. module: hr_attendance
 #. odoo-javascript

@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_eu_account_vies
+# * l10n_eu_account_vies
 #
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 18:19+0000\n"
-"PO-Revision-Date: 2026-08-28 18:19+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-10-08 09:47+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
+"l10n_eu_account_vies/nl/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: nl\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: l10n_eu_account_vies
 #: model:ir.module.module,description:base.module_l10n_eu_account_vies
@@ -40,6 +44,35 @@ msgid ""
 "such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,\n"
 "only the country code will be validated.\n"
 msgstr ""
+"\n"
+"Btw-validatie voor btw-nummers van partners.\n"
+"=========================================\n"
+"\n"
+"Na installatie van deze module worden waarden die zijn ingevoerd in het btw-"
+"veld van partners\n"
+"gecontroleerd via VIES voor alle ondersteunde landen. Het land wordt "
+"afgeleid uit de\n"
+"tweeletterige landcode die voor het btw-nummer staat. Bv. ``BE0477472701``\n"
+"wordt gecontroleerd volgens de Belgische regels.\n"
+"\n"
+"    * Wanneer de optie 'btw-VIES-controle' is ingeschakeld (in de "
+"configuratie van het\n"
+"      bedrijf van de gebruiker), worden btw-nummers doorgegeven aan de "
+"online EU VIES-database,\n"
+"      die daadwerkelijk controleert of het nummer geldig is en momenteel\n"
+"      toegewezen is aan een EU-bedrijf. Dit verloopt iets trager dan de "
+"eenvoudige\n"
+"      offline controle, vereist een internetverbinding en is mogelijk niet\n"
+"      altijd beschikbaar. Als de dienst niet beschikbaar is of het\n"
+"      gevraagde land niet ondersteunt (bv. voor niet-EU-landen), wordt in "
+"plaats daarvan een eenvoudige controle uitgevoerd\n"
+"      .\n"
+"\n"
+"Tot de ondersteunde landen behoren momenteel EU-landen en enkele niet-EU-"
+"landen\n"
+"zoals Chili, Colombia, Mexico, Noorwegen of Rusland. Voor niet-ondersteunde "
+"landen\n"
+"wordt alleen de landcode gecontroleerd.\n"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model,name:l10n_eu_account_vies.model_res_partner

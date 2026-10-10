@@ -5,14 +5,15 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-09-09 14:04+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-10-08 08:41+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "account_edi_ubl_cii/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -43,6 +44,23 @@ msgid ""
 "present in the `EAS list\n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 msgstr ""
+"\n"
+"Modul für elektronische Rechnungsstellung\n"
+"===========================\n"
+"\n"
+"Ermöglicht den Export und Import folgender Formate: E-FFF, UBL Bis 3, EHF3, "
+"NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"Bei der Erstellung der PDF-Datei zur Rechnung wird diese bei allen UBL-"
+"Formaten in die XML-Datei eingebettet. Dadurch kann der\n"
+"Empfänger die PDF-Datei allein anhand der XML-Datei abrufen. Beachten Sie, "
+"dass **EHF3 vollständig durch UBL Bis 3 implementiert ist** (`Referenz\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
+"#_implementation>`_).\n"
+"\n"
+"Beachten Sie, dass E-FFF, NLCIUS und XRechnung (UBL) nur für belgische, "
+"niederländische bzw. deutsche Unternehmen verfügbar sind.\n"
+"UBL Bis 3 ist nur für Unternehmen verfügbar, deren Land in der `EAS-Liste\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_ aufgeführt ist.\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -197,7 +215,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "Basishilfsmittel für CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
@@ -591,7 +609,7 @@ msgstr "Export außerhalb der EU"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/ZUGFeRD CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/ZUGFeRD CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__au
@@ -755,7 +773,7 @@ msgstr "Pro Steuer gruppierte Zeilen"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Has Grouped Lines"
-msgstr ""
+msgstr "Hat gruppierte Zeilen"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9910
@@ -803,7 +821,7 @@ msgstr "Kennitala für Island"
 #. module: account_edi_ubl_cii
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
 msgid "Import/Export electronic invoices with UBL/CII"
-msgstr ""
+msgstr "Import/Export von elektronischen Rechnungen mit UBL/CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0202
@@ -870,7 +888,7 @@ msgstr "UNECE-Code unterstützt"
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Is move lines Grouped"
-msgstr ""
+msgstr "Sind die Buchungen gruppiert"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0097
@@ -1135,6 +1153,12 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Umkehrung der Steuerschuldnerschaft: Liegt innerhalb eines Monats nach "
+"Erhalt der Rechnung kein schriftlicher Widerspruch vor, gilt dies als "
+"Anerkennung seitens des Kunden, dass er ein Steuerpflichtiger ist, der zur "
+"Abgabe regelmäßiger Steuererklärungen verpflichtet ist. Ist diese Bedingung "
+"nicht erfüllt, haftet der Kunde für die Zahlung der in diesem Zusammenhang "
+"fälligen Steuern, Zinsen und Strafen."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9947
@@ -2314,7 +2338,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-f
 msgid "VATEX-FR-F - Second-hand sales"
-msgstr ""
+msgstr "VATEX-FR-F – Verkauf von Gebrauchtwaren"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
@@ -2324,12 +2348,12 @@ msgstr "VATEX-FR-FRANCHISE - USt.-Freibetrag für Frankreich in der Basis"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-i
 msgid "VATEX-FR-I - Sales of works of art"
-msgstr ""
+msgstr "VATEX-FR-I – Verkauf von Kunstwerken"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-j
 msgid "VATEX-FR-J - Sales of antiques"
-msgstr ""
+msgstr "VATEX-FR-J – Verkauf von Antiquitäten"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9953
@@ -2375,7 +2399,7 @@ msgstr "Sie können nur Zeilen einer Rechnung gruppieren"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You need at least two lines to group them."
-msgstr ""
+msgstr "Sie benötigen mindestens zwei Zeilen, um sie zu gruppieren."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

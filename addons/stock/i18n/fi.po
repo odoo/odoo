@@ -39,12 +39,13 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-10-01 09:33+0000\n"
+"PO-Revision-Date: 2026-10-09 12:33+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/stock/"
 "fi/>\n"
@@ -1263,7 +1264,7 @@ msgstr "Toimenpiteen tila"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Toimenpiteen ikoni"
+msgstr "Toimenpidetyypin kuvake"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -2445,7 +2446,7 @@ msgstr "Valitse, tulostetaanko tuotteen vai erä-/sarjanumeron etiketit"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Clear"
-msgstr "Pyyhi"
+msgstr "Tyhjennä"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__closest_location
@@ -4618,7 +4619,7 @@ msgstr "Kuvake"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 #: model:ir.model.fields,help:stock.field_stock_picking_batch__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Kuvake joka kertoo poikkeustoiminnosta."
+msgstr "Poikkeustoimenpiteeseen viittaava kuvake."
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -5178,7 +5179,7 @@ msgstr "Inventoinnin tiheys"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Location"
-msgstr "Inventaariopaikka"
+msgstr "Varastoinnin sijainti"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
@@ -6127,7 +6128,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
 #: model:ir.model.fields,help:stock.field_stock_picking_batch__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols -kuvake, esim. muistilista"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__product_max_qty
@@ -6529,7 +6530,7 @@ msgstr "Seuraavan toimenpiteen eräpäivä"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_summary
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__activity_summary
 msgid "Next Activity Summary"
-msgstr "Seuraavan toimenpiteen kuvaus"
+msgstr "Seuraavan toimenpiteen yhteenveto"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_id
@@ -6833,7 +6834,7 @@ msgstr "Toimistotuoli"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_simple
 msgid "On Hand"
-msgstr "Varastossa"
+msgstr "Käytettävissä"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__product_qty
@@ -8239,7 +8240,7 @@ msgstr "Laadun laskentataulukko"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__quant_ids
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__quant_ids
 msgid "Quant"
-msgstr "Quant"
+msgstr "Määrä"
 
 #. module: stock
 #. odoo-python
@@ -8312,7 +8313,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity On Hand"
-msgstr "Varastosaldo"
+msgstr "Käytettävissä oleva määrä"
 
 #. module: stock
 #. odoo-javascript
@@ -10432,14 +10433,14 @@ msgid ""
 "available, the system will try to find a  rule to bring the products in the "
 "source location."
 msgstr ""
-"Ota varastosta: Tuotteet otetaan lähdepaikan varastosta.\n"
-"Käynnistä toinen sääntö: Järjestelmä yrittää löytää varastosäännön, jonka "
-"avulla tuotteet voidaan tuoda lähdepaikkaan. Käytettävissä olevaa varastoa "
-"ei oteta huomioon.\n"
-"Take From Stock, if Unavailable, Trigger Another Rule (Ota varastosta, jos "
-"ei ole saatavilla, laukaise toinen sääntö): Tuotteet otetaan lähdeviraston "
-"saatavilla olevasta varastosta.Jos varastoa ei ole saatavilla, järjestelmä "
-"yrittää löytää säännön, jolla tuotteet voidaan tuoda lähdevirastoon."
+"Ota varastosta: Tuotteet otetaan lähdesijainnin varastosta.\n"
+"Käynnistä toinen sääntö: Järjestelmä yrittää löytää varastosäännön "
+"tuotteiden tuomiseksi lähdesijaintiin. Käytettävissä olevaa varastoa ei "
+"oteta huomioon.\n"
+"Ota varastosta, jos ei ole saatavilla, laukaise toinen sääntö: Tuotteet "
+"otetaan lähdesijainnin saatavilla olevasta varastosta. Jos varastoa ei ole "
+"saatavilla, järjestelmä yrittää löytää säännön tuotteiden tuomiseksi "
+"lähdesijaintiin."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_allocation
@@ -11370,7 +11371,7 @@ msgstr "Pakkauksen kokonaispaino."
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Traceability"
-msgstr "Seuranta"
+msgstr "Jäljitettävyys"
 
 #. module: stock
 #. odoo-javascript
@@ -11379,12 +11380,12 @@ msgstr "Seuranta"
 #: model:ir.model,name:stock.model_stock_traceability_report
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_body_print
 msgid "Traceability Report"
-msgstr "Seurantaraportti"
+msgstr "Jäljitettävyysraportti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr "Seuraa inventaariota"
+msgstr "Seuraa varastoa"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry
@@ -11394,10 +11395,10 @@ msgid ""
 " Such dates are set automatically at lot/serial number creation based on "
 "values set on the product (in days)."
 msgstr ""
-"Seuraa seuraavia päivämääriä erissä ja sarjanumeroissa: parasta ennen, "
-"poisto, käyttöiän loppu, hälytys. Tällaiset päivämäärät asetetaan "
-"automaattisesti erän / sarjanumeron luomiselle tuotteelle asetettujen "
-"arvojen perusteella (päivinä)."
+"Seuraa päivämääriä erissä ja sarjanumeroissa: parasta ennen, poisto, "
+"käyttöiän loppu, hälytys. \n"
+"Tällaiset päivämäärät määritetään automaattisesti erän/sarjanumeron luomisen "
+"yhteydessä, tuotteelle määritettyjen arvojen perusteella (päivinä)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -11406,10 +11407,10 @@ msgid ""
 "life, alert. Such dates are set automatically at lot/serial number creation "
 "based on values set on the product (in days)."
 msgstr ""
-"Seuraa seuraavia päivämääriä erissä ja sarjanumeroissa: parasta ennen, "
-"poisto, käyttöiän loppu, hälytys. Tällaiset päivämäärät asetetaan "
-"automaattisesti erän / sarjanumeron luomiselle tuotteelle asetettujen "
-"arvojen perusteella (päivinä)."
+"Seuraa päivämääriä erissä ja sarjanumeroissa: parasta ennen, poisto, "
+"käyttöiän loppu, hälytys. \n"
+"Tällaiset päivämäärät määritetään automaattisesti erän/sarjanumeron luomisen "
+"yhteydessä, tuotteelle määritettyjen arvojen perusteella (päivinä)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -11604,7 +11605,7 @@ msgstr "Toiminnon tyyppi"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_picking_batch__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Poikkeusaktiviteetin tyyppi tietueella."
+msgstr "Kirjatun poikkeustoimenpiteen tyyppi."
 
 #. module: stock
 #. odoo-javascript
@@ -11717,7 +11718,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
 msgid "Update Quantities"
-msgstr "Päivitä määrä"
+msgstr "Päivitä määrät"
 
 #. module: stock
 #. odoo-javascript

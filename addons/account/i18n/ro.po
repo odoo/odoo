@@ -17,15 +17,16 @@
 # Ciocoiu Beatrice-Flavia <ciocoiuflavia008@gmail.com>, 2025.
 # Adrian Cocos <adrian.cocos@capps.ai>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Iulian Tanasa <iulian.tanasa@qbsretail.ro>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 15:57+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
-"account/ro/>\n"
+"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"PO-Revision-Date: 2026-10-06 03:33+0000\n"
+"Last-Translator: Iulian Tanasa <iulian.tanasa@qbsretail.ro>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-20/account/"
+"ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,6 +94,18 @@ msgid ""
 "This module also offers you an easy method of registering payments, without "
 "having to encode complete abstracts of account.\n"
 msgstr ""
+"\n"
+"Facturare și plăți\n"
+"====================\n"
+"Sistemul de facturare din Odoo, specializat și ușor de utilizat, vă permite "
+"să țineți evidența contabilității chiar dacă nu sunteți contabil. Oferă o "
+"modalitate simplă de a urmări relația cu furnizorii și clienții "
+"dumneavoastră.\n"
+"\n"
+"Puteți folosi această contabilitate simplificată și în cazul în care lucrați "
+"cu un contabil (extern) care vă ține evidența contabilă și doriți totuși să "
+"urmăriți plățile. Acest modul vă oferă și o metodă simplă de înregistrare a "
+"plăților, fără a fi nevoie să introduceți extrase de cont complete.\n"
 
 #. module: account
 #. odoo-python
@@ -101,6 +114,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Vă rugăm să contactați administratorul."
 
 #. module: account
 #. odoo-python
@@ -145,7 +160,7 @@ msgstr "#Creat de: %s"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "%(accrual_type)s entry as of %(date)s"
-msgstr ""
+msgstr "Înregistrare de tip %(accrual_type)s la data de %(date)s"
 
 #. module: account
 #. odoo-python
@@ -157,7 +172,7 @@ msgstr "%(action)s pentru jurnal %(journal)s"
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "%(amount).2f %(currency)s already paid."
-msgstr ""
+msgstr "%(amount).2f %(currency)s deja plătită."
 
 #. module: account
 #. odoo-python
@@ -21927,6 +21942,14 @@ msgid ""
 msgstr ""
 "Nu poți înregistra plăți pentru mișcări atât de intrare cât și de ieșire în "
 "același timp."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid ""
+"You can't reset to draft those journal entries. You need to request a "
+"cancellation instead."
+msgstr ""
 
 #. module: account
 #. odoo-python

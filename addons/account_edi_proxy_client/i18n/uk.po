@@ -3,14 +3,15 @@
 # * account_edi_proxy_client
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 19:19+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-05 13:27+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-20/"
 "account_edi_proxy_client/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
@@ -36,6 +37,19 @@ msgid ""
 "- Authentication offers an additionnal level of security to avoid "
 "impersonification, in case someone gains to the user's database.\n"
 msgstr ""
+"\n"
+"Цей модуль додає універсальні функції для реєстрації бази даних Odoo на "
+"проксі-сервері, що відповідає за отримання даних (через запити від "
+"вебсервісів).\n"
+"- Користувач `edi_proxy_user` має унікальний ідентифікатор для певного типу "
+"проксі (наприклад, `l10n_it_edi`, `peppol`), що дозволяє ідентифікувати його "
+"під час отримання адресованого йому документа. Цей користувач пов’язаний із "
+"конкретною компанією в певній базі даних Odoo.\n"
+"- Функції шифрування дозволяють розшифровувати всі дані користувача під час "
+"їх отримання від проксі-сервера.\n"
+"- Автентифікація забезпечує додатковий рівень безпеки для запобігання "
+"видаванню сторонньої особи за користувача в разі несанкціонованого доступу "
+"до його бази даних.\n"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -51,7 +65,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 msgid "A user already exists with this identification."
-msgstr ""
+msgstr "Користувач із таким ідентифікатором вже існує."
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_proxy_client_user
@@ -130,6 +144,12 @@ msgid ""
 "\n"
 "If you are not sure how to fix this, please contact our support."
 msgstr ""
+"Не вдалося підключитися до сервера Odoo Access Point. Це може бути "
+"спричинено наявністю іншого підключення до цього сервера. Така ситуація може "
+"виникнути, якщо ви створили копію своєї бази даних.\n"
+"\n"
+"Якщо ви не знаєте, як вирішити цю проблему, будь ласка, зверніться до нашої "
+"служби підтримки."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
@@ -170,7 +190,7 @@ msgstr "Тип проксі"
 #. module: account_edi_proxy_client
 #: model:ir.module.module,shortdesc:base.module_account_edi_proxy_client
 msgid "Proxy features for account_edi"
-msgstr ""
+msgstr "Проксі функція для account_edi"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
@@ -233,6 +253,9 @@ msgid ""
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
+"Це поле використовується для позначення того, що токен користувача EDI не "
+"синхронізований із проксі-сервером. Воно набуває значення True, коли токен "
+"потрібно оновити."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
@@ -242,9 +265,9 @@ msgstr "Цей id_client вже використовує інший корист
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__is_token_out_of_sync
 msgid "Token Out of Sync"
-msgstr ""
+msgstr "Токен не синхронізовано"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__token_sync_version
 msgid "Token Sync Version"
-msgstr ""
+msgstr "Версія синхронізації токена"

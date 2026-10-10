@@ -9,10 +9,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 18:10+0000\n"
-"PO-Revision-Date: 2026-08-31 16:49+0000\n"
+"PO-Revision-Date: 2026-10-05 23:38+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-4/l10n_account_withholding_tax/es_419/>\n"
+"odoo-20/l10n_account_withholding_tax/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,6 +87,8 @@ msgstr "Todas las líneas de retención deben tener el mismo pago."
 msgid ""
 "Allows users to manage withholding taxes on invoices, bills, and payments."
 msgstr ""
+"Permite gestionar las retenciones de impuestos en facturas de cliente, "
+"facturas de proveedor y pagos."
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_move__amount_residual
@@ -153,7 +155,7 @@ msgstr "Ajustes de configuración"
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_withholding_line__country_code
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_withholding_line__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "Código del país"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__create_uid
@@ -484,6 +486,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"El código ISO del país en dos caracteres.\n"
+"Puedes utilizar este campo para realizar una búsqueda rápida."
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
@@ -574,7 +578,7 @@ msgstr "Importe total retenido"
 #. module: l10n_account_withholding_tax
 #: model_terms:ir.ui.view,arch_db:l10n_account_withholding_tax.view_account_payment_register_form
 msgid "Total withheld:"
-msgstr ""
+msgstr "Total retenido:"
 
 #. module: l10n_account_withholding_tax
 #: model:ir.model.fields,field_description:l10n_account_withholding_tax.field_account_payment_register_withholding_line__type_tax_use
@@ -587,7 +591,7 @@ msgstr "Uso fiscal del impuesto"
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid "WH Base"
-msgstr ""
+msgstr "Base de retención"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
@@ -611,7 +615,7 @@ msgstr "Base de retención: %(names)s"
 #. odoo-python
 #: code:addons/l10n_account_withholding_tax/models/account_withholding_line.py:0
 msgid "WH Tax"
-msgstr ""
+msgstr "Impuesto de retención"
 
 #. module: l10n_account_withholding_tax
 #. odoo-python
