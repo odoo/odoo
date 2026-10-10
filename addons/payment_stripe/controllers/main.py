@@ -54,7 +54,7 @@ class StripeController(http.Controller):
         else:
             if tx_sudo.reference != response_content["description"]:
                 _logger.warning("Received payment data with incorrect reference")
-                raise Forbidden()
+                raise Forbidden
             if tx_sudo.operation != "validation":
                 self._include_payment_intent_in_payment_data(response_content, data)
             else:
@@ -134,10 +134,13 @@ class StripeController(http.Controller):
                     stripe_object["payment_method"] = payment_method
                     self._include_setup_intent_in_payment_data(stripe_object, data)
                 elif event["type"] == "charge.refunded":  # Refund operation (refund creation).
-                    refunds = stripe_object["refunds"]["data"]
                     if not stripe_object["captured"]:  # The charge was authorized and then voided
                         return request.make_json_response("")  # Don't process void-related events
 
+                    if "refunds" not in stripe_object:
+                        stripe_object["refunds"] = tx_sudo._send_api_request(
+                            "GET", "refunds", data={"charge": stripe_object["id"], "limit": 100}
+                        )
                     refunds = stripe_object["refunds"]["data"]
                     # The refunds linked to this charge are paginated, fetch the remaining refunds.
                     has_more = stripe_object["refunds"]["has_more"]
@@ -157,9 +160,11 @@ class StripeController(http.Controller):
                     # Include refunds of capture transactions, as they are grandchildren of the
                     # source transaction found from the charge.
                     child_txs = tx_sudo.child_transaction_ids
-                    processed_refund_ids = (child_txs | child_txs.child_transaction_ids).filtered(
-                        lambda tx: tx.operation == "refund"
-                    ).mapped("provider_reference")
+                    processed_refund_ids = (
+                        (child_txs | child_txs.child_transaction_ids)
+                        .filtered(lambda tx: tx.operation == "refund")
+                        .mapped("provider_reference")
+                    )
                     for refund in filter(lambda r: r["id"] not in processed_refund_ids, refunds):
                         refund_tx_sudo = self._create_refund_tx_from_refund(tx_sudo, refund)
                         self._include_refund_in_payment_data(refund, data)
