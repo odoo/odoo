@@ -22,6 +22,55 @@ class TestSelfOrderController(SelfOrderCommonTest):
         )
         return response.json().get('result')
 
+    def _setup_service_fee(self, **values):
+        """Configure a 10% service fee on the preset used by _create_order_data."""
+        fee_product = self.env['product.product'].create({
+            'name': 'Service Fee',
+            'type': 'service',
+            'list_price': 0.0,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.in_preset.write({
+            'service_fee': True,
+            'service_fee_product_id': fee_product.id,
+            'service_fee_type': 'percent',
+            'service_fee_amount': 0.1,
+            **values,
+        })
+        return fee_product
+
+    def _self_order_line(self, product, qty=1, **values):
+        price_unit = values.pop('price_unit', product.lst_price)
+        return [0, 0, {
+            'uuid': uuid.uuid4().hex,
+            'product_id': product.id,
+            'qty': qty,
+            'price_unit': price_unit,
+            'price_subtotal': price_unit * qty,
+            'price_subtotal_incl': price_unit * qty,
+            **values,
+        }]
+
+    def _process_service_fee_order(self, extra_lines=()):
+        """Send a cola + fanta order through the mobile route and return it."""
+        self.pos_config.self_ordering_mode = 'mobile'
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        order_data = self._create_order_data(
+            state='draft',
+            product=self.cola,
+            qty=1,
+            price_unit=self.cola.lst_price,
+            price_subtotal_incl=self.cola.lst_price,
+        )
+        order_data['order']['lines'].append(self._self_order_line(self.fanta))
+        order_data['order']['lines'].extend(extra_lines)
+
+        data = self.make_request_to_controller('/pos-self-order/process-order/mobile', order_data)
+        return self.env['pos.order'].browse(data['pos.order'][0]['id'])
+
     def test_get_orders_by_access_token(self):
         self.pos_config.self_ordering_mode = 'mobile'
         self.pos_config.with_user(self.pos_user).open_ui()
@@ -417,6 +466,75 @@ class TestSelfOrderController(SelfOrderCommonTest):
         )
         self.assertTrue(delivery_lines, "Delivery fee line should be added to the order")
         self.assertAlmostEqual(delivery_lines[0].price_unit, 5.0)
+
+    def test_service_fee_is_added_when_missing(self):
+        """The fee is mandated by the preset: a payload that drops its line must not escape it."""
+        (self.cola | self.fanta).taxes_id = False
+        fee_product = self._setup_service_fee()
+
+        order = self._process_service_fee_order()
+        fee_lines = order.lines.filtered(lambda l: l.product_id == fee_product)
+
+        self.assertEqual(len(fee_lines), 1)
+        # 10% of the whole cart (2.2 + 2.2), not of its first line only.
+        self.assertAlmostEqual(fee_lines.price_unit, 0.44, places=2)
+        self.assertAlmostEqual(order.amount_total, 4.84, places=2)
+
+    def test_service_fee_line_is_repriced(self):
+        """None of the values the payload puts on a fee line is kept."""
+        (self.cola | self.fanta).taxes_id = False
+        fee_product = self._setup_service_fee()
+
+        order = self._process_service_fee_order(extra_lines=[self._self_order_line(
+            fee_product,
+            qty=9,
+            price_unit=0.01,
+            price_type='manual',
+        )])
+        fee_lines = order.lines.filtered(lambda l: l.product_id == fee_product)
+
+        self.assertEqual(len(fee_lines), 1)
+        self.assertEqual(fee_lines.qty, 1)
+        self.assertEqual(fee_lines.price_type, 'automatic')
+        self.assertAlmostEqual(fee_lines.price_unit, 0.44, places=2)
+        self.assertAlmostEqual(order.amount_total, 4.84, places=2)
+
+    def test_service_fee_product_line_without_service_fee(self):
+        """A preset keeps a fee product when its fee is off: a line of it must not survive."""
+        (self.cola | self.fanta).taxes_id = False
+        fee_product = self.in_preset.service_fee_product_id
+
+        self.assertFalse(self.in_preset.service_fee)
+        self.assertTrue(fee_product, "the fee product has a default, the fee itself does not")
+
+        order = self._process_service_fee_order(extra_lines=[self._self_order_line(
+            fee_product,
+            price_unit=-100.0,
+        )])
+
+        self.assertFalse(order.lines.filtered(lambda l: l.product_id == fee_product))
+        self.assertAlmostEqual(order.amount_total, 4.4, places=2)
+
+    def test_service_fee_with_mixed_taxes(self):
+        """One fee line per tax group, as in the POS, each carrying its share of the fee."""
+        tax_10 = self.env['account.tax'].create({
+            'name': 'Service Fee Test 10%',
+            'amount': 10,
+            'amount_type': 'percent',
+        })
+        self.cola.taxes_id = False
+        self.fanta.taxes_id = tax_10
+        self.ketchup.taxes_id = tax_10
+        fee_product = self._setup_service_fee()
+
+        order = self._process_service_fee_order(extra_lines=[self._self_order_line(self.ketchup)])
+        fee_lines = order.lines.filtered(lambda l: l.product_id == fee_product)
+
+        # Cart of 2.2 untaxed + 2.42 taxed, so a fee of 0.46 split over the two tax groups.
+        self.assertEqual(len(fee_lines), 2)
+        self.assertEqual(fee_lines.tax_ids, tax_10)
+        self.assertAlmostEqual(sum(fee_lines.mapped('price_subtotal_incl')), 0.46, places=2)
+        self.assertAlmostEqual(order.amount_total, 5.08, places=2)
 
     def test_preparation_categories_are_loaded(self):
         """
