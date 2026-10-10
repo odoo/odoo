@@ -7,7 +7,14 @@ declare module "plugins" {
     import { FormOptionShared } from "@website/builder/plugins/form/form_option_plugin";
     import { ImageHoverShared } from "@website/builder/plugins/image/image_hover_plugin";
     import { MenuDataShared } from "@website/builder/plugins/menu_data_plugin";
-    import { AnimateOptionShared, can_have_hover_effect_predicates, can_have_scroll_effect_predicates, on_hover_animation_mode_cleaned_handlers, on_hover_animation_mode_applied_handlers } from "@website/builder/plugins/options/animate_option_plugin";
+    import {
+        AnimateOptionShared,
+        can_have_block_hover_effect_predicates,
+        can_have_image_hover_effect_predicates,
+        can_have_scroll_effect_predicates,
+        on_hover_animation_mode_cleaned_handlers,
+        on_hover_animation_mode_applied_handlers,
+    } from "@website/builder/plugins/options/animate_option_plugin";
     import { WebsiteBackgroundVideoShared } from "@website/builder/plugins/options/background_option_plugin";
     import { CardImageOptionShared } from "@website/builder/plugins/options/card_image_option_plugin";
     import { ChartOptionShared } from "@website/builder/plugins/options/chart_option_plugin";
@@ -89,7 +96,8 @@ declare module "plugins" {
         on_website_color_updated_handlers: on_website_color_updated_handlers;
 
         // Predicates
-        can_have_hover_effect_predicates: can_have_hover_effect_predicates;
+        can_have_block_hover_effect_predicates: can_have_block_hover_effect_predicates;
+        can_have_image_hover_effect_predicates: can_have_image_hover_effect_predicates;
         can_have_scroll_effect_predicates: can_have_scroll_effect_predicates;
 
         // Processors

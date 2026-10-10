@@ -22,7 +22,15 @@ export class CarouselSlidesOptionPlugin extends Plugin {
             }
         },
         anchor_excluded_selectors: ".carousel *",
+        can_have_block_hover_effect_predicates: this.canHaveHoverEffect.bind(this),
+        can_have_image_hover_effect_predicates: this.canHaveHoverEffect.bind(this),
     };
+
+    canHaveHoverEffect(el) {
+        if (el.closest("*:has(> .slide-link)")) {
+            return false;
+        }
+    }
 
     /**
      * Remove `clickable-slide` class from slides when there is no link element.
