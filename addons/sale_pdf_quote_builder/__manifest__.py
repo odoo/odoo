@@ -25,7 +25,7 @@
     'demo': [
         'data/sale_pdf_quote_builder_demo.xml',
     ],
-    'auto_install': True,
+    'auto_install': False,
     'assets': {
         'web.assets_backend': [
             'sale_pdf_quote_builder/static/src/js/**/*',

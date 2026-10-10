@@ -5,7 +5,7 @@
     'version': '1.0',
     'depends': ['account'],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
     'data': [
         'views/res_partner_views.xml',
     ],
