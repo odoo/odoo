@@ -24,8 +24,8 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
 }
 
 .o_survey_form, .o_survey_print {
-    --SurveyForm__choice-btn-bg-color: color-mix(in srgb, currentColor 4%, white);
-    --SurveyForm__choice-btn-bg-color--hover: color-mix(in srgb, currentColor 8%, white);
+    --SurveyForm__choice-btn-bg-color: #{color-mix(in srgb, currentColor 4%, $body-bg)};
+    --SurveyForm__choice-btn-bg-color--hover: #{color-mix(in srgb, currentColor 8%, $body-bg)};
 
     .o_survey_main_title_fade {
         transition: opacity 0.4s ease-in-out;
