@@ -106,11 +106,14 @@ class FileManager:
         self.addons_path = addons_path
         self.glob = glob
         self._files = {
-            str(path): FileAccessor(path, Path(addon_path))
-            for addon_path in addons_path
-            for path in Path(addon_path).glob(glob)
-            if '__pycache__' not in path.parts
+            str(path): FileAccessor(path, addon_path)
+            for apath in addons_path
+            if (addon_path := Path(apath))
+            for path in addon_path.glob(glob)
             if path.suffix in AVAILABLE_EXT
+            if (parts := path.parts)
+            if '__pycache__' not in parts
+            if '.git' not in parts
             if path.is_file()
         }
         self._summary = []
@@ -123,6 +126,13 @@ class FileManager:
 
     def get_file(self, path):
         return self._files.get(str(path))
+
+    def reset(self):
+        """Reset changes in the file manager."""
+        for file in self:
+            if file.dirty:
+                file._content = None
+                file.dirty = False
 
     def add_to_summary(self, message: str) -> None:
         if message:
@@ -157,7 +167,7 @@ def get_upgrade_code_scripts(from_version: tuple[int, ...], to_version: tuple[in
 
 
 def migrate(
-    addons_path: list[str],
+    addons_path: list[str] | FileManager,
     glob: str,
     from_version: tuple[int, ...] | None = None,
     to_version: tuple[int, ...] | None = None,
@@ -180,7 +190,11 @@ def migrate(
     else:
         modules = get_upgrade_code_scripts(from_version, to_version)
 
-    file_manager = FileManager(addons_path, glob)
+    if isinstance(addons_path, FileManager):
+        file_manager = addons_path
+        assert not glob, "FileManager given with a glob, unsupported"
+    else:
+        file_manager = FileManager(addons_path, glob)
     for (name, module) in modules:
         file_manager.print_progress(0)  # 0%
         module.upgrade(file_manager)
