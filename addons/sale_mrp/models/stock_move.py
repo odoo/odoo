@@ -15,3 +15,10 @@ class StockMove(models.Model):
 
     def _get_source_document(self):
         return self.production_id or self.raw_material_production_id or super()._get_source_document()
+
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        distribution = self.raw_material_production_id.sale_line_id.analytic_distribution
+        if distribution and not res.get('analytic_distribution'):
+            res['analytic_distribution'] = distribution
+        return res
