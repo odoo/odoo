@@ -594,6 +594,85 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         self.assertTrue(event.recurrence_id.tue)
         self.assertTrue(event.recurrence_id.fri)
 
+    def test_update_future_timezone(self):
+        for event_tz, start, extra_day in [
+            ('Australia/Melbourne', datetime(2026, 9, 13, 23, 0), 'sun'),  # Monday 09:00, Sunday in UTC
+            ('America/Mexico_City', datetime(2026, 9, 15, 4, 0), 'tue'),  # Monday 22:00, Tuesday in UTC
+        ]:
+            with self.subTest(event_tz=event_tz):
+                events = self.env['calendar.event'].create({
+                    'name': 'Recurrent Event',
+                    'start': start,
+                    'stop': start + relativedelta(hours=1),
+                    'recurrency': True,
+                    'rrule_type': 'weekly',
+                    'mon': True,
+                    'count': 4,
+                    'event_tz': event_tz,
+                }).recurrence_id.calendar_event_ids.sorted('start')
+                events[1].write({'recurrence_update': 'future_events'})
+                new_recurrence = events[1].recurrence_id
+                self.assertFalse(new_recurrence[extra_day])
+                self.assertEventDates(new_recurrence.calendar_event_ids, [(e.start, e.stop) for e in events[1:]])
+
+    def test_update_future_change_timezone(self):
+        events = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2026, 10, 4, 22, 0),  # Monday 09:00 in Melbourne, Sunday in UTC
+            'stop': datetime(2026, 10, 4, 23, 0),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'count': 3,
+            'event_tz': 'Australia/Melbourne',
+        }).recurrence_id.calendar_event_ids.sorted('start')
+        events[1].write({'recurrence_update': 'future_events', 'event_tz': 'UTC'})
+        new_recurrence = events[1].recurrence_id
+        self.assertFalse(new_recurrence.mon)
+        self.assertEventDates(new_recurrence.calendar_event_ids, [(e.start, e.stop) for e in events[1:]])
+
+    def test_all_day_update_future_timezone(self):
+        events = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start_date': datetime(2026, 10, 5),
+            'stop_date': datetime(2026, 10, 5),
+            'allday': True,
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'count': 3,
+            'event_tz': 'Pacific/Auckland',
+        }).recurrence_id.calendar_event_ids.sorted('start')
+        events[1].write({'recurrence_update': 'future_events'})
+        new_recurrence = events[1].recurrence_id
+        self.assertFalse(new_recurrence.tue)
+        self.assertEventDates(new_recurrence.calendar_event_ids, [(e.start, e.stop) for e in events[1:]])
+
+    def test_shift_all_timezone(self):
+        event = self.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2026, 10, 4, 22, 0),  # Monday 09:00 in Melbourne, Sunday in UTC
+            'stop': datetime(2026, 10, 4, 23, 0),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'mon': True,
+            'sun': True,
+            'count': 4,
+            'event_tz': 'Australia/Melbourne',
+        })
+        event.write({
+            'recurrence_update': 'all_events',
+            'start': event.start + relativedelta(hours=2),
+            'stop': event.stop + relativedelta(hours=2),
+        })
+        self.assertTrue(event.recurrence_id.sun)
+        self.assertEventDates(event.recurrence_id.calendar_event_ids, [
+            (datetime(2026, 10, 5, 0, 0), datetime(2026, 10, 5, 1, 0)),
+            (datetime(2026, 10, 11, 0, 0), datetime(2026, 10, 11, 1, 0)),
+            (datetime(2026, 10, 12, 0, 0), datetime(2026, 10, 12, 1, 0)),
+            (datetime(2026, 10, 18, 0, 0), datetime(2026, 10, 18, 1, 0)),
+        ])
+
     def test_update_name_future(self):
         # update regular event (not the base event)
         old_events = self.events[1:]
