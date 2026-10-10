@@ -44,7 +44,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:37+0000\n"
-"PO-Revision-Date: 2026-09-15 07:32+0000\n"
+"PO-Revision-Date: 2026-10-09 08:24+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/"
 "hr_holidays/fi/>\n"
@@ -2596,7 +2596,7 @@ msgstr "Seuraavan toimenpiteen eräpäivä"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_summary
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_summary
 msgid "Next Activity Summary"
-msgstr "Seuraavan toimenpiteen kuvaus"
+msgstr "Seuraavan toimenpiteen yhteenveto"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_id
@@ -2941,7 +2941,7 @@ msgstr "Yleiset vapaapäivät"
 msgid ""
 "Public holidays should be counted in the leave duration when applying for "
 "leaves"
-msgstr "Arkipyhät on laskettava mukaan loman kestoon lomia haettaessa"
+msgstr "Yleiset vapaapäivät on laskettava mukaan loman kestoon lomia haettaessa"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3393,10 +3393,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Tila aktiviteetin perusteella\n"
-"Myöhässä: Eräpäivä on menneisyydessä\n"
-"Tänään: Eräpäivä on tänään\n"
-"Suunniteltu: Tulevaisuudessa."
+"Tila toimenpiteiden perusteella\n"
+"Myöhässä: Eräpäivä on jo mennyt\n"
+"Tänään: Toimenpiteen päivämäärä on tänään\n"
+"Suunniteltu: Tulevat toimenpiteet."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__is_striked
@@ -3900,7 +3900,7 @@ msgstr "Vapaa-aikatyyppi"
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_status_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holidays_status_filter
 msgid "Time Off Types"
-msgstr "Vapaa-ajan tyypit"
+msgstr "Vapaatyypit"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
@@ -4124,7 +4124,7 @@ msgstr "Tyyppi Pyyntö Yksikkö"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_decoration
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Poikkeusaktiviteetin tyyppi tietueella."
+msgstr "Kirjatun poikkeustoimenpiteen tyyppi."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz
@@ -4488,10 +4488,10 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
-"Et voi muuttaa asetusta \"Sisältää yleiset vapaapäivät\", koska yksi tai "
-"useampi kyseisen                         lomatyypin varauksista on "
-"päällekkäinen yleisten vapaapäivien kanssa. Se tarkoittaa, että muutos "
-"vaikuttaisi kyseisten työntekijöiden lomasaldoon."
+"Et voi muuttaa 'Yleinen vapaapäivä sisältyy' -asetusta, koska yksi tai "
+"useampi kyseisen                         tyyppinen vapaa osuu päällekkäin "
+"julkisten vapaapäivien kanssa, mikä tarkoittaa, että tämä muutos vaikuttaisi "
+"kyseisten työntekijöiden lomapäivien saldoon."
 
 #. module: hr_holidays
 #. odoo-python

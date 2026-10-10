@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-07-06 19:19+0000\n"
+"PO-Revision-Date: 2026-10-06 17:22+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
 "website_hr_recruitment/sl/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -38,12 +38,20 @@ msgid ""
 "            <h6>4 Days after Interview</h6>\n"
 "        "
 msgstr ""
+"            <span class=\"text-muted small\">Čas do odgovora</span>\n"
+"            <h6>2 delovna dneva</h6>\n"
+"            <span class=\"text-muted small\">Postopek</span>\n"
+"            <h6>1 telefonski klic</h6>\n"
+"            <h6>1 razgovor na lokaciji</h6>\n"
+"            <span class=\"text-muted small\">Dni do ponudbe</span>\n"
+"            <h6>4 dni po razgovoru</h6>\n"
+"        "
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 msgid " In case of issue, contact %(contact_infos)s"
-msgstr ""
+msgstr "V primeru težav se obrnite na %(contact_infos)s"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -59,7 +67,7 @@ msgstr "'. Prikazani rezultati za '"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "12 days / year, including <br/>6 of your choice."
-msgstr ""
+msgstr "12 dni/leto, vključno s <br/>6 po vaši izbiri."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.view_hr_job_kanban_referal_extends
@@ -76,7 +84,7 @@ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
 msgid "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>All Jobs"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-left text-primary me-2\"/>Vsa delovna mesta"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -84,11 +92,13 @@ msgid ""
 "<i class=\"fa fa-suitcase fa-fw\" title=\"Employment type\" role=\"img\" "
 "aria-label=\"Employment type\"/>"
 msgstr ""
+"<i class=\"fa fa-suitcase fa-fw\" title=\"Vrsta zaposlitve\" role=\"img\" "
+"aria-label=\"Vrsta zaposlitve\"/>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<i class=\"oi oi-arrow-left\"/> Job Description"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-left\"/> Opis delovnega mesta"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -107,6 +117,9 @@ msgid ""
 "                                            <span class=\"h3 mt8 mb32 fw-"
 "bold\">Take a look around our website:</span>"
 msgstr ""
+"<span class=\"h5 fw-light\">Medtem,</span><br/>\n"
+"                                            <span class=\"h3 mt8 mb32 fw-"
+"bold\">Oglejte si našo spletno stran:</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -116,27 +129,27 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"s_website_form_label_content\">Department</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Oddelek</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"s_website_form_label_content\">Job</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Delovno mesto</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"s_website_form_label_content\">LinkedIn Profile</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Profil LinkedIn</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"s_website_form_label_content\">Resume</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Življenjepis</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"s_website_form_label_content\">Short Introduction</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Kratek uvod</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -145,6 +158,9 @@ msgid ""
 "                                                <span "
 "class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Vaš e-poštni naslov</span>\n"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -153,6 +169,9 @@ msgid ""
 "                                                <span "
 "class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Vaše ime</span>\n"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -161,26 +180,30 @@ msgid ""
 "                                                <span "
 "class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Vaša telefonska številka</span>"
+"\n"
+"                                                <span "
+"class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"text-muted small\">Department</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">Oddelek</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"text-muted small\">Employment Type</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">Vrsta zaposlitve</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"text-muted small\">Job</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">Delovno mesto</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"text-muted small\">Location</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\">Lokacija</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -188,6 +211,8 @@ msgid ""
 "<span class=\"text-muted small\">Provide either a resume file or a linkedin "
 "profile</span>"
 msgstr ""
+"<span class=\"text-muted small\">Navedite datoteko z življenjepisom ali "
+"profil na LinkedInu</span>"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -204,7 +229,7 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "A full-time position <br/>Attractive salary package."
-msgstr ""
+msgstr "Delovno mesto s polnim delovnim časom <br/>Privlačen paket plač."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -258,6 +283,8 @@ msgid ""
 "An application already exists for %(value)s. Duplicates might be rejected. %"
 "(recruiter_contact)s"
 msgstr ""
+"Prijava za %(value)s že obstaja. Podvojene prijave bodo morda zavrnjene. %"
+"(recruiter_contact)s"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_applicant
@@ -267,7 +294,7 @@ msgstr "Kandidat"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Application Info"
-msgstr ""
+msgstr "Informacije o aplikaciji"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -304,6 +331,21 @@ msgid ""
 "                        spirit. To be successful, you will have solid "
 "solving problem skills."
 msgstr ""
+"Kot zaposleni v našem podjetju boste <b>sodelovali z vsakim oddelkom\n"
+"                        pri ustvarjanju in uvajanju prelomnih izdelkov.</b> "
+"Pridružite se rastočemu podjetju\n"
+"                        ki ponuja odlične ugodnosti ter priložnosti za "
+"napredovanje in učenje\n"
+"                        ob boku izkušenih vodij. Iščemo izkušenega in "
+"izjemnega\n"
+"                        člana ekipe.\n"
+"                        <br/><br/>\n"
+"                        To delovno mesto je po naravi hkrati <b>ustvarjalno "
+"in zahtevno</b>, zato morate razmišljati\n"
+"                        zunaj ustaljenih okvirov. Pričakujemo, da bo "
+"kandidat proaktiven in bo imel duh »naredimo«.\n"
+"                        Za uspeh boste potrebovali dobre veščine reševanja "
+"problemov."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -314,7 +356,7 @@ msgstr "Avtonomija"
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "Autosave"
-msgstr ""
+msgstr "Samodejno shranjevanje"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -330,6 +372,8 @@ msgstr "Lahko objavite"
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__job_details
 msgid "Complementary information that will appear on the job submission page"
 msgstr ""
+"Dodatne informacije, ki bodo prikazane na strani za oddajo prijave na "
+"delovno mesto"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -350,7 +394,7 @@ msgstr "Kopirano"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Countries Filter"
-msgstr ""
+msgstr "Filter držav"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -362,6 +406,8 @@ msgstr "Ustvarjajte vsebino, ki bo našim uporabnikom v pomoč vsak dan"
 msgid ""
 "Create new job pages from the <strong>+ <i>New</i></strong> top-right button."
 msgstr ""
+"Ustvarite nove strani delovnih mest z gumbom <strong>+ <i>Novo</i></strong> "
+"v zgornjem desnem kotu."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -378,7 +424,7 @@ msgstr "Oddelek"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Departments Filter"
-msgstr ""
+msgstr "Filter oddelkov"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.jobs_searchbar_input_snippet_options
@@ -407,6 +453,13 @@ msgid ""
 "                    sports sessions, team building events, monthly drink, "
 "and much more"
 msgstr ""
+"Vsak zaposleni ima priložnost videti vpliv svojega dela.\n"
+"                    Lahko resnično prispevate k uspehu podjetja.\n"
+"                    <br/>\n"
+"                    Čez vse leto se pogosto organizira več dejavnosti, kot "
+"so tedenski\n"
+"                    športni treningi, dogodki za krepitev timskega duha, "
+"mesečna pijača in še veliko več"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -416,7 +469,7 @@ msgstr "Jej &amp; Pij"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Employment Types Filter"
-msgstr ""
+msgstr "Filter tipov zaposlitve"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -441,7 +494,7 @@ msgstr "Sledite nam"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Fruit, coffee and <br/>snacks provided."
-msgstr ""
+msgstr "Zagotovljeno sadje, kava in <br/>prigrizki."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -477,23 +530,33 @@ msgid ""
 "don't get news from me\n"
 "                                                quickly enough."
 msgstr ""
+"Običajno <strong>na prijave odgovorim v 3 dneh</strong>.\n"
+"                                                <br/><br/>\n"
+"                                                Naslednji korak je klic ali "
+"sestanek v naših prostorih.\n"
+"                                                <br/><br/>\n"
+"                                                Lahko me <strong>"
+"kontaktirate, če želite hitrejši\n"
+"                                                odgovor</strong> ali če od "
+"mene dovolj hitro ne prejmete novic.\n"
+"                                                "
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "I'm feeling lucky"
-msgstr ""
+msgstr "Imam srečo"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid ""
 "If checked, the record will be saved immediately when the field is modified."
-msgstr ""
+msgstr "Če je potrjeno, bo zapis takoj shranjen, ko bo polje spremenjeno."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Insert a Job Description..."
-msgstr ""
+msgstr "Vstavite opis delovnega mesta..."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_published
@@ -513,7 +576,7 @@ msgstr "Opis dela"
 #. module: website_hr_recruitment
 #: model:ir.actions.act_window,name:website_hr_recruitment.action_job_pages_list
 msgid "Job Pages"
-msgstr ""
+msgstr "Strani delovnih mest"
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_hr_job
@@ -529,7 +592,7 @@ msgstr "Naziv delovnega mesta"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Job not found"
-msgstr ""
+msgstr "Delovno mesto ni najdeno"
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -544,7 +607,7 @@ msgstr "Zaposlitve"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Jobs Page"
-msgstr ""
+msgstr "Stran z delovnimi mesti"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -615,12 +678,13 @@ msgstr ""
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
 msgid "Offices Filter"
-msgstr ""
+msgstr "Filter pisarn"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Optional introduction, or any question you might have about the job…"
 msgstr ""
+"Neobvezen uvod ali katero koli vprašanje, ki ga morda imate o delovnem mestu…"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_filter_by_departments
@@ -661,13 +725,13 @@ msgstr "Telefonska številka"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Play any sport with colleagues, <br/>the bill is covered."
-msgstr ""
+msgstr "Igrajte kateri koli šport s sodelavci, <br/>račun je pokrit."
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__job_details
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.hr_job_form_inherit
 msgid "Process Details"
-msgstr ""
+msgstr "Podrobnosti postopka"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
@@ -736,19 +800,19 @@ msgstr "Seo ime"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_published
 msgid "Set if the application is published on the website of the company."
-msgstr ""
+msgstr "Nastavite, če je prijava objavljena na spletnem mestu podjetja."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
 msgid "Share Job"
-msgstr ""
+msgstr "Deli delovno mesto"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 msgid "Short Introduction"
-msgstr ""
+msgstr "Kratka uvodna predstavitev"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.snippet_options
@@ -784,19 +848,19 @@ msgstr "Polna URL povezava za dostop do dokumenta preko spletne strani."
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/widgets/copy_link_menuitem.js:0
 msgid "The job link has been copied to the clipboard."
-msgstr ""
+msgstr "Povezava do delovnega mesta je bila kopirana v odložišče."
 
 #. module: website_hr_recruitment
 #. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 msgid "The job offer has been closed."
-msgstr ""
+msgstr "Ponudba za delo je bila zaprta."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_applicant_form.js:0
 msgid "The profile that you gave us doesn't seems like a linkedin profile"
-msgstr ""
+msgstr "Profil, ki ste nam ga posredovali, ni videti kot profil LinkedIna"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -805,17 +869,20 @@ msgid ""
 "                                            but feel free to <span "
 "class=\"fw-bold\">contact us</span> for a spontaneous application."
 msgstr ""
+"Trenutno ni odprtih delovnih mest,<br class=\"mb-2\"/>\n"
+"                                            vendar nas lahko <span "
+"class=\"fw-bold\">kontaktirate</span> z odprto prijavo."
 
 #. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/fields/boolean_toggle_labeled_field.js:0
 msgid "ToggleLabeled"
-msgstr ""
+msgstr "Preklop z oznako"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_recruitment_source__url
 msgid "Tracker URL"
-msgstr ""
+msgstr "URL sledilnika"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -845,6 +912,10 @@ msgid ""
 "                                We build great products to solve your "
 "business problems."
 msgstr ""
+"Smo ekipa strastnih ljudi, katerih cilj je izboljšati življenje vseh z "
+"revolucionarnimi izdelki.\n"
+"                                Ustvarjamo odlične izdelke za reševanje "
+"vaših poslovnih težav."
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -853,6 +924,8 @@ msgid ""
 "We found a recent application with a similar name, email, phone number. You "
 "can continue if it's not a mistake."
 msgstr ""
+"Našli smo nedavno prijavo s podobnim imenom, e-poštnim naslovom in "
+"telefonsko številko. Nadaljujete lahko, če ne gre za napako."
 
 #. module: website_hr_recruitment
 #. odoo-python
@@ -861,6 +934,8 @@ msgid ""
 "We've found a previous closed application in our system within the last 6 "
 "months. Please consider before applying in order not to duplicate efforts."
 msgstr ""
+"V našem sistemu smo v zadnjih 6 mesecih našli predhodno zaključeno prijavo. "
+"Preden se prijavite, prosimo, razmislite, da ne bi podvajali dela."
 
 #. module: website_hr_recruitment
 #: model:ir.model,name:website_hr_recruitment.model_website
@@ -916,12 +991,12 @@ msgstr "Kaj je v službi odličnega?"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
 msgid "Your <b>contact</b> information is:"
-msgstr ""
+msgstr "Vaši <b>kontaktni</b> podatki so:"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -941,6 +1016,8 @@ msgid ""
 "Your application has been posted successfully,<br class=\"mb-2\"/>\n"
 "                                    We usually respond within 3 days..."
 msgstr ""
+"Vaša prijava je bila uspešno oddana,<br class=\"mb-2\"/>\n"
+"                                    Običajno odgovorimo v 3 dneh..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -953,11 +1030,13 @@ msgid ""
 "e.g. Summarize the position in one or two lines that will be displayed on "
 "the Jobs list page..."
 msgstr ""
+"npr. Povzemite delovno mesto v eni ali dveh vrsticah, ki bosta prikazani na "
+"strani s seznamom delovnih mest..."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "e.g. https://www.linkedin.com/in/fpodoo"
-msgstr ""
+msgstr "npr. https://www.linkedin.com/in/fpodoo"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_right_side_bar
@@ -967,12 +1046,12 @@ msgstr "info@vašepodjetje.example.com"
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__full_url
 msgid "job URL"
-msgstr ""
+msgstr "URL delovnega mesta"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "open position"
-msgstr ""
+msgstr "Odprto delovno mesto"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
