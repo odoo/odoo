@@ -54,6 +54,7 @@ export class EmployeeFormController extends FormController {
                     this.dialogService.add(MultiVersionUpdateConfirmationDialog, {
                         title: "Apply changes to next versions?",
                         version_changes: version_changes_to_display,
+                        record,
                         cancel: () => resolve(false),
                         change_current: () => resolve(true),
                         change_multi: async () => {
