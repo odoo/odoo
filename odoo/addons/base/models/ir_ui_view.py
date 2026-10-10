@@ -1780,6 +1780,45 @@ actual arch.
         # reuse form view post-processing
         self._postprocess_tag_form(node, name_manager, node_info)
 
+    def _validate_tag_schedulecard(self, node, name_manager, node_info):
+        if not node_info['validate']:
+            return
+
+        templates_count = 0
+        for child in node.iterchildren(tag=etree.Element):
+            if child.tag == 'templates':
+                templates_count += 1
+                if templates_count > 1:
+                    msg = _('Schedulecard can contain only one templates tag')
+                    self._raise_view_error(msg, child)
+            elif child.tag != 'field':
+                msg = _('Schedulecard child can only be field or templates, got %s', child.tag)
+                self._raise_view_error(msg, child)
+
+        card_id = node.get('card_id')
+        if card_id and not card_id.isdigit():
+            msg = _("Invalid card_id '%s' in schedulecard, it must be a view id", card_id)
+            self._raise_view_error(msg, node)
+        if not card_id and not templates_count:
+            msg = _('Schedulecard must have a card_id attribute or a templates tag')
+            self._raise_view_error(msg, node)
+
+        remaining = set(node.attrib) - {'__validate__', 'card_id'}
+        if remaining:
+            msg = _(
+                "Invalid attributes (%(invalid_attributes)s) in schedulecard. Attributes must be in (card_id)",
+                invalid_attributes=remaining,
+            )
+            self._raise_view_error(msg, node)
+
+    def _postprocess_tag_schedulecard(self, node, name_manager, node_info):
+        # Like popovers, inline templates take precedence over the card view referenced
+        # by 'card_id': the card is only inlined when there are none.
+        card_id = node.get('card_id')
+        if card_id and card_id.isdigit() and node.find('templates') is None:
+            card_arch, _card_view = self._get_view(view_id=int(card_id), view_type='card')
+            node.append(card_arch)
+
     #-------------------------------------------------------------------
     # view editability
     #-------------------------------------------------------------------

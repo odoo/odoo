@@ -12,15 +12,28 @@
         </div>
         <div t-ref="this.rootRef" class="d-flex flex-column" t-att-class="{ 'd-none': this.collapsed() }">
             <div 
-                class="align-items-center cursor-pointer o_event_to_schedule_draggable py-1 text-truncate"
+                class="align-items-center cursor-pointer o_event_to_schedule_draggable py-1"
+                t-att-class="{o_event_to_schedule_draggable_card: this.props.model.meta.schedulecard}"
                 t-foreach="this.props.model.data.eventsToSchedule.records"
                 t-as="event"
                 t-key="event.id"
-                t-att-data-res-id="event.id" 
+                t-att-data-res-id="event.id"
+                t-att-data-display-name="event.display_name"
                 t-on-click="() => this.openRecord(event)"
             >
-                <i class="oi o_event_to_schedule_handle" data-icon="drag_indicator"/>
-                <span class="ps-1 min-w-0 text-truncate" t-out="event.display_name" t-att-title="event.display_name"/>
+                <Record t-if="this.props.model.meta.schedulecard"
+                    resModel="this.props.model.meta.resModel"
+                    resId="event.id"
+                    values="event"
+                    activeFields="this.props.model.meta.schedulecard.activeFields"
+                    fields="this.props.model.meta.schedulecard.fields"
+                    t-slot-scope="data">
+                    <CardRenderer record="data.record" archInfo="this.props.model.meta.schedulecard.archInfo" />
+                </Record>
+                <div t-else="" class="text-truncate">
+                    <i class="oi o_event_to_schedule_handle" data-icon="drag_indicator"/>
+                    <span class="ps-1 min-w-0 " t-out="event.display_name" t-att-title="event.display_name"/>
+                </div>
             </div>
         </div>
         <button t-if="this.displayLoadMoreButton" class="btn btn-link" t-on-click="() => this.props.model.loadMoreEventsToSchedule()">

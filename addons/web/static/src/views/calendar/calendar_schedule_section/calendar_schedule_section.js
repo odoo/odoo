@@ -1,8 +1,14 @@
 import { Component, onMounted, signal, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { Record } from "@web/model/record";
+import { CardRenderer } from "@web/views/card/card_renderer";
 
 export class CalendarScheduleSection extends Component {
     static template = "web.CalendarScheduleSection";
+    static components = {
+        Record,
+        CardRenderer,
+    };
     props = useProps({
         model: t.object(),
         editRecord: t.function(),
@@ -15,7 +21,7 @@ export class CalendarScheduleSection extends Component {
                 itemSelector: ".o_event_to_schedule_draggable",
                 eventData: function (el) {
                     return {
-                        title: el.innerText,
+                        title: el.dataset.displayName,
                         id: el.dataset.resId,
                     };
                 },

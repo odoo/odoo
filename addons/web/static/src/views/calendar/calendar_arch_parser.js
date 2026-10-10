@@ -2,6 +2,8 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { visitXML } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
+import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
+import { CardArchParser } from "@web/views/card/card_arch_parser";
 
 const FIELD_ATTRIBUTE_NAMES = ["date_start", "date_stop", "all_day", "create_name_field", "color"];
 const SCALES = ["day", "week", "month", "year"];
@@ -57,12 +59,22 @@ export class CalendarArchParser {
         const showUnusualDays = exprToBoolean(xmlDoc.getAttribute("show_unusual_days"));
 
         let popoverNode;
+        let schedulecard;
         const popoverFieldNodes = {};
         const filtersInfo = {};
         visitXML(xmlDoc, (node) => {
             switch (node.tagName) {
                 case "popover": {
                     popoverNode = node;
+                    return false;
+                }
+                case "schedulecard": {
+                    const cardArchParser = new CardArchParser();
+                    const archInfo = cardArchParser.parse(node, models, modelName);
+                    schedulecard = {
+                        archInfo,
+                        ...extractFieldsFromArchInfo(archInfo, models[modelName].fields),
+                    };
                     return false;
                 }
                 case "field": {
@@ -147,6 +159,7 @@ export class CalendarArchParser {
             scales,
             showUnusualDays,
             showDatePicker,
+            schedulecard,
         };
     }
 }
