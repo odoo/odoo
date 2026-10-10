@@ -119,12 +119,12 @@
                                                     aria-label="Add to compare"
                                                     t-att-data-product-id="wish.product_id.id"
                                                 >
-                                                    <i class="oi oi-fw" data-icon="swap_horiz" role="presentation"/>
+                                                    <i class="oi oi-fw" data-icon="swap_horiz" role="img" aria-hidden="true"/>
                                                 </button>
 
                                                 <!-- Render placeholder when product is not comparable to ensure alignment -->
                                                 <div t-else="" class="o_add_to_compare_placeholder btn btn-light pe-none opacity-0">
-                                                    <i class="oi oi-fw" data-icon="swap_horiz" aria-hidden="true"/>
+                                                    <i class="oi oi-fw" data-icon="swap_horiz" role="img" aria-hidden="true"/>
                                                 </div>
                                             </t>
                                         </div>
@@ -136,8 +136,9 @@
                                             type="button"
                                             class="btn btn-light o_wish_rm z-3 rounded-pill lh-1"
                                             title="Remove from wishlist"
+                                            aria-label="Remove from wishlist"
                                         >
-                                            <i class="oi" data-icon="close" role="presentation"/>
+                                            <i class="oi" data-icon="close" role="img" aria-hidden="true"/>
                                         </button>
                                     </t>
                                     <t t-set="product_extra_information">
@@ -145,7 +146,7 @@
                                             t-if="wish.product_id._is_sold_out() and not wish.product_id.allow_out_of_stock_order"
                                             class="o_wsale_stock_badge badge text-bg-danger align-self-start align-top"
                                         >
-                                            <i class="oi oi-filled text-danger me-1" data-icon="circle" aria-hidden="true"/>
+                                            <i class="oi oi-filled text-danger me-1" data-icon="circle" role="img" aria-hidden="true"/>
                                             Out of stock
                                         </span>
                                     </t>

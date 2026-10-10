@@ -211,7 +211,7 @@
                 <t t-call="website_blog.s_dynamic_snippet_template_teaser"
                     teaser_custom_class.f="lead h4-fs"/>
             </a>
-            <a class="btn btn-primary d-lg-none w-100 w-sm-auto mt-4" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Read Now <i class="oi" data-icon="east" role="presentation"/></a>
+            <a class="btn btn-primary d-lg-none w-100 w-sm-auto mt-4" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Read Now <i class="oi" data-icon="east" role="img" aria-hidden="true"/></a>
         </div>
     </t>
 </template>
@@ -235,7 +235,7 @@
                     <t t-call="website_blog.s_dynamic_snippet_template_category"/>
                 </div>
                 <t t-call="website_blog.s_dynamic_snippet_template_teaser" teaser_custom_class.f="lead"/>
-                <a class="btn btn-primary" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Read Now <i class="oi" data-icon="east" role="presentation"/></a>
+                <a class="btn btn-primary" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Read Now <i class="oi" data-icon="east" role="presentation" aria-hidden="true"/></a>
             </div>
             <div class="col-lg-5 order-1 order-lg-2 h-auto mb-4 mb-lg-0">
                 <t t-call="website.record_cover"
@@ -267,7 +267,7 @@
                     <t t-call="website_blog.s_dynamic_snippet_template_category"/>
                 </div>
                 <p class="lead" t-field="record.subtitle"/>
-                <a class="btn btn-primary w-100 w-sm-auto" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Read Now <i class="oi" data-icon="east" role="presentation"/></a>
+                <a class="btn btn-primary w-100 w-sm-auto" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Read Now <i class="oi" data-icon="east" role="presentation" aria-hidden="true"/></a>
             </div>
             <div class="col-12 col-sm-4 mb-3 mb-lg-0">
                 <t t-call="website.record_cover"
@@ -295,7 +295,7 @@
                             in <span t-field="record.blog_id.name"/>
                         </span>
                     </span>
-                    <span class="text-primary text-nowrap">Read Now <i class="oi" data-icon="east"/></span>
+                    <span class="text-primary text-nowrap">Read Now <i class="oi" data-icon="east" role="img" aria-hidden="true"/></span>
                 </span>
             </a>
         </div>

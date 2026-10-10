@@ -77,13 +77,13 @@
                         <div class="me-2 text-muted">Filter by:</div>
                         <ul class="nav nav-tabs border-bottom-0" id="myTab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active spam_menu" id="user-tab" data-bs-toggle="tab" href="#spam_user" role="tab" aria-controls="user" aria-selected="true"><i class="oi oi-filled" data-icon="person"/> User</a>
+                                <a class="nav-link active spam_menu" id="user-tab" data-bs-toggle="tab" href="#spam_user" role="tab" aria-controls="user" aria-selected="true"><i class="oi oi-filled" data-icon="person" role="img" aria-hidden="true"/> User</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link spam_menu" id="country-tab" data-bs-toggle="tab" href="#spam_country" role="tab" aria-controls="spam_country" aria-selected="false"><i class="oi oi-filled" data-icon="flag"/> Country</a>
+                                <a class="nav-link spam_menu" id="country-tab" data-bs-toggle="tab" href="#spam_country" role="tab" aria-controls="spam_country" aria-selected="false"><i class="oi oi-filled" data-icon="flag" role="img" aria-hidden="true"/> Country</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link spam_menu" id="character-tab" data-bs-toggle="tab" href="#spam_character" role="tab" aria-controls="spam_character" aria-selected="false"><i class="oi" data-icon="text_fields"/> Text</a>
+                                <a class="nav-link spam_menu" id="character-tab" data-bs-toggle="tab" href="#spam_character" role="tab" aria-controls="spam_character" aria-selected="false"><i class="oi" data-icon="text_fields" role="img" aria-hidden="true"/> Text</a>
                             </li>
                         </ul>
                         <button type="button" class="btn-close align-self-start" data-bs-dismiss="modal"></button>
@@ -171,7 +171,7 @@
                                     show_name="True"
                                     compact="True"/>
                                 <small class="text-muted">
-                                    <i class="oi oi-filled ms-4 me-1" data-icon="calendar_today"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                                    <i class="oi oi-filled ms-4 me-1" data-icon="calendar_today" role="img" aria-hidden="true"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
                                 </small>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
                                 show_name="True"
                                 compact="True"/>
                             <small class="text-muted">
-                                <i class="oi oi-filled ms-4 me-1" data-icon="calendar_today"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                                <i class="oi oi-filled ms-4 me-1" data-icon="calendar_today" role="img" aria-hidden="true"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
                             </small>
                         </div>
                     </div>
@@ -214,17 +214,17 @@
                             <form t-else="" method="POST" t-attf-action="#{ post_url }/validate" title="Validate" aria-label="Validate">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <button type="submit" class="btn btn-outline-success w-100 flex-grow-1">
-                                    <i class="oi" data-icon="check"/><span class="ms-2">Accept</span>
+                                    <i class="oi" data-icon="check" role="img" aria-hidden="true"/><span class="ms-2">Accept</span>
                                 </button>
                             </form>
                             <form t-if="queue_type == 'validation'" method="POST" t-attf-action="#{ post_url }/refuse" title="Refuse" aria-label="Refuse">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <button type="submit" class="btn btn-outline-danger w-100 flex-grow-1">
-                                    <i class="oi" data-icon="close"/><span class="ms-2">Reject</span>
+                                    <i class="oi" data-icon="close" role="img" aria-hidden="true"/><span class="ms-2">Reject</span>
                                 </button>
                             </form>
-                            <a t-if="queue_type == 'flagged'" t-attf-href="#{ post_url }/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive" class="btn btn-outline-danger flex-grow-1"><i class="oi" data-icon="close"/><span class="ms-2">Offensive</span></a>
-                            <a t-if="queue_type == 'offensive'" href="#" disabled="disabled" aria-label="Offensive" title="Offensive" class="btn btn-outline-danger flex-grow-1"><i class="oi" data-icon="close"/><span class="ms-2">Offensive</span></a>
+                            <a t-if="queue_type == 'flagged'" t-attf-href="#{ post_url }/ask_for_mark_as_offensive" aria-label="Mark as offensive" title="Mark as offensive" class="btn btn-outline-danger flex-grow-1"><i class="oi" data-icon="close" role="img" aria-hidden="true"/><span class="ms-2">Offensive</span></a>
+                            <a t-if="queue_type == 'offensive'" href="#" disabled="disabled" aria-label="Offensive" title="Offensive" class="btn btn-outline-danger flex-grow-1"><i class="oi" data-icon="close" role="img" aria-hidden="true"/><span class="ms-2">Offensive</span></a>
                         </div>
                     </div>
                 </div>

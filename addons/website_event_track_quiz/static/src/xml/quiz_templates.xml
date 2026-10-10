@@ -20,9 +20,9 @@
                                         t-att-name="question.id"
                                         t-att-value="answer.id"
                                         class="d-none"/>
-                                    <i t-att-class="'oi oi-filled text-400' + (!(this.widget.track.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')" data-icon="circle"></i>
-                                    <i class="oi oi-filled text-danger d-none" data-icon="cancel"></i>
-                                    <i t-att-class="'oi oi-filled text-success' + (this.widget.track.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')" data-icon="check_circle"></i>
+                                    <i t-att-class="'oi oi-filled text-400' + (!(this.widget.track.completed &amp;&amp; answer.is_correct) ? '' : ' d-none')" data-icon="circle" role="img" aria-label="Answer not set"></i>
+                                    <i class="oi oi-filled text-danger d-none" data-icon="cancel" role="img" aria-label="Wrong answer"></i>
+                                    <i t-att-class="'oi oi-filled text-success' + (this.widget.track.completed &amp;&amp; answer.is_correct ? '' :  ' d-none')" data-icon="check_circle" role="img" aria-label="Correct answer"></i>
                                 </label>
                                 <span t-out="answer.text_value"/>
                             </a>
@@ -44,7 +44,7 @@
     <t t-name="quiz.comment">
         <t t-if="answer.is_correct">
             <div class="o_quiz_quiz_answer_info list-group-item list-group-item-success">
-                <i class="oi" data-icon="info"/>
+                <i class="oi" data-icon="info" role="img" aria-hidden="true"/>
                 Correct.
                 <t t-if="answer.comment">
                     <br/>
@@ -54,7 +54,7 @@
         </t>
         <t t-else="">
             <div class="o_quiz_quiz_answer_info list-group-item list-group-item-danger">
-                <i class="oi" data-icon="info"/>
+                <i class="oi" data-icon="info" role="img" aria-hidden="true"/>
                 Incorrect. <t t-if="answer.correct_answer">The correct answer was: <t t-out="answer.correct_answer"/></t>
                 <t t-if="answer.comment">
                     <br/>

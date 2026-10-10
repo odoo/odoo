@@ -39,7 +39,7 @@ const TEMPLATES = {
                     class="form-control"
                     name="age_verification_birth_date"
                     placeholder="Enter your birth date"/>
-                <div><i class="fa fa-calendar"></i></div>
+                <div><i class="oi oi-filled" data-icon="calendar_today" role="img" aria-hidden="true"></i></div>
             </div>
             <p><a href="#" class="o_age_verification_btn o_age_verification_date_btn oe_unremovable">Verify</a></p>
         </div>

@@ -102,7 +102,7 @@ export class SnippetModel {
 
         this.dialog.add(ConfirmationDialog, {
             title: _t("Install %s", snippet.moduleDisplayName),
-            body: markup`${bodyText}\n<a href="${linkUrl}" target="_blank"><i class="oi me-1" data-icon="east"></i>${linkText}</a>`,
+            body: markup`${bodyText}\n<a href="${linkUrl}" target="_blank"><i class="oi me-1" data-icon="east" role="img" aria-hidden="true"></i>${linkText}</a>`,
             confirm: async () => installSnippetModule(snippet),
             confirmLabel: _t("Save and Install"),
             cancel: () => {},

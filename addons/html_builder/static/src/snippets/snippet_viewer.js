@@ -78,7 +78,7 @@ export class SnippetViewer extends Component {
             icons.push({
                 keyClass: "o_prefix_conditional",
                 title: "Conditionally visible",
-                content: markup`<span class="oi" data-icon="visibility_off"/>`,
+                content: markup`<span class="oi" data-icon="visibility_off" role="img" aria-hidden="true"/>`,
             });
         }
         return icons;
