@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="website_sale_stock.locationSelector.schedule">
+    <t t-name="website.locationSelector.schedule">
         <span t-attf-class="o_location_selector_schedule d-grid gap-1 #{this.props.wrapClass}">
             <t t-foreach="this.props.openingHours" t-as="openingHour" t-key="openingHour_index">
-                <t t-call="website_sale_stock.locationSelector.dailySchedule"
+                <t t-call="website.locationSelector.dailySchedule"
                     weekday="openingHour_index"
                     openingPeriods="openingHour_value"/>
             </t>
         </span>
     </t>
 
-    <t t-name="website_sale_stock.locationSelector.dailySchedule">
+    <t t-name="website.locationSelector.dailySchedule">
         <span class="d-contents">
             <small class="me-4 text-muted" t-out="this.getWeekDay(weekday)"/>
             <span class="o_location_selector_schedule_hours d-flex flex-wrap">

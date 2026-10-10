@@ -2,6 +2,7 @@
 
 from unittest.mock import patch
 
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
@@ -53,3 +54,50 @@ class TestStockWarehouse(ClickAndCollectCommon):
             ) as geo_localize_mock:
                 self.warehouse._prepare_pickup_location_data()
                 self.assertFalse(geo_localize_mock.called)
+
+
+@tagged('post_install', '-at_install')
+class TestStockWarehouseOpeningHours(ClickAndCollectCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.calendar = cls.env['resource.calendar'].create({
+            'name': "Test Opening Hours",
+            'company_id': cls.warehouse.company_id.id,
+            'attendance_ids': [
+                Command.create({'dayofweek': '0', 'hour_from': 8, 'hour_to': 12.5}),
+                Command.create({'dayofweek': '1', 'hour_from': 0, 'hour_to': 24}),
+            ],
+        })
+        cls.warehouse.opening_hours = cls.calendar
+
+    def test_format_opening_hours_formats_periods_per_day(self):
+        formatted_hours = self.warehouse._format_opening_hours(
+            self.warehouse.opening_hours.attendance_ids
+        )
+        self.assertEqual(formatted_hours['0'], ["08:00 - 12:30"])
+        self.assertEqual(formatted_hours['1'], ["00:00 - 24:00"])
+        # Days without any attendance are empty
+        for i in range(2, 7):
+            self.assertEqual(formatted_hours[str(i)], [])
+        self.assertEqual(len(formatted_hours.keys()), 7)
+
+    def test_get_opening_hours_by_partner_batches_several_partners(self):
+        other_warehouse = self.warehouse.sudo().copy({'name': "Other Warehouse", 'code': "OWH"})
+        other_warehouse.sudo().opening_hours = False
+        partner_without_warehouse = self.env['res.partner'].create({'name': "No Warehouse"})
+
+        opening_hours_by_partner = self.env['stock.warehouse'].get_opening_hours_by_partner([
+            self.warehouse.partner_id.id,
+            other_warehouse.partner_id.id,
+            partner_without_warehouse.id,
+        ])
+
+        self.assertEqual(
+            opening_hours_by_partner, {
+                self.warehouse.partner_id.id: self.warehouse._format_opening_hours(
+                    self.warehouse.opening_hours.attendance_ids
+                ),
+            }
+        )

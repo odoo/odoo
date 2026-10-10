@@ -3,7 +3,7 @@
 from datetime import UTC, datetime, timedelta
 from zoneinfo import ZoneInfo
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools.misc import OrderedSet, format_duration
 
 from odoo.addons.website_sale_collect import const
@@ -67,7 +67,7 @@ class StockWarehouse(models.Model):
         if self.opening_hours:
             tz = ZoneInfo(self.opening_hours.company_id.tz or self.env.company.tz or "UTC")
             result.update({
-                "opening_hours": self._format_opening_hours(),
+                "opening_hours": self._format_opening_hours(self.opening_hours.attendance_ids),
                 "next_open_date": self._get_pickup_next_open_date(
                     tz, estimated_dates=estimated_dates
                 ),
@@ -75,19 +75,39 @@ class StockWarehouse(models.Model):
             })
         return result
 
-    def _format_opening_hours(self):
+    @api.model
+    def _format_opening_hours(self, attendances_ids):
         """Return the warehouse's opening hours, formatted per day of the week.
 
         :return: A dict mapping each day of the week to a list of formatted attendance periods.
         :rtype: dict
         """
-        self.ensure_one()
         opening_hours_dict = {str(i): [] for i in range(7)}
-        for att in self.opening_hours.attendance_ids:
+        for att in attendances_ids:
             opening_hours_dict[att.dayofweek].append(
                 f"{format_duration(att.hour_from)} - {format_duration(att.hour_to)}"
             )
         return opening_hours_dict
+
+    @api.model
+    def get_opening_hours_by_partner(self, partner_ids):
+        """Return the formatted opening hours of the warehouses linked to the given partners.
+
+        This is used by the website store locator snippet to read the opening hours of listed
+        partners in batch.
+
+        :param list[int] partner_ids: partners whose warehouses are to check
+        :return: A mapping of partner id to its warehouse's formatted opening hours.
+        :rtype: dict
+        """
+        warehouses = self.search([
+            ('partner_id', 'in', partner_ids), ('opening_hours', '!=', False)
+        ])
+        return {
+            warehouse.partner_id.id: self._format_opening_hours(
+                warehouse.opening_hours.attendance_ids
+            ) for warehouse in warehouses
+        }
 
     def _get_pickup_next_open_date(self, tz, estimated_dates=None):
         """Return the next date the warehouse is open.
