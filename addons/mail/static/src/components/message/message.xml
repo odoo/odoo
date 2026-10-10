@@ -195,9 +195,9 @@
                                 class="o_Message_actionListContainer"
                                 t-att-class="{
                                     'o-squashed': messageView.isSquashed,
-                                    'position-absolute top-0': !messageView.isInDiscuss,
+                                    'position-absolute top-0': !messageView.isInDiscuss || messaging.device.isSmall,
                                     'start-0 ms-3': messageView.isInChatWindowAndIsAlignedRight,
-                                    'end-0 me-3': messageView.isInChatWindowAndIsAlignedLeft || messageView.isInChatter,
+                                    'end-0 me-3': messageView.isInChatWindowAndIsAlignedLeft || messageView.isInChatter || messaging.device.isSmall,
                                     'mt-n4': messageView.isInChatter and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
                                     'mt-n5': messageView.isInChatter and !(messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
                                     'mt-2': messageView.isInDiscuss and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms'),
