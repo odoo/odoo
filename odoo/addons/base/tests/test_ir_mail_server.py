@@ -377,7 +377,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.assertSMTPEmailsSent(
             smtp_from='test@xn--9caaaaaaa.com',
             smtp_to_list=['dest@xn--example--i1a.com'],
-            message_from='test@=?utf-8?b?w6nDqcOpw6nDqcOpw6k=?=.com',
+            message_from='test@xn--9caaaaaaa.com',
             from_filter=False,
         )
 
