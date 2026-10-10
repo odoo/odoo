@@ -36,7 +36,7 @@ export class ForecastWidgetField extends FloatField {
     async _openReport(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        if (!this.props.record.data.is_storable) {
+        if (!this.resId || !this.props.record.data.is_storable) {
             return;
         }
         const action = await this.orm.call("stock.move", "action_product_forecast_report", [
