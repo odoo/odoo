@@ -26,6 +26,10 @@ class TestSlugUnslug(BaseCase):
             'foo-1/#anchor': ('foo', 1),
             'foo-1?qs=1': ('foo', 1),
             'foo-1#anchor': ('foo', 1),
+            # combining marks
+            'চোখের-হেফাজত-1': ('চোখের-হেফাজত', 1),
+            'مكيّف-هواء-1': ('مكيّف-هواء', 1),
+            'สินค้า-8': ('สินค้า', 8),
         }
 
         unslug = Registry(get_db_name())['ir.http']._unslug

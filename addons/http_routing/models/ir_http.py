@@ -25,8 +25,8 @@ from odoo.addons.base.models.res_lang import LangData
 _logger = logging.getLogger(__name__)
 
 # NOTE: the second pattern is used for the ModelConverter, do not use nor flags nor groups
-_UNSLUG_RE = re.compile(r'(?:(\w{1,2}|\w[\w-]+?\w)-)?(-?\d+)(?=$|\/|#|\?)')
-_UNSLUG_ROUTE_PATTERN = r'(?:(?:\w{1,2}|\w[\w-]+?\w)-)?(?:-?\d+)(?=$|\/|#|\?)'
+_UNSLUG_RE = re.compile(r'(?:([^/#?-]{1,2}|[^/#?-][^/#?]+?[^/#?-])-)?(-?\d+)(?=$|\/|#|\?)')
+_UNSLUG_ROUTE_PATTERN = r'(?:(?:[^/#?-]{1,2}|[^/#?-][^/#?]+?[^/#?-])-)?(?:-?\d+)(?=$|\/|#|\?)'
 
 
 class ModelConverter(ir_http.ModelConverter):
