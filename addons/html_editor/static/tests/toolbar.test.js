@@ -2421,8 +2421,8 @@ test("toolbar update should be run only once", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
     counter = 0;
-    click(".o-we-toolbar .btn[name='bold']");
-    await waitFor(".btn[name='bold'].active");
+    click(".o-we-toolbar .btn[name='bold'][aria-pressed='false']");
+    await waitFor(".btn[name='bold'][aria-pressed='true'].active");
     expect(getContent(el)).toBe("<p><strong>[test]</strong></p>");
     expect(counter).toBe(1);
 });
@@ -2432,16 +2432,16 @@ test("toolbar strikethrough buttons should not be active when checked list is st
         '<ul class="o_checklist"><li class="o_checked">[test]</li></ul>'
     );
     await expandToolbar();
-    expect(".o-we-toolbar .btn[name='strikethrough']").toHaveCount(1);
+    expect(".o-we-toolbar .btn[name='strikethrough'][aria-pressed='false']").toHaveCount(1);
     expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
     await contains(".o-we-toolbar .btn[name='strikethrough']").click();
-    await waitFor(".btn[name='strikethrough'].active");
+    await waitFor(".btn[name='strikethrough'][aria-pressed='true'].active");
     expect(getContent(el)).toBe(
         '<ul class="o_checklist"><li class="o_checked"><s>[test]</s></li></ul>'
     );
     expect(".o-we-toolbar .btn[name='strikethrough']").toHaveClass("active");
     await contains(".o-we-toolbar .btn[name='strikethrough']").click();
-    await waitFor(".btn[name='strikethrough']:not(.active)");
+    await waitFor(".btn[name='strikethrough'][aria-pressed='false']:not(.active)");
     expect(getContent(el)).toBe('<ul class="o_checklist"><li class="o_checked">[test]</li></ul>');
     expect(".o-we-toolbar .btn[name='strikethrough']").not.toHaveClass("active");
 });
@@ -2561,22 +2561,22 @@ test("should highlight text color button on color picker opened", async () => {
     await setupEditor(`<div><p>[abc]</p></div>`);
     await waitFor(".o-we-toolbar");
     await expandToolbar();
-    expect(".o-select-color-foreground").not.toHaveClass("active");
+    expect(".o-select-color-foreground[aria-pressed='false']").not.toHaveClass("active");
     await click(".o-select-color-foreground");
     await waitFor(".o_font_color_selector");
-    expect(".o-select-color-foreground").toHaveClass("active");
+    expect(".o-select-color-foreground[aria-pressed='true']").toHaveClass("active");
 });
 
 test("formats should be enabled when inline code selected", async () => {
     await setupEditor(`<div class="o-paragraph">[ab<code class="o_inline_code">code</code>]</div>`);
     await expectElementCount(".o-we-toolbar", 1);
     await click(`[name="bold"]`);
-    await waitFor(`[name="bold"].active`);
+    await waitFor(`[name="bold"][aria-pressed="true"].active`);
 
     expect("strong").toHaveCount(1);
 
     await click(`[name="bold"].active`);
-    await waitFor(`[name="bold"]:not(.active)`);
+    await waitFor(`[name="bold"][aria-pressed="false"]:not(.active)`);
 
     expect("strong").toHaveCount(0);
 });
@@ -2623,4 +2623,82 @@ test("font-size should be preserved when replacing HTML element text", async () 
     await insertText(editor, "a");
     await animationFrame();
     expect(getContent(el)).toBe(`<p><span style="font-size: 21px;">a[]</span></p>`);
+});
+
+test("active text toolbar items should be aria-pressed true", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+    for (const el of queryAll(".o-we-toolbar .btn:not(.dropdown)")) {
+        expect(el).toHaveAttribute(
+            "aria-pressed",
+            el.classList.contains("active") ? "true" : "false"
+        );
+    }
+
+    await expandToolbar();
+    for (const el of queryAll(".o-we-toolbar .btn:not(.dropdown)")) {
+        expect(el).toHaveAttribute(
+            "aria-pressed",
+            el.classList.contains("active") ? "true" : "false"
+        );
+    }
+});
+test("active table toolbar items should be aria-pressed true", async () => {
+    const table = unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td><p>[a<br></p></td><td><p>b]<br></p></td>
+                </tr>
+            </tbody>
+        </table>`);
+    await setupEditor(table);
+    await waitFor(".o-we-toolbar");
+    for (const el of queryAll(".o-we-toolbar .btn:not(.dropdown)")) {
+        expect(el).toHaveAttribute(
+            "aria-pressed",
+            el.classList.contains("active") ? "true" : "false"
+        );
+    }
+
+    await expandToolbar();
+    for (const el of queryAll(".o-we-toolbar .btn:not(.dropdown)")) {
+        expect(el).toHaveAttribute(
+            "aria-pressed",
+            el.classList.contains("active") ? "true" : "false"
+        );
+    }
+});
+test("active image toolbar items should be aria-pressed true", async () => {
+    const base64Image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+
+    // Mock backend image RPCs
+    onRpc("/html_editor/get_image_info", async () => {
+        await delay(50);
+        return {
+            original: { image_src: base64Image },
+        };
+    });
+
+    // Setup editor with an image
+    const { editor } = await setupEditor(`<p>[<img src="${base64Image}">]</p>`);
+    await waitFor(".o-we-toolbar");
+    for (const el of queryAll(".o-we-toolbar .btn:not(.dropdown)")) {
+        expect(el).toHaveAttribute(
+            "aria-pressed",
+            el.classList.contains("active") ? "true" : "false"
+        );
+    }
+
+    // Be ready if an expanded image toolbar appears
+    if (editor.editable.ownerDocument.querySelector(".o-we-toolbar .btn[name='expand_toolbar']")) {
+        await expandToolbar();
+        for (const el of queryAll(".o-we-toolbar .btn:not(.dropdown)")) {
+            expect(el).toHaveAttribute(
+                "aria-pressed",
+                el.classList.contains("active") ? "true" : "false"
+            );
+        }
+    }
 });
