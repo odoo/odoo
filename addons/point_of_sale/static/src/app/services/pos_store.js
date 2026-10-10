@@ -2294,6 +2294,7 @@ export class PosStore extends WithLazyGetterTrap {
                 isSelected: order.preset_id && preset.id === order.preset_id.id,
                 item: preset,
                 color: preset.color,
+                isStarred: preset.id === this.config.default_preset_id.id,
             }));
 
             if (selectionList.length <= 1) {
@@ -2308,6 +2309,15 @@ export class PosStore extends WithLazyGetterTrap {
                           list: selectionList,
                           size: "md",
                           bodyClass: "pb-4",
+                          stars: true,
+                          onStarClick: (presetId) => {
+                              const selectedPreset = this.config.available_preset_ids.find(
+                                  (p) => p.id === presetId
+                              );
+                              if (selectedPreset) {
+                                  this.config.default_preset_id = selectedPreset;
+                              }
+                          },
                       });
         }
 
