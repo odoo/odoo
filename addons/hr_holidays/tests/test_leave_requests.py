@@ -1713,7 +1713,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertTrue(leave_mail_message, "A mail notification should be sent for approval")
         self.assertEqual(
             leave_mail_message.subject,
-            "I'm requesting 1 days of TimeNotLimited from 2022-03-11 to 2022-03-11",
+            "I'm requesting 1 day of TimeNotLimited from 2022-03-11 to 2022-03-11",
             "The email subject should describe the leave request details correctly."
         )
         self.assertIn(
@@ -2036,7 +2036,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'am',
             'request_date_to_period': 'am',
         })
-        self.assertEqual(irregular_leave.duration_display, '1 days')
+        self.assertEqual(irregular_leave.duration_display, '1 day')
 
         irregular_leave2 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Tuesday Afternoon and Wednesday Morning',
@@ -2069,7 +2069,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'am',
             'request_date_to_period': 'am',
         })
-        self.assertEqual(irregular_leave4.duration_display, '1 days')
+        self.assertEqual(irregular_leave4.duration_display, '1 day')
 
     def test_unified_time_off_hours_scenarios(self):
         with self.assertRaises(UserError):
