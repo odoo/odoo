@@ -460,6 +460,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
             search_categories = Category
         categs = Category.search_fetch(categs_domain)
 
+        tree_domain = Domain("id", "child_of", categs.ids) & website_domain
+        if not request.env.user._is_internal():
+            tree_domain &= Domain("has_published_products", "=", True)
+        if search:
+            tree_domain &= Domain("id", "in", search_categories.ids)
+        category_tree = (
+            Category.search_fetch(tree_domain, ["parent_id"])
+            if categs else Category
+        )
+        categories_by_parent = category_tree.grouped(lambda c: c.parent_id.id)
+        categs = categs.with_prefetch(category_tree.ids)
+
         category_entries = Category
         if category:
             available_categories = category.child_id.filtered(
@@ -558,6 +570,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "gap": gap,
             "categories": categs,
             "category_entries": category_entries,
+            "categories_by_parent": categories_by_parent,
             "attributes": attributes,
             "keep": keep,
             "search_categories_ids": search_categories.ids,
