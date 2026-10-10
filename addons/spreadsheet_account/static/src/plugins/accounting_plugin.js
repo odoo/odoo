@@ -88,9 +88,20 @@ export class AccountingPlugin extends OdooUIPlugin {
 
     /**
      * @param {string} accountType
+     * @param {number | null} companyId specific company to target
      * @returns {string[]}
      */
-    getAccountGroupCodes(accountType) {
+    getAccountGroupCodes(accountType, companyId = null) {
+        if (companyId) {
+            // When targeting a specific company, use a separate fetch since
+            // the default batch system flattens args and cannot distinguish
+            // per-company requests.
+            return this.serverData.batch.get(
+                "account.account",
+                "get_account_group_for_company",
+                { account_type: accountType, company_id: companyId }
+            );
+        }
         return this.serverData.batch.get("account.account", "get_account_group", accountType);
     }
 
