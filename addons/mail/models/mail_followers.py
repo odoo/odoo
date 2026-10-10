@@ -133,6 +133,8 @@ class MailFollowers(models.Model):
               ``'portal'``, ``'customer'``, ``'internal user'``);
             * ``uid`` -- linked ``res.users`` ID. If several users exist,
               preference is given to internal user, then share users.
+            * ``uids`` -- IDs of all active ``res.users`` of the partner,
+              internal users first, then by ID (``uid`` is the first one).
 
         :rtype: dict
         """
@@ -184,6 +186,7 @@ class MailFollowers(models.Model):
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
            sub_user.groups as groups,
+           sub_user.uids as uids,
            sub_followers.res_id as res_id,
            sub_followers.is_follower as _insert_followerslower
       FROM res_partner partner
@@ -193,7 +196,11 @@ class MailFollowers(models.Model):
         SELECT users.id AS uid,
                users.share AS share,
                users.notification_type AS notification_type,
-               ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups
+               ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups,
+               ARRAY_AGG(users.id) OVER (
+                   ORDER BY users.share ASC NULLS FIRST, users.id ASC
+                   ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+               ) AS uids
           FROM res_users users
      LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
          WHERE users.partner_id = partner.id AND users.active
@@ -223,6 +230,7 @@ class MailFollowers(models.Model):
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
            sub_user.groups as groups,
+           sub_user.uids as uids,
            ARRAY_AGG(fol.res_id) FILTER (WHERE fol.res_id IS NOT NULL) AS res_ids
       FROM res_partner partner
  LEFT JOIN mail_followers fol ON fol.partner_id = partner.id
@@ -232,7 +240,11 @@ class MailFollowers(models.Model):
         SELECT users.id AS uid,
                users.share AS share,
                users.notification_type AS notification_type,
-               ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups
+               ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups,
+               ARRAY_AGG(users.id) OVER (
+                   ORDER BY users.share ASC NULLS FIRST, users.id ASC
+                   ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+               ) AS uids
           FROM res_users users
      LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
          WHERE users.partner_id = partner.id AND users.active
@@ -248,7 +260,8 @@ class MailFollowers(models.Model):
            sub_user.uid,
            sub_user.share,
            sub_user.notification_type,
-           sub_user.groups
+           sub_user.groups,
+           sub_user.uids
 """
             params = [records._name, tuple(records.ids), tuple(pids)]
             self.env.cr.execute(query, tuple(params))
@@ -277,6 +290,7 @@ class MailFollowers(models.Model):
            COALESCE(sub_user.share, FALSE) as ushare,
            COALESCE(sub_user.notification_type, 'email') as notif,
            sub_user.groups as groups,
+           sub_user.uids as uids,
            0 as res_id,
            FALSE as is_follower
       FROM res_partner partner
@@ -284,7 +298,11 @@ class MailFollowers(models.Model):
         SELECT users.id AS uid,
                users.share AS share,
                users.notification_type AS notification_type,
-               ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups
+               ARRAY_AGG(groups_rel.gid) FILTER (WHERE groups_rel.gid IS NOT NULL) AS groups,
+               ARRAY_AGG(users.id) OVER (
+                   ORDER BY users.share ASC NULLS FIRST, users.id ASC
+                   ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+               ) AS uids
           FROM res_users users
      LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
          WHERE users.partner_id = partner.id AND users.active
@@ -300,7 +318,8 @@ class MailFollowers(models.Model):
            sub_user.uid,
            sub_user.share,
            sub_user.notification_type,
-           sub_user.groups
+           sub_user.groups,
+           sub_user.uids
 """
             params = [tuple(pids)]
             self.env.cr.execute(query, tuple(params))
@@ -312,7 +331,7 @@ class MailFollowers(models.Model):
         doc_infos = dict((res_id, {}) for res_id in res_ids)
         for (
             partner_id, is_active, email_normalized, lang, name,
-            pshare, uid, ushare, notif, groups, res_id, is_follower
+            pshare, uid, ushare, notif, groups, uids, res_id, is_follower
         ) in res:
             to_update = [res_id] if res_id else res_ids
             # add transitive closure of implied groups; note that the field
@@ -335,6 +354,7 @@ class MailFollowers(models.Model):
                     'notif': notif,
                     'share': pshare,
                     'uid': uid,
+                    'uids': uids or [],
                     'ushare': ushare,
                 }
                 # additional information
