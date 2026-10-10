@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@name='comment']" position="before">
+            <t t-if="o._l10n_fr_pdp_is_late_payment_penalties_applicable()">
+                <div name="l10n_fr_pdp_late_payment_penalty_notes" class="text-muted mb-3">
+                    <p class="mb-0">In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce).</p>
+                    <p class="mb-0" t-out="o._l10n_fr_pdp_get_late_payment_penalty_note()"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>
