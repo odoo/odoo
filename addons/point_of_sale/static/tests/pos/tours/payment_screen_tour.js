@@ -198,6 +198,25 @@ registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("001"),
+            inLeftSide([
+                ...Order.hasLine({ productName: "Product Test", withClass: ".selected" }),
+                Numpad.click("1"),
+            ]),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            {
+                content: "invoice button is disabled for refund of an invoiced order",
+                trigger: ".js_invoice[disabled]",
+            },
+            refresh(),
+            PaymentScreen.isShown(),
+            {
+                content: "invoice button is still disabled after refresh",
+                trigger: ".js_invoice[disabled]",
+            },
         ].flat(),
 });
 
