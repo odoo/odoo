@@ -488,7 +488,7 @@ class ProductProduct(models.Model):
             domain.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super()._search(domain, offset, limit, order)
 
-    @api.depends('name', 'default_code', 'product_tmpl_id')
+    @api.depends('name', 'default_code', 'product_tmpl_id', 'purchase_ok')
     @api.depends_context('display_default_code', 'seller_id', 'company_id', 'partner_id', 'lang')
     def _compute_display_name(self):
 
@@ -513,7 +513,8 @@ class ProductProduct(models.Model):
         if partner_ids:
             # prefetch the fields used by the `display_name`
             supplier_info = self.env['product.supplierinfo'].sudo().search_fetch(
-                [('product_tmpl_id', 'in', product_template_ids), ('partner_id', 'in', partner_ids)],
+                [('product_tmpl_id', 'in', product_template_ids), ('partner_id', 'in', partner_ids),
+                 ('product_tmpl_id.purchase_ok', '=', True)],
                 ['product_tmpl_id', 'product_id', 'company_id', 'product_name', 'product_code'],
             )
             supplier_info_by_template = {}
