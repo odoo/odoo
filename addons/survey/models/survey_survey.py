@@ -637,7 +637,7 @@ class Survey(models.Model):
             return False
         if self.page_ids and page_or_question == self.page_ids[0]:
             return False
-        return self.questions_layout == 'page_per_section' or page_or_question != answer.predefined_question_ids[0]
+        return self.questions_layout == 'page_per_section' or page_or_question != self._get_pages_or_questions(answer)[:1]
 
     def _has_attempts_left(self, partner, email, invite_token):
         self.ensure_one()
