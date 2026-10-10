@@ -394,10 +394,10 @@ class ToggleSocialMediaLinkAction extends BuilderAction {
                 })
             );
             const icon = newLinkElement.querySelector(".fa");
-            if (backgroundColor) {
+            if (referenceIcon.style.backgroundColor) {
                 icon.style.backgroundColor = backgroundColor;
             }
-            if (color) {
+            if (referenceIcon.style.color) {
                 icon.style.color = color;
             }
             icon.classList.remove("fa-stack");
