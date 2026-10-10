@@ -46,7 +46,7 @@ class PurchaseOrderLine(models.Model):
     )
     document_tax_mode = fields.Selection(related='order_id.document_tax_mode')
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
-    uom_id = fields.Many2one('uom.uom', string='Unit', domain="[('id', 'in', allowed_uom_ids)]", ondelete='restrict')
+    uom_id = fields.Many2one('uom.uom', string='Unit', ui_domain="[('id', 'in', allowed_uom_ids)]", ondelete='restrict')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)], change_default=True, index='btree_not_null', ondelete='restrict')
     product_type = fields.Selection(related='product_id.type', readonly=True)
     price_unit = fields.Float(

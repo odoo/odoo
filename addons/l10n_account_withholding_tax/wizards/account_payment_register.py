@@ -42,7 +42,7 @@ class AccountPaymentRegister(models.TransientModel):
         comodel_name='account.account',
         string="Outstanding Account",
         copy=False,
-        domain="['|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', withholding_default_account_id)]",
+        ui_domain="['|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', withholding_default_account_id)]",
         check_company=True,
         compute="_compute_withholding_outstanding_account_id",
         store=True,

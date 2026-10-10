@@ -10,7 +10,7 @@ class StockWarnInsufficientQty(models.AbstractModel):
     _description = 'Warn Insufficient Quantity'
 
     product_id = fields.Many2one('product.product', 'Product', required=True)
-    location_id = fields.Many2one('stock.location', 'Location', domain="[('usage', '=', 'internal')]", required=True)
+    location_id = fields.Many2one('stock.location', 'Location', ui_domain="[('usage', '=', 'internal')]", required=True)
     quant_ids = fields.Many2many('stock.quant', compute='_compute_quant_ids')
     quantity = fields.Float(string="Quantity", required=True)
     product_uom_name = fields.Char("Unit", required=True)

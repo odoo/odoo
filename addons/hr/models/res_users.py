@@ -112,7 +112,7 @@ class ResUsers(models.Model):
     private_city = fields.Char(**related_employee_field('private_city'), user_writeable=True)
     private_state_id = fields.Many2one(
         'res.country.state',
-        domain="[('country_id', '=?', private_country_id)]",
+        ui_domain="[('country_id', '=?', private_country_id)]",
         **related_employee_field('private_state_id'),
         user_writeable=True,
     )

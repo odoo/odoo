@@ -79,7 +79,7 @@ class ProductProduct(models.Model):
     combination_indices = fields.Char(compute='_compute_combination_indices', store=True, index=True)
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
     extra_uom_ids = fields.Many2many(
-        'uom.uom', string='Extra Packagings', domain="[('id', '!=', uom_id)]",
+        'uom.uom', string='Extra Packagings', ui_domain="[('id', '!=', uom_id)]",
         help="Variant-specific additional packagings for this product which can be used for sales")
 
     standard_price = fields.Float(
@@ -125,7 +125,7 @@ class ProductProduct(models.Model):
         string="Variant Tags",
         comodel_name='product.tag',
         relation='product_tag_product_product_rel',
-        domain="[('id', 'not in', product_tag_ids)]",
+        ui_domain="[('id', 'not in', product_tag_ids)]",
     )
     all_product_tag_ids = fields.Many2many('product.tag', compute='_compute_all_product_tag_ids', search='_search_all_product_tag_ids')
 

@@ -10,7 +10,7 @@ class Website(models.Model):
         compute='_compute_simplified_invoice_journal_id',
         store=True,
         readonly=False,
-        domain="[('type', '=', 'sale')]",
+        ui_domain="[('type', '=', 'sale')]",
         check_company=True,
         help="Journal used for simplified invoices generated from eCommerce.",
     )

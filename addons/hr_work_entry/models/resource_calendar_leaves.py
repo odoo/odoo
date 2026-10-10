@@ -8,7 +8,7 @@ class ResourceCalendarLeaves(models.Model):
 
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', 'Time Type',
-        domain="[('id', 'in', allowed_work_entry_type_ids)]",
+        ui_domain="[('id', 'in', allowed_work_entry_type_ids)]",
         compute="_compute_work_entry_type_id",
         store=True, readonly=False,
         groups="hr.group_hr_user")

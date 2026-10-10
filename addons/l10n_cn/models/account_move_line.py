@@ -11,7 +11,7 @@ class AccountMoveLine(models.Model):
         comodel_name='account.account',
         string="Output VAT Offset Account",
         default=lambda self: self.env.company.l10n_cn_output_vat_offset_account_id,
-        domain="[('account_type', '=', 'liability_current')]",
+        ui_domain="[('account_type', '=', 'liability_current')]",
         check_company=True,
     )
     l10n_cn_balance_deduction_ids = fields.One2many(

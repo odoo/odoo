@@ -24,7 +24,7 @@ class PurchaseOrder(models.Model):
     purchase_group_id = fields.Many2one('purchase.order.group', index='btree_not_null')
     alternative_po_ids = fields.One2many(
         'purchase.order', related='purchase_group_id.order_ids', readonly=False,
-        domain="[('id', '!=', id), ('state', 'in', ['draft', 'sent', 'to approve'])]",
+        ui_domain="[('id', '!=', id), ('state', 'in', ['draft', 'sent', 'to approve'])]",
         string="Alternative POs", check_company=True,
         help="Other potential purchase orders for purchasing products")
 

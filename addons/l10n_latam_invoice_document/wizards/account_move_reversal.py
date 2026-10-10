@@ -8,7 +8,7 @@ class AccountMoveReversal(models.TransientModel):
     _inherit = "account.move.reversal"
 
     l10n_latam_use_documents = fields.Boolean(compute='_compute_documents_info')
-    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', domain="[('id', 'in', l10n_latam_available_document_type_ids)]", compute='_compute_document_type', readonly=False, store=True)
+    l10n_latam_document_type_id = fields.Many2one('l10n_latam.document.type', 'Document Type', ondelete='cascade', ui_domain="[('id', 'in', l10n_latam_available_document_type_ids)]", compute='_compute_document_type', readonly=False, store=True)
     l10n_latam_available_document_type_ids = fields.Many2many('l10n_latam.document.type', compute='_compute_documents_info')
     l10n_latam_document_number = fields.Char(string='Document Number')
     l10n_latam_manual_document_number = fields.Boolean(compute='_compute_l10n_latam_manual_document_number', string='Manual Number')

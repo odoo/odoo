@@ -72,7 +72,7 @@ class PaymentTransaction(models.Model):
     token_id = fields.Many2one(
         string="Payment Token",
         comodel_name="payment.token",
-        domain='[("provider_id", "=", "provider_id")]',
+        ui_domain='[("provider_id", "=", "provider_id")]',
         ondelete="restrict",
         readonly=True,
         index="btree_not_null",

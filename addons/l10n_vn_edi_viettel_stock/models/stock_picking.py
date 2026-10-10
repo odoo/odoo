@@ -27,7 +27,7 @@ class StockPicking(models.Model):
         comodel_name='l10n_vn.symbol',
         string='SInvoice Symbol',
         compute='_compute_l10n_vn_edi_symbol_id',
-        domain="[('company_id', '=', company_id), ('usage', '=', 'delivery_document')]",
+        ui_domain="[('company_id', '=', company_id), ('usage', '=', 'delivery_document')]",
         readonly=False,
         store=True,
     )

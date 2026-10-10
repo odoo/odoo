@@ -41,7 +41,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
     journal_id = fields.Many2one(
         comodel_name='account.journal',
         compute='_compute_journal_id', store=True, readonly=False, precompute=True,
-        domain="[('type', '=', 'general')]",
+        ui_domain="[('type', '=', 'general')]",
         required=True,
         check_company=True,
         string='Journal',
@@ -63,7 +63,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         comodel_name='account.account',
         string='Accrual Account',
         check_company=True,
-        domain="[('account_type', '=', 'liability_current')] if context.get('active_model') in ['purchase.order', 'purchase.order.line'] else [('account_type', '=', 'asset_current')]",
+        ui_domain="[('account_type', '=', 'liability_current')] if context.get('active_model') in ['purchase.order', 'purchase.order.line'] else [('account_type', '=', 'asset_current')]",
     )
     preview_data = fields.Text(compute='_compute_preview_data')
     display_amount = fields.Boolean(compute='_compute_display_amount')

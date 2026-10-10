@@ -9,7 +9,7 @@ class ResCompany(models.Model):
 
     leave_timesheet_task_id = fields.Many2one(
         'project.task', string="Time Off Task",
-        domain="[('project_id', '=', internal_project_id)]")
+        ui_domain="[('project_id', '=', internal_project_id)]")
 
     def _create_internal_project_task(self):
         projects = super()._create_internal_project_task()

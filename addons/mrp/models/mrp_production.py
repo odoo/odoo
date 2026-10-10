@@ -89,7 +89,7 @@ class MrpProduction(models.Model):
 
     product_id = fields.Many2one(
         'product.product', 'Product',
-        domain="[('type', '=', 'consu')]",
+        ui_domain="[('type', '=', 'consu')]",
         compute='_compute_product_id', store=True, copy=True, precompute=True,
         readonly=False, required=True, index=True, check_company=True)
     product_name = fields.Char(compute='_compute_product_name')  # technical: used in views only
@@ -103,7 +103,7 @@ class MrpProduction(models.Model):
         'product.template.attribute.value',
         'template_attribute_value_mrp_production_rel',
         'production_id', 'template_attribute_value_id',
-        domain="""[
+        ui_domain="""[
             '&',
                 ('attribute_line_id', 'in', valid_product_template_attribute_line_ids),
                 ('attribute_id.create_variant', '=', 'no_variant')]""",
@@ -119,24 +119,24 @@ class MrpProduction(models.Model):
         compute='_compute_product_qty', store=True, copy=True)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one(
-        'uom.uom', 'Unit', domain="[('id', 'in', allowed_uom_ids)]",
+        'uom.uom', 'Unit', ui_domain="[('id', 'in', allowed_uom_ids)]",
         readonly=False, required=True, compute='_compute_uom_id', store=True, copy=True, precompute=True)
     lot_producing_ids = fields.Many2many(
         'stock.lot', string='Lot/Serial Number', copy=False,
-        domain="[('product_id', '=', product_id)]", check_company=True)
+        ui_domain="[('product_id', '=', product_id)]", check_company=True)
     qty_producing = fields.Float(string="Quantity Producing", digits='Product Unit', copy=False)
     product_uom_qty = fields.Float(string='Total Quantity', compute='_compute_product_uom_qty', store=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', copy=True, readonly=False,
         compute='_compute_picking_type_id', store=True, precompute=True,
-        domain="[('code', '=', 'mrp_operation')]",
+        ui_domain="[('code', '=', 'mrp_operation')]",
         required=True, check_company=True, index=True)
     use_create_components_lots = fields.Boolean(related='picking_type_id.use_create_components_lots')
     location_src_id = fields.Many2one(
         'stock.location', 'Components Location',
         compute='_compute_location_src_id', store=True, check_company=True,
         readonly=False, required=True, precompute=True, index=True,
-        domain="[('usage','=','internal')]",
+        ui_domain="[('usage','=','internal')]",
         help="Location where the system will look for components.")
     # this field was added to be passed a default in view for manual raw moves
     warehouse_id = fields.Many2one(related='location_src_id.warehouse_id')
@@ -144,7 +144,7 @@ class MrpProduction(models.Model):
         'stock.location', 'Finished Products Location',
         compute='_compute_location_dest_id', store=True, check_company=True,
         readonly=False, required=True, precompute=True,
-        domain="[('usage','=','internal')]",
+        ui_domain="[('usage','=','internal')]",
         help="Location where the system will stock the finished products.")
     forecasted_location_id = fields.Many2one('stock.location', 'Forecasted Location', help='Location used in the computation of the forecast.')
     date_deadline = fields.Datetime(
@@ -164,7 +164,7 @@ class MrpProduction(models.Model):
 
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material', readonly=False,
-        domain="""[
+        ui_domain="""[
         '&',
             '|',
                 ('company_id', '=', False),

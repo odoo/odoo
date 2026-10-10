@@ -99,7 +99,7 @@ class SaleOrderTemplateLine(models.Model):
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids or mandatory_product else []",
+        ui_domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids or mandatory_product else []",
         compute="_compute_product_uom_id",
         store=True,
         readonly=False,

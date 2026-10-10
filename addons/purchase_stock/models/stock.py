@@ -158,7 +158,7 @@ class StockWarehouseOrderpoint(models.Model):
     show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_supplier')
     supplier_id = fields.Many2one(
         'product.supplierinfo', string='Vendor Pricelist', check_company=True,
-        domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]",
+        ui_domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]",
         inverse='_inverse_supplier_id',
     )
     supplier_id_placeholder = fields.Char(compute='_compute_supplier_id_placeholder')

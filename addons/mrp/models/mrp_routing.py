@@ -40,18 +40,18 @@ class MrpRoutingWorkcenter(models.Model):
     possible_bom_product_template_attribute_value_ids = fields.Many2many(related='bom_id.possible_product_template_attribute_value_ids')
     bom_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
-        domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
+        ui_domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         help="BOM Product Variants needed to apply this line.")
     allow_operation_dependencies = fields.Boolean(related='bom_id.allow_operation_dependencies')
     blocked_by_operation_ids = fields.Many2many('mrp.routing.workcenter', relation="mrp_routing_workcenter_dependencies_rel",
                                      column1="operation_id", column2="blocked_by_id",
                                      string="Blocked By", help="Operations that need to be completed before this operation can start.",
-                                     domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
+                                     ui_domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
                                      copy=False)
     needed_by_operation_ids = fields.Many2many('mrp.routing.workcenter', relation="mrp_routing_workcenter_dependencies_rel",
                                      column1="blocked_by_id", column2="operation_id",
                                      string="Blocks", help="Operations that cannot start before this operation is completed.",
-                                     domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
+                                     ui_domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
                                      copy=False)
     cycle_number = fields.Integer("Repetitions", compute="_compute_time_cycle")
     time_total = fields.Float('Total Duration', compute="_compute_time_cycle")

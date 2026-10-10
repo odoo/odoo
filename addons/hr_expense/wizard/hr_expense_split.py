@@ -38,7 +38,7 @@ class HrExpenseSplit(models.TransientModel):
     tax_ids = fields.Many2many(
         comodel_name='account.tax',
         check_company=True,
-        domain="[('type_tax_use', '=', 'purchase')]",
+        ui_domain="[('type_tax_use', '=', 'purchase')]",
     )
     total_amount_currency = fields.Monetary(
         string="Total In Currency",

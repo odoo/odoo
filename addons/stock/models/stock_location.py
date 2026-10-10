@@ -550,7 +550,7 @@ class StockRoute(models.Model):
     warehouse_domain_ids = fields.One2many('stock.warehouse', compute='_compute_warehouses')
     warehouse_ids = fields.Many2many(
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
-        'Warehouses', copy=False, domain="[('id', 'in', warehouse_domain_ids)]")
+        'Warehouses', copy=False, ui_domain="[('id', 'in', warehouse_domain_ids)]")
 
     @api.depends('company_id')
     def _compute_warehouses(self):

@@ -17,7 +17,7 @@ class AccountJournal(models.Model):
     company_partner = fields.Many2one('res.partner', related='company_id.partner_id')
     l10n_ar_afip_pos_partner_id = fields.Many2one(
         'res.partner', 'ARCA POS Address', help='This is the address used for invoice reports of this POS',
-        domain="['|', ('id', '=', company_partner), '&', ('id', 'child_of', company_partner), ('type', '!=', 'contact')]"
+        ui_domain="['|', ('id', '=', company_partner), '&', ('id', 'child_of', company_partner), ('type', '!=', 'contact')]"
     )
     l10n_ar_is_pos = fields.Boolean(
         compute="_compute_l10n_ar_is_pos", store=True, readonly=False,

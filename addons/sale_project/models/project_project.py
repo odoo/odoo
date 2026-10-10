@@ -29,7 +29,7 @@ class ProjectProject(models.Model):
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
         compute="_compute_sale_line_id", store=True, readonly=False, index='btree_not_null',
-        domain=lambda self: str(self._domain_sale_line_id()),
+        ui_domain=lambda self: str(self._domain_sale_line_id()),
         help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
             " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
             "It can be modified on each task and timesheet entry individually if necessary.")
@@ -44,7 +44,7 @@ class ProjectProject(models.Model):
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
     display_sales_stat_buttons = fields.Boolean(compute='_compute_display_sales_stat_buttons', export_string_translation=False)
     sale_order_state = fields.Selection(related='sale_order_id.state', export_string_translation=False, tracking=False)
-    reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="['|', ('partner_id', '=', partner_id), ('partner_id.commercial_partner_id.id', 'parent_of', partner_id)]", index='btree_not_null',
+    reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, ui_domain="['|', ('partner_id', '=', partner_id), ('partner_id.commercial_partner_id.id', 'parent_of', partner_id)]", index='btree_not_null',
         help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
     )
     real_cost = fields.Monetary(compute='_compute_real_cost', export_string_translation=False)

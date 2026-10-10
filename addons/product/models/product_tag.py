@@ -28,7 +28,7 @@ class ProductTag(models.Model):
         string="Product Variants",
         comodel_name='product.product',
         relation='product_tag_product_product_rel',
-        domain="[('attribute_line_ids', '!=', False), ('product_tmpl_id', 'not in', product_template_ids)]",
+        ui_domain="[('attribute_line_ids', '!=', False), ('product_tmpl_id', 'not in', product_template_ids)]",
         default=_get_default_variant_id,
     )
     product_ids = fields.Many2many(

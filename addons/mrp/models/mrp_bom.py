@@ -32,11 +32,11 @@ class MrpBom(models.Model):
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product',
         check_company=True, index=True,
-        domain="[('type', '=', 'consu')]", required=True)
+        ui_domain="[('type', '=', 'consu')]", required=True)
     product_id = fields.Many2one(
         'product.product', 'Product Variant',
         check_company=True, index=True,
-        domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', '=', 'consu')]",
+        ui_domain="['&', ('product_tmpl_id', '=', product_tmpl_id), ('type', '=', 'consu')]",
         help="If a product variant is defined the BOM is available only for this product.")
     bom_line_ids = fields.One2many('mrp.bom.line', 'bom_id', 'BoM Lines', copy=True)
     byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'By-products', copy=True)
@@ -61,7 +61,7 @@ class MrpBom(models.Model):
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
         default='all_available', required=True)
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Operation Type', domain="[('code', '=', 'mrp_operation')]",
+        'stock.picking.type', 'Operation Type', ui_domain="[('code', '=', 'mrp_operation')]",
         check_company=True,
         help=u"When a procurement has a ‘produce’ route with a operation type set, it will try to create "
              "a Manufacturing Order for that product using a BoM of the same operation type.If not,"
@@ -667,7 +667,7 @@ class MrpBomLine(models.Model):
     def _default_uom_id(self):
         return self.env['uom.uom'].search([], limit=1, order='id').id
 
-    product_id = fields.Many2one('product.product', 'Component', required=True, check_company=True, index=True, domain="[('type', 'in', ['consu', 'service'])]")
+    product_id = fields.Many2one('product.product', 'Component', required=True, check_company=True, index=True, ui_domain="[('type', 'in', ['consu', 'service'])]")
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', store=True, index=True)
     company_id = fields.Many2one(
         related='bom_id.company_id', store=True, index=True, readonly=True)
@@ -687,12 +687,12 @@ class MrpBomLine(models.Model):
     possible_bom_product_template_attribute_value_ids = fields.Many2many(related='bom_id.possible_product_template_attribute_value_ids')
     bom_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
-        domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
+        ui_domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         help="BOM Product Variants needed to apply this line.")
     allowed_operation_ids = fields.One2many('mrp.routing.workcenter', related='bom_id.operation_ids')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Consumed in Operation', check_company=True,
-        domain="[('id', 'in', allowed_operation_ids)]",
+        ui_domain="[('id', 'in', allowed_operation_ids)]",
         help="The operation where the components are consumed, or the finished products created.")
     child_bom_id = fields.Many2one(
         'mrp.bom', 'Sub BoM', compute='_compute_child_bom_id')
@@ -847,11 +847,11 @@ class MrpBomByproduct(models.Model):
     allowed_operation_ids = fields.One2many('mrp.routing.workcenter', related='bom_id.operation_ids')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Produced in Operation', check_company=True,
-        domain="[('id', 'in', allowed_operation_ids)]")
+        ui_domain="[('id', 'in', allowed_operation_ids)]")
     possible_bom_product_template_attribute_value_ids = fields.Many2many(related='bom_id.possible_product_template_attribute_value_ids')
     bom_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
-        domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
+        ui_domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         help="BOM Product Variants needed to apply this line.")
     sequence = fields.Integer("Sequence")
     cost_share = fields.Float(

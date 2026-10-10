@@ -30,7 +30,7 @@ class AccountAnalyticPlan(models.Model):
         inverse='_inverse_parent_id',
         index='btree_not_null',
         ondelete='cascade',
-        domain="['!', ('id', 'child_of', id)]",
+        ui_domain="['!', ('id', 'child_of', id)]",
     )
     parent_path = fields.Char(index='btree')
     root_id = fields.Many2one(
@@ -86,7 +86,7 @@ class AccountAnalyticPlan(models.Model):
         'account.analytic.applicability',
         'analytic_plan_id',
         string='Applicability',
-        domain="[('company_id', '=', current_company_id)]",
+        ui_domain="[('company_id', '=', current_company_id)]",
     )
 
     def _auto_init(self):

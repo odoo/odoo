@@ -37,7 +37,7 @@ class EventRegistration(models.Model):
     is_multi_slots = fields.Boolean(string="Is Event Multi Slots", related="event_id.is_multi_slots")
     event_slot_id = fields.Many2one(
         "event.slot", string="Slot", ondelete='restrict', tracking=True, index="btree_not_null",
-        domain="[('event_id', '=', event_id)]")
+        ui_domain="[('event_id', '=', event_id)]")
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Ticket Type', ondelete='restrict', tracking=True, index='btree_not_null')
     active = fields.Boolean(default=True)

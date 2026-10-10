@@ -46,7 +46,7 @@ class AccountMoveSendWizard(models.TransientModel):
     pdf_report_id = fields.Many2one(
         comodel_name='ir.actions.report',
         string="Invoice report",
-        domain="[('id', 'in', available_pdf_report_ids)]",
+        ui_domain="[('id', 'in', available_pdf_report_ids)]",
         compute='_compute_pdf_report_id',
         readonly=False,
         store=True,
@@ -61,7 +61,7 @@ class AccountMoveSendWizard(models.TransientModel):
     # MAIL
     # Template: override mail.composer.mixin field
     template_id = fields.Many2one(
-        domain="[('model', '=', 'account.move')]",
+        ui_domain="[('model', '=', 'account.move')]",
         compute='_compute_template_id',
         compute_sudo=True,
         readonly=False,

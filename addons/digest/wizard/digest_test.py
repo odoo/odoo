@@ -8,7 +8,7 @@ class TestDigest(models.TransientModel):
     _description = 'Sample Digest Wizard'
 
     digest_id = fields.Many2one('digest.digest', string='Digest', required=True, ondelete='cascade')
-    user_ids = fields.Many2many('res.users', string='Recipients', domain="[('share', '=', False)]",
+    user_ids = fields.Many2many('res.users', string='Recipients', ui_domain="[('share', '=', False)]",
                                 default=lambda self: self.env.user)
 
     def send_mail_test(self):

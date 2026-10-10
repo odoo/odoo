@@ -11,5 +11,5 @@ class ResConfigSettings(models.TransientModel):
         string='Income Returns and Discounts Account',
         readonly=False,
         related='company_id.l10n_mx_income_return_discount_account_id',
-        domain="[('account_type', '=', 'income')]",
+        ui_domain="[('account_type', '=', 'income')]",
     )

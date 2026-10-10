@@ -172,7 +172,7 @@ class AccountMove(models.Model):
         compute='_compute_journal_id', inverse='_inverse_journal_id', store=True, readonly=False, precompute=True,
         required=True,
         check_company=True,
-        domain="[('id', 'in', suitable_journal_ids)]",
+        ui_domain="[('id', 'in', suitable_journal_ids)]",
     )
     journal_group_id = fields.Many2one(
         'account.journal.group',

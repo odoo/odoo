@@ -28,10 +28,10 @@ class StockMoveLine(models.Model):
         'stock.move', 'Stock Operation',
         check_company=True, index=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True, index=True)
-    product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, domain="[('type', '!=', 'service')]", index=True)
+    product_id = fields.Many2one('product.product', 'Product', ondelete="cascade", check_company=True, ui_domain="[('type', '!=', 'service')]", index=True)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     uom_id = fields.Many2one(
-        'uom.uom', 'Unit', required=True, domain="[('id', 'in', allowed_uom_ids)]",
+        'uom.uom', 'Unit', required=True, ui_domain="[('id', 'in', allowed_uom_ids)]",
         compute="_compute_uom_id", store=True, readonly=False, precompute=True,
     )
     product_category_id = fields.Many2one(related="product_id.categ_id", string="Product Category")
@@ -45,15 +45,15 @@ class StockMoveLine(models.Model):
     package_id = fields.Many2one(
         'stock.package', 'Source Package', ondelete='restrict',
         check_company=True,
-        domain="[('location_id', '=', location_id)]")
+        ui_domain="[('location_id', '=', location_id)]")
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number',
-        domain="[('product_id', '=', product_id)]", check_company=True, index=True)
+        ui_domain="[('product_id', '=', product_id)]", check_company=True, index=True)
     lot_name = fields.Char('Lot/Serial Number Name')
     result_package_id = fields.Many2one(
         'stock.package', 'Destination Package',
         ondelete='restrict', required=False, check_company=True, index='btree_not_null',
-        domain="['|', '|', ('location_id', '=', location_dest_id), ('id', '=', package_id), '&', ('location_id', '=', False), '|', ('move_line_ids', '=', False), ('move_line_ids.location_dest_id', '=', location_dest_id)]",
+        ui_domain="['|', '|', ('location_id', '=', location_dest_id), ('id', '=', package_id), '&', ('location_id', '=', False), '|', ('move_line_ids', '=', False), ('move_line_ids.location_dest_id', '=', location_dest_id)]",
         help="If set, the operations are packed into this package")
     result_package_dest_name = fields.Char('Destination Package Name', related='result_package_id.dest_complete_name')
     package_history_id = fields.Many2one('stock.package.history', string="Package History", index='btree_not_null')
@@ -65,10 +65,10 @@ class StockMoveLine(models.Model):
         check_company=True, index='btree_not_null',
         help="When validating the transfer, the products will be taken from this owner.")
     location_id = fields.Many2one(
-        'stock.location', 'From', domain="[('usage', '!=', 'view')]", check_company=True, required=True,
+        'stock.location', 'From', ui_domain="[('usage', '!=', 'view')]", check_company=True, required=True,
         compute="_compute_location_id", store=True, readonly=False, precompute=True, index=True,
     )
-    location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True, compute="_compute_location_dest_id", store=True, index=True, readonly=False, precompute=True)
+    location_dest_id = fields.Many2one('stock.location', 'To', ui_domain="[('usage', '!=', 'view')]", check_company=True, required=True, compute="_compute_location_dest_id", store=True, index=True, readonly=False, precompute=True)
     location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
     location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
     lots_visible = fields.Boolean(compute='_compute_lots_visible')

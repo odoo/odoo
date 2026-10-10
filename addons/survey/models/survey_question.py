@@ -175,7 +175,7 @@ class SurveyQuestion(models.Model):
         'survey.question.answer', string="Triggering Answers", copy=False, store=True,
         readonly=False, help="Picking any of these answers will trigger this question.\n"
                              "Leave the field empty if the question should always be displayed.",
-        domain="""[
+        ui_domain="""[
             ('question_id.survey_id', '=', survey_id),
             '&', ('question_id.question_type', 'in', ['simple_choice', 'multiple_choice']),
                  '|',

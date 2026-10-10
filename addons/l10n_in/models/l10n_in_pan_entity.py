@@ -27,7 +27,7 @@ class L10nInPanEntity(models.Model):
         comodel_name='res.partner',
         inverse_name='l10n_in_pan_entity_id',
         string="Partners",
-        domain="[('l10n_in_pan_entity_id', '=', False), '|', ('has_vat', '=', False), ('vat', 'like', name)]"
+        ui_domain="[('l10n_in_pan_entity_id', '=', False), '|', ('has_vat', '=', False), ('vat', 'like', name)]"
     )
     tds_deduction = fields.Selection([
         ('normal', 'Normal'),

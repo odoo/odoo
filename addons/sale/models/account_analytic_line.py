@@ -24,7 +24,7 @@ class AccountAnalyticLine(models.Model):
         readonly=False,
         init_storage=lambda model: None,
         index="btree_not_null",
-        domain=lambda self: str(self._domain_so_line()),
+        ui_domain=lambda self: str(self._domain_so_line()),
     )
     order_id = fields.Many2one(
         string="Customer Order",

@@ -23,7 +23,7 @@ class HrEmployee(models.Model):
         comodel_name='res.users',
         string='Expense Approver',
         compute='_compute_expense_manager', store=True, readonly=False,
-        domain=_group_hr_expense_user_domain,
+        ui_domain=_group_hr_expense_user_domain,
         help='Select the user responsible for approving "Expenses" of this employee.\n'
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).',
     )
