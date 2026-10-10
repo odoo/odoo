@@ -170,8 +170,8 @@ registry.category("web_tour.tours").add("website_page_breadcrumb", {
             run: "click",
         },
         {
-            content: "Verify loading state is shown while checking dependencies",
-            trigger: ".modal-body [data-icon='progress_activity']",
+            content: "Verify the deletion warning is shown while checking dependencies",
+            trigger: ".modal-body:has(.text-warning) [data-icon='progress_activity']",
         },
         {
             content: "Verify and close delete confirmation dialog",
