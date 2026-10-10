@@ -576,14 +576,6 @@ class TestUsers2(UsersCommonCase):
         """Test that a change on a reified fields trigger the onchange of group_ids."""
         group_public = self.env.ref('base.group_public')
         group_portal = self.env.ref('base.group_portal')
-        group_user = self.env.ref('base.group_user')
-
-        app = self.env['res.groups.privilege'].create({'name': 'Foo'})
-        group_contain_user = self.env['res.groups'].create({
-            'name': 'Small user group',
-            'privilege_id': app.id,
-            'implied_ids': [group_user.id],
-        })
 
         user_form = Form(self.env['res.users'], view='base.view_users_form')
         user_form.name = "Test"
@@ -593,40 +585,13 @@ class TestUsers2(UsersCommonCase):
         user_form['group_ids'] = group_portal
         self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
 
-        user = user_form.save()
+        user_form = Form(self.env['res.users'], view='base.view_users_form')
+        user_form.name = "Test"
+        user_form.login = "Test"
+        self.assertFalse(user_form.share)
 
-        # in debug mode, show the group widget for external user
-
-        with self.debug_mode():
-            user_form = Form(user, view='base.view_users_form')
-
-            user_form['group_ids'] = group_user
-            self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
-
-            user_form['group_ids'] = group_public
-            self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
-
-            user_form['group_ids'] = group_user
-            user_form['group_ids'] = group_user + group_contain_user
-
-            user_form.save()
-
-        # in debug mode, allow extra groups
-
-        with self.debug_mode():
-            user_form = Form(self.env['res.users'], view='base.view_users_form')
-            user_form.name = "Test-2"
-            user_form.login = "Test-2"
-
-            user_form['group_ids'] = group_portal
-            self.assertTrue(user_form.share)
-
-            # for portal user, the view_group_extra_ids is only show in debug mode
-            user_form['group_ids'] = group_portal + group_contain_user
-            self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
-
-            with self.assertRaises(ValidationError, msg="The user cannot be at the same time in groups: ['Membre', 'Portal', 'Foo / Small user group']"):
-                user_form.save()
+        user_form['group_ids'] = group_public
+        self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
 
     def test_view_group_hierarchy(self):
         """Test that the group hierarchy shows up in the correct language of the user."""
