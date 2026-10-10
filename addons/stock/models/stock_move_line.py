@@ -92,6 +92,32 @@ class StockMoveLine(models.Model):
     quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
     picking_location_id = fields.Many2one(related='picking_id.location_id')
     picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
+    lot_note = fields.Html(string="discription", compute="_compute_note", readonly=False, store=True)
+
+    @api.depends('lot_id', 'lot_name')
+    def _compute_note(self):
+        for line in self:
+            if line.lot_id:
+                line.lot_note = line.lot_id.note
+            else:
+                lot = self.env['stock.lot'].search([('name', '=', line.lot_name)])
+                line.lot_note = lot.note if lot else False
+
+    @api.onchange('lot_note')
+    def lot_note_update(self):
+        for line in self:
+            if line.lot_id:
+                line.lot_id.note = line.lot_note
+            else:
+                lot = self.env['stock.lot'].search([('name', '=', line.lot_name)])
+                if lot:
+                    lot.note = line.lot_note
+
+    def _prepare_new_lot_vals(self):
+        vals = super()._prepare_new_lot_vals()
+        if self.lot_note:
+            vals['note'] = self.lot_note
+        return vals
 
     _free_reservation_index = models.Index("""(id, company_id, product_id, lot_id, location_id, owner_id, package_id)
         WHERE (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND picked IS NOT TRUE""")
@@ -355,6 +381,12 @@ class StockMoveLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            lot = self.env["stock.lot"].browse(vals.get("lot_id"))
+            product_id = vals.get("product_id")
+            product = self.env['product.product'].browse(product_id)
+            if vals.get("lot_id") and lot.product_id.id != product_id and not product.tracking:
+                vals['lot_id'] = False
+                vals['lot_note'] = False
             if vals.get('move_id'):
                 vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
             elif vals.get('picking_id'):
