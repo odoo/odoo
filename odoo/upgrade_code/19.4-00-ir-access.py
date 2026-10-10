@@ -1,3 +1,4 @@
+# test: skip; non-idempotent, requires all initial data to run
 from __future__ import annotations
 
 import csv
