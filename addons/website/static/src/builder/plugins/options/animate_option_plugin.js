@@ -11,7 +11,7 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { containsAnyNonPhrasingContent, isVisibleTextNode } from "@html_editor/utils/dom_info";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { EmphasizeAnimatedText } from "./emphasize_animated_text";
+import { EmphasizeAnimatedContent } from "./emphasize_animated_content";
 import { handleImagesIfDataset } from "@html_builder/utils/image";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 
@@ -83,7 +83,7 @@ export class AnimateOptionPlugin extends Plugin {
                 return false;
             }
         },
-        lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
+        lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedContent }),
         // This is done to clean the dataset of the images saved in the db.
         on_will_save_handlers: () =>
             applyFunDependOnSelectorAndExclude(
@@ -398,6 +398,11 @@ export class AnimateOptionPlugin extends Plugin {
                   }
         );
         this.dependencies.history.commit();
+        // "On Appearance" animations stay in their initial state in edit mode:
+        // play them explicitly to show the effect that was applied.
+        for (const animatedTextEl of animatedTextEls) {
+            this.forceAnimation(animatedTextEl);
+        }
 
         return { elements: animatedTextEls, didRemoveOtherTextAnimation };
     }
