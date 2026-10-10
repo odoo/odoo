@@ -2892,6 +2892,12 @@ class AccountEdiUBL(models.AbstractModel):
         price_amount = price_amount_str and float(price_amount_str)
         invoiced_quantity = invoiced_quantity_str and float(invoiced_quantity_str) * file_document_sign
         base_quantity = base_quantity_str and float(base_quantity_str)
+        # Because some APs wrongly put BaseQuantity = InvoicedQuantity
+        base_quantity_is_redundant = (
+            base_quantity is not None
+            and invoiced_quantity
+            and float_compare(base_quantity, abs(invoiced_quantity), precision_digits=6) == 0
+        )
 
         total_allowances = sum(allowance['amount'] for allowance in collected_values['allowances'])
         total_charges = sum(charge['amount'] for charge in collected_values['charges'])
@@ -2969,7 +2975,7 @@ class AccountEdiUBL(models.AbstractModel):
             # price_unit = 250.0
             # quantity = 6.0
             # discount_amount = 300.0
-            if not currency.is_zero(price_subtotal):
+            if not base_quantity_is_redundant and not currency.is_zero(price_subtotal):
                 price_unit = price_subtotal / price_quantity
                 discount_amount += price_discount_amount * quantity / price_quantity
         else:
