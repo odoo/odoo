@@ -7,3 +7,10 @@ class L10nTrNilveraAlias(models.Model):
 
     name = fields.Char()
     partner_id = fields.Many2one('res.partner')
+    global_user_type = fields.Selection(
+        selection=[
+            ('Invoice', "e-Invoice"),
+            ('DespatchAdvice', "e-Dispatch"),
+        ],
+        string="Nilvera Global User Type",
+    )
