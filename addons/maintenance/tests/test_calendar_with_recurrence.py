@@ -68,3 +68,25 @@ class TestCalendarWithRecurrence(HttpCase):
 
         target_datetime = datetime.combine(datetime.now().replace(day=15), time.min.replace(hour=10))  # 15h of the month at 10 AM
         self.assertEqual(request.schedule_date, target_datetime, "The event modification should update the request")
+
+    def test_single_click_event_from_calendar(self):
+        """Make sure single-clicking an event or its recurrence opens the correct record popover.
+        """
+        equipment = self.env['maintenance.equipment'].create({
+            'name': 'room',
+        })
+        self.env['maintenance.request'].create([{
+            'name': 'send the mails',
+            'schedule_date': datetime.now() + relativedelta(months=+1),
+        }, {
+            'name': 'clean the room',
+            'equipment_id': equipment.id,
+            'maintenance_type': 'preventive',
+            'recurring_maintenance': True,
+            'repeat_until': datetime.now() + relativedelta(days=1),
+            'repeat_interval': 1,
+            'repeat_unit': 'day',
+        }])
+
+        url = '/odoo/action-maintenance.hr_equipment_request_action_cal'
+        self.start_tour(url, 'test_single_click_event_from_calendar', login='admin')

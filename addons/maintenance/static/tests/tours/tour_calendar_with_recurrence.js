@@ -85,3 +85,26 @@ registry.category("web_tour.tours").add("test_drag_and_drop_event_in_calendar", 
         },
     ],
 });
+
+registry.category("web_tour.tours").add("test_single_click_event_from_calendar", {
+    steps: () => [
+        {
+            trigger: 'a[data-event-id="1"]',
+            run: "click",
+        },
+        {
+            trigger: '.o_popover_header:contains("clean the room")',
+        },
+        {
+            trigger: ".o_card_popover_close",
+            run: "click",
+        },
+        {
+            trigger: 'a[data-event-id="2"]',
+            run: "click",
+        },
+        {
+            trigger: '.o_popover_header:contains("clean the room")',
+        },
+    ],
+});

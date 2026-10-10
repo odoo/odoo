@@ -1,6 +1,10 @@
 import { CalendarCommonRenderer } from "@web/views/calendar/calendar_common/calendar_common_renderer";
 
 export class CalendarWithRecurrenceCommonRenderer extends CalendarCommonRenderer {
+    getPopoverProps(record) {
+        return super.getPopoverProps({ ...record, id: record.rawRecord.id });
+    }
+
     onDblClick(info) {
         const record = this.props.model.records[info.event.id];
         this.props.editRecord({ ...record, id: record.rawRecord.id });
