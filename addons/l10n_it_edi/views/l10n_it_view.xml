@@ -114,6 +114,9 @@
                 <field name="l10n_it_edi_attachment_name" groups="base.group_no_one"/>
                 <field name="l10n_it_edi_state" groups="base.group_no_one"/>
             </xpath>
+            <xpath expr="//filter[@name='group_by_company']" position="after">
+                <filter string="SDI State" name="groupy_by_sdi_state" domain="[]" context="{'group_by': 'l10n_it_edi_state'}"/>
+            </xpath>
         </field>
     </record>
 

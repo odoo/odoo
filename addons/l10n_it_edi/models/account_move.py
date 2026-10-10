@@ -1270,29 +1270,32 @@ class AccountMove(models.Model):
     # EDI: Import
     # -------------------------------------------------------------------------
 
+    def _l10n_it_edi_check_send_state(self, company):
+        """ Updates the SdI state of moves waiting for a response.
+            Can be called on a specific recordset (self) or globally via search.
+        """
+        if moves_to_check := self.search([
+            ('company_id', '=', company.id),
+            ('l10n_it_edi_transaction', '!=', False),
+            *Domain.OR([
+                [('l10n_it_edi_state', 'in', WAITING_STATES)],
+                Domain.AND([
+                    [('l10n_it_edi_state', '=', 'forwarded')],
+                    [('commercial_partner_id.l10n_it_pa_index', '=ilike', '_' * 6)],
+                ]),
+            ]),
+        ]):
+            moves_to_check._l10n_it_edi_update_send_state()
+
+        return {'type': 'ir.actions.client', 'tag': 'reload'}
+
     def cron_l10n_it_edi_download_and_update(self):
         """ Crons run with sudo(), with empty recordset. Remember that. """
         retrigger = False
-        for proxy_user in self.env['account_edi_proxy_client.user'].search([('proxy_type', '=', 'l10n_it_edi')]):
-            proxy_user = proxy_user.with_company(proxy_user.company_id)
-            if proxy_user.edi_mode != 'demo':
-                moves_to_check = self.search([
-                    ('company_id', '=', proxy_user.company_id.id),
-                    ('l10n_it_edi_transaction', '!=', False),
-                    *Domain.OR(
-                        [[('l10n_it_edi_state', 'in', WAITING_STATES)],
-                        Domain.AND(
-                            [
-                                [('l10n_it_edi_state', '=', 'forwarded')],
-                                [('commercial_partner_id.l10n_it_pa_index', '=ilike', '_' * 6)],
-                            ]
-                        )]
-                    )
-                ])
-                if moves_to_check:
-                    moves_to_check._l10n_it_edi_update_send_state()
-                retrigger = retrigger or self._l10n_it_edi_download_invoices(proxy_user)
+        for proxy_user in self.env['account_edi_proxy_client.user'].search([('proxy_type', '=', 'l10n_it_edi'), ('edi_mode', '!=', 'demo')]):
+            self.env['account.move']._l10n_it_edi_check_send_state(company=proxy_user.company_id)
 
+            retrigger = retrigger or self._l10n_it_edi_download_invoices(proxy_user)
         # Retrigger download if there are still some on the server
         if retrigger:
             _logger.info('Retriggering "Receive invoices from the SdI"...')
