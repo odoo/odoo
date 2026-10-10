@@ -247,7 +247,7 @@ class AccountMoveSend(models.AbstractModel):
                     invoice._l10n_tr_nilvera_submit_earchive(xml_file)
 
                 if self._can_commit():
-                    self._cr.commit()
+                    self.env.cr.commit()
 
     @api.model
     def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
