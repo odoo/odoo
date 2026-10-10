@@ -1,0 +1,41 @@
+<odoo>
+    <record id="ir_cron_l10n_tr_edi_fetch_einvoice_purchase_documents" model="ir.cron">
+        <field name="name">TR EDI: retrieve new purchase documents</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_l10n_tr_edi_fetch_einvoice_purchase_documents()</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(hours=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="ir_cron_l10n_tr_edi_fetch_einvoice_sale_documents" model="ir.cron">
+        <field name="name">TR EDI: retrieve E-Invoice new sale documents</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_l10n_tr_edi_fetch_einvoice_sale_documents()</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(hours=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="ir_cron_l10n_tr_edi_fetch_earchive_sale_documents" model="ir.cron">
+        <field name="name">TR EDI: retrieve new E-Archive sale documents</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_l10n_tr_edi_fetch_earchive_sale_documents()</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(hours=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+    <record id="ir_cron_l10n_tr_edi_fetch_status" model="ir.cron">
+        <field name="name">TR EDI: retrieve invoice status</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_l10n_tr_edi_fetch_status()</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(hours=12)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+</odoo>
