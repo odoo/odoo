@@ -85,6 +85,11 @@ class AccountMove(models.Model):
         # EXTENDS 'l10n_it_edi'
         res = super()._l10n_it_edi_get_values(pdf_values)
         res['payment_method'] = self.l10n_it_payment_method
+        # With RiBa (MP12) the IBAN to report is the debtor's one, i.e. the customer's
+        if self.l10n_it_payment_method == 'MP12' and self.move_type == 'out_invoice':
+            res['partner_bank'] = self.commercial_partner_id.bank_ids.filtered_domain(
+                self.env['res.partner.bank']._check_company_domain(self.company_id)
+            )[:1]
 
         return res
 
