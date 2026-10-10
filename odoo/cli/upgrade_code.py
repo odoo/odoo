@@ -120,13 +120,17 @@ class FileManager:
             if addon.is_dir() and (addon / '__manifest__.py').exists()
         }
         self._files = {
-            str(path): FileAccessor(path, Path(addon_path))
-            for addon_path in addons_path
-            for path in Path(addon_path).glob(glob)
-            if '__pycache__' not in path.parts
+            str(path): FileAccessor(path, addon_path)
+            for apath in addons_path
+            if (addon_path := Path(apath))
+            for path in addon_path.glob(glob)
             if path.suffix in AVAILABLE_EXT
+            if (parts := path.parts)
+            if '__pycache__' not in parts
+            if '.git' not in parts
             if path.is_file()
         }
+        self._added_files = set()
         self._summary = []
 
     def __iter__(self) -> Iterator[FileAccessor]:
@@ -147,12 +151,24 @@ class FileManager:
 
             file = self._files.get(str(path))
             if file is None:
+                file_path = str(path)
                 file = FileAccessor(path, addon.parent)
-                self._files[str(file.path)] = file
+                self._files[file_path] = file
+                self._added_files.add(file_path)
             return file
 
         except KeyError:
             raise ValueError(f"You may not access file {module}/{file_name}")
+
+    def reset(self):
+        """Reset changes in the file manager."""
+        for file in self._added_files:
+            self._files.pop(file)
+        self._added_files.clear()
+        for file in self:
+            if file.dirty:
+                del file._content
+                file.dirty = False
 
     def add_to_summary(self, message: str) -> None:
         if message:
@@ -187,7 +203,7 @@ def get_upgrade_code_scripts(from_version: tuple[int, ...], to_version: tuple[in
 
 
 def migrate(
-    addons_path: list[str],
+    addons_path: list[str] | FileManager,
     glob: str,
     from_version: tuple[int, ...] | None = None,
     to_version: tuple[int, ...] | None = None,
@@ -210,7 +226,11 @@ def migrate(
     else:
         modules = get_upgrade_code_scripts(from_version, to_version)
 
-    file_manager = FileManager(addons_path, glob)
+    if isinstance(addons_path, FileManager):
+        file_manager = addons_path
+        assert not glob, "FileManager given with a glob, unsupported"
+    else:
+        file_manager = FileManager(addons_path, glob)
     for (name, module) in modules:
         file_manager.print_progress(0)  # 0%
         module.upgrade(file_manager)
