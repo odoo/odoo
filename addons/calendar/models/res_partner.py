@@ -101,6 +101,7 @@ class ResPartner(models.Model):
                 'is_alone': attendee.event_id.is_organizer_alone and attendee_is_organizer,
                 # attendees data is sorted according to this key in JS.
                 'is_organizer': 1 if attendee.partner_id == attendee.event_id.user_id.partner_id else 0,
+                'is_internal': not attendee.partner_id.partner_share
             })
         return attendees_details
 
