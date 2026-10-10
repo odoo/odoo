@@ -1506,3 +1506,17 @@ class TestPointOfSaleFlow(CommonPosTest):
             order.amount_total + refund.amount_total, 0.0,
             msg="The totals of an order and of its refund should cancel each other.",
         )
+
+    def test_switch_payment_to_customer_account_requires_customer(self):
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{'product_id': self.ten_dollars_no_tax.product_variant_id.id}],
+            'payment_data': [{'payment_method_id': self.cash_payment_method.id, 'amount': 10}],
+        })
+        with self.assertRaises(ValidationError):
+            order.payment_ids.payment_method_id = self.credit_payment_method
+
+        order.partner_id = self.partner_adgu
+        order.write({'payment_ids': [Command.update(order.payment_ids.id, {'payment_method_id': self.credit_payment_method.id})]})
+        self.assertEqual(order.payment_ids.payment_method_id, self.credit_payment_method)
+        self.assertTrue(order.is_singly_invoiced, "Switching to customer account should invoice the order.")
+        self.assertEqual(order.account_move.amount_residual, 10)

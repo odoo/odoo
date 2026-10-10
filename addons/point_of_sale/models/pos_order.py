@@ -533,6 +533,9 @@ class PosOrder(models.Model):
                 vals['print_history'] = False
 
         list_line = self._create_pm_change_log(vals)
+        orders_without_pay_later = self.filtered(
+            lambda o: vals.get("payment_ids") and "pay_later" not in o.payment_ids.payment_method_id.mapped("type")
+        )
         res = super().write(vals)
         for order in self:
             if vals.get('payment_ids'):
@@ -551,6 +554,12 @@ class PosOrder(models.Model):
             for order in self:
                 if vals.get('payment_ids'):
                     order.message_post(body=body)
+
+        switched_to_pay_later = orders_without_pay_later.filtered(
+            lambda o: o.state == "paid" and "pay_later" in o.payment_ids.payment_method_id.mapped("type")
+        )
+        for order in switched_to_pay_later:
+            order._generate_order_invoice()
 
         return res
 
