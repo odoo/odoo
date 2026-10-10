@@ -205,31 +205,40 @@ class StockMove(models.Model):
         return moves
 
     def _create_account_move(self):
-        """ Create account move for specific location or analytic."""
-        aml_vals_list = []
-        move_to_link = set()
+        """ Create account move for specific location or analytic.
+
+        One account move is created per company and accounting partner, as moves
+        validated together may belong to pickings of different partners or companies.
+        """
+        moves_by_company_partner = defaultdict(lambda: self.env['stock.move'])
         for move in self:
             if move._should_create_account_move():
+                moves_by_company_partner[move.company_id, move._get_partner_id_for_valuation_lines()] |= move
+
+        account_moves = self.env['account.move']
+        for (company, partner_id), moves in moves_by_company_partner.items():
+            aml_vals_list = []
+            for move in moves:
                 aml_vals_list += move._get_account_move_line_vals()
-                move_to_link.add(move.id)
-        if not aml_vals_list:
-            return self.env['account.move']
+            if not aml_vals_list:
+                continue
 
-        move_refs = list(set(self.mapped('reference')))
-        joined_refs = ", ".join(move_refs)
-        if len(joined_refs) > 43:
-            joined_refs = joined_refs[:40] + "..."
+            move_refs = list(set(moves.mapped('reference')))
+            joined_refs = ", ".join(move_refs)
+            if len(joined_refs) > 43:
+                joined_refs = joined_refs[:40] + "..."
 
-        account_move = self.env['account.move'].sudo().create({
-            'ref': joined_refs,
-            'partner_id': self._get_partner_id_for_valuation_lines(),
-            'journal_id': self.company_id.account_stock_journal_id.id,
-            'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
-            'date': self.env.context.get('force_period_date') or fields.Date.context_today(self),
-        })
-        self.env['stock.move'].browse(move_to_link).account_move_id = account_move.id
-        account_move._post()
-        return account_move
+            account_move = self.env['account.move'].sudo().create({
+                'ref': joined_refs,
+                'partner_id': partner_id,
+                'journal_id': company.account_stock_journal_id.id,
+                'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
+                'date': self.env.context.get('force_period_date') or fields.Date.context_today(self),
+            })
+            moves.account_move_id = account_move.id
+            account_move._post()
+            account_moves |= account_move
+        return account_moves
 
     def _get_partner_id_for_valuation_lines(self):
         return (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
