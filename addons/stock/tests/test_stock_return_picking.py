@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from freezegun import freeze_time
+
+from odoo import fields
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.tests.common import Form
 
@@ -209,3 +212,56 @@ class TestReturnPicking(TestStockCommon):
         stock_return_picking = stock_return_picking_form.save()
         self.assertEqual(stock_return_picking.product_return_moves.quantity, 10,
                         "The quantity to return should be 10 g (0.01 kg converted to the product's default UoM)")
+
+    def test_return_lot_keeps_in_date(self):
+        """ A lot delivered and then returned by the customer should keep its original
+        incoming date, so that FIFO still considers it older than lots received meanwhile.
+        """
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        product = self.env['product.product'].create({
+            'name': 'Lot Product',
+            'type': 'product',
+            'tracking': 'lot',
+            'categ_id': self.env['product.category'].create({
+                'name': 'FIFO',
+                'removal_strategy_id': self.env.ref('stock.removal_fifo').id,
+            }).id,
+        })
+        lot_a, lot_c = self.env['stock.lot'].create([
+            {'name': name, 'product_id': product.id, 'company_id': self.env.company.id}
+            for name in ('lot_a', 'lot_c')
+        ])
+
+        def deliver():
+            picking = self.PickingObj.create({
+                'picking_type_id': self.picking_type_out,
+                'location_id': self.stock_location,
+                'location_dest_id': self.customer_location,
+                'move_ids': [(0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': self.uom_unit.id,
+                    'location_id': self.stock_location,
+                    'location_dest_id': self.customer_location,
+                })],
+            })
+            picking.action_confirm()
+            picking.action_assign()
+            return picking
+
+        with freeze_time('2026-01-01'):
+            self.env['stock.quant']._update_available_quantity(product, stock_location, 1, lot_id=lot_a)
+            delivery = deliver()
+            delivery.button_validate()
+        with freeze_time('2026-03-01'):
+            self.env['stock.quant']._update_available_quantity(product, stock_location, 1, lot_id=lot_c)
+        with freeze_time('2026-03-05'):
+            return_wizard = Form(self.env['stock.return.picking'].with_context(
+                active_id=delivery.id, active_ids=delivery.ids, active_model='stock.picking')).save()
+            return_picking = self.PickingObj.browse(return_wizard.create_returns()['res_id'])
+            return_picking.button_validate()
+
+        quant_a = self.env['stock.quant']._gather(product, stock_location, lot_id=lot_a, strict=True)
+        self.assertEqual(quant_a.in_date, fields.Datetime.to_datetime('2026-01-01'))
+        self.assertEqual(deliver().move_line_ids.lot_id, lot_a)
