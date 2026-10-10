@@ -1,8 +1,8 @@
+# test: skip; finds l10n to migrate, do manually if needed
 from __future__ import annotations
 
 import csv
 import difflib
-import glob
 import re
 import typing
 from collections import defaultdict
