@@ -29,6 +29,8 @@ import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { ImageSize } from "@html_builder/plugins/image/image_size";
+import { ThemeAccessibilityDialog } from "./theme_accessibility_dialog";
+import { ThemeColorsPreviewDialog } from "./theme_colors_preview_dialog";
 
 /**
  * @typedef { Object } ThemeTabShared
@@ -322,6 +324,9 @@ export class ThemeTabPlugin extends Plugin {
         }
 
         const optionsArray = Array.isArray(options) ? options : [options];
+        const hasAccessibilityTest = ["website-settings", "theme-button", "theme-input"].includes(
+            id
+        );
         optionsArray.forEach((option) => {
             option.selector = "*";
         });
@@ -334,8 +339,30 @@ export class ThemeTabPlugin extends Plugin {
             isClonable: false,
             isRemovable: false,
             options: optionsArray,
-            optionsContainerTopButtons: [],
+            optionsContainerTopButtons: [
+                {
+                    class: `oi oi-fw btn ${hasAccessibilityTest ? "btn-light" : "btn-info"}`,
+                    handler: () => this.openAccessibilityCheck(id, name || _t("Theme")),
+                    icon: "accessibility_new",
+                    title: _t("Check accessibility"),
+                },
+            ],
         };
+    }
+
+    openAccessibilityCheck(id, title) {
+        if (id === "website-settings") {
+            this.services.dialog.add(ThemeColorsPreviewDialog, {
+                autoCheck: true,
+                onIframeLoad: () => {},
+            });
+            return;
+        }
+        this.services.dialog.add(ThemeAccessibilityDialog, {
+            containerId: id,
+            document: this.document,
+            title,
+        });
     }
 }
 

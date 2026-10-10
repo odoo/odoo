@@ -4,6 +4,14 @@
 <t t-name="website.WebsiteBuilder">
     <Builder t-props="this.builderProps">
         <t t-set-slot="extraActions">
+            <button type="button" t-on-click="this.checkPageAccessibility"
+                class="o-hb-btn btn px-1 d-flex align-items-center"
+                t-att-class="{ 'btn-light border': !this.pageAccessibilityState.active, 'btn-danger active': this.pageAccessibilityState.active }"
+                t-att-title="this.pageAccessibilityState.active ? 'Clear ' + this.pageAccessibilityState.issueCount + ' contrast highlight(s)' : 'Highlight text contrast issues'"
+                t-att-aria-label="this.pageAccessibilityState.active ? 'Clear ' + this.pageAccessibilityState.issueCount + ' contrast highlight(s)' : 'Highlight text contrast issues'"
+                t-att-aria-pressed="this.pageAccessibilityState.active">
+                <span class="oi oi-lg" data-icon="accessibility_new" role="img"/>
+            </button>
             <div class="o-website-discard-save-buttons d-flex">
                 <button type="button" t-on-click="this.discard"
                     class="o-hb-btn btn" data-action="cancel"
