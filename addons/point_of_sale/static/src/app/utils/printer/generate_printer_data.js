@@ -184,10 +184,16 @@ export class GeneratePrinterData {
     generateLineData() {
         return this.order.lines.map((line) => {
             const productData = { ...line.product_id.raw };
-            productData.display_name = line.getFullProductName();
+            if (line.isDiscountLine) {
+                productData.display_name = line.getFullProductName();
+            }
             return {
                 ...line.raw,
                 product_data: productData,
+                attribute_value_ids: line.constructAttributeString().replaceAll(", ", " - "),
+                child_combo_lines: line.combo_line_ids
+                    .map((x) => `${x.qty} ${x.full_product_name}`)
+                    .join(" - "),
                 product_uom_name: line.product_id.uom_id?.name || "",
                 unit_price: line.currencyDisplayPriceUnit,
                 product_unit_price: line.product_id.displayPriceUnit,

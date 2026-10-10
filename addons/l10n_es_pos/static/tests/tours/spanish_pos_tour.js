@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             FeedbackScreen.checkTicketData({
                 cssRules: [
                     {
-                        css: ".simplified-invoice-number",
+                        css: "td",
                         negation: true,
                     },
                     {
@@ -68,7 +68,7 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             FeedbackScreen.checkTicketData({
                 cssRules: [
                     {
-                        css: ".simplified-invoice-number",
+                        css: "td",
                         text: "0003",
                     },
                     {
