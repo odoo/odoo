@@ -1319,7 +1319,7 @@ describe("tab", () => {
         const expectedContent = unformat(
             `<p data-selection-placeholder=""><br></p>
             <table>
-                <colgroup><col style="width: 20px;"></colgroup>
+                <colgroup><col style="width: 20px;"><col><col></colgroup>
                 <tbody>
                     <tr style="height: 20px;">
                         <td style="">ab</td>
@@ -1344,7 +1344,7 @@ describe("tab", () => {
             unformat(`
                 <p data-selection-placeholder=""><br></p>
                 <table>
-                    <colgroup><col style="width: 20px;"></colgroup>
+                    <colgroup><col style="width: 20px;"><col><col></colgroup>
                     <tbody>
                         <tr style="height: 20px;">
                             <td style="">ab</td>
@@ -1363,7 +1363,7 @@ describe("tab", () => {
                 '<table><tbody><tr style="height: 20px;"><td style="width: 20px;">ab</td><td>[cd]</td><td>ef</td></tr></tbody></table>',
             stepFunction: () => press("Tab"),
             contentAfter:
-                '<table><colgroup><col style="width: 20px;"></colgroup><tbody><tr style="height: 20px;"><td>ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
+                '<table><colgroup><col style="width: 20px;"><col><col></colgroup><tbody><tr style="height: 20px;"><td>ab</td><td>cd</td><td>ef[]</td></tr></tbody></table>',
         });
     });
 });
