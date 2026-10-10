@@ -1,6 +1,16 @@
 /** @odoo-module alias=@web/../tests/mobile/core/action_swiper_tests default=false */
 
-import { beforeEach, expect, hover, mockTouch, queryFirst, test } from "@odoo/hoot";
+import {
+    advanceTime,
+    beforeEach,
+    expect,
+    hover,
+    mockTouch,
+    pointerDown,
+    pointerUp,
+    queryFirst,
+    test,
+} from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import {
     contains,
@@ -669,6 +679,42 @@ test("an async action is awaited before being executed", async () => {
     await mountWithCleanup(Parent);
     await swipeRight(".o_actionswiper");
     expect.verifySteps(["action started"]);
+    prom.resolve();
+    await expect.waitForSteps(["action done"]);
+});
+
+test("touches on the swiped content are ignored until the action is done", async () => {
+    const prom = Promise.withResolvers();
+
+    class Parent extends Component {
+        static components = { ActionSwiper };
+        static template = xml`
+            <div class="d-flex">
+                <ActionSwiper animationType="'forwards'" onRightSwipe="{ action: () => this.onRightSwipe() }">
+                    <div class="target-component" style="width: 200px; height: 80px" t-on-touchstart="() => this.onTouchStart()">Test</div>
+                </ActionSwiper>
+            </div>
+        `;
+        onTouchStart() {
+            expect.step("touchstart");
+        }
+        async onRightSwipe() {
+            expect.step("action started");
+            await prom.promise;
+            expect.step("action done");
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    await swipeRight(".target-component");
+    expect.verifySteps(["touchstart", "action started"]);
+
+    // tap on the content while the action is running
+    await pointerDown(".target-component");
+    await pointerUp(".target-component");
+    await advanceTime(1000);
+    expect.verifySteps([]);
+
     prom.resolve();
     await expect.waitForSteps(["action done"]);
 });
