@@ -1,5 +1,4 @@
 import logging
-import re
 import requests
 
 from markupsafe import Markup
@@ -12,8 +11,6 @@ from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOIC
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
 _logger = logging.getLogger(__name__)
-
-siren_siret_re = re.compile(r'^(\d{9}|\d{14})$')
 
 
 class ResPartner(models.Model):
@@ -93,10 +90,9 @@ class ResPartner(models.Model):
         if not self._peppol_is_french_partner():
             return None, None
 
-        siret = self.siret or (self.company_registry if self.company_registry and siren_siret_re.match(self.company_registry) else '')
-        siren = siret[:9]
+        siret = self._l10n_fr_get_siret_or_siren()
         if len(siret) == 9:
-            return 'siren', siren
+            return 'siren', siret
         elif len(siret) == 14:
             return 'siret', siret
         return None, None
