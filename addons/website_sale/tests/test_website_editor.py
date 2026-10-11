@@ -3,11 +3,13 @@
 import base64
 import binascii
 import logging
+import requests
+from unittest.mock import Mock, patch
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
-from odoo.tools import BinaryBytes
+from odoo.tools import BinaryBytes, mute_logger
 
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
@@ -239,6 +241,38 @@ class TestProductPictureController(HttpCase):
                 )
             self.env["product.image"].invalidate_model()
             self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
+
+    @mute_logger("odoo.addons.html_editor.models.ir_qweb_fields")
+    def test_extra_images_from_remote_urls(self):
+        url_attachments = self.env["ir.attachment"].create([
+            {"name": "image.png", "public": True, "url": url}
+            for url in (
+                "https://example.com/timeout_image.png",
+                "https://example.com/remote_image.png",
+            )
+        ])
+        remote_image = ATTACHMENT_DATA[0]
+
+        with (
+            patch(
+                "odoo.addons.html_editor.models.ir_qweb_fields.requests.get",
+                side_effect=[
+                    requests.exceptions.Timeout(),
+                    Mock(content=remote_image),
+                ],
+            ),
+            MockRequest(self.product.env, website=self.website),
+        ):
+            self.WebsiteSaleController.add_product_media(
+                [{"id": id_} for id_ in url_attachments.ids],
+                "image",
+                self.product.id,
+                self.product.product_tmpl_id.id,
+            )
+
+        images = self.product.product_template_image_ids
+        self.assertFalse(images[0].image_1920.content)
+        self.assertTrue(images[1].image_1920.content)
 
 
 @tagged("post_install", "-at_install")
