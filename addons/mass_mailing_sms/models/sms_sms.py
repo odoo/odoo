@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -12,9 +11,9 @@ class SmsSms(models.Model):
 
     mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing')
     # Linking to another field than the comodel id allows to use the ORM to create
-    # "linked" records (see _prepare_sms_values) without adding a foreign key.
+    # "linked" records (see _prepare_mass_sms_values) without adding a foreign key.
     # See commit message for why this is useful.
-    mailing_trace_ids = fields.One2many('mailing.trace', 'sms_id_int', string='Statistics')
+    mailing_trace_ids = fields.One2many('mailing.trace', 'sms_id_real', string='Statistics')
 
     def _update_body_short_links(self):
         """ Override to tweak shortened URLs by adding statistics ids, allowing to
