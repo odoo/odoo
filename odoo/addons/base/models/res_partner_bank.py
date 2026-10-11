@@ -3,6 +3,7 @@ import re
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import clean_context
+from odoo.tools.bank_account_number import validate_clabe, validate_iban
 
 
 def sanitize_account_number(account_number):
@@ -22,7 +23,7 @@ class ResPartnerBank(models.Model):
 
     active = fields.Boolean(default=True)
     account_type = fields.Selection(
-        selection=[('bank', 'Normal')],
+        selection=[('bank', 'Normal'), ('iban', 'IBAN'), ('clabe', 'CLABE')],
         string="Type",
         help="Bank account type: Normal, IBAN, CLABE, or other from localization. Inferred from the bank account number.",
         compute='_compute_account_type',
@@ -156,6 +157,15 @@ class ResPartnerBank(models.Model):
     def retrieve_account_type(self, account_number):
         """ To be overridden by subclasses in order to support other account_types.
         """
+        for validator, account_type in (
+            (validate_iban, 'iban'),
+            (validate_clabe, 'clabe'),
+        ):
+            try:
+                validator(self.env, account_number)
+                return account_type
+            except ValidationError:
+                pass
         return 'bank'
 
     @api.depends('account_number')
