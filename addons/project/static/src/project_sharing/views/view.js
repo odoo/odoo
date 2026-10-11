@@ -7,6 +7,7 @@ import { View } from "@web/views/view";
 patch(View.prototype, {
     setup() {
         super.setup();
+
         if (
             router.current.action === "project_sharing" &&
             !router.current.resId &&
@@ -18,9 +19,10 @@ patch(View.prototype, {
 
     async loadView(props) {
         await super.loadView(props);
+
         // prepare the readonly view for collaborators with view access only (nothing is editable)
-        if (session.portal_is_readonly && this.componentProps && this.componentProps.archInfo) {
-            const archInfo = this.componentProps.archInfo;
+        if (session.portal_is_readonly && this.componentProps().archInfo) {
+            const { archInfo } = this.componentProps();
             if (archInfo.activeActions) {
                 archInfo.activeActions.create = false;
                 archInfo.activeActions.edit = false;
