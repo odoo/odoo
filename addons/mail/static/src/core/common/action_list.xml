@@ -50,8 +50,7 @@
 
 <t t-name="mail.InlineAction">
     <t t-call="mail.Action">
-        <t t-if="this.hasDefinitionComponent" t-component="this.action.component" t-props="this.action.componentProps"/>
-        <button t-else="" t-ref="this.props.action.actionRef" t-att-class="this.btnClass" t-att="this.attrs" t-on-click="(ev) => this.onSelected(this.action, ev)" t-att-data-hotkey="this.action.hotkey" t-att-style="this.props.style">
+        <button t-ref="this.props.action.actionRef" t-att-class="this.btnClass" t-att="this.attrs" t-on-click="(ev) => this.onSelected(this.action, ev)" t-att-data-hotkey="this.action.hotkey" t-att-style="this.props.style">
             <t t-call="mail.Action.icon"/>
             <t t-call="mail.Action.label"/>
             <t t-call="mail.Action.extraContent"/>
@@ -63,8 +62,7 @@
 
 <t t-name="mail.DropdownAction">
     <t t-call="mail.Action">
-        <t t-if="this.hasDefinitionComponent" t-component="this.action.component" t-props="this.action.componentProps"/>
-        <DropdownItem t-else="" class="this.btnClass" tag="'button'" onSelected="(ev) => this.onSelected(this.action, ev)" attrs="this.attrs" closingMode="this.action.closingModeAsDropdown">
+        <DropdownItem class="this.btnClass" tag="'button'" onSelected="(ev) => this.onSelected(this.action, ev)" attrs="this.attrs" closingMode="this.action.closingModeAsDropdown">
             <t t-if="this.action.icon" t-call="mail.Action.icon"/>
             <i t-else="" class="oi oi-fw opacity-0" data-icon="question_mark"/>
             <t t-call="mail.Action.label"/>

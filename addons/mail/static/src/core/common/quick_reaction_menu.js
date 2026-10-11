@@ -1,6 +1,7 @@
 import { FrequentEmojiPlugin } from "@web/core/emoji_picker/frequent_emoji_plugin";
 import { Action } from "@mail/core/common/action";
-import { Component, signal, t, useListener, usePlugin, useProps } from "@odoo/owl";
+import { BaseAction } from "@mail/core/common/action_list";
+import { Component, signal, t, useListener, usePlugin, useProps, xml } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -158,4 +159,11 @@ export class QuickReactionMenu extends Component {
             },
         };
     }
+}
+
+export class QuickReactionAction extends BaseAction {
+    static components = { QuickReactionMenu };
+    static template = xml`
+        <QuickReactionMenu action="this.action" message="this.action.params.message" messageActive="this.action.owner.isActive?.()"/>
+    `;
 }
