@@ -10,6 +10,8 @@ import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryText } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { user } from "@web/core/user";
+import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -26,6 +28,16 @@ test("should update activities when opening the activity menu", async () => {
     });
     await click(".o_menu_systray i[aria-label='Activities']");
     await contains(".o-mail-ActivityMenu-counter:text('1')");
+});
+
+test("light user does not have the activity menu", async () => {
+    await startServer();
+    const started = start();
+    // start() resets the user from the server state before rendering the systray
+    patch(user, { isRegularUser: false });
+    await started;
+    await contains(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o_menu_systray i[aria-label='Activities']", { count: 0 });
 });
 
 test("global shortcut", async () => {
