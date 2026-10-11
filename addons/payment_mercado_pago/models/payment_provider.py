@@ -53,10 +53,7 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         url = urls.url_join('https://api.mercadopago.com', endpoint)
-        headers = {
-            'Authorization': f'Bearer {self.mercado_pago_access_token}',
-            'X-Platform-Id': 'dev_cdf1cfac242111ef9fdebe8d845d0987',
-        }
+        headers = self._mercado_pago_prepare_request_headers(endpoint, payload=payload, method=method)
         try:
             if method == 'GET':
                 response = requests.get(url, params=payload, headers=headers, timeout=10)
@@ -88,6 +85,23 @@ class PaymentProvider(models.Model):
                 "Mercado Pago: " + _("Could not establish the connection to the API.")
             )
         return response.json()
+
+    def _mercado_pago_prepare_request_headers(self, endpoint, payload=None, method='POST'):
+        """ Prepare the headers of a request to Mercado Pago API.
+
+        Note: self.ensure_one()
+
+        :param str endpoint: The endpoint to be reached by the request.
+        :param dict payload: The payload of the request.
+        :param str method: The HTTP method of the request.
+        :return: The request headers.
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {
+            'Authorization': f'Bearer {self.mercado_pago_access_token}',
+            'X-Platform-Id': 'dev_cdf1cfac242111ef9fdebe8d845d0987',
+        }
 
     def _get_default_payment_method_codes(self):
         """ Override of `payment` to return the default payment method codes. """
