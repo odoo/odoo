@@ -3,10 +3,8 @@
 import socket
 
 from itertools import product
-from unittest.mock import patch
 from werkzeug.urls import url_parse
 
-from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestRecipients
@@ -266,6 +264,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
 @tagged('-at_install', 'post_install', 'multi_company', 'mail_controller')
 class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
 
+    @mute_logger("odoo.addons.mail.tools.store_handler")
     def test_mail_thread_data(self):
         """ Test returned thread data, in MC environment, to test notably MC
         access issues on partner, ACL support, ... """
@@ -283,14 +282,16 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
         with self.assertRaises(AccessError):
             customer_c3.with_user(self.user_employee_c2).check_access("read")
 
-        self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
-        result = self.make_jsonrpc_request(
+        def request_thread_data(user):
+            self.authenticate(user.login, user.login)
+            return self.make_jsonrpc_request(
             "/mail/store", {"fetch_params": [["mail.thread", {
                 "thread_id": record.id,
                 "thread_model": record._name,
                 "request_list": ["followers"],
             }]]},
         )
+        result = request_thread_data(self.user_employee_c2)
         self.assertEqual(len(result["mail.followers"]), 2)
         self.assertEqual(result["mail.followers"][1]["partner_id"], customer_c3.id)
         self.assertEqual(result["mail.thread"][0]["followersCount"], 2)
@@ -299,41 +300,23 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
         self.assertTrue(result["mail.thread"][0]["canPostOnReadonly"])
 
         # check read / write / post access info
+        # non-internal users are rejected at the audience gate, nothing added to store
+        for portal_user in (self.user_portal, self.user_portal_c2):
+            with self.subTest(user_name=portal_user.name):
+                self.assertEqual(request_thread_data(portal_user), {})
         for test_user, (has_w, has_r, can_post) in zip(
-            (self.user_portal, self.user_portal_c2, self.user_employee, self.user_admin),
+            (self.user_employee, self.user_admin),
             (
-                (False, True, True),  # currently not really supported actually, should go through portal controllers
-                (False, True, True),  # currently not really supported actually, should go through portal controllers
                 (False, True, True),
                 (True, True, True),
             ),
         ):
             with self.subTest(user_name=test_user.name):
-                self.authenticate(test_user.login, test_user.login)
-                result = self.make_jsonrpc_request(
-                    "/mail/store",
-                    {
-                        "fetch_params": [
-                            [
-                                "mail.thread",
-                                {
-                                    "thread_id": record.id,
-                                    "thread_model": record._name,
-                                    "request_list": ["followers"],
-                                },
-                            ]
-                        ]
-                    },
-                )
-                thread_data = result["mail.thread"][0]
+                thread_data = request_thread_data(test_user)["mail.thread"][0]
                 self.assertEqual(thread_data["hasWriteAccess"], has_w)
                 self.assertEqual(thread_data["hasReadAccess"], has_r)
                 self.assertEqual(thread_data["canPostOnReadonly"], can_post)
-                if test_user in self.user_portal + self.user_portal_c2:
-                    self.assertNotIn("mail.followers", result)
-                    self.assertNotIn("followersCount", thread_data)
-                else:
-                    self.assertEqual(thread_data["followersCount"], 2)
+                self.assertEqual(thread_data["followersCount"], 2)
 
         record.with_user(self.user_admin).message_post(
             body='Hello!',
