@@ -13,7 +13,35 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 
+export const expandDiscussSequenceGroup = 5;
+export const expandDiscussSequenceQuick = 0;
+
 describeThreadActionGroup(10, { tags: ACTION_GROUP_TAGS.INLINE_SWITCHER_LOOK });
+
+registerThreadAction("expand-discuss", {
+    condition: ({ ancestors, channel, owner, store }) =>
+        channel &&
+        ancestors.inChatWindow &&
+        !store.env.services.ui.isSmall &&
+        !owner.isDiscussSidebarChannelActions,
+    icon: "expand_content",
+    name: _t("Open in Discuss"),
+    onSelected({ channel, store }) {
+        store.env.services.action.doAction(
+            {
+                type: "ir.actions.client",
+                tag: "mail.action_discuss",
+            },
+            {
+                clearBreadcrumbs: true,
+                additionalContext: { active_id: channel.id },
+            }
+        );
+    },
+    sequence: 10,
+    sequenceGroup: expandDiscussSequenceGroup,
+    sequenceQuick: expandDiscussSequenceQuick,
+});
 
 registerThreadAction("pinned-messages", {
     actionPanelComponent: PinnedMessagesPanel,

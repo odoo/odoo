@@ -17,6 +17,7 @@
         "mail",
         "mail_bot",
         "microsoft_calendar",
+        "portal_discuss",
         "project_todo",
         "website_livechat",
         "website_sale",
