@@ -52,6 +52,12 @@ class IrHttp(models.AbstractModel):
                             timestamp_1fa, auth_method_1fa = first_fa
                             if timestamp_1fa > threshold:
                                 reauth_requirements["first_fa_method"] = auth_method_1fa
+                    if reauth_type == 'logout':
+                        reason = f"Logged out after {timeout} seconds of inactivity."
+                    else:
+                        fa_type = '2FA' if mfa and session.get('identity-check-1fa') else '1FA'
+                        reason = f"Locked after {timeout} seconds of inactivity ({fa_type})."
+                    reauth_requirements["log_reason"] = reason
                     break
         return reauth_requirements
 
