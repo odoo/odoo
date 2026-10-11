@@ -1,7 +1,13 @@
 import { test, expect } from "@odoo/hoot";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { patchWithCleanup, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    makeServerError,
+    mountWithCleanup,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { browser } from "@web/core/browser/browser";
 import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 
 definePosModels();
@@ -95,6 +101,7 @@ test("keybordInputRights", async () => {
     orderSummary.numberBuffer._handleInput("-");
     expect(line.qty).toBe(3);
 });
+<<<<<<< aa0a1512b5c50aff0738088bf6b6e2ad1aa78c47
 
 test("validateOrder", async () => {
     const store = await setupPosEnv();
@@ -103,3 +110,22 @@ test("validateOrder", async () => {
     const order = store.getOrder();
     expect(order.employee_id.id).toBe(2);
 });
+||||||| 34e5f89a5cf51b77140b6a475ed73122296e9342
+=======
+test("setCashier reloads the page when the session has been deleted", async () => {
+    const store = await setupPosEnv();
+    patchWithCleanup(browser.location, {
+        reload() {
+            expect.step("reload");
+        },
+    });
+    onRpc("pos.session", "write", () => {
+        throw makeServerError({ type: "MissingError" });
+    });
+    onRpc("pos.session", "search_count", () => 0);
+
+    store.setCashier(store.models["hr.employee"].get(3));
+
+    await expect.waitForSteps(["reload"]);
+});
+>>>>>>> bb01053924f8e8b6da2e18d97977accf6e47d043
