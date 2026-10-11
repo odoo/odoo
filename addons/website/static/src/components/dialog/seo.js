@@ -1,18 +1,20 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { deduceURLfromText } from "@html_editor/main/link/utils";
-import { pyToJsLocale, jsToPyLocale } from "@web/core/l10n/utils";
+import { pyToJsLocale, jsToPyLocale, formatList } from "@web/core/l10n/utils";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 import { rpc } from "@web/core/network/rpc";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { isVisible } from "@web/core/utils/ui";
 import { CheckBox } from "@web/core/checkbox/checkbox";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { getMimetype } from "@html_editor/utils/image";
 import { WebsiteDialog } from "./dialog";
 import {
     Component,
+    computed,
     onMounted,
     onWillStart,
     onWillUnmount,
@@ -33,12 +35,14 @@ const WORD_SEPARATORS_REGEX =
 export const seoContext = proxy({
     description: "",
     keywords: [],
+    generatedKeywords: [],
     title: "",
     seoName: "",
     metaImage: "",
     defaultTitle: "",
     updatedAlts: [],
     brokenLinks: [],
+    altAttributes: [],
 });
 
 const LINK_CHECK_BASE_OPTIONS = {
@@ -88,6 +92,8 @@ const getSeo = async (self, onlyKeywords = false) => {
         p: 1,
     };
     const maxNGrams = 2;
+    const maxCandidates = 10;
+    const targetKeywordsCount = 7;
 
     const getKeywordsFromText = (text, weight, wordCounts) => {
         const segmenter = new Intl.Segmenter(lang, { granularity: "word" });
@@ -155,7 +161,7 @@ const getSeo = async (self, onlyKeywords = false) => {
             .sort((a, b) => b[1] - a[1])
             .filter((entry) => entry[1] > 0)
             .map((entry) => entry[0])
-            .slice(0, 7);
+            .slice(0, maxCandidates);
         return sortedKeywords;
     };
 
@@ -179,14 +185,45 @@ const getSeo = async (self, onlyKeywords = false) => {
         return self.seoContext.title || self.seoContext.description || "";
     };
 
-    const keywords = extractKeywords();
-    if (keywords.length) {
-        self.seoContext.keywords = keywords;
+    // Fill the list up to the target with candidates the user has not seen
+    // yet, then with the least recently generated ones (round robin), so
+    // that removed keywords only come back once all candidates were shown.
+    const seenKeywords = self.seoContext.generatedKeywords;
+    const candidates = extractKeywords().filter((kw) => !self.seoContext.keywords.includes(kw));
+    const missingCount = Math.max(0, targetKeywordsCount - self.seoContext.keywords.length);
+    const newKeywords = candidates
+        .filter((kw) => !seenKeywords.includes(kw))
+        .slice(0, missingCount);
+    if (newKeywords.length < missingCount) {
+        newKeywords.push(
+            ...seenKeywords
+                .filter((kw) => candidates.includes(kw))
+                .slice(0, missingCount - newKeywords.length)
+        );
+        // All candidates were seen: start a new round.
+        self.seoContext.generatedKeywords = [];
     }
+    self.seoContext.keywords.push(...newKeywords);
+    self.seoContext.generatedKeywords.push(...newKeywords);
     if (!onlyKeywords) {
         self.seoContext.title = htmlToTextContentInline(self.seoContext.defaultTitle);
         self.seoContext.description = extractDescription();
+        setAltTags(self);
+        self.seoContext.updatedAlts = self.seoContext.altAttributes.filter((img) => img.updated);
     }
+    return newKeywords;
+};
+
+export const setAltTags = (self) => {
+    const activeAltAttributes = self.seoContext.altAttributes.filter(
+        (img) => !img.decorative && !img.alt
+    );
+    activeAltAttributes.forEach((img) => {
+        const urlParts = img.src.split("?")[0].split("#")[0].split("/");
+        const lastPart = urlParts.pop();
+        img.alt = decodeURIComponent(lastPart || "");
+        img.updated = true;
+    });
 };
 
 /**
@@ -457,6 +494,7 @@ class MetaKeywords extends Component {
         this.state = proxy({
             language: "",
             keyword: "",
+            noNewKeywords: false,
         });
 
         this.maxKeywords = 10;
@@ -467,8 +505,13 @@ class MetaKeywords extends Component {
         });
     }
 
-    provideKeywords() {
-        getSeo(this, true);
+    async provideKeywords() {
+        const newKeywords = await getSeo(this, true);
+        this.state.noNewKeywords = !newKeywords.length;
+    }
+
+    normalizeKeyword(keyword) {
+        return keyword.replaceAll(/,+\s*/g, " ").trim();
     }
 
     onKeyup(ev) {
@@ -484,20 +527,32 @@ class MetaKeywords extends Component {
         );
     }
 
-    get isFull() {
+    get hasTooManyKeywords() {
         return this.seoContext.keywords.length >= this.maxKeywords;
     }
 
     addKeyword(keyword) {
-        keyword = keyword.replaceAll(/,\s*/gi, " ").trim();
-        if (keyword && !this.isFull && !this.seoContext.keywords.includes(keyword)) {
+        keyword = this.normalizeKeyword(keyword);
+        if (keyword && !this.seoContext.keywords.includes(keyword)) {
             this.seoContext.keywords.push(keyword);
             this.state.keyword = "";
+            this.state.noNewKeywords = false;
         }
     }
 
     removeKeyword(keyword) {
         this.seoContext.keywords = this.seoContext.keywords.filter((kw) => kw !== keyword);
+        this.state.noNewKeywords = false;
+    }
+
+    removeAllKeywords() {
+        this.seoContext.keywords = [];
+        this.state.noNewKeywords = false;
+    }
+
+    get hasKeyword() {
+        const keyword = this.normalizeKeyword(this.state.keyword);
+        return this.seoContext.keywords.includes(keyword);
     }
 }
 
@@ -595,6 +650,11 @@ export class TitleDescription extends Component {
         defaultTitle: t.string(),
         previewDescription: t.string(),
         url: t.string(),
+        isPublished: t.boolean(),
+        isVisibilityPublic: t.boolean(),
+        save: t.function(),
+        close: t.function(),
+        isDirty: t.function(),
     });
     static components = {
         SEOPreview,
@@ -604,6 +664,8 @@ export class TitleDescription extends Component {
     setup() {
         this.seoContext = proxy(seoContext);
         this.website = useService("website");
+        this.dialogs = useService("dialog");
+        this.websiteCustomMenus = useService("website_custom_menus");
         useAutofocus({ ref: this.autofocusRef });
 
         this.state = proxy({
@@ -688,12 +750,51 @@ export class TitleDescription extends Component {
         );
     }
 
+    get visibilityWarning() {
+        const reasons = [];
+        if (!this.props.isPublished) {
+            reasons.push(_t("unpublished"));
+        }
+        if (!this.props.isVisibilityPublic) {
+            reasons.push(_t("restricted to some visitors"));
+        }
+        if (!this.props.isIndexed) {
+            reasons.push(_t("hidden from search engines"));
+        }
+        return reasons.length
+            ? _t("This page is %(reasons)s.", { reasons: formatList(reasons) })
+            : "";
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
     autoFill() {
         getSeo(this);
+    }
+
+    openPagePropertiesDialog() {
+        const openPageProperties = () =>
+            this.websiteCustomMenus.open({
+                xmlid: "website.menu_page_properties",
+            });
+        if (!this.props.isDirty()) {
+            this.props.close();
+            return openPageProperties();
+        }
+        const saveAndOpen = async () => {
+            await this.props.save(false);
+            await openPageProperties();
+        };
+        this.dialogs.add(ConfirmationDialog, {
+            title: _t("Unsaved changes"),
+            body: _t("You made changes to your page's SEO settings, do you want to save them?"),
+            confirmLabel: _t("Save and go to Page Properties"),
+            cancelLabel: _t("Go back"),
+            confirm: saveAndOpen,
+            cancel: () => {},
+        });
     }
 
     /**
@@ -787,6 +888,7 @@ export class SeoChecks extends Component {
     };
     props = useProps({
         isDefaultLang: t.boolean(),
+        initialSeoState: t.object(),
     });
 
     async setup() {
@@ -797,7 +899,6 @@ export class SeoChecks extends Component {
         } = this.website.currentWebsite;
         this.object = seoObject || mainObject;
         this.state = proxy({
-            altAttributes: [],
             checkingLinks: false,
             checkedLinks: false,
             counterLinks: 0,
@@ -805,7 +906,7 @@ export class SeoChecks extends Component {
         });
         this.imgUpdated = this.imgUpdated.bind(this);
         onWillStart(async () => {
-            this.state.altAttributes = await this.getAltAttributes();
+            this.seoContext.altAttributes = await this.getAltAttributes();
             this.seoContext.updatedAlts = [];
             if (!this.props.isDefaultLang) {
                 this.hasDelayedTranslation = await fetchDelayedTranslations(path);
@@ -820,7 +921,7 @@ export class SeoChecks extends Component {
 
     imgUpdated(img) {
         img.updated = true;
-        this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
+        this.seoContext.updatedAlts = this.seoContext.altAttributes.filter((img) => img.updated);
     }
 
     async getAltAttributes() {
@@ -961,6 +1062,14 @@ export class SeoChecks extends Component {
             isImageLink: link.isImageLink,
             validLink: null,
         }));
+        Object.assign(this.props.initialSeoState, {
+            brokenLinks: seoContext.brokenLinks.map(({ oldLink, newLink, remove, broken }) => ({
+                oldLink,
+                newLink,
+                remove,
+                broken,
+            })),
+        });
     }
 }
 
@@ -978,6 +1087,20 @@ export class OptimizeSEODialog extends Component {
         close: t.function(),
     });
 
+    savedContext = signal(false);
+    isDirty = computed(
+        () => {
+            this.savedContext();
+            const currentSeoState = JSON.stringify(this.getEditableSeoState());
+            return currentSeoState !== JSON.stringify(this.initialSeoState);
+        },
+        {
+            set: (value) => {
+                this.savedContext.set(value);
+            },
+        }
+    );
+
     setup() {
         this.website = useService("website");
         this.dialogs = useService("dialog");
@@ -987,8 +1110,10 @@ export class OptimizeSEODialog extends Component {
         this.saveButton = _t("Save");
         this.size = "lg";
         this.contentClass = "oe_seo_configuration";
+        this.boundSave = this.save.bind(this);
 
         onWillStart(async () => {
+            this.initialSeoState = {};
             // Wait for the preview iframe because this dialog reads directly
             // from the iframe DOM.
             await this.waitForIframe();
@@ -997,8 +1122,10 @@ export class OptimizeSEODialog extends Component {
             } = this.website.currentWebsite;
             this.object = seoObject || mainObject;
             this.data = await rpc("/website/get_seo_data", {
-                res_id: this.object.id,
-                res_model: this.object.model,
+                seo_id: this.object.id,
+                seo_model: this.object.model,
+                main_object_id: mainObject.id,
+                main_object_model: mainObject.model,
             });
 
             if (this.data.multi_lang) {
@@ -1017,6 +1144,10 @@ export class OptimizeSEODialog extends Component {
 
             // If website.page, hide the google preview & tell user his page is currently unindexed
             this.isIndexed = "website_indexed" in this.data ? this.data.website_indexed : true;
+            // If its publishable object, tell user his page is currently unpublished.
+            this.isPublished = this.data.website_is_published ?? true;
+            // If website.page, tell user his page is currently public or not.
+            this.isVisibilityPublic = this.data.website_page_visibility ?? true;
             this.seoNameHelp = _t(
                 "This value will be escaped to be compliant with all major browsers and used in url. Keep it empty to use the default name of the record."
             );
@@ -1057,7 +1188,32 @@ export class OptimizeSEODialog extends Component {
             } else {
                 seoContext.keywords = [];
             }
+            seoContext.generatedKeywords = [];
         });
+        onMounted(() => {
+            Object.assign(this.initialSeoState, this.getEditableSeoState());
+        });
+    }
+
+    getEditableSeoState() {
+        return {
+            title: seoContext.title,
+            description: seoContext.description,
+            seoName: seoContext.seoName,
+            metaImage: seoContext.metaImage,
+            keywords: Array.from(seoContext.keywords),
+            altAttributes: seoContext.altAttributes.map(({ id, alt, decorative }) => ({
+                id,
+                alt,
+                decorative,
+            })),
+            brokenLinks: seoContext.brokenLinks.map(({ oldLink, newLink, remove, broken }) => ({
+                oldLink,
+                newLink,
+                remove,
+                broken,
+            })),
+        };
     }
 
     async waitForIframe() {
@@ -1199,6 +1355,8 @@ export class OptimizeSEODialog extends Component {
         }
 
         await Promise.all(rpcCalls);
+        Object.assign(this.initialSeoState, this.getEditableSeoState());
+        this.isDirty.set(!this.savedContext());
 
         this.website.goToWebsite({
             path: this.url.replace(
