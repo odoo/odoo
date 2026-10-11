@@ -15,17 +15,17 @@ class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
     @api.model
-    def _get_default_sending_methods(self, move) -> set:
-        """ By default, we use the sending method set on the partner or email and peppol. """
+    def _get_default_sending_methods(self, move) -> list:
+        """ By default, we use the sending method set on the partner or peppol. """
         # EXTENDS 'account'
-        default_sending_methods = super()._get_default_sending_methods(move)
+        partner = move.commercial_partner_id.with_company(move.company_id)
         if (
-            self._is_applicable_to_move('peppol', move)
+            not partner.invoice_sending_method
+            and self._is_applicable_to_move('peppol', move)
             and any(country in PEPPOL_DEFAULT_COUNTRIES for country in move.commercial_partner_id.mapped('country_id.code'))
-            and 'peppol' not in default_sending_methods
         ):
-            default_sending_methods.append('peppol')
-        return default_sending_methods
+            return ['peppol']
+        return super()._get_default_sending_methods(move)
 
     @api.model
     def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
