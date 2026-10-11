@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_time_rule_regenerate_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.time.rule.regenerate.wizard.form</field>
+        <field name="model">hr.time.rule.regenerate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reprocess Time Rules">
+                <field name="has_errors" invisible="1"/><!-- drives footer button and error panel visibility -->
+                <field name="has_removed" invisible="1"/><!-- drives removed-outputs panel visibility -->
+                <field name="has_outputs" invisible="1"/><!-- drives restore button visibility -->
+
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fw-bold text-muted small text-uppercase"
+                              style="letter-spacing:.04em">Rules</span>
+                        <field name="rule_ids" widget="many2many_tags" readonly="1" nolabel="1"/>
+                    </div>
+                    <field name="step" widget="statusbar"
+                           statusbar_visible="find,restore,rerun,done"
+                           readonly="1" nolabel="1"/>
+                </div>
+
+                <!-- step: find -->
+                <group invisible="step != 'find'">
+                    <label for="source_model_filter" string="Search in"/>
+                    <field name="source_model_filter" widget="radio" nolabel="1"/>
+                    <label for="scope" string="On which entries do you want to rerun the rule?"/>
+                    <field name="scope" widget="radio" nolabel="1"/>
+                    <label for="date_from" string="Period" invisible="scope != 'range'"/>
+                    <div invisible="scope != 'range'" class="d-flex gap-2 align-items-center">
+                        <field name="date_from" nolabel="1" placeholder="Start date"/>
+                        <span>to</span>
+                        <field name="date_to" nolabel="1" placeholder="End date"/>
+                    </div>
+                    <field name="employee_ids" widget="many2many_tags" placeholder="All employees"
+                           options="{'no_create': True}"/>
+                </group>
+
+                <!-- step: restore — current active records (output rows highlighted in blue) -->
+                <group invisible="step != 'restore'">
+                    <field name="line_ids" nolabel="1">
+                        <list create="0" delete="0" no_open="1" decoration-info="is_output">
+                            <field name="selected" widget="boolean_toggle" string=""/>
+                            <field name="rule_id" readonly="1" optional="show"/>
+                            <field name="employee_id" readonly="1"/>
+                            <field name="date_range" string="Period" readonly="1"/>
+                            <field name="work_entry_type_id" widget="badge" options="{'color_field': 'color'}" string="Type" readonly="1"/>
+                            <field name="color" column_invisible="1"/><!-- badge color_field -->
+                            <field name="kind" widget="badge"
+                                   decoration-info="kind == 'Output'"
+                                   decoration-secondary="kind == 'Source'"
+                                   readonly="1"/>
+                            <field name="is_output" column_invisible="1"/><!-- list-level decoration-info source -->
+                        </list>
+                    </field>
+                    <div class="text-muted fst-italic" invisible="line_ids">
+                        There are no time entries linked to that period for the selected rule.
+                    </div>
+                </group>
+
+                <!-- step: rerun — removed outputs (left) + restored sources ready to run (right) -->
+                <div class="row g-0 border rounded overflow-hidden"
+                     invisible="step != 'rerun'">
+
+                    <!-- left: removed output records (informational) -->
+                    <div class="col-6 border-end" invisible="not has_removed">
+                        <div class="d-flex align-items-center gap-1 px-3 py-2 border-bottom">
+                            <i class="oi text-warning" data-icon="cancel" title="Removed outputs"/>
+                            <strong class="text-muted small text-uppercase"
+                                    style="letter-spacing:.04em">Removed outputs</strong>
+                        </div>
+                        <field name="removed_line_ids" nolabel="1">
+                            <list create="0" delete="0" no_open="1" decoration-muted="True">
+                                <field name="employee_id" readonly="1"/>
+                                <field name="date_range" string="Period" readonly="1"/>
+                                <field name="work_entry_type_id" widget="badge" options="{'color_field': 'color'}" string="Type" readonly="1"/>
+                                <field name="color" column_invisible="1"/><!-- badge color_field -->
+                            </list>
+                        </field>
+                    </div>
+
+                    <!-- right: restored sources ready to rerun -->
+                    <div class="col-6" invisible="not restored_line_ids">
+                        <div class="d-flex align-items-center gap-1 px-3 py-2 border-bottom border-success border-2">
+                            <i class="oi text-success" data-icon="check_circle" title="Restored"/>
+                            <strong class="text-success small text-uppercase"
+                                    style="letter-spacing:.04em">Restored</strong>
+                        </div>
+                        <field name="restored_line_ids" nolabel="1">
+                            <list create="0" delete="0" no_open="1">
+                                <field name="employee_id" readonly="1"/>
+                                <field name="date_range" string="Period" readonly="1"/>
+                                <field name="work_entry_type_id" widget="badge" options="{'color_field': 'color'}" string="Type" readonly="1"/>
+                                <field name="color" column_invisible="1"/><!-- badge color_field -->
+                            </list>
+                        </field>
+                    </div>
+
+                </div>
+
+                <!-- step: done — processed sources (left, gray) + new outputs (right, green) -->
+                <div class="row g-0 border rounded overflow-hidden"
+                     invisible="step != 'done'">
+
+                    <!-- left: sources that were rerun -->
+                    <div class="col-6 border-end">
+                        <div class="d-flex align-items-center gap-1 px-3 py-2 border-bottom">
+                            <i class="oi text-muted" data-icon="history" title="Processed"/>
+                            <strong class="text-muted small text-uppercase"
+                                    style="letter-spacing:.04em">Processed</strong>
+                        </div>
+                        <field name="restored_line_ids" nolabel="1">
+                            <list create="0" delete="0" no_open="1" decoration-muted="True">
+                                <field name="employee_id" readonly="1"/>
+                                <field name="date_range" string="Period" readonly="1"/>
+                                <field name="work_entry_type_id" widget="badge" options="{'color_field': 'color'}" string="Type" readonly="1"/>
+                                <field name="color" column_invisible="1"/><!-- badge color_field -->
+                            </list>
+                        </field>
+                    </div>
+
+                    <!-- right: newly created outputs -->
+                    <div class="col-6" invisible="not new_output_line_ids">
+                        <div class="d-flex align-items-center gap-1 px-3 py-2 border-bottom border-success border-2">
+                            <i class="oi text-success" data-icon="check_circle" title="Updated"/>
+                            <strong class="text-success small text-uppercase"
+                                    style="letter-spacing:.04em">Updated</strong>
+                        </div>
+                        <field name="new_output_line_ids" nolabel="1">
+                            <list create="0" delete="0" no_open="1">
+                                <field name="employee_id" readonly="1"/>
+                                <field name="date_range" string="Period" readonly="1"/>
+                                <field name="work_entry_type_id" widget="badge" options="{'color_field': 'color'}" string="Type" readonly="1"/>
+                                <field name="color" column_invisible="1"/><!-- badge color_field -->
+                            </list>
+                        </field>
+                    </div>
+
+                </div>
+
+                <!-- inline errors -->
+                <div class="border rounded overflow-hidden mt-2" invisible="not has_errors">
+                    <div class="d-flex align-items-center gap-1 px-3 py-2 border-bottom border-danger border-2">
+                        <i class="oi text-danger" data-icon="error" title="Issues"/>
+                        <strong class="text-danger small text-uppercase"
+                                style="letter-spacing:.04em">Issues</strong>
+                    </div>
+                    <field name="error_line_ids" nolabel="1">
+                        <list>
+                            <field name="employee_id" readonly="1"/>
+                            <field name="date_from" string="Start" readonly="1" widget="datetime"/>
+                            <field name="date_to" string="End" readonly="1" widget="datetime"/>
+                            <field name="work_entry_type_id" widget="badge" options="{'color_field': 'color'}" string="Type" readonly="1"/>
+                            <field name="color" column_invisible="1"/><!-- badge color_field -->
+                            <field name="short_error" string="Issue" readonly="1"/>
+                        </list>
+                    </field>
+                </div>
+
+                <footer>
+                    <button name="action_find" string="Find Entries" type="object"
+                            class="btn-primary" invisible="step != 'find'"/>
+                    <button name="action_restore" string="Restore" type="object"
+                            class="btn-primary"
+                            invisible="step != 'restore' or not has_outputs"/>
+                    <button name="action_run" string="Run" type="object"
+                            class="btn-secondary" invisible="step != 'restore'"/>
+                    <button name="action_rerun" string="Run Rules" type="object"
+                            class="btn-primary" invisible="step != 'rerun' or not has_restored"/>
+                    <button string="Close" class="btn-secondary" special="cancel"
+                            invisible="step == 'rerun' and has_errors"/>
+                    <button string="Close" class="btn-secondary" special="cancel"
+                            invisible="step != 'rerun' or not has_errors"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- form view for error rows so clicking opens full message -->
+    <record id="hr_time_rule_regenerate_wizard_error_view_form" model="ir.ui.view">
+        <field name="name">hr.time.rule.regenerate.wizard.error.form</field>
+        <field name="model">hr.time.rule.regenerate.wizard.error</field>
+        <field name="arch" type="xml">
+            <form string="Issue Detail">
+                <group>
+                    <field name="employee_id" readonly="1"/>
+                    <field name="work_entry_type_id" widget="badge" options="{'color_field': 'color'}" string="Type" readonly="1"/>
+                    <field name="color" invisible="1"/><!-- badge color_field -->
+                    <field name="date_from" string="Start" readonly="1" widget="datetime"/>
+                    <field name="date_to" string="End" readonly="1" widget="datetime"/>
+                </group>
+                <field name="error" readonly="1" widget="text" nolabel="1"/>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- reprocess action in the cog menu on the time rule form -->
+    <record id="action_hr_time_rule_reprocess_server" model="ir.actions.server">
+        <field name="name">Reprocess Time Rules</field>
+        <field name="model_id" ref="hr_work_entry.model_hr_time_rule"/>
+        <field name="binding_model_id" ref="hr_work_entry.model_hr_time_rule"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = record.action_reprocess_time_rules()</field>
+    </record>
+
+    <!-- reprocess button on the time rule list -->
+    <record id="hr_time_rule_view_list_inherit_reprocess" model="ir.ui.view">
+        <field name="name">hr.time.rule.list.reprocess</field>
+        <field name="model">hr.time.rule</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_time_rule_view_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list/field[1]" position="before">
+                <header>
+                    <button name="action_reprocess_time_rules" type="object"
+                            string="Reprocess Time Rules"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -101,7 +101,7 @@ class HrAttendance(models.Model):
     # time rule engine output fields
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
     source_attendance_id = fields.Many2one('hr.attendance', index=True)
-    overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id')
+    overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id', domain=[('time_rule_id', '!=', False)])
     # set to True on surviving output records when their source is modified or deleted
     source_stale = fields.Boolean(default=False, copy=False, export_string_translation=False)
 
@@ -204,12 +204,14 @@ class HrAttendance(models.Model):
         if self.env.context.get('skip_time_rules'):
             return
         for attendance in self:
+            # outputs produced from this attendance share its time window by design; exclude them
+            own_output_domain = [('source_attendance_id', '!=', attendance.id)]
             # we take the latest attendance before our check_in time and check it doesn't overlap with ours
             last_attendance_before_check_in = self.env['hr.attendance'].search([
                 ('employee_id', '=', attendance.employee_id.id),
                 ('check_in', '<=', attendance.check_in),
                 ('id', '!=', attendance.id),
-            ], order='check_in desc', limit=1)
+            ] + own_output_domain, order='check_in desc', limit=1)
             if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
                 raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
                                                    empl_name=attendance.employee_id.name,
@@ -221,7 +223,7 @@ class HrAttendance(models.Model):
                     ('employee_id', '=', attendance.employee_id.id),
                     ('check_out', '=', False),
                     ('id', '!=', attendance.id),
-                ], order='check_in desc', limit=1)
+                ] + own_output_domain, order='check_in desc', limit=1)
                 if no_check_out_attendances:
                     raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
                                                        empl_name=attendance.employee_id.name,
@@ -233,7 +235,7 @@ class HrAttendance(models.Model):
                     ('employee_id', '=', attendance.employee_id.id),
                     ('check_in', '<', attendance.check_out),
                     ('id', '!=', attendance.id),
-                ], order='check_in desc', limit=1)
+                ] + own_output_domain, order='check_in desc', limit=1)
                 if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
                     raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
                                                        empl_name=attendance.employee_id.name,
@@ -257,7 +259,7 @@ class HrAttendance(models.Model):
         if stale_targets:
             stale_targets.exists().with_context(skip_time_rules=True).write({'source_stale': True})
         if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
-            self._update_tolerance_state()
+            self.exists()._update_tolerance_state()
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -549,6 +551,7 @@ class HrAttendance(models.Model):
             })
 
         technical_attendances = self.env['hr.attendance'].create(technical_attendances_vals)
+        technical_attendances._trigger_time_rules(include_deficit=True)
         to_unlink = technical_attendances.filtered(lambda a: not a.overtime_attendance_ids)
         body = _('This attendance was automatically created to cover an unjustified absence on that day.')
         for technical_attendance in technical_attendances:
@@ -715,3 +718,6 @@ class HrAttendance(models.Model):
         employee_id = self.env.context.get('employee_id', False)
         employee = self.env['hr.employee'].browse(employee_id) if employee_id else self.env.user.employee_id
         return employee.sudo(False)._get_unusual_days(date_from, date_to)
+
+    def action_reprocess_time_rules(self):
+        return self.env['hr.time.rule.regenerate.wizard'].action_open_from_records(self)
