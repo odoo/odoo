@@ -182,6 +182,19 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
             'discount': 9.52380952380953,
         }])
 
+    def test_partial_import_invoice_line_base_quantity_equal_billed_quantity(self):
+        # Some suppliers fill the BasisQuantity with the billed quantity while the ChargeAmount is the
+        # price of a single unit. The LineTotalAmount is then only consistent when ignoring the BasisQuantity.
+        # Line 1: price = 5.84, basis_qty = billed_qty = 10, line_total_amount = 5.84 * 10 = 58.40
+        # Line 2: price = 0.043, basis_qty = billed_qty = 2000, line_total_amount = 0.043 * 2000 = 86.00
+        # Line 3: price = 50 for 10 units, billed_qty = 20, line_total_amount = 50 / 10 * 20 = 100.00
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_base_quantity_equal_billed_quantity')
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'price_unit': 5.84, 'quantity': 10.0, 'discount': 0.0, 'price_subtotal': 58.40},
+            {'price_unit': 0.043, 'quantity': 2000.0, 'discount': 0.0, 'price_subtotal': 86.00},
+            {'price_unit': 5.0, 'quantity': 20.0, 'discount': 0.0, 'price_subtotal': 100.00},
+        ])
+
     def test_partial_import_invoice_line_negative_lines_and_total(self):
         # as TaxBasisTotalAmount < 0, refund --> document_sign = -1
         # Line 1
