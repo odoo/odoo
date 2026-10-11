@@ -6,6 +6,11 @@
             <field name="rating_email_template_id" ref="website_sale.mail_template_sale_order_rating"/>
         </record>
 
+        <record id="website_sale.sale_ribbon" model="product.ribbon">
+            <field name="assign">sale</field>
+            <field name="style">tag</field>
+        </record>
+
         <record id="product.pa_color" model="product.attribute">
             <field name="preview_variants">hover</field>
         </record>

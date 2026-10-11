@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import float_round
 
 
 class ProductRibbon(models.Model):
@@ -89,6 +90,42 @@ class ProductRibbon(models.Model):
             case "right":
                 css_classes += " o_right"
         return css_classes
+
+    def _get_discount_percent(self, price_data):
+        """Compute the discount percentage from the given price information.
+
+        :param dict price_data: price information for the given product
+        :return: the discount percentage
+        :rtype: float
+        """
+        if not price_data or price_data.get("hide_price"):
+            return 0
+        if "base_price" in price_data:  # from _get_sales_prices
+            before, after = price_data["base_price"], price_data.get("price_reduce") or 0
+        else:  # from _get_combination_info
+            before = (
+                price_data.get("list_price")
+                if price_data.get("has_discounted_price")
+                else price_data.get("compare_list_price")
+            )
+            after = price_data.get("price") or 0
+        if not before or before <= after:
+            return 0
+        return (before - after) / before * 100
+
+    def _get_display_name(self, price_data=None):
+        """Return the text to display for this ribbon.
+
+        :param dict price_data: price information for the given product
+        :rtype: str
+        """
+        if self.assign == "sale":
+            discount_percent = float_round(
+                self._get_discount_percent(price_data), precision_rounding=0.5, rounding_method="DOWN"
+            )
+            if discount_percent:
+                return f"-{discount_percent:g}%"
+        return self.name or ""
 
     def _is_applicable_for(self, product, price_data):
         """Return whether the product matches the criteria of the ribbon automatic assignment.

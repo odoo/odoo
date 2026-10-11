@@ -391,6 +391,19 @@ export class ProductPage extends Interaction {
     }
 
     /**
+     * Update the ribbon of the product page.
+     */
+    _updateProductRibbon(productContainer, newRibbon) {
+        const images = productContainer.querySelector(this._getProductImageContainerSelector());
+        const ribbon = images?.querySelector('.o_ribbons');
+        const isEditorEnabled = document.body.classList.contains('editor_enable');
+        if (ribbon && !isEditorEnabled && newRibbon) {
+            ribbon.insertAdjacentHTML('beforebegin', htmlEscape(newRibbon));
+            ribbon.remove();
+        }
+    }
+
+    /**
      * Update the documents section of the product page.
      */
     _updateDocumentsSection(productContainer, newDocumentsSection) {
@@ -483,6 +496,9 @@ export class ProductPage extends Interaction {
         }
         if (combinationInfo.documents) {
             combinationInfo.documents = markup(combinationInfo.documents);
+        }
+        if (combinationInfo.ribbon) {
+            combinationInfo.ribbon = markup(combinationInfo.ribbon);
         }
         combinationInfo.packaging_selector = markup(combinationInfo.packaging_selector);
 
@@ -807,7 +823,10 @@ export class ProductPage extends Interaction {
         this._toggleDisable(parent, isCombinationPossible && this.el.dataset.hasAvailableUoms);
 
         // Only update the images, tags and packaging selector if the product has changed.
-        if (!combination.no_product_change) {
+        // Otherwise, only update the ribbon as it may depend on the quantity.
+        if (combination.no_product_change) {
+            this._updateProductRibbon(parent.closest('#product_detail_main'), combination.ribbon);
+        } else {
             this._updateProductImages(parent.closest('#product_detail_main'), combination.carousel);
             this._updateDocumentsSection(parent.closest('#product_detail_main'), combination.documents);
             const productTags = parent.querySelector('.o_product_tags');

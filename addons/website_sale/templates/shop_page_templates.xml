@@ -419,6 +419,7 @@
                                                         auto_assign_ribbons=auto_assign_ribbons,
                                                     )"
                                                 />
+                                                <t t-set="ribbon_price_vals" t-value="template_price_vals"/>
                                                 <div
                                                     t-attf-class="oe_product {{col_is_custom_portrait and 'oe_product_custom_portrait'}} {{col_class}} {{col_class_md}} {{col_class_lg}} {{col_is_stretched and 'oe_product_size_stretch'}}"
                                                     t-attf-style="--o-wsale-products-grid-product-col-height: {{col_height}};"
