@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <t t-name="hr_skills.CertificationListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
+        <xpath expr="//ActionHelper" position="replace">
+            <div class="o_view_nocontent">
+                <div class="o_nocontent_help">
+                    <t t-if="this.certificationState.hasCertificationSkillType">
+                        <p class="o_view_nocontent_smiling_face">No Certified Employees. Register a Certification!</p>
+                        <a type="action" name="hr_skills.action_hr_employee_new_certification" class="btn btn-primary">New certification</a>
+                    </t>
+                    <t t-elif="this.certificationState.isHrManager">
+                        <p class="o_view_nocontent_smiling_face">No Certifications available. Navigate to Skill types!</p>
+                        <a type="action" name="hr_skills.hr_skill_type_action" class="btn btn-primary">Show Skill Types</a>
+                    </t>
+                    <t t-else="">
+                        <p class="o_view_nocontent_smiling_face">No Certifications available!</p>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</odoo>
