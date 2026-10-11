@@ -170,7 +170,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
             <form id="newsletter_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required"
                   data-mark="*" data-model_name="mailing.contact" data-success-mode="message" hide-change-model="true">
                 <div class="s_website_form_rows row s_col_no_bgcolor">
-                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_model_required" data-type="char" data-name="Field">
+                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_model_required" data-type="char">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 250px" for="mailing_sub1">
                                 <span class="s_website_form_label_content">Name</span>
@@ -191,7 +191,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                             </div>
                         </div>
                     </div>
-                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_model_required" data-type="email" data-name="Field">
+                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_model_required" data-type="email">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 250px" for="mailing_sub2">
                                 <span class="s_website_form_label_content">Email</span>
@@ -202,7 +202,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                             </div>
                         </div>
                     </div>
-                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_model_required" data-type="many2many" data-name="Field">
+                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_model_required" data-type="many2many">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-sm-auto s_website_form_label" style="width: 250px" for="mailing_list_">
                                 <span class="s_website_form_label_content">Subscribe to</span>
@@ -225,7 +225,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                             </div>
                         </div>
                     </div>
-                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="boolean" data-name="Field">
+                    <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="boolean">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-sm-auto s_website_form_label" style="width: 250px;" for="mailing_sub3">
                                 <span class="s_website_form_label_content">I agree to receive updates</span>
@@ -242,7 +242,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                             </div>
                         </div>
                     </div>
-                    <div class="s_website_form_submit s_website_form_no_submit_label col-12 mb-0 py-2 text-end" data-name="Submit Button">
+                    <div class="s_website_form_submit s_website_form_no_submit_label col-12 mb-0 py-2 text-end">
                         <div style="width: 250px;" class="s_website_form_label"/>
                         <span id="s_website_form_result"></span>
                         <a href="#" role="button" class="btn btn-primary ms-auto ms-lg-0 s_website_form_send">Subscribe</a>
@@ -312,14 +312,14 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                         <form id="newsletter_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required"
                                 data-mark="*" data-model_name="mailing.contact" data-success-mode="message" hide-change-model="true">
                             <div class="s_website_form_rows row s_col_no_bgcolor">
-                                <div class="s_website_form_field col-lg-6 mb-3" data-type="char" data-name="Field">
+                                <div class="s_website_form_field col-lg-6 mb-3" data-type="char">
                                     <label class="s_website_form_label" style="width: 200px" for="mailing_sub1">
                                         <span class="s_website_form_label_content">Name</span>
                                         <span class="s_website_form_mark"> *</span>
                                     </label>
                                     <input id="mailing_sub1" type="text" class="form-control s_website_form_input" name="name" required="1" placeholder="John Smith"/>
                                 </div>
-                                <div class="col-lg-6 mb-3 s_website_form_field s_website_form_model_required" data-type="email" data-name="Field">
+                                <div class="col-lg-6 mb-3 s_website_form_field s_website_form_model_required" data-type="email">
                                     <label class="s_website_form_label" style="width: 200px" for="mailing_sub2">
                                         <span class="s_website_form_label_content">Email</span>
                                         <span class="s_website_form_mark"> *</span>
@@ -329,7 +329,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                                 <div class="s_hr pt8 pb24" data-snippet="s_hr">
                                     <hr class="s_hr_1px s_hr_solid"/>
                                 </div>
-                                <div class="col-lg-12 s_website_form_field s_website_form_model_required mb-3" data-type="many2many" data-name="Field">
+                                <div class="col-lg-12 s_website_form_field s_website_form_model_required mb-3" data-type="many2many">
                                     <label class="col-sm-auto s_website_form_label d-none" style="width: 250px">
                                         <span class="s_website_form_label_content">Our mailing lists</span>
                                         <span class="s_website_form_mark"> *</span>
@@ -346,7 +346,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                                         We send one weekly newsletter per list and always try to keep it interesting. You can unsubscribe at any time.
                                     </span>
                                 </div>
-                                <div class="s_website_form_submit s_website_form_no_submit_label col-12" data-name="Submit Button">
+                                <div class="s_website_form_submit s_website_form_no_submit_label col-12">
                                     <a href="#" role="button" class="btn btn-primary s_website_form_send">Subscribe</a>
                                     <span id="s_website_form_result"/>
                                 </div>
