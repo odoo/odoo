@@ -32,6 +32,14 @@ patch(Composer.prototype, {
         return extraData;
     },
 
+    get postData() {
+        const postData = super.postData;
+        if (this.projectSharingPlugin?.projectSharingId()) {
+            postData.isCcEnabled = this.projectSharingPlugin.showCcField();
+        }
+        return postData;
+    },
+
     get isSendButtonDisabled() {
         if (this.thread && !this.thread.id) {
             return true;
