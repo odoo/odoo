@@ -1233,6 +1233,32 @@ class TestTrackingInternals(TestTrackingCommon):
         self.assertFalse(monetary_tracking.new_value_float)
 
     @users('employee')
+    def test_mail_track_properties_unlink(self):
+        """ Unlinking some records after writing on them should not prevent
+        tracking the others, as finding the tracked fields reads the properties
+        definition of the tracked records. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
+        properties_record_1 = self.properties_record_1.with_env(self.env)
+        properties_record_2 = self.properties_record_2.with_env(self.env)
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            properties_record_2.char_field = 'new char value'
+            properties_record_1.char_field = 'new char value'
+            properties_record_2.unlink()
+            # tracked fields are cached: force computing them again at flush
+            self.env.transaction.invalidate_ormcache()
+            self.flush_tracking()
+        self.assertMessageFields(
+            self._new_msgs, {
+                'author_id': self.partner_employee,
+                'model': 'mail.test.track.all',
+                'res_id': properties_record_1.id,
+                'tracking_values': [
+                    ('char_field', 'char', False, 'new char value'),
+                ],
+            }
+        )
+
+    @users('employee')
     def test_mail_track_selection_invalid(self):
         """ Check that initial invalid selection values are allowed when tracking """
         self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
