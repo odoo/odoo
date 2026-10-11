@@ -4,5 +4,14 @@
         <xpath expr="//div[hasclass('o_kanban_group_nocontent')]" position="attributes">
             <attribute name="t-if">this.props.list.groups.length === 0 &amp;&amp; !this.props.hideKanbanStagesNocontent</attribute>
         </xpath>
+        <KanbanColumnQuickCreate position="replace">
+            <ProjectTaskColumnQuickCreate
+                folded="this.state.columnQuickCreateIsFolded"
+                onFoldChange="folded => this.state.columnQuickCreateIsFolded = folded"
+                onValidate="this.props.list.createGroup.bind(this.props.list)"
+                groupByField="this.props.list.groupByField"
+                canFold="this.props.list.groups.length > 0"
+            />
+        </KanbanColumnQuickCreate>
     </t>
 </templates>
