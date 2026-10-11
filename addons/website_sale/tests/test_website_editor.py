@@ -84,6 +84,45 @@ class TestProductPictureController(HttpCase):
         # Check if exactly ATTACHMENT_COUNT images were saved (no dupes/misses?)
         self.assertEqual(ATTACHMENT_COUNT, len(self.product.product_template_image_ids[1:]))
 
+    def test_replace_image_media_to_video(self):
+        """The "Choose a video" builder action turns an existing product.image into a
+        video by writing both its video_url and the given thumbnail."""
+        self._create_product_images()
+        # Not the first (main) image: a video can't be used as the main image (pre-existing,
+        # unrelated restriction — see `_set_main_image_from_extra_images`).
+        image = self.product._get_images()[2]
+
+        self.authenticate("admin", "admin")
+        self.make_jsonrpc_request(
+            "/shop/product/replace-image-media",
+            {
+                "image_id": image.id,
+                "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                "image_1920": base64.b64encode(ATTACHMENT_DATA[0].content).decode(),
+            },
+        )
+
+        image.invalidate_recordset()
+        self.assertEqual(image.video_url, "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+        self.assertTrue(image.image_1920)
+
+    def test_replace_image_media_to_image(self):
+        """The "Choose an image" builder action turns an existing video product.image back
+        into a plain image, clearing its video_url."""
+        self._create_product_images()
+        image = self.product._get_images()[0]
+        image.video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+
+        self.authenticate("admin", "admin")
+        self.make_jsonrpc_request(
+            "/shop/product/replace-image-media",
+            {"image_id": image.id, "attachment_id": self.attachments[0].id},
+        )
+
+        image.invalidate_recordset()
+        self.assertFalse(image.video_url)
+        self.assertEqual(image.image_1920.content, ATTACHMENT_DATA[0].content)
+
     def test_extra_images_with_new_variant(self):
         # Test that adding images for a variant that is not yet created works
         product_attribute = self.env["product.attribute"].create({
@@ -207,32 +246,39 @@ class TestProductPictureController(HttpCase):
             self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
 
     def test_resequence_video_first(self):
-        """A video can't be resequenced to first position."""
+        """A video can be resequenced to the first (carousel) position: it will play when
+        the product page opens, but this must not change the product's own main image
+        (used e.g. by the /shop grid card, which has no notion of video)."""
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
             images[2].video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
-            with self.assertRaises(ValidationError):
-                self.WebsiteSaleController.resequence_product_image(
-                    images[2].id, "first", self.product.id
-                )
+            main_image_before = self.product.image_1920.content
+            self.WebsiteSaleController.resequence_product_image(
+                images[2].id, "first", self.product.id
+            )
             self.env["product.image"].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
+            self.product.invalidate_recordset()
+            self.assertListEqual(self._get_product_image_data(), [i3, i1, i2, i4, i5, i6])
+            self.assertEqual(self.product.image_1920.content, main_image_before)
 
     def test_resequence_video_replace_first(self):
-        """A video can't replace an image that was resequenced away from first position."""
+        """Resequencing an image away from the first position can promote a video into
+        that position, again without changing the product's own main image."""
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
             images[1].video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
-            with self.assertRaises(ValidationError):
-                self.WebsiteSaleController.resequence_product_image(
-                    images[0].id, "right", self.product.id
-                )
+            main_image_before = self.product.image_1920.content
+            self.WebsiteSaleController.resequence_product_image(
+                images[0].id, "right", self.product.id
+            )
             self.env["product.image"].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
+            self.product.invalidate_recordset()
+            self.assertListEqual(self._get_product_image_data(), [i2, i1, i3, i4, i5, i6])
+            self.assertEqual(self.product.image_1920.content, main_image_before)
 
 
 @tagged("post_install", "-at_install")
@@ -331,12 +377,16 @@ class TestProductVideoUpload(HttpCase):
         self.assertEqual(len(self.product.product_template_image_ids), 2)
 
     def test_upload_video_without_main_image(self):
-        """Uploading a video without a main image should raise a validation error.
+        """A video can be uploaded even without an existing main image: it becomes the
+        carousel's first slide, but the product's own main image field is left untouched
+        (e.g. the /shop grid card keeps showing no image rather than the video)."""
+        self.assertFalse(self.product.image_1920)
 
-        A video cannot become the product's main media.
-        """
-        with self.assertRaises(ValidationError):
-            self._upload_video()
+        self._upload_video()
+
+        video_image = self.product.product_template_image_ids[0]
+        self.assertEqual(video_image.video_url, self.video_data["embed_url"])
+        self.assertFalse(self.product.image_1920)
 
     def test_video_upload_invalid(self):
         # Try to upload invalid video data (e.g., empty src)

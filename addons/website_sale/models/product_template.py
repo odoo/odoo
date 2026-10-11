@@ -496,9 +496,7 @@ class ProductTemplate(models.Model):
             if template.product_template_image_ids:
                 first_product_image = template.product_template_image_ids.sorted("sequence")[0]
                 if first_product_image.video_url:
-                    raise ValidationError(
-                        template.env._("You can't use a video as the template's main image.")
-                    )
+                    continue
                 if template.image_1920.content == first_product_image.image_1920.content:
                     continue
                 template.with_context(
