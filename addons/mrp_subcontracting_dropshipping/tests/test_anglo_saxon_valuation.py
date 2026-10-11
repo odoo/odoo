@@ -238,3 +238,30 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
 
         self.assertEqual(avco_product.standard_price, 0)
         self.assertEqual(avco_product_2.standard_price, 0)
+
+    def test_resupply_dropship_bill_accounts(self):
+        """
+        A component dropshipped by its vendor to the subcontractor lands in the valued
+        subcontracting location: its bill must hit the stock valuation account, unless
+        the component is not storable.
+        """
+        self.product_b.write({
+            'route_ids': [Command.link(self.dropship_route.id)],
+            'categ_id': self.categ_avco_auto.id,
+            'seller_ids': [Command.create({'partner_id': self.partner_b.id})],
+        })
+        accounts = self.product_b.product_tmpl_id.get_product_accounts()
+        for is_storable, account in [(True, accounts['stock_valuation']), (False, accounts['expense'])]:
+            self.product_b.is_storable = is_storable
+            self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'order_line': [Command.create({'product_id': self.product_a.id})],
+            }).button_confirm()
+            resupply_po = self.env['purchase.order'].search([
+                ('product_id', '=', self.product_b.id),
+                ('state', '=', 'draft'),
+            ])
+            resupply_po.button_confirm()
+            resupply_po.picking_ids.button_validate()
+            resupply_po.action_create_invoice()
+            self.assertEqual(resupply_po.invoice_ids.invoice_line_ids.account_id, account)
