@@ -906,10 +906,12 @@ class HrEmployee(models.Model):
         return self._get_contract_dates(date) != (False, False)
 
     def _is_flexible(self, date=fields.Date.today()):
-        return self._get_version(date).resource_calendar_id._is_flexible()
+        calendar = self._get_version(date).resource_calendar_id
+        return bool(calendar) and calendar._is_flexible()
 
     def _is_fully_flexible(self, date=fields.Date.today()):
-        return self._get_version(date).resource_calendar_id._is_fully_flexible()
+        calendar = self._get_version(date).resource_calendar_id
+        return bool(calendar) and calendar._is_fully_flexible()
 
     def _get_contracts(self, date_start=None, date_end=None, use_latest_version=True, domain=None):
         """
