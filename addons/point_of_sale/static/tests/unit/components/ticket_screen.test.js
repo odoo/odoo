@@ -1,6 +1,11 @@
 import { test, expect } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
-import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    mountWithCleanup,
+    onRpc,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { session } from "@web/session";
 import { barcodeService } from "@barcodes/barcode_service";
 import { setupPosEnv } from "../utils";
@@ -133,4 +138,30 @@ test("searching by customer keeps the orders of a nameless address contact", asy
         [companyOrder.id, addressOrder.id],
         { message: "the address contact is searched by its company name" }
     );
+});
+
+test.tags("desktop");
+test("changing the order filter resets pagination", async () => {
+    const store = await setupPosEnv();
+    for (let i = 0; i < 3; i++) {
+        store.addNewOrder({});
+    }
+    const paidOrder = store.addNewOrder({});
+    paidOrder.state = "paid";
+    onRpc("pos.order", "search_paid_order_ids", () => ({
+        ordersInfo: [[paidOrder.id, "2020-01-01 00:00:00"]],
+        totalCount: 1,
+    }));
+
+    await mountWithCleanup(TicketScreen, {
+        props: { stateOverride: { filter: "ACTIVE_ORDERS", nbrByPage: 2 } },
+    });
+    await contains(".ticket-screen .next").click();
+    expect(".ticket-screen .page").toHaveText("3-3 / 3");
+
+    await contains(".pos-search-bar .filter").click();
+    await contains(".pos-search-bar .dropdown-item:contains(Paid)").click();
+    expect(".ticket-screen .page").toHaveText("1-1 / 1");
+    expect(".ticket-screen .order-row").toHaveCount(1);
+    expect(`.ticket-screen .order-row[orderuuid="${paidOrder.uuid}"]`).toHaveCount(1);
 });
