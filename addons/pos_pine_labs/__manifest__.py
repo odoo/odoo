@@ -24,6 +24,10 @@ Features include:
         'point_of_sale._assets_pos': [
             'pos_pine_labs/static/src/**/*',
         ],
+        'point_of_sale.payment_terminals': [
+            'point_of_sale/static/src/app/utils/error_handlers.js',
+            'pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js',
+        ],
         'web.assets_unit_tests': [
             'pos_pine_labs/static/tests/unit/data/**/*',
         ],
