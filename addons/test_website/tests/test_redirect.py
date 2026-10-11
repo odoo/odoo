@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, tagged, warmup
 from odoo.tools import mute_logger
 
 from unittest.mock import patch
@@ -443,3 +443,95 @@ class TestRedirect(HttpCase):
         resp = self.url_open("/foo?oups=1&bar=2", allow_redirects=False)
         self.assertEqual(resp.status_code, 301)
         self.assertURLEqual(resp.headers.get('Location'), "/new-page-11?oups=1&bar=2")
+
+
+@tagged('-at_install', 'post_install')
+class TestRedirectPortal(HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.customer = cls.env['res.partner'].create({
+            'country_id': cls.env.ref('base.fr').id,
+            'email': 'mdelvaux34@example.com',
+            'lang': 'en_US',
+            'name': 'Mathias Delvaux',
+        })
+        cls.record_portal = cls.env['website.mail.test.portal'].create({
+            'name': 'Test Portal Record',
+            'partner_id': cls.customer.id,
+            'user_id': cls.user_admin.id,
+        })
+        for group_name, group_func, group_data in cls.record_portal.sudo()._notify_get_recipients_groups(
+            cls.env['mail.message'], False
+        ):
+            if group_name == 'portal_customer' and group_func(cls.customer):
+                cls.record_access_url = group_data['button_access']['url']
+                break
+        else:
+            raise AssertionError('Record access URL not found')
+        cls.website = cls.env.ref('base.default_website')
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_customer_access_not_logged_language_redirection(self):
+        """Check that the customer is redirected to a page in his language."""
+        self._setup_website_customer_lang('en_US')
+        res = self.url_open(self.record_access_url)
+        self.assertNotIn(f'/en/my/website_test_portal/{self.record_portal.id}', res.url)
+        self.assertIn(f'/my/website_test_portal/{self.record_portal.id}', res.url)
+
+        for lang_code, expected_url_prefix in (('fr_FR', '/fr'), ('es_ES', '/es')):
+            with self.subTest(lang_code=lang_code):
+                lang = self._setup_website_customer_lang(lang_code)
+                # Language not enabled in the current website: no redirection to customer language to avoid 404
+                self.website.language_ids -= lang
+                res = self.url_open(self.record_access_url)
+                self.assertNotIn(f'{expected_url_prefix}/my/website_test_portal/{self.record_portal.id}', res.url)
+                self.assertIn(f'/my/website_test_portal/{self.record_portal.id}', res.url)
+                # Language enabled in the current website: redirection to customer language
+                self.website.language_ids += lang
+                res = self.url_open(self.record_access_url)
+                self.assertIn(f'{expected_url_prefix}/my/website_test_portal/{self.record_portal.id}', res.url)
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_customer_access_not_logged_nearest_language_redirection(self):
+        """Check redirection to nearest site language if customer's language isn't enabled (fr_BE -> fr_FR)."""
+        self._setup_website_customer_lang('fr_FR')
+        lang_fr_be = self._setup_website_customer_lang('fr_BE')
+        self.website.language_ids -= lang_fr_be
+        res = self.url_open(self.record_access_url)
+        self.assertEqual(res.status_code, 200)
+        self.assertIn(f'/fr/my/website_test_portal/{self.record_portal.id}', res.url)
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    @warmup
+    def test_profile_language_redirection(self):
+        """Profile portal redirection to a customer language page (enabled, non-default)."""
+        self._setup_website_customer_lang('es_ES')
+        with self.assertQueryCount(13):
+            self.url_open(self.record_access_url)
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    @warmup
+    def test_profile_language_redirection_default(self):
+        """Profile portal redirection to a customer language page (enabled, default)."""
+        self._setup_website_customer_lang('en_US')
+        with self.assertQueryCount(13):
+            self.url_open(self.record_access_url)
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    @warmup
+    def test_profile_language_redirection_disabled_language(self):
+        """Profile portal redirection to a customer language page (disabled, falls back to default)."""
+        lang = self._setup_website_customer_lang('es_ES')
+        self.website.language_ids -= lang
+        with self.assertQueryCount(13):
+            self.url_open(self.record_access_url)
+
+    def _setup_website_customer_lang(self, lang_code):
+        """ Activate language for the website and set it to the customer. """
+        lang = self.env['res.lang']._activate_lang(lang_code)
+        self.website.language_ids += lang
+        self.customer.lang = lang_code
+        return lang

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
 from werkzeug.urls import url_parse, url_decode, url_encode
 
 from odoo.addons.auth_signup.models.res_partner import ResPartner
@@ -456,6 +457,31 @@ class TestPortalFlow(MailCommon, HttpCase):
         self.assertEqual(len(self._mails), 1)
         self.assertIn(f'"{html_escape(self.record_portal_url_auth)}"', self._mails[0].get('body'))
         self.assertEqual(f'Your quotation "{self.record_portal.name}"', self._mails[0].get('subject'))  # Check that the template is used
+
+    def test_redirect_to_user_lang_page(self):
+        """Check that users are redirected to a page in their language or in the backend if they have access."""
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('es_ES')
+        get_frontend_installed_langs = self.env['res.lang'].with_context(web_force_installed_langs=True)._get_frontend
+        with patch.object(self.env['res.lang'].__class__, '_get_frontend', get_frontend_installed_langs):
+            lang_url_prefix_list = [('en_US', ''), ('fr_FR', '/fr'), ('es_ES', '/es')]
+            # Not logged: redirect to the portal page in the customer language.
+            for lang_code, expected_url_prefix in lang_url_prefix_list:
+                self.customer.lang = lang_code
+                res = self.url_open(self.record_portal_url_auth)
+                self.assertIn(f'{expected_url_prefix}/my/test_portal/{self.record_portal.id}', res.url)
+            # Logged: redirect to the backend if the user has access to the record otherwise to the portal page.
+            for (user, has_record_backend_access) in ((self.user_portal, False), (self.user_employee, True)):
+                self.authenticate(user.login, user.login)
+                for lang_code, expected_url_prefix in lang_url_prefix_list:
+                    with self.subTest(user=user.name, lang_code=lang_code):
+                        self.customer.lang = lang_code
+                        res = self.url_open(self.record_portal_url_auth)
+                        if has_record_backend_access:
+                            self.assert_URL(res.url, f'/odoo/mail.test.portal/{self.record_portal.id}')
+                        else:
+                            self.assertIn(f'{expected_url_prefix}/my/test_portal/{self.record_portal.id}', res.url)
+                self.logout()
 
 
 @tagged('portal')
