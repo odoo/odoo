@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="multi_classes_ids.SnippetOptions">
+        <BuilderRow label.translate="Add Classes" tooltip.translate="Add multiple classes, e.g. class1 class2">
+            <BuilderTextInput attributeAction="'class'" action="'setClasses'"
+                              placeholder.translate="e.g. class1 class2"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Add ID" tooltip.translate="ID must be a unique. e.g. id1">
+            <BuilderTextInput attributeAction="'id'" action="'setID'"
+                              placeholder.translate="ID must be a unique. e.g. id1"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Add Styles"
+                    tooltip.translate="Write custom inline CSS without any &lt;style&gt; tags.">
+            <BuilderTextInput attributeAction="'style'" action="'setStyles'"
+                              placeholder.translate="Write custom inline CSS without any &lt;style&gt; tags."/>
+        </BuilderRow>
+    </t>
+</templates>
