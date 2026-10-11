@@ -46,6 +46,11 @@
     <xpath expr="//t[@t-set='shop_btn_href']" position="replace">
         <t t-set="shop_btn_href">/shop</t>
     </xpath>
+    <xpath expr="//names[@id='specific_name']" position="inside">
+        <div key="grid" name="Grid"/>
+        <div key="product" name="Product"/>
+        <div key="product-carousel" name="Product Carousel"/>
+    </xpath>
 </template>
 
 </odoo>

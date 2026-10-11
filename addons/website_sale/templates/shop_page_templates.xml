@@ -119,8 +119,6 @@
         <t t-call="website.layout"
             additional_title="category.name"
             website_sale_sortable="website_sale_sortable">
-            <t t-set="grid_block_name">Grid</t>
-            <t t-set="product_block_name">Product</t>
 
             <!-- Qweb variable defining the class suffix for navbar items.
                  Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
@@ -392,7 +390,7 @@
                                         {{grid_md_allow_custom_cols and 'o_wsale_products_grid_table_md'}}
                                         {{website.shop_opt_products_design_classes}}"
                                     t-attf-style="--o-wsale-ppr: {{ppr}}; --o-wsale-ppg: {{ppg}}; --o-wsale-products-grid-gap: {{gap}};"
-                                    t-att-data-name="grid_block_name"
+                                    t-att-data-builder-name="grid"
                                 >
                                     <t t-foreach="bins" t-as="tr_product">
                                         <t t-foreach="tr_product" t-as="td_product">
@@ -424,7 +422,7 @@
                                                     t-attf-style="--o-wsale-products-grid-product-col-height: {{col_height}};"
                                                     t-att-data-colspan="td_product['x'] != 1 and td_product['x']"
                                                     t-att-data-rowspan="td_product['y'] != 1 and td_product['y']"
-                                                    t-att-data-name="product_block_name"
+                                                    t-att-data-builder-name="product"
                                                 >
                                                     <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
                                                         <t
