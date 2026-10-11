@@ -17,6 +17,7 @@
                     sendPaymentRequest.bind="this.sendPaymentRequest"
                     selectLine.bind="this.selectPaymentLine"
                     updateSelectedPaymentline.bind="this.updateSelectedPaymentline"
+                    isPaymentLineLocked.bind="this.isPaymentLineLocked"
                     isRefundOrder="this.isRefundOrder" />
                 <div class="payment-screen-status-mobile">
                     <PaymentScreenStatus order="this.currentOrder" />
@@ -57,6 +58,7 @@
                                 sendPaymentRequest.bind="this.sendPaymentRequest"
                                 selectLine.bind="this.selectPaymentLine"
                                 updateSelectedPaymentline.bind="this.updateSelectedPaymentline"
+                                isPaymentLineLocked.bind="this.isPaymentLineLocked"
                                 isRefundOrder="this.isRefundOrder" />
                             <div class="payment-screen-status">
                                 <PaymentScreenStatus order="this.currentOrder" />
