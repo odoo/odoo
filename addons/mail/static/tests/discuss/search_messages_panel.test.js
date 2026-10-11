@@ -380,3 +380,51 @@ test("Search should trigger a single store fetch", async () => {
     await waitStoreFetch("/discuss/channel/messages");
     await waitStoreFetch();
 });
+
+test.tags("desktop");
+test("Search message include polls", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageIds = pyEnv["mail.message"].create([
+        {
+            body: "",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: "",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const optionIds = pyEnv["mail.poll.option"].create([
+        {
+            option_label: "pizza",
+        },
+        {
+            option_label: "burger",
+        },
+    ]);
+    pyEnv["mail.poll"].create({
+        end_message_id: messageIds[1],
+        option_ids: optionIds,
+        poll_question: "what would you like to have?",
+        start_message_id: messageIds[0],
+        winning_option_id: optionIds[0],
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 2 });
+    await click("button[title='Search Messages']");
+    await contains(".o-mail-SearchMessageInput .o-mail-SearchInput input");
+    await editInput(document.body, ".o-mail-SearchMessageInput .o-mail-SearchInput input", "pizza");
+    await contains(".o-mail-SearchMessagesPanel .o-mail-Message", { count: 2 });
+    await editInput(
+        document.body,
+        ".o-mail-SearchMessageInput .o-mail-SearchInput input",
+        "burger"
+    );
+    await contains(".o-mail-SearchMessagesPanel .o-mail-Message:has(:text('burger))");
+});
