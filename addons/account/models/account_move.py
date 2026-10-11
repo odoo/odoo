@@ -6017,16 +6017,9 @@ class AccountMove(models.Model):
 
     def _get_cogs_common_vals(self, line):
         return {
-            'name': line.name[:64] if line.name else '',
+            **line._prepare_cogs_line_vals(),
             'move_id': self.id,
             'partner_id': self.commercial_partner_id.id,
-            'product_id': line.product_id.id,
-            'product_uom_id': line.product_uom_id.id,
-            'quantity': line.quantity,
-            'analytic_distribution': line.analytic_distribution,
-            'display_type': 'cogs',
-            'tax_ids': [],
-            'cogs_origin_id': line.id,
         }
 
     def _get_cogs_lines_vals(self):
