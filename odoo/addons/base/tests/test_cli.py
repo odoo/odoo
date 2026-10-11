@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 import subprocess as sp
@@ -8,6 +9,8 @@ from pathlib import Path
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
 from odoo.tests import BaseCase
 from odoo.tools import config, file_path
+
+_logger = logging.getLogger(__name__)
 
 
 class TestCommand(BaseCase):
@@ -106,6 +109,31 @@ class TestCommand(BaseCase):
         self.assertIn("usage: ", proc.stdout)
         self.assertIn("Rewrite the entire source code", proc.stdout)
         self.assertFalse(proc.stderr)
+
+    def test_upgrade_code_migrations(self):
+        from odoo import addons  # noqa: PLC0415
+        from odoo.cli.upgrade_code import FileManager, UPGRADE, migrate  # noqa: PLC0415
+        file_manager = FileManager(list(addons.__path__))
+        file_manager.print_progress = lambda *a, **kw: None  # disable output
+        for script in sorted(UPGRADE.iterdir()):
+            if script.suffix != '.py':
+                continue
+            script_name = script.name
+            script_content = script.read_text()
+            # Check for tag to skip testing
+            if '# test: skip' in script_content:
+                # skip testing the upgrade_code script entirely
+                _logger.info("  skip upgrade_code %s", script_name)
+                continue
+            # the test may change files because of false-positive changes
+            accept_changes = '# test: false' in script_content
+            # Reset changed files by the previous test
+            file_manager.reset()
+            with self.subTest(script_name, accept_changes=accept_changes):
+                _logger.info("  upgrade_code %s", script_name)
+                result = migrate(file_manager, glob=None, script=script_name, dry_run=True)
+                if not accept_changes and result:
+                    self.fail("files should not be changed")
 
     @unittest.skipIf(os.name != 'posix', '`os.openpty` only available on POSIX systems')
     def test_shell(self):
