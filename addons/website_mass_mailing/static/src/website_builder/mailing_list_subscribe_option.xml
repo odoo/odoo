@@ -15,8 +15,16 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Display Thanks Message" t-if="!this.isActiveItem('form_opt')">
-        <BuilderCheckbox action="'toggleThanksMessage'"/>
+    <BuilderRow label.translate="On Success">
+        <BuilderSelect action="'newsletterSubscribeSuccess'" actionParam="'successMode'">
+            <BuilderSelectItem actionValue="'message'">Show Message</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'redirect'" id="'on_success_redirect'">Redirect + Show Message</BuilderSelectItem>
+            <BuilderSelectItem actionValue="'closePopup'" id="'on_success_close_popup'" t-if="this.isNewsletterPopup()">Close Popup</BuilderSelectItem>
+        </BuilderSelect>
+        <BuilderButton t-if="!this.isActiveItem('on_success_close_popup')" title.translate="Edit Message" icon="'visibility'" action="'toggleThanksMessage'" />
+    </BuilderRow>
+    <BuilderRow label.translate="URL" level="1" t-if="this.isActiveItem('on_success_redirect')">
+        <BuilderUrlPicker dataAttributeAction="'successPage'" />
     </BuilderRow>
 
 </t>
@@ -33,6 +41,12 @@
             template="website_mass_mailing.MailingListSubscribeFormOption"
             selector=".s_newsletter_subscribe_form"/>
     </xpath>
+</t>
+
+<t t-name="website_mass_mailing.newsletter_subscribe_success_message">
+    <div class="js_subscribed_wrap d-none">
+        <p class="h4-fs text-center text-success mb-0"><i class="oi" data-icon="check_circle" role="img"/> Thanks for registering!</p>
+    </div>
 </t>
 
 </templates>
