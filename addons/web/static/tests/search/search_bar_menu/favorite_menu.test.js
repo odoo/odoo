@@ -61,7 +61,7 @@ test("simple rendering with no favorite", async () => {
     expect(`.o_favorite_menu .o_dropdown_title`).toHaveText(/^favorites$/i);
     expect(`.o_favorite_menu`).toHaveCount(1);
     expect(`.o_favorite_menu .dropdown-divider`).toHaveCount(0);
-    expect(`.o_favorite_menu .o_add_favorite`).toHaveCount(1);
+    expect(`.o_favorite_menu .o_custom_favorite_item`).toHaveCount(1);
 });
 
 test("edit an active favorite", async () => {

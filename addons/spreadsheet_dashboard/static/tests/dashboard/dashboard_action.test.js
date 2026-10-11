@@ -15,7 +15,7 @@ import {
     patchWithCleanup,
     saveAndEditFavorite,
     saveFavorite,
-    toggleSaveFavorite,
+    waitForSaveFavorite,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 import { location, browser } from "@web/core/browser/browser";
@@ -1057,12 +1057,12 @@ describe("Favorite filters in search bar", () => {
 
     test("simple favorite menu rendering", async function () {
         await toggleSearchBarMenu();
-        await toggleSaveFavorite();
-        expect(`.o_add_favorite + .o_accordion_values input[type="text"]`).toHaveValue(
+        await waitForSaveFavorite();
+        expect(`.o_custom_favorite_item input[type="text"]`).toHaveValue(
             "Spreadsheet with Pivot"
         );
-        expect(`.o_add_favorite + .o_accordion_values input[type="checkbox"]`).toHaveCount(1);
-        expect(`.o_add_favorite + .o_accordion_values .form-check label`).toHaveText(
+        expect(`.o_custom_favorite_item input[type="checkbox"]`).toHaveCount(1);
+        expect(`.o_custom_favorite_item .form-check label`).toHaveText(
             "Default filter"
         );
     });
@@ -1080,7 +1080,7 @@ describe("Favorite filters in search bar", () => {
         });
 
         expect.verifySteps([]);
-        await toggleSaveFavorite();
+        await waitForSaveFavorite();
         await editFavoriteName("aaa");
         await saveFavorite();
         expect.verifySteps(["/web/dataset/call_kw/spreadsheet.dashboard.favorite.filters/create"]);
@@ -1110,7 +1110,7 @@ describe("Favorite filters in search bar", () => {
         });
 
         expect.verifySteps([]);
-        await toggleSaveFavorite();
+        await waitForSaveFavorite();
         await editFavoriteName("aaa");
         await saveAndEditFavorite();
         expect.verifySteps([

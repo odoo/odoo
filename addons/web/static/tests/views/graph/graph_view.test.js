@@ -17,7 +17,7 @@ import {
     switchView,
     toggleMenuItem,
     toggleMenuItemOption,
-    toggleSaveFavorite,
+    waitForSaveFavorite,
     toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
@@ -1384,20 +1384,20 @@ test("save params succeeds", async () => {
         `,
     });
 
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("First Favorite");
     await saveFavorite();
 
     await contains(`.o_report_measures`).click();
     await toggleMenuItem("Foo");
 
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("Second Favorite");
     await saveFavorite();
 
     await selectMode("line");
 
-    await toggleSaveFavorite();
+    await waitForSaveFavorite();
     await editFavoriteName("Third Favorite");
     await saveFavorite();
 
