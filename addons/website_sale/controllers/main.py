@@ -639,7 +639,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order="attribute_id",
             aggregates=["id:recordset"],
         )
-        pavs_per_attribute.update({attribute: pavs.sorted() for attribute, pavs in grouped_pavs})
+        pavs_per_attribute.update({
+            attribute: ProductAttributeValue.union(
+                pavs.mapped(lambda pav: pav.parent_id or pav)
+            ).sorted()
+            for attribute, pavs in grouped_pavs
+        })
         # Return attributes as recordset of `product.attribute`
         attributes = ProductAttribute.union(pavs_per_attribute.keys())
         products_prices = products._get_sales_prices(
@@ -2145,7 +2150,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             value_ids = []
             for attr_value in attr_values.split(","):
                 if value_id := unslug(attr_value)[1]:
-                    value_ids.append(value_id)  # noqa: PERF401
+                    pav = self.env["product.attribute.value"].browse(value_id)
+                    value_ids.extend([pav.id, *pav.child_ids.ids])  # noqa: PERF401
 
             if value_ids:
                 attribute_value_dict[attr_id] = value_ids

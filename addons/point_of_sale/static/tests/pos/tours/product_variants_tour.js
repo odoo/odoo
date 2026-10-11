@@ -7,7 +7,7 @@ import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/uti
 function check_variant_price(product, choices, price) {
     const steps = [...ProductScreen.clickDisplayedProduct(product)];
     for (const choice of choices) {
-        steps.push(...ProductConfiguratorPopup.pickRadio(choice));
+        steps.push(...ProductConfiguratorPopup.pickPills(choice));
     }
     steps.push(
         Dialog.proceed({ title: product, button: "add" }),

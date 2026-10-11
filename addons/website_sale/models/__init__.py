@@ -11,6 +11,7 @@ from . import (
     ir_module_module,
     payment_transaction,
     product_attribute,
+    product_attribute_value,
     product_attribute_category,
     product_combo,
     product_document,
