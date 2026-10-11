@@ -48,16 +48,22 @@ test("activity upload document is available", async () => {
     await waitFor(".o-mail-Activity .o_input_file:count(1)");
 });
 
-test("activity can upload a document", async () => {
+test("activity can upload documents", async () => {
     const pyEnv = await startServer();
     const fakeId = pyEnv["res.partner"].create({});
     const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Upload Document");
-    pyEnv["mail.activity"].create({
+    const activityId = pyEnv["mail.activity"].create({
         activity_category: "upload_file",
         activity_type_id: activityType.id,
         can_write: true,
         res_id: fakeId,
         res_model: "res.partner",
+    });
+    onRpc("mail.activity", "action_feedback", ({ args, kwargs }) => {
+        expect.step("action_feedback");
+        expect(args[0]).toEqual([activityId]);
+        expect(kwargs.attachment_ids).toHaveLength(2);
+        return true;
     });
     await start();
     await openFormView("res.partner", fakeId, {
@@ -68,8 +74,11 @@ test("activity can upload a document", async () => {
             </form>`,
     });
     await waitFor(".o-mail-Activity .btn:text('Upload Document'):count(1)");
-    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
-    await inputFiles(".o-mail-Activity .o_input_file", [file]);
+    await inputFiles(".o-mail-Activity .o_input_file", [
+        new File(["hello"], "hello.txt", { type: "text/plain" }),
+        new File(["world"], "world.txt", { type: "text/plain" }),
+    ]);
+    await expect.waitForSteps(["action_feedback"]);
 });
 
 test("activity simplest layout", async () => {

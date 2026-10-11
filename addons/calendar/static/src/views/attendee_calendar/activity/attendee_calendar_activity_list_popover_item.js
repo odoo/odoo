@@ -92,11 +92,12 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
      * Remove the activity from the list when uploading a document
      * (i.e. when an activity of type Document is marked as done).
      */
-    async onFileUploaded(data) {
+    async onFilesUploadComplete() {
         const activity = this.activity();
-        await super.onFileUploaded(data);
-        activity.remove();
-        this.calendarProps.onRemoveActivityItem(activity.id);
+        if (await super.onFilesUploadComplete()) {
+            activity.remove();
+            this.calendarProps.onRemoveActivityItem(activity.id);
+        }
     }
 
     /**
