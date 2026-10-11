@@ -1529,12 +1529,7 @@ class AccountMove(models.Model):
                     amount = abs(line.amount_residual_currency)
                 else:
                     # Different foreign currencies.
-                    amount = line.company_currency_id._convert(
-                        abs(line.amount_residual),
-                        move.currency_id,
-                        move.company_id,
-                        line.date,
-                    )
+                    amount = move._get_outstanding_amount_in_move_currency(line)
 
                 if move.currency_id.is_zero(amount):
                     continue
@@ -1552,6 +1547,18 @@ class AccountMove(models.Model):
 
             if payments_widget_vals['content']:
                 move.invoice_outstanding_credits_debits_widget = payments_widget_vals
+
+    def _get_outstanding_amount_in_move_currency(self, line):
+        """ Amount of an outstanding line in the invoice currency, when the line currency
+        differs from the invoice currency.
+        """
+        self.ensure_one()
+        return line.company_currency_id._convert(
+            abs(line.amount_residual),
+            self.currency_id,
+            self.company_id,
+            line.date,
+        )
 
     @api.depends('invoice_outstanding_credits_debits_widget')
     def _compute_invoice_has_outstanding(self):
