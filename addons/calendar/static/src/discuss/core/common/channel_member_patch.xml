@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="discuss.ChannelMember" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='this.displayNameRef']" position="inside">
+            <span t-if="this.member().partner_id?.inMeetingEndText" class="text-success smaller ms-2 text-truncate fw-bold opacity-75">
+                <i class="oi oi-filled me-1" data-icon="calendar_today"/>
+                <t t-out="this.member().partner_id.inMeetingEndText"/>
+            </span>
+        </xpath>
+    </t>
+</templates>
