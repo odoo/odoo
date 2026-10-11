@@ -2111,7 +2111,8 @@ class MrpProduction(models.Model):
                         new_ml_vals = dict(
                             ml_vals,
                             quantity=move.product_uom_qty,
-                            move_id=move.id
+                            move_id=move.id,
+                            production_id=move.raw_material_production_id.id,
                         )
                         move_lines_vals.append(new_ml_vals)
                     moves_to_consume |= move
@@ -2139,6 +2140,7 @@ class MrpProduction(models.Model):
                 move_line.write({
                     'quantity': taken_qty_uom,
                     'move_id': move.id,
+                    'production_id': move.raw_material_production_id.id,
                 })
                 move_qty_to_reserve -= taken_qty
                 ml_by_move[index] = (quantity - taken_qty, move_line, ml_vals)
@@ -2159,7 +2161,8 @@ class MrpProduction(models.Model):
                         new_ml_vals = dict(
                             ml_vals,
                             quantity=taken_qty_uom,
-                            move_id=move.id
+                            move_id=move.id,
+                            production_id=move.raw_material_production_id.id,
                         )
                         move_lines_vals.append(new_ml_vals)
                     quantity -= taken_qty
