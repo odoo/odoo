@@ -6,7 +6,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 describe.current.tags("desktop");
 
 const websiteContent = `
-    <div class="s_rating pt16 pb16" data-rating-icon="star" data-snippet="s_rating" data-name="Rating">
+    <div class="s_rating pt16 pb16" data-rating-icon="star" data-snippet="s_rating">
         <strong class="s_rating_title">Quality</strong>
         <div class="s_rating_icons o_not_editable">
             <span class="s_rating_active_icons">

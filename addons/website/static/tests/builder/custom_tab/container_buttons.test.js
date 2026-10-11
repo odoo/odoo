@@ -252,7 +252,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
         </section>
         <section class="sixth">
             <p>test<p>
-            <div class="s_card" data-name="Card">card</div>
+            <div class="s_card">card</div>
         </section>
     `;
     await setupWebsiteBuilder(websiteContent);
@@ -455,7 +455,7 @@ test("Custom snippet appears in block and inner content on save and is removed o
         name: "Map",
         groupName: "geo",
         structureContent: `
-            <section data-snippet="s_map" data-name="Map">
+            <section data-snippet="s_map">
                 <div class="o_map">Map</div>
             </section>
         `,
@@ -484,7 +484,7 @@ test("Custom snippet appears in block and inner content on save and is removed o
     };
 
     const snippetWithMap = `
-        <section data-snippet="s_map" data-name="Map">
+        <section data-snippet="s_map">
             <div class="o_map">Map content</div>
         </section>
     `;

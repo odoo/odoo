@@ -105,16 +105,16 @@ HOMEPAGE_UP_TO_DATE = """
 <t name="Homepage" t-name="website.homepage1">
   <t t-call="website.layout" pageName.f="homepage">
     <div id="wrap" class="oe_structure oe_empty">
-      <section class="s_website_form pt16 pb16 o_colored_level" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+      <section class="s_website_form pt16 pb16 o_colored_level" data-vcss="001" data-snippet="s_website_form">
         <div class="container">
           <form action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-success-mode="redirect" data-success-page="/contactus-thank-you" data-model_name="mail.mail">
           </form>
         </div>
       </section>
-      <section class="s_masonry_block" data-vcss="001" data-snippet="s_masonry_block" data-name="Masonry">
+      <section class="s_masonry_block" data-vcss="001" data-snippet="s_masonry_block">
         <div class="container-fluid"/>
       </section>
-      <section class="s_showcase pt48 pb48 o_colored_level" data-vcss="002" data-snippet="s_showcase" data-name="Showcase">
+      <section class="s_showcase pt48 pb48 o_colored_level" data-vcss="002" data-snippet="s_showcase">
         <div class="container">
         </div>
       </section>
@@ -131,17 +131,17 @@ HOMEPAGE_OUTDATED = """
         <div class="container">
         </div>
       </form>
-      <section class="s_masonry_block" data-vcss="001" data-snippet="s_masonry_block" data-name="Masonry">
+      <section class="s_masonry_block" data-vcss="001" data-snippet="s_masonry_block">
         <div class="container-fluid"/>
       </section>
-      <section class="s_masonry_block" data-snippet="s_masonry_block" data-name="Masonry">
+      <section class="s_masonry_block" data-snippet="s_masonry_block">
         <div class="container-fluid"/>
       </section>
-      <section class="s_showcase pt48 pb48 o_colored_level" data-vcss="002" data-snippet="s_showcase" data-name="Showcase">
+      <section class="s_showcase pt48 pb48 o_colored_level" data-vcss="002" data-snippet="s_showcase">
         <div class="container">
         </div>
       </section>
-      <section class="s_countdown pt48 pb48" data-snippet="s_countdown" data-name="Countdown">
+      <section class="s_countdown pt48 pb48" data-snippet="s_countdown">
         <div class="container">
         </div>
       </section>
@@ -156,7 +156,7 @@ MEGA_MENU_UP_TO_DATE = """
         </div>
     </section>
 
-<section class="s_image_gallery o_slideshow pt24 o_colored_level" data-vcss="002" data-columns="3" style="height: 500px; overflow: hidden;" data-snippet="s_image_gallery" data-name="Image Gallery">
+<section class="s_image_gallery o_slideshow pt24 o_colored_level" data-vcss="002" data-columns="3" style="height: 500px; overflow: hidden;" data-snippet="s_image_gallery">
         <div class="container">
         </div>
     </section>
@@ -168,7 +168,7 @@ MEGA_MENU_OUTDATED = """
         </div>
     </section>
 
-<section class="s_image_gallery o_slideshow s_image_gallery_show_indicators s_image_gallery_indicators_rounded pt24 o_colored_level" data-columns="3" style="height: 500px; overflow: hidden;" data-snippet="s_image_gallery" data-name="Image Gallery">
+<section class="s_image_gallery o_slideshow s_image_gallery_show_indicators s_image_gallery_indicators_rounded pt24 o_colored_level" data-columns="3" style="height: 500px; overflow: hidden;" data-snippet="s_image_gallery">
         <div class="container">
         </div>
     </section>

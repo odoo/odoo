@@ -65,11 +65,11 @@ function startFormInteractions() {
 
 const formWithRestrictedFieldsTemplate = /* html */ `
     <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                     <div class="s_website_form_rows row s_col_no_bgcolor">
-                        <div data-name="Field" data-requirement-comparator="substring" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;hello&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;hello&quot;},{&quot;requirement_text&quot;:&quot;noway&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;noway&quot;}]" data-error-message="This field must contain one of the keyword(s): 'hello and noway'" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
+                        <div data-requirement-comparator="substring" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;hello&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;hello&quot;},{&quot;requirement_text&quot;:&quot;noway&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;noway&quot;}]" data-error-message="This field must contain one of the keyword(s): 'hello and noway'" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o5vq2ntfwjaw">
                                     <span class="s_website_form_label_content">Your Name</span>
@@ -80,7 +80,7 @@ const formWithRestrictedFieldsTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email" data-requirement-comparator="domain" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;gmail.com&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;gmail.com&quot;},{&quot;requirement_text&quot;:&quot;icloud.com&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;icloud.com&quot;}]" data-error-message="This field must have one of these email domain(s): gmail.com and icloud.com.">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email" data-requirement-comparator="domain" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;gmail.com&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;gmail.com&quot;},{&quot;requirement_text&quot;:&quot;icloud.com&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;icloud.com&quot;}]" data-error-message="This field must have one of these email domain(s): gmail.com and icloud.com.">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="odfcbsocir26">
                                     <span class="s_website_form_label_content">Your Email</span>
@@ -91,7 +91,7 @@ const formWithRestrictedFieldsTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div data-name="Field" data-requirement-comparator="!substring" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;football&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;football&quot;},{&quot;requirement_text&quot;:&quot;cricket&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;cricket&quot;}]" data-error-message="This field must not include the keyword(s): 'football and cricket'" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char">
+                        <div data-requirement-comparator="!substring" data-requirement-condition="[{&quot;requirement_text&quot;:&quot;football&quot;,&quot;_id&quot;:&quot;0&quot;,&quot;id&quot;:&quot;football&quot;},{&quot;requirement_text&quot;:&quot;cricket&quot;,&quot;_id&quot;:&quot;1&quot;,&quot;id&quot;:&quot;cricket&quot;}]" data-error-message="This field must not include the keyword(s): 'football and cricket'" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ogrut2y7e6ld">
                                     <span class="s_website_form_label_content">Subject</span>
@@ -102,7 +102,7 @@ const formWithRestrictedFieldsTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label">
                             <div style="width: 200px;" class="s_website_form_label"></div>
                             <span id="s_website_form_result"></span>
                             <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
@@ -116,11 +116,11 @@ const formWithRestrictedFieldsTemplate = /* html */ `
 
 const formWithCharacterLimitRuleTemplate = /* html */ `
     <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                     <div class="s_website_form_rows row s_col_no_bgcolor">
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
                                     <span class="s_website_form_label_content">Your Name</span>
@@ -131,7 +131,7 @@ const formWithCharacterLimitRuleTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label">
                             <div style="width: 200px;" class="s_website_form_label"></div>
                             <span id="s_website_form_result"></span>
                             <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
@@ -145,11 +145,11 @@ const formWithCharacterLimitRuleTemplate = /* html */ `
 
 const formWithRestrictedFileTypesTemplate = /* html */ `  
     <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                     <div class="s_website_form_rows row s_col_no_bgcolor">
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ooas5l5yuhg">
                                     <span class="s_website_form_label_content">Your Email</span>
@@ -160,7 +160,7 @@ const formWithRestrictedFileTypesTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="binary">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="binary">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="onfhvm7weawe">
                                     <span class="s_website_form_label_content">Photo</span>
@@ -174,7 +174,7 @@ const formWithRestrictedFileTypesTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label">
                             <div style="width: 200px;" class="s_website_form_label"></div>
                             <span id="s_website_form_result"></span>
                             <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
@@ -189,14 +189,14 @@ const formWithRestrictedFileTypesTemplate = /* html */ `
 function createFileUploadForm(maxFiles = 1) {
     return `
         <div id="wrapwrap">
-            <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
                 <div class="container-fluid">
                     <form action="/website/form/" method="post" enctype="multipart/form-data"
                           class="o_mark_required" data-mark="*" data-pre-fill="true"
                           data-model_name="mail.mail" data-success-mode="redirect"
                           data-success-page="/contactus-thank-you">
                         <div class="s_website_form_rows row s_col_no_bgcolor">
-                            <div data-name="Field" class="s_website_form_field mb-3 col-12
+                            <div class="s_website_form_field mb-3 col-12
                                 s_website_form_custom s_website_form_required pb0 o_colored_level"
                                 data-type="binary">
                                 <div class="row s_col_no_resize s_col_no_bgcolor">
@@ -228,11 +228,11 @@ function createFileUploadForm(maxFiles = 1) {
 
 const formWithVisibilityRulesTemplate = /* html */ `
     <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                     <div class="s_website_form_rows row s_col_no_bgcolor">
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_dnone">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
                                     <span class="s_website_form_label_content"></span>
@@ -243,7 +243,7 @@ const formWithVisibilityRulesTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oub62hlfgjwf">
                                     <span class="s_website_form_label_content">Your Email</span>
@@ -254,7 +254,7 @@ const formWithVisibilityRulesTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oqsf4m51acj">
                                     <span class="s_website_form_label_content">Subject</span>
@@ -265,7 +265,7 @@ const formWithVisibilityRulesTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oea48nwznnp">
                                     <span class="s_website_form_label_content">FieldA</span>
@@ -275,7 +275,7 @@ const formWithVisibilityRulesTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="FieldA" data-visibility-comparator="equal" data-visibility-condition="foo">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="FieldA" data-visibility-comparator="equal" data-visibility-condition="foo">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o42sfafdr6r9">
                                     <span class="s_website_form_label_content">FieldB</span>
@@ -285,7 +285,7 @@ const formWithVisibilityRulesTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="FieldB" data-visibility-comparator="equal" data-visibility-condition="foo">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="FieldB" data-visibility-comparator="equal" data-visibility-condition="foo">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="onhykjagdxb">
                                     <span class="s_website_form_label_content">FieldC</span>
@@ -295,7 +295,7 @@ const formWithVisibilityRulesTemplate = /* html */ `
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label">
                             <div style="width: 200px;" class="s_website_form_label"></div>
                             <span id="s_website_form_result"></span>
                             <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
@@ -311,13 +311,13 @@ const formTemplateWithRadioAndSelect = /* html */ `
     <div id="wrapwrap">
         <section class="s_website_form">
             <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-model_name="mail.mail">
-                <div data-name="Field" class="s_website_form_field">
+                <div class="s_website_form_field">
                     <input class="form-control s_website_form_input" type="email" name="email_from" id="o15u8g10ugoy">
                 </div>
-                <div data-name="Field" class="s_website_form_field">
+                <div class="s_website_form_field">
                     <input class="form-control s_website_form_input" type="text" name="subject" id="o7r4gf8heilh">
                 </div>
-                <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="selection" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option... (radio)">
+                <div class="s_website_form_field s_website_form_custom" data-type="selection" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option... (radio)">
                     <div class="row s_website_form_multiple" data-name="Radio Button">
                         <div class="form-check">
                             <input type="radio" class="s_website_form_input form-check-input" id="obd2szn9ilqn0" name="Radio Button" value="Option 1" required="">
@@ -325,7 +325,7 @@ const formTemplateWithRadioAndSelect = /* html */ `
                         </div>
                     </div>
                 </div>
-                <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="many2one" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option... (select)">
+                <div class="s_website_form_field s_website_form_custom" data-type="many2one" data-other-option-allowed="true" data-other-option-label="Other" data-other-option-placeholder="Other option... (select)">
                     <select class="form-select s_website_form_input" name="Select" required="" id="oo7t6wykitto">
                         <option id="oo7t6wykitto0" value="Option 1" selected>Option 1</option>
                     </select>
@@ -555,7 +555,7 @@ function formWithVisibilityRulesOnCheckbox(condition) {
     return `
         <section class="s_website_form">
             <form data-model_name="mail.mail">
-                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
+                <div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
                             <span class="s_website_form_label_content">Custom Text</span>
@@ -584,7 +584,7 @@ function formWithVisibilityRulesOnCheckbox(condition) {
                         </div>
                     </div>
                 </div>
-                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="Custom Text" data-visibility-condition='["Option 1","Option 2"]' data-visibility-comparator="${condition}">
+                <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="Custom Text" data-visibility-condition='["Option 1","Option 2"]' data-visibility-comparator="${condition}">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
                             <span class="s_website_form_label_content">b</span>
@@ -641,7 +641,7 @@ function formWithVisibilityRulesOnText(condition) {
     return `
         <section class="s_website_form">
             <form data-model_name="mail.mail">
-                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
+                <div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
                             <span class="s_website_form_label_content">a</span>
@@ -651,7 +651,7 @@ function formWithVisibilityRulesOnText(condition) {
                         </div>
                     </div>
                 </div>
-                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="a" data-visibility-condition='test' data-visibility-comparator="${condition}">
+                <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="a" data-visibility-condition='test' data-visibility-comparator="${condition}">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
                             <span class="s_website_form_label_content">b</span>
@@ -901,7 +901,7 @@ test("add aria-invalid to invalid checkbox fields", async () => {
     const formTemplate = /* html */ `
         <section class="s_website_form">
             <form data-model_name="mail.mail">
-                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required s_website_form_description_top" data-type="boolean">
+                <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required s_website_form_description_top" data-type="boolean">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-sm-auto s_website_form_label" style="width: 200px;" for="o8j0sq77aobs">
                             <span class="s_website_form_label_content">Label</span>
@@ -915,7 +915,7 @@ test("add aria-invalid to invalid checkbox fields", async () => {
                         </div>
                     </div>
                 </div>
-                <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label">
                     <div style="width: 200px;" class="s_website_form_label"></div>
                     <span id="s_website_form_result"></span>
                     <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>

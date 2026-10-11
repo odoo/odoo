@@ -21,7 +21,7 @@ const closeChartSlidingPanel = async () => {
 };
 
 const chartTemplate = (type, data) => `
-    <div class="s_chart" data-snippet="s_chart" data-name="Chart" data-type="${type}" data-legend-position="none" data-tooltip-display="false" data-border-width="2"
+    <div class="s_chart" data-snippet="s_chart" data-type="${type}" data-legend-position="none" data-tooltip-display="false" data-border-width="2"
         data-data='${JSON.stringify(data)}'>
         <p><br></p>
         <canvas style="box-sizing: border-box; display: block; height: 153px; width: 307px;" width="307" height="153"></canvas>

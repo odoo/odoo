@@ -392,7 +392,7 @@ const UPDATED_SNIPPET = {
             name: "Title",
             groupName: "a",
             content: `
-                <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+                <section class="s_title" data-snippet="s_title" data-vcss="001">
                     <h1>Title</h1>
                 </section>`,
         }),
@@ -417,10 +417,10 @@ describe("Operations failing on outdated snippets", () => {
             template: xml`<BuilderButton action="'testAction'"/>`,
         });
         await setupHTMLBuilder(
-            `<section class="s_title" data-snippet="s_title" data-name="Title">
+            `<section class="s_title" data-snippet="s_title">
                 <h1>Old</h1>
             </section>
-            <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+            <section class="s_title" data-snippet="s_title" data-vcss="001">
                 <h1>New</h1>
             </section>`,
             {
@@ -470,10 +470,10 @@ describe("Operations failing on outdated snippets", () => {
             template: xml`<BuilderButton action="'testAction'"/>`,
         });
         await setupHTMLBuilder(
-            `<section class="s_title" data-snippet="s_title" data-name="Title">
+            `<section class="s_title" data-snippet="s_title">
                 <h1>Old</h1>
             </section>
-            <section class="s_title" data-snippet="s_title" data-vcss="001" data-name="Title">
+            <section class="s_title" data-snippet="s_title" data-vcss="001">
                 <h1>New</h1>
             </section>`,
             {
@@ -526,10 +526,10 @@ describe("Operations failing on outdated snippets", () => {
             template: xml`<BuilderButton action="'testAction'"/>`,
         });
         await setupHTMLBuilder(
-            `<section class="s_title applied" data-snippet="s_title" data-name="Title">
+            `<section class="s_title applied" data-snippet="s_title">
                 <h1>Old</h1>
             </section>
-            <section class="s_title applied" data-snippet="s_title" data-vcss="001" data-name="Title">
+            <section class="s_title applied" data-snippet="s_title" data-vcss="001">
                 <h1>New</h1>
             </section>`,
             {
@@ -576,7 +576,7 @@ describe("Operations failing on outdated snippets", () => {
         });
 
         await setupHTMLBuilder(
-            `<section class="s_title applied" data-snippet="s_title" data-name="Title">
+            `<section class="s_title applied" data-snippet="s_title">
                 <h1>Old</h1>
             </section>`,
             {
@@ -609,7 +609,7 @@ describe("Operations failing on outdated snippets", () => {
         });
 
         await setupHTMLBuilder(
-            `<section class="s_title applied" data-snippet="s_title" data-name="Title">
+            `<section class="s_title applied" data-snippet="s_title">
                 <h1>Old</h1>
             </section>`,
             {
@@ -647,10 +647,10 @@ describe("Operations failing on outdated snippets", () => {
         });
 
         await setupHTMLBuilder(
-            `<section class="s_title class1" data-snippet="s_title" data-name="Title">
+            `<section class="s_title class1" data-snippet="s_title">
                 <h1>Old</h1>
             </section>
-            <section class="s_title class1" data-snippet="s_title" data-vcss="001" data-name="Title">
+            <section class="s_title class1" data-snippet="s_title" data-vcss="001">
                 <h1>New</h1>
             </section>`,
             {
@@ -693,7 +693,7 @@ describe("Operations failing on outdated snippets", () => {
         });
 
         await setupHTMLBuilder(
-            `<section class="s_title" data-snippet="s_title" data-name="Title">
+            `<section class="s_title" data-snippet="s_title">
                 <h1>Title</h1>
             </section>`,
             {
