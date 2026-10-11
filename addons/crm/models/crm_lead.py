@@ -91,6 +91,7 @@ class CrmLead(models.Model):
                 'mail.thread.blacklist',
                 'mail.thread.phone',
                 'mail.activity.mixin',
+                'discuss.call.log.mixin',
                 'utm.mixin',
                 'format.address.mixin',
                 'mail.tracking.duration.mixin',
