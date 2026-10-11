@@ -63,8 +63,11 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
      * @override
      */
     async updateRecord(record, options = {}) {
+        if (!(await this.resourceCalendarPlugin.confirmAttendanceChanges())) {
+            // The event is already moved on the screen, reload to rollback a refused change.
+            return this.load();
+        }
         try {
-            this.resourceCalendarPlugin.newAttendances.set(true);
             return super.updateRecord(...arguments);
         } catch (error) {
             this.notification.add(_t(error.data?.message ?? error), { type: "danger" });
@@ -129,7 +132,9 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
     }
 
     async createRecord(record) {
-        this.resourceCalendarPlugin.newAttendances.set(true);
+        if (!(await this.resourceCalendarPlugin.confirmAttendanceChanges())) {
+            return;
+        }
         return super.createRecord(...arguments);
     }
 
@@ -150,7 +155,9 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
             return values;
         };
         try {
-            this.resourceCalendarPlugin.newAttendances.set(true);
+            if (!(await this.resourceCalendarPlugin.confirmAttendanceChanges())) {
+                return;
+            }
             return super.multiCreateRecords(...arguments);
         } finally {
             record.getChanges = originalGetChanges;
@@ -158,22 +165,29 @@ export class ResourceCalendarAttendanceCalendarModel extends CalendarModel {
     }
 
     async unlinkRecord(recordId) {
-        this.resourceCalendarPlugin.newAttendances.set(true);
+        if (!(await this.resourceCalendarPlugin.confirmAttendanceChanges())) {
+            return;
+        }
         return super.createRecord(...arguments);
     }
 
     async unlinkRecords(recordIds) {
-        this.resourceCalendarPlugin.newAttendances.set(true);
+        if (!(await this.resourceCalendarPlugin.confirmAttendanceChanges())) {
+            return;
+        }
         return super.createRecord(...arguments);
     }
 
     async multiExcludeDates(ids, dates) {
         if (ids) {
+            // Ask before removing the selected days, they are shared by every user of the schedule.
+            if (!(await this.resourceCalendarPlugin.confirmAttendanceChanges())) {
+                return;
+            }
             await this.orm.call(this.meta.resModel, "exclude_multiple_occurences", [
                 [...new Set(ids)],
                 dates.map((d) => serializeDate(d)),
             ]);
-            this.resourceCalendarPlugin.newAttendances.set(true);
             await this.load();
         }
     }
