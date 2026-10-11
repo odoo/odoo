@@ -618,6 +618,7 @@ Return ONLY a JSON object with:
             this.state.themes = [];
             this.state.extraThemes = [];
             this.state.extraThemesLoaded = false;
+            this.state.communityThemesShown = false;
             this.props.navigate(ROUTES.paletteSelectionScreen);
         }
     }
@@ -1091,6 +1092,8 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         env.store["themesLoading"] = !env.store.themes?.length;
         env.store["extraThemesLoaded"] = false;
         env.store["extraThemes"] = [];
+        env.store["communityThemes"] = [];
+        env.store["communityThemesShown"] = false;
         this.state = proxy(env.store);
         useEffect(() => {
             const previewHeaders = this.state.previewHeaders?.join("\n") || "";
@@ -1104,6 +1107,11 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
             if (!this.state.previewHeaders?.length && !this.state.previewHeadersLoading) {
                 await ensurePreviewHeaders(this.state);
             }
+            this.state.communityThemes = await this.orm.call(
+                "website",
+                "configurator_community_themes",
+                []
+            );
             if (!this.state.themes.length) {
                 let themeName;
                 this.uiService.block();
@@ -1142,6 +1150,14 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
             !this.state.extraThemesLoaded &&
             this.state.themes.length === MAX_NBR_DISPLAY_MAIN_THEMES
         );
+    }
+
+    get showCommunityThemesButton() {
+        return !this.state.communityThemesShown && this.state.communityThemes.length > 0;
+    }
+
+    showCommunityThemes() {
+        this.state.communityThemesShown = true;
     }
 
     scalePreviewIframes() {
