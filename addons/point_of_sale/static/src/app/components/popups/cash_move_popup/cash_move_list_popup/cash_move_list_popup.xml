@@ -28,7 +28,7 @@
                                     </td>
                                     
                                     <td class="text-end delete-row" t-if="this.hasCashDeletePerm">
-                                        <button t-on-click.stop="this.callbacks[cm.id].call" class="btn btn-link btn-lg text-danger">
+                                        <button t-on-click.stop="this.callbacks[cm.id].call" class="btn btn-hover-danger btn-lg">
                                             <i t-if="this.callbacks[cm.id].status != 'loading'" class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                                             <i t-else="" class="oi oi-spin" data-icon="autorenew" aria-hidden="true" />
                                         </button>
