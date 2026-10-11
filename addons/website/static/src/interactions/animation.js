@@ -62,32 +62,36 @@ export class Animation extends BaseAnimation {
      */
     startAnimation() {
         // Forces the browser to redraw using setTimeout.
-        this.waitForTimeout(() => {
-            this.isAnimating = true;
-            this.playState = "running";
-            const removeListeners = [];
-            const onAnimationEnd = (ev) => {
-                const duration = parseFloat(getComputedStyle(this.el).animationDuration);
-                if (ev.target !== this.el || (duration > 0 && ev.elapsedTime === 0)) {
-                    return;
+        return new Promise((resolve) =>
+            this.waitForTimeout(() => {
+                this.isAnimating = true;
+                this.isAnimated = false;
+                this.playState = "running";
+                const removeListeners = [];
+                const onAnimationEnd = (ev) => {
+                    const duration = parseFloat(getComputedStyle(this.el).animationDuration);
+                    if (ev.target !== this.el || (duration > 0 && ev.elapsedTime === 0)) {
+                        return;
+                    }
+                    for (const removeListener of removeListeners) {
+                        removeListener();
+                    }
+                    this.isAnimating = false;
+                    this.isAnimated = true;
+                    window.dispatchEvent(new Event("resize"));
+                };
+                for (const eventName of [
+                    "webkitAnimationEnd",
+                    "oanimationend",
+                    "msAnimationEnd",
+                    "animationend",
+                ]) {
+                    const removeListener = this.addListener(this.el, eventName, onAnimationEnd);
+                    removeListeners.push(removeListener);
                 }
-                for (const removeListener of removeListeners) {
-                    removeListener();
-                }
-                this.isAnimating = false;
-                this.isAnimated = true;
-                window.dispatchEvent(new Event("resize"));
-            };
-            for (const eventName of [
-                "webkitAnimationEnd",
-                "oanimationend",
-                "msAnimationEnd",
-                "animationend",
-            ]) {
-                const removeListener = this.addListener(this.el, eventName, onAnimationEnd);
-                removeListeners.push(removeListener);
-            }
-        });
+                resolve();
+            })
+        );
     }
 
     resetAnimation() {
