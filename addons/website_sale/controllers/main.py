@@ -144,7 +144,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         return []
 
     def _get_shop_domain(
-        self, search, category, attribute_value_dict, search_in_description=True, tags=None
+        self,
+        search,
+        category,
+        attribute_value_dict,
+        search_in_description=True,
+        tags=None,
+        ribbon=None,
     ):
         domains = [self.env.website.sale_product_domain()]
         if search:
@@ -168,13 +174,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 self.env["product.template"]._get_attribute_value_domain(attribute_value_dict)
             )
 
-        if tags:
-            domains.append(
-                Domain.OR([
-                    Domain("product_tag_ids", "in", tags),
-                    Domain("product_variant_ids.additional_product_tag_ids", "in", tags),
-                ])
-            )
+        domains.append(
+            self.env["product.template"]._get_variant_filters_domain(tags=tags, ribbon=ribbon)
+        )
 
         return Domain.AND(domains)
 
@@ -214,6 +216,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         category=None,
         attribute_value_dict=None,
         tags=None,
+        ribbon=None,
         min_price=0.0,
         max_price=0.0,
         conversion_rate=1,
@@ -223,6 +226,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "allowFuzzy": not post.get("noFuzzy"),
             "category": str(category.id) if category else None,
             "tags": tags,
+            "ribbon": ribbon,
             "min_price": min_price / conversion_rate,
             "max_price": max_price / conversion_rate,
             "attribute_value_dict": attribute_value_dict,
@@ -251,6 +255,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         max_price,
         order=None,
         tags=None,
+        ribbon=None,
         on_sale=None,
         in_stock=None,
         **_kwargs,
@@ -261,6 +266,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "max_price": max_price,
             "order": order,
             "tags": tags,
+            "ribbon": ribbon,
             "on_sale": on_sale,
             "in_stock": in_stock,
             **request.session.get("attribute_value_params", {}),
@@ -280,6 +286,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "tags": 0,
             "min_price": 0,
             "max_price": 0,
+            "ribbon": 0,
             "on_sale": 0,
             "in_stock": 0,
         }
@@ -321,6 +328,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         min_price=0.0,
         max_price=0.0,
         tags="",
+        ribbon=None,
         on_sale=None,
         in_stock=None,
         **post,
@@ -343,14 +351,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 url = urlparse(request.httprequest.url)
                 return request.redirect(url._replace(path=path).geturl(), code=301)
 
-        try:
-            min_price = float(min_price)
-        except ValueError:
-            min_price = 0
-        try:
-            max_price = float(max_price)
-        except ValueError:
-            max_price = 0
+        min_price = self._cast_as_float(min_price) or 0
+        max_price = self._cast_as_float(max_price) or 0
+        ribbon = post["ribbon"] = self._cast_as_int(ribbon)
 
         website_domain = website.website_domain()
 
@@ -387,15 +390,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             request.session.pop("attribute_value_params", None)
 
-        filter_by_tags_enabled = website.is_view_active("website_sale.filter_products_tags")
-        if filter_by_tags_enabled:
-            if tags:
-                post["tags"] = tags
-                unslug = self.env["ir.http"]._unslug
-                tags = {tag_id for tag in tags.split(",") if (tag_id := unslug(tag)[1])}
-            else:
-                post["tags"] = None
-                tags = {}
+        if tags:
+            post["tags"] = tags
+            unslug = self.env["ir.http"]._unslug
+            tags = {tag_id for tag in tags.split(",") if (tag_id := unslug(tag)[1])}
+        else:
+            post["tags"] = None
+            tags = {}
 
         url = category.website_url if category else SHOP_PATH
         keep = QueryURL(
@@ -462,17 +463,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         search_term = fuzzy_search_term if fuzzy_search_term else search
         shop_domain = self._get_shop_domain(
-            search_term,
-            category,
-            attribute_value_dict,
-            tags=tags if filter_by_tags_enabled else None,
+            search_term, category, attribute_value_dict, tags=tags, ribbon=ribbon
         )
         shop_query = request.env["product.template"]._search(shop_domain)
 
         filters_domain = self._get_shop_domain(search_term, category, attribute_value_dict={})
         filters_query = request.env["product.template"]._search(filters_domain)
 
-        filter_by_price_enabled = website.is_view_active("website_sale.filter_products_price")
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
             # This is ~4 times more efficient than a search for the cheapest and most expensive
@@ -552,6 +549,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             product_count = len(search_product)
 
         ProductTag = self.env["product.tag"]
+        filter_by_tags_enabled = website.is_view_active("website_sale.filter_products_tags")
         if filter_by_tags_enabled:
             all_tags = ProductTag.search_fetch(
                 Domain.AND([
@@ -697,8 +695,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             values["available_max_price"] = float_round(available_max_price, 2)
             if available_min_price != available_max_price:
                 nb_filter_sections += 1
+        values["tags"] = tags
         if filter_by_tags_enabled:
-            values.update({"all_tags": all_tags, "tags": tags})
+            values["all_tags"] = all_tags
             if all_tags:
                 nb_filter_sections += 1
         if category:
