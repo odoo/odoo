@@ -192,6 +192,10 @@ class TestMyDATAInvoice(AccountTestInvoicingCommon):
         bill = self._create_mydata_bill()
         self.assert_mydata_xml_tree(bill, expected_file_path='from_odoo/mydata_cls_expense.xml', send_classification=True)
 
+    def test_mydata_send_invoice_of_type_11_2(self):
+        invoice = self._create_mydata_invoice(inv_type='11.2', cls_category='category1_3', cls_type='E3_561_007')
+        self.assert_mydata_xml_tree(invoice, expected_file_path='from_odoo/mydata_invoice_11_2.xml')
+
     ####################################################################################################
     # Test: assert built-in constraints
     ####################################################################################################
