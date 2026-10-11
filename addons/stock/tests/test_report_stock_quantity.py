@@ -452,3 +452,70 @@ class TestReportStockQuantity(tests.TransactionCase):
             ['product_qty:sum'],
         )
         self.assertEqual(report[0][2], 0.0)
+
+    def test_forecast_after_quant_cleaning_following_a_delivery(self):
+        """
+        Ensure the forecast remains correct after the delivered stock quant
+        reaches zero and is cleaned up, with an unconfirmed future receipt.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Forecast flattening test product',
+            'is_storable': True,
+        })
+        start = fields.Date.today()
+
+        receipt = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.wh.lot_stock_id.id,
+            'product_id': product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 6.0,
+        })
+        receipt._action_confirm()
+        receipt.write({'quantity': 6.0, 'picked': True})
+        receipt._action_done()
+
+        with freeze_time(start + timedelta(days=5)):
+            delivery = self.env['stock.move'].create({
+                'location_id': self.wh.lot_stock_id.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': product.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 6.0,
+            })
+            delivery._action_confirm()
+            delivery.write({'quantity': 6.0, 'picked': True})
+            delivery._action_done()
+
+            future_receipt = self.env['stock.move'].create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.wh.lot_stock_id.id,
+                'product_id': product.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 6.0,
+                'date': fields.Datetime.now() + timedelta(days=10),
+            })
+            future_receipt._action_confirm()
+
+            self.assertEqual(product.qty_available, 0.0)
+            # Simulate what the scheduler does once on-hand reaches exactly 0.
+            self.env['stock.quant']._quant_tasks()
+            self.assertFalse(self.env['stock.quant'].search([
+                ('product_id', '=', product.id), ('location_id', '=', self.wh.lot_stock_id.id),
+            ]))
+
+            report = self.env['report.stock.quantity']._read_group(
+                [
+                    ('state', '=', 'forecast'), ('product_id', '=', product.id),
+                    ('date', '>=', start - timedelta(days=2)), ('date', '<=', start + timedelta(days=16)),
+                ],
+                ['date:day'],
+                ['product_qty:sum'],
+            )
+            qty_by_date = dict(report)
+            self.assertEqual(qty_by_date[start - timedelta(days=1)], 0.0)
+            self.assertEqual(qty_by_date[start], 6.0)  # receipt day
+            self.assertEqual(qty_by_date[start + timedelta(days=4)], 6.0)
+            self.assertEqual(qty_by_date[start + timedelta(days=5)], 0.0)  # delivery day
+            self.assertEqual(qty_by_date[start + timedelta(days=14)], 0.0)
+            self.assertEqual(qty_by_date[start + timedelta(days=15)], 6.0)  # future receipt day
