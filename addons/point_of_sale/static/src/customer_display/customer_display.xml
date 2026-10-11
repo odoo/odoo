@@ -157,7 +157,7 @@
                     </div>
                 </div>
                 <div t-else="" class="d-flex flex-column align-items-center justify-content-center h-100 w-100">
-                    <h1 class="display-2 w-75 mt-2 fw-bold text-center text-muted">Welcome</h1>
+                    <h1 class="display-2 w-75 mt-2 fw-bold text-center text-muted" t-out="this.posWelcomeMessage"></h1>
                 </div>
                 <div t-if="this.order.scaleData" class="o_customer_display_scale">
                     <h4 class="modal-title text-break text-center w-100" t-att-class="{ 'me-auto': this.uiService.isSmall }">

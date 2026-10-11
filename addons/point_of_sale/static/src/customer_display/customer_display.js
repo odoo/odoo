@@ -36,6 +36,10 @@ export class CustomerDisplay extends Component {
         return this.customerDisplay.data();
     }
 
+    get posWelcomeMessage() {
+        return this.customerDisplay.posWelcomeMessage;
+    }
+
     get qrData() {
         return {
             ...this.order.qrData,
