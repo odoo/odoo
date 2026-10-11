@@ -240,7 +240,10 @@ class PurchaseOrderLine(models.Model):
     @api.depends('price_subtotal', 'product_qty', 'qty_to_invoice')
     def _compute_price_subtotal_to_invoice(self):
         for line in self:
-            line.price_subtotal_to_invoice = line.price_subtotal / line.product_qty * line.qty_to_invoice
+            if line.product_qty:
+                line.price_subtotal_to_invoice = line.price_subtotal / line.product_qty * line.qty_to_invoice
+            else:
+                line.price_subtotal_to_invoice = 0.0
 
     @api.depends('product_qty', 'qty_invoiced')
     def _compute_qty_to_invoice_raw(self):
