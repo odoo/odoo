@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="l10n_pt_report_payment_receipt_document_inherit" inherit_id="account.report_payment_receipt_document">
+        <!-- If the customer has no VAT, we must show 'Consumidor final' -->
+        <xpath expr="//span[@t-field='o.partner_id']" position="after">
+            <span t-if="o.company_id.account_fiscal_country_id.code == 'PT' and not o.partner_id.vat"
+                  t-out="'(Consumidor final)'"/>
+        </xpath>
+        <!-- Add document type and document number -->
+        <xpath expr="//span[@t-field='o.payment_receipt_title']" position="replace">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'PT' and o.l10n_pt_document_type">
+                <span t-out="dict(o.fields_get(allfields=['l10n_pt_document_type'])['l10n_pt_document_type']['selection'])[o.l10n_pt_document_type]"/>:
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//span[@t-field='o.name']" position="replace">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'PT'">
+                <span t-if="o.l10n_pt_document_number" t-field="o.l10n_pt_document_number">FS 2023/0001</span>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <!-- ATCUD -->
+        <xpath expr="//div[hasclass('mb-4') and hasclass('mt-3')]" position="inside">
+            <div class="oe_structure"></div>
+            <div class="row" t-if="o.company_id.account_fiscal_country_id.code == 'PT'">
+                <div name="atcud" class="col-6" t-if="o.l10n_pt_atcud">
+                    ATCUD: <span t-field="o.l10n_pt_atcud">0</span>
+                </div>
+                <div name="internal_name" class="col-6">
+                    Internal Number: <span t-field="o.name">INV0001</span>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

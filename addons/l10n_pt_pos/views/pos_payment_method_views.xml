@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_payment_method_view_form_inherit_pt" model="ir.ui.view">
+        <field name="name">pos.payment.method.form.inherit.pt</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="l10n_pt_pos_payment_mechanism" invisible="country_code != 'PT'"/>
+                <field name="l10n_pt_pos_default_at_series_id"
+                       invisible="country_code != 'PT' or not journal_id"
+                       domain="[('company_id', '=', company_id), ('active', '=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pos_payment_method_view_tree_inherit_pt" model="ir.ui.view">
+        <field name="name">pos.payment.method.list.inherit.pt</field>
+        <field name="model">pos.payment.method</field>
+        <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='journal_id']" position="after">
+                <field name="l10n_pt_pos_payment_mechanism" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

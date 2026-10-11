@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_payment_form_inherit_pt" model="ir.ui.view">
+            <field name="name">account.payment.form.inherit.pt</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <!-- Add button for printing receipt -->
+                <xpath expr="//button[@name='action_reject']" position="after">
+                    <button name="action_open_reprint_wizard"
+                        string="Print"
+                        invisible="state not in ('in_process', 'paid', 'canceled') or country_code != 'PT' or payment_type == 'outbound'"
+                        type="object"
+                        groups="base.group_user"
+                        data-hotkey="o"/>
+                </xpath>
+                <!-- Not allow resetting payments to draft, instead allow cancelling them directly by calling cancellation wizard -->
+                <xpath expr="//button[@name='action_draft']" position="attributes">
+                    <attribute name="invisible">state == 'draft' or (country_code == 'PT' and l10n_pt_document_number)</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="attributes">
+                    <attribute name="invisible">not id or not (state == 'draft' or (state == 'in_process' and is_sent)) or (country_code == 'PT' and l10n_pt_document_number)</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_cancel']" position="after">
+                    <button name="%(l10n_pt_certification.action_l10n_pt_cancel)d"
+                            string="Cancel"
+                            type="action"
+                            groups="account.group_account_invoice"
+                            data-hotkey="w"
+                            invisible="not id or state not in ('in_process', 'paid') or payment_type != 'inbound' or country_code != 'PT'"/>
+                </xpath>
+                <!-- Add PT info page -->
+                <xpath expr="//notebook[@name='payment_notebook']" position="inside">
+                    <page name="l10n_pt_info"
+                          string="Portugal Information"
+                          invisible="country_code != 'PT' or payment_type != 'inbound'">
+                        <group>
+                            <field name="l10n_pt_at_series_id"
+                                   readonly="state in ['in_process', 'paid', 'canceled']"
+                                   required="payment_type == 'inbound' and country_code == 'PT'"
+                                   domain="[('active', '=', True), ('payment_journal_id', '=', journal_id)]"/>
+                            <field name="l10n_pt_document_number"/>
+                            <field name="l10n_pt_atcud"/>
+                            <field name="l10n_pt_cancel_reason"
+                                   invisible="state != 'canceled'"
+                                   required="state == 'canceled' and l10n_pt_document_number"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_payment_tree_inherit_pt" model="ir.ui.view">
+            <field name="name">account.payment.tree.inherit.pt</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                   <field name="l10n_pt_document_number" string="Document Number" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
