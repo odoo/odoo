@@ -270,3 +270,26 @@ class TestUserSettings(MailCommon):
             "no_notif",
             "channel_notifications state should be updated correctly"
         )
+
+    @users("employee")
+    def test_set_volume_setting_of_guest(self):
+        settings = self.user_employee.res_users_settings_id
+        partner = self.env["res.partner"].sudo().create({"name": "Partner"})
+        with self.assertBus(
+            lambda: BusResult(
+                self.user_employee,
+                "res.users.settings.volumes",
+                [
+                    {
+                        "id": settings.volume_settings_ids.id,
+                        "volume": 0.7,
+                        "partner_id": None,
+                        "guest_id": {"id": partner.id},
+                        "user_setting_id": {"id": settings.id},
+                    },
+                ],
+            ),
+        ):
+            # Simulate a guest with the id of no partner, then a guest with the id of a partner.
+            settings.set_volume_setting(False, 0.5, guest_id=partner.id + 1)
+            settings.set_volume_setting(False, 0.7, guest_id=partner.id)
