@@ -233,6 +233,34 @@ test("addPaymentline", async () => {
     const result2 = order.addPaymentline(cashPaymentMethod);
     expect(result2.data.payment_method_id.id).toBe(cashPaymentMethod.id);
     expect(result2.data.amount).toBe(585);
+
+    // A line paid through a payment interface starts as pending
+    const cardPaymentMethod = store.models["pos.payment.method"].get(2);
+    cardPaymentMethod.payment_interface = {};
+    const result3 = order.addPaymentline(cardPaymentMethod);
+    expect(result3.data.payment_status).toBe("pending");
+});
+
+test("toBeValidate", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const cashPaymentMethod = store.models["pos.payment.method"].get(1);
+    const cardPaymentMethod = store.models["pos.payment.method"].get(2);
+    order.addPaymentline(cashPaymentMethod);
+    const cardPaymentLine = order.addPaymentline(cardPaymentMethod).data;
+    cardPaymentLine.setAmount(10);
+
+    // Cash line pays everything, card line has no request out
+    cardPaymentLine.payment_status = "pending";
+    expect(order.toBeValidate()).toBe(true);
+
+    // Card request out
+    cardPaymentLine.payment_status = "waiting_card";
+    expect(order.toBeValidate()).toBe(false);
+
+    // Connection error, outcome unknown
+    cardPaymentLine.payment_status = "force_done";
+    expect(order.toBeValidate()).toBe(false);
 });
 
 test("getTotalDiscount", async () => {

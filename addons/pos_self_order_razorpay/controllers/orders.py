@@ -24,7 +24,7 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
                 'card_type': razorpay_status_response.get('paymentCardType'),
                 'cardholder_name': razorpay_status_response.get('nameOnCard'),
                 'transaction_id': razorpay_status_response.get('txnId'),
-                'payment_status': razorpay_status_response.get('status'),
+                'payment_status': 'done',
                 'pos_order_id': order.id,
                 'payment_method_authcode': razorpay_status_response.get('authCode'),
                 'card_brand': razorpay_status_response.get('paymentCardBrand'),

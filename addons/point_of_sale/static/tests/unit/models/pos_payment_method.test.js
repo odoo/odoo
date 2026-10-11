@@ -23,7 +23,7 @@ test("_checkOrder", async () => {
 
     // Same type but already processing
     const paymentline = createPaymentLine(store, order, card1);
-    paymentline.payment_status = "waitingCard";
+    paymentline.payment_status = "waiting_card";
     expect(card1._checkOrder({ order })).toEqual(failure);
 
     // Can send the request while processing if it's the same payment line
@@ -56,4 +56,22 @@ test("getPaymentInterfaceStates", async () => {
     createPaymentLine(store, order3, card);
     const result3 = card.getPaymentInterfaceStates();
     expect(result3).toEqual({ status: false, message: "Test Message" });
+});
+
+test("paymentProviderKey", async () => {
+    const store = await setupPosEnv();
+    const card = store.models["pos.payment.method"].get(2);
+
+    // No provider
+    expect(card.paymentProviderKey).toBe(false);
+
+    // Provider
+    card.payment_provider = "adyen";
+    card.payment_method_type = "terminal";
+    expect(card.paymentProviderKey).toBe("adyen");
+
+    // Bank QR methods have no provider: the key is their type
+    card.payment_provider = false;
+    card.payment_method_type = "bank_qr_code";
+    expect(card.paymentProviderKey).toBe("bank_qr_code");
 });

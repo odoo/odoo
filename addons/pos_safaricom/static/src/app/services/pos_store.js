@@ -28,14 +28,14 @@ patch(PosStore.prototype, {
                 if (payload.phone_number) {
                     paymentLine.cardholder_name = payload.phone_number;
                 }
-                paymentLine.setPaymentStatus("done");
+                paymentLine.payment_status = "done";
 
                 // Complete the payment (resolve promise)
                 if (paymentInterface?.completePayment) {
                     paymentInterface.completePayment(paymentLine, true);
                 }
             } else {
-                paymentLine.setPaymentStatus("retry");
+                paymentLine.payment_status = "retry";
 
                 // Complete the payment (resolve promise)
                 if (paymentInterface?.completePayment) {

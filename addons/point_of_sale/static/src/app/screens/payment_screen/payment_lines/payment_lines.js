@@ -17,7 +17,6 @@ export const paymentScreenPaymentLinesProps = {
     sendPaymentCancel: t.function(),
     sendPaymentRequest: t.function(),
     updateSelectedPaymentline: t.function(),
-    isRefundOrder: t.boolean(),
 };
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
@@ -41,7 +40,7 @@ export class PaymentScreenPaymentLines extends Component {
 
     async selectLine(paymentline) {
         this.props.selectLine(paymentline.uuid);
-        if (this.ui.isSmall) {
+        if (this.ui.isSmall && paymentline.isAmountEditable) {
             this.dialog.add(NumberPopup, {
                 title: _t("New amount"),
                 buttons: enhancedButtons(),
@@ -59,6 +58,55 @@ export class PaymentScreenPaymentLines extends Component {
 
     showQrCode(line) {
         this.pos.displayQrCode(line);
+    }
+
+    /**
+     * Get the controls displayed around the payment info of the given line.
+     * Controls with an `action` are rendered as buttons, the others as indicators.
+     * @returns {{start: Array<PaymentLineControl>, end: Array<PaymentLineControl>}}
+     *
+     * @typedef {Object} PaymentLineControl
+     * @property {string} id                      - Unique identifier for the control.
+     * @property {string} icon                    - Icon displayed in the control.
+     * @property {string} [iconClass]             - Additional classes for the icon.
+     * @property {string} [classes]               - Additional CSS classes to apply to the control.
+     * @property {string} [title]                 - Title and aria-label of the control.
+     * @property {Function} [action]              - Callback executed when the control is clicked.
+     * @property {boolean} [disabled]             - Whether the button is disabled.
+     */
+    getLineControls(line) {
+        const controls = { start: [], end: [] };
+
+        if (line.useQr) {
+            controls.start.push({
+                id: "qr_code",
+                icon: "qr_code",
+                classes: "paymentline_show_qr_code ms-2 ps-3",
+                title: _t("Show QR Code"),
+                action: () => this.showQrCode(line),
+                disabled: !line.qr_code || !line.isProcessing,
+            });
+        }
+
+        if (!line.isSelected() && line.isProcessing) {
+            controls.end.push({
+                id: "spinner",
+                icon: "autorenew",
+                iconClass: "oi-spin",
+                classes: "payment-spinner mx-2 px-3",
+            });
+        } else if (line.payment_status !== "done") {
+            controls.end.push({
+                id: "delete",
+                icon: "close_small",
+                iconClass: "text-danger",
+                classes: "delete-button mx-2 px-3",
+                title: _t("Delete"),
+                action: () => this.props.deleteLine(line.uuid),
+            });
+        }
+
+        return controls;
     }
 
     /**
@@ -84,9 +132,12 @@ export class PaymentScreenPaymentLines extends Component {
      * @type {PaymentActionState}
      */
     getPaymentActionState(line) {
+        if (line.useBankQrCode && line.payment_status === "waiting") {
+            return null;
+        }
+
         const status = line.payment_status;
-        const isRefund = this.props.isRefundOrder;
-        const camelToSnakeCase = (id) => id.replace(/([A-Z])/g, "_$1").toLowerCase();
+        const isRefund = line.isRefund;
         const SPINNER_ICON = "autorenew";
         const SPINNER_ICON_CLASS = "oi-spin";
         const ACTIONS = {
@@ -137,19 +188,19 @@ export class PaymentScreenPaymentLines extends Component {
                 severity: "danger",
             },
         };
-        const state = { id: "unknown", title: "", actions: [] };
+        const state = { title: "", actions: [] };
 
         // --- Pending
         if (status === "pending") {
-            state.id = "pending";
-            state.title = _t("Payment request pending");
-            state.actions = [ACTIONS.send];
+            state.id = isRefund ? "refund_available" : "pending";
+            state.title = isRefund ? _t("Refund available") : _t("Payment request pending");
+            state.actions = [isRefund ? ACTIONS.refund : ACTIONS.send];
         }
 
         // --- Retry
         else if (status === "retry") {
             state.id = "retry";
-            state.title = _t("Transaction cancelled");
+            state.title = _t("Transaction failed");
             state.actions = [ACTIONS.retry];
         }
 
@@ -161,13 +212,13 @@ export class PaymentScreenPaymentLines extends Component {
         }
 
         // --- Waiting customer action
-        else if (["waitingCard", "waitingScan"].includes(status)) {
+        else if (["waiting_card", "waiting_scan"].includes(status)) {
             const titles = {
-                waitingCard: _t("Waiting for card"),
-                waitingScan: _t("Waiting for the customer to scan the QR Code"),
+                waiting_card: _t("Waiting for card"),
+                waiting_scan: _t("Waiting for the customer to scan the QR Code"),
             };
 
-            state.id = isRefund ? "waiting_refund" : camelToSnakeCase(status);
+            state.id = isRefund ? "waiting_refund" : status;
             state.title = isRefund ? _t("Refund in process") : titles[status];
             state.icon = SPINNER_ICON;
             state.iconClass = SPINNER_ICON_CLASS;
@@ -175,14 +226,14 @@ export class PaymentScreenPaymentLines extends Component {
         }
 
         // --- Request sent
-        else if (["waiting", "waitingCancel", "waitingCapture"].includes(status)) {
-            state.id = camelToSnakeCase(status);
+        else if (["waiting", "waiting_cancel", "waiting_capture"].includes(status)) {
+            state.id = status;
             state.title = _t("Request sent");
             state.icon = SPINNER_ICON;
             state.iconClass = SPINNER_ICON_CLASS;
             state.actions = [
                 { ...ACTIONS.forceDone, show: status === "waiting" },
-                { ...ACTIONS.forceCancel, show: status === "waitingCancel" },
+                { ...ACTIONS.forceCancel, show: status === "waiting_cancel" },
             ];
         }
 
@@ -192,11 +243,9 @@ export class PaymentScreenPaymentLines extends Component {
             state.title = isRefund ? _t("Refund Successful") : _t("Payment Successful");
         }
 
-        // --- Refund available
-        else if (!status && isRefund && line.payment_interface) {
-            state.id = "refund_available";
-            state.title = _t("Refund available");
-            state.actions = [ACTIONS.refund];
+        // --- Non-electronic payment: no status to show
+        else {
+            return null;
         }
 
         return state;

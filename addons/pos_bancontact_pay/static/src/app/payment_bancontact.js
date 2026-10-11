@@ -13,7 +13,7 @@ export class PaymentBancontact extends PaymentInterface {
         if (
             !line.bancontact_id ||
             !line.qr_code ||
-            !["waiting", "waitingScan", "waitingCancel"].includes(line.payment_status)
+            !["waiting", "waiting_scan", "waiting_cancel"].includes(line.payment_status)
         ) {
             const { bancontact_id, qr_code } = await this.callPaymentMethod(
                 "create_bancontact_payment",

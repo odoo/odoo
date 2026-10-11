@@ -17,8 +17,8 @@ export class PaymentMollie extends PaymentInterface {
 
                 if (
                     paymentLine &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "retry"
+                    !paymentLine.isSettled &&
+                    paymentLine.payment_status !== "retry"
                 ) {
                     paymentLine.payment_method_id.payment_interface.handleMollieStatusResponse(
                         paymentLine,
@@ -30,7 +30,7 @@ export class PaymentMollie extends PaymentInterface {
     }
 
     async sendPaymentRequest(line) {
-        if (line.amount < 0) {
+        if (line.isRefund) {
             const originalPaymentId = this._findOriginalPaymentId(line);
             if (!originalPaymentId) {
                 this._showMollieError(

@@ -819,13 +819,8 @@ describe("pos_store.js", () => {
         store.config.auto_validate_electronic_payment = false;
         expect(await store.autoValidateOrder(order)).toBe(false);
 
-        // Is in refund process
-        store.config.auto_validate_electronic_payment = true;
-        order.isRefundInProcess = () => true;
-        expect(await store.autoValidateOrder(order)).toBe(false);
-
         // Should be autovalidated
-        order.isRefundInProcess = () => false;
+        store.config.auto_validate_electronic_payment = true;
         expect(await store.autoValidateOrder(order)).toBe("test_validated");
     });
 
@@ -931,7 +926,7 @@ describe("pos_store.js", () => {
             const paymentMethod = store.models["pos.payment.method"].get(1);
             const payment = createPaymentLine(store, order, paymentMethod, {
                 qr_code: "data:image/png;base64,qr",
-                payment_status: "waitingScan",
+                payment_status: "waiting_scan",
             });
 
             // Not selected
@@ -956,7 +951,7 @@ describe("pos_store.js", () => {
             const paymentMethod = store.models["pos.payment.method"].get(1);
             const payment = createPaymentLine(store, order, paymentMethod, {
                 qr_code: "data:image/png;base64,qr",
-                payment_status: "waitingScan",
+                payment_status: "waiting_scan",
             });
             order.selectPaymentline(payment);
 

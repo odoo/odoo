@@ -17,6 +17,13 @@ patch(PosOrder.prototype, {
         }
         return serialized;
     },
+    addPaymentline(payment_method) {
+        const result = super.addPaymentline(...arguments);
+        if (result.status && payment_method.type === "online") {
+            result.data.payment_status = "pending";
+        }
+        return result;
+    },
     get isCustomerRequired() {
         const online_payments_customer_required = this.paymentsRequireCustomer(this.payment_ids);
         return super.isCustomerRequired || (!this.partner_id && online_payments_customer_required);

@@ -284,11 +284,8 @@ export class PosStore extends WithLazyGetterTrap {
             return;
         }
         order.payment_ids?.forEach((payment) => {
-            if (
-                payment.payment_method_id.useBankQrCode &&
-                payment.getPaymentStatus() === "waiting"
-            ) {
-                payment.setPaymentStatus("retry");
+            if (payment.payment_method_id.useBankQrCode && payment.payment_status === "waiting") {
+                payment.payment_status = "retry";
             }
         });
     }
@@ -602,7 +599,7 @@ export class PosStore extends WithLazyGetterTrap {
         for (const pm of this.config.payment_method_ids) {
             const PaymentInterface = registry
                 .category("pos_payment_providers")
-                .get(pm.payment_provider, null);
+                .get(pm.paymentProviderKey, null);
             pm.payment_interface = PaymentInterface ? new PaymentInterface(this, pm) : null;
         }
 
@@ -1976,8 +1973,8 @@ export class PosStore extends WithLazyGetterTrap {
             const paymentLine = order.payment_ids.find(
                 (paymentLine) =>
                     paymentLine.payment_provider === provider &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "retry"
+                    !paymentLine.isSettled &&
+                    paymentLine.payment_status !== "retry"
             );
             if (paymentLine) {
                 return paymentLine;
@@ -2481,7 +2478,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
             return false;
         }
-        payment.setPaymentStatus("waiting");
         let qrCodeValue;
         try {
             qrCodeValue = await this.data.call("pos.payment.method", "get_qr_code_value", [
@@ -2802,11 +2798,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     async autoValidateOrder(args = {}) {
         const { order = this.getOrder() } = args;
-        if (
-            order.toBeValidate() &&
-            this.config.auto_validate_electronic_payment &&
-            !order.isRefundInProcess()
-        ) {
+        if (order.toBeValidate() && this.config.auto_validate_electronic_payment) {
             return await this.validateOrder({ ...args, order });
         }
         return false;
@@ -3142,7 +3134,7 @@ export class PosStore extends WithLazyGetterTrap {
         // No QR was explicitly pushed: default to the selected payment line's own
         // QR code while it's mid-processing (e.g. a terminal waiting to be scanned).
         const payment = this.getOrder()?.getSelectedPaymentline();
-        return payment?.isProcessing() && payment.qr_code
+        return payment?.isProcessing && payment.qr_code
             ? { title: _t("Scan the QR for payment"), ...payment.getQrPopupProps() }
             : null;
     }

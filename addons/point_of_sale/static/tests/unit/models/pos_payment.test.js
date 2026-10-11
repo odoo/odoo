@@ -47,10 +47,11 @@ test("isProcessing", async () => {
 
     const processingStatuses = [
         "waiting",
-        "waitingCancel",
-        "waitingCard",
-        "waitingScan",
-        "waitingCapture",
+        "waiting_cancel",
+        "waiting_card",
+        "waiting_scan",
+        "waiting_capture",
+        "force_done",
     ];
 
     for (const status of processingStatuses) {
@@ -67,6 +68,24 @@ test("isProcessing", async () => {
     expect(paymentline.isProcessing()).toBe(false);
 });
 
+test("isRefund", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const card = store.models["pos.payment.method"].get(2);
+    const paymentline = createPaymentLine(store, order, card);
+
+    // positive amount
+    expect(paymentline.isRefund).toBe(false);
+
+    // negative amount
+    paymentline.amount = -10;
+    expect(paymentline.isRefund).toBe(true);
+
+    // zero amount
+    paymentline.amount = 0;
+    expect(paymentline.isRefund).toBe(false);
+});
+
 test("handlePaymentResponse", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
@@ -74,13 +93,13 @@ test("handlePaymentResponse", async () => {
     const paymentline = createPaymentLine(store, order, card);
 
     // Successful
-    paymentline.payment_status = "waitingCard";
+    paymentline.payment_status = "waiting_card";
     const response = paymentline.handlePaymentResponse(true);
     expect(response).toBe(true);
     expect(paymentline.payment_status).toBe("done");
 
     // Failed
-    paymentline.payment_status = "waitingCard";
+    paymentline.payment_status = "waiting_card";
     const responseFail = paymentline.handlePaymentResponse(false);
     expect(responseFail).toBe(false);
     expect(paymentline.payment_status).toBe("retry");
@@ -93,28 +112,28 @@ test("handlePaymentCancelResponse", async () => {
     const paymentline = createPaymentLine(store, order, card);
 
     // Successful
-    paymentline.payment_status = "waitingCancel";
+    paymentline.payment_status = "waiting_cancel";
     const response = paymentline.handlePaymentCancelResponse(true);
     expect(response).toBe(true);
     expect(paymentline.payment_status).toBe("retry");
 
     // Failed - Terminal
     card.payment_method_type = "terminal";
-    paymentline.payment_status = "waitingCancel";
+    paymentline.payment_status = "waiting_cancel";
     const responseFailTerminal = paymentline.handlePaymentCancelResponse(false);
     expect(responseFailTerminal).toBe(false);
-    expect(paymentline.payment_status).toBe("waitingCard");
+    expect(paymentline.payment_status).toBe("waiting_card");
 
     // Failed - External QR
     card.payment_method_type = "external_qr";
-    paymentline.payment_status = "waitingScan";
+    paymentline.payment_status = "waiting_scan";
     const responseFailNonTerminal = paymentline.handlePaymentCancelResponse(false);
     expect(responseFailNonTerminal).toBe(false);
-    expect(paymentline.payment_status).toBe("waitingScan");
+    expect(paymentline.payment_status).toBe("waiting_scan");
 
     // Failed - Other
     card.payment_method_type = "other";
-    paymentline.payment_status = "waitingCancel";
+    paymentline.payment_status = "waiting_cancel";
     const responseFailOther = paymentline.handlePaymentCancelResponse(false);
     expect(responseFailOther).toBe(false);
     expect(paymentline.payment_status).toBe("waiting");
@@ -153,12 +172,8 @@ test("canBeAdjusted", async () => {
     card.payment_method_type = "none";
     expect(paymentline.canBeAdjusted()).toBe(false);
 
-    // no payment interface + is bank qr code
+    // no payment interface + is not cash
     card.type = "bank";
-    card.payment_method_type = "bank_qr_code";
-    expect(paymentline.canBeAdjusted()).toBe(false);
-
-    // no payment interface + is not cash or bank qr code
     card.payment_method_type = "none";
     expect(paymentline.canBeAdjusted()).toBe(true);
 

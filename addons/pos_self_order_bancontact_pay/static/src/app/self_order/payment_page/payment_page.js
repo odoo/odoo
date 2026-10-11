@@ -28,7 +28,7 @@ patch(PaymentPage.prototype, {
                 p.payment_method_id.payment_provider === "bancontact_pay" &&
                 p.bancontact_id &&
                 p.qr_code &&
-                ["waiting", "waitingScan", "waitingCancel"].includes(p.payment_status)
+                ["waiting", "waiting_scan", "waiting_cancel"].includes(p.payment_status)
         );
         if (waitingBancontactPayment) {
             if (waitingBancontactPayment.amount === this.selfOrder.currentOrder.amount_total) {

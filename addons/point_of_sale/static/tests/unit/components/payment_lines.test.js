@@ -1,6 +1,5 @@
 import { test, expect, describe } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
-import { findComponent, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     setupPosEnv,
     getFilledOrder,
@@ -9,7 +8,6 @@ import {
 } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
-import { Component, proxy, xml } from "@odoo/owl";
 
 definePosModels();
 
@@ -18,32 +16,21 @@ test("getPaymentActionState", async () => {
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
     const paymentline = createPaymentLine(store, order, card);
-    const childProps = proxy({
-        paymentLines: [paymentline],
-        deleteLine: () => {},
-        selectLine: () => {},
-        sendForceDone: () => {},
-        sendForceCancel: () => {},
-        sendPaymentCancel: () => {},
-        sendPaymentRequest: () => {},
-        updateSelectedPaymentline: () => {},
-        isRefundOrder: false,
+    const comp = await mountWithCleanup(PaymentScreenPaymentLines, {
+        props: {
+            paymentLines: [paymentline],
+            deleteLine: () => {},
+            selectLine: () => {},
+            sendForceDone: () => {},
+            sendForceCancel: () => {},
+            sendPaymentCancel: () => {},
+            sendPaymentRequest: () => {},
+            updateSelectedPaymentline: () => {},
+        },
     });
-    // Props only update through a parent re-render, so wrap the component in a
-    // parent and mutate the (reactive) props it passes down to test the
-    // isRefundOrder transitions through the real prop-update path.
-    class Wrapper extends Component {
-        static template = xml`<PaymentScreenPaymentLines t-props="this.childProps"/>`;
-        static components = { PaymentScreenPaymentLines };
-        setup() {
-            this.childProps = childProps;
-        }
-    }
-    const wrapper = await mountWithCleanup(Wrapper);
-    const comp = findComponent(wrapper, (c) => c instanceof PaymentScreenPaymentLines);
-    const setIsRefundOrder = async (value) => {
-        childProps.isRefundOrder = value;
-        await animationFrame();
+    // A negative amount makes the line a refund
+    const setRefund = (isRefund) => {
+        paymentline.amount = isRefund ? -10 : 10;
     };
 
     // Helper
@@ -54,11 +41,7 @@ test("getPaymentActionState", async () => {
 
     // No status
     const stateNoStatus = comp.getPaymentActionState(paymentline);
-    expect(normalizeActionState(stateNoStatus)).toEqual({
-        id: "unknown",
-        title: "",
-        actions: [],
-    });
+    expect(stateNoStatus).toBe(null);
 
     // pending
     paymentline.payment_status = "pending";
@@ -82,7 +65,7 @@ test("getPaymentActionState", async () => {
     const stateRetry = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateRetry)).toEqual({
         id: "retry",
-        title: "Transaction cancelled",
+        title: "Transaction failed",
         actions: [
             {
                 id: "retry",
@@ -110,9 +93,9 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waitingCard - refund
-    paymentline.payment_status = "waitingCard";
-    await setIsRefundOrder(true);
+    // waiting_card - refund
+    paymentline.payment_status = "waiting_card";
+    setRefund(true);
     const stateWaitingCardRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardRefund)).toEqual({
         id: "waiting_refund",
@@ -137,8 +120,8 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waitingCard - no refund
-    await setIsRefundOrder(false);
+    // waiting_card - no refund
+    setRefund(false);
     const stateWaitingCardNoRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardNoRefund)).toEqual({
         id: "waiting_card",
@@ -163,8 +146,8 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waitingScan
-    paymentline.payment_status = "waitingScan";
+    // waiting_scan
+    paymentline.payment_status = "waiting_scan";
     const stateWaitingScan = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingScan)).toEqual({
         id: "waiting_scan",
@@ -215,8 +198,13 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waitingCancel
-    paymentline.payment_status = "waitingCancel";
+    // waiting on a bank QR line: the transfer is confirmed in the QR popup
+    card.payment_method_type = "bank_qr_code";
+    expect(comp.getPaymentActionState(paymentline)).toBe(null);
+    card.payment_method_type = "none";
+
+    // waiting_cancel
+    paymentline.payment_status = "waiting_cancel";
     const stateWaitingCancel = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCancel)).toEqual({
         id: "waiting_cancel",
@@ -241,8 +229,8 @@ test("getPaymentActionState", async () => {
         ],
     });
 
-    // waitingCapture
-    paymentline.payment_status = "waitingCapture";
+    // waiting_capture
+    paymentline.payment_status = "waiting_capture";
     const stateWaitingCapture = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCapture)).toEqual({
         id: "waiting_capture",
@@ -269,7 +257,7 @@ test("getPaymentActionState", async () => {
 
     // Done - refund
     paymentline.payment_status = "done";
-    await setIsRefundOrder(true);
+    setRefund(true);
     const stateDoneRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateDoneRefund)).toEqual({
         id: "refunded",
@@ -278,7 +266,7 @@ test("getPaymentActionState", async () => {
     });
 
     // Done - no refund
-    await setIsRefundOrder(false);
+    setRefund(false);
     const stateDoneNoRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateDoneNoRefund)).toEqual({
         id: "paid",
@@ -286,10 +274,9 @@ test("getPaymentActionState", async () => {
         actions: [],
     });
 
-    // Refund available
-    paymentline.payment_status = null;
-    card.payment_interface = true;
-    await setIsRefundOrder(true);
+    // pending - refund
+    paymentline.payment_status = "pending";
+    setRefund(true);
     const stateRefundAvailable = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateRefundAvailable)).toEqual({
         id: "refund_available",
@@ -315,7 +302,7 @@ describe("show qr code button", () => {
 
         paymentline.payment_method_id.payment_method_type = "external_qr";
         paymentline.qr_code = "https://example.com/qr-code-data";
-        paymentline.payment_status = "waitingScan";
+        paymentline.payment_status = "waiting_scan";
 
         await mountWithCleanup(PaymentScreenPaymentLines, {
             props: {
@@ -327,7 +314,6 @@ describe("show qr code button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline .paymentline_show_qr_code").not.toHaveAttribute("disabled");
@@ -353,7 +339,6 @@ describe("show qr code button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline .paymentline_show_qr_code").toHaveAttribute("disabled");
@@ -379,7 +364,6 @@ describe("show qr code button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline .paymentline_show_qr_code").toHaveAttribute("disabled");
@@ -403,7 +387,6 @@ describe("show qr code button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline .paymentline_show_qr_code").toHaveCount(0);
@@ -427,7 +410,6 @@ describe("spinner or delete button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
@@ -452,7 +434,6 @@ describe("spinner or delete button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
@@ -465,7 +446,7 @@ describe("spinner or delete button", () => {
         const card = store.models["pos.payment.method"].get(2);
         const paymentline = createPaymentLine(store, order, card);
 
-        paymentline.payment_status = "waitingCard";
+        paymentline.payment_status = "waiting_card";
 
         await mountWithCleanup(PaymentScreenPaymentLines, {
             props: {
@@ -477,7 +458,6 @@ describe("spinner or delete button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(1);
@@ -502,7 +482,6 @@ describe("spinner or delete button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
@@ -515,7 +494,7 @@ describe("spinner or delete button", () => {
         const card = store.models["pos.payment.method"].get(2);
         const paymentline = createPaymentLine(store, order, card);
 
-        paymentline.payment_status = "waitingCard";
+        paymentline.payment_status = "waiting_card";
         order.uiState.selected_paymentline_uuid = paymentline.uuid;
 
         await mountWithCleanup(PaymentScreenPaymentLines, {
@@ -528,7 +507,6 @@ describe("spinner or delete button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
@@ -554,7 +532,6 @@ describe("spinner or delete button", () => {
                 sendPaymentCancel: () => {},
                 sendPaymentRequest: () => {},
                 updateSelectedPaymentline: () => {},
-                isRefundOrder: false,
             },
         });
         expect(".paymentline i.oi-spin[data-icon='autorenew']").toHaveCount(0);
