@@ -69,12 +69,6 @@ class CalendarRecurrence(models.Model):
     def _get_microsoft_synced_fields(self):
         return {'rrule'} | self.env['calendar.event']._get_microsoft_synced_fields()
 
-    @api.model
-    def _restart_microsoft_sync(self):
-        self.env['calendar.recurrence'].search(self._get_microsoft_sync_domain()).write({
-            'need_sync_m': True,
-        })
-
     def _has_base_event_time_fields_changed(self, new):
         """
         Indicates if at least one time field of the base event has changed, based

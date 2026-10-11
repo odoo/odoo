@@ -73,10 +73,3 @@ class GoogleSync(models.AbstractModel):
         marks the record to be re-synchronized.
         """
         raise NotImplementedError()
-
-    @api.model
-    def _restart_google_sync(self):
-        """ Turns on the google synchronization for all the records of
-        a given user.
-        """
-        raise NotImplementedError()

@@ -367,7 +367,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
     @patch_api
     def test_stop_synchronization(self):
         self.env.user.stop_google_synchronization()
-        self.assertTrue(self.env.user.google_synchronization_stopped, "The google synchronization flag should be switched on")
+        self.assertFalse(self.env.user.google_calendar_token, "The google synchronization token should be reset")
         self.assertFalse(self.env.user._sync_google_events(self.google_service), "The google synchronization should be stopped")
 
         # If synchronization stopped, creating a new event should not call _google_insert.
@@ -397,7 +397,8 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'partner_ids': [(4, self.partner_jean_luc.id)],
         })
 
-        user.with_user(user).restart_google_synchronization()
+        user.write({'google_calendar_token': 'token', 'google_calendar_rtoken': 'rtoken'})
+        event._sync_odoo2google(self.google_service)
         self.assertGoogleEventPatched(event.google_id, {
             'id': event.google_id,
             'start': {'dateTime': '2020-01-15T08:00:00+00:00', 'date': None},
@@ -411,7 +412,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'attendees': [{'email': 'jean-luc@opoo.com', 'responseStatus': 'accepted'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
             'transparency': 'opaque',
-        }, timeout=3)
+        })
 
     @patch_api
     def test_all_event_updated(self):
@@ -678,7 +679,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         must be True for later synchronizing it with Google Calendar.
         """
         # Set synchronization as active and unpause the synchronization.
-        self.env.user.google_synchronization_stopped = False
+        self.env.user.res_users_settings_id.write({'google_calendar_rtoken': 'rtoken', 'google_calendar_token': 'token'})
         self.env.user.sudo().pause_google_synchronization()
 
         # Create record and call synchronization method.
@@ -691,7 +692,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         record._sync_odoo2google(self.google_service)
 
         # Assert that synchronization is paused, insert wasn't called and record is waiting to be synced.
-        self.assertFalse(self.env.user.google_synchronization_stopped)
+        self.assertTrue(self.env.user.google_calendar_token)
         self.assertEqual(self.env.user._get_google_sync_status(), "sync_paused")
         self.assertTrue(record.need_sync, "Sync variable must be true for updating event when sync re-activates")
         self.assertGoogleEventNotInserted()
@@ -703,7 +704,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         field 'need_sync' as True for later synchronizing it with Google Calendar.
         """
         # Set synchronization as active and unpause it.
-        self.env.user.google_synchronization_stopped = False
+        self.env.user.res_users_settings_id.write({'google_calendar_rtoken': 'rtoken', 'google_calendar_token': 'token'})
         self.env.user.sudo().unpause_google_synchronization()
 
         # Setup synced record in Calendar.
@@ -721,7 +722,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         record._sync_odoo2google(self.google_service)
 
         # Assert that synchronization is paused, patch wasn't called and record is waiting to be synced.
-        self.assertFalse(self.env.user.google_synchronization_stopped)
+        self.assertTrue(self.env.user.google_calendar_token)
         self.assertEqual(self.env.user._get_google_sync_status(), "sync_paused")
         self.assertEqual(record.name, "Updated Event", "Assert that event name was updated in Odoo Calendar")
         self.assertTrue(record.need_sync, "Sync variable must be true for updating event when sync re-activates")
@@ -734,7 +735,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         have its field 'need_sync' as True for later synchronizing it with Google Calendar.
         """
         # Set synchronization as active and then pause synchronization.
-        self.env.user.google_synchronization_stopped = False
+        self.env.user.res_users_settings_id.write({'google_calendar_rtoken': 'rtoken', 'google_calendar_token': 'token'})
         self.env.user.sudo().unpause_google_synchronization()
 
         # Setup synced record in Calendar.
@@ -751,7 +752,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         record.unlink()
 
         # Assert that synchronization is paused, delete wasn't called and record was archived in Odoo.
-        self.assertFalse(self.env.user.google_synchronization_stopped)
+        self.assertTrue(self.env.user.google_calendar_token)
         self.assertEqual(self.env.user._get_google_sync_status(), "sync_paused")
         self.assertFalse(record.active, "Event must be archived in Odoo after unlinking it")
         self.assertTrue(record.need_sync, "Sync variable must be true for updating event in Google when sync re-activates")
@@ -814,7 +815,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
     def test_event_sync_after_pause_period(self, mock_sync_request):
         """ Ensure that an event created during the paused synchronization period gets synchronized after resuming it. """
         # Pause the synchronization and creates the local event.
-        self.organizer_user.google_synchronization_stopped = False
+        self.organizer_user.res_users_settings_id.write({'google_calendar_rtoken': 'rtoken', 'google_calendar_token': 'token'})
         self.organizer_user.sudo().pause_google_synchronization()
         record = self.env['calendar.event'].with_user(self.organizer_user).create({
             'name': "Event",
@@ -828,7 +829,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
 
         # With the synchronization paused, manually call the synchronization to simulate the page refresh.
         self.organizer_user.sudo()._sync_google_events(self.google_service)
-        self.assertFalse(self.organizer_user.google_synchronization_stopped, "Synchronization should not be stopped, only paused.")
+        self.assertTrue(self.organizer_user.google_calendar_token, "Synchronization should not be stopped, only paused.")
         self.assertEqual(self.organizer_user._get_google_sync_status(), "sync_paused", "Synchronization must be paused since it wasn't resumed yet.")
         self.assertTrue(record.need_sync, "Record must have its 'need_sync' variable as true for it to be synchronized when the synchronization is resumed.")
         self.assertGoogleEventNotInserted()
@@ -906,8 +907,8 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         with self.mock_datetime_and_now("2023-01-10"):
             # Stop the synchronization for the organizer and leave the attendee synchronized.
             # Then, create an event with the organizer and attendee. Assert that it was not inserted.
-            self.organizer_user.google_synchronization_stopped = True
-            self.attendee_user.google_synchronization_stopped = False
+            self.organizer_user.res_users_settings_id._set_google_auth_tokens(False, False, 0)
+            self.attendee_user.res_users_settings_id.write({'google_calendar_rtoken': False, 'google_calendar_token': False})
             record = self.env['calendar.event'].with_user(self.organizer_user).create({
                 'name': "Event",
                 'start': datetime(2023, 1, 15, 8, 0),
@@ -925,7 +926,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             self.assertGoogleAPINotCalled()
 
             # Now, we synchronize the organizer and make sure the event got inserted by him.
-            self.organizer_user.with_user(self.organizer_user).restart_google_synchronization()
+            self.organizer_user.write({'google_calendar_rtoken': 'rtoken', 'google_calendar_token': 'token'})
             self.organizer_user.with_user(self.organizer_user).sudo()._sync_google_events(self.google_service)
             self.assertGoogleEventInserted({
                 'id': False,
@@ -1096,8 +1097,8 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         Test event is synchronized for organizer with active google synchronization if it is
         created by a user with google synchronization stopped.
         """
-        self.attendee_user.google_synchronization_stopped = True
-        self.organizer_user.google_calendar_token = 'dummy-token'
+        self.attendee_user.res_users_settings_id.write({'google_calendar_rtoken': False, 'google_calendar_token': False})
+        self.organizer_user.res_users_settings_id.write({'google_calendar_rtoken': 'rtoken', 'google_calendar_token': 'token'})
         event = self.env['calendar.event'].with_user(self.attendee_user).create({
             'name': "Event",
             'start': datetime(2020, 1, 15, 8, 0),

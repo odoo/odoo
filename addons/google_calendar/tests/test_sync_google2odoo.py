@@ -2385,11 +2385,8 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertTrue(editable_event.with_user(guest_user).write({'name': 'Edited by attendee!'}),
                         "Attendee should be able to modify event with 'guests_readonly' variable as 'False'.")
 
-        # Assert that guest user can restart the synchronization of its calendar (containing non-editable events).
         guest_user.with_user(guest_user).stop_google_synchronization()
-        self.assertTrue(guest_user.google_synchronization_stopped)
-        guest_user.with_user(guest_user).restart_google_synchronization()
-        self.assertFalse(guest_user.google_synchronization_stopped)
+        self.assertFalse(guest_user.google_calendar_token)
 
     @patch_api
     def test_attendee_status_is_not_updated_when_syncing_and_time_data_is_not_changed(self):

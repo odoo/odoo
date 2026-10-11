@@ -58,12 +58,6 @@ class CalendarEvent(models.Model):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop', 'calendar_id',
                 'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as', 'videocall_location'}
 
-    @api.model
-    def _restart_google_sync(self):
-        events = self.env['calendar.event'].search(self._get_sync_domain())
-        events.write({'need_sync': True})
-        events._check_alarm_ids_sync_limit()
-
     @api.model_create_multi
     def create(self, vals_list):
         description_context = self.env.context.get('skip_contact_description', False)
@@ -147,9 +141,11 @@ class CalendarEvent(models.Model):
             )
 
     def _skip_send_mail_status_update(self):
-        """If a google calendar is not syncing with the user, don't send a mail."""
-        user_id = self._get_event_user()
-        if user_id.is_google_calendar_synced() and user_id.res_users_settings_id._is_google_calendar_valid():
+        """If the event is synchronized with Google, we let Google handle mail notifications."""
+        user_id = self._get_event_owner() or self.env.user
+        if (user_id._get_google_sync_status() == 'sync_active'
+                and user_id.res_users_settings_id._is_google_calendar_valid()
+                and self._should_be_synced()):
             return True
         return super()._skip_send_mail_status_update()
 

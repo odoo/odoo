@@ -7,5 +7,4 @@ UPDATE res_users
 
 UPDATE res_users_settings
     SET microsoft_calendar_sync_token = NULL,
-        microsoft_synchronization_stopped = True,
         microsoft_last_sync_date = NULL;
