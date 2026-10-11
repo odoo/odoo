@@ -416,6 +416,27 @@ export class ProductPage extends Interaction {
     }
 
     /**
+     * Replace the product specifications with the ones of the selected combination.
+     *
+     * @param {Markup} productSpecifications
+     */
+    _updateProductSpecifications(productSpecifications) {
+        const specsContainerEl = this.el.querySelector('.o_wsale_specs_container');
+        const newSpecsContainerEl = createElementWithContent('div', productSpecifications)
+            .querySelector('.o_wsale_specs_container');
+        if (!specsContainerEl || !newSpecsContainerEl) return;
+
+        // Keep the accordion item opened by the customer, if it is still displayed
+        const openedCollapseId = specsContainerEl.querySelector('.accordion-collapse.show')?.id;
+        if (openedCollapseId) {
+            newSpecsContainerEl.querySelector(`#${openedCollapseId}`)?.classList.add('show');
+        }
+        this.services["public.interactions"].stopInteractions(specsContainerEl);
+        specsContainerEl.replaceWith(newSpecsContainerEl);
+        this.services["public.interactions"].startInteractions(newSpecsContainerEl);
+    }
+
+    /**
      * Toggles the disabled class on the parent element and the "add to cart" and "buy now" buttons
      * depending on whether the current combination is possible.
      *
@@ -485,6 +506,10 @@ export class ProductPage extends Interaction {
             combinationInfo.documents = markup(combinationInfo.documents);
         }
         combinationInfo.packaging_selector = markup(combinationInfo.packaging_selector);
+
+        if (combinationInfo.product_specifications) {
+            combinationInfo.product_specifications = markup(combinationInfo.product_specifications);
+        }
 
         this._onChangeCombination(ev, parent, combinationInfo, attributeValueImages);
         this._checkExclusions(parent, combination);
@@ -835,6 +860,10 @@ export class ProductPage extends Interaction {
                 );
                 variantSection.classList.toggle('d-none', !hasAttributes && !hasPackaging);
             }
+        }
+
+        if (combination.product_specifications) {
+            this._updateProductSpecifications(combination.product_specifications);
         }
 
         const productIdElements = parent.querySelectorAll('[data-product-id]');
