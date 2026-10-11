@@ -673,3 +673,60 @@ class TestConsumeComponent(TestConsumeComponentCommon):
             {'quantity': 2.0, 'picked': True, 'lot_ids': lot.ids},
             {'quantity': 1.0, 'picked': True, 'lot_ids': serial.ids},
         ])
+
+    def test_2_steps_manufacturing_partial_production_with_tracked_components(self):
+        """Ensure lots/serials tracked components are correctly consumed on MOs
+        when the order is only partially produced
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.manufacture_steps = 'pbm'
+        self.bom_none.write({
+            'consumption': 'warning',
+            'product_id': self.produced_none,
+        })
+        components = self.bom_none.bom_line_ids.mapped('product_id')
+        lot, sn1, sn2 = self.env['stock.lot'].create([
+            {
+                'name': 'LOT01',
+                'product_id': components[1].id,
+                'company_id': self.env.company.id,
+            },
+            {
+                'name': 'SN01',
+                'product_id': components[2].id,
+                'company_id': self.env.company.id,
+            },
+            {
+                'name': 'SN02',
+                'product_id': components[2].id,
+                'company_id': self.env.company.id,
+            },
+        ])
+        self.env['stock.quant']._update_available_quantity(components[0], warehouse.lot_stock_id, 6)
+        self.env['stock.quant']._update_available_quantity(components[1], warehouse.lot_stock_id, 4, lot_id=lot)
+        self.env['stock.quant']._update_available_quantity(components[2], warehouse.lot_stock_id, 1, lot_id=sn1)
+        self.env['stock.quant']._update_available_quantity(components[2], warehouse.lot_stock_id, 1, lot_id=sn2)
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_none.product_id.id,
+            'product_qty': 2.0,
+            'bom_id': self.bom_none.id,
+        })
+        mo.action_confirm()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1.0
+        mo.picking_ids.button_validate()
+        action = mo.button_mark_done()
+        self.assertEqual(action.get('res_model'), 'mrp.production.backorder')
+        Form(self.env['mrp.production.backorder'].with_context(**action['context'])).save().action_backorder()
+        self.assertEqual(mo.state, 'done')
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'quantity': 3.0, 'picked': True},
+            {'quantity': 2.0, 'picked': True},
+            {'quantity': 1.0, 'picked': True},
+        ])
+        mo_backorder = mo.production_group_id.production_ids[-1]
+        self.assertRecordValues(mo_backorder.move_raw_ids, [
+            {'quantity': 3.0, 'picked': False},
+            {'quantity': 2.0, 'picked': False},
+            {'quantity': 1.0, 'picked': False},
+        ])
