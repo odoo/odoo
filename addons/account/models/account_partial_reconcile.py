@@ -3,6 +3,7 @@ from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
 
+from collections import defaultdict
 from datetime import timedelta
 
 
@@ -109,6 +110,17 @@ class AccountPartialReconcile(models.Model):
         # Get the payments without journal entry to reset once the amount residual is reset
         to_update_payments = self._get_to_update_payments(from_state='paid')
 
+        # Get the links between the payments and the moves they are no longer reconciled with
+        moves_to_unlink_per_payment = defaultdict(lambda: self.env['account.move'])
+        for partial in self:
+            # The moves of both reconciled lines (e.g. an invoice and the journal entry of a payment), at most 2 per partial
+            moves = (partial.debit_move_id | partial.credit_move_id).move_id
+            if (
+                (payment := moves.origin_payment_id)
+                and (moves_to_unlink := (moves - payment.move_id) & payment.invoice_ids)
+            ):
+                moves_to_unlink_per_payment[payment] |= moves_to_unlink
+
         # Retrieve the matching number to unlink.
         full_to_unlink = self.full_reconcile_id
         all_reconciled = self.debit_move_id + self.credit_move_id
@@ -123,6 +135,9 @@ class AccountPartialReconcile(models.Model):
 
         # Remove the matching numbers before reversing the moves to avoid trying to remove the full twice.
         full_to_unlink.unlink()
+
+        for payment, moves in moves_to_unlink_per_payment.items():
+            payment.invoice_ids -= moves
 
         # Reverse CABA entries.
         if moves_to_reverse:
