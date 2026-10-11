@@ -1096,3 +1096,32 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
                 self.vat_0_N1_purchase,
             ]
         )
+
+    def test_import_vendor_bill_no_vat_seller(self):
+        """Do not match an existing partner with vat='/' when the seller has no IdFiscaleIVA"""
+
+        self.env['res.partner'].create({
+            'name': 'Decoy Partner',
+            'vat': '/',
+            'company_id': self.company.id,
+        })
+        existing_partners = self.env['res.partner'].search([])
+
+        # Strip IdFiscaleIVA from the seller so _l10n_it_edi_get_partner_info returns vat='/'
+        applied_xml = """
+            <xpath expr="//CedentePrestatore/DatiAnagrafici/IdFiscaleIVA" position="replace"/>
+            <xpath expr="//CedentePrestatore/DatiAnagrafici/CodiceFiscale" position="replace">
+                <CodiceFiscale>MRTMTT91D08F205J</CodiceFiscale>
+            </xpath>
+        """
+        invoice = self._assert_import_invoice(
+            'IT01234567888_FPR01.xml',
+            [{'move_type': 'in_invoice'}],
+            applied_xml,
+        )
+
+        self.assertNotIn(
+            invoice.partner_id, existing_partners,
+            "A FatturaPA seller with no VAT number must not match any existing partner "
+            "(including partners with '/' as a placeholder VAT). A new partner should be created.",
+        )
