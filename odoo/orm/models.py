@@ -1049,6 +1049,8 @@ class BaseModel(metaclass=MetaModel):
                         e_fields = get_columns_from_sql_diagnostics(self.env.cr, e.diag, check_registry=True)
                         if len(e_fields) == 1:
                             pg_error_info['field'] = e_fields[0]
+                        elif e_fields:
+                            pg_error_info['fields'] = e_fields
                     messages.append(dict(info, type='error', **pg_error_info))
                     # Failed to write, log to messages, rollback savepoint (to
                     # avoid broken transaction) and keep going
@@ -1092,9 +1094,6 @@ class BaseModel(metaclass=MetaModel):
 
         info = {'rows': {'to': -1}}
         for id, xid, record, info in converted:
-            if self.env.context.get('import_file') and self.env.context.get('import_skip_records'):
-                if any([record.get(field) is None for field in self.env.context['import_skip_records']]):
-                    continue
             if xid:
                 xid = xid if '.' in xid else "%s.%s" % (current_module, xid)
                 batch_xml_ids.add(xid)
