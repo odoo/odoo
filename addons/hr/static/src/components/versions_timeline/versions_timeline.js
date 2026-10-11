@@ -145,6 +145,9 @@ export const versionsTimeline = {
     ...statusBarField,
     component: VersionsTimeline,
     additionalClasses: ["o_field_statusbar", "o_records_timeline", "d-flex", "gap-1"],
+    fieldDependencies: [
+        { name: "display_name", type: "char" },
+    ],
 };
 
 registry.category("fields").add("versions_timeline", versionsTimeline);
