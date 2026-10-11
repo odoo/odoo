@@ -458,6 +458,11 @@
                                                invisible="work_entry_type_request_unit == 'hour'"
                                                class="text-muted w-auto"/>
                                         <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit == 'hour'">day(s)</span>
+                                        <div class="text-muted d-flex gap-1 me-1" invisible="not max_leaves">
+                                            (<field name="virtual_remaining_leaves" widget="float" class="w-auto" digits="[3,2]"/>
+                                            <span class="text-nowrap">remaining out of</span>
+                                            <field name="max_leaves" widget="float" class="w-auto" digits="[3,2]"/>)
+                                        </div>
                                     </div>
                                     <div invisible="work_entry_type_request_unit != 'half_day' or last_several_days">
                                         <field name="work_entry_type_request_unit" invisible="1"/> <!-- Needed -->
@@ -470,6 +475,13 @@
                                                nolabel="1"
                                                required="1"
                                         />
+                                        <div class="text-muted d-flex gap-1 me-1" invisible="not max_leaves">
+                                            <field name="virtual_remaining_leaves" widget="float" class="w-auto" digits="[3,2]"/>
+                                            <span class="text-nowrap">remaining out of</span>
+                                            <field name="max_leaves" widget="float" class="w-auto" digits="[3,2]"/>
+                                            <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit != 'hour'">hour(s)</span>
+                                            <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit == 'hour'">day(s)</span>
+                                        </div>
                                     </div>
                                     <div invisible="not allocation_display_warning">
                                           <field class="text-danger fw-bold" name="allocation_display_warning" nolabel="1"/>

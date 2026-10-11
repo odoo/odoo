@@ -18,7 +18,7 @@ export const workEntryTypeBadgeField = {
     fieldDependencies: [
         { name: "color", type: "integer" },
         { name: "display_code", type: "char" },
-        { name: "name", type: "char" },
+        { name: "display_name", type: "char" },
     ],
 };
 registry.category("fields").add("work_entry_type_badge", workEntryTypeBadgeField);
@@ -75,6 +75,7 @@ export const many2OneWorkEntryTypeField = {
     relatedFields: [
         { name: "display_code", type: "char" },
         { name: "color", type: "char" },
+        { name: "display_name", type: "char" },
     ],
 };
 
