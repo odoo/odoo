@@ -1452,6 +1452,7 @@ class AccountMove(models.Model):
                     'move_id': line.move_id.id,
                     'date': fields.Date.to_string(line.date),
                     'account_payment_id': line.payment_id.id,
+                    'can_open_move': line.move_id._can_open_from_payments_widget(),
                 })
 
             if not payments_widget_vals['content']:
@@ -1499,6 +1500,7 @@ class AccountMove(models.Model):
                         'account_payment_id': counterpart_line.payment_id.id,
                         'payment_method_name': counterpart_line.payment_id.payment_method_line_id.name,
                         'move_id': counterpart_line.move_id.id,
+                        'can_open_move': counterpart_line.move_id._can_open_from_payments_widget(),
                         'is_refund': counterpart_line.move_id.move_type in ['in_refund', 'out_refund'],
                         'ref': reconciliation_ref,
                         # these are necessary for the views to change depending on the values
@@ -5388,6 +5390,17 @@ class AccountMove(models.Model):
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
+
+    def _can_open_from_payments_widget(self):
+        """ Invoicing users can open the payments and invoices matched with an invoice, but not the bank
+        transactions and journal entries, as they would give them access to the journal entries and items.
+        """
+        self.ensure_one()
+        return (
+            self.env.user.has_group('account.group_account_readonly')
+            or bool(self.origin_payment_id)
+            or self.is_invoice(include_receipts=True)
+        )
 
     def action_open_business_doc(self):
         self.ensure_one()
