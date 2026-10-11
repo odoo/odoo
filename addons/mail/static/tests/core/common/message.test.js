@@ -11,11 +11,19 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, test } from "@odoo/hoot";
+<<<<<<< c2b4532fd89e0786b4058d355aff763e69c7cfbb
 import { animationFrame, waitFor, waitForNone } from "@odoo/hoot-dom";
+||||||| 5662d4399683adfeaf1d11d92e9677e43ab3c8cf
+import { animationFrame } from "@odoo/hoot-dom";
+=======
+import { animationFrame } from "@odoo/hoot-dom";
+import { preloadBundle } from "@web/../tests/web_test_helpers";
+>>>>>>> 9adb17433f48b1a7bd02985af60c51ef0d493483
 import { getOrigin } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
 defineMailModels();
+preloadBundle("mail.assets_message_email");
 
 test("following internal link from chatter does not open chat window", async () => {
     const pyEnv = await startServer();
@@ -109,4 +117,25 @@ test("code block embedded in an email message's body should be ignored", async (
         "pre[data-embedded='readonlySyntaxHighlighting']:not([data-embedded-mounted]):text(print('hello'))",
         { parent: [".o-mail-Message-shadowBody", { shadowRoot: true }] }
     );
+});
+
+test("read more button of an email message shows its icon", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Jeanne" });
+    pyEnv["mail.message"].create({
+        body: `<p>Thanks</p><blockquote data-o-mail-quote="1">Previous message</blockquote>`,
+        message_type: "email",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    const shadowBody = [".o-mail-Message-shadowBody", { shadowRoot: true }];
+    await contains(".o-mail-ellipsis i[data-icon='more_horiz']", {
+        parent: shadowBody,
+        visible: true,
+    });
+    await contains("blockquote:text(Previous message)", { parent: shadowBody, visible: false });
+    await click(".o-mail-ellipsis", { parent: shadowBody });
+    await contains("blockquote:text(Previous message)", { parent: shadowBody, visible: true });
 });
