@@ -24,10 +24,10 @@ class ResConfigSettings(models.TransientModel):
         if routing_before and not self.group_mrp_routings:
             self.env['mrp.routing.workcenter'].search([]).active = False
         elif not routing_before and self.group_mrp_routings:
-            operations = self.env['mrp.routing.workcenter'].search_read([('active', '=', False)], ['id', 'write_date'])
-            last_updated = max((op['write_date'] for op in operations), default=0)
+            operations = self.env['mrp.routing.workcenter'].search_fetch([('active', '=', False)], ['id', 'write_date'])
+            last_updated = max((op.write_date for op in operations), default=0)
             if last_updated:
-                op_to_update = self.env['mrp.routing.workcenter'].browse([op['id'] for op in operations if op['write_date'] == last_updated])
+                op_to_update = self.env['mrp.routing.workcenter'].browse(op.id for op in operations if op.write_date == last_updated)
                 op_to_update.active = True
 
     @api.onchange('group_unlocked_by_default')

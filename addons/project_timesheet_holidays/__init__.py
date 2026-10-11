@@ -18,12 +18,12 @@ def post_init(env):
         company = company.with_company(company)
         if not company.internal_project_id:
             if not internal_projects_by_company_dict:
-                internal_projects_by_company_read = project.search_read([
+                internal_projects = project.search_fetch([
                     ('name', '=', env._('Internal')),
                     ('allow_timesheets', '=', True),
                     ('company_id', 'in', companies.ids),
                 ], ['company_id', 'id'])
-                internal_projects_by_company_dict = {res['company_id'][0]: res['id'] for res in internal_projects_by_company_read}
+                internal_projects_by_company_dict = {res.company_id.id: res.id for res in internal_projects}
             project_id = internal_projects_by_company_dict.get(company.id, False)
             if not project_id:
                 project_id = project.create({

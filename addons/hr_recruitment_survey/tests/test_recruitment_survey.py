@@ -110,7 +110,7 @@ class TestRecruitmentSurvey(common.TransactionCase):
         # Manager: ok for survey type recruitment
         invite_recruitment.with_user(self.hr_recruitment_manager).action_invite()
         with self.assertRaises(AccessError):
-            self.survey_custom.with_user(self.hr_recruitment_manager).read(['title'])
+            self.survey_custom.with_user(self.hr_recruitment_manager).fetch(['title'])
 
         # Interviewer needs to be set as interviewer for the job or the applicant
         user = self.hr_recruitment_interviewer

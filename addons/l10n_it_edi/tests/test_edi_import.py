@@ -739,7 +739,7 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
         """Ensure that a user having only group_account_invoice can compute field l10n_it_edi_is_self_invoice"""
         user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
         move = self.env['account.move'].create({'move_type': 'in_invoice'})
-        move.with_user(user).read(['l10n_it_edi_is_self_invoice'])  # should not raise
+        move.with_user(user).fetch(['l10n_it_edi_is_self_invoice'])  # should not raise
 
     def test_l10n_it_payment_method_correctly_imported(self):
         self._assert_import_invoice('IT01234567890_FPR01.xml', [{

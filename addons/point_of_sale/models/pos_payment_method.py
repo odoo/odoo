@@ -104,7 +104,7 @@ class PosPaymentMethod(models.Model):
     def get_provider_status(self):
         providers = self.get_payment_providers()
         module_names = [provider["module"] for provider in providers]
-        module_states = {m['name']: {'state': m['state'], 'id': m['id']} for m in self.env['ir.module.module'].search_read([('name', 'in', module_names)], ['name', 'state'])}
+        module_states = {m.name: {'state': m.state, 'id': m.id} for m in self.env['ir.module.module'].search_fetch([('name', 'in', module_names)], ['name', 'state'])}
         return [{**p, 'state': module_states[p['module']]['state'], 'id': module_states[p['module']]['id']} for p in providers if p['module'] in module_states]
 
     @api.model

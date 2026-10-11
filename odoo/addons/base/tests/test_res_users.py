@@ -548,8 +548,8 @@ class TestUsers2(UsersCommonCase):
         user.write({'group_ids': [Command.set([group_visitor.id])]})
         self.assertEqual(user.group_ids & groups, group_visitor)
         self.assertEqual(user.all_group_ids & groups, group_visitor)
-        self.assertEqual(user.read(['group_ids'])[0]['group_ids'], [group_visitor.id])
-        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_regular).ids))
+        self.assertEqual(user.group_ids.ids, [group_visitor.id])
+        self.assertEqual(set(user.all_group_ids.ids), set((group_visitor + group_regular).ids))
 
         # remove group_visitor
         user.write({'group_ids': [Command.unlink(group_visitor.id)]})
@@ -559,15 +559,15 @@ class TestUsers2(UsersCommonCase):
         user.write({'group_ids': [Command.set([group_manager.id])]})
         self.assertEqual(user.group_ids & groups, group_manager)
         self.assertEqual(user.all_group_ids & groups, group_visitor + group_manager + group_user)
-        self.assertEqual(user.read(['group_ids'])[0]['group_ids'], [group_manager.id])
-        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user + group_regular).ids))
+        self.assertEqual(user.group_ids.ids, [group_manager.id])
+        self.assertEqual(set(user.all_group_ids.ids), set((group_visitor + group_manager + group_user + group_regular).ids))
 
         # add user in group_user, and check field value
         user.write({'group_ids': [Command.link(group_user.id)]})
         self.assertEqual(user.group_ids & groups, group_manager + group_user)
         self.assertEqual(user.all_group_ids & groups, group_visitor + group_manager + group_user)
-        self.assertEqual(set(user.read(['group_ids'])[0]['group_ids']), set((group_manager + group_user).ids))
-        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user + group_regular).ids))
+        self.assertEqual(set(user.group_ids.ids), set((group_manager + group_user).ids))
+        self.assertEqual(set(user.all_group_ids.ids), set((group_visitor + group_manager + group_user + group_regular).ids))
 
         groups = self.env['res.groups'].search([('all_user_ids', '=', user.id)])
         self.assertEqual(groups, user.all_group_ids)

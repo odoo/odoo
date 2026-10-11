@@ -158,9 +158,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
         res = {}
 
         warehouse = self._get_warehouse()
-        wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
+        wh_location_ids = [loc.id for loc in self.env['stock.location'].search(
             [('id', 'child_of', warehouse.view_location_id.id)],
-            ['id'],
         )]
         # any quantities in this location will be considered free stock, others are free stock in transit
         wh_stock_location = warehouse.lot_stock_id

@@ -27,10 +27,10 @@ class IrModel(models.Model):
 
     @api.model
     def _display_name_for(self, models):
-        records = self.sudo().search_read([("model", "in", models)], ["name", "model"])
+        records = self.sudo().search_fetch([("model", "in", models)], ["name", "model"])
         return [{
-            "display_name": model["name"],
-            "model": model["model"],
+            "display_name": model.name,
+            "model": model.model,
         } for model in records]
 
     @api.model

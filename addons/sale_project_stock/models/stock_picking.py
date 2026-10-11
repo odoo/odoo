@@ -46,11 +46,11 @@ class StockPicking(models.Model):
             # Create SOLs in reinvoiced_sale_order_id with reinvoicable stock moves
             sale_line_values_to_create = []
             # Get last sequence SOL
-            last_so_line = self.env['sale.order.line'].search_read(
+            last_so_line = self.env['sale.order.line'].search_fetch(
                 [('order_id', '=', sale_order.id)],
                 ['sequence'], order='sequence desc', limit=1,
             )
-            last_sequence = next((sol['sequence'] for sol in last_so_line), 100)
+            last_sequence = next((sol.sequence for sol in last_so_line), 100)
 
             for stock_move in reinvoicable_stock_moves:
                 # Get price

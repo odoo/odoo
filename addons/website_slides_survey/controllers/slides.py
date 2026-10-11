@@ -64,7 +64,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
             }).id
         elif linked_survey_id:
             try:
-                request.env['survey.survey'].browse([linked_survey_id]).read(['title'])
+                request.env['survey.survey'].browse([linked_survey_id]).fetch(['title'])
             except AccessError:
                 return {'error': _('You are not allowed to link a certification.')}
 

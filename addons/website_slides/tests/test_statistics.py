@@ -161,7 +161,7 @@ class TestChannelStatistics(common.SlidesCase):
         slides.write({'is_preview': True})
         slides.flush_model()
         slides_emp = slides.with_user(self.user_emp)
-        slides_emp.read(['name'])
+        slides_emp.fetch(['name'])
         with self.assertRaises(UserError):
             slides_emp.action_mark_completed()
 
@@ -171,7 +171,7 @@ class TestChannelStatistics(common.SlidesCase):
         slides.write({'is_preview': True})
         slides.flush_model()
         slides_emp = slides.with_user(self.user_emp)
-        slides_emp.read(['name'])
+        slides_emp.fetch(['name'])
         with self.assertRaises(UserError):
             slides_emp.action_set_viewed()
 
