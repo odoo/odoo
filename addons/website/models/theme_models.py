@@ -270,12 +270,12 @@ class ThemeUtils(models.AbstractModel):
         'website.footer_no_copyright',
     ]
 
-    def _post_copy(self, mod):
-        # Call specific theme post copy
-        theme_post_copy = '_%s_post_copy' % mod.name
-        if hasattr(self, theme_post_copy):
-            _logger.info('Executing method %s' % theme_post_copy)
-            method = getattr(self, theme_post_copy)
+    def _apply_theme_config(self, mod):
+        # Call specific theme configuration
+        theme_apply_config = '_%s_apply_config' % mod.name
+        if hasattr(self, theme_apply_config):
+            _logger.info('Executing method %s', theme_apply_config)
+            method = getattr(self, theme_apply_config)
             return method(mod)
         return False
 
