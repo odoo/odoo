@@ -319,3 +319,28 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_variants_merge_line_barcode', login="pos_user")
+
+    def test_archived_product_removed_and_order_is_refunded(self):
+        """
+        Tests that once product is archived after order is created
+        product is not shown but the order can still be refunded.
+        """
+        self.env['pos.session'].sudo().search([('state', '!=', 'closed')]).write({'state': 'closed'})
+        self.pos_admin.write({
+            'group_ids': [
+                (4, self.env.ref('product.group_product_manager').id),
+                (4, self.env.ref('account.group_account_manager').id),
+            ]
+        })
+        self.env['product.product'].create({
+            'is_storable': True,
+            'name': 'A Test Product',
+            'available_in_pos': True,
+            'list_price': 1,
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_archived_product_removed_and_order_is_refunded",
+            login="pos_admin",
+        )
