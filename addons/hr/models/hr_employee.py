@@ -871,6 +871,8 @@ class HrEmployee(models.Model):
         new_version = self.env['hr.version'].sudo().create(copy_vals).sudo(False)
         with self.env.protecting([f for f_name, f in version_fields.items() if f_name not in new_version_vals and f.copy], new_version):
             new_version.write(new_version_vals)
+        # Force recompute of fields possibly left stale by protecting() above (e.g. final_yearly_costs).
+        new_version.modified(list(new_version_vals.keys()))
         if template_id := values.get('contract_template_id'):
             template = self.env['hr.version'].browse(template_id)
             template_vals = new_version.get_values_from_contract_template(template)
