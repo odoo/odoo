@@ -23,6 +23,7 @@ class MailGroupMessage(models.Model):
     _description = 'Mailing List Message'
     _rec_name = 'subject'
     _order = 'create_date DESC'
+    _parent_name = 'group_message_parent_id'
     _primary_email = 'email_from'
 
     # <mail.message> fields, can not be done with inherits because it will impact
