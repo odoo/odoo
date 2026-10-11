@@ -8,8 +8,8 @@
             <div t-ref="this.displayNameRef" class="d-flex overflow-hidden flex-column lh-sm">
                 <div class="d-flex align-items-center">
                     <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.member().name" t-att-title="this.member().name"/>
-                    <i t-if="this.member().channel_role === 'owner'" class="oi ms-1 text-warning lh-sm" data-icon="crown_f" role="img" title="Owner" aria-label="Owner"/>
-                    <i t-if="this.member().channel_role === 'admin'" class="oi ms-1 opacity-75 lh-sm" data-icon="crown" role="img" title="Admin" aria-label="Admin"/>
+                    <i t-if="this.showOwnerIcon" class="oi ms-1 text-warning lh-sm" data-icon="crown_f" role="img" title="Owner" aria-label="Owner"/>
+                    <i t-if="this.showAdminIcon" class="oi ms-1 opacity-75 lh-sm" data-icon="crown" role="img" title="Admin" aria-label="Admin"/>
                 </div>
                 <span t-if="this.member().isInvitationPending" class="ms-2 pe-1 text-truncate smaller fst-italic text-muted">Invitation Pending</span>
             </div>
