@@ -279,6 +279,9 @@ registry.category("web_tour.tours").add("test_order_refund_flow", {
             // First refund order
             ProductScreen.clickRefund(),
             TicketScreen.selectOrder("001"),
+            inLeftSide({
+                trigger: `button:not(:disabled):contains("Invoice")`,
+            }),
             ProductScreen.clickNumpad("1"),
             TicketScreen.toRefundTextContains("To Refund: 1.00"),
             TicketScreen.confirmRefund(),
