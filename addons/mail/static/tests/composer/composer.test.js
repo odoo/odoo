@@ -896,7 +896,7 @@ test("remove an attachment from composer does not need any confirmation", async 
     await inputFiles(".o-mail-Composer .o_input_file", [text]);
     await waitFor(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt):count(1)");
     await waitFor(".o-mail-Composer-footer .o-mail-AttachmentList:count(1)");
-    await click(".o-mail-Attachment-unlink");
+    await click(".o-mail-AttachmentContainer [title='Remove']");
     await waitForNone(".o-mail-AttachmentList .o-mail-AttachmentContainer");
 });
 
@@ -1000,7 +1000,7 @@ test("remove an uploading attachment", async () => {
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer .o_input_file", [text]);
     await waitFor(".o-mail-AttachmentContainer.o-isUploading:contains(text.txt):count(1)");
-    await click(".o-mail-Attachment-unlink");
+    await click(".o-mail-AttachmentContainer [title='Remove']");
     await waitForNone(".o-mail-Composer .o-mail-AttachmentContainer");
 });
 
@@ -1033,9 +1033,7 @@ test("[technical] does not crash when an attachment is removed before its upload
     await openDiscuss(channelId);
     await inputFiles(".o-mail-Composer .o_input_file", [text1, text2]);
     await waitFor(".o-mail-AttachmentContainer.o-isUploading:contains(text1.txt):count(1)");
-    await click(
-        ".o-mail-AttachmentContainer.o-isUploading:contains(text2.txt) .o-mail-Attachment-unlink"
-    );
+    await click(".o-mail-AttachmentContainer.o-isUploading:contains(text2.txt) [title='Remove']");
     await waitForNone(".o-mail-AttachmentContainer:contains('text2.txt')");
     // Simulates the completion of the upload of the first attachment
     resolve();

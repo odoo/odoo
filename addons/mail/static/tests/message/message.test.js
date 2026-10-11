@@ -1855,7 +1855,7 @@ test("Clear message body and remove attachments should open message delete dialo
     await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "", { replace: true });
     await click(
-        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('test.txt')) .o-mail-Attachment-unlink"
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('test.txt')) [title='Remove']"
     );
     triggerHotkey("Enter");
     await waitFor(
@@ -1896,7 +1896,7 @@ test("Can remove saved attachments while editing a message", async () => {
         ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('morty.txt')):count(1)"
     );
     await click(
-        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('rick.txt')) .o-mail-Attachment-unlink"
+        ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('rick.txt')) [title='Remove']"
     );
     await waitForNone(
         ".o-mail-Message .o-mail-Composer .o-mail-AttachmentContainer:has(:text('rick.txt'))"
@@ -1975,7 +1975,8 @@ test("allow attachment delete on authored message", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-AttachmentImage:count(1)");
-    await click("button[title='Remove']");
+    await click(".o-mail-AttachmentContainer [title='Actions']");
+    await click(".dropdown-item:text('Remove')");
     await waitFor(
         ".modal-dialog .modal-body p:text('Are you sure you want to delete \"BLAH\"? This action cannot be undone.'):count(1)"
     );
@@ -2048,7 +2049,8 @@ test("allow attachment image download on message", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-AttachmentImage:count(1)");
-    await waitFor("button[title='Download']:count(1)");
+    await click(".o-mail-AttachmentContainer [title='Actions']");
+    await waitFor(".dropdown-item:text('Download'):count(1)");
 });
 
 test("Can download all files of a message", async () => {
@@ -2119,15 +2121,15 @@ test("Can remove files of message individually", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(
-        ":nth-child(1 of .o-mail-Message) :nth-child(1 of .o-mail-AttachmentContainer) [title='Remove']"
+        ":nth-child(1 of .o-mail-Message) :nth-child(1 of .o-mail-AttachmentContainer) [title='Actions']"
     );
     await waitFor(
-        ":nth-child(1 of .o-mail-Message) :nth-child(2 of .o-mail-AttachmentContainer) [title='Remove']"
+        ":nth-child(1 of .o-mail-Message) :nth-child(2 of .o-mail-AttachmentContainer) [title='Actions']"
     );
-    await waitForNone(
-        ":nth-child(2 of .o-mail-Message) .o-mail-AttachmentContainer [title='Remove']"
+    await waitFor(
+        ":nth-child(2 of .o-mail-Message) .o-mail-AttachmentContainer [title='Download']"
     );
-    await waitFor(":nth-child(3 of .o-mail-Message) .o-mail-AttachmentContainer [title='Remove']");
+    await waitFor(":nth-child(3 of .o-mail-Message) .o-mail-AttachmentContainer [title='Actions']");
 });
 
 test("avatar card from author should be opened after clicking on their avatar", async () => {
@@ -2299,7 +2301,8 @@ test("delete all attachments of a message with some text content should still ke
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(1)");
-    await click(".o-mail-AttachmentContainer button[title='Remove']");
+    await click(".o-mail-AttachmentContainer [title='Actions']");
+    await click(".dropdown-item:text('Remove')");
     await click(".modal button:text('Delete Attachment')");
     await waitFor(".o-mail-Message:count(1)");
 });
