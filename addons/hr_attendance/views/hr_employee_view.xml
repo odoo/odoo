@@ -96,7 +96,33 @@
         </field>
     </record>
 
-    <menuitem id="menu_hr_attendance_employee" name="Employees" parent="hr_attendance.menu_hr_attendance_view_attendances_management" action="hr_employee_attendance_action_kanban" groups="hr_attendance.group_hr_attendance_officer" sequence="2"/>
+    <record id="action_attendance_employee_view_access" model="ir.actions.server">
+        <field name="name">Employees</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="state">code</field>
+        <field name="code">
+if env.user.has_group('hr.group_hr_user'):
+    action = {
+        'name': 'Employees',
+        'type': 'ir.actions.act_window',
+        'res_model': 'hr.employee',
+        'view_mode': 'kanban,form',
+        'views': [[env.ref('hr.hr_kanban_view_employees').id, 'kanban'], [False, 'form']],
+        'target': 'current',
+    }
+else:
+    action = {
+        'name': 'Employees',
+        'type': 'ir.actions.act_window',
+        'res_model': 'hr.employee.public',
+        'view_mode': 'kanban,form',
+        'views': [[env.ref('hr.hr_employee_public_view_kanban').id, 'kanban'], [False, 'form']],
+        'target': 'current',
+    }
+        </field>
+    </record>
+
+    <menuitem id="menu_hr_attendance_employee" name="Employees" parent="hr_attendance.menu_hr_attendance_view_attendances_management" action="action_attendance_employee_view_access" groups="hr_attendance.group_hr_attendance_officer" sequence="2"/>
 
     <record id="view_employee_tree_inherit_leave" model="ir.ui.view">
         <field name="name">hr.employee.list.leave</field>
