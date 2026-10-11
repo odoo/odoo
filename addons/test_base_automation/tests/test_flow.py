@@ -1507,6 +1507,33 @@ class TestCompute(common.TransactionCase):
             'remaining_hours': 32,
         }])
 
+    def test_action_write_overrides_pending_computation(self):
+        lead_model = self.env['ir.model']._get('base.automation.lead.test')
+        state_field = self.env['ir.model.fields']._get('base.automation.lead.test', 'state')
+        stage = self.env['test_base_automation.stage'].create({'name': 'Initial'})
+        lead = self.env['base.automation.lead.test'].create({
+            'name': 'Test Lead',
+            'state': 'open',
+            'stage_id': stage.id,
+        })
+
+        create_automation(
+            self,
+            model_id=lead_model.id,
+            trigger='on_state_set',
+            trigger_field_ids=[state_field.id],
+            filter_domain="[('state', '=', 'draft')]",
+            _actions={
+                'state': 'object_write',
+                'evaluation_type': 'value',
+                'update_path': 'stage_id',
+                'value': '0',
+            },
+        )
+
+        lead.state = 'draft'
+        self.assertFalse(lead.stage_id)
+
     def test_recursion(self):
         project = self.env['test_base_automation.project'].create({})
 
