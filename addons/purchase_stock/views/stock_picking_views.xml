@@ -22,4 +22,16 @@
         </field>
     </record>
 
+    <record id="purchase_stock_vpicktree" model="ir.ui.view">
+        <field name="name">purchase.stock.view.vpicktree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="default_order">id</attribute>
+            </xpath>
+        </field>
+
+    </record>
+
 </odoo>
