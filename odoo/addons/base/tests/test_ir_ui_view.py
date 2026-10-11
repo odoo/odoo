@@ -820,10 +820,39 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
 
     def test_replace(self):
         spec = E.xpath(
-            E.div("$0", {'class': "some"}),
+            E.div(E('replace-target'), {'class': "some"}),
             expr="//p", position="replace")
 
         self.apply_spec(spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(E.div(
+                E.div(E.p('Content'), {'class': 'some'})
+            ))
+        )
+
+    def test_replace_with_sibling(self):
+        spec = E.xpath(
+            E.div("text", E('first-sibling'), 'more text', E('replace-target'), 'tail text', {'class': "some"}),
+            expr="//p", position="replace")
+
+        self.apply_spec(spec)
+        self.assertEqual(
+            self.base_arch,
+            E.template(E.div(
+                E.div("text", E('first-sibling'), 'more text', E.p('Content'), 'tail text', {'class': 'some'})
+            ))
+        )
+
+    def test_replace_compatibility(self):
+        spec = E.xpath(
+            E.div("$0", {'class': "some"}),
+            expr="//p", position="replace")
+
+        with self.assertLogs('odoo.tools.template_inheritance', level="WARNING") as log_catcher:
+            self.apply_spec(spec)
+        self.assertEqual(log_catcher.output, ["WARNING:odoo.tools.template_inheritance:$0 is deprecated: use a node with tag replace-target instead"])
+
         self.assertEqual(
             self.base_arch,
             E.template(E.div(
@@ -1113,7 +1142,7 @@ class TestTemplating(ViewCase):
             'inherit_id': view1.id,
             'arch': """<xpath expr="//div[@role='search']" position="replace">
                 <form>
-                    <t>$0</t>
+                    <t><replace-target/></t>
                 </form>
             </xpath>
             """
