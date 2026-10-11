@@ -11,4 +11,5 @@ class ResPartner(models.Model):
         help="Used in sales orders.",
         comodel_name="delivery.carrier",
         company_dependent=True,
+        default=lambda self: (self.env.ref("delivery.free_delivery_carrier", raise_if_not_found=False)),
     )
