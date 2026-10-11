@@ -26,9 +26,19 @@ export class TranslatePlugin extends Plugin {
         toolbar_items: [
             {
                 id: "translate",
+<<<<<<< 374406358ba6d2d5ed131bd13d66270e763702c6:addons/html_editor/static/src/main/translate/translate_plugin.js
                 groupId: "translate",
                 description: _t("Translate with Google Translate"),
                 isAvailable: (selection) => !selection.isCollapsed && user.userId,
+||||||| b419b9c2ea2526485f834e882db886056369f9f6:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_plugin.js
+                groupId: "ai",
+                description: _t("Translate with AI"),
+                isAvailable: (selection) => !selection.isCollapsed && user.userId,
+=======
+                groupId: "ai",
+                description: _t("Translate with AI"),
+                isAvailable: (selection) => !selection.isCollapsed && user.isInternalUser,
+>>>>>>> 1c8bd23ace865272a80fdbc1631a9ec14cf0b2e7:addons/html_editor/static/src/main/chatgpt/chatgpt_translate_plugin.js
                 isDisabled: this.isNotReplaceableByAI.bind(this),
                 Component: LanguageSelector,
                 props: {
