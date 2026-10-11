@@ -1018,6 +1018,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     )
                 )
             )
+            combination = product._get_available_combination(
+                combination,
+                combination.filtered(
+                    lambda ptav: ptav.product_attribute_value_id.id in attribute_value_ids
+                ),
+            )
             combination_info = product._get_combination_info(
                 combination=combination.with_env(self.env)
             )
