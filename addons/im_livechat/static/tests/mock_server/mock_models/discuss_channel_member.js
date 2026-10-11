@@ -42,7 +42,25 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
                 member.livechat_member_type = "agent";
             }
         }
+        this._compute_channel_role(idOrIds);
         return idOrIds;
+    }
+
+    /** @param {number[]} ids */
+    _compute_channel_role(ids) {
+        for (const member of this.browse(ids)) {
+            const [channel] = this.env["discuss.channel"].browse(member.channel_id);
+            if (channel?.channel_type === "livechat") {
+                const isOwner =
+                    member.livechat_member_type === "agent" &&
+                    member.partner_id &&
+                    this.env["res.users"].search([
+                        ["partner_id", "=", member.partner_id],
+                        ["active", "=", true],
+                    ]).length;
+                member.channel_role = isOwner ? "owner" : false;
+            }
+        }
     }
 
     _store_member_fields(res) {
