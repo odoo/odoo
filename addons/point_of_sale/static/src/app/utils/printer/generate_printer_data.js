@@ -368,6 +368,7 @@ export class GeneratePrinterData {
         let orderChange = override || order.getChanges({ cancelled: opts.cancelled });
         let reprint = false;
 
+<<<<<<< 0d3d14467ed0e75586e8a86f574d9acd4baa213f
         if (!opts.prepOrderLines) {
             if (
                 !orderChange.addedQuantity.length &&
@@ -383,6 +384,34 @@ export class GeneratePrinterData {
                 order.pushLastPrints(orderChange);
                 orderChange = [orderChange];
             }
+||||||| 91b4254400603374114381b8e14b28648eb919b0
+        if (
+            !orderChange.addedQuantity.length &&
+            !orderChange.removedQuantity.length &&
+            !orderChange.noteUpdate.length &&
+            !orderChange.internal_note &&
+            !orderChange.general_customer_note &&
+            order.lastPrints.length
+        ) {
+            orderChange = [order.lastPrints.at(-1)];
+            reprint = true;
+        } else {
+            order.pushLastPrints(orderChange);
+            orderChange = [orderChange];
+=======
+        if (
+            !orderChange.addedQuantity.length &&
+            !orderChange.removedQuantity.length &&
+            !orderChange.noteUpdate.length &&
+            !orderChange.internal_note &&
+            !orderChange.general_customer_note &&
+            order.lastPrints.length
+        ) {
+            orderChange = [order.lastPrints.at(-1)];
+            reprint = true;
+        } else {
+            orderChange = [orderChange];
+>>>>>>> b0f6ff601f35327c3ef6050f8fd98628c2ab4467
         }
 
         if (reprint && opts.orderDone) {

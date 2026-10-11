@@ -461,3 +461,34 @@ export function closeRegisterPopupIsShown() {
         trigger: ".modal .close-pos-popup",
     };
 }
+<<<<<<< 0d3d14467ed0e75586e8a86f574d9acd4baa213f
+||||||| 91b4254400603374114381b8e14b28648eb919b0
+export function reloadData({ full = false } = {}) {
+    return [
+        clickMenuButton(),
+        mockClearStorage(),
+        clickMenuDropdownOption("Reload Data"),
+        clickBtn(full ? "Full" : "Limited", { expectUnloadPage: true }),
+    ];
+}
+=======
+export function reloadData({ full = false } = {}) {
+    return [
+        clickMenuButton(),
+        mockClearStorage(),
+        clickMenuDropdownOption("Reload Data"),
+        clickBtn(full ? "Full" : "Limited", { expectUnloadPage: true }),
+    ];
+}
+
+export function fakePrintChange() {
+    return {
+        trigger: "body",
+        run: () => {
+            posmodel.ticketPrinter.printOrderChanges = async function (args) {
+                return true;
+            };
+        },
+    };
+}
+>>>>>>> b0f6ff601f35327c3ef6050f8fd98628c2ab4467

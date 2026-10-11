@@ -3547,9 +3547,17 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_confirm_coupon_programs_one_by_one(self):
         """
+<<<<<<< 0d3d14467ed0e75586e8a86f574d9acd4baa213f
         Sync from UI is now syncing orders one by one, so the per-order loyalty
         processing (_process_loyalty) runs once per order: 6 times in this tour
         (6 orders created).
+||||||| 91b4254400603374114381b8e14b28648eb919b0
+        Sync from UI is now syncing orders one by one.
+        confirm_coupon_programs should be called 6 times in this tour (6 orders created).
+=======
+        Sync from UI is now syncing orders one by one.
+        confirm_coupon_programs should be called 7 times in this tour (6 orders created + one sent to preparation).
+>>>>>>> b0f6ff601f35327c3ef6050f8fd98628c2ab4467
         """
         self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
         pos_order = self.env.registry.models['pos.order']

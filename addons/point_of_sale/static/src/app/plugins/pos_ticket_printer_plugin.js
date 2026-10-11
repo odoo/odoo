@@ -330,9 +330,14 @@ export class PosTicketPrinterPlugin extends Plugin {
             const generator = this.getGenerator({ models: this.data.models, order });
             const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
             const changes = generator.generatePreparationData(categoryIds, opts);
+<<<<<<< 0d3d14467ed0e75586e8a86f574d9acd4baa213f:addons/point_of_sale/static/src/app/plugins/pos_ticket_printer_plugin.js
             const tickets = printer.is_split_per_product
                 ? this._splitTicketsPerProduct(changes, generator)
                 : changes;
+||||||| 91b4254400603374114381b8e14b28648eb919b0:addons/point_of_sale/static/src/app/services/pos_ticket_printer_service.js
+=======
+            const orderChanges = changes.length ? changes[0]._rawChange : null;
+>>>>>>> b0f6ff601f35327c3ef6050f8fd98628c2ab4467:addons/point_of_sale/static/src/app/services/pos_ticket_printer_service.js
 
             for (const ticket of tickets) {
                 rawChangeForRetry = rawChangeForRetry || ticket._rawChange;
@@ -368,6 +373,10 @@ export class PosTicketPrinterPlugin extends Plugin {
                 } else if (result.warningCode) {
                     this.displayPrinterWarning(result, printer.name);
                 }
+            }
+
+            if (isPrinted && orderChanges) {
+                order.pushLastPrints(orderChanges);
             }
         }
 
