@@ -60,6 +60,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
     def _get_shop_page_queries(self):
         res = defaultdict(int)
         res.update({
+            "account_account": 1,
             "account_account_tag": 2,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
@@ -103,6 +104,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
     def _get_product_page_queries(self):
         res = defaultdict(int)
         res.update({
+            "account_account": 1,
             "account_account_tag": 2,
             "account_tax": 2,
             "account_tax_repartition_line": 2,
@@ -146,7 +148,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
 
     @warmup
     def test_get_combination_info_route(self):
-        no_product_change_query_count = 31
+        no_product_change_query_count = 32
         if "website_sale_stock" in self.installed_modules:
             no_product_change_query_count += 1
         with self.assertQueryCount(no_product_change_query_count):
@@ -163,7 +165,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
 
         # When a new combination matches another product, additional templates and values are sent
         # to the client (tags, images, ...)
-        product_change_query_count = 43
+        product_change_query_count = 44
         if "website_sale_stock" in self.installed_modules:
             product_change_query_count += 1
         with self.assertQueryCount(product_change_query_count):
@@ -254,9 +256,8 @@ class TestWebsiteSalePerformanceWithPricelist(TestWebsiteSalePerformanceWithPric
         if "website_sale_subscription" not in self.installed_modules:
             # FIXME VFE magic comeback when sub is installed makes no **** sense
             # Seems to come from the `website_sale` template, not the sub override strangely
-            # The rules are fixed, product currency (through _get_main_company) does not have to be
-            # computed anymore
-            res["res_company"] -= 1
+            # All variants have a fixed price rule, so list_price is never read here
+            del res["account_account"]
         return res
 
     def test_product_page_generation(self):
