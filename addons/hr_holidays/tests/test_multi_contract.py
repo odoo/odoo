@@ -2,6 +2,7 @@
 
 from datetime import datetime, date
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 from odoo.tests import Form, freeze_time, tagged
 from odoo.addons.hr_holidays.tests.common import TestHolidayContract
 
@@ -473,3 +474,32 @@ class TestHolidaysMultiContract(TestHolidayContract):
         # Assert based on partial-time calendar
         self.assertEqual(leave.number_of_days, 1)
         self.assertEqual(leave.number_of_hours, 6)
+
+    def test_leave_in_past_version_with_different_duration_based_schedule(self):
+        """Check that a time off in a past version uses the working schedule of that version."""
+        full_week_calendar, without_tuesday_calendar = self.env['resource.calendar'].create([{
+            'name': 'Monday to Friday',
+            'attendance_ids': [
+                Command.create({'dayofweek': dayofweek, 'duration_hours': 8})
+                for dayofweek in ['0', '1', '2', '3', '4']
+            ],
+        }, {
+            'name': 'Monday to Friday without Tuesday',
+            'attendance_ids': [
+                Command.create({'dayofweek': dayofweek, 'duration_hours': 8})
+                for dayofweek in ['0', '2', '3', '4']
+            ],
+        }])
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee with a new working schedule',
+            'tz': 'Europe/Brussels',
+            'resource_calendar_id': full_week_calendar.id,
+            'date_version': date(2025, 1, 1),
+        })
+        employee.create_version({
+            'date_version': date(2025, 9, 1),
+            'resource_calendar_id': without_tuesday_calendar.id,
+        })
+
+        leave = self.create_leave(date(2025, 8, 5), date(2025, 8, 5), employee_id=employee.id)
+        self.assertEqual(leave.number_of_days, 1)
