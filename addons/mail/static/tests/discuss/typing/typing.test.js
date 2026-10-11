@@ -1,6 +1,6 @@
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     hover,
     insertText,
@@ -13,7 +13,13 @@ import {
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { animationFrame, describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
-import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    contains,
+    getService,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 import { Store } from "@mail/core/common/store_plugin";
@@ -230,9 +236,9 @@ test('"is typing" timeout should work even when 2 notify_typing happen at the ex
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await mailContains(".o-discuss-Typing", { text: "Demo is typing..." });
     await advanceTime(Store.OTHER_LONG_TYPING);
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing..." });
+    await mailContains(".o-discuss-Typing", { count: 0, text: "Demo is typing..." });
 });
 
 test('[text composer] other member typing status "is typing" refreshes of assuming no longer typing', async () => {
@@ -802,7 +808,7 @@ test("[text composer] chat: correspondent is typing in chat window", async () =>
     });
     await start();
     await openMessagingMenu();
-    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:count(1)").click();
     await waitForNone("[title='Demo is typing...']");
     // simulate receive typing notification from demo "is typing"
     withUser(userId, () =>
@@ -838,7 +844,7 @@ test("chat: correspondent is typing in chat window", async () => {
     const composerService = getService("mail.composer");
     composerService.setHtmlComposer();
     await openMessagingMenu();
-    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-NotificationItem:count(1)").click();
     await waitForNone("[title='Demo is typing...']");
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -997,8 +1003,8 @@ test("[text composer] switching to another channel triggers notify_typing to sto
     await openDiscuss(chatId);
     await insertText(".o-mail-Composer-input", "a");
     await expect.waitForSteps(["notify_typing:true"]);
-    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await click(".o-mail-NotificationItem:has(:text('general'))");
+    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('general')):count(1)").click();
     await advanceTime(SHORT_TYPING / 2);
     await expect.waitForSteps(["notify_typing:false"]);
 });
@@ -1030,8 +1036,8 @@ test("switching to another channel triggers notify_typing to stop", async () => 
     };
     await htmlInsertText(editor, "a");
     await expect.waitForSteps(["notify_typing:true"]);
-    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await click(".o-mail-NotificationItem:has(:text('general'))");
+    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('general')):count(1)").click();
     await advanceTime(SHORT_TYPING / 2);
     await expect.waitForSteps(["notify_typing:false"]);
 });

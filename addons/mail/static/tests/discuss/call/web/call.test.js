@@ -1,7 +1,6 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import {
-    click,
     defineMailModels,
     insertText,
     mockGetMedia,
@@ -17,6 +16,7 @@ import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { advanceTime, freezeTime, keyDown, test, waitFor, waitForNone } from "@odoo/hoot";
 import { patch } from "@web/core/utils/patch";
+import { contains } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 
@@ -34,7 +34,7 @@ test("no auto-call on joining chat", async () => {
         "mario"
     );
     await waitFor(".o_command_name:count(2)");
-    await click(".o_command_name:text('Mario')");
+    await contains(".o_command_name:text('Mario'):count(1)").click();
     await waitFor(".o-mail-MessagingMenuItem:has(:text('Mario')):count(1)");
     await waitForNone(".o-mail-Message");
     await waitForNone(".o-discuss-Call");
@@ -51,11 +51,11 @@ test("no auto-call on joining group chat", async () => {
     await start();
     await openDiscuss();
     await triggerHotkey("control+k");
-    await click(".o_command_name:text(Mario)");
+    await contains(".o_command_name:text(Mario):count(1)").click();
     await waitFor(".o-mail-DiscussContent-threadName[title='Mario']:count(1)");
-    await click("[title='Invite People']");
-    await click(".o-discuss-ChannelInvitation-selectable:has(:text(Luigi))");
-    await click("button:text('Create Group Chat')");
+    await contains("[title='Invite People']:count(1)").click();
+    await contains(".o-discuss-ChannelInvitation-selectable:has(:text(Luigi)):count(1)").click();
+    await contains("button:text('Create Group Chat'):count(1)").click();
     await waitFor(
         ".o-mail-MessagingMenuItem:has(:text('Mitchell Admin, Mario, and Luigi')):count(1)"
     );
@@ -94,10 +94,10 @@ test("Can push-to-talk", async () => {
         await advanceTime(100);
     }
     await subscribed;
-    await click("[title='Start Call']");
+    await contains("[title='Start Call']:count(1)").click();
     await advanceTime(1000);
     await waitFor(".o-discuss-Call:count(1)");
-    await click(".o-discuss-Call");
+    await contains(".o-discuss-Call:count(1)").click();
     await advanceTime(1000);
     await keyDown("f");
     await advanceTime(PTT_RELEASE_DURATION);
@@ -106,7 +106,7 @@ test("Can push-to-talk", async () => {
     window.dispatchEvent(new Event("blur"));
     await advanceTime(PTT_RELEASE_DURATION + 1000);
     await waitFor(".o-discuss-CallParticipantCard:not(:has(.o-isTalking)):count(1)");
-    await click(".o-discuss-Call");
+    await contains(".o-discuss-Call:count(1)").click();
     await advanceTime(1000);
     await keyDown("f");
     await advanceTime(PTT_RELEASE_DURATION);

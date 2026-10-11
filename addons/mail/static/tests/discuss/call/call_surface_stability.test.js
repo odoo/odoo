@@ -27,7 +27,7 @@ import {
     waitFor,
     waitForNone,
 } from "@odoo/hoot-dom";
-import { getService } from "@web/../tests/web_test_helpers";
+import { contains, getService } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { Call } from "@mail/discuss/call/common/call";
 import { INSET_MARGIN } from "@mail/discuss/call/common/stage/layout_engine";
@@ -291,12 +291,12 @@ test("swapping the main and the inset stream keeps both video elements", async (
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Share Screen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Share Screen']:count(1)").click();
     await waitFor("video[type='screen']:not(.o-inset):count(1)");
     // Focusing the shared screen makes the controller float, i.e. hide until the pointer moves.
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click("[title='Turn camera on']");
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor("video[type='screen']:not(.o-inset):count(1)");
     await waitFor("video[type='camera'].o-inset:count(1)");
     const screenEl = queryFirst(
@@ -310,7 +310,7 @@ test("swapping the main and the inset stream keeps both video elements", async (
 
     // Clicking the inset swaps which stream is main: the screen card goes to the inset and the
     // camera card takes the main window.
-    await click("video[type='camera'].o-inset");
+    await contains("video[type='camera'].o-inset:count(1)").click();
     await waitFor("video[type='screen'].o-inset:count(1)");
     await waitFor("video[type='camera']:not(.o-inset):count(1)");
     expect(
@@ -330,10 +330,10 @@ test("dragging the inset moves it to the corner it is dropped in", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
-    await click("[title='Share Screen']");
+    await contains("[title='Start Call']:count(1)").click();
+    await contains("[title='Share Screen']:count(1)").click();
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click("[title='Turn camera on']");
+    await contains("[title='Turn camera on']:count(1)").click();
     await waitFor("video[type='camera'].o-inset:count(1)");
     const insetEl = queryFirst(".o-discuss-CallParticipantCard.o-inset");
     const mainEl = queryFirst(".o-discuss-CallParticipantCard:has(video[type='screen'])");
@@ -435,8 +435,8 @@ test("a participant joining mid-call keeps the video element of everyone else", 
 test("resize keeps every video element and only changes geometry", async () => {
     const { remotes } = await openMeetingWithParticipants(["Alice", "Bob", "Charlie"]);
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
@@ -476,8 +476,8 @@ test("resize keeps every video element and only changes geometry", async () => {
 test("several changes in the same task lay the stage out once", async () => {
     const { remotes } = await openMeetingWithParticipants(["Alice", "Bob", "Charlie"]);
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
@@ -524,8 +524,8 @@ test("a card has its place on the very frame it appears", async () => {
         "Bob",
     ]);
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
@@ -552,8 +552,8 @@ test("a card has its place on the very frame it appears", async () => {
 test("every card of a tiled grid stays inside the stage", async () => {
     const { remotes } = await openMeetingWithParticipants(["Alice", "Bob"]);
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
@@ -562,8 +562,8 @@ test("every card of a tiled grid stays inside the stage", async () => {
     );
     await waitFor(".o-discuss-CallParticipantCard[aria-label='Bob'] video[type='camera']:count(1)");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='change-layout']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='change-layout']:count(1)").click();
     // The layout change renders on this frame and lays out on the microtask that render queues.
     await animationFrame();
 
@@ -587,8 +587,8 @@ test("every card of a tiled grid stays inside the stage", async () => {
 test("every card of a sidebar column stays inside the stage", async () => {
     const { remotes } = await openMeetingWithParticipants(["Alice", "Bob"], "sidebar");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await remotes.Bob.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
@@ -624,8 +624,8 @@ test("recent speakers share the spotlight", async () => {
     const names = ["Alice", "Bob", "Charlie", "Dave", "Eve"];
     const { remotes } = await openMeetingWithParticipants(names, "tiled");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     // Start the cameras while the grid still shows everyone: the spotlight renders only whoever
     // holds the stage, so the others would have no card to give a stream to.
@@ -725,8 +725,8 @@ for (const layout of ["spotlight", "sidebar"]) {
     test(`a sole recent speaker takes focus in ${layout}`, async () => {
         const { remotes } = await openMeetingWithParticipants(["Alice", "Bob"], layout);
         await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-        await click(".o-discuss-CallActionList button[title='More']");
-        await click("[name='fullscreen']");
+        await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+        await contains("[name='fullscreen']:count(1)").click();
         await waitFor(".o-mail-Meeting:count(1)");
         const channel = getService("discuss.rtc").channel;
         expect(channel.activeRtcSession).toBe(
@@ -750,8 +750,8 @@ for (const layout of ["spotlight", "sidebar"]) {
     test(`a presenter keeps focus while another participant talks in ${layout}`, async () => {
         const { remotes } = await openMeetingWithParticipants(["Alice", "Bob"], layout);
         await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-        await click(".o-discuss-CallActionList button[title='More']");
-        await click("[name='fullscreen']");
+        await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+        await contains("[name='fullscreen']:count(1)").click();
         await waitFor(".o-mail-Meeting:count(1)");
         await remotes.Alice.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
         await waitFor("video[type='screen']:not(.o-inset):count(1)");
@@ -781,8 +781,8 @@ for (const layout of ["spotlight", "sidebar"]) {
 test("a split spotlight follows its last remaining speaker", async () => {
     const { remotes } = await openMeetingWithParticipants(["Alice", "Bob"], "spotlight");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     getService("discuss.rtc").updateSessionInfo({
         [remotes.Alice.sessionId]: { isTalking: true },
@@ -880,8 +880,8 @@ test("a small screen renders only the cards it has room for", async () => {
     const names = ["Alice", "Bob", "Charlie", "Dave", "Eve", "Fay", "Gus", "Hal", "Ivy"];
     await openMeetingWithParticipants(names, "tiled");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     // The rest collapse into the indicator the chat window already used, and get no surface at all.
     await waitFor(".o-discuss-Call-moreIndicator:count(1)");
@@ -898,8 +898,8 @@ test("the card cap never hides whoever is talking", async () => {
     const names = ["Alice", "Bob", "Charlie", "Dave", "Eve", "Fay", "Gus", "Hal", "Ivy"];
     const { remotes } = await openMeetingWithParticipants(names, "tiled");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await waitFor(".o-discuss-Call-moreIndicator:count(1)");
     expect(
@@ -924,8 +924,8 @@ test("someone sharing their screen gets a card before their video arrives", asyn
     const names = ["Alice", "Bob", "Charlie", "Dave", "Eve", "Fay", "Gus", "Hal", "Ivy"];
     const { remotes } = await openMeetingWithParticipants(names, "sidebar");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await waitFor(".o-discuss-Call-moreIndicator:count(1)");
     // Alice is the auto-focus target, so she holds the main window and the sidebar column takes
@@ -956,8 +956,8 @@ test("the overflow indicator takes a sidebar slot rather than half the main wind
     const names = ["Alice", "Bob", "Charlie", "Dave", "Eve", "Fay", "Gus", "Hal", "Ivy"];
     const { remotes } = await openMeetingWithParticipants(names, "sidebar");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
-    await click(".o-discuss-CallActionList button[title='More']");
-    await click("[name='fullscreen']");
+    await contains(".o-discuss-CallActionList button[title='More']:count(1)").click();
+    await contains("[name='fullscreen']:count(1)").click();
     await waitFor(".o-mail-Meeting:count(1)");
     await remotes.Alice.updateUpload("screen", createVideoStream().getVideoTracks()[0]);
     await waitFor(".o-discuss-Call-moreIndicator:count(1)");

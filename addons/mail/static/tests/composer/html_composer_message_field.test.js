@@ -25,7 +25,7 @@ import {
 import { patch } from "@web/core/utils/patch";
 import {
     click,
-    contains as waitForContains,
+    contains as mailContains,
     defineMailModels,
     mailModels,
     openFormView,
@@ -119,7 +119,7 @@ test("media dialog: upload", async function () {
     await press("Enter");
 
     // upload test
-    await waitForContains(".modal-title", { text: "Select a media" });
+    await mailContains(".modal-title", { text: "Select a media" });
     await waitForNone("[name='attachment_ids'] .o_attachment[title='test.jpg']");
     const fileInputs = queryAll(".o_select_media_dialog input.d-none.o_file_input");
     const fileB64 =

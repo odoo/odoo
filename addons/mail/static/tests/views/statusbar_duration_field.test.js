@@ -1,5 +1,5 @@
 import {
-    contains,
+    contains as mailContains,
     mailModels,
     openFormView,
     start,
@@ -42,10 +42,10 @@ test("status bar duration field used in form view", async () => {
     await openFormView("res.partner", partnerId, {
         arch: `<form><field name="stage_id" widget="statusbar_duration"/></form>`,
     });
-    await contains("span[title='7 days, 30 minutes']", {
+    await mailContains("span[title='7 days, 30 minutes']", {
         parent: [".o_statusbar_status button:has(:text('New'))"],
     });
-    await contains("span[title='3 hours']", { parent: ["button:has(:text('Qualified'))"] });
+    await mailContains("span[title='3 hours']", { parent: ["button:has(:text('Qualified'))"] });
     await waitFor("button:text('Proposition'):count(1)");
-    await contains("span[title='2 days, 5 hours']", { parent: ["button:has(:text('Won'))"] });
+    await mailContains("span[title='2 days, 5 hours']", { parent: ["button:has(:text('Won'))"] });
 });

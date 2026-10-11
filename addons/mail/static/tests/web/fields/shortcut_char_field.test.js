@@ -1,6 +1,6 @@
-import { click, defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor } from "@odoo/hoot";
-import { getService, switchView } from "@web/../tests/web_test_helpers";
+import { contains, getService, switchView } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 describe.current.tags("desktop");
@@ -29,7 +29,7 @@ test('shortcut widget displays the appropriate "::" icon across views', async ()
     await switchView("kanban");
     await waitFor(".o_kanban_view .o_content:count(1)");
     await waitFor(`${selector}:text(':: hello'):count(1)`);
-    await click(".o_control_panel_main_buttons .o-kanban-button-new");
+    await contains(".o_control_panel_main_buttons .o-kanban-button-new:count(1)").click();
     await waitFor(`.o_form_view .o_content:count(1)`);
     await waitFor(`${selector} input[type='text']:count(1)`);
     await waitFor(`${selector}:text('::'):count(1)`);

@@ -1,7 +1,7 @@
 import {
     SIZES,
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     inputFiles,
     onRpcBefore,
@@ -13,7 +13,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mockTimeZone } from "@odoo/hoot-mock";
-import { onRpc, pagerNext, pagerPrevious } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, pagerNext, pagerPrevious } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -134,10 +134,10 @@ test("scroll to attachment box when toggling on", async () => {
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Message:count(30)");
     await scroll(".o-mail-Chatter", "bottom");
-    await click("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach files']:enabled:count(1)").click();
     await waitFor(".o-mail-AttachmentBox:count(1)");
-    await contains(".o-mail-Chatter", { scroll: 0 });
-    await contains(".o-mail-AttachmentBox", { visible: true });
+    await mailContains(".o-mail-Chatter", { scroll: 0 });
+    await mailContains(".o-mail-AttachmentBox", { visible: true });
 });
 
 test("do not auto-scroll to attachment box when initially open", async () => {
@@ -165,7 +165,7 @@ test("do not auto-scroll to attachment box when initially open", async () => {
     });
     await waitFor(".o-mail-Message:count(1)");
     // weak test, no guarantee that we waited long enough for the potential scroll to happen
-    await contains(".o_content", { scroll: 0 });
+    await mailContains(".o_content", { scroll: 0 });
 });
 
 test("attachment box should order attachments from newest to oldest", async () => {
@@ -180,7 +180,7 @@ test("attachment box should order attachments from newest to oldest", async () =
     await start();
     await openFormView("res.partner", partnerId);
     await waitFor(".o-mail-Chatter [aria-label='Attach files']:text('3'):count(1)");
-    await click(".o-mail-Chatter [aria-label='Attach files']"); // open attachment box
+    await contains(".o-mail-Chatter [aria-label='Attach files']:enabled:count(1)").click(); // open attachment box
     await waitFor(".o-mail-AttachmentContainer:eq(0):has(:text('C.txt')):count(1)");
     await waitFor(".o-mail-AttachmentContainer:eq(1):has(:text('B.txt')):count(1)");
     await waitFor(".o-mail-AttachmentContainer:eq(2):has(:text('A.txt')):count(1)");
@@ -266,11 +266,11 @@ test("removing a copy from the dropdown keeps the other copies", async () => {
             </form>`,
     });
     await click(".o-mail-Attachment-duplicateCounter", { text: "3" });
-    await click(".o-mail-Attachment-duplicate:eq(0) [title='Remove']");
+    await contains(".o-mail-Attachment-duplicate:eq(0) [title='Remove']:count(1)").click();
     await waitFor(
         ".modal-body:text('Are you sure you want to delete \"signature.png\"? This action cannot be undone.'):count(1)"
     );
-    await click(".modal-footer .btn-primary");
+    await contains(".modal-footer .btn-primary:count(1)").click();
     await waitFor(".o-mail-AttachmentContainer[aria-label='signature.png']:count(1)");
     await waitFor(".o-mail-Attachment-duplicateCounter:text('2'):count(1)");
     await waitFor(".o-mail-Chatter [aria-label='Attach files']:text('2'):count(1)");
@@ -435,10 +435,10 @@ test("discarding the selection restores the attach files button", async () => {
                 <chatter open_attachments="True"/>
             </form>`,
     });
-    await click(".o-mail-Chatter-selectFiles");
-    await click(".o-mail-AttachmentContainer[aria-label='signature.png']");
+    await contains(".o-mail-Chatter-selectFiles:count(1)").click();
+    await contains(".o-mail-AttachmentContainer[aria-label='signature.png']:count(1)").click();
     await waitFor(".o-mail-Attachment-selectCheckbox:checked:count(1)");
-    await click(".o-mail-Chatter-discardSelection");
+    await contains(".o-mail-Chatter-discardSelection:count(1)").click();
     await waitFor(".o-mail-Chatter-attachmentActions button:text('Attach files'):count(1)");
     await waitForNone(".o-mail-Attachment-selectCheckbox");
 });
@@ -467,7 +467,7 @@ test("attachment box auto-closed on switch to record wih no attachments", async 
         resIds: [partnerId_1, partnerId_2],
     });
     await waitFor(".o-mail-AttachmentBox:count(1)");
-    await click(".o_pager_next");
+    await contains(".o_pager_next:count(1)").click();
     await waitForNone(".o-mail-AttachmentBox");
 });
 
@@ -524,7 +524,7 @@ test("attachment should be uploaded on the correct record when using the pager n
     await waitFor("button[aria-label='Attach files']:not(:has(sup)):count(1)");
     await pagerPrevious();
     await click("button[aria-label='Attach files']", { text: "1" });
-    await contains(".o-mail-AttachmentCard", { text: "A.jpeg" });
+    await mailContains(".o-mail-AttachmentCard", { text: "A.jpeg" });
     // Second upload
     uploadDeferred = Promise.withResolvers();
     await click("button[aria-label='Attach files']");
@@ -536,6 +536,6 @@ test("attachment should be uploaded on the correct record when using the pager n
     await waitFor("button[aria-label='Attach files']:not(:has(sup)):count(1)");
     await pagerPrevious();
     await click("button[aria-label='Attach files']", { text: "2" });
-    await contains(".o-mail-AttachmentCard", { text: "A.jpeg" });
-    await contains(".o-mail-AttachmentCard", { text: "B.jpeg" });
+    await mailContains(".o-mail-AttachmentCard", { text: "A.jpeg" });
+    await mailContains(".o-mail-AttachmentCard", { text: "B.jpeg" });
 });

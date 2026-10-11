@@ -1,6 +1,5 @@
 import {
-    click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     insertText,
     openDiscuss,
@@ -10,7 +9,7 @@ import {
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
+import { Command, contains, getService, serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 import { Composer } from "@mail/core/common/composer";
@@ -71,10 +70,10 @@ test("[text composer] use a command for a specific channel type", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Composer-suggestionList:count(1)");
     await waitForNone(".o-mail-Composer-suggestionList .o-open");
-    await contains(".o-mail-Composer-input", { value: "" });
+    await mailContains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "/");
-    await click(".o-mail-Composer-suggestion strong:text('who')");
-    await contains(".o-mail-Composer-input", { value: "/who " });
+    await contains(".o-mail-Composer-suggestion strong:text('who'):count(1)").click();
+    await mailContains(".o-mail-Composer-input", { value: "/who " });
 });
 
 test.tags("html composer");
@@ -93,7 +92,7 @@ test("use a command for a specific channel type", async () => {
         editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
     };
     await htmlInsertText(editor, "/");
-    await click(".o-mail-Composer-suggestion strong:text('who')");
+    await contains(".o-mail-Composer-suggestion strong:text('who'):count(1)").click();
     await waitFor(".o-mail-Composer-html.odoo-editor-editable:text('/who'):count(1)");
 });
 
@@ -107,9 +106,9 @@ test("[text composer] command suggestion should only open if command is the firs
     await openDiscuss(channelId);
     await waitFor(".o-mail-Composer-suggestionList:count(1)");
     await waitForNone(".o-mail-Composer-suggestionList .o-open");
-    await contains(".o-mail-Composer-input", { value: "" });
+    await mailContains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "bluhbluh ");
-    await contains(".o-mail-Composer-input", { value: "bluhbluh " });
+    await mailContains(".o-mail-Composer-input", { value: "bluhbluh " });
     await insertText(".o-mail-Composer-input", "/");
     // weak test, no guarantee that we waited long enough for the potential list to open
     await waitForNone(".o-mail-Composer-suggestionList .o-open");
@@ -203,13 +202,13 @@ test("Sort partner suggestions by recent chats", async () => {
         expect.step("new_message")
     );
     await openDiscuss();
-    await click(".o-mail-NotificationItem:has(:text('User 2'))");
+    await contains(".o-mail-NotificationItem:has(:text('User 2')):count(1)").click();
     await insertText(".o-mail-Composer-input", "This is a test");
     await press("Enter");
     await waitFor(".o-mail-Message-content:text('This is a test'):count(1)");
     await expect.waitForSteps(["new_message"]);
-    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
-    await click(".o-mail-NotificationItem:has(:text('General'))");
+    await contains(".o-mail-MessagingMenu-tab[data-id='channel']:count(1)").click();
+    await contains(".o-mail-NotificationItem:has(:text('General')):count(1)").click();
     await insertText(".o-mail-Composer-input[placeholder='Message #General…']", "@");
     await insertText(".o-mail-Composer-input", "User");
     await waitFor(".o-mail-Composer-suggestion strong:count(3)");
@@ -311,7 +310,7 @@ test("mention suggestion displays OdooBot before archived partners", async () =>
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await waitFor(".o-mail-Composer-suggestion:count(3)");
-    await contains(".o-mail-Composer-suggestion:has(:text('OdooBot'))", {
+    await mailContains(".o-mail-Composer-suggestion:has(:text('OdooBot'))", {
         before: [
             ".o-mail-Composer-suggestion:has(:text('Mitchell Admin'))",
             {

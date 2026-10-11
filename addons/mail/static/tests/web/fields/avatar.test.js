@@ -1,6 +1,6 @@
-import { click, defineMailModels, start } from "@mail/../tests/mail_test_helpers";
+import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
-import { mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
@@ -22,7 +22,7 @@ test("basic rendering", async () => {
     await waitFor(".o-mail-Avatar span:count(1)");
     await waitFor(".o-mail-Avatar span:text('User display name'):count(1)");
     await waitForNone(".o_avatar_card");
-    await click(".o-mail-Avatar img");
+    await contains(".o-mail-Avatar img:count(1)").click();
     await waitFor(".o_avatar_card:count(1)");
 });
 

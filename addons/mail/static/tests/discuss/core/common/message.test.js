@@ -1,5 +1,4 @@
 import {
-    click,
     defineMailModels,
     setupChatHub,
     start,
@@ -8,6 +7,7 @@ import {
 
 import { describe, test, waitFor } from "@odoo/hoot";
 import { getOrigin } from "@web/core/utils/urls";
+import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -39,11 +39,11 @@ test("clicking message link does not swap open chat window", async () => {
     await start();
     await waitFor(".o-mail-ChatWindow:eq(0) .o-mail-ChatWindow-header:contains(R&D):count(1)");
     await waitFor(".o-mail-ChatWindow:eq(1) .o-mail-ChatWindow-header:contains(Support):count(1)");
-    await click("a.o_message_redirect:contains(R&D)");
+    await contains("a.o_message_redirect:contains(R&D):count(1)").click();
     await waitFor(".o-mail-Message.o-highlighted:contains(Hello R&D):count(1)");
     await waitFor(".o-mail-ChatWindow:eq(0) .o-mail-ChatWindow-header:contains(R&D):count(1)");
     await waitFor(".o-mail-ChatWindow:eq(1) .o-mail-ChatWindow-header:contains(Support):count(1)");
-    await click("a.o_message_redirect:contains(Support)");
+    await contains("a.o_message_redirect:contains(Support):count(1)").click();
     await waitFor(".o-mail-Message.o-highlighted:contains(Hello from there):count(1)");
     await waitFor(".o-mail-ChatWindow:eq(0) .o-mail-ChatWindow-header:contains(R&D):count(1)");
     await waitFor(".o-mail-ChatWindow:eq(1) .o-mail-ChatWindow-header:contains(Support):count(1)");

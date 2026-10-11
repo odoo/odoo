@@ -1,7 +1,6 @@
 import { onWebsocketEvent } from "@bus/../tests/mock_websocket";
 import { BusPlugin } from "@bus/services/bus_plugin";
 import {
-    click,
     defineMailModels,
     openDiscuss,
     start,
@@ -9,7 +8,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { getService, makeTestApp } from "@web/../tests/web_test_helpers";
+import { contains, getService, makeTestApp } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 describe.current.tags("desktop");
@@ -21,7 +20,7 @@ test("Member list and Pinned Messages Panel menu are exclusive", async () => {
     await start();
     await openDiscuss(channelId);
     await waitFor(".o-discuss-ChannelMemberList:count(1)"); // member list open by default
-    await click("[title='Pinned Messages']");
+    await contains("[title='Pinned Messages']:count(1)").click();
     await waitFor(".o-discuss-PinnedMessagesPanel:count(1)");
     await waitForNone(".o-discuss-ChannelMemberList");
 });

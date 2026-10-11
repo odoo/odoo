@@ -1,5 +1,4 @@
 import {
-    click,
     defineMailModels,
     openDiscuss,
     start,
@@ -7,7 +6,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor } from "@odoo/hoot";
 
-import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
+import { Command, contains, getService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -53,7 +52,7 @@ test("call participants and invitees are grouped in their own box", async () => 
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     await waitFor(".o-discuss-ChannelMemberList:count(1)");
     await waitFor(
         ".o-discuss-ChannelMemberList-group h6:text('In this call - 2') + div .o-discuss-ChannelMember:text('Mitchell Admin'):count(1)"
@@ -102,7 +101,7 @@ test("can see who is talking among call participants", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Join Call']");
+    await contains("[title='Join Call']:count(1)").click();
     // Talking indicator shows up while Alice is actually talking.
     const store = getService("mail.store");
     store["discuss.channel.rtc.session"].get(aliceSessionId).isTalking = true;

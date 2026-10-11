@@ -1,7 +1,7 @@
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import {
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     hover,
     onRpcBefore,
@@ -12,7 +12,7 @@ import {
 import { expect, test } from "@odoo/hoot";
 import { pointerDown, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { contains, serverState } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 
@@ -70,19 +70,19 @@ test("translation of email message", async () => {
     }));
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("span:text('Al mal tiempo, buena cara.')", {
+    await mailContains("span:text('Al mal tiempo, buena cara.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
     await hover(".o-mail-Message");
     await click("button[title='Expand']");
     await click(".o-dropdown-item:contains('Translate')");
-    await contains("span:text('To bad weather, good face.')", {
+    await mailContains("span:text('To bad weather, good face.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
-    await contains(".o-mail-Message-body:text('(Translated from: Spanish)')", {});
+    await mailContains(".o-mail-Message-body:text('(Translated from: Spanish)')", {});
     await click("button[title='Expand']");
     await click(".o-dropdown-item:contains('Initial Language')");
-    await contains("span:text('Al mal tiempo, buena cara.')", {
+    await mailContains("span:text('Al mal tiempo, buena cara.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
 });
@@ -155,7 +155,7 @@ test("Toggle message translation on mobile", async () => {
     await waitFor(".o-mail-Message:count(1)");
     await pointerDown(".o-mail-Message");
     await advanceTime(LONG_PRESS_DELAY);
-    await click("button:contains('Translate')");
+    await contains("button:contains('Translate'):count(1)").click();
     await waitFor(
         ".o-mail-Message-body:text('To bad weather, good face. (Translated from: Spanish)'):count(1)"
     );

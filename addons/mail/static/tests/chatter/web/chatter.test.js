@@ -2,7 +2,7 @@ import {
     SIZES,
     STORE_FETCH_ROUTES,
     click,
-    contains,
+    contains as mailContains,
     defineMailModels,
     dragenterFiles,
     dropFiles,
@@ -27,6 +27,7 @@ import { advanceTime } from "@odoo/hoot-mock";
 import { range } from "@web/core/utils/numbers";
 import {
     clickSave,
+    contains,
     defineActions,
     getService,
     mockService,
@@ -215,7 +216,7 @@ test("No attachment loading spinner when switching from loading record to creati
     await waitFor("button[aria-label='Attach files']:count(1)");
     await advanceTime(DELAY_FOR_SPINNER);
     await waitFor("button[aria-label='Attach files'] .oi-spin:count(1)");
-    await click(".o_control_panel_main_buttons .o_form_button_create");
+    await contains(".o_control_panel_main_buttons .o_form_button_create:count(1)").click();
     await waitForNone("button[aria-label='Attach files'] .oi-spin");
     await expect.waitForSteps(["before mail.thread"]);
     resolve();
@@ -245,7 +246,7 @@ test("Textarea content is kept when switching from aside to bottom", async () =>
     await insertText(".o-mail-Composer-input", "Hello world !");
     await patchUiSize({ size: SIZES.LG });
     await waitFor(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input:count(1)");
-    await contains(".o-mail-Composer-input", { value: "Hello world !" });
+    await mailContains(".o-mail-Composer-input", { value: "Hello world !" });
 });
 
 test("Composer type is kept when switching from aside to bottom", async () => {
@@ -254,7 +255,7 @@ test("Composer type is kept when switching from aside to bottom", async () => {
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    await click("button:text('Log note')");
+    await contains("button:text('Log note'):enabled:count(1)").click();
     await patchUiSize({ size: SIZES.LG });
     await waitFor(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input:count(1)");
     await waitFor("button.btn-primary:text('Log note'):count(1)");
@@ -319,7 +320,7 @@ test("chatter: dropping attachments should close pinned messages and search pane
     const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
     await start();
     await openFormView("res.partner", partnerId);
-    await click("[title='Search Messages']");
+    await contains("[title='Search Messages']:count(1)").click();
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await dragenterFiles(".o-mail-Chatter", [text]);
     await dropFiles(".o-Dropzone", [text]);
@@ -327,7 +328,7 @@ test("chatter: dropping attachments should close pinned messages and search pane
         ".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text.txt')):count(1)"
     );
     await waitForNone(".o-mail-SearchMessageInput");
-    await click("button[title='Pinned Messages']");
+    await contains("button[title='Pinned Messages']:count(1)").click();
     await waitFor(".o-mail-pinnedMessages:count(1)");
     await dragenterFiles(".o-mail-Chatter", [text2]);
     await dropFiles(".o-Dropzone", [text2]);
@@ -433,7 +434,7 @@ async function postMesssageShortcutInChatter({ isMacOS = false } = {}) {
     }
     await start();
     await openFormView("res.partner", partnerId);
-    await click("button:text('Send message')");
+    await contains("button:text('Send message'):enabled:count(1)").click();
     await waitForNone(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter"); // hot-key converts control to command
@@ -528,7 +529,7 @@ test("show attachment box", async () => {
     await waitFor("button[aria-label='Attach files']:count(1)");
     await waitFor("button[aria-label='Attach files']:text('2'):count(1)");
     await waitForNone(".o-mail-AttachmentBox");
-    await click("button[aria-label='Attach files']");
+    await contains("button[aria-label='Attach files']:enabled:count(1)").click();
     await waitFor(".o-mail-AttachmentBox:count(1)");
 });
 
@@ -559,7 +560,7 @@ test('do not post message with "Enter" keyboard shortcut', async () => {
     const partnerId = pyEnv["res.partner"].create({});
     await start();
     await openFormView("res.partner", partnerId);
-    await click("button:text('Send message')");
+    await contains("button:text('Send message'):enabled:count(1)").click();
     await waitForNone(".o-mail-Message");
     await insertText(".o-mail-Composer-input", "Test");
     triggerHotkey("Enter");
@@ -603,7 +604,7 @@ test("scroll position is kept when navigating from one record to another", async
     await waitFor(".o-mail-Message:count(20)");
     const clientHeight1 = queryFirst(".o-mail-Chatter:first").clientHeight; // client height might change (cause: breadcrumb)
     const scrollValue1 = queryFirst(".o-mail-Chatter:first").scrollHeight / 2;
-    await contains(".o-mail-Chatter", { scroll: 0 });
+    await mailContains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", scrollValue1);
     await openFormView("res.partner", partnerId_2);
     await waitFor(".o-mail-Message:count(30)");
@@ -613,11 +614,15 @@ test("scroll position is kept when navigating from one record to another", async
     await openFormView("res.partner", partnerId_1);
     await waitFor(".o-mail-Message:count(20)");
     const clientHeight3 = queryFirst(".o-mail-Chatter:first").clientHeight;
-    await contains(".o-mail-Chatter", { scroll: scrollValue1 - (clientHeight3 - clientHeight1) });
+    await mailContains(".o-mail-Chatter", {
+        scroll: scrollValue1 - (clientHeight3 - clientHeight1),
+    });
     await openFormView("res.partner", partnerId_2);
     await waitFor(".o-mail-Message:count(30)");
     const clientHeight4 = queryFirst(".o-mail-Chatter:first").clientHeight;
-    await contains(".o-mail-Chatter", { scroll: scrollValue2 - (clientHeight4 - clientHeight2) });
+    await mailContains(".o-mail-Chatter", {
+        scroll: scrollValue2 - (clientHeight4 - clientHeight2),
+    });
 });
 
 test("basic chatter rendering", async () => {
@@ -650,7 +655,7 @@ test('chatter just contains "creating a new record" message during the creation 
     };
     await start({ serverData: { views } });
     await openFormView("res.partner", partnerId);
-    await click(".o_control_panel_main_buttons .o_form_button_create");
+    await contains(".o_control_panel_main_buttons .o_form_button_create:count(1)").click();
     await waitFor(".o-mail-Message:count(1)");
     await waitFor(".o-mail-Message-body:text('Creating a new record...'):count(1)");
 });
@@ -721,7 +726,7 @@ test("chatter updating", async () => {
             </form>`,
         resIds: [partnerId_1, partnerId_2],
     });
-    await click(".o_pager_next");
+    await contains(".o_pager_next:count(1)").click();
     await waitFor(".o-mail-Message:count(1)");
 });
 
@@ -763,9 +768,9 @@ test("post message on draft record", async () => {
                 <chatter/>
             </form>`,
     });
-    await click("button:text('Send message')");
+    await contains("button:text('Send message'):enabled:count(1)").click();
     await insertText(".o-mail-Composer-input", "Test");
-    await click(".o-mail-Composer button[aria-label='Send']:enabled");
+    await contains(".o-mail-Composer button[aria-label='Send']:enabled:count(1)").click();
     await waitFor(".o-mail-Message:count(1)");
     await waitFor(".o-mail-Message-content:text('Test'):count(1)");
 });
@@ -797,7 +802,7 @@ test("schedule activities on draft record should prompt with scheduling an activ
                 <chatter/>
             </form>`,
     });
-    await click("button:text('Activity')");
+    await contains("button:text('Activity'):enabled:count(1)").click();
     await wizardOpened;
     await expect.waitForSteps(["mail.activity.schedule"]);
 });
@@ -836,9 +841,9 @@ test("Mentions in composer should still work when using pager", async () => {
     await patchUiSize({ size: SIZES.LG });
     await start();
     await openFormView("res.partner", partnerId_1, { resIds: [partnerId_1, partnerId_2] });
-    await click("button:text('Send message')");
+    await contains("button:text('Send message'):enabled:count(1)").click();
     await waitFor(".o-mail-Composer-input:count(1)");
-    await click(".o_pager_next");
+    await contains(".o_pager_next:count(1)").click();
     await waitFor(".o_pager:text(2 / 2):count(1)"); // ensures we correctly switched to the second record
     await insertText(".o-mail-Composer-input", "@");
     // all active records in DB with a name: Mitchell Admin | Hermit
