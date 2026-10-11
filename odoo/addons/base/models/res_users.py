@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
-import binascii
 import collections
 import contextlib
 import datetime
@@ -9,7 +8,7 @@ import hmac
 import ipaddress
 import json
 import logging
-import os
+import secrets
 import time
 from functools import wraps
 from hashlib import sha256
@@ -1592,9 +1591,11 @@ class ChangePasswordOwn(models.TransientModel):
         # would be great to update the session id in-place, but it seems dicey
         return {'type': 'ir.actions.client', 'tag': 'reload'}
 
+
 # API keys support
-API_KEY_SIZE = 20 # in bytes
-INDEX_SIZE = 8 # in hex digits, so 4 bytes, or 20% of the key
+API_KEY_SIZE = 20  # in bytes
+API_KEY_SUFFIX = '_oak'
+INDEX_SIZE = 8  # in hex digits, so 4 bytes, or 20% of the key
 KEY_CRYPT_CONTEXT = CryptContext(
     # default is 29000 rounds which is 25~50ms, which is probably unnecessary
     # given in this case all the keys are completely random data: dictionary
@@ -1691,7 +1692,7 @@ class ResUsersApikeys(models.Model):
         """
         self._check_expiration_date(expiration_date)
         # no need to clear the LRU when *adding* a key, only when removing
-        k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
+        k = secrets.token_hex(API_KEY_SIZE) + API_KEY_SUFFIX
         self.env.cr.execute(SQL("""
             INSERT INTO %s (name, user_id, scope, expiration_date, key, index)
             VALUES (%s, %s, %s, %s, %s, %s)
