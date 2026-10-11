@@ -5043,18 +5043,30 @@ class BaseModel(metaclass=MetaModel):
             # bounds and scans the table. The range below selects the same rows
             # from the index: parent_path ends with '/' and '0' is the next
             # character, so left(parent_path, -1) || '0' closes the range.
+            # The range only holds when the collation compares strings
+            # character by character: others, like glibc's en_US.UTF-8, ignore
+            # the '/' and sort '12/14/' after '120', so they keep the LIKE.
+            if self.pool.has_bytewise_collation:
+                descendants = SQL(
+                    """ child.parent_path >= node.parent_path
+                        AND child.parent_path < left(node.parent_path, -1) || '0' """
+                )
+            else:
+                descendants = SQL(
+                    "child.parent_path LIKE concat(node.parent_path, %s)", '%',
+                )
             updated = dict(self.env.execute_query(SQL(
                 """ UPDATE %(table)s child
                     SET parent_path = concat(%(prefix)s, substr(child.parent_path,
                             length(node.parent_path) - length(node.id || '/') + 1))
                     FROM %(table)s node
                     WHERE node.id IN %(ids)s
-                    AND child.parent_path >= node.parent_path
-                    AND child.parent_path < left(node.parent_path, -1) || '0'
+                    AND %(descendants)s
                     RETURNING child.id, child.parent_path """,
                 table=SQL.identifier(self._table),
                 prefix=prefix,
                 ids=tuple(records.ids),
+                descendants=descendants,
             )))
 
             # update the cache of updated nodes, and determine what to recompute

@@ -12,7 +12,7 @@ from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import Form, TransactionCase, tagged, users
-from odoo.tools import float_repr, mute_logger
+from odoo.tools import SQL, float_repr, mute_logger
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -4155,6 +4155,38 @@ class TestParentStore(TransactionCaseWithUserDemo):
         self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
         self.assertParentOf(self.cats(5), self.cats(0, 5))
         self.assertParentOf(self.cats(9), self.cats(0, 6, 9))
+
+    def test_move_collation(self):
+        """ Move a subtree when parent_path does not sort in the "C" collation. """
+        # find a collation sorting '12/14/' after '120', like glibc's en_US.UTF-8
+        self.env.cr.execute(SQL("""
+            SELECT collname FROM pg_collation
+            WHERE collprovider = 'c' AND collname NOT IN ('C', 'POSIX', 'ucs_basic')
+            AND collencoding IN (-1, pg_char_to_encoding(getdatabaseencoding()))
+            ORDER BY collname ILIKE %s DESC, collname
+        """, 'en_US%'))
+        for [collation] in self.env.cr.fetchall():
+            self.env.cr.execute(SQL(
+                "SELECT %s::varchar > %s::varchar COLLATE %s", '12/14/', '120',
+                SQL.identifier(collation),
+            ))
+            if self.env.cr.fetchone()[0]:
+                break
+        else:
+            self.skipTest("no collation sorting '12/14/' after '120'")
+        # make parent_path sort like a database whose default is that collation
+        self.env.flush_all()
+        self.env.cr.execute(SQL(
+            "ALTER TABLE test_orm_category ALTER COLUMN parent_path TYPE varchar COLLATE %s",
+            SQL.identifier(collation),
+        ))
+        self.patch(self.registry, 'has_bytewise_collation', False)
+
+        self.cats(6).write({'parent': self.cats(1).id})
+        self.assertChildOf(self.cats(1), self.cats(1, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(9), self.cats(0, 1, 6, 9))
 
     def test_move_1_cycle(self):
         """ Move a node to create a cycle. """

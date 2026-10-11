@@ -295,6 +295,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         with closing(self.cursor()) as cr:
             self.has_unaccent = db.has_unaccent(cr)
             self.has_trigram = db.has_trigram(cr)
+            self.has_bytewise_collation = db.has_bytewise_collation(cr)
 
         self.unaccent = _unaccent if self.has_unaccent else lambda x: x  # type: ignore
         self.unaccent_python = remove_accents if self.has_unaccent else lambda x: x
