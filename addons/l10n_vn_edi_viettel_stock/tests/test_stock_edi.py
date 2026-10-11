@@ -16,7 +16,7 @@ class TestVNEDIStock(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company_vn = cls.env['res.company'].create({
+        cls.company_vn = cls.setup_localization_company('vn', {
             'name': 'VN Test Company',
             'country_id': cls.env.ref('base.vn').id,
             'street': '3 Alley 45 Phan Dinh Phung',

@@ -10,7 +10,7 @@ class TestSandwichLeave(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        self.indian_company = self.env['res.company'].create({
+        self.indian_company = self.add_company('base.test_company_in', {
             'name': 'Test Indian Company',
             'country_id': self.env.ref('base.in').id,
             'tz': 'UTC',

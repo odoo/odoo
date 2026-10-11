@@ -23,5 +23,8 @@ This is the basic Ugandian localisation necessary to run Odoo in UG:
     ],
     "demo": [
         "demo/demo_company.xml",
-    ]
+    ],
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
 }

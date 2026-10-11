@@ -34,5 +34,8 @@ Tento modul definuje:
     'demo': [
         'demo/demo_company.xml',
     ],
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

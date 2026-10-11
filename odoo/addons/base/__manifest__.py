@@ -91,6 +91,7 @@ The kernel of Odoo, needed for all installation.
     'test_data': [
         'tests/data/res_partner.xml',
         'tests/data/res_company.xml',
+        'tests/data/res_company_l10n.xml',
         'tests/data/res_users.xml',
     ],
     'assets': {

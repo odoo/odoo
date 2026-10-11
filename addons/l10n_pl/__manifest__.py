@@ -39,5 +39,8 @@ Wewnętrzny numer wersji OpenGLOBE 1.02
         'demo/demo_company.xml',
     ],
     'post_init_hook': '_preserve_tag_on_taxes',
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

@@ -27,6 +27,7 @@ from . import test_account_lock_exception
 from . import test_audit_trail
 from . import test_chart_template
 from . import test_company_branch
+from . import test_company_fixtures
 from . import test_digest
 from . import test_download_docs
 from . import test_fiscal_position

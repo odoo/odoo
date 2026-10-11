@@ -27,5 +27,8 @@
             'l10n_pt/static/src/helpers/*.js',
         ],
     },
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

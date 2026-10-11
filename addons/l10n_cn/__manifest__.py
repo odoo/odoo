@@ -54,5 +54,8 @@ correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)
         'demo/demo_company.xml',
         'demo/demo_company_asbe.xml',
     ],
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
 }

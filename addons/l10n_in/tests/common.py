@@ -39,7 +39,7 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             'l10n_in_tcs_feature': True,
         })
 
-        cls.outside_in_company = cls.env['res.company'].create({
+        cls.outside_in_company = cls.setup_localization_company('us', {
             'name': 'Outside India Company',
             'country_id': cls.country_us.id,
         })

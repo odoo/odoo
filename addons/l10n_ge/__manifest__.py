@@ -24,5 +24,8 @@ The module is designed to provide a standard accounting setup for companies oper
     'data': [
         'data/account_tax_report_data.xml',
     ],
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': "LGPL-3",
 }

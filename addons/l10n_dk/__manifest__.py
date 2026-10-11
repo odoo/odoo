@@ -46,6 +46,9 @@ Also provides Nemhandel registration and invoice sending throught the Odoo Acces
             'l10n_dk/static/src/tours/nemhandel_onboarding.js',
         ],
     },
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
     'license': 'LGPL-3',
     'post_init_hook': '_post_init_nemhandel',
     'uninstall_hook': 'uninstall_hook',

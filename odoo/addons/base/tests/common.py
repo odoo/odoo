@@ -200,6 +200,8 @@ class BaseCommon(TransactionCase):
         else:
             if company_xmlid:
                 _logger.info('Using %s to create company %s', company_xmlid, name)
+            # Localization write hooks may use with_company() on this fixture.
+            cls.env.user.company_ids = [Command.link(template_company.id)]
             template_company.write(create_values)
             company = template_company
         cls.env.user.company_ids = [Command.link(company.id)]

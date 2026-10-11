@@ -42,4 +42,7 @@ Tax Invoice
         "demo/demo_company.xml",
     ],
     "license": "LGPL-3",
+    'test_data': [
+        'tests/data/account_chart_template.xml',
+    ],
 }

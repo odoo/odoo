@@ -1,6 +1,37 @@
+from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged, TransactionCase
 from odoo.tools import mute_logger
+
+
+@tagged('post_install', '-at_install')
+class TestModuleCountryFixtures(TransactionCase):
+    @mute_logger('odoo.modules.module')
+    def test_fixture_companies_do_not_auto_install_localizations(self):
+        fixture_ids = self.env['ir.model.data'].search([
+            ('module', '=', 'base'), ('model', '=', 'res.company'), ('name', '=like', 'test_company%'),
+        ]).mapped('res_id')
+        real_countries = self.env['res.company'].search([('id', 'not in', fixture_ids)]).country_id
+        country = (self.env['res.company'].browse(fixture_ids).country_id - real_countries)[:1]
+        self.assertTrue(country)
+        Modules = self.env['ir.module.module']
+        dependency = Modules.create({'name': 'test_fixture_install_dependency', 'state': 'uninstalled'})
+        localization = Modules.create({
+            'name': 'test_fixture_install_localization',
+            'state': 'uninstalled',
+            'auto_install': True,
+            'country_ids': [Command.link(country.id)],
+            'dependencies_id': [Command.create({
+                'name': dependency.name, 'auto_install_required': True,
+            })],
+        })
+        dependency.button_install()
+        self.assertEqual(localization.state, 'uninstalled')
+
+        dependency.state = 'uninstalled'
+        self.env['res.company'].create({'name': 'Real Localization Company', 'country_id': country.id})
+        dependency.button_install()
+        self.assertEqual(localization.state, 'to install')
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

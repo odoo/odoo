@@ -241,6 +241,11 @@ class AccountTestInvoicingCommon(ProductCommon):
     def setup_independent_company(cls, name='company_1_data', **create_values):
         if cls._test_independent_company_xmlid:
             return cls.env.ref(cls._test_independent_company_xmlid)
+        country_code = cls._get_localization_country_code()
+        if country_code and not (cls.country_code or cls.chart_template):
+            fixture = cls.env.ref(f'base.test_company_{country_code}', raise_if_not_found=False)
+            if fixture:
+                cls.country_code = fixture.country_id.code
         company = cls._create_company(name=name, **create_values)  # many tests hardcode this name
         return company
 
@@ -260,9 +265,8 @@ class AccountTestInvoicingCommon(ProductCommon):
     def _create_company(cls, company_xmlid=None, **create_values):
         create_values.setdefault('terms_type', 'plain')  # avoid an unwanted auto note
         create_values.setdefault('account_opening_date', False)  # avoid auto-generating returns
+        chart_template = cls.chart_template
 
-        if (cls.country_code or cls.chart_template) and company_xmlid is None:
-            create_values['candidate_xmlids'] = ('base.test_company_template', 'base.test_company_template2')
         if cls.country_code:
             country = cls.env['res.country'].search([('code', '=', cls.country_code.upper())])
             if not country:
@@ -272,9 +276,32 @@ class AccountTestInvoicingCommon(ProductCommon):
             if 'currency_id' not in create_values:
                 create_values['currency_id'] = country.currency_id.id
 
+        if company_xmlid is None and (cls.country_code or cls.chart_template or create_values.get('country_id')):
+            ChartTemplate = cls.env['account.chart.template']
+            country = cls.env['res.country'].browse(create_values.get('country_id'))
+            chart_template = cls.chart_template or ChartTemplate._guess_chart_template(country)
+            template = ChartTemplate._get_chart_template_mapping()[chart_template]
+            template_country = cls.env['res.country'].browse(template['country_id'])
+            fixture_country = country or template_country
+            if template_country and chart_template == ChartTemplate._guess_chart_template(template_country):
+                fixture = f'base.test_company_{template_country.code.lower()}'
+            else:
+                fixture = f'base.test_company_chart_{chart_template}'
+            candidates = [fixture, f'{fixture}_2']
+            # Countries without an accounting localization still use the generic chart.
+            if fixture_country and chart_template == 'generic_coa':
+                candidates[:0] = [
+                    f'base.test_company_{fixture_country.code.lower()}',
+                    f'base.test_company_{fixture_country.code.lower()}_2',
+                ]
+            create_values.setdefault('candidate_xmlids', tuple(
+                xmlid for xmlid in candidates
+                if cls.env.ref(xmlid, raise_if_not_found=False)
+            ) + ('base.test_company_template', 'base.test_company_template2'))
+
         company = super()._create_company(company_xmlid=company_xmlid, **create_values)
-        if cls.chart_template or not company.chart_template:
-            cls._use_chart_template(company, cls.chart_template)
+        if not company.chart_template or (chart_template and company.chart_template != chart_template):
+            cls._use_chart_template(company, chart_template)
 
         # if the currency_id was defined explicitly (or via the country), it should override the one from the coa
         if create_values.get('currency_id'):

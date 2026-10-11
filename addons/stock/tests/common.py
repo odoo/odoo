@@ -56,9 +56,18 @@ class TestStockCommon(ProductVariantsCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company = cls.env['res.company'].create({
-            'name': 'Stock Tests Company',
-        })
+        country_code = cls._get_localization_country_code()
+        if country_code:
+            country_code = getattr(cls, 'country_code', False) or country_code
+            fixture = cls.env.ref(f'base.test_company_{country_code.lower()}', raise_if_not_found=False)
+            if fixture and cls.env.company.country_id == fixture.country_id:
+                cls.company = cls.env.company
+            elif fixture:
+                cls.company = cls.setup_localization_company(country_code, {'name': 'Stock Tests Company'})
+            else:
+                cls.company = cls.env['res.company'].create({'name': 'Stock Tests Company'})
+        else:
+            cls.company = cls.env['res.company'].create({'name': 'Stock Tests Company'})
         # Some models use env.company in various methods, so we make sure they will find the stock company
         cls.env = cls.env(context=dict(cls.env.context, allowed_company_ids=[cls.company.id]))
         cls.env.ref('base.user_admin').company_ids |= cls.company

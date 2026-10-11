@@ -97,6 +97,7 @@
     ],
     'test_data': [
         'tests/data/stock_warehouse.xml',
+        'tests/data/stock_warehouse_l10n.xml',
     ],
     'application': True,
     'pre_init_hook': 'pre_init_hook',

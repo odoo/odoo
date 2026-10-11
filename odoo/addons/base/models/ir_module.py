@@ -403,7 +403,14 @@ class IrModuleModule(models.Model):
 
     @assert_log_admin_access
     def button_install(self):
-        company_countries = self.env['res.company'].search([]).country_id
+        # Shared test companies cover every localization, but must not cause all
+        # country-specific modules to be installed on a test database.
+        test_company_ids = self.env['ir.model.data'].search([
+            ('module', '=', 'base'),
+            ('model', '=', 'res.company'),
+            ('name', '=like', 'test_company%'),
+        ]).mapped('res_id')
+        company_countries = self.env['res.company'].search([('id', 'not in', test_company_ids)]).country_id
         # domain to select auto-installable (but not yet installed) modules
         auto_domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True)]
 

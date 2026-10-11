@@ -20,10 +20,17 @@ class TestStockValuationCommon(BaseCommon):
 
     @classmethod
     def _create_company(cls, **create_values):
-        company = super()._create_company(**create_values)
-        cls.env["account.chart.template"]._load(
-            "generic_coa", company, install_demo=False
+        country_code = cls._get_localization_country_code()
+        fixture = (
+            cls.env.ref(f'base.test_company_{country_code}', raise_if_not_found=False)
+            if country_code else False
         )
+        company = (
+            cls.setup_localization_company(fixture.country_id.code, create_values)
+            if fixture else super()._create_company(**create_values)
+        )
+        if not company.chart_template:
+            cls.env["account.chart.template"]._load("generic_coa", company, install_demo=False)
         return company
 
     # HELPER
@@ -351,10 +358,10 @@ class TestStockValuationCommon(BaseCommon):
 
         # To move to stock common later
         cls.route_mto = cls.env.ref('stock.route_warehouse0_mto')
-        cls.company = cls.env['res.company'].create({'name': 'Inventory Test Company'})
-        cls.env["account.chart.template"]._load(
-            "generic_coa", cls.company, install_demo=False
-        )
+        cls.company = cls._create_company(name='Inventory Test Company')
+        warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.company.id)], limit=1)
+        if warehouse.name != cls.company.name:
+            warehouse.name = cls.company.name
         cls.company = cls.company.with_company(cls.company.id)
         cls.env = cls.env(context=dict(cls.env.context, allowed_company_ids=[cls.company.id]))
         # We use the admin on tour.
