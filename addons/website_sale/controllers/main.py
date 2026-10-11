@@ -2208,8 +2208,26 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: A dict grouping attribute value ids by attribute id.
         :rtype: dict(int, list(int))
         """
+<<<<<<< 082aba29fa97d63250831da94b16363405b7e344
         attribute_value_pairs = [value.split("-") for value in attribute_values if value]
         return {
             int(pair[0]): [int(value_id) for value_id in pair[1].split(",")]
             for pair in attribute_value_pairs
         }
+||||||| d24ed4c9ff8e0785070c7d69668cb6d8175d5008
+        attribute_value_pairs = [value.split('-') for value in attribute_values if value]
+        return {
+            int(pair[0]): [int(value_id) for value_id in pair[1].split(',')]
+            for pair in attribute_value_pairs
+        }
+=======
+        attribute_value_dict = {}
+        for value in attribute_values:
+            pair = value.split('-')
+            if len(pair) < 2 or not pair[0].isdigit():
+                continue
+            value_ids = [value_id for value_id in pair[1].split(',') if value_id.isdigit()]
+            if value_ids:
+                attribute_value_dict[int(pair[0])] = [int(value_id) for value_id in value_ids]
+        return attribute_value_dict
+>>>>>>> b1cf77724f4fafc14f56ff77754874dc34009054
