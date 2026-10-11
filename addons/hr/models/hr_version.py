@@ -111,8 +111,6 @@ class HrVersion(models.Model):
         selection='_get_marital_status_selection',
         string='Marital Status',
         groups="hr.group_hr_user",
-        default='single',
-        required=True,
         tracking=1)
     spouse_complete_name = fields.Char(string="Spouse Legal Name", groups="hr.group_hr_user", tracking=1)
     spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=1)
