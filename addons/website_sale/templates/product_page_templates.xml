@@ -95,7 +95,7 @@
                     <div
                         t-attf-class="row align-items-lg-start {{website.product_page_cols_order == 'inverse' and 'flex-lg-row-reverse' or ''}}"
                         id="product_detail_main"
-                        data-name="Product Page"
+                        data-builder-name="product-page"
                         t-att-data-image-layout="website.product_page_image_layout"
                     >
                         <div
@@ -860,7 +860,7 @@
             >
                 <section data-snippet="s_dynamic_snippet_products"
                     t-attf-class="oe_website_sale oe_unmovable oe_unremovable o_no_save s_dynamic_snippet_products o_wsale_alternative_products oe_website_sale s_dynamic pt32 pb32 o_colored_level #{default_design_classes}"
-                    data-name="Alternative Products" style="background-image: none;" t-att-data-filter-id="product._get_alternative_product_filter()"
+                    data-builder-name="alternative-products" style="background-image: none;" t-att-data-filter-id="product._get_alternative_product_filter()"
                     data-template-key="website_sale.dynamic_filter_template_product_product_products_item" data-product-category-id="all" data-number-of-elements="4"
                     data-number-of-elements-small-devices="1" data-number-of-records="16" data-carousel-interval="5000" data-bs-original-title="" title="">
                     <div class="container">
@@ -1291,7 +1291,7 @@
                     imagesCount == 1   and 'o_grid_solo' or ''
                 }}
             "
-            data-name="Product Grid"
+            data-builder-name="product-grid"
             t-att-data-image_spacing="website.product_page_image_spacing"
             t-att-data-image_count="len(product_images)"
             t-att-data-grid_columns="website.product_page_grid_columns"

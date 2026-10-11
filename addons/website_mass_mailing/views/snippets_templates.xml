@@ -51,7 +51,7 @@ Users upgraded from a version lower than 16.0 may have those blocks in their
 database, without the s_newsletter_list class. See fixNewsletterListClass.
 -->
 <template id="s_newsletter_subscribe_form" name="Newsletter">
-    <div t-attf-class="s_newsletter_subscribe_form s_newsletter_list js_subscribe #{_contentClasses}" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
+    <div t-attf-class="s_newsletter_subscribe_form s_newsletter_list js_subscribe #{_contentClasses}" data-vxml="001" data-list-id="0" data-builder-name="newsletter-form">
         <div class="js_subscribed_wrap d-none">
             <t t-if="thank_you_message" t-out="thank_you_message"/>
             <p t-else="" class="h4-fs text-center text-success"><i class="oi" data-icon="check_circle" role="img"/> Thanks for registering!</p>
@@ -121,7 +121,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
         <div class="o_we_shape o_html_builder_Bold_15" style="background-image: url('/html_editor/shape/html_builder/Bold/15.svg?c5=o-color-1');"/>
             <div class="container">
                 <div class="row">
-                    <div class="col-12 col-lg-6 offset-lg-3 pt16 pb16" data-name="Card">
+                    <div class="col-12 col-lg-6 offset-lg-3 pt16 pb16" data-builder-name="card">
                         <div class="s_card card o_cc o_cc1 my-0" data-vxml="001" data-snippet="s_card">
                             <div class="card-body p-md-5">
                                 <p class="h1-fs" style="text-align: center;">✉️</p>
@@ -265,7 +265,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 </template>
 
 <template id="s_newsletter_subscribe_popup" name="Newsletter Popup">
-    <div class="s_popup o_newsletter_popup o_snippet_invisible" data-name="Newsletter Popup" data-vcss="001" data-invisible="1">
+    <div class="s_popup o_newsletter_popup o_snippet_invisible" data-builder-name="newsletter-popup" data-vcss="001" data-invisible="1">
         <div class="modal fade s_popup_middle o_newsletter_modal"
              style="background-color: var(--black-50) !important;"
              data-show-after="5000" data-display="afterDelay" data-consents-duration="7"

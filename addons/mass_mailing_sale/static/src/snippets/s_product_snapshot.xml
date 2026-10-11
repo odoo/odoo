@@ -5,7 +5,7 @@
                 <div class="row align-items-stretch">
                     <t t-foreach="[1,2,3]" t-as="key" t-key="key">
                         <div class="col-md-4 col-12 s_record_snapshot pt16 pb16"
-                            data-name="Product Snapshot"
+                            data-builder-name="product-snapshot"
                             data-model="product.template" data-fragment-key="columns"
                             style="padding-left: 16px !important; padding-right: 16px !important;">
                             <t t-call="mass_mailing_sale.s_product_snapshot_columns_fragment"
@@ -28,7 +28,7 @@
     <t t-name="mass_mailing_sale.s_product_card">
         <section class="s_text_image o_mail_snippet_general pt40 pb40">
             <div class="container s_record_snapshot s_text_block o_cc"
-                data-name="Product Snapshot"
+                data-builder-name="product-snapshot"
                 data-model="product.template" data-fragment-key="card">
                 <t t-call="mass_mailing_sale.s_product_snapshot_card_fragment"
                     record="{
@@ -47,7 +47,7 @@
     <t t-name="mass_mailing_sale.s_product_aside">
         <section class="s_text_image o_mail_snippet_general o_colored_level pt40 pb40">
             <div class="container s_record_snapshot s_text_block o_cc"
-                data-name="Product Snapshot" contenteditable="true"
+                data-builder-name="product-snapshot" contenteditable="true"
                 data-model="product.template" data-fragment-key="aside">
                 <t t-call="mass_mailing_sale.s_product_snapshot_aside_fragment"
                     record="{
