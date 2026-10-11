@@ -1,7 +1,8 @@
 import { test, expect, queryOne, waitFor } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { isVisible } from "@html_editor/utils/dom_info";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { definePosModels } from "../data/generate_model_definitions";
 import { mountPosDialog, setupPosEnv } from "../utils";
 import { setupCustomerDisplay, CustomerDisplayAssertions as Assert } from "./utils";
@@ -9,6 +10,7 @@ import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/custo
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { ScaleInterface } from "@point_of_sale/app/utils/scale/scale_interface";
+import DeviceIdentifierSequence from "@point_of_sale/app/utils/devices_identifier_sequence";
 
 definePosModels();
 
@@ -130,4 +132,31 @@ test("CustomerDisplayTourWithQr: customer display shows QR code for payment", as
     expect(".o_customer_display_scale:contains('Gross Weight: 7.21 Units)").toHaveCount(1);
     expect(".o_customer_display_scale .product-price").toHaveText("$ 115.00 / Units");
     expect(".o_customer_display_scale .computed-price").toHaveText("$ 829.15");
+});
+
+test("customer display follows the POS device identifier after data reload", async () => {
+    const [store, , display] = await setupCustomerDisplay();
+    const previousIdentifier = store.customerDisplay.context.identifier;
+    const newIdentifier = "new-device-identifier";
+
+    localStorage.setItem(DeviceIdentifierSequence.previousDeviceIdentifierKey, previousIdentifier);
+    store.customerDisplay.context.identifier = newIdentifier;
+
+    patch(display, {
+        _updateDisplayIdentifier(identifier) {
+            expect(identifier).toBe(newIdentifier);
+            expect.step("update_customer_display_identifier");
+        },
+    });
+    onRpc("pos.config", "update_customer_display", async (params) => {
+        expect(params.args[2]).toBe(String(previousIdentifier));
+        expect(JSON.parse(params.args[1])).toEqual({
+            newIdentifier,
+        });
+        display._onDataReceived(JSON.stringify({ newIdentifier }));
+        return true;
+    });
+
+    await store.customerDisplay.syncCustomerDisplayIdentifier();
+    expect.verifySteps(["update_customer_display_identifier"]);
 });

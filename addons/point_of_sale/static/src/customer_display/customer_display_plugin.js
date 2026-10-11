@@ -92,7 +92,17 @@ export class CustomerDisplayPlugin extends Plugin {
             return;
         }
         this._applyTheme(parsedData.displayTheme);
+        if (parsedData.newIdentifier) {
+            this._updateDisplayIdentifier(parsedData.newIdentifier);
+        }
         this.data.set({ ...this.data(), ...parsedData });
+    }
+
+    _updateDisplayIdentifier(newIdentifier) {
+        const url = new URL(location.href);
+        const path = url.pathname.split("/");
+        path[path.length - 1] = newIdentifier;
+        location.pathname = path.join("/");
     }
 
     _applyTheme(theme) {
