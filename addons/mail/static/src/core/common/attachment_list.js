@@ -1,6 +1,8 @@
 import { AttachmentDeleteDialog } from "@mail/core/common/attachment_delete_dialog";
 import { Gif } from "@mail/core/common/gif";
+import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
+import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -39,7 +41,7 @@ class Actions extends Component {
 }
 
 export class AttachmentList extends Component {
-    static components = { Actions, Dropdown, Gif };
+    static components = { Actions, Dropdown, DropdownItem, Gif };
     static template = "mail.AttachmentList";
 
     rootRef = signal.ref();
@@ -49,6 +51,7 @@ export class AttachmentList extends Component {
         this.ancestors = useAncestors();
         Object.assign(this, { attClassObjectToString, formatDate, formatDateTime });
         this.store = useService("mail.store");
+        this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.props = useProps({
             attachmentGroups: t.array(
                 t.object({
@@ -160,6 +163,28 @@ export class AttachmentList extends Component {
     /**
      * @param {import("models").Attachment} attachment
      */
+    canShowInConversation(attachment) {
+        return (
+            !this.ancestors.inMessage &&
+            attachment.message_ids.some((m) => m.thread?.eq(attachment.thread))
+        );
+    }
+
+    /** @param {import("models").Attachment} attachment */
+    async onClickShowInConversation(attachment) {
+        if (this.ui.isSmall || this.ancestors.inChatWindow || this.ancestors.inMeetingView) {
+            this.env.closeAttachmentPanel?.();
+            this.ancestors.inMeetingView?.openChat();
+        }
+        // Give the time for menus to close before scrolling to the message.
+        await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
+        const message = attachment.message_ids.find((m) => m.thread?.eq(attachment.thread));
+        if (message) {
+            await this.messageHighlight?.highlightMessage(message);
+        }
+    }
+
+    /** @param {import("models").Attachment} attachment */
     onClickAttachment(attachment) {
         if (this.props.isSelecting) {
             this.props.onToggleSelected?.(attachment);
@@ -211,6 +236,13 @@ export class AttachmentList extends Component {
                 onSelect: () => this.onClickDownload(attachment),
             });
         }
+        if (this.canShowInConversation(attachment)) {
+            res.push({
+                label: this.showInConversationTooltip,
+                icon: "chat_paste_go_2",
+                onSelect: () => this.onClickShowInConversation(attachment),
+            });
+        }
         return res;
     }
 
@@ -225,5 +257,9 @@ export class AttachmentList extends Component {
         // in messages users are expected to delete the message instead of just the attachment
         const message = this.ancestors.inMessage?.message;
         return !message || message.hasTextContent || this.props.attachmentGroups.length > 1;
+    }
+
+    get showInConversationTooltip() {
+        return _t("Show in Conversation");
     }
 }
