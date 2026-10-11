@@ -888,6 +888,16 @@ class HrEmployee(models.Model):
         future_contract_dates = [d for d in list(contracts.keys()) if d > date]
         new_contract_date_end = min(future_contract_dates) + relativedelta(days=-1) if future_contract_dates else False
 
+        # Close the previous contract: its end date becomes the day before this one starts
+        past_contract_dates = [d for d in list(contracts.keys()) if d < date]
+        if past_contract_dates:
+            previous_contract_date = max(past_contract_dates)
+            previous_version = self.version_ids.filtered(lambda v: v.date_version == previous_contract_date)
+            if previous_version:
+                previous_version.write({
+                    'contract_date_end': date + relativedelta(days=-1),
+                })
+
         # There is already a version but with no contract defined on it so we simply write on it the dates
         if version_same_date := self.version_ids.filtered(lambda v: v.date_version == date):
             version_same_date.write({
