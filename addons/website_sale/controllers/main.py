@@ -159,9 +159,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         domains = [request.website.sale_product_domain()]
         if search:
             product_template = request.env["product.template"]
-            search_fields = product_template._get_website_sale_search_fields(
-                search_in_description
-            )
+            search_fields = product_template._get_website_sale_search_fields(search_in_description)
             for srch in search.split(" "):
                 subdomains = [
                     product_template._search_get_field_domain(field, srch)
@@ -397,12 +395,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         search_term = fuzzy_search_term if fuzzy_search_term else search
         product_domain = self._get_shop_domain(search_term, category, attribute_value_dict)
 
-        filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
+        filter_by_price_enabled = website.is_view_active("website_sale.filter_products_price")
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
             # This is ~4 times more efficient than a search for the cheapest and most expensive
             # products
-            query = request.env['product.template']._search(product_domain)
+            query = request.env["product.template"]._search(product_domain)
             sql = query.select(
                 SQL(
                     "COALESCE(MIN(list_price), 0) * %(conversion_rate)s, COALESCE(MAX(list_price), 0) * %(conversion_rate)s",  # noqa: E501
@@ -455,9 +453,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if search:
             # using a sub-query is more efficient than using a query in the shape of "ids in (...)"
             # when there are 100k product ids to match.
-            product_query = request.env['product.template']._search(product_domain)
+            product_query = request.env["product.template"]._search(product_domain)
             search_categories = Category.search(
-                Domain('product_tmpl_ids', 'in', product_query)
+                Domain("product_tmpl_ids", "in", product_query)
             ).parents_and_self
             categs_domain &= Domain("id", "in", search_categories.ids)
         else:
@@ -527,7 +525,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order="attribute_id",
                 aggregates=["id:recordset"],
             )
-            pavs_per_attribute.update({attribute: pavs.sorted() for attribute, pavs in grouped_pavs})
+            pavs_per_attribute.update({
+                attribute: pavs.sorted() for attribute, pavs in grouped_pavs
+            })
             # Return attributes as recordset of `product.attribute`
             attributes = ProductAttribute.union(pavs_per_attribute.keys())
         else:
@@ -1942,7 +1942,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 "Some products in your cart are not available for purchase in your"
                 " country. Please remove them or contact us."
             )
-            return request.redirect('/shop/cart')
+            return request.redirect("/shop/cart")
 
     def _check_addresses(self, order_sudo):
         """Check whether the cart's addresses are complete and valid.
@@ -2208,8 +2208,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: A dict grouping attribute value ids by attribute id.
         :rtype: dict(int, list(int))
         """
-        attribute_value_pairs = [value.split("-") for value in attribute_values if value]
-        return {
-            int(pair[0]): [int(value_id) for value_id in pair[1].split(",")]
-            for pair in attribute_value_pairs
-        }
+        attribute_value_dict = {}
+        for value in attribute_values:
+            pair = value.split("-")
+            if len(pair) < 2 or not pair[0].isdigit():
+                continue
+            value_ids = [value_id for value_id in pair[1].split(",") if value_id.isdigit()]
+            if value_ids:
+                attribute_value_dict[int(pair[0])] = [int(value_id) for value_id in value_ids]
+        return attribute_value_dict
