@@ -698,6 +698,7 @@ export const x2ManyFieldDialogProps = {
     close: t.function(),
     record: t.object(),
     addNew: t.function(),
+    getAddContext: t.function().optional(),
     save: t.function(),
     title: t.string(),
     delete: t.any().optional(),
@@ -832,8 +833,9 @@ export class X2ManyFieldDialog extends Component {
             if (await this.record.checkValidity({ displayNotification: true })) {
                 await this.props.save(this.record);
                 if (saveAndNew) {
+                    const addContext = this.props.getAddContext?.(this.record);
                     await this.record.switchMode("readonly");
-                    this.record = await this.props.addNew();
+                    this.record = await this.props.addNew(addContext);
                 }
             } else {
                 return false;
@@ -918,6 +920,7 @@ export function useOpenX2ManyRecord({
     updateRecord,
     saveRecord,
     isMany2Many,
+    getAddContext,
 }) {
     const viewService = useService("view");
     const ui = useService("ui");
@@ -979,7 +982,13 @@ export function useOpenX2ManyRecord({
                 archInfo,
                 record,
                 controls,
-                addNew: () => getList().extendRecord(params),
+                addNew: (extraContext) =>
+                    getList().extendRecord(
+                        extraContext
+                            ? { ...params, context: makeContext([params.context, extraContext]) }
+                            : params
+                    ),
+                getAddContext,
                 save: (rec) => {
                     if (isDuplicate && rec.id === record.id) {
                         return updateRecord(rec);
