@@ -1,6 +1,9 @@
-import { Component, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
+import { Component, proxy, signal, t, usePlugin, useProps, xml } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Domain } from "@web/core/domain";
+import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
+import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
@@ -11,7 +14,7 @@ import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { fuzzyTest } from "@web/core/utils/search";
-import { render } from "@web/owl2/utils";
+import { render, useSubEnv } from "@web/owl2/utils";
 import { SearchBarDropdown } from "@web/search/search_bar_dropdown";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 
@@ -43,12 +46,27 @@ const SUB_ITEMS_DEFAULT_LIMIT = 8;
 
 export const DROPDOWN_CLOSE_DELAY = 10;
 
+/**
+ * The facets are rendered in the dropdown of the search input: dropdowns opened
+ * from a facet must not be considered as its submenus.
+ */
+class DropdownNestingBoundary extends Component {
+    static template = xml`<t t-call-slot="default"/>`;
+
+    setup() {
+        useSubEnv({ [DROPDOWN_NESTING]: null });
+    }
+}
+
 export class SearchBar extends Component {
     static template = "web.SearchBar";
     static components = {
         SearchBarMenu,
         SearchBarDropdown,
+        CheckboxItem,
+        Dropdown,
         DropdownItem,
+        DropdownNestingBoundary,
     };
     props = useProps({
         autofocus: t.boolean().optional(true),
