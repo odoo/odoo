@@ -1,8 +1,10 @@
 /* global owl */
-
+import { DocumentationLink } from "@web/core/documentation_link/documentation_link";
 const { Component, xml, useListener, signal, useProps, types: t } = owl;
 
 export class Dialog extends Component {
+    static components = { DocumentationLink };
+
     props = useProps({
         name: t.string(),
         help: t.string().optional(),
@@ -31,7 +33,12 @@ export class Dialog extends Component {
                 <div class="modal-content">
                     <div class="modal-header gap-1">
                         <t t-out="this.props.name"/>
-                        <a t-if="this.props.help" t-att-href="this.props.help" class="oi text-decoration-none text-dark" data-icon="help" target="_blank"/>
+                        <DocumentationLink
+                          t-if="this.props.help"
+                          path="this.props.help"
+                          class="text-dark"
+                          label="''"
+                        />
                     </div>
                     <div class="modal-body position-relative dialog-body">
                         <t t-call-slot="body" />

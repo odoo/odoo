@@ -12,12 +12,11 @@
                     <div class="d-flex align-items-center">
                         <field name="sms_twilio_account_sid" placeholder="ACabcde12345abcde12345abcde12345ab"
                             required="1" class="w-75"/>
-                        <a target="_blank" class="btn btn-link ms-1 w-25 p-0"
-                            role="button"
-                            href="https://www.odoo.com/documentation/latest/applications/marketing/sms_marketing/twilio.html">
-                            Need help ?
-                            <i class="oi" data-icon="open_in_new" aria-hidden="true"/>
-                        </a>
+                        <widget
+                            name="documentation_link"
+                            path="/applications/marketing/sms_marketing/twilio.html"
+                            label="Need help ?"
+                        />
                     </div>
                     <field name="sms_twilio_auth_token" password="True" placeholder="abcde12345abcde12345abcde12345ab"
                         required="1" class="w-75"/>

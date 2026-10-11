@@ -35,6 +35,8 @@ from odoo.tools import (
 )
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.sql import escape_like_value
+from odoo.release import documentation_url
+
 
 _logger = logging.getLogger(__name__)
 
@@ -1372,14 +1374,12 @@ class ResUsers(models.Model):
                 "\"base.login_cooldown_after\" to 0.",
                 source, user or "?", self.env.cr.dbname, failures, previous)
             if ipaddress.ip_address(source).is_private:
-                _logger.warning(
-                    "The rate-limited IP address %s is classified as private "
-                    "and *might* be a proxy. If your Odoo is behind a proxy, "
-                    "it may be mis-configured. Check that you are running "
-                    "Odoo in Proxy Mode and that the proxy is properly configured, see "
-                    "https://www.odoo.com/documentation/latest/administration/install/deploy.html#https for details.",
-                    source
-                )
+                message = ("The rate-limited IP address %s is classified as private "
+                          "and *might* be a proxy. If your Odoo is behind a proxy, "
+                          "it may be mis-configured. Check that you are running "
+                          "Odoo in Proxy Mode and that the proxy is properly configured, see "
+                          f"{documentation_url}/administration/install/deploy.html#https for details.")
+                _logger.warning(message, source)
             raise AccessDenied(_("Too many login failures, please wait a bit before trying again."))
 
         try:

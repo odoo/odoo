@@ -33,6 +33,7 @@ url = 'https://www.odoo.com'
 author = 'OpenERP S.A.'
 author_email = 'info@odoo.com'
 license = 'LGPL-3'
+documentation_url = f'{url}/documentation/{"master" if version[3] in (ALPHA, BETA) else series.replace('~', '-')}'
 
 nt_service_name = "odoo-server-" + series.replace('~','-')
 

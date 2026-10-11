@@ -7,7 +7,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { Component, xml } from "@odoo/owl";
 import { expect, test } from "@odoo/hoot";
-import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
+import { DocumentationLink } from "@web/core/documentation_link/documentation_link";
 
 class Partner extends models.Model {
     bar = fields.Boolean();
@@ -15,7 +15,7 @@ class Partner extends models.Model {
 
 defineModels([Partner]);
 
-test("documentation_link: default label and icon", async () => {
+test("documentation_link: default label", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -27,7 +27,7 @@ test("documentation_link: default label and icon", async () => {
     });
     expect(".o_doc_link").toHaveText("View Documentation");
     expect("a.alert-link").toHaveCount(0);
-    expect(".o_doc_link [data-icon='open_in_new']").toHaveCount(1);
+    expect(".o_doc_link .oi").toHaveCount(1);
 });
 
 test("documentationLink: add alert-link class", async () => {
@@ -60,39 +60,39 @@ test("documentation_link: given label", async () => {
         arch: /* xml */ `
         <form>
             <field name="bar"/>
-            <widget name="documentation_link" path="/this_is_a_test.html" label="docdoc"/>
+            <widget name="documentation_link" path="/this_is_a_test.html" label="docdoc" />
+        </form>`,
+    });
+    expect(".o_doc_link").toHaveText("docdoc");
+    expect(".o_doc_link .oi").toHaveCount(1);
+});
+
+test("documentation_link: given label without icon", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+        <form>
+            <field name="bar"/>
+            <widget name="documentation_link" path="/this_is_a_test.html" label="docdoc" hide-icon="True"/>
         </form>`,
     });
     expect(".o_doc_link").toHaveText("docdoc");
     expect(".o_doc_link .oi").toHaveCount(0);
 });
 
-test("documentation_link: given icon", async () => {
+test("documentation_link: empty label with icon", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
         <form>
             <field name="bar"/>
-            <widget name="documentation_link" path="/this_is_a_test.html" icon="help"/>
+            <widget name="documentation_link" path="/this_is_a_test.html" label="" />
         </form>`,
     });
     expect(".o_doc_link").toHaveText("");
-    expect(".o_doc_link [data-icon='help']").toHaveCount(1);
-});
-
-test("documentation_link: given label and icon", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: /* xml */ `
-        <form>
-            <field name="bar"/>
-            <widget name="documentation_link" path="/this_is_a_test.html" label="docdoc" icon="help"/>
-        </form>`,
-    });
-    expect(".o_doc_link").toHaveText("docdoc");
-    expect(".o_doc_link [data-icon='help']").toHaveCount(1);
+    expect(".o_doc_link .oi").toHaveCount(1);
 });
 
 test("documentation_link: relative path", async () => {
@@ -107,7 +107,7 @@ test("documentation_link: relative path", async () => {
     });
     expect(".o_doc_link").toHaveAttribute(
         "href",
-        "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
+        "/web/documentation/applications/technical/web/settings/this_is_a_test.html"
     );
 });
 

@@ -4,10 +4,12 @@ import { localization } from "@web/core/l10n/localization";
 import { registry } from '@web/core/registry';
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
+import { DocumentationLink } from "@web/core/documentation_link/documentation_link";
 
 
 export class CrmPlsTooltip extends Component {
     static template = "crm.PlsTooltip";
+    static components = { DocumentationLink };
 
     props = useProps({
         close: t.function().optional(),
