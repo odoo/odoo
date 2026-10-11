@@ -18,6 +18,7 @@ class AccountJournal(models.Model):
             'views': [(self.env.ref('l10n_my_edi.myinvois_document_list_view').id, 'list'), (self.env.ref('l10n_my_edi.myinvois_document_form_view').id, 'form')],
             'context': {
                 'display_consolidate_invoice_button': True,
+                'l10n_my_edi_display_sync_button': self.type == 'purchase',
                 'journal_id': self.id,
                 'search_default_journal_id': self.id,
             }
