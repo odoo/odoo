@@ -2912,3 +2912,27 @@ class TestSaleMrpAccessRights(TransactionCase):
             {'product_id': self.component.id, 'product_uom_qty': 1.0},
             {'product_id': self.extra_product.id, 'product_uom_qty': 1.0},
         ])
+
+    def test_mo_allocation_report_access_rights(self):
+        """
+        Test that an MRP user with access only to their own sales documents can open the
+        allocation report of an MO listing the delivery of an SO they do not own.
+        """
+        self.user_mrp_only.groups_id += self.env.ref('sales_team.group_sale_salesman')
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Customer'}).id,
+            'order_line': [Command.create({
+                'product_id': self.finished_product.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        so.action_confirm()
+        mo = self.env['mrp.production'].create({
+            'product_id': self.finished_product.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+
+        self.env.invalidate_all()
+        report = self.env['report.stock.report_reception'].with_user(self.user_mrp_only).with_context(default_production_ids=mo.ids)
+        report.get_report_data(mo.ids, {})
