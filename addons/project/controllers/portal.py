@@ -152,6 +152,7 @@ class ProjectCustomerPortal(CustomerPortal):
             project_id=project.id,
             project_name=project.name,
             portal_is_readonly=collaborator.access_mode == 'view' if collaborator else False,
+            portal_can_advanced_edit=collaborator.access_mode == 'advanced_edit' if collaborator else True,
             user_companies={
                 'current_company': project_company.id,
                 'allowed_companies': {
