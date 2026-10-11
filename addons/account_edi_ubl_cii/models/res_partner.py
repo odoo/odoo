@@ -4,12 +4,48 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.partner_identifiers import validation_error_message
 
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
+<<<<<<< 3fc97a63a87424f46cc075714391092eb51b0c05
 from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import (
     CORNER_CASE_IDENTIFIERS_METADATA,
     DEPRECATED_ELECTRONIC_ADDRESS_SCHEMES_CODELIST,
     ELECTRONIC_ADDRESS_SCHEMES_CODELIST,
     ELECTRONIC_ADDRESS_SCHEME_INVALID_CHARS_RE,
 )
+||||||| 2a697031849f9bf33116834b90bc664d93d9034a
+from odoo.tools import single_email_re
+
+
+PEPPOL_ENDPOINT_INVALIDCHARS_RE = re.compile(r'[^a-zA-Z\d\-._~]')
+PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS = {
+    '0208': re.compile(r'[^0-9]'),
+    '9925': re.compile(r'[^beBE0-9]'),
+    'EM': re.compile(r'[^a-zA-Z\d\-._@]'),
+}
+
+
+def sanitize_peppol_endpoint(peppol_endpoint, eas=None):
+    if not peppol_endpoint:
+        return peppol_endpoint
+    sanitizer = PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS.get(eas, PEPPOL_ENDPOINT_INVALIDCHARS_RE)
+    return sanitizer.sub('', peppol_endpoint)
+=======
+from odoo.tools import single_email_re
+
+
+PEPPOL_ENDPOINT_INVALIDCHARS_RE = re.compile(r'[^a-zA-Z\d\-._~]')
+PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS = {
+    '0208': re.compile(r'[^0-9]'),
+    '9925': re.compile(r'[^beBE0-9]'),
+    'EM': re.compile(r'[^a-zA-Z\d\-._@+]'),
+}
+
+
+def sanitize_peppol_endpoint(peppol_endpoint, eas=None):
+    if not peppol_endpoint:
+        return peppol_endpoint
+    sanitizer = PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS.get(eas, PEPPOL_ENDPOINT_INVALIDCHARS_RE)
+    return sanitizer.sub('', peppol_endpoint)
+>>>>>>> 80d13b2a419f3443ff02265478eaade7ea043cd3
 
 
 class ResPartner(models.Model):
