@@ -264,7 +264,6 @@ export class Composer extends Component {
                 }
                 if (focus && this.editor?.editable) {
                     this.editor.shared.selection.focusEditable();
-                    this.editor.shared.selection.selectAroundNonEditable();
                 }
             },
             () => [
@@ -415,7 +414,6 @@ export class Composer extends Component {
         } else {
             this.editor.shared.selection.setCursorEnd(lastNode);
         }
-        this.editor.shared.selection.selectAroundNonEditable();
     }
 
     get areAllActionsDisabled() {
