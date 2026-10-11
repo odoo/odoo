@@ -197,6 +197,7 @@ class IrCron(models.Model):
                 if not jobs:
                     return
                 cls._check_modules_state(cron_cr, jobs)
+                cls._lock_registry_changes(cron_cr)
                 cls._process_jobs_loop(cron_cr, job_ids=[job['id'] for job in jobs])
         except BadVersion:
             _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
@@ -254,7 +255,7 @@ class IrCron(models.Model):
 
     @staticmethod
     def _check_modules_state(cr, jobs):
-        """ Ensure no module is installing or upgrading """
+        """ Ensure no module is marked for changes (installing or upgrading). """
         cr.execute("""
             SELECT COUNT(*)
             FROM ir_module_module
@@ -279,8 +280,24 @@ class IrCron(models.Model):
         # because the db has zombie states and we force a call to
         # reset_module_states.
         from odoo.modules.loading import reset_modules_state  # noqa: PLC0415
-        reset_modules_state(cr)
-        cr.commit()
+        try:
+            # lock to avoid reset during ongoing module installation
+            cr.execute("SELECT pg_advisory_xact_lock(hashtext('registry_loading')) NOWAIT", log_exceptions=False)
+        except psycopg2.OperationalError:
+            _logger.debug("failed to lock registry for reset_modules_state")
+        else:
+            reset_modules_state(cr)
+            cr.commit()
+        # reset done or failed, in any case, raise to re-check other conditions
+        raise BadModuleState()
+
+    @staticmethod
+    def _lock_registry_changes(cr):
+        """Acquire a shared session lock on the registry to prevent it from updating."""
+        try:
+            cr.execute("SELECT pg_advisory_lock_shared(hashtext('registry_loading')) NOWAIT", log_exceptions=False)
+        except psycopg2.OperationalError:
+            raise BadModuleState()
 
     @staticmethod
     def _get_ready_sql_condition(cr: BaseCursor) -> SQL:
@@ -498,6 +515,15 @@ class IrCron(models.Model):
                 loop_count < MIN_RUNS_PER_JOB
                 or time.monotonic() < env.context['cron_end_time']
             ):
+                if cls.pool is not env.registry:
+                    # registry changed, retry later
+                    status = CompletionStatus.PARTIALLY_DONE
+                    _logger.info(
+                        'Job %r (%s) %s (registry changed)',
+                        job['cron_name'], job['id'], status,
+                    )
+                    return status
+
                 cron, progress = cron._add_progress(timed_out_counter=timed_out_counter)
                 job_cr.commit()
 
@@ -875,6 +901,8 @@ class IrCron(models.Model):
         if not progress:
             # not called during a cron, just commit
             self.env.cr.commit()
+            if self.env.registry is not self.pool:
+                return 0  # registry changed, no time left
             return float('inf')
         assert processed >= 0, 'processed must be positive'
         assert (remaining or 0) >= 0, "remaining must be positive"
@@ -890,6 +918,8 @@ class IrCron(models.Model):
             vals['deactivate'] = True
         progress.write(vals)
         self.env.cr.commit()
+        if self.env.registry is not self.pool:
+            return 0  # registry changed, no time left
         return max(ctx.get('cron_end_time', float('inf')) - time.monotonic(), 0)
 
     @api.model
