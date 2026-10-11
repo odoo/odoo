@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 
@@ -106,6 +106,13 @@ class TestTaskState(TestProjectCommon):
         self.task_1._onchange_project_id()
         self.assertEqual(self.task_1.state, '01_in_progress', "task_1 state should automatically switch back to in_progress when its project changes")
         self.assertEqual(self.task_2.state, '1_canceled', "task_2 state should remain to cancelled when its project changes")
+
+    def test_change_stage_in_form(self):
+        stage_won = self.env['project.task.type'].search([('name', '=', 'Won')])
+        with Form(self.task_1) as task_form:
+            task_form.state = '03_approved'
+            task_form.stage_id = stage_won
+        self.assertEqual(self.task_1.state, '01_in_progress', "task_1 state should switch back to in_progress when its stage changes in the form")
 
     def test_duplicate_dependent_task(self):
         self.task_1.write({
