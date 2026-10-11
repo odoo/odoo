@@ -6,6 +6,7 @@ import re
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -520,8 +521,13 @@ class CalendarEvent(models.Model):
             values['subject'] = self.name or ''
 
         if 'description' in fields_to_sync:
+            content = self._get_customer_description()
+            if self.videocall_location and self.DISCUSS_ROUTE in self.videocall_location and self.videocall_location not in (content or ''):
+                # Surface the Discuss join link in the body exactly once, even across two-way sync.
+                join_link = Markup('<a href="%s">%s</a>') % (self.videocall_location, _("Join with Odoo Discuss"))
+                content = Markup('%s<br>%s') % (content, join_link) if content else join_link
             values['body'] = {
-                'content': self._get_customer_description(),
+                'content': content,
                 'contentType': "html",
             }
 
