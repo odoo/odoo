@@ -188,7 +188,10 @@ class HrLeaveAllocation(models.Model):
         self.ensure_one()
         date_from = allocation_data.get('nextcall', self.nextcall) or self.date_from \
             if self.accrual_plan_id else self.date_from
-        return self.employee_id._get_hours_per_day(date_from)
+        hours_per_day = self.employee_id._get_hours_per_day(date_from)
+        if hours_per_day == 0:
+            raise ValidationError(self.env._("The employee cannot have a time-off allocation for that period as they have 0 working hours."))
+        return hours_per_day
 
     def _get_title(self):
         self.ensure_one()
