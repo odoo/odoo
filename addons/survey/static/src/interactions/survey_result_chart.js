@@ -201,6 +201,18 @@ export class SurveyResultChart extends Interaction {
                 ],
             },
             options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            generateLabels: this.generateShortLegendLabels,
+                        },
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: this.splitTooltipTitle,
+                        },
+                    },
+                },
                 aspectRatio: 2,
             },
         };
@@ -361,6 +373,38 @@ export class SurveyResultChart extends Interaction {
      */
     markIfCorrect(value) {
         return value.text + (this.rightAnswers.indexOf(value.text) >= 0 ? " \u2713" : "");
+    }
+
+    /**
+     * Returns the default pie chart legend items with a shortened text.
+     *
+     * @param {Chart} chart
+     */
+    generateShortLegendLabels(chart) {
+        const legendItems = Chart.overrides.pie.plugins.legend.labels.generateLabels(chart);
+        const labelLimit = 20;
+        return legendItems.map((item) => ({
+            ...item,
+            text: item.text.length > labelLimit ? `${item.text.slice(0, labelLimit)}…` : item.text,
+        }));
+    }
+
+    /**
+     * Returns the tooltip title split into lines, so that a long answer fits in the chart.
+     *
+     * @param {Object[]} tooltipItems
+     */
+    splitTooltipTitle(tooltipItems) {
+        const lineLimit = 50;
+        const lines = [];
+        for (const word of tooltipItems[0].label.split(" ")) {
+            if (lines.length && `${lines.at(-1)} ${word}`.length <= lineLimit) {
+                lines[lines.length - 1] += ` ${word}`;
+            } else {
+                lines.push(word);
+            }
+        }
+        return lines;
     }
 
     /**
