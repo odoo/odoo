@@ -976,6 +976,139 @@ class WebsiteSearchableMixin(models.AbstractModel):
         count = model.search_count(domain) if limit and limit == len(results) else len(results)
         return results, count
 
+    @api.model
+    def _search_get_matching_query(self, search_detail, search):
+        """
+        Returns the query matching search_detail's results, on which
+        _search_get_relevance_vectors can rank rows by relevance to search.
+
+        Override this method if matching isn't a plain model.search().
+
+        :param search_detail: see :meth:`_search_get_detail`
+        :param search: text against which to match results
+
+        :return: query selecting the matching records
+        """
+        domain = self._search_build_domain(
+            search_detail['base_domain'], search, search_detail['search_fields'], search_detail.get('search_extra'),
+        )
+        model = self.sudo() if search_detail.get('requires_sudo') else self
+        return model._search(domain, order=search_detail.get('order'))
+
+    @api.model
+    def _search_get_relevance_fields(self, search_detail):
+        """
+        Groups search_detail's fields by relevance category.
+
+        :param search_detail: see :meth:`_search_get_detail`
+
+        :return: dict mapping each category ('name', 'tags', 'description')
+            to its list of field paths
+        """
+        mapping = search_detail['mapping']
+        fields_by_category = {'name': [], 'tags': [], 'description': []}
+        if name_field := mapping.get('name', {}).get('name'):
+            fields_by_category['name'].append(name_field)
+        if description_field := mapping.get('description', {}).get('name'):
+            fields_by_category['description'].append(description_field)
+        for field_path in search_detail['search_fields']:
+            if field_path.count('.') == 1 and field_path.endswith('.name'):
+                fields_by_category['tags'].append(field_path)
+        return fields_by_category
+
+    @api.model
+    def _search_get_field_text_sql(self, table, query, field_path):
+        """
+        Builds the SQL expression for field_path's text on table's row.
+
+        :param table: SQL table of the row being ranked
+        :param query: query table belongs to, extended with a join if field_path
+            is a one2many/many2many field
+        :param field_path: name of a field, or 'relation.field' for one2many/many2many
+
+        :return: SQL expression for the field's text, or None if it can't be
+            turned into ranking SQL
+        """
+        head, is_dotted, tail = field_path.partition('.')
+        if not is_dotted:
+            try:
+                return self._field_to_sql(table._alias, head, query)
+            except ValueError:
+                return None
+
+        if '.' in tail:
+            return None  # more than one relational hop, not supported
+        field = self._fields.get(head)
+        if field is None or field.type not in ('one2many', 'many2many'):
+            return None
+        comodel = self.env[field.comodel_name]
+        if tail not in comodel._fields:
+            return None
+
+        sub_alias = Query.make_alias(table._alias, head)
+        sub_query = Query(comodel, sub_alias)
+        try:
+            field_sql = comodel._field_to_sql(sub_alias, tail, sub_query)
+        except ValueError:
+            return None
+
+        if field.type == 'one2many':
+            if not field.inverse_name:
+                return None
+            sub_query.add_where(SQL("%s = %s", sub_query.table[field.inverse_name], table.id))
+        else:
+            if not field.relation:
+                return None
+            rel_alias = Query.make_alias(sub_alias, 'rel')
+            sub_query.add_join('JOIN', rel_alias, field.relation, SQL(
+                "%s = %s", SQL.identifier(rel_alias, field.column2), sub_query.table.id,
+            ))
+            sub_query.add_where(SQL("%s = %s", SQL.identifier(rel_alias, field.column1), table.id))
+
+        return sub_query.subselect(SQL("string_agg(%s, ' ')", field_sql))
+
+    @api.model
+    def _search_get_relevance_vectors(self, table, query, search_detail):
+        """
+        Builds the per-category tsvector expressions search_detail's results
+        are ranked on, see `website._search_get_relevance_keys`.
+
+        :param table: SQL table of the rows being ranked
+        :param query: query table belongs to
+        :param search_detail: see :meth:`_search_get_detail`
+
+        :return: dict mapping 'name', 'tags' and 'description' to a tsvector SQL
+            expression (weighted 'A', 'B', 'C' respectively), defaulting to an
+            empty tsvector when the category has no usable field
+        """
+        mapping = search_detail['mapping']
+        html_fields = {config['name'] for config in mapping.values() if config.get('html')}
+
+        def category_sql(weight, field_paths):
+            texts = []
+            for field_path in field_paths:
+                text_sql = self._search_get_field_text_sql(table, query, field_path)
+                if text_sql is None:
+                    continue
+                text_sql = SQL("COALESCE(%s, '')", text_sql)
+                if field_path in html_fields:
+                    text_sql = SQL("regexp_replace(%s, '<[^>]*>', ' ', 'g')", text_sql)
+                texts.append(text_sql)
+            if not texts:
+                return SQL("''::tsvector")
+            text_sql = SQL(" || ' ' || ").join(texts)
+            # Cap length: a tsvector over ~1MB raises, and since every model is
+            # one branch of a UNION, one oversized record would kill the whole
+            # query, not just its own branch.
+            return SQL("setweight(to_tsvector('simple', left(%s, 100000)), %s)", text_sql, weight)
+
+        fields_by_category = self._search_get_relevance_fields(search_detail)
+        weights = {'name': 'A', 'tags': 'B', 'description': 'C'}
+        return {
+            category: category_sql(weights[category], fields_by_category[category])
+            for category in ('name', 'tags', 'description')
+        }
+
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = self[:limit].read(fetch_fields)
         for result in results_data:

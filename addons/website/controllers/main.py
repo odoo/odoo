@@ -10,7 +10,8 @@ import urllib.parse
 import zipfile
 from hashlib import md5, sha256
 from io import BytesIO
-from itertools import islice
+from itertools import islice, repeat
+from operator import itemgetter
 from textwrap import shorten
 from xml.etree import ElementTree as ET
 
@@ -1201,6 +1202,42 @@ class Website(Home):
         order = order or 'name ASC'
         return 'is_published desc, %s, id desc' % order
 
+    def _search_apply_proportionate_allocation(self, search_results, limit):
+        """
+        Distribute a global result limit proportionally across groups
+        based on their contribution to the total results.
+
+        Example:
+            Total retrieved results across 3 models = 50
+                - M1: 5   (10%)
+                - M2: 10  (20%)
+                - M3: 35  (70%)
+
+            With limit = 30:
+                - M1 → 10% of 30 ≈ 3
+                - M2 → 20% of 30 ≈ 6
+                - M3 → 70% of 30 ≈ 21
+
+        Note:
+            Due to rounding and minimum allocation guarantees,
+            the total number of allocated results may slightly exceed `limit`.
+
+        :param search_results: per-model results, see `_search_exact`/`_search_by_relevance`,
+            truncated in place down to each model's allocated share
+        :param limit: global limit to distribute across `search_results`
+        """
+        total_obtained_results = sum(len(m.get("results", [])) for m in search_results)
+        for model in search_results:
+            results_data = model.get("results")
+            if results_data:
+                # Calculate proportional allocation for this group
+                allocated_count = math.ceil((len(results_data) / total_obtained_results) * limit)
+                # Ensure at least 1 result per group to maintain visibility
+                allocated_count = max(allocated_count, 1)
+                model["results"] = results_data[:allocated_count]
+                if model.get("ranks") is not None:
+                    model["ranks"] = model["ranks"][:allocated_count]
+
     @http.route('/website/snippet/autocomplete', type='jsonrpc', auth='public', website=True, readonly=True)
     def autocomplete(self, search_type=None, term=None, order=None, offset=0, limit=6, max_nb_chars=999, options=None):
         """
@@ -1218,6 +1255,7 @@ class Website(Home):
             allowFuzzy: enables the fuzzy matching when truthy
             fuzzy (boolean): True when called after finding a name through fuzzy matching
             renderTemplate (bool): If True, returns rendered HTML instead of grouped dict results
+            sortByRelevance: True if we want to sort results by relevance
 
         :returns: dict (or False if no result) containing
             - 'results' (dict | str):
@@ -1259,36 +1297,7 @@ class Website(Home):
             }
 
         if options.get("proportionateAllocation") and results_count > limit:
-            """
-            Distribute a global result limit proportionally across groups
-            based on their contribution to the total results.
-
-            Example:
-                Total retrieved results across 3 models = 50
-                    - M1: 5   (10%)
-                    - M2: 10  (20%)
-                    - M3: 35  (70%)
-
-                With limit = 30:
-                    - M1 → 10% of 30 ≈ 3
-                    - M2 → 20% of 30 ≈ 6
-                    - M3 → 70% of 30 ≈ 21
-
-            Note:
-                Due to rounding and minimum allocation guarantees,
-                the total number of allocated results may slightly exceed `limit`.
-            """
-            total_obtained_results = sum(len(m.get("results", [])) for m in search_results)
-            for model in search_results:
-                results_data = model.get("results")
-                if results_data:
-                    # Calculate proportional allocation for this group
-                    allocated_count = math.ceil(
-                        (len(results_data) / total_obtained_results) * limit
-                    )
-                    # Ensure at least 1 result per group to maintain visibility
-                    allocated_count = max(allocated_count, 1)
-                    model["results"] = results_data[:allocated_count]
+            self._search_apply_proportionate_allocation(search_results, limit)
 
         term = fuzzy_term or term
         search_results = self.env.website._search_render_results(search_results, limit)
@@ -1345,6 +1354,19 @@ class Website(Home):
                 'data': result_data,
                 'has_more': search_result.get('count') > offset + limit
             }
+        if options.get('sortByRelevance'):
+            ranks_by_group = {sr['model'].replace('.', '_'): sr.get('ranks') for sr in search_results}
+            ranked_records = []
+            for group_key, group in result.items():
+                # no ranks (no search term): keep the group order, the stable sort does the rest
+                ranked_records += zip(ranks_by_group[group_key] or repeat(math.inf), group['data'])
+            ranked_records.sort(key=itemgetter(0))
+            result = {'all': {
+                'groupName': _('All'),
+                'searchCount': results_count,
+                'data': [record for _rank, record in ranked_records],
+                'has_more': any(group['has_more'] for group in result.values()),
+            }}
 
         if options.get('renderTemplate'):
             values = [item for group in result.values() for item in group['data']]
