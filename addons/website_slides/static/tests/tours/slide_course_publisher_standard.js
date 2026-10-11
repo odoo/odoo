@@ -132,6 +132,28 @@ registerWebsitePreviewTour(
                         ':iframe .o_wslides_course_nav a:contains("Déboulonnate")[href^="/slides/how-to-deboulonnate"]',
                     run: "click",
                 },
+                {
+                    content: "Set the content to be previewable",
+                    trigger: ":iframe span.o_wslides_js_slide_toggle_is_preview:not(:visible)",
+                    run: "click",
+                },
+                {
+                    content: "Wait for the Preview badge & reload",
+                    trigger: ":iframe span.o_wslides_js_slide_toggle_is_preview",
+                    run: () => {
+                        window.location.reload();
+                    },
+                    expectUnloadPage: true,
+                },
+                {
+                    trigger: ".o_frontend_to_backend_edit_btn",
+                    run: "click",
+                    expectUnloadPage: true,
+                },
+                {
+                    content: "Check that the preview badge is still there",
+                    trigger: ":iframe span.o_wslides_js_slide_toggle_is_preview.text-bg-success",
+                },
             ],
             slidesTourTools.addImageToSection("Introduction", "Overview", true),
             slidesTourTools.addPdfToSection("Introduction", "Exercise", true)
