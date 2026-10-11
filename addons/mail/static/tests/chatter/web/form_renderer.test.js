@@ -187,6 +187,33 @@ test("[TECHNICAL] unfolded ellipsis button should not fold on message click besi
     expect(".o-mail-Message-body span").toHaveCount(1);
 });
 
+test("quote wrapper with its own reply keeps the next reply collapsed", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: `<p>New reply</p>
+            <div data-o-mail-quote="1">
+                <p class="previous-reply" data-o-mail-quote="1">Previous reply</p>
+                <blockquote data-o-mail-quote="1">
+                    <p class="earlier-reply">Earlier reply</p>
+                </blockquote>
+            </div>`,
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId, {
+        arch: `<form><sheet><field name="name"/></sheet><chatter/></form>`,
+    });
+    await waitFor(".o-mail-ellipsis:visible:count(1)");
+    await click(".o-mail-Message-body > .o-mail-ellipsis");
+    expect(".previous-reply:visible").toHaveText("Previous reply");
+    expect(".earlier-reply:visible").toHaveCount(0);
+    await click(".o-mail-Message-body > div > .o-mail-ellipsis");
+    expect(".earlier-reply:visible").toHaveText("Earlier reply");
+});
+
 test("ellipsis button on message of type notification", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
