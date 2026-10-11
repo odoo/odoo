@@ -45,7 +45,8 @@ class StockMove(models.Model):
     def _compute_description_picking(self):
         super()._compute_description_picking()
         for move in self:
-            if move.purchase_line_id and not move.description_picking_manual:
+            # A dropship delivery slip is read by the end customer: no vendor data on it.
+            if move.purchase_line_id and not move.description_picking_manual and not move._is_dropshipped():
                 current_description = move.description_picking
                 product = move.product_id.with_context(lang=move._get_lang())
                 has_receipt_description = bool(product._get_picking_description(move.picking_type_id))
