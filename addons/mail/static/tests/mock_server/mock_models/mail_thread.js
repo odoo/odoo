@@ -16,27 +16,6 @@ export class MailThread extends models.ServerModel {
     _name = "mail.thread";
     _inherit = ["base"];
 
-    /**
-     * @param {number[]} ids
-     * @param {number} [after]
-     * @param {number} [limit=100]
-     * @param {boolean} [filter_recipients]
-     */
-    message_get_followers(ids, after, limit, filter_recipients) {
-        const kwargs = getKwArgs(arguments, "ids", "after", "limit", "filter_recipients");
-        ids = kwargs.ids;
-        after = kwargs.after || 0;
-        limit = kwargs.limit || 100;
-        filter_recipients = kwargs.filter_recipients || false;
-
-        return new Store()
-            .add(this.browse(ids), "_store_message_followers_fields", {
-                as_thread: true,
-                fields_params: { after, limit, filter_recipients },
-            })
-            .as_dict();
-    }
-
     _store_message_followers_fields(
         res,
         { after = 0, limit = 100, filter_recipients = false, reset = false } = {}

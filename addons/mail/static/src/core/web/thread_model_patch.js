@@ -5,25 +5,6 @@ import { rpc } from "@web/core/network/rpc";
 
 /** @type {import("models").Thread} */
 const threadPatch = {
-    get recipientsFullyLoaded() {
-        return this.recipientsCount === this.recipients.length;
-    },
-    async loadMoreFollowers() {
-        const data = await this.store.env.services.orm.call(this.model, "message_get_followers", [
-            [this.id],
-            this.followers.at(-1).id,
-        ]);
-        this.store.insert(data);
-    },
-    async loadMoreRecipients() {
-        const data = await this.store.env.services.orm.call(
-            this.model,
-            "message_get_followers",
-            [[this.id], this.recipients.at(-1).id],
-            { filter_recipients: true }
-        );
-        this.store.insert(data);
-    },
     /** @override */
     open(options) {
         const res = super.open(...arguments);

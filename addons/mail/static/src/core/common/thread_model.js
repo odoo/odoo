@@ -314,13 +314,6 @@ export class Thread extends Record {
         return `${this.model}_${this.id}`;
     }
 
-    get followersFullyLoaded() {
-        return (
-            this.followersCount ===
-            (this.selfFollower ? this.followers.length + 1 : this.followers.length)
-        );
-    }
-
     attachmentsInWebClientView = this.computedShallowEqual(() => {
         const attachments = this.attachments.filter(
             (attachment) => (attachment.isPdf || attachment.isImage) && !attachment.uploading
