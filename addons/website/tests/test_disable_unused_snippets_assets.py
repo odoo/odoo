@@ -127,7 +127,7 @@ HOMEPAGE_OUTDATED = """
 <t name="Homepage" t-name="website.homepage1">
   <t t-call="website.layout" pageName.f="homepage">
     <div id="wrap" class="oe_structure oe_empty">
-      <form action="/website_form/" method="post" class="s_website_form container-fluid mt32 o_fake_not_editable" enctype="multipart/form-data" data-name="Form Builder" data-model_name="mail.mail" data-success_page="/contactus-thank-you" data-snippet="s_website_form">
+      <form action="/website_form/" method="post" class="s_website_form container-fluid mt32 o_fake_not_editable" enctype="multipart/form-data" data-dynamic-builder-name="Form Builder" data-model_name="mail.mail" data-success_page="/contactus-thank-you" data-snippet="s_website_form">
         <div class="container">
         </div>
       </form>
@@ -151,7 +151,7 @@ HOMEPAGE_OUTDATED = """
 """
 
 MEGA_MENU_UP_TO_DATE = """
-<section class="s_mega_menu_multi_menus py-4 o_colored_level" data-name="Multi-Menus">
+<section class="s_mega_menu_multi_menus py-4 o_colored_level" data-dynamic-builder-name="Multi-Menus">
         <div class="container">
         </div>
     </section>
@@ -163,7 +163,7 @@ MEGA_MENU_UP_TO_DATE = """
 """
 
 MEGA_MENU_OUTDATED = """
-<section class="s_mega_menu_multi_menus py-4 o_colored_level" data-name="Multi-Menus">
+<section class="s_mega_menu_multi_menus py-4 o_colored_level" data-dynamic-builder-name="Multi-Menus">
         <div class="container">
         </div>
     </section>

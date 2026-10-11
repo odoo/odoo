@@ -55,7 +55,7 @@ class IrUiView extends models.Model {
 export const setupWebsiteBuilderOeId = 539;
 
 export const invisibleEl =
-    '<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element" data-invisible="1"></div>';
+    '<div class="s_invisible_el o_snippet_invisible" data-dynamic-builder-name="Invisible Element" data-invisible="1"></div>';
 
 export function defineWebsiteModels({ includeMailModels = true } = {}) {
     describe.current.tags("desktop");
