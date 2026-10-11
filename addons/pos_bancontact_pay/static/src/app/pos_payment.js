@@ -5,8 +5,8 @@ patch(PosPayment.prototype, {
     getQrPopupProps(customerDisplay = false) {
         const base = super.getQrPopupProps(...arguments);
         const lang = this.pos_order_id?.user_id?.lang?.split("_")?.[0];
-        const supportedLanguages = ["fr", "nl"];
-        const frameLanguage = lang && supportedLanguages.includes(lang) ? lang : "fr";
+        const supportedLanguages = ["en", "fr", "nl", "de"];
+        const frameLanguage = lang && supportedLanguages.includes(lang) ? lang : "en";
         return { ...base, frameLanguage };
     },
 
