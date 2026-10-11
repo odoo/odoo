@@ -24,7 +24,7 @@
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
                 <list string="Work Center" multi_edit="1">
-                    <field name="company_id" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/> <!-- needed by the company-dependent domain of the check_company fields of this list -->
                     <field name="sequence" widget="handle"/>
                     <field name="name" optional="show"/>
                     <field name="code" optional="show"/>
@@ -37,7 +37,7 @@
                     <field name="time_start" optional="hide"/>
                     <field name="time_stop" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
-                    <field name="active" column_invisible="True"/>
+                    <field name="active" column_invisible="True"/> <!-- enables the Archive/Unarchive action in this list -->
                 </list>
             </field>
         </record>
@@ -264,7 +264,7 @@
                 <form string="Work Center">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <field name="has_routing_lines" invisible="1"/>
+                            <field name="has_routing_lines" invisible="1"/> <!-- drives invisible of the Operations stat button -->
                             <button type="object"
                                 name="action_show_operations"
                                 invisible="not has_routing_lines"
@@ -307,8 +307,8 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
                             <group>
-                                <field name="active" invisible="1"/>
-                                <field name="company_id" invisible="1"/>
+                                <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget -->
+                                <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields and used in the employee_ids domain added by mrp_workorder -->
                                 <field name="name" string="Work Center Name" required="True"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                                 <field
@@ -521,7 +521,7 @@
                         <field  name="workorder_id"/>
                         <field name="workcenter_id"/>
                         <field name="loss_id"/>
-                        <field name="company_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields of this form -->
                     </group><group>
                         <field name="date_start"/>
                         <field name="date_end"/>

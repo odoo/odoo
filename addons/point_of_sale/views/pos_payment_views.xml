@@ -34,7 +34,7 @@
         <field name="model">pos.payment</field>
         <field name="arch" type="xml">
             <list string="Payments" create="0" delete="0">
-                <field name="currency_id" column_invisible="True" />
+                <field name="currency_id" column_invisible="True" /> <!-- currency of the monetary columns of this list -->
                 <field name="payment_date"/>
                 <field name="payment_method_id" />
                 <field name="pos_order_id" />

@@ -7,7 +7,7 @@
             <form string="Skills" class="o_hr_skills_dialog_form">
                 <sheet>
                     <group>
-                        <field name="applicant_id" invisible="1"/>
+                        <field name="applicant_id" invisible="1"/> <!-- required parent applicant, filled by the default_applicant_id of the context opening this dialog -->
                         <field name="skill_type_id" widget="badges_many2one" string="Category"/>
                         <field name="skill_id" widget="badges_many2one"
                             context="{'default_skill_type_id': skill_type_id}"

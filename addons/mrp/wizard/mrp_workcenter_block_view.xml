@@ -9,8 +9,8 @@
                 <group>
                     <field name="loss_id" class="oe_inline" domain="[('manual','=',True)]"/>
                     <field name="description" placeholder="Add a description..."/>
-                    <field name="workcenter_id" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
+                    <field name="workcenter_id" invisible="1"/> <!-- required work center filled by the default_workcenter_id of the context -->
+                    <field name="company_id" invisible="1"/> <!-- needed by the company-dependent domain of the check_company fields of this wizard -->
                 </group>
                 <footer>
                     <button name="button_block" string="Block" type="object" class="btn-danger" data-hotkey="q"/>

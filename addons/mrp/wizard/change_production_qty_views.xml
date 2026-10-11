@@ -19,7 +19,7 @@
                     <span class="text-muted">
                         Modifying the quantity to produce will also modify the quantities of components to consume for this manufacturing order.
                     </span>
-                    <field name="mo_id" invisible="1"/>
+                    <field name="mo_id" invisible="1"/> <!-- required manufacturing order filled by the default_mo_id of the context -->
                     <footer>
                         <button name="change_prod_qty" string="Set Quantity" data-hotkey="q"
                             colspan="1" type="object" class="btn-primary"/>

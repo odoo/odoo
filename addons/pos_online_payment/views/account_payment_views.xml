@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="pos_order_id" invisible="1"/>
+                <field name="pos_order_id" invisible="1"/> <!-- drives invisible of the POS Order button -->
                 <button name="action_view_pos_order" type="object"
                         class="oe_stat_button" icon="shopping_cart"
                         invisible="not pos_order_id">

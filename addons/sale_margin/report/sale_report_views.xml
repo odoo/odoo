@@ -17,7 +17,7 @@
                 <field name="purchase_price" widget="monetary" optional="show" sum="Total Cost"/>
                 <field name="margin" widget="monetary" sum="Total Margin"/>
                 <field name="margin_percent" widget="percentage" optional="show" width="100px"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency of the monetary columns of this list -->
             </list>
         </field>
     </record>

@@ -8,9 +8,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='standard_price_uom']" position="inside">
                     <t groups="mrp.group_mrp_manager">
-                        <field name="bom_count" invisible="1"/>
-                        <field name="cost_method" invisible="1"/>
-                        <field name="valuation" invisible="1"/>
+                        <field name="bom_count" invisible="1"/> <!-- drives invisible of the Compute Price from BoM button -->
+                        <field name="cost_method" invisible="1"/> <!-- drives invisible of the Compute Price from BoM button -->
+                        <field name="valuation" invisible="1"/> <!-- drives invisible of the Compute Price from BoM button -->
                         <button name="button_bom_cost"
                             string="Compute Price from BoM" type="object"
                             invisible="bom_count == 0 or valuation == 'real_time' and cost_method == 'fifo'"
@@ -29,9 +29,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='standard_price_uom']" position="inside">
                     <t groups="mrp.group_mrp_manager">
-                        <field name="bom_count" invisible="1"/>
-                        <field name="cost_method" invisible="1"/>
-                        <field name="valuation" invisible="1"/>
+                        <field name="bom_count" invisible="1"/> <!-- drives invisible of the Compute Price from BoM button -->
+                        <field name="cost_method" invisible="1"/> <!-- drives invisible of the Compute Price from BoM button -->
+                        <field name="valuation" invisible="1"/> <!-- drives invisible of the Compute Price from BoM button -->
                         <button name="button_bom_cost"
                             string="Compute Price from BoM" type="object"
                             invisible="bom_count == 0 or valuation == 'real_time' and cost_method == 'fifo'"

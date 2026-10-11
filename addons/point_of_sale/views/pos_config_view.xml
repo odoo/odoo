@@ -8,11 +8,11 @@
             <form string="Point of Sale Configuration">
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <field name="active" invisible="1"/>
-                    <field name="company_has_template" invisible="1"/>
-                    <field name="has_active_session" invisible="1"/>
-                    <field name="other_devices" invisible="1"/>
-                    <field name="module_pos_hr" invisible="1"/>
+                    <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget -->
+                    <field name="company_has_template" invisible="1"/> <!-- drives invisible of the missing chart of accounts warning -->
+                    <field name="has_active_session" invisible="1"/> <!-- drives invisible of the opened session warning and readonly of module_pos_hr -->
+                    <field name="other_devices" invisible="1"/> <!-- drives invisible of the receipt printers block -->
+                    <field name="module_pos_hr" invisible="1"/> <!-- drives invisible of the employees block -->
 
                     <div class="oe_title" id="title">
                         <label for="name"/>
@@ -123,7 +123,7 @@
                 <field name="name" />
                 <field name="company_id"  options="{'no_create': True}" groups="base.group_multi_company"/>
                 <field name="last_session_closing_date" string="Closing"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency of the monetary columns of this list -->
                 <field name="current_cash_register_balance" widget="monetary" string="Balance"/>
             </list>
         </field>

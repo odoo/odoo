@@ -9,11 +9,11 @@
             <!-- Needed by customContentKanbanLikeWidget to save selected documents on the product. -->
             <!-- Desktop view -->
             <xpath expr="//field[@name='order_line']/list" position="inside">
-                <field name="product_document_ids" column_invisible="1"/>
+                <field name="product_document_ids" column_invisible="1"/> <!-- needed by customContentKanbanLikeWidget to save the documents selected on the product -->
             </xpath>
             <!-- Mobile view -->
             <xpath expr="//field[@name='order_line']/kanban" position="inside">
-                <field name="product_document_ids" column_invisible="1"/>
+                <field name="product_document_ids" column_invisible="1"/> <!-- needed by customContentKanbanLikeWidget to save the documents selected on the product -->
             </xpath>
             <page name="order_lines" position="after">
                 <page
@@ -23,8 +23,8 @@
                     invisible="not (partner_id and is_pdf_quote_builder_available) or context.get('hide_pdf_quote_builder')"
                 >
                     <!-- Needed by customContentKanbanLikeWidget to save selected documents. -->
-                    <field name="quotation_document_ids" invisible="1"/>
-                    <field name="customizable_pdf_form_fields" invisible="1"/>
+                    <field name="quotation_document_ids" invisible="1"/> <!-- needed by customContentKanbanLikeWidget to save the selected documents -->
+                    <field name="customizable_pdf_form_fields" invisible="1"/> <!-- needed by customContentKanbanLikeWidget to save the values filled in the document form fields -->
                     <widget
                         name="customContentKanbanLikeWidget"
                         class="d-inline"

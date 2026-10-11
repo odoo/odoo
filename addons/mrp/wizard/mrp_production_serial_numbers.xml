@@ -6,7 +6,7 @@
         <field name="model">mrp.production.serials</field>
         <field name="arch" type="xml">
             <form string="Serial Numbers">
-                <field name="production_id" invisible="True"/>
+                <field name="production_id" invisible="True"/> <!-- manufacturing order the serial numbers are generated for, filled from the context -->
                 <group invisible="not workorder_id">
                     <group>
                         <field name="qty_produced"/>
