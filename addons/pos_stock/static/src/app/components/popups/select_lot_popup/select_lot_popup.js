@@ -1,5 +1,6 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { Component, onMounted, proxy, useProps, signal, t } from "@odoo/owl";
+import { deserializeDate, formatDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
@@ -32,6 +33,7 @@ export class SelectLotPopup extends Component {
                 .map((item) => ({
                     text: item.text.trim(),
                     id: item.id,
+                    expiration_date: item.expiration_date,
                 })),
         });
         useAutoFocusToLast(this.rootRef);
@@ -55,7 +57,11 @@ export class SelectLotPopup extends Component {
                     );
                     if (filteredOptions.length) {
                         return filteredOptions.map((option) => ({
-                            label: option.name,
+                            label: `${option.name}${
+                                option.expiration_date
+                                    ? " - " + this.getFormattedDate(option.expiration_date)
+                                    : ""
+                            }`,
                             onSelect: () =>
                                 this.onSelect({
                                     create: true,
@@ -146,5 +152,17 @@ export class SelectLotPopup extends Component {
             event.stopPropagation();
             this.confirm();
         }
+    }
+
+    getFormattedDate(value) {
+        if (!value) {
+            return "";
+        }
+
+        if (typeof value === "string") {
+            value = deserializeDate(value);
+        }
+
+        return formatDate(value);
     }
 }
