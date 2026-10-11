@@ -231,16 +231,11 @@ class EventSponsor(models.Model):
         return vals
 
     def _get_breadcrumb_items(self, is_detail_page=False):
-        items = super()._get_breadcrumb_items(is_detail_page)
-        items.append((self.env._("Events"), '/event'))
-        if not self:
-            return items
-        event = self[0].event_id
-        event_slug = self.env['ir.http']._slug(event)
-        items.extend([
-            (event.name, event.website_url),
-            (self.env._("Exhibitors"), f'/event/{event_slug}/exhibitors'),
-        ])
+        event = self.event_id or self.env['event.event'].browse(self.env.context.get('event_id'))
+        if not event:
+            return super()._get_breadcrumb_items(is_detail_page)
+        items = event._get_breadcrumb_items(True)
+        items.append((self.env._("Exhibitors"), f'{event.website_url}/exhibitors'))
         if is_detail_page:
             items.append((self.name, self.website_url))
         return items
@@ -261,8 +256,7 @@ class EventSponsor(models.Model):
         if is_detail_page:
             schemas.append(self._build_profilepage_jsonld_vals())
             return schemas
-        event_slug = self.env['ir.http']._slug(self[0].event_id)
-        schemas.append(self._build_collectionpage_jsonld_vals(
-            self.env._("Exhibitors"), f'/event/{event_slug}/exhibitors', self,
-        ))
+        # The listing the visitor is on is the last breadcrumb item.
+        name, path = self._get_breadcrumb_items()[-1]
+        schemas.append(self._build_collectionpage_jsonld_vals(name, path, self))
         return schemas
