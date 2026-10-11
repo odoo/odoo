@@ -9,3 +9,7 @@ class ResConfigSettings(models.TransientModel):
         related='website_id.l10n_ar_website_sale_show_both_prices',
         readonly=False,
     )
+    l10n_ar_final_consumer_limit = fields.Float(
+        related='website_id.l10n_ar_final_consumer_limit',
+        readonly=False,
+    )
