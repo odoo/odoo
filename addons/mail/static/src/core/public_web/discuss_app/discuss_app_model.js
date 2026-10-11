@@ -11,6 +11,7 @@ export class DiscussApp extends Record {
         this.onChange(
             () => [this.thread],
             function onChangeThread(thread) {
+                this.sideChannel = undefined;
                 if (!thread && !this.hasRestoredThread) {
                     // Keep the stored id until the restore reads it.
                     return;
@@ -36,6 +37,7 @@ export class DiscussApp extends Record {
     isMemberPanelOpenByDefault = this.localStorage(true);
     lastActiveId = this.localStorage(undefined);
     thread = fields.One("mail.thread", { inverse: "discussAppAsThread" });
+    sideChannel = fields.One("discuss.channel", { inverse: "discussAppAsSideChannel" });
     hasRestoredThread = false;
     sidebarWidth = this.localStorage(SIDEBAR_WIDTH);
 
@@ -66,7 +68,8 @@ export class DiscussApp extends Record {
 
     /** @param {import("@mail/core/common/action").Action} [nextActiveAction] */
     shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
-        return true;
+        // opening a side channel closes the action panel, that is not a user choice
+        return !this.sideChannel;
     }
 }
 

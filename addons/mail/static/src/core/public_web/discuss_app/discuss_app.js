@@ -1,5 +1,4 @@
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
-import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { propSignal } from "@mail/utils/common/hooks";
 
 import {
@@ -7,7 +6,6 @@ import {
     computed,
     onMounted,
     onWillUnmount,
-    providePlugins,
     signal,
     t,
     useListener,
@@ -22,10 +20,12 @@ import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_me
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useService } from "@web/core/utils/hooks";
+import { DiscussSideChannel } from "@mail/core/public_web/discuss_app/discuss_side_channel";
 
 export class Discuss extends Component {
     static components = {
         DiscussContent,
+        DiscussSideChannel,
         MessagingMenu,
         ResizablePanel,
     };
@@ -42,8 +42,8 @@ export class Discuss extends Component {
         this.channel = propSignal("channel", t.instanceOf(this.store["discuss.channel"]), {
             optional: true,
         });
+        this.sideChannel = computed(() => this.store.discuss.sideChannel);
         this.menuState = computed(() => this.store.discuss.sidebarState);
-        providePlugins([MessageHighlightPlugin], { thread: () => this.thread });
         this.orm = useService("orm");
         this.effect = usePlugin(EffectPlugin);
         this.ui = useService("ui");

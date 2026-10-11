@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.DiscussSideChannel">
+    <div class="o-mail-DiscussSideChannel o-mail-DiscussContent-panelContainer rounded-4 border">
+        <ActionPanel title="this.channel().displayName" close="() => this.store.discuss.sideChannel = undefined" resizable="true" minWidth="300" initialWidth="400" icon="'forum'" contentRef="this.panelContentRef">
+            <t t-set-slot="header-extra">
+                <button title="Open in Full View" class="btn opacity-75 opacity-100-hover p-1 position-relative" t-on-click="() => this.channel().open()">
+                    <i class="oi" data-icon="expand_content"/>
+                </button>
+            </t>
+            <Thread thread="this.channel().thread" jumpPresent="this.state.jumpPresent"/>
+            <t t-call="mail.ChatWindow.memberTyping"/>
+            <Composer
+                composer="this.channel().composer"
+                autofocus="!this.isMobileOS"
+                onDiscardCallback="() => (this.channel().composer.replyToMessage = undefined)"
+                onPostCallback.bind="() => this.state.jumpPresent++"
+                dropzoneRef="this.panelContentRef"
+           />
+        </ActionPanel>
+    </div>
+</t>
+
+</templates>
