@@ -20,6 +20,10 @@ export class HrEmployee extends hrModels.HrEmployee {
         },
     ];
 
+    get_expected_hours() {
+        return {};
+    }
+
     _store_avatar_card_fields(res) {
         super._store_avatar_card_fields(res);
         res.attr("leave_date_to");
