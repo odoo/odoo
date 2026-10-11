@@ -528,3 +528,54 @@ class TestAccountPayment(AccountPaymentCommon):
         })
         inv_line = payment.move_id.line_ids.filtered(lambda l: l.balance == 200)
         self.assertFalse(statement_line._get_partial_amounts(-200, inv_line, -100, -100))
+
+    def test_post_process_existing_payment_provider_reference(self):
+        """Provider reference should propagate to a pre-existing payment."""
+        tx = self._create_transaction(
+            "direct",
+            provider_reference="provider_ref",
+            state="done",
+        )
+
+        payment_method_line = tx.provider_id.journal_id.inbound_payment_method_line_ids.filtered(
+            lambda line: line.payment_provider_id == tx.provider_id
+        )
+
+        payment = self.env["account.payment"].create({
+            "amount": tx.amount,
+            "payment_type": "inbound",
+            "currency_id": tx.currency_id.id,
+            "partner_id": tx.partner_id.id,
+            "partner_type": "customer",
+            "journal_id": tx.provider_id.journal_id.id,
+            "company_id": tx.company_id.id,
+            "payment_method_line_id": payment_method_line.id,
+            "memo": tx.reference,
+        })
+        payment.action_post()
+
+        tx.payment_id = payment
+
+        with patch.object(
+                self.env.registry["payment.transaction"],
+                "_create_payment",
+                autospec=True,
+        ) as create_payment_mock:
+            tx._post_process()
+
+        create_payment_mock.assert_not_called()
+
+        expected_reference = f"{tx.reference} - {tx.provider_reference}"
+        self.assertEqual(payment.memo, expected_reference)
+
+        liquidity_lines, counterpart_lines, _writeoff_lines = payment._seek_for_lines()
+        expected_line_name = f"{payment.payment_method_line_id.name}: {expected_reference}"
+
+        self.assertEqual(
+            liquidity_lines.mapped("name"),
+            [expected_line_name],
+        )
+        self.assertEqual(
+            counterpart_lines.mapped("name"),
+            [expected_line_name],
+        )
