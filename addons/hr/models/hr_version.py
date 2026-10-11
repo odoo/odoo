@@ -7,9 +7,10 @@ from babel.dates import format_date, get_date_format
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
-from odoo.tools import get_lang, babel_locale_parse
+from odoo.tools import SQL, get_lang, babel_locale_parse
 
 import logging
 import operator as py_operator
@@ -458,10 +459,41 @@ class HrVersion(models.Model):
         """
         if not (self.contract_date_start and date_from and date_to):
             return False
-        period_start = date_from or date.min
-        period_end = date_to or date.max
-        contract_end = self.date_end or date.max
-        return period_start <= contract_end and self.date_start <= period_end
+        return self.date_start <= date_to and (not self.date_end or self.date_end >= date_from)
+
+    @api.model
+    def _is_overlapping_period_domain(self, date_from, date_to):
+        """
+        Return a domain matching the versions in contract at least one day during [date_from, date_to].
+        It only relies on stored fields, as searching on the computed date_end scans every version.
+        """
+        if not (date_from and date_to):
+            return Domain.FALSE
+
+        def _no_next_version_before_period(table):
+            # Each version ends the day before the next active one, so that next one must start after date_from
+            return SQL(
+                """NOT EXISTS (
+                    SELECT 1 FROM hr_version next_version
+                     WHERE next_version.employee_id = %s
+                       AND next_version.active
+                       AND next_version.date_version > %s
+                       AND next_version.date_version <= %s
+                )""",
+                table.employee_id, table.date_version, date_from,
+            )
+
+        # date_start is max(date_version, contract_date_start), so both must start before the period ends
+        return Domain.AND([
+            Domain('contract_date_start', '!=', False),
+            Domain('contract_date_start', '<=', date_to),
+            Domain('date_version', '<=', date_to),
+            Domain('contract_date_end', '=', False) | Domain('contract_date_end', '>=', date_from),
+            Domain.custom(
+                to_sql=_no_next_version_before_period,
+                predicate=lambda version: version._is_overlapping_period(date_from, date_to),
+            ),
+        ])
 
     def _get_reference_calendar(self, date=None):
         self.ensure_one()
