@@ -530,11 +530,11 @@ class L10nEsEdiTbaiDocument(models.Model):
             elif l10n_es_type == 'no_sujeto':
                 no_sujeta = sujeta_no_sujeta.setdefault('NoSujeta', {})
                 no_sujeta.setdefault('ImportePorArticulos7_14_Otros', 0.0)
-                no_sujeta['ImportePorArticulos7_14_Otros'] += sign * float_round(values['base_amount'], 2)
+                no_sujeta['ImportePorArticulos7_14_Otros'] = float_round(no_sujeta['ImportePorArticulos7_14_Otros'] + sign * float_round(values['base_amount'], 2), 2)
             elif l10n_es_type == 'no_sujeto_loc':
                 no_sujeta = sujeta_no_sujeta.setdefault('NoSujeta', {})
                 no_sujeta.setdefault('ImporteTAIReglasLocalizacion', 0.0)
-                no_sujeta['ImporteTAIReglasLocalizacion'] += sign * float_round(values['base_amount'], 2)
+                no_sujeta['ImporteTAIReglasLocalizacion'] = float_round(no_sujeta['ImporteTAIReglasLocalizacion'] + sign * float_round(values['base_amount'], 2), 2)
 
         if 'sujeto' in encountered_l10n_es_type and 'sujeto_isp' not in encountered_l10n_es_type:
             sujeta_no_sujeta['Sujeta']['NoExenta']['TipoNoExenta'] = 'S2'
