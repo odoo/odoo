@@ -16,7 +16,7 @@ function fromField(f, record) {
         case "qrcode":
             const qrcode = document.createElement("img");
             qrcode.setAttribute("class", "img img-fluid");
-            qrcode.setAttribute("src", "data:image/png;base64," + record["qrcode"]);
+            qrcode.setAttribute("src", "data:image/png;base64," + (record["qrcode"]?.content || ""));
             return qrcode;
         case "url":
             const url = document.createElement("a");
