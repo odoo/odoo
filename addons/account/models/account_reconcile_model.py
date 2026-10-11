@@ -25,7 +25,7 @@ class AccountReconcileModelLine(models.Model):
         selection=[
             ('fixed', 'Fixed'),
             ('percentage', 'Percentage of balance'),
-            ('percentage_st_line', 'Percentage of statement line'),
+            ("percentage_st_line", "Percentage of transaction"),
             ('regex', 'From label'),
         ],
         required=True,
@@ -80,7 +80,7 @@ class AccountReconcileModelLine(models.Model):
             if record.amount_type == 'fixed' and record.amount == 0:
                 raise UserError(_("The amount is not a number"))
             if record.amount_type == 'percentage_st_line' and record.amount == 0:
-                raise UserError(_("Statement line percentage can't be 0"))
+                raise UserError(self.env._("Transaction percentage can't be 0"))
             if record.amount_type == 'percentage' and record.amount == 0:
                 raise UserError(_("Balance percentage can't be 0"))
             if record.amount_type == 'regex':
@@ -112,7 +112,7 @@ class AccountReconcileModel(models.Model):
         ],
         compute='_compute_trigger',
         required=True, tracking=True, store=True, readonly=False, precompute=True,
-        help='Validate the statement line automatically (reconciliation based on your rule).'
+        help="Validate the transaction automatically (reconciliation based on your rule)."
     )
     next_activity_type_id = fields.Many2one(
         comodel_name='mail.activity.type',
@@ -144,10 +144,10 @@ class AccountReconcileModel(models.Model):
         ('contains', 'Contains'),
         ('not_contains', 'Not Contains'),
         ('match_regex', 'Match Regex'),
-    ], string='Label', tracking=True, help='''The reconciliation model will only be applied when either the statement line label, the transaction details or the note matches the following:
-        * Contains: The statement line must contains this string (case insensitive).
+    ], string="Label", tracking=True, help="""The reconciliation model will only be applied when either the transaction label, the transaction details or the note matches the following:
+        * Contains: The transaction must contain this string (case insensitive).
         * Not Contains: Negation of "Contains".
-        * Match Regex: Define your own regular expression.''')
+        * Match Regex: Define your own regular expression.""")
     match_label_param = fields.Char(string='Label Parameter', tracking=True)
     match_partner_ids = fields.Many2many('res.partner', string='Partners',
         help='The reconciliation model will only be applied to the selected customers/vendors.')
