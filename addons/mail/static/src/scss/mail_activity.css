@@ -64,8 +64,13 @@
 
                     .o_activity_link_kanban {
                         font-size: 1.5em;
-                        @include o-hover-text-color($text-muted, map-get($theme-colors, 'success'));
-                        @include o-hover-opacity(0.5, 1);
+                        color: var(--o-bs-text-muted);
+                        opacity: 0.5;
+
+                        &:hover, &:focus, &.focus {
+                            color: var(--success);
+                            opacity: 1;
+                        }
                     }
 
                     &.o_activity_selected {

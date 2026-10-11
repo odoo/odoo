@@ -353,9 +353,9 @@ $o-mail-utilities: map-merge(
     color: $yellow;
 }
 
-@mixin o-mail-call-bordered($opacity) {
-    border: 1px solid rgba($o-action, $opacity) !important;
-    background-color: mix(mix($white, $gray-100, 15%), $o-action, 97.5%) !important;
+.o-mail-callBordered {
+    border: 1px solid color-mix(in srgb, var(--o-action) calc(var(--o-mail-callBordered-opacity, .35) * 100%), transparent) !important;
+    background-color: color-mix(in srgb, color-mix(in srgb, var(--white) 15%, var(--gray-100)) 97.5%, var(--o-action)) !important;
 }
 
 // see `@mixin button-variant`, this is the implementation without requiring `.btn` classname
@@ -417,7 +417,6 @@ a.o-discuss-mention {
 }
 
 .o-discuss-inCallIcon {
-    @include o-mail-call-bordered(.35);
     color: $o-action;
     aspect-ratio: 1;
 
