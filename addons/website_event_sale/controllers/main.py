@@ -18,6 +18,35 @@ class WebsiteEventSaleController(WebsiteEventController):
             item['price'] = item['ticket']['price'] if item['ticket'] else 0
         return res
 
+    def _prepare_registration_new_values(self, event, **post):
+        """ Override to ensure the validation includes tickets already in the cart. """
+        res = super()._prepare_registration_new_values(event, **post)
+        order_sudo = request.cart
+        if not (res and order_sudo):
+            return res
+
+        # Group cart quantities by slot and ticket to handle complex carts
+        cart_qty = {}
+        for line in order_sudo.order_line:
+            if line.event_ticket_id:
+                # Key maps to (slot_id, ticket_id)
+                key = (line.event_slot_id.id or False, line.event_ticket_id.id)
+                cart_qty[key] = cart_qty.get(key, 0) + line.product_uom_qty
+
+        # limit_check with cart quantities included
+        limit_check = res.get('limit_check', True)
+        if limit_check:
+            slot_id = res.get('event_slot_id', False)
+            for ticket in res.get('tickets', []):
+                key = (int(slot_id) if slot_id else False, ticket['id'])
+                in_cart = cart_qty.get(key, 0)
+                if (ticket['quantity'] + in_cart) > ticket['current_limit_per_order']:
+                    limit_check = False
+                    break
+
+        res['limit_check'] = limit_check
+        return res
+
     def _create_attendees_from_registration_post(self, event, registration_data):
         # we have at least one registration linked to a ticket -> sale mode activate
         if not any(info.get('event_ticket_id') for info in registration_data):
