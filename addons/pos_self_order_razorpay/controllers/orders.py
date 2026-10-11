@@ -1,4 +1,5 @@
 from odoo import http
+from odoo.tools import consteq
 from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 from werkzeug.exceptions import Unauthorized
 
@@ -8,16 +9,23 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
     def razorpay_payment_status(self, access_token, order_id, payment_data, payment_method_id):
         pos_config = self._verify_pos_config(access_token)
         order = pos_config.env['pos.order'].search([
-            ('id', '=', order_id), ('config_id', '=', pos_config.id)
+            ('id', '=', order_id), ('config_id', '=', pos_config.id), ('access_token', '=', payment_data.get('order_token'))
         ], limit=1)
 
         if not order:
             raise Unauthorized()
 
         payment_method = pos_config.env['pos.payment.method'].browse(payment_method_id)
+        reference_id = payment_method._razorpay_get_reference_id(order)
+        p2p_request_id = str(payment_data.get('p2pRequestId') or '')
+        expected_signature = payment_method._razorpay_sign_transaction(p2p_request_id, reference_id)
+        if not p2p_request_id or not consteq(str(payment_data.get('razorpay_signature') or ''), expected_signature):
+            raise Unauthorized()
         razorpay_status_response = payment_method.razorpay_fetch_payment_status(payment_data)
         payment_status = razorpay_status_response.get('status')
         if payment_status == "AUTHORIZED":
+            if not consteq(razorpay_status_response.get('externalRefNumber'), reference_id):
+                raise Unauthorized()
             order.add_payment({
                 'amount': order.amount_total,
                 'payment_method_id': payment_method.id,
@@ -47,7 +55,7 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
     def razorpay_cancel_status(self, access_token, order_id, payment_data, payment_method_id):
         pos_config = self._verify_pos_config(access_token)
         order = pos_config.env['pos.order'].search([
-            ('id', '=', order_id), ('config_id', '=', pos_config.id)
+            ('id', '=', order_id), ('config_id', '=', pos_config.id), ('access_token', '=', payment_data.get('order_token'))
         ], limit=1)
 
         if not order:
