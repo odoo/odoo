@@ -55,6 +55,16 @@ class TestEventVisitor(TestEventOnlineCommon, WebsiteVisitorTestsCommon):
         # main_visitor is now attending both events
         self.assertEqual(self.event_0 | event_1, main_visitor.event_registered_ids)
 
+    def test_visitor_display_name_with_no_partner(self):
+        """ Test that the display name of a visitor without a partner and with an event registration still get a non empty display name """
+        visitor_data = self._prepare_main_visitor_data()
+        # Simulate an anonymous visitor
+        visitor_data['access_token'] = 'f9d2af99f543874642f89bd334fa4a49'
+        main_visitor = self.env['website.visitor'].create(visitor_data)
+        self.assertTrue(main_visitor.event_registration_ids, "Visitor should have event registrations")
+        self.assertFalse(main_visitor.event_registration_ids.name, "Visitor registration name should be empty")
+        self.assertTrue(main_visitor.display_name, "Even with an empty event registration name, visitor display name should not be empty")
+
     def _prepare_main_visitor_data(self):
         values = super()._prepare_main_visitor_data()
         values.update({
