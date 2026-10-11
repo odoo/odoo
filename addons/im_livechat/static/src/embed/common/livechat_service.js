@@ -8,12 +8,6 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { canLoadLivechat } from "@im_livechat/embed/common/misc";
 
-export const RATING = Object.freeze({
-    GOOD: 5,
-    OK: 3,
-    BAD: 1,
-});
-
 const OPERATOR_STORAGE_KEY = "im_livechat_previous_operator";
 
 export class LivechatService {
