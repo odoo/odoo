@@ -1058,7 +1058,7 @@ MISC_WHITELIST = {
     "hr_calendar.CalendarCommonRenderer.buttonWorklocation": {'multiCalendar'},  # Nested t-inherits with a xpath t-call
     "hr_calendar.AttendeeCalendarCommonPopover.body": {'slot'},  # dynamic t-call
     "hr_payroll.ActionableWarningLine": {'warning'},  # Didn't check
-    "hr_skills.SkillsListRenderer.Rows": {'list'},  # dynamic t-call I guess
+    "hr.SkillsListRenderer.Rows": {'list'},  # dynamic t-call I guess
     "lunch.LunchDashboardOrder": {'currency'},  # Var above t-call
     'l10n_ae_faf.company_data_warning': {'warningParams'},  # dynamic t-call
     'l10n_be_reports.partner_vat_listing_missing_partners_warning': {'warningParams'},  # dynamic t-call
