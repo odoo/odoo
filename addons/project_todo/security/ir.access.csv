@@ -3,3 +3,4 @@ task_type_own_write_rule,Project/Task Type: write own stages,project.task.type,b
 task_edition_rule_internal,Project/Task: employees: Full access to own private task only,project.task,base.group_user,crud,"[('project_id', '=', False), ('user_ids', 'in', user.id), ('parent_id', '=', False)]"
 tags_own_write_rule,Project/tags employees: Full access to own tags only,project.tags,base.group_user,cud,"[('create_uid', '=', user.id),('project_ids', '=', False)]"
 access_mail_activity_todo_create,mail.activity.todo.create,mail.activity.todo.create,base.group_user,cru,
+access_project_todo_convert_wizard,project.todo.convert.wizard,project.todo.convert.wizard,base.group_user,crud,
