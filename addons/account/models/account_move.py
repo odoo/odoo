@@ -6388,6 +6388,7 @@ class AccountMove(models.Model):
         label = self.adjusting_entry_origin_label if len(self.adjusting_entries_move_ids) == 1 else 'Invoices'
         return self.adjusting_entry_origin_move_ids._get_records_action(name=label)
 
+<<<<<<< b4aabbe419868201d119de57e296dc9a8a173812
     def open_journal_items(self):
         self.ensure_one()
         return {
@@ -6410,6 +6411,14 @@ class AccountMove(models.Model):
             name=self.env._("Invoices") if self.is_purchase_document(include_receipts=True) else self.env._("Vendor Bills"),
         )
 
+||||||| e27402004dfda3f319a6fbf050b8f40a3921ffdd
+=======
+    def action_open_journal_items(self):
+        self.ensure_one()
+        lines = self.line_ids.filtered(lambda line: line.display_type not in {'line_section', 'line_subsection', 'line_note'})
+        return lines._get_records_action(name=self.env._("Journal Items"), views=[(False, 'list')])
+
+>>>>>>> 5d4575dad4e631b4becea8f2a6620116ec4a6090
     def action_switch_move_type(self):
         if any(move.move_type == "entry" for move in self):
             raise ValidationError(_("This action isn't available for this document."))

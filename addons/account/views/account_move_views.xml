@@ -986,6 +986,7 @@
                                            invisible="adjusting_entry_origin_moves_count == 1"
                                            string="Invoices" widget="statinfo"/>
                             </button>
+<<<<<<< b4aabbe419868201d119de57e296dc9a8a173812
                             <button name="open_journal_items"
                                     groups="account.group_account_invoice,account.group_account_readonly"
                                     invisible="move_type == 'entry'"
@@ -1014,6 +1015,19 @@
                                 <span class="o_stat_text" invisible="move_type != 'in_refund'">Vendor Bill</span>
                                 <span class="o_stat_text" invisible="move_type != 'entry'">Journal Entry</span>
                             </button>
+||||||| e27402004dfda3f319a6fbf050b8f40a3921ffdd
+=======
+                            <button name="action_open_journal_items"
+                                    groups="account.group_account_invoice,account.group_account_readonly"
+                                    invisible="move_type == 'entry'"
+                                    class="oe_stat_button"
+                                    icon="fa-bars"
+                                    type="object">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Journal Items</span>
+                                    </div>
+                            </button>
+>>>>>>> 5d4575dad4e631b4becea8f2a6620116ec4a6090
                         </div>
 
                         <widget name="web_ribbon" title="Sent"
