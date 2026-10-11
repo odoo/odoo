@@ -24,7 +24,7 @@ class TestAccountAnalyticLine(TestCommonSaleTimesheet):
             timesheet.product_id, self.product_delivery_timesheet2,
             "The product of the timesheet should be the one of its sales order item.")
         self.assertEqual(
-            timesheet.product_uom_id, self.env.company.project_time_mode_id,
+            timesheet.product_uom_id, self.env.ref('uom.product_uom_hour'),
             "The timesheet should still be encoded in the time unit of the company.")
 
         other_sale_line = self.so.order_line.filtered(lambda sol: sol.product_id == self.product_delivery_timesheet1)
