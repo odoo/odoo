@@ -7876,7 +7876,7 @@ test("selection can be enabled with the 'alt' key", async () => {
     await keyDown("alt");
     await animationFrame();
     expect(".o_kanban_record").toHaveClass("o_record_selection_available");
-    expect(".o_kanban_record > .o_record_selection_tooltip").toHaveText("Click to select");
+    expect(".o_kanban_record > .o_record_selection_btn > i").toHaveAttribute("data-icon", "circle");
     await contains(".o_kanban_record:nth-of-type(1)").click();
     expect(".o_selection_box").toHaveCount(1);
     await keyUp("alt");
