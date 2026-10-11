@@ -211,6 +211,11 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
             self.assertEqual(line.find("ImporteUnitario").text, unitario)
             self.assertEqual(line.find("ImporteTotal").text, total)
 
+        def assert_tax_line(line, tipo_impositivo, base_imponible, Cuota_impuesto):
+            self.assertEqual(line.find("TipoImpositivo").text, tipo_impositivo)
+            self.assertEqual(line.find("BaseImponible").text, base_imponible)
+            self.assertEqual(line.find("CuotaImpuesto").text, Cuota_impuesto)
+
         self.pos_config_usd.module_pos_discount = True
         discount_product = self.env.ref("pos_discount.product_product_consumable", raise_if_not_found=False)
         self.pos_config_usd.discount_product_id = discount_product
@@ -287,11 +292,26 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         assert_order_line(order_lines[0], "1.00000000", "100.00000000", "121.00000000")
         assert_order_line(order_lines[1], "1.00000000", "-10.00000000", "-12.10000000")
         assert_order_line(order_lines[2], "1.00000000", "-20.00000000", "-24.20000000")
+        # total amount is 84.70 (70.00 + 21% tax)
         self.assertEqual(xml_doc.find("Factura/DatosFactura/ImporteTotalFactura").text, "84.70")
+
+        tax_lines = xml_doc.find(".//DesgloseIVA")
+        self.assertEqual(len(tax_lines), 1)
+
+        # check for applied_tax_amount, base_amount, tax_value
+        assert_tax_line(tax_lines[0], "21.00", "70.00", "14.70")
 
         xml_doc = get_edi_doc_in_xml(pos_refund)
         order_lines = xml_doc.find("Factura/DatosFactura/DetallesFactura")
         assert_order_line(order_lines[0], "1.00000000", "-100.00000000", "-121.00000000")
         assert_order_line(order_lines[1], "1.00000000", "10.00000000", "12.10000000")
         assert_order_line(order_lines[2], "1.00000000", "20.00000000", "24.20000000")
+
+        # total amount is -84.70 (-70.00 + 21% tax)
         self.assertEqual(xml_doc.find("Factura/DatosFactura/ImporteTotalFactura").text, "-84.70")
+
+        tax_lines = xml_doc.find(".//DesgloseIVA")
+        self.assertEqual(len(tax_lines), 1)
+
+        # check for applied_tax_amount, base_amount, tax_value
+        assert_tax_line(tax_lines[0], "21.00", "-70.00", "-14.70")
