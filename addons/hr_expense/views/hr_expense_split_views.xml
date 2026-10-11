@@ -29,7 +29,12 @@
                                 widget="analytic_distribution"
                                 groups="analytic.group_analytic_accounting"
                             />
-                            <field name="total_amount_currency" string="Total" force_save="1" readonly="product_has_cost"/>
+                            <field name="total_amount_currency"
+                                   string="Total"
+                                   force_save="1"
+                                   widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"
+                                   readonly="product_has_cost"/>
                         </group>
                     </sheet>
                 </form>
