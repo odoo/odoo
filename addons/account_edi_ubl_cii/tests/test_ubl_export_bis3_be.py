@@ -46,15 +46,29 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             f"Expected constraint error for missing item name was not found. Actual errors: {errors}"
         )
 
-    def test_ubl_line_with_zero_quantity(self):
-        """ Test that an invoice line with a quantity of 0 is not reported as having no quantity. """
-        invoice = self._create_invoice_one_line(price_unit=100.0, quantity=0.0)
-        invoice.action_post()
-        _xml_content, errors = self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)
-        self.assertFalse(
-            [err for err in errors if "Invoiced quantity is missing" in str(err)],
-            f"A quantity of 0 was reported as missing. Actual errors: {errors}"
+    def test_invoice_line_zero_quantity_not_missing(self):
+        """
+        [IBR-022] Generic PINT constraint (defined on account.edi.ubl_pint, inherited by BIS3
+        for EU invoices as well as by non-EU PINT CIUS such as MY/SG/JP/ANZ): a quantity of 0.0 is
+        a valid value and must not block the invoice export nor be dropped from the XML.
+        """
+        product = self._create_product(lst_price=100.0, taxes_id=self.tax_sale_a)
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            quantity=0.0,
+            partner_id=self.partner_be,
+            post=True,
         )
+        self._generate_invoice_ubl_file(invoice)
+        self.assertTrue(
+            invoice.ubl_cii_xml_id,
+            "Invoice export should not be blocked by a line with quantity 0.0 [IBR-022]"
+        )
+
+        xml_tree = etree.fromstring(invoice.ubl_cii_xml_id.raw)
+        invoiced_quantity = xml_tree.find('.//{*}InvoicedQuantity')
+        self.assertIsNotNone(invoiced_quantity)
+        self.assertEqual(invoiced_quantity.text, '0.0')
 
     def test_invoice_buyer_reference_uses_partner_ref(self):
         tax_21 = self.percent_tax(21.0)
