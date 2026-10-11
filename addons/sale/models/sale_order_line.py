@@ -1594,9 +1594,19 @@ class SaleOrderLine(models.Model):
 
     def _get_downpayment_line_price_unit(self, invoices):
         return sum(
-            l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
-            for l in self.invoice_lines
-            if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
+            (
+                sum(l.price_unit for l in grouped_l)
+                * self.env['res.currency']._get_conversion_rate(
+                    from_currency=grouped_l.currency_id,
+                    to_currency=self.order_id.currency_id,
+                    company=self.company_id,
+                    date=move_id._get_invoice_currency_rate_date(),
+                )
+                * (1 if move_id.move_type == 'out_invoice' else -1)
+            )
+            for move_id, grouped_l in self.invoice_lines
+            .filtered(lambda l: l.move_id.state == 'posted' and l.move_id not in invoices)  # don't recompute with the final invoice
+            .grouped(lambda l: l.move_id).items()
         )
 
     def _get_grouped_section_summary(self, display_taxes=True):
