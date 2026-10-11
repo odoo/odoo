@@ -669,7 +669,17 @@ actual arch.
 
     def unlink(self):
         # if in uninstall mode and has children views, emulate an ondelete cascade
+<<<<<<< 573818e777a139417870bd74fc8ec40ed42cd7ad
         if self.env.context.get('force_delete') and self.inherit_children_ids:
+||||||| f141381d42357732e89cfbe70407ecc74a3da0e1
+        if self.env.context.get('_force_unlink', False) and self.inherit_children_ids:
+=======
+        if (
+            (self.env.context.get('_force_unlink', False) or
+            self.env.context.get('cascade_unlink_views')) and
+            self.inherit_children_ids
+        ):
+>>>>>>> 398f14fac1286a30ee7df0c401acdc122764101b
             self.inherit_children_ids.unlink()
         return super().unlink()
 
