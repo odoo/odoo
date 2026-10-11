@@ -25,16 +25,11 @@ from xmlrpc import client as xmlrpclib
 
 from lxml import etree, html
 from markupsafe import Markup, escape
-from requests import Session
 from werkzeug import urls
 
 from odoo import _, api, Command, exceptions, fields, models, modules, tools
 from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
 from odoo.addons.mail.tools.discuss import Store
-from odoo.addons.mail.tools.web_push import (
-    push_to_end_point, DeviceUnreachableError,
-    ENCRYPTION_BLOCK_OVERHEAD, ENCRYPTION_HEADER_SIZE, MAX_PAYLOAD_SIZE
-)
 from odoo.exceptions import MissingError, AccessError
 from odoo.fields import Domain
 from odoo.tools import (
@@ -60,7 +55,6 @@ if typing.TYPE_CHECKING:
     from odoo.models import BaseModel
 
 
-MAX_DIRECT_PUSH = 5
 BAD_CONTENT_TYPES = ('binary/octet-stream', '*/*', 'bin/plain')  # replaced by application/octet-stream
 
 _logger = logging.getLogger(__name__)
@@ -4127,75 +4121,15 @@ class MailThread(models.AbstractModel):
           ``MailThread._notify_get_recipients()``;
         """
         partner_ids = self._notify_get_recipients_for_extra_notifications(message, recipients_data)
-        devices, private_key, public_key = self._web_push_get_partners_parameters(partner_ids)
+        devices, private_key, public_key = self.env["mail.push.device"]._web_push_get_partners_parameters(partner_ids)
         if not devices:
             return
-        payload = self._web_push_truncate_payload(
+        payload = devices._web_push_truncate_payload(
             self._notify_by_web_push_prepare_payload(
                 message, force_record_name=kwargs.get('force_record_name'),
             )
         )
-        self._web_push_send_notification(devices, private_key, public_key, payload=payload)
-
-    def _web_push_get_partners_parameters(self, partner_ids):
-        """
-        :param partner_ids: IDs of the res.partners
-        :returns: the `mail.push.device` records, the vapid private key and the vapid public key
-        """
-        devices_su = self.env["mail.push.device"].sudo()
-        if not partner_ids:
-            return devices_su, None, None
-        vapid_private_key = self.env["ir.config_parameter"].sudo().get_str("mail.web_push_vapid_private_key")
-        vapid_public_key = self.env["ir.config_parameter"].sudo().get_str("mail.web_push_vapid_public_key")
-        if not vapid_private_key or not vapid_public_key:
-            return devices_su, None, None
-        return devices_su.search([("partner_id", "in", partner_ids)]), vapid_private_key, vapid_public_key
-
-    def _web_push_send_notification(self, devices, private_key, public_key, payload_by_lang=None, payload=None, force_direct_send=False):
-        """Send a push notification to the given devices.
-
-        :param payload: JSON serializable dict following the notification API specs (https://notifications.spec.whatwg.org/#api)
-        :param payload_by_lang: a dict mapping payload by lang, either this or payload must be provided
-        :param force_direct_send: push to the endpoints from the current request
-          instead of queuing ``mail.push`` records for the cron once more than
-          ``MAX_DIRECT_PUSH`` devices are targeted. Endpoints are then contacted
-          one after the other, hence only for notifications that cannot wait for
-          the cron (e.g. an incoming call) and on few devices.
-        """
-        if len(devices) < MAX_DIRECT_PUSH or force_direct_send:
-            session = Session()
-            devices_to_unlink = set()
-            for device in devices:
-                try:
-                    push_to_end_point(
-                        base_url=self.get_base_url(),
-                        device={
-                            'id': device.id,
-                            'endpoint': device.endpoint,
-                            'keys': device.keys
-                        },
-                        payload=json.dumps(payload_by_lang and payload_by_lang[device.partner_id.lang] or payload),
-                        vapid_private_key=private_key,
-                        vapid_public_key=public_key,
-                        session=session,
-                    )
-                except DeviceUnreachableError:
-                    devices_to_unlink.add(device.id)
-                except Exception as e:  # pylint: disable=broad-except
-                    # Avoid blocking the whole request just for a notification
-                    _logger.error('An error occurred while contacting the endpoint: %s', e)
-
-            # clean up obsolete devices
-            if devices_to_unlink:
-                devices_list = list(devices_to_unlink)
-                self.env['mail.push.device'].sudo().browse(devices_list).unlink()
-
-        else:
-            self.env['mail.push'].sudo().create([{
-                'mail_push_device_id': device.id,
-                'payload': json.dumps(payload_by_lang and payload_by_lang[device.partner_id.lang] or payload),
-            } for device in devices])
-            self.env.ref('mail.ir_cron_web_push_notification')._trigger()
+        devices._web_push_send_notification(private_key, public_key, payload=payload)
 
     def _notify_by_web_push_prepare_payload(self, message, force_record_name=False):
         """ Returns dictionary containing message information for a browser device.
@@ -4764,79 +4698,6 @@ class MailThread(models.AbstractModel):
         if not 'lang' in self.env.context:
             raise ValueError(_('At this point lang should be correctly set'))
         return self.env['ir.model']._get(model_name).display_name  # one query for display name
-
-    @api.model
-    def _web_push_truncate_payload(self, payload):
-        r"""Check the payload limit of ~3990 bytes to avoid 413 error return code.
-
-        See `_truncate_payload_get_max_payload_length` for the exact limit.
-
-        When sending a push notification, the entire encrypted json payload should be no more than 4096 bytes in length.
-        To ensure this, when possible, the body contents of the notification are truncated in such a way that the end
-        result will not exceed that limit.
-
-        Example Truncation:
-            We know there is an encryption overhead of 10 bytes, and a total limit of 50 bytes.
-            The payload is `{"messageId": "5291", "body": "A very long text"}`
-            So we have an effective payload length of (50 - 10) = 40.
-            Our full payload is 49 bytes, of which 16 bytes are text we are willing to truncate.
-            We must remove 9 bytes, such that the payload becomes effectively
-            `{"messageId": "5291", "body": "A very "}`
-
-        There are some considerations with this approach. Notably we must consider the full encoded length in bytes.
-        While we encode the payload in utf-8, it is actually transformed into json with `ensure_ascii=True` first.
-        This means this payload, as a python dictionary: {"body": "BØDY"}; Becomes {"body": "B\\u00d8DY"}.
-        Where `00d8` is the unicode codepoint for "Ø", and "\\u" is a json escape sequence.
-
-        In that case we must ensure that the truncated body does not suddenly contain invalid unicode escape sequences.
-        Similarly to how one should not cut an encoded string in the middle of a utf-8 character.
-
-        Example Unicode Truncation:
-            Assume {"body": "BØDY"} needs to be truncated of 3 bytes
-            It should not become {"body": "B\\u00d"}
-            Instead it should become {"body": "B"}
-
-        :param dict payload: Current payload to truncate.
-        :return: The truncated payload;
-        """
-        payload_length = len(json.dumps(payload).encode())
-        # json.dumps defaults to translating unicode to hex codepoints (ensure_ascii=True)
-        # hence we need to check the length the body takes up in that format
-        # json string quotes are removed and the body is not encoded as it's already all ASCII
-        body = json.dumps(payload['options']['body'])[1:-1]
-        body_length = len(body)
-
-        max_length = self._truncate_payload_get_max_payload_length()
-        if payload_length > max_length:
-            body_max_length = max(0, max_length - payload_length + body_length)
-            # truncate to max length and try to loads again
-            # if there's any error, it will be a unicode error
-            # the error position gives us the start of the codepoint
-            # remove everything after that + the preceding escape marker (\u)
-            try:
-                # remove trailing '\' as the error for that is unhelpful
-                truncated_body = body[:body_max_length].rstrip('\\')
-                truncated_body = json.loads(f'"{truncated_body}"')
-            except json.decoder.JSONDecodeError as json_error:
-                truncated_body = json.loads(f'"{body[:json_error.pos - 2]}"')
-            payload['options']['body'] = truncated_body
-        return payload
-
-    @staticmethod
-    def _truncate_payload_get_max_payload_length():
-        """Define the maximum length we want for the payload.
-
-        This limit is derived from:
-
-            - the maximum encrypted payload size we may send to web push servers.
-            - the header required using AES128GCM encryption.
-            - the overhead of encrypting one block. Payload will not exceed 1 block as the point
-              here is to keep everything within the default (and max) block size.
-
-        For details about encryption overhead sizes, see variable definition in web_push.
-        Currently all of these values are payload-independent.
-        """
-        return MAX_PAYLOAD_SIZE - ENCRYPTION_HEADER_SIZE - ENCRYPTION_BLOCK_OVERHEAD
 
     # ------------------------------------------------------
     # FOLLOWERS API

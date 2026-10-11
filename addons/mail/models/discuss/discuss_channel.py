@@ -973,7 +973,7 @@ class DiscussChannel(models.Model):
                 stores[channel].add(new_members, "_store_member_fields")
                 if channel.channel_type == "channel":
                     invited_partner_ids = new_members.filtered(lambda m: not m.is_self).partner_id.ids
-                    devices, private_key, public_key = channel._web_push_get_partners_parameters(invited_partner_ids)
+                    devices, private_key, public_key = self.env["mail.push.device"]._web_push_get_partners_parameters(invited_partner_ids)
                     if devices:
                         icon = f"/web/image/discuss.channel/{channel.id}/avatar_128"
                         languages = set(devices.partner_id.mapped("lang"))
@@ -995,7 +995,7 @@ class DiscussChannel(models.Model):
                                     "icon": icon,
                                 },
                             }
-                        channel._web_push_send_notification(devices, private_key, public_key, payload_by_lang=payload_by_lang)
+                        devices._web_push_send_notification(private_key, public_key, payload_by_lang=payload_by_lang)
             if existing_members and (bus_channel := current_user or current_guest):
                 # If the current user invited these members but they are already present, notify the current user about their existence as well.
                 # In particular this fixes issues where the current user is not aware of its own member in the following case:
@@ -1224,9 +1224,9 @@ class DiscussChannel(models.Model):
                     value=members,
                 ),
             )
-            devices, private_key, public_key = self._web_push_get_partners_parameters(members.partner_id.ids)
+            devices, private_key, public_key = self.env["mail.push.device"]._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
-                self._web_push_send_notification(devices, private_key, public_key, payload={
+                devices._web_push_send_notification(private_key, public_key, payload={
                     "title": "",
                     "options": {
                         "data": {
