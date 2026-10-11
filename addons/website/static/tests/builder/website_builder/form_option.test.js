@@ -802,7 +802,7 @@ test("Min and max character limits should not contradict one another.", async ()
             </div>
         </section>`
     );
-    await contains(':iframe [data-name="Field"]').click();
+    await contains(":iframe .s_website_form_field").click();
     await contains('[data-action-id="toggleCharacterLimit"] input').click();
     // By default, minlength is 0 and maxlength is 100.
     expect("[data-attribute-action='minlength'] input").toHaveValue(0);

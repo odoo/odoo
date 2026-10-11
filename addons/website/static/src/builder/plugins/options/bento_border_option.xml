@@ -11,7 +11,7 @@
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
-        <bento_border_option template="website.BentoBorderOption" selector=".s_bento_banner section[data-name='Card'], .s_bento_block_card"/>
+        <bento_border_option template="website.BentoBorderOption" selector=".s_bento_banner section[data-builder-name='card'], .s_bento_block_card"/>
     </xpath>
 </t>
 
