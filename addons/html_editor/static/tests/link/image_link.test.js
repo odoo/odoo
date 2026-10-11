@@ -151,12 +151,17 @@ test("when clearing link URL for an image and clicking outside does not change h
     );
 });
 // TODO: need to check with AGE
+// TODO when removing .todo: create equivalent test for mobile taking bottom sheet into account
+/*
+// Commented out: it seems "desktop" is ignored on "todo" tests
+test.tags("desktop");
 test.todo("popover should not open for not editable image", async () => {
     await setupEditor(`<a href="#"><img src="${base64Img}" contenteditable="false"></a>`);
     await click("img");
     await animationFrame();
     await expectElementCount(".o-we-linkpopover", 0);
 });
+*/
 test("label field should be hidden if <a> content is not text only", async () => {
     await setupEditor(`<p><a href="http://test.com/"><img src="${base64Img}">te[]xt</a></p>`);
     await expectElementCount(".o-we-linkpopover", 1);

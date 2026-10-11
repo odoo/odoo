@@ -9,6 +9,7 @@ export class ColorPickerCustomTab extends Component {
     static components = { CustomColorPicker };
     props = useProps({
         applyColor: t.function(),
+        close: t.function().optional,
         colorPickerNavigation: t.function(),
         onColorClick: t.function(),
         onColorPreview: t.function(),
