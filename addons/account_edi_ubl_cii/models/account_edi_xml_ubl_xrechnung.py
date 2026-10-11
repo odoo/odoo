@@ -107,24 +107,6 @@ class AccountEdiXmlUBLDE(models.AbstractModel):
                 'schemeID': 'EM'
             }
 
-    def _ubl_add_party_tax_scheme_nodes(self, vals):
-        # EXTENDS
-        super()._ubl_add_party_tax_scheme_nodes(vals)
-        nodes = vals['party_node']['cac:PartyTaxScheme']
-        partner = vals['party_vals']['partner']
-        commercial_partner = partner.commercial_partner_id
-
-        if (
-            not nodes
-            and commercial_partner.peppol_eas
-        ):
-            nodes.append({
-                'cbc:CompanyID': {'_text': None},
-                'cac:TaxScheme': {
-                    'cbc:ID': {'_text': commercial_partner.peppol_eas},
-                },
-            })
-
     def _ubl_add_party_legal_entity_nodes(self, vals):
         # EXTENDS
         super()._ubl_add_party_legal_entity_nodes(vals)
