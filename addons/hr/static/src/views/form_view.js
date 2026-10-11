@@ -30,7 +30,8 @@ export class EmployeeFormController extends FormController {
             || record._skipContractEndDialog;
 
         // Only run the logic if it's not an employee creation but an update
-        if (Boolean(record._config.resId)) {
+        // and if it's only directly on the employee form not in a popup for another model
+        if (Boolean(record._config.resId) && record._config.resModel == "hr.employee") {
             // We extract the versions of the employee so that we can check if we're on the last one chronologically
             let ver_ids = await this.orm.read('hr.employee', [record._values.employee_id.id], ['version_ids']);
             ver_ids = ver_ids[0].version_ids;
