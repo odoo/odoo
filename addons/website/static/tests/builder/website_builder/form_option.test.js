@@ -153,11 +153,11 @@ test("'Author' field's type stays selected when you modify the option list", asy
         },
     }));
     await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+        `<section class="s_website_form" data-snippet="s_website_form">
             <div class="container-fluid">
             <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                 <div class="s_website_form_rows">
-                    <div data-name="Field" class="s_website_form_field s_website_form_required" data-type="many2one">
+                    <div class="s_website_form_field s_website_form_required" data-type="many2one">
                         <div class="row">
                             <label class="s_website_form_label" for="oyeqnysxh10b">
                                 <span class="s_website_form_label_content">Author</span>
@@ -216,7 +216,7 @@ test("empty placeholder selection input for selection field", async () => {
     onRpc("get_authorized_fields", () => ({}));
     const { getEditor } = await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="many2one">
+            <div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="many2one">
                 <div class="row s_col_no_resize s_col_no_bgcolor">
                     <label class="col-form-label col-sm-auto s_website_form_label" for="ozp7022vqhe">
                         <span class="s_website_form_label_content">Selection Field</span>
@@ -254,7 +254,7 @@ test("selection field discards empty entries", async () => {
     onRpc("get_authorized_fields", () => ({}));
     const { getEditor } = await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="many2one">
+            <div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="many2one">
                 <div class="row s_col_no_resize s_col_no_bgcolor">
                     <label class="col-form-label col-sm-auto s_website_form_label" for="ozp7022vqhe">
                         <span class="s_website_form_label_content">Selection Field</span>
@@ -328,7 +328,7 @@ test("Undo change of default value of a text field", async () => {
 
 const formWithCondition = `
 <section class="s_website_form"><form data-model_name="mail.mail">
-     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
+     <div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
          <div class="row s_col_no_resize s_col_no_bgcolor">
              <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="first">
                  <span class="s_website_form_label_content">a</span>
@@ -338,7 +338,7 @@ const formWithCondition = `
              </div>
          </div>
      </div>
-     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="a" data-visibility-comparator="set">
+     <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="a" data-visibility-comparator="set">
          <div class="row s_col_no_resize s_col_no_bgcolor">
              <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
                  <span class="s_website_form_label_content">b</span>
@@ -385,7 +385,7 @@ test("Remove visibility dependency on field unavailable (change second)", async 
 
 const formWithConditionOnChexbox = `
 <section class="s_website_form"><form data-model_name="mail.mail">
-    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
+    <div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
         <div class="row s_col_no_resize s_col_no_bgcolor">
             <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
                 <span class="s_website_form_label_content">Custom Text</span>
@@ -414,7 +414,7 @@ const formWithConditionOnChexbox = `
             </div>
         </div>
     </div>
-     <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="Custom Text" data-visibility-condition="Option 1" data-visibility-comparator="selected">
+     <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="Custom Text" data-visibility-condition="Option 1" data-visibility-comparator="selected">
          <div class="row s_col_no_resize s_col_no_bgcolor">
              <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
                  <span class="s_website_form_label_content">b</span>
@@ -475,7 +475,7 @@ test("Visibility dependency on radio field with 'Add other' option", async (fiel
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(`
 <section class="s_website_form"><form data-model_name="mail.mail">
-    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
+    <div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
         <div class="row s_col_no_resize s_col_no_bgcolor">
             <label class="col-sm-auto s_website_form_label" style="width: 200px" for="oradio01">
                 <span class="s_website_form_label_content">Custom Text</span>
@@ -505,7 +505,7 @@ test("Visibility dependency on radio field with 'Add other' option", async (fiel
             </div>
         </div>
     </div>
-    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="Custom Text" data-visibility-comparator="selected">
+    <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="Custom Text" data-visibility-comparator="selected">
         <div class="row s_col_no_resize s_col_no_bgcolor">
             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
                 <span class="s_website_form_label_content">b</span>
@@ -527,10 +527,10 @@ test("Visibility dependency on radio field with 'Add other' option", async (fiel
 test("Changing max files number option updates file input 'multiple' attribute", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(`
-    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
         <form data-model_name="mail.mail">
             <div class="s_website_form_rows">
-                <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="binary">
+                <div class="s_website_form_field s_website_form_custom" data-type="binary">
                     <label class="s_website_form_label" for="o3xe8o85w0ct">
                         <span class="s_website_form_label_content">File Upload</span>
                     </label>
@@ -628,10 +628,10 @@ test("Last list entry cannot be removed", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(
         `
-<section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+<section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
     <form data-model_name="mail.mail">
         <div class="s_website_form_rows">
-			<div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
+			<div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
 			    <div class="row s_col_no_resize s_col_no_bgcolor">
 			        <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
 			            <span class="s_website_form_label_content">Custom Text</span>
@@ -782,11 +782,11 @@ test("Shouldn't have the 'Link to country' option if there's no country field", 
 test("Min and max character limits should not contradict one another.", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+        `<section class="s_website_form" data-snippet="s_website_form">
             <div class="container-fluid">
             <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                 <div class="s_website_form_rows">
-                    <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
+                    <div class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
                         <div class="row s_col_no_resize s_col_no_bgcolor">
                             <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ok0ney2v8rwf">
                                 <span class="s_website_form_label_content">name</span>
@@ -876,11 +876,11 @@ test("Only state fields have data-link-state-to-country attr", async () => {
 test("Checkbox default value option stays visible when changing label position", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+        `<section class="s_website_form" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                     <div class="s_website_form_rows">
-                        <div data-name="Field" class="s_website_form_field s_website_form_custom" data-type="boolean">
+                        <div class="s_website_form_field s_website_form_custom" data-type="boolean">
                             <label class="s_website_form_label" for="opftfejmju">
                                 <span class="s_website_form_label_content">My Field</span>
                             </label>
@@ -906,7 +906,7 @@ test("multiple conditional visibility value for 'contains'", async () => {
     await setupWebsiteBuilder(
         `<section class="s_website_form">
             <form data-model_name="mail.mail">
-                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
+                <div class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
                             <span class="s_website_form_label_content">Custom Text</span>
@@ -935,7 +935,7 @@ test("multiple conditional visibility value for 'contains'", async () => {
                         </div>
                     </div>
                 </div>
-                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom d-none" data-type="char">
+                <div class="s_website_form_field mb-3 col-12 s_website_form_custom d-none" data-type="char">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
                             <span class="s_website_form_label_content">b</span>
@@ -991,7 +991,7 @@ test("contains conditional visibility value for 'record' field", async () => {
                         </div>
                     </div>
                 </div>
-                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom d-none" data-type="char">
+                <div class="s_website_form_field mb-3 col-12 s_website_form_custom d-none" data-type="char">
                     <div class="row s_col_no_resize s_col_no_bgcolor">
                         <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
                             <span class="s_website_form_label_content">b</span>
@@ -1035,11 +1035,11 @@ describe("Many2one Field", () => {
         }));
         await setupWebsiteBuilder(
             `
-            <section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+            <section class="s_website_form" data-snippet="s_website_form">
                 <div class="container-fluid">
                     <form action="/website/form/" method="post" class="o_mark_required" data-model_name="res.partner">
                         <div class="s_website_form_rows">
-                            <div data-name="Field" class="s_website_form_field s_website_form_required" data-type="many2one">
+                            <div class="s_website_form_field s_website_form_required" data-type="many2one">
                                 <div class="row">
                                     <label class="s_website_form_label" for="oyeqnysxh10b">
                                         <span class="s_website_form_label_content">Country</span>
@@ -1376,11 +1376,11 @@ test("builderList re-renders when the field type changes (existing fields)", asy
         },
     });
     await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+        `<section class="s_website_form" data-snippet="s_website_form">
             <div class="container-fluid">
             <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                 <div class="s_website_form_rows">
-                    <div data-name="Field" class="s_website_form_field s_website_form_required" data-type="many2one">
+                    <div class="s_website_form_field s_website_form_required" data-type="many2one">
                         <div class="row">
                             <label class="s_website_form_label" for="oyeqnysxh10b">
                                 <span class="s_website_form_label_content">Author</span>
@@ -1680,11 +1680,11 @@ test("single-choice field is displayed as a dropdown when it has more than five 
         },
     }));
     await setupWebsiteBuilder(
-        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+        `<section class="s_website_form" data-snippet="s_website_form">
             <div class="container-fluid">
             <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
                 <div class="s_website_form_rows">
-                    <div data-name="Field" class="s_website_form_field" data-type="many2one">
+                    <div class="s_website_form_field" data-type="many2one">
                         <div class="row">
                             <label class="s_website_form_label" for="oyeqnysxh10b">
                                 <span class="s_website_form_label_content">Author</span>

@@ -248,14 +248,14 @@ export async function setupHTMLBuilder(
                 getSnippetStructure({
                     name: "Test",
                     groupName: "a",
-                    content: `<section class="s_test" data-snippet="s_test" data-name="Test">
+                    content: `<section class="s_test" data-snippet="s_test">
             <div class="test_a"></div>
             </section>`,
                 }),
             ],
             // TODO: maybe we should use the same structure as in the snippets?
             snippet_content: snippetContent || [
-                `<section class="s_test" data-snippet="s_test" data-name="Test">
+                `<section class="s_test" data-snippet="s_test">
             <div class="test_a"></div>
             </section>`,
             ],
@@ -577,7 +577,7 @@ export const exampleContent = '<h1 class="title">Hello</h1>';
 export const wrapExample = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${exampleContent}</div>`;
 
 export async function setupHTMLBuilderWithDummySnippet(content) {
-    const snippetEl = `<section class="s_test" data-snippet="s_test" data-name="Test">
+    const snippetEl = `<section class="s_test" data-snippet="s_test">
             <div class="test_a"></div>
         </section>`;
 

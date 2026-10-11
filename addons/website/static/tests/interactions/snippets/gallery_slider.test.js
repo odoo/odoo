@@ -75,22 +75,22 @@ const defaultLightbox = /*xml*/ `
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_1" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_1" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_3" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_3" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_1_landscape_md_2" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_1_landscape_md_2" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_4" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_4" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_6" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_6" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_2" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_2" alt="">
                 </div>
             </div>
         </div>
@@ -105,22 +105,22 @@ const defaultOldLightbox = `
         <div class="carousel slide" style="margin: 0 12px;" id="slideshow_3" data-bs-ride="false" data-bs-interval="0">
             <div class="carousel-inner" style="padding: 0;">
                 <div class="carousel-item active">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_1" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_1" alt="">
                 </div>
                 <div class="carousel-item">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_3" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_3" alt="">
                 </div>
                 <div class="carousel-item">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_1_landscape_md_2" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_1_landscape_md_2" alt="">
                 </div>
                 <div class="carousel-item">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_4" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_4" alt="">
                 </div>
                 <div class="carousel-item">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_6" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_6" alt="">
                 </div>
                 <div class="carousel-item undefined">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_2" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_2" alt="">
                 </div>
             </div>
             <ul class="carousel-indicators">
@@ -145,7 +145,7 @@ const singleImagePopupGallery = `
         <div id="slideshow_sample" class="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="img img-fluid d-block" data-name="Image" src="/web/image/website.set_2_square_md_2" alt="">
+                    <img class="img img-fluid d-block" src="/web/image/website.set_2_square_md_2" alt="">
                 </div>
             </div>
         </div>

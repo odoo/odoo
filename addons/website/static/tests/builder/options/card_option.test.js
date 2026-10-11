@@ -86,9 +86,9 @@ test("remove/add cover image", async () => {
 });
 
 const nestedCardsWithOneCover = `
-    <div class="s_card card outer_card o_draggable" data-snippet="s_card" data-name="Card">
+    <div class="s_card card outer_card o_draggable" data-snippet="s_card">
         <div class="card-body">
-            <div class="s_card o_card_img_top card inner_card" data-snippet="s_card" data-name="Card">
+            <div class="s_card o_card_img_top card inner_card" data-snippet="s_card">
                 <figure class="o_card_img_wrapper mb-0 ratio ratio-16x9">
                     <img class="o_card_img card-img-top" src="/web/image/website.s_card_default_image_1" alt="" loading="lazy" data-mimetype="image/jpeg">
                 </figure>
@@ -295,12 +295,12 @@ test("cover image set to wide aspect ratio can be vertically aligned", async () 
 });
 
 const nestedCardsWithTwoCovers = `
-    <div class="s_card o_card_img_top card outer_card o_draggable" data-snippet="s_card" data-name="Card">
+    <div class="s_card o_card_img_top card outer_card o_draggable" data-snippet="s_card">
         <figure class="o_card_img_wrapper mb-0 ratio ratio-16x9">
             <img class="o_card_img card-img-top" src="/web/image/website.s_card_default_image_1" alt="" loading="lazy" data-mimetype="image/jpeg">
         </figure>
         <div class="card-body">
-            <div class="s_card o_card_img_top card inner_card" data-snippet="s_card" data-name="Card">
+            <div class="s_card o_card_img_top card inner_card" data-snippet="s_card">
                 <figure class="o_card_img_wrapper mb-0 ratio ratio-16x9">
                     <img class="o_card_img card-img-top" src="/web/image/website.s_card_default_image_1" alt="" loading="lazy" data-mimetype="image/jpeg">
                 </figure>

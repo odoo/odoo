@@ -10,7 +10,7 @@ import {
 defineWebsiteModels();
 
 const headerContent = `
-    <header id="top" data-anchor="true" data-name="Header">
+    <header id="top" data-anchor="true" data-builder-name="header">
         <nav class="navbar">
             <div id="o_main_nav" class="container o_main_nav"> content </div>
         </nav>

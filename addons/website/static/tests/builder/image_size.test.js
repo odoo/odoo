@@ -250,10 +250,10 @@ test("media resize bar does not appear in grid mode", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <div class="container">
             <div class="row o_grid_mode" data-row-count="6">
-                <div class="image-test o_grid_item g-height-5 g-col-lg-5 col-lg-5" data-name="Block" style="z-index: 1; grid-area: 2 / 6 / 7 / 11;">
+                <div class="image-test o_grid_item g-height-5 g-col-lg-5 col-lg-5" data-builder-name="block" style="z-index: 1; grid-area: 2 / 6 / 7 / 11;">
                     <img src="/web/image/website.set_2_square_md_5" class="img img-fluid mx-auto" alt="" loading="lazy" data-mimetype="image/webp">
                 </div>
-                <div class="video-test o_grid_item g-height-5 g-col-lg-5 col-lg-5" data-name="Block" style="z-index: 1; grid-area: 2 / 1 / 7 / 6;">
+                <div class="video-test o_grid_item g-height-5 g-col-lg-5 col-lg-5" data-builder-name="block" style="z-index: 1; grid-area: 2 / 1 / 7 / 6;">
                     <div data-oe-expression="//www.youtube.com/embed/G8b4UZIcTfg?rel=0&amp;autoplay=0" class="mx-auto media_iframe_video">
                         <div class="css_editable_mode_display"></div>
                         <div class="media_iframe_video_size"></div>

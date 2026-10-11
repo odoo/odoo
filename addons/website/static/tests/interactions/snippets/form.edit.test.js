@@ -10,11 +10,11 @@ describe.current.tags("interaction_dev");
 
 const formXml = `
     <div id="wrapwrap">
-        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
             <div class="container-fluid">
                 <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
                     <div class="s_website_form_rows row s_col_no_bgcolor">
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom o_draggable" data-type="datetime">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_custom o_draggable" data-type="datetime">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="onbni9ji3oa">
                                     <span class="s_website_form_label_content">When ?</span>
@@ -29,7 +29,7 @@ const formXml = `
                                 </div>
                             </div>
                         </div>
-                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom o_draggable" data-type="char">
+                        <div class="s_website_form_field mb-3 col-12 s_website_form_custom o_draggable" data-type="char">
                             <div class="row s_col_no_resize s_col_no_bgcolor">
                                 <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o291di1too2s">
                                     <span class="s_website_form_label_content">Company</span>
@@ -39,7 +39,7 @@ const formXml = `
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label">
                             <div style="width: 200px;" class="s_website_form_label"/>
                             <span id="s_website_form_result"></span>
                             <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>

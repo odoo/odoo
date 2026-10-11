@@ -407,7 +407,7 @@ export function addDropZoneSelector(selector) {
 export async function setupWebsiteBuilderWithDummySnippet(content) {
     const getSnippetEl = (withColoredLevelClass = false) => {
         const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
-        return `<section class="${className}" data-snippet="s_test" data-name="Test">
+        return `<section class="${className}" data-snippet="s_test">
             <div class="test_a"></div>
         </section>`;
     };
