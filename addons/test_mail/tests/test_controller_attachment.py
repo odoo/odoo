@@ -34,6 +34,34 @@ class TestAttachmentController(MailControllerAttachmentCommon):
             thread=thread,
         )
 
+    def test_attachment_delete_not_found(self):
+        """Test a 404 notifies the user to remove an attachment they cannot read,
+        but not one they can read without being allowed to delete it."""
+        admin_record, readonly_record = self.env["mail.test.access"].create([
+            {"access": "admin", "name": "Admin"},
+            {"access": "internal_ro", "name": "Read only"},
+        ])
+        admin_attachment, deleted_attachment, readonly_attachment = self.env["ir.attachment"].create([
+            {"name": "Admin", "res_id": admin_record.id, "res_model": admin_record._name},
+            {"name": "Deleted"},
+            {"name": "Read only", "res_id": readonly_record.id, "res_model": readonly_record._name},
+        ])
+        deleted_attachment.unlink()
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        for attachment, notified in (
+            (admin_attachment, True),
+            (deleted_attachment, True),
+            (readonly_attachment, False),
+        ):
+            with self.subTest(attachment_id=attachment.id), self.assertBus(
+                [(self.cr.dbname, "res.partner", self.partner_employee.id)] if notified else [],
+                [{"type": "ir.attachment/delete", "payload": {"id": attachment.id}}] if notified else [],
+            ):
+                res = self.url_open(
+                    "/mail/attachment/delete", json={"params": {"attachment_id": attachment.id}},
+                )
+                self.assertEqual(res.json()["error"]["code"], 404)
+
     def test_upload_multi_company(self):
         record = self.user_employee.partner_id
         record.company_id = self.user_employee.company_id

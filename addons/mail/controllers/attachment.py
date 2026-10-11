@@ -100,7 +100,14 @@ class AttachmentController(ThreadController):
     def mail_attachment_delete(self, attachment_id, access_token=None):
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
         if not attachment or not attachment._has_attachments_ownership([access_token]):
-            request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
+            if not attachment or not attachment.has_access("read"):
+                env = request.env
+
+                # Notify from a new cursor after the rollback, as NotFound rolls the request back.
+                @env.cr.postrollback.add
+                def notify_delete():
+                    with env.registry.cursor() as cr:
+                        env(cr=cr).user._bus_send("ir.attachment/delete", {"id": attachment_id})
             raise NotFound()
         message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
