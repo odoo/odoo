@@ -16,8 +16,14 @@ export function getSnippetName(snippetEl, snippetModel) {
         }
         return snippetEl.dataset.customName;
     }
-    if (snippetEl.dataset.name) {
-        return snippetEl.dataset.name;
+    const specificNameId = snippetEl.dataset.builderName;
+    if (specificNameId) {
+        const specificName = snippetModel.namesMaps.specific_name?.[specificNameId];
+        if (specificName) {
+            return specificName;
+        } else {
+            console.warn(`data-builder-name ${specificNameId} not found in specific_name map`);
+        }
     }
     const snippetKey = snippetEl.dataset.snippet;
     const nameFromSnippet = snippetModel.getSnippetNameByKey(snippetKey);
