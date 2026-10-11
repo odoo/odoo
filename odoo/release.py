@@ -38,4 +38,5 @@ nt_service_name = "odoo-server-" + series.replace('~','-')
 
 MIN_PY_VERSION = (3, 12)
 MAX_PY_VERSION = (3, 14)
+MAIN_PY_VERSION = (3, 14)
 MIN_PG_VERSION = 16

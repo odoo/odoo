@@ -25,6 +25,12 @@ Re-implement Odoo's file import system:
     'version': '2.0',
     'category': 'Hidden/Tools',
     'auto_install': True,
+    'external_dependencies': [
+        {'pypi': 'odfpy', 'modules': ['odf'], 'optional': True, 'apt': 'python3-odf'},
+        {'pypi': 'xlrd', 'apt': 'python3-xlrd'},
+        {'pypi': 'openpyxl', 'apt': 'python3-openpyxl'},
+        {'pypi': 'chardet', 'apt': 'python3-chardet'},
+    ],
     'data': [
         'security/ir.access.csv',
     ],
