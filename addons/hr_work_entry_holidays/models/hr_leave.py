@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from zoneinfo import ZoneInfo
 
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
@@ -43,9 +44,19 @@ class HrLeave(models.Model):
             for contract in contracts:
                 # Generate only if it has aleady been generated
                 if leave.date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
+                    contract_tz = (
+                                contract.resource_calendar_id or contract.employee_id.resource_calendar_id or contract.employee_id).tz
+                    tz = ZoneInfo(contract_tz) if contract_tz else ZoneInfo('UTC')
+                    contract_start = fields.Datetime.to_datetime(contract.date_start).replace(tzinfo=tz).astimezone(ZoneInfo('UTC')).replace(tzinfo=None)
+                    contract_stop = datetime.combine(
+                        fields.Datetime.to_datetime(contract.date_end or datetime.max.date()), time.max)
+                    if contract.date_end:
+                        contract_stop = contract_stop.replace(tzinfo=tz).astimezone(ZoneInfo('UTC')).replace(tzinfo=None)
+                    work_entry_start = max(leave.date_from, contract_start)
+                    work_entry_end = min(leave.date_to, contract_stop)
                     work_entries_vals_list += contract._get_work_entries_values(
-                        datetime.combine(leave.date_from, time.min),
-                        datetime.combine(leave.date_to, time.max),
+                        datetime.combine(work_entry_start, time.min),
+                        datetime.combine(work_entry_end, time.max),
                     )
 
         work_entries_vals_list = self.env['hr.version']._generate_work_entries_postprocess(work_entries_vals_list)
