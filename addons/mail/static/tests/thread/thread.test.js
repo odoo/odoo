@@ -1,4 +1,5 @@
 import {
+    actionPanel,
     click,
     contains,
     defineMailModels,
@@ -1138,7 +1139,7 @@ test("Can scroll to notification", async () => {
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await isInViewportOf(".o-mail-Message:contains(message 59)", ".o-mail-Thread");
     await click("[title='Pinned Messages']");
-    await click(".o-discuss-PinnedMessagesPanel a[role='button']:text('Jump')");
+    await click(`${actionPanel("Pinned Messages")} a[role='button']:text('Jump')`);
     await isInViewportOf(".o-mail-NotificationMessage:contains(notification 0)", ".o-mail-Thread");
 });
 

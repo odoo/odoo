@@ -4,6 +4,7 @@ import { serverState } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 import {
+    actionPanel,
     SIZES,
     click,
     contains,
@@ -298,7 +299,7 @@ test("when triggering jump to present, keeps showing old messages until recent o
     await openDiscuss(channelId);
     await waitStoreFetch("/discuss/channel/messages");
     await click("[title='Pinned Messages']");
-    await click(".o-discuss-PinnedMessagesPanel a[role='button']:text('Jump')");
+    await click(`${actionPanel("Pinned Messages")} a[role='button']:text('Jump')`);
     await waitFor(".o-mail-Thread .o-mail-Message:has(:text('first-message')):count(1)");
     await animationFrame();
     slowMessageFetchDeferred = Promise.withResolvers();

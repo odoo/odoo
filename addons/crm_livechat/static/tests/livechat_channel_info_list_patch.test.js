@@ -1,5 +1,11 @@
 import { defineCrmLivechatModels } from "@crm_livechat/../tests/crm_livechat_test_helpers";
-import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import {
+    actionPanel,
+    contains,
+    openDiscuss,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
@@ -19,8 +25,8 @@ test("open leads of the visitor are shown in the channel info list", async () =>
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-livechat-ChannelInfoList h6:text('Open leads')");
+    await contains(`${actionPanel("Information")} h6:text('Open leads')`);
     await contains(
-        ".o-livechat-ChannelInfoList a[data-oe-model='crm.lead']:text('Bob wants a demo')"
+        `${actionPanel("Information")} a[data-oe-model='crm.lead']:text('Bob wants a demo')`
     );
 });

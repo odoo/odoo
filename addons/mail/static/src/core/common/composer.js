@@ -58,7 +58,7 @@ import {
 } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useComposerActions } from "@mail/core/common/composer_actions";
+import { pickerGetAnchor, useComposerActions } from "@mail/core/common/composer_actions";
 import { ActionList, CircleInlineAction } from "@mail/core/common/action_list";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
@@ -68,6 +68,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { usePopover } from "@web/core/popover/popover_hook";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { computedShallowEqual } from "@mail/utils/common/signal";
+import { PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -224,12 +225,12 @@ export class Composer extends Component {
                 const target = ev.composedPath()[0];
                 if (
                     this.ui.isSmall &&
-                    this.composerActions.activeAction &&
+                    this.composerActions.panelAction &&
                     this.pickerContainerRef() &&
                     target !== this.pickerContainerRef() &&
                     !this.pickerContainerRef().contains(target)
                 ) {
-                    this.composerActions.activeAction.actionPanelClose();
+                    this.composerActions.panelAction.closePanel();
                 }
             },
             { capture: true }
@@ -440,7 +441,6 @@ export class Composer extends Component {
                 ...this.composerActions.partition.group,
             ],
             disabledCondition: ({ owner }) => owner.areAllActionsDisabled,
-            dropdownPosition: "top-start",
             icon: "add_circle",
             name: _t("More Actions"),
         });
@@ -526,6 +526,25 @@ export class Composer extends Component {
             return undefined;
         }
         return action.id === "send-message" ? SendMessageInlineAction : CircleInlineAction;
+    }
+
+    /**
+     * "More Actions" opens above the composer. The pickers open in a popover on the actions,
+     * except on a small screen where they open in the panel of the composer.
+     *
+     * @type {import("@mail/core/common/action_list").GetPanelContainer}
+     */
+    getPanelContainer({ action }) {
+        if (action.definition.isMoreAction) {
+            return { type: PANEL_CONTAINER_TYPE.DROPDOWN, position: "top-start" };
+        }
+        if (!this.ui.isSmall) {
+            return {
+                type: PANEL_CONTAINER_TYPE.POPOVER,
+                arrow: false,
+                target: pickerGetAnchor({ action, owner: this }),
+            };
+        }
     }
 
     get CANCEL_OR_SAVE_EDIT_TEXT() {
@@ -927,7 +946,7 @@ export class Composer extends Component {
     }
 
     async sendMessage() {
-        this.composerActions.activeAction?.actionPanelClose?.();
+        this.composerActions.closePanels();
         if (this.props.composer.message) {
             this.editMessage();
             return;

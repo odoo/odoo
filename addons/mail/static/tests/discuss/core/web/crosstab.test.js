@@ -1,4 +1,5 @@
 import {
+    actionPanel,
     click,
     defineMailModels,
     openDiscuss,
@@ -21,7 +22,7 @@ test("Channel subscription is renewed when channel is manually added", async () 
         },
     });
     await openDiscuss(channelId);
-    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await click("[title='Add People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Mitchell Admin'))");
     await click("button:text('Invite'):enabled");

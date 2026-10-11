@@ -395,6 +395,19 @@ test("No 'Hide Until New Message' on conversation with self in call", async () =
     await waitFor(".o-dropdown-item:text('Hide Until New Message'):count(1)");
 });
 
+test("sidebar opens the invitation of a channel in a dialog", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await waitFor(".modal .o-discuss-ChannelActionDialog .modal-title:text('General'):count(1)");
+    await waitFor(".modal .o-discuss-ChannelInvitation-search:count(1)");
+    await click(".modal .btn-close");
+    await waitForNone(".modal");
+});
+
 test("opening a hidden channel re-pins it", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create([

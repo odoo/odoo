@@ -9,6 +9,7 @@ import { user } from "@web/core/user";
 
 import { types, useProps } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
+import { PANEL_CONTAINER_TYPE } from "@mail/core/common/action";
 
 const { DateTime } = luxon;
 
@@ -45,6 +46,24 @@ const messagingMenuItemPatch = {
     },
     get actionsDropdownState() {
         return this.channel ? this.channelDropdownState : super.actionsDropdownState;
+    },
+    /**
+     * The sidebar has no panel: panels open in a dropdown of their action, or in a dialog.
+     *
+     * @type {MessagingMenuItem["getPanelContainer"]}
+     */
+    getPanelContainer(params) {
+        if (!this.channel) {
+            return super.getPanelContainer(params);
+        }
+        if (["delete-thread", "invite-people"].includes(params.action.id)) {
+            return {
+                type: PANEL_CONTAINER_TYPE.DIALOG,
+                contentClass: "o-discuss-ChannelActionDialog",
+                title: this.channel.displayName,
+            };
+        }
+        return PANEL_CONTAINER_TYPE.DROPDOWN;
     },
     hasActions() {
         return this.channel ? this.threadActions.actionsComputed().length : super.hasActions();

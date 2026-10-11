@@ -1,4 +1,5 @@
 import {
+    actionPanel,
     click,
     defineMailModels,
     openDiscuss,
@@ -18,7 +19,7 @@ test("Add member to channel", async () => {
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await waitFor(".o-discuss-ChannelMember:text('Mitchell Admin'):count(1)");
     await click("[title='Add People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Harry'))");

@@ -147,6 +147,36 @@ test("Clicking on leave button leaves the channel", async () => {
     await contains(".o-mail-MessagingMenuEmpty");
 });
 
+test("Change livechat status from the dropdown of the chat actions", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({
+                guest_id: pyEnv["mail.guest"].create({ name: "Visitor 11" }),
+                livechat_member_type: "visitor",
+            }),
+        ],
+        channel_type: "livechat",
+        livechat_status: "need_help",
+    });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
+    const needHelpLabel =
+        ".o-mail-MessagingMenuItem:has(:text('Visitor 11')) .o-livechat-LivechatStatusLabel.o-help";
+    await contains(needHelpLabel);
+    await click("[title='Chat Actions']");
+    await click("button[name='livechat-status']");
+    await contains(".o-livechat-LivechatStatusSelection .active:text('Looking for help')");
+    await click(".o-livechat-LivechatStatusSelection button:text('In progress')");
+    await contains(needHelpLabel, { count: 0 });
+});
+
 test("Message unread counter", async () => {
     mockDate("2023-01-03 12:00:00");
     const pyEnv = await startServer();

@@ -1,4 +1,5 @@
 import {
+    actionPanel,
     click,
     contains,
     MENU_ACTIVE_IDS,
@@ -55,7 +56,7 @@ test("Can invite a partner to a livechat channel", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
+    await contains(actionPanel("Information")); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Add People']");
     await click("input", {
@@ -95,7 +96,7 @@ test("Available operators come first", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
+    await contains(actionPanel("Information")); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Add People']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
@@ -149,7 +150,7 @@ test("Partners invited most frequently by the current user come first", async ()
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
     await click(".o-mail-NotificationItem:has(:text('Visitor #1'))");
-    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
+    await contains(actionPanel("Information")); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Add People']");
     await click("input", { parent: [".o-discuss-ChannelInvitation-selectable", { text: "John" }] });
@@ -195,7 +196,7 @@ test("shows operators are in call", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
+    await contains(actionPanel("Information")); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("[title='Add People']");
     await contains(".o-discuss-ChannelInvitation-selectable:contains('bob in a call')");
@@ -231,7 +232,7 @@ test("Operator invite shows livechat_username", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.LIVECHAT);
     await click(".o-mail-NotificationItem:has(:text('Visitor #1'))");
-    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
+    await contains(actionPanel("Information")); // wait for auto-open of this panel
     await click("button[title='Members']");
     await click("button[title='Add People']");
     await contains("input", {

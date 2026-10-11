@@ -91,13 +91,6 @@ registerCallAction("mute", muteAction);
 /** @type {CallActionDefinition} */
 export const quickActionSettings = {
     condition: ({ ancestors, channel }) => !ancestors.inCallMenu && channel?.isSelfInCall,
-    dropdownComponent: QuickVoiceSettings,
-    dropdownMenuClass: ({ ancestors }) =>
-        ancestors.inMeetingView
-            ? "o-discuss-CallActionList-menu o-inMeetingView o-p-1_5 border-0 shadow overflow-x-hidden"
-            : "o-discuss-CallActionList-menu p-1 border-0 shadow overflow-x-hidden",
-    dropdownPosition: "top-end",
-    dropdownTrigger: true,
     extraContentComponent: TalkingAudioBars,
     // Only self's session in this very call: the call preview shows the button before joining.
     extraContentComponentProps: ({ channel, store }) => ({
@@ -106,6 +99,7 @@ export const quickActionSettings = {
     icon: "keyboard_arrow_up",
     iconClass: "o-discuss-quickVoiceSettings-chevron",
     name: _t("Voice Settings"),
+    panel: { component: QuickVoiceSettings },
     sequence: 15,
     sequenceGroup: 100,
 };
@@ -164,15 +158,9 @@ registerCallAction("camera-on", cameraOnAction);
 /** @type {CallActionDefinition} */
 export const quickVideoSettings = {
     condition: ({ ancestors, channel }) => !ancestors.inCallMenu && channel?.isSelfInCall,
-    dropdownComponent: QuickVideoSettings,
-    dropdownMenuClass: ({ ancestors }) =>
-        ancestors.inMeetingView
-            ? "o-discuss-CallActionList-menu o-inMeetingView o-p-1_5 border-0 shadow overflow-x-hidden"
-            : "o-discuss-CallActionList-menu p-1 border-0 shadow overflow-x-hidden",
-    dropdownPosition: "top-end",
-    dropdownTrigger: true,
     icon: "keyboard_arrow_up",
     name: _t("Video Settings"),
+    panel: { component: QuickVideoSettings },
     sequence: 15,
     sequenceGroup: 120,
 };

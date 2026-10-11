@@ -1,4 +1,5 @@
 import {
+    actionPanel,
     click,
     contains,
     defineMailModels,
@@ -37,9 +38,9 @@ test("Should open the search panel when search button is clicked", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await click("[title='Search Messages']");
-    await waitFor(".o-mail-SearchMessagesPanel:count(1)");
+    await waitFor(`${actionPanel("Search Messages")}:count(1)`);
     await waitFor(".o-mail-ActionPanel-header .o-mail-SearchMessageInput:count(1)");
     await waitFor(".o-mail-SearchMessageInput .o-mail-SearchInput input:count(1)");
 });
@@ -60,7 +61,7 @@ test("Should open the search panel with hotkey 'f'", async () => {
     await openDiscuss(channelId);
     await waitFor(".o-mail-Message:count(1)");
     await press("alt+f");
-    await waitFor(".o-mail-SearchMessagesPanel:count(1)");
+    await waitFor(`${actionPanel("Search Messages")}:count(1)`);
 });
 
 test.tags("desktop");
@@ -85,10 +86,10 @@ test("Search a message", async () => {
         ".o-mail-SearchMessageInput .o-mail-SearchInput input",
         "message"
     );
-    await waitFor(".o-mail-SearchMessagesPanel .o-mail-Message:count(1)");
+    await waitFor(`${actionPanel("Search Messages")} .o-mail-Message:count(1)`);
     expect(".o-mail-SearchMessageInput .o-mail-SearchInput input").toHaveValue("message");
     await click("button[aria-label='Clear']");
-    await waitFor(".o-mail-SearchMessagesPanel:not(:has(.o-mail-Message)):count(1)");
+    await waitFor(`${actionPanel("Search Messages")}:not(:has(.o-mail-Message)):count(1)`);
     expect(".o-mail-SearchMessageInput .o-mail-SearchInput input").toHaveValue("");
 });
 
@@ -142,7 +143,7 @@ test("Searching messages shows spinner icon", async () => {
             },
         ],
     ]);
-    await waitFor(".o-mail-SearchMessagesPanel .o-mail-Message:count(1)");
+    await waitFor(`${actionPanel("Search Messages")} .o-mail-Message:count(1)`);
     await waitFor(".o-mail-SearchMessageInput .o-mail-SearchInput:not(.o-searching):count(1)");
     await waitFor(
         ".o-mail-SearchMessageInput .o-mail-SearchInput i.oi[data-icon='search']:count(1)"
@@ -241,7 +242,7 @@ test("Search should be hightlighted", async () => {
     await click("[title='Search Messages']");
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "message");
-    await waitFor(`.o-mail-SearchMessagesPanel .o-mail-Message .${HIGHLIGHT_CLASS}:count(1)`);
+    await waitFor(`${actionPanel("Search Messages")} .o-mail-Message .${HIGHLIGHT_CLASS}:count(1)`);
 });
 
 test.tags("desktop");
@@ -250,10 +251,10 @@ test("Should close the search panel when search button is clicked again", async 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await waitFor(".o-discuss-ChannelMemberList:count(1)"); // wait for auto-open of this panel
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await click("[title='Search Messages']");
     await click("[title='Close Search']");
-    await waitFor(".o-mail-SearchMessagesPanel:count(1)");
+    await waitFor(`${actionPanel("Search Messages")}:count(1)`);
 });
 
 test.tags("desktop");
@@ -276,10 +277,10 @@ test("Search a message in 60 messages should return 30 message first", async () 
     await click("[title='Search Messages']");
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "message");
-    await waitFor(".o-mail-SearchMessagesPanel .o-mail-Message:count(30)");
+    await waitFor(`${actionPanel("Search Messages")} .o-mail-Message:count(30)`);
     // give enough time to useVisible to potentially load more (unexpected) messages
     await tick();
-    await waitFor(".o-mail-SearchMessagesPanel .o-mail-Message:count(30)");
+    await waitFor(`${actionPanel("Search Messages")} .o-mail-Message:count(30)`);
 });
 
 test.tags("desktop");
@@ -302,12 +303,12 @@ test("Scrolling to the bottom should load more searched message", async () => {
     await click("[title='Search Messages']");
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "message");
-    await waitFor(".o-mail-SearchMessagesPanel .o-mail-Message:count(30)");
-    await scroll(".o-mail-SearchMessagesPanel .o-mail-ActionPanel", "bottom");
-    await waitFor(".o-mail-SearchMessagesPanel .o-mail-Message:count(60)");
+    await waitFor(`${actionPanel("Search Messages")} .o-mail-Message:count(30)`);
+    await scroll(actionPanel("Search Messages"), "bottom");
+    await waitFor(`${actionPanel("Search Messages")} .o-mail-Message:count(60)`);
     // give enough time to useVisible to potentially load more (unexpected) messages
     await tick();
-    await waitFor(".o-mail-SearchMessagesPanel .o-mail-Message:count(60)");
+    await waitFor(`${actionPanel("Search Messages")} .o-mail-Message:count(60)`);
 });
 
 test.tags("desktop");
@@ -328,7 +329,7 @@ test("Search a message containing round brackets", async () => {
     await click("button[title='Search Messages']");
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "(message");
-    await waitFor(".o-mail-SearchMessagesPanel .o-mail-Message:count(1)");
+    await waitFor(`${actionPanel("Search Messages")} .o-mail-Message:count(1)`);
 });
 
 test.tags("desktop");
@@ -346,7 +347,7 @@ test("Search a message containing single quotes", async () => {
     await click("button[title='Search Messages']");
     await waitFor(".o-mail-SearchMessageInput:count(1)");
     await insertText(".o-mail-SearchMessageInput .o-mail-SearchInput input", "can't");
-    await waitFor(".o-mail-SearchMessagesPanel .o-mail-Message:count(1)");
+    await waitFor(`${actionPanel("Search Messages")} .o-mail-Message:count(1)`);
 });
 
 test.tags("mobile");
@@ -359,9 +360,9 @@ test("Close message search panel when navigating back on mobile", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-ChatWindow-moreActions");
     await click("button:text('Search Messages')");
-    await waitFor(".o-mail-SearchMessagesPanel:count(1)");
+    await waitFor(`${actionPanel("Search Messages")}:count(1)`);
     history.back();
-    await waitForNone(".o-mail-SearchMessagesPanel");
+    await waitForNone(actionPanel("Search Messages"));
 });
 
 test.tags("desktop");

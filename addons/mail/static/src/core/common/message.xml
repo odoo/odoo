@@ -156,7 +156,7 @@
         <t t-if="this.isMobileOS and isReverse" t-call="mail.Message.emptyQuickAction"/>
         <div class="d-flex rounded-1 overflow-hidden gap-1" t-att-class="{ 'flex-row-reverse': isReverse }">
             <t t-if="this.isMobileOS or this.state.shouldRenderActions">
-                <ActionList actions="this.actions" inline="true" fw="false" actionComponent.bind="this.getActionComponent"/>
+                <ActionList actions="this.actions" inline="true" fw="false" actionComponent.bind="this.getActionComponent" panelContainer="this.actionPanelContainer"/>
                 <t t-foreach="Array(Math.max(this.quickActionCount - this.quickActions().length - 1, 0))" t-as="i" t-key="i_index">
                     <t t-call="mail.Message.emptyQuickAction"/>
                 </t>

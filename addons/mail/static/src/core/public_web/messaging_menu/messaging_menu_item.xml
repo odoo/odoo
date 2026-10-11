@@ -33,7 +33,7 @@
                             t-on-click.stop="() => this.actionsDropdownState.isOpen ? this.actionsDropdownState.close() : this.actionsDropdownState.open()"
                         />
                         <t t-set-slot="content">
-                            <ActionList actions="this.actionsList" dropdown="true"/>
+                            <ActionList actions="this.actionsList" dropdown="true" panelContainer.bind="this.getPanelContainer"/>
                         </t>
                     </Dropdown>
                 </div>
