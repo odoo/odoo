@@ -1,9 +1,7 @@
 import { ChatWindow } from "@mail/core/common/chat_window_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").ChatWindow} */
-const chatWindowPatch = {
+export const chatWindowPatch = patchModel(ChatWindow, {
     setup() {
         super.setup(...arguments);
         /** @type {PromiseWithResolvers<boolean>} */
@@ -40,5 +38,4 @@ const chatWindowPatch = {
         }
         return canClose;
     },
-};
-patch(ChatWindow.prototype, chatWindowPatch);
+});

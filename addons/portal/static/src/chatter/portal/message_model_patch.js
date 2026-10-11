@@ -1,7 +1,7 @@
-import { patch } from "@web/core/utils/patch";
 import { Message } from "@mail/core/common/message_model";
+import { patchModel } from "@mail/model/export";
 
-patch(Message.prototype, {
+export const messagePatch = patchModel(Message, {
     get canToggleBookmark() {
         let result = super.canToggleBookmark;
         if (this.thread && !this.thread.channel) {

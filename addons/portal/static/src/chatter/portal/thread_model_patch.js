@@ -1,9 +1,7 @@
 import { Thread } from "@mail/core/common/thread_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Thread} */
-const threadPatch = {
+export const threadPatch = patchModel(Thread, {
     computeSelvesBySequence() {
         const result = super.computeSelvesBySequence();
         if (this.portal_partner) {
@@ -19,5 +17,4 @@ const threadPatch = {
             ...(this.pid ? { pid: this.pid } : {}),
         };
     },
-};
-patch(Thread.prototype, threadPatch);
+});

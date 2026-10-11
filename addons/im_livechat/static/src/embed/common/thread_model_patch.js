@@ -1,10 +1,9 @@
 import { Thread } from "@mail/core/common/thread_model";
+import { patchModel } from "@mail/model/export";
 import "@mail/discuss/core/common/thread_model_patch";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(Thread.prototype, {
+export const threadPatch = patchModel(Thread, {
     setup() {
         super.setup();
         const { promise, resolve } = Promise.withResolvers();

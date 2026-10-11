@@ -1,8 +1,7 @@
 import { Composer } from "@mail/core/common/composer_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(Composer.prototype, {
+export const composerPatch = patchModel(Composer, {
     /** @returns {import("models").Attachment|undefined} */
     get voiceAttachment() {
         return this.attachments.find((attachment) => attachment.voice);

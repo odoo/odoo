@@ -1,14 +1,13 @@
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
+import { patchModel } from "@mail/model/export";
 import { fields } from "@mail/model/misc";
 import { convertBrToLineBreak } from "@mail/utils/common/format";
 
-import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 import { url } from "@web/core/utils/urls";
 
-/** @type {import("models").DiscussChannel} */
-const discussChannelPatch = {
+export const discussChannelPatch = patchModel(DiscussChannel, {
     setup() {
         super.setup(...arguments);
         this.chatbot = fields.One("Chatbot", { inverse: "channel_id" });
@@ -196,5 +195,4 @@ const discussChannelPatch = {
     get transcriptUrl() {
         return url(`/im_livechat/download_transcript/${this.id}`);
     },
-};
-patch(DiscussChannel.prototype, discussChannelPatch);
+});

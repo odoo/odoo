@@ -1,11 +1,9 @@
 import { Store } from "@mail/core/common/store_plugin";
+import { patchModel } from "@mail/model/export";
 import { compareDatetime } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Store} */
-const storePatch = {
+export const storePatch = patchModel(Store, {
     setup() {
         super.setup(...arguments);
         this.livechatChannels = this.makeCachedFetchData("im_livechat.channel");
@@ -60,5 +58,4 @@ const storePatch = {
             },
         ];
     },
-};
-patch(Store.prototype, storePatch);
+});

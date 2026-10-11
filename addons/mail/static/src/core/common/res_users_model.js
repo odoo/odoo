@@ -7,6 +7,7 @@ import { getOuterHtml } from "@mail/utils/common/html";
 import { imageUrl } from "@web/core/utils/urls";
 
 export class ResUsers extends ImStatusMixin {
+    /** @type {"res.users"} */
     static _name = "res.users";
     static _inherits = { "res.partner": "partner_id" };
 

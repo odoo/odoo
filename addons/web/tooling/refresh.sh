@@ -11,7 +11,7 @@ refreshInDir () {
     cd "$1" || exit
     cp "$tooling/_eslintignore" .eslintignore
     cp "$tooling/_eslintrc.json" .eslintrc.json
-    cp "$tooling/_jsconfig.json" jsconfig.json
+    python3 "$tooling/generate_jsconfig.py" . ${pathToEnterprise:+--enterprise "$pathToEnterprise"}
     cp "$tooling/_package.json" package.json
     cd - &> /dev/null
 }

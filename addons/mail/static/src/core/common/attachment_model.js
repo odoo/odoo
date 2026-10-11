@@ -8,6 +8,7 @@ import { rpc } from "@web/core/network/rpc";
 import { imageUrl, url } from "@web/core/utils/urls";
 
 export class Attachment extends FileModelMixin(Record) {
+    /** @type {"ir.attachment"} */
     static _name = "ir.attachment";
     setup() {
         super.setup(...arguments);

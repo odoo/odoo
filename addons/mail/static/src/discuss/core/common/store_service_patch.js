@@ -1,13 +1,12 @@
 import { Store } from "@mail/core/common/store_plugin";
+import { patchModel } from "@mail/model/export";
 import { fields } from "@mail/model/misc";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { localeCompare } from "@web/core/l10n/utils";
-import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
 
-/** @type {import("models").Store} */
-const storeServicePatch = {
+export const storeServicePatch = patchModel(Store, {
     /** @override */
     setup() {
         super.setup();
@@ -119,6 +118,4 @@ const storeServicePatch = {
             await this.createGroupChat({ users_to });
         }
     },
-};
-
-patch(Store.prototype, storeServicePatch);
+});

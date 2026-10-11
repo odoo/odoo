@@ -1,8 +1,7 @@
 import { Rating } from "@rating/core/common/rating_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(Rating.prototype, {
+export const ratingPatch = patchModel(Rating, {
     setup() {
         super.setup(...arguments);
         /** @type {string|undefined} */

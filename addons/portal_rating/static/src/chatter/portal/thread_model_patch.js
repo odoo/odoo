@@ -1,11 +1,10 @@
 import { Thread } from "@mail/core/common/thread_model";
-
-import { patch } from "@web/core/utils/patch";
+import { patchModel } from "@mail/model/export";
 
 export const REVIEW_INITIAL_LIMIT = 3;
 export const REVIEW_LOAD_MORE_LIMIT = 10;
 
-patch(Thread.prototype, {
+export const threadPatch = patchModel(Thread, {
     setup() {
         super.setup();
         /** @type {false|number} */

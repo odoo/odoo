@@ -1,8 +1,7 @@
 import { MessagingMenuUIState } from "@mail/core/public_web/messaging_menu/messaging_menu_ui_state_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-const messagingMenuUIStateModelPatch = {
+export const messagingMenuUIStateModelPatch = patchModel(MessagingMenuUIState, {
     selectTab(tab) {
         super.selectTab(tab);
         if (this.id === "discuss.sidebar") {
@@ -19,5 +18,4 @@ const messagingMenuUIStateModelPatch = {
         }
         return super._isReadyForInitialLoad();
     },
-};
-patch(MessagingMenuUIState.prototype, messagingMenuUIStateModelPatch);
+});

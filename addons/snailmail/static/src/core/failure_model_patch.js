@@ -1,8 +1,8 @@
 import { Failure } from "@mail/core/common/failure_model";
+import { patchModel } from "@mail/model/export";
 import { _t } from "@web/core/l10n/translation";
-import { patch } from "@web/core/utils/patch";
 
-patch(Failure.prototype, {
+export const failurePatch = patchModel(Failure, {
     get iconSrc() {
         if (this.type === "snail") {
             return "/snailmail/static/img/snailmail_failure.png";

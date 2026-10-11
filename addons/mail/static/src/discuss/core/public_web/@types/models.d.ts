@@ -1,17 +1,10 @@
 declare module "models" {
     export interface DiscussChannel {
-        _computeMessagingMenuTabsWithCounter: () => unknown[];
-        autoOpenChatWindowOnNewMessage: Readonly<boolean>;
-        createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
-        hasSubChannelFeature: Readonly<boolean>;
-        inChathubOnNewMessage: Readonly<boolean>;
         isLocallyPinned: boolean;
         lastSubChannelLoaded: DiscussChannel;
-        loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<void>;
         loadSubChannelsDone: boolean;
         messagingMenuTabs: MessagingMenuTab[];
         messagingMenuTabsWithCounter: MessagingMenuTab[];
-        notifyDescriptionToServer: (description: string) => Promise<unknown>;
         primaryMessagingMenuTab: MessagingMenuTab;
     }
     export interface MessagingMenu {
@@ -23,7 +16,6 @@ declare module "models" {
         channels: DiscussChannel[];
         channelsWithCounter: DiscussChannel[];
         compareChannels: (c1: DiscussChannel, c2: DiscussChannel) => number;
-        getSortedChannels: (filter: MessagingMenuTabFilter, channels: DiscussChannel[]) => DiscussChannel[];
         includesChannel: (channel: DiscussChannel) => boolean;
     }
     export interface Store {
@@ -32,6 +24,5 @@ declare module "models" {
         fetchSsearchConversationsSequential: () => Promise<any>;
         hasHiddenChannelsFetcher: ReturnType<Store['makeCachedFetchData']>;
         most_popular_channels: DiscussChannel[];
-        searchConversations: (searchValue: string) => Promise<void>;
     }
 }

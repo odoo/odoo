@@ -31,6 +31,8 @@ let prevLastMessageId = null;
 let temporaryIdOffset = 0.01;
 
 export class Store extends BaseStore {
+    /** @type {"Store"} */
+    static _name = "Store";
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
     static OTHER_LONG_TYPING = 60000;
 

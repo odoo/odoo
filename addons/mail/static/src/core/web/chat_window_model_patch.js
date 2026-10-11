@@ -1,8 +1,7 @@
 import { ChatWindow } from "@mail/core/common/chat_window_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-patch(ChatWindow.prototype, {
+export const chatWindowPatch = patchModel(ChatWindow, {
     _onClose(options) {
         if (
             this.store.env.services.ui.isSmall &&

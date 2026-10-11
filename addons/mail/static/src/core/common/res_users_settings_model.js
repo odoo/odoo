@@ -1,6 +1,7 @@
 import { Record, fields } from "@mail/model/export";
 
 export class ResUsersSettings extends Record {
+    /** @type {"res.users.settings"} */
     static _name = "res.users.settings";
 
     id;

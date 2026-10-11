@@ -1,11 +1,9 @@
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
+import { patchModel } from "@mail/model/export";
 
 import { fields } from "@mail/model/misc";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").DiscussChannel} */
-const discussChannelPatch = {
+export const discussChannelPatch = patchModel(DiscussChannel, {
     setup() {
         super.setup(...arguments);
         this.livechatWelcomeMessage = fields.One("mail.message", {
@@ -83,6 +81,7 @@ const discussChannelPatch = {
     get hasWelcomeMessage() {
         return this.channel_type === "livechat" && !this.chatbot;
     },
+    /** @returns {boolean|undefined} */
     get isLastCommentFromVisitor() {
         return this.newestPersistentCommentOfAllMessages?.isSelfAuthored;
     },
@@ -101,5 +100,4 @@ const discussChannelPatch = {
     shouldNotifyMessageToUser() {
         return this.channel_type === "livechat" || super.shouldNotifyMessageToUser(...arguments);
     },
-};
-patch(DiscussChannel.prototype, discussChannelPatch);
+});

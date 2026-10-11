@@ -6,6 +6,8 @@ import { _t } from "@web/core/l10n/translation";
 export const MENU_TABS = { BOOKMARK: "bookmark", NOTIFICATION: "notification" };
 
 export class MessagingMenu extends Record {
+    /** @type {"MessagingMenu"} */
+    static _name = "MessagingMenu";
     static singleton = true;
 
     allTabs = this.computedShallowEqual(() => [...this.store.MessagingMenuTab.records.values()]);

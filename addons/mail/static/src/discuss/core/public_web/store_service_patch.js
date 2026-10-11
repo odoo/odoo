@@ -1,12 +1,10 @@
 import { Store } from "@mail/core/common/store_plugin";
+import { patchModel } from "@mail/model/export";
 import { fields } from "@mail/model/misc";
 import { useSequential } from "@mail/utils/common/hooks";
 import { rpc } from "@web/core/network/rpc";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Store} */
-const StorePatch = {
+export const StorePatch = patchModel(Store, {
     setup() {
         super.setup(...arguments);
         this.hasHiddenChannelsFetcher = this.makeCachedFetchData("has_hidden_channels");
@@ -24,5 +22,4 @@ const StorePatch = {
         });
         this.insert(data);
     },
-};
-patch(Store.prototype, StorePatch);
+});

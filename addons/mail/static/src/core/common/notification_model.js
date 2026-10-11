@@ -3,6 +3,7 @@ import { fields, Record } from "@mail/model/export";
 import { _t } from "@web/core/l10n/translation";
 
 export class Notification extends Record {
+    /** @type {"mail.notification"} */
     static _name = "mail.notification";
 
     setup() {

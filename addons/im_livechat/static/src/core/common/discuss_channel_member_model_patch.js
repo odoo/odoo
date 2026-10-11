@@ -1,13 +1,10 @@
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").ChannelMember} */
-const discussChannelMemberPatch = {
+export const discussChannelMemberPatch = patchModel(ChannelMember, {
     setup() {
         super.setup(...arguments);
         /** @type {"agent"|"bot"|"visitor"} */
         this.livechat_member_type = undefined;
     },
-};
-patch(ChannelMember.prototype, discussChannelMemberPatch);
+});

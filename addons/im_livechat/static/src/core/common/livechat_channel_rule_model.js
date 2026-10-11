@@ -2,6 +2,7 @@ import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
 
 export class LivechatChannelRule extends Record {
+    /** @type {"im_livechat.channel.rule"} */
     static _name = "im_livechat.channel.rule";
 
     /** @type {string} */

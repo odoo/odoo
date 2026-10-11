@@ -1,11 +1,9 @@
 import { Thread } from "@mail/core/common/thread_model";
-
-import { patch } from "@web/core/utils/patch";
+import { patchModel } from "@mail/model/export";
 
 import "@mail/core/public_web/thread_model_patch";
 
-/** @type {import("models").Thread} */
-const threadPatch = {
+export const threadPatch = patchModel(Thread, {
     get isEmpty() {
         return !this.channel?.from_message_id && super.isEmpty;
     },
@@ -21,5 +19,4 @@ const threadPatch = {
             sidebarState.activeTab = this.channel?.primaryMessagingMenuTab ?? fallback;
         }
     },
-};
-patch(Thread.prototype, threadPatch);
+});

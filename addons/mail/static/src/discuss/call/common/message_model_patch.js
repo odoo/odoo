@@ -1,9 +1,7 @@
 import { Message } from "@mail/core/common/message_model";
+import { patchModel } from "@mail/model/export";
 
-import { patch } from "@web/core/utils/patch";
-
-/** @type {import("models").Message} */
-const messagePatch = {
+export const messagePatch = patchModel(Message, {
     get notificationHidden() {
         if (
             this.store.rtc.channel?.eq(this.channel_id) &&
@@ -15,5 +13,4 @@ const messagePatch = {
         }
         return super.notificationHidden;
     },
-};
-patch(Message.prototype, messagePatch);
+});
