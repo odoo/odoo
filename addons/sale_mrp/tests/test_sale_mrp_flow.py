@@ -2699,6 +2699,45 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(len(so.picking_ids), 1)
         self.assertEqual(so.picking_ids.move_ids.product_qty, 20)
 
+    def test_mo_split_with_batch_size_and_mtso_rule_gets_separate_pick_pickings(self):
+        """
+        Same as `test_mo_split_with_batch_size_gets_separate_pick_pickings`, but with a
+        'mts_else_mto' Pre-Production -> Production rule: the component moves are then not
+        chained to the pick components moves. Each MO should still get its own picking.
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.manufacture_steps = 'pbm'
+        warehouse.pbm_route_id.rule_ids.filtered(
+            lambda r: r.action == 'pull' and r.location_src_id == warehouse.pbm_loc_id
+        ).procure_method = 'mts_else_mto'
+        self.product.route_ids = [Command.set([
+            warehouse.mto_pull_id.route_id.id,
+            warehouse.manufacture_pull_id.route_id.id,
+        ])]
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'enable_batch_size': True,
+            'batch_size': 10.0,
+            'bom_line_ids': [Command.create({'product_id': self.component_a.id, 'product_qty': 1})],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 20,
+            })],
+        })
+        so.action_confirm()
+
+        mos = so.mrp_production_ids
+        self.assertEqual(len(mos), 2)
+        for mo in mos:
+            picking = mo.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.pbm_type_id)
+            self.assertEqual(len(picking), 1)
+            self.assertEqual(picking.move_ids.production_group_id, mo.production_group_id)
+
     def test_reassign_component_picking_sale_order_keeps_mo_reference(self):
         """Check that linking the components transfer of an MTO manufacturing order to another sales order
         keeps the further component needs of that manufacturing order in the same transfer, and that linking

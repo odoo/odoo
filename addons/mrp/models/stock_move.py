@@ -569,10 +569,29 @@ class StockMove(models.Model):
         return keys
 
     def _feeds_raw_material_production(self):
-        """Whether this move directly or indirectly supplies components for a production
-        (i.e. ends up in a `raw_material_production_id`).
+        """Whether this move directly or indirectly supplies components for a production:
+        - it brings the products to the components location of a production of its own
+          production group (this also covers moves that are not chained to the component
+          moves, e.g. when those are MTS because of a 'mts_else_mto' rule), or
+        - it ends up in a `raw_material_production_id` through `move_dest_ids`.
         """
-        return bool(self.browse(self._rollup_move_dests()).raw_material_production_id)
+        self.ensure_one()
+        if not self.production_group_id:
+            # Nothing to discriminate on: avoid rolling up the whole move chain.
+            return False
+        if self._is_going_to_production_components_location():
+            return True
+        moves = self.browse(self._rollup_move_dests())
+        return bool(moves.raw_material_production_id) or any(
+            move._is_going_to_production_components_location() for move in moves - self
+        )
+
+    def _is_going_to_production_components_location(self):
+        self.ensure_one()
+        return any(
+            self.location_dest_id._child_of(location)
+            for location in self.production_group_id.production_ids.location_src_id
+        )
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
