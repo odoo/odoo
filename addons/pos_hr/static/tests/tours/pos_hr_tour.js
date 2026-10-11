@@ -129,32 +129,6 @@ registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("CashierCannotClose", {
-    steps: () =>
-        [
-            Chrome.clickBtn("Open Register"),
-            PosHr.loginScreenIsShown(),
-            PosHr.clickLoginButton(),
-            CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
-            Dialog.confirm("Open Register"),
-            Chrome.clickMenuButton(),
-            Chrome.waitForMenuOptionsToOpen(),
-            {
-                trigger: negate(
-                    `.o_pos_burger_menu_buttons > button.btn:contains("Close Register")`
-                ),
-            },
-            Chrome.closeBurgerMenu(),
-            PosHr.clickCashierName(),
-            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
-            Chrome.clickMenuButton(),
-            Chrome.waitForMenuOptionsToOpen(),
-            {
-                trigger: `.o_pos_burger_menu_buttons > button.btn:contains("Close Register")`,
-            },
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("test_cashier_user_can_change_price", {
     steps: () =>
         [
@@ -334,13 +308,13 @@ registry.category("web_tour.tours").add("pos_hr_go_backend_opened_registered", {
             PosHr.clickCashierName(),
             CashierSelectionPopup.has("Pos Employee1", { run: "click" }),
             PosHr.enterPin("2580"),
-            Chrome.notExistMenuOption("Close Register"),
+            Chrome.existMenuOption("Close Register"),
             Chrome.notExistMenuOption("Backend"),
 
             // Employee without user --> 403
             PosHr.clickCashierName(),
             CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
-            Chrome.notExistMenuOption("Close Register"),
+            Chrome.existMenuOption("Close Register"),
             Chrome.notExistMenuOption("Backend"),
 
             // Manager without user --> 403

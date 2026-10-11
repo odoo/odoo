@@ -65,14 +65,13 @@ export class ClosePosPopup extends Component {
         const initialState = { notes: "", payments: {} };
         if (this.pos.config.cash_control) {
             const defaultCash = this.props.default_cash_details;
+            const initialCashCount = this.pos.accessRight.canSeeExpectedCash
+                ? defaultCash.amount
+                : 0;
             initialState.payments[defaultCash.id] = {
-                counted: this.pos.formatCurrency(
-                    defaultCash.amount,
-                    this.pos.config.currency_id.id,
-                    {
-                        noSymbol: true,
-                    }
-                ),
+                counted: this.pos.formatCurrency(initialCashCount, this.pos.config.currency_id.id, {
+                    noSymbol: true,
+                }),
             };
         }
         this.props.non_cash_payment_methods.forEach((pm) => {
