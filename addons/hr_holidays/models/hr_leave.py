@@ -424,6 +424,21 @@ class HrLeave(models.Model):
         versions = self.env['hr.version'].sudo().search(domain)
         return versions.filtered(lambda v: v._is_overlapping_period(self.request_date_from, self.request_date_to))
 
+    @api.constrains('request_date_from', 'request_date_to', 'work_entry_type_id', 'employee_id')
+    def _check_flexible_hourly_leave_single_day(self):
+        """
+            An employee without a working schedule has no attendance to spread an hourly
+            request over, so a custom hours time off must stay within a single day.
+        """
+        for holiday in self.filtered('employee_id'):
+            if holiday.work_entry_type_request_unit != 'hour' or holiday.request_date_from == holiday.request_date_to:
+                continue
+            if holiday.employee_id._get_version(holiday.request_date_from).is_flexible:
+                raise ValidationError(self.env._(
+                    "%(employee)s has no working schedule, so a time off in hours must start and end on the same day.",
+                    employee=holiday.employee_id.display_name,
+                ))
+
     @api.constrains('date_from', 'date_to')
     def _check_contracts(self):
         """
@@ -454,7 +469,7 @@ class HrLeave(models.Model):
                       ) for version in versions)))
 
     @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',
-                 'request_date_from', 'request_date_to', 'employee_id')
+                 'request_date_from', 'request_date_to', 'employee_id', 'work_entry_type_request_unit')
     def _compute_date_from_to(self):
         for holiday in self:
             if not holiday.request_date_from or not holiday.request_date_to:
@@ -717,7 +732,7 @@ class HrLeave(models.Model):
                 tz = leave.employee_id._get_tz(leave.date_from) or tz
             leave.tz = tz
 
-    @api.depends('number_of_hours', 'number_of_days')
+    @api.depends('number_of_hours', 'number_of_days', 'work_entry_type_request_unit')
     def _compute_duration_display(self):
         for leave in self:
             duration = leave.number_of_days
