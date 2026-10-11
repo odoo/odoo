@@ -1,4 +1,5 @@
 import { fields, Record } from "@mail/model/export";
+import { LIST_LOADER_EPOCH, LIST_LOADER_STATUS, ListLoader } from "@mail/utils/common/list_loader";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
@@ -31,7 +32,7 @@ import { _t } from "@web/core/l10n/translation";
  * Defines a messaging menu tab with:
  * - `actions`: buttons shown near the search bar
  * - `filters`: chip options to narrow the content, rendered next to the search bar
- * - content: tab records loaded lazily through `counter`/`loadMore`
+ * - content: tab records loaded lazily through `counter`/`loadMore` (see `ListLoader`)
  *
  * Content can also be narrowed by any number of plugin filters (`pluginFilters`), that
  * can be provided by any addon under its own key (`setPluginFilter`). Display is up to
@@ -151,12 +152,12 @@ export class MessagingMenuTab extends Record {
     init_counter_ids = [];
     label;
     /**
-     * Load state tracked per filter. Keyed by filter id, or `"_base"` for the unfiltered
-     * view. Values are "new"|"idle"|"loading"|"loaded". See `getLoadStatus`.
+     * Loaders of the records, per combination of active filters (see `_filterKey`), or
+     * `"_base"` for the unfiltered view. See `getLoader`.
      *
-     * @type {Object<string, "new"|"idle"|"loading"|"loaded">}
+     * @type {Map<string, ListLoader>}
      */
-    loadStatusByFilterId = fields.Attr({}, { asProxy: true });
+    loaderByFilterKey = new Map();
     /** IDs of already loaded records, used to exclude them from `loadMore` requests. */
     loadMoreExcludeIds = this.computedShallowEqual(() => this._computeLoadMoreExcludeIds());
     messages = fields.Many("mail.message", { inverse: "messagingMenuTabsAsMessages" });
@@ -223,13 +224,26 @@ export class MessagingMenuTab extends Record {
     /**
      * @param {MessagingMenuTabFilter} [filter] The active chip filter, if any.
      * @param {MessagingMenuTabFilter[]} [pluginFilters=[]] The active plugin filters.
-     * @returns {"new"|"idle"|"loading"|"loaded"}
+     * @returns {import("@mail/utils/common/list_loader").ListLoaderStatus}
      */
     getLoadStatus(filter, pluginFilters = []) {
-        if (this.loadStatusByFilterId["_base"] === "loaded") {
-            return "loaded";
+        const baseStatus = this.getLoader("_base").getStatus(LIST_LOADER_EPOCH.OLDER);
+        if (baseStatus === LIST_LOADER_STATUS.LOADED) {
+            return baseStatus;
         }
-        return this.loadStatusByFilterId[this._filterKey(filter, pluginFilters)] ?? "new";
+        const filterKey = this._filterKey(filter, pluginFilters);
+        return this.getLoader(filterKey).getStatus(LIST_LOADER_EPOCH.OLDER);
+    }
+
+    /**
+     * @param {string} filterKey see `_filterKey`
+     * @returns {ListLoader}
+     */
+    getLoader(filterKey) {
+        if (!this.loaderByFilterKey.has(filterKey)) {
+            this.loaderByFilterKey.set(filterKey, this._makeLoader(filterKey));
+        }
+        return this.loaderByFilterKey.get(filterKey);
     }
 
     /**
@@ -243,31 +257,36 @@ export class MessagingMenuTab extends Record {
      * @param {string} [options.searchTerm]
      */
     async loadMore({ filter, pluginFilters = [], searchTerm } = {}) {
-        if (!["new", "idle"].includes(this.getLoadStatus(filter, pluginFilters))) {
+        const filterKey = this._filterKey(filter, pluginFilters);
+        if (searchTerm) {
+            // Search results are fetched apart from the loaded records: they don't affect them.
+            const params = { search_term: searchTerm };
+            await this._makeLoader(filterKey).load(LIST_LOADER_EPOCH.OLDER, { params });
             return;
         }
-        const key = this._filterKey(filter, pluginFilters);
-        this.loadStatusByFilterId[key] = "loading";
-        try {
-            const result = await this.store.fetchStoreData(
-                `/mail/messaging_menu/${this.recordType}/load_more`,
-                {
-                    tab_id: this.id,
-                    filter_ids: [filter?.id, ...pluginFilters.map((f) => f.id)].filter(Boolean),
-                    exclude_ids: this.loadMoreExcludeIds,
-                    limit: MessagingMenuTab.LOAD_MORE_LIMIT,
-                    search_term: searchTerm,
-                },
-                { requestData: true }
-            );
-            if (!searchTerm) {
-                this.loadStatusByFilterId[key] = result.is_fully_loaded ? "loaded" : "idle";
-            }
-        } finally {
-            if (this.loadStatusByFilterId[key] === "loading") {
-                this.loadStatusByFilterId[key] = "idle";
-            }
+        if (this.getLoadStatus(filter, pluginFilters) !== LIST_LOADER_STATUS.LOADED) {
+            await this.getLoader(filterKey).load(LIST_LOADER_EPOCH.OLDER);
         }
+    }
+
+    /** @param {string} filterKey see `_filterKey` */
+    _makeLoader(filterKey) {
+        return new ListLoader({
+            fetch: async (params) => {
+                const result = await this.store.fetchStoreData(
+                    `/mail/messaging_menu/${this.recordType}/load_more`,
+                    {
+                        tab_id: this.id,
+                        filter_ids: filterKey === "_base" ? [] : filterKey.split("__"),
+                        ...params,
+                    },
+                    { requestData: true }
+                );
+                return this.recordType === "mail.message" ? result.messages : result.channels;
+            },
+            getKnownIds: () => this.loadMoreExcludeIds,
+            limit: MessagingMenuTab.LOAD_MORE_LIMIT,
+        });
     }
 }
 

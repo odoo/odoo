@@ -176,12 +176,12 @@ const StorePatch = {
         // Everything was read: any filter combination including "notification_unread" is
         // now empty and fully loaded.
         const notificationTab = this.store.messagingMenu.notificationTab;
-        for (const key of Object.keys(notificationTab.loadStatusByFilterId)) {
+        for (const [key, loader] of notificationTab.loaderByFilterKey) {
             if (key.split("__").includes("notification_unread")) {
-                notificationTab.loadStatusByFilterId[key] = "loaded";
+                loader.markFullyLoaded();
             }
         }
-        notificationTab.loadStatusByFilterId.notification_unread = "loaded";
+        notificationTab.getLoader("notification_unread").markFullyLoaded();
         const close = notification.add(
             readMessageIds.length === 1
                 ? _t("1 item marked as read")
