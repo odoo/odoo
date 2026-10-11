@@ -2,7 +2,7 @@
 
 from odoo import _, fields, models
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import groupby
 
@@ -241,43 +241,23 @@ class DeliveryCarrier(models.Model):
     def _product_price_to_company_currency(self, quantity, product, company):
         return company.currency_id._convert(quantity * product.standard_price, product.currency_id, company)
 
-    # ------------------------------------------------ #
-    # Fixed price shipping, aka a very simple provider #
-    # ------------------------------------------------ #
+    # ------------------------------ #
+    # In-house delivery type methods #
+    # ------------------------------ #
 
-    def fixed_send_shipping(self, pickings):
+    def in_house_send_shipping(self, pickings):
         res = []
         for p in pickings:
-            res = res + [{'exact_price': p.carrier_id.fixed_price,
+            price = p.carrier_id._get_price_available(p.sale_id) if p.sale_id else None
+            exact_price = p.carrier_id.fixed_price if price is None else price
+            res = res + [{'exact_price': exact_price,
                           'tracking_number': False}]
         return res
 
-    def fixed_get_tracking_link(self, picking):
+    def in_house_get_tracking_link(self, picking):
         if self.tracking_url and picking.carrier_tracking_ref:
             return self.tracking_url.replace("<shipmenttrackingnumber>", picking.carrier_tracking_ref)
         return False
 
-    def fixed_cancel_shipment(self, pickings):
-        raise NotImplementedError()
-
-    # ----------------------------------- #
-    # Based on rule delivery type methods #
-    # ----------------------------------- #
-
-    def base_on_rule_send_shipping(self, pickings):
-        res = []
-        for p in pickings:
-            carrier = self._match_address(p.partner_id)
-            if not carrier:
-                raise ValidationError(_('There is no matching delivery rule.'))
-            res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
-                          'tracking_number': False}]
-        return res
-
-    def base_on_rule_get_tracking_link(self, picking):
-        if self.tracking_url and picking.carrier_tracking_ref:
-            return self.tracking_url.replace("<shipmenttrackingnumber>", picking.carrier_tracking_ref)
-        return False
-
-    def base_on_rule_cancel_shipment(self, pickings):
+    def in_house_cancel_shipment(self, pickings):
         raise NotImplementedError()

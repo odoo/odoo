@@ -4,4 +4,4 @@ UPDATE delivery_carrier
 -- disable delivery methods from external providers
 UPDATE delivery_carrier
    SET active = false
-   WHERE delivery_type NOT IN ('fixed', 'base_on_rule');
+   WHERE delivery_type != 'in_house';

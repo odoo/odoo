@@ -30,7 +30,7 @@ class TestChooseDeliveryCarrier(DeliveryCommon, HttpCase):
         cls.normal_delivery = cls._prepare_carrier(
             product=cls.product_delivery_normal,
             name="Normal Delivery Charges",
-            delivery_type="fixed",
+            delivery_type="in_house",
             fixed_price=10.0,
         )
 

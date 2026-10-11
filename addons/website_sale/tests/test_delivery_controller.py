@@ -53,7 +53,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
         self.env["delivery.carrier"].create([
             {
                 "name": "Over 300",
-                "delivery_type": "base_on_rule",
+                "delivery_type": "in_house",
                 "product_id": self.product_delivery_poste.id,
                 "website_published": True,
                 "price_rule_ids": [
@@ -62,7 +62,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
             },
             {
                 "name": "Under 300",
-                "delivery_type": "base_on_rule",
+                "delivery_type": "in_house",
                 "product_id": self.product_delivery_poste.id,
                 "website_published": True,
                 "price_rule_ids": [
@@ -71,7 +71,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
             },
             {
                 "name": "No rules",
-                "delivery_type": "base_on_rule",
+                "delivery_type": "in_house",
                 "product_id": self.product_delivery_poste.id,
                 "website_published": True,
             },
@@ -83,7 +83,9 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
         ])
 
         self.assertEqual(
-            self.empty_cart._get_delivery_methods().mapped("name"), ["Under 300", "Fixed"]
+            self.empty_cart._get_delivery_methods().mapped("name"),
+            ["Under 300", "No rules", "Fixed"],
+            "Methods without pricing rules should use their price.",
         )
 
     def test_recompute_cart_recomputes_delivery_rate(self):
@@ -95,7 +97,7 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
         })
         carrier = self.env['delivery.carrier'].create({
             'name': 'Free over 15',
-            'delivery_type': 'base_on_rule',
+            'delivery_type': 'in_house',
             'product_id': delivery_product.id,
             'website_published': True,
             'price_rule_ids': [

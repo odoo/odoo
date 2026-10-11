@@ -36,7 +36,7 @@ class TestCarrierPropagation(TransactionCase):
         cls.normal_delivery = cls.env['delivery.carrier'].create({
             'name': 'Normal Delivery Charges',
             'fixed_price': 10,
-            'delivery_type': 'fixed',
+            'delivery_type': 'in_house',
             'product_id': cls.product_delivery_normal.id,
         })
         cls.customer_location = cls.env.ref("stock.stock_location_customers")

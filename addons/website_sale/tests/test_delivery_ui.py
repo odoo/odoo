@@ -49,7 +49,7 @@ class TestUi(HttpCase):
             "name": "The Poste",
             "sequence": 9999,  # ensure last to load price async
             "fixed_price": 20.0,
-            "delivery_type": "base_on_rule",
+            "delivery_type": "in_house",
             "product_id": self.product_delivery_poste.id,
             "website_published": True,
             "price_rule_ids": [

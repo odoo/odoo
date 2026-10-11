@@ -13,14 +13,7 @@
             />
         </t>
         <div id="o_custom_payment_details" position="replace">
-            <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
-                <div class="mt-2 mb-3">
-                    <div class="o_body_carrier_message">
-                        <t t-out="order.carrier_id.website_description"/>
-                    </div>
-                </div>
-            </t>
-            <t t-else="">
+            <t t-if="tx_sudo.provider_id.custom_mode != 'on_site'">
                 <t>$0</t> <!-- Replaced by old content. -->
             </t>
         </div>
