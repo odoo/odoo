@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem
+        id="menu_eva_root"
+        name="EVA"
+        groups="base.group_user"
+        web_icon="eva,static/description/icon.png"
+        sequence="0"/>
+
+    <menuitem
+        id="menu_eva_games"
+        name="Games"
+        parent="menu_eva_root"
+        action="eva.action_game"
+        sequence="1"/>
+
+    <menuitem
+        id="menu_eva_players"
+        name="Players"
+        parent="menu_eva_root"
+        action="eva.action_player"
+        sequence="2"/>
+</odoo>
