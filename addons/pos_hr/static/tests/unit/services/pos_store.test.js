@@ -18,6 +18,28 @@ test("employeeIsAdmin", async () => {
     store.setCashier(emp);
     expect(store.accessRight.employeeIsAdmin).toBe(true);
 });
+test("price mode follows the active cashier's price rights", async () => {
+    const store = await setupPosEnv();
+    const manager = store.models["hr.employee"].get(2);
+    const cashier = store.models["hr.employee"].get(3);
+    const restrictive = store.models["hr.employee"].get(4);
+
+    store.config.restrict_price_control = true;
+    store.setCashier(manager);
+    expect(store.accessRight.disablePriceButton).toBe(true);
+    store.numpadMode = "price";
+    store.setCashier(cashier);
+    expect(store.accessRight.disablePriceButton).toBe(false);
+    expect(store.numpadMode).toBe("quantity");
+
+    store.config.restrict_price_control = false;
+    store.setCashier(cashier);
+    expect(store.accessRight.disablePriceButton).toBe(true);
+    store.numpadMode = "price";
+    store.setCashier(restrictive);
+    expect(store.accessRight.disablePriceButton).toBe(false);
+    expect(store.numpadMode).toBe("quantity");
+});
 test("_getConnectedCashier", async () => {
     const store = await setupPosEnv();
     expect(store.accessRight._getConnectedCashier().id).toBe(2);

@@ -206,6 +206,27 @@ test("drag and drop reorders products", async () => {
     expect(products.get(6).pos_sequence).toBe(21);
 });
 
+test("price numpad button follows the restrict price control setting", async () => {
+    const { store, productScreen } = await mountProductScreen();
+    const isPriceDisabled = () =>
+        Boolean(
+            productScreen.getNumpadButtons().find((button) => button.value === "price").disabled
+        );
+    const cashier = store.accessRight.loggedCashier;
+
+    store.config.restrict_price_control = false;
+    for (const role of ["manager", "cashier"]) {
+        cashier._role = role;
+        expect(isPriceDisabled()).toBe(false);
+    }
+
+    store.config.restrict_price_control = true;
+    cashier._role = "manager";
+    expect(isPriceDisabled()).toBe(false);
+    cashier._role = "cashier";
+    expect(isPriceDisabled()).toBe(true);
+});
+
 test("multiplePrinter using mock records", async () => {
     const store = await setupPosEnv();
     const printer = store.ticketPrinter;

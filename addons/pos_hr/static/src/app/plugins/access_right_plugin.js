@@ -154,7 +154,7 @@ patch(PosAccessRightPlugin.prototype, {
         return this.hasEmployeeRole(["manager", "cashier"]);
     },
     get disablePriceButton() {
-        return this.hasEmployeeRole(["manager", "cashier"]);
+        return super.disablePriceButton && this.hasEmployeeRole(["manager", "cashier"]);
     },
     get canCancelOrder() {
         return this.hasEmployeeRole(["manager", "cashier"]);
