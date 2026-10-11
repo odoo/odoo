@@ -62,9 +62,16 @@ class StockMove(models.Model):
         res = super().write(vals)
         if 'date' in vals:
             for move in self:
-                if move.state in ('done', 'cancel') or not move.is_subcontract:
+                if move.state == 'cancel' or not move.is_subcontract:
                     continue
-                move.move_orig_ids.production_id.with_context(from_subcontract=True).filtered(lambda p: p.state not in ('done', 'cancel')).write({
+                productions = move.move_orig_ids.production_id
+                if move.state == 'done':
+                    productions.filtered(lambda p: p.state == 'done').with_context(force_date=True).write({
+                        'date_start': move.date,
+                        'date_finished': move.date,
+                    })
+                    continue
+                productions.with_context(from_subcontract=True).filtered(lambda p: p.state not in ('done', 'cancel')).write({
                     'date_start': move.date,
                     'date_finished': move.date,
                 })
