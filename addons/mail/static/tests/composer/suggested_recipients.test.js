@@ -9,6 +9,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
 import { mockService } from "@web/../tests/web_test_helpers";
@@ -110,6 +111,7 @@ test("Opening full composer in 'log note' mode should not copy selected suggeste
     await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:contains(John Jane):count(1)");
     await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:contains(john@test.be):count(1)");
     await click("button:text('Log note')");
+    await contains(".o-mail-Composer [o-we-hint-text='Log an internal note…']");
     await click("button[title='Open Full Composer']");
     await doActionCalled;
     await expect.waitForSteps(["do-action"]);
@@ -142,7 +144,7 @@ test("Check that a partner is created for new followers when sending a message",
     // Ensure that partner `john@test.be` is created while sending the message (not before)
     const partners = pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]]);
     expect(partners).toHaveLength(0);
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await waitFor(".o-mail-Followers-counter:text('1'):count(1)");
 });
@@ -169,7 +171,7 @@ test("suggest recipient on 'Send message' composer", async () => {
     await waitFor(".o-mail-RecipientsInput .o_tag_badge_text:contains(john@test.be):count(1)");
     // Ensure that partner `john@test.be` is created before sending the message
     expect(pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]])).toHaveLength(0);
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await tick();
     expect(pyEnv["res.partner"].search_read([["email", "=", "john@test.be"]])).toHaveLength(1);
@@ -190,7 +192,7 @@ test("suggested recipients should not be notified when posting an internal note"
     await start();
     await openFormView("res.fake", fakeId);
     await click("button:text('Log note')");
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await waitFor(".o-mail-Message:count(1)");
     await expect.waitForSteps(["message_post"]);
@@ -226,7 +228,7 @@ test("update email for the partner on the fly", async () => {
     await insertText(".o-mail-RecipientsInputTagsListPopover input", "john@jane.be");
     await click(".o-mail-RecipientsInputTagsListPopover .btn-primary");
 
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await waitFor(".o-mail-Message:count(1)");
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");
@@ -257,7 +259,7 @@ test("suggested recipients should not be added as follower when posting a messag
     await openFormView("res.fake", fakeId);
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");
     await click("button:text('Send message')");
-    await insertText(".o-mail-Composer-input", "Dummy Message");
+    await insertTextInComposer(".o-mail-Composer", "Dummy Message");
     await click(".o-mail-Composer-send:enabled");
     await waitFor(".o-mail-Message:count(1)");
     await waitFor(".o-mail-Followers-counter:text('0'):count(1)");

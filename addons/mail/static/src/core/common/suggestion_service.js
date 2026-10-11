@@ -19,14 +19,13 @@ export class SuggestionService {
         this.env = env;
         this.orm = services.orm;
         this.store = services["mail.store"];
-        this.composer = services["mail.composer"];
     }
 
     /**
      * Returns list of supported delimiters, each supported
      * delimiter is in an array [a, b, c] where:
      * - a: chars to trigger
-     * - b: (optional) if set, the exact position in composer text input to allow using this delimiter
+     * - b: (optional) if set, the exact position in the composer text node to allow using this delimiter
      * - c: (optional) if set, this is the minimum amount of extra char after delimiter to allow using this delimiter
      *
      * @param {import('models').Thread} thread
@@ -34,15 +33,7 @@ export class SuggestionService {
      * @returns {Array<[SuggestionDelimiter, number, number]>}
      */
     getSupportedDelimiters(thread, ancestors) {
-        const delimiters = [
-            [SUGGESTION_DELIMITERS.PARTNER],
-            [SUGGESTION_DELIMITERS.CANNED_RESPONSE],
-        ];
-        // the emoji plugin handles the emoji suggestions already
-        if (!this.composer.htmlEnabled) {
-            delimiters.push([SUGGESTION_DELIMITERS.EMOJI, undefined, 2]);
-        }
-        return delimiters;
+        return [[SUGGESTION_DELIMITERS.PARTNER], [SUGGESTION_DELIMITERS.CANNED_RESPONSE]];
     }
 
     /**
@@ -340,7 +331,7 @@ export class SuggestionService {
 }
 
 export const suggestionService = {
-    dependencies: ["orm", "mail.store", "mail.composer"],
+    dependencies: ["orm", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services

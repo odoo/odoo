@@ -622,7 +622,6 @@ test("Open chat window from messaging menu with chat hub compact", async () => {
     await click(".o-mail-NotificationItem-name:text('John')");
     await waitStoreFetch("/discuss/channel/messages"); // ensure messages are loaded before doing message post
     await waitFor(".o-mail-ChatWindow-displayName:text('John'):count(1)");
-    await triggerEvents(".o-mail-Composer-input", ["blur", "focusout"]); // FIXME: click fold doesn't focusout/blur the composer, thus marks as read
     await click(".o-mail-ChatWindow-header [title='Fold']");
     await waitForNone(".o-mail-ChatWindow");
     await withUser(johnId, () =>

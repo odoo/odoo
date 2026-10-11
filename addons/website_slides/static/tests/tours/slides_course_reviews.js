@@ -87,11 +87,11 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         { trigger: '#chatterRoot:shadow .o-mail-Message button:contains("Comment")', run: "click" },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer textarea",
-            run: "edit Thanks for enjoying my 'mid' course, you mid student",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
+            run: "editor Thanks for enjoying my 'mid' course, you mid student",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer textarea",
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer-html",
             run: "press ctrl+Enter",
         },
         {

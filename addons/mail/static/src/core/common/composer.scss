@@ -64,7 +64,7 @@
         }
     }
     &:not(.o-focused) {
-        .o-mail-Composer-input::placeholder {
+        .o-we-hint {
             opacity: 50%;
         }
         .o-mail-Composer-mainActions button:not(.active) {
@@ -129,7 +129,7 @@
     }
 }
 
-.o-mail-Composer-inputStyle, .o-mail-Composer-html {
+.o-mail-Composer-html {
     padding-top: var(--o-mail-Composer-vPadding);
     padding-bottom: var(--o-mail-Composer-vPadding);
     padding-left: map-get($spacers, 1);
@@ -155,7 +155,7 @@
     }
 }
 
-.o-mail-Composer-input, .o-mail-Composer-html {
+.o-mail-Composer-html {
     max-height: Min(400px, 60vh);
     resize: none;
 
@@ -180,7 +180,7 @@
         max-height: Min(400px, 30vh);
     }
 
-    &::placeholder {
+    .o-we-hint {
         opacity: 40%;
 
         .o-mail-Composer.o-focused & {
@@ -202,13 +202,6 @@
     --Avatar-size: #{$o-mail-Avatar-size};
 }
 
-.o-mail-Composer-fake {
-    height: 0;
-    left: -10000px;
-    top: -10000px;
-    visibility: hidden;
-}
-
 .o-mail-Composer-inputContainer {
     --border-color: #{rgba($dark, var(--mail-Composer-inputContainerUnfocusedBorderOpacity, .2))};
     border-radius: calc(var(--o-mail-Composer-vPadding) + #{$o-mail-Composer-pillRadiusBase}); // Keep the single-line pill radius when the composer grows.
@@ -217,12 +210,8 @@
         border-radius: $border-radius-lg;
     }
 
-    &:has(textarea:focus) {
-        --border-color: #{rgba($o-component-active-border, .65)};
-    }
-
     &:has(.o-mail-Composer-html:focus) {
-        --border-color: #{$o-component-active-border};
+        --border-color: #{rgba($o-component-active-border, .65)};
     }
 }
 

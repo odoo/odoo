@@ -1,9 +1,4 @@
-import {
-    defineMailModels,
-    setupChatHub,
-    start,
-    startServer,
-} from "@mail/../tests/mail_test_helpers";
+import { defineMailModels, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, test, waitFor, waitForNone } from "@odoo/hoot";
 import { Command, getService, serverState } from "@web/../tests/web_test_helpers";
 
@@ -47,16 +42,14 @@ test("openChat: open existing chat for user", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const channelId = pyEnv["discuss.channel"].create({
+    pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    setupChatHub({ opened: [channelId] });
     await start();
-    await waitFor(".o-mail-ChatWindow .o-mail-Composer-input:not(:focus):count(1)");
     getService("mail.store").openChat({ partnerId });
-    await waitFor(".o-mail-ChatWindow .o-mail-Composer-input:focus:count(1)");
+    await waitFor(".o-mail-ChatWindow .o-mail-Composer-html:focus:count(1)");
 });

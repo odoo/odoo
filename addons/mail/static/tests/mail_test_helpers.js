@@ -34,6 +34,7 @@ import {
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
+import { _addRootRefToEditor } from "./mail_test_helpers_composer";
 import { click, contains, TIMEOUT } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
@@ -94,6 +95,7 @@ import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
 import { Store } from "./mock_server/store";
+import { Composer } from "@mail/core/common/composer";
 
 export * from "./mail_test_helpers_contains";
 
@@ -390,6 +392,12 @@ export async function start(options) {
         },
     });
     preventActualMediaUsage();
+    patch(Composer.prototype, {
+        onLoadWysiwyg(editor) {
+            _addRootRefToEditor(this.rootRef, editor);
+            return super.onLoadWysiwyg(...arguments);
+        },
+    });
     serverState.serverVersion = options?.serverVersion ?? [99, 9]; // so local storage entries upgrade to latest version. HOOT sets 1.0 otherwise, ignoring all upgrades...
     if (!MockServer.current) {
         await startServer();

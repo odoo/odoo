@@ -28,6 +28,7 @@ import { debounce } from "@web/core/utils/timing";
 export class HintPlugin extends Plugin {
     static id = "hint";
     static dependencies = ["history", "selection"];
+    static shared = ["updateHints"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
@@ -96,7 +97,13 @@ export class HintPlugin extends Plugin {
 
     triggerDebouncedUpdateHints(selectionData = this.dependencies.selection.getSelectionData()) {
         if (selectionData.documentSelectionIsInEditable) {
-            this.clearHints();
+            // Keep the selected block's hint to avoid a blink until the update.
+            const anchorBlock = closestBlock(selectionData.documentSelection.anchorNode);
+            for (const el of selectElements(this.editable, ".o-we-hint")) {
+                if (el !== anchorBlock) {
+                    this.removeHint(el);
+                }
+            }
         }
         this.debouncedUpdateHints();
     }
