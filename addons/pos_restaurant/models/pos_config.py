@@ -7,12 +7,35 @@ from odoo.tools import convert
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
+    def _get_default_split_payment_product(self):
+        return self.env.ref('pos_restaurant.product_product_split_payment', raise_if_not_found=False)
+
+    def _init_column_split_payment_product(self):
+        if self._get_default_split_payment_product():
+            return
+
+        product = self.env['product.product'].sudo().create({
+            'name': 'Split Payment',
+        })
+        self.env['ir.model.data'].sudo()._update_xmlids([{
+            'xml_id': 'pos_restaurant.product_product_split_payment',
+            'record': product,
+            'noupdate': True,
+        }])
+
     floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.', copy=False)
     default_screen = fields.Selection([('tables', 'Tables'), ('register', 'Register')], string='Default Screen', default='tables')
     use_course_allocation = fields.Boolean(string="Enable Course Allocation")
     use_show_items_on_course_ticket = fields.Boolean(string="Show Items on Fired Course Ticket", help="Show items again on the fired course ticket in preparation printer")
     floor_plan_settings = fields.Json(string='Floor Plan Settings')
     floor_plan = fields.Json(string='Floor Plan', compute="_compute_floor_plan")
+    split_payment_product_id = fields.Many2one(
+        'product.product',
+        string='Split Payment Product',
+        default=_get_default_split_payment_product,
+        init_storage='_init_column_split_payment_product',
+        help="This product is used as reference on receipts when an order is settled via Split and Pay."
+    )
 
     def _get_forbidden_change_fields(self):
         forbidden_keys = super()._get_forbidden_change_fields()
@@ -332,3 +355,8 @@ class PosConfig(models.Model):
         model_data = {k: data[k] for k in model_keys if k in data}
         layout_data = {k: v for k, v in data.items() if k not in layout_exclude}
         return model_data, layout_data
+
+    def _get_special_products(self):
+        res = super()._get_special_products()
+        default_split_payment = self.env.ref('pos_restaurant.product_product_split_payment', raise_if_not_found=False) or self.env['product.product']
+        return res | default_split_payment

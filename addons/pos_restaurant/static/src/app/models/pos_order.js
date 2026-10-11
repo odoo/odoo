@@ -210,4 +210,8 @@ patch(PosOrder.prototype, {
             ) + 1
         );
     },
+
+    get splitPaymentLines() {
+        return this.lines.filter((line) => line.isSplitPaymentLine);
+    },
 });
