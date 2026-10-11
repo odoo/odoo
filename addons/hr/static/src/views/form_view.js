@@ -45,7 +45,7 @@ export class EmployeeFormController extends FormController {
 
                 let version_changes_to_display = await this.orm.call("hr.employee",
                     "get_multi_version_changes",
-                    [record._config.resId],
+                    [record.resId],
                     {
                         'version_changes': version_changes,
                     }
@@ -57,14 +57,16 @@ export class EmployeeFormController extends FormController {
                         cancel: () => resolve(false),
                         change_current: () => resolve(true),
                         change_multi: async () => {
-                            let versions_to_update = ver_ids.slice(ver_ids.indexOf(record._values.version_id.id))
-                            await this.orm.call("hr.version", "write", [versions_to_update.slice(1), version_changes]);
-                            this.model._updateConfig(record.config, {
-                                context: {
-                                    ...record.config.context,
-                                    multi_update_version_ids: versions_to_update,
-                                },
-                            }, { reload: false });
+                            let versions_to_update = ver_ids.slice(ver_ids.indexOf(record._values.version_id.id));
+                            await this.orm.call("hr.employee", "write_versions", [
+                                record.resId,
+                                versions_to_update,
+                                version_changes,
+                            ]);
+                            // Already written and tracked on all the versions, don't write them again on save
+                            for (const fieldName of Object.keys(version_changes)) {
+                                delete changes[fieldName];
+                            }
                             resolve(true);
                         },
                     }, {
@@ -122,13 +124,6 @@ export class EmployeeFormController extends FormController {
 
     async onRecordSaved(record, changes) {
         await super.onRecordSaved(record, changes);
-        if (record.config?.context?.multi_update_version_ids) {
-            record.model._updateConfig(record.config, {
-                context: Object.fromEntries(
-                    Object.entries(record.config.context).filter(([key]) => key !== "multi_update_version_ids")
-                ),
-            }, { reload: false });
-        }
 
         if (this.pendingNewContract) {
             const version_id = await this.orm.call("hr.employee", "create_version", [
