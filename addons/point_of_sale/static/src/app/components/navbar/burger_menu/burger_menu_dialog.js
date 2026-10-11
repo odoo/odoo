@@ -37,7 +37,7 @@ export class BurgerMenuDialog extends Component {
     }
 
     get showPrinterButton() {
-        return this.pos.config.other_devices && this.pos.config.receipt_printer_ids.length > 1;
+        return this.pos.config.receipt_printer_ids.length > 1;
     }
 
     openLnaPopup() {
