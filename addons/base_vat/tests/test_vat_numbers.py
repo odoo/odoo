@@ -275,3 +275,23 @@ class TestStructure(TransactionCase):
         self.assertEqual(test_partner.vat, '12ABC34501DE35')
         test_partner.write({'vat': '51.494.569/0131-70'})
         self.assertEqual(test_partner.vat, '51494569013170')
+
+    def test_missing_eu_prefix_auto_appended(self):
+        """Test that EU VAT numbers entered without a country prefix are
+        automatically prefixed to ensure consistency for Peppol exports."""
+        # validation=False is used by the onchanges on res.partner.vat and account.fiscal.position.foreign_vat
+        # we should only append the prefix when saving
+        vat, _ = self.env['res.partner']._run_vat_checks(self.env.ref('base.be'), '0477472701', validation=False)
+        self.assertEqual(vat, '0477472701', "The BE prefix should not be appended during the onchange.")
+
+        be_country = self.env.ref('base.be').id
+        partner_be = self.env['res.partner'].create({'name': 'Test Peppol BE', 'country_id': be_country, 'vat': '0477472701'})
+        self.assertEqual(partner_be.vat, 'BE0477472701', "The BE prefix should be automatically appended.")
+
+        gr_country = self.env.ref('base.gr').id
+        partner_gr = self.env['res.partner'].create({'name': 'Test Peppol GR', 'country_id': gr_country, 'vat': '123456783'})
+        self.assertEqual(partner_gr.vat, 'EL123456783', "The GR country code should resolve to the EL prefix.")
+
+        ro_country = self.env.ref('base.ro').id
+        partner_ro = self.env['res.partner'].create({'name': 'Test Peppol RO', 'country_id': ro_country, 'vat': '1234567897'})
+        self.assertEqual(partner_ro.vat, '1234567897', "The RO prefix should not be appended for Romania (CUI exception).")
