@@ -31,7 +31,7 @@ class DashboardShareRoute(http.Controller):
         )
 
     @http.route(["/dashboard/download/<int:share_id>/<token>"],
-                type='http', auth='user', readonly=True)
+                type='http', auth='user', replica=True)
     def download(self, token=None, share_id=None):
         share = self._get_active_dashboard_share_or_not_found(share_id)
         share._check_dashboard_access(token)
@@ -48,7 +48,7 @@ class DashboardShareRoute(http.Controller):
         type="http",
         auth="public",
         methods=["GET"],
-        readonly=True,
+        replica=True,
     )
     def get_shared_dashboard_data(self, share_id, token):
         share = self._get_active_dashboard_share_or_not_found(share_id)

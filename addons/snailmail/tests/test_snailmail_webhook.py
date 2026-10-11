@@ -25,7 +25,7 @@ class TestSnailmailWebhook(SnailmailWebhookCase):
         self.assertFalse(notification.failure_type)
         self.assertFalse(notification.failure_reason)
 
-    @mute_logger('odoo.addons.snailmail.controller.snailmail_webhook')
+    @mute_logger('odoo.addons.snailmail.controllers.snailmail_webhook')
     def test_webhook_delivered(self):
         """Delivered webhook marks letter as sent and notification as sent."""
         self.test_letter.state = 'process'
@@ -44,7 +44,7 @@ class TestSnailmailWebhook(SnailmailWebhookCase):
         self.assertFalse(notification.failure_type)
         self.assertFalse(notification.failure_reason)
 
-    @mute_logger('odoo.addons.snailmail.controller.snailmail_webhook')
+    @mute_logger('odoo.addons.snailmail.controllers.snailmail_webhook')
     def test_webhook_undeliverable(self):
         """Undeliverable webhook marks letter as error and notification as bounce."""
         self.test_letter.state = 'process'
@@ -63,7 +63,7 @@ class TestSnailmailWebhook(SnailmailWebhookCase):
         self.assertEqual(notification.failure_type, 'sn_undeliverable')
         self.assertEqual(notification.failure_reason, 'Undeliverable letter')
 
-    @mute_logger('odoo.addons.snailmail.controller.snailmail_webhook')
+    @mute_logger('odoo.addons.snailmail.controllers.snailmail_webhook')
     def test_webhook_error_management(self):
         """Test invalid webhook requests return 404."""
         cases = [

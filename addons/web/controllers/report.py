@@ -23,7 +23,7 @@ class ReportController(Controller):
     @route([
         '/report/<converter>/<reportname>',
         '/report/<converter>/<reportname>/<docids>',
-    ], type='http', auth='user', website=True, readonly=True)
+    ], type='http', auth='user', website=True, replica=True)
     def report_routes(self, reportname, docids=None, converter=None, **data):
         report = request.env['ir.actions.report']
         context = dict(request.env.context)
@@ -55,7 +55,7 @@ class ReportController(Controller):
     @route([
         '/report/barcode',
         '/report/barcode/<barcode_type>/<path:value>',
-    ], type='http', auth='public', readonly=True)
+    ], type='http', auth='public', replica=True)
     def report_barcode(self, barcode_type, value, **kwargs):
         """Contoller able to render barcode images thanks to reportlab.
         Samples::
@@ -158,7 +158,7 @@ class ReportController(Controller):
             res = request.make_response(html_escape(json.dumps(error)))
             raise werkzeug.exceptions.InternalServerError(response=res) from e
 
-    @route(['/report/get_pdf_engine_state'], type='jsonrpc', auth='user', readonly=True)
+    @route(['/report/get_pdf_engine_state'], type='jsonrpc', auth='user', replica=True)
     def get_pdf_engine_state(self, engine_name=None):
         actions_report = self.env['ir.actions.report']
         if not engine_name:

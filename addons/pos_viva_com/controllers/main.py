@@ -10,7 +10,7 @@ _logger = logging.getLogger(__name__)
 
 
 class PosVivaComController(http.Controller):
-    @http.route('/pos_viva_com/notification', type='http', auth='none', csrf=False, readonly=False)
+    @http.route('/pos_viva_com/notification', type='http', auth='none', csrf=False, replica=False)
     def notification(self, company_id, token):
         _logger.info('notification received from Viva.com')
 

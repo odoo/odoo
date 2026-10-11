@@ -107,7 +107,7 @@ class EventTrackLocationDisplayController(http.Controller):
             **schedule,
         }
 
-    @http.route('/event/<int:event_id>/location-display/<int:location_id>', type='http', auth='public', website=True, sitemap=False, readonly=True)
+    @http.route('/event/<int:event_id>/location-display/<int:location_id>', type='http', auth='public', website=True, sitemap=False, replica=True)
     def location_display(self, event_id, location_id):
         return request.render(
             'website_event_track.event_track_location_display',
@@ -115,7 +115,7 @@ class EventTrackLocationDisplayController(http.Controller):
             headers=[('Cache-Control', 'no-store')]
         )
 
-    @http.route('/event/<int:event_id>/location-display/<int:location_id>/content', type='jsonrpc', auth='public', website=True, sitemap=False, readonly=True)
+    @http.route('/event/<int:event_id>/location-display/<int:location_id>/content', type='jsonrpc', auth='public', website=True, sitemap=False, replica=True)
     def location_display_content(self, event_id, location_id):
         return request.env['ir.ui.view']._render_template(
             'website_event_track.event_track_location_display_content',

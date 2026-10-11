@@ -253,7 +253,11 @@ class Cursor(_CursorProtocol):
     """
     IN_MAX = IN_MAX_CONST   # decent limit on size of IN queries - guideline = Oracle limit
 
-    def __init__(self, cnx: PsycoConnection, dbname: str):
+    def __init__(self, cnx: PsycoConnection, dbname: str, *, readonly: bool = False):
+        if cnx.readonly and not readonly:
+            e = "cannot use a read/write cursor on a read-only connection"
+            raise ValueError(e)
+
         super().__init__()
         self.precommit = Callbacks()
         self.postcommit = Callbacks()
@@ -287,6 +291,10 @@ class Cursor(_CursorProtocol):
         else:
             self.__caller = None
         self._closed = False   # real initialization value
+
+        if readonly and not self._cnx.readonly:
+            self._obj.execute("SET TRANSACTION READ ONLY")
+        self.readonly = readonly
 
         if os.getenv('ODOO_FAKETIME_TEST_MODE') and self.dbname in tools.config['db_name']:
             self._obj.execute("SET SESSION search_path = public, pg_catalog;")
@@ -562,6 +570,10 @@ class Cursor(_CursorProtocol):
         self.postrollback.clear()
         if self._closing:
             self._close()
+        elif self.readonly and not self._cnx.readonly:
+            # read-only cursor on a read/write connection, commit() did
+            # reset the transaction to read/write, set it read-only again
+            self._obj.execute("SET TRANSACTION READ ONLY")
         self.postcommit.run()
 
     def rollback(self) -> None:
@@ -579,6 +591,10 @@ class Cursor(_CursorProtocol):
             self._now = None
         if self._closing:
             self._close()
+        elif self.readonly and not self._cnx.readonly:
+            # read-only cursor on a read/write connection, rollback() did
+            # reset the transaction to read/write, set it read-only again
+            self._obj.execute("SET TRANSACTION READ ONLY")
         try:
             self.postrollback.run()
         except Exception:
@@ -599,10 +615,6 @@ class Cursor(_CursorProtocol):
     @property
     def closed(self) -> bool:
         return self._closed or bool(self._cnx.closed)
-
-    @property
-    def readonly(self) -> bool:
-        return bool(self._cnx.readonly)
 
 
 BaseCursor = Cursor  # backward-compatibility
@@ -787,16 +799,28 @@ class Connection:
     def dbname(self) -> str:
         return self.__dbname
 
-    def cursor(self) -> Cursor:
+    def cursor(self, *, readonly: bool | None = None) -> Cursor:
+        """
+        Open a cursor.
+
+        :param readonly: Whether to open a read/write cursor or a
+            read-only one. When not set, it uses a read/write cursor on
+            the primary database, and a read-only one on the replica.
+        :raise ValueError: When trying to acquire a read/write cursor on
+            the read-only replica database.
+        """
         _logger.debug('create cursor to %r', self.dsn)
         cnx = self.__pool.borrow(self.__dsn)
         cnx.set_session(
-            # See the docstring of this class.
             isolation_level=ISOLATION_LEVEL_REPEATABLE_READ,
             readonly=self.__pool.readonly,
             autocommit=False,
         )
-        return Cursor(cnx, self.__dbname)
+        return Cursor(
+            cnx,
+            self.__dbname,
+            readonly=self.__pool.readonly if readonly is None else readonly,
+        )
 
     def __bool__(self):
         raise NotImplementedError()
