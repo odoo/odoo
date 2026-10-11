@@ -497,14 +497,14 @@
                                     <field name="webhook_sample_payload" string="Sample Payload" nolabel="1" colspan="2" readonly="1" widget="code" options="{'mode': 'javascript'}" />
                                 </group>
                             </group>
-                            <t invisible="state != 'multi'">
-                                <field name="child_ids" widget="many2many" mode="kanban" context="{
-                                    'is_modal': 1,
-                                    'default_model_id': model_id,
-                                }"/>
-                            </t>
                             <notebook>
-                                <page string="Code" invisible="state != 'code'">
+                                <page name="multi_actions" string="Actions" invisible="state != 'multi'" autofocus="autofocus">
+                                    <field name="child_ids" mode="kanban" context="{
+                                        'is_modal': 1,
+                                        'default_model_id': model_id,
+                                    }"/>
+                                </page>
+                                <page string="Code" invisible="state != 'code'" autofocus="autofocus">
                                     <field name="code" invisible="state != 'code'" widget="code" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                                 </page>
                                 <page string="Help" invisible="state != 'code'" name="ir_actions_server_code_help">
@@ -537,8 +537,8 @@ env['res.partner'].create({'name': partner_name})
     </pre>
                                     </div>
                                 </page>
-                                <page string="Explanation" name="explanation">
-                                    <field name="explanation" nolabel="1" class="oe-bordered-editor"/>
+                                <page string="Notes" name="explanation">
+                                    <field name="explanation" nolabel="1" class="oe-bordered-editor" placeholder="Keep track of what this action does and why it exists"/>
                                 </page>
                                 <page string="Usage" name="usage" invisible="1"/>
                             </notebook>
@@ -623,7 +623,6 @@ env['res.partner'].create({'name': partner_name})
                     <field name="name" string="Server Action"/>
                     <field name="model_id"/>
                     <field name="state"/>
-                    <filter string="Top-level actions" name="toplevel_actions" domain="[('parent_id', '=', False)]"/>
                     <group>
                         <filter string="Action Type" name="action_type" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
@@ -639,9 +638,9 @@ env['res.partner'].create({'name': partner_name})
             <field name="view_mode">list,form</field>
             <field name="view_id" ref="view_server_action_tree"/>
             <field name="search_view_id" ref="view_server_action_search"/>
+            <field name="domain">[('parent_id', '=', False)]</field>
             <field name="context">{
                 'key':'server_action',
-                'search_default_toplevel_actions': 1,
             }</field>
         </record>
         <!-- ir.embedded.actions -->
