@@ -4,6 +4,7 @@ import {
     defineMailModels,
     insertText,
     listenStoreFetch,
+    MENU_ACTIVE_IDS,
     onRpcBefore,
     openDiscuss,
     patchUiSize,
@@ -14,6 +15,8 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { Store } from "@mail/../tests/mock_server/store";
+
 import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
 import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
@@ -342,4 +345,57 @@ test("Can join accessible channel via thread action", async () => {
     await waitForNone(".o-discuss-ChannelMember");
     await click("[title='Join Channel']");
     await waitFor(".o-discuss-ChannelMember:text('Mitchell Admin'):count(1)");
+});
+
+function makeAutoSubscribeNotifications(pyEnv, channelId) {
+    const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
+    const memberId = pyEnv["discuss.channel.member"].create({
+        channel_id: channelId,
+        partner_id: partner.id,
+    });
+    return {
+        channel: [
+            partner,
+            "mail.record/insert",
+            new Store(partner)
+                .add(pyEnv["discuss.channel"].browse(channelId), "_store_channel_fields")
+                .as_dict(),
+        ],
+        member: [
+            partner,
+            "mail.record/insert",
+            new Store(partner)
+                .add(pyEnv["discuss.channel.member"].browse(memberId), (res) => {
+                    res.from_method("_store_persona_default_fields");
+                    res.attr("unpin_dt");
+                })
+                .as_dict(),
+        ],
+    };
+}
+
+test("auto-subscribed channel is listed when its channel notification comes first", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ channel_member_ids: [], name: "Sales" });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await waitForNone(".o-mail-MessagingMenuItem");
+    const { channel, member } = makeAutoSubscribeNotifications(pyEnv, channelId);
+    // Simulate the channel sent on the bus of a group, then the member sent to the user.
+    pyEnv["bus.bus"]._sendone(...channel);
+    pyEnv["bus.bus"]._sendone(...member);
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Sales')):count(1)");
+});
+
+test("auto-subscribed channel is listed when its member notification comes first", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ channel_member_ids: [], name: "Sales" });
+    await start();
+    await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await waitForNone(".o-mail-MessagingMenuItem");
+    const { channel, member } = makeAutoSubscribeNotifications(pyEnv, channelId);
+    // Simulate the member sent to the user, then the channel sent on the bus of a group.
+    pyEnv["bus.bus"]._sendone(...member);
+    pyEnv["bus.bus"]._sendone(...channel);
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Sales')):count(1)");
 });
