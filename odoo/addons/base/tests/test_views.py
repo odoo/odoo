@@ -14,6 +14,7 @@ from lxml.builder import E
 from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 
+from odoo import fields
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -5751,3 +5752,23 @@ class ViewModifiers(ViewCase):
                 'inherit_id': parent_view.id,
                 'arch': inherit_arch,
             })
+
+
+class TestPropertiesFieldViewValidation(ViewCase):
+
+    def test_properties_field_without_definition_record(self):
+        """A ``properties`` field whose ``definition_record`` is not set
+        (e.g. the module declaring ``definition=`` is absent, as happens
+        during upgrade with custom module fields) must not crash view validation."""
+
+        model_name = 'ir.ui.view.custom'
+        model_class = self.env.registry[model_name]
+        dummy_field = fields.Properties(string="Dummy Properties", name='x_dummy_properties')
+        dummy_field.model_name = model_name
+
+        self.patch(model_class, '_fields', dict(model_class._fields, x_dummy_properties=dummy_field))
+
+        self.assertValid(
+            '<form><field name="x_dummy_properties"/></form>',
+            model=model_name,
+        )
