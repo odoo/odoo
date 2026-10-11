@@ -509,7 +509,9 @@ class SaleOrderLine(models.Model):
     @api.depends('product_id')
     def _compute_product_uom(self):
         for line in self:
-            if not line.product_uom or (line.product_id.uom_id.id != line.product_uom.id):
+            if not line.product_uom or (
+                line.product_id.uom_id.category_id != line.product_uom.category_id
+            ):
                 line.product_uom = line.product_id.uom_id
 
     @api.depends('product_id', 'company_id')
