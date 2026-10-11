@@ -4,7 +4,6 @@ import operator as py_operator
 from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Iterable
-from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -166,11 +165,7 @@ class ProductProduct(models.Model):
         domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
         dates_in_the_past = False
         # only to_date as to_date will correspond to qty_available
-        original_value = to_date
-        to_date = fields.Datetime.to_datetime(to_date)
-        if (isinstance(original_value, date) and not isinstance(original_value, datetime)) or \
-            (isinstance(original_value, str) and len(original_value) == 10):
-            to_date = datetime.combine(to_date.date(), time.max)
+        to_date = self.env.company._to_date_upper_bound(to_date)
 
         if to_date and to_date < fields.Datetime.now():
             dates_in_the_past = True

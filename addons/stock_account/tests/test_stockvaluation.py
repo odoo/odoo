@@ -2334,6 +2334,8 @@ class TestStockValuation(TestStockValuationCommon):
         """
         Ensure that qty_available, free_qty, avg_cost, and total_value are computed
         correctly for products at a historical to_date, taking the user's timezone into account.
+        A receipt in the evening of the company timezone, already the next day in UTC,
+        counts on that day.
         """
         self.env.user.tz = 'Europe/Paris'
         to_date = date(2024, 1, 10)
@@ -2380,6 +2382,49 @@ class TestStockValuation(TestStockValuationCommon):
             products.with_context(to_date="2024-01-10"),
             expected_values,
         )
+
+        self.env.company.tz = 'America/Bogota'  # UTC-5
+        with freeze_time('2024-01-11 01:00:00'):  # 2024-01-10 20:00 in Bogota
+            self._make_in_move(self.product_standard, 1)
+        with freeze_time('2024-01-12 10:00:00'):
+            self.assertRecordValues(
+                self.product_standard.with_context(to_date=to_date),
+                [{'qty_available': 11.0, 'total_value': 110.0}],
+            )
+
+    def test_valuation_report_and_closing_use_company_timezone(self):
+        """ With the company in UTC+9 and the user in Brussels, 2026-07-01 20:00 UTC
+        is July 1 for the user and July 2 for the company. The valuation report and
+        a closing at July 1 count what happened until the end of the company's
+        July 1, and a closing generated at that moment is dated July 2. """
+        self.env.company.tz = 'Asia/Tokyo'  # UTC+9
+        self.env.user.tz = 'Europe/Brussels'
+        self._use_inventory_location_accounting()
+        product = self.product_standard_auto
+        with freeze_time('2026-07-01 01:00:00'):  # 2026-07-01 10:00 for the company
+            self._make_in_move(product, 1)
+        with freeze_time('2026-07-01 20:00:00'):  # 2026-07-01 22:00 for the user, 2026-07-02 05:00 for the company
+            self._make_in_move(product, 1)
+            self.env['stock.quant'].create({
+                'product_id': self.product_standard.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity': 1,
+            }).action_apply_inventory()
+            report = self.env['stock_account.stock.valuation.report'].get_report_values(date='2026-07-01')['data']
+            self.assertEqual(report['ending_stock']['value'], 10.0)
+            self.assertEqual(report['today'], '2026-07-02')
+            self.assertEqual(report['date_upper_bound'], '2026-07-01 14:59:59')
+            closing_move = self._close(at_date=date(2026, 7, 1))
+            valuation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
+            variation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_variation)
+            self.assertRecordValues(
+                valuation_aml + variation_aml,
+                [
+                    {'account_id': self.account_stock_valuation.id, 'debit': 10, 'credit': 0},
+                    {'account_id': self.account_stock_variation.id, 'debit': 0, 'credit': 10},
+                ]
+            )
+            self.assertEqual(self._close().date, date(2026, 7, 2))
 
     def test_stock_report_avco_warehouse_dependency(self):
         """ Create two warehouses and check that the total value and the on hand quantity
@@ -3477,10 +3522,11 @@ class TestStockValuation(TestStockValuationCommon):
     def test_cron_post_stock_valuation_domain(self):
         """ Cron must process daily/periodic every day and add monthly/periodic
         on the last day of the month, regardless of the valuation method.
-        Manual companies must be skipped.
+        Manual companies must be skipped. The last day of the month is the one
+        of the company timezone.
         """
         Company = self.env['res.company']
-        daily_periodic, monthly_periodic, daily_realtime, manual_periodic = Company.create([
+        daily_periodic, monthly_periodic, daily_realtime, manual_periodic, monthly_tokyo = Company.create([
             {
                 'name': 'Daily Periodic',
                 'inventory_period': 'daily',
@@ -3500,6 +3546,11 @@ class TestStockValuation(TestStockValuationCommon):
                 'name': 'Manual Periodic',
                 'inventory_period': 'manual',
                 'inventory_valuation': 'periodic',
+            },
+            {
+                'name': 'Monthly Tokyo',
+                'inventory_period': 'monthly',
+                'tz': 'Asia/Tokyo',  # UTC+9
             },
         ])
 
@@ -3533,6 +3584,51 @@ class TestStockValuation(TestStockValuationCommon):
                 self.assertIn(monthly_periodic.id, called_ids)
                 self.assertIn(daily_realtime.id, called_ids)
                 self.assertNotIn(manual_periodic.id, called_ids)
+
+            with freeze_time('2026-03-30 16:00:00'):  # 2026-03-31 01:00 in Tokyo
+                called_ids.clear()
+                Company._cron_post_stock_valuation()
+                self.assertIn(monthly_tokyo.id, called_ids)
+
+            with freeze_time('2026-03-31 16:00:00'):  # 2026-04-01 01:00 in Tokyo
+                called_ids.clear()
+                Company._cron_post_stock_valuation()
+                self.assertNotIn(monthly_tokyo.id, called_ids)
+
+    def test_continental_closing_uses_company_fiscal_year(self):
+        """ In continental perpetual valuation, the variation of an inventory
+        adjustment made in June 2026 belongs to the 2026 fiscal year: with the
+        company in UTC+9, a closing generated at 2026-12-31 20:00 UTC is already
+        on the company's 2027-01-01 and has nothing to post for 2027. """
+        self.env.company.tz = 'Asia/Tokyo'  # UTC+9
+        self.account_stock_valuation.account_stock_expense_id = self.account_expense
+        self._use_inventory_location_accounting()
+        with freeze_time('2026-06-15 10:00:00'):
+            self.env['stock.quant'].create({
+                'product_id': self.product_standard_auto.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity': 1,
+            }).action_apply_inventory()
+        with freeze_time('2026-12-31 20:00:00'):  # 2027-01-01 05:00 in Tokyo
+            with self.assertRaises(UserError):
+                self._close()
+
+    def test_closing_after_past_date_closing_uses_company_day(self):
+        """ With the company in UTC-5, an inventory adjustment at 2026-06-30 20:00
+        local time is posted by a closing at June 30, so the next closing has
+        nothing left to post. """
+        self.env.company.tz = 'America/Bogota'  # UTC-5
+        self._use_inventory_location_accounting()
+        with freeze_time('2026-07-01 01:00:00'):  # 2026-06-30 20:00 in Bogota
+            self.env['stock.quant'].create({
+                'product_id': self.product_standard.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity': 1,
+            }).action_apply_inventory()
+        with freeze_time('2026-07-03 12:00:00'):
+            self._close(at_date=date(2026, 6, 30))
+            with self.assertRaises(UserError):
+                self._close()
 
     def test_generate_entry_branch_correct_account(self):
         """ When generating entry on a branch and the main company is also selected, the account move is
