@@ -93,7 +93,7 @@ test("Renaming custom snippets don't make an orm call", async () => {
 });
 
 test("thumbnails are displayed on custom inner snippets even if they have the same name of a snippet structure", async () => {
-    const testSnippetContent = `<section class="s_test" data-snippet="s_test" data-name="test"><p>test snippet</p></section>`;
+    const testSnippetContent = `<section class="s_test" data-snippet="s_test"><p>test snippet</p></section>`;
     const structureSnippetDesc = {
         name: "test",
         groupName: "a",
