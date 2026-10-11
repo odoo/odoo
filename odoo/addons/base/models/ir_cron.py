@@ -56,6 +56,7 @@ _intervalTypes = {
     'weeks': lambda interval: relativedelta(days=7 * interval),
     'months': lambda interval: relativedelta(months=interval),
     'minutes': lambda interval: relativedelta(minutes=interval),
+    'never': lambda _: relativedelta(year=9999),
 }
 
 
@@ -109,13 +110,17 @@ class IrCron(models.Model):
         delegate=True, ondelete='restrict', required=True)
     cron_name = fields.Char('Name', compute='_compute_cron_name', store=True)
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
+    state = fields.Selection(related='ir_actions_server_id.state', inherited=True, default='code')
     active = fields.Boolean(default=True)
-    interval_number = fields.Integer(default=1, help="Repeat every x.", required=True, aggregator='avg')
-    interval_type = fields.Selection([('minutes', 'Minutes'),
-                                      ('hours', 'Hours'),
-                                      ('days', 'Days'),
-                                      ('weeks', 'Weeks'),
-                                      ('months', 'Months')], string='Interval Unit', default='months', required=True)
+    interval_number = fields.Integer(default=1, help="Repeat every x.", required=True, aggregator=None)
+    interval_type = fields.Selection([
+        ('minutes', 'Minutes'),
+        ('hours', 'Hours'),
+        ('days', 'Days'),
+        ('weeks', 'Weeks'),
+        ('months', 'Months'),
+        ('never', 'Never'),
+    ], string='Interval Unit', default='never', required=True)
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, aggregator=None, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
@@ -136,17 +141,11 @@ class IrCron(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             vals['usage'] = 'ir_cron'
+            if vals.get('interval_type') == 'never' and 'nextcall' not in vals:
+                vals['nextcall'] = datetime(9999, 1, 1)
         if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
             self.env.cr.postcommit.add(self._notifydb)
         return super().create(vals_list)
-
-    @api.model
-    def default_get(self, fields):
-        # only 'code' state is supported for cron job so set it as default
-        model = self
-        if not model.env.context.get('default_state'):
-            model = model.with_context(default_state='code')
-        return super(IrCron, model).default_get(fields)
 
     def method_direct_trigger(self):
         """Run the CRON job in the current (HTTP) thread.
@@ -502,6 +501,7 @@ class IrCron(models.Model):
                 job_cr.commit()
 
                 success = False
+                call_start_time = time.monotonic()
                 try:
                     # signaling check and commit is done inside `_callback`
                     cron._callback(job['cron_name'], job['ir_actions_server_id'])
@@ -555,6 +555,7 @@ class IrCron(models.Model):
 
                     loop_count += 1
                     progress.timed_out_counter = 0
+                    progress.duration = time.monotonic() - call_start_time
                     timed_out_counter = 0
                     job_cr.commit()  # ensure we have no leftovers
 
@@ -842,6 +843,8 @@ class IrCron(models.Model):
             # we use timed_out_counter + 1 so that if the current execution
             # times out, the counter already takes it into account
             'timed_out_counter': 0 if timed_out_counter is None else timed_out_counter + 1,
+            # set the duration to 10 minutes by default
+            'duration': False if timed_out_counter is None else 600.0,
         }])
         return self.with_context(ir_cron_progress_id=progress.id), progress
 
@@ -935,6 +938,7 @@ class IrCronProgress(models.Model):
     done = fields.Integer(default=0)
     deactivate = fields.Boolean()
     timed_out_counter = fields.Integer(default=0)
+    duration = fields.Float(help="Duration of the job in seconds")
 
     @api.autovacuum
     def _gc_cron_progress(self):
