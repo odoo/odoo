@@ -29,10 +29,15 @@ class SaleOrder(models.Model):
     coupon_point_ids = fields.One2many(
         comodel_name="sale.order.coupon.points", inverse_name="order_id", copy=False
     )
+    # List of disabled rewards for automatic claim
+    disabled_auto_rewards = fields.Many2many(
+        "loyalty.reward", relation="sale_order_disabled_auto_rewards_rel"
+    )
     reward_amount = fields.Float(compute="_compute_reward_total")
 
     # Display Fields
     gift_card_count = fields.Integer(compute="_compute_gift_card_count")
+    claimable_reward_count = fields.Integer(compute="_compute_claimable_reward_count")
 
     @api.depends("order_line")
     def _compute_reward_total(self):
@@ -89,6 +94,24 @@ class SaleOrder(models.Model):
         )
         for order in self:
             order.gift_card_count = gift_card_data.get(order, 0)
+
+    @api.depends("order_line", "coupon_point_ids", "applied_coupon_ids")
+    def _compute_claimable_reward_count(self):
+        for order in self:
+            # Rewards no longer on the order since it was last saved, e.g. deleted by the user
+            removed_rewards = order._origin.order_line.reward_id - order.order_line.reward_id
+            order._update_programs_and_rewards()
+            if order.state in ("draft", "sent"):
+                if removed_rewards:
+                    claimable_rewards = order.env["loyalty.reward"].union(
+                        order._get_claimable_rewards().values()
+                    )
+                    if deleted_rewards := removed_rewards & claimable_rewards:
+                        order.disabled_auto_rewards |= deleted_rewards
+                order._auto_apply_rewards()
+            order.claimable_reward_count = sum(
+                len(rewards) for rewards in order._get_claimable_rewards().values()
+            )
 
     def _add_loyalty_history_lines(self):
         self.ensure_one()
@@ -220,6 +243,7 @@ class SaleOrder(models.Model):
                     )
                 )
             order._update_programs_and_rewards()
+            order._auto_apply_rewards()
         has_claimable_rewards = len(self) == 1 and bool(self._get_claimable_rewards())
 
         # Remove any coupon from 'current' program that don't claim any reward.
@@ -285,15 +309,6 @@ class SaleOrder(models.Model):
     def action_open_reward_wizard(self):
         self.ensure_one()
         self._update_programs_and_rewards()
-        claimable_rewards = self._get_claimable_rewards()
-        if len(claimable_rewards) == 1:
-            coupon = next(iter(claimable_rewards))
-            rewards = claimable_rewards[coupon]
-            if len(rewards) == 1 and not rewards.multi_product:
-                self._apply_program_reward(claimable_rewards[coupon], coupon)
-                return True
-        elif not claimable_rewards:
-            return True
         return self.env["ir.actions.actions"]._for_xml_id(
             "sale_loyalty.sale_loyalty_reward_wizard_action"
         )
@@ -1179,6 +1194,47 @@ class SaleOrder(models.Model):
                 if points >= reward.required_points:
                     result[coupon] |= reward
         return result
+
+    def _is_auto_claimable_program(self, program):
+        """Whether the rewards of the given program can be claimed without user input."""
+        self.ensure_one()
+        return program.program_type in ("promotion", "buy_x_get_y")
+
+    def _auto_apply_rewards(self):
+        """Try to auto apply claimable rewards.
+
+        It must answer to the following rules:
+         - Must be from an auto claimable program, see `_is_auto_claimable_program`
+         - Must not be from a nominative program
+         - The reward must be the only reward of the program
+         - The reward may not be a multi product reward
+         - The reward must not have been removed from the order by the user
+
+        Returns True if any reward was claimed else False.
+        """
+        self.ensure_one()
+
+        claimed_reward_count = 0
+        claimable_rewards = self._get_claimable_rewards()
+        for coupon, rewards in claimable_rewards.items():
+            if (
+                not self._is_auto_claimable_program(coupon.program_id)
+                or len(coupon.program_id.reward_ids) != 1
+                or coupon.program_id.is_nominative
+                or (rewards.reward_type == "product" and rewards.multi_product)
+                or rewards in self.disabled_auto_rewards._origin
+                or rewards in self.order_line.reward_id
+            ):
+                continue
+
+            try:
+                res = self._apply_program_reward(rewards, coupon)
+                if "error" not in res:
+                    claimed_reward_count += 1
+            except UserError:
+                pass
+
+        return bool(claimed_reward_count)
 
     def _allow_nominative_programs(self):
         """Whether this order may use nominative programs."""
