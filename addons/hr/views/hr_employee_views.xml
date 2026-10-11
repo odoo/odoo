@@ -332,7 +332,12 @@
                                     </group>
                                     <group string="Personal Information" name="hr_birth_group">
                                         <field name="legal_name" invisible="split_legal_name"/>
-                                        <field name="birthday"/>
+                                        <label for="birthday"/>
+                                        <div class="d-flex align-items-center gap-2" name="birth_and_age">
+                                            <field name="birthday" nolabel="1" class="oe_inline o_hr_narrow_field"/>
+                                            <label for="age" class="ms-3"/>
+                                            <field name="age" nolabel="1" class="oe_inline o_hr_narrow_field"/>
+                                        </div>
                                         <field name="birthday_public_display" invisible="not birthday" widget="boolean_toggle"/>
                                         <label for="place_of_birth"/>
                                         <div class="o_row" name="birth_location">
