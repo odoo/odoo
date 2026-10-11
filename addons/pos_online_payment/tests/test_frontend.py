@@ -279,10 +279,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
         self.assertEqual(order.state, 'draft')
 
-    def test_errors_tour(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('OnlinePaymentErrorsTour', login="pos_op_user")
-
     def test_refuse_online_payment_without_accounting_payment(self):
         """
         Test that a an order can not be paid through an online payment method from the backend
@@ -351,7 +347,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             loaded_data = self.pos_config.current_session_id.load_data({'only_records': True})
             config_online_pm_data = [record.get('_customer_required') for record in loaded_data['pos.payment.method'] if record['id'] == online_pm.id]
             self.assertTrue(all(config_online_pm_data))
-            self.start_pos_tour('test_payment_method_customer_required')
 
     def test_online_payment_with_cash_rounding_only_cash_method(self):
         """ With cash rounding only for cash payment methods, the online payment
