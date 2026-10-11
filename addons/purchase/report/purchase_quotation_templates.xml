@@ -35,6 +35,7 @@
                     <p t-else="" t-field="o.incoterm_id.code" class="m-0"/>
                 </div>
             </div>
+            <t t-call="product.matrix" order="o"/>
             <table class="table table-borderless">
                 <thead style="display: table-row-group">
                     <tr>

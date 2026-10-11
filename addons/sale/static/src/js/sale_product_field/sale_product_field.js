@@ -124,6 +124,7 @@ export const saleOrderLineProductField = {
         { name: "product_type", type: "selection" },
         { name: "service_tracking", type: "selection" },
         { name: "product_template_attribute_value_ids", type: "many2many" },
+        { name: "product_add_mode", type: "selection" },
     ],
 };
 

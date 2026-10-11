@@ -205,6 +205,26 @@ class ProductTemplateAttributeValue(models.Model):
         ptavs = ptavs._filter_single_value_lines().with_prefetch(self._prefetch_ids)
         return ", ".join([ptav.name for ptav in ptavs])
 
+    def _grid_header_cell(self, fro_currency, to_currency, company, display_extra=True):
+        """Generate a header matrix cell for 1 or multiple attributes.
+
+        :param res.currency fro_currency:
+        :param res.currency to_currency:
+        :param res.company company:
+        :param bool display_extra: whether extra prices should be displayed in the cell
+            True by default, used to avoid showing extra prices on purchases.
+        :returns: cell with name (and price if any price_extra is defined on self)
+        :rtype: dict
+        """
+        header_cell = {
+            "name": " • ".join([attr.name for attr in self]) if self else " "
+        }  # The " " is to avoid having 'Not available' if the template has only one attribute line.
+        extra_price = sum(self.mapped("price_extra")) if display_extra else 0
+        if extra_price:
+            header_cell["currency_id"] = to_currency.id
+            header_cell["price"] = fro_currency._convert(extra_price, to_currency, company)
+        return header_cell
+
     def _filter_single_value_lines(self):
         """Return `self` with values from single value lines filtered out
         depending on the active state of all the values in `self`.

@@ -103,6 +103,7 @@
 
             <div class="oe_structure"></div>
             <t t-if="doc.company_id.show_sol_numbers" t-set="line_counter" t-value="1"/>
+            <t t-call="product.matrix" order="doc"/>
             <table class="o_has_total_table table o_main_table table-borderless">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group">

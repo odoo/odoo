@@ -12,7 +12,6 @@ from . import (
     payment_transaction,
     product_category,
     product_document,
-    product_pricelist_item,
     product_product,
     product_template,
     res_company,

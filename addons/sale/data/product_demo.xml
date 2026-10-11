@@ -178,5 +178,8 @@
     <record id="product.product_product_13_product_template" model="product.template">
         <field name="optional_product_ids" eval="[Command.set([ref('product.product_product_11_product_template')])]"/>
     </record>
+    <record id="product.matrix_product_template_shirt" model="product.template">
+        <field name="product_add_mode">matrix</field>
+    </record>
 
 </odoo>
