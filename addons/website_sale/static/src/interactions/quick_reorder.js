@@ -152,6 +152,10 @@ export class QuickReorder extends Interaction {
             data['website_sale.shorter_cart_summary']
         );
         data['website_sale.cart_lines'] = markup(data['website_sale.cart_lines']);
+        data['website_sale.total'] = markup(data['website_sale.total']);
+        data['website_sale.quick_reorder_history'] = markup(
+            data['website_sale.quick_reorder_history']
+        );
 
         // Add the product to the cart and update the DOM.
         const cart = this.el.closest('#shop_cart');

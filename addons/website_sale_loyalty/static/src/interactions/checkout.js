@@ -1,3 +1,5 @@
+import { markup } from '@odoo/owl';
+import { setElementContent } from '@web/core/utils/html';
 import { patch } from '@web/core/utils/patch';
 import { Checkout } from '@website_sale/interactions/checkout';
 
@@ -13,7 +15,7 @@ patch(Checkout.prototype, {
                 '[data-reward-type="shipping"]'
             );
             if (cart_summary_shipping_reward) {
-                cart_summary_shipping_reward.innerHTML = result.amount_delivery_discounted;
+                setElementContent(cart_summary_shipping_reward, result.amount_delivery_discounted);
             }
         }
         if (result.discount_reward_amounts) {
@@ -25,9 +27,25 @@ patch(Checkout.prototype, {
                 location.reload();
             } else {
                 cart_summary_discount_rewards.forEach(
-                    (el, i) => (el.innerHTML = result.discount_reward_amounts[i])
+                    (el, i) => (setElementContent(el, result.discount_reward_amounts[i]))
                 );
             }
         }
+    },
+
+    /**
+     * @override method from `@website_sale/interactions/checkout`
+     */
+    _markupOrderSummaryValues(values) {
+        values = super._markupOrderSummaryValues(...arguments);
+        if (values.amount_delivery_discounted) {
+            values.amount_delivery_discounted = markup(values.amount_delivery_discounted);
+        }
+        if (values.discount_reward_amounts) {
+            values.discount_reward_amounts = values.discount_reward_amounts.map(
+                (amount) => markup(amount)
+            );
+        }
+        return values;
     },
 });
