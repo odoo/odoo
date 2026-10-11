@@ -275,9 +275,11 @@
         active="True"
     >
         <t name="buttons_container" position="inside">
-            <t t-call="website_sale.product_tile_element_visibility">
-                <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_wishlist'"/>
-                <t t-call="website_sale.wishlist_button"/>
+            <t t-nocache="The wishlist depends on the user.">
+                <t t-call="website_sale.product_tile_element_visibility">
+                    <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_wishlist'"/>
+                    <t t-call="website_sale.wishlist_button"/>
+                </t>
             </t>
         </t>
     </template>

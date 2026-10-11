@@ -38,6 +38,8 @@ class IrHttp(models.AbstractModel):
         is either:
         - 'tests' to load tests assets
         - 'assets' to load assets non minified
+        - 'disable-t-cache' to render the templates without the `t-cache`
+        - 'show-t-cache' to outline the `t-cache` and `t-nocache` zones
         - any other truthy value to enable simple debug mode (to show some
         technical feature, to show complete traceback in frontend error..)
         - any falsy value to disable debug mode
@@ -46,7 +48,7 @@ class IrHttp(models.AbstractModel):
         Multiple debug modes can be activated simultaneously, separated with a
         comma (eg: 'tests, assets').
         """
-        return {'', '1', 'assets', 'tests'}
+        return {'', '1', 'assets', 'tests', 'disable-t-cache', 'show-t-cache'}
 
     @classmethod
     def _handle_debug(cls):
