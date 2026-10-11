@@ -3,7 +3,7 @@
 {
     'name': "Payment - Account",
     'category': 'Accounting/Accounting',
-    'summary': "Enable customers to pay invoices on the portal and post payments when transactions are processed.",
+    'summary': "Pay invoices online from the portal and reconcile intercompany payments",
     'version': '2.0',
     'depends': ['account', 'payment'],
     'auto_install': ['account'],
