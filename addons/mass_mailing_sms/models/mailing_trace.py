@@ -17,9 +17,12 @@ class MailingTrace(models.Model):
         ('sms', 'SMS')
     ], ondelete={'sms': 'set default'})
     sms_id = fields.Many2one('sms.sms', string='SMS', store=False, compute='_compute_sms_id', compute_sql='_compute_sql_sms_id', compute_sudo=True, inverse='_inverse_sms_id')
+    sms_id_real = fields.Many2one('sms.sms', string='SMS')
     sms_id_int = fields.Integer(
         string='SMS ID',
         index='btree_not_null',
+        store=True,
+        compute='_compute_sms_id_int',
         # Integer because the related sms.sms can be deleted separately from its statistics.
         # However, the ID is needed for several action and controllers.
     )
@@ -52,33 +55,26 @@ class MailingTrace(models.Model):
         ('twilio_from_to', 'From / To identic'),
     ])
 
-    @api.depends('sms_id_int', 'trace_type')
+    @api.depends('sms_id_real', 'trace_type')
     def _compute_sms_id(self):
-        sms_traces = self.filtered(lambda t: t.trace_type == 'sms' and t.sms_id_int)
+        sms_traces = self.filtered(lambda t: t.trace_type == 'sms' and t.sms_id_real and not t.sms_id_real.to_delete)
         (self - sms_traces).sms_id = False
         if not sms_traces:
             return
-        existing_sms_ids = set(self.env['sms.sms'].search([
-            ('id', 'in', sms_traces.mapped('sms_id_int')), ('to_delete', '!=', True)
-        ]).ids)
         for sms_trace in sms_traces:
-            sms_trace.sms_id = sms_trace.sms_id_int in existing_sms_ids and sms_trace.sms_id_int
+            sms_trace.sms_id = sms_trace.sms_id_real
 
     def _compute_sql_sms_id(self, table):
-        comodel = self.env['sms.sms']
-        coalias = table._make_alias('sms_id_int', comodel)
-        table._query.add_join('LEFT JOIN', coalias, None, SQL(
-            "%s = %s AND %s IS NOT TRUE AND %s = 'sms'",
-            table.sms_id_int,
-            coalias.id,
-            coalias.to_delete,
-            table.trace_type,
-        ))
-        return coalias.id
+        return SQL("CASE WHEN %s = 'sms' AND %s IS NOT TRUE THEN %s END", table.trace_type, table.sms_id_real.to_delete, table.sms_id_real)
 
     def _inverse_sms_id(self):
         for trace in self:
-            trace.sms_id_int = int(trace.sms_id)
+            trace.sms_id_real = int(trace.sms_id)
+
+    @api.depends('sms_id_real')
+    def _compute_sms_id_int(self):
+        for trace in self:
+            trace.sms_id_int = trace.sms_id_real.id or trace.sms_id_int
 
     @api.model_create_multi
     def create(self, vals_list):
