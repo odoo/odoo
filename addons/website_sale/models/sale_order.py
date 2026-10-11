@@ -952,6 +952,10 @@ class SaleOrder(models.Model):
                     _("The delivery method is not compatible with your delivery address.")
                 )
 
+        # the reason is meant for the salesperson, the customer cannot act on it
+        if self._get_online_confirmation_error():
+            raise ValidationError(_("This order cannot be confirmed online. Please contact us."))
+
     def _recompute_cart(self):
         """Recompute taxes and prices for the current cart."""
         self._recompute_taxes()

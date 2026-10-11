@@ -32,6 +32,9 @@ class PaymentLinkWizard(models.TransientModel):
             if sale_order.is_expired:
                 wizard.warning_message = _("The sale order has expired.")
                 sale_wizards |= wizard
+            if error_msg := sale_order._get_online_confirmation_error():
+                wizard.warning_message = error_msg
+                sale_wizards |= wizard
         super(PaymentLinkWizard, self - sale_wizards)._compute_warning_message()
 
     def _prepare_url(self, base_url, related_document):
