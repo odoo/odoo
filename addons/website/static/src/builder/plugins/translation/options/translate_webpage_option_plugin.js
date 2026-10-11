@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef { Object } TranslateWebpageOptionShared
@@ -16,13 +17,7 @@ import { uniqueId } from "@web/core/utils/functions";
  */
 export class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
-    static dependencies = [
-        "translateWebpageOption",
-        "translation",
-        "history",
-        "domObserver",
-        "valueHistory",
-    ];
+    static dependencies = ["builderActions", "translateWebpageOption", "translation"];
 
     setup() {
         this.canTimeout = false;
@@ -156,7 +151,10 @@ export class TranslateToAction extends BuilderAction {
                 while (walker.nextNode()) {
                     const node = walker.currentNode;
                     const text = node.textContent;
-                    enqueueTranslation(node, uniqueId("t_"), text);
+                    // o_translatable_text is handled above
+                    if (!closestElement(node, "textarea.o_translatable_text")) {
+                        enqueueTranslation(node, uniqueId("t_"), text);
+                    }
                 }
             }
         }
@@ -262,27 +260,19 @@ export class TranslateToAction extends BuilderAction {
                     }
                 } else if (id.startsWith("ta_")) {
                     const { el, attribute } = node;
-                    const attributeInfo =
-                        this.dependencies.translation.getTranslationInfo(el)?.[attribute];
-                    if (attributeInfo && text != attributeInfo.translation) {
-                        const oldValue = attributeInfo.translation;
-                        this.dependencies.domObserver.applyCustomMutation({
-                            apply: () => (attributeInfo.translation = text),
-                            revert: () => (attributeInfo.translation = oldValue),
-                        });
+                    const translateAction =
+                        this.dependencies.builderActions.getAction("translateAttribute");
+                    const translateSpec = { editingElement: el, params: { mainParam: attribute } };
+                    if (
+                        this.dependencies.translation.hasTranslatedAttribute(el, attribute) &&
+                        text != translateAction.getValue(translateSpec)
+                    ) {
                         el.dataset.oeTranslationState = "translated";
-                        if (attribute === "textContent" || attribute === "value") {
-                            this.dependencies.valueHistory.setValue(el, text);
-                        }
-                        if (attribute !== "textContent") {
-                            el.setAttribute(attribute, text);
-                        }
+                        translateAction.apply({ ...translateSpec, value: text });
                     }
                 }
             }
         }
-        this.dependencies.history.commit();
-
         return numOfFailedTranslationNodes;
     }
 
