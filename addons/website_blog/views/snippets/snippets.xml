@@ -17,6 +17,10 @@
         <t t-snippet="website_blog.s_blog_posts_single_badge" string="Blog Post" group="blogs" label="Blog"/>
         <t t-snippet="website_blog.s_blog_posts_carousel" string="Blog Posts" group="blogs" label="Dynamic Carousel"/>
     </xpath>
+    <xpath expr="//names[@id='specific_name']" position="inside">
+        <div key="blog-cover" name="Blog Cover"/>
+        <div key="blog-post-cover" name="Blog Post Cover"/>
+    </xpath>
 </template>
 
 </odoo>

@@ -210,7 +210,7 @@
     </xpath>
 
     <xpath expr="//header" position="attributes">
-        <attribute name="data-name">Header</attribute>
+        <attribute name="data-builder-name">header</attribute>
         <attribute name="t-att-data-extra-items-toggle-aria-label">extra_items_toggle_aria_label</attribute>
     </xpath>
 
@@ -234,12 +234,12 @@
     </xpath>
 
     <xpath expr="//footer" position="attributes">
-        <attribute name="data-name">Footer</attribute>
+        <attribute name="data-builder-name">footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
-        <attribute name="data-name">Copyright</attribute>
+        <attribute name="data-builder-name">copyright</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="class" add="o_colored_level o_cc" separator=" "/>
     </xpath>
@@ -2828,8 +2828,8 @@
     <t t-set="_name" t-value="_name or _record._name"/>
     <t t-set="_id" t-value="_id or _record.id"/>
     <t t-set="_bg" t-value="_bg or _record._get_background(height=_resize_height, width=_resize_width)"/>
-    <t t-set="default_cover_name">Cover</t>
-    <div t-att-data-name="display_opt_name or default_cover_name"
+    <t t-set="default_cover_name" t-value="cover"/>
+    <div t-att-data-builder-name="display_opt_name or default_cover_name"
          t-att-style="_cp.get('background_color_style')"
          t-att-data-use_size="use_size"
          t-att-data-use_filters="use_filters"

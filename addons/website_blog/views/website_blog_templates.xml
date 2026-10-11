@@ -137,7 +137,7 @@ list of filtered posts (by date or tag).
                 <div t-attf-class="o_wblog_category_cover_container mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
                     <t t-call="website.record_cover"
                         _record="blog"
-                        display_opt_name.translate="Blog Cover"
+                        display_opt_name.f="blog-cover"
                         additionnal_classes.f="ratio ratio-16x9 overflow-hidden rounded"/>
                 </div>
                 <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
@@ -163,7 +163,7 @@ list of filtered posts (by date or tag).
             _record="blog"
             use_filters="True"
             use_text_align="True"
-            display_opt_name.translate="Blog Cover"
+            display_opt_name.f="blog-cover"
             additionnal_classes.f="o_wblog_post_page_cover o_record_has_cover cover_auto py-5">
             <div class="container position-relative h-100 d-flex flex-column justify-content-around">
                 <div t-attf-class="o_wblog_post_title my-lg-4">
@@ -275,7 +275,7 @@ list of filtered posts (by date or tag).
                     snippet_autofocus="True"
                     use_filters="True"
                     use_size="True"
-                    display_opt_name.translate="Blog Post Cover"
+                    display_opt_name.f="blog-post-cover"
                     additionnal_classes.f="o_wblog_post_page_cover">
                     <div class="o_container_small text-center position-relative h-100 d-flex flex-column flex-grow-1 justify-content-center">
                         <!-- Title and subtitle -->
@@ -440,7 +440,7 @@ list of filtered posts (by date or tag).
         <div t-attf-class="#{(opt_blog_post_full_width_cover or opt_blog_post_full_container) and 'container-fluid' or 'container'} #{opt_blog_post_full_width_cover and 'g-0'}">
             <t t-call="website.record_cover"
                 _record="blog_post"
-                display_opt_name.translate="Blog Post Cover"
+                display_opt_name.f="blog-post-cover"
                 additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_regular mt-5 ratio"/>
         </div>
     </xpath>
@@ -499,7 +499,7 @@ list of filtered posts (by date or tag).
                 <div class="col-lg-7 offset-lg-1 mt-lg-4">
                     <t t-call="website.record_cover"
                         _record="blog_post"
-                        display_opt_name.translate="Blog Post Cover"
+                        display_opt_name.f="blog-post-cover"
                         additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_split ratio rounded overflow-hidden"/>
                 </div>
             </div>
@@ -611,7 +611,7 @@ list of filtered posts (by date or tag).
         <a t-attf-href="/blog/#{slug(next_post.blog_id)}/#{slug(next_post)}" t-att-title="'Read next: ' + next_post.name" class="d-flex align-items-center gap-4 bg-light rounded-3 p-3 text-reset text-decoration-none">
             <t t-call="website.record_cover"
                 _record="next_post"
-                display_opt_name.translate="Blog Post Cover"
+                display_opt_name.f="blog-post-cover"
                 additionnal_classes.f="flex-basis-50 rounded shadow-sm overflow-hidden h-100 ratio ratio-16x9"/>
             <div class="d-flex flex-column flex-basis-75">
                 <h3 t-field="next_post.name" class="o_wblog_post_name text-wrap-pretty h5-fs" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title"/>
