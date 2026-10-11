@@ -1,0 +1,17 @@
+.o_website_add_font_dialog {
+    height: 50vh;
+
+    a.dropdown-item:has(> .o_website_selected_font) {
+        background-color: var(--o-gray-200) !important;
+    }
+
+    .o_website_font_preview_sample::after {
+        content: "";
+        position: absolute;
+        inset: 0 0 0 auto;
+        width: 80px;
+        border-radius: inherit;
+        pointer-events: none;
+        @include gradient-x(transparent, var(--o-gray-100), 0%, 75%);
+    }
+}
