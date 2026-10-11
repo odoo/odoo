@@ -50,8 +50,8 @@ else:
         raise ImportError("pypdf implementation not found") from errors[0]
     del errors
 
-PageObject, PdfReaderBase, PdfWriter, filters, generic, errors, create_string_object =\
-    pypdf.PageObject, pypdf.PdfReader, pypdf.PdfWriter, pypdf.filters, pypdf.generic, pypdf.errors, pypdf.create_string_object
+PageObject, PdfReaderBase, PdfWriter, filters, generic, errors, create_string_object, Fit, Link =\
+    pypdf.PageObject, pypdf.PdfReader, pypdf.PdfWriter, pypdf.filters, pypdf.generic, pypdf.errors, pypdf.create_string_object, pypdf.Fit, pypdf.Link
 # because they got re-exported
 ArrayObject, BooleanObject, ByteStringObject, DecodedStreamObject, DictionaryObject, IndirectObject, NameObject, NumberObject =\
     generic.ArrayObject, generic.BooleanObject, generic.ByteStringObject, generic.DecodedStreamObject, generic.DictionaryObject, generic.IndirectObject, generic.NameObject, generic.NumberObject
@@ -173,7 +173,7 @@ def rotate_pdf(pdf):
     writer = PdfFileWriter()
     reader = PdfFileReader(io.BytesIO(pdf), strict=False)
     for page in reader.pages:
-        page.rotate_clockwise(90)
+        page.rotate(90)
         writer.add_page(page)
     with io.BytesIO() as _buffer:
         writer.write(_buffer)
