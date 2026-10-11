@@ -171,7 +171,7 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
             <h1 class="visually-hidden">Login</h1>
             <div class="oe_structure" id="oe_structure_login_top"/>
             <owl-component t-if="not login" name="web.user_switch" />
-            <form t-attf-class="oe_login_form #{'' if login else 'd-none'}" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash" data-captcha="login">
+            <form t-attf-class="oe_login_form o_floating_labels #{'' if login else 'd-none'}" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash" data-captcha="login">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                 <div class="mb-3" t-if="databases and len(databases) &gt; 1">
@@ -183,16 +183,14 @@ For more information, please visit: https://developer.mozilla.org/en-US/docs/Web
                 </div>
 
                 <div class="mb-3 field-login">
-                    <label for="login" class="form-label d-flex justify-content-between">Email</label>
-                    <input type="text" placeholder="Enter your email" name="login" t-att-value="login" id="login" class="form-control" required="required" autocapitalize="off" autocomplete="username"/>
+                    <label for="login" class="form-label">Email</label>
+                    <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autocapitalize="off" autocomplete="username"/>
                 </div>
 
-                <div class="o_caps_lock_warning">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <label for="password" class="form-label">Password</label>
-                    </div>
+                <div class="field-password o_caps_lock_warning">
+                    <label for="password" class="form-label">Password</label>
                     <div class="input-group mb-1">
-                        <input type="password" placeholder="Enter your password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                        <input type="password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                         <button type="button" class="btn btn-sm border border-start-0 o_show_password">
                             <i class="oi" data-icon="visibility"/>
                         </button>
