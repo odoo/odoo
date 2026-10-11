@@ -148,13 +148,13 @@
     padding: var(--Kanban-padding);
     gap: var(--Kanban-gap);
 
-    @include media-only(print) {
+    @media print {
         --Kanban-gap: var(--o-bs-spacer-2);
         --KanbanGroup-padding-h: 0;
         --KanbanRecord-margin-h: 0;
     }
 
-    @include media-only(print) {
+    @media print {
         @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             --Card-padding-h: calc(var(--o-kanban-inside-hgutter) * 2);
         }

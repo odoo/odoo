@@ -90,9 +90,59 @@
 }
 
 /* Print */
-@include media-only(print) {
+@media print {
     html:has(.o_action_manager .o_calendar_view.o_view_controller.o_action) {
-        @extend %o-html-layout-fill;
+        height: 100%;
+
+        .o_web_client {
+            height: 100%;
+            display: flex;
+            flex-flow: column nowrap;
+
+            > .o_action_manager {
+                direction: ltr; /* Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl */
+                flex: 1 1 auto;
+                height: 100%;
+                overflow: hidden;
+
+                > .o_action {
+                    height: 100%;
+                    display: flex;
+                    flex-flow: column nowrap;
+                    overflow: hidden;
+
+                    > .o_control_panel {
+                        flex: 0 0 auto;
+                    }
+                    .o_content {
+                        overflow: auto;
+                        height: 100%;
+                    }
+
+                    @media (max-width: 187.98mm) {
+                        /* Made the o_action scroll instead of its o_content. */
+                        /* Except when the view wants to handle the scroll itself. */
+                        &:not(.o_action_delegate_scroll) {
+                            overflow: auto;
+
+                            .o_content {
+                                overflow: initial;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .o_control_panel {
+                flex: 0 0 auto;
+            }
+
+            .o_content {
+                direction: ltr; /* Define direction attribute here so when rtlcss preprocessor run, it converts it to rtl */
+                flex: 1 1 auto;
+                position: relative;
+            }
+        }
 
         .o_calendar_renderer {
             .o_calendar_fc_view {
