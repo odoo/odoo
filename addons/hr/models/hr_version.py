@@ -576,9 +576,12 @@ class HrVersion(models.Model):
         for version in self:
             version.distance_home_work = version.km_home_work / 1.609 if version.distance_home_work_unit == "miles" else version.km_home_work
 
-    @api.depends(
-        'contract_date_start', 'contract_date_end', 'date_version', 'employee_id',
-        'employee_id.version_ids.date_version', 'departure_date')
+    @api.model
+    def _get_compute_dates_dependencies(self):
+        return {'contract_date_start', 'contract_date_end', 'date_version', 'employee_id',
+            'employee_id.version_ids.date_version', 'departure_date'}
+
+    @api.depends(lambda self: self._get_compute_dates_dependencies())
     def _compute_dates(self):
         for version in self:
             version.date_start = max(version.date_version, version.contract_date_start) \
