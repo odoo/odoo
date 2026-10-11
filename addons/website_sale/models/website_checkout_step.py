@@ -111,15 +111,15 @@ class WebsiteCheckoutStep(models.Model):
         """Check whether the `/shop/address` step is valid and complete, and return the incomplete
         page otherwise.
 
+        Note: An anonymous cart (i.e., without any address yet) is not redirected here: the
+        address form is shown inline on `/shop/checkout` so that the customer can fill in their
+        details and pick a delivery method on a single page.
+
         :param sale.order order_sudo: The current cart, sudoed.
         :param dict kwargs: Additional arguments for overrides.
         :return: The incomplete or invalid step href if any; otherwise, None.
         :rtype: str | None
         """
-        # Check that an address has been added.
-        if order_sudo._is_anonymous_cart():
-            return "/shop/address"
-
         # Check that the delivery address is complete.
         delivery_partner_sudo = order_sudo.partner_shipping_id
         if (
