@@ -9,6 +9,8 @@
                     <field name="channel_id" string="Conversation"/>
                     <field name="start_dt" string="Date" widget="daterange" options="{'end_date_field': 'end_dt'}"/>
                     <field name="duration_hour" string="Duration" widget="discuss_call_history_duration"/>
+                    <field name="activity_res_id" string="Logged On" widget="many2one_reference_icon"/>
+                    <field name="activity_res_model" column_invisible="True"/>
                     <field name="has_recording" nolabel="True" widget="discuss_call_history_indicators"/>
                 </list>
             </field>
@@ -27,6 +29,10 @@
             <field name="model">discuss.call.history</field>
             <field name="arch" type="xml">
                 <form string="Call History">
+                    <header>
+                        <field name="activity_id" invisible="True"/>
+                        <button name="action_log_meeting" string="Log Meeting" type="object" invisible="activity_id"/>
+                    </header>
                     <sheet>
                         <group>
                             <group>
@@ -36,6 +42,8 @@
                             <group>
                                 <field name="end_dt"/>
                                 <field name="duration_hour" widget="discuss_call_history_duration"/>
+                                <field name="activity_res_model" invisible="True"/>
+                                <field name="activity_res_id" string="Logged On" widget="many2one_reference_icon" invisible="not activity_id"/>
                             </group>
                         </group>
                         <notebook invisible="not artifact_ids">

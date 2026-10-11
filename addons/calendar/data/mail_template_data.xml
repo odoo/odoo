@@ -82,7 +82,7 @@
                     <t t-else="">Join</t>
                 </td>
                 <td style="padding-top: 6px;">
-                    <a t-att-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
+                    <a t-att-href="object._get_videocall_location()" target="_blank" style="color: #008f8c;">
                         <t t-if="object.get_base_url() in object.event_id.videocall_location">Odoo Discuss</t>
                         <t t-else="">Video meeting</t>
                     </a>
@@ -235,7 +235,7 @@
                     <t t-else="">Join</t>
                 </td>
                 <td style="padding-top: 6px;">
-                    <a t-att-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
+                    <a t-att-href="object._get_videocall_location()" target="_blank" style="color: #008f8c;">
                         <t t-if="object.event_id.videocall_source == 'discuss'">Odoo Discuss</t>
                         <t t-else="">Video meeting</t>
                     </a>
@@ -369,7 +369,7 @@
                     <t t-else="">Join</t>
                 </td>
                 <td style="padding-top: 6px;">
-                    <a t-att-href="object.event_id.videocall_location" target="_blank" style="color: #008f8c;">
+                    <a t-att-href="object._get_videocall_location()" target="_blank" style="color: #008f8c;">
                         <t t-if="object.get_base_url() in object.event_id.videocall_location">Odoo Discuss</t>
                         <t t-else="">Video meeting</t>
                     </a>
@@ -432,6 +432,7 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
+        <!-- REVIEW [2/5 consistency]: this template (and the ICS) still use the plain videocall_location, so external attendees join as strangers instead of their guest; use attendee._get_videocall_location() where possible. -->
         <record id="calendar_template_meeting_update" model="mail.template">
             <field name="name">Calendar: Event Update</field>
             <field name="model_id" ref="calendar.model_calendar_event"/>

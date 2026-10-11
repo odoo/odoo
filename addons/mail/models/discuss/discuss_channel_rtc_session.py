@@ -49,20 +49,28 @@ class DiscussChannelRtcSession(models.Model):
                 '<div data-oe-type="call" class="o_mail_notification">%s</div>',
             ) % self.env._("%(user)s started a call") % {"user": self.env.user.name}
             message = channel.message_post(body=body, subtype_xmlid="mail.mt_important_notification")
-            # sudo - discuss.call.history: can create call history when call is created.
+            # sudo - discuss.call.history: can create call history when call is created, and
+            # link it to the activity that planned it.
             self.env["discuss.call.history"].sudo().create(
                 {
                     "channel_id": channel.id,
                     "start_dt": now,
                     "start_call_message_id": message.id,
                 },
-            )
+            )._link_activity()
             stores[channel].add(message, ["call_history_ids"])
         for rtc_session in rtc_sessions:
             stores[rtc_session.channel_id].add(
                 rtc_session.channel_id,
                 "_store_rtc_update_fields",
                 fields_params={"added": rtc_session},
+            )
+            # the member joined the call: they are no longer merely invited to it
+            stores[rtc_session.channel_id].add(
+                rtc_session.channel_id,
+                lambda res, member=rtc_session.channel_member_id: res.many(
+                    "invited_member_ids", [], mode="DELETE", value=member,
+                ),
             )
         return rtc_sessions
 
@@ -89,11 +97,12 @@ class DiscussChannelRtcSession(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"removed": rtc_session},
             )
-        # sudo - dicuss.rtc.call.history: setting the end date of the call
-        # after it ends is allowed.
+        # sudo - discuss.call.history: setting the end date of the call after it ends,
+        # and logging it on the activity that planned it, is allowed.
         domain = [("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)]
         for history in self.env["discuss.call.history"].sudo().search(domain):
             history.end_dt = fields.Datetime.now()
+            history._link_and_complete_activity()
             stores[history.channel_id].add(history, ["duration_hour", "end_dt"])
         return super().unlink()
 
