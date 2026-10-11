@@ -69,3 +69,6 @@ class HrEmployeeSkill(models.Model):
 
     def action_save(self):
         return {'type': 'ir.actions.act_window_close'}
+
+    def _get_company_id_change_error_message(self):
+        return self.env._("Some of the employee's skills and certifications are company specific.")

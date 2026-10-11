@@ -15,9 +15,13 @@ class HrJobSkill(models.Model):
         index=True,
         ondelete="cascade",
     )
+    company_id = fields.Many2one(related='job_id.company_id')
 
     def _linked_field_name(self):
         return "job_id"
+
+    def _get_company_id_change_error_message(self):
+        return self.env._("Some of the job's skills and certifications are company specific.")
 
     def _can_edit_certification_validity_period(self):
         return False
