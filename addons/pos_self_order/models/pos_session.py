@@ -42,8 +42,8 @@ class PosSession(models.Model):
         )
         return read_records
 
-    def close_session_from_ui(self, payment_method_closing={}):
-        result = super().close_session_from_ui(payment_method_closing)
+    def close_session_from_ui(self, payment_method_closing={}, opening_notes=None, closing_notes=None):
+        result = super().close_session_from_ui(payment_method_closing, opening_notes, closing_notes)
         self.config_id.notify_session_state_changed()
         return result
 
