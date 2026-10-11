@@ -1487,14 +1487,14 @@ describe("create with powerbox", () => {
         ).toHaveCount(1);
     });
     test("title element should be same as current block if current block is heading", async () => {
-        const { editor } = await setupEditor(`<h1><font style="color: #ff0000">abc[]</font></h1>`, {
+        const { editor } = await setupEditor(`<h1><span style="color: #ff0000">abc[]</span></h1>`, {
             config: getConfig([toggleBlockEmbedding]),
         });
         await insertText(editor, "/toggle");
         await waitFor(".o-we-powerbox");
         await press("Enter");
         expect("[data-embedded='toggleBlock'] [data-embedded-editable='title']").toHaveInnerHTML(
-            `<h1><font style="color: #ff0000">abc</font></h1>`
+            `<h1><span style="color: #ff0000">abc</span></h1>`
         );
     });
 });

@@ -9,7 +9,6 @@ import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils
 import {
     isElement,
     isStylable,
-    isPhrasingContent,
     isProtected,
     isProtecting,
     isVisible,
@@ -199,6 +198,7 @@ export class LinkPlugin extends Plugin {
         "lineBreak",
         "overlay",
         "color",
+        "format",
         "baseContainer",
         "feff",
         "delete",
@@ -387,7 +387,6 @@ export class LinkPlugin extends Plugin {
 
         /** Processors */
         clean_for_save_processors: (root) => this.removeEmptyLinks(root),
-        html_compatibility_processors: this.moveLinkColorToFont.bind(this),
         normalize_processors: this.normalizeLink.bind(this),
         to_inline_code_processors: (node) => {
             this.removeEmptyLinks(node);
@@ -862,7 +861,7 @@ export class LinkPlugin extends Plugin {
                 });
                 if (!this.config.hideStylingInLinkPopover) {
                     link.removeAttribute("style");
-                    this.dependencies.color.removeAllColor();
+                    this.dependencies.format.removeSelectionFormats(["color", "backgroundColor"]);
                 }
                 // Remove the current link (linkInDocument) if it has no content
                 if (
@@ -884,36 +883,6 @@ export class LinkPlugin extends Plugin {
                 }
             }
         }
-    }
-
-    /**
-     * An inline color on an anchor only comes from an external style: the
-     * editor never colors an anchor itself. Remove it from the anchor, create
-     * a font tag inside it, and move the color to the font tag, so that the
-     * color is applied to the font element instead of the anchor element.
-     */
-    moveLinkColorToFont(root) {
-        for (const anchorEl of selectElements(root, "a")) {
-            if (/btn(-[a-z0-9_-]*)custom/.test(anchorEl.className)) {
-                // if the link is a customized button, we don't want to change the color
-                continue;
-            }
-            const { color } = anchorEl.style;
-            const childNodes = [...anchorEl.childNodes];
-            if (color && childNodes.every(isPhrasingContent)) {
-                anchorEl.style.removeProperty("color");
-                const font =
-                    anchorEl.nodeName === "FONT" ? anchorEl : anchorEl.querySelector("font");
-                if (font && cleanZWChars(anchorEl.textContent) === font.textContent) {
-                    continue;
-                }
-                const newFont = this.document.createElement("font");
-                newFont.append(...childNodes);
-                anchorEl.appendChild(newFont);
-                this.dependencies.color.colorElement(newFont, color, "color");
-            }
-        }
-        return root;
     }
 
     normalizeLink(root) {

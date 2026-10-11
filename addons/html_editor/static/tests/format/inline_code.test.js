@@ -138,13 +138,13 @@ test("should open toolbar for mixed selection and apply formatting outside inlin
     await contains(".btn:contains('Solid')").click();
     await contains(".o_color_button[data-color='#0000FF']").click();
     expect(getContent(el)).toBe(
-        `<p>abc\ufeff<code class="o_inline_code">\ufefft[est\ufeff</code>\ufeff<font style="color: rgb(0, 0, 255);"><strong>de]</strong></font>f</p>`
+        `<p>abc\ufeff<code class="o_inline_code">\ufefft[est\ufeff</code>\ufeff<span style="color: rgb(0, 0, 255);"><strong>de]</strong></span>f</p>`
     );
     // Apply font size formatting should wrap only the external text.
     await contains(".o-we-toolbar [name='font_size'].dropdown-toggle").click();
     await contains(`.o_font_size_selector_menu .dropdown-item:contains('80')`).click();
     expect(getContent(el)).toBe(
-        `<p>abc\ufeff<code class="o_inline_code">\ufefft[est\ufeff</code>\ufeff<span class="display-1-fs"><font style="color: rgb(0, 0, 255);"><strong>de]</strong></font></span>f</p>`
+        `<p>abc\ufeff<code class="o_inline_code">\ufefft[est\ufeff</code>\ufeff<span style="color: rgb(0, 0, 255);" class="display-1-fs"><strong>de]</strong></span>f</p>`
     );
 });
 
