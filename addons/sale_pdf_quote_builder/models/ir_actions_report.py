@@ -33,7 +33,7 @@ class IrActionsReport(models.Model):
                 initial_stream := result.get(order.id, {}).get("stream")
             ):
                 quotation_documents = order.quotation_document_ids
-                headers = quotation_documents.filtered(lambda doc: doc.document_type == "header")
+                headers = quotation_documents.filtered(lambda doc: doc.position == "header")
                 footers = quotation_documents - headers
                 product_documents_before_quote = []
                 product_documents_after_quote = []
@@ -224,7 +224,7 @@ class IrActionsReport(models.Model):
         existing_mapping = json.loads(order.customizable_pdf_form_fields or "{}")
         if order_line:
             base_values = existing_mapping.get("line", {}).get(str(order_line.id), {})
-        elif document.document_type == "header":
+        elif document.position == "header":
             base_values = existing_mapping.get("header", {})
         else:
             base_values = existing_mapping.get("footer", {})

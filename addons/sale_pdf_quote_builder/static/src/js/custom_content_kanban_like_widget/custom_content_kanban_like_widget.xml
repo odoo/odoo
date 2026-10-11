@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-name="sale_pdf_quote_builder.CustomContentKanbanLike">
-        <t t-if="this.state.headers.files?.length">
+        <t t-if="this.state.beforeQuoteDocs.files?.length">
             <t t-call="sale_pdf_quote_builder.section"
-                section="this.state.headers"
+                section="this.state.beforeQuoteDocs"
                 save="(lineId, docId, isSelected) => {
                         this.saveQuotationDocument(docId, isSelected);
                     }">
@@ -18,9 +18,9 @@
                 </t>
             </t>
         </t>
-        <t t-if="this.state.footers.files?.length">
+        <t t-if="this.state.afterQuoteDocs.files?.length">
             <t t-call="sale_pdf_quote_builder.section"
-                section="this.state.footers"
+                section="this.state.afterQuoteDocs"
                 save="(lineId, docId, isSelected) => {
                         this.saveQuotationDocument(docId, isSelected);
                     }">

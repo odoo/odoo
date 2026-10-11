@@ -16,9 +16,9 @@ export class CustomContentKanbanLikeWidget extends Component {
     setup() {
         this.orm = useService("orm");
         this.state = proxy({
-            headers: {},
+            beforeQuoteDocs: {},
             lines: {},
-            footers: {},
+            afterQuoteDocs: {},
             readonly: this.props.readonly,
         });
 
@@ -40,18 +40,22 @@ export class CustomContentKanbanLikeWidget extends Component {
     async updateState() {
         const saved = await this.props.record.save();  // To display documents of potentially unsaved SOL.
         if (saved) {  // do not fetch wrong form data if record was not saved.
-            const { headers, lines, footers } = await this.orm.call(
+            const {
+                before_quote_docs: beforeQuoteDocs,
+                lines,
+                after_quote_docs: afterQuoteDocs,
+            } = await this.orm.call(
                 'sale.order', 'get_update_included_pdf_params', [this.props.record.resId]
             )
-            this.state.headers = headers;
+            this.state.beforeQuoteDocs = beforeQuoteDocs;
             this.state.lines = lines;
-            this.state.footers = footers;
+            this.state.afterQuoteDocs = afterQuoteDocs;
         }
     }
 
     updateJson() {
-        const selectedHeaders = this.state.headers.files.filter(f => f.is_selected);
-        const selectedFooters = this.state.footers.files.filter(f => f.is_selected);
+        const selectedHeaders = this.state.beforeQuoteDocs.files.filter(f => f.is_selected);
+        const selectedFooters = this.state.afterQuoteDocs.files.filter(f => f.is_selected);
         const value = JSON.stringify({
             'header': Object.assign({}, ...selectedHeaders.map(header => {
                 return {

@@ -12,7 +12,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="document_type"/>
+                            <field name="position"/>
                             <label for="raw"/>
                             <div class="o_row">
                                 <field
@@ -77,7 +77,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="ir_attachment_id"/>
                 <field name="mimetype"/>
-                <field name="document_type"/>
+                <field name="position"/>
                 <field name="name"/>
                 <field name="active"/>
                 <templates>
@@ -98,16 +98,8 @@
                         <main>
                             <field name="name" class="fw-bolder text-truncate"/>
                             <div class="d-flex text-nowrap">
-                                <span>Document type:</span>
-                                <field name="document_type" class="ms-2" widget="selection"/>
-                            </div>
-                            <div
-                                t-if="!context.hide_template_ids
-                                      and !!record.quotation_template_ids.raw_value.length"
-                                class="mt-1"
-                            >
-                                <span class="pe-2">Templates:</span>
-                                <field name="quotation_template_ids" class="d-inline-block" widget="many2many_tags"/>
+                                <span>Position:</span>
+                                <field name="position" class="ms-2" widget="selection"/>
                             </div>
                         </main>
                     </t>
@@ -123,10 +115,10 @@
             <list editable="top" multi_edit="true">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="document_type"/>
-                <field name="quotation_template_ids" widget="many2many_tags"/>
+                <field name="position"/>
+                <field name="quotation_template_ids" widget="many2many_tags" optional="hide"/>
                 <field name="add_by_default" widget="boolean_toggle" optional="show"/>
-                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
     </record>
@@ -140,9 +132,9 @@
                 <separator/>
                 <group>
                     <filter
-                        string="Document type"
-                        name="doc_type"
-                        context="{'group_by': 'document_type'}"
+                        string="Position"
+                        name="position"
+                        context="{'group_by': 'position'}"
                     />
                     <filter
                         string="Quotation Template"
@@ -158,15 +150,15 @@
     </record>
 
     <record id="quotation_document_action" model="ir.actions.act_window">
-        <field name="name">Headers/Footers</field>
+        <field name="name">Additional Pages</field>
         <field name="res_model">quotation.document</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Upload quotation headers and footers
+                Upload pages to add before or after your quotations
             </p>
             <p>
-                Personalize your quotes with catchy header and footer pages
+                Personalize your quotes with catchy additional pages
                 <br/>
                 to boost your sales.
             </p>
