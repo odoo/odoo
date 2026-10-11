@@ -52,6 +52,9 @@ class HrEmployeeDeparture(models.Model):
     apply_immediately = fields.Boolean(compute="_compute_apply_immediately")
     apply_date = fields.Date(readonly=True)
     last_contract_date_end = fields.Date()
+    allowed_departure_reason_ids = fields.Many2many(
+        'hr.departure.reason', compute='_compute_allowed_departure_reason_ids'
+    )
 
     @api.depends('dismissal_date')
     def _compute_departure_date(self):
@@ -130,6 +133,16 @@ class HrEmployeeDeparture(models.Model):
                 and v.contract_date_end == version.contract_date_end,
             ).with_context(sync_contract_dates=True).write(vals)
         return res
+
+    @api.depends('employee_id')
+    def _compute_allowed_departure_reason_ids(self):
+        for record in self:
+            country = record.employee_id.company_country_id
+            if country == self.env.ref('base.ae'):
+                domain = [('country_id', '=', country.id)]
+            else:
+                domain = ['|', ('country_id', '=', False), ('country_id', '=', country.id)]
+            record.allowed_departure_reason_ids = self.env['hr.departure.reason'].search(domain)
 
     def _cron_apply_departure(self):
         today = fields.Date.today()
