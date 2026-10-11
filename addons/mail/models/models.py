@@ -9,7 +9,7 @@ from markupsafe import Markup
 
 from odoo import _, api, exceptions, models, tools
 from odoo.fields import Domain
-from odoo.tools import parse_contact_from_email
+from odoo.tools import formatLang, parse_contact_from_email
 from odoo.tools.mail import email_normalize, email_split_and_format
 
 from odoo.addons.mail.tools.alias_error import AliasError
@@ -860,6 +860,35 @@ class Base(models.AbstractModel):
                 last_field.convert_to_export(value, last_model)
                 for value in field_value
             )
+        elif last_field.type == 'monetary':
+            currency_fname = last_field.get_currency_field(last_model)
+            formated_value = (formatLang(record.env,
+                                        value,
+                                        digits=(
+                                                record[currency_fname] or
+                                                record.env.company.currency_id).decimal_places
+                                        )
+            for record, value in zip(last_model, field_value))
+            return ' '.join(formated_value)
+        elif last_field.type == 'float':
+            digits_info = last_field.get_digits(self.env)
+            min_digits_info = last_field.get_min_display_digits(self.env)
+            # Determine the initial base precision
+            if digits_info:
+                base_precision = digits_info[1]
+            elif min_digits_info:
+                base_precision = 6
+            else:
+                base_precision = 2
+            min_precision_limit = min_digits_info or 0
+            formatted_values = []
+            for val in field_value:
+                int_digits_count = len(str(int(abs(val))))
+                max_dec_digits = max(15 - int_digits_count, 0)
+                # Clamp precision between min limit and max allowed decimal digits
+                precision = max(min_precision_limit, min(base_precision, max_dec_digits))
+                formatted_values.append(formatLang(self.env, val, digits=precision))
+            return ' '.join(formatted_values)
         return ' '.join(str(value if value is not False and value is not None else '') for value in field_value)
 
     def _mail_get_timezone(self):
