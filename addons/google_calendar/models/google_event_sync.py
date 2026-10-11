@@ -79,7 +79,7 @@ class GoogleEventSync(models.AbstractModel):
             synced.write({self._active_name: False})
             to_unlink = self - synced
             return super(__class__, to_unlink).unlink()
-        elif synced:
+        elif synced and self._archive_synced_on_unlink():
             # Since we cannot delete such record (see method comment), we archive it.
             # Notice that archiving the record will delete the associated record on Google.
             # (archive calls write() which sets need sync to true when the active field changes)
@@ -87,6 +87,10 @@ class GoogleEventSync(models.AbstractModel):
             self.action_archive()
             return True
         return super().unlink()
+
+    def _archive_synced_on_unlink(self):
+        """Return whether synced records must be archived instead of deleted."""
+        return True
 
     def _handle_calendar_change(self, google_service, new_calendar_id):
         self.ensure_one()

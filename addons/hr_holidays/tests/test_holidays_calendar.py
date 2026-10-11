@@ -106,6 +106,29 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         self.assertEqual(leave_half.meeting_id.start, leave_half.date_from)
         self.assertEqual(leave_half.meeting_id.stop, leave_half.date_to)
 
+    def test_home_working_sets_location_without_calendar_event(self):
+        home_working_type = self.env.ref('hr_work_entry.generic_work_entry_type_home_working')
+        home_working_type.write({
+            'requires_allocation': False,
+            'leave_validation_type': 'no_validation',
+            'create_calendar_meeting': True,
+        })
+        test_date = date(2025, 4, 24)
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Home Working',
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': home_working_type.id,
+            'request_date_from': test_date,
+            'request_date_to': test_date,
+        })
+
+        self.assertFalse(leave.meeting_id)
+        self.assertEqual(self.env['hr.employee.location'].search([
+            ('employee_id', '=', self.employee_emp.id),
+            ('date', '=', test_date),
+        ]).work_location_id, self.env.ref('hr.home_work_location'))
+
     def test_overlapping_refused_time_off_approval(self):
         """
         Test that a refused time off request shows a warning message
