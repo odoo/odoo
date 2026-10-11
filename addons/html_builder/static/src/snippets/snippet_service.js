@@ -495,8 +495,14 @@ export class SnippetModel {
         if (snippetEl.classList.contains("s_custom_snippet") && snippetEl.dataset.customName) {
             return snippetEl.dataset.customName;
         }
-        if (snippetEl.dataset.name) {
-            return snippetEl.dataset.name;
+        const specificNameId = snippetEl.dataset.builderName;
+        if (specificNameId) {
+            const specificName = this.namesMaps.specific_name?.[specificNameId];
+            if (specificName) {
+                return specificName;
+            } else {
+                console.warn(`data-builder-name ${specificNameId} not found in specific_name map`);
+            }
         }
         const nameFromSnippet = this.getOriginalSnippet(snippetEl.dataset.snippet)?.title;
         if (nameFromSnippet) {
