@@ -219,6 +219,45 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
 
 @tagged('post_install', '-at_install')
+class TestUiMobileFilters(HttpCase):
+    """ The filters offcanvas only exists below the lg breakpoint. """
+
+    browser_size = '375x667'
+
+    def test_website_event_mobile_filters(self):
+        movie, language = self.env['event.tag.category'].create([
+            {'name': 'Movie'},
+            {'name': 'Language'},
+        ])
+        inception, avatar, __ = self.env['event.tag'].create([
+            {'name': 'Inception', 'category_id': movie.id},
+            {'name': 'Avatar', 'category_id': movie.id},
+            {'name': 'Matrix', 'category_id': movie.id},
+        ])
+        english, hindi, french = self.env['event.tag'].create([
+            {'name': 'English', 'category_id': language.id},
+            {'name': 'Hindi', 'category_id': language.id},
+            {'name': 'French', 'category_id': language.id},
+        ])
+        self.env['event.event'].create([
+            {
+                'name': name,
+                'website_published': True,
+                'date_begin': datetime.today() - timedelta(days=1),
+                'date_end': datetime.today() + timedelta(days=1),
+                'tag_ids': tags,
+            }
+            for name, tags in [
+                ('Inception in English', inception + english),
+                ('Inception in Hindi', inception + hindi),
+                ('Avatar in French', avatar + french),
+                ('Avatar in English', avatar + english),
+            ]
+        ])
+        self.start_tour('/event', 'website_event_mobile_filters', login='admin')
+
+
+@tagged('post_install', '-at_install')
 class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
 
     def setUp(self):

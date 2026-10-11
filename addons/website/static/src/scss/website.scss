@@ -2864,6 +2864,13 @@ input[value*="data-oe-translation-source-sha"] {
     }
 }
 
+// Keep the offcanvas and backdrop fixed so they overlay the page instead of
+// taking up space.
+.o_website_filters.offcanvas,
+.o_website_filters ~ .offcanvas-backdrop {
+    position: fixed;
+}
+
 // Notification
 .o_notification_manager .o_notification {
     --Notification__background-color: #{$body-bg};
