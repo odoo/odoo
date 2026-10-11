@@ -853,3 +853,68 @@ class TestSafeEvalRuntime(TransactionCase):
 
         with self.assertRaises(UnsafeFunctionError):
             safe_checker.check(deque().append)
+
+    def _count_context_checks(self, expr, context, mode='eval'):
+        from odoo.tools.safe_eval import runtime  # noqa: PLC0415
+        with patch.object(
+            runtime, 'assert_safe_context', wraps=runtime.assert_safe_context
+        ) as context_check:
+            result = safe_eval(expr, dict(context), mode=mode)
+        return result, context_check.call_count
+
+    def test_generator_eager_consumer(self):
+
+        def ctx(n):
+            return {
+                'results': {i: i for i in range(n)},
+                'keys': list(range(n))
+            }
+
+        genexp = "sum(results[k] for k in keys)"
+        listcomp = "sum([results[k] for k in keys])"
+
+        for n in (0, 1, 100):
+            expected = sum(range(n))
+            self.assertEqual(safe_eval(genexp, ctx(n), mode='eval'), expected)
+            self.assertEqual(safe_eval(listcomp, ctx(n), mode='eval'), expected)
+
+        _, nbr_context_check = self._count_context_checks(genexp, ctx(10))
+        self.assertEqual(nbr_context_check, 1)
+        _, nbr_context_check = self._count_context_checks(genexp, ctx(1000))
+        self.assertEqual(nbr_context_check, 1)
+
+    def test_generator_eager_consumers_results(self):
+        cases = [
+            ("sum(x for x in (1, 2, 3))", 6),
+            ("min(x for x in (3, 1, 2))", 1),
+            ("max(x for x in (3, 1, 2))", 3),
+            ("sorted(x for x in (3, 1, 2))", [1, 2, 3]),
+            ("list(x for x in (1, 2))", [1, 2]),
+            ("tuple(x + 1 for x in (1, 2))", (2, 3)),
+            ("set(x % 2 for x in (1, 2, 3))", {0, 1}),
+            ("dict((x, x * x) for x in (1, 2))", {1: 1, 2: 4}),
+        ]
+        for expr, expected in cases:
+            result, checks = self._count_context_checks(expr, {})
+            self.assertEqual(result, expected)
+            self.assertEqual(checks, 1)
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_generator_eager_consumers_preserves_safety(self):
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
+            safe_eval("sum(x for x in bad)", {'bad': [self.UnsafeClass]}, mode='eval')
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
+            safe_eval("list(UnsafeClass() for _ in [0])", self.unsafe_context, mode='eval')
+
+    @mute_logger('odoo.tools.safe_eval.runtime')
+    def test_check_generator_eager_consumer(self):
+        expr = "d['total'] = sum(side_effect() + d['foo'] for _ in [0, 1])"
+        d = {'foo': 1}
+
+        def side_effect():
+            d['bar'] = self.UnsafeClass
+            return 0
+
+        safe_ctx = {'d': d, 'side_effect': side_effect}
+        with self.assertRaisesRegex(ValueError, '^UnsafeClassError'):
+            safe_eval(dedent(expr), safe_ctx, mode='exec')
