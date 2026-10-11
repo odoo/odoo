@@ -19,13 +19,20 @@ export class SearchMessageResult extends Component {
     }
 
     get MESSAGE_FOUND() {
-        if (this.props.messageSearch.messages.length === 0) {
+        const count = this.props.messageSearch.messages.length;
+        if (count === 0) {
             return false;
         }
-        if (this.props.messageSearch.count === 1) {
+        if (count === 1) {
             return _t("1 message found");
         }
-        return _t("%s messages found", this.props.messageSearch.count);
+        if (this.props.messageSearch.hasMore) {
+            return _t(
+                "Showing the first %s messages found. Narrow your search or scroll to see more.",
+                count
+            );
+        }
+        return _t("%s messages found", count);
     }
 
     onLoadMoreVisible() {

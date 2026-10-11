@@ -1022,8 +1022,6 @@ class MailMessage(models.Model):
                 [("subtype_id.description", "ilike", search_term)],
             ])
             domain &= message_domain
-        if search_term or is_filtered:
-            res["count"] = self.search_count(domain)
         if around is not None:
             messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
             messages_after = self.search(domain & Domain('id', '>', around), limit=limit // 2, order='id ASC')
