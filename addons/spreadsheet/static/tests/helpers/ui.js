@@ -11,7 +11,7 @@ import { render } from "@web/owl2/utils";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
 const { useStoreProvider, ModelStore } = stores;
-const { ModelPlugin, NotificationPlugin } = owlPlugins;
+const { ModelPlugin, NotificationPlugin, IsSmallPlugin, SpreadsheetRectPlugin } = owlPlugins;
 
 class Parent extends Component {
     static template = xml`<Spreadsheet model="this.props.model"/>`;
@@ -34,7 +34,9 @@ class ComponentWithStores extends Component {
     setup() {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.model);
-        providePlugins([ModelPlugin, NotificationPlugin], { model: this.props.model });
+        providePlugins([ModelPlugin, NotificationPlugin, IsSmallPlugin, SpreadsheetRectPlugin], {
+            model: this.props.model,
+        });
         onMounted(() => {
             this.props.model.on("update", this, () => render(this, true));
             stores.on("store-updated", this, () => render(this, true));
