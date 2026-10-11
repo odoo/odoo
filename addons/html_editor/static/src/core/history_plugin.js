@@ -374,6 +374,11 @@ export class HistoryPlugin extends Plugin {
      */
     reverse(type) {
         this.trigger("on_will_invalidate_pending_changes_handlers");
+        this.trigger(
+            type === HISTORY_COMMIT_TYPES.UNDO
+                ? "on_history_will_undo_handlers"
+                : "on_history_will_redo_handlers"
+        );
         const commitsToReverse = this.getNextCommitsToReverse(type);
         if (!commitsToReverse.length) {
             return;
