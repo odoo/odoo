@@ -285,11 +285,8 @@ class HrEmployee(models.Model):
                                                             and e.hr_presence_state == "out_of_working_hour")
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in employees:
-            if employee.sudo().attendance_state == "checked_in" or not employee.user_id:
-                if not employee.user_id and not employee.sudo().is_in_contract:
-                    employee.hr_presence_state = "out_of_working_hour"
-                else:
-                    employee.hr_presence_state = "present"
+            if employee.sudo().attendance_state == "checked_in":
+                employee.hr_presence_state = "present"
             elif employee.sudo().attendance_state == "checked_out" and \
                  employee.hr_presence_state == "out_of_working_hour" and \
                  employee.id in working_now_list and \
