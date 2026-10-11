@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.PublicSelfMenu">
+    <Dropdown t-if="this.hasMenu" position="'bottom-end'" menuClass="'o-mail-PublicSelfMenu'">
+        <button class="o-mail-PublicSelfMenu-toggler btn d-flex align-items-center gap-1 px-1 py-0 me-1 rounded-3">
+            <t t-call="mail.PublicSelfMenu.self"/>
+        </button>
+        <t t-set-slot="content">
+            <div t-if="this.store.self_guest" class="px-3 py-1">
+                <label class="form-label small text-muted mb-1" for="o-mail-PublicSelfMenu-guestName">Your name</label>
+                <input
+                    id="o-mail-PublicSelfMenu-guestName"
+                    class="o-mail-PublicSelfMenu-guestName form-control form-control-sm"
+                    type="text"
+                    t-att-value="this.store.self_guest.name"
+                    t-on-change="(ev) => this.renameGuest(ev.target.value)"
+                    t-on-keydown="this.onKeydownGuestName"
+                />
+            </div>
+            <t t-if="this.store.publicColorScheme">
+                <div t-if="this.store.self_guest" role="separator" class="dropdown-divider"/>
+                <Dropdown menuClass="'o-mail-PublicSelfMenu-colorScheme'">
+                    <a href="#" class="o-mail-PublicSelfMenu-colorSchemeToggler">
+                        <t t-if="this.store.publicColorScheme === 'dark'"><i class="oi me-1" data-icon="dark_mode"/> Dark theme</t>
+                        <t t-else=""><i class="oi me-1" data-icon="light_mode"/> Light theme</t>
+                    </a>
+                    <t t-set-slot="content">
+                        <DropdownItem class="{ 'active': this.store.publicColorScheme === 'light' }" onSelected="() => this.setColorScheme('light')"><i class="oi me-1" data-icon="light_mode"/> Light theme</DropdownItem>
+                        <DropdownItem class="{ 'active': this.store.publicColorScheme === 'dark' }" onSelected="() => this.setColorScheme('dark')"><i class="oi me-1" data-icon="dark_mode"/> Dark theme</DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+        </t>
+    </Dropdown>
+    <div t-else="" class="d-flex align-items-center gap-1 px-1 me-1">
+        <t t-call="mail.PublicSelfMenu.self"/>
+    </div>
+</t>
+
+<t t-name="mail.PublicSelfMenu.self">
+    <img class="o-mail-DiscussContent-selfAvatar rounded-3 object-fit-cover flex-shrink-0" alt="Avatar" t-att-src="this.store.self.avatarUrl"/>
+    <span class="o-mail-PublicSelfMenu-name text-nowrap text-truncate" t-out="this.store.self.name"/>
+</t>
+
+</templates>

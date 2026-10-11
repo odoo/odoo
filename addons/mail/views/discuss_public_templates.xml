@@ -16,7 +16,13 @@
                         discuss_data: <t t-out="json.dumps(store_data)"/>
                     };
                 </script>
-                <t t-call-assets="mail.assets_public"/>
+                <t t-call-assets="mail.assets_public" t-css="false"/>
+                <t t-if="color_scheme == 'dark'">
+                    <t t-call-assets="mail.assets_public_dark" t-js="false"/>
+                </t>
+                <t t-else="">
+                    <t t-call-assets="mail.assets_public" t-js="false"/>
+                </t>
                 <t t-call-assets="mail.assets_discuss_public_test_tours" t-if="'tests' in debug or test_mode_enabled"/>
                 <style>
                     body {

@@ -131,9 +131,11 @@ class PublicPageController(http.Controller):
         return self._response_discuss_public_template(store, channel)
 
     def _response_discuss_public_template(self, store: Store, channel=None):
+        color_scheme = self._get_discuss_public_color_scheme()
         store.add_global_values(
             companyName=request.env.company.name,
             inPublicPage=True,
+            publicColorScheme=color_scheme,
         )
         if channel:
             store.add(channel, "_store_channel_fields")
@@ -144,7 +146,13 @@ class PublicPageController(http.Controller):
         return request.render(
             "mail.discuss_public_channel_template",
             {
+                "color_scheme": color_scheme or "light",
                 "session_info": request.env["ir.http"].session_info(),
                 "store_data": store.as_dict(),
             },
         )
+
+    def _get_discuss_public_color_scheme(self):
+        """Return the color scheme of the public page ("light" or "dark"), or False
+        when it cannot be chosen, the page then being always light."""
+        return False
