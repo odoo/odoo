@@ -35,3 +35,13 @@ test("Display tax include/exclude subtotal label", async () => {
     expect(total2.innerHTML).toBe("$&nbsp;17.85");
     expect(subtotal2.innerHTML).toBe("$&nbsp;15.00");
 });
+
+test("Negate the unit price from the numpad in price mode", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const orderSummary = await mountWithCleanup(OrderSummary, {});
+    const line = order.getSelectedOrderline();
+    store.numpadMode = "price";
+    await orderSummary.updateSelectedOrderline({ buffer: "-0", key: "-" });
+    expect(line.price_unit).toBe(-3);
+});
