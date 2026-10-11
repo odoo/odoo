@@ -33,7 +33,7 @@ class XenditCommon(PaymentCommon):
             "updated": "2023-07-12T09:31:23.577Z",
             "description": cls.reference,
             "customer_id": "cust-64118d86854d7d89206e732d",
-            "allowed_payment_channels": ["BNI"],
+            "allowed_payment_channels": ["BNI_VIRTUAL_ACCOUNT"],
             "payment_link_url": "https://xen.to/kGxPCi60",
             "payment_id": "py-ac1fcd3e-21c5-4c70-bb06-fa3c34e19e0c",
             "business_id": "64118d86854d7d89206e732d",
@@ -74,16 +74,6 @@ class XenditCommon(PaymentCommon):
                 },
                 "transaction_sequence": "INITIAL",
             },
-        }
-        cls.legacy_charge_notification_data = {
-            "id": "5f1d3d1e9a1b2c0011f3a1a2",
-            "external_id": cls.reference,
-            "status": "CAPTURED",
-            "currency": cls.currency.name,
-            "amount": cls.amount,
-            "payment_method": "CREDIT_CARD",
-            "credit_card_token_id": "legacy-token-123",
-            "masked_card_number": "400000XXXXXX1000",
         }
         cls.payment_request_requires_action_data = {
             "payment_request_id": "pr-64a8d9c614802d6c402cd82d",

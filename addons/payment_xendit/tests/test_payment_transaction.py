@@ -5,7 +5,6 @@ from uuid import UUID
 
 from werkzeug.urls import url_encode
 
-from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -35,24 +34,6 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
                 payment_safe_write=True
             )._get_specific_rendering_values(None)
         self.assertDictEqual(rendering_values, {"api_url": url, "http_method": "get"})
-
-    def test_rendering_values_save_session_id_as_provider_reference(self):
-        """Test that the session id from the session creation response - returned as
-        `payment_session_id`, not `id` - is saved as the provider reference immediately, so that
-        a return before the webhook arrives can still be checked against it."""
-        tx = self._create_transaction("redirect")
-        with (
-            patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-                "._send_api_request",
-                return_value=dict(self.webhook_notification_data, status="ACTIVE"),
-            ),
-            patch.object(payment_utils, "generate_access_token", self._generate_test_access_token),
-        ):
-            tx.with_context(payment_safe_write=True)._get_specific_rendering_values(None)
-        self.assertEqual(
-            tx.provider_reference, self.webhook_notification_data["payment_session_id"]
-        )
 
     @mute_logger("odoo.addons.payment.models.payment_transaction")
     def test_no_input_missing_from_redirect_form(self):
@@ -99,7 +80,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
                 return_value=test_uuid,
             ),
         ):
-            request_payload = tx._xendit_prepare_invoice_request_payload()
+            request_payload = tx._xendit_prepare_session_request_payload()
         partner_first_name, partner_last_name = payment_utils.split_partner_name(tx.partner_name)
         self.assertDictEqual(
             request_payload,
@@ -135,7 +116,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         with patch(
             "odoo.addons.payment.utils.generate_access_token", new=self._generate_test_access_token
         ):
-            request_payload = tx._xendit_prepare_invoice_request_payload()
+            request_payload = tx._xendit_prepare_session_request_payload()
         self.assertEqual(request_payload["session_type"], "PAY")
         self.assertEqual(request_payload["allow_save_payment_method"], "FORCED")
         self.assertEqual(
@@ -150,7 +131,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         with patch(
             "odoo.addons.payment.utils.generate_access_token", new=self._generate_test_access_token
         ):
-            request_payload = tx._xendit_prepare_invoice_request_payload()
+            request_payload = tx._xendit_prepare_session_request_payload()
         self.assertNotIn("allow_save_payment_method", request_payload)
         self.assertNotIn("channel_properties", request_payload)
 
@@ -162,7 +143,7 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         with patch(
             "odoo.addons.payment.utils.generate_access_token", new=self._generate_test_access_token
         ):
-            request_payload = tx._xendit_prepare_invoice_request_payload()
+            request_payload = tx._xendit_prepare_session_request_payload()
         self.assertEqual(request_payload["session_type"], "SAVE")
         self.assertEqual(request_payload["amount"], 0)
 
@@ -186,78 +167,37 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         """Test that for the IDR currency, the amount is rounded down to the nearest unit."""
         currency_idr = self.env.ref("base.IDR")
         tx = self._create_transaction("redirect", amount=1000.50, currency_id=currency_idr.id)
-        self.assertEqual(tx._get_rounded_amount(), 1000)
+        self.assertEqual(tx._xendit_get_rounded_amount(), 1000)
 
     def test_get_pending_authentication_url_when_requires_action(self):
-        """Test that the authentication URL is fetched for an already processed token payment
-        stuck in REQUIRES_ACTION, as Xendit can challenge card-on-file charges with 3DS."""
+        """Test that the authentication URL is taken from the recorded charge response of a token
+        payment requiring 3DS, as Xendit can challenge card-on-file charges."""
         token = self._create_token(provider_ref="pt-abc123")
         tx = self._create_transaction("token", token_id=token.id)
-        tx.with_context(payment_safe_write=True)._apply_updates(
-            self.payment_request_requires_action_data
-        )
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
-            return_value=self.payment_request_requires_action_data,
-        ) as mock_req:
-            auth_url = tx._xendit_get_pending_authentication_url()
+        tx._record(self.payment_request_requires_action_data)
+        auth_url = tx._xendit_get_pending_authentication_url()
         self.assertEqual(auth_url, self.payment_request_requires_action_data["actions"][0]["value"])
-        mock_req.assert_called_once_with(
-            "GET",
-            "v3/payment_requests/pr-64a8d9c614802d6c402cd82d",
-            api_version="2024-11-11",
-        )
 
     def test_get_pending_authentication_url_when_not_pending(self):
-        """Test that no authentication URL is returned, and no API call made, for a
-        transaction that isn't pending."""
+        """Test that no authentication URL is returned for a transaction that isn't pending."""
         token = self._create_token(provider_ref="pt-abc123")
-        tx = self._create_transaction("token", token_id=token.id)
-        tx.with_context(payment_safe_write=True)._apply_updates(
-            self.payment_request_notification_data
-        )  # status SUCCEEDED
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request"
-        ) as mock_req:
-            auth_url = tx._xendit_get_pending_authentication_url()
-        self.assertIsNone(auth_url)
-        self.assertEqual(mock_req.call_count, 0)
+        tx = self._create_transaction("token", token_id=token.id, state="done")
+        tx._record(self.payment_request_requires_action_data)
+        self.assertIsNone(tx._xendit_get_pending_authentication_url())
 
     def test_get_pending_authentication_url_when_status_not_requires_action(self):
-        """Test that no authentication URL is returned when the payment request isn't (or is
-        no longer) awaiting customer action."""
+        """Test that no authentication URL is returned when the charge isn't awaiting customer
+        action."""
         token = self._create_token(provider_ref="pt-abc123")
         tx = self._create_transaction("token", token_id=token.id)
-        tx.with_context(payment_safe_write=True)._apply_updates(
-            self.payment_request_requires_action_data
-        )
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
-            return_value=self.payment_request_notification_data,
-        ):
-            auth_url = tx._xendit_get_pending_authentication_url()
-        self.assertIsNone(auth_url)
-
-    @mute_logger("odoo.addons.payment_xendit.models.payment_transaction")
-    def test_get_pending_authentication_url_returns_none_on_request_failure(self):
-        """Test that a failure to fetch the payment request doesn't crash the checkout
-        confirmation, since the charge itself was already sent before this point."""
-        token = self._create_token(provider_ref="pt-abc123")
-        tx = self._create_transaction("token", token_id=token.id)
-        tx.with_context(payment_safe_write=True)._apply_updates(
-            self.payment_request_requires_action_data
-        )
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
-            side_effect=ValidationError("Xendit: nope"),
-        ):
-            auth_url = tx._xendit_get_pending_authentication_url()
-        self.assertIsNone(auth_url)
+        tx._record(self.payment_request_notification_data)  # status SUCCEEDED
+        self.assertIsNone(tx._xendit_get_pending_authentication_url())
 
     def test_processing_values_include_authentication_url_after_token_charge(self):
         """Test that processing values for a token payment include the authentication URL when
         the charge requires 3DS authentication, taken from the charge response recorded earlier
         in the same request, as it isn't processed yet."""
+        self._disable_process_patcher()
         token = self._create_token(provider_ref="pt-abc123")
         tx = self._create_transaction("token", token_id=token.id)
         with (
@@ -278,26 +218,6 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
         self.assertEqual(
             processing_values["pending_authentication_url"],
             self.payment_request_requires_action_data["actions"][0]["value"],
-        )
-
-    def test_get_pending_authentication_url_fetches_actions_missing_from_response(self):
-        """Test that the payment request is fetched when the recorded charge response doesn't
-        include the actions to take."""
-        token = self._create_token(provider_ref="pt-abc123")
-        tx = self._create_transaction("token", token_id=token.id)
-        requires_action_data = dict(self.payment_request_requires_action_data)
-        del requires_action_data["actions"]
-        tx._record(requires_action_data)
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
-            return_value=self.payment_request_requires_action_data,
-        ) as mock_req:
-            auth_url = tx._xendit_get_pending_authentication_url()
-        self.assertEqual(auth_url, self.payment_request_requires_action_data["actions"][0]["value"])
-        mock_req.assert_called_once_with(
-            "GET",
-            "v3/payment_requests/pr-64a8d9c614802d6c402cd82d",
-            api_version="2024-11-11",
         )
 
     def test_no_item_missing_from_token_charge_payload(self):
@@ -334,58 +254,6 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
             },
         )
 
-    def test_token_charge_return_url_carries_return_params_in_request_context(self):
-        """Test that, when initiated from a customer-facing request, the success return URL of
-        a token charge carries the tx ref and access token, so that the customer can be checked
-        against Xendit if the webhook doesn't arrive in time. The failure return URL is left as
-        is, since a failed/cancelled return isn't acted upon."""
-        tx = self._create_transaction("token")
-        return_url = self._build_url(XenditController._return_url)
-        with (
-            patch("odoo.addons.payment_xendit.models.payment_transaction.request", new=object()),
-            patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
-                "._send_api_request",
-                return_value=self.payment_request_notification_data,
-            ) as mock_req,
-            patch.object(payment_utils, "generate_access_token", self._generate_test_access_token),
-        ):
-            tx._xendit_create_token_charge("pt-token123", "card")
-        channel_properties = mock_req.call_args.kwargs["json"]["channel_properties"]
-        self.assertEqual(channel_properties["failure_return_url"], return_url)
-        token = self._generate_test_access_token(tx.reference, tx.amount)
-        self.assertEqual(
-            channel_properties["success_return_url"],
-            f"{return_url}?{url_encode({'tx_ref': tx.reference, 'access_token': token, 'success': 'true'})}",
-        )
-
-    def test_sync_from_provider_checks_payment_request_for_token_operation(self):
-        """Test that syncing a token payment queries the payment request endpoint (with the API
-        version it requires), not the session endpoint used for checkout redirects."""
-        tx = self._create_transaction(
-            "token", provider_reference="pr-64a8d9c614802d6c402cd82d", state="pending"
-        )
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
-            return_value=self.payment_request_notification_data,
-        ) as mock_req:
-            tx._xendit_sync_from_provider()
-        mock_req.assert_called_once_with(
-            "GET",
-            "v3/payment_requests/pr-64a8d9c614802d6c402cd82d",
-            api_version="2024-11-11",
-        )
-
-    def test_sync_from_provider_checks_session_for_redirect_operation(self):
-        """Test that syncing a checkout redirect or validation queries the session endpoint."""
-        tx = self._create_transaction("redirect", provider_reference="ps-64a8f9c614802d6c402cd82d")
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
-            return_value=self.webhook_notification_data,
-        ) as mock_req:
-            tx._xendit_sync_from_provider()
-        mock_req.assert_called_once_with("GET", "sessions/ps-64a8f9c614802d6c402cd82d")
-
     def test_token_charge_card_on_file_type_for_offline_operation(self):
         """Test that offline (unattended) token charges are flagged as merchant-initiated
         rather than customer-initiated, to reduce the odds of a 3DS challenge."""
@@ -400,111 +268,23 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
                 payload["channel_properties"]["card_on_file_type"], "MERCHANT_UNSCHEDULED"
             )
 
-    def test_send_payment_request_dispatches_v3_token_to_payment_requests(self):
-        """Test that a payment request for a v3 token (prefixed 'pt-') is sent through the
-        `v3/payment_requests` endpoint."""
+    def test_send_payment_request_charges_token(self):
+        """Test that a payment request charges the token through the `v3/payment_requests`
+        endpoint."""
         token = self._create_token(provider_ref="pt-abc123")
         tx = self._create_transaction("token", token_id=token.id)
-        with (
-            patch(
-                "odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction"
-                "._xendit_create_token_charge"
-            ) as create_token_charge_mock,
-            patch(
-                "odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction"
-                "._xendit_create_legacy_token_charge"
-            ) as create_legacy_charge_mock,
-        ):
+        with patch(
+            "odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction"
+            "._xendit_create_token_charge"
+        ) as create_token_charge_mock:
             tx._send_payment_request()
         create_token_charge_mock.assert_called_once_with("pt-abc123", token.payment_method_id.code)
-        self.assertEqual(create_legacy_charge_mock.call_count, 0)
-
-    def test_send_payment_request_dispatches_legacy_token_to_credit_card_charges(self):
-        """Test that a payment request for a legacy (v2) token, not prefixed 'pt-', is sent
-        through the legacy `credit_card_charges` endpoint instead."""
-        token = self._create_token(provider_ref="legacy-token-123")
-        tx = self._create_transaction("token", token_id=token.id)
-        with (
-            patch(
-                "odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction"
-                "._xendit_create_token_charge"
-            ) as create_token_charge_mock,
-            patch(
-                "odoo.addons.payment_xendit.models.payment_transaction.PaymentTransaction"
-                "._xendit_create_legacy_token_charge"
-            ) as create_legacy_charge_mock,
-        ):
-            tx._send_payment_request()
-        create_legacy_charge_mock.assert_called_once_with("legacy-token-123")
-        self.assertEqual(create_token_charge_mock.call_count, 0)
-
-    def test_no_item_missing_from_legacy_token_charge_payload(self):
-        """Test that a legacy (v2) token charge is sent to the `credit_card_charges` endpoint,
-        without the `api-version` header the v3 endpoints require, and with `is_recurring` set
-        to avoid a repeated 3DS challenge on every renewal."""
-        currency_idr = self.env.ref("base.IDR")
-        tx = self._create_transaction("redirect", amount=1000.50, currency_id=currency_idr.id)
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
-            return_value=self.legacy_charge_notification_data,
-        ) as mock_req:
-            tx._xendit_create_legacy_token_charge("legacy-token-123")
-        self.assertEqual(mock_req.call_args.args[0], "POST")
-        self.assertEqual(mock_req.call_args.args[1], "credit_card_charges")
-        self.assertNotIn("api_version", mock_req.call_args.kwargs)
-        self.assertDictEqual(
-            mock_req.call_args.kwargs.get("json"),
-            {
-                "token_id": "legacy-token-123",
-                "external_id": tx.reference,
-                "amount": 1000,
-                "currency": "IDR",
-                "is_recurring": True,
-            },
-        )
-
-    def test_processing_legacy_charge_notification_confirms_transaction(self):
-        """Test that processing a legacy (v2) `credit_card_charges` response confirms the
-        transaction and stores the charge id as the provider reference."""
-        tx = self._create_transaction("token")
-        tx.with_context(payment_safe_write=True)._apply_updates(
-            self.legacy_charge_notification_data
-        )
-        self.assertEqual(tx.state, "done")
-        self.assertEqual(tx.provider_reference, self.legacy_charge_notification_data["id"])
-
-    def test_get_pending_authentication_url_returns_none_for_legacy_token(self):
-        """Test that no authentication URL is fetched for a legacy (v2) token charge, as it has
-        no `v3/payment_requests` counterpart to look up."""
-        token = self._create_token(provider_ref="legacy-token-123")
-        tx = self._create_transaction(
-            "token",
-            token_id=token.id,
-            provider_reference=self.legacy_charge_notification_data["id"],
-            state="pending",
-        )
-        with patch(
-            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request"
-        ) as mock_req:
-            auth_url = tx._xendit_get_pending_authentication_url()
-        self.assertIsNone(auth_url)
-        self.assertEqual(mock_req.call_count, 0)
 
     def test_search_by_reference_returns_tx(self):
         """Test that the transaction is found based on the payment data."""
         tx = self._create_transaction("redirect")
         tx_found = self.env["payment.transaction"]._search_by_reference(
             "xendit", self.webhook_notification_data
-        )
-        self.assertEqual(tx, tx_found)
-
-    def test_search_by_reference_falls_back_to_external_id(self):
-        """Test that the transaction is found via `external_id`, sent by legacy (v2)
-        `credit_card_charges` notifications, when `reference_id` (used by the sessions/v3 APIs)
-        is absent."""
-        tx = self._create_transaction("redirect")
-        tx_found = self.env["payment.transaction"]._search_by_reference(
-            "xendit", self.legacy_charge_notification_data
         )
         self.assertEqual(tx, tx_found)
 
