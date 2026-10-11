@@ -199,7 +199,7 @@ export class ColorPlugin extends Plugin {
                 .getTargetedNodes()
                 .filter(
                     (node) =>
-                        this.dependencies.selection.isNodeEditable(node) &&
+                        (!isTextNode(node) || this.dependencies.selection.isNodeEditable(node)) &&
                         node.nodeName !== "T" &&
                         this.dependencies.selection.areNodeContentsFullySelected(node)
                 );
@@ -313,6 +313,8 @@ export class ColorPlugin extends Plugin {
                 .filter(Boolean)
         );
 
+        const nodesToColor = [...selectedNodes, ...targetedFieldNodes];
+
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
                 let font =
@@ -421,9 +423,21 @@ export class ColorPlugin extends Plugin {
                         font = [];
                     }
                 } else if (
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
                     (node.nodeType === Node.TEXT_NODE &&
                         (isVisibleTextNode(node) || isZWS(node))) ||
                     (node.nodeName === "BR" && isEmptyBlock(node.parentNode)) ||
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+                    (node.nodeType === Node.TEXT_NODE && !isWhitespace(node) && !isZwnbsp(node)) ||
+                    (node.nodeName === "BR" && isEmptyBlock(node.parentNode)) ||
+=======
+                    (color !== "" &&
+                        ((node.nodeType === Node.TEXT_NODE &&
+                            !isWhitespace(node) &&
+                            !isZwnbsp(node)) ||
+                            (node.nodeName === "BR" && isEmptyBlock(node.parentNode)) ||
+                            !this.dependencies.selection.isNodeEditable(node))) ||
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
                     (node.nodeType === Node.ELEMENT_NODE &&
                         ["inline", "inline-block"].includes(getComputedStyle(node).display) &&
                         !isWhitespace(node.textContent) &&
@@ -461,21 +475,23 @@ export class ColorPlugin extends Plugin {
                         fillEmpty(font);
                     }
                 } else {
-                    font = []; // Ignore non-text or invisible text nodes.
+                    // Ignore non-text or invisible text nodes.
+                    font =
+                        node.nodeType === Node.ELEMENT_NODE &&
+                        node.matches(PROTECTED_QWEB_SELECTOR) &&
+                        this.dependencies.selection.isNodeEditable(node)
+                            ? node
+                            : [];
                 }
                 return font;
             });
 
-        for (const fieldNode of targetedFieldNodes) {
-            this.colorElement(fieldNode, color, mode);
-        }
-
-        let fonts = getFonts(selectedNodes);
+        let fonts = getFonts(nodesToColor);
         // Dirty fix as the previous call could have unconnected elements
         // because of the `splitAroundUntil`. Another call should provide he
         // correct list of fonts.
         if (!fonts.every((font) => font.isConnected)) {
-            fonts = getFonts(selectedNodes);
+            fonts = getFonts(nodesToColor);
         }
 
         // Color the selected <font>s and remove uncolored fonts.

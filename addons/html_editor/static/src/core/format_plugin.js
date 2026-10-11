@@ -28,9 +28,27 @@ import {
     findFurthest,
     selectElements,
 } from "../utils/dom_traversal";
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
 import { formatsSpecs, FORMATTABLE_TAGS } from "../utils/formatting";
 import { boundariesIn, leftPos, rightPos } from "../utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
+import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
+import { prepareUpdate } from "@html_editor/utils/dom_state";
+import { _t } from "@web/core/l10n/translation";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { withSequence } from "@html_editor/utils/resource";
+import { isFakeLineBreak } from "../utils/dom_state";
+=======
+import { FONT_SIZE_CLASSES, formatsSpecs } from "../utils/formatting";
+import { boundariesIn, boundariesOut, leftPos, rightPos } from "../utils/position";
+import { prepareUpdate } from "@html_editor/utils/dom_state";
+import { _t } from "@web/core/l10n/translation";
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
+import { withSequence } from "@html_editor/utils/resource";
+import { isFakeLineBreak } from "../utils/dom_state";
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -340,9 +358,16 @@ export class FormatPlugin extends Plugin {
             }
         }
 
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
         const cursor = this.dependencies.selection.preserveSelection();
         const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+=======
+        const cursor = this.dependencies.selection.preserveSelection();
+
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
         const selectedTextNodes = /** @type { Text[] } **/ (
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
             this.dependencies.selection
                 .getTargetedNodes()
                 .filter(
@@ -355,6 +380,44 @@ export class FormatPlugin extends Plugin {
                                     previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
                         isContentEditable(n)
                 )
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+            this.dependencies.selection
+                .getTargetedNodes()
+                .filter(
+                    (n) =>
+                        this.dependencies.selection.areNodeContentsFullySelected(n) &&
+                        ((isTextNode(n) &&
+                            (isVisibleTextNode(n) ||
+                                isZWS(n) ||
+                                (/^\n+$/.test(n.nodeValue) && !applyStyle))) ||
+                            (n.nodeName === "BR" &&
+                                (isFakeLineBreak(n) ||
+                                    previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
+                        isContentEditable(n)
+                )
+=======
+            this.dependencies.selection.getTargetedNodes().filter((n) => {
+                if (!this.dependencies.selection.areNodeContentsFullySelected(n)) {
+                    return false;
+                }
+                if (n.nodeName === "T") {
+                    return true;
+                }
+                if (!isContentEditable(n)) {
+                    return false;
+                }
+
+                const isRelevantTextNode =
+                    isTextNode(n) &&
+                    (isVisibleTextNode(n) ||
+                        isZWS(n) ||
+                        (/^\n+$/.test(n.nodeValue) && !applyStyle));
+                const isFakeBr = n.nodeName === "BR" && isFakeLineBreak(n);
+                const followsBr = previousLeaf(n, closestBlock(n))?.nodeName === "BR";
+
+                return isRelevantTextNode || isFakeBr || followsBr;
+            })
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
         );
         const unformattedTextNodes = selectedTextNodes.filter((n) => {
             if (!(this.checkPredicates("is_formattable_node_predicates", n) ?? true)) {
@@ -371,11 +434,16 @@ export class FormatPlugin extends Plugin {
             return true;
         });
 
-        const tagetedFieldNodes = new Set(
+        const targetedFieldNodes = new Set(
             this.dependencies.selection
                 .getTargetedNodes()
                 .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
-                .filter((node) => node && this.dependencies.selection.isNodeEditable(node))
+                .filter(
+                    (node) =>
+                        node &&
+                        this.dependencies.selection.isNodeEditable(node) &&
+                        node.nodeName !== "T"
+                )
         );
         const formatSpec = formatsSpecs[formatName];
         for (const node of unformattedTextNodes) {
@@ -405,6 +473,7 @@ export class FormatPlugin extends Plugin {
                 inlineAncestors.push(parentNode);
             }
 
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
             while (parentNode && !isBlock(parentNode)) {
                 const isNodeUnsplittable = this.dependencies.split.isUnsplittable(parentNode);
                 const isClassSplittable =
@@ -427,7 +496,16 @@ export class FormatPlugin extends Plugin {
                             currentNode = newLastAncestorInlineFormat;
                         }
                     }
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+                if (isUselessZws) {
+                    unwrapContents(parentNode);
+=======
+                if (isUselessZws) {
+                    cursor.update(callbacksForCursorUpdate.unwrap(parentNode));
+                    unwrapContents(parentNode);
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
                 } else {
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
                     if (["setFontSizeClassName", "fontSize"].includes(formatName) && applyStyle) {
                         removeClass(parentNode, "o_default_font_size");
                     }
@@ -439,6 +517,37 @@ export class FormatPlugin extends Plugin {
                         currentNode = currentNode.parentElement;
                     } else {
                         break;
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+                    const cursors = this.dependencies.selection.preserveSelection();
+                    this.dispatchTo("clean_handlers", parentNode);
+                    // Remove empty text nodes (replaced FEFFs) before splitting,
+                    // to prevent creating empty elements in the DOM.
+                    removeEmptyTextNodes(parentNode, cursors);
+                    cursors.restore();
+                    const newLastAncestorInlineFormat = this.dependencies.split.splitAroundUntil(
+                        currentNode,
+                        parentNode
+                    );
+                    removeFormat(newLastAncestorInlineFormat, formatSpec);
+                    if (newLastAncestorInlineFormat.isConnected) {
+                        inlineAncestors.push(newLastAncestorInlineFormat);
+                        currentNode = newLastAncestorInlineFormat;
+=======
+                    const cursors = this.dependencies.selection.preserveSelection();
+                    this.dispatchTo("clean_handlers", parentNode);
+                    // Remove empty text nodes (replaced FEFFs) before splitting,
+                    // to prevent creating empty elements in the DOM.
+                    removeEmptyTextNodes(parentNode, cursors);
+                    cursors.restore();
+                    const newLastAncestorInlineFormat = this.dependencies.split.splitAroundUntil(
+                        currentNode,
+                        parentNode
+                    );
+                    removeFormat(newLastAncestorInlineFormat, formatSpec, cursor);
+                    if (newLastAncestorInlineFormat.isConnected) {
+                        inlineAncestors.push(newLastAncestorInlineFormat);
+                        currentNode = newLastAncestorInlineFormat;
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
                     }
                 }
                 parentNode = currentNode.parentElement;
@@ -446,6 +555,7 @@ export class FormatPlugin extends Plugin {
 
             const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
             if (firstBlockOrClassHasFormat && !applyStyle) {
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
                 const isParentNodeBlockAndCompletelySelected =
                     isBlock(parentNode) &&
                     this.dependencies.selection.areNodeContentsFullySelected(parentNode);
@@ -464,6 +574,15 @@ export class FormatPlugin extends Plugin {
                 (!firstBlockOrClassHasFormat || parentNode.nodeName === "LI") &&
                 applyStyle
             ) {
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+                formatSpec.addNeutralStyle &&
+                    formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors));
+            } else if (!firstBlockOrClassHasFormat && applyStyle) {
+=======
+                formatSpec.addNeutralStyle &&
+                    formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors, cursor));
+            } else if (!firstBlockOrClassHasFormat && applyStyle) {
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
                 const tag = formatSpec.tagName && this.document.createElement(formatSpec.tagName);
                 if (tag) {
                     cursor.update(callbacksForCursorUpdate.after(node, tag));
@@ -472,23 +591,48 @@ export class FormatPlugin extends Plugin {
                     tag.append(node);
 
                     if (!formatSpec.isFormatted(tag, formatProps)) {
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
                         cursor.remapNode(tag, node);
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+=======
+                        cursor.update(callbacksForCursorUpdate.after(tag, node));
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
                         tag.after(node);
+                        cursor.update(callbacksForCursorUpdate.remove(tag));
                         tag.remove();
                         formatSpec.addStyle(
                             getOrCreateSpan(node, inlineAncestors, cursor),
                             formatProps
                         );
                     }
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
                 } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
                     formatSpec.addStyle(
                         getOrCreateSpan(node, inlineAncestors, cursor),
                         formatProps
                     );
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+                } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
+                    formatSpec.addStyle(getOrCreateSpan(node, inlineAncestors), formatProps);
+=======
+                } else if (formatName !== "fontSize" || formatProps.size) {
+                    formatSpec.addStyle(
+                        getOrCreateSpan(node, inlineAncestors, cursor),
+                        formatProps
+                    );
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
                 }
             }
         }
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
         for (const targetedFieldNode of tagetedFieldNodes) {
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+
+        for (const targetedFieldNode of tagetedFieldNodes) {
+=======
+
+        for (const targetedFieldNode of targetedFieldNodes) {
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
             if (applyStyle) {
                 formatSpec.addStyle(targetedFieldNode, formatProps);
             } else {
@@ -515,14 +659,68 @@ export class FormatPlugin extends Plugin {
         }
         cursor.restore();
         if (
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
             unformattedTextNodes.length === 1 &&
             unformattedTextNodes[0] &&
             unformattedTextNodes[0].textContent === "\u200B"
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+            selectedTextNodes.length === 1 &&
+            selectedTextNodes[0] &&
+            selectedTextNodes[0].textContent === "\u200B"
+=======
+            textNodesToFormat.length === 1 &&
+            textNodesToFormat[0] &&
+            textNodesToFormat[0].textContent === "\u200B"
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
         ) {
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
             this.dependencies.selection.setCursorEnd(unformattedTextNodes[0]);
             return !!tagetedFieldNodes.size;
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+            // We set the cursor at the end of the selected ZWS text node, to
+            // avoid an issue on ios safari where the selection is collapsed,
+            // and set the format as bold/italic, the cursor is not properly
+            // updated. Even though the selection is properly set, safari seems
+            // to force the cursor to stay at the old position at rendering
+            // if there's no node between the old and new cursor position,
+            // e.g. <div>[]<p>\u200B</p></div> -> <div><p>[]\u200B</p></div>.
+            this.dependencies.selection.setCursorEnd(selectedTextNodes[0]);
+        } else if (selectedTextNodes.length) {
+            const firstNode = selectedTextNodes[0];
+            const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
+            let newSelection;
+            if (selection.direction === DIRECTIONS.RIGHT) {
+                newSelection = {
+                    anchorNode: firstNode,
+                    anchorOffset: 0,
+                    focusNode: lastNode,
+                    focusOffset: lastNode.length,
+                };
+            } else {
+                newSelection = {
+                    anchorNode: lastNode,
+                    anchorOffset: lastNode.length,
+                    focusNode: firstNode,
+                    focusOffset: 0,
+                };
+            }
+            this.dependencies.selection.setSelection(newSelection, { normalize: false });
+            return true;
         }
+        if (tagetedFieldNodes.size > 0) {
+            return true;
+=======
+            this.dependencies.selection.setCursorEnd(textNodesToFormat[0]);
+            return !!targetedFieldNodes.size;
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
+        }
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
         return true;
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+=======
+
+        return true;
+>>>>>>> 070fc573b131e6ef1c05aeb4581ab140bdeda2dc
     }
 
     normalize(root) {
