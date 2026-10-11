@@ -14,11 +14,23 @@ class SaleOrder(models.Model):
         """ Synchronize partner from SO to registrations. This is done notably
         in website_sale controller shop/address that updates customer, but not
         only. """
+        if vals.get('signature'):
+            self._verify_event_seats_availability()
         result = super(SaleOrder, self).write(vals)
         if any(line.service_tracking == 'event' for line in self.order_line) and vals.get('partner_id'):
             registrations_toupdate = self.env['event.registration'].sudo().search([('sale_order_id', 'in', self.ids)])
             registrations_toupdate.write({'partner_id': vals['partner_id']})
         return result
+
+    def _verify_event_seats_availability(self):
+        for so in self:
+            for event, lines in so.order_line.filtered(
+                lambda l: l.service_tracking == 'event' and l.event_id
+            ).grouped('event_id').items():
+                event._verify_seats_availability([
+                    (line.event_slot_id, line.event_ticket_id, int(line.product_uom_qty) - len(line.registration_ids.filtered(lambda r: r.state != 'cancel')))
+                    for line in lines
+                ])
 
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
@@ -30,6 +42,9 @@ class SaleOrder(models.Model):
             if so_lines_missing_events:
                 so_lines_descriptions = "".join(f"\n- {so_line_description.name}" for so_line_description in so_lines_missing_events)
                 raise ValidationError(_("Please make sure all your event related lines are configured before confirming this order:%s", so_lines_descriptions))
+
+            so._verify_event_seats_availability()
+
             # Initialize registrations
             so.order_line._init_registrations()
             if len(self) == 1:
