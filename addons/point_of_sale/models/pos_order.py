@@ -1434,10 +1434,10 @@ class PosOrder(models.Model):
         self.email = email
         mail_template_id = 'point_of_sale.email_template_pos_receipt'
         mail_template = self.env.ref(mail_template_id, raise_if_not_found=False)
-        ticket_image = self.order_receipt_generate_image()
+        ticket_image = self.with_context(force_no_printer=True).order_receipt_generate_image()
         basic_image = None
         if self.config_id.basic_receipt:
-            basic_image = self.order_receipt_generate_image(True)
+            basic_image = self.with_context(force_no_printer=True).order_receipt_generate_image(True)
         if not mail_template:
             raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
         mail_template.send_mail(

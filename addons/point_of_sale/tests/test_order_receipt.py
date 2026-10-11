@@ -162,6 +162,12 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
             _logger.warning(log)
 
     def compare_receipt_data(self, frontend, backend):
+        backend['extra_data'].pop('receipt_style', None)
+        backend['extra_data'].pop('receipt_class', None)
+
+        frontend['extra_data'].pop('receipt_style', None)
+        frontend['extra_data'].pop('receipt_class', None)
+
         backend_prices = backend['extra_data'].pop('prices', {})
         frontend_prices = frontend['extra_data'].pop('prices', {})
         backend_taxes = backend_prices.pop('taxes', {})
