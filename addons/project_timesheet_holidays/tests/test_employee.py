@@ -12,6 +12,7 @@ class TestEmployee(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.company = cls.env.ref('base.test_company')
+        cls.company.country_id = cls.env.ref('base.us')
         cls.global_leave = cls.env['resource.calendar.leaves'].create({
             'name': 'Test Global Leave',
             'date_from': '2020-01-01 00:00:00',
@@ -159,6 +160,7 @@ class TestEmployee(TransactionCase):
             'leave_validation_type': 'both',
             'requires_allocation': False,
             'unit_of_measure': 'day',
+            'country_id': self.company.country_id.id,
         })
         leave = self.env['hr.leave'].create({
             'employee_id': employee.id,

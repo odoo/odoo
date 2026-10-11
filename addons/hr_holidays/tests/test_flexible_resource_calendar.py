@@ -9,6 +9,7 @@ class TestFlexibleResourceCalendar(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.calendar_flex, cls.calendar_fully_flex = cls.env['resource.calendar'].create([{
             'name': 'Flexible Calendar',
             'calendar_type': 'undefined',
