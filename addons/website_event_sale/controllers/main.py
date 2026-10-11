@@ -5,7 +5,7 @@ from collections import defaultdict
 from odoo.http import request, route
 from odoo.tools import float_is_zero
 
-from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo.addons.portal.controllers.address import Address
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 
 
@@ -88,7 +88,7 @@ class WebsiteEventSaleController(WebsiteEventController):
                 return request.redirect("/shop/confirmation")
             elif order_sudo:
                 if order_sudo._is_anonymous_cart():
-                    booked_by_partner, feedback_dict = CustomerPortal()._create_or_update_address(
+                    booked_by_partner, feedback_dict = Address()._create_or_update_address(
                         request.env['res.partner'].sudo(),
                         order_sudo=order_sudo,
                         verify_address_values=False,
