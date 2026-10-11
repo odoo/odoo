@@ -32,12 +32,12 @@ class AccountEdiXmlUblGr(models.AbstractModel):
         invoice = vals['invoice']
         document_node.update({
             # BT-1: Invoice number with format: "VAT|Issue date|Installation sn.|Invoice Type|Series|eINV Issue sn."
-            'cbc:ID': {'_text': self._format_greek_invoice_number(invoice)},
+            'cbc:ID': self._format_greek_invoice_number(invoice),
         })
         # BT-10: Buyer reference - Contracting authority name
         buyer = invoice.partner_id.commercial_partner_id
         if buyer.l10n_gr_edi_contracting_authority_name:
-            document_node['cbc:BuyerReference'] = {'_text': buyer.l10n_gr_edi_contracting_authority_name}
+            document_node['cbc:BuyerReference'] = buyer.l10n_gr_edi_contracting_authority_name
 
     # -------------------------------------------------------------------------
     # EXPORT VALUES
@@ -51,25 +51,25 @@ class AccountEdiXmlUblGr(models.AbstractModel):
             additional_document_references = [additional_document_references]
             document_node['cac:AdditionalDocumentReference'] = additional_document_references
         additional_document_references.append({
-            'cbc:ID': {'_text': str(invoice.l10n_gr_edi_mark)},
-            'cbc:DocumentDescription': {'_text': '##M.AR.K##'},
+            'cbc:ID': str(invoice.l10n_gr_edi_mark),
+            'cbc:DocumentDescription': '##M.AR.K##',
         })
 
         if vals['document_type'] != 'credit_note':
             # BT-11: ProjectReference
             document_node['cac:ProjectReference'] = {
-                'cbc:ID': {'_text': f"{invoice.l10n_gr_edi_budget_type}|{invoice.l10n_gr_edi_project_reference}"}
+                'cbc:ID': f"{invoice.l10n_gr_edi_budget_type}|{invoice.l10n_gr_edi_project_reference}"
             }
             # BT-12: ContractDocumentReference
             document_node['cac:ContractDocumentReference'] = {
-                'cbc:ID': {'_text': invoice.l10n_gr_edi_contract_reference}
+                'cbc:ID': invoice.l10n_gr_edi_contract_reference
             }
         # BT-25 Billing reference (preceding invoice number) for credit notes
         elif vals['document_type'] == 'credit_note':
             reversed_entry = invoice.reversed_entry_id
             document_node['cac:BillingReference'] = {
                 'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {'_text': self._format_greek_invoice_number(reversed_entry) if reversed_entry else ''},
+                    'cbc:ID': self._format_greek_invoice_number(reversed_entry) if reversed_entry else '',
                 }
             }
         return document_node
@@ -93,7 +93,7 @@ class AccountEdiXmlUblGr(models.AbstractModel):
         if partner.id == vals['customer'].id and buyer.l10n_gr_edi_contracting_authority_code:
             nodes = vals['party_node'].setdefault('cac:PartyIdentification', [])
             nodes.append({
-                'cbc:ID': {'_text': buyer.l10n_gr_edi_contracting_authority_code}
+                'cbc:ID': buyer.l10n_gr_edi_contracting_authority_code
             })
 
     # -------------------------------------------------------------------------

@@ -6,6 +6,7 @@ from lxml import etree
 
 from odoo import _, api, fields, models, tools, SUPERUSER_ID
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import SUPPORTED_FILE_TYPES
+from odoo.addons.account_edi_ubl_cii.tools.ubl_21_common import DocumentReference
 from odoo.tools import cleanup_xml_node
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 from odoo.addons.account.tools import dict_to_xml
@@ -283,7 +284,7 @@ class AccountMoveSend(models.AbstractModel):
         for attachment_values in attachments_to_embed:
             additional_document_reference_node = {
                 '_tag': 'cac:AdditionalDocumentReference',
-                'cbc:ID': {'_text': attachment_values['filename']},
+                'cbc:ID': attachment_values['filename'],
                 'cbc:DocumentTypeCode': attachment_values.get('document_type_node'),
                 'cac:Attachment': {
                     'cbc:EmbeddedDocumentBinaryObject': {
@@ -293,7 +294,7 @@ class AccountMoveSend(models.AbstractModel):
                     }
                 }
             }
-            tree.insert(anchor_index, dict_to_xml(additional_document_reference_node, nsmap=nsmap))
+            tree.insert(anchor_index, dict_to_xml(additional_document_reference_node, nsmap=nsmap, template=DocumentReference))
 
         invoice_data['ubl_cii_xml_attachment_values']['raw'] = etree.tostring(
             cleanup_xml_node(tree), xml_declaration=True, encoding='UTF-8'

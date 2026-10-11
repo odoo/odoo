@@ -168,26 +168,24 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         pos_order = vals['pos_order']
         pos_order._compute_l10n_jo_edi_pos_uuid()
         document_node.update({
-            'cbc:ProfileID': {'_text': 'reporting:1.0'},
-            'cbc:ID': {'_text': (pos_order.name or '').replace('/', '_')},
-            'cbc:UUID': {'_text': pos_order.l10n_jo_edi_pos_uuid},
-            'cbc:IssueDate': {'_text': '2020-01-01' if pos_order.company_id.l10n_jo_edi_pos_testing_mode else pos_order.date_order.date()},
+            'cbc:ProfileID': 'reporting:1.0',
+            'cbc:ID': (pos_order.name or '').replace('/', '_'),
+            'cbc:UUID': pos_order.l10n_jo_edi_pos_uuid,
+            'cbc:IssueDate': '2020-01-01' if pos_order.company_id.l10n_jo_edi_pos_testing_mode else pos_order.date_order.date(),
             'cbc:InvoiceTypeCode': {'_text': 381 if vals['is_refund'] else 388, 'name': self._get_payment_method_code(pos_order)},
-            'cbc:Note': {'_text': pos_order.general_customer_note},
-            'cbc:DocumentCurrencyCode': {'_text': pos_order.currency_id.name},
-            'cbc:TaxCurrencyCode': {'_text': pos_order.currency_id.name},
+            'cbc:Note': pos_order.general_customer_note,
+            'cbc:DocumentCurrencyCode': pos_order.currency_id.name,
+            'cbc:TaxCurrencyCode': pos_order.currency_id.name,
             'cac:BillingReference': {
                 'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {'_text': (pos_order.refunded_order_id.name or '').replace('/', '_')},
-                    'cbc:UUID': {'_text': pos_order.refunded_order_id.l10n_jo_edi_pos_uuid},
-                    'cbc:DocumentDescription': {
-                        '_text': self.format_float(abs(pos_order.refunded_order_id.amount_total), vals['currency_dp']),
-                    },
+                    'cbc:ID': (pos_order.refunded_order_id.name or '').replace('/', '_'),
+                    'cbc:UUID': pos_order.refunded_order_id.l10n_jo_edi_pos_uuid,
+                    'cbc:DocumentDescription': self.format_float(abs(pos_order.refunded_order_id.amount_total), vals['currency_dp']),
                 },
             } if vals['is_refund'] else None,
             'cac:AdditionalDocumentReference': {
-                'cbc:ID': {'_text': 'ICV'},
-                'cbc:UUID': {'_text': pos_order.id},
+                'cbc:ID': 'ICV',
+                'cbc:UUID': pos_order.id,
             },
         })
 
@@ -195,7 +193,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         super()._add_pos_order_accounting_customer_party_nodes(document_node, vals)
         document_node['cac:AccountingCustomerParty'].update({
             'cac:AccountingContact': {
-                'cbc:Telephone': {'_text': self._sanitize_phone(vals['customer'].phone)}
+                'cbc:Telephone': self._sanitize_phone(vals['customer'].phone)
             },
         })
 
@@ -203,7 +201,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         document_node['cac:SellerSupplierParty'] = {
             'cac:Party': {
                 'cac:PartyIdentification': {
-                    'cbc:ID': {'_text': vals['pos_order'].company_id.l10n_jo_edi_sequence_income_source},
+                    'cbc:ID': vals['pos_order'].company_id.l10n_jo_edi_sequence_income_source,
                 },
             },
         }
@@ -212,7 +210,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         if vals['is_refund']:
             document_node['cac:PaymentMeans'] = {
                 'cbc:PaymentMeansCode': {'listID': 'UN/ECE 4461', '_text': 10},
-                'cbc:InstructionNote': {'_text': vals['pos_order'].l10n_jo_edi_pos_return_reason},
+                'cbc:InstructionNote': vals['pos_order'].l10n_jo_edi_pos_return_reason,
             }
 
     def _get_party_node(self, vals):
@@ -225,13 +223,13 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
             } if is_customer else None,
             'cac:PostalAddress': self._get_address_node(vals),
             'cac:PartyTaxScheme': {
-                'cbc:CompanyID': {'_text': commercial_partner.vat},
+                'cbc:CompanyID': commercial_partner.vat,
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': 'VAT'},
+                    'cbc:ID': 'VAT',
                 },
             },
             'cac:PartyLegalEntity': {
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
             },
         }
 
@@ -241,10 +239,10 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         state = partner['state_id']
 
         return {
-            'cbc:PostalZone': {'_text': partner.zip},
-            'cbc:CountrySubentityCode': {'_text': state.code},
+            'cbc:PostalZone': partner.zip,
+            'cbc:CountrySubentityCode': state.code,
             'cac:Country': {
-                'cbc:IdentificationCode': {'_text': country.code},
+                'cbc:IdentificationCode': country.code,
             },
         }
 
@@ -252,8 +250,8 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         currency_suffix = vals['currency_suffix']
 
         document_node['cac:AllowanceCharge'] = {
-            'cbc:ChargeIndicator': {'_text': 'false'},
-            'cbc:AllowanceChargeReason': {'_text': 'discount'},
+            'cbc:ChargeIndicator': 'false',
+            'cbc:AllowanceChargeReason': 'discount',
             'cbc:Amount': {
                 '_text': self.format_float(vals[f'discount_amount{currency_suffix}'], vals['currency_dp']),
                 'currencyID': vals['currency_name'],
@@ -309,7 +307,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
 
     def _add_pos_order_line_id_nodes(self, line_node, vals):
         line_id = self._get_pos_order_line_id(vals)
-        line_node['cbc:ID'] = {'_text': line_id}
+        line_node['cbc:ID'] = line_id
 
     def _add_pos_order_line_amount_nodes(self, line_node, vals):
         super()._add_pos_order_line_amount_nodes(line_node, vals)
@@ -319,7 +317,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
     def _add_pos_order_line_item_nodes(self, line_node, vals):
         product = vals['base_line']['product_id']
         line_node['cac:Item'] = {
-            'cbc:Name': {'_text': product.name},
+            'cbc:Name': product.name,
         }
 
     def _add_pos_order_line_tax_total_nodes(self, line_node, vals):
@@ -383,7 +381,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         grouping_key = vals['grouping_key']
         return {
             'cbc:ID': {'_text': grouping_key['tax_category_code'], 'schemeAgencyID': 6, 'schemeID': 'UN/ECE 5305'},
-            'cbc:Percent': {'_text': grouping_key['amount']} if grouping_key['amount_type'] == 'percent' else None,
+            'cbc:Percent': grouping_key['amount'] if grouping_key['amount_type'] == 'percent' else None,
             'cac:TaxScheme': {
                 'cbc:ID': {
                     '_text': 'VAT' if grouping_key['amount_type'] == 'percent' else 'OTH',
@@ -410,8 +408,8 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
         currency_suffix = vals['currency_suffix']
 
         line_node['cac:Price']['cac:AllowanceCharge'] = {
-            'cbc:ChargeIndicator': {'_text': 'false'},
-            'cbc:AllowanceChargeReason': {'_text': 'DISCOUNT'},
+            'cbc:ChargeIndicator': 'false',
+            'cbc:AllowanceChargeReason': 'DISCOUNT',
             'cbc:Amount': {
                 '_text': self.format_float(abs(vals[f'discount_amount{currency_suffix}']), vals['currency_dp']),
                 'currencyID': vals['currency_name'],

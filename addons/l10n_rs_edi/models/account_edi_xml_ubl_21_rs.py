@@ -15,21 +15,19 @@ class AccountEdiXmlUBL21RS(models.AbstractModel):
         super()._add_invoice_header_nodes(document_node, vals)
         invoice = vals['invoice']
 
-        document_node['cbc:CustomizationID'] = {'_text': self._get_customization_id()}
+        document_node['cbc:CustomizationID'] = self._get_customization_id()
 
         # Billing Reference values for Credit Note
         if invoice.move_type == 'out_refund' and invoice.reversed_entry_id:
             document_node['cac:BillingReference'] = {
-                'cbc:ID': {'_text': invoice.reversed_entry_id.name},
-                'cbc:IssueDate': {'_text': invoice.reversed_entry_id.invoice_date},
+                'cbc:ID': invoice.reversed_entry_id.name,
+                'cbc:IssueDate': invoice.reversed_entry_id.invoice_date,
             }
 
         document_node['cac:InvoicePeriod'] = [
             document_node.get('cac:InvoicePeriod'),
             {
-                'cbc:DescriptionCode': {
-                    '_text': '0' if invoice.move_type == 'out_refund' else invoice.l10n_rs_tax_date_obligations_code
-                },
+                'cbc:DescriptionCode': '0' if invoice.move_type == 'out_refund' else invoice.l10n_rs_tax_date_obligations_code,
             }
         ]
 
@@ -47,14 +45,12 @@ class AccountEdiXmlUBL21RS(models.AbstractModel):
 
         if partner.country_code == 'RS' and partner.l10n_rs_edi_public_funds:
             party_node['cac:PartyIdentification'] = {
-                'cbc:ID': {
-                    '_text': f'JBKJS: {partner.l10n_rs_edi_public_funds}',
-                },
+                'cbc:ID': f'JBKJS: {partner.l10n_rs_edi_public_funds}',
             }
 
         if vat_country == 'RS' and partner._check_vat_number(vat_country, vat_number):
-            party_node['cac:PartyTaxScheme']['cbc:CompanyID'] = {'_text': vat_country + vat_number}
+            party_node['cac:PartyTaxScheme']['cbc:CompanyID'] = vat_country + vat_number
 
-        party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = {'_text': partner.l10n_rs_edi_registration_number}
+        party_node['cac:PartyLegalEntity']['cbc:CompanyID'] = partner.l10n_rs_edi_registration_number
 
         return party_node

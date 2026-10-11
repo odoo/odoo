@@ -33,10 +33,10 @@ class AccountEdiXmlUbl_21(models.AbstractModel):
 
         invoice = vals['invoice']
         document_node.update({
-            'cbc:UBLVersionID': {'_text': '2.1'},
-            'cbc:DueDate': {'_text': invoice.invoice_date_due} if vals['document_type'] == 'invoice' else None,
-            'cbc:CreditNoteTypeCode': {'_text': 261 if vals['process_type'] == 'selfbilling' else 381} if vals['document_type'] == 'credit_note' else None,
-            'cbc:BuyerReference': {'_text': invoice.commercial_partner_id.ref},
+            'cbc:UBLVersionID': '2.1',
+            'cbc:DueDate': invoice.invoice_date_due if vals['document_type'] == 'invoice' else None,
+            'cbc:CreditNoteTypeCode': 261 if vals['process_type'] == 'selfbilling' else 381 if vals['document_type'] == 'credit_note' else None,
+            'cbc:BuyerReference': invoice.commercial_partner_id.ref,
         })
 
     def _add_document_allowance_charge_nodes(self, document_node, vals):

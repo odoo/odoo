@@ -141,16 +141,16 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         invoice._compute_l10n_jo_edi_uuid()
         document_node.update({
             'cbc:UBLVersionID': None,
-            'cbc:ProfileID': {'_text': 'reporting:1.0'},
-            'cbc:ID': {'_text': invoice.name.replace('/', '_')},
-            'cbc:UUID': {'_text': invoice.l10n_jo_edi_uuid},
+            'cbc:ProfileID': 'reporting:1.0',
+            'cbc:ID': invoice.name.replace('/', '_'),
+            'cbc:UUID': invoice.l10n_jo_edi_uuid,
             'cbc:DueDate': None,
             'cbc:InvoiceTypeCode': {
                 '_text': "381" if invoice.move_type == 'out_refund' else "388",
                 'name': invoice._get_invoice_scope_code() + invoice._get_invoice_payment_method_code() + invoice._get_invoice_tax_payer_type_code(),
             },
-            'cbc:DocumentCurrencyCode': {'_text': invoice.currency_id.name},
-            'cbc:TaxCurrencyCode': {'_text': invoice.currency_id.name},
+            'cbc:DocumentCurrencyCode': invoice.currency_id.name,
+            'cbc:TaxCurrencyCode': invoice.currency_id.name,
             'cbc:BuyerReference': None,
             'cac:OrderReference': None,
         })
@@ -158,29 +158,25 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         if invoice.reversed_entry_id:
             document_node['cac:BillingReference'] = {
                 'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {'_text': (invoice.reversed_entry_id.name or '').replace('/', '_')},
-                    'cbc:UUID': {'_text': invoice.reversed_entry_id.l10n_jo_edi_uuid},
-                    'cbc:DocumentDescription': {
-                        '_text': self.format_float(
+                    'cbc:ID': (invoice.reversed_entry_id.name or '').replace('/', '_'),
+                    'cbc:UUID': invoice.reversed_entry_id.l10n_jo_edi_uuid,
+                    'cbc:DocumentDescription': self.format_float(
                             abs(invoice.reversed_entry_id.amount_total),
                             vals['currency_dp'],
-                        )
-                    },
+                        ),
                 }
             }
 
         document_node['cac:AdditionalDocumentReference'] = {
-            'cbc:ID': {'_text': 'ICV'},
-            'cbc:UUID': {'_text': invoice.id},
+            'cbc:ID': 'ICV',
+            'cbc:UUID': invoice.id,
         }
 
     def _add_invoice_accounting_customer_party_nodes(self, document_node, vals):
         super()._add_invoice_accounting_customer_party_nodes(document_node, vals)
         invoice = vals['invoice']
         document_node['cac:AccountingCustomerParty']['cac:AccountingContact'] = {
-            'cbc:Telephone': {
-                '_text': self._sanitize_phone(invoice.partner_id.phone)
-            }
+            'cbc:Telephone': self._sanitize_phone(invoice.partner_id.phone)
         }
 
     def _add_invoice_seller_supplier_party_nodes(self, document_node, vals):
@@ -189,9 +185,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         document_node['cac:SellerSupplierParty'] = {
             'cac:Party': {
                 'cac:PartyIdentification': {
-                    'cbc:ID': {
-                        '_text': invoice.company_id.l10n_jo_edi_sequence_income_source
-                    }
+                    'cbc:ID': invoice.company_id.l10n_jo_edi_sequence_income_source
                 }
             }
         }
@@ -207,9 +201,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
                     '_text': 10,
                     'listID': "UN/ECE 4461",
                 },
-                'cbc:InstructionNote': {
-                    '_text': (invoice.ref or '').replace('/', '_')
-                },
+                'cbc:InstructionNote': (invoice.ref or '').replace('/', '_'),
             }
 
     def _get_party_node(self, vals):
@@ -225,13 +217,13 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             } if role != 'supplier' else None,
             'cac:PostalAddress': self._get_address_node(vals),
             'cac:PartyTaxScheme': {
-                'cbc:CompanyID': {'_text': partner.vat},
+                'cbc:CompanyID': partner.vat,
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': 'VAT'}
+                    'cbc:ID': 'VAT'
                 }
             },
             'cac:PartyLegalEntity': {
-                'cbc:RegistrationName': {'_text': partner.name}
+                'cbc:RegistrationName': partner.name
             },
         }
         return party_node
@@ -240,10 +232,10 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         partner = vals['partner']
 
         return {
-            'cbc:PostalZone': {'_text': partner.zip},
-            'cbc:CountrySubentityCode': {'_text': partner.state_id.code},
+            'cbc:PostalZone': partner.zip,
+            'cbc:CountrySubentityCode': partner.state_id.code,
             'cac:Country': {
-                'cbc:IdentificationCode': {'_text': partner.country_id.code}
+                'cbc:IdentificationCode': partner.country_id.code
             }
         }
 
@@ -334,8 +326,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             discount_amount += vals['discount_amount_currency']
 
         return {
-            'cbc:ChargeIndicator': {'_text': 'false'},
-            'cbc:AllowanceChargeReason': {'_text': 'discount'},
+            'cbc:ChargeIndicator': 'false',
+            'cbc:AllowanceChargeReason': 'discount',
             'cbc:Amount': {
                 '_text': self.format_float(discount_amount, vals['currency_dp']),
                 'currencyID': vals['currency_name'],
@@ -355,7 +347,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
                 'schemeID': 'UN/ECE 5305',
                 'schemeAgencyID': '6',
             },
-            'cbc:Percent': {'_text': grouping_key['amount']} if grouping_key['amount_type'] == 'percent' else None,
+            'cbc:Percent': grouping_key['amount'] if grouping_key['amount_type'] == 'percent' else None,
             'cac:TaxScheme': {
                 'cbc:ID': {
                     '_text': 'VAT' if grouping_key['amount_type'] == 'percent' else 'OTH',
@@ -370,9 +362,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _add_invoice_line_id_nodes(self, line_node, vals):
-        line_node['cbc:ID'] = {
-            '_text': vals['base_lines_edi_ids'].get(vals['line_idx'], vals['line_idx']),
-        }
+        line_node['cbc:ID'] = vals['base_lines_edi_ids'].get(vals['line_idx'], vals['line_idx'])
 
     def _get_line_edi_id(self, line, default_id):
         # only kept for stable policy, would be removed in FWs
@@ -476,8 +466,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     def _get_line_discount_allowance_charge_node(self, vals):
         # OVERRIDE account_edi_xml_ubl_20.py
         return {
-            'cbc:ChargeIndicator': {'_text': 'false'},
-            'cbc:AllowanceChargeReason': {'_text': 'DISCOUNT'},
+            'cbc:ChargeIndicator': 'false',
+            'cbc:AllowanceChargeReason': 'DISCOUNT',
             'cbc:Amount': {
                 '_text': self.format_float(
                     abs(vals['discount_amount_currency']),

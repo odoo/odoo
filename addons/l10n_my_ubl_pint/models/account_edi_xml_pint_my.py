@@ -71,9 +71,9 @@ class AccountEdiXmlPint_My(models.AbstractModel):
 
         if commercial_partner.country_code == 'MY':
             vals['party_node']['cac:PartyTaxScheme'] = [{
-                'cbc:CompanyID': {'_text': commercial_partner.sst_registration_number or 'NA'},
+                'cbc:CompanyID': commercial_partner.sst_registration_number or 'NA',
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': 'NOT_EU_VAT'},
+                    'cbc:ID': 'NOT_EU_VAT',
                 },
             }]
 
@@ -86,21 +86,21 @@ class AccountEdiXmlPint_My(models.AbstractModel):
 
         if commercial_partner.country_code == 'MY':
             nodes.append({
-                'cbc:CompanyID': {'_text': commercial_partner.vat or 'NA'},
+                'cbc:CompanyID': commercial_partner.vat or 'NA',
                 'cac:TaxScheme': {
-                    'cbc:ID': {'_text': 'GST'},
+                    'cbc:ID': 'GST',
                 },
             })
 
     def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_customization_id_node(vals)
-        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:peppol:pint:billing-1@my-1'
+        vals['document_node']['cbc:CustomizationID'] = 'urn:peppol:pint:billing-1@my-1'
 
     def _ubl_add_profile_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_profile_id_node(vals)
-        vals['document_node']['cbc:ProfileID']['_text'] = 'urn:peppol:bis:billing'
+        vals['document_node']['cbc:ProfileID'] = 'urn:peppol:bis:billing'
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints

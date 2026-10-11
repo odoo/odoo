@@ -79,26 +79,26 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         if vals['document_type'] in ['invoice', 'credit_note']:
             for node in vals['document_node']['cac:PaymentMeans']:
                 payee_account = node.get('cac:PayeeFinancialAccount')
-                if payee_account and any(char.isspace() for char in payee_account['cbc:ID']['_text']):
+                if payee_account and any(char.isspace() for char in payee_account['cbc:ID']):
                     constraints['ubl_hr_br_1'] = self.env._("HR-BR-1: The account number must not contain whitespace characters.")
             if invoice.amount_residual > 0 and not invoice.invoice_date_due:
                 constraints.update({'ubl_hr_br_4': self.env._("HR-BT-4: In the case of a positive amount due for payment (BT-115), the payment due date (BT-9) must be specified.")})
             constraints.update({
                 'ubl_hr_br_7_seller_email_required': (
                     self.env._("The Seller's e-mail must be provided.")
-                ) if not vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cac:Contact']['cbc:ElectronicMail'].get('_text') else None,
+                ) if not vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cac:Contact']['cbc:ElectronicMail'] else None,
                 'ubl_hr_br_10_buyer_email_required': (
                     self.env._("The Buyer's e-mail must be provided.")
-                ) if not vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cac:Contact']['cbc:ElectronicMail'].get('_text') else None,
+                ) if not vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cac:Contact']['cbc:ElectronicMail'] else None,
                 'ubl_hr_br_s_buyer_vat_required': (
                     self.env._("The invoice must contain the Customer's VAT identification number (BT-48).")
-                ) if any(not item['cbc:CompanyID'].get('_text') for item in vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cac:PartyTaxScheme']) else None,
+                ) if any(not item['cbc:CompanyID'] for item in vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cac:PartyTaxScheme']) else None,
                 'ubl_hr_br_37_operator_label_required': (
                     self.env._("The invoice must contain the Operator Label (HR-BT-4).")
-                ) if not vals['document_node']['cac:AccountingSupplierParty']['cac:SellerContact']['cbc:Name'].get('_text') else None,
+                ) if not vals['document_node']['cac:AccountingSupplierParty']['cac:SellerContact']['cbc:Name'] else None,
                 'ubl_hr_br_9_operator_oib_required': (
                     self.env._("The invoice must contain the Operator OIB (HR-BT-5).")
-                ) if not vals['document_node']['cac:AccountingSupplierParty']['cac:SellerContact']['cbc:ID'].get('_text') else None,
+                ) if not vals['document_node']['cac:AccountingSupplierParty']['cac:SellerContact']['cbc:ID'] else None,
             })
         return constraints
 
@@ -116,12 +116,12 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             return
 
         # For Croatia, ID should be the Croatian-format fiscalization number
-        vals['document_node']['cbc:ID']['_text'] = invoice.l10n_hr_fiscalization_number
+        vals['document_node']['cbc:ID'] = invoice.l10n_hr_fiscalization_number
 
     def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_customization_id_node(vals)
-        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0#conformant#urn:mfin.gov.hr:ext-2025:1.0'
+        vals['document_node']['cbc:CustomizationID'] = 'urn:cen.eu:en16931:2017#compliant#urn:mfin.gov.hr:cius-2025:1.0#conformant#urn:mfin.gov.hr:ext-2025:1.0'
 
     def _ubl_add_profile_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -132,9 +132,9 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
 
         # HR-BR-34: The process label MUST be specified. Values P1-P12 or P99:Customer ID from Table 4 Business Process Types are used.
         if invoice.l10n_hr_process_type == 'P99':
-            vals['document_node']['cbc:ProfileID']['_text'] = f"P99:{invoice.l10n_hr_customer_defined_process_name}"
+            vals['document_node']['cbc:ProfileID'] = f"P99:{invoice.l10n_hr_customer_defined_process_name}"
         else:
-            vals['document_node']['cbc:ProfileID']['_text'] = invoice.l10n_hr_process_type
+            vals['document_node']['cbc:ProfileID'] = invoice.l10n_hr_process_type
 
     def _ubl_add_copy_indicator_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -145,7 +145,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
 
         # HR-BT-1: Copy indicator - is the invoice the original or already sent
         #   This doesn't appear to be currently supported in Odoo, and is set to 'false' in TR localization using a similar format
-        vals['document_node']['cbc:CopyIndicator']['_text'] = 'false'
+        vals['document_node']['cbc:CopyIndicator'] = 'false'
 
     def _ubl_add_issue_date_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -157,8 +157,8 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         # HR-BT-2: The invoice must have an invoice issuance time.
         #   (in addition to BT-2: Date of issue)
         issue_date_str, issue_time_str = fields.Datetime.to_string(invoice.l10n_hr_invoice_sending_time).split()
-        vals['document_node']['cbc:IssueDate']['_text'] = issue_date_str
-        vals['document_node']['cbc:IssueTime']['_text'] = issue_time_str
+        vals['document_node']['cbc:IssueDate'] = issue_date_str
+        vals['document_node']['cbc:IssueTime'] = issue_time_str
 
     def _ubl_add_invoice_type_code_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -171,7 +171,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             invoice.l10n_hr_process_type in ('P4', 'P6')
             and invoice.move_type == 'out_invoice'
         ):
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = '386'
+            vals['document_node']['cbc:InvoiceTypeCode'] = '386'
 
     def _ubl_add_credit_note_type_code_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -184,11 +184,11 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
             invoice.l10n_hr_process_type in ('P4', 'P6')
             and invoice.move_type == 'out_refund'
         ):
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '386'
+            vals['document_node']['cbc:CreditNoteTypeCode'] = '386'
         elif invoice.l10n_hr_process_type == 'P9':
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '381'
+            vals['document_node']['cbc:CreditNoteTypeCode'] = '381'
         elif invoice.l10n_hr_process_type == 'P10':
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = '384'
+            vals['document_node']['cbc:CreditNoteTypeCode'] = '384'
 
     def _ubl_add_billing_reference_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -202,8 +202,8 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         if 'refund' in invoice.move_type and invoice.reversed_entry_id:
             vals['document_node']['cac:BillingReference'] = [{
                 'cac:InvoiceDocumentReference': {
-                    'cbc:ID': {'_text': invoice.ref},
-                    'cbc:IssueDate': {'_text': invoice.reversed_entry_id.invoice_date},
+                    'cbc:ID': invoice.ref,
+                    'cbc:IssueDate': invoice.reversed_entry_id.invoice_date,
                 },
             }]
 
@@ -236,7 +236,7 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
                         'cbc:Percent': category['cbc:Percent'],
                         'cbc:TaxExemptionReasonCode': category['cbc:TaxExemptionReasonCode'],
                         'cbc:TaxExemptionReason': category['cbc:TaxExemptionReason'],
-                        'hrextac:HRTaxScheme': category['cac:TaxScheme'] if hr_tax_name['_text'] != "HR:POVNAK" else {'_text': "OTH"},
+                        'hrextac:HRTaxScheme': category['cac:TaxScheme'] if hr_tax_name != "HR:POVNAK" else "OTH",
                     })
                 hr_tax_subtotals.append({
                     'cbc:TaxableAmount': subtotal['cbc:TaxableAmount'],
@@ -314,12 +314,8 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
         invoice = vals['invoice']
         document_node['cac:AccountingSupplierParty'].update({
             'cac:SellerContact': {
-                'cbc:ID': {
-                    '_text': invoice.l10n_hr_operator_oib
-                },
-                'cbc:Name': {
-                    '_text': invoice.l10n_hr_operator_name
-                }
+                'cbc:ID': invoice.l10n_hr_operator_oib,
+                'cbc:Name': invoice.l10n_hr_operator_name
             }
         })
 
@@ -363,16 +359,16 @@ class AccountEdiXmlUBLHR(models.AbstractModel):
     def _ubl_get_tax_category_node(self, vals, tax_category):
         # EXTENDS account.edi.xml.ubl_bis3
         node = super()._ubl_get_tax_category_node(vals, tax_category)
-        node['cbc:Name']['_text'] = tax_category['hr_category_name']
-        node['hrextac:HRObracunPDVPoNaplati'] = {'_text': tax_category['invoice_legal_notes_str']}
+        node['cbc:Name'] = tax_category['hr_category_name']
+        node['hrextac:HRObracunPDVPoNaplati'] = tax_category['invoice_legal_notes_str']
         return node
 
     def _ubl_get_line_item_node_classified_tax_category_node(self, vals, tax_category):
         # EXTENDS account.edi.xml.ubl_bis3
         node = super()._ubl_get_line_item_node_classified_tax_category_node(vals, tax_category)
-        node['cbc:Name']['_text'] = tax_category['hr_category_name']
-        node['cbc:TaxExemptionReasonCode']['_text'] = tax_category.get('tax_exemption_reason_code')
-        node['cbc:TaxExemptionReason']['_text'] = tax_category.get('tax_exemption_reason')
+        node['cbc:Name'] = tax_category['hr_category_name']
+        node['cbc:TaxExemptionReasonCode'] = tax_category.get('tax_exemption_reason_code')
+        node['cbc:TaxExemptionReason'] = tax_category.get('tax_exemption_reason')
         return node
 
     def _setup_base_lines(self, vals):

@@ -33,12 +33,12 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
         if invoice.buyer_reference:
             # Pagero doc states that the 'Service Code' should be in the BuyerReference node
-            document_node['cbc:BuyerReference'] = {'_text': invoice.buyer_reference}
+            document_node['cbc:BuyerReference'] = invoice.buyer_reference
 
         if invoice.purchase_order_reference:
             # Pagero doc states that the 'Commitment Number' should be in the OrderReference/ID node
             document_node['cac:OrderReference'] = {
-                'cbc:ID': {'_text': invoice.purchase_order_reference}
+                'cbc:ID': invoice.purchase_order_reference
             }
 
     def _ubl_add_party_identification_nodes(self, vals):
@@ -86,7 +86,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         commercial_partner = partner.commercial_partner_id
         if commercial_partner.country_code in self.env['res.company']._get_france_country_codes() and commercial_partner._get_additional_identifier('FR_SIRET'):
             vals['party_node']['cac:PartyLegalEntity'] = [{
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
                 'cbc:CompanyID': {
                     '_text': commercial_partner._get_additional_identifier('FR_SIRET'),
                     'schemeID': '0009',
