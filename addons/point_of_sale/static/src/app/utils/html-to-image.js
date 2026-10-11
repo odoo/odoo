@@ -519,10 +519,12 @@ function cloneSelectValue(nativeNode, clonedNode) {
         }
     }
 }
-function decorate(nativeNode, clonedNode) {
+function decorate(nativeNode, clonedNode, options) {
     if (isInstanceOfElement(clonedNode, Element)) {
-        cloneCSSStyle(nativeNode, clonedNode);
-        clonePseudoElements(nativeNode, clonedNode);
+        if (options.inlineStyles !== false) {
+            cloneCSSStyle(nativeNode, clonedNode);
+            clonePseudoElements(nativeNode, clonedNode);
+        }
         cloneInputValue(nativeNode, clonedNode);
         cloneSelectValue(nativeNode, clonedNode);
     }
@@ -572,7 +574,7 @@ async function cloneNode(node, options, isRoot) {
     return Promise.resolve(node)
         .then((clonedNode) => cloneSingleNode(clonedNode, options))
         .then((clonedNode) => cloneChildren(node, clonedNode, options))
-        .then((clonedNode) => decorate(node, clonedNode))
+        .then((clonedNode) => decorate(node, clonedNode, options))
         .then((clonedNode) => ensureSVGSymbols(clonedNode, options));
 }
 
