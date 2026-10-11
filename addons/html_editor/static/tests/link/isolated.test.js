@@ -3,7 +3,7 @@ import { deleteBackward, insertText } from "../_helpers/user_actions";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { descendants } from "@html_editor/utils/dom_traversal";
 import { tick } from "@odoo/hoot-mock";
-import { getContent, setSelection } from "../_helpers/selection";
+import { getContent, moveSelectionOutsideEditor, setSelection } from "../_helpers/selection";
 import { cleanLinkArtifacts } from "../_helpers/format";
 import { animationFrame } from "@odoo/hoot-dom";
 import { processThroughNormalize } from "../_helpers/dispatch";
@@ -452,6 +452,48 @@ describe("should position the cursor outside the link", () => {
         // the selection is not actually set. So we just check that the content is unchanged.
         expect(getContent(el)).toBe(
             '<p>\ufeff<a href="/fake">\ufeff<strong>link</strong>\ufeff</a>\ufeff</p>'
+        );
+    });
+    test("clicking at the end of the button when editor is blur", async () => {
+        onRpc("/html_editor/link_preview_internal", () => ({}));
+        onRpc("/test", () => ({}));
+        const { el } = await setupEditor(
+            '<p><a class="btn btn-primary" href="/test">t[]est</a></p>'
+        );
+        const a = el.querySelector("a");
+        const rect = a.getBoundingClientRect();
+        const clientX = rect.right + 1;
+        const clientY = rect.top + rect.height / 2;
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: a, offset: 3 }),
+        });
+        moveSelectionOutsideEditor();
+        await tick();
+        await click(a.parentElement, { clientX, clientY });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>\ufeff<a class="btn btn-primary" href="/test">\ufefftest\ufeff</a>\ufeff[]</p>'
+        );
+    });
+    test("clicking at the start padding of the button when editor is blur", async () => {
+        onRpc("/html_editor/link_preview_internal", () => ({}));
+        onRpc("/test", () => ({}));
+        const { el } = await setupEditor(
+            '<p><a class="btn btn-primary" href="/test">t[]est</a></p>'
+        );
+        const a = el.querySelector("a");
+        const rect = a.getBoundingClientRect();
+        const clientX = rect.left + 1;
+        const clientY = rect.top + rect.height / 2;
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: a.firstChild, offset: 0 }),
+        });
+        moveSelectionOutsideEditor();
+        await tick();
+        await click(a, { clientX, clientY });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>\ufeff<a class="btn btn-primary" href="/test">\ufeff[]test\ufeff</a>\ufeff</p>'
         );
     });
 });
