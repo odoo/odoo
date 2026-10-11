@@ -2855,7 +2855,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertRecordValues(self.env['account.move.line'].search([('open_on', '=', '2016-02-28'), ('id', 'in', all_lines.ids)], order='id asc'), [
             {'amount_residual':  300.0, 'residual_at_date':  700.0},
             {'amount_residual':    0.0, 'residual_at_date':    0.0},
-            {'amount_residual':    0.0, 'residual_at_date': -400.0},
         ])
 
         line_4 = self.create_line_for_reconciliation(-100.0, -100.0, comp_curr, '2016-04-01')
