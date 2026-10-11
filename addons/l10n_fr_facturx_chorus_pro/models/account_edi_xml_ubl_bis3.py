@@ -1,4 +1,8 @@
+import re
+
 from odoo import _, models
+
+SIRET_RE = re.compile(r'\d{14}')
 
 
 class AccountEdiXmlUBLBIS3(models.AbstractModel):
@@ -64,10 +68,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         constraints = super()._export_invoice_constraints(invoice, vals)
         customer, supplier = vals['customer'].commercial_partner_id, vals['supplier']
         if self._is_customer_behind_chorus_pro(customer):
-            if 'siret' not in customer._fields or not customer.siret:
+            if 'siret' not in customer._fields or not customer.siret or not SIRET_RE.fullmatch(customer.siret):
                 constraints['chorus_customer'] = _("The siret of the final recipient is mandatory for the customer when invoicing through Chorus Pro.")
             france_country_codes = self.env['res.company']._get_france_country_codes()
-            if supplier.country_code in france_country_codes and ('siret' not in supplier._fields or not supplier.siret):
+            if supplier.country_code in france_country_codes and ('siret' not in supplier._fields or not supplier.siret or not SIRET_RE.fullmatch(supplier.siret)):
                 constraints['chorus_supplier_fr'] = _("The siret is mandatory for french suppliers when invoicing to Chorus Pro.")
             if supplier.country_code not in france_country_codes and not supplier.vat:
                 constraints['chorus_supplier_not_fr'] = _("The VAT is mandatory for non-french suppliers when invoicing to Chorus Pro.")
@@ -76,6 +80,20 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     # -------------------------------------------------------------------------
     # EXPORT: New (dict_to_xml) helpers
     # -------------------------------------------------------------------------
+
+    def _export_invoice_constraints_new(self, invoice, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        constraints = super()._export_invoice_constraints_new(invoice, vals)
+        customer, supplier = vals['customer'].commercial_partner_id, vals['supplier']
+        if self._is_customer_behind_chorus_pro(customer):
+            if 'siret' not in customer._fields or not customer.siret or not SIRET_RE.fullmatch(customer.siret):
+                constraints['chorus_customer'] = _("The siret of the final recipient is mandatory for the customer when invoicing through Chorus Pro.")
+            france_country_codes = self.env['res.company']._get_france_country_codes()
+            if supplier.country_code in france_country_codes and ('siret' not in supplier._fields or not supplier.siret or not SIRET_RE.fullmatch(supplier.siret)):
+                constraints['chorus_supplier_fr'] = _("The siret is mandatory for french suppliers when invoicing to Chorus Pro.")
+            if supplier.country_code not in france_country_codes and not supplier.vat:
+                constraints['chorus_supplier_not_fr'] = _("The VAT is mandatory for non-french suppliers when invoicing to Chorus Pro.")
+        return constraints
 
     def _add_invoice_header_nodes(self, document_node, vals):
         super()._add_invoice_header_nodes(document_node, vals)
