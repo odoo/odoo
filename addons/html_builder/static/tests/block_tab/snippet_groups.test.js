@@ -145,8 +145,8 @@ test("open add snippet dialog + switch snippet category", async () => {
                 '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
                 '<div name="B" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: createTestSnippets({ snippets, withName: false }).map(
-                (snippetDesc) => getSnippetStructure(snippetDesc)
+            snippet_structure: createTestSnippets({ snippets }).map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
             ),
         },
     });
@@ -167,7 +167,7 @@ test("open add snippet dialog + switch snippet category", async () => {
             ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div"
         ).map((el) => el.innerHTML)
     ).toEqual(
-        createTestSnippets({ snippets, withName: true })
+        createTestSnippets({ snippets })
             .filter((s) => s.groupName === "a")
             .map((s) => s.content)
     );
@@ -180,7 +180,7 @@ test("open add snippet dialog + switch snippet category", async () => {
             ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div"
         ).map((el) => el.innerHTML)
     ).toEqual(
-        createTestSnippets({ snippets, withName: true })
+        createTestSnippets({ snippets })
             .filter((s) => s.groupName === "b")
             .map((s) => s.content)
     );
@@ -204,15 +204,15 @@ test("search snippet in add snippet dialog", async () => {
                 '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
                 '<div name="B" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: createTestSnippets({ snippets, withName: false }).map(
-                (snippetDesc) => getSnippetStructure(snippetDesc)
+            snippet_structure: createTestSnippets({ snippets }).map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
             ),
         },
     });
     await click(".o_hb_snippets_menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
     await waitForSnippetDialog();
     expect("aside .list-group .list-group-item").toHaveCount(2);
-    const snippetsDescriptionProcessed = createTestSnippets({ snippets, withName: true });
+    const snippetsDescriptionProcessed = createTestSnippets({ snippets });
     expect(
         queryAll(
             ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div"
@@ -266,7 +266,6 @@ test("search snippet by class", async () => {
             keywords: [],
         },
         // The second snippet includes a child class selector using innerHTML.
-        // Using createTestSnippets with withName toggles the data-name automatically.
         {
             name: "foo",
             groupName: "a",
@@ -283,8 +282,8 @@ test("search snippet by class", async () => {
         },
     ];
 
-    const snippetsForSetup = createTestSnippets({ snippets, withName: false });
-    const snippetsDescriptionProcessed = createTestSnippets({ snippets, withName: true });
+    const snippetsForSetup = createTestSnippets({ snippets });
+    const snippetsDescriptionProcessed = createTestSnippets({ snippets });
 
     await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
@@ -345,8 +344,8 @@ test("search snippet by label", async () => {
         },
     ];
 
-    const snippetsForSetup = createTestSnippets({ snippets, withName: false });
-    const snippetsDescriptionProcessed = createTestSnippets({ snippets, withName: true });
+    const snippetsForSetup = createTestSnippets({ snippets });
+    const snippetsDescriptionProcessed = createTestSnippets({ snippets });
 
     await setupHTMLBuilder("<div><p>Text</p></div>", {
         snippets: {
@@ -401,8 +400,8 @@ test("add snippet dialog with imagePreview", async () => {
                 '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
                 '<div name="B" data-oe-snippet-id="123" data-o-snippet-group="b"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: createTestSnippets({ snippets, withName: false }).map(
-                (snippetDesc) => getSnippetStructure(snippetDesc)
+            snippet_structure: createTestSnippets({ snippets }).map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
             ),
         },
     });
@@ -411,7 +410,7 @@ test("add snippet dialog with imagePreview", async () => {
         ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap";
     await waitForSnippetDialog();
     expect(`${previewSnippetIframeSelector}`).toHaveCount(2);
-    const snippetsDescriptionProcessed = createTestSnippets({ snippets, withName: true });
+    const snippetsDescriptionProcessed = createTestSnippets({ snippets });
     expect(`${previewSnippetIframeSelector}:first > div`).toHaveInnerHTML(
         snippetsDescriptionProcessed[0].content
     );
@@ -428,8 +427,8 @@ test("insert snippet structure", async () => {
             snippet_groups: [
                 '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: createTestSnippets({ snippets, withName: false }).map(
-                (snippetDesc) => getSnippetStructure(snippetDesc)
+            snippet_structure: createTestSnippets({ snippets }).map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
             ),
         },
     });
@@ -446,9 +445,7 @@ test("insert snippet structure", async () => {
     await waitForEndOfOperation();
 
     expect(contentEl).toHaveInnerHTML(
-        `<section><p>Text</p></section>${
-            createTestSnippets({ snippets, withName: true })[0].content
-        }`
+        `<section><p>Text</p></section>${createTestSnippets({ snippets })[0].content}`
     );
 });
 
@@ -460,8 +457,8 @@ test("Drag & drop snippet structure", async () => {
             snippet_groups: [
                 '<div name="A" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
             ],
-            snippet_structure: createTestSnippets({ snippets, withName: false }).map(
-                (snippetDesc) => getSnippetStructure(snippetDesc)
+            snippet_structure: createTestSnippets({ snippets }).map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
             ),
         },
     });
@@ -489,9 +486,7 @@ test("Drag & drop snippet structure", async () => {
     await waitForEndOfOperation();
 
     expect(contentEl).toHaveInnerHTML(
-        `${
-            createTestSnippets({ snippets, withName: true })[0].content
-        }<section><p>Text</p></section>`
+        `${createTestSnippets({ snippets })[0].content}<section><p>Text</p></section>`
     );
 });
 
