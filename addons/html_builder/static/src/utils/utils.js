@@ -16,6 +16,9 @@ export function getSnippetName(snippetEl, snippetModel) {
         }
         return snippetEl.dataset.customName;
     }
+    if (snippetEl.dataset.dynamicBuilderName) {
+        return snippetEl.dataset.dynamicBuilderName;
+    }
     const specificNameId = snippetEl.dataset.builderName;
     if (specificNameId) {
         const specificName = snippetModel.namesMaps.specific_name?.[specificNameId];

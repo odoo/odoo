@@ -29,6 +29,7 @@
                 class="o_wsale_product_page"
                 t-att-data-has-available-uoms="has_available_uoms"
                 t-att-data-name="product.name"
+                t-att-data-dynamic-builder-name="product.name"
             >
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message.translate="Drag blocks here to add them on all products"/>
                 <section
@@ -44,6 +45,7 @@
                     "
                     t-att-data-view-track="view_track and '1' or '0'"
                     t-att-data-name="combination_info['display_name']"
+                    t-att-data-dynamic-builder-name="combination_info['display_name']"
                 >
                     <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-3">
                         <div class="d-flex align-items-center flex-grow-1">
@@ -1181,11 +1183,10 @@
 
     <!-- Product page images: Carousel -->
     <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
-        <t t-set="product_carousel_block_name">Product Carousel</t>
         <div
             id="o-carousel-product"
             t-attf-class="#{len(product_images) > 1 and 'o_carousel_not_single'} carousel slide mb-3 overflow-hidden"
-            t-att-data-name="product_carousel_block_name"
+            data-builder-name="product-carousel"
         >
             <div
                 class="o_carousel_product_outer carousel-outer position-relative d-flex align-items-center w-100 overflow-hidden"
