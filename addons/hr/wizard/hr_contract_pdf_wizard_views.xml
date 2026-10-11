@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="hr_contract_pdf_wizard_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.pdf.wizard.form</field>
+        <field name="model">hr.contract.pdf.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Contract" js_class="hr_contract_pdf_wizard_form">
+                <sheet>
+                    <group>
+                        <field name="company_id" invisible="1"/>
+                        <field name="company_country_id" invisible="1"/>
+                        <field name="parent_company_id" invisible="1"/>
+                        <field name="address_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="version_id" invisible="1"/>
+                        <field name="employee_id" invisible="1"/>
+                        <field name="legal_name"/>
+                        <field name="wage"/>
+                        <field name="resource_calendar_id"/>
+                        <label for="contract_date_start" string="Contract"/>
+                        <div class="o_row" name="contract_dates">
+                            <field name="contract_date_start" class="o_hr_narrow_field me-3"/>
+                            <span>to</span>
+                            <field name="contract_date_end" placeholder="Indefinite" class="o_hr_narrow_field ms-3"
+                                   widget="date_dynamic_min" options="{'min_date_field': 'contract_date_start'}"/>
+                        </div>
+                        <field name="job_title"/>
+                        <field name="employee_type_id"/>
+                        <field name="work_location_id"/>
+                    </group>
+
+                    <footer>
+                        <button
+                            name="action_generate_pdf"
+                            string="Generate"
+                            type="object"
+                            class="btn btn-primary"
+                        />
+                        <button
+                            name="action_send_pdf"
+                            string="Send"
+                            type="object"
+                            class="btn btn-secondary"
+                        />
+                        <button
+                            name="action_preview_pdf"
+                            string="Preview"
+                            type="object"
+                            class="btn btn-secondary"
+                        />
+                        <button
+                            string="Discard"
+                            special="cancel"
+                            class="btn btn-secondary"
+                        />
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
