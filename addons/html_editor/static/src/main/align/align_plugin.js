@@ -54,9 +54,7 @@ export class AlignPlugin extends Plugin {
                     getItems: () => alignmentItems,
                     getDisplay: () => this.alignment,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
-                    onSelected: (item) => {
-                        this.setAlignment(item.mode);
-                    },
+                    previewable: () => this.previewableSetAlignment,
                 },
                 isAvailable: this.canSetAlignment.bind(this),
             },
@@ -66,6 +64,7 @@ export class AlignPlugin extends Plugin {
         on_selectionchange_handlers: withSequence(READ, this.updateAlignmentParams.bind(this)),
         on_history_commit_undone_handlers: this.updateAlignmentParams.bind(this),
         on_history_commit_redone_handlers: this.updateAlignmentParams.bind(this),
+        on_savepoint_restored_handlers: this.updateAlignmentParams.bind(this),
         on_all_formats_removed_handlers: this.removeTextAlignment.bind(this),
 
         /** Predicates */
@@ -92,6 +91,9 @@ export class AlignPlugin extends Plugin {
         this.alignment = proxy({ displayName: "" });
         this.canSetAlignmentMemoized = weakMemoize(
             (selection) => isHtmlContentSupported(selection) && this.getBlocksToAlign().length > 0
+        );
+        this.previewableSetAlignment = this.dependencies.history.makePreviewableOperation((item) =>
+            this.setAlignment(item.mode)
         );
     }
 
