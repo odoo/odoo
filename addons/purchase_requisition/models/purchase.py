@@ -1,20 +1,38 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, get_lang
 
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    requisition_id = fields.Many2one('purchase.requisition', string='Agreement', copy=False, index='btree_not_null')
+    requisition_id = fields.Many2many(
+        'purchase.requisition',
+        relation='purchase_order_requisition_rel',
+    )
     requisition_type = fields.Selection(related='requisition_id.requisition_type')
+    date_order_warning = fields.Char(compute='_compute_date_order_warning')
+
+    @api.depends('date_order', 'requisition_id.date_start', 'requisition_id.date_end')
+    def _compute_date_order_warning(self):
+        for order in self:
+            # if no order date no warning possible
+            if not order.date_order:
+                order.date_order_warning = False
+                continue
+            order_date = order.date_order.date()
+            violating_requisitions = order.requisition_id.filtered(
+                lambda r: (r.date_start and order_date < r.date_start) or
+                            (r.date_end and order_date > r.date_end)
+            ).mapped('name')
+            if not violating_requisitions:
+                order.date_order_warning = False
+            else:
+                order.date_order_warning = _("You are placing an order outside the %s validity period", ", ".join(violating_requisitions))
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
-        if not self.requisition_id:
-            return
-
         self = self.with_company(self.company_id)
         requisition = self.requisition_id
         if self.partner_id:
@@ -29,48 +47,57 @@ class PurchaseOrder(models.Model):
         self.partner_id = partner.id
         self.fiscal_position_id = fpos.id
         self.payment_term_id = payment_term.id
-        self.company_id = requisition.company_id.id
-        self.currency_id = requisition.currency_id.id
-        if not self.origin or requisition.name not in self.origin.split(', '):
-            if self.origin:
-                if requisition.name:
-                    self.origin = self.origin + ', ' + requisition.name
-            else:
-                self.origin = requisition.name
-        self.note = requisition.description
-        if requisition.date_start:
-            self.date_order = max(fields.Datetime.now(), fields.Datetime.to_datetime(requisition.date_start))
-        else:
-            self.date_order = fields.Datetime.now()
+        if requisition:
+            self.company_id = requisition[0].company_id.id
+            self.currency_id = requisition[0].currency_id.id
 
-        # Create PO lines if necessary
-        # Do not clobber existing lines if the PO is already confirmed
+        existing_origins = self.origin.split(', ') if self.origin else []
+        req_names = requisition.mapped('name')
+        all_origins = []
+        for name in existing_origins + req_names:
+            if name and name not in all_origins:
+                all_origins.append(name)
+        self.origin = ', '.join(all_origins)
+        valid_descriptions = requisition.filtered('description').mapped('description')
+        if valid_descriptions:
+            self.note = '\n\n'.join(valid_descriptions)
+        start_dates = requisition.filtered('date_start').mapped(
+            lambda r: fields.Datetime.to_datetime(r.date_start),
+        )
+        self.date_order = max(start_dates + [fields.Datetime.now()])
+
         if self.state != 'draft':
             return
-        order_lines = []
-        for line in requisition.line_ids:
-            if line.display_type:
-                order_lines.append((0, 0, line._prepare_purchase_order_line(name=False)))
-                continue
-            # Compute name
-            product_lang = line.product_id.with_context(
-                lang=partner.lang or self.env.user.lang,
-                partner_id=partner.id
-            )
-            name = product_lang.display_name
-            if product_lang.description_purchase:
-                name += '\n' + product_lang.description_purchase
+        commands = []
+        unique_lines = self.order_line.mapped(lambda ol: (ol.product_id.id, ol.price_unit))
+        for req in requisition:
+            for line in req.line_ids:
+                possible_duplicate = (line.product_id.id, line.price_unit)
+                if possible_duplicate in unique_lines:
+                    continue
+                if line.display_type:
+                    commands.append((0, 0, line._prepare_purchase_order_line(name=False)))
+                    continue
+                # Compute name
+                product_lang = line.product_id.with_context(
+                    lang=partner.lang or self.env.user.lang,
+                    partner_id=partner.id
+                )
+                name = product_lang.display_name
+                if product_lang.description_purchase:
+                    name += '\n' + product_lang.description_purchase
 
-            # Compute taxes
-            taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id in requisition.company_id.parent_ids)).ids
+                # Compute taxes
+                taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id in req.company_id.parent_ids)).ids
 
-            product_qty = line.product_qty if requisition.requisition_type == 'purchase_template' else 0
-            # Create PO line
-            order_line_values = line._prepare_purchase_order_line(
-                name=name, product_qty=product_qty, price_unit=line.price_unit,
-                taxes_ids=taxes_ids)
-            order_lines.append((0, 0, order_line_values))
-        self.order_line = order_lines
+                product_qty = line.product_qty if req.requisition_type == 'purchase_template' else 0
+                # Create PO line
+                order_line_values = line._prepare_purchase_order_line(
+                    name=name, product_qty=product_qty, price_unit=line.price_unit,
+                    taxes_ids=taxes_ids)
+                commands.append((0, 0, order_line_values))
+
+        self.order_line = commands
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -102,6 +129,29 @@ class PurchaseOrder(models.Model):
 
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
+
+    order_too_big_warning = fields.Char(compute='_compute_order_too_big_warning')
+
+    def _compute_order_too_big_warning(self):
+        requisitions = self.order_id.requisition_id
+        # each line uses (product, unit price) as a key to match against a purchase requisition line with the same (product, unit price)
+        requisition_map = {}
+        for requisition in requisitions:
+            for requisition_line in requisition.line_ids:
+                requisition_map[requisition_line.product_id, requisition_line.price_unit] = (requisition_line, requisition.display_name)
+
+        for line in self:
+            # if the line is not in any requisition no warning is possible
+            if (line.product_id, line.price_unit) not in requisition_map:
+                line.order_too_big_warning = False
+            # the line gets a warning if the quantity is higher than what is ordered
+            else:
+                (requisition_line, requisition_name) = requisition_map[line.product_id, line.price_unit]
+                remaining_quantity = requisition_line.product_qty - requisition_line.qty_ordered
+                if line.product_qty > remaining_quantity:
+                    line.order_too_big_warning = _("Ordering this quantity will make the total ordered quantity for %s exceed the agreed-upon quantity", requisition_name)
+                else:
+                    line.order_too_big_warning = False
 
     def _compute_price_unit_and_date_planned_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
