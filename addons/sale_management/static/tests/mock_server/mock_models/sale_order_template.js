@@ -3,30 +3,12 @@ import { models } from "@web/../tests/web_test_helpers";
 export class SaleOrderTemplate extends models.ServerModel {
     _name = "sale.order.template";
 
-    get_section_templates() {
-        return [
-            {
-                id: 1,
-                name: "Section Template 1",
-                create_uid: this.env.user.id,
-            },
-            {
-                id: 2,
-                name: "Section Template 2",
-                create_uid: this.env.user.id,
-            },
-            {
-                id: 3,
-                name: "Section Template 3",
-                create_uid: this.env.user.id,
-            },
-            {
-                id: 4,
-                name: "Section Template 4",
-                create_uid: this.env.user.id,
-            },
-        ];
-    }
+    _records = [1, 2, 3, 4].map((id) => ({
+        id,
+        name: `Section Template ${id}`,
+        template_type: "section",
+        user_has_access: true,
+    }));
 
     prepare_section_template_order_lines() {
         return [
