@@ -17,7 +17,7 @@ export class AddBentoCardAction extends BuilderAction {
     static dependencies = ["clone", "history"];
     async apply({ editingElement }) {
         const cardCols = editingElement.querySelectorAll(
-            ".row > div:has(> [data-name='Bento card'])"
+            ".row > div:has(> [data-builder-name='bento-card'])"
         );
         const lastCardCol = cardCols[cardCols.length - 1];
         if (lastCardCol) {
