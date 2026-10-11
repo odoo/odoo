@@ -23,6 +23,11 @@ This addon provides an extensible, maintainable editor.
             "html_editor/static/src/main/media/video/providers/**/*",
             "html_editor/static/src/main/media/video/utils.js",
         ],
+        'web.assets_frontend_lazy': [
+            ('remove', 'html_editor/static/src/main/media/video/abstract_third_party_video.js'),
+            ('remove', 'html_editor/static/src/main/media/video/providers/**/*'),
+            ('remove', 'html_editor/static/src/main/media/video/utils.js'),
+        ],
         'web.assets_frontend': [
             ('include', 'html_editor.assets_media_dialog'),
             ('include', 'html_editor.assets_readonly'),

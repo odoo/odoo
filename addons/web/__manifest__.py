@@ -234,6 +234,11 @@ This module provides the core of the Odoo Web Client.
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
             # Remove assets_frontend_minimal
+            ('remove', 'web/static/src/polyfills/object.js'),
+            ('remove', 'web/static/src/polyfills/array.js'),
+            ('remove', 'web/static/src/polyfills/promise.js'),
+            ('remove', 'web/static/src/polyfills/set.js'),
+            ('remove', 'web/static/src/polyfills/map.js'),
             ('remove', 'web/static/src/module_loader.js'),
             ('remove', 'web/static/src/session.js'),
             ('remove', 'web/static/src/core/browser/cookie.js'),
