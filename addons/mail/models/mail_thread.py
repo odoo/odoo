@@ -1669,6 +1669,15 @@ class MailThread(models.AbstractModel):
                 related_attachment = [attach for attach in attachments if attach[2] and attach[2].get('cid') == cid]
                 if related_attachment:
                     node.set('data-filename', related_attachment[0][0])
+
+                    # Images present in quotes (replies and signatures) will be marked as quoted
+                    # during attachment creation unless they are also present in the main message body.
+                    # This prevents such images from appearing in the chatter.
+                    if not any(a.get('data-o-mail-quote') for a in node.iterancestors()):
+                        related_attachment[0].info['noquoted'] = True
+                        related_attachment[0].info.pop('quoted', None)
+                    elif not related_attachment[0].info.get('noquoted'):
+                        related_attachment[0].info['quoted'] = True
                     postprocessed = True
 
         for node in to_remove:
@@ -2567,6 +2576,8 @@ class MailThread(models.AbstractModel):
                 if (cid and cid in body_cids) or (name and name in body_filenames):
                     token = self.env['ir.attachment']._generate_access_token()
                     attachement_values['access_token'] = token
+                if info.get('quoted'):
+                    attachement_values['quote_attachment'] = True
                 attachement_values_list.append(attachement_values)
 
                 # keep cid, name list and token synced with attachement_values_list length to match ids latter
@@ -5389,7 +5400,11 @@ class MailThread(models.AbstractModel):
 
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()
-        res = self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
+        res = self.env['ir.attachment'].search([
+            ('res_id', '=', self.id),
+            ('res_model', '=', self._name),
+            ('quote_attachment', '=', False),
+        ], order='id desc')
         if 'original_id' in self.env['ir.attachment']._fields:
             # If the image is SVG: We take the png version if exist otherwise we take the svg
             # If the image is not SVG: We take the original one if exist otherwise we take it
