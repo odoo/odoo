@@ -272,13 +272,16 @@ class PurchaseOrderLine(models.Model):
 
     def _compute_price_unit_and_date_planned_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
+        requisition_line_used = set()
         for pol in self:
             if pol.product_id.id not in pol.order_id.requisition_id.line_ids.product_id.ids:
                 po_lines_without_requisition |= pol
                 continue
             for line in pol.order_id.requisition_id.line_ids:
-                if line.product_id == pol.product_id:
-                    pol.price_unit = line.product_uom_id._compute_price(line.price_unit, pol.product_uom)
+                if line.product_id == pol.product_id and line.id not in requisition_line_used:
+                    requisition_line_used.add(line.id)
+                    if not pol.price_unit:
+                        pol.price_unit = line.product_uom_id._compute_price(line.price_unit, pol.product_uom)
                     partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
                     params = {'order_id': pol.order_id}
                     seller = pol.product_id._select_seller(
@@ -295,7 +298,8 @@ class PurchaseOrderLine(models.Model):
                     name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
                     if line.product_description_variants:
                         name += '\n' + line.product_description_variants
-                    pol.name = name
+                    if not pol.name:
+                        pol.name = name
                     break
         super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_date_planned_and_name()
 
