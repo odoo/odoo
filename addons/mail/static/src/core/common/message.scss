@@ -152,7 +152,7 @@
 }
 @include o-message-bubble-colors;
 
-.o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
+.o-mail-ChatWindow .o-mail-Message.o-selfAuthored:not(.o-compact) {
     flex-direction: row-reverse;
 
     .o-mail-Message-core, .o-mail-Message-textContent {
@@ -163,6 +163,75 @@
     }
     .o-mail-Message-author {
         display: none;
+    }
+}
+
+// IRC-like layout: one line per message with time, author and body.
+.o-mail-Message.o-compact {
+    padding-top: 1px;
+    padding-bottom: 1px;
+
+    .o-mail-Thread & {
+        margin-top: 0;
+    }
+
+    &:hover:not(.o-editing) {
+        background-color: rgba($o-action, .05) !important;
+    }
+
+    .o-mail-Message-sidebar {
+        flex-basis: $o-mail-Message-compactSidebarWidth;
+        max-width: $o-mail-Message-compactSidebarWidth;
+        padding-left: map-get($spacers, 1);
+    }
+
+    .o-mail-Message-compactAvatar {
+        width: 1.25em;
+        height: 1.25em;
+    }
+
+    // Author and body share the first line, anything else spans below.
+    .o-mail-Message-compactContent {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: baseline;
+        column-gap: map-get($spacers, 2);
+
+        > :not(.o-mail-Message-header):not(.o-mail-Message-contentContainer) {
+            grid-column: 1 / -1;
+        }
+
+        // Not enough room for an author column in narrow chat windows.
+        .o-mail-ChatWindow & {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    .o-mail-Message-header {
+        flex-wrap: nowrap !important;
+    }
+
+    .o-mail-Message-author {
+        font-size: inherit;
+    }
+
+    .o-mail-Message-body:not(.o-note) {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    // Actions float over the end of the line instead of taking space inline.
+    .o-mail-Message-actions {
+        position: absolute;
+        top: -.5rem;
+        right: map-get($spacers, 2);
+        z-index: 1;
+        margin: 0 !important;
+        padding: 1px;
+        background-color: $o-view-background-color;
+        border: $border-width solid $border-color;
+        border-radius: $border-radius;
+        box-shadow: $box-shadow-sm;
     }
 }
 
