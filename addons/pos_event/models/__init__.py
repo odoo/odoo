@@ -10,3 +10,4 @@ from . import event_registration
 from . import event_question
 from . import event_question_answer
 from . import event_registration_answer
+from . import event_tag
