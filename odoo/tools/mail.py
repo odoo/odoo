@@ -1081,6 +1081,37 @@ def formataddr(pair, charset='utf-8'):
             return f'"{name}" <{local}@{domain}>'
     return f"{local}@{domain}"
 
+
+def idna_encode_header_domains(value):
+    """Punycode the domain of each address of an address header value.
+
+    Encoded-words are not allowed in the domain part of an address, so an
+    internationalized domain has to be IDNA-encoded before the header is
+    folded. The display name is left as is, an encoded-word is valid there.
+
+    >>> idna_encode_header_domains('test@\xe9\xe9\xe9.com')
+    'test@xn--9caaa.com'
+    >>> idna_encode_header_domains('"Jos\xe9" <jose@example.com>')
+    '"Jos\xe9" <jose@example.com>'
+    """
+    if not value or '@' not in value:
+        return value
+
+    addresses = []
+    encoded = False
+    for name, addr in getaddresses([value]):
+        local, at, domain = addr.rpartition('@')
+        try:
+            domain.encode('ascii')
+        except UnicodeEncodeError:
+            # rfc5890 - Internationalized Domain Names for Applications (IDNA)
+            addr = local + at + idna.encode(domain).decode('ascii')
+            encoded = True
+        addresses.append(email.utils.formataddr((name, addr)) if name else addr)
+
+    return ', '.join(addresses) if encoded else value
+
+
 def encapsulate_email(old_email, new_email):
     """Change the FROM of the message and use the old one as name.
 
