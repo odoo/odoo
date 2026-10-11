@@ -71,7 +71,7 @@ class TestL10nArWebsiteSale(TestArCommon):
         with self.subTest(scenario="Single 21% VAT - tax excluded"):
             combo = self._get_combination_info()
             self.assertDictContains(combo, {
-                'list_price': 1210.00,  # 1000 + 21%
+                'price': 1210.00,  # 1000 + 21%
                 'l10n_ar_price_tax_excluded': 1000.00,
             })
 
@@ -86,7 +86,7 @@ class TestL10nArWebsiteSale(TestArCommon):
             self.product_1.taxes_id = tax_27_included + tax_10_5_excluded
             combo = self._get_combination_info()
             self.assertDictContains(combo, {
-                'list_price': 1082.68,                 # Computed price including all taxes
+                'price': 1082.68,                 # Computed price including all taxes
                 'l10n_ar_price_tax_excluded': 787.40,  # Reverse calculated base price
             })
 
@@ -138,14 +138,14 @@ class TestL10nArWebsiteSale(TestArCommon):
         with self.subTest(scenario="White variant with 100 extra + 21% VAT"):
             combo = self._get_combination_info(product_id=white_variant)
             self.assertDictContains(combo, {
-                'list_price': 1331.00,                # (1000+100) + 21%
+                'price': 1331.00,                # (1000+100) + 21%
                 'l10n_ar_price_tax_excluded': 1100.00,
             })
 
         with self.subTest(scenario="Black variant with 200 extra + 21% VAT"):
             combo = self._get_combination_info(product_id=black_variant)
             self.assertDictContains(combo, {
-                'list_price': 1452.00,                # (1000+200) + 21%
+                'price': 1452.00,                # (1000+200) + 21%
                 'l10n_ar_price_tax_excluded': 1200.00,
             })
 

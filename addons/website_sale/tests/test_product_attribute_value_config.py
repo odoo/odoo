@@ -62,7 +62,6 @@ class TestWebsiteSaleProductAttributeValueConfig(
             combination_info = product_template._get_combination_info()
             self.assertEqual(combination_info["price"], 2222 * discount_rate * currency_ratio)
             self.assertEqual(combination_info["list_price"], 2222 * currency_ratio)
-            self.assertEqual(combination_info["has_discounted_price"], True)
 
             # CASE: B2C setting
             website.show_line_subtotals_tax_selection = "tax_included"
@@ -74,7 +73,6 @@ class TestWebsiteSaleProductAttributeValueConfig(
             self.assertAlmostEqual(
                 combination_info["list_price"], 2222 * currency_ratio * tax_ratio
             )
-            self.assertEqual(combination_info["has_discounted_price"], True)
 
     def test_get_combination_info_with_fpos(self):
         # Setup product.
@@ -129,10 +127,10 @@ class TestWebsiteSaleProductAttributeValueConfig(
             805,
             "700$ (500 fixed price + 200 attribute extra price) + 15% tax",
         )
-        self.assertEqual(
-            combination_info["list_price"],
-            805,
-            "700$ (500 fixed price + 200 attribute extra price) + 15% tax (2)",
+        self.assertNotIn(
+            "list_price",
+            combination_info,
+            msg="Discount is fixed and therefore not displayed on the website",
         )
 
         # Setup fiscal position 15% => 0%.
@@ -154,8 +152,10 @@ class TestWebsiteSaleProductAttributeValueConfig(
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
         self.assertEqual(combination_info["price"], 700, "700$ + 0% tax (mapped from fp 15% -> 0%)")
-        self.assertEqual(
-            combination_info["list_price"], 700, "700$ + 0% tax (mapped from fp 15% -> 0%)"
+        self.assertNotIn(
+            "list_price",
+            combination_info,
+            msg="Discount is fixed and therefore not displayed on the website",
         )
 
         # Try same flow with tax included
@@ -166,7 +166,11 @@ class TestWebsiteSaleProductAttributeValueConfig(
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
         self.assertEqual(combination_info["price"], 700, "608.70$ + 15% tax")
-        self.assertEqual(combination_info["list_price"], 700, "608.70$ + 15% tax (2)")
+        self.assertNotIn(
+            "list_price",
+            combination_info,
+            msg="Discount is fixed and therefore not displayed on the website",
+        )
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = jp_country.id
@@ -177,10 +181,10 @@ class TestWebsiteSaleProductAttributeValueConfig(
             608.7,
             "608.70$ + 0% tax (mapped from fp 15% -> 0%)",
         )
-        self.assertEqual(
-            round(combination_info["list_price"], 2),
-            608.7,
-            "608.70$ + 0% tax (mapped from fp 15% -> 0%)",
+        self.assertNotIn(
+            "list_price",
+            combination_info,
+            msg="Discount is fixed and therefore not displayed on the website",
         )
 
         # Try same flow with tax included for apply tax
@@ -192,10 +196,10 @@ class TestWebsiteSaleProductAttributeValueConfig(
             639.13,
             "608.70$ + 5% tax (mapped from fp 15% -> 5% for BE)",
         )
-        self.assertEqual(
-            round(combination_info["list_price"], 2),
-            639.13,
-            "608.70$ + 5% tax (mapped from fp 15% -> 5% for BE)",
+        self.assertNotIn(
+            "list_price",
+            combination_info,
+            msg="Discount is fixed and therefore not displayed on the website",
         )
 
     def test_hide_attribute_value_without_matching_product_variant(self):

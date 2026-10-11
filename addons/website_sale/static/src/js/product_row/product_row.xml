@@ -19,7 +19,7 @@
                     <small t-if="!this.props.hide_price" class="mb-0 text-body">
                         <span t-out="this.formattedPrice" class="me-1 text-nowrap"/>
                         <del
-                            t-if="this.props.strikethrough_price"
+                            t-if="this.props.list_price"
                             t-out="this.formattedStrikethroughPrice"
                             class="text-nowrap text-muted"
                         />

@@ -136,22 +136,27 @@ class Cart(PaymentPortal):
         if not product or not product._is_add_to_cart_allowed():
             raise UserError(self._get_product_user_error(product))
 
-        if product.sudo().type == 'combo':
+        if product.sudo().type == "combo":
             combo_item_products = [
-                product for product in linked_products or [] if product.get('combo_item_id')
+                product for product in linked_products or [] if product.get("combo_item_id")
             ]
             combos_sudo = product.sudo().product_tmpl_id.combo_ids
-            selected_combos_sudo = request.env['product.combo.item'].sudo().browse([
-                combo_item['combo_item_id'] for combo_item in combo_item_products
-            ]).combo_id
-            if (
-                len(combo_item_products) != len(combos_sudo)
-                or set(selected_combos_sudo.ids) != set(combos_sudo.ids)
+            selected_combos_sudo = (
+                request
+                .env["product.combo.item"]
+                .sudo()
+                .browse([combo_item["combo_item_id"] for combo_item in combo_item_products])
+                .combo_id
+            )
+            if len(combo_item_products) != len(combos_sudo) or set(selected_combos_sudo.ids) != set(
+                combos_sudo.ids
             ):
-                raise UserError(self.env._(
-                    "The number of selected combo items must match the number of available"
-                    " combo choices."
-                ))
+                raise UserError(
+                    self.env._(
+                        "The number of selected combo items must match the number of available"
+                        " combo choices."
+                    )
+                )
 
         added_qty_per_line = {}
         values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
@@ -265,7 +270,7 @@ class Cart(PaymentPortal):
             "currency": order_sudo.currency_id.name,
         }
 
-    def _get_product_user_error(self, product):
+    def _get_product_user_error(self, product):  # noqa: ARG002
         return self.env._("The given product does not exist therefore it cannot be added to cart.")
 
     @route(
@@ -454,7 +459,13 @@ class Cart(PaymentPortal):
                     self.env.website.prevent_sale
                     and self.env.website._prevent_product_sale(
                         line_sudo.product_id,
-                        line_sudo.product_id._get_combination_info_variant()["price"] == 0,
+                        self.env.website.currency_id.is_zero(
+                            self.env.website.pricelist_id._get_product_price(
+                                line_sudo.product_id,
+                                quantity=line_sudo.product_uom_qty,
+                                uom=line_sudo.product_uom_id,
+                            )
+                        ),
                     )
                 )
             ):

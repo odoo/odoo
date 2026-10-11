@@ -12,14 +12,11 @@ patch(ProductPage.prototype, {
      */
     async _onChangeCombination(ev, parent, combination) {
         await super._onChangeCombination(...arguments);
-        const currencyValue = parent.querySelector(
-            '.o_l10n_ar_price_tax_excluded .oe_currency_value'
+        this._updatePrice(
+            parent,
+            '.o_l10n_ar_price_tax_excluded',
+            combination.l10n_ar_price_tax_excluded,
+            combination.currency_precision
         );
-        if (currencyValue) {
-            currencyValue.textContent = this._priceToStr(
-                combination.l10n_ar_price_tax_excluded,
-                combination.currency_precision
-            );
-        }
     },
 });

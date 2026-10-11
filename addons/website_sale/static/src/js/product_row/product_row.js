@@ -10,7 +10,7 @@ export class ProductRow extends Component {
         website_url: t.string(),
         image_url: t.string(),
         price: t.number(),
-        strikethrough_price: t.number().optional(),
+        list_price: t.number().optional(),
         hide_price: t.boolean(),
         currency_id: t.number(),
     });
@@ -38,6 +38,6 @@ export class ProductRow extends Component {
      * @return {string} The formatted strikethrough price.
      */
     get formattedStrikethroughPrice() {
-        return formatCurrency(this.props.strikethrough_price, this.props.currency_id);
+        return formatCurrency(this.props.list_price, this.props.currency_id);
     }
 }

@@ -10,8 +10,8 @@ class ProductWishlist(Controller):
     @route("/shop/wishlist/add", type="jsonrpc", auth="public", website=True)
     def add_to_wishlist(self, product_id, **_kw):
         product = self.env["product.product"].browse(product_id)
-
-        price = product._get_combination_info_variant()["price"]
+        price = self.env.website.pricelist_id._get_product_price(product, 1.0)
+        price = product._apply_taxes_to_price(price, self.env.website.currency_id)
 
         Wishlist = self.env["product.wishlist"]
         if self.env.website.is_public_user():
