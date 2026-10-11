@@ -42,6 +42,7 @@ class StockMove(models.Model):
         'mrp.routing.workcenter', related='raw_material_production_id.bom_id.operation_ids')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Operation To Consume', check_company=True,
+        compute='_compute_operation_id', store=True, readonly=False,
         domain="[('id', 'in', allowed_operation_ids)]")
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order To Consume', copy=False, check_company=True, index='btree_not_null')
@@ -58,6 +59,13 @@ class StockMove(models.Model):
         help="The percentage of the final production cost for this by-product. The total of all by-products' cost share must be smaller or equal to 100.")
     product_qty_available = fields.Float('Product On Hand Quantity', related='product_id.qty_available', depends=['product_id'])
     product_virtual_available = fields.Float('Product Forecasted Quantity', related='product_id.virtual_available', depends=['product_id'])
+
+    @api.depends('workorder_id')
+    def _compute_operation_id(self):
+        # to sync operation_id on the move when the workorder changes
+        for move in self:
+            if move.workorder_id:
+                move.operation_id = move.workorder_id.operation_id
 
     @api.depends('product_id.bom_ids', 'product_id.bom_ids.uom_id')
     def _compute_allowed_uom_ids(self):
@@ -439,10 +447,6 @@ class StockMove(models.Model):
     def action_add_from_catalog_byproduct(self):
         mo = self.env['mrp.production'].browse(self.env.context.get('order_id'))
         return mo.with_context(child_field='move_byproduct_ids').action_add_from_catalog()
-
-    def action_add_from_catalog_wo(self):
-        workorder = self.env['mrp.workorder'].browse(self.env.context.get('order_id'))
-        return workorder.with_context(child_field='move_raw_ids').action_add_from_catalog()
 
     def _action_cancel(self):
         res = super(StockMove, self)._action_cancel()
