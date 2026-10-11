@@ -72,7 +72,7 @@ test("Drag & drop inner content block", async () => {
     await waitForEndOfOperation();
 
     expect(contentEl).toHaveInnerHTML(
-        `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button" data-name="Button A">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
+        `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button" data-dynamic-builder-name="Button A">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
     );
     expect(".o_website_builder_sidebar [data-icon='undo']").toBeEnabled();
 });
@@ -95,7 +95,7 @@ test("Drag & drop inner content block + undo/redo", async () => {
     await waitForEndOfOperation();
 
     expect(contentEl).toHaveInnerHTML(
-        `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button" data-name="Button A">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
+        `<div>\ufeff<a class="btn btn-primary" href="#" data-snippet="s_button" data-dynamic-builder-name="Button A">\ufeffButton A\ufeff</a>\ufeff<p>Text</p></div>`
     );
     expect(".o_website_builder_sidebar [data-icon='undo']").toBeEnabled();
     expect(".o_website_builder_sidebar [data-icon='redo']").not.toBeEnabled();

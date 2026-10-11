@@ -47,7 +47,7 @@ test("dynamic snippet loads items and displays them through template", async () 
       <div id="wrapwrap">
           <section data-snippet="s_events" class="s_events s_event_upcoming_snippet s_event_event_picture s_dynamic pt32 pb32 o_colored_level"
                   data-custom-template-data="{&quot;events_event_time_active&quot;:true}"
-                  data-name="Events"
+                  data-dynamic-builder-name="Events"
                   data-filter-id="1"
                   data-filter-by-tag-ids="[{&quot;id&quot;:5,&quot;name&quot;:&quot;Culture&quot;,&quot;display_name&quot;:&quot;Culture&quot;,&quot;category_id&quot;:&quot;2,Activity&quot;}]"
                   data-template-key="website_event.dynamic_filter_template_event_event_picture"

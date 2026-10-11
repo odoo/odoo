@@ -707,7 +707,7 @@ test("Can link states to a country", async () => {
     onRpc("get_authorized_fields", () => countryAndStateField);
     await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="Country" class="s_website_form_field" data-type="many2one">
+            <div data-dynamic-builder-name="Country" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="country">
                         <span class="s_website_form_label_content">Country</span>
@@ -721,7 +721,7 @@ test("Can link states to a country", async () => {
                     </div>
                 </div>
             </div>
-            <div data-name="State" class="s_website_form_field" data-type="many2one">
+            <div data-dynamic-builder-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
                         <span class="s_website_form_label_content">State</span>
@@ -759,7 +759,7 @@ test("Shouldn't have the 'Link to country' option if there's no country field", 
     onRpc("get_authorized_fields", () => countryAndStateField);
     await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="State" class="s_website_form_field" data-type="many2one">
+            <div data-dynamic-builder-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
                         <span class="s_website_form_label_content">State</span>
@@ -831,7 +831,7 @@ test("Only state fields have data-link-state-to-country attr", async () => {
     onRpc("get_authorized_fields", () => countryAndStateField);
     await setupWebsiteBuilder(
         `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div data-name="Country" class="s_website_form_field" data-type="many2one">
+            <div data-dynamic-builder-name="Country" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="country">
                         <span class="s_website_form_label_content">Country</span>
@@ -843,7 +843,7 @@ test("Only state fields have data-link-state-to-country attr", async () => {
                     </div>
                 </div>
             </div>
-            <div data-name="State" class="s_website_form_field" data-type="many2one">
+            <div data-dynamic-builder-name="State" class="s_website_form_field" data-type="many2one">
                 <div>
                     <label class="s_website_form_label" for="state">
                         <span class="s_website_form_label_content">State</span>

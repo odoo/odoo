@@ -23,11 +23,11 @@ test("Should show anchor button based on resource selectors", async () => {
         template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
     });
     await setupHTMLBuilder(`
-            <div data-name="Link creation allowed1" class="allowed1">
+            <div data-dynamic-builder-name="Link creation allowed1" class="allowed1">
                 Allowed link to be created
-                <div data-name="Link creation not allowed" class="excluded">
+                <div data-dynamic-builder-name="Link creation not allowed" class="excluded">
                     Not allowed link to be created
-                    <div data-name="Link creation allowed2" class="allowed2">
+                    <div data-dynamic-builder-name="Link creation allowed2" class="allowed2">
                         Allowed link to be created
                     </div>
                 </div>

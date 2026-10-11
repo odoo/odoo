@@ -24,7 +24,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 defineWebsiteModels();
 
 const dummySnippet = `
-    <section data-name="Dummy Section" data-snippet="s_dummy">
+    <section data-dynamic-builder-name="Dummy Section" data-snippet="s_dummy">
         <div class="container">
             <div class="row">
                 <div class="col-lg-7">
@@ -201,7 +201,7 @@ test("Saved custom snippets drop root unremovable and unmovable classes", async 
         `
         <section
             class="oe_unremovable oe_unmovable"
-            data-name="Dummy Section"
+            data-dynamic-builder-name="Dummy Section"
             data-snippet="s_dummy"
         >
             <div class="container">
@@ -229,13 +229,13 @@ test("Saved custom snippets drop root unremovable and unmovable classes", async 
 
 test("Use the sidebar 'create anchor' buttons", async () => {
     const websiteContent = `
-        <section class="first" data-name="Dummy Section" data-snippet="s_dummy">
+        <section class="first" data-dynamic-builder-name="Dummy Section" data-snippet="s_dummy">
             <h1>Anchor test</h1>
         </section>
-        <section class="second" data-name="Dummy Section" data-snippet="s_dummy">
+        <section class="second" data-dynamic-builder-name="Dummy Section" data-snippet="s_dummy">
             <p>test<p>
         </section>
-        <section class="third" data-name="Dummy Section" data-snippet="s_dummy">
+        <section class="third" data-dynamic-builder-name="Dummy Section" data-snippet="s_dummy">
             <p>test<p>
         </section>
         <section class="fourth">

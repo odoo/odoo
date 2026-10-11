@@ -27,10 +27,10 @@ test("Undo/Redo correctly restores the stored container target", async () => {
         template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
     });
     await setupHTMLBuilder(`
-        <div data-name="Target 1" class="test-options-target target1">
+        <div data-dynamic-builder-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
-        <div data-name="Target 2" class="test-options-target target2">
+        <div data-dynamic-builder-name="Target 2" class="test-options-target target2">
             Homepage2
         </div>
 
@@ -62,10 +62,10 @@ test("Undo/Redo multiple actions always restores the action container target", a
         template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
     });
     await setupHTMLBuilder(`
-        <div data-name="Target 1" class="test-options-target target1">
+        <div data-dynamic-builder-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
-        <div data-name="Target 2" class="test-options-target target2">
+        <div data-dynamic-builder-name="Target 2" class="test-options-target target2">
             Homepage2
         </div>
 
@@ -108,10 +108,10 @@ test("Undo/Redo an action that activates another target restores the old one on 
         template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
     });
     const { getEditor } = await setupHTMLBuilder(`
-        <div data-name="Target 1" class="test-options-target target1">
+        <div data-dynamic-builder-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
-        <div data-name="Target 2" class="test-options-target target2">
+        <div data-dynamic-builder-name="Target 2" class="test-options-target target2">
             Homepage2
         </div>
 
@@ -145,7 +145,7 @@ test("Undo/Redo an action that deactivates the containers restores the old one o
         template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
     });
     const { getEditor } = await setupHTMLBuilder(`
-        <div data-name="Target 1" class="test-options-target target1">
+        <div data-dynamic-builder-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
     `);
@@ -190,7 +190,7 @@ test("Undoing an action that deactivates target followed by another action does 
         template: xml`<BuilderButton action="'otherAction'">Test</BuilderButton>`,
     });
     const { getEditor } = await setupHTMLBuilder(`
-        <div data-name="Target 1" class="test-options-target target1">
+        <div data-dynamic-builder-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
     `);
@@ -235,7 +235,7 @@ test("Reverting a preview after an action that deactivates target does not deact
         template: xml`<BuilderButton action="'otherAction'">Test</BuilderButton>`,
     });
     const { getEditor } = await setupHTMLBuilder(`
-        <div data-name="Target 1" class="test-options-target target1">
+        <div data-dynamic-builder-name="Target 1" class="test-options-target target1">
             Homepage
         </div>
     `);
@@ -280,9 +280,9 @@ test("Containers fallback to a valid ancestor if the target disappears and resto
         template: xml`<BuilderButton action="'ancestorAction'">Ancestor selected</BuilderButton>`,
     });
     await setupHTMLBuilder(`
-        <div data-name="Ancestor" class="test-ancestor">
+        <div data-dynamic-builder-name="Ancestor" class="test-ancestor">
             Hey I'm an ancestor
-            <div data-name="Target 1" class="test-options-target target1">
+            <div data-dynamic-builder-name="Target 1" class="test-options-target target1">
                 Homepage
             </div>
         </div>
@@ -308,10 +308,10 @@ test("Do not activate/update containers if the element clicked is excluded", asy
         template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
     });
     await setupHTMLBuilder(`
-        <div data-name="Target 1" class="test-options-target target1 o_we_no_overlay">
+        <div data-dynamic-builder-name="Target 1" class="test-options-target target1 o_we_no_overlay">
             Homepage
         </div>
-        <div data-name="Target 2" class="test-options-target target2">
+        <div data-dynamic-builder-name="Target 2" class="test-options-target target2">
             Homepage2
         </div>
 
@@ -347,11 +347,11 @@ test("Do not show parent container for no_parent_containers targets", async () =
         template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
     });
     await setupHTMLBuilder(`
-        <div data-name="Parent" class="test-parent-target">
+        <div data-dynamic-builder-name="Parent" class="test-parent-target">
             Parent
-            <div data-name="Child" class="test-child-target">
+            <div data-dynamic-builder-name="Child" class="test-child-target">
                 Child
-                <div data-name="Grand-child" class="test-grand-child-target">
+                <div data-dynamic-builder-name="Grand-child" class="test-grand-child-target">
                     Grand-Child
                 </div>
             </div>
@@ -396,7 +396,7 @@ test("Option containers should update reactively", async () => {
         template: xml`<BuilderButton classAction="'disabled_clone'">Disable clone</BuilderButton>`,
     });
     await setupHTMLBuilder(`
-        <div data-name="Target" class="test-options-target target1">
+        <div data-dynamic-builder-name="Target" class="test-options-target target1">
             Homepage
         </div>
     `);
@@ -452,7 +452,7 @@ test("Option containers dispatched to plugins are updated reactively", async () 
         `,
     });
     await setupHTMLBuilder(`
-        <div data-name="Target">
+        <div data-dynamic-builder-name="Target">
             <div> Is removable? <p class="target">-</p></div>
         </div>
     `);

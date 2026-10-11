@@ -6,7 +6,7 @@ setupInteractionWhiteList("website.state_form_field");
 describe.current.tags("interaction_dev");
 
 const formEl = `<section class="s_website_form"><form data-model_name="mail.mail">
-        <div data-name="Country" class="s_website_form_field s_website_form_custom" data-type="many2one">
+        <div data-dynamic-builder-name="Country" class="s_website_form_field s_website_form_custom" data-type="many2one">
             <div>
                 <label class="s_website_form_label" for="country">
                     <span class="s_website_form_label_content">Country</span>
@@ -21,7 +21,7 @@ const formEl = `<section class="s_website_form"><form data-model_name="mail.mail
                 </div>
             </div>
         </div>
-        <div data-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
+        <div data-dynamic-builder-name="State" class="s_website_form_field s_website_form_custom" data-type="many2one">
             <div>
                 <label class="s_website_form_label" for="state">
                     <span class="s_website_form_label_content">State</span>

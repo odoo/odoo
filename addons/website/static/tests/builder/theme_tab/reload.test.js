@@ -36,7 +36,7 @@ test("hide invisible element after reload from 'theme' tab should stay on 'theme
     });
     onRpc("/website/theme_customize_data", () => {});
     await setupWebsiteBuilder(
-        `<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element"></div>`
+        `<div class="s_invisible_el o_snippet_invisible" data-dynamic-builder-name="Invisible Element"></div>`
     );
     queryOne(":iframe .s_invisible_el").dataset.applied = "1";
     expect(":iframe .s_invisible_el").toHaveAttribute("data-applied");

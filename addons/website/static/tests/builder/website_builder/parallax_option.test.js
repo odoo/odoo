@@ -91,7 +91,7 @@ test("remove parallax from inner block", async () => {
                 class="s_parallax_no_overflow_hidden"
                 style="background-image: ${backgroundImageUrl}">
                 AAAA
-                        <section data-name="SectionB" id="section_b" class="s_parallax_no_overflow_hidden"
+                        <section data-dynamic-builder-name="SectionB" id="section_b" class="s_parallax_no_overflow_hidden"
                         style="background-image: ${backgroundImageUrl}">
                             BBBB
                         </section>
