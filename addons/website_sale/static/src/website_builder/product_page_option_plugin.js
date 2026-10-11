@@ -236,21 +236,7 @@ export class BaseProductPageAction extends BuilderAction {
                 }
             }
         } else if(type === "video") {
-            attachments = await Promise.all(attachments.map(async attachment => {
-                const thumbnailUrl = await attachment.thumbnailUrl;
-                let thumbnailData = null;
-                if (thumbnailUrl) {
-                    const fetchResult = await fetch(thumbnailUrl);
-                    const blob = await fetchResult.blob();
-                    thumbnailData = await getDataURLFromFile(blob);
-                }
-
-                return {
-                    name: attachment.platform + " - [Video]",
-                    video_url: attachment.embedUrl,
-                    image_1920:  thumbnailData ? thumbnailData.split(",")[1] : null
-                }
-            }));
+            attachments = await Promise.all(attachments.map((video) => this.getVideoValues(video)));
         }
         await rpc("/shop/product/extra-media", {
             media: attachments,
@@ -259,6 +245,22 @@ export class BaseProductPageAction extends BuilderAction {
             product_template_id: this.productTemplateID,
             combination_ids: this.getSelectedVariantValues(el),
         });
+    }
+
+    async getVideoValues(video) {
+        const thumbnailUrl = await video.thumbnailUrl;
+        let thumbnailData = null;
+        if (thumbnailUrl) {
+            const fetchResult = await fetch(thumbnailUrl);
+            const blob = await fetchResult.blob();
+            thumbnailData = await getDataURLFromFile(blob);
+        }
+
+        return {
+            name: video.platform + " - [Video]",
+            video_url: video.embedUrl,
+            image_1920: thumbnailData ? thumbnailData.split(",")[1] : null,
+        };
     }
 
     async convertAttachmentToWebp(attachment, imageEl) {
