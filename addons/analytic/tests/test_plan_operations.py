@@ -43,10 +43,12 @@ class TestAnalyticPlanOperations(TransactionCase):
         parent = self.env['account.analytic.plan'].create({'name': 'Parent Plan'})
         plan = self.env['account.analytic.plan'].create({'name': 'Test Plan', 'parent_id': parent.id})
         self.assertFalse(plan._find_plan_column('account.analytic.line'))
-        self.assertTrue(plan._find_related_field('account.analytic.line'))
+        plan_field = plan._find_related_field('account.analytic.line')
+        self.assertTrue(plan_field)
         plan.parent_id = False
         self.assertTrue(plan._find_plan_column('account.analytic.line'))
         self.assertFalse(plan._find_related_field('account.analytic.line'))
+        self.assertFalse(plan_field.exists())
 
     def test_demote_plan(self):
         parent = self.env['account.analytic.plan'].create({'name': 'Parent Plan'})
