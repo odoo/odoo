@@ -143,7 +143,7 @@ class DocController(http.Controller):
             {
                 'model': ir_model.model,
                 'name': ir_model.name,
-                'doc': ir_model.explanation,
+                'doc': ir_model.explanation or '',
                 'fields': {
                     field.name: {'string': field.field_description}
                     for field in ir_model.field_id
