@@ -4,7 +4,10 @@ from odoo.tests import tagged, TransactionCase
 from odoo.exceptions import UserError
 from unittest.mock import patch
 
+import requests
+
 import odoo.tests
+from odoo.addons.base_geolocalize.models.base_geocoder import GeoCodingError
 
 
 @odoo.tests.tagged('external', '-standard')
@@ -105,3 +108,86 @@ class TestPartnerGeoLocalization(TransactionCase):
         partner = self.env['res.partner'].create({'name': 'Test Partner', 'street': '1 Test Street'})
         partner.write({'street': '2 Test Street'})
         self.assertFalse(partner.should_be_geolocalized)
+
+    def test_geo_localize_stores_error_for_partners_without_match(self):
+        """ Partners whose address cannot be resolved are flagged with an error
+        and not retried until their address changes. """
+        partner = self.env['res.partner'].create({
+            'name': "Test A", 'street': "1 Fake Street", 'zip': "1000", 'city': "Bucarest",
+            'should_be_geolocalized': True,
+        })
+        with patch(
+            'odoo.addons.base_geolocalize.models.res_partner.ResPartner._geo_localize',
+            return_value=None,
+        ):
+            partner.with_context(force_geo_localize=True).geo_localize()
+        self.assertEqual(
+            partner.geo_localization_error,
+            "No match found for address: 1 Fake Street, 1000 Bucarest",
+        )
+        self.assertFalse(partner.should_be_geolocalized)
+
+    def test_geo_localize_clears_error_for_partners_with_match(self):
+        """ Partners whose address is resolved are not flagged with an error anymore. """
+        partner = self.env['res.partner'].create({
+            'name': "Test A", 'geo_localization_error': "No match found for this address.",
+        })
+        with patch(
+            'odoo.addons.base_geolocalize.models.res_partner.ResPartner._geo_localize',
+            return_value=(44.4323, 26.1063),
+        ):
+            partner.with_context(force_geo_localize=True).geo_localize()
+        self.assertFalse(partner.geo_localization_error)
+
+    def test_editing_the_address_clears_the_error(self):
+        """ Fixing a typo in the address allows a new geolocation attempt. """
+        partner = self.env['res.partner'].create({
+            'name': "Test A", 'city': "Bucarest", 'geo_localization_error': "No match found for this address.",
+        })
+        partner.city = "Bucharest"
+        self.assertFalse(partner.geo_localization_error)
+
+    def test_geo_localize_stores_error_when_server_fails(self):
+        """ A provider failure is saved on the partner instead of aborting the
+        transaction, no fallback query is made and the partner is not retried. """
+        partner = self.env['res.partner'].create({'name': "Test A", 'city': "Bucharest", 'should_be_geolocalized': True})
+        with patch(
+            'odoo.addons.base_geolocalize.models.base_geocoder.BaseGeocoder.geo_find',
+            side_effect=GeoCodingError("Error with geolocation server: timeout"),
+        ) as mock_geo_find:
+            partner.with_context(force_geo_localize=True).geo_localize()
+        mock_geo_find.assert_called_once()
+        self.assertEqual(partner.geo_localization_error, "Error with geolocation server: timeout")
+        self.assertFalse(partner.date_localization)
+        self.assertFalse(partner.should_be_geolocalized)
+
+    def test_openstreetmap_errors(self):
+        """ "No match" is returned as None, every other failure raises a
+        GeoCodingError describing what went wrong. """
+        def response(status_code, content):
+            res = requests.Response()
+            res.status_code = status_code
+            res._content = content
+            return res
+
+        def call_openstreetmap(**requests_get_mock):
+            with patch('odoo.addons.base_geolocalize.models.base_geocoder.time'), \
+                 patch('requests.get', **requests_get_mock):
+                return self.env['base.geocoder']._call_openstreetmap("1 Fake Street")
+
+        for requests_get_mock, reason in [
+            ({'side_effect': requests.Timeout()}, "timeout"),
+            ({'side_effect': requests.ConnectionError()}, "server not reached"),
+            ({'return_value': response(429, b"<html></html>")}, "server answered with HTTP status 429"),
+            ({'return_value': response(200, b"<html></html>")}, "unexpected response format"),
+            ({'return_value': response(200, b'[{"lat": "x"}]')}, "unexpected response format"),
+        ]:
+            with self.subTest(reason=reason), self.assertRaises(GeoCodingError) as e:
+                call_openstreetmap(**requests_get_mock)
+            self.assertEqual(str(e.exception), f"Error with geolocation server: {reason}")
+
+        self.assertIsNone(call_openstreetmap(return_value=response(200, b"[]")))
+        self.assertEqual(
+            call_openstreetmap(return_value=response(200, b'[{"lat": "44.4", "lon": "26.1"}]')),
+            (44.4, 26.1),
+        )
