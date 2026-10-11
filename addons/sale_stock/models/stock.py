@@ -90,6 +90,9 @@ class StockMove(models.Model):
                     move.description_picking = ''
                 move.description_picking = (multiline_description + '\n' + move.description_picking).strip()
 
+    def _get_related_account_moves(self):
+        return self.sale_id.invoice_ids or super()._get_related_account_moves()
+
     def _action_synch_order(self):
         sale_order_lines_vals = []
         for move in self:

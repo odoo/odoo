@@ -31,6 +31,9 @@ class StockPicking(models.Model):
             lock += self.company_id._get_lock_date_violations(self.date_done.date(), fiscalyear=True, sale=False, purchase=False, tax=False, hard=True)
         return bool(lock)
 
+    def _get_related_account_moves(self):
+        return self.env['account.move'].browse()
+
     def _prepare_return_move_default_values(self, move_id):
         vals = super()._prepare_return_move_default_values(move_id)
         vals['to_refund'] = move_id.to_refund

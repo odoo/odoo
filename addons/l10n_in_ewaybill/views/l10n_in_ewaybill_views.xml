@@ -53,6 +53,9 @@
                         <field name="error_message"/>
                     </div>
                 </div>
+                <div invisible="not warning">
+                    <field name="warning" class="o_field_html" widget="actionable_errors"/>
+                </div>
                 <sheet>
                     <div class="oe_title">
                         <h1 invisible="not name">
@@ -170,6 +173,18 @@
                 <!-- Chatter -->
                 <chatter/>
             </form>
+        </field>
+    </record>
+
+    <record id="l10n_in_ewaybill_list_view" model="ir.ui.view">
+        <field name="name">l10n.in.ewaybill.list.view</field>
+        <field name="model">l10n.in.ewaybill</field>
+        <field name="arch" type="xml">
+            <list string="e-Waybill">
+                <field name="display_name" string="e-Waybill Number"/>
+                <field name="document_number"/>
+                <field name="document_date"/>
+            </list>
         </field>
     </record>
 

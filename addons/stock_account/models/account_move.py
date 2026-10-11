@@ -12,6 +12,10 @@ class AccountMove(models.Model):
     # OVERRIDE METHODS
     # -------------------------------------------------------------------------
 
+    def _get_related_pickings(self):
+        # OVERRIDE
+        return self.env['stock.picking'].browse()
+
     def _get_lines_onchange_currency(self):
         # OVERRIDE
         return self.line_ids.filtered(lambda l: l.display_type != 'cogs')

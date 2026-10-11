@@ -9,6 +9,9 @@ from odoo.tools.misc import formatLang
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    def _get_related_pickings(self):
+        return self.invoice_line_ids.sale_line_ids.move_ids.picking_id or super()._get_related_pickings()
+
     def _get_invoiced_lot_values(self):
         """ Get and prepare data to show a table of invoiced lot on the invoice's report. """
         self.ensure_one()

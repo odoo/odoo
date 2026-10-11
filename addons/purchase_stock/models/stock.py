@@ -39,6 +39,9 @@ class StockPicking(models.Model):
             return NotImplemented
         return [('purchase_id.date_order', operator, value)]
 
+    def _get_related_account_moves(self):
+        return self.purchase_id.invoice_ids or super()._get_related_account_moves()
+
     def _create_return(self):
         picking = super()._create_return()
         if len(picking.move_ids.partner_id) == 1 and picking.partner_id != picking.move_ids.partner_id:
