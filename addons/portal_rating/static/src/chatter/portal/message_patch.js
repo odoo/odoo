@@ -41,7 +41,7 @@ patch(Message.prototype, {
     },
 
     get ratingValue() {
-        return this.message.rating_value || this.message.rating_id?.rating;
+        return this.message.rating_id?.rating;
     },
 
     get richBodyAttClass() {
@@ -84,7 +84,7 @@ patch(Message.prototype, {
         this.state.editRating = !this.state.editRating;
         if (this.state.editRating) {
             const messageContent = convertBrToLineBreak(
-                this.props.message.rating_id.publisher_comment
+                this.props.message.rating_id.publisher_comment || ""
             );
             this.props.message.composer = {
                 message: this.props.message,
@@ -112,6 +112,6 @@ patch(Message.prototype, {
             rating_id: this.message.rating_id.id,
             publisher_comment: "",
         });
-        this.message.rating_id = data;
+        this.store.insert(data);
     },
 });

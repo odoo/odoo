@@ -24,12 +24,11 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       - search mail_notification
         #       - fetch mail_notification
         #   - search bus_bus (_bus_last_id)
-        #   29 store add message:
+        #   28 store add message:
         #       - fetch mail_message (_records_by_model_name/prefetch)
         #       - search mail_message_schedule
         #       - search mail_followers
         #       - read group rating_rating (_rating_get_stats_per_record for slide.channel)
-        #       - read group rating_rating (_rating_get_stats_per_record for product.template)
         #       3 thread:
         #           - fetch hr_employee
         #           - fetch slide_channel
