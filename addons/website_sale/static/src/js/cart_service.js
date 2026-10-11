@@ -6,7 +6,7 @@ import { ProductCombo } from '@sale/js/models/product_combo';
 import {
     ProductConfiguratorDialog
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
-import { getSelectedCustomPtav, serializeComboItem } from '@sale/js/sale_utils';
+import { getConfiguredPtavs, serializeComboItem } from '@sale/js/sale_utils';
 import { browser } from '@web/core/browser/browser';
 import { serializeDateTime } from '@web/core/l10n/dates';
 import { rpc } from '@web/core/network/rpc';
@@ -403,22 +403,12 @@ export class CartService {
             return serializedProduct;
         }
 
-        // Custom attributes.
-        serializedProduct.product_custom_attribute_values = [];
-        for (const ptal of product.attribute_lines) {
-            const selectedCustomPtav = getSelectedCustomPtav(ptal);
-            if (selectedCustomPtav) {
-                serializedProduct.product_custom_attribute_values.push({
-                    custom_product_template_attribute_value_id: selectedCustomPtav.id,
-                    custom_value: ptal.customValue ?? '',
-                });
-            }
-        }
-
-        // No variant attributes.
-        serializedProduct.no_variant_attribute_value_ids = product.attribute_lines
-            .filter(ptal => ptal.create_variant === 'no_variant')
-            .flatMap(ptal => ptal.selected_attribute_value_ids);
+        const { customPtavs, noVariantPtavIds } = getConfiguredPtavs(product);
+        serializedProduct.product_custom_attribute_values = customPtavs.map(customPtav => ({
+            custom_product_template_attribute_value_id: customPtav.id,
+            custom_value: customPtav.value ?? '',
+        }));
+        serializedProduct.no_variant_attribute_value_ids = noVariantPtavIds;
 
         return serializedProduct;
     }
