@@ -18,7 +18,7 @@ export class SubChannelList extends Component {
         this.ancestors = useAncestors();
         this.store = useService("mail.store");
         this.offlineService = useService("offline");
-        // bound once so `onClickSubChannel` is a stable (useProps.static) handler
+        // bound once so `onClickSubChannel` is a stable (static prop) handler
         this.onClickSubChannel = this.onClickSubChannel.bind(this);
         this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"]),

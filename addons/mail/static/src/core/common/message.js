@@ -41,7 +41,6 @@ import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
 import {
     MessageSelectionState,
-    propComputed,
     useForwardRefsToParent,
     useLongPress,
     useRightClickMenu,
@@ -108,20 +107,17 @@ export class Message extends Component {
             className: t.string().optional(),
             hasActions: t.boolean().optional(true),
             isFirstMessage: t.boolean().optional(),
+            isReadOnly: t.signal(t.boolean()).optional(),
             message: t.instanceOf(this.store["mail.message"]),
             messageRefs: t.instanceOf(Map).optional(),
             messageSearch: t.instanceOf(MessageSearchState).optional(),
             messageSelection: t.instanceOf(MessageSelectionState).optional(),
+            onParentMessageClick: onParentMessageClickType(this.store).optional().static(),
             previousMessage: t.instanceOf(this.store["mail.message"]).optional(),
             showDates: t.boolean().optional(true),
             squashed: t.boolean().optional(),
             thread: t.instanceOf(this.store["mail.thread"]).optional(),
         });
-        this.isReadOnly = propComputed("isReadOnly", t.boolean().optional());
-        this.onParentMessageClick = useProps.static(
-            "onParentMessageClick",
-            onParentMessageClickType(this.store).optional()
-        );
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = proxy({
             shouldRenderActions: false,
@@ -362,7 +358,7 @@ export class Message extends Component {
     }
 
     get isEditing() {
-        return !this.isReadOnly() && this.props.message.composer;
+        return !this.props.isReadOnly() && this.props.message.composer;
     }
 
     get message() {
