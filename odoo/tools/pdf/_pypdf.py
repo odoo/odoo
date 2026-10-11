@@ -1,7 +1,8 @@
 import typing
 
 from pypdf import errors, filters, generic, PageObject, PdfReader as _Reader, PdfWriter as _Writer
-from pypdf.generic import create_string_object
+from pypdf.annotations import Link
+from pypdf.generic import create_string_object, Fit
 from pypdf import __version__  # noqa: F401
 
 from odoo.tools.func import deprecated
@@ -42,6 +43,10 @@ class PdfReader(_Reader):
     @deprecate
     def getDocumentInfo(self):
         return self.metadata
+
+    @property
+    def outlines(self):
+        return self.outline
 
     @deprecate
     def getFormTextFields(self):
@@ -95,3 +100,27 @@ class PdfWriter(_Writer):
     @deprecate
     def _addObject(self, *args, **kwargs):
         return self._add_object(*args, **kwargs)
+
+    def addLink(self, pagenum, pagedest, rect, border=None, fit='/Fit', *args):
+        return self.add_annotation(
+            page_number=pagenum,
+            annotation=Link(
+                rect=rect,
+                border=border,
+                target_page_index=pagedest,
+                fit=Fit(fit, args),
+            ),
+        )
+
+    def add_bookmark(
+        self, title, pagenum, parent=None, color=None, bold=False, italic=False, fit='/Fit', *args,
+    ):
+        return self.add_outline_item(
+            title,
+            pagenum,
+            parent=parent,
+            color=color,
+            bold=bold,
+            italic=italic,
+            fit=Fit(fit, args),
+        )
