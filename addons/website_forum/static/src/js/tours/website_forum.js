@@ -9,12 +9,14 @@ registry.category("web_tour.tours").add("question_tour", {
             tooltipPosition: "bottom",
             content: _t("Select a forum to post your question in."),
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: 'a[href$="/ask"]',
             tooltipPosition: "left",
             content: _t("Create a new post in this forum by clicking on the button."),
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: "input[name=post_name]",
@@ -53,6 +55,7 @@ registry.category("web_tour.tours").add("question_tour", {
             trigger: "button:contains(/^Post/)",
             content: _t("Click to post your question."),
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: ".o_wforum_content_wrapper .h3:contains(test)",
@@ -79,6 +82,7 @@ registry.category("web_tour.tours").add("question_tour", {
             trigger: 'button:contains("Post Answer")',
             content: _t("Click to post your answer."),
             run: "click",
+            expectUnloadPage: true,
         },
         {
             trigger: ".o_wforum_content_wrapper .h3:contains(test)",
