@@ -14,6 +14,7 @@ class PaypalCommon(PaymentCommon):
                 "paypal_email_account": "dummy@test.mail.com",
                 "paypal_client_id": "dummy_client_id",
                 "paypal_client_secret": "dummy_secret",
+                "paypal_account_id": "dummy_account_id",
             },
         )
 
@@ -86,6 +87,11 @@ class PaypalCommon(PaymentCommon):
                 "amount": {"currency_code": cls.currency.name, "value": str(cls.amount)},
                 "supplementary_data": {"related_ids": {"order_id": cls.order_id}},
             },
+        }
+
+        cls.merchant_notification = {
+            "event_type": "CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED",
+            "resource": {"merchant_id": "MERCHANT123"},
         }
 
         cls.declined_notification = {

@@ -106,14 +106,9 @@ def normalize_payment_data(data, has_capture_data=False, event_type=None, paymen
         "purchase_units": data["purchase_units"],
     }
     if not has_capture_data:
-        result.update({
-            **purchase_unit,
-            "txn_type": data.get("intent"),
-            "id": data.get("id"),
-            "status": data.get("status"),
-        })
+        result.update({**purchase_unit, "id": data.get("id"), "status": data.get("status")})
     elif captured := purchase_unit.get("payments", {}).get("captures"):
-        result.update({**captured[0], "txn_type": "CAPTURE"})
+        result.update(captured[0])
     else:
         _logger.warning("Invalid response format; can't normalize.")
     return result
