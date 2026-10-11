@@ -1119,6 +1119,7 @@ SERVICES_MAPPING = {
     "bus.logs_service": ['BusLogsPlugin', '@bus/debug/bus_logs_plugin'],
     "bus_service": ['BusPlugin', '@bus/services/bus_plugin'],
     "color_scheme": ['ColorSchemePlugin', '@web_enterprise/webclient/color_scheme/color_scheme_plugin'],
+    "command": ['CommandPlugin', '@web/core/commands/command_plugin'],
     "currency": ['CurrencyPlugin', '@web/webclient/currency_plugin'],
     "dialog": ['DialogPlugin', '@web/core/dialog/dialog_plugin'],
     "discuss.upgrade": ['DiscussUpgradePlugin', '@mail/core/common/upgrade/upgrade_plugin'],
