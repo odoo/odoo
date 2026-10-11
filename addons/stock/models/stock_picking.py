@@ -2051,8 +2051,8 @@ class StockPicking(models.Model):
 
     def _find_auto_batch(self):
         self.ensure_one()
-        # Check if auto_batch is enabled for this picking.
-        if not self.picking_type_id.auto_batch or\
+        # Check if batch creation is manual for this picking.
+        if self.picking_type_id.batch_creation_type == 'manual' or\
            not self.picking_type_id._is_auto_batch_grouped() or self.picking_type_id._is_auto_wave_grouped() or\
            self.batch_id or not self.move_ids or\
            not self._is_auto_batchable():
@@ -2084,7 +2084,7 @@ class StockPicking(models.Model):
         return new_batch
 
     def _is_auto_batchable(self, picking=None):
-        """ Verifies if a picking can be put in a batch with another picking without violating auto_batch constrains.
+        """ Verifies if a picking can be put in a batch with another picking without violating automatic batch constrains.
         """
         if self.state != 'assigned':
             return False

@@ -15,8 +15,8 @@ class TestL10nRoEdiStockCommon(ValuationReconciliationTestCommon):
         cls.customer_location = cls.env.ref('stock.stock_location_customers').id
         cls.stock_location = cls.warehouse.lot_stock_id.id
         # Disable auto-batching
-        cls.warehouse.out_type_id.auto_batch = False
-        cls.warehouse.in_type_id.auto_batch = False
+        cls.warehouse.out_type_id.batch_creation_type = 'manual'
+        cls.warehouse.in_type_id.batch_creation_type = 'manual'
 
     @classmethod
     def create_stock_picking(cls, partner, name=False, location_id=None, location_dest_id=None, picking_type=None, product_data=None):

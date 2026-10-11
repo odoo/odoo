@@ -194,7 +194,7 @@ class TestAutoWaving(TransactionCase):
 
     def test_group_by_partner_and_location(self):
         self.picking_type_out.write({
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'batch_group_by_partner': True,
             'wave_group_by_location': True,
             'wave_location_ids': self.child_location_2,
@@ -236,7 +236,7 @@ class TestAutoWaving(TransactionCase):
 
     def test_group_by_locations(self):
         self.picking_type_out.write({
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'wave_group_by_location': True,
             'wave_location_ids': (self.stock_location | self.child_location_1).ids,
             'batch_group_by_partner': False,
@@ -268,7 +268,7 @@ class TestAutoWaving(TransactionCase):
 
     def test_group_by_country_and_product(self):
         self.picking_type_out.write({
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'batch_group_by_destination': True,
             'wave_group_by_product': True,
             'batch_group_by_partner': False,
@@ -350,8 +350,8 @@ class TestAutoWaving(TransactionCase):
         self.assertEqual(wave_8.move_line_ids.product_id, self.product_2)
 
     def test_group_only_when_auto_batch_is_enable(self):
-        """ This test ensures wave grouping is only done when the `auto_batch`
-        field is true, no matter what the other fields value is."""
+        """ This test ensures wave grouping is only done when the `batch_creation_type`
+        field is `auto`, no matter what the other fields value is."""
         # Update quantity in stock to have enough for fullfil all pickings and their copies.
         for location, products in [
             [self.stock_location, [self.product_1]],
@@ -361,9 +361,9 @@ class TestAutoWaving(TransactionCase):
         ]:
             for product in products:
                 self.env['stock.quant']._update_available_quantity(product, location, 99)
-        # Set `wave_group_by_product` on true even if `auto_batch` is false.
+        # Set `wave_group_by_product` on true even if `batch_creation_type` is `manual`.
         self.picking_type_out.write({
-            'auto_batch': False,
+            'batch_creation_type': 'manual',
             'batch_group_by_destination': False,
             'batch_group_by_partner': False,
             'batch_group_by_src_loc': False,
@@ -378,7 +378,7 @@ class TestAutoWaving(TransactionCase):
         waves = self.env['stock.picking.batch'].search([('is_wave', '=', True)])
         self.assertEqual(len(waves), 0)
         # Set auto batch on true -> pickings' products should be batched in wave.
-        self.picking_type_out.auto_batch = True
+        self.picking_type_out.batch_creation_type = 'auto'
         self.all_pickings.action_assign()
         waves = self.env['stock.picking.batch'].search([('is_wave', '=', True)])
         self.assertEqual(len(waves), 4)
@@ -389,7 +389,7 @@ class TestAutoWaving(TransactionCase):
             back into the current wave (which causes a UserError as it hasn't closed yet). """
         self.picking_type_out.write({
             'create_backorder': 'always',
-            'auto_batch': True,
+            'batch_creation_type': 'auto',
             'batch_group_by_destination': False,
             'batch_group_by_partner': False,
             'batch_group_by_src_loc': False,
