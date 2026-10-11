@@ -140,12 +140,6 @@ defineMailModels();
 
 onRpc("get_working_hours_for_all_attendees", () => ({}));
 onRpc("get_attendee_detail", () => []);
-onRpc("get_state_selections", () => [
-    ["accepted", "Yes"],
-    ["declined", "No"],
-    ["tentative", "Maybe"],
-    ["needsAction", "Needs Action"],
-]);
 onRpc("res.users", "read", () => [{ user: serverState.userId, employee_id: [{ employee_id: 1 }] }]);
 onRpc("res.users", "get_calendar_model_data", () => ({
     credential_status: {},
