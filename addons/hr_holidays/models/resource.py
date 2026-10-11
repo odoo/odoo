@@ -184,6 +184,7 @@ class ResourceCalendar(models.Model):
         for calendar in self:
             calendar.associated_leaves_count = result.get(calendar.id, 0) + global_leave_count
 
+<<<<<<< 3dc45d1916b35ad057a9a3d722b0dfd5dae8d275
 
 class ResourceResource(models.Model):
     _inherit = "resource.resource"
@@ -224,3 +225,24 @@ class ResourceResource(models.Model):
                 resource_hours_per_week[self.id][week] -= holiday_id.number_of_hours
         else:
             super()._format_leave(leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale)
+||||||| bd82d8cae35fb6c99ed71140ec34ab92cb5455b4
+    def _get_flexible_leaves_date(self, res_leaves, resource, tz):
+        super()._get_flexible_leaves_date(res_leaves, resource, tz)
+        return [
+            (tz.localize(datetime.combine(i[0].date(), time.min)).astimezone(pytz.utc),
+             tz.localize(datetime.combine(i[1].date(), time.max)).astimezone(pytz.utc))
+            if not any(holiday.request_unit_half or holiday.request_unit_hours for holiday in i[2].holiday_id)
+            else (i[0], i[1])
+            for i in res_leaves
+        ]
+=======
+    def _get_flexible_leaves_date(self, res_leaves, resource, tz):
+        super()._get_flexible_leaves_date(res_leaves, resource, tz)
+        return [
+            (tz.localize(datetime.combine(i[0].date(), time.min)).astimezone(pytz.utc),
+             tz.localize(datetime.combine(i[1].date(), time.max)).astimezone(pytz.utc))
+            if not any(holiday.request_unit_half or holiday.request_unit_hours for holiday in i[2].sudo().holiday_id)
+            else (i[0], i[1])
+            for i in res_leaves
+        ]
+>>>>>>> 69d650b523b2529c0392968ccf0057ce36cd0d95
