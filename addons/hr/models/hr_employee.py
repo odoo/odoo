@@ -1797,6 +1797,29 @@ class HrEmployee(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        primary_xml_ids = {}
+        if self.env.context.get('import_file'):
+            today = fields.Date.context_today(self)
+            for idx, vals in enumerate(vals_list):
+                if 'version_ids' in vals:
+                    cmds = vals['version_ids']
+                    create_cmds = [c for c in cmds if isinstance(c, (tuple, list)) and len(c) == 3 and c[0] == 0]
+                    if create_cmds:
+                        past_or_current = [c for c in create_cmds if c[2].get('date_version') and fields.Date.to_date(c[2]['date_version']) <= today]
+                        primary_cmd = max(past_or_current, key=lambda c: fields.Date.to_date(c[2]['date_version'])) if past_or_current else min(create_cmds, key=lambda c: fields.Date.to_date(c[2]['date_version']) if c[2].get('date_version') else date.max)
+
+                        cmd_vals = primary_cmd[2]
+                        for k, v in cmd_vals.items():
+                            if k == 'id':
+                                primary_xml_ids[idx] = v
+                            elif k not in vals:
+                                vals[k] = v
+
+                        if 'date_version' in cmd_vals:
+                            vals.setdefault('date_version', cmd_vals['date_version'])
+
+                        cmds.remove(primary_cmd)
+
         vals_per_company = defaultdict(list)
         for idx, vals in enumerate(vals_list):
             if vals.get('user_id'):
@@ -1822,6 +1845,23 @@ class HrEmployee(models.Model):
                 employee.resource_id.calendar_id = employee.version_id.resource_calendar_id
         # As we do a custom batch by company, we must reorder the records to respect the original order.
         employees = employees.sorted(key=lambda employee: index_per_employee[employee])
+
+        if primary_xml_ids:
+            imd_data = []
+            for emp in employees:
+                idx = index_per_employee[emp]
+                if idx in primary_xml_ids:
+                    xml_id = primary_xml_ids[idx]
+                    if '.' not in xml_id:
+                        xml_id = f"__import__.{xml_id}"
+                    imd_data.append({
+                        'xml_id': xml_id,
+                        'record': emp.version_id,
+                        'noupdate': False,
+                    })
+            if imd_data:
+                self.env['ir.model.data']._update_xmlids(imd_data)
+
         # Sudo in case HR officer doesn't have the Contact Creation group
         employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
         if self.env.context.get('salary_simulation'):
