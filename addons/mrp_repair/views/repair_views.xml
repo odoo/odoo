@@ -6,16 +6,15 @@
             <field name="model">repair.order</field>
             <field name="inherit_id" ref="repair.view_repair_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_view_sale_order']" position="after">
-                    <button
-                        class="oe_stat_button" name="action_view_mrp_productions" type="object"
+                <button name="%(repair.action_repair_move_lines)d" position="after">
+                    <button class="oe_stat_button" name="action_view_mrp_productions" type="object"
                         icon="build" groups="mrp.group_mrp_user"
                         invisible="production_count == 0 or state == 'draft'">
                         <div class="o_field_widget o_stat_info">
                             <field name="production_count" string="Manufacturing" widget="statinfo"/>
                         </div>
                     </button>
-                </xpath>
+                </button>
             </field>
         </record>
     </data>
