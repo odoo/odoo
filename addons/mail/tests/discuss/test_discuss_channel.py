@@ -195,6 +195,24 @@ class TestChannelInternals(MailCommon, HttpCase):
                     },
                 ),
                 BusResult(
+                    (test_group, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": self._filter_partners_fields(
+                            {
+                                "id": self.env.user.partner_id.id,
+                                "user_ids": [self.env.user.id],
+                            },
+                        ),
+                        "res.users": self._filter_users_fields(
+                            {
+                                "id": self.env.user.id,
+                                "role_ids": [],
+                            },
+                        ),
+                    },
+                ),
+                BusResult(
                     test_group,
                     "mail.record/insert",
                     {
@@ -1041,6 +1059,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         all_users = all_test_user + mentions_test_user + nothing_test_user
         notifications = [BusResult(user, "mail.message/notification") for user in all_users]
         notifications.append(BusResult(channel, "discuss.channel/new_message"))
+        notifications.append(BusResult((channel, "internal_users"), "mail.record/insert"))
         with self.assertBus(notifications):
             # sending mention message
             with self.with_user("employee"):

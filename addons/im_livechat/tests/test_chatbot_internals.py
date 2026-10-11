@@ -228,6 +228,15 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     {"store_data": transfer_message_data, "id": discuss_channel.id},
                 ),
                 BusResult(
+                    (discuss_channel, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": [
+                            {"id": self.chatbot_script.operator_partner_id.id, "user_ids": []}
+                        ],
+                    },
+                ),
+                BusResult(
                     discuss_channel,
                     "mail.record/insert",
                     {
@@ -275,6 +284,15 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     discuss_channel,
                     "discuss.channel/new_message",
                     {"store_data": joined_message_data, "id": discuss_channel.id},
+                ),
+                BusResult(
+                    (discuss_channel, "internal_users"),
+                    "mail.record/insert",
+                    {
+                        "res.partner": [
+                            {"id": self.chatbot_script.operator_partner_id.id, "user_ids": []}
+                        ],
+                    },
                 ),
                 BusResult(
                     discuss_channel,

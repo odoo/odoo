@@ -355,6 +355,15 @@ export class Message extends Component {
         };
     }
 
+    /** @type {string} */
+    get authorNameStyle() {
+        const color = this.message.authorRoleColor;
+        if (!/^[A-F0-9]{6}$/i.test(color)) {
+            return "";
+        }
+        return `color: #${color};`;
+    }
+
     get deliveryFailureText() {
         return this.message.failureNotifications.length > 0
             ? _t("Click to see delivery errors")

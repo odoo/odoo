@@ -574,7 +574,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=37, employee=37):
+        with self.assertQueryCount(admin=38, employee=38):
             composer._action_send_mail()
 
         # notifications
@@ -601,7 +601,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=44, employee=44):
+        with self.assertQueryCount(admin=45, employee=45):
             composer._action_send_mail()
 
         # notifications
@@ -699,7 +699,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(admin=25, employee=24):
+        with self.assertQueryCount(admin=26, employee=25):
             record.write({
                 'user_id': self.user_emp_inbox.id,
             })
@@ -787,7 +787,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(admin=21, employee=21):
+        with self.assertQueryCount(admin=22, employee=22):
             record.message_post(
                 body=Markup('<p>Test Post Performances with an inbox ping</p>'),
                 partner_ids=self.user_emp_inbox.partner_id.ids,
@@ -813,7 +813,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
         subtype_ids = (self.env.ref('test_mail.st_mail_test_simple_external') | self.env.ref('mail.mt_comment')).ids
 
-        with self.assertQueryCount(admin=5, employee=5):
+        with self.assertQueryCount(admin=5, employee=7):
             record.message_subscribe(partner_ids=self.user_emp_inbox.partner_id.ids, subtype_ids=subtype_ids)
 
         with self.assertQueryCount(admin=2, employee=2):
@@ -1640,14 +1640,14 @@ class TestMessageToStorePerformance(BaseMailPerformance):
             'res_id': record.id
         } for record in records])
 
-        with self.assertQueryCount(employee=5):
+        with self.assertQueryCount(employee=7):
             res = Store().add(messages, "_store_message_fields")._build_result()
             self.assertEqual(len(res["mail.message"]), 6)
 
         self.env.flush_all()
         self.env.invalidate_all()
 
-        with self.assertQueryCount(employee=16):  # tm: 15
+        with self.assertQueryCount(employee=18):  # tm: 15
             res = Store().add(messages, "_store_message_fields")._build_result()
             self.assertEqual(len(res["mail.message"]), 6)
 
@@ -1767,6 +1767,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "is_company": False,
                                     "main_user_id": self.env.user.id,
                                     "name": "OdooBot",
+                                    "user_ids": [],
                                     "write_date": fields.Datetime.to_string(
                                         self.env.user.partner_id.write_date
                                     ),
@@ -1886,6 +1887,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "is_company": False,
                                     "main_user_id": self.env.user.id,
                                     "name": "OdooBot",
+                                    "user_ids": [],
                                     "write_date": fields.Datetime.to_string(
                                         self.env.user.partner_id.write_date
                                     ),
@@ -2004,7 +2006,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=83):
+        with self.assertQueryCount(employee=84):
             ticket.message_post(
                 attachments=attachments_vals,
                 attachment_ids=attachments.ids,
@@ -2053,7 +2055,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=857):  # tm: 848
+        with self.assertQueryCount(employee=867):  # tm: 848
             for ticket, attachments in zip(tickets, attachments_all, strict=True):
                 ticket.message_post(
                     attachments=attachments_vals,
