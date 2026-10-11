@@ -94,7 +94,7 @@ test("Add an element on the invisible elements tab", async () => {
     ).click();
     await waitForEndOfOperation();
     expect(
-        ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Test') [data-icon='visibility']"
+        ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') [data-icon='visibility']"
     ).toHaveCount(1);
     expect(
         ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Invisible Element') [data-icon='visibility_off']"
