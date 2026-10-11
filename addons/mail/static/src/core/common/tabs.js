@@ -1,7 +1,17 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { useChildRefs, useScrollState } from "@mail/utils/common/hooks";
-import { Component, Portal, signal, t, useEffect, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    Portal,
+    signal,
+    t,
+    useEffect,
+    useOnChange,
+    useProps,
+} from "@odoo/owl";
 
 export class Tabs extends Component {
     static template = "mail.Tabs";
@@ -67,20 +77,32 @@ export class Tab extends Component {
             onBecameVisible: t.function([]).optional(),
         });
         this.rootRef = signal();
-        useLayoutEffect(
-            (headerRefs, id) => {
-                headerRefs.set(id, this.rootRef);
-                return () => headerRefs.delete(id);
-            },
-            () => [this.ancestors.inTabs.headerRefs, this.props.id]
-        );
-        useLayoutEffect(
+        // tied to mount/unmount rather than setup/destroy, see `UseForwardRefsToParent`
+        let registeredId;
+        const unregisterHeader = () => {
+            if (registeredId !== undefined) {
+                this.ancestors.inTabs.headerRefs.delete(registeredId);
+                registeredId = undefined;
+            }
+        };
+        const registerHeader = () => {
+            if (registeredId === this.props.id) {
+                return;
+            }
+            unregisterHeader();
+            registeredId = this.props.id;
+            this.ancestors.inTabs.headerRefs.set(registeredId, this.rootRef);
+        };
+        onMounted(registerHeader);
+        onPatched(registerHeader);
+        onWillUnmount(unregisterHeader);
+        useOnChange(
+            () => [this.isActive],
             (active) => {
                 if (active) {
                     this.props.onBecameVisible?.();
                 }
-            },
-            () => [this.isActive]
+            }
         );
     }
 

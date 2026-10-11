@@ -7,11 +7,10 @@ import {
 } from "@mail/utils/common/format";
 import { useSearch } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
-import { proxy, t, useProps, useScope } from "@odoo/owl";
+import { proxy, t, useOnChange, useProps, useScope } from "@odoo/owl";
 import { emojiType } from "@web/core/emoji_picker/emoji_loader";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 /**
  * Delimiters that trigger suggestion lists in the composer.
@@ -80,17 +79,26 @@ export class UseSuggestion {
             deps: () => [this.detection.delimiter, this.detection.position],
             isActive: () => !!this.detection.delimiter,
         });
-        useLayoutEffect(
+        // on a change only: the initial content (e.g. of an edited message) is not being typed
+        useOnChange(
+            () => this.detectionDeps,
             () => {
+                if (this.composerService.htmlEnabled && !this.editor()) {
+                    return;
+                }
                 this.detect();
             },
-            () => [
-                this.composer.selection.start,
-                this.composer.selection.end,
-                this.composer.composerText,
-                this.composer.composerHtml,
-            ]
+            { initialRun: false }
         );
+    }
+    /** The composer state {@link detect} depends on. */
+    get detectionDeps() {
+        return [
+            this.composer.selection.start,
+            this.composer.selection.end,
+            this.composer.composerText,
+            this.composer.composerHtml,
+        ];
     }
     /**
      * Whether the user closed the suggestion list. Only the answer of an ongoing fetch is

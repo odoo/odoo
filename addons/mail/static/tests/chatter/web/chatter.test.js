@@ -16,6 +16,7 @@ import {
     scroll,
     start,
     startServer,
+    triggerEvents,
     triggerHotkey,
     waitStoreFetch,
     MENU_ACTIVE_IDS,
@@ -605,11 +606,14 @@ test("scroll position is kept when navigating from one record to another", async
     const scrollValue1 = queryFirst(".o-mail-Chatter:first").scrollHeight / 2;
     await contains(".o-mail-Chatter", { scroll: 0 });
     await scroll(".o-mail-Chatter", scrollValue1);
+    // setting scrollTop only schedules the scroll event: save it before navigating away
+    await triggerEvents(".o-mail-Chatter", ["scroll"]);
     await openFormView("res.partner", partnerId_2);
     await waitFor(".o-mail-Message:count(30)");
     const clientHeight2 = queryFirst(".o-mail-Chatter:first").clientHeight;
     const scrollValue2 = queryFirst(".o-mail-Chatter:first").scrollHeight / 3;
     await scroll(".o-mail-Chatter", scrollValue2);
+    await triggerEvents(".o-mail-Chatter", ["scroll"]);
     await openFormView("res.partner", partnerId_1);
     await waitFor(".o-mail-Message:count(20)");
     const clientHeight3 = queryFirst(".o-mail-Chatter:first").clientHeight;

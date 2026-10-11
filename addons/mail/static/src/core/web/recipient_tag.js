@@ -1,11 +1,10 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { RecipientsInputTagsListPopover } from "./recipients_input_tags_list_popover";
 import { RecipientsPopover } from "./recipients_popover";
 
-import { Component, EventBus, signal, types, useProps } from "@odoo/owl";
+import { Component, EventBus, onMounted, onPatched, signal, types, useProps } from "@odoo/owl";
 
 export class RecipientTag extends Component {
     static template = "mail.RecipientTag";
@@ -77,15 +76,19 @@ export class RecipientTag extends Component {
  */
 export function useRecipientChecker(getTags) {
     const bus = new EventBus();
-    useLayoutEffect(
-        (invalidTag) => {
-            if (invalidTag) {
-                bus.trigger("open", {
-                    id: invalidTag.id,
-                });
-            }
-        },
-        () => [getTags().find((tag) => !tag.email)]
-    );
+    let invalidTag;
+    // after the patch: the tag of the invalid recipient has to be mounted to open its popover
+    const checkRecipients = () => {
+        const tag = getTags().find((tag) => !tag.email);
+        if (tag === invalidTag) {
+            return;
+        }
+        invalidTag = tag;
+        if (tag) {
+            bus.trigger("open", { id: tag.id });
+        }
+    };
+    onMounted(checkRecipients);
+    onPatched(checkRecipients);
     return bus;
 }
