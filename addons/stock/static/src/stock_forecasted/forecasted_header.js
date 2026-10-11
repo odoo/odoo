@@ -19,6 +19,26 @@ export class ForecastedHeader extends Component {
     async _onClickInventory(){
         const productIds = this.props.docs.product_variants_ids;
         const action = await this.orm.call('product.product', 'action_open_quants', [productIds]);
+        action.domain = [
+            ...(action.domain || []),
+            ["warehouse_id", "in", this.props.docs.warehouse_ids],
+        ];
+        if (action.help) {
+            action.help = markup(action.help);
+        }
+        return this.action.doAction(action);
+    }
+
+    async _onClickTransfers(type) {
+        const action = await this.orm.call(
+            "stock.picking",
+            `get_action_picking_tree_${type === "incoming" ? "incoming" : "outgoing"}`
+        );
+        action.domain = [
+            ["product_id", "in", this.props.docs.product_variants_ids],
+            ["state", "not in", ["draft", "done", "cancel"]],
+            ["picking_type_id.warehouse_id", "in", this.props.docs.warehouse_ids],
+        ];
         if (action.help) {
             action.help = markup(action.help);
         }
@@ -26,7 +46,7 @@ export class ForecastedHeader extends Component {
     }
 
     get products() {
-        return this.props.docs.product;
+        return this.props.docs.product; 
     }
 
     get leadTime() {
@@ -58,7 +78,7 @@ export class ForecastedHeader extends Component {
     }
 
     get quantityOnHand() {
-        return Object.values(this.products).reduce((sum, product) => sum + product.quantity_on_hand, 0);
+        return Object.values(this.products).reduce((sum, product) => sum + product.qty_available, 0);
     }
 
     get incomingQty() {
