@@ -1,8 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
+from odoo import Command
 from odoo.tests.common import new_test_user
 
 from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.mail.models.discuss.discuss_channel import DiscussChannel
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
 
@@ -278,7 +282,7 @@ class TestDiscussTools(MailCase):
 
         def _get_fields(res):
             res.attr("name")
-            res.attr("description", internal=True)
+            res.for_internal_users(["description"])
             res.many(
                 "channel_member_ids",
                 lambda res: (
@@ -286,18 +290,18 @@ class TestDiscussTools(MailCase):
                         "partner_id",
                         lambda res: (
                             res.attr("name"),
-                            res.extend(["email", "phone"], internal=True),
+                            res.for_internal_users(["email", "phone"]),
                         ),
                     ),
                     res.attr("seen_message_id"),
                 ),
             )
-            res.many("message_ids", ["author_id"], internal=True)
+            res.for_internal_users(lambda res: res.many("message_ids", ["author_id"]))
             res.one(
                 "discuss_category_id",
                 lambda res: (
                     res.attr("id"),
-                    res.from_method("_store_category_fields", internal=True),
+                    res.for_internal_users("_store_category_fields"),
                 ),
             )
 
@@ -359,6 +363,129 @@ class TestDiscussTools(MailCase):
         with self.assertBus([BusResult(portal_user, "mail.record/insert", non_internal_payload)]):
             store = Store(bus_channel=portal_user)
             store.add(public_channel, _get_fields)
+
+    def test_363_clear_fields_for_internal_users(self):
+        """Test that clear() keeps the fields for internal users for the internal store of a
+        channel target, and removes them for a store that is for internal users."""
+        public_channel = self.env["discuss.channel"].create(
+            {"name": "Public Channel", "group_public_id": False},
+        )
+        bob_user = new_test_user(self.env, "bob_user", name="Bob", email="bob@secret.com")
+
+        def _get_fields(res):
+            res.attr("name")
+            res.for_internal_users(["email"])
+            res.clear()
+            res.attr("phone")
+
+        with self.assertBus(
+            [
+                BusResult(
+                    public_channel,
+                    "mail.record/insert",
+                    {"res.partner": [{"id": bob_user.partner_id.id, "phone": False}]},
+                ),
+                BusResult(
+                    (public_channel, "internal_users"),
+                    "mail.record/insert",
+                    {"res.partner": [{"email": "bob@secret.com", "id": bob_user.partner_id.id}]},
+                ),
+            ],
+        ):
+            Store(bus_channel=public_channel).add(bob_user.partner_id, _get_fields)
+        with self.assertBus(
+            [
+                BusResult(
+                    bob_user,
+                    "mail.record/insert",
+                    {"res.partner": [{"id": bob_user.partner_id.id, "phone": False}]},
+                ),
+            ],
+        ):
+            Store(bus_channel=bob_user).add(bob_user.partner_id, _get_fields)
+
+    def test_365_target_blocks(self):
+        """Test that the target blocks of a field list are evaluated for the target of each store
+        the field list is added to, and that the target cannot be read outside of them."""
+        bob_user = new_test_user(self.env, "bob_user", name="Bob", email="bob@secret.com")
+        portal_user = new_test_user(self.env, login="portal_user", groups="base.group_portal")
+        field_list = Store._format_fields(
+            lambda res: (res.attr("name"), res.for_internal_users(["email"])),
+            bob_user.partner_id,
+        )
+        self.assertEqual(
+            Store(bus_channel=bob_user).add(bob_user.partner_id, field_list)._build_result(),
+            {
+                "res.partner": [
+                    {"email": "bob@secret.com", "id": bob_user.partner_id.id, "name": "Bob"},
+                ],
+            },
+        )
+        self.assertEqual(
+            Store(bus_channel=portal_user).add(bob_user.partner_id, field_list)._build_result(),
+            {"res.partner": [{"id": bob_user.partner_id.id, "name": "Bob"}]},
+        )
+        with self.assertRaises(AssertionError):
+            field_list.is_for_internal_users()
+
+    def test_367_for_group(self):
+        """Test that for_group() adds its fields only for a target user of the group."""
+        alice_user = new_test_user(
+            self.env,
+            "alice_user",
+            groups="base.group_user,base.group_system",
+            name="alice_user",
+        )
+        bob_user = new_test_user(self.env, "bob_user", name="bob_user")
+        field_list = Store._format_fields(
+            lambda res: (res.attr("name"), res.for_group("base.group_system", ["login"])),
+            alice_user + bob_user,
+        )
+        self.assertEqual(
+            Store(bus_channel=alice_user).add(alice_user + bob_user, field_list)._build_result(),
+            {
+                "res.users": [
+                    {"id": alice_user.id, "login": "alice_user", "name": "alice_user"},
+                    {"id": bob_user.id, "login": "bob_user", "name": "bob_user"},
+                ],
+            },
+        )
+        self.assertEqual(
+            Store(bus_channel=bob_user).add(alice_user + bob_user, field_list)._build_result(),
+            {
+                "res.users": [
+                    {"id": alice_user.id, "name": "alice_user"},
+                    {"id": bob_user.id, "name": "bob_user"},
+                ],
+            },
+        )
+
+    def test_370_bus_batch_reuses_field_lists(self):
+        """Test that the stores of a bus batch reuse the field list built for the same records."""
+        group = self.env["res.groups"].create({"name": "Group 370"})
+        users = new_test_user(self.env, "user_370_a") | new_test_user(self.env, "user_370_b")
+        users.group_ids = [Command.link(group.id)]
+        channel = self.env["discuss.channel"].create({"name": "Channel 370"})
+        with (
+            patch.object(
+                DiscussChannel,
+                "_store_channel_fields",
+                autospec=True,
+                side_effect=DiscussChannel._store_channel_fields,
+            ) as store_channel_fields,
+            self.assertBus(
+                lambda: [
+                    BusResult(channel, "mail.record/insert"),
+                    *(
+                        BusResult(member.partner_id.user_ids, "mail.record/insert")
+                        for member in channel.channel_member_ids.sorted("id")
+                        if member.partner_id in users.partner_id
+                    ),
+                ],
+            ),
+        ):
+            channel.group_ids = group
+        self.assertEqual(store_channel_fields.call_count, 1)
 
     def test_390_add_no_loop(self):
         """Test that store.add() does not loop indefinitely but it is still allowed to process

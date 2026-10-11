@@ -589,7 +589,7 @@ class ResUsers(models.Model):
         res.attr("share")
         res.one("partner_id", "_store_avatar_card_fields")
         res.attr("is_public", lambda u: u._is_public())
-        res.from_method("_store_im_status_fields", internal=True)
+        res.for_internal_users("_store_im_status_fields")
 
     # ------------------------------------------------------------
     # Mail Servers
