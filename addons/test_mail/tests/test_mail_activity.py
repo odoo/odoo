@@ -525,7 +525,9 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with freeze_time(self.dt_reference):
             groups_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activity_groups', [])
-        self.assertEqual(len(groups_data), 3, 'Should have activities for 2 test models + generic for non accessible')
+        # ignore unrelated groups from other modules
+        delta = len([data for data in groups_data if not data.get('model').startswith('mail.')])
+        self.assertEqual(len(groups_data) - delta, 3, 'Should have activities for 2 test models + generic for non accessible')
 
         for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue), exp_domain in [
             ('mail.activity', '2 free + 2 linked to 1', (1, 1, 3, 0), []),
