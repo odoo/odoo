@@ -123,7 +123,7 @@ class RecurrenceRule(models.Model):
             (self.calendar_event_ids - base_event_id).microsoft_id = False
             (self.calendar_event_ids - base_event_id).ms_universal_event_id = False
             (self.calendar_event_ids - base_event_id).unlink()
-            base_event_id.with_context(dont_notify=True).write(dict(
+            base_event_id.with_context(dont_notify=True, no_mail_to_attendees=True).write(dict(
                 new_event_values, microsoft_id=False, ms_universal_event_id=False, need_sync_m=False
             ))
             if self._rrule_parse(self.rrule, original_dtstart) == current_parsed_rrule:
