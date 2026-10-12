@@ -794,6 +794,28 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
         self.assertEqual(private_group.channel_partner_ids, self.user_employee.partner_id | test_partner)
 
+    def test_channel_subscribe_auto_sends_member_create_date(self):
+        group = self.env["res.groups"].create({"name": "Group", "user_ids": self.test_user.ids})
+        self._reset_bus()
+        self.test_channel.group_ids = group
+        member = self.test_channel.channel_member_ids.filtered(
+            lambda m: m.partner_id == self.test_partner,
+        )
+        self.assertTrue(member)
+        self.env.cr.precommit.run()
+        notification = self.env["bus.bus"].sudo().search(
+            [("channel", "=", json_dump((self.cr.dbname, "res.users", self.test_user.id)))],
+        )
+        self.assertEqual(len(notification), 1)
+        message = json.loads(notification.message)
+        self.assertEqual(message["type"], "mail.record/insert")
+        member_data = message["payload"]["discuss.channel.member"]
+        self.assertEqual([data["id"] for data in member_data], member.ids)
+        self.assertEqual(
+            member_data[0]["create_date"],
+            fields.Datetime.to_string(member.create_date),
+        )
+
     @users('employee')
     @mute_logger('odoo.models.unlink')
     def test_channel_private_unfollow(self):
