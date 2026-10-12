@@ -28,23 +28,27 @@ class AccountMoveLine(models.Model):
 
         # Separate tax into the regular and luxury component
         ChartTemplate = self.env['account.chart.template'].with_company(self.company_id)
-        default_tax_group = ChartTemplate.ref('default_tax_group', raise_if_not_found=False)
         non_luxury_tax_group = ChartTemplate.ref('l10n_id_tax_group_non_luxury_goods', raise_if_not_found=False)
         vat_collector_group = ChartTemplate.ref('l10n_id_tax_group_vat_collector', raise_if_not_found=False)
-        regular_tax_groups = {default_tax_group, non_luxury_tax_group, vat_collector_group}
+        regular_tax_groups = {non_luxury_tax_group, vat_collector_group}
         regular_tax_groups.discard(False)
         luxury_tax_group = ChartTemplate.ref('l10n_id_tax_group_luxury_goods', raise_if_not_found=False)
         stlg_tax_group = ChartTemplate.ref('l10n_id_tax_group_stlg', raise_if_not_found=False)
         zero_tax_group_0 = ChartTemplate.ref('l10n_id_tax_group_0', raise_if_not_found=False)
         zero_tax_group_exempt = ChartTemplate.ref('l10n_id_tax_group_exempt', raise_if_not_found=False)
-        zero_tax_groups = {zero_tax_group_0, zero_tax_group_exempt}
+        not_collected_tax_group = ChartTemplate.ref('l10n_id_tax_group_not_collected', raise_if_not_found=False)
+        zero_tax_groups = {zero_tax_group_0, zero_tax_group_exempt, not_collected_tax_group}
         zero_tax_groups.discard(False)
         ppn_tax_groups = regular_tax_groups | {luxury_tax_group, stlg_tax_group} | zero_tax_groups
         ppn_tax_groups.discard(False)
 
         stlg_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id == stlg_tax_group)
         ppn_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id in ppn_tax_groups)
-        non_luxury_tax = self.tax_ids.filtered(lambda tax: tax.tax_group_id == non_luxury_tax_group)
+        # Journal items posted before the chart had the SPT Masa PPN grids only have their tax group to go by.
+        is_other_value_base = (
+            self.env.ref('l10n_id.tag_spt_sale_dpp_nilai_lain') in self.tax_tag_ids
+            or (non_luxury_tax_group and non_luxury_tax_group in self.tax_ids.tax_group_id)
+        )
 
         tax_details = base_line['tax_details']
 
@@ -61,7 +65,7 @@ class AccountMoveLine(models.Model):
             "STLGRate": stlg_tax.amount if stlg_tax else 0.0,
         }
         if ppn_tax:
-            if non_luxury_tax:
+            if is_other_value_base:
                 line_val['OtherTaxBase'] = idr.round(line_val['TaxBase'] * 11 / 12)
             else:
                 line_val['OtherTaxBase'] = line_val['TaxBase']
