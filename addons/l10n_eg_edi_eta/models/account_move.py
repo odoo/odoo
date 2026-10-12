@@ -383,6 +383,61 @@ class AccountMove(models.Model):
                 },
             })
 
+        export_moves = self.filtered(lambda m: m._l10n_eg_eta_is_export())
+
+        if products_with_invalid_weight := amls_to_check.filtered(
+            lambda line: line.move_id in export_moves
+        ).product_id.filtered(lambda p: p.type == 'consu' and p.weight <= 0):
+            message = self.env._(
+                "All product weights must be greater than 0 for export invoices, as required by the Egyptian Tax Authority (ETA). "
+                "Please update the weight on the product form to proceed."
+            )
+            if not self.env.user.has_group('uom.group_uom'):
+                message += self.env._(
+                    " Make sure to enable the use of Units of Measure in the accounting settings in order to display the weight on products."
+                )
+            alerts.update({
+                'eg_eta_edi_export_products_with_invalid_weight': {
+                    'level': 'danger',
+                    'message': message,
+                    'action_text': self.env._("View Products"),
+                    'action': products_with_invalid_weight.product_tmpl_id._get_records_action(),
+                },
+            })
+
+        if moves_without_delivery_date := export_moves.filtered(lambda m: not m.delivery_date):
+            alerts.update({
+                'eg_eta_edi_export_no_delivery_date': {
+                    'level': 'danger',
+                    'message': self.env._("Please set the delivery date."),
+                    'action_text': self.env._("View Invoices"),
+                    'action': moves_without_delivery_date._get_records_action(),
+                },
+            })
+
+        export_notes = self.filtered(lambda m: m._get_l10n_eg_eta_document_type() in ('ec', 'ed'))
+
+        if notes_without_origin := export_notes.filtered(lambda m: not m._l10n_eg_eta_get_origin_move()):
+            alerts.update({
+                'eg_eta_edi_export_note_without_origin': {
+                    'level': 'danger',
+                    'message': self.env._("Please create this export credit/debit note from the original export invoice."),
+                    'action_text': self.env._("View Invoices"),
+                    'action': notes_without_origin._get_records_action(),
+                },
+            })
+
+        notes_with_origin = export_notes.filtered(lambda m: m._l10n_eg_eta_get_origin_move())
+        if unsent_origins := notes_with_origin.filtered(lambda o: not o.l10n_eg_uuid):
+            alerts.update({
+                'eg_eta_edi_export_origin_not_sent': {
+                    'level': 'danger',
+                    'message': self.env._("Please send the original export invoices to the ETA first."),
+                    'action_text': self.env._("View Invoices"),
+                    'action': unsent_origins._get_records_action(),
+                },
+            })
+
         return alerts
 
     # ===================================================
@@ -422,11 +477,20 @@ class AccountMove(models.Model):
         )
 
     def _get_l10n_eg_eta_document_type(self):
-        return {
+        document_type = {
             'out_invoice': 'd' if self._fields.get('debit_origin_id') and self.debit_origin_id else 'i',
             'out_refund': 'c',
             'in_refund': 'd',
         }.get(self.move_type, '')
+        if self._l10n_eg_eta_is_export() and document_type:
+            document_type = f"e{document_type}"  # For export type (ei / ec / ed)
+        return document_type
+
+    def _l10n_eg_eta_is_export(self):
+        return self.partner_id.commercial_partner_id.country_code != 'EG'
+
+    def _l10n_eg_eta_get_origin_move(self):
+        return self.reversed_entry_id or (self._fields.get('debit_origin_id') and self.debit_origin_id)  # noqa: OLS03028
 
     def _generate_l10n_eg_edi_json(self, is_demo=False):
 
@@ -478,10 +542,11 @@ class AccountMove(models.Model):
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
 
         date_string = self.invoice_date.strftime('%Y-%m-%dT%H:%M:%SZ')
+        document_type = self._get_l10n_eg_eta_document_type()
         eta_invoice = {
             'issuer': self._l10n_eg_eta_prepare_address_data(self.journal_id.l10n_eg_branch_id, issuer=True),
             'receiver': self._l10n_eg_eta_prepare_address_data(self.partner_id),
-            'documentType': self._get_l10n_eg_eta_document_type(),
+            'documentType': document_type,
             'documentTypeVersion': '1.0',
             'dateTimeIssued': date_string,
             'taxpayerActivityCode': self.journal_id.l10n_eg_activity_type_id.code,
@@ -506,6 +571,10 @@ class AccountMove(models.Model):
             eta_invoice['purchaseOrderReference'] = self.ref
         if self.invoice_origin:
             eta_invoice['salesOrderReference'] = self.invoice_origin
+        if document_type in ['ec', 'ed'] and (origin := self._l10n_eg_eta_get_origin_move()):
+            eta_invoice['references'] = [origin.l10n_eg_uuid]
+        if document_type in ['i', 'ei', 'ec', 'ed'] and self.delivery_date:
+            eta_invoice['serviceDeliveryDate'] = self.delivery_date.strftime('%Y-%m-%d')
         # If the invoice is being generated in test mode, append a dummy signature to it
         if is_demo:
             eta_invoice['signatures'] = [{'i': 'i'}]
@@ -518,6 +587,7 @@ class AccountMove(models.Model):
             'discount_total': 0.0,
             'total_price_subtotal_before_discount': 0.0,
         }
+        weight_uom = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
         for base_line, aggregated_values in base_lines_aggregated_values:
             line = base_line['record']
             tax_details = base_line['tax_details']
@@ -571,6 +641,14 @@ class AccountMove(models.Model):
             if self.currency_id != self.env.ref('base.EGP'):
                 lines[-1]['unitValue']['currencyExchangeRate'] = self._l10n_eg_edi_round(self._l10n_eg_edi_exchange_currency_rate())
                 lines[-1]['unitValue']['amountSold'] = line.price_unit
+            if self._l10n_eg_eta_is_export():
+                quantity = line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id, round=False)
+                weight_quantity = 0.01 if line.product_id.type != 'consu' else line.product_id.weight * quantity
+                lines[-1]['weightUnitType'] = {
+                    self.env.ref('uom.product_uom_kgm'): 'KGM',
+                    self.env.ref('uom.product_uom_lb'): 'LB',
+                }.get(weight_uom)
+                lines[-1]['weightQuantity'] = self._l10n_eg_edi_round(weight_quantity)
         return lines, totals
 
     def _l10n_eg_eta_prepare_address_data(self, partner, issuer=False):
