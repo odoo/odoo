@@ -39,6 +39,14 @@ class ProductTemplate(models.Model):
             template._check_vendor_for_service_tracking_subcontract(template.seller_ids)
         return res
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default=default)
+        for vals in vals_list:
+            # The vendors are not copied, so the copy can't be subcontracted
+            if vals.get('service_tracking') == 'subcontract' and not vals.get('seller_ids'):
+                vals['service_tracking'] = 'no'
+        return vals_list
+
     def _prepare_service_tracking_tooltip(self):
         if self.service_tracking == 'subcontract':
             return self.env._("Each time you sell this product through a SO, a RfQ is automatically created to buy the product. Tip: don't forget to set a vendor on the product.")
