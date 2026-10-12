@@ -12,7 +12,7 @@ export class ExpenseShareTargetItem extends ShareTargetItem {
             clickParams: { name: "action_create_from_uploads" },
             resModel: "hr.expense",
             context: this.context,
-            files: this.getFiles(),
+            files: this.props.files,
         });
         if (action) {
             await this.action.doAction(action);
