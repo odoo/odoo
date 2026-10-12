@@ -1,0 +1,509 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_ldap
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~18.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"PO-Revision-Date: 2026-09-09 22:11+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
+"odoo-master/auth_ldap/es_419/>\n"
+"Language: es_419\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.8.1\n"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
+msgid ""
+"    Filter used to look up user accounts in the LDAP database. It is an    "
+"arbitrary LDAP filter in string representation. Any `%s` placeholder    will "
+"be replaced by the login (identifier) provided by the user, the filter    "
+"should contain at least one such placeholder.\n"
+"\n"
+"    The filter must result in exactly one (1) result, otherwise the login "
+"will    be considered invalid.\n"
+"\n"
+"    Example (actual attributes depend on LDAP server and setup):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
+msgstr ""
+"    El filtro utilizado para buscar cuentas de usuario en la base de datos "
+"LDAP. Es un filtro LDAP    arbitrario en representación de una cadena. "
+"Cualquier marcador de posición `%s` se reemplazará con el nombre utilizado "
+"para iniciar sesión (identificador) que el usuario proporcionó. El filtro "
+"debe incluir al menos uno de estos marcadores de posición.\n"
+"\n"
+"    El filtro solo debe proporcionar un (1) resultado, de lo contrario se "
+"considerará    que el inicio de sesión no es válido.\n"
+"\n"
+"    Ejemplo (los atributos reales dependen del servidor LDAP y la "
+"configuración):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
+
+#. module: auth_ldap
+#: model:ir.module.module,description:base.module_auth_ldap
+msgid ""
+"Adds support for authentication by LDAP server.\n"
+"===============================================\n"
+"This module allows users to login with their LDAP username and password, "
+"and\n"
+"will automatically create Odoo users for them on the fly.\n"
+"\n"
+"**Note:** This module only work on servers that have Python's ``python-"
+"ldap`` module installed.\n"
+"\n"
+"Configuration:\n"
+"--------------\n"
+"After installing this module, you need to configure the LDAP parameters in "
+"the\n"
+"General Settings menu. Different companies may have different\n"
+"LDAP servers, as long as they have unique usernames (usernames need to be "
+"unique\n"
+"in Odoo, even across multiple companies).\n"
+"\n"
+"Anonymous LDAP binding is also supported (for LDAP servers that allow it), "
+"by\n"
+"simply keeping the LDAP user and password empty in the LDAP configuration.\n"
+"This does not allow anonymous authentication for users, it is only for the "
+"master\n"
+"LDAP account that is used to verify if a user exists before attempting to\n"
+"authenticate it.\n"
+"\n"
+"Securing the connection with STARTTLS is available for LDAP servers "
+"supporting\n"
+"it, by enabling the TLS option in the LDAP configuration.\n"
+"\n"
+"For further options configuring the LDAP settings, refer to the ldap.conf\n"
+"manpage: manpage:`ldap.conf(5)`.\n"
+"\n"
+"Security Considerations:\n"
+"------------------------\n"
+"Users' LDAP passwords are never stored in the Odoo database, the LDAP "
+"server\n"
+"is queried whenever a user needs to be authenticated. No duplication of the\n"
+"password occurs, and passwords are managed in one place only.\n"
+"\n"
+"Odoo does not manage password changes in the LDAP, so any change of "
+"password\n"
+"should be conducted by other means in the LDAP directory directly (for LDAP "
+"users).\n"
+"\n"
+"It is also possible to have local Odoo users in the database along with\n"
+"LDAP-authenticated users (the Administrator account is one obvious "
+"example).\n"
+"\n"
+"Here is how it works:\n"
+"---------------------\n"
+"    * The system first attempts to authenticate users against the local "
+"Odoo\n"
+"      database;\n"
+"    * if this authentication fails (for example because the user has no "
+"local\n"
+"      password), the system then attempts to authenticate against LDAP;\n"
+"\n"
+"As LDAP users have blank passwords by default in the local Odoo database\n"
+"(which means no access), the first step always fails and the LDAP server is\n"
+"queried to do the authentication.\n"
+"\n"
+"Enabling STARTTLS ensures that the authentication query to the LDAP server "
+"is\n"
+"encrypted.\n"
+"\n"
+"User Template:\n"
+"--------------\n"
+"In the LDAP configuration on the General Settings, it is possible to select "
+"a *User\n"
+"Template*. If set, this user will be used as template to create the local "
+"users\n"
+"whenever someone authenticates for the first time via LDAP authentication. "
+"This\n"
+"allows pre-setting the default groups and menus of the first-time users.\n"
+"\n"
+"**Warning:** if you set a password for the user template, this password will "
+"be\n"
+"         assigned as local password for each new LDAP user, effectively "
+"setting\n"
+"         a *master password* for these users (until manually changed). You\n"
+"         usually do not want this. One easy way to setup a template user is "
+"to\n"
+"         login once with a valid LDAP user, let Odoo create a blank local\n"
+"         user with the same login (and a blank password), then rename this "
+"new\n"
+"         user to a username that does not exist in LDAP, and setup its "
+"groups\n"
+msgstr ""
+"Agrega compatibilidad con la autenticación mediante un servidor LDAP.\n"
+"=========================================================\n"
+"\n"
+"Este módulo permite que los usuarios inicien sesión con su nombre de usuario "
+"y contraseña de LDAP y\n"
+"crea usuarios de Odoo para ellos de forma automática.\n"
+"\n"
+"**Nota:** Este módulo solo funciona en servidores que tienen instalado el "
+"módulo \n"
+"``python-ldap`` de Python.\n"
+"\n"
+"Configuración:\n"
+"--------------\n"
+"Después de instalar este módulo, debes configurar los parámetros de LDAP \n"
+"en el menú de ajustes generales. Las empresas pueden tener distintos "
+"servidores LDAP,\n"
+"siempre que tengan nombres de usuario únicos (los nombres de usuario deben "
+"ser únicos \n"
+"en Odoo, incluso entre varias empresas).\n"
+"\n"
+"También se admite el enlace anónimo de LDAP (para servidores LDAP que lo "
+"permiten).\n"
+"Para ello, deja vacíos el usuario y la contraseña de LDAP en la "
+"configuración de LDAP.\n"
+"Esto no permite que los usuarios se autentiquen de forma anónima; solo se "
+"aplica a la cuenta maestra de LDAP que se usa para verificar si existe un "
+"usuario antes de intentar \n"
+"autenticarlo.\n"
+"\n"
+"Puedes proteger la conexión con STARTTLS en servidores LDAP que \n"
+"lo admitan. Para ello, activa la opción TLS en la configuración de LDAP.\n"
+"\n"
+"Para consultar más opciones de configuración de LDAP, consulta la página del "
+"manual en ldap.conf\n"
+"manpage: manpage:'ldap.conf(5)'.\n"
+"\n"
+"Consideraciones de seguridad:\n"
+"-----------------------------\n"
+"Las contraseñas de LDAP de los usuarios nunca se almacenan en la base de "
+"datos de Odoo. \n"
+"El sistema consulta el servidor LDAP cada vez que necesita autenticar a un "
+"usuario. La contraseña \n"
+"no se duplica y se gestiona en un solo lugar.\n"
+"\n"
+"Odoo no gestiona los cambios de contraseña en LDAP, por lo que debes cambiar "
+"las contraseñas \n"
+"de los usuarios de LDAP por otros medios, directamente en el directorio "
+"LDAP.\n"
+"\n"
+"También puedes tener usuarios locales de Odoo en la base de datos \n"
+"junto con usuarios autenticados mediante LDAP (la cuenta de administrador es "
+"un claro ejemplo).\n"
+"\n"
+"Funciona de la siguiente manera:\n"
+"---------------------\n"
+"* Primero, el sistema intenta autentificar a los usuarios en la base de "
+"datos local \n"
+"de Odoo.\n"
+"* Si ocurre un error en la autenticación (por ejemplo, porque el usuario no "
+"tiene una contraseña\n"
+"local), entonces el sistema intenta autenticarlo con LDAP.\n"
+"\n"
+"Los usuarios de LDAP tienen contraseñas vacías de forma predeterminada en la "
+"base de datos local de Odoo\n"
+"(lo que significa que no tienen acceso), por lo que el primer paso siempre "
+"falla y el sistema consulta el servidor LDAP para autenticar al usuario.\n"
+"\n"
+"Habilitar STARTTL garantiza que la consulta de autenticación al servidor "
+"LDAP esté\n"
+"encriptada.\n"
+"\n"
+"Plantilla de usuario:\n"
+"---------------------\n"
+"En la configuración de LDAP de los ajustes generales puedes seleccionar una "
+"\n"
+"*plantilla de usuario*. Si la configuras, Odoo usará este usuario como "
+"plantilla para crear usuarios locales \n"
+"cada vez que alguien se autentique por primera vez mediante LDAP. Esto "
+"permite preconfigurar los grupos y menús predeterminados de los usuarios "
+"nuevos.\n"
+"\n"
+"**Advertencia:** Si configuras una contraseña para la plantilla de usuario, "
+"Odoo asignará \n"
+"esta contraseña como contraseña local a cada nuevo usuario de LDAP. Esto "
+"establece \n"
+"una *contraseña maestra* para estos usuarios (hasta que la cambien de forma "
+"manual). Por lo general, \n"
+"no querrás hacer esto. Una forma sencilla de configurar un usuario como "
+"plantilla \n"
+"consiste en iniciar sesión una vez con un usuario válido de LDAP, dejar que "
+"Odoo cree un usuario local sin contraseña \n"
+"con el mismo nombre de usuario, cambiar el nombre de este nuevo usuario \n"
+"por uno que no exista en LDAP y configurar sus grupos.\n"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+msgid "An error occurred: %(error)s"
+msgstr "Ocurrió un error: %(error)s"
+
+#. module: auth_ldap
+#: model:ir.module.module,shortdesc:base.module_auth_ldap
+msgid "Authentication via LDAP"
+msgstr "Autenticación mediante LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr ""
+"Crea cuentas de usuario local en automático para los nuevos usuarios que se "
+"autentican con LDAP."
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+msgid "Cannot contact LDAP server at %(server)s:%(port)d"
+msgstr "No fue posible conectarse al servidor LDAP en %(server)s:%(port)d"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
+msgid "Company"
+msgstr "Empresa"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "Company LDAP configuration"
+msgstr "Configuración LDAP de la empresa"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+msgid "Connection Test Failed!"
+msgstr "Ocurrió un error con la prueba de conexión."
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+msgid "Connection Test Successful!"
+msgstr "Prueba de conexión exitosa."
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+msgid "Connection to LDAP server at %(server)s:%(port)d timed out"
+msgstr ""
+"Se agotó el tiempo de espera a la conexión del servidor LDAP %(server)s:%"
+"(port)d"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
+msgid "Create User"
+msgstr "Crear usuario"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
+msgid ""
+"DN of the user search scope: all descendants of this base will be searched "
+"for users."
+msgstr ""
+"DN del alcance de búsqueda de usuario: Se buscarán usuarios en todos los "
+"descendientes de esta base."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nombre en pantalla"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+msgid "Invalid credentials for bind DN %(binddn)s"
+msgstr "Las credenciales para el nombre distintivo %(binddn)s no son válidas"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "LDAP Configuration"
+msgstr "Configuración de LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
+msgid "LDAP Parameters"
+msgstr "Parámetros de LDAP"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
+msgid "LDAP Server"
+msgstr "Servidor LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
+msgid "LDAP Server address"
+msgstr "Dirección del servidor LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
+msgid "LDAP Server port"
+msgstr "Puerto del servidor LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
+msgid "LDAP base"
+msgstr "Base LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
+msgid "LDAP binddn"
+msgstr "bindDN de LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
+msgid "LDAP filter"
+msgstr "Filtro LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
+msgid "LDAP password"
+msgstr "Contraseña LDAP"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Login Information"
+msgstr "Información de inicio de sesión"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+msgid "No local user found for LDAP login and not configured to create one"
+msgstr ""
+"No se encontró un usuario local para el inicio de sesión LDAP y la opción "
+"para crear uno no está configurada."
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Process Parameter"
+msgstr "Parámetro del proceso"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication "
+"attempts will fail."
+msgstr ""
+"Solicita una conexión segura TLS/SSL al conectarse al servidor LDAP. Esta "
+"opción requiere un servidor con STARTTLS habilitado o todos los intentos de "
+"autenticación fallarán."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Server Information"
+msgstr "Información del servidor"
+
+#. module: auth_ldap
+#: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "Configura tu servidor LDAP"
+
+#. module: auth_ldap
+#. odoo-python
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
+msgid "Successfully connected to LDAP server at %(server)s:%(port)d"
+msgstr "Conexión exitosa con el servidor LDAP en %(server)s:%(port)d"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
+msgid "Template User"
+msgstr "Plantilla de usuario"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "Test Connection"
+msgstr "Probar conexión"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr ""
+"La contraseña de la cuenta de usuario en el servidor LDAP que se usa para "
+"consultar el directorio."
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+"La cuenta de usuario en el servidor LDAP utilizada para consultar el "
+"directorio. Deja el campo vacío si quieres conectarte de forma anónima."
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
+msgid "Use TLS"
+msgstr "Usar TLS"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "User"
+msgstr "Usuario"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+msgid "User Information"
+msgstr "Información del usuario"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
+msgid "User to copy when creating new users"
+msgstr "Usuario a copiar al crear nuevos usuarios"

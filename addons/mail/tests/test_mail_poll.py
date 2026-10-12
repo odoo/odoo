@@ -1,0 +1,235 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import timedelta
+from pprint import pformat
+
+from odoo.addons.mail.tests.common import MailCommon
+from odoo.tests.common import HttpCase, JsonRpcException, new_test_user, tagged
+
+
+@tagged("mail_poll")
+class TestMailPoll(MailCommon, HttpCase):
+
+    POLL_OPTIONS = [
+        {"emoji": "🍔", "label": "Burger"},
+        {"emoji": "🍕", "label": "Pizza"},
+        {"emoji": "🌮", "label": "Tacos"},
+    ]
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.test_record = cls.env["discuss.channel"].create({"name": "General"})
+
+    def test_only_one_option_allowed_on_single_option_polls(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {
+                "duration": 1,
+                "options": self.POLL_OPTIONS,
+                "question": "What is your favorite food?",
+                "thread_id": self.test_record.id,
+                "thread_model": self.test_record._name,
+            },
+        )
+        poll = self.env["mail.poll"].search([("id", "=", poll_id)])
+        self.assertEqual(poll.option_ids.mapped("option_emoji"), ["🍔", "🍕", "🌮"])
+        with (
+            self.assertRaises(JsonRpcException) as error_catcher,
+            self.assertLogs("odoo.http", level="WARNING") as log_catcher,
+        ):
+            self.make_jsonrpc_request(
+                "/mail/poll/vote", {"poll_id": poll.id, "option_ids": poll.option_ids.ids}
+            )
+        self.assertEqual(error_catcher.exception.args[0], "odoo.exceptions.ValidationError")
+        self.assertIn(
+            'WARNING:odoo.http:Cannot vote on poll "What is your favorite food?": only one vote is allowed per user.',
+            log_catcher.output,
+        )
+        self.make_jsonrpc_request(
+            "/mail/poll/vote", {"poll_id": poll.id, "option_ids": poll.option_ids[0].ids}
+        )
+        self.assertIn(self.user_employee, poll.option_ids[0].vote_ids.user_id)
+
+    def test_multiple_options_allowed_on_multi_option_polls(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {
+                "allow_multiple_options": True,
+                "duration": 1,
+                "options": self.POLL_OPTIONS,
+                "question": "What is your favorite food?",
+                "thread_id": self.test_record.id,
+                "thread_model": self.test_record._name,
+            },
+        )
+        poll = self.env["mail.poll"].search([("id", "=", poll_id)])
+        self.make_jsonrpc_request(
+            "/mail/poll/vote", {"poll_id": poll.id, "option_ids": poll.option_ids.ids}
+        )
+        self.assertIn(self.user_employee, poll.option_ids[0].vote_ids.user_id)
+        self.assertIn(self.user_employee, poll.option_ids[1].vote_ids.user_id)
+        self.assertIn(self.user_employee, poll.option_ids[2].vote_ids.user_id)
+
+    def test_vote_percentage_computation(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        channel = self.env["discuss.channel"].create({"name": "General"})
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {
+                "allow_multiple_options": True,
+                "duration": 1,
+                "options": self.POLL_OPTIONS,
+                "question": "What is your favorite food?",
+                "thread_id": channel.id,
+                "thread_model": "discuss.channel",
+            },
+        )
+        poll = self.env["mail.poll"].search([("id", "=", poll_id)])
+        cases = [
+            [{"option": poll.option_ids[0], "votes": 1, "expected_percentage": 100}],
+            [
+                {"option": poll.option_ids[0], "votes": 1, "expected_percentage": 50},
+                {"option": poll.option_ids[1], "votes": 1, "expected_percentage": 50},
+            ],
+            # Remainder skipped not to skew the results.
+            [
+                {"option": poll.option_ids[0], "votes": 1, "expected_percentage": 33},
+                {"option": poll.option_ids[1], "votes": 1, "expected_percentage": 33},
+                {"option": poll.option_ids[2], "votes": 1, "expected_percentage": 33},
+            ],
+            [
+                {"option": poll.option_ids[0], "votes": 0, "expected_percentage": 0},
+                {"option": poll.option_ids[1], "votes": 0, "expected_percentage": 0},
+                {"option": poll.option_ids[2], "votes": 0, "expected_percentage": 0},
+            ],
+            [
+                {"option": poll.option_ids[0], "votes": 2, "expected_percentage": 67},
+                {"option": poll.option_ids[1], "votes": 1, "expected_percentage": 33},
+            ],
+            [
+                {"option": poll.option_ids[0], "votes": 3, "expected_percentage": 50},
+                {"option": poll.option_ids[1], "votes": 2, "expected_percentage": 33},
+                {"option": poll.option_ids[2], "votes": 1, "expected_percentage": 17},
+            ],
+        ]
+        max_votes = max(sum(a["votes"] for a in case) for case in cases)
+        users = self.env["res.users"].browse(
+            [
+                new_test_user(self.env, f"user{i}", groups="base.group_user").id
+                for i in range(1, max_votes + 1)
+            ]
+        )
+        for case in cases:
+            with self.subTest(pformat(case)):
+                poll.option_ids.vote_ids.unlink()
+                self.env["mail.poll.vote"].create(
+                    [
+                        {"option_id": option_data["option"].id, "user_id": user.id}
+                        for option_data in case
+                        for user in users[: option_data["votes"]]
+                    ]
+                )
+                for option_data in case:
+                    self.assertEqual(
+                        option_data["option"].vote_percentage, option_data["expected_percentage"]
+                    )
+
+    def test_poll_ui(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        channel = self.test_record
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {
+                "duration": 1,
+                "options": self.POLL_OPTIONS,
+                "question": "???",
+                "thread_id": channel.id,
+                "thread_model": channel._name,
+            },
+        )
+        # Posting enough message so that the poll message isn't loaded when
+        # opening the channel.
+        for i in range(50):
+            channel.message_post(body=f"message_{i}", message_type="comment")
+        self.start_tour(
+            f"/odoo/discuss?active_id={channel.id}&test_poll_id={poll_id}",
+            "mail_poll_tour.js",
+            login=self.user_employee.login,
+        )
+
+    def test_notify_by_web_push_prepare_payload(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        with self.mock_datetime_and_now("2026-09-10 12:00:00"):
+            poll_id = self.make_jsonrpc_request(
+                "/mail/poll/create",
+                {
+                    "duration": 10,
+                    "options": self.POLL_OPTIONS,
+                    "question": "What is your favorite food?",
+                    "thread_id": self.test_record.id,
+                    "thread_model": self.test_record._name,
+                },
+            )
+            poll = self.env["mail.poll"].browse(poll_id)
+            payload = self.env["discuss.channel"]._notify_by_web_push_prepare_payload(
+                poll.start_message_id,
+            )
+            self.assertEqual(
+                payload["options"]["body"],
+                f'{self.user_employee.name} started a poll: "What is your favorite food?".',
+            )
+            self.make_jsonrpc_request(
+                "/mail/poll/vote",
+                {"poll_id": poll.id, "option_ids": poll.option_ids[0].ids},
+            )
+            no_winner_poll_id = self.make_jsonrpc_request(
+                "/mail/poll/create",
+                {
+                    "duration": 10,
+                    "options": self.POLL_OPTIONS,
+                    "question": "What is your favorite dessert?",
+                    "thread_id": self.test_record.id,
+                    "thread_model": self.test_record._name,
+                },
+            )
+            no_winner_poll = self.env["mail.poll"].browse(no_winner_poll_id)
+            self.frozen_datetime_mock.tick(timedelta(minutes=10))
+            self.env["mail.poll"]._end_expired_polls()
+        payload = self.env["discuss.channel"]._notify_by_web_push_prepare_payload(
+            poll.end_message_id,
+        )
+        self.assertEqual(
+            payload["options"]["body"],
+            f'{self.user_employee.name}\'s poll "What is your favorite food?" has closed. '
+            'Winning answer: "Burger".',
+        )
+        payload = self.env["discuss.channel"]._notify_by_web_push_prepare_payload(
+            no_winner_poll.end_message_id,
+        )
+        self.assertEqual(
+            payload["options"]["body"],
+            f'{self.user_employee.name}\'s poll "What is your favorite dessert?" has closed.',
+        )
+
+    def test_do_not_end_expired_polls_twice(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        poll_id = self.make_jsonrpc_request(
+            "/mail/poll/create",
+            {
+                "duration": 0,
+                "options": self.POLL_OPTIONS,
+                "question": "What is your favorite food?",
+                "thread_id": self.test_record.id,
+                "thread_model": self.test_record._name,
+            },
+        )
+        poll = self.env["mail.poll"].browse(poll_id)
+        self.assertFalse(poll.end_message_id.exists())
+        self.env["mail.poll"]._end_expired_polls()
+        self.assertTrue(poll.end_message_id.exists())
+        end_message = poll.end_message_id
+        self.env["mail.poll"]._end_expired_polls()
+        self.assertEqual(end_message, poll.end_message_id)

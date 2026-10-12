@@ -1,0 +1,44 @@
+.o_field_many2one_avatar {
+    img:hover {
+        cursor: context-menu;
+        outline: var(--border-width) solid var(--o-action);
+    }
+    &.text-muted {
+        img {
+            filter: grayscale(1);
+            opacity: 0.5;
+        }
+    }
+}
+
+.o_kanban_record  {
+    @media screen and (min-width: 576px), print and (min-width: 100mm) {
+        .o_field_widget.o_field_many2one_avatar_user .o_quick_assign {
+            visibility: hidden;
+        }
+        &:hover {
+            .o_field_widget.o_field_many2one_avatar_user .o_quick_assign {
+                visibility: visible;
+            }
+        }
+    }
+}
+
+.o_m2o_tags_avatar_field_popover {
+    z-index: calc(var(--o-bs-zindex-modal) - 1);
+    font-size: var(--o-bs-dropdown-font-size);
+    .o_field_many2one_selection {
+        padding: 0.25rem;
+        .o-autocomplete--dropdown-menu {
+            min-width: 178px;
+            font-size: var(--o-bs-dropdown-font-size);
+            .dropdown-item {
+                padding: var(--o-dropdown-vpadding) calc(var(--o-dropdown-hpadding) / 2);
+            }
+        }
+        .o-autocomplete--input {
+            margin-bottom: .5rem;
+            padding-bottom: 0.25rem;
+        }
+    }
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="cr_partner_address_form" model="ir.ui.view">
+        <field name="name">cr.partner.form.address</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <form>
+                <div class="o_address_format">
+                    <field name="street" placeholder="Otras Señas..." class="o_address_street"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="street2" placeholder="Barrio..." class="o_address_street"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="city_id"
+                           placeholder="Cantón"
+                           class="o_address_city"
+                           domain="[('country_id', '=', country_id)]"
+                           invisible="not country_enforce_cities"
+                           readonly="type == 'contact' and parent_id"
+                           context="{'default_country_id': country_id, 'default_state_id': state_id, 'default_zipcode': zip}"/>
+                    <field name="city"
+                           placeholder="City"
+                           class="o_address_city"
+                           invisible="country_enforce_cities and (city_id or city in ['', False])"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="state_id" class="o_address_state" placeholder="Province"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           context="{'default_country_id': country_id}"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="zip" placeholder="ZIP" class="o_address_zip"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="l10n_cr_district_id" placeholder="District..." class="o_address_street"
+                           options="{'no_open': True, 'no_quick_create': True}"
+                           invisible="country_code != 'CR'"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country"
+                           options="{'no_open': True, 'no_create': True}"
+                           readonly="type == 'contact' and parent_id"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+</odoo>

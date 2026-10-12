@@ -1,0 +1,10 @@
+:root {
+    --o-calendar-faint: var(--gray-300);
+    --o-calendar-shadow: var(--o-white);
+    --o-calendar-divider-size: 25px;
+    --o-calendar-divider-opacity: .25;
+}
+
+.o_calendar_bg_event[class*="o_calendar_color_"]:not(.o_calendar_color_custom) {
+    --fc-event-color: color-mix(in srgb, var(--o-white) 25%, var(--o-calendar-event-bg));
+}

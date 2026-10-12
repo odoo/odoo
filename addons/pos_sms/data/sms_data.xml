@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="sms_template_data_point_of_sale" model="sms.template">
+            <field name="name">POS: Sent Order Confirmation via Text</field>
+            <field name="model_id" ref="point_of_sale.model_pos_order"/>
+            <field name="body">
+                {{ object.company_id.name }} : Your order with reference: {{ object.pos_reference }} was processed succesfully with amount {{  object.currency_id.format(object.amount_total) }}. Use {{ object.pos_reference }}  for further reference
+            </field>
+        </record>
+    </data>
+</odoo>

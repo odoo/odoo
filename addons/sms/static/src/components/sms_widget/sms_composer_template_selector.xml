@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sms.MailComposerTemplateSelector" t-inherit="mail.MailComposerTemplateSelector" t-inherit-mode="extension">
+        <xpath expr="//Dropdown" position="attributes">
+            <attribute name="t-if">this.props.record.resModel === 'sms.composer' || this.props.record.data.can_edit_body</attribute>
+        </xpath>
+    </t>
+</templates>

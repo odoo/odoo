@@ -1,0 +1,66 @@
+<rsm:CrossIndustryInvoice  xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+
+  <rsm:SupplyChainTradeTransaction>
+    <ram:IncludedSupplyChainTradeLineItem>
+      <ram:AssociatedDocumentLineDocument>
+        <ram:LineID>1</ram:LineID>
+      </ram:AssociatedDocumentLineDocument>
+      <ram:SpecifiedTradeProduct>
+          <ram:Description>turlutututu</ram:Description>
+      </ram:SpecifiedTradeProduct>
+      <ram:SpecifiedLineTradeSettlement>
+        <ram:SpecifiedTradeSettlementLineMonetarySummation>
+          <ram:LineTotalAmount>1.00</ram:LineTotalAmount>
+        </ram:SpecifiedTradeSettlementLineMonetarySummation>
+      </ram:SpecifiedLineTradeSettlement>
+    </ram:IncludedSupplyChainTradeLineItem>
+
+    <ram:ApplicableHeaderTradeAgreement>
+      <ram:SellerTradeParty>
+        <ram:Name>company_1_data</ram:Name>
+        <ram:SpecifiedLegalOrganization schemeID="0002">987654321</ram:SpecifiedLegalOrganization>
+        <ram:DefinedTradeContact>
+            <ram:PersonName>company_1_data</ram:PersonName>
+            <ram:TelephoneUniversalCommunication>
+                <ram:CompleteNumber>+33 499 65 43 21</ram:CompleteNumber>
+            </ram:TelephoneUniversalCommunication>
+            <ram:EmailURIUniversalCommunication>
+                <ram:URIID>mycompany@company.com</ram:URIID>
+            </ram:EmailURIUniversalCommunication>
+        </ram:DefinedTradeContact>
+        <ram:PostalTradeAddress>
+            <ram:PostcodeCode>35400</ram:PostcodeCode>
+            <ram:LineOne>Rue Grand Port 1</ram:LineOne>
+            <ram:CityName>Saint-Malo</ram:CityName>
+            <ram:CountryID>FR</ram:CountryID>
+        </ram:PostalTradeAddress>
+        <ram:SpecifiedTaxRegistration>
+            <ram:ID schemeID="VA">FR23334175221</ram:ID>
+        </ram:SpecifiedTaxRegistration>
+      </ram:SellerTradeParty>
+      <ram:BuyerTradeParty>
+        <ram:Name>partner_fr</ram:Name>
+        <ram:SpecifiedLegalOrganization schemeID="0002">123456789</ram:SpecifiedLegalOrganization>
+        <ram:DefinedTradeContact>
+            <ram:PersonName>partner_fr</ram:PersonName>
+            <ram:TelephoneUniversalCommunication>
+                <ram:CompleteNumber>+33 499 12 34 56</ram:CompleteNumber>
+            </ram:TelephoneUniversalCommunication>
+            <ram:EmailURIUniversalCommunication>
+                <ram:URIID>partner_fr@company.com</ram:URIID>
+            </ram:EmailURIUniversalCommunication>
+        </ram:DefinedTradeContact>
+        <ram:PostalTradeAddress>
+            <ram:PostcodeCode>75000</ram:PostcodeCode>
+            <ram:LineOne>Rue Jean Jaurès, 42</ram:LineOne>
+            <ram:CityName>Paris</ram:CityName>
+            <ram:CountryID>FR</ram:CountryID>
+        </ram:PostalTradeAddress>
+        <ram:SpecifiedTaxRegistration>
+            <ram:ID schemeID="VA">FR05677404089</ram:ID>
+        </ram:SpecifiedTaxRegistration>
+      </ram:BuyerTradeParty>
+    </ram:ApplicableHeaderTradeAgreement>
+
+  </rsm:SupplyChainTradeTransaction>
+</rsm:CrossIndustryInvoice>

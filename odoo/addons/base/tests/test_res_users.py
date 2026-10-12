@@ -1,0 +1,1016 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import datetime, timedelta
+from types import SimpleNamespace
+from unittest.mock import patch
+
+from lxml import etree
+
+from odoo.api import SUPERUSER_ID
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.fields import Command
+from odoo.http import request_var
+from odoo.tests import (
+    Form,
+    HttpCase,
+    TransactionCase,
+    freeze_time,
+    new_test_user,
+    tagged,
+    users,
+    warmup,
+)
+from odoo.tools import mute_logger
+
+from odoo.addons.base.models.res_groups import ResGroups
+
+
+class UsersCommonCase(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        users = cls.env['res.users'].create([
+            {
+                'name': 'Internal',
+                'login': 'user_internal',
+                'password': 'password',
+                'group_ids': [cls.env.ref('base.group_user').id],
+                'tz': 'UTC',
+            },
+            {
+                'name': 'Portal 1',
+                'login': 'portal_1',
+                'password': 'portal_1',
+                'group_ids': [cls.env.ref('base.group_portal').id],
+            },
+            {
+                'name': 'Portal 2',
+                'login': 'portal_2',
+                'password': 'portal_2',
+                'group_ids': [cls.env.ref('base.group_portal').id],
+            },
+        ])
+
+        cls.user_internal, cls.user_portal_1, cls.user_portal_2 = users
+
+        # Remove from the cache the values filled with admin rights for the users/partners that have just been created
+        # So unit tests reading/writing these partners/users
+        # as other low-privileged users do not have their cache polluted with values fetched with admin rights
+        users.partner_id.invalidate_recordset()
+        users.invalidate_recordset()
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestUsers(UsersCommonCase):
+
+    def test_name_search(self):
+        """ Check name_search on user. """
+        User = self.env['res.users']
+
+        test_user = User.create({'name': 'Flad the Impaler', 'login': 'vlad'})
+        like_user = User.create({'name': 'Wlad the Impaler', 'login': 'vladi'})
+        other_user = User.create({'name': 'Nothing similar', 'login': 'nothing similar'})
+        all_users = test_user | like_user | other_user
+
+        res = User.name_search('vlad', operator='ilike')
+        self.assertEqual(User.browse(i[0] for i in res) & all_users, test_user)
+
+        res = User.name_search('vlad', operator='not ilike')
+        self.assertEqual(User.browse(i[0] for i in res) & all_users, all_users)
+
+        res = User.name_search('', operator='ilike')
+        self.assertEqual(User.browse(i[0] for i in res) & all_users, all_users)
+
+        res = User.name_search('', operator='not ilike')
+        self.assertEqual(User.browse(i[0] for i in res) & all_users, User)
+
+        res = User.name_search('lad', operator='ilike')
+        self.assertEqual(User.browse(i[0] for i in res) & all_users, test_user | like_user)
+
+        res = User.name_search('lad', operator='not ilike')
+        self.assertEqual(User.browse(i[0] for i in res) & all_users, other_user)
+
+    def test_user_partner(self):
+        """ Check that the user partner is well created """
+
+        User = self.env['res.users']
+        Partner = self.env['res.partner']
+        Company = self.env['res.company']
+
+        company_1 = Company.create({'name': 'company_1'})
+        company_2 = Company.create({'name': 'company_2'})
+
+        partner = Partner.create({
+            'name': 'Bob Partner',
+            'company_id': company_2.id
+        })
+
+        # case 1 : the user has no partner
+        test_user = User.create({
+            'name': 'John Smith',
+            'login': 'jsmith',
+            'company_ids': [company_1.id],
+            'company_id': company_1.id
+        })
+
+        self.assertFalse(
+            test_user.partner_id.company_id,
+            "The partner_id linked to a user should be created without any company_id")
+
+        # case 2 : the user has a partner
+        test_user = User.create({
+            'name': 'Bob Smith',
+            'login': 'bsmith',
+            'company_ids': [company_1.id],
+            'company_id': company_1.id,
+            'partner_id': partner.id
+        })
+
+        self.assertEqual(
+            test_user.partner_id.company_id,
+            company_1,
+            "If the partner_id of a user has already a company, it is replaced by the user company"
+        )
+
+
+    def test_change_user_company(self):
+        """ Check the partner company update when the user company is changed """
+
+        User = self.env['res.users']
+        Company = self.env['res.company']
+
+        test_user = User.create({'name': 'John Smith', 'login': 'jsmith'})
+        company_1 = Company.create({'name': 'company_1'})
+        company_2 = Company.create({'name': 'company_2'})
+
+        test_user.company_ids += company_1
+        test_user.company_ids += company_2
+
+        # 1: the partner has no company_id, no modification
+        test_user.write({
+            'company_id': company_1.id
+        })
+
+        self.assertFalse(
+            test_user.partner_id.company_id,
+            "On user company change, if its partner_id has no company_id,"
+            "the company_id of the partner_id shall NOT be updated")
+
+        # 2: the partner has a company_id different from the new one, update it
+        test_user.partner_id.write({
+            'company_id': company_1.id
+        })
+
+        test_user.write({
+            'company_id': company_2.id
+        })
+
+        self.assertEqual(
+            test_user.partner_id.company_id,
+            company_2,
+            "On user company change, if its partner_id has already a company_id,"
+            "the company_id of the partner_id shall be updated"
+        )
+
+    @mute_logger('odoo.sql_db')
+    def test_deactivate_portal_users_access(self):
+        """Test that only a portal users can deactivate his account."""
+        with self.assertRaises(UserError, msg='Internal users should not be able to deactivate their account'):
+            self.user_internal._deactivate_portal_user()
+
+    @mute_logger('odoo.sql_db', 'odoo.addons.base.models.res_users_deletion')
+    def test_deactivate_portal_users_archive_and_remove(self):
+        """Test that if the account can not be removed, it's archived instead
+        and sensitive information are removed.
+
+        In this test, the deletion of "portal_user" will succeed,
+        but the deletion of "portal_user_2" will fail.
+        """
+        User = self.env['res.users']
+        portal_user = User.create({
+            'name': 'Portal',
+            'login': 'portal_user',
+            'password': 'password',
+            'group_ids': [self.env.ref('base.group_portal').id],
+        })
+        portal_partner = portal_user.partner_id
+
+        portal_user_2 = User.create({
+            'name': 'Portal',
+            'login': 'portal_user_2',
+            'password': 'password',
+            'group_ids': [self.env.ref('base.group_portal').id],
+        })
+        portal_partner_2 = portal_user_2.partner_id
+
+        (portal_user | portal_user_2)._deactivate_portal_user()
+
+        self.assertTrue(portal_user.exists() and not portal_user.active, 'Should have archived the user 1')
+
+        self.assertEqual(portal_user.name, 'Portal', 'Should have kept the user name')
+        self.assertEqual(portal_user.partner_id.name, 'Portal', 'Should have kept the partner name')
+        self.assertNotEqual(portal_user.login, 'portal_user', 'Should have removed the user login')
+
+        asked_deletion_1 = self.env['res.users.deletion'].search([('user_id', '=', portal_user.id)])
+        asked_deletion_2 = self.env['res.users.deletion'].search([('user_id', '=', portal_user_2.id)])
+
+        self.assertTrue(asked_deletion_1, 'Should have added the user 1 in the deletion queue')
+        self.assertTrue(asked_deletion_2, 'Should have added the user 2 in the deletion queue')
+
+        # The deletion will fail for "portal_user_2",
+        # because of the absence of "ondelete=cascade"
+        self.cron = self.env['ir.cron'].create({
+            'name': 'Test Cron',
+            'user_id': portal_user_2.id,
+            'model_id': self.env.ref('base.model_res_partner').id,
+        })
+
+        with self.enter_registry_test_mode():
+            self.env.ref('base.ir_cron_res_users_deletion').method_direct_trigger()
+
+        self.assertFalse(portal_user.exists(), 'Should have removed the user')
+        self.assertFalse(portal_partner.exists(), 'Should have removed the partner')
+        self.assertEqual(asked_deletion_1.state, 'done', 'Should have marked the deletion as done')
+
+        self.assertTrue(portal_user_2.exists(), 'Should have kept the user')
+        self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
+        self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
+
+    def test_delete_public_user(self):
+        """Test that the public user cannot be deleted."""
+        public_user = self.env.ref('base.public_user')
+        public_partner = public_user.partner_id
+
+        # Attempt to delete the public user
+        with self.assertRaises(UserError, msg="Public user should not be deletable"):
+            public_user.unlink()
+
+        # Ensure the public user still exists and is inactive
+        self.assertTrue(public_user.exists() and not public_user.active, "Public user should still exist and be inactive")
+        self.assertTrue(public_partner.exists() and not public_partner.active, "Public partner should still exist and be inactive")
+
+    def test_user_home_action_restriction(self):
+        test_user = new_test_user(self.env, 'hello world')
+
+        # Find an action that contains restricted context ('active_id')
+        restricted_action = self.env['ir.actions.act_window'].search([('context', 'ilike', 'active_id')], limit=1)
+        with self.assertRaises(ValidationError):
+            test_user.action_id = restricted_action.id
+
+        # Find an action without restricted context
+        allowed_action = self.env['ir.actions.act_window'].search(['!', ('context', 'ilike', 'active_id')], limit=1)
+
+        test_user.action_id = allowed_action.id
+        self.assertEqual(test_user.action_id.id, allowed_action.id)
+
+    def test_context_get_lang(self):
+        self.env['res.lang'].with_context(active_test=False).search([
+            ('code', 'in', ['fr_FR', 'es_ES', 'de_DE', 'en_US'])
+        ]).write({'active': True})
+
+        user = new_test_user(self.env, 'jackoneill')
+        user = user.with_user(user)
+        user.lang = 'fr_FR'
+
+        company = user.company_id.partner_id.sudo()
+        company.lang = 'de_DE'
+
+        request = SimpleNamespace()
+        request.best_lang = 'es_ES'
+        request_patch = patch('odoo.addons.base.models.res_users.request', request)
+        self.addCleanup(request_patch.stop)
+        request_patch.start()
+
+        self.assertEqual(user.context_get()['lang'], 'fr_FR')
+        self.env.transaction.invalidate_ormcache()
+        user.lang = False
+
+        self.assertEqual(user.context_get()['lang'], 'es_ES')
+        self.env.transaction.invalidate_ormcache()
+        request_patch.stop()
+
+        self.assertEqual(user.context_get()['lang'], 'de_DE')
+        self.env.transaction.invalidate_ormcache()
+        company.lang = False
+
+        self.assertEqual(user.context_get()['lang'], 'en_US')
+
+    def test_user_self_update(self):
+        """ Check that the user has access to write his phone. """
+        test_user = self.env['res.users'].create({'name': 'John Smith', 'login': 'jsmith'})
+        self.assertFalse(test_user.phone)
+        test_user.with_user(test_user).write({'phone': '2387478'})
+
+        self.assertEqual(
+            test_user.partner_id.phone,
+            '2387478',
+            "The phone of the partner_id shall be updated."
+        )
+
+    def test_session_non_existing_user(self):
+        """
+        Test to check the invalidation of session bound to non existing (or deleted) users.
+        """
+        User = self.env['res.users']
+        last_user_id = User.with_context(active_test=False).search([], limit=1, order="id desc")
+        non_existing_user = User.browse(last_user_id.id + 1)
+        self.assertFalse(non_existing_user._compute_session_token('session_id'))
+
+    def test_create(self):
+        """ creating a user should automatically create a new partner """
+        partners_before = self.env['res.partner'].search([])
+        user_foo = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+
+        self.assertNotIn(user_foo.partner_id, partners_before)
+
+    def test_create_with_ancestor(self):
+        """ creating a user with a specific 'partner_id' should not create a new partner """
+        partner_foo = self.env['res.partner'].create({'name': 'Foo'})
+        partners_before = self.env['res.partner'].search([])
+        user_foo = self.env['res.users'].create({'partner_id': partner_foo.id, 'login': 'foo'})
+        partners_after = self.env['res.partner'].search([])
+
+        self.assertEqual(partners_before, partners_after)
+        self.assertEqual(user_foo.name, 'Foo')
+        self.assertEqual(user_foo.partner_id, partner_foo)
+
+    @mute_logger('odoo.models')
+    def test_copy(self):
+        """ copying a user should automatically copy its partner, too """
+        user_foo = self.env['res.users'].create({
+            'name': 'Foo',
+            'login': 'foo',
+            'employee': True,
+        })
+        foo_before, = user_foo.read()
+        del foo_before['create_date']
+        del foo_before['write_date']
+        user_bar = user_foo.copy({'login': 'bar'})
+        foo_after, = user_foo.read()
+        del foo_after['create_date']
+        del foo_after['write_date']
+        self.assertEqual(foo_before, foo_after)
+
+        self.assertEqual(user_bar.name, 'Foo (copy)')
+        self.assertEqual(user_bar.login, 'bar')
+        self.assertEqual(user_foo.employee, user_bar.employee)
+        self.assertNotEqual(user_foo.id, user_bar.id)
+        self.assertNotEqual(user_foo.partner_id.id, user_bar.partner_id.id)
+
+    @mute_logger('odoo.models')
+    def test_copy_with_ancestor(self):
+        """ copying a user with 'parent_id' in defaults should not duplicate the partner """
+        user_foo = self.env['res.users'].create({'login': 'foo', 'name': 'Foo', 'signature': 'Foo'})
+        partner_bar = self.env['res.partner'].create({'name': 'Bar'})
+
+        foo_before, = user_foo.read()
+        del foo_before['create_date']
+        del foo_before['write_date']
+        del foo_before['login_date']
+        partners_before = self.env['res.partner'].search([])
+        user_bar = user_foo.copy({'partner_id': partner_bar.id, 'login': 'bar'})
+        foo_after, = user_foo.read()
+        del foo_after['create_date']
+        del foo_after['write_date']
+        del foo_after['login_date']
+        partners_after = self.env['res.partner'].search([])
+
+        self.assertEqual(foo_before, foo_after)
+        self.assertEqual(partners_before, partners_after)
+
+        self.assertNotEqual(user_foo.id, user_bar.id)
+        self.assertEqual(user_bar.partner_id.id, partner_bar.id)
+        self.assertEqual(user_bar.login, 'bar', "login is given from copy parameters")
+        self.assertFalse(user_bar.password, "password should not be copied from original record")
+        self.assertEqual(user_bar.name, 'Bar', "name is given from specific partner")
+        self.assertEqual(user_bar.signature, user_foo.signature, "signature should be copied")
+
+
+@tagged('post_install', '-at_install', 'groups')
+class TestUsers2(UsersCommonCase):
+
+    def test_change_user_login(self):
+        """ Check that partner email is updated when changing user's login """
+
+        User = self.env['res.users']
+        with Form(User, view='base.view_users_simple_form') as UserForm:
+            UserForm.name = "Test User"
+            UserForm.login = "test-user1"
+            self.assertFalse(UserForm.email)
+
+            UserForm.login = "test-user1@mycompany.example.org"
+            self.assertEqual(
+                UserForm.email, "test-user1@mycompany.example.org",
+                "Setting a valid email as login should update the partner's email"
+            )
+
+    def test_default_groups(self):
+        """ The groups handler doesn't use the "real" view with pseudo-fields
+        during installation, so it always works (because it uses the normal
+        group_ids field).
+        """
+        default_group = self.env.ref('base.default_user_group')
+        test_group = self.env['res.groups'].create({'name': 'test_group'})
+        default_group.implied_ids = test_group
+
+        # use the specific views which has the pseudo-fields
+        f = Form(self.env['res.users'], view='base.view_users_form')
+        f.name = "bob"
+        f.login = "bob"
+        user = f.save()
+
+        group_user = self.env.ref('base.group_user')
+
+        self.assertIn(group_user, user.group_ids)
+        self.assertEqual(default_group.implied_ids + group_user, user.group_ids)
+
+    def test_role_regular_user_marker_present(self):
+        """ Selecting the "User" role must always leave the regular-user
+        marker (``base.group_user_regular``) somewhere in ``all_group_ids``
+        (either added directly, or already implied by another group). """
+        group_regular = self.env.ref('base.group_user_regular')
+
+        user_form = Form(self.env['res.users'], view='base.view_users_form')
+        user_form.name = "Test Regular"
+        user_form.login = "test_regular_marker"
+        user_form.role = 'regular_user'
+        user = user_form.save()
+
+        self.assertEqual(user.role, 'regular_user')
+        self.assertIn(group_regular, user.all_group_ids)
+
+    def test_role_toggle_regular_light_sequence(self):
+        """ Repeatedly toggling the role between "User" and "Light" (each
+        change saved, as done through the interface) must never leave the
+        user in an inconsistent state where ``role`` reports 'regular_user'
+        while the regular-user marker (``base.group_user_regular``) is
+        missing from ``all_group_ids``. Such a state silently reverts to
+        'light_user' on the next read (e.g. after a reload) since the role
+        is otherwise derived from the actual groups on the user. """
+        group_regular = self.env.ref('base.group_user_regular')
+
+        user_form = Form(self.env['res.users'], view='base.view_users_form')
+        user_form.name = "Toggle"
+        user_form.login = "toggle_user"
+        user_form.role = 'regular_user'
+        user = user_form.save()
+
+        for i in range(5):
+            with Form(user, view='base.view_users_form') as f:
+                f.role = 'light_user'
+            user.invalidate_recordset()
+            self.assertEqual(user.role, 'light_user', f"iteration {i}: role not switched to light")
+
+            with Form(user, view='base.view_users_form') as f:
+                f.role = 'regular_user'
+            user.invalidate_recordset()
+            self.assertEqual(user.role, 'regular_user', f"iteration {i}: role not switched to regular")
+            self.assertIn(
+                group_regular, user.all_group_ids,
+                f"iteration {i}: role is 'regular_user' but the regular-user marker "
+                "is missing from all_group_ids",
+            )
+
+    def test_role_pdf_regular_user_sticks(self):
+        """ Literal repro of the "role reverts to Light after saving User"
+        report: selecting role='regular_user' on a fresh light user must
+        stick, both live in the onchange and after save. """
+        user_form = Form(self.env['res.users'], view='base.view_users_form')
+        user_form.name = "PDF Repro"
+        user_form.login = "pdf_repro_user"
+        user_form.role = "regular_user"
+        self.assertEqual(user_form.role, 'regular_user')
+        user = user_form.save()
+        self.assertEqual(user.role, 'regular_user')
+
+    def test_role_toggle_regular_light_single_session_unsaved(self):
+        """ Same light/regular toggle sequence as
+        test_role_toggle_regular_light_sequence, but WITHOUT saving between
+        each toggle -- a single open Form (one onchange session), several
+        role flips, one final save -- matching a user clicking the Role
+        radio back and forth before ever hitting Save. Each `f.role = ...`
+        re-triggers `_onchange_role` for real (unlike a plain write()),
+        operating each time on whatever NewId-wrapped group_ids the
+        previous onchange in the same session left behind. """
+        group_regular = self.env.ref('base.group_user_regular')
+
+        with Form(self.env['res.users'], view='base.view_users_form') as f:
+            f.name = "Single Session Toggle"
+            f.login = "single_session_toggle_user"
+            for i in range(9):
+                expected = 'regular_user' if i % 2 == 0 else 'light_user'
+                f.role = expected
+                self.assertEqual(f.role, expected, f"iteration {i}: unexpected role in Form")
+            self.assertEqual(f.role, 'regular_user', "sequence must end on regular_user")
+        user = f.save()
+
+        self.assertEqual(user.role, 'regular_user')
+        self.assertIn(
+            group_regular, user.all_group_ids,
+            "role is 'regular_user' after save but the regular-user marker "
+            "is missing from all_group_ids",
+        )
+
+    def test_role_search(self):
+        for user in [
+            self.env.ref('base.user_admin'),
+            self.env.ref('base.public_user'),
+            *self.env['res.users'].create([
+                {'name': 'portal', 'login': 'test_role_portal', 'group_ids': self.env.ref('base.group_portal')},
+                {'name': 'user', 'login': 'test_role_user', 'group_ids': self.env.ref('base.group_user')},
+            ]),
+        ]:
+            with self.subTest(user_id=user.id, role=user.role):
+                found = user.with_context(active_test=False).search([('role', '=', user.role), ('id', '=', user.id)])
+                self.assertEqual(found, user)
+
+    def test_selection_groups(self):
+        # create 3 groups that should be in a selection
+        app = self.env['res.groups.privilege'].create({'name': 'Foo'})
+        group_user, group_manager, group_visitor = self.env['res.groups'].create([
+            {'name': name, 'privilege_id': app.id}
+            for name in ('User', 'Manager', 'Visitor')
+        ])
+        # THIS PART IS NECESSARY TO REPRODUCE AN ISSUE: group1.id < group2.id < group0.id
+        self.assertLess(group_user.id, group_manager.id)
+        self.assertLess(group_manager.id, group_visitor.id)
+        # implication order is group0 < group1 < group2
+        group_manager.implied_ids = group_user
+        group_user.implied_ids = group_visitor
+        groups = group_visitor + group_user + group_manager
+        # the lowest-rights group of a privilege implies the regular-user marker
+        group_regular = self.env.ref('base.group_user_regular')
+
+        # create a user
+        user = self.env['res.users'].create({'name': 'foo', 'login': 'foo'})
+
+        # put user in group_visitor, and check field value
+        user.write({'group_ids': [Command.set([group_visitor.id])]})
+        self.assertEqual(user.group_ids & groups, group_visitor)
+        self.assertEqual(user.all_group_ids & groups, group_visitor)
+        self.assertEqual(user.read(['group_ids'])[0]['group_ids'], [group_visitor.id])
+        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_regular).ids))
+
+        # remove group_visitor
+        user.write({'group_ids': [Command.unlink(group_visitor.id)]})
+        self.assertEqual(user.group_ids & groups, self.env['res.groups'])
+
+        # put user in group_manager, and check field value
+        user.write({'group_ids': [Command.set([group_manager.id])]})
+        self.assertEqual(user.group_ids & groups, group_manager)
+        self.assertEqual(user.all_group_ids & groups, group_visitor + group_manager + group_user)
+        self.assertEqual(user.read(['group_ids'])[0]['group_ids'], [group_manager.id])
+        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user + group_regular).ids))
+
+        # add user in group_user, and check field value
+        user.write({'group_ids': [Command.link(group_user.id)]})
+        self.assertEqual(user.group_ids & groups, group_manager + group_user)
+        self.assertEqual(user.all_group_ids & groups, group_visitor + group_manager + group_user)
+        self.assertEqual(set(user.read(['group_ids'])[0]['group_ids']), set((group_manager + group_user).ids))
+        self.assertEqual(set(user.read(['all_group_ids'])[0]['all_group_ids']), set((group_visitor + group_manager + group_user + group_regular).ids))
+
+        groups = self.env['res.groups'].search([('all_user_ids', '=', user.id)])
+        self.assertEqual(groups, user.all_group_ids)
+
+    def test_implied_groups_on_change(self):
+        """Test that a change on a reified fields trigger the onchange of group_ids."""
+        group_public = self.env.ref('base.group_public')
+        group_portal = self.env.ref('base.group_portal')
+        group_user = self.env.ref('base.group_user')
+
+        app = self.env['res.groups.privilege'].create({'name': 'Foo'})
+        group_contain_user = self.env['res.groups'].create({
+            'name': 'Small user group',
+            'privilege_id': app.id,
+            'implied_ids': [group_user.id],
+        })
+
+        user_form = Form(self.env['res.users'], view='base.view_users_form')
+        user_form.name = "Test"
+        user_form.login = "Test"
+        self.assertFalse(user_form.share)
+
+        user_form['group_ids'] = group_portal
+        self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
+
+        user = user_form.save()
+
+        # in debug mode, show the group widget for external user
+
+        with self.debug_mode():
+            user_form = Form(user, view='base.view_users_form')
+
+            user_form['group_ids'] = group_user
+            self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
+
+            user_form['group_ids'] = group_public
+            self.assertTrue(user_form.share, 'The group_ids onchange should have been triggered')
+
+            user_form['group_ids'] = group_user
+            user_form['group_ids'] = group_user + group_contain_user
+
+            user_form.save()
+
+        # in debug mode, allow extra groups
+
+        with self.debug_mode():
+            user_form = Form(self.env['res.users'], view='base.view_users_form')
+            user_form.name = "Test-2"
+            user_form.login = "Test-2"
+
+            user_form['group_ids'] = group_portal
+            self.assertTrue(user_form.share)
+
+            # for portal user, the view_group_extra_ids is only show in debug mode
+            user_form['group_ids'] = group_portal + group_contain_user
+            self.assertFalse(user_form.share, 'The group_ids onchange should have been triggered')
+
+            with self.assertRaises(ValidationError, msg="The user cannot be at the same time in groups: ['Membre', 'Portal', 'Foo / Small user group']"):
+                user_form.save()
+
+    def test_view_group_hierarchy(self):
+        """Test that the group hierarchy shows up in the correct language of the user."""
+        self.env['res.lang']._activate_lang('fr_FR')
+        group_system = self.env.ref('base.group_system')
+        group_system.with_context(lang='fr_FR').name = 'Administrateur'
+
+        view_group_hierarchy_en = self.env['res.groups']._get_view_group_hierarchy()
+        view_group_hierarchy_fr = self.env['res.groups'].with_context(lang='fr_FR')._get_view_group_hierarchy()
+        self.assertNotEqual(view_group_hierarchy_en['groups'][group_system.id]['name'], 'Administrateur')
+        self.assertEqual(view_group_hierarchy_fr['groups'][group_system.id]['name'], 'Administrateur')
+
+        # Should work the other way around too
+        self.env.transaction.invalidate_ormcache('groups')
+        view_group_hierarchy_fr = self.env['res.groups'].with_context(lang='fr_FR')._get_view_group_hierarchy()
+        view_group_hierarchy_en = self.env['res.groups']._get_view_group_hierarchy()
+        self.assertNotEqual(view_group_hierarchy_en['groups'][group_system.id]['name'], 'Administrateur')
+        self.assertEqual(view_group_hierarchy_fr['groups'][group_system.id]['name'], 'Administrateur')
+
+        with patch('odoo.addons.base.models.res_groups.ResGroups._get_view_group_hierarchy') as mock:
+            self.user_portal_1.copy_data()
+            self.assertFalse(mock.called)
+
+    def test_change_user_to_light(self):
+        group_user = self.env.ref('base.group_user')
+        hr = self.env['res.groups.privilege'].create({'name': 'Monkey Hr'})
+        hr_interviewer = self.env['res.groups'].create({'name': 'HR Interviewer', 'privilege_id': hr.id})
+        hr_user = self.env['res.groups'].create({'name': 'HR Officer', 'privilege_id': hr.id})
+        hr_user.implied_ids += hr_interviewer
+        hr_manager = self.env['res.groups'].create({'name': 'HR Manager', 'privilege_id': hr.id})
+        hr_manager.implied_ids += hr_user
+
+        # Converted the HR group to a light group
+        light_groups = self.env['res.groups']._get_light_group_xmlids() + (hr_interviewer.id,)
+        with patch.object(ResGroups, '_get_light_group_xmlids', lambda s: light_groups):
+            hr_interviewer.implied_ids = []
+
+        with patch.object(ResGroups, '_get_light_group_xmlids', lambda s: light_groups):
+            self.assertEqual(hr_manager._reduce_to_light_groups().mapped('name'), hr_interviewer.mapped('name'))
+
+            user = self.user_internal
+            user.group_ids += hr_manager
+
+            self.assertEqual(user.group_ids._reduce_to_light_groups().mapped('name'), (group_user + hr_interviewer).mapped('name'))
+
+            self.assertEqual(user.role, 'regular_user')
+            self.assertEqual(set(user.group_ids.mapped('name')), {'Role / User', 'HR Manager'})
+            self.assertIn('Is regular user', user.all_group_ids.mapped('name'))
+
+            with Form(user, view='base.view_users_form') as UserForm:
+                UserForm.role = "light_user"
+                self.assertEqual(UserForm.role, 'light_user')
+
+            self.assertEqual(user.role, 'light_user')
+            self.assertEqual(set(user.group_ids.mapped('name')), {'Role / User', 'HR Interviewer'})
+
+    @users('user_internal', 'portal_1')
+    @mute_logger('odoo.addons.base.models.ir_access')
+    def test_user_writeable_fields(self):
+        """ Check for writeable fields.
+
+        Check that a normal user: can write only on user_writeable fields.
+        Check that a portal user: cannot write on themselves.
+        """
+        self.assertIn(
+            "post_install",
+            self.test_tags,
+            "This test **must** be `post_install` to ensure the expected behavior despite other modules",
+        )
+        user_writeable_fields = [
+            name
+            for name, field in self.env["res.users"]._fields.items()
+            if getattr(field, 'user_writeable', False)
+        ]
+        self.assertIn(
+            "email",
+            user_writeable_fields,
+            "For this test to make sense, 'email' must be `user_writeable`",
+        )
+        self.assertNotIn(
+            "login",
+            user_writeable_fields,
+            "For this test to make sense, 'login' must not be `user_writeable`",
+        )
+
+        me = self.env.user.with_env(self.env)
+        other = self.user_portal_2.with_env(self.env)
+
+        # Allow to write a field in the user_writeable_fields for internal users
+        # only
+        if self.env.user._has_group('base.group_user'):
+            me.email = "foo@bar.com"
+            self.assertEqual(me.email, "foo@bar.com")
+        else:
+            with self.assertRaises(AccessError):
+                me.email = "foo@bar.com"
+        # Disallow to write a field not in the user_writeable_fields
+        with self.assertRaises(AccessError):
+            me.login = "foo"
+
+        # Disallow to write a field in the user_writeable_fields on another user
+        with self.assertRaises(AccessError):
+            other.email = "foo@bar.com"
+        # Disallow to write a field not in the user_writeable_fields on another user
+        with self.assertRaises(AccessError):
+            other.login = "foo"
+
+    @warmup
+    def test_write_group_ids_performance(self):
+        contact_creation_group = self.env.ref("base.group_partner_manager")
+        self.assertNotIn(contact_creation_group, self.user_internal.group_ids)
+        # Process any tracking message at flush for cleaner queryCount
+        self.flush_tracking()
+
+        # all modules: 51, base: 17; nightly: +1
+        with self.assertQueryCount(52):
+            self.user_internal.write({
+                "group_ids": [Command.link(contact_creation_group.id)],
+            })
+
+    def test_portal_user_manager_access(self):
+        # groups
+        group_portal = self.env.ref('base.group_portal')
+        group_user = self.env.ref('base.group_user')
+        group_partner_manager = self.env.ref('base.group_partner_manager')
+        group_portal_user_manager = self.env['res.groups'].create({
+            'name': 'Portal User Manager',
+            'user_ids': [],
+        })
+
+        # access
+        self.env['ir.access'].create({
+            'name': 'Allow user profile update',
+            'model_id': self.env['ir.model']._get('res.users').id,
+            'group_id': group_portal_user_manager.id,
+            'operation': 'u',
+            'domain': [('share', '=', True)],
+        })
+
+        # Users
+        portal_user_manager = self.env['res.users'].create({
+            'name': 'Portal User Manager',
+            'login': 'maintainer',
+            'password': 'password',
+            'group_ids': [group_user.id, group_partner_manager.id, group_portal_user_manager.id],
+        })
+        user = self.env['res.users'].create({
+            'name': 'User',
+            'login': 'user_',
+            'password': 'password',
+            'group_ids': [group_user.id, group_partner_manager.id],
+        })
+        portal = self.env['res.users'].create({
+            'name': 'Portal',
+            'login': 'portal_',
+            'password': 'password',
+            'group_ids': [group_portal.id],
+        })
+
+        # A UPM cannot update the user profile of another USER
+        with self.assertRaises(AccessError):
+            user.with_user(portal_user_manager).write({
+                'name': 'New name for you'
+            })
+        # A UPM can update the user profile of a PORTAL user
+        portal.with_user(portal_user_manager).write({
+            'name': 'New name for you'
+        })
+
+        # A UPM cannot update the partner profile of another USER
+        with self.assertRaises(AccessError):
+            user.partner_id.with_user(portal_user_manager).write({
+                'name': 'New name for you'
+            })
+        # A UPM can update the partner profile of a PORTAL user
+        portal.partner_id.with_user(portal_user_manager).write({
+            'name': 'New name for you'
+        })
+
+        # A USER cannot update the user profile of another USER
+        with self.assertRaises(AccessError):
+            self.user_internal.with_user(user).write({
+                'name': 'New name for you'
+            })
+        # A USER cannot update the user profile of a PORTAL user
+        with self.assertRaises(AccessError):
+            portal.with_user(user).write({
+                'name': 'New name for you'
+            })
+
+        # A USER cannot update the partner profile of another USER
+        with self.assertRaises(AccessError):
+            self.user_internal.partner_id.with_user(user).write({
+                'name': 'New name for you'
+            })
+        # A USER can update the partner profile of a PORTAL user
+        portal.partner_id.with_user(user).write({
+            'name': 'New name for you'
+        })
+
+    def flush_tracking(self):
+        self.env.flush_all()
+        self.cr.flush()
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+class TestUsersTweaks(TransactionCase):
+    def test_superuser(self):
+        """ The superuser is inactive and must remain as such. """
+        user = self.env['res.users'].browse(SUPERUSER_ID)
+        self.assertFalse(user.active)
+        with self.assertRaises(UserError):
+            user.write({'active': True})
+
+
+@tagged('post_install', '-at_install')
+class TestUsersIdentitycheck(HttpCase):
+
+    def _rpc(self, model, method, *args, **kwargs):
+        return self.url_open(
+            "/web/dataset/call_kw", json={"params": {"model": model, "method": method, "args": args, "kwargs": kwargs}}
+        ).json()
+
+    def test_change_password(self):
+        """Test that the change of users' password is correctly done and allowed by an identity check."""
+        user_internal = self.env['res.users'].create({
+            'name': 'Internal',
+            'login': 'user_internal',
+            'password': 'oldpassword',
+            'group_ids': [self.env.ref('base.group_user').id],
+        })
+        user_admin = self.env.ref('base.user_admin')
+        self.authenticate(user_admin.login, user_admin.password)
+
+        with freeze_time('2025-10-14 00:00:00'):
+            # Check that an identity check is triggered when clicking the "Change Password" button in the user form of user_internal.
+            wizard_action_result = self._rpc('res.users', 'action_change_password_wizard', user_internal.id)['result']
+            self.assertEqual(wizard_action_result['res_model'], 'res.users.identitycheck')
+            identitycheck_result = self._rpc(
+                wizard_action_result['res_model'],
+                'run_check',
+                wizard_action_result['res_id'],
+                context={'password': user_admin.login}
+            )['result']
+
+        # Wait 10 minutes that the first identity check, triggered at the opening of the form, expire before the submission
+        # to ensure that an identity check protect the method changing the passwords.
+        with freeze_time('2025-10-14 00:10:00'):
+            wizard_id = self._rpc(identitycheck_result['res_model'], 'create', {}, context=identitycheck_result['context'])['result']
+            self.env['change.password.user'].search([('wizard_id', '=', wizard_id), ('user_id', '=', user_internal.id)]).write({'new_passwd': 'newpassword'})
+            change_password_result = self._rpc(identitycheck_result['res_model'], 'change_password_button', wizard_id)['result']
+            self.assertEqual(change_password_result['res_model'], 'res.users.identitycheck')
+            self._rpc(
+                change_password_result['res_model'],
+                'run_check',
+                change_password_result['res_id'],
+                context={'password': user_admin.login}
+            )['result']
+
+        # To check that the password of user_internal has been modified.
+        self.env['res.users'].with_user(user_internal)._check_credentials(
+            {'login': 'user_internal', 'password': 'newpassword', 'type': 'password'},
+            {'interactive': False}
+        )
+
+    @users('admin')
+    def test_revoke_all_devices(self):
+        """
+        Test to check the revoke all devices by changing the current password as a new password
+        """
+        # Change the password to 8 characters for security reasons
+        self.env.user.password = "admin@odoo"
+
+        # Create a first session that will be used to revoke other sessions
+        session = self.authenticate('admin', 'admin@odoo', session_extra={'_trace_disable': False})
+
+        # Create a second session that will be used to check it has been revoked
+        self.authenticate('admin', 'admin@odoo', session_extra={'_trace_disable': False})
+        # Test the session is valid
+        # Valid session -> not redirected from /web to /web/login
+        self.assertTrue(self.url_open('/web').url.endswith('/web'))
+
+        # Push a fake request to the request stack, because @check_identity requires a request.
+        # Use the first session created above, used to invalid other sessions than itself.
+        request_reset = request_var.set(SimpleNamespace(session=session, env=self.env))
+        self.addCleanup(request_var.reset, request_reset)
+        # The user clicks the button logout from all devices from his profile
+        action = self.env.user.action_revoke_all_devices()
+        # The form of the check identity wizard opens
+        form = Form(self.env[action['res_model']].browse(action['res_id']), action.get('view_id'))
+        # The user fills his password
+        form.password = 'admin@odoo'
+        # The user clicks the button "Log out from all devices", which triggers a save then a call to the button method
+        user_identity_check = form.save()
+        action = user_identity_check.with_context(password=form.password).run_check()
+
+        # Test the session is no longer valid
+        # Invalid session -> redirected from /web to /web/login
+        self.assertTrue(self.url_open('/web').url.endswith('/web/login?redirect=%2Fweb%3F'))
+
+        # In addition, the password must have been emptied from the wizard
+        self.assertFalse(user_identity_check.password)
+
+
+@tagged('post_install', '-at_install')
+class TestApiKeys(UsersCommonCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.env['ir.config_parameter'].set_bool('base.enable_programmatic_api_keys', True)
+        UsersApiKeys = cls.env['res.users.apikeys'].with_user(cls.user_internal)
+        cls.tomorrow = datetime.now() + timedelta(days=1)
+        cls.api_key = UsersApiKeys._generate('scope', 'Key ', cls.tomorrow)
+
+    def test_programmatic_apikey_management_is_deactivated_by_default(self):
+        self.env['ir.config_parameter'].set_bool('base.enable_programmatic_api_keys', None)
+
+        # Attempting to create a key raises an error
+        with self.assertRaisesRegex(UserError, 'Programmatic API keys are not enabled'):
+            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+                self.api_key, 'scope', 'Another key', self.tomorrow)
+
+        # Attempting to revoke a key raises an error
+        with self.assertRaisesRegex(UserError, 'Programmatic API keys are not enabled'):
+            self.env['res.users.apikeys'].with_user(self.user_internal).revoke(self.api_key)
+
+    def test_generate_apikey_is_limited(self):
+        # create 9 new keys, which makes 10 keys in total for user_internal
+        for i in range(9):
+            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+                self.api_key, 'scope', 'Another key', self.tomorrow)
+
+        with self.assertRaisesRegex(UserError, 'Limit of 10 API keys is reached'):
+            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+                self.api_key, 'scope', 'Another key', self.tomorrow)
+
+        # This ICP can change the limit
+        self.env['ir.config_parameter'].set_int('base.programmatic_api_keys_limit', 11)
+        self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+            self.api_key, 'scope', 'Another key', self.tomorrow)
+
+    def test_generate_apikey_raises_when_creating_key_from_differently_scoped_key(self):
+        # Creating a key with a different scope raises an error
+        with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
+            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+                self.api_key, 'other', 'Another key with another scope', self.tomorrow)
+
+    def test_generate_apikey_accepts_creating_key_from_identically_scoped_key(self):
+        # Creating a key with the same scope doesn't raise
+        self.env['res.users.apikeys'].with_user(self.user_internal).generate(
+            self.api_key, 'scope', 'Another key with same scope', self.tomorrow)
+
+    def test_generate_apikey_checks_ownership(self):
+        # Check that an API key cannot be generated from another user's API key
+        with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
+            self.env['res.users.apikeys'].with_user(SUPERUSER_ID).generate(
+                self.api_key, 'scope', 'Another key', self.tomorrow)
+
+
+class TestResUsersForm(TransactionCase):
+    def test_create_res_users(self):
+        user_form = Form(self.env['res.users'])
+        user_form.login = 'a user login'
+        user_form.name = 'a user name'
+        user_form.save()
+
+    def test_light_user_preferences(self):
+        """ A light user has no calendar settings in its preferences. """
+        light_user = self.env['res.users'].create({
+            'login': 'light_preferences',
+            'name': 'Light Preferences',
+            'group_ids': [Command.set(self.env.ref('base.group_user').ids)],
+        })
+        self.assertEqual(light_user.role, 'light_user')
+        arch = self.env['res.users'].with_user(light_user).get_view(
+            self.env.ref('base.view_users_form_simple_modif').id, 'form')['arch']
+        tree = etree.fromstring(arch)
+        calendar_page = tree.xpath('//page[@name="calendar"]')
+        self.assertTrue(calendar_page, "the calendar page should still be in the preferences view")
+        self.assertEqual(calendar_page[0].get('invisible'), "role == 'light_user'")
+        # the phone and the security settings stay available to a light user
+        for xpath in ('//div[@name="phone"]', '//page[@name="page_security"]'):
+            node = tree.xpath(xpath)
+            self.assertTrue(node, f"{xpath} should be in the preferences view")
+            self.assertFalse(node[0].get('invisible'))

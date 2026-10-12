@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.ShareTargetItem">
+        <div t-if="this.hasMultiCompanies" class="d-flex flex-column p-2">
+            <Record t-props="this.multiCompaniesRecordProps" t-slot-scope="data">
+                <h3>In Company</h3>
+                <Field id="'company'" name="'company'" record="data.record" canOpen="false"/>
+            </Record>
+        </div>
+    </t>
+</templates>

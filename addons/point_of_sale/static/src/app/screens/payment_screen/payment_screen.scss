@@ -1,0 +1,61 @@
+.left-content {
+  width: $pos-left-pane-width;
+  min-width: $pos-left-pane-width;
+
+  @media (max-width: 1199.98px) {
+      width: $pos-left-pane-width-tablet;
+      min-width: $pos-left-pane-width-tablet;
+  }
+}
+
+.payment-summary {
+  padding-inline: 150px;
+}
+
+.paymentmethods {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.paymentmethod:nth-child(odd):last-child {
+  grid-column: span 2;
+}
+
+.payment-method-icon {
+    max-width: 50px;
+    max-height: 50px;
+    vertical-align: middle;
+
+    @media (max-width: 575.98px) {
+      max-width: 32px;
+      max-height: 32px;
+    }
+}
+
+.paymentlines-container .total {
+  font-size: clamp(24px, 3vw, 64px);
+}
+
+@media (max-width: 767.98px) {
+    .paymentlines-empty .message {
+        padding-bottom: var(--o-bs-spacer-3);
+    }
+}
+
+.paymentline {
+  border: var(--border-width) solid var(--border-color);
+  &.selected {
+    background: var(--o-component-active-bg);
+    border-color: var(--o-component-active-border);
+    color: var(--o-component-active-color);
+  }
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(30px); }
+  50% { opacity: 0.5; transform: translateY(0px); }
+  100% { opacity: 1; }
+}
+
+.fade-effect {
+  animation: fadeInOut 1000ms ease-in-out;
+}

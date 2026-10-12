@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_event.EventsListPageOption">
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Layout">
+            <BuilderSelect>
+                <BuilderSelectItem actionParam="{views: ['website_event.opt_events_list_columns']}">Grid</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: []}">List</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Card design">
+            <BuilderCheckbox actionParam="{views: ['website_event.opt_events_list_cards']}"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Template badge">
+            <BuilderCheckbox
+            actionParam="{views: ['website_event.opt_events_list_categories']}"/>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Top Bar Filter">
+            <BuilderButton
+                label.translate="Date"
+                actionParam="{views: ['website_event.event_time']}"/>
+            <BuilderButton
+                id="'opt_event_location'"
+                label.translate="Countries"
+                actionParam="{views: ['website_event.event_location']}"/>
+        </BuilderRow>
+        <t t-if="this.isActiveItem('opt_event_location')">
+            <BuilderRow
+                level="1"
+                label.translate="Include online"
+                tooltip.translate="If enabled, online events will be included when user filters by country.">
+                <BuilderCheckbox actionParam="{views: ['website_event.event_location_include_online']}"/>
+             </BuilderRow>
+        </t>
+
+        <BuilderRow label.translate="Sidebar">
+            <BuilderCheckbox id="'events_sidebar_opt'" actionParam="{views: ['website_event.opt_index_sidebar']}"/>
+        </BuilderRow>
+        <t t-if="this.isActiveItem('events_sidebar_opt')">
+            <BuilderRow label.translate="About Us">
+                <BuilderCheckbox actionParam="{views: ['website_event.index_sidebar_about_us']}"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Follow Us">
+                <BuilderCheckbox actionParam="{views: ['website_event.index_sidebar_follow_us']}"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Photos">
+                <BuilderCheckbox actionParam="{views: ['website_event.index_sidebar_photos']}"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Quotes">
+                <BuilderCheckbox actionParam="{views: ['website_event.index_sidebar_quotes']}"/>
+            </BuilderRow>
+        </t>
+    </BuilderContext>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='page_options_hook']" position="after">
+        <events_list_page_option
+            template="website_event.EventsListPageOption"
+            selector="main:has(.o_wevent_events_list)"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
+</templates>

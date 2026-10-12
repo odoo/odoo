@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_pos_preset_form_inherit_pos_self_order_sms" model="ir.ui.view">
+        <field name="name">pos.preset.form.inherit.pos.self.order.sms</field>
+        <field name="model">pos.preset</field>
+        <field name="inherit_id" ref="pos_self_order.view_pos_preset_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mail_template_id']" position="after">
+                <field name="sms_receipt_template_id" string="SMS Confirmation" invisible="not available_in_self or identification == 'none'" placeholder="None" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

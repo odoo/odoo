@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <template id="egyptian_invoice" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@id='qrcode']" position="after">
+                <t t-set="eg_qrcode" t-value="o._l10n_eg_eta_qr_code()"/>
+                <div id="qrcode_eg" t-if="eg_qrcode">
+                    <p>
+                        <strong class="text-center">ETA QR Code</strong>
+                        <img class="d-block" t-att-src="eg_qrcode"/>
+                    </p>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

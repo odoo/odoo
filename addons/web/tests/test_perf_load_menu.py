@@ -1,0 +1,105 @@
+
+import json
+from uuid import uuid4
+
+from odoo.tests import common, tagged
+
+
+@tagged('post_install', '-at_install')
+class TestPerfSessionInfo(common.HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Improve stability of query count by using dedicated company and user.
+        cls.company = cls.env.ref('base.test_company')
+        cls.user = common.new_test_user(
+            cls.env,
+            "session",
+            email="session@in.fo",
+            tz="UTC",
+            company_id=cls.company.id,
+        )
+
+    def setUp(self):
+        super().setUp()
+        self.uid = self.user
+        self._prepare()
+
+    def _prepare(self):
+        self.env.invalidate_all()
+        for cache_name in self.env.registry.registry_caches__:
+            if '.' not in cache_name:
+                self.env.transaction.invalidate_ormcache(cache_name)
+
+    def test_performance_session_info(self):
+        self.authenticate(self.user.login, "info")
+        self._prepare()
+
+        # cold ormcache:
+        # - Only web: 37
+        # - bus: 38
+        # - mail: 61
+        # - All modules: 83
+        with self.assertQueryCount(83):
+            self.url_open(
+                "/web/session/get_session_info",
+                data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
+                headers={"Content-Type": "application/json"},
+            )
+
+        # cold fields cache - warm ormcache:
+        # - Only web: 7
+        # - bus: 8
+        # - mail: 16
+        # - All modules: 28
+        with self.assertQueryCount(28):
+            self.url_open(
+                "/web/session/get_session_info",
+                data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
+                headers={"Content-Type": "application/json"},
+            )
+
+    def test_load_web_menus_perf(self):
+        # cold orm/fields cache:
+        # - Web only: 17
+        # - All modules 51
+        with self.assertQueryCount(51):
+            self.env['ir.ui.menu'].load_web_menus(False)
+
+        # cold fields cache:
+        # - Web only: 0
+        # - All modules: 1 (web_studio + 1)
+        has_studio = self.env['ir.module.module'].sudo().search_count(
+            [('name', '=', 'web_studio'), ('state', '=', 'installed')])
+        self.env.invalidate_all()
+        with self.assertQueryCount(has_studio):
+            self.env['ir.ui.menu'].load_web_menus(False)
+
+    def test_load_menus_perf(self):
+        # cold orm/fields cache:
+        # - Web only: 17
+        # - All modules 51
+        with self.assertQueryCount(51):
+            self.env['ir.ui.menu'].load_menus(False)
+
+        # cold fields cache:
+        # - Web only: 0
+        # - All modules: 1 (web_studio + 1)
+        has_studio = self.env['ir.module.module'].sudo().search_count(
+            [('name', '=', 'web_studio'), ('state', '=', 'installed')])
+        self.env.invalidate_all()
+        with self.assertQueryCount(has_studio):
+            self.env['ir.ui.menu'].load_menus(False)
+
+    def test_visible_menu_ids(self):
+        # cold ormcache:
+        # - Only web 16
+        # - All modules: 30
+        with self.assertQueryCount(28):
+            self.env['ir.ui.menu']._visible_menu_ids()
+
+        # cold fields cache - warm orm cache (only web: 0, all module: 0)
+        self.env.invalidate_all()
+        with self.assertQueryCount(0):
+            self.env['ir.ui.menu']._visible_menu_ids()

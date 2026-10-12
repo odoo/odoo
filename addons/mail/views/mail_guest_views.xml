@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="mail_guest_view_tree" model="ir.ui.view">
+        <field name="name">mail.guest.list</field>
+        <field name="model">mail.guest</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <list string="Guests">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="country_id"/>
+                <field name="lang"/>
+                <field name="timezone"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mail_guest_view_form" model="ir.ui.view">
+        <field name="name">mail.guest.form</field>
+        <field name="model">mail.guest</field>
+        <field name="arch" type="xml">
+            <form string="Guest">
+                <sheet>
+                    <div class="oe_title mb-4 d-flex align-items-center">
+                        <field name="image_128" widget="image" class="oe_avatar me-3"
+                            options="{'preview_image': 'image_128', 'size': [128, 128]}"/>
+                        <div class="flex-grow-1">
+                            <label for="name"/>
+                            <h1 class="mb-0">
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                    </div>
+                    <group>
+                        <field name="country_id"/>
+                        <field name="lang"/>
+                        <field name="timezone"/>
+                        <field name="channel_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_guest_action" model="ir.actions.act_window">
+        <field name="name">Guests</field>
+        <field name="res_model">mail.guest</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-inherit="website_forum.forumPageOption" t-inherit-mode="extension">
+    <xpath expr="//BuilderContext" position="inside">
+        <BuilderRow label.translate="Separate Courses" level="1">
+            <BuilderCheckbox actionParam="{views: ['website_slides_forum.website_slides_forum_index']}"/>
+        </BuilderRow>
+    </xpath>
+</t>
+
+</templates>

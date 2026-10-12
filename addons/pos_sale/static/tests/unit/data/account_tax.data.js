@@ -1,0 +1,36 @@
+import { AccountTax } from "@point_of_sale/../tests/unit/data/account_tax.data";
+
+AccountTax._records = [
+    ...AccountTax._records,
+    {
+        id: 20,
+        name: "10%",
+        price_include: false,
+        include_base_amount: false,
+        is_base_affected: true,
+        has_negative_factor: false,
+        amount_type: "percent",
+        children_tax_ids: [],
+        amount: 10.0,
+        company_id: 250,
+        sequence: 1,
+        tax_group_id: 1,
+        fiscal_position_ids: [],
+    },
+    {
+        id: 21,
+        name: "5% incl",
+        price_include: true,
+        price_include_override: "tax_included",
+        include_base_amount: false,
+        is_base_affected: true,
+        has_negative_factor: false,
+        amount_type: "percent",
+        children_tax_ids: [],
+        amount: 5.0,
+        company_id: 250,
+        sequence: 1,
+        tax_group_id: 2,
+        fiscal_position_ids: [],
+    },
+];

@@ -1,0 +1,28 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+
+{
+    'name': "IAP / Mail",
+    'summary': """Bridge between IAP and mail""",
+    'description': """Bridge between IAP and mail""",
+    'category': 'Hidden/Tools',
+    'depends': [
+        'iap',
+        'mail',
+    ],
+    'auto_install': True,
+    'data': [
+        'data/mail_templates.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'iap_mail/static/src/js/**/*',
+            'iap_mail/static/src/scss/iap_mail.css',
+        ],
+        "web.dark_mode_assets_backend": [
+            'iap_mail/static/src/scss/iap_mail.dark.css',
+        ],
+    },
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+}

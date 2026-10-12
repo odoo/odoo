@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TimelineImagesOption">
+    <BuilderRow label.translate="Milestones" applyTo="':scope > :has(.s_timeline_images_row)'">
+        <BuilderButton type="'success'" action="'addItem'" actionParam="'.s_timeline_images_row:last-child'" preview="false">Add Milestone</BuilderButton>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <timeline_images_option template="website.TimelineImagesOption" selector=".s_timeline_images"/>
+    </xpath>
+</t>
+
+</templates>

@@ -1,0 +1,28 @@
+// ======= Options
+
+// By default, hide `o_add_compare` buttons when inside a product
+// entry. Show them when `o_wsale_products_opt_has_comparison` is applied.
+:where(.oe_product_cart) {
+
+    .o_add_compare, .o_add_to_compare {
+        display: var(--o-wsale-comparison-btn-display, none);
+        order: var(--o-wsale-comparison-btn-order);
+    }
+
+    .o_add_compare_placeholder, .o_add_to_compare_placeholder {
+        display: var(--o-wsale-comparison-btn-placeholder-display, none);
+        order: var(--o-wsale-comparison-btn-order);
+    }
+}
+
+:where(.o_wsale_products_opt_has_comparison) {
+    :where(.oe_product_cart) {
+        --o-wsale-comparison-btn-display: inline-flex;
+    }
+
+    &:where(.o_wsale_products_opt_actions_onhover):where(.o_wsale_products_opt_layout_catalog) :where(.oe_product_cart) {
+        --o-wsale-comparison-btn-display: flex;
+    }
+}
+
+

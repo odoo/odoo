@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ColorPickerField">
+        <Dropdown state="this.dropdownState" disabled="this.props.readonly">
+            <button t-attf-class="border-0 rounded-circle o_colorlist_toggler o_colorlist_item_color_{{ this.selectedColor }} me-2"  t-att-title="this.colors[this.selectedColor]"  t-att-aria-label="this.colors[this.selectedColor]"/>
+            <t t-set-slot="content">
+                <ColorList onColorSelected.bind="this.switchColor" selectedColor="this.selectedColor"/>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

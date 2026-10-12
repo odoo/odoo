@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="account_invoice_line_it_FatturaPA" inherit_id="l10n_it_edi.account_invoice_line_it_FatturaPA">
+            <DettaglioLinee position="inside">
+                <AltriDatiGestionali t-if="record.l10n_it_edi_doi_id">
+                    <TipoDato t-translation="off">INTENTO</TipoDato>
+                    <RiferimentoTesto t-out="record.l10n_it_edi_doi_id.display_name"/>
+                    <RiferimentoData t-out="format_date(record.l10n_it_edi_doi_id.issue_date)"/>
+                </AltriDatiGestionali>
+            </DettaglioLinee>
+        </template>
+
+    </data>
+</odoo>

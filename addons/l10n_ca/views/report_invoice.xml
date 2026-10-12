@@ -1,0 +1,22 @@
+<odoo>
+    <template id="l10n_ca_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+        <xpath expr="//t[@name='address_not_same_as_shipping']" position="inside">
+            <t t-if="o.partner_id.l10n_ca_pst">
+                <div t-if="'TQ' in o.partner_id.l10n_ca_pst.upper()">QST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+                <div t-else="">PST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+            </t>
+        </xpath>
+        <xpath expr="//t[@name='address_same_as_shipping']" position="inside">
+            <t t-if="o.partner_id.l10n_ca_pst">
+                <div t-if="'TQ' in o.partner_id.l10n_ca_pst.upper()">QST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+                <div t-else="">PST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+            </t>
+        </xpath>
+        <xpath expr="//t[@name='no_shipping']" position="inside">
+            <t t-if="o.partner_id.l10n_ca_pst">
+                <div t-if="'TQ' in o.partner_id.l10n_ca_pst.upper()">QST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+                <div t-else="">PST: <span t-field="o.partner_id.l10n_ca_pst"/></div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

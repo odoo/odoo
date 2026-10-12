@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.DomainSavableField" t-inherit="web.DomainField">
+        <xpath expr="//div[hasclass('o_field_domain_panel')]//button[hasclass('o_domain_show_selection_button')]" position="after">
+            <t t-if="this.state.isValid">
+                <button t-attf-class="btn btn-sm btn-secondary {{ !this.state.showSaveButton ? 'd-none' : '' }}" type="button" t-on-click.stop="this.openSaveMailingFilterDialog">
+                    <t t-out="this.saveBtnLabel"/>
+                </button>
+            </t>
+        </xpath>
+    </t>
+</templates>

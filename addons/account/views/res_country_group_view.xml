@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="country_group_form_inherit_account" model="ir.ui.view">
+        <field name="name">res.country.group.form.inherit.account</field>
+        <field name="model">res.country.group</field>
+        <field name="inherit_id" ref="base.view_country_group_form"/>
+        <field name="arch" type="xml">
+            <field name="country_ids" position="after">
+                <field name="exclude_state_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

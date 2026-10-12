@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_bg_journal_view_form" model="ir.ui.view">
+        <field name="name">l10n_bg.journal.view.form</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='bank_account_number']" position="before">
+                <group string="Bulgaria VAT Document Types" invisible="type not in ('sale', 'purchase')">
+                    <field name="l10n_bg_customer_invoice"/>
+                    <field name="l10n_bg_credit_notes"/>
+                    <field name="l10n_bg_debit_notes"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

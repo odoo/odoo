@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.GraphView.Buttons">
+        <div class="btn-group" role="toolbar" aria-label="Main actions">
+            <ReportViewMeasures
+                measures="this.model.metaData.measures"
+                activeMeasures="[this.model.metaData.measure]"
+                onMeasureSelected.bind="this.onMeasureSelected"
+                multiSelect="false"
+            />
+        </div>
+
+        <div class="ms-auto d-flex gap-2" role="toolbar" aria-label="Graph actions">
+            <t t-if="this.model.metaData.mode === 'bar' || this.model.metaData.mode === 'line'">
+                <div t-if="this.model.metaData.mode === 'line'"
+                     class="form-check form-switch align-self-center me-2 mb-0"
+                     data-tooltip="Cumulative"
+                >
+                    <label class="form-check-label small" for="switchCumulated">Cumulative</label>
+                    <input class="form-check-input"
+                           type="checkbox"
+                           role="switch"
+                           id="switchCumulated"
+                           t-on-change="this.toggleCumulated"
+                           t-att-checked="this.model.metaData.cumulated"
+                    />
+                </div>
+                <div class="form-check form-switch align-self-center mb-0"
+                     data-tooltip="Stacked"
+                >
+                    <label class="form-check-label small" for="switchStacked">Stacked</label>
+                    <input class="form-check-input"
+                           type="checkbox"
+                           role="switch"
+                           id="switchStacked"
+                           t-on-change="this.toggleStacked"
+                           t-att-checked="this.model.metaData.stacked"
+                    />
+                </div>
+                <span class="vr my-2 mx-2 text-600"/>
+            </t>
+            <t t-if="this.model.metaData.mode !== 'pie'">
+                <div class="btn-group o_switcher" role="toolbar" aria-label="Sort graph" name="toggleOrderToolbar">
+                    <button class="oi btn btn-secondary o_graph_button o_sort_desc" data-icon="south" data-tooltip="Descending" aria-label="Descending"
+                            t-on-click="() => this.toggleOrder('DESC')"
+                            t-att-class="{ active: this.model.metaData.order === 'DESC' }"
+                    />
+                    <button class="oi btn btn-secondary o_graph_button o_sort_asc" data-icon="north" data-tooltip="Ascending" aria-label="Ascending"
+                            t-on-click="() => this.toggleOrder('ASC')"
+                            t-att-class="{ active: this.model.metaData.order === 'ASC' }"
+                    />
+                </div>
+                <span class="vr my-2 mx-2 text-600"/>
+            </t>
+            <div class="btn-group o_switcher" role="toolbar" aria-label="Change graph">
+                <button class="btn btn-secondary oi o_graph_button" data-icon="bar_chart" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"
+                        t-on-click="() => this.onModeSelected('bar')"
+                        t-att-class="{ active: this.model.metaData.mode === 'bar' }"
+                />
+                <button class="btn btn-secondary oi o_graph_button" data-icon="show_chart" data-tooltip="Line Chart" aria-label="Line Chart" data-mode="line"
+                        t-on-click="() => this.onModeSelected('line')"
+                        t-att-class="{ active: this.model.metaData.mode === 'line' }"
+                />
+                <button class="btn btn-secondary oi o_graph_button" data-icon="pie_chart" data-tooltip="Pie Chart" aria-label="Pie Chart" data-mode="pie"
+                        t-on-click="() => this.onModeSelected('pie')"
+                        t-att-class="{ active: this.model.metaData.mode === 'pie' }"
+                />
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.GraphView">
+        <div t-att-class="this.props.className" t-ref="this.rootRef">
+            <Layout className="this.model.useSampleModel ? 'o_view_sample_data' : ''" display="this.props.display">
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+                <t t-set-slot="control-panel-actions">
+                    <SearchBar toggler="this.searchBarToggler"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
+                </t>
+                <t t-if="this.model.isReady() and this.model.data">
+                    <t t-if="!this.model.hasData() or this.model.useSampleModel and this.props.info.noContentHelp">
+                        <ActionHelper noContentHelp="this.props.info.noContentHelp" />
+                    </t>
+                    <t t-component="this.props.Renderer" model="this.model" buttonTemplate="this.props.buttonTemplate" />
+                </t>
+                <t t-elif="this.model.isReady()" t-call="web.NoContentHelper"
+                    title.translate="Invalid data"
+                    description.translate="Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results"/>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

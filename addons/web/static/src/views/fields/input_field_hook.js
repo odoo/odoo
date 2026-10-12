@@ -1,0 +1,186 @@
+import { onMounted, onPatched, untrack, useListener, useProps } from "@odoo/owl";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
+import { useBus } from "@web/core/utils/hooks";
+import { onWillRender } from "@web/owl2/utils";
+
+/**
+ * This hook is meant to be used by field components that use an input or
+ * textarea to edit their value. Its purpose is to prevent that value from being
+ * erased by an update of the model (typically coming from an onchange) when the
+ * user is currently editing it.
+ *
+ * @param {Object} params
+ * @param {() => string} params.getValue a function that returns the value to write in
+ *   the input, if the user isn't currently editing it
+ * @param {(value: string) => any} [params.parse] a function that parses the value of the input.
+ * @param {Ref<HTMLInputElement | HTMLTextAreaElement> | (() => HTMLInputElement | HTMLTextAreaElement | null)} params.ref a ref or signal containing the input/textarea
+ * @param {boolean} [params.preventLineBreaks] Prevent line breaks in input when set
+ * @param {string} [params.fieldName]
+ * @param {() => boolean} [params.shouldSave] if true, save the record with the new value
+ */
+export function useInputField(params) {
+    const inputRef = params.ref;
+    const getEl = () => (inputRef ? untrack(inputRef) : null);
+    const props = useProps();
+    const fieldName = params.fieldName || props.name;
+    const shouldSave = params.shouldSave ?? (() => false);
+
+    /*
+     * A field is dirty if it is no longer sync with the model
+     * More specifically, a field is no longer dirty after it has *tried* to update the value in the model.
+     * An invalid value will thefore not be dirty even if the model will not actually store the invalid value.
+     */
+    let isDirty = false;
+
+    /**
+     * The last value that has been commited to the model.
+     * Not changed in case of invalid field value.
+     */
+    let lastSetValue = null;
+
+    /**
+     * Track the fact that there is a change sent to the model that hasn't been acknowledged yet
+     * (e.g. because the onchange is still pending). This is necessary if we must do an urgent save,
+     * as we have to re-send that change for the write that will be done directly.
+     * FIXME: this could/should be handled by the model itself, when it will be rewritten
+     */
+    let pendingUpdate = false;
+
+    /**
+     * When a user types, we need to set the field as dirty.
+     */
+    function onInput(ev) {
+        isDirty = ev.target.value !== lastSetValue;
+        if (params.preventLineBreaks && ev.inputType === "insertFromPaste") {
+            ev.target.value = ev.target.value.replace(/[\r\n]+/g, " ");
+        }
+        props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+        if (!props.record.isValid) {
+            props.record.resetFieldValidity(fieldName);
+        }
+    }
+
+    /**
+     * On blur, we consider the field no longer dirty, even if it were to be invalid.
+     * However, if the field is invalid, the new value will not be committed to the model.
+     */
+    async function onChange(ev) {
+        if (isDirty) {
+            isDirty = false;
+            let isInvalid = false;
+            let val = ev.target.value;
+            if (params.parse) {
+                try {
+                    val = params.parse(val);
+                } catch {
+                    props.record.setInvalidField(fieldName);
+                    isInvalid = true;
+                }
+            }
+
+            if (!isInvalid) {
+                if (val !== props.record.data[fieldName]) {
+                    lastSetValue = getEl().value;
+                    pendingUpdate = true;
+                    await props.record.update({ [fieldName]: val }, { save: shouldSave() });
+                    pendingUpdate = false;
+                } else {
+                    getEl().value = params.getValue();
+                }
+                props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+            }
+        }
+    }
+    function onKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        const keys = ["tab", "shift+tab"];
+        if (ev.target.tagName.toLowerCase() !== "textarea") {
+            keys.push("enter");
+        }
+        if (keys.includes(hotkey)) {
+            commitChanges(false);
+        }
+        if (params.preventLineBreaks && ["enter", "shift+enter"].includes(hotkey)) {
+            ev.preventDefault();
+        }
+    }
+
+    useListener(inputRef, "input", onInput);
+    useListener(inputRef, "change", onChange);
+    useListener(inputRef, "keydown", onKeydown);
+
+    // We need to call getValue to always observe
+    // the corresponding value in the record. Otherwise, in some cases,
+    // if the value in the record change the component isn't patched.
+    onWillRender(() => params.getValue());
+
+    /**
+     * Sometimes, a patch can happen with possible a new value for the field
+     * If the user was typing a new value (isDirty) or the field is still invalid,
+     * we need to do nothing.
+     * If it is not such a case, we update the field with the new value.
+     */
+    const syncInputWithRecord = () => {
+        const value = params.getValue();
+        const el = getEl();
+        if (!el) {
+            return;
+        }
+        if (el.value === value) {
+            isDirty = false;
+        }
+        if (!isDirty && !props.record.isFieldInvalid(fieldName)) {
+            el.value = value;
+            lastSetValue = el.value;
+        }
+    };
+    onMounted(syncInputWithRecord);
+    onPatched(syncInputWithRecord);
+
+    const { model } = props.record;
+    useBus(model.bus, "WILL_SAVE_URGENTLY", () => commitChanges(true));
+    useBus(model.bus, "NEED_LOCAL_CHANGES", (ev) => ev.detail.proms.push(commitChanges()));
+
+    /**
+     * Roughly the same as onChange, but called at more specific / critical times. (See bus events)
+     */
+    async function commitChanges(urgent) {
+        const el = getEl();
+        if (!el) {
+            return;
+        }
+
+        isDirty = el.value !== lastSetValue;
+        if (isDirty || (urgent && pendingUpdate)) {
+            let isInvalid = false;
+            isDirty = false;
+            let val = el.value;
+            if (params.parse) {
+                try {
+                    val = params.parse(val);
+                } catch {
+                    isInvalid = true;
+                    if (urgent) {
+                        return;
+                    } else {
+                        props.record.setInvalidField(fieldName);
+                    }
+                }
+            }
+
+            if (isInvalid) {
+                return;
+            }
+
+            if ((val || false) !== (props.record.data[fieldName] || false)) {
+                lastSetValue = el.value;
+                await props.record.update({ [fieldName]: val }, { save: shouldSave() });
+            } else {
+                el.value = params.getValue();
+            }
+            props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+        }
+    }
+
+    return inputRef;
+}

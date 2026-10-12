@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form.zatca</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ubl_cii_tax_exemption_reason']" position="attributes">
+                <attribute name="invisible" separator=" or " add="not l10n_sa_show_exemption_reason"></attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

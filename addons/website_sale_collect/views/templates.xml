@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template
+        id="payment_confirmation_status"
+        inherit_id="website_sale.payment_confirmation_status"
+    >
+        <t t-set="alert_class" position="after">
+            <t
+                t-if="tx_sudo._filtered_pending_pay_on_delivery()"
+                t-set="alert_class"
+                t-value="'alert-success'"
+            />
+        </t>
+        <div id="o_custom_payment_details" position="replace">
+            <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
+                <div class="mt-2 mb-3">
+                    <div class="o_body_carrier_message">
+                        <t t-out="order.carrier_id.website_description"/>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <t>$0</t> <!-- Replaced by old content. -->
+            </t>
+        </div>
+    </template>
+
+    <template id="product_page_click_and_collect" inherit_id="website_sale.cta_wrapper">
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="before">
+            <owl-component
+                t-if="combination_info.get('show_click_and_collect_availability')"
+                name="website_sale_collect.ClickAndCollectAvailability"
+                t-att-props="json.dumps({
+                    'productId': product_variant.id,
+                    'zipCode': zip_code,
+                    'countryCode': country_code,
+                    'showSelectStoreButton': show_select_store_button,
+                    'selectedLocationData': selected_location_data or {},
+                    'inStoreData': combination_info.get('in_store_data', {}),
+                    'deliveryData': combination_info.get('delivery_data', {}),
+                    'isInStoreSelected': is_in_store_selected,
+                })"
+                t-attf-class="d-flex o_not_editable w-100 mb-4"
+            />
+        </xpath>
+    </template>
+
+</odoo>

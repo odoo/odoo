@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Display of /pos/pay (the order of the if conditions matters)-->
+    <template id="pay">
+        <t t-set="page_title">Payment</t>
+        <t t-set="additional_title">
+            <t t-out="page_title" />
+        </t>
+        <t t-call="portal.frontend_layout"
+            page_title="page_title"
+            additional_title="additional_title"
+            no_footer="1"
+            no_header="1">
+
+            <div class="wrap">
+                <div class="d-flex flex-column vh-100">
+                    <div class="d-flex justify-content-between p-3 border-bottom border-top bg-light text-center">
+                        <span class="order-reference fw-bolder" t-out="reference_prefix"/>
+                        <span class="order-id text-muted"> Order ID: <t t-out="pos_order_id"/></span>
+                    </div>
+                    <div class="d-flex flex-column p-3">
+                        <h4 class="d-flex gap-3 align-items-center mb-3 fs-6 small text-uppercase fw-bolder">
+                            To Pay
+                            <hr class="flex-grow-1 m-0"/>
+                        </h4>
+                        <span t-if="not currency" class="alert alert-danger m-0">
+                            <strong>Error:</strong> The currency is missing or invalid.
+                        </span>
+                        <span t-elif="not amount" class="alert alert-info m-0">
+                            There is nothing to pay.
+                        </span>
+                        <span t-else="">
+                            <t t-call="pos_online_payment.pay_summary"/>
+                            <t t-call="payment.form" />
+                        </span>
+                    </div>
+                    <div class="d-grid p-3" t-if="exit_route">
+                        <a role="button" class="btn btn-light btn-lg border py-3" t-att-href="exit_route">
+                            Cancel payment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="pay_summary">
+        <span id="o_pos_summary_amount"
+                t-out="amount"
+                t-options="{'widget': 'monetary', 'display_currency': currency}"
+                class="fs-1 text-primary fw-bold"
+        />
+    </template>
+
+    <!-- Display of /payment/status -->
+    <template id="pos_payment_status" name="POS Payment Status">
+        <t t-call="web.frontend_layout" no_header="True" no_footer="True" pageName="'h-100'">
+            <div class="pos_payment_status h-100 w-100 d-flex flex-column align-items-center p-3 bg-100"
+                 t-att-style="pos_primary_color and ('--primary: %s;' % pos_primary_color)">
+                <!-- Payment not found -->
+                <div t-if="payment_not_found" class="o_pos_status_stage flex-grow-1 d-flex flex-column align-items-center justify-content-center px-3 text-center">
+                    <i class="oi oi-5x mb-4 text-primary" data-icon="send"/>
+                    <h1 class="o_pos_status_title m-0 fw-bolder">Your payment is on its way!</h1>
+                    <p class="o_pos_status_subtitle mt-1 mb-0 text-muted">
+                        You should receive an email confirming your payment within a few minutes.<br/>
+                        Don't hesitate to contact us if you don't receive it.
+                    </p>
+                </div>
+                <!-- Polling -->
+                <t t-else="">
+                    <!-- Brand -->
+                    <div class="o_pos_status_brand flex-shrink-0 pb-4">
+                        <img t-if="pos_logo" t-att-src="pos_logo" class="o_pos_status_logo object-fit-contain" t-att-alt="pos_company_name"/>
+                    </div>
+
+                    <!-- Stage (payment-status poller hook) -->
+                    <div name="o_payment_status"
+                         class="o_pos_status_stage flex-grow-1 d-flex flex-column align-items-center justify-content-center text-center px-3 w-100"
+                         data-min-dwell="900"
+                         t-att-data-transaction-reference="tx.reference"
+                         t-att-data-landing-route="tx.landing_route"
+                         t-att-data-notification-channel="notification_channel">
+                        <h1 class="o_pos_status_title m-0 fw-bolder">Almost there!</h1>
+                        <p class="o_pos_status_subtitle mt-1 mb-0 text-muted">We're confirming your payment.</p>
+
+                        <!-- Progress (decorative; the page redirects when the payment is confirmed) -->
+                        <div class="o_pos_progress w-100 mw-50 mt-4 rounded-pill overflow-hidden bg-200" aria-hidden="true">
+                            <div class="o_pos_progress_bar w-50 h-100 rounded-pill"/>
+                        </div>
+
+                        <!-- Order / total summary -->
+                        <div class="o_pos_status_badge d-inline-flex align-items-center gap-2 mt-4 px-4 py-3 rounded-pill border border-light bg-white fs-4">
+                            <span t-if="pos_tracking_number">
+                                <span class="text-500">Order</span>
+                                <span class="o_pos_badge_v fw-bold ms-1" t-out="pos_tracking_number"/>
+                            </span>
+                            <span t-if="pos_tracking_number" class="text-400">·</span>
+                            <span>
+                                <span class="text-500">Total</span>
+                                <span class="o_pos_badge_v o_pos_status_accent fw-bold ms-1" t-out="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="o_pos_status_base d-flex flex-column align-items-center w-100">
+                        <!-- Skip (revealed after a short delay if the redirect hasn't happened yet) -->
+                        <a t-att-href="tx.landing_route" role="button" class="o_pos_status_skip btn btn-link skip-link">
+                            Skip <i class="oi ms-1" data-icon="east"/>
+                        </a>
+                        <div class="o_pos_status_secured mt-2 fs-6 text-400">
+                            <i class="oi me-2" data-icon="lock"/>Payment secured · Don't close this window
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- Header -->
+    <!-- TODO (PR https://github.com/odoo/odoo/pull/242202): apply suggestions comments -->
+    <template id="pos_state_header" name="POS State Header" inherit_id="payment.state_header" primary="True">
+        <xpath expr="//div[@name='o_payment_status_alert']" position="replace">
+            <t t-if="status_message">
+                <div t-if="tx.state == 'done' or tx.state == 'authorized'" class="o_tx_status_container o_check_container mx-auto mb-4">
+                    <svg viewBox="0 0 100 100" class="w-100 h-100">
+                        <circle class="circle" cx="50" cy="50" r="47.75" />
+                        <polyline class="icon-line line-1" points="28.5346107,51.0058517 42.1743011,64.645546 71.4653931,35.3544579 "/>
+                    </svg>
+                </div>
+
+
+                <div t-elif="tx.state == 'error' or tx.state == 'cancel'" class="o_tx_status_container o_error_container mx-auto mb-4">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="circle" cx="50" cy="50" r="47.75"/>
+                        <line class="icon-line line-1" x1="35" y1="35" x2="65" y2="65"/>
+                        <line class="icon-line line-2" x1="65" y1="35" x2="35" y2="65"/>
+                    </svg>
+                </div>
+
+                <div t-elif="tx.state == 'pending'" class="o_tx_status_container o_pending_container mx-auto mb-4">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="circle" cx="50" cy="50" r="47.75"/>
+                        <polyline class="icon-line" points="35,25 65,25 35,75 65,75 35,25"/>
+                    </svg>
+                </div>
+
+                <div t-elif="tx.state == 'draft'" class="o_tx_status_container o_draft_container mx-auto mb-4">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="circle" cx="50" cy="50" r="47.75"/>
+                        <polyline class="icon-line line-1" points="37,27 63,27 69,33 69,73 37,73 37,27" />
+                        <line class="icon-line line-2" x1="44" y1="44" x2="60" y2="44"/>
+                        <line class="icon-line line-3" x1="46" y1="52" x2="58" y2="52"/>
+                        <line class="icon-line line-4" x1="48" y1="60" x2="56" y2="60"/>
+                    </svg>
+                </div>
+
+                <div t-else="" class="o_tx_status_container o_unknown_container mx-auto mb-4">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="circle" cx="50" cy="50" r="47.75"/>
+                        <path class="icon-line line-1" d="M40 38 Q50 25 60 38 Q60 48 50 52 Q50 58 50 60" />
+                        <line class="icon-line line-2" x1="50" y1="68" x2="50" y2="72" />
+                    </svg>
+                </div>
+
+                <h5 t-if="status_heading" t-out="status_heading"/>
+                <span t-if="status_message" t-out="status_message"/>
+                <span t-if="tx.state_message" t-out="tx.state_message"/>
+                <hr />
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Display of /pos/pay/confirmation -->
+    <template id="pay_confirmation">
+        <t t-call="web.frontend_layout" no_header="True" no_footer="True" pageName="'h-100'">
+            <div class="pos_pay_confirmation h-100 w-100 d-flex justify-content-center align-items-center px-3 bg-100">
+                <div class="text-center w-100" style="max-width: 540px;">
+                    <!-- State -->
+                    <t t-call="pos_online_payment.pos_state_header"/>
+
+                    <!-- Summary -->
+                    <table class="table table-borderless w-100">
+                        <tr t-if="state == 'success'">
+                            <th class="text-start">Amount</th>
+                            <td class="text-end">
+                                <span t-out="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-start">Order Reference</th>
+                            <td class="text-end">
+                                <span t-out="order_reference"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-start">Transaction Reference</th>
+                            <td class="text-end">
+                                <span t-out="tx_reference"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th class="text-start">Order ID</th>
+                            <td class="text-end">
+                                <span t-out="pos_order_id"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-2 flex-column flex-sm-row">
+                        <div t-if="exit_route" style="flex: 1 1 0;">
+                            <a role="button" t-att-class="'btn w-100 ' + ('btn-primary' if state == 'success' else 'btn-light border')"  t-att-href="exit_route">
+                                <t t-out="'Continue' if state == 'success' else 'Cancel payment'"/>
+                            </a>
+                        </div>
+                        <div t-if="pay_route and state != 'success'" style="flex: 1 1 0;">
+                            <a role="button" class="btn btn-primary w-100" t-att-href="pay_route">
+                                Try again
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Processed by -->
+                    <div t-if="state == 'success'" class="my-2 text-muted">
+                        Processed by
+                        <t t-out="provider_name"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

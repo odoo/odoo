@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr.UserDeactivationDialog">
+        <Dialog title.translate="Confirmation" size="'sm'">
+            <p>Are you sure you want to deactivate this user?</p>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-primary" t-on-click="this.onDeactivate">
+                    Deactivate
+                </button>
+                <button t-if="this.props.canEndCollaboration" type="button" class="btn btn-primary"
+                        t-on-click="this.onDeactivateAndEndCollaboration">
+                    Deactivate &amp; End Collaboration
+                </button>
+                <button type="button" class="btn btn-secondary" t-on-click="this.onDiscard">
+                    Discard
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

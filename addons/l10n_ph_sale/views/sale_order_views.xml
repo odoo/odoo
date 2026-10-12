@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_l10n_ph_discount_privilege" model="ir.ui.view">
+        <field name="name">sale.order.form.l10n_ph.discount_privilege</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='so_button_below_order_lines']" position="inside">
+                <button name="action_open_discount_privilege_wizard"
+                        string="Edit Discount Privileges"
+                        type="object"
+                        class="btn btn-secondary"
+                        groups="sales_team.group_sale_salesman"
+                        invisible="not l10n_ph_has_discount_privilege or state not in ('draft', 'sent')"
+                />
+                <button name="action_open_discount_privilege_wizard"
+                        string="Discount Privileges"
+                        type="object"
+                        class="btn btn-secondary"
+                        groups="sales_team.group_sale_salesman"
+                        invisible="l10n_ph_has_discount_privilege or state not in ('draft', 'sent')"
+                />
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='discount']" position="after">
+                <field name="l10n_ph_regular_discount_amount" readonly="1" optional="hide"
+                       column_invisible="parent.country_code != 'PH'"/>
+                <field name="l10n_ph_special_discount_amount" readonly="1" optional="hide"
+                       column_invisible="parent.country_code != 'PH'"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='discount']" position="attributes">
+                <attribute name="readonly">l10n_ph_discount_privilege_id</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

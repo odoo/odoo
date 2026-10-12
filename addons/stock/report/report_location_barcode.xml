@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="location_barcode_4x7_label">
+        <td t-att-style="label['invisible'] and 'visibility:hidden;'">
+            <div class="o_label_full o_label_4x7">
+                <t t-if="not label.get('invisible')">
+                    <t t-call="product.report_label_contour_marks"/>
+                    <div class="o_label_centering_table">
+                        <div class="o_label_centered_content">
+                            <div class="o_label_name" t-out="label['name']"/>
+                            <div class="o_label_content">
+                                <div class="o_label_barcode_block">
+                                    <t t-call="product.report_label_barcode"
+                                       barcode_size="'width:100%;height:8mm'"/>
+                                    <div class="o_label_barcode_text" t-out="label['barcode_text']"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </td>
+    </template>
+
+    <template id="location_barcode_zpl_label">
+^PW376
+^LL297
+^FO5,60^A0N,30,24^FB366,1,0,C^FH^FD<t t-out="name"/>^FS
+        <t t-if="barcode_value">
+^FO5,100^BY3^BCN,110,N,N,N^FH^FD<t t-out="barcode_value"/>^FS
+            <t t-if="label['barcode_text']">
+^FO5,215^A0N,22,17^FB366,1,0,C^FH^FD<t t-out="label['barcode_text']"/>^FS
+            </t>
+        </t>
+    </template>
+</odoo>

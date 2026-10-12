@@ -1,0 +1,60 @@
+.table.o_sale_product_configurator_table {
+    & tr:first-child > td {
+        padding-top: 0 !important;
+    }
+
+    > :not(caption) > *:last-child > * {
+        border-bottom: 0;
+    }
+
+    &:where(:not(.o_sale_product_configurator_table_optional)) {
+        margin-bottom: $spacer !important;
+    }
+}
+
+.o_sale_product_configurator_img {
+    width: 40px;
+    max-height: 240px;
+
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
+        width: 120px;
+    }
+}
+
+@media screen and (min-width: 768px), print and (min-width: 188mm) {
+    .o_sale_product_configurator_qty,
+    .o_sale_product_configurator_price {
+        width: 160px;
+    }
+}
+
+@media screen and (max-width: 575.98px), print and (max-width: 99.98mm) {
+    .oe_striked_price {
+        margin-bottom: 0;
+    }
+}
+
+@media screen and (min-width: 576px) and (max-width: 767.98px), print and (min-width: 100mm) and (max-width: 187.98mm) {
+    [name="sale_product_configurator_formatted_price"]:only-child {
+        margin-bottom: map-get($spacers, 2) !important;
+    }
+}
+
+.o_sale_product_configurator_description {
+    --lines-clamp: 3;
+}
+
+@media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
+    .impossible_combination_alert {
+        margin-left: -3rem;
+        margin-right: -9rem;
+    }
+}
+
+.o_sale_product_configurator_uom_choice.active label {
+    $-btn-secondary-design: map-get($o-btns-bs-override, "secondary");
+
+    background-color: map-get($-btn-secondary-design, active-background);
+    border-color: map-get($-btn-secondary-design, active-border);
+    color: map-get($-btn-secondary-design, active-color);
+}

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="web.ClickbotOverlay">
+        <t t-set="state" t-value="this.props.state.state"/>
+        <div class="position-fixed bottom-0 end-0 m-3 p-3 bg-white border rounded shadow"
+             style="min-width: 300px; z-index: 9999;">
+
+            <!-- ── LAUNCHER ── -->
+            <t t-if="state.phase === 'launcher'">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <strong>ClickBot</strong>
+                    <button class="btn-close" t-on-click="() => this.props.state.close()"/>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check mb-1">
+                        <input type="checkbox" class="form-check-input" id="cb-offline"
+                               t-att-checked="state.offline"
+                               t-on-change="(ev) => state.offline = ev.target.checked"/>
+                        <label class="form-check-label" for="cb-offline">Offline</label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input type="checkbox" class="form-check-input" id="cb-logger"
+                               t-att-checked="state.logger"
+                               t-on-change="(ev) => state.logger = ev.target.checked"/>
+                        <label class="form-check-label" for="cb-logger">Logger</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="cb-light"
+                               t-att-checked="state.light"
+                               t-on-change="(ev) => state.light = ev.target.checked"/>
+                        <label class="form-check-label" for="cb-light">Light</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <select class="form-select form-select-sm"
+                            t-on-change="(ev) => state.xmlId = ev.target.value">
+                        <option value="">All apps</option>
+                        <t t-foreach="this.props.state.apps" t-as="app" t-key="app.xmlid">
+                            <option t-att-value="app.xmlid" t-esc="app.name"
+                                    t-att-selected="app.xmlid === state.xmlId"/>
+                        </t>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary w-100" t-on-click="() => this.props.state.start()">
+                    Start
+                </button>
+            </t>
+
+            <!-- ── RUNNING ── -->
+            <t t-elif="state.phase === 'running'">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <strong>ClickBot</strong>
+                        <span t-if="state.testingOffline"
+                              class="badge bg-warning text-dark ms-1">offline</span>
+                        <span t-else="" class="badge bg-success ms-1">online</span>
+                    </div>
+                    <button class="btn btn-sm btn-danger" t-on-click="() => this.props.state.stop()">Stop</button>
+                </div>
+                <div t-if="state.currentApp"
+                     class="mb-2 text-muted small text-truncate">
+                    Testing: <t t-out="state.currentApp"/>
+                </div>
+                <div class="small text-muted mb-2">
+                    <span t-if="state.totalApps">
+                        Apps <t t-out="state.appIndex"/>/<t t-out="state.totalApps"/>
+                    </span>
+                    <span t-if="state.totalMenus" class="ms-2">
+                        Menus <t t-out="state.menuIndex"/>/<t t-out="state.totalMenus"/>
+                    </span>
+                </div>
+                <div class="d-flex gap-3 small text-muted">
+                    <span>Views: <strong t-out="this.stats.testedViews"/></span>
+                    <span t-if="this.stats.testedFilters">
+                        Filters: <strong t-out="this.stats.testedFilters"/>
+                    </span>
+                    <span t-if="this.stats.errorMenuCount" class="text-danger">
+                        Errors: <strong t-out="this.stats.errorMenuCount"/>
+                    </span>
+                </div>
+            </t>
+
+            <!-- ── DONE ── -->
+            <t t-else="">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong t-if="!state.error" class="text-success">ClickBot ✓</strong>
+                    <strong t-else="" class="text-danger">ClickBot ✗</strong>
+                    <button class="btn btn-sm btn-secondary"
+                            t-on-click="() => this.props.state.close()">Close</button>
+                </div>
+                <div t-if="state.error"
+                     class="mb-2 text-danger small"
+                     style="max-width: 260px; word-break: break-word;">
+                    <t t-out="state.error"/>
+                </div>
+                <div class="small text-muted">Time: <strong t-out="state.timeTaken.toFixed(1)"/>s</div>
+                <div class="small text-muted">Apps tested: <strong t-out="state.onlineStats.testedApps.length"/></div>
+                <div class="small text-muted">Menus tested: <strong t-out="state.onlineStats.testedMenus.length"/></div>
+                <div t-if="state.onlineStats.errorMenuCount" class="small text-danger">
+                    Errors: <strong t-out="state.onlineStats.errorMenuCount"/>
+                </div>
+            </t>
+
+        </div>
+    </t>
+
+</templates>

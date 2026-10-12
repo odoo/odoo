@@ -1,0 +1,28 @@
+<svg viewBox="0 0 1440 900" fill="#3AADAA" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <defs>
+        <filter id="blur" x="0" y="0" width="1440" height="900" filterUnits="userSpaceOnUse">
+            <feGaussianBlur stdDeviation="150"/>
+        </filter>
+        <linearGradient id="fadeMask" x1="0" y1="0" x2="0" y2="900" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#000"/>
+            <stop offset="0.18" stop-color="#fff"/>
+            <stop offset="0.82" stop-color="#fff"/>
+            <stop offset="1" stop-color="#000"/>
+        </linearGradient>
+        <mask id="edgeFade" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="900">
+            <rect width="1440" height="900" fill="url(#fadeMask)"/>
+        </mask>
+    </defs>
+    <g filter="url(#blur)" mask="url(#edgeFade)">
+        <!-- first-->
+        <ellipse cx="13.873" cy="343.445" rx="128.873" ry="343.445" transform="matrix(0.388733 -0.92135 0.872589 0.488454 -187 213.475)" fill="#7C6576" opacity="0.5"/>
+        <!--second-->
+        <ellipse cx="128.873" cy="237.172" rx="128.873" ry="237.172" transform="matrix(0.388733 -0.92135 0.872589 0.488454 128 360.475)" fill="#7C6576" opacity="0.5"/>
+        <!-- middle left-->
+        <ellipse cx="178.618" cy="142.455" rx="138.618" ry="242.455" transform="matrix(0.0344348 -0.999407 0.990274 -0.139131 370.133 693.299)" fill="#3AADAA" opacity="0.75"/>
+        <!-- middle-right -->
+        <ellipse cx="242.828" cy="330.387" rx="152.828" ry="330.387" transform="matrix(0.0344348 -0.999407 0.990274 -0.139131 625.416 816.302)" fill="#7C6576" opacity="0.75"/>
+        <!-- last -->
+        <ellipse cx="47.219" cy="233.899" rx="157.219" ry="233.899" transform="matrix(0.266949 -0.963711 0.96181 0.273718 1156 679.027)" fill="#7C6576" opacity="0.75"/>
+    </g>
+</svg>

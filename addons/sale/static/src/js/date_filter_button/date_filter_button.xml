@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="sale.DateFilterButton">
+        <Dropdown position="'bottom-end'">
+            <button class="border-0 bg-transparent fw-normal">
+                <i class="oi me-2" data-icon="calendar_today"/>
+                <span t-out="this.props.selectedDateFilter.label"/>
+                <i class="oi ms-2" data-icon="arrow_drop_down"/>
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="this.dateFilters" t-as="filter" t-key="filter.id">
+                    <DropdownItem
+                        tag="'div'"
+                        class="{ 'selected': this.props.selectedDateFilter.id === filter.id, 'd-flex justify-content-between': true }"
+                        closingMode="'none'"
+                        onSelected="() => this.props.update(filter)"
+                    >
+                        <div t-out="filter.label"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

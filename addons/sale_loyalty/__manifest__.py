@@ -1,0 +1,35 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+{
+    "name": "Sale Loyalty",
+    "summary": "Use discounts and loyalty programs in sales orders",
+    "description": "Integrate discount and loyalty programs mechanisms in sales orders.",
+    "category": "Sales/Sales",
+    "depends": ["sale", "loyalty"],
+    "auto_install": True,
+    "data": [
+        "data/sale_loyalty_data.xml",
+        "wizard/sale_loyalty_coupon_wizard_views.xml",
+        "wizard/sale_loyalty_reward_wizard_views.xml",
+        "views/loyalty_card_views.xml",
+        "views/loyalty_program_views.xml",
+        "views/sale_order_views.xml",
+        "views/sale_portal_templates.xml",
+        "views/res_partner_views.xml",
+        "views/sale_loyalty_menus.xml",
+        "security/ir.access.csv",
+    ],
+    "assets": {
+        "web.assets_frontend": [
+            "sale_loyalty/static/src/interactions/gift_card.js",
+            "sale_loyalty/static/src/scss/gift_card.scss",
+        ],
+        "web.assets_backend": [
+            "sale_loyalty/static/src/xml/discount_menu_widget.xml",
+            "sale_loyalty/static/src/sale_order_form_view/**/*",
+        ],
+    },
+    "uninstall_hook": "uninstall_hook",
+    "author": "Odoo S.A.",
+    "license": "LGPL-3",
+}

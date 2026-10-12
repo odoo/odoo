@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_vn_edi_viettel_stock_send_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_vn_edi_viettel_stock.send_wizard.form</field>
+        <field name="model">l10n_vn_edi_viettel_stock.send_wizard</field>
+        <field name="arch" type="xml">
+            <form string="Send Transfer Note to SInvoice">
+                <field name="template_field_ids" nolabel="1">
+                    <list editable="bottom" create="0" delete="0">
+                        <field name="is_required" column_invisible="1"/> <!-- required for decoration-danger -->
+                        <field name="key_label" string="Field" readonly="1"/>
+                        <field name="value" string="Value"
+                            decoration-danger="is_required and not value"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_send" string="Send" type="object" class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

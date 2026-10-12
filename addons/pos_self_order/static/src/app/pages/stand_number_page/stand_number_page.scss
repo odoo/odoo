@@ -1,0 +1,20 @@
+
+
+.numpad-so {
+    background-color: var(--o-white);
+    border-radius: var(--border-radius-xl);
+
+    & button {
+        background-color: var(--o-white);
+        min-height: 5vh;
+        font-size: 1.8rem !important;
+
+        &::after {
+            border: var(--border-width) solid var(--o-gray-200);
+        }
+
+        &:disabled {
+            background-color: lighten($o-gray-300, 5%)
+        }
+    }
+}

@@ -1,0 +1,60 @@
+.left-pane {
+    max-width: 500px;
+}
+
+.buttons {
+    grid-area: buttons;
+}
+
+.pos-search-bar {
+    grid-area: search;
+}
+
+.item {
+    grid-area: pagination;
+}
+
+.table > :not(caption) > * > * {
+    background-color: unset;
+}
+.order-row.highlight {
+    background-color: var(--o-component-active-bg);
+    color: var(--o-action);
+}
+
+.ticket-screen .delete-column {
+    width: 30px;
+}
+
+.address-cell {
+    max-width: 180px;
+}
+
+@media (max-width: 575.98px) {
+    .screen-full-width {
+        flex-direction: column;
+        height: auto;
+        min-height: 100%;
+    }
+
+    .ticket-screen .order,
+    .ticket-screen .leftpane {
+        max-width: inherit;
+    }
+
+    .ticket-screen .rightpane {
+        width: auto;
+    }
+    .pos .orders {
+        position: sticky;
+        z-index: 1;
+    }
+
+    .controls {
+        grid-template-columns: auto auto;
+        grid-template-areas: 
+            "buttons pagination"
+            "search search";
+    }
+}
+

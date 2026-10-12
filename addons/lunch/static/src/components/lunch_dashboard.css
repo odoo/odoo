@@ -1,0 +1,32 @@
+.o_lunch_content {
+    .o-autocomplete--input {
+        cursor: pointer;
+    }
+
+
+    .o_search_panel_resize + &, .o_search_panel_sidebar + & {
+        .o_kanban_renderer {
+            --Kanban-padding: 0 var(--o-bs-spacer-2) var(--o-bs-spacer-3) 0;
+        }
+    }
+}
+
+.o_lunch_banner {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
+        min-width: 18rem;
+    }
+
+    .o_lunch_order_line_quantity {
+        input {
+            max-width: 3rem;
+        }
+
+        .o_lunch_qty_btn.disabled .oi{
+            opacity: var(--o-bs-btn-disabled-opacity);
+        }
+
+        &.o_lunch_order_line_input_disabled {
+            opacity: var(--o-bs-btn-disabled-opacity);
+        }
+    }
+}

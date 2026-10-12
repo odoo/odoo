@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="l10n_ro_edi_stock_report_delivery_document" inherit_id="stock.report_delivery_document" priority="100">
+        <xpath expr="//div[div[@t-field='o.carrier_tracking_ref']] | //div[div[span[@t-field='o.shipping_weight']]]" position="after">
+            <div t-if="o.l10n_ro_edi_stock_enable and o.l10n_ro_edi_stock_document_uit" class="col-auto" name="div_etransport_uit">
+                <strong>eTransport UIT</strong>
+                <p t-field="o.l10n_ro_edi_stock_document_uit"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

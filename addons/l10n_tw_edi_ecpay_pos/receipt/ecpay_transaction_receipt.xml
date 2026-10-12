@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="l10n_tw_edi_ecpay_pos.ecpay_transaction_receipt">
+            <html id="pos-receipt">
+                <head>
+                    <meta charset="UTF-8"></meta>
+                    <t t-call="point_of_sale.pos_order_receipt_style" />
+                </head>
+                <div class="ecpay-receipt">
+                    <h1 class="text-center">交易明細</h1>
+                    <div class="text-normal-ecpay mb-1">
+                        <span>訂單編號:</span>
+                        <t t-out="order.get('name')"/>
+                    </div>
+                    <div class="text-normal-ecpay mb-1">
+                        <span>發票號碼:</span>
+                        <t t-out="extra_data.get('iis_number')"/>
+                    </div>
+                    <div class="text-normal-ecpay mb-1">
+                        <span t-if="extra_data.get('l10n_tw_edi_carrier_number') != '' and (extra_data.get('l10n_tw_edi_carrier_type') == '' or extra_data.get('l10n_tw_edi_carrier_type') == '1')">共通載具: </span>
+                        <span t-if="extra_data.get('l10n_tw_edi_carrier_type') == '2'">自然人憑證: </span>
+                        <span t-if="extra_data.get('l10n_tw_edi_carrier_type') == '3'">手機載具: </span>
+                        <t t-out="extra_data.get('l10n_tw_edi_carrier_number')"/>
+                    </div>
+                    <div class="text-normal-ecpay mb-1">
+                        <span>結帳時間:</span>
+                        <t t-out="extra_data.get('iis_create_date')"/>
+                    </div>
+                    <table class="table table-borderless text-normal-ecpay mb-1" width="100%">
+                        <thead>
+                            <tr class="text-center">
+                                <th><span>項目</span></th>
+                                <th><span>單價*數量</span></th>
+                                <th><span>⾦額</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total_quantity" t-value="0"/>
+                            <t t-foreach="lines" t-as="line">
+                                <tr class="text-center">
+                                    <td width="40%">
+                                        <t t-out="line['product_data']['display_name']"/>
+                                    </td>
+                                    <td width="40%">
+                                        <t t-out="line['price_unit_incl_custom']"/>
+                                        *
+                                        <t t-out="line['qty']"/>
+                                    </td>
+                                    <td width="20%">
+                                        <t t-out="line['price_subtotal_incl_custom']"/>
+                                        <span> TX</span>
+                                    </td>
+                                </tr>
+                                <t t-set="total_quantity" t-value="total_quantity + line['qty']"/>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div>
+                        <div class="text-normal-ecpay mb-1">
+                            <span>總計</span>
+                            <t t-out="total_quantity"/>
+                            <span> 項</span>
+                        </div>
+                        <div class="text-normal-ecpay mb-1">
+                            <span>小計 </span>
+                            <t t-out="extra_data.get('total_amount')" />
+                        </div>
+                        <div class="text-normal-ecpay mb-1">
+                            <span>發票金額 </span>
+                            <t t-out="extra_data.get('l10n_tw_edi_invoice_amount')" />
+                        </div>
+                        <t t-foreach="payments" t-as="payment">
+                            <div class="text-normal-ecpay mb-1">
+                                <t t-out="payment['payment_method_data']['name']" /> <t t-out="payment['amount']" />
+                            </div>
+                        </t>
+                        <div class="text-normal-ecpay mb-1">
+                            <span>找零 </span>
+                            <t t-out="order['amount_return']" />
+                        </div>
+                    </div>
+                </div>
+            </html>
+        </template>
+    </data>
+</odoo>

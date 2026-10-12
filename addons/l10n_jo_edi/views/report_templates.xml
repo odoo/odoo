@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Every layout gets the hook, so the watermark keeps its place next to the logo whichever one the company picks -->
+    <template id="l10n_jo_edi_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_jo" t-out="custom_header_jo"/>
+        </xpath>
+    </template>
+    <template id="l10n_jo_edi_external_layout_wave" inherit_id="web.external_layout_wave">
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_jo" t-out="custom_header_jo"/>
+        </xpath>
+    </template>
+    <template id="l10n_jo_edi_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_jo" t-out="custom_header_jo"/>
+        </xpath>
+    </template>
+    <template id="l10n_jo_edi_external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_jo" t-out="custom_header_jo"/>
+        </xpath>
+    </template>
+    <template id="l10n_jo_edi_external_layout_center" inherit_id="web.external_layout_center">
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_jo" t-out="custom_header_jo"/>
+        </xpath>
+    </template>
+    <template id="l10n_jo_edi_external_layout_dual" inherit_id="web.external_layout_dual">
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_jo" t-out="custom_header_jo"/>
+        </xpath>
+    </template>
+    <template id="l10n_jo_edi_external_layout_lines" inherit_id="web.external_layout_lines">
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_jo" t-out="custom_header_jo"/>
+        </xpath>
+    </template>
+    <template id="l10n_jo_edi_external_layout_compact" inherit_id="web.external_layout_compact">
+        <xpath expr="//img" position="after">
+            <t t-if="custom_header_jo" t-out="custom_header_jo"/>
+        </xpath>
+    </template>
+</odoo>

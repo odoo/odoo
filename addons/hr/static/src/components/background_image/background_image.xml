@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="hr.BackgroundImage">
+        <img
+            loading="lazy"
+            t-att-data-tooltip-template="this.hasTooltip and this.tooltipAttributes.template"
+            t-att-data-tooltip-info="this.hasTooltip and this.tooltipAttributes.info"
+            t-att-data-tooltip-delay="this.hasTooltip and this.props.zoomDelay"
+            t-attf-src="#{this.getUrl(this.props.previewImage or this.props.name)}"
+            alt="Binary file"
+           />
+    </t>
+</templates>

@@ -1,0 +1,25 @@
+<templates>
+    <t t-name="mass_mailing.TemplatePreviewField">
+        <div t-ref="this.rootWrapperRef" t-att-class="{
+            'o_mail_favorite_preview_wrapper': this.props.template,
+            'o_mailing_template_card_preview_wrapper': !this.props.template,
+        }" class="mb-2">
+            <div t-ref="this.shadowRootRef" t-att-class="{
+                'o_mail_favorite_preview': this.props.template,
+                'o_mailing_shadow_root': !this.props.template,
+            }" inert="inert"/>
+        </div>
+    </t>
+
+    <t t-name="mass_mailing.TemplatePreviewBody">
+        <div t-att-class="{
+            'o_favorite_template_preview': this.source === 'template',
+            'o_mailing_template_preview': this.source !== 'template',
+        }">
+            <div class="o_mass_mailing_value o_readonly"
+                t-att-class="{'o_rtl': this.isRTL}">
+                <t t-out="this.bodyArch"/>
+            </div>
+        </div>
+    </t>
+</templates>

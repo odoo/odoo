@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base.cr" model="res.country">
+        <field name="enforce_cities" eval="1"/>
+        <field name="address_view_id" ref="cr_partner_address_form"/>
+        <field name="address_format" eval="'%(street)s\n%(street2)s\n%(l10n_cr_district_name)s\n%(city)s\n%(state_name)s %(zip)s\n%(country_name)s'"/>
+    </record>
+
+</odoo>

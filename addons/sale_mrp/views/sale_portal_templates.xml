@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="sale_order_portal_content_inherit_sale_mrp"
+        name="Orders MOs"
+        inherit_id="sale.sale_order_portal_content">
+
+        <div id="informations" position="inside">
+            <div t-if="mrp_productions" class="flex-grow-1 flex-shrink-1 flex-basis-0 min-w-0">
+                <t t-set="mo" t-value="mrp_productions[0]"/>
+                <div class="d-flex align-items-center align-items-lg-start justify-content-between gap-3">
+                    <div class="d-flex flex-column">
+                        <h5 class="mb-1">Manufacturing Orders</h5>
+                        <span t-out="mo.name"/>
+                        <div t-if="mo.date_finished" class="small text-muted">
+                            <span t-field="mo.date_finished" t-options="{'date_only': True}"/>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <span t-if="mo.state in ['to_close', 'done']" class="small badge text-bg-success">
+                            <i class="oi oi-fw" data-icon="check"/> Manufactured
+                        </span>
+                        <span t-elif="mo.state == 'cancel'" class="small badge text-bg-danger">
+                            <i class="oi oi-fw" data-icon="close"/> Cancelled
+                        </span>
+                        <span t-elif="mo.state == 'confirmed'" class="small badge text-bg-info">
+                            <i class="oi oi-fw" data-icon="schedule"/> Confirmed
+                        </span>
+                        <span t-elif="mo.state == 'progress'" class="small badge text-bg-warning">
+                            <i class="oi oi-fw" data-icon="schedule"/> In Progress
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

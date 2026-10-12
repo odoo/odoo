@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sms_composer_view_form" model="ir.ui.view">
+        <field name="name">sms.composer.views.inherit.sms</field>
+        <field name="model">sms.composer</field>
+        <field name="inherit_id" ref="sms.sms_composer_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='res_model']" position="after">
+                <field name="utm_campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
+                    invisible="1"/>
+                <field name="mailing_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

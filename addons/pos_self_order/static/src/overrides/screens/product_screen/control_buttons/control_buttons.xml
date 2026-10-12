@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
+            <!-- Dynamic QR Button -->
+            <t t-if="this.showDynamicQr" t-call="point_of_sale.controlButton"
+                icon="'qr_code'"
+                btnText.translate="Dynamic QR"
+                btnClasses="'btn-secondary '"
+                disabled="this.currentOrder.preset_id and this.currentOrder.preset_id.service_at !== 'table'"
+                onClick="() => this.clickDynamicQr()">
+            </t>
+        </xpath>
+    </t>
+</templates>

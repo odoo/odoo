@@ -1,0 +1,34 @@
+.o_timeoff_calendar {
+    flex-grow: 1;
+    flex-basis: 0;
+    min-width: 0;
+
+    .o_calendar_renderer .o_calendar_widget {
+        .hr_mandatory_day {
+            .o_calendar_day_top_number {
+                font-weight: 600;
+            }
+        }
+
+        .o_calendar_fc_view_multiMonthYear .hr_mandatory_day:not([aria-disabled]):not([aria-current=date]) .o_calendar_day_top:not(:hover),
+        > div > .o_calendar_fc_view_dayGridMonth .hr_mandatory_day:not([aria-disabled]):not([aria-current=date]) {
+            .o_calendar_day_top_number {
+                color: var(--mandatory-day-color) !important;
+            }
+        }
+
+        .o_calendar_bg_event {
+            border-radius: var(--border-radius-pill);
+        }
+
+        :is(.o_calendar_fc_view_dayGridMonth, .o_calendar_fc_view_multiMonthYear) .o_calendar_day[aria-current=date][class*="hr_mandatory_day_"] {
+            --o-calendar-day-number-bg: var(--mandatory-day-color);
+        }
+
+        @for $size from 1 through length($o-colors) {
+            .hr_mandatory_day_#{$size - 1} {
+                --mandatory-day-color: #{nth($o-colors, $size)};
+            }
+        }   
+    }
+}

@@ -1,0 +1,22 @@
+id,name,model_id,group_id/id,operation,domain
+survey_rule_slide_channel_officer,Survey: slide channel officer on certification: read,survey.survey,website_slides.group_website_slides_officer,r,"[('certification', '=', True),
+            ('survey_type', 'in', ('survey', 'live_session', 'assessment', 'custom')),
+            '|', ('restrict_user_ids', '=', False),('restrict_user_ids', 'in', user.id)]"
+survey_question_rule_slide_channel_officer,Survey question: slide channel officer on certification: read,survey.question,website_slides.group_website_slides_officer,r,"[('survey_id.certification', '=', True),
+            ('survey_id.survey_type', 'in', ('survey', 'live_session', 'assessment', 'custom')),
+            '|', ('survey_id.restrict_user_ids', '=', False),('survey_id.restrict_user_ids', 'in', user.id)]"
+survey_question_answer_slide_channel_officer,Survey question answer: slide channel officer on certification: read,survey.question.answer,website_slides.group_website_slides_officer,r,"[
+            '|',
+                '&',
+                    '&', ('question_id.survey_id.certification', '=', True), ('question_id.survey_id.survey_type', 'in', ('survey', 'live_session', 'assessment', 'custom')),
+                    '|', ('question_id.survey_id.restrict_user_ids', '=', False), ('question_id.survey_id.restrict_user_ids', 'in', user.id),
+                '&',
+                    '&', ('matrix_question_id.survey_id.certification', '=', True), ('matrix_question_id.survey_id.survey_type', 'in', ('survey', 'live_session', 'assessment', 'custom')),
+                    '|', ('matrix_question_id.survey_id.restrict_user_ids', '=', False), ('matrix_question_id.survey_id.restrict_user_ids', 'in', user.id),
+        ]"
+survey_user_input_rule_slide_channel_officer,Survey user input: slide channel officer on certification: read,survey.user_input,website_slides.group_website_slides_officer,r,"[('survey_id.certification', '=', True),
+            ('survey_id.survey_type', 'in', ('survey', 'live_session', 'assessment', 'custom')),
+            '|', ('survey_id.restrict_user_ids', '=', False), ('survey_id.restrict_user_ids', 'in', user.id)]"
+survey_user_input_line_rule_slide_channel_officer,Survey user input line: slide channel officer on certification: read,survey.user_input.line,website_slides.group_website_slides_officer,r,"[('survey_id.certification', '=', True),
+            ('survey_id.survey_type', 'in', ('survey', 'live_session', 'assessment', 'custom')),
+            '|', ('survey_id.restrict_user_ids', '=', False), ('survey_id.restrict_user_ids', 'in', user.id)]"

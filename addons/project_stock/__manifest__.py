@@ -1,0 +1,15 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+{
+    'name': 'Project Stock',
+    'summary': 'Link Stock pickings to Project',
+    'category': 'Services/Project',
+    'depends': ['stock', 'project'],
+    'data': [
+        'views/stock_picking_views.xml',
+        'views/project_project_views.xml',
+    ],
+    'auto_install': True,
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.BooleanIconField">
+        <button class="btn ratio-1x1 px-1 py-0"
+                t-attf-class="{{this.props.record.data[this.props.name] ? 'btn-primary' : 'btn-outline-primary'}}"
+                t-att-data-tooltip="this.props.label"
+                t-on-click.prevent.stop="this.update"
+                data-available-offline="">
+            <i class="oi" t-att-class="this.props.iconClass" t-att-data-icon="this.props.icon"/>
+        </button>
+    </t>
+
+</templates>

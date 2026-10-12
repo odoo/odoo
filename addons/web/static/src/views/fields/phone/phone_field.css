@@ -1,0 +1,9 @@
+body:not(.o_touch_device) .o_field_phone {
+    &:not(:hover):not(:focus-within) {
+        &:has(input:not(:hover)) span .o_phone_form_link {
+            display: none !important;
+        }
+    }
+
+    word-break: keep-all !important;
+}

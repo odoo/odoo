@@ -1,0 +1,27 @@
+.o-discuss-ChangeLayoutDialog-option.o-selected {
+    background-color: $o-view-background-color;
+    border-color: $o-brand-primary !important;
+}
+
+.o-discuss-ChangeLayoutDialog-thumbnail {
+    width: 3rem;
+    height: 1.75rem;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    &.o-auto {
+        background-image: url("/mail/static/src/img/call_layouts/layout_auto.svg");
+    }
+    &.o-tiled {
+        background-image: url("/mail/static/src/img/call_layouts/layout_tiled.svg");
+    }
+    &.o-spotlight {
+        background-image: url("/mail/static/src/img/call_layouts/layout_spotlight.svg");
+    }
+    &.o-sidebar {
+        background-image: url("/mail/static/src/img/call_layouts/layout_sidebar.svg");
+    }
+    &.o-discuss {
+        background-image: url("/mail/static/src/img/call_layouts/layout_discuss.svg");
+    }
+}

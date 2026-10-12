@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <!-- Calls _load() directly instead of try_loading() to avoid the warning -->
+    <function model="account.chart.template" name="_load" eval="(False, 'generic_coa', obj().env['res.company'].browse(ref('base.test_company')), False)"/>
+    <function model="account.chart.template" name="_load" eval="(False, 'generic_coa', obj().env['res.company'].browse(ref('base.test_company_with_branch')), False)"/>
+</data>

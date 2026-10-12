@@ -1,0 +1,26 @@
+.o-discuss-NotificationSettings {
+
+    .o-mail-NotificationSettings-submenu {
+        max-width: 250px !important;
+    }
+    .o-discuss-NotificationSettings-separator {
+        min-width: 20px;
+    }
+
+    .btn {
+        --#{$prefix}btn-hover-bg: #{$dropdown-link-hover-bg};
+        --#{$prefix}btn-active-bg: #{$dropdown-link-hover-bg};
+
+        @if $o-webclient-color-scheme != dark {
+            &:hover, &.show {
+                .o-discussCallTheme & {
+                    background-color: mix($gray-700, $gray-800);
+                }
+            }
+        }
+    }
+}
+
+.o-discuss-NotificationSettings-defaultValue {
+    color: $o-action;
+}

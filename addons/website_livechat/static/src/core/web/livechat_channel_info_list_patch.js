@@ -1,0 +1,23 @@
+import { LivechatChannelInfoList } from "@im_livechat/core/web/livechat_channel_info_list";
+
+import { compareDatetime } from "@mail/utils/common/misc";
+
+import { toLocaleDateTimeString } from "@web/core/l10n/dates";
+import { patch } from "@web/core/utils/patch";
+
+/** @type {LivechatChannelInfoList} */
+const livechatChannelInfoListPatch = {
+    get recentConversations() {
+        return (this.props.thread.livechat_visitor_id?.discuss_channel_ids ?? [])
+            .filter((channel) => channel.notEq(this.props.thread.channel))
+            .sort(
+                (t1, t2) =>
+                    compareDatetime(t2.last_interest_dt, t1.last_interest_dt) || t2.id - t1.id
+            );
+    },
+    CLOSED_ON_TEXT(channel) {
+        return toLocaleDateTimeString(channel.livechat_end_dt);
+    },
+};
+
+patch(LivechatChannelInfoList.prototype, livechatChannelInfoListPatch);

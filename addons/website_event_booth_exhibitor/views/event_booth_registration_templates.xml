@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <template id="event_booth_registration_details" inherit_id="website_event_booth.event_booth_registration_details">
+        <form id="o_wbooth_contact_details_form" position="attributes">
+            <attribute name="enctype">multipart/form-data</attribute>
+        </form>
+        <xpath expr="//div[@id='o_wbooth_contact_details']" position="before">
+            <div id="o_wbooth_sponsor_details" t-if="booth_category.use_sponsor">
+                <h4 class="mt32">
+                    <strong>Sponsor Details</strong>
+                </h4>
+                <div class="form-text text-muted mb16">
+                    How can we showcase your company ?
+                </div>
+                <div class="row mb-3">
+                    <label class="col-form-label col-sm-auto" for="sponsor_name">
+                        <span>Company Name</span>
+                        <span class="mandatory_mark"> *</span>
+                    </label>
+                    <div class="col-sm">
+                        <input class="form-control" type="text" name="sponsor_name" id="sponsor_name" required="True"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-form-label col-sm-auto" for="sponsor_email">
+                        <span>Email</span>
+                        <span class="mandatory_mark"> *</span>
+                    </label>
+                    <div class="col-sm">
+                        <input class="form-control" type="email" name="sponsor_email" id="sponsor_email" required="True"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-form-label col-sm-auto" for="sponsor_phone">Phone</label>
+                    <div class="col-sm">
+                        <input class="form-control" type="text" name="sponsor_phone" id="sponsor_phone"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-form-label col-sm-auto" for="sponsor_slogan">Slogan</label>
+                    <div class="col-sm">
+                        <input class="form-control" type="text" name="sponsor_slogan" id="sponsor_slogan"/>
+                    </div>
+                </div>
+                <div class="row mb-3" t-if="booth_category.exhibitor_type != 'sponsor'">
+                    <label class="col-form-label col-sm-auto" for="sponsor_description">Description</label>
+                    <div class="col-sm">
+                        <textarea class="form-control" name="sponsor_description" id="sponsor_description"/>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label class="col-form-label col-sm-auto" for="sponsor_image">Picture</label>
+                    <div class="col-sm">
+                        <input name="sponsor_image" type="file" accept="image/*"/>
+                    </div>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="contact_details"/>
+                    <label class="fw-normal" for="contact_details">Contact me through a different email/phone.</label>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='o_wbooth_contact_details']" position="attributes">
+            <attribute name="t-att-class">'d-none' if booth_category.use_sponsor else ''</attribute>
+        </xpath>
+        <xpath expr="//input[@name='contact_name']" position="attributes">
+            <attribute name="t-att-required">False if booth_category.use_sponsor else True</attribute>
+        </xpath>
+        <xpath expr="//input[@name='contact_email']" position="attributes">
+            <attribute name="t-att-required">False if booth_category.use_sponsor else True</attribute>
+        </xpath>
+    </template>
+
+</data></odoo>

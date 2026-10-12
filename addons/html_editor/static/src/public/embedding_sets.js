@@ -1,0 +1,17 @@
+import { readonlySyntaxHighlightingEmbedding } from "@html_editor/others/embedded_components/core/syntax_highlighting/readonly_syntax_highlighting";
+import { readonlyFileEmbedding } from "@html_editor/others/embedded_components/core/file/readonly_file";
+import { readonlyTableOfContentEmbedding } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content";
+import { toggleBlockEmbedding } from "@html_editor/others/embedded_components/core/toggle_block/toggle_block";
+import { readonlyVideoEmbedding } from "@html_editor/others/embedded_components/core/video/readonly_video";
+import { readonlyDateEmbedding } from "@html_editor/others/embedded_components/core/date/readonly_date";
+import { whiteboardEmbedding } from "@html_editor/others/embedded_components/core/whiteboard/whiteboard";
+
+export const PUBLIC_EMBEDDINGS = [
+    readonlyFileEmbedding,
+    readonlyTableOfContentEmbedding,
+    toggleBlockEmbedding,
+    readonlyVideoEmbedding,
+    readonlySyntaxHighlightingEmbedding,
+    readonlyDateEmbedding,
+    whiteboardEmbedding,
+];

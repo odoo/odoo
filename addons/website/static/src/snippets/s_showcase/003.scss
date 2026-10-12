@@ -1,0 +1,13 @@
+.s_showcase[data-vcss='003'] {
+    .s_showcase_icon {
+        &:not(.float-start):not(.float-end) {
+            margin-bottom: var(--s_showcase_icon_margin, #{map-get($spacers, 3)}) !important;
+        }
+        &.float-start {
+            margin-inline-end: var(--s_showcase_icon_margin, #{map-get($spacers, 3)}) !important;
+        }
+        &.float-end {
+            margin-inline-start: var(--s_showcase_icon_margin, #{map-get($spacers, 3)}) !important;
+        }
+    }
+}

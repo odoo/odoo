@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tax grids needed for the 606 purchases report but not displayed on the IT-1 tax report -->
+    <record id="tag_tax_cost_purchase" model="account.account.tag">
+        <field name="name">tax.cost.purchase</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.do"/>
+    </record>
+
+    <record id="tag_tax_isr_purchase" model="account.account.tag">
+        <field name="name">tax.isr.purchase</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.do"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_expense.travel_admin_by_car_expense" model="hr.expense">
+            <field name="analytic_distribution" eval="{ref('project.analytic_office_design'): 100}"/>
+        </record>
+        <record id="hr_expense.travel_demo_by_car_expense" model="hr.expense">
+            <field name="analytic_distribution" eval="{ref('project.analytic_office_design'): 100}"/>
+        </record>
+        <record id="transportation_expense" model="hr.expense">
+            <field name="name">Transportation</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
+            <field name="product_id" ref="hr_expense.expense_product_travel_accommodation"/>
+            <field name="total_amount_currency" eval="240.0"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="date" eval="time.strftime('%Y-%m-12')"/>
+        </record>
+        <record id="restaurant_expense" model="hr.expense">
+            <field name="name">Restaurant</field>
+            <field name="employee_id" ref="hr.employee_al"/>
+            <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
+            <field name="product_id" ref="hr_expense.expense_product_meal"/>
+            <field name="total_amount_currency" eval="320.0"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="date" eval="time.strftime('%Y-%m-10')"/>
+        </record>
+
+        <function name="action_submit" model="hr.expense">
+            <value model="hr.expense" eval="[ref('transportation_expense'), ref('restaurant_expense')]"/>
+        </function>
+
+        <function name="action_approve" model="hr.expense">
+            <value model="hr.expense" eval="[ref('transportation_expense'), ref('restaurant_expense')]"/>
+        </function>
+    </data>
+</odoo>

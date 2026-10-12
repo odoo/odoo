@@ -1,0 +1,20 @@
+.pos-scenario-card {
+    &:hover {
+        background: var(--ScenarioCard-background--hover, var(--o-gray-200));
+    }
+
+    &:focus-visible {
+        box-shadow: 0 0 0 var(--o-bs-btn-focus-width) RGBA(var(--o-bs-btn-link-focus-shadow-rgb), .5);
+        outline: none;
+    }
+}
+
+.pos-scenario-card.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    color:  var(--o-brand-secondary);
+
+    img {
+        opacity: 0.5;
+    }
+}

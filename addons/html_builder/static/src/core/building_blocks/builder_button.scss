@@ -1,0 +1,50 @@
+.o_hb_btn {
+    --gradient: none;
+
+    transition: none;
+    min-width: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex: 1 1 25%;
+    white-space: nowrap;
+    min-height: var(--o-hb-btn-minHeight);
+
+    &.o_hb_btn_has_icon, &.oi {
+        --btn-padding-x: var(--o-hb-btn-has-icon-paddingX, #{map-get($spacers , 2)});
+        vertical-align: middle;
+
+        flex: 0 1 auto;
+        min-width: fit-content;
+    }
+
+    &.o_hb_btn_has_img_icon, &:has(.o_hb_svg) {
+        flex: 0 1 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        --btn-padding-x: #{map-get($spacers , 2)};
+    }
+
+    &.o_hb_btn_has_img_icon > img {
+        max-height: 1em;
+        width: 1.4em;
+        margin-top: 0.2em;
+        margin-bottom: 0.2em;
+    }
+
+    &.o_hb_btn_has_img_icon .o_hb_svg {
+        flex-shrink: 0;
+
+        &, .o_graphic, .o_subdle {
+            fill: currentColor;
+        }
+
+        .o_subdle {
+            fill-opacity: 0.5;
+        }
+    }
+
+    .oi, &:before {
+        line-height: inherit;
+    }
+}

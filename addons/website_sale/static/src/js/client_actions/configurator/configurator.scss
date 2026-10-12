@@ -1,0 +1,30 @@
+.o_configurator_container .o_wsale_configurator_screen.o_configurator_screen {
+    .button_area {
+        position: absolute;
+        inset: 0;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .theme_preview {
+        aspect-ratio: auto;
+        overflow: visible;
+        background: transparent;
+        border: 0 !important;
+        transition: all .3s ease 0s;
+
+        img {
+            border: var(--border-width) solid $border-color;
+        }
+
+        &:hover,
+        &:focus-within {
+            box-shadow: none;
+
+            img {
+                border-color: map-get($theme-colors, primary);
+                box-shadow: var(--box-shadow);
+            }
+        }
+    }
+}

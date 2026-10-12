@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-name="account.AccountPickCurrencyDate">
+        <button
+            type="button"
+            t-on-click.prevent="() => this.dateTimePicker.open()"
+            class="btn btn-link text-dark p-0"
+            title="Pick the rate on a certain date"
+            t-ref="this.datetimePickerTargetRef"
+        >
+            <i class="oi oi-filled" data-icon="calendar_today"/>
+        </button>
+    </t>
+
+    <t t-name="account.AccountCurrencyExchangeRate">
+        <div class="d-flex gap-1 align-items-center flex-nowrap text-muted">
+            <span>1</span>
+            <span class="w-auto" t-out="this.fromCurrency and this.fromCurrency.display_name or ''"/>
+            <button type="button" t-on-click.prevent="this.onSwap"
+                    class="btn btn-link text-dark p-0 mx-1"
+                    title="Click to swap currencies">
+                <i class="oi" data-icon="swap_horiz"/>
+            </button>
+            <input t-if="this.isEditable" type="text" class="o_input"
+                   style="max-width: 21ch;"
+                   t-att-value="this.displayRate" t-on-change="this.onRateInput"/>
+            <span t-else="" t-out="this.displayRate"/>
+            <span class="w-auto" t-out="this.toCurrency and this.toCurrency.display_name or ''"/>
+        </div>
+    </t>
+</template>

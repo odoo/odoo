@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="account.mail_attachments">
+        <ul class="list-unstyled m-0">
+            <t t-foreach="this.renderedAttachments" t-as="attachment" t-key="attachment.id">
+                <t t-if="!attachment.skip">
+                    <li class="d-flex align-items-center bg-200 p-1 ps-3 my-2">
+                        <span t-out="attachment.name" class="flex-grow-1 text-truncate"/>
+
+                        <button class="btn flex-shrink-0" t-on-click.stop="() => this.onFileRemove(attachment.id)">
+                            <i class="oi oi-fw" data-icon="close"/>
+                        </button>
+
+                        <i class="oi oi-fw o_button_icon" data-icon="warning" t-if="attachment.tooltip" t-att-data-tooltip="attachment.tooltip"></i>
+                    </li>
+                </t>
+            </t>
+        </ul>
+    </t>
+</templates>

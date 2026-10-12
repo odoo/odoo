@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_form_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n_hu_edi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='credit_limits']" position="after">
+                <group string="Hungary"
+                       name="hungary"
+                       invisible="country_code != 'HU'">
+                    <field name="l10n_hu_group_vat"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

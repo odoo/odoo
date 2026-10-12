@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_partner_corporate" model="res.partner">
+        <field name="name">Distribuidora Comercial S.A.</field>
+        <field name="vat">3101234567</field>
+        <field name="street">300 metros norte de la iglesia católica</field>
+        <field name="street2">Barrio Escalante</field>
+        <field name="l10n_cr_district_id" ref="district_cr_10101"/>
+        <field name="city_id" ref="city_cr_101"/>
+        <field name="city">San José</field>
+        <field name="state_id" ref="base.state_SJ"/>
+        <field name="zip">10101</field>
+        <field name="country_id" ref="base.cr"/>
+        <field name="phone">+506 2222 3344</field>
+        <field name="email">facturacion@distribuidora.crexample.com</field>
+    </record>
+
+    <record id="demo_partner_individual" model="res.partner">
+        <field name="name">María Rodríguez Jiménez</field>
+        <field name="additional_identifiers" eval="{'CR_CN': '0102340567'}"/>
+        <field name="street">50 metros sur del Parque Central</field>
+        <field name="street2">Barrio Fátima</field>
+        <field name="l10n_cr_district_id" ref="district_cr_40101"/>
+        <field name="city_id" ref="city_cr_401"/>
+        <field name="city">Heredia</field>
+        <field name="state_id" ref="base.state_H"/>
+        <field name="zip">40101</field>
+        <field name="country_id" ref="base.cr"/>
+        <field name="phone">+506 8888 1122</field>
+        <field name="email">maria.rodriguez@crexample.com</field>
+    </record>
+
+    <record id="demo_partner_zona_franca" model="res.partner">
+        <field name="name">Tech Manufacturing Zona Franca S.A.</field>
+        <field name="vat">3101765432</field>
+        <field name="street">Zona Franca Coyol, Edificio B12</field>
+        <field name="street2">El Coyol</field>
+        <field name="l10n_cr_district_id" ref="district_cr_20108"/>
+        <field name="city_id" ref="city_cr_201"/>
+        <field name="city">Alajuela</field>
+        <field name="state_id" ref="base.state_A"/>
+        <field name="zip">20108</field>
+        <field name="country_id" ref="base.cr"/>
+        <field name="phone">+506 2436 7788</field>
+        <field name="email">cuentas@techmanufacturing.crexample.com</field>
+    </record>
+
+    <record id="demo_partner_nite" model="res.partner">
+        <field name="name">Asociación Solidarista Ejemplo</field>
+        <field name="additional_identifiers" eval="{'CR_NITE': '2000000001'}"/>
+        <field name="street">100 metros oeste de la Municipalidad</field>
+        <field name="street2">Centro</field>
+        <field name="l10n_cr_district_id" ref="district_cr_30101"/>
+        <field name="city_id" ref="city_cr_301"/>
+        <field name="city">Cartago</field>
+        <field name="state_id" ref="base.state_C"/>
+        <field name="zip">30101</field>
+        <field name="country_id" ref="base.cr"/>
+        <field name="phone">+506 2551 6677</field>
+        <field name="email">admin@asociacion.crexample.com</field>
+    </record>
+</odoo>

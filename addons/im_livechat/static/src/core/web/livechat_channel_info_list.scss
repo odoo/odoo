@@ -1,0 +1,86 @@
+.o-livechat-LivechatStatusLabel.o-help {
+    color: var(--livechat-LivechatStatusLabel-helpColor, var(--purple));
+}
+
+.o-livechat-LivechatStatusSelection {
+    --list-group-border-radius: var(--border-radius);
+
+    @keyframes shakeX {
+        from, to {transform: translate3d(0, 0, 0);}
+        20%, 60% {transform: translate3d(-.15em, 0, 0);}
+        40%, 80% {transform: translate3d(.15em, 0, 0);}
+    }
+
+    button:where(:not(.active)) {
+        &:not(:hover) {
+            background-color: var(--gray-200);
+            opacity: 75%;
+        }
+
+        .o-livechat-LivechatStatusLabel {
+            visibility: hidden;
+            animation: none;
+        }
+    }
+
+    .o-livechat-LivechatStatusLabel {
+        &.o-help {
+            animation: none;
+        }
+    }
+
+    button.active .o-livechat-LivechatStatusLabel {
+        &.o-help {
+            animation: shakeX .5s;
+        }
+    }
+
+    button.active.o-inProgress  {
+        --list-group-active-bg: #{rgba($success, .15)};
+        --list-group-active-color: var(--success);
+        --list-group-active-border-color: var(--success);
+
+        .o-livechat-LivechatStatusSelection-Label {
+            color: var(--list-group-color);
+        }
+        &.o-livechat-LivechatStatusLabel-icon {
+            color: var(--success);
+        }
+
+        .form-check-input {
+            background-color: var(--success);
+            border-color: var(--success);
+        }
+    }
+
+    button.active.o-need-help {
+        --list-group-active-bg: color-mix(in srgb, var(--purple) 35%, transparent);
+        --list-group-active-color: var(--body-color);
+        --list-group-active-border-color: #{lighten($purple, 15%)};
+
+
+        &.o-livechat-LivechatStatusLabel-icon {
+            color: var(--purple);
+        }
+
+        .form-check-input {
+            background-color: var(--purple);
+            border-color: var(--purple);
+        }
+    }
+
+    /* Dropdown */
+    .o_popover & {
+        border-radius: var(--border-radius-xl);
+    }
+}
+
+.o-livechat-LivechatStatusLabel.position-absolute {
+    background-color: rgba($white, var(--bg-opacity, 1));
+    border-radius: 50%;
+}
+
+.o_country_flag {
+    width:24px;
+    height: 16px;
+}

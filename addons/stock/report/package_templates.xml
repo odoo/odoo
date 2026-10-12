@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="package_zpl_label">
+            <t t-if="label['is_sscc']">
+^FO310,50
+^A0N,44,33^FH^FDSSCC: <t t-out="label['barcode_text']"/>^FS
+^FO310,100^BY3
+<t t-if="label['pack_date']">^A0N,44,33^FH^FDPack Date: <t t-out="label['pack_date']"/>^FS</t>
+^FO310,150^BY3
+<t t-if="label['package_type']">^A0N,44,33^FH^FDPackage Type: <t t-out="label['package_type']"/>^FS</t>
+^FO100,50^BY3
+^BXN,10,200
+^FH^FD<t t-out="barcode_value"/>^FS
+            </t>
+            <t t-else="">
+^FO100,50
+^A0N,44,33^FH^FD<t t-out="name"/>^FS
+^FO100,100^BY3
+^BCN,100,Y,N,N
+^FH^FD<t t-out="barcode_value"/>^FS
+            </t>
+        </template>
+
+        <template id="package_pdf_label">
+            <td t-att-style="label['invisible'] and 'visibility:hidden;'">
+                <div t-if="not label.get('invisible')" style="width: 100%; padding-top: 10mm;">
+                    <table class="table table-borderless" style="width: 100%;">
+                        <tr t-if="label['is_sscc']">
+                            <td style="width: 42%; text-align: right; padding-right: 8mm;">
+                                <t t-call="product.report_label_barcode"
+                                   barcode_size="'width:35mm;height:35mm'"
+                                   symbology="'ECC200DataMatrix'"/>
+                            </td>
+                            <td style="font-size: 20px; vertical-align: middle;">
+                                <div>SSCC: <t t-out="label['barcode_text']"/></div>
+                                <div t-if="label['pack_date']">Pack Date: <t t-out="label['pack_date']"/></div>
+                                <div t-if="label['package_type']">Package Type: <t t-out="label['package_type']"/></div>
+                            </td>
+                        </tr>
+                        <tr t-else="">
+                            <td style="text-align: center;">
+                                <t t-call="product.report_label_barcode"
+                                   barcode_size="'width:150mm;height:25mm'"/>
+                                <div style="font-size: 20px;" t-out="label['barcode_text']"/>
+                                <div t-if="label['pack_date']" style="font-size: 24px; font-weight: bold;">Pack Date: <t t-out="label['pack_date']"/></div>
+                                <div t-if="label['package_type']" style="font-size: 24px; font-weight: bold;">Package Type: <t t-out="label['package_type']"/></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </template>
+    </data>
+</odoo>

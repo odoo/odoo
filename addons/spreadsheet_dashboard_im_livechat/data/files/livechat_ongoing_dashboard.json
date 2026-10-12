@@ -1,0 +1,1444 @@
+{
+  "version": "19.3.10",
+  "sheets": [
+    {
+      "id": "dashboard_sheet_id",
+      "name": "Dashboard",
+      "colNumber": 10,
+      "rowNumber": 108,
+      "rows": {
+        "107": { "size": 22 }
+      },
+      "cols": {
+        "0": { "size": 136 }
+      },
+      "merges": [],
+      "cells": {},
+      "styles": {},
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [
+        {
+          "id": "cba382a2-1663",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 11 },
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#EA6175",
+            "baselineColorUp": "#43C5B1",
+            "baselineMode": "difference",
+            "title": { "text": "Ongoing Sessions", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!B2",
+            "humanize": false,
+            "chartId": "71458a01-fefb"
+          }
+        },
+        {
+          "id": "9df1a04c-467b",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 404, "y": 11 },
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#EA6175",
+            "baselineColorUp": "#43C5B1",
+            "baselineMode": "difference",
+            "title": { "text": "Handled by Bot", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!B3",
+            "humanize": false,
+            "chartId": "8e6d14e4-4d53"
+          }
+        },
+        {
+          "id": "b6ffe163-ed96",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 202, "y": 11 },
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#EA6175",
+            "baselineColorUp": "#43C5B1",
+            "baselineMode": "difference",
+            "title": { "text": "Handled by Agent", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!B4",
+            "humanize": false,
+            "chartId": "4755f948-8867"
+          }
+        },
+        {
+          "id": "a2fcb7be-c1de",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 606, "y": 11 },
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#EA6175",
+            "baselineColorUp": "#43C5B1",
+            "baselineMode": "difference",
+            "title": { "text": "Escalated", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!B5",
+            "humanize": false,
+            "chartId": "8ad7bbd1-793e"
+          }
+        },
+        {
+          "id": "d10e43fc-7590",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 808, "y": 11 },
+          "width": 192,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#EA6175",
+            "baselineColorUp": "#43C5B1",
+            "baselineMode": "difference",
+            "title": { "text": "Calls", "bold": true, "color": "#01666B" },
+            "type": "scorecard",
+            "background": "",
+            "keyValue": "Data!B6",
+            "humanize": false,
+            "chartId": "c7940a9c-bda4"
+          }
+        },
+        {
+          "id": "33067d43-5094",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 1533 },
+          "width": 495,
+          "height": 460,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "1ef5697c-b724": {
+                "type": "geo",
+                "legendPosition": "left",
+                "title": {},
+                "colorScale": { "minColor": "#f7fbff", "midColor": "#6aaed6", "maxColor": "#08306b" },
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "'Top Countries'!A2:A51",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "0", "dataRange": "'Top Countries'!B2:B51" }
+                  ],
+                  "dataSetsHaveTitle": false
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Top Countries",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "1ef5697c-b724", "title": "Map" },
+              {
+                "type": "carouselDataView",
+                "title": "Top",
+                "rangeData": {
+                  "_sheetId": "34e78712-1567",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 1 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "023024b5-76ca",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 505, "y": 1533 },
+          "width": 495,
+          "height": 460,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "39f8b370-f24f": {
+                "type": "treemap",
+                "legendPosition": "left",
+                "title": {},
+                "showValues": true,
+                "showHeaders": false,
+                "showLabels": true,
+                "humanize": true,
+                "dataSource": {
+                  "labelRange": "'Top Languages'!B1:B51",
+                  "type": "range",
+                  "dataSets": [
+                    { "dataSetId": "d4683efa-02b9", "dataRange": "'Top Languages'!A1:A51" }
+                  ],
+                  "dataSetsHaveTitle": false
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Top Languages",
+              "fontSize": 21,
+              "bold": true,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "39f8b370-f24f", "title": "Chart" },
+              {
+                "type": "carouselDataView",
+                "title": "Top",
+                "rangeData": {
+                  "_sheetId": "05a77437-c308",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 1 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "c31d7c8a-93a5",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 123 },
+          "width": 1000,
+          "height": 460,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "1a9cd09d-78cb": {
+                "title": { "text": "" },
+                "legendPosition": "none",
+                "type": "bar",
+                "stacked": false,
+                "axesDesign": {
+                  "x": {
+                    "title": { "text": "Minutes" }
+                  },
+                  "y": {
+                    "title": { "text": "Sessions" }
+                  }
+                },
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "actionXmlId": "im_livechat.im_livechat_report_channel_action",
+                  "metaData": {
+                    "groupBy": ["start_date_minutes"],
+                    "measure": "__count",
+                    "order": null,
+                    "resModel": "im_livechat.report.channel",
+                    "mode": "bar"
+                  },
+                  "searchParams": {
+                    "context": {
+                      "params": {
+                        "action": 188,
+                        "actionStack": [
+                          { "action": 188 }
+                        ]
+                      },
+                      "pivot_measures": ["__count", "time_to_answer", "duration", "rating", "number_of_calls"],
+                      "im_livechat.hide_partner_company": true
+                    },
+                    "domain": [
+                      ["channel_id.livechat_end_dt", "=", false]
+                    ],
+                    "groupBy": ["start_date_minutes"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "text": "Sessions by Minute",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              { "type": "chart", "chartId": "1a9cd09d-78cb" }
+            ],
+            "fieldMatching": {
+              "1a9cd09d-78cb": {
+                "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+                "951c09be-0626": { "chain": "country_id", "type": "many2one" },
+                "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+                "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
+                "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+              }
+            }
+          }
+        },
+        {
+          "id": "da2b04ec-6d05",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 593 },
+          "width": 1000,
+          "height": 460,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {
+              "5ddf8a27-a528": {
+                "title": { "text": "" },
+                "legendPosition": "top",
+                "type": "bar",
+                "stacked": true,
+                "humanize": true,
+                "dataSource": {
+                  "type": "odoo",
+                  "actionXmlId": "im_livechat.im_livechat_agent_history_action",
+                  "metaData": {
+                    "groupBy": ["partner_id"],
+                    "measure": "__count",
+                    "order": null,
+                    "resModel": "im_livechat.channel.member.history",
+                    "mode": "bar"
+                  },
+                  "searchParams": {
+                    "context": {
+                      "pivot_measures": [
+                        "__count",
+                        "response_time_hour",
+                        "session_duration_hour",
+                        "rating",
+                        "call_count"
+                      ],
+                      "im_livechat.hide_partner_company": true
+                    },
+                    "domain": [
+                      ["livechat_member_type", "=", "agent"]
+                    ],
+                    "groupBy": ["partner_id"],
+                    "orderBy": []
+                  }
+                },
+                "dataSetStyles": {}
+              }
+            },
+            "title": {
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B",
+              "text": "Sessions by Agent"
+            },
+            "items": [
+              { "type": "chart", "chartId": "5ddf8a27-a528" }
+            ],
+            "fieldMatching": {
+              "5ddf8a27-a528": {
+                "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+                "951c09be-0626": { "chain": "session_country_id", "type": "many2one" },
+                "fbb1d9f0-d136": { "chain": "channel_id.livechat_lang_id", "type": "many2one" },
+                "731ca145-d193": { "chain": "session_livechat_channel_id", "type": "many2one" },
+                "9dd855bf-83ea": { "chain": "agent_expertise_ids", "type": "many2many" }
+              }
+            }
+          }
+        },
+        {
+          "id": "df6c697a-f409",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 1063 },
+          "width": 1000,
+          "height": 460,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": { "text": "Top Agents", "bold": true, "fontSize": 21, "color": "#01666B" },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "a066c908-3b5f",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 3 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "cf2065e9-d832",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 0, "y": 2003 },
+          "width": 495,
+          "height": 460,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Expertise",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "68c55532-16bd",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 1 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        },
+        {
+          "id": "f60dee47-ccf1",
+          "col": 0,
+          "row": 0,
+          "offset": { "x": 505, "y": 2003 },
+          "width": 495,
+          "height": 460,
+          "tag": "carousel",
+          "data": {
+            "chartDefinitions": {},
+            "title": {
+              "text": "Top Chatbot Answers",
+              "bold": true,
+              "fontSize": 21,
+              "color": "#01666B"
+            },
+            "items": [
+              {
+                "type": "carouselDataView",
+                "rangeData": {
+                  "_sheetId": "657a1983-2145",
+                  "_zone": { "top": 0, "left": 0, "bottom": 50, "right": 1 }
+                }
+              }
+            ],
+            "fieldMatching": {}
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "backgroundColor": "#F9FAFB",
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "16705d67-20c0-466d-ac72-3b955432e0ba",
+      "name": "Data",
+      "colNumber": 65,
+      "rowNumber": 95,
+      "rows": {},
+      "cols": {
+        "0": { "size": 164 },
+        "1": { "size": 110 },
+        "2": { "size": 110 },
+        "3": { "size": 110 },
+        "4": { "size": 110 }
+      },
+      "merges": [],
+      "cells": {
+        "A1": "=_t(\"KPI\")",
+        "A2": "Sum. Ongoing Sessions",
+        "A3": "Sum. Handled by bot",
+        "A4": "Sum. Handled by agent",
+        "A5": "Sum. Escalated",
+        "A6": "Sum. Calls",
+        "A16": "Agents in call",
+        "A17": "=PIVOT.HEADER(4,\"#partner_id\",1)",
+        "A18:A26": {
+          "N": "=|+1",
+          "S": ["="]
+        },
+        "B1": "=_t(\"Current\")",
+        "B2": "=PIVOT.VALUE(13,\"__count:sum\")",
+        "B3": {
+          "N": "=",
+          "S": ["handled_by_bot:sum"]
+        },
+        "B4": {
+          "N": "=",
+          "S": ["handled_by_agent:sum"]
+        },
+        "B5": {
+          "N": "+1",
+          "S": ["__count:count"]
+        },
+        "B6": {
+          "N": "+12",
+          "S": ["__count:count_distinct"]
+        }
+      },
+      "styles": { "F8": 1, "F12": 1 },
+      "formats": { "B6": 1, "B8:C8": 2, "B9:C9": 3, "I15": 3, "C3": 4, "C4": 5 },
+      "borders": {},
+      "conditionalFormats": [],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "comments": {}
+    },
+    {
+      "id": "a066c908-3b5f",
+      "name": "Top Agents",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 95 },
+        "1": { "size": 69 },
+        "2": { "size": 151 },
+        "3": { "size": 34 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(17,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:D1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 6 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "cd29e13c-bd2e",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
+    },
+    {
+      "id": "34e78712-1567",
+      "name": "Top Countries",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 95 },
+        "1": { "size": 69 },
+        "2": { "size": 151 },
+        "3": { "size": 34 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(22,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:D1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 6 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "cd29e13c-bd2e",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
+    },
+    {
+      "id": "05a77437-c308",
+      "name": "Top Languages",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 95 },
+        "1": { "size": 69 },
+        "2": { "size": 151 },
+        "3": { "size": 34 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(25,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:D1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 6 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "cd29e13c-bd2e",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
+    },
+    {
+      "id": "68c55532-16bd",
+      "name": "Top Expertise",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 95 },
+        "1": { "size": 69 },
+        "2": { "size": 151 },
+        "3": { "size": 34 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(28,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:D1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 6 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "cd29e13c-bd2e",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
+    },
+    {
+      "id": "657a1983-2145",
+      "name": "Top Chatbot Answers",
+      "colNumber": 26,
+      "rowNumber": 100,
+      "rows": {
+        "0": { "size": 28 },
+        "1": { "size": 28 },
+        "2": { "size": 28 },
+        "3": { "size": 28 },
+        "4": { "size": 28 },
+        "5": { "size": 28 },
+        "6": { "size": 28 },
+        "7": { "size": 28 },
+        "8": { "size": 28 },
+        "9": { "size": 28 },
+        "10": { "size": 28 },
+        "11": { "size": 28 },
+        "12": { "size": 28 },
+        "13": { "size": 28 },
+        "14": { "size": 28 },
+        "15": { "size": 28 },
+        "16": { "size": 28 },
+        "17": { "size": 28 },
+        "18": { "size": 28 },
+        "19": { "size": 28 },
+        "20": { "size": 28 },
+        "21": { "size": 28 },
+        "22": { "size": 28 },
+        "23": { "size": 28 },
+        "24": { "size": 28 },
+        "25": { "size": 28 },
+        "26": { "size": 28 },
+        "27": { "size": 28 },
+        "28": { "size": 28 },
+        "29": { "size": 28 },
+        "30": { "size": 28 },
+        "31": { "size": 28 },
+        "32": { "size": 28 },
+        "33": { "size": 28 },
+        "34": { "size": 28 },
+        "35": { "size": 28 },
+        "36": { "size": 28 },
+        "37": { "size": 28 },
+        "38": { "size": 28 },
+        "39": { "size": 28 },
+        "40": { "size": 28 },
+        "41": { "size": 28 },
+        "42": { "size": 28 },
+        "43": { "size": 28 },
+        "44": { "size": 28 },
+        "45": { "size": 28 },
+        "46": { "size": 28 },
+        "47": { "size": 28 },
+        "48": { "size": 28 },
+        "49": { "size": 28 },
+        "50": { "size": 28 }
+      },
+      "cols": {
+        "0": { "size": 116 },
+        "1": { "size": 69 },
+        "2": { "size": 151 },
+        "3": { "size": 34 }
+      },
+      "merges": [],
+      "cells": { "A1": "=PIVOT(24,50,FALSE,FALSE)" },
+      "styles": { "A1": 2, "A2:A51": 3, "B4:C51": 3, "B1:D1": 4, "B2:C3": 5 },
+      "formats": { "A2:A13": 6 },
+      "borders": {},
+      "conditionalFormats": [
+        {
+          "id": "cd29e13c-bd2e",
+          "rule": { "type": "DataBarRule", "color": 14609659, "rangeValues": "B2:B51" },
+          "ranges": ["A2:A51"]
+        }
+      ],
+      "dataValidationRules": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "isLocked": false,
+      "panes": { "xSplit": 0, "ySplit": 1 },
+      "headerGroups": {
+        "ROW": [],
+        "COL": []
+      },
+      "defaultStyle": {
+        "colDefault": { "0": 7 },
+        "rowDefault": {},
+        "sheetDefault": 6
+      },
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": { "align": "right" },
+    "2": { "bold": true, "align": "left", "verticalAlign": "top", "fontSize": 11 },
+    "3": { "verticalAlign": "middle" },
+    "4": {
+      "bold": true,
+      "align": "left",
+      "verticalAlign": "top",
+      "fontSize": 11,
+      "textColor": "#434343"
+    },
+    "5": { "verticalAlign": "middle", "textColor": "#434343" },
+    "6": {},
+    "7": { "textColor": "#434343" }
+  },
+  "formats": {
+    "1": "#,##0",
+    "2": "0%",
+    "3": "hhhh:mm:ss",
+    "4": "0 \"sec\"",
+    "5": "0 \"min\"",
+    "6": "@"
+  },
+  "borders": {},
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "4507cb5a-087b": {
+      "type": "ODOO",
+      "model": "im_livechat.report.channel",
+      "name": "Main aggregates",
+      "domain": [
+        ["channel_id.livechat_end_dt", "=", false]
+      ],
+      "context": {},
+      "columns": [],
+      "rows": [],
+      "measures": [
+        { "id": "__count:sum", "fieldName": "__count", "aggregator": "sum" },
+        {
+          "id": "handled_by_bot:sum",
+          "fieldName": "handled_by_bot",
+          "aggregator": "sum"
+        },
+        {
+          "id": "handled_by_agent:sum",
+          "fieldName": "handled_by_agent",
+          "aggregator": "sum"
+        },
+        { "id": "has_call:sum", "fieldName": "has_call", "aggregator": "sum" }
+      ],
+      "formulaId": "13",
+      "fieldMatching": {
+        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "951c09be-0626": { "chain": "country_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+        "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
+        "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+      }
+    },
+    "d9792e42-ac74": {
+      "type": "ODOO",
+      "model": "im_livechat.report.channel",
+      "name": "Session escalated aggregates",
+      "domain": [
+        "&",
+        ["channel_id.livechat_end_dt", "=", false],
+        ["channel_id.livechat_is_escalated", "!=", false]
+      ],
+      "context": {},
+      "columns": [],
+      "rows": [],
+      "measures": [
+        { "id": "__count:count", "fieldName": "__count", "aggregator": "count" }
+      ],
+      "formulaId": "14",
+      "fieldMatching": {
+        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "951c09be-0626": { "chain": "country_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+        "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
+        "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+      }
+    },
+    "a25aec01-9f5b": {
+      "type": "ODOO",
+      "model": "im_livechat.channel.member.history",
+      "name": "Agent",
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count:sum"
+      },
+      "domain": [
+        "&",
+        [
+          "livechat_member_type",
+          "in",
+          ["agent"]
+        ],
+        ["channel_id.livechat_end_dt", "=", false]
+      ],
+      "context": { "im_livechat.hide_partner_company": true },
+      "columns": [],
+      "rows": [
+        { "fieldName": "partner_id" }
+      ],
+      "measures": [
+        {
+          "id": "__count:sum",
+          "fieldName": "__count",
+          "aggregator": "sum",
+          "userDefinedName": "Sessions"
+        },
+        {
+          "id": "response_time_hour:avg",
+          "fieldName": "response_time_hour",
+          "aggregator": "avg",
+          "isHidden": true,
+          "format": "#,##0"
+        },
+        {
+          "id": "Response Time (sec):avg",
+          "fieldName": "Response Time (sec)",
+          "aggregator": "avg",
+          "userDefinedName": "Response Time (sec)",
+          "computedBy": {
+            "sheetId": "93888f05-d66d",
+            "formula": "='response_time_hour:avg' * 3600"
+          },
+          "format": ""
+        },
+        {
+          "id": "Call:sum",
+          "fieldName": "Call",
+          "aggregator": "sum",
+          "userDefinedName": "Call",
+          "computedBy": {
+            "sheetId": "a066c908-3b5f",
+            "formula": "=IF(COUNTIF(Data!$A$17:$A$26, partner_id)>0, \"📞\", \"\")"
+          }
+        }
+      ],
+      "formulaId": "17",
+      "fieldMatching": {
+        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "951c09be-0626": { "chain": "session_country_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "channel_id.livechat_lang_id", "type": "many2one" },
+        "731ca145-d193": { "chain": "session_livechat_channel_id", "type": "many2one" },
+        "9dd855bf-83ea": { "chain": "agent_expertise_ids", "type": "many2many" }
+      }
+    },
+    "3b3e3078-51e6": {
+      "type": "ODOO",
+      "model": "im_livechat.channel.member.history",
+      "name": "Agents in call",
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count:sum"
+      },
+      "domain": [
+        "&",
+        "&",
+        [
+          "livechat_member_type",
+          "in",
+          ["agent"]
+        ],
+        ["channel_id.livechat_end_dt", "=", false],
+        ["partner_id.rtc_session_ids", "!=", false]
+      ],
+      "context": { "im_livechat.hide_partner_company": true },
+      "columns": [],
+      "rows": [
+        { "fieldName": "partner_id" }
+      ],
+      "measures": [
+        { "id": "__count:sum", "fieldName": "__count", "aggregator": "sum" }
+      ],
+      "fieldMatching": {
+        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "951c09be-0626": { "chain": "session_country_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "channel_id.livechat_lang_id", "type": "many2one" },
+        "731ca145-d193": { "chain": "session_livechat_channel_id", "type": "many2one" },
+        "9dd855bf-83ea": { "chain": "agent_expertise_ids", "type": "many2many" }
+      },
+      "formulaId": "4"
+    },
+    "ab4d6b08-4e9f": {
+      "type": "ODOO",
+      "model": "im_livechat.report.channel",
+      "name": "Country",
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count:sum"
+      },
+      "domain": [
+        "&",
+        ["channel_id.livechat_end_dt", "=", false],
+        ["channel_id.country_id", "!=", false]
+      ],
+      "context": {},
+      "columns": [],
+      "rows": [
+        { "fieldName": "country_id" }
+      ],
+      "measures": [
+        {
+          "id": "__count:sum",
+          "fieldName": "__count",
+          "aggregator": "sum",
+          "userDefinedName": "Sessions"
+        }
+      ],
+      "formulaId": "22",
+      "fieldMatching": {
+        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "951c09be-0626": { "chain": "country_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+        "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
+        "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+      }
+    },
+    "ddbd381c-cf18": {
+      "type": "ODOO",
+      "model": "im_livechat.report.channel",
+      "name": "Chatbot Answer",
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count:sum"
+      },
+      "domain": [
+        "&",
+        ["chatbot_answers_path_str", "!=", false],
+        ["channel_id.livechat_end_dt", "=", false]
+      ],
+      "context": {},
+      "columns": [],
+      "rows": [
+        { "fieldName": "chatbot_answers_path" }
+      ],
+      "measures": [
+        {
+          "id": "__count:sum",
+          "fieldName": "__count",
+          "aggregator": "sum",
+          "userDefinedName": "Sessions"
+        }
+      ],
+      "formulaId": "24",
+      "fieldMatching": {
+        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "951c09be-0626": { "chain": "country_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+        "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
+        "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+      }
+    },
+    "1ccc42f7-9956": {
+      "type": "ODOO",
+      "model": "im_livechat.report.channel",
+      "name": "Language",
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count:sum"
+      },
+      "domain": [
+        "&",
+        ["lang_id", "!=", false],
+        ["channel_id.livechat_end_dt", "=", false]
+      ],
+      "context": {},
+      "columns": [],
+      "rows": [
+        { "fieldName": "lang_id" }
+      ],
+      "measures": [
+        {
+          "id": "__count:sum",
+          "fieldName": "__count",
+          "aggregator": "sum",
+          "userDefinedName": "Sessions"
+        }
+      ],
+      "formulaId": "25",
+      "fieldMatching": {
+        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "951c09be-0626": { "chain": "country_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "lang_id", "type": "many2one" },
+        "731ca145-d193": { "chain": "livechat_channel_id", "type": "many2one" },
+        "9dd855bf-83ea": { "chain": "session_expertise_ids", "type": "many2many" }
+      }
+    },
+    "cd02255a-0a88": {
+      "type": "ODOO",
+      "model": "im_livechat.channel.member.history",
+      "name": "Call aggregates",
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count:count_distinct"
+      },
+      "domain": [
+        "&",
+        "&",
+        [
+          "livechat_member_type",
+          "in",
+          ["agent"]
+        ],
+        ["channel_id.livechat_end_dt", "=", false],
+        ["call_history_ids.end_dt", "=", false]
+      ],
+      "context": { "im_livechat.hide_partner_company": true },
+      "columns": [],
+      "rows": [],
+      "measures": [
+        {
+          "id": "__count:count_distinct",
+          "fieldName": "__count",
+          "aggregator": "count_distinct"
+        }
+      ],
+      "fieldMatching": {
+        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "951c09be-0626": { "chain": "session_country_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "channel_id.livechat_lang_id", "type": "many2one" },
+        "731ca145-d193": { "chain": "session_livechat_channel_id", "type": "many2one" },
+        "9dd855bf-83ea": { "chain": "agent_expertise_ids", "type": "many2many" }
+      },
+      "formulaId": "26"
+    },
+    "255be042-8d9f": {
+      "type": "ODOO",
+      "model": "im_livechat.channel.member.history",
+      "name": "Expertise",
+      "sortedColumn": {
+        "domain": [],
+        "order": "desc",
+        "measure": "__count:sum"
+      },
+      "domain": [
+        "&",
+        ["channel_id.livechat_end_dt", "=", false],
+        ["agent_expertise_ids", "!=", false]
+      ],
+      "context": {},
+      "columns": [],
+      "rows": [
+        { "fieldName": "agent_expertise_ids", "order": "asc" }
+      ],
+      "measures": [
+        {
+          "id": "__count:sum",
+          "fieldName": "__count",
+          "aggregator": "sum",
+          "userDefinedName": "Sessions"
+        }
+      ],
+      "formulaId": "28",
+      "fieldMatching": {
+        "7bb2084a-2349": { "chain": "partner_id", "type": "many2one" },
+        "951c09be-0626": { "chain": "session_country_id", "type": "many2one" },
+        "fbb1d9f0-d136": { "chain": "channel_id.livechat_lang_id", "type": "many2one" },
+        "731ca145-d193": { "chain": "session_livechat_channel_id", "type": "many2one" },
+        "9dd855bf-83ea": { "chain": "agent_expertise_ids", "type": "many2many" }
+      }
+    }
+  },
+  "pivotNextId": 29,
+  "customTableStyles": {},
+  "namedRanges": {},
+  "globalFilters": [
+    {
+      "id": "7bb2084a-2349",
+      "label": "Agents",
+      "type": "relation",
+      "modelName": "res.partner",
+      "domainOfAllowedValues": [
+        ["partner_share", "=", false]
+      ],
+      "includeChildren": false
+    },
+    {
+      "id": "951c09be-0626",
+      "label": "Countries",
+      "type": "relation",
+      "modelName": "res.country",
+      "domainOfAllowedValues": [],
+      "includeChildren": false
+    },
+    {
+      "id": "fbb1d9f0-d136",
+      "label": "Languages",
+      "type": "relation",
+      "modelName": "res.lang",
+      "domainOfAllowedValues": [
+        [
+          "active",
+          "in",
+          [true, false]
+        ]
+      ],
+      "includeChildren": false
+    },
+    {
+      "id": "731ca145-d193",
+      "label": "Channels",
+      "type": "relation",
+      "modelName": "im_livechat.channel",
+      "domainOfAllowedValues": [],
+      "includeChildren": false
+    },
+    {
+      "id": "9dd855bf-83ea",
+      "label": "Expertises",
+      "type": "relation",
+      "modelName": "im_livechat.expertise",
+      "domainOfAllowedValues": [],
+      "includeChildren": false
+    }
+  ],
+  "lists": {},
+  "listNextId": 1,
+  "odooLinkReferences": {
+    "71458a01-fefb": {
+      "type": "odooMenu",
+      "odooMenuId": "spreadsheet_dashboard_im_livechat.ongoing_session_all_menu"
+    },
+    "8e6d14e4-4d53": {
+      "type": "odooMenu",
+      "odooMenuId": "spreadsheet_dashboard_im_livechat.ongoing_sessions_handle_by_bot_menu"
+    },
+    "4755f948-8867": {
+      "type": "odooMenu",
+      "odooMenuId": "spreadsheet_dashboard_im_livechat.ongoing_sessions_handle_by_agent_menu"
+    },
+    "8ad7bbd1-793e": {
+      "type": "odooMenu",
+      "odooMenuId": "spreadsheet_dashboard_im_livechat.ongoing_sessions_escalated_menu"
+    },
+    "c7940a9c-bda4": {
+      "type": "odooMenu",
+      "odooMenuId": "spreadsheet_dashboard_im_livechat.ongoing_sessions_agents_in_call_menu"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.ThemeColorsPreviewDialog">
+    <Dialog title.translate="Colors Preview" footer="false" withBodyPadding="false"
+        contentClass="'o_theme_colors_preview_dialog h-100'">
+        <iframe class="d-block h-100 w-100" src="/website/theme_colors_preview"
+            t-on-load="(ev) => this.props.onIframeLoad(ev.target.contentDocument)"/>
+    </Dialog>
+</t>
+
+</templates>

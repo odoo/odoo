@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="base_automation.ActionsOne2ManyField">
+        <div class="d-flex align-items-center" t-ref="this.root">
+            <t t-if="this.currentActions.length === 0">
+                <span class="text-muted">no action defined...</span>
+            </t>
+            <t t-foreach="this.currentActions" t-as="action" t-key="action.id">
+                <div style="min-width: fit-content;" t-att-data-action-id="action.id">
+                    <div class="fs-5 d-flex align-items-center">
+                        <i
+                            data-name="server_action_icon"
+                            class="oi"
+                            t-att-class="{'oi-filled': ['object_create', 'object_write', 'mail_post', 'followers', 'remove_followers', 'webhook'].includes(action.data.state)}"
+                            t-att-data-icon="{
+                                'code': 'code',
+                                'object_create': 'add_box',
+                                'object_copy': 'content_copy',
+                                'object_write': 'edit',
+                                'multi': 'format_list_bulleted',
+                                'mail_post': 'mail',
+                                'followers': 'person',
+                                'remove_followers': 'person_remove',
+                                'next_activity': 'schedule',
+                                'sms': 'smartphone',
+                                'webhook': 'send',
+                                'whatsapp': 'whatsapp',
+                            }[action.data.state] || 'radio_button_unchecked'"
+                        />
+                        <div class="ps-2" t-out="action.data.name" />
+                    </div>
+                </div>
+                <div t-if="!action_last" class="px-3 align-self-center" t-att-data-action-id="action.id">
+                    <i class="oi oi-lg text-primary" data-icon="add"></i>
+                </div>
+            </t>
+            <t t-if="this.hiddenActionsCount">
+                <div class="fs-3 align-self-center text-muted text-nowrap">
+                    <t t-out="this.moreText"/>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

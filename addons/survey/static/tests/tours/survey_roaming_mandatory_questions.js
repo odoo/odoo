@@ -1,0 +1,97 @@
+import { registry } from '@web/core/registry';
+
+registry.category('web_tour.tours').add('test_survey_roaming_mandatory_questions', {
+    steps: () => [{
+        content: 'Click on Start',
+        trigger: 'button.btn:contains("Start")',
+        run: "click",
+    }, {
+        content: 'Skip question Q1',
+        trigger: 'button.btn:contains("Continue")',
+        run: "click",
+    },
+    {
+        trigger: 'div.o_survey_question:contains("Q2")',
+    },
+    {
+        content: 'Skip question Q2',
+        trigger: 'button.btn:contains("Continue")',
+        run: "click",
+    }, {
+        content: 'Check if Q3 button is Submit',
+        trigger: 'button.btn:contains("Submit")',
+    }, {
+        content: 'Go back to Q2',
+        trigger: 'button.o_survey_navigation_submit[value="previous"]',
+        run: "click",
+    }, {
+        content: 'Check if the alert box is present',
+        trigger: 'div.o_survey_question_error span',
+    }, {
+        content: 'Skip question Q2 again',
+        trigger: 'button.btn:contains("Continue")',
+        run: "click",
+    }, {
+        content: 'Answer Q3',
+        trigger: 'div.o_survey_question:contains("Q3") label:contains("Answer 1")',
+        run: "click",
+    }, {
+        content: 'Click on Submit',
+        trigger: 'button.btn:contains("Submit")',
+        run: "click",
+    }, {
+        content: 'Check if question is Q1',
+        trigger: 'div.o_survey_question:contains("Q1")',
+    }, {
+        content: 'Click on "Continue" button',
+        trigger: 'button.btn:contains("Continue")',
+        run: "click",
+    }, {
+        content: 'Check if question is Q2',
+        trigger: 'div.o_survey_question:contains("Q2")',
+    }, {
+        content: 'Click on "Continue" button',
+        trigger: 'button.btn:contains("Continue")',
+        run: "click",
+    }, {
+        content: 'Check if question is Q1 again (should loop on skipped questions)',
+        trigger: 'div.o_survey_question:contains("Q1")',
+    }, {
+        content: 'Answer Q1',
+        trigger: 'div.o_survey_question:contains("Q1") label:contains("Answer 2")',
+        run: "click",
+    }, {
+        content: 'Check if the visible question is the skipped question Q2',
+        trigger: 'div.o_survey_question:contains("Q2")',
+    }, {
+        content: 'Answer Q2',
+        trigger: 'div.o_survey_question:contains("Q2") label:contains("Answer 3")',
+        run: "click",
+    }, {
+        // To check with dev ? Auto continue on radio not working with conditonal questions
+        content: 'Click on Continue',
+        trigger: 'button.btn:contains("Continue")',
+        run: "click",
+    }, {
+        content: 'Check if the visible question is the indirectly skipped mandatory conditional question Q4',
+        trigger: 'div.o_survey_question:contains("Q4")',
+    }, {
+        content: 'Answer Q4',
+        trigger: 'div.o_survey_question:contains("Q4") label:contains("Answer 1")',
+        run: "click",
+    }, {
+        content: 'Check if the visible question is the indirectly skipped non-mandatory conditional question Q5',
+        trigger: 'div.o_survey_question:contains("Q5")',
+    }, {
+        content: 'Answer Q5',
+        trigger: 'div.o_survey_question:contains("Q5") label:contains("Answer 1")',
+        run: "click",
+    }, {
+        content: 'Click on Submit',
+        trigger: 'button.btn:contains("Submit")',
+        run: "click",
+    }, {
+        content: 'Check if the survey is done',
+        trigger: 'div.o_survey_finished p:contains("Thank you!")',
+    }],
+});

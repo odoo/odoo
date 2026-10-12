@@ -1,0 +1,248 @@
+import { expect, test } from "@odoo/hoot";
+import { setInputFiles } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import {
+    clickSave,
+    contains,
+    defineModels,
+    fields,
+    MockServer,
+    mockService,
+    models,
+    mountView,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
+
+class Turtle extends models.Model {
+    picture_ids = fields.Many2many({
+        string: "Pictures",
+        relation: "ir.attachment",
+    });
+    _records = [{ id: 1, picture_ids: [17] }];
+}
+
+class IrAttachment extends models.Model {
+    _name = "ir.attachment";
+    name = fields.Char();
+    mimetype = fields.Char();
+    _records = [{ id: 17, name: "Marley&Me.jpg", mimetype: "jpg" }];
+}
+
+defineModels([Turtle, IrAttachment]);
+
+test("widget many2many_binary", async () => {
+    expect.assertions(17);
+
+    mockService("http", {
+        post(route, { ufile }) {
+            expect(route).toBe("/web/binary/upload_attachment");
+            expect(ufile[0].name).toBe("fake_file.tiff", {
+                message: "file is correctly uploaded to the server",
+            });
+            const ids = MockServer.env["ir.attachment"].create(
+                ufile.map(({ name }) => ({ name, mimetype: "text/plain" }))
+            );
+            return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
+        },
+    });
+
+    IrAttachment._views.list = '<list string="Pictures"><field name="name"/></list>';
+    onRpc((args) => {
+        if (args.method !== "get_views") {
+            expect.step(args.route);
+        }
+        if (args.method === "web_read" && args.model === "turtle") {
+            expect(args.kwargs.specification).toEqual({
+                display_name: {},
+                picture_ids: {
+                    fields: {
+                        mimetype: {},
+                        name: {},
+                    },
+                },
+            });
+        }
+        if (args.method === "web_save" && args.model === "turtle") {
+            expect(args.kwargs.specification).toEqual({
+                display_name: {},
+                picture_ids: {
+                    fields: {
+                        mimetype: {},
+                        name: {},
+                    },
+                },
+            });
+        }
+        if (args.method === "web_read" && args.model === "ir.attachment") {
+            expect(args.kwargs.specification).toEqual({
+                mimetype: {},
+                name: {},
+            });
+        }
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "turtle",
+        arch: `
+            <form>
+                <group>
+                    <field name="picture_ids" widget="many2many_binary" options="{'accepted_file_extensions': 'image/*'}"/>
+                </group>
+            </form>`,
+        resId: 1,
+    });
+
+    expect("div.o_field_widget .oe_fileupload").toHaveCount(1);
+    expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
+    expect("div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete").toHaveCount(1);
+    expect("div.o_field_widget .oe_fileupload .o_attach").toHaveCount(1);
+    expect("div.o_field_widget .oe_fileupload .o_attach").toHaveText("Pictures");
+
+    expect("input.o_input_file").toHaveAttribute("accept", "image/*");
+    expect.verifySteps(["/web/dataset/call_kw/turtle/web_read"]);
+
+    // Set and trigger the change of a file for the input
+    await contains(".o_file_input_trigger").click();
+    await setInputFiles(new File(["fake_file"], "fake_file.tiff", { type: "text/plain" }));
+    await animationFrame();
+
+    expect(".o_attachment:nth-child(2) .caption a:eq(0)").toHaveText("fake_file.tiff", {
+        message: 'value of attachment should be "fake_file.tiff"',
+    });
+    expect(".o_attachment:nth-child(2) .caption.small a").toHaveText("TIFF", {
+        message: "file extension should be correct",
+    });
+    expect(".o_attachment:nth-child(2) .o_image.o_hover").toHaveAttribute(
+        "data-mimetype",
+        "text/plain",
+        { message: "preview displays the right mimetype" }
+    );
+
+    // delete the attachment
+    await contains("div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete").click();
+
+    await clickSave();
+    expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
+    expect.verifySteps([
+        "/web/dataset/call_kw/ir.attachment/web_read",
+        "/web/dataset/call_kw/turtle/web_save",
+    ]);
+});
+
+test("widget many2many_binary displays notification on error", async () => {
+    expect.assertions(11);
+
+    mockService("http", {
+        post(route, { ufile }) {
+            expect(route).toBe("/web/binary/upload_attachment");
+            expect([ufile[0].name, ufile[1].name]).toEqual(["good_file.txt", "bad_file.txt"], {
+                message: "files are correctly sent to the server",
+            });
+            const ids = MockServer.env["ir.attachment"].create({
+                name: ufile[0].name,
+                mimetype: "text/plain",
+            });
+            return JSON.stringify([
+                ...MockServer.env["ir.attachment"].read(ids),
+                {
+                    name: ufile[1].name,
+                    mimetype: "text/plain",
+                    error: `Error on file: ${ufile[1].name}`,
+                },
+            ]);
+        },
+    });
+
+    IrAttachment._views.list = '<list string="Pictures"><field name="name"/></list>';
+
+    await mountView({
+        type: "form",
+        resModel: "turtle",
+        arch: `
+            <form>
+                <group>
+                    <field name="picture_ids" widget="many2many_binary" options="{'accepted_file_extensions': 'image/*'}"/>
+                </group>
+            </form>`,
+        resId: 1,
+    });
+
+    expect("div.o_field_widget .oe_fileupload").toHaveCount(1);
+    expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
+    expect("div.o_field_widget .oe_fileupload .o_attach").toHaveCount(1);
+    expect("div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete").toHaveCount(1);
+
+    // Set and trigger the import of 2 files in the input
+    await contains(".o_file_input_trigger").click();
+    await setInputFiles([
+        new File(["good_file"], "good_file.txt", { type: "text/plain" }),
+        new File(["bad_file"], "bad_file.txt", { type: "text/plain" }),
+    ]);
+    await animationFrame();
+
+    expect(".o_attachment:nth-child(2) .caption a:eq(0)").toHaveText("good_file.txt", {
+        message: 'value of attachment should be "good_file.txt"',
+    });
+    expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
+    expect(".o_notification").toHaveCount(1);
+    expect(".o_notification_content").toHaveText("Uploading error. Error on file: bad_file.txt");
+    expect(".o_notification_bar").toHaveClass("bg-danger");
+});
+
+test("widget many2many_binary image MIME type preview", async () => {
+    expect.assertions(9);
+
+    const IMAGE_B64 =
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
+    const imageData = Uint8Array.from([...atob(IMAGE_B64)].map((c) => c.charCodeAt(0)));
+
+    mockService("http", {
+        post(route, { ufile }) {
+            expect(route).toBe("/web/binary/upload_attachment");
+            expect(ufile[0].name).toBe("fake_image.png", {
+                message: "file is correctly uploaded to the server",
+            });
+            const ids = MockServer.env["ir.attachment"].create(
+                ufile.map(({ name }) => ({ name, mimetype: "image/png" }))
+            );
+            return JSON.stringify(MockServer.env["ir.attachment"].read(ids));
+        },
+    });
+
+    IrAttachment._views.list = '<list string="Pictures"><field name="name"/></list>';
+
+    await mountView({
+        type: "form",
+        resModel: "turtle",
+        arch: `
+            <form>
+                <group>
+                    <field name="picture_ids" widget="many2many_binary" options="{'accepted_file_extensions': 'image/*'}"/>
+                </group>
+            </form>`,
+        resId: 1,
+    });
+
+    expect("div.o_field_widget .oe_fileupload").toHaveCount(1);
+    expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
+    expect("div.o_field_widget .oe_fileupload .o_attach").toHaveCount(1);
+    expect("div.o_field_widget .oe_fileupload .o_attachment .o_attachment_delete").toHaveCount(1);
+
+    // Set and trigger the import of a png image in the input
+    await contains(".o_file_input_trigger").click();
+    await setInputFiles(new File([imageData], "fake_image.png", { type: "image/png" }));
+    await animationFrame();
+
+    expect(".o_attachment:nth-child(2) .caption a:eq(0)").toHaveText("fake_image.png", {
+        message: 'value of attachment should be "fake_image.png"',
+    });
+    expect(".o_attachment:nth-child(2) .caption.small a").toHaveText("PNG", {
+        message: "file extension should be correct",
+    });
+    expect(".o_attachment:nth-child(2) .o_preview_image.o_hover").toHaveAttribute(
+        "src",
+        `data:image/png;base64,${IMAGE_B64}`,
+        { message: "preview should display the image preview" }
+    );
+});

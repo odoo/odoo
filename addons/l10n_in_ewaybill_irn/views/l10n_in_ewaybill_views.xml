@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_in_ewaybill_irn_inherit" model="ir.ui.view">
+        <field name="name">l10n.in.ewaybill.irn.form.inherit</field>
+        <field name="model">l10n.in.ewaybill</field>
+        <field name="inherit_id" ref="l10n_in_ewaybill.l10n_in_ewaybill_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='document_details']" position="attributes">
+                <attribute name="invisible">state == 'pending' and is_process_through_irn or is_sent_through_irn</attribute>
+            </xpath>
+            <xpath expr="//field[@name='type_id']" position="attributes">
+                <attribute name="required">(
+                        (state == 'pending' and not is_process_through_irn) or
+                        (state != 'pending' and not is_sent_through_irn)
+                    )
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

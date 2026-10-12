@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="web.WithSearch">
+    <t t-call-slot="default"
+      context="this.searchModel.context"
+      domain="this.searchModel.domain"
+      groupBy="this.searchModel.groupBy"
+      orderBy="this.searchModel.orderBy"
+      display="this.searchModel.display"/>
+  </t>
+
+</templates>

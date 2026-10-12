@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="company_address_list" inherit_id="web.company_address_list">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <li t-if="company.l10n_sg_unique_entity_number and company.country_code == 'SG'">
+                UEN No.: <span t-out="company.l10n_sg_unique_entity_number"/>
+            </li>
+        </xpath>
+    </template>
+</odoo>

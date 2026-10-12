@@ -1,0 +1,1755 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="l10n_lu_tax_report_section_2" model="account.report">
+        <field name="name">Section II</field>
+        <field name="name@fr">Section II</field>
+        <field name="name@de">Abschnitt II</field>
+        <field name="name@lb">Abschnitt II</field>
+        <field name="sequence">2</field>
+        <field name="country_id" ref="base.lu"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_section_2_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@fr">Solde</field>
+                <field name="name@de">Saldo</field>
+                <field name="name@lb">Sold</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_lu_tax_report_assessment_tax_due" model="account.report.line">
+                <field name="name">II. ASSESSMENT OF TAX DUE</field>
+                <field name="name@fr">II. ÉVALUATION DE LA TAXE DUE</field>
+                <field name="name@de">II. FESTSETZUNG DER GESCHULDETEN STEUER</field>
+                <field name="name@lb">II. ASSESSMENT VUN STEIER DUE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_2a_breakdown_taxable_turnover_base" model="account.report.line">
+                        <field name="name">037 - Breakdown of taxable turnover – base</field>
+                        <field name="name@fr">037 - Chiffre d'affaires imposable – base</field>
+                        <field name="name@de">037 - Steuerpflichtiger Umsatz: Aufteilung - Besteuerungsgrundlage</field>
+                        <field name="name@lb">037 - Ënnerdeelung vum besteierbaren Ëmsaz - Basis</field>
+                        <field name="code">LUTAX_037</field>
+                        <field name="aggregation_formula">LUTAX_031.balance + LUTAX_033.balance + LUTAX_701.balance + LUTAX_703.balance + LUTAX_705.balance + LUTAX_901.balance + LUTAX_903.balance + LUTAX_905.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2a_base_17" model="account.report.line">
+                                <field name="name">701 - base 17%</field>
+                                <field name="name@fr">701 - base 17%</field>
+                                <field name="name@de">701 - Besteuerungsgrundlage 17%</field>
+                                <field name="name@lb">701 - Basis 17%</field>
+                                <field name="code">LUTAX_701</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-701</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_16" model="account.report.line">
+                                <field name="name">901 - base 16%</field>
+                                <field name="name@fr">901 - base 16%</field>
+                                <field name="name@de">901 - Besteuerungsgrundlage 16%</field>
+                                <field name="name@lb">901 - Basis 16%</field>
+                                <field name="code">LUTAX_901</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-901</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_14" model="account.report.line">
+                                <field name="name">703 - base 14%</field>
+                                <field name="name@fr">703 - base 14%</field>
+                                <field name="name@de">703 - Besteuerungsgrundlage 14%</field>
+                                <field name="name@lb">703 - Basis 14%</field>
+                                <field name="code">LUTAX_703</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-703</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_13" model="account.report.line">
+                                <field name="name">903 - base 13%</field>
+                                <field name="name@fr">903 - base 13%</field>
+                                <field name="name@de">903 - Besteuerungsgrundlage 13%</field>
+                                <field name="name@lb">903 - Basis 13%</field>
+                                <field name="code">LUTAX_903</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-903</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_8" model="account.report.line">
+                                <field name="name">705 - base 8%</field>
+                                <field name="name@fr">705 - base 8%</field>
+                                <field name="name@de">705 - Besteuerungsgrundlage 8%</field>
+                                <field name="name@lb">705 - Basis 8%</field>
+                                <field name="code">LUTAX_705</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-705</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_7" model="account.report.line">
+                                <field name="name">905 - base 7%</field>
+                                <field name="name@fr">905 - base 7%</field>
+                                <field name="name@de">905 - Besteuerungsgrundlage 7%</field>
+                                <field name="name@lb">905 - Basis 7%</field>
+                                <field name="code">LUTAX_905</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-905</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_3" model="account.report.line">
+                                <field name="name">031 - base 3%</field>
+                                <field name="name@fr">031 - base 3%</field>
+                                <field name="name@de">031 - Besteuerungsgrundlage 3%</field>
+                                <field name="name@lb">031 - Basis 3%</field>
+                                <field name="code">LUTAX_031</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-031</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_base_0" model="account.report.line">
+                                <field name="name">033 - base 0%</field>
+                                <field name="name@fr">033 - base 0%</field>
+                                <field name="name@de">033 - Besteuerungsgrundlage 0%</field>
+                                <field name="name@lb">033 - Basis 0%</field>
+                                <field name="code">LUTAX_033</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_base_0_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-033</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2a_breakdown_taxable_turnover_tax" model="account.report.line">
+                        <field name="name">046 - Breakdown of taxable turnover – tax</field>
+                        <field name="name@fr">046 - Chiffre d'affaires imposable – taxe</field>
+                        <field name="name@de">046 - Steuerpflichtiger Umsatz: Aufteilung - MwSt.</field>
+                        <field name="name@lb">046 - Ënnerdeelung vun besteierbaren Ëmsaz - Steier</field>
+                        <field name="code">LUTAX_046</field>
+                        <field name="aggregation_formula">LUTAX_040.balance + LUTAX_702.balance + LUTAX_704.balance + LUTAX_706.balance + LUTAX_902.balance + LUTAX_904.balance + LUTAX_906.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2a_tax_17" model="account.report.line">
+                                <field name="name">702 - tax 17%</field>
+                                <field name="name@fr">702 - taxe 17%</field>
+                                <field name="name@de">702 - MwSt. 17%</field>
+                                <field name="name@lb">702 - Steier 17%</field>
+                                <field name="code">LUTAX_702</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-702</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_16" model="account.report.line">
+                                <field name="name">902 - tax 16%</field>
+                                <field name="name@fr">902 - taxe 16%</field>
+                                <field name="name@de">902 - MwSt. 16%</field>
+                                <field name="name@lb">902 - Steier 16%</field>
+                                <field name="code">LUTAX_902</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-902</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_14" model="account.report.line">
+                                <field name="name">704 - tax 14%</field>
+                                <field name="name@fr">704 - taxe 14%</field>
+                                <field name="name@de">704 - MwSt. 14%</field>
+                                <field name="name@lb">704 - Steier 14%</field>
+                                <field name="code">LUTAX_704</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-704</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_13" model="account.report.line">
+                                <field name="name">904 - tax 13%</field>
+                                <field name="name@fr">904 - taxe 13%</field>
+                                <field name="name@de">904 - MwSt. 13%</field>
+                                <field name="name@lb">904 - Steier 13%</field>
+                                <field name="code">LUTAX_904</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-904</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_8" model="account.report.line">
+                                <field name="name">706 - tax 8%</field>
+                                <field name="name@fr">706 - taxe 8%</field>
+                                <field name="name@de">706 - MwSt. 8%</field>
+                                <field name="name@lb">706 - Steier 8%</field>
+                                <field name="code">LUTAX_706</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-706</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_7" model="account.report.line">
+                                <field name="name">906 - tax 7%</field>
+                                <field name="name@fr">906 - taxe 7%</field>
+                                <field name="name@de">906 - MwSt. 7%</field>
+                                <field name="name@lb">906 - Steier 7%</field>
+                                <field name="code">LUTAX_906</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-906</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2a_tax_3" model="account.report.line">
+                                <field name="name">040 - tax 3%</field>
+                                <field name="name@fr">040 - taxe 3%</field>
+                                <field name="name@de">040 - MwSt. 3%</field>
+                                <field name="name@lb">040 - Steier 3%</field>
+                                <field name="code">LUTAX_040</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2a_tax_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-040</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2b_intra_community_acqui_of_goods_base" model="account.report.line">
+                        <field name="name">051 - Intra-Community acquisitions of goods – base</field>
+                        <field name="name@fr">051 - Acquisitions intracommunautaires de biens - base</field>
+                        <field name="name@de">051 - Innergemeinschaftliche Erwerbe von Gegenständen - Besteuerungsgrundlage</field>
+                        <field name="name@lb">051 - Intra-Communautéit Acquisitioun vu Wueren - Basis</field>
+                        <field name="code">LUTAX_051</field>
+                        <field name="aggregation_formula">LUTAX_049.balance + LUTAX_194.balance + LUTAX_711.balance + LUTAX_713.balance + LUTAX_715.balance + LUTAX_719.balance + LUTAX_911.balance + LUTAX_913.balance + LUTAX_915.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2b_base_17" model="account.report.line">
+                                <field name="name">711 - base 17%</field>
+                                <field name="name@fr">711 - base 17%</field>
+                                <field name="name@de">711 - Besteuerungsgrundlage 17%</field>
+                                <field name="name@lb">711 - Basis 17%</field>
+                                <field name="code">LUTAX_711</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_base_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">711</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_base_16" model="account.report.line">
+                                <field name="name">911 - base 16%</field>
+                                <field name="name@fr">911 - base 16%</field>
+                                <field name="name@de">911 - Besteuerungsgrundlage 16%</field>
+                                <field name="name@lb">911 - Basis 16%</field>
+                                <field name="code">LUTAX_911</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_base_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">911</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_base_14" model="account.report.line">
+                                <field name="name">713 - base 14%</field>
+                                <field name="name@fr">713 - base 14%</field>
+                                <field name="name@de">713 - Besteuerungsgrundlage 14%</field>
+                                <field name="name@lb">713 - Basis 14%</field>
+                                <field name="code">LUTAX_713</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_base_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">713</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_base_13" model="account.report.line">
+                                <field name="name">913 - base 13%</field>
+                                <field name="name@fr">913 - base 13%</field>
+                                <field name="name@de">913 - Besteuerungsgrundlage 13%</field>
+                                <field name="name@lb">913 - Basis 13%</field>
+                                <field name="code">LUTAX_913</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_base_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">913</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_base_8" model="account.report.line">
+                                <field name="name">715 - base 8%</field>
+                                <field name="name@fr">715 - base 8%</field>
+                                <field name="name@de">715 - Besteuerungsgrundlage 8%</field>
+                                <field name="name@lb">715 - Basis 8%</field>
+                                <field name="code">LUTAX_715</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_base_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">715</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_base_7" model="account.report.line">
+                                <field name="name">915 - base 7%</field>
+                                <field name="name@fr">915 - base 7%</field>
+                                <field name="name@de">915 - Besteuerungsgrundlage 7%</field>
+                                <field name="name@lb">915 - Basis 7%</field>
+                                <field name="code">LUTAX_915</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_base_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">915</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_base_3" model="account.report.line">
+                                <field name="name">049 - base 3%</field>
+                                <field name="name@fr">049 - base 3%</field>
+                                <field name="name@de">049 - Besteuerungsgrundlage 3%</field>
+                                <field name="name@lb">049 - Basis 3%</field>
+                                <field name="code">LUTAX_049</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_base_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">049</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_base_exempt" model="account.report.line">
+                                <field name="name">194 - base exempt</field>
+                                <field name="name@fr">194 - base exonérée</field>
+                                <field name="name@de">194 - Besteuerungsgrundlage steuerbefreit</field>
+                                <field name="name@lb">194 - Basis befreit</field>
+                                <field name="code">LUTAX_194</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_base_exempt_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">194</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_manufactured_tobacco" model="account.report.line">
+                                <field name="name">719 - of manufactured tobacco (VAT is collected at the exit of the tax warehouse with excise duties)</field>
+                                <field name="name@fr">719 - de tabacs fabriqués dont la TVA est perçue à la sortie de l'entrepôt fiscal conjointement avec les accises</field>
+                                <field name="name@de">719 - von Tabakwaren, deren Mehrwertsteuer am Ausgang des Steuerlagers gemeinsam mit den Verbrauchsteuern erhoben wird</field>
+                                <field name="name@lb">719 - vun hiergestallten Tubak (TVA gëtt um Sortie vum Steierlager mat Akzisen gesammelt)</field>
+                                <field name="code">LUTAX_719</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_manufactured_tobacco_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">719</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2b_intra_community_acquisitions_goods_tax" model="account.report.line">
+                        <field name="name">056 - Intra-Community acquisitions of goods – tax</field>
+                        <field name="name@fr">056 - Acquisitions intracommunautaires de biens - taxe</field>
+                        <field name="name@de">056 - Innergemeinschaftliche Erwerbe von Gegenständen - MwSt.</field>
+                        <field name="name@lb">056 - Intra-Communautéit Acquisitioun vu Wueren - Steier</field>
+                        <field name="code">LUTAX_056</field>
+                        <field name="aggregation_formula">LUTAX_054.balance + LUTAX_712.balance + LUTAX_714.balance + LUTAX_716.balance + LUTAX_912.balance + LUTAX_914.balance + LUTAX_916.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2b_tax_17" model="account.report.line">
+                                <field name="name">712 - tax 17%</field>
+                                <field name="name@fr">712 - taxe 17%</field>
+                                <field name="name@de">712 - MwSt. 17%</field>
+                                <field name="name@lb">712 - Steier 17%</field>
+                                <field name="code">LUTAX_712</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-712</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_16" model="account.report.line">
+                                <field name="name">912 - tax 16%</field>
+                                <field name="name@fr">912 - taxe 16%</field>
+                                <field name="name@de">912 - MwSt. 16%</field>
+                                <field name="name@lb">912 - Steier 16%</field>
+                                <field name="code">LUTAX_912</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-912</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_14" model="account.report.line">
+                                <field name="name">714 - tax 14%</field>
+                                <field name="name@fr">714 - taxe 14%</field>
+                                <field name="name@de">714 - MwSt. 14%</field>
+                                <field name="name@lb">714 - Steier 14%</field>
+                                <field name="code">LUTAX_714</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-714</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_13" model="account.report.line">
+                                <field name="name">914 - tax 13%</field>
+                                <field name="name@fr">914 - taxe 13%</field>
+                                <field name="name@de">914 - MwSt. 13%</field>
+                                <field name="name@lb">914 - Steier 13%</field>
+                                <field name="code">LUTAX_914</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-914</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_8" model="account.report.line">
+                                <field name="name">716 - tax 8%</field>
+                                <field name="name@fr">716 - taxe 8%</field>
+                                <field name="name@de">716 - MwSt. 8%</field>
+                                <field name="name@lb">716 - Steier 8%</field>
+                                <field name="code">LUTAX_716</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-716</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_7" model="account.report.line">
+                                <field name="name">916 - tax 7%</field>
+                                <field name="name@fr">916 - taxe 7%</field>
+                                <field name="name@de">916 - MwSt. 7%</field>
+                                <field name="name@lb">916 - Steier 7%</field>
+                                <field name="code">LUTAX_916</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-916</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2b_tax_3" model="account.report.line">
+                                <field name="name">054 - tax 3%</field>
+                                <field name="name@fr">054 - taxe 3%</field>
+                                <field name="name@de">054 - MwSt. 3%</field>
+                                <field name="name@lb">054 - Steier 3%</field>
+                                <field name="code">LUTAX_054</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2b_tax_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-054</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2c_acquisitions_triangular_transactions_base" model="account.report.line">
+                        <field name="name">152 - Acquisitions, in the context of triangular transactions – base</field>
+                        <field name="name@fr">152 - Acquisitions triangulaires – base</field>
+                        <field name="name@de">152 - Im Rahmen von Dreiecksgeschäften getätigte Erwerbe - Besteuerungsgrundlage</field>
+                        <field name="name@lb">152 - Acquisitioune, am Kontext vun dräieckeger Transaktiounen - Basis</field>
+                        <field name="code">LUTAX_152</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_2c_acquisitions_triangular_transactions_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">152</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2d_importation_of_goods_base" model="account.report.line">
+                        <field name="name">065 - Importation of goods – base</field>
+                        <field name="name@fr">065 - Importations de biens - base</field>
+                        <field name="name@de">065 - Einfuhren von Gegenständen - Besteuerungsgrundlage</field>
+                        <field name="name@lb">065 - Import vu Wueren - Basis</field>
+                        <field name="code">LUTAX_065</field>
+                        <field name="aggregation_formula">LUTAX_196.balance + LUTAX_721.balance + LUTAX_723.balance + LUTAX_725.balance + LUTAX_731.balance + LUTAX_733.balance + LUTAX_735.balance + LUTAX_059.balance + LUTAX_063.balance + LUTAX_195.balance + LUTAX_729.balance + LUTAX_921.balance + LUTAX_923.balance + LUTAX_925.balance + LUTAX_931.balance + LUTAX_933.balance + LUTAX_935.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2d_1_base_17" model="account.report.line">
+                                <field name="name">721 - for business purposes: base 17%</field>
+                                <field name="name@fr">721 - à des fins de l'entreprise: base 17%</field>
+                                <field name="name@de">721 - für Zwecke des Unternehmens: Besteuerungsgrundlage 17%</field>
+                                <field name="name@lb">721 - fir Geschäftszwecker: Basis 17%</field>
+                                <field name="code">LUTAX_721</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_base_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">721</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_base_16" model="account.report.line">
+                                <field name="name">921 - for business purposes: base 16%</field>
+                                <field name="name@fr">921 - à des fins de l'entreprise: base 16%</field>
+                                <field name="name@de">921 - für Zwecke des Unternehmens: Besteuerungsgrundlage 16%</field>
+                                <field name="name@lb">921 - fir Geschäftszwecker: Basis 16%</field>
+                                <field name="code">LUTAX_921</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_base_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">921</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_base_14" model="account.report.line">
+                                <field name="name">723 - for business purposes: base 14%</field>
+                                <field name="name@fr">723 - à des fins de l'entreprise: base 14%</field>
+                                <field name="name@de">723 - für Zwecke des Unternehmens: Besteuerungsgrundlage 14%</field>
+                                <field name="name@lb">723 - fir Geschäftszwecker: Basis 14%</field>
+                                <field name="code">LUTAX_723</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_base_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">723</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_base_13" model="account.report.line">
+                                <field name="name">923 - for business purposes: base 13%</field>
+                                <field name="name@fr">923 - à des fins de l'entreprise: base 13%</field>
+                                <field name="name@de">923 - für Zwecke des Unternehmens: Besteuerungsgrundlage 13%</field>
+                                <field name="name@lb">923 - fir Geschäftszwecker: Basis 13%</field>
+                                <field name="code">LUTAX_923</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_base_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">923</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_base_8" model="account.report.line">
+                                <field name="name">725 - for business purposes: base 8%</field>
+                                <field name="name@fr">725 - à des fins de l'entreprise: base 8%</field>
+                                <field name="name@de">725 - für Zwecke des Unternehmens: Besteuerungsgrundlage 8%</field>
+                                <field name="name@lb">725 - fir Geschäftszwecker: Basis 8%</field>
+                                <field name="code">LUTAX_725</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_base_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">725</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_base_7" model="account.report.line">
+                                <field name="name">925 - for business purposes: base 7%</field>
+                                <field name="name@fr">925 - à des fins de l'entreprise: base 7%</field>
+                                <field name="name@de">925 - für Zwecke des Unternehmens: Besteuerungsgrundlage 7%</field>
+                                <field name="name@lb">925 - fir Geschäftszwecker: Basis 7%</field>
+                                <field name="code">LUTAX_925</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_base_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">925</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_base_3" model="account.report.line">
+                                <field name="name">059 - for business purposes: base 3%</field>
+                                <field name="name@fr">059 - à des fins de l'entreprise: base 3%</field>
+                                <field name="name@de">059 - für Zwecke des Unternehmens: Besteuerungsgrundlage 3%</field>
+                                <field name="name@lb">059 - fir Geschäftszwecker: Basis 3%</field>
+                                <field name="code">LUTAX_059</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_base_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">059</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_base_exempt" model="account.report.line">
+                                <field name="name">195 - for business purposes: base exempt</field>
+                                <field name="name@fr">195 - à des fins de l'entreprise: base exonérée</field>
+                                <field name="name@de">195 - für Zwecke des Unternehmens: Besteuerungsgrundlage steuerbefreit</field>
+                                <field name="name@lb">195 - fir Geschäftszwecker: Basis befreit</field>
+                                <field name="code">LUTAX_195</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_base_exempt_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">195</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_manufactured_tobacco" model="account.report.line">
+                                <field name="name">729 - of manufactured tobacco (VAT is collected at the exit of the tax warehouse with excise duties)</field>
+                                <field name="name@fr">729 - de tabacs fabriqués dont la TVA est perçue à la sortie de l'entrepôt fiscal conjointement avec les accises</field>
+                                <field name="name@de">729 - von Tabakwaren, deren Mehrwertsteuer am Ausgang des Steuerlagers gemeinsam mit den Verbrauchsteuern erhoben wird</field>
+                                <field name="name@lb">729 - vun hiergestallten Tubak (TVA gëtt bei der Sortie vum Steierlager mat Akzisen gesammelt)</field>
+                                <field name="code">LUTAX_729</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_manufactured_tobacco_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">729</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_base_17" model="account.report.line">
+                                <field name="name">731 - for non-business purposes: base 17%</field>
+                                <field name="name@fr">731 - à des fins étrangères à l'entreprise: base 17%</field>
+                                <field name="name@de">731 - für unternehmensfremde Zwecke: Besteuerungsgrundlage 17%</field>
+                                <field name="name@lb">731 - fir net-geschäftlech Zwecker: Basis 17%</field>
+                                <field name="code">LUTAX_731</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_base_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">731</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_base_16" model="account.report.line">
+                                <field name="name">931 - for non-business purposes: base 16%</field>
+                                <field name="name@fr">931 - à des fins étrangères à l'entreprise: base 16%</field>
+                                <field name="name@de">931 - für unternehmensfremde Zwecke: Besteuerungsgrundlage 16%</field>
+                                <field name="name@lb">931 - fir net-geschäftlech Zwecker: Basis 16%</field>
+                                <field name="code">LUTAX_931</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_base_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">931</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_base_14" model="account.report.line">
+                                <field name="name">733 - for non-business purposes: base 14%</field>
+                                <field name="name@fr">733 - à des fins étrangères à l'entreprise: base 14%</field>
+                                <field name="name@de">733 - für unternehmensfremde Zwecke: Besteuerungsgrundlage 14%</field>
+                                <field name="name@lb">733 - fir net-geschäftlech Zwecker: Basis 14%</field>
+                                <field name="code">LUTAX_733</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_base_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">733</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_base_13" model="account.report.line">
+                                <field name="name">933 - for non-business purposes: base 13%</field>
+                                <field name="name@fr">933 - à des fins étrangères à l'entreprise: base 13%</field>
+                                <field name="name@de">933 - für unternehmensfremde Zwecke: Besteuerungsgrundlage 13%</field>
+                                <field name="name@lb">933 - fir net-geschäftlech Zwecker: Basis 13%</field>
+                                <field name="code">LUTAX_933</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_base_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">933</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_base_8" model="account.report.line">
+                                <field name="name">735 - for non-business purposes: base 8%</field>
+                                <field name="name@fr">735 - à des fins étrangères à l'entreprise: base 8%</field>
+                                <field name="name@de">735 - für unternehmensfremde Zwecke: Besteuerungsgrundlage 8%</field>
+                                <field name="name@lb">735 - fir net-geschäftlech Zwecker: Basis 8%</field>
+                                <field name="code">LUTAX_735</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_base_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">735</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_base_7" model="account.report.line">
+                                <field name="name">935 - for non-business purposes: base 7%</field>
+                                <field name="name@fr">935 - à des fins étrangères à l'entreprise: base 7%</field>
+                                <field name="name@de">935 - für unternehmensfremde Zwecke: Besteuerungsgrundlage 7%</field>
+                                <field name="name@lb">935 - fir net-geschäftlech Zwecker: Basis 7%</field>
+                                <field name="code">LUTAX_935</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_base_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">935</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_base_3" model="account.report.line">
+                                <field name="name">063 - for non-business purposes: base 3%</field>
+                                <field name="name@fr">063 - à des fins étrangères à l'entreprise: base 3%</field>
+                                <field name="name@de">063 - für unternehmensfremde Zwecke: Besteuerungsgrundlage 3%</field>
+                                <field name="name@lb">063 - fir net-geschäftlech Zwecker: Basis 3%</field>
+                                <field name="code">LUTAX_063</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_base_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">063</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_base_exempt" model="account.report.line">
+                                <field name="name">196 - for non-business purposes: base exempt</field>
+                                <field name="name@fr">196 - à des fins étrangères à l'entreprise: base exonérée</field>
+                                <field name="name@de">196 - für unternehmensfremde Zwecke: Besteuerungsgrundlage steuerbefreit</field>
+                                <field name="name@lb">196 - fir net-Geschäftszwecker: Basis befreit</field>
+                                <field name="code">LUTAX_196</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_base_exempt_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">196</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2d_importation_of_goods_tax" model="account.report.line">
+                        <field name="name">407 - Importation of goods – tax</field>
+                        <field name="name@fr">407 - Importations de biens - taxe</field>
+                        <field name="name@de">407 - Einfuhren von Gegenständen - MwSt.</field>
+                        <field name="name@lb">407 - Import vu Wueren - Steier</field>
+                        <field name="code">LUTAX_407</field>
+                        <field name="aggregation_formula">LUTAX_724.balance + LUTAX_726.balance + LUTAX_732.balance + LUTAX_734.balance + LUTAX_736.balance + LUTAX_068.balance + LUTAX_073.balance + LUTAX_722.balance + LUTAX_922.balance + LUTAX_924.balance + LUTAX_926.balance + LUTAX_932.balance + LUTAX_934.balance + LUTAX_936.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2d_1_tax_17" model="account.report.line">
+                                <field name="name">722 - for business purposes: tax 17%</field>
+                                <field name="name@fr">722 - à des fins de l'entreprise: taxe 17%</field>
+                                <field name="name@de">722 - für Zwecke des Unternehmens: MwSt. 17%</field>
+                                <field name="name@lb">722 - fir Geschäftszwecker: Steier 17%</field>
+                                <field name="code">LUTAX_722</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-722</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_16" model="account.report.line">
+                                <field name="name">922 - for business purposes: tax 16%</field>
+                                <field name="name@fr">922 - à des fins de l'entreprise: taxe 16%</field>
+                                <field name="name@de">922 - für Zwecke des Unternehmens: MwSt. 16%</field>
+                                <field name="name@lb">922 - fir Geschäftszwecker: Steier 16%</field>
+                                <field name="code">LUTAX_922</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-922</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_14" model="account.report.line">
+                                <field name="name">724 - for business purposes: tax 14%</field>
+                                <field name="name@fr">724 - à des fins de l'entreprise: taxe 14%</field>
+                                <field name="name@de">724 - für Zwecke des Unternehmens: MwSt. 14%</field>
+                                <field name="name@lb">724 - fir Geschäftszwecker: Steier 14%</field>
+                                <field name="code">LUTAX_724</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-724</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_13" model="account.report.line">
+                                <field name="name">924 - for business purposes: tax 13%</field>
+                                <field name="name@fr">924 - à des fins de l'entreprise: taxe 13%</field>
+                                <field name="name@de">924 - für Zwecke des Unternehmens: MwSt. 13%</field>
+                                <field name="name@lb">924 - fir Geschäftszwecker: Steier 13%</field>
+                                <field name="code">LUTAX_924</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-924</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_8" model="account.report.line">
+                                <field name="name">726 - for business purposes: tax 8%</field>
+                                <field name="name@fr">726 - à des fins de l'entreprise: taxe 8%</field>
+                                <field name="name@de">726 - für Zwecke des Unternehmens: MwSt. 8%</field>
+                                <field name="name@lb">726 - fir Geschäftszwecker: Steier 8%</field>
+                                <field name="code">LUTAX_726</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-726</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_7" model="account.report.line">
+                                <field name="name">926 - for business purposes: tax 7%</field>
+                                <field name="name@fr">926 - à des fins de l'entreprise: taxe 7%</field>
+                                <field name="name@de">926 - für Zwecke des Unternehmens: MwSt. 7%</field>
+                                <field name="name@lb">926 - fir Geschäftszwecker: Steier 7%</field>
+                                <field name="code">LUTAX_926</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-926</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_1_tax_3" model="account.report.line">
+                                <field name="name">068 - for business purposes: tax 3%</field>
+                                <field name="name@fr">068 - à des fins de l'entreprise: taxe de 3%</field>
+                                <field name="name@de">068 - für Zwecke des Unternehmens: MwSt. 3%</field>
+                                <field name="name@lb">068 - fir Geschäftszwecker: Steier 3%</field>
+                                <field name="code">LUTAX_068</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_1_tax_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-068</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_17" model="account.report.line">
+                                <field name="name">732 - for non-business purposes: tax 17%</field>
+                                <field name="name@fr">732 - à des fins étrangères à l'entreprise: taxe 17%</field>
+                                <field name="name@de">732 - für unternehmensfremde Zwecke: MwSt. 17%</field>
+                                <field name="name@lb">732 - fir net-Geschäftszwecker: Steier 17%</field>
+                                <field name="code">LUTAX_732</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-732</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_16" model="account.report.line">
+                                <field name="name">932 - for non-business purposes: tax 16%</field>
+                                <field name="name@fr">932 - à des fins étrangères à l'entreprise: taxe 16%</field>
+                                <field name="name@de">932 - für unternehmensfremde Zwecke: MwSt. 16%</field>
+                                <field name="name@lb">932 - fir net-geschäftlech Zwecker: Steier 16%</field>
+                                <field name="code">LUTAX_932</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_16_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-932</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_14" model="account.report.line">
+                                <field name="name">734 - for non-business purposes: tax 14%</field>
+                                <field name="name@fr">734 - à des fins étrangères à l'entreprise: taxe 14%</field>
+                                <field name="name@de">734 - für unternehmensfremde Zwecke: MwSt. 14%</field>
+                                <field name="name@lb">734 - fir net-geschäftlech Zwecker: Steier 14%</field>
+                                <field name="code">LUTAX_734</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_14_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-734</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_13" model="account.report.line">
+                                <field name="name">934 - for non-business purposes: tax 13%</field>
+                                <field name="name@fr">934 - à des fins étrangères à l'entreprise: taxe 13%</field>
+                                <field name="name@de">934 - für unternehmensfremde Zwecke: MwSt. 13%</field>
+                                <field name="name@lb">934 - fir net-geschäftlech Zwecker: Steier 13%</field>
+                                <field name="code">LUTAX_934</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_13_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-934</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_8" model="account.report.line">
+                                <field name="name">736 - for non-business purposes: tax 8%</field>
+                                <field name="name@fr">736 - à des fins étrangères à l'entreprise: taxe 8%</field>
+                                <field name="name@de">736 - für unternehmensfremde Zwecke: MwSt. 8%</field>
+                                <field name="name@lb">736 - fir net-Geschäftszwecker: Steier 8%</field>
+                                <field name="code">LUTAX_736</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-736</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_7" model="account.report.line">
+                                <field name="name">936 - for non-business purposes: tax 7%</field>
+                                <field name="name@fr">936 - à des fins étrangères à l'entreprise: taxe 7%</field>
+                                <field name="name@de">936 - für unternehmensfremde Zwecke: MwSt. 7%</field>
+                                <field name="name@lb">936 - fir net-Geschäftszwecker: Steier 7%</field>
+                                <field name="code">LUTAX_936</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-936</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2d_2_tax_3" model="account.report.line">
+                                <field name="name">073 - for non-business purposes: tax 3%</field>
+                                <field name="name@fr">073 - à des fins étrangères à l'entreprise: taxe de 3%</field>
+                                <field name="name@de">073 - für unternehmensfremde Zwecke: MwSt. 3%</field>
+                                <field name="name@lb">073 - fir net-geschäftlech Zwecker: Steier 3%</field>
+                                <field name="code">LUTAX_073</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2d_2_tax_3_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-073</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2e_supply_of_service_for_customer" model="account.report.line">
+                        <field name="name">409 - Supply of services for which the customer is liable for the payment of VAT – base</field>
+                        <field name="name@fr">409 - Prestations de services à déclarer par le preneur redevable de la taxe - base</field>
+                        <field name="name@de">409 - Vom Empfänger als Steuerschuldner zu erklärende Dienstleistungen - Besteuerungsgrundlage</field>
+                        <field name="name@lb">409 - Liwwerung vu Servicer, fir déi de Client fir d'Bezuelung vun der TVA verantwortlech ass - Basis</field>
+                        <field name="code">LUTAX_409</field>
+                        <field name="aggregation_formula">LUTAX_436.balance + LUTAX_435.balance + LUTAX_463.balance + LUTAX_765.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2e_1_base" model="account.report.line">
+                                <field name="name">436 - base</field>
+                                <field name="name@fr">436 - base</field>
+                                <field name="name@de">436 - Besteuerungsgrundlage</field>
+                                <field name="name@lb">436 - Basis</field>
+                                <field name="code">LUTAX_436</field>
+                                <field name="aggregation_formula">LUTAX_431.balance + LUTAX_741.balance + LUTAX_743.balance + LUTAX_745.balance + LUTAX_941.balance + LUTAX_943.balance + LUTAX_945.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_tax_report_line_2e_1_a_base_17" model="account.report.line">
+                                        <field name="name">741 - not exempt within the territory: base 17%</field>
+                                        <field name="name@fr">741 - non exonérées à l'intérieur du pays: base 17%</field>
+                                        <field name="name@de">741 - nicht steuerbefreit im Inland: Besteuerungsgrundlage 17%</field>
+                                        <field name="name@lb">741 - net befreit am Territoire: Basis 17%</field>
+                                        <field name="code">LUTAX_741</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_base_17_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">741</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_base_16" model="account.report.line">
+                                        <field name="name">941 - not exempt within the territory: base 16%</field>
+                                        <field name="name@fr">941 - non exonérées à l'intérieur du pays: base 16%</field>
+                                        <field name="name@de">941 - nicht steuerbefreit im Inland: Besteuerungsgrundlage 16%</field>
+                                        <field name="name@lb">941 - net befreit am Territoire: Basis 16%</field>
+                                        <field name="code">LUTAX_941</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_base_16_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">941</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_base_14" model="account.report.line">
+                                        <field name="name">743 - not exempt within the territory: base 14%</field>
+                                        <field name="name@fr">743 - non exonérées à l'intérieur du pays: base 14%</field>
+                                        <field name="name@de">743 - nicht steuerbefreit im Inland: Besteuerungsgrundlage 14%</field>
+                                        <field name="name@lb">743 - net befreit am Territoire: Basis 14%</field>
+                                        <field name="code">LUTAX_743</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_base_14_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">743</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_base_13" model="account.report.line">
+                                        <field name="name">943 - not exempt within the territory: base 13%</field>
+                                        <field name="name@fr">943 - non exonérées à l'intérieur du pays: base 13%</field>
+                                        <field name="name@de">943 - nicht steuerbefreit im Inland: Besteuerungsgrundlage 13%</field>
+                                        <field name="name@lb">943 - net befreit am Territoire: Basis 13%</field>
+                                        <field name="code">LUTAX_943</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_base_13_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">943</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_base_8" model="account.report.line">
+                                        <field name="name">745 - not exempt within the territory: base 8%</field>
+                                        <field name="name@fr">745 - non exonérées à l'intérieur du pays: base 8%</field>
+                                        <field name="name@de">745 - nicht steuerbefreit im Inland: Besteuerungsgrundlage 8%</field>
+                                        <field name="name@lb">745 - net befreit am Territoire: Basis 8%</field>
+                                        <field name="code">LUTAX_745</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_base_8_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">745</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_base_7" model="account.report.line">
+                                        <field name="name">945 - not exempt within the territory: base 7%</field>
+                                        <field name="name@fr">945 - non exonérées à l'intérieur du pays: base 7%</field>
+                                        <field name="name@de">945 - nicht steuerbefreit im Inland: Besteuerungsgrundlage 7%</field>
+                                        <field name="name@lb">945 - net befreit am Territoire: Basis 7%</field>
+                                        <field name="code">LUTAX_945</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_base_7_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">945</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_base_3" model="account.report.line">
+                                        <field name="name">431 - not exempt within the territory: base 3%</field>
+                                        <field name="name@fr">431 - non exonérées à l'intérieur du pays: base 3%</field>
+                                        <field name="name@de">431 - nicht steuerbefreit im Inland: Besteuerungsgrundlage 3%</field>
+                                        <field name="name@lb">431 - net befreit am Territoire: Basis 3%</field>
+                                        <field name="code">LUTAX_431</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_base_3_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">431</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2e_1_b_exempt" model="account.report.line">
+                                <field name="name">435 - exempt within the territory: exempt</field>
+                                <field name="name@fr">435 - exonérées à l'intérieur du pays: exonérées</field>
+                                <field name="name@de">435 - steuerbefreit im Inland: steuerbefreit</field>
+                                <field name="name@lb">435 - befreit am Territoire: befreit</field>
+                                <field name="code">LUTAX_435</field>
+                                <field name="hide_if_zero" eval="1"/>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2e_1_b_exempt_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">435</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2e_2_base" model="account.report.line">
+                                <field name="name">463 - base</field>
+                                <field name="name@fr">463 - base</field>
+                                <field name="name@de">463 - Besteuerungsgrundlage</field>
+                                <field name="name@lb">463 - Basis</field>
+                                <field name="code">LUTAX_463</field>
+                                <field name="aggregation_formula">LUTAX_441.balance + LUTAX_445.balance + LUTAX_751.balance + LUTAX_753.balance + LUTAX_755.balance + LUTAX_951.balance + LUTAX_953.balance + LUTAX_955.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_tax_report_line_2e_2_base_17" model="account.report.line">
+                                        <field name="name">751 - not established or residing within the Community: base 17%</field>
+                                        <field name="name@fr">751 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: base 17%</field>
+                                        <field name="name@de">751 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: Besteuerungsgrundlage 17%</field>
+                                        <field name="name@lb">751 - net etabléiert oder an der Gemeinschaft wunnen: Basis 17%</field>
+                                        <field name="code">LUTAX_751</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_base_17_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">751</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_base_16" model="account.report.line">
+                                        <field name="name">951 - not established or residing within the Community: base 16%</field>
+                                        <field name="name@fr">951 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: base 16%</field>
+                                        <field name="name@de">951 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: Besteuerungsgrundlage 16%</field>
+                                        <field name="name@lb">951 - net etabléiert oder an der Gemeinschaft wunnen: Basis 16%</field>
+                                        <field name="code">LUTAX_951</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_base_16_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">951</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_base_14" model="account.report.line">
+                                        <field name="name">753 - not established or residing within the Community: base 14%</field>
+                                        <field name="name@fr">753 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: base 14%</field>
+                                        <field name="name@de">753 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: Besteuerungsgrundlage 14%</field>
+                                        <field name="name@lb">753 - net etabléiert oder an der Gemeinschaft wunnen: Basis 14%</field>
+                                        <field name="code">LUTAX_753</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_base_14_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">753</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_base_13" model="account.report.line">
+                                        <field name="name">953 - not established or residing within the Community: base 13%</field>
+                                        <field name="name@fr">953 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: base 13%</field>
+                                        <field name="name@de">953 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: Besteuerungsgrundlage 13%</field>
+                                        <field name="name@lb">953 - net etabléiert oder an der Gemeinschaft wunnen: Basis 13%</field>
+                                        <field name="code">LUTAX_953</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_base_13_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">953</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_base_8" model="account.report.line">
+                                        <field name="name">755 - not established or residing within the Community: base 8%</field>
+                                        <field name="name@fr">755 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: base 8%</field>
+                                        <field name="name@de">755 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: Besteuerungsgrundlage 8%</field>
+                                        <field name="name@lb">755 - net etabléiert oder an der Gemeinschaft wunnen: Basis 8%</field>
+                                        <field name="code">LUTAX_755</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_base_8_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">755</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_base_7" model="account.report.line">
+                                        <field name="name">955 - not established or residing within the Community: base 7%</field>
+                                        <field name="name@fr">955 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: base 7%</field>
+                                        <field name="name@de">955 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: Besteuerungsgrundlage 7%</field>
+                                        <field name="name@lb">955 - net etabléiert oder an der Gemeinschaft wunnen: Basis 7%</field>
+                                        <field name="code">LUTAX_955</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_base_7_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">955</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_base_3" model="account.report.line">
+                                        <field name="name">441 - not established or residing within the Community: base 3%</field>
+                                        <field name="name@fr">441 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: base 3%</field>
+                                        <field name="name@de">441 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: Besteuerungsgrundlage 3%</field>
+                                        <field name="name@lb">441 - net etabléiert oder an der Gemeinschaft wunnen: Basis 3%</field>
+                                        <field name="code">LUTAX_441</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_base_3_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">441</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_exempt" model="account.report.line">
+                                        <field name="name">445 - not established or residing within the Community: exempt</field>
+                                        <field name="name@fr">445 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: exonérées</field>
+                                        <field name="name@de">445 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: steuerbefreit</field>
+                                        <field name="name@lb">445 - net etabléiert oder an der Gemeinschaft wunnen: befreit</field>
+                                        <field name="code">LUTAX_445</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_exempt_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">445</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2e_3_base" model="account.report.line">
+                                <field name="name">765 - base</field>
+                                <field name="name@fr">765 - base</field>
+                                <field name="name@de">765 - Besteuerungsgrundlage</field>
+                                <field name="name@lb">765 - Basis</field>
+                                <field name="code">LUTAX_765</field>
+                                <field name="aggregation_formula">LUTAX_761.balance + LUTAX_961.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_tax_report_line_2e_3_base_17" model="account.report.line">
+                                        <field name="name">761 - suppliers established within the territory: base 17%</field>
+                                        <field name="name@fr">761 - effectuées au déclarant par des assujettis établis à l'intérieur du pays: base 17%</field>
+                                        <field name="name@de">761 - erbracht an den Erklärenden von im Inland ansässigen Steuerpflichtigen: Besteuerungsgrundlage 17%</field>
+                                        <field name="name@lb">761 - Fournisseuren am Territoire etabléiert: Basis 17%</field>
+                                        <field name="code">LUTAX_761</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_3_base_17_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">761</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_3_base_16" model="account.report.line">
+                                        <field name="name">961 - suppliers established within the territory: base 16%</field>
+                                        <field name="name@fr">961 - effectuées au déclarant par des assujettis établis à l'intérieur du pays: base 16%</field>
+                                        <field name="name@de">961 - erbracht an den Erklärenden von im Inland ansässigen Steuerpflichtigen: Besteuerungsgrundlage 16%</field>
+                                        <field name="name@lb">961 - Fournisseuren am Territoire etabléiert: Basis 16%</field>
+                                        <field name="code">LUTAX_961</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_3_base_16_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">961</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2e_supply_of_service_for_customer_liable_for_payment_tax" model="account.report.line">
+                        <field name="name">410 - Supply of services for which the customer is liable for the payment of VAT – tax</field>
+                        <field name="name@fr">410 - Prestations de services à déclarer par le preneur redevable de la taxe - taxe</field>
+                        <field name="name@de">410 - Vom Empfänger als Steuerschuldner zu erklärende Dienstleistungen - MwSt.</field>
+                        <field name="name@lb">410 - Liwwerung vu Servicer, fir déi de Client fir d'Bezuelung vun der TVA verantwortlech ass - Steier</field>
+                        <field name="code">LUTAX_410</field>
+                        <field name="aggregation_formula">LUTAX_462.balance + LUTAX_464.balance + LUTAX_766.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2e_1_a_tax" model="account.report.line">
+                                <field name="name">462 - tax</field>
+                                <field name="name@fr">462 - taxe</field>
+                                <field name="name@de">462 - MwSt.</field>
+                                <field name="name@lb">462 - Steier</field>
+                                <field name="code">LUTAX_462</field>
+                                <field name="aggregation_formula">LUTAX_432.balance + LUTAX_742.balance + LUTAX_744.balance + LUTAX_746.balance + LUTAX_942.balance + LUTAX_944.balance + LUTAX_946.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_tax_report_line_2e_1_a_tax_17" model="account.report.line">
+                                        <field name="name">742 - not exempt within the territory: tax 17%</field>
+                                        <field name="name@fr">742 - non exonérées à l'intérieur du pays: taxe 17%</field>
+                                        <field name="name@de">742 - nicht steuerbefreit im Inland: MwSt. 17%</field>
+                                        <field name="name@lb">742 - net befreit am Territoire: Steier 17%</field>
+                                        <field name="code">LUTAX_742</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_tax_17_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-742</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_tax_16" model="account.report.line">
+                                        <field name="name">942 - not exempt within the territory: tax 16%</field>
+                                        <field name="name@fr">942 - non exonérées à l'intérieur du pays: taxe 16%</field>
+                                        <field name="name@de">942 - nicht steuerbefreit im Inland: MwSt. 16%</field>
+                                        <field name="name@lb">942 - net befreit am Territoire: Steier 16%</field>
+                                        <field name="code">LUTAX_942</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_tax_16_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-942</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_tax_14" model="account.report.line">
+                                        <field name="name">744 - not exempt within the territory: tax 14%</field>
+                                        <field name="name@fr">744 - non exonérées à l'intérieur du pays: taxe 14%</field>
+                                        <field name="name@de">744 - nicht steuerbefreit im Inland: MwSt. 14%</field>
+                                        <field name="name@lb">744 - net befreit am Territoire: Steier 14%</field>
+                                        <field name="code">LUTAX_744</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_tax_14_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-744</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_tax_13" model="account.report.line">
+                                        <field name="name">944 - not exempt within the territory: tax 13%</field>
+                                        <field name="name@fr">944 - non exonérées à l'intérieur du pays: taxe 13%</field>
+                                        <field name="name@de">944 - nicht steuerbefreit im Inland: MwSt. 13%</field>
+                                        <field name="name@lb">944 - net befreit am Territoire: Steier 13%</field>
+                                        <field name="code">LUTAX_944</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_tax_13_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-944</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_tax_8" model="account.report.line">
+                                        <field name="name">746 - not exempt within the territory: tax 8%</field>
+                                        <field name="name@fr">746 - non exonérées à l'intérieur du pays: taxe 8%</field>
+                                        <field name="name@de">746 - nicht steuerbefreit im Inland: MwSt. 8%</field>
+                                        <field name="name@lb">746 - net befreit am Territoire: Steier 8%</field>
+                                        <field name="code">LUTAX_746</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_tax_8_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-746</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_tax_7" model="account.report.line">
+                                        <field name="name">946 - not exempt within the territory: tax 7%</field>
+                                        <field name="name@fr">946 - non exonérées à l'intérieur du pays: taxe 7%</field>
+                                        <field name="name@de">946 - nicht steuerbefreit im Inland: MwSt. 7%</field>
+                                        <field name="name@lb">946 - net befreit am Territoire: Steier 7%</field>
+                                        <field name="code">LUTAX_946</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_tax_7_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-946</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_1_a_tax_3" model="account.report.line">
+                                        <field name="name">432 - not exempt within the territory: tax 3%</field>
+                                        <field name="name@fr">432 - non exonérées à l'intérieur du pays: tax 3%</field>
+                                        <field name="name@de">432 - nicht steuerbefreit im Inland: MwSt. 3%</field>
+                                        <field name="name@lb">432 - net befreit am Territoire: Steier 3%</field>
+                                        <field name="code">LUTAX_432</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_1_a_tax_3_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-432</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2e_2_tax" model="account.report.line">
+                                <field name="name">464 - tax</field>
+                                <field name="name@fr">464 - taxe</field>
+                                <field name="name@de">464 - MwSt.</field>
+                                <field name="name@lb">464 - Steier</field>
+                                <field name="code">LUTAX_464</field>
+                                <field name="aggregation_formula">LUTAX_442.balance + LUTAX_752.balance + LUTAX_754.balance + LUTAX_756.balance + LUTAX_952.balance + LUTAX_954.balance + LUTAX_956.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_tax_report_line_2e_2_tax_17" model="account.report.line">
+                                        <field name="name">752 - not established or residing within the Community: tax 17%</field>
+                                        <field name="name@fr">752 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: taxe 17%</field>
+                                        <field name="name@de">752 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: MwSt. 17%</field>
+                                        <field name="name@lb">752 - net etabléiert oder an der Gemeinschaft wunnen: Steier 17%</field>
+                                        <field name="code">LUTAX_752</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_tax_17_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-752</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_tax_16" model="account.report.line">
+                                        <field name="name">952 - not established or residing within the Community: tax 16%</field>
+                                        <field name="name@fr">952 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: taxe 16%</field>
+                                        <field name="name@de">952 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: MwSt. 16%</field>
+                                        <field name="name@lb">952 - net etabléiert oder an der Gemeinschaft wunnen: Steier 16%</field>
+                                        <field name="code">LUTAX_952</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_tax_16_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-952</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_tax_14" model="account.report.line">
+                                        <field name="name">754 - not established or residing within the Community: tax 14%</field>
+                                        <field name="name@fr">754 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: taxe 14%</field>
+                                        <field name="name@de">754 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: MwSt. 14%</field>
+                                        <field name="name@lb">754 - net etabléiert oder an der Gemeinschaft wunnen: Steier 14%</field>
+                                        <field name="code">LUTAX_754</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_tax_14_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-754</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_tax_13" model="account.report.line">
+                                        <field name="name">954 - not established or residing within the Community: tax 13%</field>
+                                        <field name="name@fr">954 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: taxe 13%</field>
+                                        <field name="name@de">954 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: MwSt. 13%</field>
+                                        <field name="name@lb">954 - net etabléiert oder an der Gemeinschaft wunnen: Steier 13%</field>
+                                        <field name="code">LUTAX_954</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_tax_13_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-954</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_tax_8" model="account.report.line">
+                                        <field name="name">756 - not established or residing within the Community: tax 8%</field>
+                                        <field name="name@fr">756 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: taxe 8%</field>
+                                        <field name="name@de">756 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: MwSt. 8%</field>
+                                        <field name="name@lb">756 - net etabléiert oder an der Gemeinschaft wunnen: Steier 8%</field>
+                                        <field name="code">LUTAX_756</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_tax_8_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-756</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_tax_7" model="account.report.line">
+                                        <field name="name">956 - not established or residing within the Community: tax 7%</field>
+                                        <field name="name@fr">956 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: taxe 7%</field>
+                                        <field name="name@de">956 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: MwSt. 7%</field>
+                                        <field name="name@lb">956 - net etabléiert oder an der Gemeinschaft wunnen: Steier 7%</field>
+                                        <field name="code">LUTAX_956</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_tax_7_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-956</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_2_tax_3" model="account.report.line">
+                                        <field name="name">442 - not established or residing within the Community: tax 3%</field>
+                                        <field name="name@fr">442 - effectuées au déclarant par des assujettis établis en dehors de la Communauté: tax 3%</field>
+                                        <field name="name@de">442 - erbracht an den Erklärenden von Steuerpflichtigen, die nicht in der Gemeinschaft ansässig sind: MwSt. 3%</field>
+                                        <field name="name@lb">442 - net etabléiert oder wunnen an der Gemeinschaft: Steier 3%</field>
+                                        <field name="code">LUTAX_442</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_2_tax_3_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-442</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2e_3_tax" model="account.report.line">
+                                <field name="name">766 - tax</field>
+                                <field name="name@fr">766 - taxe</field>
+                                <field name="name@de">766 - MwSt.</field>
+                                <field name="name@lb">766 - Steier</field>
+                                <field name="code">LUTAX_766</field>
+                                <field name="aggregation_formula">LUTAX_762.balance + LUTAX_962.balance</field>
+                                <field name="children_ids">
+                                    <record id="account_tax_report_line_2e_3_tax_17" model="account.report.line">
+                                        <field name="name">762 - suppliers established within the territory: tax 17%</field>
+                                        <field name="name@fr">762 - effectuées au déclarant par des assujettis établis à l'intérieur du pays: taxe 17%</field>
+                                        <field name="name@de">762 - erbracht an den Erklärenden von im Inland ansässigen Steuerpflichtigen: MwSt. 17%</field>
+                                        <field name="name@lb">762 - Fournisseuren am Territoire etabléiert: Steier 17%</field>
+                                        <field name="code">LUTAX_762</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_3_tax_17_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">762</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_2e_3_tax_16" model="account.report.line">
+                                        <field name="name">962 - suppliers established within the territory: tax 16%</field>
+                                        <field name="name@fr">962 - effectuées au déclarant par des assujettis établis à l'intérieur du pays: taxe 16%</field>
+                                        <field name="name@de">962 - erbracht an den Erklärenden von im Inland ansässigen Steuerpflichtigen: MwSt. 16%</field>
+                                        <field name="name@lb">962 - Fournisseuren am Territoire etabléiert: Steier 16%</field>
+                                        <field name="code">LUTAX_962</field>
+                                        <field name="hide_if_zero" eval="1"/>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_2e_3_tax_16_tag" model="account.report.expression">
+                                                <field name="label">balance</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">962</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2f_supply_goods_base" model="account.report.line">
+                        <field name="name">767 - Supply of goods for which the purchaser is liable for the payment of VAT - base</field>
+                        <field name="name@fr">767 - Livraisons de biens à déclarer par l'acquéreur redevable de la taxe - base</field>
+                        <field name="name@de">767 - Vom Erwerber als Steuerschuldner zu erklärende Lieferungen - Besteuerungsgrundlage</field>
+                        <field name="name@lb">767 - Liwwerung vu Wueren, fir déi de Keefer fir d'Bezuelung vun der TVA haftbar ass - Basis</field>
+                        <field name="code">LUTAX_767</field>
+                        <field name="aggregation_formula">LUTAX_769.balance + LUTAX_763.balance + LUTAX_963.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2f_supply_goods_base_17" model="account.report.line">
+                                <field name="name">769 - base 17%</field>
+                                <field name="name@de">769 - 17% Basis</field>
+                                <field name="name@lb">769 - Basis 17%</field>
+                                <field name="code">LUTAX_769</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_base_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">769</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2f_supply_goods_base_8" model="account.report.line">
+                                <field name="name">763 - base 8%</field>
+                                <field name="name@de">763 - Besteuerungsgrundlage 8%</field>
+                                <field name="name@lb">763 - Basis 8%</field>
+                                <field name="code">LUTAX_763</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_base_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">763</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2f_supply_goods_base_7" model="account.report.line">
+                                <field name="name">963 - base 7%</field>
+                                <field name="name@de">963 - Besteuerungsgrundlage 7%</field>
+                                <field name="name@lb">963 - Basis 7%</field>
+                                <field name="code">LUTAX_963</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_base_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">963</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2f_supply_goods_tax" model="account.report.line">
+                        <field name="name">768 - Supply of goods for which the purchaser is liable for the payment of VAT - tax</field>
+                        <field name="name@fr">768 - Livraisons de biens à déclarer par l'acquéreur redevable de la taxe - taxe</field>
+                        <field name="name@de">768 - Vom Erwerber als Steuerschuldner zu erklärende Lieferungen - MwSt.</field>
+                        <field name="name@lb">768 - Liwwerung vu Wueren, fir déi de Keefer fir d'Bezuelung vun der TVA haftbar ass - Steier</field>
+                        <field name="code">LUTAX_768</field>
+                        <field name="aggregation_formula">LUTAX_770.balance + LUTAX_764.balance + LUTAX_964.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_2f_supply_goods_tax_17" model="account.report.line">
+                                <field name="name">770 - tax 17%</field>
+                                <field name="name@fr">770 - taxe 17%</field>
+                                <field name="name@de">770 - Steuer 17%</field>
+                                <field name="name@lb">770 - Steier 17%</field>
+                                <field name="code">LUTAX_770</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_tax_17_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">770</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2f_supply_goods_tax_8" model="account.report.line">
+                                <field name="name">764 - tax 8%</field>
+                                <field name="name@fr">764 - taxe 8%</field>
+                                <field name="name@de">764 - MwSt. 8%</field>
+                                <field name="name@lb">764 - Steier 8%</field>
+                                <field name="code">LUTAX_764</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_tax_8_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">764</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_2f_supply_goods_tax_7" model="account.report.line">
+                                <field name="name">964 - tax 7%</field>
+                                <field name="name@fr">964 - taxe 7%</field>
+                                <field name="name@de">964 - MwSt. 7%</field>
+                                <field name="name@lb">964 - Steier 7%</field>
+                                <field name="code">LUTAX_964</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_2f_supply_goods_tax_7_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">964</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2g_special_arrangement" model="account.report.line">
+                        <field name="name">227 - Special arrangement for tax suspension: adjustment</field>
+                        <field name="name@fr">227 - Régime particulier suspensif: régularisation</field>
+                        <field name="name@de">227 - Sonderregelung zur Steueraussetzung: Berichtigung</field>
+                        <field name="name@lb">227 - Special Arrangement fir Steier Suspensioun: Upassung</field>
+                        <field name="code">LUTAX_227</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_2g_special_arrangement_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">227</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_2h_total_tax_due" model="account.report.line">
+                        <field name="name">076 - Total tax due</field>
+                        <field name="name@fr">076 - Total de la taxe en aval</field>
+                        <field name="name@de">076 - Gesamtbetrag der Steuer</field>
+                        <field name="name@lb">076 - Ganzen Steier wéinst</field>
+                        <field name="code">LUTAX_076</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_2h_total_tax_due_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">LUTAX_046.balance + LUTAX_056.balance + LUTAX_407.balance + LUTAX_410.balance + LUTAX_768.balance + LUTAX_227.balance</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

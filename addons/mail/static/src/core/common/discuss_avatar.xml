@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussAvatar">
+        <svg t-att-width="this.props.size" t-att-height="this.props.size" viewBox="0 0 32 32" class="o-mail-DiscussAvatar overflow-visible" t-attf-class="{{ this.props.className }}" t-att-class="{ 'o-isBrowserSafari': this.isBrowserSafari() }">
+            <t t-set="cutoutX" t-value="this.isTyping ? 14 : 19"/>
+            <t t-set="cutoutWidth" t-value="this.isTyping ? 24 : 16"/>
+            <t t-set="rtlShiftX" t-value="this.isRtl ? 32 - 2 * cutoutX - cutoutWidth : 0"/> <!-- mirror the cutout to the bottom-left corner -->
+            <mask t-att-id="this.uniqueId" width="1000" height="1000">
+                <rect x="0" y="0" height="100%" width="100%" fill="white"/>
+                <t t-if="this.showIconMask">
+                    <t t-set="imStatusData" t-value="this.imStatusData"/>
+                    <t t-set="safariNonBreakingSpace" t-value="this.isBrowserSafari() ? '\u00a0' : ''"/> <!-- hack for making mask work in Safari -->
+                    <t t-if="imStatusData">
+                        <!-- glyph is a ligature, i.e. text: keep it out of the text content of the avatar -->
+                        <Portal target="'body'">
+                            <svg width="0" height="0" class="position-absolute" aria-hidden="true">
+                                <defs>
+                                    <text t-att-id="this.uniqueId + '.imStatus'" class="oi oi-filled o-mail-DiscussAvatar-imStatusMask" t-att-class="imStatusData.iconClass" t-att-data-mask-icon="imStatusData.icon" y=".45rem" dominant-baseline="central" fill="black" stroke="black" stroke-width="3" stroke-linejoin="round" aria-hidden="true" t-out="imStatusData.icon + safariNonBreakingSpace"/>
+                                </defs>
+                            </svg>
+                        </Portal>
+                        <use t-att-href="'#' + this.uniqueId + '.imStatus'" t-attf-transform="translate({{21 + rtlShiftX}}, 20) {{this.props.iconExtraTransform ?? ''}}"/>
+                    </t>
+                    <rect t-else="" fill="black" x="0" y="0" t-att-width="cutoutWidth" t-att-height="this.isTyping ? 15 : 16" rx="8" ry="8" t-attf-transform="translate({{cutoutX + rtlShiftX}}, 19) {{this.props.iconExtraTransform ?? ''}}"/>
+                </t>
+            </mask>
+            <foreignObject x="0" y="0" width="32" height="32" t-att-mask="'url(#' + this.uniqueId + ')'">
+                <t t-call="mail.DiscussAvatar.avatarImg"/> <!-- FIXME: owl doesn't like and load immediate <img> below <foreignObject>, hence t-call shenanigans -->
+            </foreignObject>
+            <g t-if="this.showIcon" t-attf-transform="translate({{(this.isTyping ? 16 : 21) + rtlShiftX}}, 20) {{this.props.iconExtraTransform ?? ''}}">
+                <svg width="25" height="15" viewBox="0 0 25 15">
+                    <foreignObject x="0" y="0" width="25" height="15">
+                        <ThreadIcon t-if="this.thread" thread="this.thread" typing="this.props.typing"/>
+                        <ImStatus t-elif="this.channelMember" member="this.channelMember" className="'d-flex'" size="'md'" typing="this.props.typing"/>
+                        <ImStatus t-elif="this.user" user="this.user" persona="this.persona"  typing="this.props.typing"/>
+                        <ImStatus t-elif="this.persona" persona="this.persona" typing="this.props.typing"/>
+                    </foreignObject>
+                </svg>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="mail.DiscussAvatar.avatarImg">
+        <img t-if="this.thread" class="w-100 h-100 object-fit-cover" t-att-class="{ [this.props.imgRoundedClass]: this.props.imgRoundedClass, 'rounded-2': !this.props.imgRoundedClass }" t-att-src="this.thread.channel?.parent_channel_id?.avatarUrl ?? this.thread.channel?.avatarUrl ?? this.thread.avatarUrl" alt="Thread Image"/>
+        <img t-elif="this.channelMember" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [this.props.imgRoundedClass]: this.props.imgRoundedClass, 'rounded-3': !this.props.imgRoundedClass }" t-att-src="this.channelMember.avatarUrl"/>
+        <img
+            t-elif="this.user or this.persona"
+            class="w-100 h-100 object-fit-cover"
+            t-att-class="{ [this.props.imgRoundedClass]: this.props.imgRoundedClass, 'rounded': !this.props.imgRoundedClass }"
+            t-att-src="(this.user || this.persona).avatarUrl"
+            alt=""
+        />
+    </t>
+</templates>

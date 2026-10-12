@@ -1,0 +1,23 @@
+@keyframes paymentlineStatusFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.paymentlines {
+    .paymentline_status {
+        border: var(--border-width) solid var(--border-color);
+        background: var(--gray-200);
+
+        opacity: 0;
+        transform: translateY(10px);
+        animation: paymentlineStatusFadeIn 0.3s ease-out forwards;
+
+        .paymentline_status_actions {
+            > .paymentline_status_actions_button {
+                flex: 1 1 0 !important;
+            }
+        }
+    }
+}

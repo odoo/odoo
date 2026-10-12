@@ -1,0 +1,14 @@
+.o_field_CopyClipboardChar :is(span, input):not([data-icon='assignment']) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.o_field_CopyClipboardURL {
+    min-width: 0;
+    .o_form_uri {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1 1 0 !important;
+    }
+}

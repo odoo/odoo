@@ -1,0 +1,11 @@
+.o_status {
+    display: block;
+    background-color: map-get($grays, '200');
+    height: 12px;
+    width: 12px;
+    box-shadow: inset 0 0 0 1px rgba($black, .2);
+
+    .dropdown-item > & {
+        transform: translateX(-50%);
+    }
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fake_partners" model="populate.blueprint">
+        <field name="name">Common - Partners</field>
+        <field name="definition_xml" type="xml">
+            <create model="res.partner" count="100" id="partners">
+                <field name="name" generator="fake.company"/>
+                <field name="email" generator="fake.company_email"/>
+                <field name="phone" generator="fake.phone_number"/>
+                <field name="is_company" eval="True"/>
+                <field name="active" eval="True"/>
+                <field name="street" generator="fake.street_address"/>
+                <field name="city" generator="fake.city"/>
+                <field name="zip" generator="fake.postcode"/>
+                <field name="country_id" domain="[('code', 'in', ['US', 'CA', 'GB', 'DE', 'FR'])]" null_ratio="0.1"/>
+            </create>
+        </field>
+    </record>
+
+    <record id="fake_internal_users" model="populate.blueprint">
+        <field name="name">Common - Internal Users</field>
+        <field name="definition_xml" type="xml">
+            <create model="res.users" count="100" id="users" context="{'tracking_disable': True, 'install_mode': True}">
+                <field name="name" generator="fake.name"/>
+                <value name="user_name" generator="fake.user_name"/>
+                <value name="random_digits" generator="scalar.integer" start="10" end="99"/>
+                <field name="login" eval="f'{user_name}{random_digits if random_digits else ''}'" unique="True"/>
+                <field name="email" generator="fake.email"/>
+            </create>
+        </field>
+    </record>
+</odoo>

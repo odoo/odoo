@@ -1,0 +1,59 @@
+.o-mail-Chatter .o-mail-Message-body [summary~="o_mail_notification"] {
+    display: none;
+}
+
+.o-mail-Chatter-top {
+    z-index: $o-mail-NavigableList-zIndex - 2;
+    background-color: $o-webclient-background-color;
+
+    &.shadow-sm {
+        background-image: linear-gradient(90deg, transparent, $o-view-background-color, transparent);
+    }
+}
+
+.o-mail-Chatter-top, .o-mail-Chatter-content {
+    --Chatter-default-padding-x: #{$o-spacer};
+
+    padding-right: var(--Chatter-default-padding-x);
+}
+
+.o-mail-Chatter-top .o-mail-Composer {
+    --Chatter-default-padding-x: #{$o-spacer};
+    --mail-Chatter-contentPaddingLeft: var(--ChatterAsideForm-padding-left, calc(var(--Chatter-default-padding-x) / 2));
+    margin-left: calc((var(--mail-Chatter-contentPaddingLeft)) * -1);
+}
+
+.o-mail-Chatter-top {
+    padding-left: var(--ChatterAsideForm-padding-left, var(--Chatter-default-padding-x));
+}
+
+.o-mail-Chatter-content {
+    --mail-Chatter-contentPaddingLeft: var(--ChatterAsideForm-padding-left, var(--Chatter-default-padding-x));
+    padding-left: calc(var(--mail-Chatter-contentPaddingLeft) - #{($o-mail-Message-sidebarWidth - $o-mail-Avatar-size) / 2});
+}
+
+.o-mail-Followers-button:focus {
+    background-color: $gray-200;
+}
+
+.o-mail-Followers-dropdown {
+    /**
+     * Note: Min() refers to CSS min() and not SCSS min().
+     *
+     * To by-pass SCSS min() shadowing CSS min(), we rely on SCSS being case-sensitive while CSS isn't.
+     */
+    max-width: Min(400px, 95vw);
+    max-height: Min(500px, 50vh);
+}
+
+.o-mail-Follower-avatar {
+    --Avatar-size: #{$o-mail-Avatar-sizeSmall};
+}
+
+.o-mail-Follower:has(.o-mail-Follower-action:hover), .o-mail-FollowerList-unfollow:has(.o-mail-Follower-action:hover) {
+    background-color: inherit !important;
+}
+
+.btn.o-mail-Chatter-follow:hover {
+    color: $black !important;
+}

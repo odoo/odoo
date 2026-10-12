@@ -1,0 +1,35 @@
+.o_project_kanban .o_kanban_renderer {
+
+    footer {
+        --border-style: dashed;
+    }
+
+    .o_project_kanban_main {
+        /* Prevents the kanban settings menu from overflowing and creating a scrollbar. */
+        .o_kanban_card_manage_pane .o_kanban_card_manage_section a {
+            white-space: normal;
+        }
+        .o_project_kanban_body {
+            padding-left: 2px;
+        }
+    }
+
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        .o_view_nocontent {
+            top: 15%;
+        }
+    }
+}
+
+.o_dow_widget {
+    th {
+        padding: 10px 10px 0 10px;
+    }
+
+    .o_dow_days {
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
+}

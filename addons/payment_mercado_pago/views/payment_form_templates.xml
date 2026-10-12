@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="payment_mercado_pago.method_form" inherit_id="payment.method_form">
+        <xpath expr="//input[@name='o_payment_radio']" position="attributes">
+            <attribute name="t-att-data-mercado-pago-inline-form-values">
+                provider_sudo._mercado_pago_get_inline_form_values(partner_id)
+            </attribute>
+        </xpath>
+    </template>
+
+</odoo>

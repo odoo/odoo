@@ -1,0 +1,19 @@
+.odoo-editor-editable {
+    ::selection {
+        background-color: rgba(117, 167, 249, 0.5) !important; /* #bad3fc equivalent when over white*/
+    }
+}
+.o_selected_table {
+    caret-color: transparent;
+
+    ::selection {
+        background-color: transparent !important;
+    }
+    .o_selected_td {
+        box-shadow: 0 0 0 100vmax rgba(117, 167, 249, 0.5) inset; /* #bad3fc equivalent when over white, overlaying on the bg color*/
+        border-collapse: separate;
+    }
+    .o_selected_td_bg_color_preview {
+        box-shadow: unset;
+    }
+}

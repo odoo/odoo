@@ -1,0 +1,555 @@
+import { useCrossDocumentListener } from "../../utils/hooks";
+import { session } from "@web/session";
+import { _t } from "@web/core/l10n/translation";
+import {
+    Component,
+    useProps,
+    proxy,
+    signal,
+    t,
+    useEffect,
+    onMounted,
+    onWillUnmount,
+} from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { cleanZWChars, deduceURLfromText } from "./utils";
+import { CheckBox } from "@web/core/checkbox/checkbox";
+import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import {
+    BUTTON_SHAPES,
+    BUTTON_SIZES,
+    BUTTON_TYPES,
+    computeButtonClasses,
+    getButtonShape,
+    getButtonSize,
+    getButtonType,
+} from "@html_editor/utils/button_style";
+import { closestElement, trapFocus } from "@html_editor/utils/dom_traversal";
+
+export const linkPopoverProps = {
+    advancedAttributeOptions: t.array().optional(),
+    allowStripDomain: t.boolean().optional(),
+    allowTargetBlank: t.boolean().optional(),
+    canEdit: t.boolean().optional(true),
+    canRemove: t.boolean().optional(true),
+    canUpload: t.boolean().optional(),
+    containerElement: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE),
+    document: t.customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+    getAttachmentMetadata: t.function(),
+    getExternalMetaData: t.function(),
+    getInternalMetaData: t.function(),
+    includeStyling: t.boolean().optional(true),
+    isImage: t.boolean(),
+    linkElement: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE),
+    LinkPopoverState: t.object(),
+    onApply: t.function(),
+    onChange: t.function(),
+    onCopy: t.function(),
+    onDiscard: t.function(),
+    onEdit: t.function(),
+    onRemove: t.function(),
+    onUpload: t.function().optional(),
+    publicAttachments: t.boolean().optional(),
+    recordInfo: t.object(),
+    showReplaceTitleBanner: t.boolean(),
+    type: t.string(),
+};
+
+function useContentChange(el, callback) {
+    onMounted(() => {
+        el.addEventListener("keyup", callback);
+    });
+    onWillUnmount(() => {
+        el.removeEventListener("keyup", callback);
+    });
+}
+
+export class LinkPopover extends Component {
+    static template = "html_editor.linkPopover";
+    props = useProps(linkPopoverProps);
+    static components = { CheckBox, Dropdown, DropdownItem };
+    buttonSizesData = BUTTON_SIZES;
+    buttonShapesData = BUTTON_SHAPES;
+    buttonTypesData = BUTTON_TYPES;
+    editingWrapper = signal.ref();
+    urlRef = signal.ref();
+    labelRef = signal.ref();
+
+    setup() {
+        this.ui = useService("ui");
+        this.notificationService = useService("notification");
+        this.uploadService = useService("uploadLocalFiles");
+
+        const linkElement = this.props.linkElement;
+        const textContent = cleanZWChars(linkElement.textContent);
+        const labelEqualsUrl =
+            textContent === linkElement.getAttribute("href") ||
+            textContent + "/" === linkElement.getAttribute("href");
+
+        this.linkPreviewTarget =
+            linkElement.hash?.length && this.isAbsoluteURLInCurrentDomain(linkElement.href)
+                ? "_self"
+                : "_blank";
+        const advancedAttributeOptions = this.props.advancedAttributeOptions.reduce(
+            (result, option) => {
+                const attrValue = linkElement.getAttribute(option.attribute);
+                const isChecked = option.isMultiValueAttr
+                    ? attrValue?.includes(option.value)
+                    : attrValue === option.value;
+                result[option.id] = { ...option, isChecked };
+                return result;
+            },
+            {}
+        );
+        this.state = proxy({
+            editing: this.props.LinkPopoverState.editing,
+            // `.getAttribute("href")` instead of `.href` to keep relative url
+            url: this.setUrlFileNamePath(
+                linkElement.getAttribute("href") || this.deduceUrl(textContent)
+            ),
+            label: labelEqualsUrl ? "" : textContent,
+            previewIcon: {
+                /** @type {'oi'|'imgSrc'|'mimetype'} */
+                type: "oi",
+                value: "public",
+            },
+            urlTitle: "",
+            urlDescription: "",
+            linkPreviewName: "",
+            imgSrc: "",
+            type: this.props.type || getButtonType(linkElement),
+            directDownload: true,
+            isDocument: false,
+            buttonSize: getButtonSize(linkElement),
+            buttonShape: getButtonShape(linkElement),
+            isImage: this.props.isImage,
+            showReplaceTitleBanner: this.props.showReplaceTitleBanner,
+            canReplaceTitle: !linkElement.querySelector("img,.fa"),
+            showLabel: !linkElement.childElementCount,
+            stripDomain: true,
+            showAdvancedOptions: false,
+            advancedAttributeOptions,
+        });
+
+        this.updateDocumentState();
+        // The focused input is chosen once: the URL field for images or when
+        // only a label is set, otherwise the label field.
+        this.inputRef =
+            this.state.isImage || (this.state.label && !this.state.url)
+                ? this.urlRef
+                : this.labelRef;
+        useEffect(() => {
+            this.inputRef()?.focus();
+        });
+        if (!this.state.editing) {
+            this.loadAsyncLinkPreview();
+        }
+        const onPointerDown = (ev) => {
+            if (this.state.isImage) {
+                return;
+            }
+            this.state.url ||= "#";
+            if (this.editingWrapper() && !this.editingWrapper().contains(ev.target)) {
+                this.onClickApply();
+            }
+        };
+        useCrossDocumentListener(this.props.document, "pointerdown", onPointerDown);
+        useContentChange(this.props.linkElement, () => {
+            const fileName = this.props.linkElement.textContent;
+            this.state.urlTitle = fileName;
+            this.state.url = this.setUrlFileNamePath(this.state.url);
+        });
+    }
+    setUrlFileNamePath(url) {
+        const fileName = this.props.linkElement.textContent;
+        const file = closestElement(this.props.linkElement, ".o_file_box");
+        if (!file) {
+            return url;
+        }
+        const hadOrigin = /^https?:\/\//i.test(url);
+        const urlObj = new URL(url, window.location.origin);
+        const match = urlObj.pathname.match(/^(\/web\/content\/\d+)(?:\/[^/]*)?$/);
+        if (!match) {
+            return url;
+        }
+        let cleanName = fileName.replace(/\ufeff/g, "");
+        const extension = file.dataset.extension;
+        if (extension && !cleanName.toLowerCase().endsWith(`.${extension.toLowerCase()}`)) {
+            cleanName += `.${extension}`;
+        }
+        urlObj.pathname = `${match[1]}/${encodeURIComponent(cleanName)}`;
+        return hadOrigin ? urlObj.toString() : urlObj.toString().replace(urlObj.origin, "");
+    }
+
+    toggleAdvancedOptions() {
+        this.state.showAdvancedOptions = !this.state.showAdvancedOptions;
+    }
+
+    toggleAdvancedAttr(attr) {
+        const option = this.state.advancedAttributeOptions[attr];
+        option.isChecked = !option.isChecked;
+        if (!option.isChecked) {
+            for (const opt of Object.values(this.state.advancedAttributeOptions)) {
+                if (opt.requires === attr) {
+                    opt.isChecked = false;
+                }
+            }
+        }
+    }
+
+    prepareLinkParams() {
+        const attributes = {
+            href: this.state.url,
+            class: this.classes,
+        };
+        for (const opt of Object.values(this.state.advancedAttributeOptions)) {
+            const { attribute, isChecked, value, isMultiValueAttr } = opt;
+            attributes[attribute] ??= "";
+            if (!isChecked) {
+                continue;
+            }
+            if (isMultiValueAttr) {
+                const currentAttribute = attributes[attribute];
+                attributes[attribute] = currentAttribute ? `${currentAttribute} ${value}` : value;
+            } else {
+                attributes[attribute] = value;
+            }
+        }
+        return {
+            label: this.state.label,
+            attachmentId: this.state.attachmentId,
+            attributes,
+        };
+    }
+
+    discard() {
+        this.props.onDiscard();
+        this.cancelUpload?.();
+    }
+
+    onChange() {
+        // Apply changes to update the link preview.
+        const params = this.prepareLinkParams();
+        this.props.onChange(params);
+        this.updateDocumentState();
+    }
+    onClickApply() {
+        this.state.editing = false;
+        this.applyDeducedUrl();
+        const params = this.prepareLinkParams();
+        this.props.onApply(params);
+    }
+    applyDeducedUrl() {
+        if (this.state.label === "") {
+            this.state.label = this.state.url;
+        }
+        const deducedUrl = this.deduceUrl(this.state.url);
+        this.state.url = deducedUrl
+            ? this.correctLink(deducedUrl)
+            : this.correctLink(this.state.url);
+        if (
+            this.props.allowStripDomain &&
+            this.state.stripDomain &&
+            this.isAbsoluteURLInCurrentDomain()
+        ) {
+            const urlObj = new URL(this.state.url, window.location.origin);
+            // Not necessarily equal to window.location.origin
+            // (see isAbsoluteURLInCurrentDomain)
+            this.state.url = this.state.url.replace(urlObj.origin, "");
+        }
+    }
+    onClickEdit() {
+        this.state.editing = true;
+        this.props.onEdit();
+        this.updateUrlAndLabel();
+    }
+    updateUrlAndLabel() {
+        this.state.url = this.props.linkElement.getAttribute("href");
+
+        const textContent = cleanZWChars(this.props.linkElement.textContent);
+        const labelEqualsUrl =
+            textContent === this.props.linkElement.getAttribute("href") ||
+            textContent + "/" === this.props.linkElement.getAttribute("href");
+        this.state.label = labelEqualsUrl ? "" : textContent;
+    }
+    onClickRemove() {
+        this.props.onRemove();
+    }
+
+    onKeydownEnter(ev) {
+        const isAutoCompleteDropdownOpen = document.querySelector(".o-autocomplete--dropdown-menu");
+        if (ev.key === "Enter" && !isAutoCompleteDropdownOpen && this.state.url) {
+            ev.preventDefault();
+            this.onClickApply();
+        }
+    }
+
+    onKeydown(ev) {
+        if (!this.editingWrapper()) {
+            return;
+        }
+        if (ev.key === "Escape") {
+            ev.preventDefault();
+            ev.stopImmediatePropagation();
+            this.onClickApply();
+        } else if (ev.key == "Tab") {
+            ev.preventDefault();
+            const focusableElements = this.editingWrapper().querySelectorAll(
+                "input, select, button:not([disabled])"
+            );
+            trapFocus(focusableElements, ev.shiftKey);
+        }
+    }
+
+    onInput() {
+        this.onChange();
+    }
+
+    onClickReplaceTitle() {
+        this.state.label = this.state.urlTitle;
+        this.onClickApply();
+    }
+
+    onClickDirectDownload(checked) {
+        this.state.directDownload = checked;
+        this.state.url = this.state.url.replace("&download=true", "");
+        if (this.state.directDownload) {
+            this.state.url += "&download=true";
+        }
+    }
+
+    onClickStripDomain(checked) {
+        this.state.stripDomain = checked;
+    }
+
+    /**
+     * Updates the component state with the chosen link type and triggers
+     * `onChange` to propagate the update.
+     *
+     * @param {string} type - The selected link type
+     */
+    onSelectedLinkType(type) {
+        this.state.type = type;
+        this.onChange();
+    }
+
+    /**
+     * @private
+     */
+    async updateDocumentState() {
+        const url = this.state.url;
+        const urlObject = URL.parse(url, document.URL);
+        if (
+            url &&
+            (url.startsWith("/web/content/") ||
+                (urlObject &&
+                    urlObject.pathname.startsWith("/web/content") &&
+                    urlObject.host === document.location.host))
+        ) {
+            const { type } = await this.props.getAttachmentMetadata(url);
+            this.state.isDocument = type !== "url";
+            this.state.directDownload = url.includes("&download=true");
+        } else {
+            this.state.isDocument = false;
+            this.state.directDownload = true;
+        }
+    }
+    correctLink(url) {
+        if (
+            url &&
+            !url.startsWith("tel:") &&
+            !url.startsWith("mailto:") &&
+            !url.includes("://") &&
+            !url.startsWith("/") &&
+            !url.startsWith("#") &&
+            !url.startsWith("${")
+        ) {
+            url = "https://" + url;
+        }
+        if (url && (url.startsWith("http:") || url.startsWith("https:"))) {
+            url = URL.parse(url) ? url : "";
+        }
+        return url;
+    }
+    deduceUrl(text) {
+        text = text.trim();
+        if (/^(https?:|mailto:|tel:)/.test(text)) {
+            // Text begins with a known protocol, accept it as valid URL.
+            return text;
+        } else {
+            return deduceURLfromText(text, this.props.linkElement) || "";
+        }
+    }
+    /**
+     * link preview in the popover
+     */
+    resetPreview() {
+        this.state.previewIcon = { type: "oi", value: "public" };
+        this.state.urlTitle = this.state.url || _t("No URL specified");
+        this.state.urlDescription = "";
+        this.state.linkPreviewName = "";
+    }
+    async loadAsyncLinkPreview() {
+        let url;
+        if (this.state.url === "") {
+            this.resetPreview();
+            this.state.previewIcon.value = "help_outline";
+            return;
+        }
+        if (this.isAttachmentUrl()) {
+            const { mimetype } = await this.props.getAttachmentMetadata(this.state.url);
+            this.resetPreview();
+            this.state.urlTitle = this.props.linkElement.textContent;
+            this.state.previewIcon = { type: "mimetype", value: mimetype };
+            return;
+        }
+        try {
+            url = new URL(this.state.url, document.URL); // relative to absolute
+        } catch {
+            // Invalid URL, might happen with editor unsuported protocol. eg type
+            // `geo:37.786971,-122.399677`, become `http://geo:37.786971,-122.399677`
+            this.notificationService.add(_t("This URL is invalid. Preview couldn't be updated."), {
+                type: "danger",
+            });
+            return;
+        }
+        this.resetPreview();
+        const protocol = url.protocol;
+        if (!protocol.startsWith("http")) {
+            const faMap = { "mailto:": "mail", "tel:": "phone" };
+            const icon = faMap[protocol];
+            if (icon) {
+                this.state.previewIcon.value = icon;
+                this.state.previewIcon.class = icon === "phone" ? "oi-filled" : undefined;
+            }
+        } else if (
+            window.location.hostname !== url.hostname &&
+            !new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`).test(url.origin)
+        ) {
+            // Preview pages from current website only. External website will
+            // most of the time raise a CORS error. To avoid that error, we
+            // would need to fetch the page through the server (s2s), involving
+            // enduser fetching problematic pages such as illicit content.
+            this.state.previewIcon = {
+                type: "imgSrc",
+                value: `https://www.google.com/s2/favicons?sz=16&domain=${encodeURIComponent(url)}`,
+            };
+
+            const externalMetadata = await this.props
+                .getExternalMetaData(this.state.url)
+                .catch((error) => {
+                    console.warn(`Error fetching external metadata for ${url.href}:`, error);
+                    return {};
+                });
+
+            this.state.urlTitle = externalMetadata?.og_title?.trim() || this.state.url;
+            this.state.urlDescription = externalMetadata?.og_description?.trim() || "";
+            this.state.imgSrc = externalMetadata?.og_image?.trim() || "";
+            if (
+                externalMetadata?.og_image &&
+                this.state.label &&
+                this.state.urlTitle === this.state.url
+            ) {
+                this.state.urlTitle = this.state.label;
+            }
+        } else {
+            // Set state based on cached link meta data
+            // for record missing errors, we push a warning that the url is likely invalid
+            // for other errors, we log them to not block the ui
+            const internalMetadata = await this.props
+                .getInternalMetaData(url.href)
+                .catch((error) => {
+                    if (!session.test_mode) {
+                        console.warn(`Error fetching internal metadata for ${url.href}:`, error);
+                    }
+                    return {};
+                });
+            if (internalMetadata.favicon) {
+                this.state.previewIcon = {
+                    type: "imgSrc",
+                    value: internalMetadata.favicon.href,
+                };
+            }
+            if (internalMetadata.error_msg) {
+                this.notificationService.add(internalMetadata.error_msg, {
+                    type: "warning",
+                });
+            } else if (internalMetadata.other_error_msg) {
+                console.error(
+                    "Internal meta data retrieve error for link preview: " +
+                        internalMetadata.other_error_msg
+                );
+            } else {
+                this.state.linkPreviewName =
+                    internalMetadata.link_preview_name ||
+                    internalMetadata.display_name ||
+                    internalMetadata.name;
+                this.state.urlDescription = internalMetadata?.description || "";
+                this.state.urlTitle = this.state.linkPreviewName
+                    ? this.state.linkPreviewName
+                    : this.state.url;
+            }
+
+            if (
+                (internalMetadata.ogTitle || internalMetadata.title) &&
+                !this.state.linkPreviewName
+            ) {
+                this.state.urlTitle = internalMetadata.ogTitle
+                    ? internalMetadata.ogTitle.getAttribute("content")
+                    : internalMetadata.title.text.trim();
+            }
+
+            if (internalMetadata.imgSrc) {
+                this.state.imgSrc = internalMetadata.imgSrc;
+                this.state.previewIcon = {
+                    type: "oi",
+                    value: "image",
+                };
+            }
+        }
+    }
+
+    get classes() {
+        return computeButtonClasses(this.props.linkElement, {
+            type: this.state.type,
+            size: this.state.buttonSize,
+            shape: this.state.buttonShape,
+        });
+    }
+
+    get showUrl() {
+        return this.state.urlTitle && this.state.url && this.state.urlTitle !== this.state.url;
+    }
+
+    async uploadFile() {
+        const { upload, getURL } = this.uploadService;
+        const { resModel, resId } = this.props.recordInfo;
+        const setAbortCallback = (abortFn) => {
+            this.cancelUpload = abortFn;
+        };
+        const [attachment] = await upload(
+            { resModel, resId },
+            { accessToken: true, setAbortCallback }
+        );
+        delete this.cancelUpload;
+        if (!attachment) {
+            // No file selected or upload failed
+            return;
+        }
+        this.props.onUpload?.(attachment);
+        this.state.url = getURL(attachment, { download: true, unique: true, accessToken: true });
+        this.state.label ||= attachment.name;
+        this.state.attachmentId = attachment.id;
+        this.onChange();
+    }
+
+    isAttachmentUrl() {
+        return !!this.state.url.match(/\/web\/content\/\d+/);
+    }
+
+    isAbsoluteURLInCurrentDomain(url = this.state.url) {
+        return isAbsoluteURLInCurrentDomain(url);
+    }
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_bg_move_view_form" model="ir.ui.view">
+        <field name="name">l10n_bg.move.view.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_info_group']" position="after">
+                <group string="Bulgaria VAT Document" name="l10n_bg_documents" invisible="country_code != 'BG'">
+                    <field string="Document Type" name="l10n_bg_document_type"/>
+                    <field string="Document Number" name="l10n_bg_document_number"/>
+                    <field string="Exemption reason" name="l10n_bg_exemption_reason"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_bg_move_view_tree" model="ir.ui.view">
+        <field name="name">l10n_bg.move.view.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field string="Document Number" name="l10n_bg_document_number" optional="show"/>
+                <field string="Document Type" name="l10n_bg_document_type" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_bg_move_view_filter" model="ir.ui.view">
+        <field name="name">l10n_bg.move.view.filter</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='group_by_company']" position="after">
+                <filter string="Document Type" name="l10n_bg_document_type_groupby" context="{'group_by': 'l10n_bg_document_type'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

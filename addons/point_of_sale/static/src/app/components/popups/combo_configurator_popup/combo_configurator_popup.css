@@ -1,0 +1,12 @@
+.combo-configurator-popup label.selected {
+    box-shadow: 0 0 0 calc(var(--o-bs-border-width) * 2) var(--o-action);
+}
+.combo-item {
+    .product {
+        border-bottom: calc(var(--o-bs-border-width) * 6) solid var(--border-color);
+        /* To override the hover effect of product_card.scss */
+        &:hover {
+            border-bottom: calc(var(--o-bs-border-width) * 6) solid var(--border-color);
+        }
+    }
+}

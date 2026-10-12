@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_hu_edi_cancellation_form" model="ir.ui.view">
+        <field name="name">l10n_hu_edi.cancellation.form</field>
+        <field name="model">l10n_hu_edi.cancellation</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    Technical Annulment should only be used when an error in the software caused an incorrect data report.<br/>
+                    To cancel an invoice / credit note in a normal business flow, please create a credit note / debit note.
+                </div>
+                <group>
+                    <field name="code"/>
+                    <field name="reason"/>
+                </group>
+                <footer>
+                    <button string="Request Annulment" name="button_request_cancel" type="object" default_focus="1" class="btn-primary"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.MediaTranslationOption">
+    <BuilderRow label.translate="Media">
+        <BuilderButton
+            action="'translateMediaSrc'"
+            label.translate="Replace"
+            type="'success'"
+            preview="false"/>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.TranslationBuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='translation_options']" position="before">
+        <media_translation_option
+            template="website.MediaTranslationOption"
+            t-att-selector="`${translateImageOptionSelector}, ${translateDocumentOptionSelector}`"/>
+    </xpath>
+</t>
+
+</templates>

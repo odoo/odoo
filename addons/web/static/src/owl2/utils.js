@@ -1,0 +1,16 @@
+// @ts-ignore
+const owl = globalThis.owl;
+
+/**
+ * @param {any} component
+ * @param {boolean} [deep]
+ * @deprecated use Owl reactivity {@link https://github.com/odoo/owl/blob/master/doc/v3/owl/reference/reactivity.md}
+ */
+export function render(component, deep = false) {
+    component.__owl__.render(deep);
+}
+
+export const onWillRender = owl.onWillRender;
+export const useLayoutEffect = owl.useLayoutEffect;
+export const useEnv = owl.useEnv;
+export const useSubEnv = owl.useSubEnv;

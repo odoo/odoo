@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_order_line_tree_inherit_sale_stock" model="ir.ui.view">
+        <field name="name">sale.order.line.list.sale.stock.location</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <field name="price_subtotal" position="before">
+                <field name="route_ids" groups="stock.group_adv_location" options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

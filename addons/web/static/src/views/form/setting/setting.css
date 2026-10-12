@@ -1,0 +1,51 @@
+.o_setting_box {
+    margin-bottom: 8px;
+    margin-top: 8px;
+    position: relative;
+ }
+
+ .o_setting_left_pane {
+    float: left;
+ }
+
+ .o_setting_right_pane {
+    margin-left: var(--o-bs-spacer-2);
+    border-left: 1px solid var(--border-color);
+    padding-left: 12px;
+
+    .o_form_label + .oi, .o_form_label + .o_doc_link {
+        margin-left: var(--o-bs-spacer-2);
+   }
+
+    .o_input_dropdown > .o_input {
+       width: 100%;
+    }
+
+    .o_field_widget {
+      &:not(.o_field_boolean) {
+         flex: 0 0 auto;
+
+         @media screen and (min-width: 768px), print and (min-width: 188mm) {
+            width: 50%;
+         }
+      }
+    }
+
+    button.btn-link:first-child {
+       padding: 0;
+    }
+
+    a.oe-link {
+       font-size: 12px;
+    }
+ }
+
+.o_setting_box .o_field_boolean {
+    background-color: var(--o-view-background-color);
+
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        &:not(.o_setting_container &) {
+            background-color: var(--body-bg);
+        }
+    }
+}

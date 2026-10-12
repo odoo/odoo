@@ -1,0 +1,178 @@
+// Icons
+// ============================================================================
+
+// ================================
+// SCSS VARIABLES
+// ================================
+
+$ms-font-family: 'Material Symbols Outlined';
+$oi-font-family: 'odoo_ui_icons';
+// Icon sizing map
+$icon-sizes: (
+    'sm': 0.8em,
+    'lg': 1.25em,
+    '2x': 2em,
+    '3x': 3em,
+    '4x': 4em,
+    '5x': 5em,
+    '6x': 6em,
+    '7x': 7em,
+    '8x': 8em,
+    '9x': 9em,
+    '10x': 10em,
+);
+$oi-default-size: 1em;   // Normally 14px
+$oi-fw-ratio: 1.28571429; // Matches .fa-fw
+
+// ================================
+// MIXINS
+// ================================
+
+@mixin material-icon-base {
+    display: inline-block;
+    font-family: var(--icon-font-family, #{$ms-font-family}) !important;
+    font-style: normal;
+    font-size: var(--oi-font-size, #{$oi-default-size});
+    font-weight: 400 !important;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    /*rtl:ignore*/
+    direction: ltr;
+    speak: never;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    &:before {
+        display: inline-block;
+        content: attr(data-icon);
+        // Geometric precision necessary for WebKit to apply icon ligatures
+        text-rendering: geometricPrecision;
+        // WebKit splits the run at `-`, breaking the ligature
+        word-break: keep-all;
+    }
+
+    &.oi-filled {
+        -webkit-font-variation-settings: 'FILL' 1;
+        font-variation-settings: 'FILL' 1;
+    }
+}
+
+// ================================
+// BASE CLASSES
+// ================================
+
+// Generic class for Material Symbols and OI extended library icons.
+.oi {
+    @include material-icon-base;
+    &[data-icon^="oi_"] {
+        --icon-font-family: #{$oi-font-family};
+    }
+    &[data-icon="oi_twitter"]:before {
+        content: "oi_x";
+    }
+    &[data-icon="oi_twitter-square"]:before {
+        content: "oi_x-square";
+    }
+}
+
+.o_rtl .oi {
+    $rtl-selectors: ();
+    @each $icon in $oi-custom-rtl-icons {
+        $rtl-selectors: append($rtl-selectors, unquote('&[data-icon="oi_#{$icon}"]'), comma);
+    }
+    @each $icon in $ms-rtl-icons {
+        $rtl-selectors: append($rtl-selectors, unquote('&[data-icon="#{$icon}"]'), comma);
+    }
+    
+    #{$rtl-selectors} {
+        transform: scaleX(-1);
+    }
+}
+
+
+// ================================
+// UTILITY CLASSES & ADVANCED FEATURES
+// ================================
+
+// Dynamic size generation using SCSS loops
+@each $name, $size in $icon-sizes {
+    .oi-#{$name} {
+        font-size: $size;
+
+        @if $name == 'lg' {
+            vertical-align: middle;
+        }
+    }
+}
+
+.oi-fw {
+    width: calc(#{$oi-fw-ratio} * var(--oi-font-size, #{$oi-default-size}));
+    text-align: center;
+}
+
+.oi-stack {
+    position: relative;
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    line-height: 2em;
+    vertical-align: middle;
+}
+
+.oi-stack-1x, .oi-stack-2x {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.oi-stack-1x {
+    line-height: inherit;
+}
+
+.oi-stack-2x {
+    font-size: 2em;
+}
+
+// Rotation classes using mixin
+.oi-rotate-90 {
+    transform: rotate(90deg);
+}
+
+.oi-rotate-180 {
+    transform: rotate(180deg);
+}
+
+.oi-rotate-270 {
+    transform: rotate(270deg);
+}
+
+// Flipping classes using mixin
+.oi-flip-horizontal {
+    transform: scaleX(-1);
+}
+
+.oi-flip-vertical {
+    transform: scaleY(-1);
+}
+
+// Spinning animation
+.oi-spin {
+    animation: oi-spin 2s infinite linear;
+}
+
+.oi-pulse {
+    animation: oi-spin 1s infinite steps(8);
+}
+
+@keyframes oi-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(359deg);
+    }
+}

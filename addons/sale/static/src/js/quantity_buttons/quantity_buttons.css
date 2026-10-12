@@ -1,0 +1,22 @@
+input[name="sale_quantity"] {
+    padding: 0;
+
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        max-width: 3rem;
+    }
+
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
+        max-width: 4rem;
+    }
+
+    /* removing input field=number arrows as their size might */
+    /* change depending on browser default styling and shift input's position */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    &[type=number] {
+        -moz-appearance: textfield;
+    }
+}

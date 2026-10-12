@@ -1,0 +1,231 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_uy
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.5a1+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-11 18:15+0000\n"
+"PO-Revision-Date: 2026-09-11 18:15+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_uy
+#: model:ir.module.module,description:base.module_l10n_uy
+msgid ""
+"\n"
+"General Chart of Accounts.\n"
+"==========================\n"
+"\n"
+"This module adds accounting functionalities for the Uruguayan localization, representing the minimum required configuration for a company to operate in Uruguay under the regulations and guidelines provided by the DGI (Dirección General Impositiva).\n"
+"\n"
+"Among the functionalities are:\n"
+"\n"
+"* Uruguayan Generic Chart of Account\n"
+"* Pre-configured VAT Taxes and Tax Groups.\n"
+"* Legal document types in Uruguay.\n"
+"* Valid contact identification types in Uruguay.\n"
+"* Configuration and activation of Uruguayan Currencies  (UYU, UYI - Unidad Indexada Uruguaya).\n"
+"* Frequently used default contacts already configured: DGI, Consumidor Final Uruguayo.\n"
+"\n"
+"Configuration\n"
+"-------------\n"
+"\n"
+"Demo data for testing:\n"
+"\n"
+"* Uruguayan company named \"UY Company\" with the Uruguayan chart of accounts already installed, pre configured taxes, document types and identification types.\n"
+"* Uruguayan contacts for testing:\n"
+"\n"
+"   * IEB Internacional\n"
+"   * Consumidor Final Anónimo Uruguayo.\n"
+"\n"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/models/l10n_latam_document_type.py:0
+msgid ""
+"%(document_number)s is not a valid value for %(document_type)s.\n"
+"The document number must be entered with a maximum of 2 letters for the first part and 7 numbers for the second. The following are examples of valid document numbers:\n"
+"- XX0000001\n"
+" - YY0000123\n"
+" - A0000001"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model,name:l10n_uy.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_uy
+#: model:account.report.column,name:l10n_uy.tax_report_balance
+msgid "Balance"
+msgstr ""
+
+#. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_base_impb_cmprs_reduced
+msgid "Base Purchases Reduced VAT"
+msgstr ""
+
+#. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_base_impb_vnts_reduced
+msgid "Base Sales Reduced VAT"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "CI"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model,name:l10n_uy.model_res_company
+msgid "Company"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model,name:l10n_uy.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model,website_form_label:l10n_uy.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Cédula de Identidad (Uruguayan ID card)."
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "DNI"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields,field_description:l10n_uy.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_document_type__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_res_partner__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Documento Nacional de Identidad (AR, BR, CL or PY)."
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model,name:l10n_uy.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Foreign tax identification number."
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Foreigner Identity Number."
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields,field_description:l10n_uy.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_uy.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_uy.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_document_type__id
+#: model:ir.model.fields,field_description:l10n_uy.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_uy.field_res_partner__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model,name:l10n_uy.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model,name:l10n_uy.model_l10n_latam_document_type
+msgid "Latam Document Type"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "NIE"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "NIFE"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Other identification document."
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/tools/partner_identifiers.py:0
+msgid "Otros"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/models/template_uy.py:0
+msgid "Purchases"
+msgstr ""
+
+#. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_cmprs_iva_reduced
+msgid "Purchases Reduced VAT"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/models/template_uy.py:0
+msgid "Sales"
+msgstr ""
+
+#. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_vnts_iva_reduced
+msgid "Sales Reduced VAT"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields,field_description:l10n_uy.field_account_tax__l10n_uy_tax_category
+msgid "Tax Category"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields,help:l10n_uy.field_account_tax__l10n_uy_tax_category
+msgid ""
+"UY: Use to group the transactions in the Financial Reports required by DGI"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.module.module,shortdesc:base.module_l10n_uy
+msgid "Uruguay - Accounting"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model.fields.selection,name:l10n_uy.selection__account_tax__l10n_uy_tax_category__vat
+msgid "VAT"
+msgstr ""

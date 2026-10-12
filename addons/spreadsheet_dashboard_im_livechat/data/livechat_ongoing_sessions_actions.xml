@@ -1,0 +1,90 @@
+<odoo>
+<data>
+    <record id="ongoing_sessions_all_action" model="ir.actions.act_window">
+        <field name="context">{'search_default_ongoing': 1}</field>
+        <field name="domain">[('channel_type', '=', 'livechat')]</field>
+        <field name="name">Sessions</field>
+        <field name="res_model">discuss.channel</field>
+        <field name="search_view_id" ref="im_livechat.discuss_channel_view_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('im_livechat.discuss_channel_view_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('im_livechat.discuss_channel_view_form')})
+        ]"/>
+    </record>
+    <menuitem
+        id="ongoing_session_all_menu"
+        name="Ongoing Sessions"
+        parent="im_livechat.livechat_technical"
+        action="ongoing_sessions_all_action"
+        groups="im_livechat.im_livechat_group_manager"
+    />
+    <record id="ongoing_sessions_escalated_action" model="ir.actions.act_window">
+        <field name="context">{'search_default_ongoing': 1, 'search_default_escalated': 1}</field>
+        <field name="name">Sessions</field>
+        <field name="res_model">discuss.channel</field>
+        <field name="search_view_id" ref="im_livechat.discuss_channel_view_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('im_livechat.discuss_channel_view_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('im_livechat.discuss_channel_view_form')})
+        ]"/>
+    </record>
+    <menuitem
+        id="ongoing_sessions_escalated_menu"
+        name="Escalated Sessions"
+        parent="im_livechat.livechat_technical"
+        action="ongoing_sessions_escalated_action"
+        groups="im_livechat.im_livechat_group_manager"
+    />
+    <record id="ongoing_sessions_agents_in_call_action" model="ir.actions.act_window">
+        <field name="context">{'search_default_ongoing': 1, 'search_default_in_call': 1}</field>
+        <field name="name">Sessions</field>
+        <field name="res_model">discuss.channel</field>
+        <field name="search_view_id" ref="im_livechat.discuss_channel_view_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('im_livechat.discuss_channel_view_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('im_livechat.discuss_channel_view_form')})
+        ]"/>
+    </record>
+    <menuitem
+        id="ongoing_sessions_agents_in_call_menu"
+        name="Ongoing Call Sessions"
+        parent="im_livechat.livechat_technical"
+        action="ongoing_sessions_agents_in_call_action"
+        groups="im_livechat.im_livechat_group_manager"
+    />
+    <record id="ongoing_sessions_handle_by_agent_action" model="ir.actions.act_window">
+        <field name="context">{'search_default_ongoing': 1, 'search_default_handled_by_agent': 1}</field>
+        <field name="name">Sessions</field>
+        <field name="res_model">discuss.channel</field>
+        <field name="search_view_id" ref="im_livechat.discuss_channel_view_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('im_livechat.discuss_channel_view_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('im_livechat.discuss_channel_view_form')})
+        ]"/>
+    </record>
+    <menuitem
+        id="ongoing_sessions_handle_by_agent_menu"
+        name="Sessions Handled by Agent"
+        parent="im_livechat.livechat_technical"
+        action="ongoing_sessions_handle_by_agent_action"
+        groups="im_livechat.im_livechat_group_manager"
+    />
+    <record id="ongoing_sessions_handle_by_bot_action" model="ir.actions.act_window">
+        <field name="context">{'search_default_ongoing': 1, 'search_default_handled_by_bot': 1}</field>
+        <field name="name">Sessions</field>
+        <field name="res_model">discuss.channel</field>
+        <field name="search_view_id" ref="im_livechat.discuss_channel_view_search"/>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('im_livechat.discuss_channel_view_tree')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('im_livechat.discuss_channel_view_form')})
+        ]"/>
+    </record>
+    <menuitem
+        id="ongoing_sessions_handle_by_bot_menu"
+        name="Sessions Handled by Bot"
+        parent="im_livechat.livechat_technical"
+        action="ongoing_sessions_handle_by_bot_action"
+        groups="im_livechat.im_livechat_group_manager"
+    />
+</data>
+</odoo>

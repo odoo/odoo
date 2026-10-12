@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="sale.SaleKanbanRenderer" t-inherit="account.FileUploadKanbanRenderer" t-inherit-mode="primary">
+        <t t-if="this.showNoContentHelper" position="replace">
+            <t t-if="this.showNoContentHelper">
+                <SaleActionHelper noContentHelp="this.props.noContentHelp"/>
+            </t>
+        </t>
+    </t>
+</templates>

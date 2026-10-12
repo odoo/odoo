@@ -1,0 +1,185 @@
+<rsm:CrossIndustryInvoice  xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100" xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100" xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+
+  <rsm:ExchangedDocumentContext>
+    <ram:BusinessProcessSpecifiedDocumentContextParameter>
+        <ram:ID>B1</ram:ID>
+    </ram:BusinessProcessSpecifiedDocumentContextParameter>
+    <ram:GuidelineSpecifiedDocumentContextParameter>
+      <ram:ID>urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended</ram:ID>
+    </ram:GuidelineSpecifiedDocumentContextParameter>
+  </rsm:ExchangedDocumentContext>
+
+  <rsm:ExchangedDocument>
+    <ram:ID>INV/2026/00001</ram:ID>
+    <ram:TypeCode>380</ram:TypeCode>
+    <ram:IssueDateTime>
+      <udt:DateTimeString format="102">20260101</udt:DateTimeString>
+    </ram:IssueDateTime>
+    <ram:IncludedNote>
+        <ram:Content>Test narration</ram:Content>
+    </ram:IncludedNote>
+    <ram:IncludedNote>
+        <ram:Content>In the event of late payment, a flat-rate fee of €40 for collection costs will be charged (Articles L.441-10 and D.441-5 of the Code de commerce).</ram:Content>
+        <ram:SubjectCode>PMT</ram:SubjectCode>
+    </ram:IncludedNote>
+    <ram:IncludedNote>
+        <ram:Content>Late payment penalties at an annual rate of 10% are applied if the payment is made after the due date.</ram:Content>
+        <ram:SubjectCode>PMD</ram:SubjectCode>
+    </ram:IncludedNote>
+    <ram:IncludedNote>
+        <ram:Content>No discount for early payment.</ram:Content>
+        <ram:SubjectCode>AAB</ram:SubjectCode>
+    </ram:IncludedNote>
+  </rsm:ExchangedDocument>
+
+<rsm:SupplyChainTradeTransaction>
+    <ram:IncludedSupplyChainTradeLineItem>
+      <ram:AssociatedDocumentLineDocument>
+        <ram:LineID>1</ram:LineID>
+      </ram:AssociatedDocumentLineDocument>
+      <ram:SpecifiedTradeProduct>
+          <ram:Name>Test Product</ram:Name>
+      </ram:SpecifiedTradeProduct>
+      <ram:SpecifiedLineTradeAgreement>
+        <ram:GrossPriceProductTradePrice>
+            <ram:ChargeAmount>20.00</ram:ChargeAmount>
+        </ram:GrossPriceProductTradePrice>
+        <ram:NetPriceProductTradePrice>
+          <ram:ChargeAmount>20.00</ram:ChargeAmount>
+        </ram:NetPriceProductTradePrice>
+      </ram:SpecifiedLineTradeAgreement>
+      <ram:SpecifiedLineTradeDelivery>
+        <ram:BilledQuantity unitCode="C62">1.0</ram:BilledQuantity>
+      </ram:SpecifiedLineTradeDelivery>
+      <ram:SpecifiedLineTradeSettlement>
+        <ram:ApplicableTradeTax>
+          <ram:TypeCode>VAT</ram:TypeCode>
+          <ram:CategoryCode>S</ram:CategoryCode>
+          <ram:RateApplicablePercent>20.0</ram:RateApplicablePercent>
+        </ram:ApplicableTradeTax>
+        <ram:SpecifiedTradeSettlementLineMonetarySummation>
+          <ram:LineTotalAmount>20.00</ram:LineTotalAmount>
+        </ram:SpecifiedTradeSettlementLineMonetarySummation>
+      </ram:SpecifiedLineTradeSettlement>
+    </ram:IncludedSupplyChainTradeLineItem>
+
+    <ram:ApplicableHeaderTradeAgreement>
+      <ram:SellerTradeParty>
+        <ram:Name>company_1_data</ram:Name>
+        <ram:SpecifiedLegalOrganization>
+            <ram:ID schemeID="0002">968515759</ram:ID>
+        </ram:SpecifiedLegalOrganization>
+        <ram:DefinedTradeContact>
+            <ram:PersonName>company_1_data</ram:PersonName>
+            <ram:TelephoneUniversalCommunication>
+                <ram:CompleteNumber>+33612345678</ram:CompleteNumber>
+            </ram:TelephoneUniversalCommunication>
+            <ram:EmailURIUniversalCommunication>
+                <ram:URIID>my_company@test.com</ram:URIID>
+            </ram:EmailURIUniversalCommunication>
+        </ram:DefinedTradeContact>
+        <ram:PostalTradeAddress>
+            <ram:PostcodeCode>35043</ram:PostcodeCode>
+            <ram:LineOne>Rue Abbé Huet</ram:LineOne>
+            <ram:CityName>Rennes</ram:CityName>
+            <ram:CountryID>FR</ram:CountryID>
+        </ram:PostalTradeAddress>
+        <ram:URIUniversalCommunication>
+            <ram:URIID schemeID="0225">968515759_96851575905899</ram:URIID>
+        </ram:URIUniversalCommunication>
+        <ram:SpecifiedTaxRegistration>
+            <ram:ID schemeID="VA">FR91746948785</ram:ID>
+        </ram:SpecifiedTaxRegistration>
+      </ram:SellerTradeParty>
+      <ram:BuyerTradeParty>
+        <ram:Name>SUPER FRENCH PARTNER</ram:Name>
+        <ram:SpecifiedLegalOrganization>
+            <ram:ID schemeID="0002">968515759</ram:ID>
+        </ram:SpecifiedLegalOrganization>
+        <ram:DefinedTradeContact>
+            <ram:PersonName>SUPER FRENCH PARTNER</ram:PersonName>
+            <ram:TelephoneUniversalCommunication>
+                <ram:CompleteNumber>+33 1 23 45 67 89</ram:CompleteNumber>
+            </ram:TelephoneUniversalCommunication>
+        </ram:DefinedTradeContact>
+        <ram:PostalTradeAddress>
+            <ram:PostcodeCode>59000</ram:PostcodeCode>
+            <ram:LineOne>Rue Fabricy, 16</ram:LineOne>
+            <ram:CityName>Lille</ram:CityName>
+            <ram:CountryID>FR</ram:CountryID>
+        </ram:PostalTradeAddress>
+        <ram:URIUniversalCommunication>
+            <ram:URIID schemeID="0225">968515759_96851575905808</ram:URIID>
+        </ram:URIUniversalCommunication>
+        <ram:SpecifiedTaxRegistration>
+            <ram:ID schemeID="VA">FR23334175221</ram:ID>
+        </ram:SpecifiedTaxRegistration>
+      </ram:BuyerTradeParty>
+      <ram:BuyerOrderReferencedDocument>
+        <ram:IssuerAssignedID>INV/2026/00001</ram:IssuerAssignedID>
+      </ram:BuyerOrderReferencedDocument>
+    </ram:ApplicableHeaderTradeAgreement>
+      <ram:ApplicableHeaderTradeDelivery>
+        <ram:ShipToTradeParty>
+          <ram:Name>SUPER FRENCH PARTNER</ram:Name>
+          <ram:DefinedTradeContact>
+            <ram:PersonName>SUPER FRENCH PARTNER</ram:PersonName>
+            <ram:TelephoneUniversalCommunication>
+                <ram:CompleteNumber>+33 1 23 45 67 89</ram:CompleteNumber>
+            </ram:TelephoneUniversalCommunication>
+          </ram:DefinedTradeContact>
+            <ram:PostalTradeAddress>
+                <ram:PostcodeCode>59000</ram:PostcodeCode>
+                <ram:LineOne>Rue Fabricy, 16</ram:LineOne>
+                <ram:CityName>Lille</ram:CityName>
+                <ram:CountryID>FR</ram:CountryID>
+            </ram:PostalTradeAddress>
+        </ram:ShipToTradeParty>
+          <ram:ActualDeliverySupplyChainEvent>
+            <ram:OccurrenceDateTime>
+              <udt:DateTimeString format="102">20260101</udt:DateTimeString>
+            </ram:OccurrenceDateTime>
+          </ram:ActualDeliverySupplyChainEvent>
+      </ram:ApplicableHeaderTradeDelivery>
+
+    <ram:ApplicableHeaderTradeSettlement>
+      <ram:PaymentReference>INV/2026/00001</ram:PaymentReference>
+      <ram:InvoiceCurrencyCode>EUR</ram:InvoiceCurrencyCode>
+      <ram:SpecifiedTradeSettlementPaymentMeans>
+          <ram:TypeCode>42</ram:TypeCode>
+          <ram:PayeePartyCreditorFinancialAccount>
+              <ram:ProprietaryID>FR7630004028379876543210943</ram:ProprietaryID>
+          </ram:PayeePartyCreditorFinancialAccount>
+      </ram:SpecifiedTradeSettlementPaymentMeans>
+      <ram:ApplicableTradeTax>
+        <ram:CalculatedAmount>4.00</ram:CalculatedAmount>
+        <ram:TypeCode>VAT</ram:TypeCode>
+        <ram:BasisAmount>20.00</ram:BasisAmount>
+        <ram:CategoryCode>S</ram:CategoryCode>
+        <ram:DueDateTypeCode>5</ram:DueDateTypeCode>
+        <ram:RateApplicablePercent>20.0</ram:RateApplicablePercent>
+      </ram:ApplicableTradeTax>
+        <ram:BillingSpecifiedPeriod>
+            <ram:StartDateTime>
+                <udt:DateTimeString format="102">20260101</udt:DateTimeString>
+            </ram:StartDateTime>
+            <ram:EndDateTime>
+                <udt:DateTimeString format="102">20260101</udt:DateTimeString>
+            </ram:EndDateTime>
+        </ram:BillingSpecifiedPeriod>
+        <ram:SpecifiedTradePaymentTerms>
+            <ram:DueDateDateTime>
+                <udt:DateTimeString format="102">20260101</udt:DateTimeString>
+            </ram:DueDateDateTime>
+        </ram:SpecifiedTradePaymentTerms>
+      <ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+        <ram:LineTotalAmount>20.00</ram:LineTotalAmount>
+        <ram:TaxBasisTotalAmount>20.00</ram:TaxBasisTotalAmount>
+        <ram:TaxTotalAmount currencyID="EUR">4.00</ram:TaxTotalAmount>
+        <ram:GrandTotalAmount>24.00</ram:GrandTotalAmount>
+        <ram:TotalPrepaidAmount>0.00</ram:TotalPrepaidAmount>
+        <ram:DuePayableAmount>24.00</ram:DuePayableAmount>
+      </ram:SpecifiedTradeSettlementHeaderMonetarySummation>
+    </ram:ApplicableHeaderTradeSettlement>
+  </rsm:SupplyChainTradeTransaction>
+</rsm:CrossIndustryInvoice>

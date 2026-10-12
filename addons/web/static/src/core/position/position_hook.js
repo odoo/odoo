@@ -1,0 +1,154 @@
+import { EventBus, onMounted, onPatched, onWillDestroy, onWillUnmount } from "@odoo/owl";
+import { reposition } from "@web/core/position/utils";
+import { omit } from "@web/core/utils/objects";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { useEnv, useSubEnv } from "@web/owl2/utils";
+
+/**
+ * @typedef {import("@web/core/position/utils").ComputePositionOptions} ComputePositionOptions
+ * @typedef {import("@web/core/position/utils").PositioningSolution} PositioningSolution
+ *
+ * @typedef {Object} UsePositionOptionsExtensionType
+ * @property {(popperElement: HTMLElement, solution: PositioningSolution) => void} [onPositioned]
+ *  callback called when the positioning is done.
+ * @typedef {ComputePositionOptions & UsePositionOptionsExtensionType} UsePositionOptions
+ * @property {boolean} [rememberPosition=true]
+ *  keep the last position as the preferred one
+ *
+ * @typedef PositioningControl
+ * @property {() => void} lock prevents further positioning updates
+ * @property {() => void} unlock allows further positioning updates (triggers an update right away)
+ */
+
+export const POSITION_BUS = Symbol("position-bus");
+
+/**
+ * Makes sure that the `popper` element is always
+ * placed at `position` from the `target` element.
+ * If doing so the `popper` element is clipped off `container`,
+ * sensible fallback positions are tried.
+ * If all of fallback positions are also clipped off `container`,
+ * the original position is used.
+ *
+ * Note: The popper element should be bound to the given ref with t-ref.
+ *
+ * @param {import("@web/core/utils/hooks").Ref} popperRef ref on the popper element
+ * @param {() => HTMLElement} getTarget
+ * @param {UsePositionOptions} [options={}] the options to be used for positioning
+ * @returns {PositioningControl}
+ *  control object to lock/unlock the positioning.
+ */
+export function usePosition(popperRef, getTarget, options = {}) {
+    const rememberPosition = options.rememberPosition ?? true;
+    const getPopperEl = popperRef;
+    let lock = false;
+    const update = () => {
+        const popperEl = getPopperEl();
+        const targetEl = getTarget();
+        if (!popperEl || !targetEl?.isConnected || lock) {
+            // No compute needed
+            return false;
+        }
+        const repositionOptions = omit(options, "onPositioned");
+        const solution = reposition(popperEl, targetEl, repositionOptions);
+        // Don't memorize center position because it's a fallback that we don't want to keep if possible
+        if (rememberPosition && solution.direction !== "center") {
+            options.position = `${solution.direction}-${solution.variant}`; // memorize last position
+        }
+        options.onPositioned?.(popperEl, solution);
+        return true;
+    };
+
+    const env = useEnv();
+    const bus = env[POSITION_BUS] || new EventBus();
+
+    let executingUpdate = false;
+    const batchedUpdate = async () => {
+        // not same as batch, here we're executing once and then awaiting.
+        // Only open the batching window when a reposition actually happened:
+        // update() may run before the popper ref is set (its subtree commits
+        // later in the same task), and consuming the window then would drop
+        // the "update" trigger that follows the ref assignment, leaving the
+        // popper unpositioned until an unrelated event repositions it.
+        if (!executingUpdate && update()) {
+            executingUpdate = true;
+            await Promise.resolve();
+            executingUpdate = false;
+        }
+    };
+    bus.addEventListener("update", batchedUpdate);
+    onWillDestroy(() => bus.removeEventListener("update", batchedUpdate));
+
+    const isTopmost = !(POSITION_BUS in env);
+    if (isTopmost) {
+        useSubEnv({ [POSITION_BUS]: bus });
+    }
+
+    const throttledUpdate = useThrottleForAnimation(() => bus.trigger("update"));
+    let stopListening;
+    const updatePosition = () => {
+        stopListening?.();
+        stopListening = null;
+        // Reposition
+        bus.trigger("update");
+
+        if (isTopmost) {
+            // Attach listeners to keep the positioning up to date
+            const scrollListener = (e) => {
+                if (getPopperEl()?.contains(e.target)) {
+                    // In case the scroll event occurs inside the popper, do not reposition
+                    return;
+                }
+                if (!e.target.contains(getTarget())) {
+                    // the position target isn't inside the scrolled area, no need to reposition
+                    return;
+                }
+                throttledUpdate();
+            };
+            // Get the ownerDocument of the target, and the topmost document
+            // if the target is inside an iframe of same-origin
+            // (c.f. html_builder), to handle scroll events at these 2 levels.
+            const documents = [];
+            const targetDocument = getTarget()?.ownerDocument;
+            if (targetDocument) {
+                documents.push(targetDocument);
+                if (
+                    targetDocument.defaultView &&
+                    targetDocument.defaultView.top !== targetDocument.defaultView
+                ) {
+                    try {
+                        documents.push(targetDocument.defaultView.top.document);
+                    } catch {
+                        // Don't access the top document if it is not allowed.
+                        // (i.e. iframe origin or sandbox restriction)
+                    }
+                }
+            }
+            for (const document of documents) {
+                document.addEventListener("scroll", scrollListener, { capture: true });
+                document.addEventListener("load", throttledUpdate, { capture: true });
+            }
+            window.addEventListener("resize", throttledUpdate);
+            stopListening = () => {
+                for (const document of documents) {
+                    document.removeEventListener("scroll", scrollListener, { capture: true });
+                    document.removeEventListener("load", throttledUpdate, { capture: true });
+                }
+                window.removeEventListener("resize", throttledUpdate);
+            };
+        }
+    };
+    onMounted(updatePosition);
+    onPatched(updatePosition);
+    onWillUnmount(() => stopListening?.());
+
+    return {
+        lock: () => {
+            lock = true;
+        },
+        unlock: () => {
+            lock = false;
+            bus.trigger("update");
+        },
+    };
+}

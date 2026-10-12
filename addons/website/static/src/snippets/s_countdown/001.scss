@@ -1,0 +1,146 @@
+.s_countdown[data-vcss="001"] .s_countdown_wrapper {
+    --countdown-item-bg-color: transparent;
+
+    font-variant-numeric: tabular-nums;
+
+    .s_countdown_metrics {
+        outline: none;
+    }
+
+    .o_colored_item {
+        background-color: var(--countdown-item-bg-color);
+        border: $border-width solid $border-color;
+    }
+
+    .o_count_item {
+        display: inline-flex;
+        align-items: baseline;
+    }
+
+    .o_count_item_nbs {
+        // Force to keep ltr numbers
+        direction: ltr #{"/* rtl:ltr */"};
+    }
+
+    &.o_label_none .o_count_item_label, &.o_label_compact .o_label_full {
+        @include visually-hidden();
+    }
+
+    &:where(:not(.o_label_compact)) .o_label_short {
+        display: none;
+    }
+
+    &.o_count_monospace .o_count_item_nbs {
+        font-family: $font-family-monospace;
+    }
+
+    // Hide unnecessary separator when changing the display option
+    .o_count_item:where(:has( ~ .o_count_item.d-none)):not(:has(~.o_count_item:not(.d-none))) ~ .o_count_separator {
+        display: none;
+    }
+
+    &:where(:not(.o_label_compact)) {
+        .o_count_inline_text {
+            .o_count_item_label {
+                margin-left: map-get($spacers, 1)/2;
+            }
+            /* Split the margin between the number and the label to prevent
+            accidentally selecting the label when editing numbers with a
+            toolbar. */
+            .o_count_item_nbs {
+                margin-right: map-get($spacers, 1)/2;
+            }
+        }
+    }
+
+    .o_count_inline_text {
+        .o_count_item_label {
+            text-transform: lowercase;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        // Use "," as separator
+        .o_count_item:where(:not(:last-child):not(:has( + .d-none))):after {
+            content: ',\00a0';
+        }
+    }
+
+    &.o_label_none {
+        .o_count_inline_text {
+            .o_count_item {
+                // Replace "," separator with ":" when labels are hidden.
+                &:where(:not(:first-of-type)):before {
+                    content: '\00a0:\00a0';
+                }
+
+                &::after {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .o_template_dominoes {
+        .o_count_item_nbs {
+            gap: 1px;
+        }
+    }
+
+    &.o_countdown_no_bg_color .o_template_dominoes {
+        .o_count_item_nb {
+            &:after {
+                position: absolute;
+                inset: 50% 0 auto;
+                display: block;
+                border-bottom: $border-width solid $border-color;
+                content: '';
+                z-index: 1;
+            }
+        }
+    }
+
+    &:not(.o_countdown_no_bg_color) .o_template_dominoes {
+        .o_count_item_nb {
+            // Simulates the horizontal line in the middle of the domino.
+            clip-path: polygon(0 0, 100% 0, 100% calc(50% - 0.5px), 0 calc(50% - 0.5px), 0 calc(50% + 0.5px), 100% calc(50% + 0.5px), 100% 100%, 0 100%);
+        }
+    }
+
+    .o_template_wrapped_numbers {
+        .o_count_item_nbs {
+            min-width: map-get($spacers, 5);
+            aspect-ratio: 1 / 1;
+            display: inline-flex;
+        }
+
+        .o_count_separator {
+            display: flex;
+            min-height: map-get($spacers, 5);
+            height: 3em;
+        }
+    }
+}
+
+.s_countdown[data-vcss="001"].s_countdown_title_hidden {
+    .s_countdown_title {
+        display: none !important;
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    .s_countdown[data-vcss="001"].s_countdown_title_left {
+        > .container, > .container-fluid, > .o_container_small {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .s_countdown_title {
+            width: 25%;
+            padding-right: 0.5rem;
+        }
+    }
+}

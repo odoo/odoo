@@ -1,0 +1,212 @@
+/* The call controls (call_action_list.js) of the call bar and of the meeting's side actions. */
+.o-discuss-CallActionList,
+.o-mail-MeetingSideActions {
+    --o-CallControls-size: var(--o-bs-spacer-5);
+    --o-CallControls-narrowWidth: calc(var(--o-bs-spacer-5) - var(--o-bs-spacer-2));
+    --o-CallControls-iconSize: var(--o-bs-h2-font-size);
+    --o-CallControls-chevronIconSize: var(--o-bs-h3-font-size);
+    /* Neutral grays lifted from the call view's black: the call menu colors lean blue. Plain mixes, */
+    /* as the dark theme swaps tint-color and shade-color. */
+    --o-CallControls-bgColor: color-mix(in srgb, white 10%, var(--o-mail-Meeting-bgColor));
+    --o-CallControls-bgColor-lighter: color-mix(in srgb, white 20%, var(--o-mail-Meeting-bgColor));
+
+    /* The colors are the button's own variables, set per class (call_action_list.js picks it). */
+    .o-discuss-CallControl {
+        --btn-color: white;
+        --btn-hover-color: white;
+        --btn-active-color: white;
+        --btn-disabled-color: white;
+        /* Flat like the call theme's buttons, whose class these controls go without. */
+        --gradient: transparent;
+        --o-mail-ActionList-icon-opacity: 100%;
+        width: var(--o-CallControls-size);
+        height: var(--o-CallControls-size);
+    }
+
+    .o-discuss-CallControl-neutral {
+        --btn-bg: var(--o-CallControls-bgColor);
+        --btn-disabled-bg: var(--o-CallControls-bgColor);
+        --btn-hover-bg: var(--o-CallControls-bgColor-lighter);
+        --btn-active-bg: var(--o-CallControls-bgColor-lighter);
+    }
+
+    .o-discuss-CallControl-selected {
+        --btn-active-bg: var(--o-action);
+    }
+
+    .o-discuss-CallControl-icon {
+        font-size: var(--o-CallControls-iconSize);
+    }
+
+    .o-discuss-CallControl-more {
+        width: var(--o-CallControls-narrowWidth);
+    }
+
+    .o-discuss-CallControl-leave {
+        width: calc(var(--o-CallControls-size) * 1.5);
+
+        /* The hang-up handset. */
+        .o-discuss-CallControl-icon {
+            transform: rotate(135deg);
+        }
+    }
+}
+
+.o-discuss-CallActionList .o-mail-ActionList-group {
+    gap: var(--o-bs-spacer-2);
+}
+
+/* Outside a meeting, the bar has to fit a chat window. */
+.o-discuss-CallActionList:not(.o-inMeetingView) {
+    --o-CallControls-size: calc(var(--o-bs-spacer) * 2);
+    --o-CallControls-narrowWidth: calc(var(--o-bs-spacer) * 2 - var(--o-bs-spacer-1));
+    --o-CallControls-iconSize: var(--o-bs-h4-font-size);
+    --o-CallControls-chevronIconSize: var(--o-bs-font-size-base);
+}
+
+/* Microphone and camera: the toggle and its settings chevron share one pill. */
+.o-discuss-CallActionList .o-mail-ActionList-group:has(.o-discuss-CallControl-settings) {
+    gap: 0;
+    background-color: var(--o-CallControls-bgColor);
+    /* Muting and turning the camera off ease in rather than snap. */
+    transition: background-color 0.3s ease-in-out;
+
+    .o-discuss-CallControl {
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+
+    .o-discuss-CallControl-toggle,
+    .o-discuss-CallControl-off {
+        width: calc(var(--o-CallControls-size) + var(--o-bs-spacer-2));
+    }
+
+    /* Switched on is the resting state: neutral, even for the camera tagged as active then. */
+    .o-discuss-CallControl-toggle {
+        --btn-bg: var(--o-CallControls-bgColor-lighter);
+        --btn-disabled-bg: var(--o-CallControls-bgColor-lighter);
+        --btn-hover-bg: var(--o-CallControls-bgColor-lighter);
+        --btn-active-bg: var(--o-CallControls-bgColor-lighter);
+    }
+
+    .o-discuss-CallControl-off {
+        --btn-bg: var(--danger);
+        --btn-disabled-bg: var(--danger);
+        --btn-hover-bg: var(--danger);
+        --btn-active-bg: var(--danger);
+    }
+
+    /* The chevron shows the pill through. */
+    .o-discuss-CallControl-settings {
+        --btn-bg: transparent;
+        --btn-disabled-bg: transparent;
+        --btn-hover-bg: transparent;
+        --btn-active-bg: transparent;
+        width: var(--o-CallControls-narrowWidth);
+
+        &.show .o-discuss-CallControl-chevron {
+            transform: rotate(180deg);
+        }
+    }
+
+    .o-discuss-CallControl-chevron {
+        font-size: var(--o-CallControls-chevronIconSize);
+    }
+
+    /* Self's talking bars only stand in for the chevron while actually talking. */
+    .o-discuss-quickVoiceSettings:not(:hover):not(.show):not(:has(.o-isTalking)) {
+        .o-discuss-quickVoiceSettings-chevron {
+            opacity: 1;
+        }
+
+        .o-discuss-TalkingAudioBars {
+            opacity: 0;
+        }
+    }
+
+    &:has(.o-discuss-CallControl-off) {
+        background-color: color-mix(in srgb, black 60%, var(--danger));
+    }
+}
+
+/* Every popover of the call controls fades in. */
+.o-discuss-CallActionList-menu {
+    animation: o-discuss-CallActionList-menuIn 0.15s linear;
+
+    /* Nearly as deep as the call view rather than the simulated dark theme's gray (core.scss). */
+    &.dropdown-menu {
+        background-color: color-mix(in srgb, white 5%, var(--o-mail-Meeting-bgColor));
+
+        /* Items hover like the quick settings' rows: the light theme's item hover would darken them. */
+        .dropdown-item:hover,
+        .dropdown-item.focus {
+            background-color: color-mix(in srgb, white 10%, transparent);
+        }
+
+        /* Odoo hangs the check mark a fixed em below the item's top (webclient.scss): centered */
+        /* instead, whatever the item's padding. */
+        .dropdown-item.active::before {
+            top: 50%;
+            transform: translate(-1.25em, -50%);
+        }
+    }
+
+    /* Separators only hint at the grouping: no opacity utility goes this low. */
+    hr {
+        opacity: 0.1;
+    }
+}
+
+@keyframes o-discuss-CallActionList-menuIn {
+    from {
+        opacity: 0;
+    }
+}
+
+.o-discuss-CallActionList-callLayout {
+    .o-mail-ActionList-actionLabel {
+        font-weight: var(--o-bs-font-weight-bold);
+    }
+
+    .o-mail-ActionList-button {
+        padding-top: var(--o-bs-spacer-2);
+        padding-bottom: var(--o-bs-spacer-2);
+    }
+}
+
+.o-discuss-quickVoiceSettings:has(.o-discuss-TalkingAudioBars) {
+    .o-discuss-TalkingAudioBars {
+        position: absolute;
+        inset: 0;
+        height: auto;
+        pointer-events: none;
+    }
+
+    .o-discuss-TalkingAudioBars-audioBar {
+        background-color: currentColor !important;
+    }
+
+    .o-discuss-quickVoiceSettings-chevron {
+        opacity: 0;
+    }
+
+    &:hover, &.show {
+        .o-discuss-quickVoiceSettings-chevron {
+            opacity: 1;
+        }
+        .o-discuss-TalkingAudioBars {
+            opacity: 0;
+        }
+    }
+}
+
+/* The device's name lines up with the label, past the icon (as wide as its font size) and the gap. */
+.o-mail-DeviceSelect-subtitle {
+    padding-inline-start: calc(var(--o-font-size-base-small) + var(--o-bs-spacer-2));
+
+    .o-inMeetingView & {
+        /* The o-gap-2_5 between the icon and the label, halfway between the spacers 2 and 3. */
+        padding-inline-start: calc(
+            var(--o-bs-h3-font-size) + (var(--o-bs-spacer-2) + var(--o-bs-spacer-3)) / 2
+        );
+    }
+}

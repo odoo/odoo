@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OrderWidget">
+        <div
+            class="page-buttons bg-view z-1"
+            t-att-class="{'border-top' : !this.props.removeTopClasses}">
+            <div class="o_self_footer container o_self_container px-kiosk-p-4 d-flex justify-content-between flex-nowrap py-3 gap-2 gap-sm-4">
+                <div class="d-flex flex-nowrap align-items-center justify-content-start overflow-hidden gap-2" style="min-width: fit-content;">
+                    <t t-call-slot="left"/>
+                </div>
+
+                <div class="d-flex flex-nowrap align-items-center justify-content-end overflow-hidden gap-2 gap-md-4">
+                    <t t-call-slot="right"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

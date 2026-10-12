@@ -1,0 +1,26 @@
+.o_wsale_collect_switch {
+    --ClickAndCollect__switch-padding: #{map-get($spacers, 1)};
+    --ClickAndCollect__option-border-radius--selected: #{$border-radius};
+
+    border-radius: calc(var(--ClickAndCollect__option-border-radius--selected, #{$border-radius}) + var(--ClickAndCollect__switch-padding, #{map-get($spacers, 1)}));
+    padding: var(--ClickAndCollect__switch-padding, #{map-get($spacers, 1)});
+
+    .o_wsale_collect_option {
+        border-radius: var(--ClickAndCollect__option-border-radius--selected, #{$border-radius});
+
+        &:hover {
+            background-color: if(lightness($body-bg) > 50%, darken(o-color('o-color-3'), 3%), lighten($body-bg, 20%));
+        }
+
+        &:has(:checked) {
+            background-color: if(lightness($body-bg) > 50%, $body-bg, lighten($body-bg, 15%));
+            box-shadow: $box-shadow-sm;
+        }
+
+        &:has(:focus-visible) {
+            position: relative;
+            z-index: 1;
+            outline: $focus-ring-width solid $focus-ring-color;
+        }
+    }
+}

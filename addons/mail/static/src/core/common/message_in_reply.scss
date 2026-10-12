@@ -1,0 +1,34 @@
+.o-mail-MessageInReply-author {
+    opacity: 75%;
+}
+
+.o-mail-MessageInReply-avatar {
+    width: $o-mail-Avatar-size / 2;
+    aspect-ratio: 1;
+}
+
+.o-mail-MessageInReply-core {
+    border-width: $border-width !important;
+    border-color: color-mix(in srgb, var(--o-bubble-color-base) 50%, transparent) !important;
+
+    .o-mail-MessageInReply-message {
+        opacity: var(--mail-MessageInReply-messageOpacityNonHover, 65%);
+    }
+
+    &:hover, &:focus-visible {
+        transform: translateY(#{$border-width * -2});
+        transition: $transition-base;
+
+        .o-mail-MessageInReply-message {
+            opacity: 100%;
+        }
+    }
+}
+
+
+.o-mail-MessageInReply-message {
+    // Make the body single line when possible
+    p {
+        margin: 0;
+    }
+}

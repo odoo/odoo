@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_form_inherit_l10n_ro_edi" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_ro_edi</field>
+        <field name="model">account.move</field>
+        <field name="priority">30</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="l10n_ro_edi_state"
+                       invisible="not l10n_ro_edi_state or move_type in ('out_receipt', 'in_receipt')"/>
+                <field name="l10n_ro_edi_index"
+                       invisible="not l10n_ro_edi_index or move_type in ('out_receipt', 'in_receipt')"/>
+            </xpath>
+
+            <!-- CIUS-RO Documents Tab -->
+            <xpath expr="//page[@id='other_tab_entry']" position="after">
+                <page id="l10n_ro_edi_documents"
+                      string="E-Factura"
+                      invisible="not l10n_ro_edi_document_ids">
+                    <field name="l10n_ro_edi_document_ids">
+                        <list create="false" delete="false" edit="false" no_open="1"
+                              decoration-danger="state == 'invoice_refused'"
+                              decoration-warning="state == 'invoice_sent'"
+                              decoration-success="state == 'invoice_validated'">
+                            <field name="datetime"/>
+                            <field name="state" widget="account_document_state"/>
+                            <field name="key_download" optional="hide"/>
+
+                            <button name="action_l10n_ro_edi_fetch_status"
+                                    type="object"
+                                    string="Fetch status"
+                                    invisible="not show_fetch_status_button"/>
+                            <button name="action_l10n_ro_edi_download_attachment"
+                                    type="object"
+                                    string="Download the document sent"
+                                    invisible="not attachment or state not in ['invoice_not_indexed', 'invoice_sent']"/>
+                            <button name="action_l10n_ro_edi_download_attachment"
+                                    type="object"
+                                    string="Download the signature"
+                                    invisible="not attachment or state not in ['invoice_validated', 'invoice_refused']"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="out_invoice_tree_inherit_l10n_ro_edi" model="ir.ui.view">
+        <field name="name">out.invoice.list.inherit.l10n_ro_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="status_in_payment" position="before">
+                <field name="l10n_ro_edi_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="out_credit_note_tree_inherit_l10n_ro_edi" model="ir.ui.view">
+        <field name="name">out.credit.note.list.inherit.l10n_ro_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_out_credit_note_tree"/>
+        <field name="arch" type="xml">
+            <field name="status_in_payment" position="before">
+                <field name="l10n_ro_edi_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="in_invoice_tree_inherit_l10n_ro_edi" model="ir.ui.view">
+        <field name="name">in.invoice.list.inherit.l10n_ro_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="status_in_payment" position="before">
+                <field name="l10n_ro_edi_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_ro_edi_view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit.l10n.ro.edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='journal_id']" position="after">
+                <field name="l10n_ro_edi_state"/>
+            </xpath>
+            <xpath expr="//filter[@name='out_refund']" position="after">
+                <filter string="Sent E-Factura" name="l10n_ro_edi_state_invoice_sent"
+                        domain="[('l10n_ro_edi_state', 'in', ['invoice_not_indexed', 'invoice_sent'])]"/>
+                <filter string="Refused E-Factura" name="l10n_ro_edi_state_invoice_refused"
+                        domain="[('l10n_ro_edi_state', '=', 'invoice_refused')]"/>
+                <filter string="Validated E-Factura" name="l10n_ro_edi_state_invoice_validated"
+                        domain="[('l10n_ro_edi_state', '=', 'invoice_validated')]"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="E-Factura Status" name="l10n_ro_edi_state_group"
+                        domain="" context="{'group_by':'l10n_ro_edi_state'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="l10n_ro_edi_action_fetch_ciusro_status" model="ir.actions.server">
+        <field name="name">Fetch E-Factura Status</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records._l10n_ro_edi_fetch_invoice_sent_documents()
+        </field>
+    </record>
+
+</odoo>

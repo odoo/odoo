@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ir_cron_calendar_clean_up" model="ir.cron">
+            <field name="name">Resource: Clean up calendar attendances</field>
+            <field name="model_id" ref="model_resource_calendar"/>
+            <field name="state">code</field>
+            <field name="code">model._calendar_clean_up()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+        </record>
+    </data>
+</odoo>

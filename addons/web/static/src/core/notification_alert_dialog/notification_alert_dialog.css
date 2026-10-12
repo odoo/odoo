@@ -1,0 +1,38 @@
+.o-NotificationAlertDialog-toggleRect {
+    animation: o-NotificationAlertDialog-toggle-fill 4.6s linear infinite;
+    animation-delay: 1.8s;
+}
+
+.o-NotificationAlertDialog-toggleCircle {
+    animation: o-NotificationAlertDialog-toggle-move 4.6s linear infinite;
+    animation-delay: 1.8s;
+}
+
+.o-PermissionIllustration-mouse {
+    animation: o-PermissionIllustration-mouse-move 4.6s linear infinite;
+    animation-delay: 1s;
+}
+
+@keyframes o-NotificationAlertDialog-toggle-fill {
+    0%   { fill: var(--gray-300); }
+    6.5% { fill: var(--primary); }
+    45%  { fill: var(--primary); }
+    52%  { fill: var(--gray-300); }
+    100% { fill: var(--gray-300); }
+}
+
+@keyframes o-NotificationAlertDialog-toggle-move {
+    0%   { transform: translateX(0); }
+    6.5% { transform: translateX(21px); }
+    45%  { transform: translateX(21px); }
+    52%  { transform: translateX(0); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes o-PermissionIllustration-mouse-move {
+    0%   { transform: translate(0 , 0); }
+    10% { transform: translate(-50px , 55px); }
+    30%  { transform: translate(-50px , 55px); }
+    45%  { transform: translate(0 , 0); }
+    100% { transform: translate(0 , 0); }
+}

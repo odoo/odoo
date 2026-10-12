@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="resource_calendar_pick_up_in_store" model="resource.calendar">
+        <field name="name">Pick up in store - Opening hours</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="attendance_ids" eval="[
+            Command.clear(),
+            Command.create({'dayofweek': '0', 'hour_from': 8, 'hour_to': 18}),
+            Command.create({'dayofweek': '1', 'hour_from': 8, 'hour_to': 18}),
+            Command.create({'dayofweek': '2', 'hour_from': 8, 'hour_to': 18}),
+            Command.create({'dayofweek': '3', 'hour_from': 8, 'hour_to': 18}),
+            Command.create({'dayofweek': '4', 'hour_from': 8, 'hour_to': 18}),
+        ]"/>
+    </record>
+
+    <record id="stock.warehouse0" model="stock.warehouse">
+        <field name="opening_hours" ref="resource_calendar_pick_up_in_store"/>
+    </record>
+
+</odoo>

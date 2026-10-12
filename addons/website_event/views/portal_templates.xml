@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_events" inherit_id="event.portal_my_events">
+        <xpath expr="//td[@name='event_name']" position="replace">
+            <td t-if="registration.event_id.is_published">
+                <a t-attf-href="/event/#{registration.event_id.id}">
+                    <span t-field="registration.event_id.name" t-att-title="registration.event_id.name"/>
+                </a>
+            </td>
+            <td t-else="">
+                <span t-field="registration.event_id.name" t-att-title="registration.event_id.name"/>
+            </td>
+        </xpath>
+    </template>
+</odoo>

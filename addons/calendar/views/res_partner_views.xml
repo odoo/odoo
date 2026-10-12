@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<odoo>
+        <!-- Add contextual button on partner form view -->
+        <record id="view_partners_form" model="ir.ui.view">
+            <field name="name">res_partner.view.form.calendar</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <data>
+                    <div name="button_box" position="inside">
+                        <button class="oe_stat_button" type="object"
+                            name="action_schedule_meeting"
+                            icon="calendar_today"
+                            icon_class="oi-filled"
+                            context="{'partner_id': id, 'partner_name': name}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text"><field name="meeting_display_label"/></span>
+                                <field name="meeting_next_date" class="o_stat_value" invisible="not meeting_next_date"/>
+                                <field name="meeting_count" class="o_stat_value" invisible="meeting_next_date or not meeting_count"/>
+                            </div>
+                        </button>
+                    </div>
+                </data>
+            </field>
+        </record>
+
+        <record id="res_partner_view_form_simplified" model="ir.ui.view">
+            <field name="name">res.partner.view.form.simplified.calendar</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Contact" class="o_res_partner_form_quick_create">
+                    <group>
+                        <field name="name" default_focus="1" placeholder="e.g. Lumber Inc or Brandon Freeman"  required="1"/>
+                        <field name="parent_id"
+                            string="Company"
+                            widget="res_partner_many2one"
+                            placeholder="e.g. Acme Corporation"
+                            domain="[('parent_id', '=', False)]"
+                            context="{'show_vat': True, 'default_user_id': user_id}"/>
+                        <field name="email" widget="email" required="True" placeholder="e.g. john.doe@email.com"/>
+                        <field name="phone" widget="phone" options="{'enable_sms': false}" placeholder="e.g. (555) 555-0199"/>
+                        <field name="function" placeholder="e.g. Sales Director"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+</odoo>

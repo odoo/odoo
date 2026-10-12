@@ -1,0 +1,81 @@
+.o-mail-ChatWindow {
+    width: $o-mail-ChatWindow-width;
+
+    z-index: $zindex-sticky;
+    &.o-mobile {
+        z-index: var(--mail-ChatWindow-mobileZindex, $zindex-sticky - 2) !important;
+    }
+    &:not(.o-mobile) {
+        --border-opacity: var(--mail-ChatWindow-desktopBorderOpacity, .15);
+        height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9);
+        border-radius: calc(#{$o-mail-Composer-chatWindowVPadding} + #{$o-mail-Composer-pillRadiusBase});
+    }
+    outline: none;
+
+    transition: box-shadow 2.0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    &.o-highlighted {
+        box-shadow: 0 0 1.5rem #{$o-component-active-border} !important;
+    }
+}
+
+.o-mail-ChatWindow-moreActions {
+    color: inherit !important;
+    background-color: inherit !important;
+    &:hover, &.o-active, &.o-hover {
+        color: var(--mail-ChatWindow-moreActionsHoverColor, black) !important;
+        backdrop-filter: invert(.025);
+        border-color: transparent !important;
+    }
+    &:not(.o-active):not(.o-hover) [data-icon="arrow_drop_down"] {
+        opacity: 50%;
+    }
+}
+
+.o-mail-ChatWindow-closePanel {
+    z-index: 2;
+}
+
+.o-mail-ChatWindow-counter {
+    margin-bottom: map-get($spacers, 1) / 2;
+}
+
+.o-mail-ChatWindow-country {
+    width: 24px;
+}
+
+.o-mail-ChatWindow-header {
+    --o-btn-circle-height: 0;
+    --border-opacity: var(--mail-ChatWindow-headerBorderOpacity, .15);
+
+    .o-mail-ActionList-group {
+        gap: map-get($spacers, 3);
+
+        button:not(:hover):not(:focus-visible):not(:active):not(.btn-success) {
+            --o-mail-ActionList-Button-opacity: .5;
+        }
+
+        @include media-breakpoint-up(md) {
+            gap: map-get($spacers, 1);
+        }
+    }
+
+    .o-mail-ChatWindow-threadAvatar img {
+        height: $o-mail-Avatar-sizeSmall;
+        width: $o-mail-Avatar-sizeSmall;
+    }
+
+    button:not(.o-tag-JOIN_LEAVE_CALL) {
+        --gradient: transparent;
+        padding: 0;
+    }
+}
+
+.o-mail-ChatWindow-imStatus {
+    bottom: -1px;
+    right: -2px;
+}
+
+.o-mail-ChatWindow-typing {
+    font-size: $small-font-size * 0.9;
+    z-index: $o-mail-NavigableList-zIndex - 2;
+}

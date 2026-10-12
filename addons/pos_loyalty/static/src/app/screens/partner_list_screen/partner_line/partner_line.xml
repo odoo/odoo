@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_loyalty.PartnerLine" t-inherit="point_of_sale.PartnerLine" t-inherit-mode="extension">
+        <xpath expr="//td[hasclass('partner-line-balance')]" position="inside">
+            <t t-foreach="this.getLoyaltyPoints()" t-as="entry" t-key="entry.id">
+                <div class="pos-right-align" t-out="entry.repr"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

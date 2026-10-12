@@ -1,0 +1,206 @@
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, computed, proxy, signal, t, useOnChange, useProps } from "@odoo/owl";
+import { KeepLast } from "@web/core/utils/concurrency";
+
+/**
+ * A notebook component that will render only the current page and allow
+ * switching between its pages.
+ *
+ * You can also set pages using a template component. Use an array with
+ * the `pages` props to do such rendering.
+ *
+ * Pages can also specify their index in the notebook.
+ *
+ *      e.g.:
+ *          PageTemplate.template = xml`
+                    <h1 t-out="this.props.heading" />
+                    <p t-out="this.props.text" />`;
+
+ *      `pages` could be:
+ *      [
+ *          {
+ *              Component: PageTemplate,
+ *              id: 'unique_id' // optional: can be given as defaultPage props to the notebook
+ *              index: 1 // optional: page position in the notebook
+ *              name: 'some_name' // optional
+ *              title: "Some Title 1", // title displayed on the tab pane
+ *              props: {
+ *                  heading: "Page 1",
+ *                  text: "Text Content 1",
+ *              },
+ *          },
+ *          {
+ *              Component: PageTemplate,
+ *              title: "Some Title 2",
+ *              props: {
+ *                  heading: "Page 2",
+ *                  text: "Text Content 2",
+ *              },
+ *          },
+ *      ]
+ *
+ * <Notebook pages="pages">
+ *    <t t-set-slot="Page Name 1" title="Some Title" isVisible="bool">
+ *      <div>Page Content 1</div>
+ *    </t>
+ *    <t t-set-slot="Page Name 2" title="Some Title" isVisible="bool">
+ *      <div>Page Content 2</div>
+ *    </t>
+ * </Notebook>
+ *
+ * @extends Component
+ */
+
+export const notebookProps = {
+    slots: t.object().optional(),
+    pages: t.array().optional(),
+    class: t.any().optional(),
+    className: t.string().optional(""),
+    defaultPage: t.string().optional(),
+    orientation: t.string().optional("horizontal"),
+    icons: t.object().optional(),
+    onPageUpdate: t.function().optional(() => () => {}),
+    onWillActivatePage: t.function().optional(() => () => {}),
+};
+
+export class Notebook extends Component {
+    static template = "web.Notebook";
+    props = useProps(notebookProps);
+
+    activePane = signal.ref();
+
+    setup() {
+        this.pages = computed(() => this.computePages(this.props));
+        this.state = proxy({ currentPage: null });
+        this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
+        this.keepLastPageTransition = new KeepLast();
+        useLayoutEffect(
+            () => {
+                this.props.onPageUpdate(this.state.currentPage);
+                this.activePane()?.classList.add("show");
+            },
+            () => [this.state.currentPage]
+        );
+        // the default page changed: always activate it
+        useOnChange(
+            () => [this.props.defaultPage],
+            (defaultPage) => {
+                this.state.currentPage = this.computeActivePage(defaultPage, true);
+            },
+            { initialRun: false }
+        );
+        // the pages changed: only fall back on the default page if it wasn't visible
+        useOnChange(
+            () => [this.pages()],
+            () => {
+                this.state.currentPage = this.computeActivePage(
+                    this.props.defaultPage,
+                    !this.defaultVisible
+                );
+            },
+            { initialRun: false }
+        );
+    }
+
+    get navItems() {
+        return this.pages().filter((e) => e[1].isVisible);
+    }
+
+    get page() {
+        const page = this.pages().find((e) => e[0] === this.state.currentPage)[1];
+        return page.Component && page;
+    }
+
+    async activatePage(pageIndex) {
+        if (!this.disabledPages.includes(pageIndex) && this.state.currentPage !== pageIndex) {
+            const prom = (async () => this.props.onWillActivatePage(pageIndex))();
+            const canProceed = await this.keepLastPageTransition.add(prom);
+            if (canProceed !== false) {
+                this.activePane()?.classList.remove("show");
+                this.state.currentPage = pageIndex;
+            }
+        }
+    }
+
+    computePages(props) {
+        if (!props.slots && !props.pages) {
+            return [];
+        }
+        if (props.pages) {
+            for (const page of props.pages) {
+                page.isVisible = true;
+            }
+        }
+        this.disabledPages = [];
+        const pages = [];
+        const pagesWithIndex = [];
+        for (const [k, v] of Object.entries({ ...props.slots, ...props.pages })) {
+            const id = v.id || k;
+            if (v.index) {
+                pagesWithIndex.push([id, v]);
+            } else {
+                pages.push([id, v]);
+            }
+            if (v.isDisabled) {
+                this.disabledPages.push(k);
+            }
+        }
+        for (const page of pagesWithIndex) {
+            pages.splice(page[1].index, 0, page);
+        }
+        return pages;
+    }
+
+    computeActivePage(defaultPage, activateDefault) {
+        if (!this.pages().length) {
+            return null;
+        }
+        const pages = this.pages()
+            .filter((e) => e[1].isVisible)
+            .map((e) => e[0]);
+
+        if (defaultPage) {
+            if (!pages.includes(defaultPage)) {
+                this.defaultVisible = false;
+            } else {
+                this.defaultVisible = true;
+                if (activateDefault) {
+                    return defaultPage;
+                }
+            }
+        }
+        const current = this.state.currentPage;
+        if (!current || (current && !pages.includes(current))) {
+            return pages[0];
+        }
+
+        return current;
+    }
+
+    invalidPages = computed(() => this.computeInvalidPages());
+    computeInvalidPages() {
+        const invalidPages = new Set();
+        for (const page of this.navItems) {
+            const invalid = page[1].fieldNames?.some((fieldName) =>
+                this.env.model?.root.isFieldInvalid(fieldName)
+            );
+            if (invalid) {
+                invalidPages.add(page[0]);
+            }
+        }
+        return invalidPages;
+    }
+
+    _getNavItemClasses(navItem) {
+        const invalidPages = this.invalidPages();
+        const classes = {
+            "active position-relative cursor-default z-1": navItem[0] === this.state.currentPage,
+            "p-3 rounded-0 w-100": this.props.orientation === "vertical",
+            o_page_invalid: invalidPages.has(navItem[0]),
+        };
+        if (navItem[1].className) {
+            classes[navItem[1].className] = true;
+        }
+        return classes;
+    }
+}

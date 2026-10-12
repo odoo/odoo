@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <!-- Maintenance Request-related subtypes for messaging / Chatter -->
+    <record id="mt_req_created" model="mail.message.subtype">
+        <field name="name">Request Created</field>
+        <field name="res_model">maintenance.request</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+        <field name="description">Maintenance Request created</field>
+    </record>
+    <record id="mt_req_status" model="mail.message.subtype">
+        <field name="name">Status Changed</field>
+        <field name="res_model">maintenance.request</field>
+        <field name="default" eval="True"/>
+        <field name="description">Status changed</field>
+    </record>
+
+    <!-- Equipment-related subtypes for messaging / Chatter -->
+    <record id="mt_mat_assign" model="mail.message.subtype">
+        <field name="name">Equipment Assigned</field>
+        <field name="res_model">maintenance.equipment</field>
+        <field name="description">Equipment Assigned</field>
+    </record>
+
+    <!-- Equipment Category-related subtypes for messaging / Chatter -->
+    <record id="mt_cat_req_created" model="mail.message.subtype">
+        <field name="name">Maintenance Request Created</field>
+        <field name="res_model">maintenance.equipment.category</field>
+        <field name="default" eval="True"/>
+        <field name="parent_id" ref="mt_req_created"/>
+        <field name="relation_field">category_id</field>
+    </record>
+    <record id="mt_cat_mat_assign" model="mail.message.subtype">
+        <field name="name">Equipment Assigned</field>
+        <field name="res_model">maintenance.equipment.category</field>
+        <field name="default" eval="True"/>
+        <field name="parent_id" ref="mt_mat_assign"/>
+        <field name="relation_field">category_id</field>
+    </record>
+    <record id="equipment_team_maintenance" model="maintenance.team">
+        <field name="name">Internal Maintenance</field>
+    </record>
+</data>
+</odoo>

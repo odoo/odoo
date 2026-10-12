@@ -1,0 +1,96 @@
+//------------------------------------------------------------------------------
+// Bootstrap Mixins and Functions Extensions
+// Those will affect the way bootstrap is generated wherever bootstrap is used
+//------------------------------------------------------------------------------
+
+// This variable must be defined here instead of bootstrap overridden files
+// otherwise we will have deprecation messages during assets generation
+$enable-deprecation-messages: false !default;
+
+// Override color-contrast function to handle the alpha component of colors
+@function color-contrast($background, $color-contrast-dark: $color-contrast-dark, $color-contrast-light: $color-contrast-light, $min-contrast-ratio: $min-contrast-ratio, $main-background: $body-bg) {
+    $real-color: opaque($main-background, $background);
+
+    $foregrounds: $color-contrast-light, $color-contrast-dark, $white, $black;
+    $max-ratio: 0;
+    $max-ratio-color: null;
+
+    @each $color in $foregrounds {
+      $contrast-ratio: contrast-ratio($real-color, $color);
+      @if $contrast-ratio > $min-contrast-ratio {
+        @return $color;
+      } @else if $contrast-ratio > $max-ratio {
+        $max-ratio: $contrast-ratio;
+        $max-ratio-color: $color;
+      }
+    }
+
+    @warn "Found no color leading to #{$min-contrast-ratio}:1 contrast ratio against #{$real-color} (mix of given color and background)...";
+
+    @return $max-ratio-color;
+}
+
+@function mute-color($color) {
+    @return scale-color($color, $alpha: -30%);
+}
+
+// This placeholder regroups the rules that will apply on all elements with a
+// bg-* class (see o-bg-color, bg-variant). The optimized-css way would be to
+// have a common class for them all.
+%o-bg-color-component-color-reset {
+    h1, h2, h3, h4, h5, h6 {
+        color: inherit;
+    }
+}
+
+$o-yiq-min-opacity-threshold: 0.3 !default;
+$o-color-extras-nesting-selector: '&' !default;
+
+@mixin o-bg-color($color, $text-color: null, $with-extras: true, $important: true, $yiq-min-opacity-threshold: $o-yiq-min-opacity-threshold, $background: $body-bg, $nesting-selector: $o-color-extras-nesting-selector) {
+    @if ($color) {
+        $-yiq-threshold-met: alpha($color) > $yiq-min-opacity-threshold;
+
+        $-yiq-color: if($text-color, $text-color, if($-yiq-threshold-met, color-contrast($color, $main-background: $background), null));
+
+        // Generate a pair of CSS variables for bg-* classes to then use them
+        // within the .badge design definition (see website.scss)
+        --background-color: #{$color};
+        --color: #{$-yiq-color};
+
+        background-color: $color#{if($important, ' !important', '')};
+        color: $-yiq-color; // not important so that text utilities still work
+
+        @if $with-extras and $-yiq-threshold-met {
+            #{$nesting-selector} {
+                @extend %o-bg-color-component-color-reset;
+
+                .text-muted {
+                    // Always important since the basic BS rule is important
+                    color: mute-color($-yiq-color) !important;
+                }
+            }
+        }
+    }
+}
+
+// Override background utilities so that they come with a default contrasted
+// color (especially useful in the frontend editor for example). Also modifies
+// the way .text-muted elements are rendered in those environments.
+@mixin bg-variant($parent, $color, $text-color: null) {
+    #{$parent} {
+        @include o-bg-color($color, $text-color);
+    }
+    a#{$parent},
+    button#{$parent} {
+        &:hover, &:focus {
+            @include o-bg-color(darken($color, 10%), $text-color, false);
+        }
+    }
+}
+@mixin bg-gradient-variant($parent, $color, $text-color: null) {
+    #{$parent} {
+        @include o-bg-color($color, $text-color);
+        background-image: linear-gradient(180deg, mix($body-bg, $color, 15%), $color) !important;
+        background-repeat: repeat-x !important;
+    }
+}

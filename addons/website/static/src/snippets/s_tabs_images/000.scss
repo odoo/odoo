@@ -1,0 +1,18 @@
+.s_tabs_images {
+    .o_nav_tabs_description {
+        display: none;
+    }
+
+    .s_tabs_nav_with_descriptions:where(.s_tabs_nav_vertical) :where(.o_nav_tabs_description),
+    .s_tabs_nav_with_descriptions_active:where(.s_tabs_nav_vertical) .active > :where(.o_nav_tabs_description) {
+        @include media-breakpoint-up(lg) {
+            display: block;
+        }
+    }
+
+    // Forces custom colors to be maintained independently of the color preset.
+    .s_tabs_pills_template .nav-link.active {
+        background: var(--#{$prefix}nav-pills-link-active-bg) !important;
+        color: var(--#{$prefix}nav-pills-link-active-color) !important;
+    }
+}

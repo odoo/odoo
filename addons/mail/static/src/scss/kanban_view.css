@@ -1,0 +1,42 @@
+.o-discuss-CategoryKanban {
+    .o-discuss-CategoryKanban-group {
+        gap: var(--Kanban-gap);
+    }
+
+    .o_kanban_record {
+        width: var(--KanbanRecord-width);
+        flex-grow: 1;
+    }
+}
+
+.o_kanban_renderer {
+    --o-kanban-attachement-image-size: 80px;
+
+    .o_kanban_record.o_kanban_attachment {
+        --Card-padding-h: var(--o-bs-spacer-0);
+        --Card-padding-v: var(--o-bs-spacer-0);
+
+        .o_kanban_image {
+            width: var(--o-kanban-attachement-image-size);
+
+            .o_kanban_image_wrapper {
+                min-height: var(--o-kanban-attachement-image-size);
+            }
+
+            .o_attachment_image {
+                width: var(--o-kanban-attachement-image-size);
+                height: var(--o-kanban-attachement-image-size);
+            }
+
+            .o_image {
+                width: calc(var(--o-kanban-attachement-image-size) * 0.7);
+                height: calc(var(--o-kanban-attachement-image-size) * 0.7);
+            }
+        }
+
+        .o_kanban_details_wrapper {
+            min-height: var(--o-kanban-attachement-image-size);
+            padding: var(--o-kanban-inside-vgutter) var(--o-kanban-inside-hgutter);
+        }
+    }
+}

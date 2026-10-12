@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="sale_management.SaleManagementTemplateKanbanView.Buttons" t-inherit="account.FileuploadKanbanView.Buttons" t-inherit-mode="primary">
+        <button class="btn btn-primary o-kanban-button-new" position="replace">
+            <SaleTemplateDropdown
+                t-if="!this.env.inDialog and this.canCreate"
+                newButtonClasses="'btn btn-primary o-kanban-button-new'"
+                record="this.model.root"
+            />
+        </button>
+    </t>
+</templates>

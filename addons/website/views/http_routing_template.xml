@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="website.4xx_hide_error" inherit_id="http_routing.4xx" active="False">
+    <t t-call="http_routing.http_error_container" position="replace">
+        <div t-if="debug" class="o_debug_block container css_editable_mode_hidden">
+            <t t-call="http_routing.http_error_debug"/>
+        </div>
+    </t>
+</template>
+
+<template id="website.400_hide_error" inherit_id="http_routing.400" active="False">
+    <t t-call="http_routing.http_error_container" position="replace">
+        <div t-if="debug" class="o_debug_block container css_editable_mode_hidden">
+            <t t-call="http_routing.http_error_debug"/>
+        </div>
+    </t>
+</template>
+
+<template id="website.403_hide_error" inherit_id="http_routing.403" active="False">
+    <t t-call="http_routing.http_error_container" position="replace">
+        <div t-if="debug" class="o_debug_block container css_editable_mode_hidden">
+            <t t-call="http_routing.http_error_debug"/>
+        </div>
+    </t>
+</template>
+
+<template id="website.415_hide_error" inherit_id="http_routing.415" active="False">
+    <t t-call="http_routing.http_error_container" position="replace">
+        <div t-if="debug" class="o_debug_block container css_editable_mode_hidden">
+            <t t-call="http_routing.http_error_debug"/>
+        </div>
+    </t>
+</template>
+
+<template id="website.422_hide_error" inherit_id="http_routing.422" active="False">
+    <t t-call="http_routing.http_error_container" position="replace">
+        <div t-if="debug" class="o_debug_block container css_editable_mode_hidden">
+            <t t-call="http_routing.http_error_debug"/>
+        </div>
+    </t>
+</template>
+
+</odoo>

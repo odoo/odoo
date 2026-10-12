@@ -1,0 +1,15 @@
+import { fields, Record } from "@mail/model/export";
+
+export class ResourceResource extends Record {
+    static _name = "resource.resource";
+
+    /** @type {number} */
+    id;
+    /** @type {string|undefined} */
+    name;
+    /** @type {'user'|'material'} */
+    resource_type = "user";
+    user_id = fields.One("res.users");
+}
+
+ResourceResource.register();

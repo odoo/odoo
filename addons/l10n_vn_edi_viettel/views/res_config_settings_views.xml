@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_vn_edi" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_vn_edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_vn.res_config_settings_view_form_inherit_l10n_vn"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='l10n_vn_edi_symbol_setting']" position="attributes">
+                <attribute name="string">Set up SInvoice</attribute>
+                <attribute name="help">Manage and submit e-invoice to GDT using SInvoice integration</attribute>
+            </xpath>
+            <xpath expr="//div[@id='l10n_vn_edi_default_symbol_row']" position="before">
+                <div class="mt16 row" title="SInvoice account">
+                    <label for="l10n_vn_edi_username" string="Username" class="col-3 col-lg-3 o_light_label"/>
+                    <field name="l10n_vn_edi_username" nolabel="1"/>
+                </div>
+                <div class="row">
+                    <label for="l10n_vn_edi_password" string="Password" class="col-3 col-lg-3 o_light_label"/>
+                    <field name="l10n_vn_edi_password" password="True" nolabel="1"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='l10n_vn_edi_symbol_actions']/button[1]" position="before">
+                <button string="Fetch Symbols"
+                        type="object"
+                        name="action_fetch_symbols"
+                        class="btn btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

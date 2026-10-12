@@ -1,0 +1,19 @@
+/* Image above the message of an empty screen, drawn before the paragraph holding one of these classes */
+.o_view_nocontent_smiling_face::before,
+.o_view_nocontent_neutral_face::before,
+.o_view_nocontent_empty_folder::before,
+.o_view_nocontent_image::before,
+.o_empty_folder_image::before {
+    content: "";
+    display: block;
+    margin: auto;
+}
+
+.o_view_nocontent .o_nocontent_help .o_view_nocontent_empty_folder::before,
+.o_empty_folder_image::before {
+    width: 120px;
+    height: 80px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background: transparent url(/web/static/img/empty_folder.svg) no-repeat center;
+}

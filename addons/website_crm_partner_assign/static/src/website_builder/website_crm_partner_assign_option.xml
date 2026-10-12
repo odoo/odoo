@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="website_partnership.PartnershipPageOption" t-inherit-mode="extension">
+        <xpath expr="//BuilderRow[@id=&quot;'categories_option'&quot;]" position="before">
+            <BuilderRow label.translate="Countries">
+                <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_crm_partner_assign.countries_setting']}" />
+            </BuilderRow>
+        </xpath>
+    </t>
+    <t t-name="website_crm_partner_assign.PartnersPageOption">
+        <BuilderRow t-if="this.state.has_google_maps_api_key" label.translate="World Map">
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_crm_partner_assign.ref_country']}" />
+        </BuilderRow>
+    </t>
+
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='page_options_hook']" position="after">
+            <website_crm_partners_page_option
+                selector="main:has(#oe_structure_website_partnership_layout_1):has(.o_wcrm_filters_top)"
+                title="Partners Page"
+                groups='["website.group_website_designer"]'
+                editableOnly="false"/>
+        </xpath>
+    </t>
+</templates>

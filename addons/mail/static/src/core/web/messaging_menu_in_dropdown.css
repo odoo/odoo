@@ -1,0 +1,25 @@
+.o-mail-MessagingMenuInDropdown {
+    width: 475px;
+    height: Min(calc(var(--o-dropdown-max-height) - 5px), 630px); /* -5px for borders */
+    background-color: var(--mail-MessagingMenu-bg, var(--o-webclient-background-color));
+}
+
+.o-mail-MessagingMenuInDropdown-list {
+    background-color: var(--mail-MessagingMenu-bg, var(--o-view-background-color));
+    --list-group-border-color: var(--mail-MessagingMenu-tabContentBorderColor, color-mix(in srgb, var(--gray-200) 50%, transparent));
+}
+
+.o-mail-MessagingMenuInDropdown-headerFilter {
+    border: 1px solid transparent;
+
+    &.o-active {
+        background-color: color-mix(in srgb, var(--o-action) 7.5%, transparent);
+        border-color: color-mix(in srgb, var(--o-action) 10%, transparent);
+    }
+}
+
+.o_web_client.o-mail-discuss-systray-menu-open .o_main_navbar {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        background-color: var(--o-navbar-background) !important;
+    }
+}

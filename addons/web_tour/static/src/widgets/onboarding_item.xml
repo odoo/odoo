@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<templates>
+<t t-name="web_tour.OnboardingItem">
+    <DropdownItem>
+        <div class="d-flex justify-content-between ps-3">
+            <div class="align-self-center">
+                <span class="form-check form-switch" t-on-click.stop.prevent="() => this.props.toggleItem()">
+                    <input type="checkbox" class="form-check-input" id="onboarding" t-att-checked="this.props.toursEnabled"/>
+                    <label class="form-check-label">Onboarding</label>
+                </span>
+            </div>
+        </div>
+    </DropdownItem>
+</t>
+</templates>

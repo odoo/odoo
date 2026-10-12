@@ -1,0 +1,37 @@
+import { registry } from "@web/core/registry";
+
+registry.category("web_tour.tours").add("skip_website_configurator", {
+    steps: () => [
+        {
+            content: "create a new website",
+            trigger: 'button[name="action_website_create_new"]',
+            run: "click",
+        },
+        {
+            content: "insert website name",
+            trigger: 'div[name="name"] input',
+            run: "edit Website EN",
+        },
+        {
+            content: "validate the website creation modal",
+            trigger: ".modal button.btn-primary",
+            run: "click",
+            expectUnloadPage: true,
+        },
+        {
+            content: "skip configurator",
+            trigger:
+                ".o_configurator_container .btn.btn-link:contains('Skip and start from scratch')",
+            run: "click",
+        },
+        {
+            content: "Check that the homepage is loaded",
+            trigger: ".o_website_preview :iframe html[data-view-xmlid='website.homepage']",
+            timeout: 30000,
+        },
+        {
+            content: "Check that the editor is opened",
+            trigger: ":iframe #wrapwrap.odoo-editor-editable",
+        },
+    ],
+});

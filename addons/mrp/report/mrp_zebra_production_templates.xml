@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="finished_product_zpl_label">
+^PW406
+^LL203
+^FO14,23^A0N,23^FB235,1,0,L^FH^FD<t t-out="name"/>^FS
+^FO250,23^A0N,23,18^FB142,1,0,R^FH^FD<t t-out="secondary_text"/>^FS
+            <t t-if="barcode_value">
+^FO14,67^BY2^BCN,74,N^FH^FD<t t-out="barcode_value"/>^FS
+^FO14,159^A0N,21,16^FB170,1,0,L^FH^FD<t t-out="label['barcode_text']"/>^FS
+            </t>
+            <t t-else="">
+^FO14,90^A0N,22^FB378,1,0,C^FDNo barcode available^FS
+            </t>
+            <t t-if="reference">
+^FO222,159^A0N,21,16^FB170,1,0,R^FH^FD<t t-out="reference"/>^FS
+            </t>
+        </template>
+    </data>
+</odoo>

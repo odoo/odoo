@@ -1,0 +1,30 @@
+.o_todo_form_view {
+    .o_form_sheet_bg {
+        .o_form_sheet {
+            .oe_title {
+                max-width: initial;
+            }
+
+            .o_widget_todo_archived > .ribbon {
+                margin-top: 0px;
+            }
+        }
+    }
+    .o_task_state_widget {
+        font-size: large;
+    }
+    @media screen and (min-width: 1400px), print and (min-width: 250mm) {
+        .o_widget_todo_chatter_panel {
+            width: 35%;
+        }
+    }
+    @media screen and (max-width: 1399.98px), print and (max-width: 249.98mm) {
+        .o_widget_todo_chatter_panel {
+            min-width: 100%;
+        }
+    }
+}
+
+.o_todo_hide_avatar .o_avatar {
+    display: none;
+}

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderOverlay">
+    <div class="oe_overlay o_handlers_idle">
+        <div class="o_handles">
+            <!-- Visible overlay borders + allow to resize when not readonly -->
+            <div class="o_handle o_column_handle o_side o_side_y n readonly">
+                <span class="o_handle_indicator"></span>
+            </div>
+            <div class="o_handle o_column_handle o_side o_side_y s readonly">
+                <span class="o_handle_indicator"></span>
+            </div>
+            <div class="o_handle o_column_handle o_side o_side_x e readonly" >
+                <span class="o_handle_indicator"></span>
+            </div>
+            <div class="o_handle o_column_handle o_side o_side_x w readonly">
+                <span class="o_handle_indicator"></span>
+            </div>
+
+             <!-- Grid resize handles -->
+             <div class="o_handle o_grid_handle o_side o_side_y n d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_side o_side_x e d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_side o_side_x w d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_side o_side_y s d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_corner_handle ne d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_corner_handle nw d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_corner_handle se d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+             <div class="o_handle o_grid_handle o_corner_handle sw d-none">
+                <span class="o_handle_indicator"/>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

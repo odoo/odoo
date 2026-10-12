@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "keep_odoo_default": true,
+  "formatters": {
+    "runbot": {
+      "()": "odoo.logging.JSONFormatter",
+      "record_keys": ["dbname", "name", "levelname", "pathname", "funcName", "lineno", "test"]
+    }
+  },
+  "handlers": {
+    "runbot": {
+      "class": "logging.handlers.WatchedFileHandler",
+      "formatter": "runbot",
+      "filename": "odoo_log.json",
+      "level": "RUNBOT"
+    }
+  },
+  "root": {
+    "handlers": ["runbot"]
+  }
+}

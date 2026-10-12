@@ -1,0 +1,83 @@
+import { Component, useProps, signal, t, useEffect, xml } from "@odoo/owl";
+import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
+import { useService } from "@web/core/utils/hooks";
+import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
+
+class ListContainerDialog extends Component {
+    static components = { Dialog };
+    props = useProps({
+        items: t.array(),
+        close: t.function(),
+    });
+    static template = xml`
+        <Dialog title="this.title" footer="false">
+            <div class="list-container-items d-flex p-2 flex-wrap" style="gap: 0.5rem;">
+                <t t-foreach="this.props.items" t-as="item" t-key="item_index">
+                    <t t-call-slot="default" item="item" />
+                </t>
+            </div>
+        </Dialog>
+    `;
+    setup() {
+        this.title = _t("Choose an order");
+    }
+}
+
+export class ListContainer extends Component {
+    props = useProps({
+        items: t.array(),
+        onClickPlus: t.function().optional(),
+        slots: t.object(),
+        class: t.string().optional(""),
+        forceSmall: t.boolean().optional(),
+    });
+    static template = xml`
+        <div class="d-flex gap-1 align-items-center flex-grow-1" t-attf-class="{{this.props.class}}" t-att-class="{'overflow-hidden': !this.isUiSmall}">
+            <button t-if="this.props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg flex-shrink-0 lh-lg" t-on-click="this.props.onClickPlus">
+                <i class="oi oi-fw" data-icon="add_circle" aria-hidden="true"/>
+            </button>
+            <span t-if="this.props.onClickPlus" class="navbar-separator mx-1"/>
+            <div class="overflow-hidden flex-grow-1">
+                <div t-ref="this.container" class="list-container-items d-flex align-items-center gap-1">
+                    <div t-if="!this.props.forceSmall" t-foreach="this.props.items" t-as="item" t-key="item_index" t-att-class="{'invisible order-2': this.shouldBeInvisible(item_index)}">
+                        <t t-call-slot="default" item="item"/>
+                    </div>
+                    <button t-if="this.sizing.isLarger or this.props.forceSmall" t-on-click="this.toggle"
+                        class="btn btn-lg btn-secondary order-1 flex-shrink-0 fw-bolder lh-lg"
+                        t-att-class="this.props.forceSmall ? '' : 'px-3 fw-bold'">
+                        <i t-if="this.props.forceSmall" class="oi oi-fw" data-icon="arrow_drop_down"/>
+                        <t t-else="">+<t t-out="this.hiddenCount"/></t>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    container = signal.ref();
+    setup() {
+        this.sizing = useIsChildLarger(this.container);
+        this.ui = useService("ui");
+        this.dialog = useService("dialog");
+
+        useEffect(() => {
+            if (!this.container()) {
+                return;
+            }
+            if (this.props.items.length >= 0) {
+                this.sizing.reload();
+            }
+        });
+    }
+    shouldBeInvisible(itemIndex) {
+        return itemIndex >= this.sizing.maxItems;
+    }
+    get hiddenCount() {
+        return this.props.items.length - this.sizing.maxItems;
+    }
+    toggle() {
+        this.dialog.add(ListContainerDialog, {
+            items: this.props.items,
+            slots: this.props.slots,
+        });
+    }
+}

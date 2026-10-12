@@ -1,0 +1,45 @@
+import { Image } from "@html_builder/core/img";
+import { ImgGroup } from "@html_builder/core/img_group";
+import { expect, test, describe } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
+import { Component, xml, useProps } from "@odoo/owl";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
+
+describe.current.tags("desktop");
+
+test("ImgGroup's inner Image components should not be blocked before src load", async () => {
+    const defs = {
+        img1: Promise.withResolvers(),
+        img2: Promise.withResolvers(),
+        img3: Promise.withResolvers(),
+    };
+    patch(Image.prototype, {
+        loadImage() {
+            const { promise: def } = defs[this.props.class];
+            return Promise.all([super.loadImage(), def]);
+        },
+    });
+    class Container extends Component {
+        static components = { ImgGroup, Image };
+        static template = xml`
+            <ImgGroup>
+                <t t-foreach="Object.keys(this.defs)" t-as="key" t-key="key">
+                    <Image src="''" class="key"/>
+                </t>
+            </ImgGroup>`;
+        props = useProps({});
+
+        setup() {
+            this.defs = defs;
+        }
+    }
+    await mountWithCleanup(Container);
+
+    for (const key in defs) {
+        expect("img").toHaveCount(0);
+        defs[key].resolve();
+        await animationFrame();
+    }
+    expect("img").toHaveCount(3);
+});

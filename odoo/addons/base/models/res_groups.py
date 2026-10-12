@@ -1,0 +1,627 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from collections import defaultdict
+
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Command, Domain
+from odoo.tools import SetDefinitions
+
+
+REGULAR_VALUE = object()
+
+
+class ResGroups(models.Model):
+    _name = 'res.groups'
+    _description = "Access Groups"
+    _rec_name = 'full_name'
+    _allow_sudo_commands = False
+    _order = 'privilege_id, sequence, name, id'
+    _clear_cache_name = 'groups'
+    _clear_cache_on_fields = {'implied_ids', 'implied_by_ids'}
+    name = fields.Char(required=True, translate=True)
+    user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', help='Users explicitly in this group')
+    all_user_ids = fields.Many2many('res.users', string='Users and implied users',
+        compute='_compute_all_user_ids', search='_search_all_user_ids', inverse='_inverse_all_user_ids')
+
+    all_users_count = fields.Integer('# Users', help='Number of users having this group (implicitly or explicitly)',
+        compute='_compute_all_users_count', compute_sudo=True)
+
+    access_ids = fields.One2many('ir.access', 'group_id', string="Access Rules", copy=True)
+    access_count = fields.Integer(
+        compute="_compute_access_count"
+    )
+    menu_access = fields.Many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', string='Access Menu')
+    view_access = fields.Many2many('ir.ui.view', 'ir_ui_view_group_rel', 'group_id', 'view_id', string='Views')
+    comment = fields.Text(string='Notes', translate=True)
+    full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
+    share = fields.Boolean(string='Share Group',
+        help="Indicates that the group is used external data sharing prupose (e.g., portal access to specific records)")
+    api_key_duration = fields.Float(string='API Keys maximum duration days',
+        help="Determines the maximum duration of an api key created by a user belonging to this group.")
+
+    sequence = fields.Integer(string='Sequence')
+    privilege_id = fields.Many2one('res.groups.privilege', string='Scope', index=True)
+    view_group_hierarchy = fields.Json(string='Technical field for default group setting', compute='_compute_view_group_hierarchy')
+
+    _check_api_key_duration = models.Constraint(
+        'CHECK(api_key_duration >= 0)',
+        'The api key duration cannot be a negative value.',
+    )
+
+    """ The groups involved are to be interpreted as sets.
+    Thus we can define groups that we will call for example N, Z... such as mathematical sets.
+        ┌──────────────────────────────────────────┐
+        │ C  ┌──────────────────────────┐          │
+        │    │ R  ┌───────────────────┐ │ ┌──────┐ |   "C"
+        │    │    │ Q  ┌────────────┐ │ │ │ I    | |   "I" implied "C"
+        │    │    │    │ Z  ┌─────┐ │ │ │ │      | |   "R" implied "C"
+        │    │    │    │    │ N   │ │ │ │ │      │ │   "Q" implied "R"
+        │    │    │    │    └─────┘ │ │ │ │      │ │   "P" implied "R"
+        │    │    │    └────────────┘ │ │ │      │ │   "Z" implied "Q"
+        │    │    └───────────────────┘ │ │      │ │   "N" implied "Z"
+        │    │      ┌───────────────┐   │ │      │ │
+        │    │      │ P             │   │ │      │ │
+        │    │      └───────────────┘   │ └──────┘ │
+        │    └──────────────────────────┘          │
+        └──────────────────────────────────────────┘
+    For example:
+    * A manager group will imply a user group: all managers are users (like Z imply C);
+    * A group "computer developer employee" will imply that he is an employee group, a user
+      group, that he has access to the timesheet user group.... "computer developer employee"
+      is therefore a set of users in the intersection of these groups. These users will
+      therefore have all the rights of these groups in addition to their own access rights.
+    """
+    implied_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
+        string='Implied Groups', help='Users in the current group are implicitly part of the implied groups')
+    implied_count = fields.Integer(compute="_compute_implied_count"
+    )
+    all_implied_ids = fields.Many2many('res.groups', string='Transitively Implied Groups', recursive=True,
+        compute='_compute_all_implied_ids', compute_sudo=True, search='_search_all_implied_ids',
+        help="The group itself with all its implied groups.")
+    implied_by_ids = fields.Many2many('res.groups', 'res_groups_implied_rel', 'hid', 'gid',
+        string='Implying Groups', help="Users in implying groups are implicitly part of the current group")
+    implied_by_count = fields.Integer(compute="_compute_implied_by_count")
+    all_implied_by_ids = fields.Many2many('res.groups', string='Transitively Implying Groups', recursive=True,
+        compute='_compute_all_implied_by_ids', compute_sudo=True, search='_search_all_implied_by_ids')
+    disjoint_ids = fields.Many2many('res.groups', string='Disjoint Groups',
+        help="Users in the current group cannot be added in disjoint groups. For example, a user cannot be in the \"Internal\" and \"Portal\" groups at the same time.",
+        compute='_compute_disjoint_ids')
+
+    @api.constrains('implied_ids', 'implied_by_ids')
+    def _check_disjoint_groups(self):
+        # check for users that might have two exclusive groups
+        self.env.transaction.invalidate_ormcache('groups')
+
+        try:
+            if any(
+                group.all_implied_ids & group.all_implied_by_ids.all_implied_ids.disjoint_ids
+                for group in self
+            ):
+                # A implies B C                       A
+                # B implies D E                     /   \
+                # C implies F G                  [B]      C
+                # E disjoint G                   / \     / \
+                #                               D   E*  F   G*
+                # g = B
+                # g.all_implied_ids = BDE
+                # g.all_implied_by_ids = AB
+                #    .all_implied_ids = ABCDEFG
+                #       .disjoint_ids = EG
+                # & => E
+                msg = self.env._("This makes a group imply two disjoint groups.")
+                raise ValidationError(msg)  # noqa: TRY301
+
+            self._check_user_disjoint_groups()
+
+        except ValidationError:
+            self.env.transaction.invalidate_ormcache('groups')
+            raise
+
+    @api.constrains('view_access')
+    def _check_inherited_view_groups(self):
+        self.view_access._check_groups()
+
+    @api.constrains('user_ids')
+    def _check_user_disjoint_groups(self):
+        # Here we should check all the users in any group of 'self':
+        #
+        #   self.user_ids._check_disjoint_groups()
+        #
+        # But that wouldn't scale at all for large groups, like more than 10K
+        # users.  So instead we search for such a nasty user.
+
+        # those are the only disjoint groups
+        user_type_groups = self._get_user_type_groups()
+
+        for group in self:
+            user_type_group = user_type_groups & group.all_implied_ids
+            if not user_type_group:
+                # as 'group' does not imply any of the user type groups, no user
+                # with 'group' may end up having two disjoint groups
+                continue
+            domain = (
+                # user is active
+                Domain('active', '=', True)
+                # and user has 'group', and thus also has 'user_type_group'
+                & Domain('group_ids', 'in', group.all_implied_by_ids.ids)
+                # and user has another user type group
+                & Domain('group_ids', 'in', (user_type_groups - user_type_group).all_implied_by_ids.ids)
+            )
+            user = self.env['res.users'].search(domain, order='id', limit=1)
+            if user:
+                disjoint_groups = user.all_group_ids & user_type_groups
+                raise ValidationError(self.env._(
+                    "User %(user)s cannot be at the same time in exclusive groups %(groups)s.",
+                    user=repr(user.name),
+                    groups=", ".join(repr(g.display_name) for g in disjoint_groups),
+                ))
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_settings_group(self):
+        classified = self.env['res.config.settings']._get_classified_fields()
+        for _name, _groups, implied_group in classified['group']:
+            if implied_group.id in self.ids:
+                raise ValidationError(self.env._('You cannot delete a group linked with a settings field.'))
+
+    @api.depends('privilege_id.name', 'name')
+    @api.depends_context('short_display_name')
+    def _compute_full_name(self):
+        # Important: value must be stored in environment of group, not group1!
+        for group, group1 in zip(self, self.sudo()):
+            if group1.privilege_id and not self.env.context.get('short_display_name'):
+                group.full_name = '%s / %s' % (group1.privilege_id.name, group1.name)
+            else:
+                group.full_name = group1.name
+
+    def _search_full_name(self, operator, operand):
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+
+        if isinstance(operand, str):
+            def make_operand(val): return val
+            operands = [operand]
+        else:
+            def make_operand(val): return [val]
+            operands = operand
+
+        where_domains = [Domain('name', operator, operand)]
+        for group in operands:
+            if not group:
+                continue
+            domain = Domain('name', operator, make_operand(group))
+            where_domains.append(domain)
+
+            if '/' in group:
+                privilege_name, _, group_name = group.partition('/')
+                group_name = group_name.strip()
+                privilege_name = privilege_name.strip()
+            else:
+                privilege_name = group
+                group_name = None
+
+            if privilege_name:
+                domain = Domain(
+                    'privilege_id', 'any!', Domain('name', operator, make_operand(privilege_name)),
+                )
+                if group_name:
+                    domain &= Domain('name', operator, make_operand(group_name))
+                where_domains.append(domain)
+
+        return Domain.OR(where_domains)
+
+    @api.model
+    def _search(self, domain, offset=0, limit=None, order=None, **kwargs):
+        # add explicit ordering if search is sorted on full_name
+        if order and order.startswith('full_name'):
+            groups = super().search(domain)
+            groups = groups.sorted('full_name', reverse=order.endswith('DESC'))
+            groups = groups[offset:offset+limit] if limit else groups[offset:]
+            return groups._as_query(order)
+        return super()._search(domain, offset, limit, order, **kwargs)
+
+    def write(self, vals):
+        if 'name' in vals:
+            names = v.values() if isinstance((v := vals['name']), dict) else [v]
+            if any(n_.startswith('-') for n_ in names):
+                raise UserError(self.env._('The name of the group can not start with "-"'))
+
+        internal_group_ids = self._get_internal_group_ids()
+
+        # invalidate caches before updating groups, since the recomputation of
+        # field 'share' depends on method has_group()
+        # DLE P139
+        if any(self._ids):
+            self.env['ir.access']._clear_caches()
+
+        if 'user_ids' in vals:
+            old_user_ids = {group.id: group.user_ids.ids for group in self.sudo()}
+
+        res = super().write(vals)
+
+        if 'user_ids' in vals:
+            # Reverse the writing of users on res.groups so we can call users._log_group_changes
+            group_changes = defaultdict(lambda: {'added': set(), 'removed': set()})
+            for group in self.sudo():
+                old = set(old_user_ids[group.id])
+                new = set(group.user_ids.ids)
+                for user_id in new - old:
+                    group_changes[user_id]['added'].add(group.id)
+                for user_id in old - new:
+                    group_changes[user_id]['removed'].add(group.id)
+            users = self.env['res.users'].browse(group_changes.keys())
+            users.fetch(['group_ids'])
+            old_group_ids = {}
+            for user_id, changes in group_changes.items():
+                current_groups = set(users.browse(user_id).group_ids.ids)
+                old_group_ids[user_id] = (current_groups - changes['added']) | changes['removed']
+            users._log_group_changes(vals, old_group_ids, self.ids)
+
+        # invalidate caches after the write (if not su) because we check access
+        # when writing
+        if any(self._ids) and not self.env.su:
+            self.env['ir.access']._clear_caches()
+
+        if self.env.context.get('apply_regular_group') is not REGULAR_VALUE:
+            self._apply_group_regular()
+
+        # If the group implications linked to group_user are modified,
+        # `res.users.share` / `res.partner.partner_share` are recomputed.
+        if internal_group_ids != self._get_internal_group_ids():
+            self.env['res.users']._recompute_user_share()
+
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        internal_group_ids = self._get_internal_group_ids()
+        res = super().create(vals_list)
+        self._apply_group_regular()
+        if internal_group_ids != self._get_internal_group_ids():
+            self.env['res.users']._recompute_user_share()
+        return res
+
+    def unlink(self):
+        internal_group_ids = self._get_internal_group_ids()
+        res = super().unlink()
+        self._apply_group_regular()
+        if internal_group_ids != self._get_internal_group_ids():
+            self.env['res.users']._recompute_user_share()
+        return res
+
+    def _ensure_xml_id(self):
+        """Return the groups external identifiers, creating the external identifier for groups missing one"""
+        result = self.get_external_id()
+        missings = {group_id: f'__custom__.group_{group_id}' for group_id, ext_id in result.items() if not ext_id}
+        if missings:
+            self.env['ir.model.data'].sudo().create(
+                [
+                    {
+                        'name': name.split('.')[1],
+                        'model': 'res.groups',
+                        'res_id': group_id,
+                        'module': name.split('.')[0],
+                    }
+                    for group_id, name in missings.items()
+                ]
+            )
+            result.update(missings)
+
+        return result
+
+    @api.depends('all_implied_by_ids.user_ids')
+    def _compute_all_user_ids(self):
+        for group in self.with_context(active_test=False):
+            group.all_user_ids = group.all_implied_by_ids.user_ids
+
+    def _inverse_all_user_ids(self):
+        for group in self:
+            user_to_add = group.all_user_ids - group.all_implied_by_ids.user_ids
+            user_to_remove = group.all_implied_by_ids.user_ids - group.all_user_ids
+            group.user_ids = group.user_ids - user_to_remove + user_to_add
+
+            cannot_remove = group.all_implied_by_ids.user_ids & user_to_remove
+            if cannot_remove:
+                raise UserError(self.env._(
+                    "It is not possible to remove implied group %(group)s from users %(users)s",
+                    group=repr(group.name),
+                    users=', '.join(cannot_remove.mapped('name')),
+                ))
+
+    def _search_all_user_ids(self, operator, value):
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return NotImplemented
+        return Domain('all_implied_by_ids.user_ids', operator, value)
+
+    @api.depends('implied_ids')
+    def _compute_implied_count(self):
+        for group in self:
+            group.implied_count = len(group.implied_ids)
+
+    @api.depends('implied_ids.all_implied_ids')
+    def _compute_all_implied_ids(self):
+        """ Compute the reflexive transitive closure of implied_ids. """
+        group_definitions = self._get_group_definitions()
+        for g in self:
+            g.all_implied_ids = g.ids + group_definitions.get_superset_ids(g.ids)
+
+    def _search_all_implied_ids(self, operator, value):
+        """ Compute the search on the reflexive transitive closure of implied_ids. """
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        group_definitions = self._get_group_definitions()
+        ids = [*value, *group_definitions.get_subset_ids(value)]
+        return [('id', operator, ids)]
+
+    @api.depends('implied_by_ids')
+    def _compute_implied_by_count(self):
+        for group in self:
+            group.implied_by_count = len(group.implied_by_ids)
+
+    @api.depends('implied_by_ids.all_implied_by_ids')
+    def _compute_all_implied_by_ids(self):
+        """ Compute the reflexive transitive closure of implied_by_ids. """
+        group_definitions = self._get_group_definitions()
+        for g in self:
+            g.all_implied_by_ids = g.ids + group_definitions.get_subset_ids(g.ids)
+
+    def _search_all_implied_by_ids(self, operator, value):
+        """ Compute the search on the reflexive transitive closure of implied_by_ids. """
+        if operator in ("any", "not any") and isinstance(value, Domain):
+            value = self.search(value).ids
+            operator = "in" if operator == "any" else "not in"
+        elif operator not in ('in', 'not in'):
+            return NotImplemented
+
+        group_definitions = self._get_group_definitions()
+        ids = [*value, *group_definitions.get_superset_ids(value)]
+
+        return [('id', operator, ids)]
+
+    def _get_user_type_groups(self):
+        """ Return the (disjoint) user type groups (employee, portal, public). """
+        group_definitions = self._get_group_definitions()
+        group_ids = [
+            gid
+            for xid in ('base.group_user', 'base.group_portal', 'base.group_public')
+            if (gid := group_definitions.get_id(xid))
+        ]
+        return self.sudo().browse(group_ids)
+
+    def _compute_disjoint_ids(self):
+        user_type_groups = self._get_user_type_groups()
+        for group in self:
+            if group in user_type_groups:
+                group.disjoint_ids = user_type_groups - group
+            else:
+                group.disjoint_ids = False
+
+    def _apply_group(self, implied_group):
+        """ Add the given group to the groups implied by the current group
+        :param implied_group: the implied group to add
+        """
+        groups = self.filtered(lambda g: implied_group not in g.all_implied_ids)
+        groups.write({'implied_ids': [Command.link(implied_group.id)]})
+
+    def _remove_group(self, implied_group):
+        """ Remove the given group from the implied groups of the current group
+        :param implied_group: the implied group to remove
+        """
+        groups = self.all_implied_ids.filtered(lambda g: implied_group in g.implied_ids)
+        groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
+
+    @api.model
+    def _get_internal_group_ids(self):
+        """ Return the ids of the groups whose members are internal users, i.e.
+        ``base.group_user`` and every group implying it. """
+        group_definitions = self._get_group_definitions()
+        group_user_id = group_definitions.get_id('base.group_user')
+        return (group_user_id, *group_definitions.get_subset_ids([group_user_id]))
+
+    def _get_light_group_xmlids(self):
+        """List of XML IDs of groups considered light
+
+        Addons that declare light groups extend this method to append their
+        own XML IDs (see e.g. ``hr_holidays``, ``point_of_sale``).
+        """
+        return (
+            'base.group_user',
+            'base.group_portal',
+            'base.group_public',
+            'base.group_everyone',
+            'base.group_no_one',
+            'base.group_multi_currency',
+            'base.default_user_group',
+        )
+
+    def _apply_group_regular(self):
+        group_definitions = self._get_group_definitions()
+        group_user_regular_id = group_definitions.get_id('base.group_user_regular')
+        if not group_user_regular_id:
+            return
+
+        # All groups not marked as light are regular
+
+        light_group_ids = {gid for xid in self._get_light_group_xmlids() if (gid := group_definitions.get_id(xid))}
+        all_group_ids = group_definitions.get_all_ids()
+        regular_group_ids = set(all_group_ids) - light_group_ids - {group_user_regular_id}
+        # ``base.default_user_group`` is a container of the groups granted to new
+        # users, not a functional access group held for its own rights.
+        if default_user_group_id := group_definitions.get_id('base.default_user_group'):
+            regular_group_ids.discard(default_user_group_id)
+
+        # The group is only applied to groups with the fewest rights for each privilege.
+
+        data_privileges = self._get_view_group_hierarchy()['privileges']
+        data_groups = self._get_view_group_hierarchy()['groups']
+
+        regular_sorted_ids = sorted(regular_group_ids, key=lambda gid: (pid := data_groups[gid]['privilege_id']) and data_privileges[pid]['group_ids'].index(gid))
+
+        privilege_ids = set()
+        ids = []
+        for gid in regular_sorted_ids:
+            if not (pid := data_groups[gid]['privilege_id']) or not (set(data_groups[gid]['implied_ids']) & regular_group_ids):
+                ids.append(gid)
+            elif pid not in privilege_ids:
+                ids.append(gid)
+                privilege_ids.add(pid)
+
+        # save
+
+        group_user_regular = self.browse(group_user_regular_id)
+        if set(ids) != set(group_user_regular.implied_by_ids.ids):
+            group_user_regular.with_context(apply_regular_group=REGULAR_VALUE).implied_by_ids = [Command.set(ids)]
+
+    def _is_light_groups(self):
+        """Check if the set of groups provided is light or not"""
+        group_definitions = self._get_group_definitions()
+        light_groups = {group_definitions.get_id(xid) for xid in self._get_light_group_xmlids()}
+        return set(self.ids) <= light_groups
+
+    def _reduce_to_light_groups(self):
+        """ Reduce the group recordset to its light-group equivalents.
+
+        Groups in `self` that are already light groups (or implied by them) are
+        retained. Non-light groups are mapped to their closest implied light group
+        belonging to the same privilege hierarchy.
+
+        see: `_get_light_group_xmlids`
+
+        :return: A recordset containing only the mapped light groups.
+        :rtype: res.groups
+        """
+        group_definitions = self._get_group_definitions()
+        light_groups = self.browse(gid for xid in self._get_light_group_xmlids() if (gid := group_definitions.get_id(xid)))
+
+        data_privileges = self._get_view_group_hierarchy()['privileges']
+        data_groups = self._get_view_group_hierarchy()['groups']
+
+        # Keep only the light groups.
+        # We then add the light groups according to the privilege hierarchy
+        result = self & light_groups
+
+        for group in self - light_groups:
+            privilege_id = data_groups[group.id]['privilege_id']
+            if not privilege_id:
+                continue
+            sorted_intermediates = (
+                # The intermediaries who are light are ordered to have the valid group with the most rights.
+                (group.all_implied_ids & light_groups)
+                .filtered(lambda g: data_groups[g.id]['privilege_id'] == privilege_id)
+                .sorted(lambda g: data_privileges[data_groups[g.id]['privilege_id']]['group_ids'].index(g.id))
+            )
+            result |= sorted_intermediates[:1]
+
+        return result
+
+    def _compute_view_group_hierarchy(self):
+        self.view_group_hierarchy = self._get_view_group_hierarchy()
+
+    @api.model
+    @api.ormcache('self.env.lang', cache='groups')
+    def _get_view_group_hierarchy(self):
+        return {
+            'groups': {
+                group.id: {
+                    'id': group.id,
+                    'name': group.name,
+                    'comment': group.comment,
+                    'privilege_id': group.privilege_id.id,
+                    'disjoint_ids': group.disjoint_ids.ids,
+                    'implied_ids': group.implied_ids.ids,
+                    'all_implied_ids': group.all_implied_ids.ids,
+                    'all_implied_by_ids': group.all_implied_by_ids.ids,
+                }
+                for group in self.search([])
+            },
+            'privileges': {
+                privilege.id: {
+                    'id': privilege.id,
+                    'name': privilege.name,
+                    'category_id': privilege.category_id.id,
+                    'description': privilege.description,
+                    'placeholder': privilege.placeholder,
+                    'group_ids': [group.id for group in privilege.group_ids.sorted(lambda g: (len(g.all_implied_ids & privilege.group_ids) if g.privilege_id else 0, g.sequence, g.id))]
+                }
+                for privilege in self.env['res.groups.privilege'].search([])
+            },
+            'categories': [
+                {
+                    'id': category.id,
+                    'name': category.name,
+                    'privilege_ids': category.privilege_ids.sorted(lambda p: p.sequence).filtered(lambda p: p.group_ids).ids,
+                } for category in self.env['ir.module.category'].search([('privilege_ids.group_ids', '!=', False)])
+            ]
+        }
+
+    @api.model
+    @api.ormcache(cache='groups')
+    def _get_group_definitions(self):
+        """ Return the definition of all the groups as a :class:`~odoo.tools.SetDefinitions`. """
+        groups = self.sudo().search([], order='id')
+        id_to_refs = groups._get_external_ids()
+        data = {
+            group.id: {
+                'refs': id_to_refs[group.id] or [str(group.id)],
+                'supersets': group.implied_ids.ids,
+                'disjoints': group.disjoint_ids.ids,
+            }
+            for group in groups
+        }
+        return SetDefinitions(data)
+
+    @api.model
+    def _is_feature_enabled(self, group_reference):
+        return self.env['res.users'].sudo().browse(api.SUPERUSER_ID)._has_group(group_reference)
+
+    @api.depends('all_user_ids')
+    def _compute_all_users_count(self):
+        for group in self:
+            group.all_users_count = len(group.all_user_ids)
+
+    @api.depends('access_ids')
+    def _compute_access_count(self):
+        for group in self:
+            group.access_count = len(group.access_ids)
+
+    def action_show_all_users(self):
+        self.ensure_one()
+        return {
+            'name': self.env._('Users and implied users of %(group)s', group=self.display_name),
+            'view_mode': 'list,form',
+            'res_model': 'res.users',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False, 'form_view_ref': 'base.view_users_form'},
+            'domain': [('all_group_ids', 'in', self.ids)],
+            'target': 'current',
+        }
+
+    def action_view_implied_ids(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Implying Groups"),
+            'res_model': 'res.groups',
+            'views': [[False, 'list'], [False, 'form']],
+            'domain': [('implied_by_ids', 'in', self.ids)],
+        }
+
+    def action_view_implied_by_ids(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Implied Groups"),
+            'res_model': 'res.groups',
+            'views': [[False, 'list'], [False, 'form']],
+            'domain': [('implied_ids', 'in', self.ids)],
+        }
+
+    def action_view_access_ids(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Access Rules"),
+            'res_model': 'ir.access',
+            'views': [[False, 'list'], [False, 'kanban'], [False, 'form']],
+            'domain': [('group_id', 'in', self.ids)],
+        }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- In a retail store, most buyers are anonymous walk-in customers
+            We need a default customer to print out Ecpay invoices for them
+            This customer is set as the default customer while entering the pos session -->
+        <record id="ecpay_default_walk_in_customer" model="res.partner">
+            <field name="name">Walk In Customer</field>
+            <field name="email">walkin@example.com</field>
+            <field name="country_id" eval="ref('base.tw')"/>
+        </record>
+    </data>
+</odoo>

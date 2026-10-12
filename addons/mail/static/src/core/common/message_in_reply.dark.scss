@@ -1,0 +1,23 @@
+.o-mail-MessageInReply-author {
+    opacity: 50%;
+}
+
+.o-mail-MessageInReply-core {
+    --mail-MessageInReply-messageOpacityNonHover: 50%;
+
+    background-color: color-mix(in srgb, var(--gray-100) 35%, transparent) !important;
+
+    &.o-blue {
+        border-left-color: color-mix(in srgb, var(--gray-100), var(--info)) !important
+    }
+    &.o-green {
+        border-left-color: mix($gray-100, $success, 50%) !important
+    }
+    &.o-orange {
+        border-left-color: color-mix(in srgb, var(--gray-100) 40%, var(--warning)) !important
+    }
+
+    &:hover {
+        filter: brightness(1.1);
+    }
+}

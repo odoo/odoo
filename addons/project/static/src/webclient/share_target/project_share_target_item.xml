@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="project.ShareTargetItem" t-inherit="web.ShareTargetItem" t-inherit-mode="primary">
+        <xpath expr="//div[@t-if='this.hasMultiCompanies']" position="after">
+            <div t-if="this.hasMultiProjects" class="d-flex flex-column p-2">
+                <Record t-props="this.projectRecordProps" t-slot-scope="data">
+                    <h3>In Project</h3>
+                    <Field id="'project'" name="'project'" record="data.record" context="this.context" canOpen="false"/>
+                </Record>
+            </div>
+        </xpath>
+    </t>
+</templates>

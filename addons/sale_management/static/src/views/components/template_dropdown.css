@@ -1,0 +1,25 @@
+.o_sale_management_template {
+    @media screen and (min-width: 576px), print and (min-width: 100mm) {
+        .o_template_icon_group {
+            visibility: hidden;
+        }
+
+        &:hover, &.focus {
+            .o_template_icon_group {
+                visibility: visible;
+
+                .btn {
+                    color: var(--o-bs-text-muted) !important;
+
+                    &.btn-link:hover {
+                        color: var(--o-bs-btn-link-hover-color) !important;
+                    }
+
+                    &[data-icon='delete']:hover {
+                        color: var(--o-danger) !important;
+                    }
+                }
+            }
+        }
+    }
+}

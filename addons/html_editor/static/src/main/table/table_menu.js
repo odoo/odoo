@@ -1,0 +1,418 @@
+import { getBaseContainerSelector } from "@html_editor/utils/base_container";
+import {
+    getIframeAdjustedBoundingRect,
+    getTableColgroup,
+    isEmpty,
+    isTableCell,
+} from "@html_editor/utils/dom_info";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { getRowIndex } from "@html_editor/utils/table";
+import { Component, onMounted, onWillUnmount, useProps, signal, t, useListener } from "@odoo/owl";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../../utils/hooks";
+
+export class TableMenu extends Component {
+    static components = { Dropdown, DropdownItem };
+    static template = "html_editor.TableMenu";
+
+    props = useProps({
+        addColumn: t.function(),
+        addRow: t.function(),
+        buildTableGrid: t.function(),
+        clearColumnContent: t.function(),
+        clearRowContent: t.function(),
+        close: t.function(),
+        commit: t.function(),
+        direction: t.string().optional("ltr"),
+        document: t.customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+        dropdownState: t.object(),
+        editable: t.customValidator(t.object(), (p) => p.nodeType === Node.ELEMENT_NODE),
+        moveColumn: t.function(),
+        moveRow: t.function(),
+        removeColumn: t.function(),
+        removeRow: t.function(),
+        resetColumnWidth: t.function().optional(),
+        resetRowHeight: t.function().optional(),
+        resetSize: t.function().optional(),
+        tableDragDropOverlay: t.object(),
+        target: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE),
+        toggleAlternatingRows: t.function(),
+        turnIntoHeader: t.function(),
+        turnIntoRow: t.function(),
+        type: t.string(), // column or row
+    });
+
+    menuRef = signal.ref();
+
+    setup() {
+        this.editableDocument = this.props.editable.ownerDocument;
+        const onPointerDown = (ev) => this.onPointerDown(ev);
+        onMounted(() => {
+            this.overlayEl = this.menuRef();
+            this.overlayEl.addEventListener("pointerdown", onPointerDown);
+        });
+        onWillUnmount(() => {
+            this.menuRef()?.removeEventListener("pointerdown", onPointerDown);
+        });
+        useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp.bind(this));
+        useLayoutEffect(
+            () => {
+                const { type, target } = this.props;
+                this.tableGrid = this.props.buildTableGrid(closestElement(target, "table"));
+                const rowIndex = getRowIndex(target.parentElement);
+                const colIndex = this.tableGrid[rowIndex].indexOf(target);
+                this.anchorCell =
+                    type === "column" ? this.tableGrid[0][colIndex] : this.tableGrid[rowIndex][0];
+                if (type === "column") {
+                    this.isFirst = this.anchorCell.cellIndex === 0;
+                    this.isLast = !this.anchorCell.nextElementSibling;
+                } else {
+                    const tr = this.anchorCell.parentElement;
+                    this.isFirst = !tr.previousElementSibling;
+                    this.isLast = !tr.nextElementSibling;
+                    this.isTableHeader = [...tr.children][0].nodeName === "TH";
+                }
+                this.items = type === "column" ? this.colItems() : this.rowItems();
+                this.updatePosition();
+            },
+            () => [this.props.target]
+        );
+        if (this.props.document.defaultView.frameElement) {
+            useListener(this.props.document, "scroll", () => {
+                this.updatePosition();
+            });
+            useListener(this.props.document, "pointerdown", (ev) => {
+                if (!this.overlayEl.contains(ev.target)) {
+                    this.props.close();
+                }
+            });
+        }
+    }
+
+    get hasCustomTableSize() {
+        const table = closestElement(this.anchorCell, "table");
+        if (!table) {
+            return false;
+        }
+        const rowHasHeight = [...table.rows].some((row) => row.style.height);
+        const colHasWidth = [...table.querySelectorAll("colgroup col")].some(
+            (col) => col.style.width
+        );
+        return rowHasHeight || colHasWidth;
+    }
+
+    get hasCustomRowHeight() {
+        return !!closestElement(this.anchorCell, "tr")?.style.height;
+    }
+
+    get hasCustomColumnWidth() {
+        const table = closestElement(this.anchorCell, "table");
+        const index = this.tableGrid[0].indexOf(this.anchorCell);
+        const colgroup = getTableColgroup(table);
+        if (!colgroup) {
+            return false;
+        }
+        const targetCols = [...colgroup.children].slice(index, index + this.anchorCell.colSpan);
+        return targetCols.some((col) => col.style.width);
+    }
+
+    get hasContent() {
+        const baseContainerSelector = getBaseContainerSelector();
+        const cell = this.anchorCell;
+        const colIndex = this.tableGrid[0].indexOf(cell);
+        const targetCells =
+            this.props.type === "row"
+                ? [...cell.parentElement.children]
+                : this.tableGrid.map((row) => row[colIndex]);
+        return targetCells.some((td) => {
+            const { children } = td;
+            return !(
+                children.length === 1 &&
+                children[0].matches(baseContainerSelector) &&
+                isEmpty(children[0])
+            );
+        });
+    }
+
+    updatePosition() {
+        const { type, direction } = this.props;
+        if (!this.overlayEl || !this.anchorCell) {
+            return;
+        }
+        const targetRect = getIframeAdjustedBoundingRect(this.anchorCell);
+        const container = this.overlayEl.parentElement;
+        const containerRect = container.getBoundingClientRect();
+        const top = targetRect.top - containerRect.top;
+        const left = targetRect.left - containerRect.left;
+        this.overlayEl.classList.remove("h-100", "w-100");
+        if (type === "column") {
+            Object.assign(this.overlayEl.style, {
+                position: "absolute",
+                top: `${top - this.overlayEl.offsetHeight}px`,
+                left: `${left}px`,
+                width: `${targetRect.width}px`,
+            });
+        } else {
+            const isLTR = direction === "ltr";
+            const inlineStartOffset = isLTR ? left : containerRect.right - targetRect.right;
+            Object.assign(this.overlayEl.style, {
+                position: "absolute",
+                top: `${top}px`,
+                insetInlineStart: `${inlineStartOffset - this.overlayEl.offsetWidth}px`,
+                height: `${targetRect.height}px`,
+            });
+        }
+    }
+    onSelected(item) {
+        item.action(this.anchorCell);
+        this.props.commit();
+        this.props.close();
+    }
+
+    onPointerDown(ev) {
+        const target = this.anchorCell;
+        let hasMergedSpan = false;
+        if (this.props.type === "column") {
+            const colIndex = this.tableGrid[0].indexOf(target);
+            hasMergedSpan = this.tableGrid.some((row) => row[colIndex].colSpan > 1);
+        } else {
+            const colIndex = getRowIndex(target);
+            hasMergedSpan = this.tableGrid[colIndex].some((cell) => cell.rowSpan > 1);
+        }
+        // Do not allow drag-and-drop on merged cells
+        if (hasMergedSpan) {
+            return;
+        }
+        this.longPressTimer = setTimeout(() => {
+            this.props.close();
+            // Open the TableDragDrop overlay.
+            this.props.tableDragDropOverlay.open({
+                target: target,
+                props: {
+                    type: this.props.type,
+                    pointerPos: { x: ev.clientX, y: ev.clientY },
+                    target: target,
+                    document: this.props.document,
+                    editable: this.props.editable,
+                    close: () => this.props.tableDragDropOverlay.close(),
+                    moveRow: this.props.moveRow,
+                    moveColumn: this.props.moveColumn,
+                    commit: this.props.commit,
+                    tableGrid: this.tableGrid,
+                },
+            });
+        }, 200); // long press threshold
+    }
+
+    onPointerUp() {
+        // Cancel long-press to prevent tableDragDropOverlay.
+        clearTimeout(this.longPressTimer);
+        delete this.longPressTimer;
+    }
+
+    isCurrentOrAdjacentCellRowSpanned(position) {
+        const td = this.anchorCell;
+        const tr = closestElement(td, "tr");
+        const rowIndex = getRowIndex(tr);
+        const adjacentRowIndex = position === "move_down" ? rowIndex + 1 : rowIndex - 1;
+        return (
+            this.tableGrid[rowIndex]?.some((cell) => cell?.rowSpan > 1) ||
+            this.tableGrid[adjacentRowIndex]?.some((cell) => cell?.rowSpan > 1)
+        );
+    }
+
+    isCurrentOrAdjacentCellColSpanned(position) {
+        const targetCell = this.anchorCell;
+        const columnIndex = this.tableGrid[0].indexOf(targetCell);
+        const adjacentIndex = position === "move_right" ? columnIndex + 1 : columnIndex - 1;
+        return this.tableGrid.some(
+            (row) => row[columnIndex]?.colSpan > 1 || row[adjacentIndex]?.colSpan > 1
+        );
+    }
+
+    colItems() {
+        const ltr = this.props.direction === "ltr";
+        return [
+            !this.isFirst && {
+                name: "move_left",
+                icon: "chevron_left",
+                iconClass: "disabled",
+                text: ltr ? _t("Move left") : _t("Move right"),
+                action: (target) =>
+                    this.props.moveColumn(this.tableGrid[0].indexOf(target) - 1, target),
+                disable: this.isCurrentOrAdjacentCellColSpanned("move_left"),
+                tooltip: _t("Merged columns cannot be moved left or right."),
+            },
+            !this.isLast && {
+                name: "move_right",
+                icon: "chevron_right",
+                text: ltr ? _t("Move right") : _t("Move left"),
+                action: (target) =>
+                    this.props.moveColumn(this.tableGrid[0].indexOf(target) + 1, target),
+                disable: this.isCurrentOrAdjacentCellColSpanned("move_right"),
+                tooltip: _t("Merged columns cannot be moved left or right."),
+            },
+            {
+                name: "insert_left",
+                icon: "add",
+                text: ltr ? _t("Insert left") : _t("Insert right"),
+                action: this.props.addColumn.bind(this, "before"),
+            },
+            {
+                name: "insert_right",
+                icon: "add",
+                text: ltr ? _t("Insert right") : _t("Insert left"),
+                action: this.props.addColumn.bind(this, "after"),
+            },
+            {
+                name: "delete",
+                icon: "delete",
+                iconClass: "oi-filled",
+                text: _t("Delete"),
+                action: this.props.removeColumn.bind(this),
+            },
+            this.props.resetColumnWidth &&
+                this.hasCustomColumnWidth && {
+                    name: "reset_column_size",
+                    icon: "table_chart",
+                    text: _t("Reset column size"),
+                    action: (target) => {
+                        const cell = closestElement(target, isTableCell);
+                        const table = closestElement(cell, "table");
+                        const colgroup = getTableColgroup(table);
+                        if (!colgroup) {
+                            return;
+                        }
+                        const colIndex = this.tableGrid[0].indexOf(cell);
+                        const targetCols = [...colgroup.children].slice(
+                            colIndex,
+                            colIndex + cell.colSpan
+                        );
+                        const layoutContainer = closestElement(cell, "table");
+                        targetCols.forEach((col) => {
+                            this.props.resetColumnWidth(col, {
+                                layoutContainer,
+                                hasProxyElements: true,
+                            });
+                        });
+                    },
+                },
+            this.props.resetSize &&
+                this.hasCustomTableSize && {
+                    name: "reset_table_size",
+                    icon: "table_chart",
+                    text: _t("Reset table size"),
+                    action: (target) =>
+                        this.props.resetSize(closestElement(target, "table"), {
+                            proxyElementSelector: "colgroup",
+                            heightElementsSelector: "tr",
+                        }),
+                },
+            this.hasContent && {
+                name: "clear_content",
+                icon: "cancel",
+                iconClass: "oi-filled",
+                text: _t("Clear content"),
+                action: this.props.clearColumnContent.bind(this),
+            },
+        ].filter(Boolean);
+    }
+
+    rowItems() {
+        const table = closestElement(this.anchorCell, "table");
+        const hasAlternatingRowClass = table.classList.contains("o_alternating_rows");
+        return [
+            this.isFirst &&
+                !this.isTableHeader && {
+                    name: "make_header",
+                    icon: "view_module",
+                    text: _t("Turn into header"),
+                    action: (target) => this.props.turnIntoHeader(target.parentElement),
+                },
+            this.isFirst &&
+                this.isTableHeader && {
+                    name: "remove_header",
+                    icon: "table_chart",
+                    text: _t("Turn into row"),
+                    action: (target) => this.props.turnIntoRow(target.parentElement),
+                },
+            !this.isFirst && {
+                name: "move_up",
+                icon: "expand_less",
+                text: _t("Move up"),
+                action: (target) =>
+                    this.props.moveRow(getRowIndex(target) - 1, target.parentElement),
+                disable: this.isCurrentOrAdjacentCellRowSpanned("move_up"),
+                tooltip: _t("Merged rows cannot be moved up or down."),
+            },
+            !this.isLast && {
+                name: "move_down",
+                icon: "expand_more",
+                text: _t("Move down"),
+                action: (target) =>
+                    this.props.moveRow(getRowIndex(target) + 1, target.parentElement),
+                disable: this.isCurrentOrAdjacentCellRowSpanned("move_down"),
+                tooltip: _t("Merged rows cannot be moved up or down."),
+            },
+            !this.isTableHeader && {
+                name: "insert_above",
+                icon: "add",
+                text: _t("Insert above"),
+                action: (target) => this.props.addRow("before", target.parentElement),
+            },
+            {
+                name: "insert_below",
+                icon: "add",
+                text: _t("Insert below"),
+                action: (target) => this.props.addRow("after", target.parentElement),
+            },
+            {
+                name: "toggle_alternating_rows",
+                icon: "colors",
+                text: hasAlternatingRowClass
+                    ? _t("Clear alternate colors")
+                    : _t("Alternate row colors"),
+                action: () => this.props.toggleAlternatingRows(table),
+            },
+            {
+                name: "delete",
+                icon: "delete",
+                iconClass: "oi-filled",
+                text: _t("Delete"),
+                action: (target) => this.props.removeRow(target.parentElement),
+            },
+            this.props.resetRowHeight &&
+                this.hasCustomRowHeight && {
+                    name: "reset_row_size",
+                    icon: "table_chart",
+                    text: _t("Reset row size"),
+                    action: (target) =>
+                        this.props.resetRowHeight(closestElement(target, "tr"), {
+                            layoutContainer: closestElement(target, "table"),
+                            elementsSelector: "tr",
+                        }),
+                },
+            this.props.resetSize &&
+                this.hasCustomTableSize && {
+                    name: "reset_table_size",
+                    icon: "table_chart",
+                    text: _t("Reset table size"),
+                    action: (target) =>
+                        this.props.resetSize(closestElement(target, "table"), {
+                            proxyElementSelector: "colgroup",
+                            heightElementsSelector: "tr",
+                        }),
+                },
+            this.hasContent && {
+                name: "clear_content",
+                icon: "cancel",
+                iconClass: "oi-filled",
+                text: _t("Clear content"),
+                action: (target) => this.props.clearRowContent(target.parentElement),
+            },
+        ].filter(Boolean);
+    }
+}

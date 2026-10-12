@@ -1,0 +1,263 @@
+from itertools import product
+
+from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon, MessagePostSubTestData
+from odoo.tests import tagged
+
+
+@tagged("mail_controller")
+class TestPortalThreadController(MailControllerThreadCommon):
+
+    def test_message_post_portal_no_partner(self):
+        """Test access of message post for portal without partner."""
+        record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
+        token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
+
+        def test_access(user, allowed, route_kw=None, exp_author=None):
+            return MessagePostSubTestData(user, allowed, route_kw=route_kw, exp_author=exp_author)
+
+        self._execute_message_post_subtests(
+            record,
+            (
+                test_access(self.user_public, False),
+                test_access(self.user_public, False, route_kw=bad_token),
+                test_access(self.user_public, False, route_kw=bad_sign),
+                test_access(self.user_public, True, route_kw=token),
+                test_access(self.user_public, True, route_kw=sign, exp_author=partner),
+                test_access(self.guest, False),
+                test_access(self.guest, False, route_kw=bad_token),
+                test_access(self.guest, False, route_kw=bad_sign),
+                test_access(self.guest, True, route_kw=token),
+                test_access(self.guest, True, route_kw=sign, exp_author=partner),
+                test_access(self.user_portal, False),
+                test_access(self.user_portal, False, route_kw=bad_token),
+                test_access(self.user_portal, False, route_kw=bad_sign),
+                test_access(self.user_portal, True, route_kw=token),
+                test_access(self.user_portal, True, route_kw=sign),
+                test_access(self.user_employee, True),
+                test_access(self.user_employee, True, route_kw=bad_token),
+                test_access(self.user_employee, True, route_kw=bad_sign),
+                test_access(self.user_employee, True, route_kw=token),
+                test_access(self.user_employee, True, route_kw=sign),
+            ),
+        )
+
+    def test_message_post_portal_with_partner(self):
+        """Test access of message post for portal with partner."""
+        rec_partner = self.env["res.partner"].create({"name": "Record Partner"})
+        record = self.env["mail.test.portal"].create({"name": "Test", "partner_id": rec_partner.id})
+        token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
+
+        def test_access(user, allowed, route_kw=None, exp_author=None):
+            return MessagePostSubTestData(user, allowed, route_kw=route_kw, exp_author=exp_author)
+
+        self._execute_message_post_subtests(
+            record,
+            (
+                test_access(self.user_public, False),
+                test_access(self.user_public, False, route_kw=bad_token),
+                test_access(self.user_public, False, route_kw=bad_sign),
+                test_access(self.user_public, True, route_kw=token, exp_author=rec_partner),
+                test_access(self.user_public, True, route_kw=sign, exp_author=partner),
+                # sign has priority over token when both are provided
+                test_access(self.user_public, True, route_kw=token | sign, exp_author=partner),
+                test_access(self.guest, False),
+                test_access(self.guest, False, route_kw=bad_token),
+                test_access(self.guest, False, route_kw=bad_sign),
+                test_access(self.guest, True, route_kw=token, exp_author=rec_partner),
+                test_access(self.guest, True, route_kw=sign, exp_author=partner),
+                test_access(self.guest, True, route_kw=token | sign, exp_author=partner),
+                test_access(self.user_portal, False),
+                test_access(self.user_portal, False, route_kw=bad_token),
+                test_access(self.user_portal, False, route_kw=bad_sign),
+                test_access(self.user_portal, True, route_kw=token),
+                test_access(self.user_portal, True, route_kw=sign),
+                test_access(self.user_employee, True),
+                test_access(self.user_employee, True, route_kw=bad_token),
+                test_access(self.user_employee, True, route_kw=bad_sign),
+                test_access(self.user_employee, True, route_kw=token),
+                test_access(self.user_employee, True, route_kw=sign),
+            ),
+        )
+
+    def test_message_post_partner_ids_mention_token(self):
+        """Test partner_ids of message_post for portal record without partner.
+        All users are allowed to mention with specific message_mention token."""
+        record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
+        token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
+        all_partners = (
+            self.user_portal + self.user_employee + self.user_admin
+        ).partner_id
+        record.message_subscribe(partner_ids=self.user_employee.partner_id.ids)
+
+        def test_partners(user, allowed, exp_partners, route_kw=None, exp_author=None):
+            return MessagePostSubTestData(
+                user,
+                allowed,
+                partners=all_partners,
+                route_kw=route_kw,
+                exp_author=exp_author,
+                exp_partners=exp_partners,
+                add_mention_token=True,
+            )
+
+        self._execute_message_post_subtests(
+            record,
+            (
+                test_partners(self.user_public, False, all_partners),
+                test_partners(self.user_public, False, all_partners, route_kw=bad_token),
+                test_partners(self.user_public, False, all_partners, route_kw=bad_sign),
+                test_partners(self.user_public, True, all_partners, route_kw=token),
+                test_partners(self.user_public, True, all_partners, route_kw=sign, exp_author=partner),
+                test_partners(self.guest, False, all_partners),
+                test_partners(self.guest, False, all_partners, route_kw=bad_token),
+                test_partners(self.guest, False, all_partners, route_kw=bad_sign),
+                test_partners(self.guest, True, all_partners, route_kw=token),
+                test_partners(self.guest, True, all_partners, route_kw=sign, exp_author=partner),
+                test_partners(self.user_portal, False, all_partners),
+                test_partners(self.user_portal, False, all_partners, route_kw=bad_token),
+                test_partners(self.user_portal, False, all_partners, route_kw=bad_sign),
+                test_partners(self.user_portal, True, all_partners, route_kw=token),
+                test_partners(self.user_portal, True, all_partners, route_kw=sign),
+                test_partners(self.user_employee, True, all_partners),
+                test_partners(self.user_employee, True, all_partners, route_kw=bad_token),
+                test_partners(self.user_employee, True, all_partners, route_kw=bad_sign),
+                test_partners(self.user_employee, True, all_partners, route_kw=token),
+                test_partners(self.user_employee, True, all_partners, route_kw=sign),
+            ),
+        )
+
+    def test_message_post_partner_ids_portal(self):
+        """Test partner_ids of message_post for portal record without partner.
+        Only internal users are allowed to mention without specific message_mention token."""
+        record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
+        token, bad_token, sign, bad_sign, partner = self._get_sign_token_params(record)
+        all_partners = (
+            self.user_portal + self.user_employee + self.user_admin
+        ).partner_id
+        record.message_subscribe(partner_ids=self.user_employee.partner_id.ids)
+
+        def test_partners(user, allowed, exp_partners, route_kw=None, exp_author=None):
+            return MessagePostSubTestData(
+                user,
+                allowed,
+                partners=all_partners,
+                route_kw=route_kw,
+                exp_author=exp_author,
+                exp_partners=exp_partners,
+            )
+
+        self._execute_message_post_subtests(
+            record,
+            (
+                test_partners(self.user_public, False, self.env["res.partner"]),
+                test_partners(self.user_public, False, self.env["res.partner"], route_kw=bad_token),
+                test_partners(self.user_public, False, self.env["res.partner"], route_kw=bad_sign),
+                test_partners(self.user_public, True, self.env["res.partner"], route_kw=token),
+                test_partners(self.user_public, True, self.env["res.partner"], route_kw=sign, exp_author=partner),
+                test_partners(self.guest, False, self.env["res.partner"]),
+                test_partners(self.guest, False, self.env["res.partner"], route_kw=bad_token),
+                test_partners(self.guest, False, self.env["res.partner"], route_kw=bad_sign),
+                test_partners(self.guest, True, self.env["res.partner"], route_kw=token),
+                test_partners(self.guest, True, self.env["res.partner"], route_kw=sign, exp_author=partner),
+                test_partners(self.user_portal, False, self.env["res.partner"]),
+                test_partners(self.user_portal, False, self.env["res.partner"], route_kw=bad_token),
+                test_partners(self.user_portal, False, self.env["res.partner"], route_kw=bad_sign),
+                test_partners(self.user_portal, True, self.env["res.partner"], route_kw=token),
+                test_partners(self.user_portal, True, self.env["res.partner"], route_kw=sign),
+                test_partners(self.user_employee, True, all_partners),
+                test_partners(self.user_employee, True, all_partners, route_kw=bad_token),
+                test_partners(self.user_employee, True, all_partners, route_kw=bad_sign),
+                test_partners(self.user_employee, True, all_partners, route_kw=token),
+                test_partners(self.user_employee, True, all_partners, route_kw=sign),
+            ),
+        )
+
+    def test_mail_thread_data_portal(self):
+        """Test getting thread data through a portal record with no access."""
+        record = self.env["mail.test.portal.no.access"].create({"name": "Test"})
+        partner = self.env["res.partner"].create({"name": "Sign Partner"})
+        for user, route_kw in product(
+            (self.user_public, self.user_portal, self.user_employee),
+            (
+                {"token": record._portal_ensure_token()},
+                {"hash": record._sign_token(partner.id), "pid": partner.id},
+            ),
+        ):
+            with self.subTest(user=user.name, kw=route_kw):
+                self._authenticate_pseudo_user(user)
+                result = self.make_jsonrpc_request(
+                    "/mail/store",
+                    {
+                        "fetch_params": [
+                            [
+                                "mail.thread",
+                                {
+                                    "thread_model": record._name,
+                                    "thread_id": record.id,
+                                    "request_list": ["followers"],
+                                    "access_params": route_kw,
+                                },
+                            ]
+                        ]
+                    },
+                )
+                thread_data = result["mail.thread"][0]
+                self.assertNotIn("mail.followers", result)
+                self.assertNotIn("followersCount", thread_data)
+                self.assertFalse(thread_data["canPostOnReadonly"])
+                self.assertFalse(thread_data["hasReadAccess"])
+                self.assertFalse(thread_data["hasWriteAccess"])
+
+    def test_message_post_sanitizes_post_data(self):
+        """Only internal users with direct posting ACL can pass custom
+        `message_type`/`subtype_xmlid`; everyone else gets `comment`/`mail.mt_comment`."""
+        non_accessible_record = self.env["mail.test.portal.no.access"].create(
+            {"name": "Non accessible"}
+        )
+        token, _, sign, _, partner = self._get_sign_token_params(non_accessible_record)
+
+        def test_post_data(
+            user, exp_message_type, exp_subtype_xmlid, route_kw=None, exp_author=None
+        ):
+            return MessagePostSubTestData(
+                user,
+                True,
+                message_type="notification",
+                subtype_xmlid="mail.mt_note",
+                route_kw=route_kw,
+                exp_author=exp_author,
+                exp_message_type=exp_message_type,
+                exp_subtype_xmlid=exp_subtype_xmlid,
+            )
+
+        self._execute_message_post_subtests(
+            non_accessible_record,
+            [
+                test_post_data(
+                    exp_author=partner if user == self.user_public and route_kw is sign else None,
+                    exp_message_type="comment",
+                    exp_subtype_xmlid="mail.mt_comment",
+                    route_kw=route_kw,
+                    user=user,
+                )
+                for user, route_kw in product(
+                    (self.user_public, self.user_portal, self.user_employee),
+                    (token, sign),
+                )
+            ],
+        )
+        self._execute_message_post_subtests(
+            self.env["mail.test.rating.thread.read"].create({"name": "User accessible record"}),
+            [
+                test_post_data(
+                    exp_message_type="notification",
+                    exp_subtype_xmlid="mail.mt_note",
+                    user=self.user_employee,
+                ),
+                test_post_data(
+                    exp_message_type="comment",
+                    exp_subtype_xmlid="mail.mt_comment",
+                    user=self.user_portal,
+                ),
+            ],
+        )

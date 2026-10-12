@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- iap Client Account Views -->
+    <record id="iap_account_view_tree" model="ir.ui.view">
+        <field name="name">iap.account.list</field>
+        <field name="model">iap.account</field>
+        <field name="arch" type="xml">
+            <list string="In-App Purchase Accounts" duplicate="false" multi_edit="1" editable="bottom">
+                <field name="name"/>
+                <field name="service_id"/>
+                <field name="description"/>
+                <field name="company_ids" widget="many2many_tags"/>
+                <field name="balance"/>
+                <field name="account_token" optional="hidden"/>
+                <button name="action_manage" type="object" string="Manage" class="btn btn-primary" icon="settings"/>
+                <button name="action_rotate_token" type="object" string="Rotate" class="btn btn-secondary" icon="security"
+                        confirm="This is useful if you think it may have leaked. It will also deactivate auto-refill if set. Are you sure to rotate your IAP token? "
+                />
+            </list>
+        </field>
+    </record>
+    <record id="iap_service_pack_view_tree" model="ir.ui.view">
+        <field name="name">iap.service.pack.list</field>
+        <field name="model">iap.service.pack</field>
+        <field name="arch" type="xml">
+            <list string="In-App Purchase Service Packs" duplicate="false">
+                <field name="name"/>
+                <field name="credit"/>
+                <field name="price"/>
+                <field name="service_id"/>
+            </list>
+        </field>
+    </record>
+    <!-- Actions -->
+    <record id="iap_account_action" model="ir.actions.act_window">
+        <field name="name">In-App Purchase Accounts</field>
+        <field name="res_model">iap.account</field>
+        <field name="path">iap-accounts</field>
+        <field name='view_mode'>list</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem
+        id="iap_root_menu"
+        name="IAP"
+        parent="base.menu_custom"
+        sequence="5"/>
+
+    <menuitem
+        id="iap_account_menu"
+        name="In-App Purchase Accounts"
+        parent="iap_root_menu"
+        action="iap_account_action"
+        sequence="10"/>
+
+</odoo>

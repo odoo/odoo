@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_self_order.DynamicQrReceipt">
+            <html id="pos-receipt">
+                <head>
+                    <meta charset="UTF-8"></meta>
+                    <t t-call="point_of_sale.pos_order_receipt_style" />
+                </head>
+                <body>
+                    <div class="pos-receipt">
+                        <div class="w-100 text-center mb-2" name="logo">
+                            <img t-if="image['logo']" t-att-src="image['logo']" style="max-height: 75px" />
+                        </div>
+                        <div class="text-large text-center text-bold mb-2">
+                            Scan to join your order
+                        </div>
+                        <div t-if="order['pos_reference']" class="text-center">
+                            Ticket <span t-out="order['pos_reference']" />
+                        </div>
+                        <div class="text-center">
+                            <span t-out="extra_data['formated_date_order']" />
+                        </div>
+                        <div t-if="extra_data['cashier_name']" class="text-center">
+                            Served by <span t-out="extra_data['cashier_name']" />
+                        </div>
+                        <div t-if="extra_data['table_name']" class="text-center">
+                            Table <span t-out="extra_data['table_name']" />
+                        </div>
+                        <div t-if="order['tracking_number']" class="w-100 text-center mt-2 mb-3" name="tracking-number">
+                            <span class="text-insane" t-out="order['tracking_number']" />
+                        </div>
+
+                        <div class="w-100 text-center my-3">
+                            <img t-att-src="qrCode" alt="QR Code" style="width: 80%; max-width: 300px;" />
+                        </div>
+
+                        <t t-call="point_of_sale.company_info_receipt" />
+                    </div>
+                </body>
+            </html>
+        </template>
+    </data>
+</odoo>

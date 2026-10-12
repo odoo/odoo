@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.menu" id="crm_menu_partners">
+        <field name="name" model="res.company" eval="obj().env.company.partnership_label"/>
+        <field name="parent_id" ref="crm.crm_menu_config"/>
+        <field name="sequence">16</field>
+    </record>
+    <menuitem id="menu_res_partner_grade_action"
+              action="partnership.res_partner_grade_action"
+              parent="crm_menu_partners"
+              sequence="1"/>
+</odoo>

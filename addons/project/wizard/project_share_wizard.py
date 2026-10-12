@@ -1,0 +1,135 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import operator
+
+from odoo import Command, api, fields, models, _
+
+
+class ProjectShareWizard(models.TransientModel):
+    _name = 'project.share.wizard'
+    _inherit = ['portal.share']
+    _description = 'Project Sharing'
+
+    @api.model
+    def default_get(self, fields):
+        # The project share action could be called in `project.collaborator`
+        # and so we have to check the active_model and active_id to use
+        # the right project.
+        active_model = self.env.context.get('active_model', '')
+        active_id = self.env.context.get('active_id', False)
+        if active_model == 'project.collaborator':
+            active_model = 'project.project'
+            active_id = self.env.context.get('default_project_id', False)
+        result = super(ProjectShareWizard, self.with_context(active_model=active_model, active_id=active_id)).default_get(fields)
+        if result['res_model'] and result['res_id']:
+            project = self.env[result['res_model']].browse(result['res_id'])
+            collaborator_vals_list = []
+            for collaborator in project.collaborator_ids:
+                collaborator_vals_list.append({
+                    'partner_id': collaborator.partner_id.id,
+                    'partner_name': collaborator.partner_id.display_name,
+                    'access_mode': collaborator.access_mode,
+                })
+            if collaborator_vals_list:
+                collaborator_vals_list.sort(key=operator.itemgetter('partner_name'))
+                result['collaborator_ids'] = [
+                    Command.create({'partner_id': collaborator['partner_id'], 'access_mode': collaborator['access_mode'], 'send_invitation': False})
+                    for collaborator in collaborator_vals_list
+                ]
+        return result
+
+    @api.model
+    def _selection_target_model(self):
+        project_model = self.env['ir.model']._get('project.project')
+        return [(project_model.model, project_model.name)]
+
+    share_link = fields.Char("Share Link")
+    collaborator_ids = fields.One2many('project.share.collaborator.wizard', 'parent_wizard_id', string='Collaborators')
+    existing_partner_ids = fields.Many2many('res.partner', compute='_compute_existing_partner_ids', export_string_translation=False)
+
+    @api.depends('res_model', 'res_id')
+    def _compute_resource_ref(self):
+        for wizard in self:
+            if wizard.res_model and wizard.res_model == 'project.project':
+                wizard.resource_ref = '%s,%s' % (wizard.res_model, wizard.res_id or 0)
+            else:
+                wizard.resource_ref = None
+
+    @api.depends('collaborator_ids')
+    def _compute_existing_partner_ids(self):
+        for wizard in self:
+            wizard.existing_partner_ids = wizard.collaborator_ids.partner_id
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        wizards = super().create(vals_list)
+        for wizard in wizards:
+            collaborator_ids_to_add = []
+            collaborator_ids_vals_list = []
+            project = wizard.resource_ref
+            project_collaborator_ids_to_remove = [
+                c.id for c in project.collaborator_ids
+                if c.partner_id not in wizard.collaborator_ids.partner_id
+            ]
+            project_collaborator_per_partner_id = {c.partner_id.id: c for c in project.collaborator_ids}
+            for collaborator in wizard.collaborator_ids:
+                partner_id = collaborator.partner_id.id
+                project_collaborator = project_collaborator_per_partner_id.get(partner_id)
+                if not project_collaborator:
+                    collaborator_ids_to_add.append((partner_id, collaborator.access_mode))
+                elif project_collaborator.access_mode != collaborator.access_mode:
+                    collaborator_ids_vals_list.append(
+                        Command.update(project_collaborator.id, {'access_mode': collaborator.access_mode})
+                    )
+
+            if collaborator_ids_to_add:
+                partner_ids_list = [c[0] for c in collaborator_ids_to_add]
+                partners = project._get_new_collaborators(self.env['res.partner'].browse(partner_ids_list))
+                for partner_id, access_mode in collaborator_ids_to_add:
+                    if partner_id in partners.ids:
+                        collaborator_ids_vals_list.append(
+                            Command.create({'partner_id': partner_id, 'access_mode': access_mode})
+                        )
+
+            if project_collaborator_ids_to_remove:
+                collaborator_ids_vals_list.extend(Command.delete(c_id) for c_id in project_collaborator_ids_to_remove)
+
+            if collaborator_ids_vals_list:
+                project.write({'collaborator_ids': collaborator_ids_vals_list})
+
+        return wizards
+
+    def action_share_record(self):
+        # Confirmation dialog is only opened if new portal user(s) need to be created in a 'on invitation' website
+        self.ensure_one()
+        if not self.collaborator_ids:
+            return
+        on_invite = self.env['res.users']._get_signup_invitation_scope() == 'b2b'
+        new_portal_user = self.collaborator_ids.filtered(lambda c: c.send_invitation and not c.partner_id.user_ids) and on_invite
+        if not new_portal_user:
+            return self.action_send_mail()
+        return {
+            'name': _('Confirmation'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'views': [(self.env.ref('project.project_share_wizard_confirm_form').id, 'form')],
+            'res_model': 'project.share.wizard',
+            'res_id': self.id,
+            'target': 'new',
+            'context': self.env.context,
+        }
+
+    def action_send_mail(self):
+        result = {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _("Project shared with your collaborators."),
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
+        if partners_to_invite := self.collaborator_ids.filtered('send_invitation').partner_id:
+            self._send_signup_link(partners=partners_to_invite.with_context({'signup_valid': True}))
+            self._log_share_message(partners_to_invite)
+        return result

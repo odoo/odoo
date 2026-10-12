@@ -1,0 +1,12 @@
+.o_snooze_options .btn.o_snooze_option {
+    border-radius: var(--o-bs-border-radius-lg);
+    flex: 0 0 auto;
+    min-width: 90px;
+    padding: .65rem 1rem;
+
+    &.o_snooze_option_selected {
+        background-color: color-mix(in srgb, var(--o-brand-primary) 12%, transparent);
+        border-color: color-mix(in srgb, var(--o-brand-primary) 55%, transparent);
+        color: var(--o-brand-primary);
+    }
+}

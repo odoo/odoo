@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_bank_form_inherit_account" model="ir.ui.view">
+        <field name="name">res.partner.bank.form.inherit.account</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="Payment QR Settings" name="l10n_id_qris_settings" invisible="country_code != 'ID' or not company_qr_code">
+                    <group>
+                        <field name="l10n_id_qris_api_key"/>
+                        <field name="l10n_id_qris_mid"/>
+                        <p>
+                            <widget name="documentation_link"
+                                    path="/applications/finance/fiscal_localizations/indonesia.html#qris-qr-code-on-invoices"
+                                    label="Documentation"/>
+                        </p>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

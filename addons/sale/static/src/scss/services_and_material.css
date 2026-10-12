@@ -1,0 +1,15 @@
+.o_view_nocontent {
+    .o_nocontent_help {
+        max-width: 800px;
+        flex-grow: 1;
+    }
+
+    .o_view_nocontent_services_and_material:before {
+        width: 100%;
+        aspect-ratio: 2;
+        background: color-mix(in srgb, var(--gray-300) 50%, transparent)  var(--servicesAndMaterial-emptyState-image, url(/sale/static/src/img/services_and_material_empty_light.svg)) no-repeat center;
+        background-size: 100%;
+        border-radius: var(--border-radius-xl);
+        margin-bottom: var(--o-bs-spacer-4);
+    }
+}

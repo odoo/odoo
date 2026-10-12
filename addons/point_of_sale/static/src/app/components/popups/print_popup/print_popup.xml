@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.PrintPopup">
+        <Dialog title.translate="Print" footer="false" size="'md'" contentClass="`print-popup ${!this.ui.isSmall ? 'rounded-4' : ''}`">
+            <div class="print-popup-modal py-3">
+                <button t-foreach="this.printList" t-as="item" t-key="item_index"
+                    t-attf-class="print-button btn btn-lg {{item.isPrimary ? 'btn-primary' : 'btn-secondary'}} d-inline-flex flex-md-column align-items-center justify-content-md-center gap-2 p-3"
+                    t-on-click="() => this.clickPrintButton(item)"
+                    t-att-disabled="item.status === 'loading' ? 'disabled' : ''"
+                >
+                    <i class="oi oi-2x opacity-50" t-att-class="{'oi-fw oi-spin': item.status === 'loading'}" t-att-data-icon="item.status === 'loading' ? 'autorenew' : item.icon"/>
+                    <span class="text-center">
+                        <span t-out="item.label"/>
+                    </span>
+                </button>
+            </div>
+        </Dialog>
+    </t>
+</templates>

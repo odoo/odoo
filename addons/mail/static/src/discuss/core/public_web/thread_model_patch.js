@@ -1,0 +1,25 @@
+import { Thread } from "@mail/core/common/thread_model";
+
+import { patch } from "@web/core/utils/patch";
+
+import "@mail/core/public_web/thread_model_patch";
+
+/** @type {import("models").Thread} */
+const threadPatch = {
+    get isEmpty() {
+        return !this.channel?.from_message_id && super.isEmpty;
+    },
+    setAsDiscussThread() {
+        if (this.channel && !this.channel?.self_member_id?.is_pinned) {
+            this.channel.isLocallyPinned = true;
+        }
+        super.setAsDiscussThread(...arguments);
+        const menu = this.store.messagingMenu;
+        const sidebarState = this.store.discuss.sidebarState;
+        if (sidebarState.activeTab?.notEq(menu.bookmarkTab)) {
+            const fallback = this.store.inPublicPage ? menu.channelTab : menu.chatTab;
+            sidebarState.activeTab = this.channel?.primaryMessagingMenuTab ?? fallback;
+        }
+    },
+};
+patch(Thread.prototype, threadPatch);

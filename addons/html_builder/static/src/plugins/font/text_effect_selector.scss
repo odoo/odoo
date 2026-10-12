@@ -1,0 +1,78 @@
+.o_text_effect_popover {
+    max-height: 440px !important;
+    min-width: unset;
+    overflow-y: auto;
+
+    .o_hb_text_effect_preview {
+        overflow: hidden;
+        height: 40px;
+        width: 48px;
+        border: $border-width solid $border-color;
+        border-radius: $border-radius-sm;
+        background-color: $white;
+        color: $black;
+
+        .o_hb_text_effect_preview_sample {
+            font-size: 32px;
+            line-height: 1em;
+            scale: 0.8;
+        }
+
+        &.o_hb_text_effect_preview_dark {
+            background-color: $gray-900;
+            color: $white;
+        }
+    }
+
+    .o_hb_text_effect_options {
+        --o-hb-text-effect-option-bg: $white;
+        --o-hb-text-effect-shadow-bg: rgba(0, 0, 0, 0.05);
+
+        width: 330px;
+        font-size: $o-we-font-size;
+        background-color: var(--o-hb-text-effect-option-bg);
+
+        [data-icon='chevron_backward'] {
+            aspect-ratio: 1 / 1;
+        }
+
+        .o_hb_text_effect_shadow {
+            border-radius: $border-radius-sm;
+            background-color: var(--o-hb-text-effect-shadow-bg);
+
+            .o_hb_text_effect_shadow_options {
+                border-right: $border-width solid var(--o-hb-text-effect-option-bg);
+
+                .o_hb_row_label {
+                    background-color: transparent;
+                }
+            }
+
+
+            .o_hb_text_effect_remove_shadow {
+                width: 32px;
+            }
+        }
+
+        .o_hb_text_effect_add_shadow {
+            border-style: dashed;
+
+            &, &:focus, &:hover, &:active {
+                border-color: var(
+                    --o-hb-text-effect-add-shadow-border-color,
+                    var(--btn-border-color)
+                );
+            }
+        }
+
+        .o_hb_text_effect_add_shadow, .o_hb_text_effect_remove_shadow {
+            &, &:focus, &:hover {
+                background-color: transparent !important;
+            }
+        }
+    }
+}
+
+.o_hb_row_content .o_hb_text_effect_preview {
+    display: none !important;
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mrp_subcontracting.MoOverviewOperationsBlock" t-inherit="mrp.MoOverviewOperationsBlock" t-inherit-mode="extension">
+        <xpath expr="//td[@name='free_to_use']" position="after">
+            <td t-if="this.props.showOptions.subcontractorAvailabilities and this.props.showOptions.availabilities"/>
+        </xpath>
+    </t>
+
+</templates>

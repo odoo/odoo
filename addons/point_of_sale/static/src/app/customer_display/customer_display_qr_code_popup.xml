@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.QrCodeCustomerDisplay">
+        <t t-if="this.ui.isSmall">
+            <Dialog title.translate="Scan QR" size="'sm'" bodyClass="'d-flex justify-content-center'">
+                <img id="CustomerDisplayqrCode" t-att-src="this.getQrCode()" alt="Customer QR Code"
+                        class="img-fluid mb-3 w-50"/>
+                <t t-set-slot="footer">
+                    <t t-set="customerDisplayURL" t-value="this.props.customerDisplayURL"/>
+                    <a t-att-href="customerDisplayURL" target="_blank" class="btn btn-primary text-white">Open Customer Display</a>
+                    <button class="btn btn-secondary" t-on-click="() => this.props.close()">Discard</button>
+                </t>
+            </Dialog>
+        </t>
+        <t t-else="">
+            <Dialog title.translate="Open Customer Display" size="'md'">
+                <p class="popup-text mt-n3">You can either use it on this device or scan the QR code to display it on another device</p>
+                 <t t-set-slot="footer">
+                    <button t-on-click="this.openOnThisDevice" class="btn btn-primary">
+                        This device
+                    </button>
+                    <button t-on-click="this.showQr" class="btn btn-secondary">
+                        Display QR
+                    </button>
+                    <button class="btn btn-secondary ms-auto" t-on-click="() => this.props.close()">Discard</button>
+                </t>
+            </Dialog>
+        </t>
+    </t>
+</templates>

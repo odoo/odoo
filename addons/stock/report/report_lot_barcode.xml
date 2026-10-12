@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="lot_barcode_4x12_label">
+            <td t-att-style="label['invisible'] and 'visibility:hidden;'">
+                <div class="o_label_full o_label_4x12">
+                    <t t-if="not label.get('invisible')">
+                        <t t-call="product.report_label_contour_marks"/>
+                        <div class="o_label_centering_table">
+                            <div class="o_label_centered_content">
+                                <div class="o_label_table o_label_header">
+                                    <div class="o_label_name_block">
+                                        <div class="o_label_name" t-out="label['name']"/>
+                                    </div>
+                                </div>
+                                <div class="o_label_content">
+                                    <div class="o_label_barcode_block">
+                                        <t t-call="product.report_label_barcode" barcode_size="'width:100%;height:6mm'"/>
+                                    </div>
+                                    <div class="o_label_table o_label_footer">
+                                        <div class="o_label_barcode_text">
+                                            <t t-if="label['barcode_value']" t-out="label['barcode_text']"/>
+                                            <t t-else="">&amp;nbsp;</t>
+                                        </div>
+                                        <div class="o_label_reference_block">
+                                            <div class="o_label_reference" t-out="label['reference']"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </td>
+        </template>
+
+        <template id="lot_qr_4x12_label">
+            <td t-att-style="label['invisible'] and 'visibility:hidden;'">
+                <div class="o_label_full o_label_4x12_gs1">
+                    <t t-if="not label.get('invisible')">
+                        <t t-call="product.report_label_contour_marks"/>
+                        <div class="o_label_table">
+                            <div class="o_label_barcode_side">
+                                <div class="o_label_barcode_block">
+                                    <t t-call="product.report_label_barcode"
+                                       barcode_size="'width:100%;height:16mm'"
+                                       symbology="'ECC200DataMatrix'"/>
+                                </div>
+                            </div>
+                            <div class="o_label_info_side">
+                                <div class="o_label_info_frame">
+                                    <div class="o_label_info_top">
+                                        <div class="o_label_name" t-out="label['name']"/>
+                                        <div class="o_label_reference_block">
+                                            <div class="o_label_reference" t-out="label['reference']"/>
+                                        </div>
+                                    </div>
+                                    <div class="o_label_info_bottom">
+                                        <div class="o_label_barcode_text" t-out="label['barcode_text']"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </td>
+        </template>
+
+    </data>
+</odoo>

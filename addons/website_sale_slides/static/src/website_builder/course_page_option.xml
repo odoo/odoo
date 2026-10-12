@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sales_slides.CoursePageOption">
+    <BuilderRow label.translate="Buy Now Button">
+        <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_sale_slides.course_option_buy_course_now']}"/>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='page_options_hook']" position="after">
+        <course_page_option
+            template="website_sales_slides.CoursePageOption"
+            selector="main:has(.o_wslides_course_header)"
+            title="Course Page"
+            groups='["website.group_website_designer"]'
+            editableOnly="false"/>
+    </xpath>
+</t>
+
+</templates>

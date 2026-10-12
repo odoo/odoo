@@ -1,0 +1,42 @@
+.s_timeline[data-vcss="001"] {
+    .s_timeline_dot {
+        width: var(--o-timeline-dot-size, 24px);
+        height: var(--o-timeline-dot-size, 24px);
+
+        @include media-breakpoint-up(md) {
+            left: 50%;
+        }
+
+        &:before, &:after {
+            position: absolute;
+            border-radius: $border-radius-pill;
+            background-color: currentColor;
+            content: '';
+        }
+
+        &:before {
+            inset: 0;
+            opacity: .1;
+        }
+
+        &:after {
+            inset: 8px;
+        }
+    }
+
+    .s_timeline_line {
+        margin-top: calc(var(--o-timeline-dot-size, 24px) + #{map-get($spacers, 1)});
+
+        @include media-breakpoint-up(md) {
+            left: 50%;
+        }
+    }
+
+    .s_timeline_card {
+        // Keep the cards aligned in mobile view.
+        @include media-breakpoint-down(md) {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+    }
+}

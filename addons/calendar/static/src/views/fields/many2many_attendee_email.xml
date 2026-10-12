@@ -1,0 +1,7 @@
+<templates>
+    <t t-name="calendar.Many2ManyAttendeeEmail" t-inherit="calendar.Many2ManyAttendee" t-inherit-mode="primary">
+        <xpath expr="//Many2XAutocomplete" position="attributes">
+            <attribute name="isToMany">false</attribute>
+        </xpath>
+    </t>
+</templates>

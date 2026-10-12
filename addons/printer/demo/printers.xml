@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="zebra_printer_demo" model="printer.printer">
+            <field name="name">Emulated Zebra</field>
+            <field name="ip_address">localhost:8080</field>
+            <field name="type">zpl</field>
+        </record>
+        <record id="epos_printer_demo" model="printer.printer">
+            <field name="name">Emulated ePOS</field>
+            <field name="ip_address">pos.stva.ovh/label</field>
+            <field name="type">epos</field>
+        </record>
+    </data>
+</odoo>

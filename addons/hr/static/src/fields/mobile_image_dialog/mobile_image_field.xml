@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.MobileImageField" t-inherit="web.ImageField" t-inherit-mode="primary">
+        <!-- Remove overlay buttons -->
+        <xpath expr="//div[hasclass('o_image_uploader_container')]" position="replace"/>
+
+        <xpath expr="//img" position="attributes">
+            <attribute name="t-on-click">this.onImageClick</attribute>
+            <attribute name="t-att-style">this.sizeStyle + '; cursor: pointer;'</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="hr.MobileImageDialog">
+        <Dialog title="this.props.title" size="'sm'">
+            <div class="text-center p-2">
+                <img
+                    t-att-src="this.getUrl(this.props.previewImage or this.props.name)"
+                    class="img-fluid rounded border shadow-sm"
+                    style="max-height: 220px; object-fit: contain;"
+                />
+            </div>
+
+            <t t-set-slot="footer">
+                <div class="d-grid gap-2 w-100">
+                    <FileUploader
+                        acceptedFileExtensions="this.acceptedFileExtensions"
+                        onUploaded.bind="this.onFileUploaded">
+                        <t t-set-slot="toggler">
+                            <button class="btn btn-primary w-100 py-2 d-flex align-items-center justify-content-center gap-2">
+                                <i class="oi oi-fw oi-filled" data-icon="edit"/> Edit
+                            </button>
+                        </t>
+                    </FileUploader>
+
+                    <button
+                        t-if="this.props.record.data[this.props.name] and this.state.isValid"
+                        class="btn btn-outline-danger w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                        t-on-click="this.onFileRemove">
+                        <i class="oi oi-fw" data-icon="delete"/> Remove
+                    </button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

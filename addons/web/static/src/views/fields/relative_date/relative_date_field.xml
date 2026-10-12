@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.RelativeDateField">
+        <t t-if="this.props.readonly">
+            <div
+                t-att-class="this.classNames"
+                t-att-title="this.numericValue"
+            >
+                <t t-out="this.diffString"/>
+            </div>
+        </t>
+        <t t-else="">
+            <DateTimeField t-props="this.dateTimeFieldProps" />
+        </t>
+    </t>
+</templates>

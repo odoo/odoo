@@ -1,0 +1,47 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o-discuss-Call {
+    --o-discuss-Call-bgColor: #{$o-mail-Meeting-bgColor};
+    height: 50%; // ensures that the view returns to the right height when resized
+    min-height: 50%;
+    background-color: inherit;
+    display: grid;
+    grid-template-columns: 1fr;
+
+    &.o-selfInCall {
+        background-color: var(--o-discuss-Call-bgColor, #{$dark});
+    }
+
+    &.o-compact {
+        height: auto;
+        min-height: auto;
+    }
+
+    &.o-minimized {
+        height: 20%; // ensures that the view returns to the right height when resized
+        min-height: #{"max(16%, 130px)"};
+        &.o-selfInCall {
+            min-height: #{"max(22%, 130px)"};
+        }
+        &.o-compact {
+            height: 10%;
+            min-height: #{"max(10%, 145px)"};
+            &:not(.o-selfInCall) {
+                min-height: #{"max(10%, 120px)"};
+            }
+            &.o-hasVideo.o-selfInCall {
+                height: calc(100vw * 9 / 16);
+            }
+        }
+    }
+
+    &.o-fullSize {
+        height: 100%;
+        min-height: 100%;
+        &.o-minimized {
+            height: 100%;
+        }
+    }
+}

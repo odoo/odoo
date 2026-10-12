@@ -1,0 +1,98 @@
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { Many2One, computeM2OProps } from "@web/views/fields/many2one/many2one";
+import { user } from "@web/core/user";
+import { useService } from "@web/core/utils/hooks";
+
+class TemplateSelectionPopover extends Component {
+    static template = "hr.TemplateSelectionPopover";
+    static components = { Many2One };
+
+    props = useProps({
+        close: t.function(),
+        onSelect: t.function(),
+        record: t.object(),
+        fieldProps: t.object(),
+    });
+
+    setup() {
+        this.state = proxy({
+            selectedTemplate: false,
+        });
+        this.orm = useService("orm");
+    }
+
+    get many2oneProps() {
+        const companyId = user.activeCompany.id;
+
+        const fieldProps = computeM2OProps({
+            ...this.props.fieldProps,
+            name: "contract_template_id",
+            record: this.props.record,
+            canCreate: false,
+            canCreateEdit: false,
+            canQuickCreate: false,
+            canOpen: false,
+            domain: () => [
+                ["employee_id", "=", false],
+                ["company_id", "=", companyId],
+            ],
+            context: {},
+            readonly: false,
+        });
+
+        return {
+            ...fieldProps,
+            placeholder: "Search contract templates...",
+            value: this.state.selectedTemplate,
+            update: async (value) => {
+                if (value && !value.display_name) {
+                    const displayName = await this.orm.read(
+                        "hr.version",
+                        [value.id],
+                        ["display_name"]
+                    );
+                    value = { ...value, display_name: displayName[0].display_name };
+                }
+                this.state.selectedTemplate = value;
+            },
+        };
+    }
+
+    onConfirm() {
+        if (this.state.selectedTemplate) {
+            this.props.record.update({ contract_template_id: this.state.selectedTemplate });
+        }
+        this.props.close();
+    }
+}
+
+export class ContractTemplateField extends Component {
+    static template = "hr.ContractTemplateField";
+    props = useProps(standardFieldProps);
+
+    templateButtonRef = signal.ref();
+
+    setup() {
+        this.templatePopover = usePopover(TemplateSelectionPopover, {
+            closeOnClickAway: true,
+            position: "bottom",
+        });
+    }
+
+    async onSelectTemplate() {
+        this.templatePopover.open(this.templateButtonRef(), {
+            fieldProps: this.props,
+            record: this.props.record,
+            onSelect: (template) => this.loadTemplate(template),
+        });
+    }
+}
+
+export const contractTemplateField = {
+    component: ContractTemplateField,
+};
+
+registry.category("fields").add("contract_template_button", contractTemplateField);

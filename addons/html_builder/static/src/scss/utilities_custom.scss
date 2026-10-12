@@ -1,0 +1,28 @@
+// Extend utilities
+// See BORDER_VARIABLES_RULES_EXTENSION
+
+$utilities: () !default;
+$utilities: map-merge(
+    $utilities,
+    (
+        "rounded": (
+            property: --box-border-radius,
+            class: rounded,
+            // FIXME addons/web/static/src/scss/utilities_custom.scss is
+            // forcing non CSS values (and actually less values) for partial
+            // direction class (e.g. rounded-end)... probably to review.
+            values: (
+                // Default values of bootstrap
+                null: var(--#{$prefix}border-radius),
+                0: 0,
+                1: var(--#{$prefix}border-radius-sm),
+                2: var(--#{$prefix}border-radius),
+                3: var(--#{$prefix}border-radius-lg),
+                4: var(--#{$prefix}border-radius-xl),
+                5: var(--#{$prefix}border-radius-xxl),
+                circle: 50%,
+                pill: var(--#{$prefix}border-radius-pill)
+            ),
+        ),
+    ),
+);

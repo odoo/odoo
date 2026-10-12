@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.es</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <!-- The module install checkbox stays to let `execute()` install/uninstall the
+                 module, but is hidden in favor of the per-company activation checkbox below:
+                 uninstalling Veri*Factu is done from Apps, not from this per-company setting. -->
+            <xpath expr="//field[@name='module_l10n_es_edi_verifactu']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='module_l10n_es_edi_verifactu']" position="before">
+                <field name="l10n_es_edi_verifactu_required"/>
+            </xpath>
+            <xpath expr="//label[@name='module_l10n_es_edi_verifactu_label']" position="attributes">
+                <attribute name="for">l10n_es_edi_verifactu_required</attribute>
+            </xpath>
+            <xpath expr="//label[@name='module_l10n_es_edi_verifactu_label']" position="after">
+                <div class="content-group" invisible="not l10n_es_edi_verifactu_required">
+                    <div class="mt16">
+                        <div class="o_row">
+                            <button name="%(l10n_es_edi_verifactu_certificate_action)d" type="action"
+                                    icon="east" class="oe_link">
+                                Manage certificates
+                            </button>
+                        </div>
+                        <div class="o_row">
+                            <a class="oe_link fw-bold" target="_blank" href="https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/spain.html#veri-factu">
+                                <i class="o_button_icon oi oi-fw oi" data-icon="east"/>
+                                Access Declaración Responsable
+                            </a>
+                        </div>
+                        <div class="o_row mt16">
+                            <label for="l10n_es_edi_verifactu_test_environment" class="o_light_label"
+                                   string="Test Environment"/>
+                            <field name="l10n_es_edi_verifactu_test_environment"/>
+                        </div>
+                        <div class="text-muted" invisible="not l10n_es_edi_verifactu_test_environment">
+                            The data is sent to test servers and is not considered official.
+                        </div>
+                        <div class="text-muted" invisible="l10n_es_edi_verifactu_test_environment">
+                            The data is sent to the tax agency.
+                        </div>
+                        <br/>
+                    </div>
+                </div>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

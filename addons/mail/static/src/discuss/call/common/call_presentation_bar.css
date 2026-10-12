@@ -1,0 +1,22 @@
+.o-discuss-CallPresentationBar {
+    container-type: inline-size;
+    container-name: presentation-bar;
+
+    @container presentation-bar (max-width: 500px) {
+        .o-discuss-CallPresentationBar-presenterLabel.o-self-presenter,
+        .o-discuss-CallPresentationBar-divider {
+            display: none;
+        }
+    }
+}
+
+.o-discuss-CallPresentationBar-container {
+    background-color: #1a1e24;
+    color: white;
+}
+
+.o-discuss-CallPresentationBar-divider {
+    width: 1px;
+    height: 18px;
+    background-color: rgba(255, 255, 255, 0.5);
+}

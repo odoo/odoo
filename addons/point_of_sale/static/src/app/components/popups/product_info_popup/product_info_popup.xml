@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ProductInfoPopup">
+        <t t-set="productInfo" t-value="this.props.info.productInfo"/>
+        <Dialog contentClass="'product-info-popup'">
+            <t t-set-slot="header">
+                <div class="w-100">
+                    <div class="d-flex justify-content-start">
+                        <button t-att-disabled="!this.pos.accessRight.disableToggleFavorite" t-on-click="this.toggleFavorite" class="border-0 bg-transparent p-0 mb-2">
+                            <i class="oi oi-lg oi-fw" t-att-class="{'oi-filled': this.props.productTemplate.is_favorite}" data-icon="star"
+                                t-att-style="this.props.productTemplate.is_favorite ? 'color: #f3cc00;' : ''"
+                                role="img"/>
+                        </button>
+                        <h3 class="section-title" t-out="this.props.productTemplate.displayName + ' | ' + this.pos.formatCurrency(this.taxDetails.total_included_currency)"/>
+                        <button type="button" class="btn-close mb-2" aria-label="Close" tabindex="-1" t-on-click="this.props.close"/>
+                    </div>
+                    <div class="d-flex flex-wrap gap-1 mt-1" t-if="this.props.productTemplate.product_tag_ids?.length">
+                        <t t-foreach="this.props.productTemplate.product_tag_ids" t-as="tag" t-key="tag.id">
+                            <span t-if="tag" class="o_tag d-inline-flex align-items-center badge rounded-pill" t-att-data-product-tag-id="tag.id" t-attf-style="background-color: #{tag.color} !important; color: #fff !important;">
+                                <span class="o_tag_badge_text o_badge_text" t-out="tag.name"/>
+                            </span>
+                        </t>
+                    </div>
+                </div>
+            </t>
+            <div class="section-public-description mb-4 pb-4 border-bottom text-start" t-if="this.props.productTemplate.productDescriptionMarkup">
+                <h3 class="section-title">
+                    Description
+                </h3>
+                <t t-out="this.props.productTemplate.productDescriptionMarkup" />
+            </div>
+            <div class="section-inventory mt-3 mb-4 pb-4 border-bottom text-start">
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center justify-content-between gap-2">
+                        <h3 class="section-title">Inventory</h3>
+                        <button t-if="this.pos.accessRight.canSnooze" class="btn btn-lg lh-lg text-nowrap" t-on-click="this.openSnoozeDialog" t-attf-class="{{this.state.activeSnooze ? 'btn-warning' : 'btn-secondary'}}">
+                            <i class="oi me-1" data-icon="schedule" t-if="!(this.state.activeSnooze and this.ui.isSmall)" aria-hidden="true"></i>
+                            <span t-if="!this.state.activeSnooze and !this.ui.isSmall">Snooze</span>
+                            <span class="m-0" t-if="this.state.activeSnooze" style="font-variant-numeric: tabular-nums;">
+                                <t t-out="this.state.countdown" />
+                            </span>
+                        </button>
+                    </div>
+                    <div class="section-inventory-body">
+                        <div>
+                            <i t-attf-class="oi oi-filled text-{{ productInfo.free_qty &gt; 0 ? 'success' : 'danger' }} me-2" data-icon="circle"></i>
+                            On hand: <span class="me-1 fw-bolder on-hand"><t t-out="productInfo.free_qty"/></span>
+                            <t t-out="productInfo.uom"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="this.props.info?.productInfo?.suppliers?.length">
+                <h3 class="section-title">Replenishment</h3>
+                <div class="section-supplier-body">
+                    <t t-foreach="productInfo.suppliers" t-as="supplier" t-key="supplier.id">
+                        <div class="d-flex flex-column flex-md-row gap-2">
+                            <div>
+                                <span t-out="supplier.name" class="table-name"/>:
+                            </div>
+                            <span class="me-1 fw-bolder">
+                                <t t-out="supplier.delay"/>
+                                Days
+                            </span>
+                            <span t-if="this._hasMarginsCostsAccessRights()">
+                                <t t-out="this.pos.formatCurrency(supplier.price)"/>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <div class="section-optional-product mt-3 mb-4 pb-4 border-bottom text-start" t-if="this.props.info?.productInfo?.optional_products?.length > 0">
+                <h3 class="section-title">Optional Products:</h3>
+                <div class="section-optional-product-body" t-foreach="productInfo.optional_products" t-as="optional" t-key="optional.id">
+                    <span>
+                        <a class="text-primary text-decoration-underline" t-out="optional.name" t-on-click="() => this.searchProduct(optional.name)"/>
+                            from
+                        <t t-out="this.pos.formatCurrency(optional.list_price)"/>
+                    </span>
+                </div>
+            </div>
+            <div t-if="this.pos.accessRight.canAccessProductFinancials" class="financials-order d-grid gap-2 mt-3" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="section-financials text-start">
+                    <h3 class="section-title">Financials</h3>
+                    <div class="grid gap-2">
+                        <label class="fw-bold">Price excl. Tax:</label>
+                        <span class="price-excl-tax"><t t-out="this.pos.formatCurrency(this.taxDetails.total_excluded_currency)"/></span>
+                        <t t-foreach="this.taxDetails.taxes_data" t-as="tax" t-key="tax_index">
+                            <label class="fw-bold vat-label"><t t-out="this.vatLabel" /> <t t-out="tax.tax.name"/>:</label>
+                            <span class="vat-value"><t t-out="this.pos.formatCurrency(tax.tax_amount_currency)"/></span>
+                        </t>
+                        <label class="fw-bold">Price incl. Tax:</label>
+                        <span class="price-incl-tax"><t t-out="this.pos.formatCurrency(this.taxDetails.total_included_currency)"/></span>
+                        <t t-if="this._hasMarginsCostsAccessRights()">
+                            <label class="fw-bold">Cost:</label>
+                            <span><t t-out="this.props.info.costCurrency"/></span>
+                            <label class="fw-bold">Margin:</label>
+                            <span><t t-out="this.props.info.marginCurrency"/> (<t t-out="this.props.info.marginPercent"/>%) </span>
+                        </t>
+                    </div>
+                    <div class="grid gap-2 mt-3">
+                        <t t-foreach="productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
+                            <label class="fw-bold" t-out="pricelist.name"/>
+                            <span t-out="this.pos.formatCurrency(pricelist.price)"/>
+                        </t>
+                    </div>
+                </div>
+                <div class="section-order text-start">
+                    <h3 class="section-title">Order</h3>
+                    <div class="grid gap-2">
+                        <label class="fw-bold">Total Price excl. Tax:</label>
+                        <span t-out="this.props.info.orderPriceWithoutTaxCurrency"/>
+                        <label class="fw-bold"><t t-out="this.totalVatLabel"/></label>
+                        <span t-out="this.props.info.orderTaxTotalCurrency"/>
+                        <label class="fw-bold">Total Price incl. Tax:</label>
+                        <span t-out="this.props.info.orderPriceWithTaxCurrency"/>
+                        <t t-if="this._hasMarginsCostsAccessRights()">
+                            <label class="fw-bold">Total Cost:</label>
+                            <span t-out="this.props.info.orderCostCurrency"/>
+                            <label class="fw-bold">Total Margin:</label>
+                            <span><t t-out="this.props.info.orderMarginCurrency"/> (<t t-out="this.props.info.orderMarginPercent"/>%)</span>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="d-flex flex-row gap-2 w-100">
+                    <button class="btn btn-primary w-50" t-on-click="this.props.close">Close</button>
+                    <button t-if="this.pos.accessRight.allowProductEdition" class="btn btn-secondary w-50" t-on-click="this.editProduct">Edit</button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_text_chart" name="Text - Chart">
+    <section class="s_text_chart pt80 pb80">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 pt16 pb16">
+                    <h2>Enhance your experience</h2>
+                    <p>Write one or two paragraphs describing your product or services. To be successful your content needs to be useful to your readers.</p>
+                    <p>Start with the customer – find out what they want and give it to them.</p>
+                    <p><a href="#" class="btn btn-secondary o_translate_inline">Learn more</a></p>
+                </div>
+                <div class="col-lg-5 offset-lg-1 pt40 pb40 border rounded">
+                    <div class="s_chart" data-snippet="s_chart" data-name="Chart" data-type="doughnut" data-legend-position="none" data-tooltip-display="false" data-stacked="false" data-border-width="2" data-data='{"labels":["First","Second"],"datasets":[{"label":"One","data":["25","75"],"backgroundColor":["o-color-3","o-color-1"],"borderColor":["",""]}]}'>
+                        <canvas height="0" role="img"/>
+                    </div>
+                    <!-- Placeholder chart, to be displayed in the preview modal -->
+                    <svg class="s_dialog_preview d-block mx-auto" width="450" height="230" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="55" r="40" fill="transparent" stroke="var(--o-color-3)" stroke-width="25"/>
+                        <circle cx="50" cy="55" r="40" fill="transparent" stroke="var(--o-color-1)" stroke-width="25" stroke-dasharray="251.2" stroke-dashoffset="62.8"/>
+                    </svg>
+                    <!-- End of placeholder -->
+                    <p><br/></p>
+                    <p class="o_small-fs text-600" style="text-align: center;">75% of clients have been using the service for over a decade consistently.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

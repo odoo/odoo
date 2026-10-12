@@ -1,0 +1,24 @@
+from odoo import models, fields
+
+
+class ResCompany(models.Model):
+    _inherit = 'res.company'
+
+    l10n_eg_client_identifier = fields.Char(string="ETA Client ID", groups="base.group_erp_manager")
+    l10n_eg_client_secret = fields.Char(string="ETA Client Secret", groups="base.group_erp_manager")
+    l10n_eg_edi_api_mode = fields.Selection(
+        selection=[('demo', "Demo"), ('preproduction', "Pre-production (Testing)"), ('production', "Production (Live)")],
+        string="ETA Invoice Sending Mode",
+    )
+    l10n_eg_building_no = fields.Char("Building No.", compute='_compute_address', inverse='_inverse_l10n_eg_building_no')
+
+    def _get_company_address_field_names(self):
+        """Override to add EG specific address fields"""
+        return super()._get_company_address_field_names() + ["l10n_eg_building_no"]
+
+    def _inverse_l10n_eg_building_no(self):
+        for company in self:
+            company.partner_id.l10n_eg_building_no = company.l10n_eg_building_no
+
+    def _get_invoicing_threshold(self):
+        return self.env['ir.config_parameter'].sudo().get_float('l10n_eg_edi_eta.invoicing_threshold', default=150000.0)

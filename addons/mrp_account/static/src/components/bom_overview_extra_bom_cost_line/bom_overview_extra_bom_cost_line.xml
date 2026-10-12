@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t  t-inherit="mrp.BomOverviewComponentsBlock" t-inherit-mode="extension">
+        <xpath expr="." position="inside">
+            <t t-call="mrp_account.BomOverviewComponentsBlock"/>
+        </xpath>
+    </t>
+
+    <t t-name="mrp_account.BomOverviewComponentsBlock">
+        <tr t-if="this.data.bom_type == 'normal' &amp;&amp; this.data.bom_extra_cost &gt; 0">
+            <td><div class="text-truncate" t-attf-style="margin-left: {{ this.data.level * 20 }}px">Extra Cost</div></td>
+            <td class="text-end" t-out="this.formatFloat(this.data.quantity)"/>
+            <td t-if="this.props.showOptions.uom" class="text-start" t-out="this.data.uom_name"/>
+            <td t-if="this.props.showOptions.mode === 'forecast'" colspan="4"/>
+            <td t-attf-class="text-end" t-attf-colspan="{{ this.props.showOptions.mode === 'forecast' ? 1 : 2 }}" t-out="this.formatMonetary(this.data.bom_extra_cost * this.data.quantity)"/>
+            <td t-if="this.showAttachments" class="text-center"/>
+        </tr>
+    </t>
+</templates>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.ChangeLayoutDialog">
+        <Dialog size="'md'" footer="false" title.translate="Change layout">
+            <div class="o-discuss-ChangeLayoutDialog d-flex flex-column">
+                <t t-foreach="this.layoutOptions" t-as="option" t-key="option.value">
+                    <button class="o-discuss-ChangeLayoutDialog-option btn d-flex align-items-center gap-2 my-1" t-att-class="{ 'o-selected': this.isSelected(option.value) }" t-on-click="() => this.onSelectLayout(option.value)">
+                        <input class="form-check-input mt-0 flex-shrink-0" type="radio" t-att-checked="this.isSelected(option.value)"/>
+                        <span class="flex-grow-1 text-start"><t t-out="option.label"/></span>
+                        <span t-attf-class="o-discuss-ChangeLayoutDialog-thumbnail o-{{ option.value }} flex-shrink-0"/>
+                    </button>
+                </t>
+                <t t-if="this.isSelected(this.CALL_GRID_LAYOUT.TILED)">
+                    <hr class="o-discuss-separator my-1"/>
+                    <label class="d-flex align-items-center justify-content-between my-1 cursor-pointer">
+                        <span class="fw-bold">Prioritize tiles with video</span>
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" role="switch" t-att-checked="this.store.settings.showOnlyVideo" t-on-change="(ev) => this.store.settings.showOnlyVideo = ev.target.checked"/>
+                        </div>
+                    </label>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+</templates>

@@ -1,0 +1,177 @@
+.o_calendar_renderer {
+    background-color: var(--o-view-background-color);
+
+    @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
+        border-top: 1px solid var(--o-calendar-border);
+    }
+
+    /* Reset all link (A tag) the normal color (to override Bootstrap rule) */
+    /* And also override WebEditor rules */
+    .o_calendar_widget a {
+        color: inherit;
+    }
+
+    .o_calendar_widget .o_calendar_fc_view {
+        border-right: var(--border-width) solid var(--o-calendar-border);
+        border-bottom: var(--border-width) solid var(--o-calendar-border);
+    }
+
+    .o_calendar_widget .o_calendar_fc_view_multiMonthYear {
+        border: 0;
+    }
+}
+
+/* ===============  Records =============== */
+.o_calendar_event {
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        line-height: 1.2;
+    }
+
+    &:hover {
+        color: var(--body-color);
+
+        &:not(.o_event_dot) .o_calendar_event_bg {
+            --o-calendar-bg-opacity: .35;
+        }
+    }
+
+    &.o_calendar_event_mirror, &.o_calendar_event_dragging {
+        --o-calendar-bg-opacity: .25;
+        border-color: color-mix(in srgb, var(--o-calendar-primary) 50%, transparent);
+
+        .o_calendar_event_bg {
+            background-color: color-mix(in srgb, var(--o-calendar-primary) calc(var(--o-calendar-bg-opacity) * 100%), transparent);
+        }
+    }
+
+    &.o_calendar_event_mirror {
+        background-color: color-mix(in srgb, var(--o-calendar-primary) calc(var(--o-calendar-bg-opacity) * 100%), transparent);
+    }
+
+    &.o_past_event::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        display: block;
+        z-index: 3;
+        background-color: color-mix(in srgb, var(--o-view-background-color) calc(var(--o-calendar-overlay-opacity) * 100%), transparent);
+    }
+
+    &:not(.o_event_dot):not(.o_calendar_event_dragging) {
+        &.o_calendar_custom_highlight, &.o_calendar_popover_open {
+            box-shadow: 0px 8px 2px -7px rgba(0, 0, 0, 0.5);
+            z-index: 2; /* for the shadow to go over the events below */
+        }
+    }
+
+    .o_calendar_event_bg {
+        position: absolute;
+        inset: 0;
+        transition: var(--o-bs-transition-base);
+    }
+
+    .o_calendar_event_main > .o_event_title {
+        @media screen and (max-width: 991.98px), print and (max-width: 189.98mm) {
+            text-overflow: unset;
+            white-space: break-spaces;
+
+            > span {
+                word-break: break-word;
+            }
+        }
+    }
+
+    &:not(.o_event_dot) {
+        --o-calendar-overlay-opacity: .5;
+
+        &.o_event_hatched {
+            --o-calendar-bg-opacity: .5;
+        }
+    }
+
+    &.o_event_dot {
+        --o-calendar-overlay-opacity: .25;
+
+        display: flex;
+        align-items: center;
+        gap: var(--o-bs-spacer-1);
+        border: none;
+
+        &:before {
+            z-index: 2;
+            display: inline-block;
+            font-family: "Material Symbols Outlined";
+            content: 'circle_f';
+        }
+
+        &:hover {
+            --o-calendar-bg-opacity: 1;
+        }
+
+        &.o_event_hatched:before {
+            --o-calendar-event-bg: var(--fc-event-contrast-color);
+
+            content: "radio_button_unchecked";
+        }
+    }
+}
+
+:is(.o_calendar_fc_view_timeGridDay, .o_calendar_fc_view_timeGridWeek) .o_calendar_event {
+    --o-calendar-bg-opacity: .25;
+}
+
+/* ===============  Generate color classes =============== */
+@for $i from 1 through length($o-colors-complete) {
+    $color: nth($o-colors-complete, $i);
+    $color-subtle: mix($o-white, $color, 55%);
+
+    .o_calendar_color_#{$i - 1} {
+        --fc-event-color: #{$color-subtle};
+        --fc-event-contrast-color: #{color-contrast($color-subtle)};
+        --o-calendar-event-border-color: #{tint-color($color, 50%)};
+        --o-calendar-event-bg: #{$color};
+        --o-calendar-event-bg-subtle-rgb: #{to-rgb($color-subtle)};
+
+        &.o_event_hatched:has(.o_calendar_event_bg), &.o_attendee_status_tentative:has(.o_calendar_event_bg) {
+            --fc-event-color: var(--o-view-background-color);
+        }
+        &.o_event_hatched:not(.o_event_dot):not(.o_calendar_row_event):not(.o_calendar_column_event), &.o_event_hatched .o_calendar_event_bg, &.o_attendee_status_tentative:not(.o_event_dot) .o_calendar_event_bg {
+            background: repeating-linear-gradient(
+                45deg,
+                RGBA(to-rgb($color), .3),
+                RGBA(to-rgb($color), .3) 10px,
+                RGBA(to-rgb($color), .6) 10px,
+                RGBA(to-rgb($color), .6) 20px
+            ) !important;
+        }
+
+        &.o_event_striked:not(.o_event_dot) {
+            background: linear-gradient(
+                transparent 0 45%,
+                $color 45% 55%,
+                transparent 55% 100%);
+        }
+
+        &.o_event_dot {
+            background-color: rgba(var(--o-calendar-event-bg-subtle-rgb), var(--o-calendar-bg-opacity));
+
+            &:before {
+                color: var(--o-calendar-event-bg, var(--info));
+            }
+        }
+    }
+
+    .o_calendar_filter_color_#{$i - 1} {
+        &.form-check:hover .o_calendar_filter_input_bg:not(.no_filter_color) {
+            border-color: shade-color($color, 20%);
+        }
+
+        .o_calendar_filter_input_bg {
+            border-color: $color;
+
+            &:checked {
+                background-color: $color;
+            }
+        }
+    }
+}

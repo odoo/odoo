@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale.sale_menu_root" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+
+    <menuitem
+        id="sale_order_template_menu"
+        name="Templates"
+        action="sale_order_template_action"
+        parent="sale.menu_sales_config"
+        sequence="1"
+    />
+
+</odoo>

@@ -1,0 +1,31 @@
+.o_field_radio {
+    > span, > button {
+        flex: 0 0 auto;
+    }
+    @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
+        display: inline-block;
+    }
+    .o_radio_input {
+        outline: none;
+    }
+
+    .o_radio_item {
+        flex: 0 0 auto;
+    }
+
+    .o_horizontal {
+        display: inline-flex;
+        flex-wrap: wrap;
+
+        .o_radio_item {
+            margin-right: calc(var(--o-form-spacing-unit) * 2);
+        }
+    }
+
+    .o_vertical {
+        flex-flow: column nowrap;
+        .o_radio_item {
+            margin-bottom: var(--o-form-spacing-unit);
+        }
+    }
+}

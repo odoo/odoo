@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo><data noupdate="1">
+    <record id="mail_template_data_delivery_confirmation" model="mail.template">
+        <field name="name">Shipping: Send by Email</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="subject">{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})</field>
+        <field name="partner_to">{{ object.partner_id.email and object.partner_id.id or object.partner_id.parent_id.id }}</field>
+        <field name="use_default_to" eval="False"/>
+        <field name="description">Sent to the customers when orders are delivered, if the setting is enabled</field>
+        <field name="email_layout_xmlid">mail.mail_notification_light</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Hello <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,<br/><br/>
+        <t t-if="hasattr(object, 'delivery_type') and object.delivery_type == 'in_store'">
+            Your order has been collected.
+        </t>
+        <t t-else="">
+            We are glad to inform you that your order has been shipped.
+        </t>
+        <t t-if="hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref">
+            Your tracking reference is
+            <strong>
+            <t t-if="object.carrier_tracking_url">
+                <t t-set="multiple_carrier_tracking" t-value="object.get_multiple_carrier_tracking()"/>
+                <t t-if="multiple_carrier_tracking">
+                    <t t-foreach="multiple_carrier_tracking" t-as="line">
+                        <br/><a t-att-href="line[1]" target="_blank" t-out="line[0] or ''"></a>
+                    </t>
+                </t>
+                <t t-else="">
+                    <a t-attf-href="{{ object.carrier_tracking_url }}" target="_blank" t-out="object.carrier_tracking_ref or ''"></a>.
+                </t>
+            </t>
+            <t t-else="">
+                <t t-out="object.carrier_tracking_ref or ''"></t>.
+            </t>
+            </strong>
+        </t>
+        <br/><br/>
+        Please find your delivery order attached for more details.<br/><br/>
+        Thank you,
+        <t t-if="user.signature">
+            <br />
+            <div>--<br/><t t-out="user.signature or ''">Mitchell Admin</t></div>
+        </t>
+    </p>
+</div>
+        </field>
+        <field name="report_template_ids" eval="[(4, ref('stock.action_report_delivery'))]"/>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+    <record id="mail_template_data_stock_move_line_recall" model="mail.template">
+        <field name="name">Stock Move Line: Product Recall</field>
+        <field name="model_id" ref="model_stock_move_line"/>
+        <field name="subject">Product recall: {{ object.product_id.display_name or 'n/a' }}</field>
+        <field name="partner_to">{{ object.picking_partner_id.id if object.picking_partner_id else '' }}</field>
+        <field name="reply_to">{{ object.company_id.email_formatted or user.email_formatted or '' }}</field>
+        <field name="use_default_to" eval="False"/>
+        <field name="description">Product recall from lot/serial number</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear <t t-out="object.picking_partner_id.display_name or ''"></t><br/><br/>
+        We would like to issue a product recall regarding the following product:<br/><br/>
+        Product:<br/>
+        <t t-out="object.product_id.display_name or ''"></t><br/><br/>
+        Lot / Serial Number:<br/>
+        <t t-out="object.lot_id.name or object.lot_name or ''"></t><br/><br/>
+        We apologize for the inconvenience caused.<br/><br/>
+        Best wishes,
+    </p>
+</div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+</data>
+</odoo>

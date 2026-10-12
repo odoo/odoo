@@ -1,0 +1,141 @@
+import { Component, signal, t, useProps } from "@odoo/owl";
+import { standardFieldProps } from "../standard_field_props";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { hasTouch } from "@web/core/browser/feature_detection";
+import { useNavigation } from "@web/core/navigation/navigation";
+
+const DROPDOWN_ITEM_LIMIT = 8;
+export const baseBadgesFieldProps = {
+    ...standardFieldProps,
+    badgeLimit: t.number().optional(),
+    options: t.array(),
+    string: t.string(),
+    value: t.or([t.string(), t.number(), t.boolean(), t.literal(null)]),
+    onChange: t.function(),
+    canDeselect: t.boolean().optional(),
+    onSearchMore: t.function().optional(),
+};
+
+export class BaseBadgesField extends Component {
+    static template = "web.BaseBadgesField";
+    props = useProps(baseBadgesFieldProps);
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
+
+    badgesContainerRef = signal.ref();
+
+    setup() {
+        useNavigation(this.badgesContainerRef, {
+            hotkeys: {
+                arrowright: (navigator) => navigator.next(),
+                arrowleft: (navigator) => navigator.previous(),
+                space: (navigator) => navigator.activeItem?.select(),
+                backspace: () => this.clearSelection(),
+                delete: () => this.clearSelection(),
+                arrowup: null,
+                arrowdown: null,
+            },
+        });
+    }
+
+    /**
+     * Computes the ordered list of options. If the selected value is
+     * beyond the limit, it is moved into the visible "unfolded" range.
+     */
+    get optionsDict() {
+        const { options, badgeLimit, value } = this.props;
+        const displayOptions = [...options];
+
+        if (this.hasMoreThanMax) {
+            const index = displayOptions.findIndex((opt) => opt[0] === value);
+
+            // If selected value is in the "More" dropdown, move it to the visible limit
+            if (index >= badgeLimit) {
+                const [selectedOption] = displayOptions.splice(index, 1);
+                displayOptions.splice(badgeLimit - 1, 0, selectedOption);
+            }
+        }
+
+        return {
+            unfolded: badgeLimit ? displayOptions.slice(0, badgeLimit) : displayOptions,
+            folded: badgeLimit ? displayOptions.slice(badgeLimit) : [],
+        };
+    }
+
+    get badgesOptions() {
+        return this.optionsDict.unfolded;
+    }
+
+    get dropdownOptions() {
+        if (!this.hasMoreThanMax) {
+            return [];
+        }
+
+        const { onSearchMore } = this.props;
+        const { folded } = this.optionsDict;
+        return onSearchMore ? folded.slice(0, DROPDOWN_ITEM_LIMIT) : folded;
+    }
+
+    get extraBadgeLabel() {
+        const hiddenCount = this.props.options.length - this.props.badgeLimit;
+        return `+${hiddenCount}`;
+    }
+
+    get hasMoreThanMax() {
+        return this.props.badgeLimit && this.props.options.length > this.props.badgeLimit;
+    }
+
+    get string() {
+        return this.props.string;
+    }
+
+    get value() {
+        return this.props.value;
+    }
+
+    get isBottomSheet() {
+        return hasTouch();
+    }
+
+    stringify(value) {
+        return JSON.stringify(value);
+    }
+
+    onChange(value) {
+        if (value === this.value && this.props.canDeselect) {
+            this.props.onChange(false);
+        } else {
+            this.props.onChange(value);
+        }
+    }
+
+    getBadgeClassNames(option = false) {
+        return this.props.readonly ? "" : { active: this.value === option[0] };
+    }
+
+    getNavigationTabIndex(navigationId) {
+        if (this.value) {
+            return this.value === navigationId ? 0 : -1;
+        }
+        return this.badgesOptions[0]?.[0] === navigationId ? 0 : -1;
+    }
+
+    clearSelection() {
+        if (!this.props.canDeselect || this.props.readonly) {
+            return;
+        }
+        if (this.value) {
+            this.onChange(false);
+        }
+    }
+}
+
+export const extractStandardFieldProps = (props = {}) => ({
+    id: props.id,
+    name: props.name,
+    readonly: props.readonly,
+    record: props.record,
+});

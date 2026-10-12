@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_hr</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='warning_text_employees']" position='replace'>
+                <div class="row">
+                     <label for="pos_manager_employee_ids" string="Manager" class="col-lg-4 o_light_label" />
+                    <field name="pos_manager_employee_ids" widget="many2many_tags" placeholder="Select Employee(s)" domain="[('company_id', '=', company_id)]" />
+                </div>
+                <div class="row">
+                    <label for="pos_cashier_employee_ids" string="Cashier" class="col-lg-4 o_light_label" />
+                    <field name="pos_cashier_employee_ids" widget="many2many_tags" placeholder="Select Employee(s)" domain="[('company_id', '=', company_id)]" />
+                </div>
+                <div class="row">
+                    <label for="pos_restrictive_employee_ids" string="Restrictive" class="col-lg-4 o_light_label" />
+                    <field name="pos_restrictive_employee_ids" widget="many2many_tags" placeholder="Select Employee(s)" domain="[('company_id', '=', company_id)]" />
+                </div>
+                <div class="row">
+                    <label for="pos_supervised_employee_ids" string="Supervised" class="col-lg-4 o_light_label" />
+                    <field name="pos_supervised_employee_ids" widget="many2many_tags" placeholder="Select Employee(s)" domain="[('company_id', '=', company_id)]" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

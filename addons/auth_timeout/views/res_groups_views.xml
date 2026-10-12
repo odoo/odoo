@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="auth_passkey_groups_form">
+        <field name="name">auth.passkey.groups.form</field>
+        <field name="model">res.groups</field>
+        <field name="inherit_id" ref="base.view_groups_form"/>
+        <field name="arch" type="xml">
+            <page name="settings" position="inside">
+                <separator string="Timeouts"/>
+                <div class="row mt16 o_settings_container">
+                    <setting help="The screen of the users in this group will be locked after a defined delay">
+                        <field name="has_lock_timeout_inactivity" string="Lock screen"/>
+                        <div invisible="not has_lock_timeout_inactivity">
+                            <field name="lock_timeout_inactivity" invisible="True"/><!-- for onchanges `_onchange_has_lock_timeout_inactivity`, `_onchange_lock_timeout_inactivity_delay_unit` -->
+                            after
+                            <field name="lock_timeout_inactivity_delay_in_unit" class="oe_inline o_input_4ch"/>
+                            <field name="lock_timeout_inactivity_delay_unit" class="oe_inline"/>
+                            of inactivity
+                            <div>
+                                <label for="lock_timeout_inactivity_mfa" string="Two-factor authentication"/>
+                                <field name="lock_timeout_inactivity_mfa" widget="boolean_toggle"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting help="The users in this group will be automatically logout at regular intervals">
+                        <field name="has_lock_timeout" string="Logout"/>
+                        <div invisible="not has_lock_timeout">
+                            <field name="lock_timeout" invisible="True"/><!-- for onchanges `_onchange_has_lock_timeout`, `_onchange_lock_timeout_delay_unit` -->
+                            every
+                            <field name="lock_timeout_delay_in_unit" class="oe_inline o_input_4ch"/>
+                            <field name="lock_timeout_delay_unit" class="oe_inline"/>
+                            <div>
+                                <label for="lock_timeout_mfa" string="Two-factor authentication"/>
+                                <field name="lock_timeout_mfa" widget="boolean_toggle"/>
+                            </div>
+                        </div>
+                    </setting>
+                </div>
+            </page>
+        </field>
+    </record>
+</odoo>
