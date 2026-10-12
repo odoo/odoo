@@ -5,6 +5,7 @@ import * as ProductScreen from "@point_of_sale/../tests/tours/utils/product_scre
 import * as TicketScreen from "@point_of_sale/../tests/tours/utils/ticket_screen_util";
 import * as PosSale from "@pos_sale/../tests/tours/utils/pos_sale_utils";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
+import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
@@ -654,5 +655,30 @@ registry.category("web_tour.tours").add("test_settle_cancelled_sale_order", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_full_down_payment_so_still_listed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.selectNthOrder(1),
+            {
+                content: "Apply a down payment (percentage)",
+                trigger: ".selection-item:contains('Apply a down payment (percentage)')",
+                run: "click",
+            },
+            Numpad.enterValue("100"),
+            Dialog.confirm("Ok"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            ProductScreen.clickControlButton("Quotation/Order"),
+            {
+                content: "The fully down paid sale order is still listed",
+                trigger: ".modal .o_data_row td:contains('Full Down Payment SO')",
+            },
         ].flat(),
 });
