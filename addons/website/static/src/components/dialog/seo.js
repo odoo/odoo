@@ -816,9 +816,7 @@ export class SeoChecks extends Component {
             }
         });
         onMounted(() => {
-            if (this.props.isDefaultLang) {
-                this.getBrokenLinks();
-            }
+            this.getBrokenLinks();
         });
     }
 
