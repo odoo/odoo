@@ -161,6 +161,56 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
             expected_values = get_expected_values(base_expected_values, tax_7)
             self.assert_base_lines_tax_details(document, expected_values)
 
+    def test_dispatch_delta_on_base_lines_with_same_taxes(self):
+        """ Make sure the base line delta of a tax is dispatched on base lines having this tax.
+        Otherwise, the base amount of the journal items for a tax no longer matches the 'tax_base_amount'
+        of its tax line.
+
+        The 22% tax is computed on 40.0 / 1.22 = 32.786885 so its base is 32.79.
+        However, the base lines only reach 13.11 + 19.67 = 32.78.
+        The missing cent must go on the 24.0 line (22%), not on the biggest line of the document (28.0, 10%).
+        """
+        tax_10 = self.percent_tax(10.0, price_include_override='tax_included')
+        tax_22 = self.percent_tax(22.0, price_include_override='tax_included')
+        document = self.populate_document(self.init_document(
+            lines=[
+                {'price_unit': 28.0, 'tax_ids': tax_10},
+                {'price_unit': -28.0, 'tax_ids': tax_10},
+                {'price_unit': 16.0, 'tax_ids': tax_22},
+                {'price_unit': 24.0, 'tax_ids': tax_22},
+            ],
+        ))
+
+        def line_values(tax, total_excluded, total_included, delta, tax_amount, base_amount):
+            return {
+                'total_excluded': total_excluded,
+                'total_excluded_currency': total_excluded,
+                'total_included': total_included,
+                'total_included_currency': total_included,
+                'delta_total_excluded': delta,
+                'delta_total_excluded_currency': delta,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'tax_amount': tax_amount,
+                        'tax_amount_currency': tax_amount,
+                        'base_amount': base_amount,
+                        'base_amount_currency': base_amount,
+                    }
+                ],
+            }
+
+        expected_values = {
+            'base_lines_tax_details': [
+                line_values(tax_10, 25.45, 28.0, 0.0, 2.55, 25.45),
+                line_values(tax_10, -25.45, -28.0, 0.0, -2.55, -25.45),
+                line_values(tax_22, 13.11, 16.0, 0.0, 2.89, 13.11),
+                line_values(tax_22, 19.67, 24.0, 0.01, 4.32, 19.680000000000003),
+            ]
+        }
+        self.assert_base_lines_tax_details(document, expected_values)
+        self._run_js_tests()
+
     def test_global_discount_raw_gross_total_excluded(self):
         """ Tests to ensure expected raw_gross_total_excluded is calculated
         correctly with both line discounts and global discounts
