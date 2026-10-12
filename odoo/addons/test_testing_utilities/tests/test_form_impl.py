@@ -533,6 +533,17 @@ class TestO2M(TransactionCase):
     def test_o2m_self_recursive(self):
         Form(self.env['test_testing_utilities.recursive'], view='test_testing_utilities.o2m_recursive_relation_view')
 
+    def test_o2m_self_recursive_other_o2m(self):
+        """ The self-recursive o2m loads the same form as subview, nested until
+        the o2ms of the deepest level are handled as m2ms: this must not leak
+        into the o2ms of the upper levels.
+        """
+        with Form(self.env['test_testing_utilities.recursive'], view='test_testing_utilities.o2m_recursive_relation_view') as f:
+            with f.line_ids.new() as line:
+                line.name = 'line'
+
+        self.assertEqual(f.record.line_ids.mapped('name'), ['line'])
+
     def test_o2m_readonly(self):
         Model = self.env['test_testing_utilities.parent']
         with Form(Model, view='test_testing_utilities.o2m_modifier') as form:
