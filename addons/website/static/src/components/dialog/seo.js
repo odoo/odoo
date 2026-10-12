@@ -816,9 +816,7 @@ export class SeoChecks extends Component {
             }
         });
         onMounted(() => {
-            if (this.props.isDefaultLang) {
-                this.getBrokenLinks();
-            }
+            this.getBrokenLinks();
         });
     }
 
@@ -916,6 +914,7 @@ export class SeoChecks extends Component {
                 }
                 return {
                     link: path.pathname + path.search,
+                    rawHref: el.getAttribute("href") || (path.pathname + path.search),
                     res_model: recordEl.dataset.resModel || recordEl.dataset.oeModel,
                     res_id: parseInt(recordEl.dataset.resId || recordEl.dataset.oeId, 10),
                     field: recordEl.dataset.oeField || null,
@@ -954,8 +953,8 @@ export class SeoChecks extends Component {
         // Keep links order in the DOM.
         brokenLinks.sort((a, b) => a.position - b.position);
         this.seoContext.brokenLinks = brokenLinks.map((link) => ({
-            oldLink: link.link,
-            newLink: link.link,
+            oldLink: link.rawHref || link.link,
+            newLink: link.rawHref || link.link,
             broken: true,
             remove: false,
             res_model: link.res_model,
@@ -1159,14 +1158,14 @@ export class OptimizeSEODialog extends Component {
         });
 
         const rpcCalls = [];
-        if (
-            seoContext.brokenLinks.some(
-                (link) => link.oldLink !== link.newLink || link.remove === true
-            )
-        ) {
+        const modifiedLinks = (seoContext.brokenLinks || []).filter(
+            (link) => link.oldLink !== link.newLink || link.remove === true
+        );
+        if (modifiedLinks.length) {
             rpcCalls.push(
                 rpc("/website/update_broken_links", {
-                    links: seoContext.brokenLinks,
+                    links: modifiedLinks,
+                    lang: currentLang,
                 })
             );
         }

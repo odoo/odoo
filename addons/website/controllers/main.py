@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+from collections import defaultdict
 import colorsys
 import datetime
 import logging
@@ -35,7 +36,7 @@ from odoo.tools.json import scriptsafe as json
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
 from odoo.tools.sql import escape_like_value
-from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
+from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS, StoredTranslations
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -1687,28 +1688,94 @@ class Website(Home):
     def _get_image_id(model, model_id, field, index):
         return f"{model}-{model_id}-{field}-{index}"
 
+    @staticmethod
+    def _matches_link(href, old_link):
+        if not href or not old_link:
+            return False
+        return href == old_link or href.rstrip('/') == old_link.rstrip('/')
+
+    @classmethod
+    def _modify_tree_links(cls, tree, links, matched_links=None):
+        modified = False
+        for a in tree.xpath('.//a'):
+            href = a.get('href')
+            if not href:
+                continue
+            for link in links:
+                if cls._matches_link(href, link['oldLink']):
+                    if link.get('remove'):
+                        a.drop_tag()
+                    else:
+                        a.set('href', markup_escape(link['newLink']))
+                    modified = True
+                    if matched_links is not None:
+                        matched_links.add(id(link))
+                    break
+        return modified
+
+    @classmethod
+    def _modify_record_html(cls, record, field_name, links):
+        tree = html.fromstring(str(record[field_name]))
+        if cls._modify_tree_links(tree, links):
+            new_html = html.tostring(tree, encoding='unicode', method='html')
+            record.write({field_name: new_html})
+
     @http.route(['/website/update_broken_links'], type='jsonrpc', auth="user", website=True)
-    def update_broken_links(self, links):
+    def update_broken_links(self, links, lang=None):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
+
+        website = self.env.website or request.env.ref('base.default_website')
+        default_lang = website.default_lang_id.code
+        current_lang = lang or request.env.context.get('lang') or default_lang
+        is_default_lang = (current_lang == default_lang)
+
+        # Group links by (res_model, res_id, field)
+        links_by_record = defaultdict(list)
         for link in links:
-            record = request.env[link['res_model']].browse(link['res_id'])
-            if not record.has_access('write'):
+            field = 'arch_db' if link.get('field') == 'arch' else (link.get('field') or 'arch_db')
+            links_by_record[(link['res_model'], link['res_id'], field)].append(link)
+
+        for (res_model, res_id, field_name), record_links in links_by_record.items():
+            record = request.env[res_model].browse(res_id)
+            if not record.exists() or not record.has_access('write'):
                 continue
-            link['field'] = 'arch_db' if link['field'] == 'arch' else link['field']
-            tree = html.fromstring(str(record[link['field']]))
-            modified = False
-            for element in tree.xpath('//a'):
-                href = element.get('href')
-                if href and (link['oldLink'] == href or link['oldLink'] == href + '/'):
-                    if link['remove']:
-                        element.drop_tag()
-                    else:
-                        element.set('href', markup_escape(link['newLink']))
-                    modified = True
-            if modified:
-                new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({link['field']: new_html_content})
+            field = record._fields.get(field_name)
+            if not field:
+                continue
+
+            # Default language or non-translatable field: update base record directly
+            if is_default_lang or not callable(field.translate):
+                target_record = record.with_context(lang=current_lang)
+                self._modify_record_html(target_record, field_name, record_links)
+                continue
+
+            # Secondary language with translatable field:
+            val_default = record.with_context(lang=default_lang)[field_name]
+            val_lang = record.with_context(lang=current_lang)[field_name]
+            translation_dict = StoredTranslations._get_translation_dictionary(
+                field, val_default, {current_lang: val_lang}
+            )
+
+            term_updates = {}
+            matched_links = set()
+            for source_term, trans in translation_dict.items():
+                lang_term = trans.get(current_lang) or source_term
+                if '<a' not in lang_term:
+                    continue
+                tree = html.fragment_fromstring(lang_term, create_parent='div')
+                if self._modify_tree_links(tree, record_links, matched_links):
+                    term_updates[source_term] = (tree.text or '') + ''.join(
+                        html.tostring(child, encoding='unicode') for child in tree
+                    )
+
+            if term_updates:
+                record._update_field_translations(field_name, {current_lang: term_updates})
+
+            remaining_links = [l for l in record_links if id(l) not in matched_links]
+            if remaining_links:
+                # Shared structural links: modify the base record in default_lang
+                self._modify_record_html(record.with_context(lang=default_lang), field_name, remaining_links)
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):
