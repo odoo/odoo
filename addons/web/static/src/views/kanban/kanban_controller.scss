@@ -37,8 +37,30 @@
             > .o_kanban_card_manage_title {
                 margin: calc((var(--o-bs-font-size-base) * var(--body-line-height)) / 2) 0;
             }
-            > div:not(.o_kanban_card_manage_title) {
-                @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
+        }
+
+        /* Links emulating dropdown items */
+        div[class*="col-"] > div:not(.o_kanban_card_manage_title),
+        .row.o_kanban_card_manage_settings > div:last-child {
+            padding: 0;
+
+            &:last-child {
+                margin-bottom: 5px;
+            }
+        }
+
+        /* Links nested in a widget too, like the upload link of the account dashboard */
+        div[class*="col-"] > div:not(.o_kanban_card_manage_title) a,
+        .row.o_kanban_card_manage_settings > div:last-child > a {
+            margin: auto auto auto calc(var(--o-kanban-dashboard-dropdown-complex-gap) * -1);
+            padding: 3px var(--o-kanban-dashboard-dropdown-complex-gap);
+            color: var(--o-bs-dropdown-link-color);
+            display: block;
+            border-radius: var(--dropdown-item-border-radius, 0);
+
+            &:hover {
+                background-color: var(--o-bs-dropdown-link-hover-bg);
+                color: var(--o-bs-dropdown-link-hover-color);
             }
         }
 
@@ -59,7 +81,6 @@
                 }
             }
             > div:last-child {
-                @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
                 padding-left: var(--o-bs-dropdown-item-padding-x);
             }
         }
