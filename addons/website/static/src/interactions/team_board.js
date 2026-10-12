@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { Interaction } from "@web/public/interaction";
+import { browser } from "@web/core/browser/browser";
 
 export class SendMessageModal extends Component {
     static template = "website.SendMessageModal";
@@ -12,6 +13,7 @@ export class SendMessageModal extends Component {
     props = useProps({
         close: t.function(),
         cardHtml: t.string(),
+        name: t.string(),
     });
 
     setup() {
@@ -49,6 +51,16 @@ export class SendMessageModal extends Component {
             this.notification.add(_t("Your message could not be sent."), { type: "danger" });
         }
     }
+
+    async copyEmail() {
+        const email = `${this.props.name.toLowerCase().replaceAll(" ", ".")}@test.test`;
+        try {
+            await browser.navigator.clipboard.writeText(email);
+            this.notification.add(_t("Email copied."), { type: "success" });
+        } catch {
+            this.notification.add(_t("Could not copy the email."), { type: "danger" });
+        }
+    }
 }
 
 export class TeamBoard extends Interaction {
@@ -84,10 +96,11 @@ export class TeamBoard extends Interaction {
         this.openCardModal(ev.currentTarget);
     }
 
-
     openCardModal(card) {
         const data = {
             cardHtml: card.innerHTML,
+            name: card.querySelector(".o_card_title")?.textContent.trim() || "",
+
         };
         this.closeModal = this.services.dialog.add(SendMessageModal, data, {
             onClose: () => {

@@ -13,6 +13,10 @@
                     <t t-if="this.state.sending"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span> Sending...</t>
                     <t t-else="">Send a Message</t>
                 </button>
+
+               <button type="button" class="btn btn-secondary" t-on-click="this.copyEmail">
+                    Copy Email
+                </button>
             </t>
         </Dialog>
     </t>
