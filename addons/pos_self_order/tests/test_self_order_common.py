@@ -110,3 +110,30 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
             "end_time": datetime.now() + timedelta(hours=1),
         })
         self.start_tour(self.pos_config._get_self_order_route(floor.table_ids[0].id), "test_self_order_product_availability")
+
+    def test_get_orders_unknown_table_identifier(self):
+        """An identifier matching no table must not return tableless draft orders."""
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_service_mode': 'table',
+            'self_ordering_pay_after': 'meal',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        session = self.pos_config.current_session_id
+        session.set_opening_control(0, "")
+
+        self.env['pos.order'].create({
+            'session_id': session.id,
+            'company_id': self.pos_config.company_id.id,
+            'amount_tax': 0,
+            'amount_total': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+
+        result = self.make_jsonrpc_request('/pos-self-order/get-user-data', {
+            'access_token': self.pos_config.access_token,
+            'order_access_tokens': [],
+            'table_identifier': 'unknown',
+            })
+        self.assertEqual(result, {})
