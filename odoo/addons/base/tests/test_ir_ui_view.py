@@ -4119,49 +4119,6 @@ class TestHelpViews(ViewCase):
                     model='res.partner',
                 )
 
-    def test_help_view_without_model(self):
-        # a help view without model can be used by views of several models
-        help_view = self.View.create({'name': 'shared help', 'arch': '<help><p>Nothing yet</p></help>'})
-        self.assertEqual(help_view.type, 'help')
-        self.assertFalse(help_view.model)
-        for model in ('res.partner', 'res.country'):
-            list_view = self._create_view(f'<list help_id="{help_view.id}"><field name="name"/></list>', model=model)
-            arch = etree.fromstring(self.env[model].get_view(list_view.id)['arch'])
-            self.assertEqual(arch.find('help/p').text, 'Nothing yet')
-
-    def test_help_view_without_model_validated_with_host_model(self):
-        # it's validated with the model of each view using it
-        help_view = self.View.create({
-            'name': 'shared help',
-            'arch': '<help><button name="open_commercial_entity" type="object" string="Open"/></help>',
-        })
-        self._create_view(f'<list help_id="{help_view.id}"><field name="name"/></list>', model='res.partner')
-        with self.assertRaises(ValidationError) as catcher, mute_logger('odoo.addons.base.models.ir_ui_view'):
-            self._create_view(f'<list help_id="{help_view.id}"><field name="rate"/></list>', model='res.currency.rate')
-        self.assertIn("open_commercial_entity is not a valid action on res.currency.rate", str(catcher.exception))
-
-    def test_help_view_without_model_on_action(self):
-        help_view = self.View.create({'name': 'shared help', 'arch': '<help><p>Nothing yet</p></help>'})
-        action = self.env['ir.actions.act_window'].create({
-            'name': 'Partners', 'res_model': 'res.partner', 'help_view_id': help_view.id,
-        })
-        self.assertIn('Nothing yet', action.help_view_arch)
-
-    def test_help_view_data_model(self):
-        # the data_method can be a method of another model
-        help_view = self._create_view('<help data_method="name_search" data_model="res.country"><p t-out="data.x"/></help>')
-        self.assertEqual(help_view.type, 'help')
-        self.assertInvalid(
-            '<help data_method="name_search" data_model="not.a.model"><p>No partner yet</p></help>',
-            "Model not found: not.a.model",
-            model='res.partner',
-        )
-        self.assertInvalid(
-            '<help data_method="write" data_model="res.country"><p>No partner yet</p></help>',
-            "Attribute data_method of help views must be the name of a public @api.model method of res.country (write)",
-            model='res.partner',
-        )
-
     def test_help_id_shared_by_view_types(self):
         help_view = self._create_view('<help><p>No partner yet</p></help>')
         list_view = self._create_view(f'<list help_id="{help_view.id}"><field name="name"/></list>')

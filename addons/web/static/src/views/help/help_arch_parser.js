@@ -16,11 +16,9 @@ export class HelpArchParser {
                 node.setAttribute("widget_id", widgetId);
             }
         });
-        // model method returning the data of the help (see `data_method`), of the
-        // view's model unless `data_model` is set
+        // name of the model method returning the data of the help (see `data_method`)
         const dataMethod = xmlDoc.getAttribute("data_method");
-        const dataModel = xmlDoc.getAttribute("data_model");
-        return { xmlDoc, widgetNodes, dataMethod, dataModel };
+        return { xmlDoc, widgetNodes, dataMethod };
     }
 }
 

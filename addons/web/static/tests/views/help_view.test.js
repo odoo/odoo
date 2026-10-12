@@ -324,23 +324,3 @@ test(`help view: data not requested without data_method`, async () => {
     expect(`.o_view_nocontent .o_help_title`).toHaveCount(1);
     expect.verifySteps([]);
 });
-
-test(`help view: data_method of another model (data_model)`, async () => {
-    onRpc("get_shared_help_data", ({ model }) => {
-        expect.step(`get_shared_help_data on ${model}`);
-        return { threshold: 42 };
-    });
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <list>
-                <field name="foo"/>
-                <help data_method="get_shared_help_data" data_model="res.users">
-                    <p class="o_help_threshold">Threshold: <b t-out="data.threshold"/></p>
-                </help>
-            </list>`,
-    });
-    expect.verifySteps(["get_shared_help_data on res.users"]);
-    expect(`.o_view_nocontent .o_help_threshold`).toHaveText("Threshold: 42");
-});

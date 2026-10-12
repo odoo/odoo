@@ -60,8 +60,7 @@ export class ActionHelper extends Component {
                     }
                 },
             });
-            const { dataMethod, dataModel } = this.helpArchInfo;
-            const data = await orm.call(dataModel || resModel, dataMethod, [domain], {
+            const data = await orm.call(resModel, this.helpArchInfo.dataMethod, [domain], {
                 context,
             });
             // ignore the result if the search changed in the meantime
