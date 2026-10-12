@@ -1402,6 +1402,7 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
 
     patchWithCleanup(DropdownPopover.prototype, {
         setup() {
+            super.setup(...arguments);
             let previousMenuRect;
             onPatched(() => {
                 expect.step(`submenu dropdown patched`);
@@ -1505,6 +1506,41 @@ test("multi-level dropdown: mouseentering a dropdown item should close any subdr
     expect(DROPDOWN_MENU).toHaveCount(1, {
         message: "only 1st menu is opened",
     });
+});
+
+test.tags("desktop");
+test("multi-level dropdown: a dropdown in the toggler of another one is not its submenu", async () => {
+    class Parent extends Component {
+        static components = { Dropdown, DropdownItem };
+        static template = xml`
+            <Dropdown>
+                <div class="outer d-inline-flex align-items-center gap-2 p-2 border">
+                    Outer
+                    <Dropdown>
+                        <button class="inner">Inner</button>
+                        <t t-set-slot="content">
+                            <DropdownItem class="'inner-item'">Inner Item</DropdownItem>
+                        </t>
+                    </Dropdown>
+                </div>
+                <t t-set-slot="content">
+                    <DropdownItem class="'outer-item'">Outer Item</DropdownItem>
+                </t>
+            </Dropdown>
+        `;
+    }
+    await mountWithCleanup(Parent);
+    expect(".inner").not.toHaveClass("o-dropdown--has-parent");
+
+    await hover(".inner");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(0);
+
+    await click(".inner");
+    await animationFrame();
+    expect(DROPDOWN_MENU).toHaveCount(1);
+    expect(DROPDOWN_MENU).not.toHaveClass("o-dropdown--menu-submenu");
+    expect(".inner-item").toHaveCount(1);
 });
 
 test.tags("desktop");
