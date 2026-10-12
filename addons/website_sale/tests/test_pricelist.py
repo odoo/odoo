@@ -6,6 +6,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo.fields import Command
+from odoo.http.session import session_store
 from odoo.tests import tagged
 from odoo.tools import SQL
 
@@ -996,3 +997,22 @@ class TestWebsiteSaleSession(HttpCaseWithUserPortal):
         })
         test_user.partner_id.property_product_pricelist = user_pricelist
         self.start_tour("/shop", "website_sale.pricelist_on_login", login="")
+
+    def test_public_visitor_no_session_saved(self):
+        """
+        Browsing the shop anonymously (e.g. public user, bots and crawlers) must not save
+        a session on disk.
+        """
+        self.env.user.write({
+            "group_ids": [Command.link(self.env.ref("product.group_product_pricelist").id)]
+        })
+        product = self.env["product.template"].create({
+            "name": "Test Product",
+            "list_price": 100.0,
+            "website_published": True,
+        })
+        for url in ("/shop", product.website_url):
+            with self.subTest(url=url), patch.object(session_store(), "save") as session_save:
+                self.opener.cookies.clear()
+                self.url_open(url).raise_for_status()
+                session_save.assert_not_called()
