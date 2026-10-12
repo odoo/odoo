@@ -38,7 +38,7 @@ from odoo.modules.module import get_manifest
 from odoo.tools import BinaryBytes, BinaryValue, file_open, lazy
 from odoo.tools.image import image_process
 from odoo.tools.sql import SQL, escape_like_value
-from odoo.tools.translate import _
+from odoo.tools.translate import StoredTranslations, _
 
 logger = logging.getLogger(__name__)
 
@@ -313,8 +313,10 @@ class Website(models.CachedModel):
         websites = super().create(vals_list)
         websites._ensure_logo_media_attachment()
         websites.company_id._compute_website_id()
-        for website in websites:
-            website._bootstrap_homepage()
+        # a duplicated website receives the content of its source instead
+        if not self.env.context.get('website_duplication'):
+            for website in websites:
+                website._bootstrap_homepage()
 
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
@@ -562,6 +564,137 @@ class Website(models.CachedModel):
             ('url', 'ilike', '.assets\\_'),
         ])
         attachments_to_unlink.unlink()
+
+    def copy_data(self, default=None):
+        default = default or {}
+        vals_list = super().copy_data(default=default)
+        for website, vals in zip(self, vals_list):
+            if 'name' not in default:
+                vals['name'] = self.env._("%s (copy)", website.name)
+            if 'domain' not in default:
+                vals['domain'] = False
+        return vals_list
+
+    def copy(self, default=None):
+        """ Duplicate the websites along with their specific content, see
+        :meth:`_duplicate_content`. """
+        new_websites = super(Website, self.with_context(website_duplication=True)).copy(default=default).with_env(self.env)
+        for website, new_website in zip(self, new_websites):
+            website._duplicate_content(new_website)
+        return new_websites
+
+    def _duplicate_content(self, website):
+        """ Copy the content specific to ``self`` onto ``website``, its freshly
+        created duplicate: views, pages, model pages, menus, dynamic snippet
+        filters, assets, theme and customized assets attachments, and
+        redirections. The records shared between websites are not duplicated.
+
+        :param website: the duplicate of ``self``
+        :return: a dict mapping the duplicated records to their copy
+        """
+        # create the copies as if they were created from the new website
+        self = self.with_context(website_id=website.id, active_test=False)  # noqa: PLW0642
+
+        def website_records(model, domain=()):
+            return self.env[model].search([('website_id', '=', self.id), *domain], order='id')
+
+        publication_fields = ['is_published', 'publish_on', 'published_date']
+        views = website_records('ir.ui.view')
+        menus = website_records('website.menu')
+        filters = website_records('website.snippet.filter')
+        record_map = {}
+        # Enable the copied views once they all exist, as a view may extend an
+        # element added by a view of another branch of the inheritance tree.
+        self._duplicate_records(website, views, record_map, keep=['key', 'theme_template_id'],
+                                parent_field='inherit_id', values={'active': False})
+        views.filtered('active').mapped(record_map.get).with_context(no_cow=True).write({'active': True})
+        self._duplicate_records(website, website_records('website.page'), record_map,
+                                keep=['url', 'theme_template_id', *publication_fields], parent_field='parent_id')
+        self._duplicate_records(website, website_records('website.controller.page'), record_map,
+                                keep=['name', 'name_slugified', *publication_fields])
+        self._duplicate_records(website, menus, record_map, keep=['theme_template_id'], parent_field='parent_id')
+        self._duplicate_records(website, filters, record_map)
+        self._duplicate_records(website, website_records('ir.asset'), record_map, keep=['key', 'theme_template_id'])
+        self._duplicate_records(website, website_records('ir.attachment', [
+            '|',
+            ('key', '!=', False),  # theme attachment
+            ('url', '=like', '/_custom/%'),  # customized theme attachment
+        ]), record_map, keep=['key', 'theme_template_id'])
+        self._duplicate_records(website, website_records('website.rewrite'), record_map)
+
+        # sudo: the password can only be read by the administrators
+        for view in views.filtered(lambda view: view.visibility == 'password').sudo():
+            record_map[view].sudo().visibility_password = view.visibility_password
+        if self.cookie_policy_id in record_map:
+            website.cookie_policy_id = record_map[self.cookie_policy_id]
+
+        # make the dynamic snippets of the copied views use the copied filters
+        if filters:
+            filter_ids = {str(snippet_filter.id): str(record_map[snippet_filter].id) for snippet_filter in filters}
+            pattern = re.compile(r'(?<=data-filter-id=")(%s)(?=")' % '|'.join(filter_ids))
+            for view in views:
+                arch_translations = view._get_stored_translations('arch_db')
+                if arch_translations and pattern.search(arch_translations['en_US']):
+                    record_map[view].with_context(no_save_prev=True).arch_db = StoredTranslations({
+                        lang: pattern.sub(lambda match: filter_ids[match[0]], arch)
+                        for lang, arch in arch_translations.items()
+                    })
+
+        # `<module>.<website id>_<template menu xmlid name>`, given by
+        # `_copy_menu_hierarchy` and needed by the modules installed later on
+        prefix = f'{self.id}_'
+        external_ids = menus._get_external_ids()
+        self.env['ir.model.data']._update_xmlids([
+            {
+                'xml_id': website._website_xmlid(f'{module}.{name.removeprefix(prefix)}'),
+                'record': record_map[menu],
+                'noupdate': True,
+            }
+            for menu in menus
+            for module, name in (xmlid.split('.', 1) for xmlid in external_ids[menu.id])
+            if name.startswith(prefix)
+        ])
+        return record_map
+
+    @api.model
+    def _duplicate_records(self, website, records, record_map, keep=(), parent_field=None, values=None):
+        """ Copy ``records`` onto ``website``. The parents are copied before
+        their children, so that the children of a record keep their order.
+        The many2one fields referring to records already duplicated are set to
+        their copy.
+
+        :param records: the records to duplicate
+        :param dict record_map: maps the records duplicated so far to their
+            copy, updated with the copies of ``records``
+        :param keep: the fields to keep as is, even if not copied by default
+        :param parent_field: the many2one field defining the hierarchy of
+            ``records``
+        :param dict values: the values to set on all the copies
+        """
+        while records:
+            if parent_field:
+                ids = set(records.ids)
+                batch = records.filtered(lambda record: record[parent_field].id not in ids)
+            else:
+                batch = records
+            vals_list = []
+            for record in batch:
+                record_default = {
+                    fname: record_map[record[fname]].id
+                    for fname, field in record._fields.items()
+                    if field.type == 'many2one' and field.copy and record[fname] in record_map
+                }
+                for fname in keep:
+                    field = record._fields[fname]
+                    # keep the value in all languages
+                    translations = field.translate is True and record._get_stored_translations(fname)
+                    record_default[fname] = (
+                        translations.normalize(record.env, field) if translations
+                        else field.convert_to_write(record[fname], record)
+                    )
+                vals_list += record.copy_data({**record_default, **(values or {}), 'website_id': website.id})
+            record_map.update(zip(batch, batch.browse().create(vals_list)))
+            records -= batch
 
     def create_and_redirect_configurator(self):
         self._force()

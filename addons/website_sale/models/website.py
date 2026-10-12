@@ -144,6 +144,7 @@ class Website(models.Model):
         string="E-Commerce Extra Fields",
         comodel_name="website.sale.extra.field",
         inverse_name="website_id",
+        copy=True,
     )
 
     product_page_container = fields.Selection(
@@ -1073,9 +1074,17 @@ class Website(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         websites = super().create(vals_list)
-        for website in websites:
-            website._create_checkout_steps()
+        # a duplicated website receives the checkout steps of its source instead
+        if not self.env.context.get("website_duplication"):
+            for website in websites:
+                website._create_checkout_steps()
         return websites
+
+    def _duplicate_content(self, website):
+        record_map = super()._duplicate_content(website)
+        steps = self.env["website.checkout.step"].search([("website_id", "=", self.id)])
+        self._duplicate_records(website, steps, record_map, keep=["is_published"])
+        return record_map
 
     def _create_checkout_steps(self):
         generic_steps = (
