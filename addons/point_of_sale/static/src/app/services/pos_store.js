@@ -249,6 +249,9 @@ export class PosStore extends WithLazyGetterTrap {
          */
         return formatCurrency(amount, currencyId, opts);
     }
+    parseCurrency(value, currency = this.currency) {
+        return parseFloat(value, { digits: [69, currency.decimal_places] });
+    }
     isValidFloat(inputValue) {
         let floatRegex;
         const decimalPoint = localization.decimalPoint;

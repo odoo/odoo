@@ -823,3 +823,26 @@ test("with 'hide_trailing_zeros' option", async () => {
     expect(".o_field_widget input").toHaveValue("9.1");
     expect(".o_field_widget .o_input span:eq(0)").toHaveText("$");
 });
+
+test("currency without decimals: grouped amount is not read as decimals", async () => {
+    serverState.currencies = [
+        { id: 1, name: "TWD", symbol: "NT$", position: "before", digits: [69, 0] },
+    ];
+    Partner._records = [{ id: 1, monetary_field: 2000, currency_id: 1 }];
+    onRpc("web_save", ({ args }) => expect.step(args[1]));
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="monetary_field"/>
+                <field name="currency_id" invisible="1"/>
+            </form>`,
+    });
+
+    expect(".o_field_widget input").toHaveValue("2,000");
+    await contains(".o_field_widget input").edit("2,500");
+    await clickSave();
+    expect.verifySteps([{ monetary_field: 2500 }]);
+});
