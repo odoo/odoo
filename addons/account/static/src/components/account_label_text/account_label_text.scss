@@ -12,19 +12,19 @@
 
         .o-autocomplete {
             height: 100%;
+        }
 
-            &--input {
-                height: 100%;
-                opacity: 0;
-            }
+        .o-autocomplete--input {
+            height: 100%;
+            opacity: 0;
+        }
 
-            &--dropdown-menu {
-                pointer-events: auto;
+        .o-autocomplete--dropdown-menu {
+            pointer-events: auto;
 
-                &:has(li.o_m2o_no_result),
-                &:has(.o_loading) {
-                    display: none;
-                }
+            &:has(li.o_m2o_no_result),
+            &:has(.o_loading) {
+                display: none;
             }
         }
 

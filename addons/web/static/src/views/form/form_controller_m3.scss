@@ -14,26 +14,41 @@
             border: 1px solid var(--o-field-box-border-color);
             padding: var(--field-spacing-unit) calc(1.5 * var(--field-spacing-unit));
             background-color: var(--o-view-background-color);
+        }
 
-            &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
-                background-color: var(--body-bg);
-            }
-            &:has(.o_field_invalid):not(:has(:focus-within)) {
-                --o-field-box-border-color: #{o-text-color('danger')};
-                background-color: var(--o-input-invalid-bg);
-            }
-            &:focus-within {
-                --o-field-box-border-color: var(--o-action);
-            }
+        .o_outlined:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))),
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label .o_property_field_value:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))),
+        .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)):has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
+            background-color: var(--body-bg);
+        }
 
-            .o_input {
-                --o-input-background-color: transparent;
-                border-width: 0;
-            }
+        .o_outlined:has(.o_field_invalid):not(:has(:focus-within)),
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label .o_property_field_value:has(.o_field_invalid):not(:has(:focus-within)),
+        .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)):has(.o_field_invalid):not(:has(:focus-within)) {
+            --o-field-box-border-color: #{o-text-color('danger')};
+            background-color: var(--o-input-invalid-bg);
+        }
 
-            h1, h2, h3, h4, h5, h6 {
-                all: unset;
-            }
+        .o_outlined:focus-within,
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label .o_property_field_value:focus-within,
+        .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)):focus-within {
+            --o-field-box-border-color: var(--o-action);
+        }
+
+        .o_outlined .o_input,
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label .o_property_field_value .o_input,
+        .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) .o_input {
+            --o-input-background-color: transparent;
+            border-width: 0;
+        }
+
+        .o_outlined :is(h1, h2, h3, h4, h5, h6),
+        .o_outlined :is(.h1, .h2, .h3, .h4, .h5, .h6),
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label .o_property_field_value :is(h1, h2, h3, h4, h5, h6),
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label .o_property_field_value :is(.h1, .h2, .h3, .h4, .h5, .h6),
+        .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) :is(h1, h2, h3, h4, h5, h6),
+        .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) :is(.h1, .h2, .h3, .h4, .h5, .h6) {
+            all: unset;
         }
 
         .o_form_label:has(+ .o_outlined),
@@ -57,18 +72,22 @@
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+        }
 
-            & * {
-                color: inherit !important;
-                font-size: inherit !important;
-                line-height: inherit !important;
-                font-weight: inherit !important;
-            }
+        .o_form_label:has(+ .o_outlined) *,
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label label *,
+        .o_inner_group:not(.oe_subtotal_footer) .o_wrap_label:has(+ .o_cell:not(.o_no_box)) .o_form_label * {
+            color: inherit !important;
+            font-size: inherit !important;
+            line-height: inherit !important;
+            font-weight: inherit !important;
+        }
 
-            sup {
-                color: var(--o-action) !important;
-                position: static;
-            }
+        .o_form_label:has(+ .o_outlined) sup,
+        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label label sup,
+        .o_inner_group:not(.oe_subtotal_footer) .o_wrap_label:has(+ .o_cell:not(.o_no_box)) .o_form_label sup {
+            color: var(--o-action) !important;
+            position: static;
         }
 
         /* Subtotals are already visually grouped by the footer itself, no box needed */

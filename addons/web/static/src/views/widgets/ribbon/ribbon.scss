@@ -37,20 +37,20 @@
             font-size: var(--o-bs-font-size-base);
         }
     }
+}
 
-    &-top-right {
-        pointer-events: none;
-        top: 0;
-        right: 0;
+.ribbon-top-right {
+    pointer-events: none;
+    top: 0;
+    right: 0;
 
-        & span {
-            --Ribbon-top-position-default: calc((var(--Ribbon-height-default) * -1));
-            --Ribbon-left-position-default: calc(var(--Ribbon-shadow-distance) + var(--Ribbon-shadow-blur));
+    & span {
+        --Ribbon-top-position-default: calc((var(--Ribbon-height-default) * -1));
+        --Ribbon-left-position-default: calc(var(--Ribbon-shadow-distance) + var(--Ribbon-shadow-blur));
 
-            left: var(--Ribbon-left-position, var(--Ribbon-left-position-default));
-            top: var(--Ribbon-top-position, var(--Ribbon-top-position-default));
-            transform: rotate(45deg);
-        }
+        left: var(--Ribbon-left-position, var(--Ribbon-left-position-default));
+        top: var(--Ribbon-top-position, var(--Ribbon-top-position-default));
+        transform: rotate(45deg);
     }
 }
 

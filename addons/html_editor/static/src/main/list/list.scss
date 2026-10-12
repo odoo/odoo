@@ -20,36 +20,48 @@
     }
 }
 
-#wrapwrap, /* avoid duplicating in portal */
-.o_mass_mailing_value, /* avoid duplicating in mass_mailing */
-.o_field_html {
-    .o-float-start-parent {
-        & ~ ul, & ~ ol {
-            display: flow-root;
-        }
-        .o_we_hint::after {
-            display: none;
-        }
-    }
+/* `#wrapwrap` and `.o_mass_mailing_value` avoid duplicating these rules in portal and in mass_mailing */
+#wrapwrap .o-float-start-parent ~ ul,
+#wrapwrap .o-float-start-parent ~ ol,
+.o_mass_mailing_value .o-float-start-parent ~ ul,
+.o_mass_mailing_value .o-float-start-parent ~ ol,
+.o_field_html .o-float-start-parent ~ ul,
+.o_field_html .o-float-start-parent ~ ol {
+    display: flow-root;
+}
 
-    .o-float-end-parent {
-        & ~ ul, & ~ ol {
-            &[dir] {
-                display: flow-root;
-            }
-        }
-        .o_we_hint::after {
-            display: none;
-        }
-    }
+#wrapwrap .o-float-start-parent .o_we_hint::after,
+.o_mass_mailing_value .o-float-start-parent .o_we_hint::after,
+.o_field_html .o-float-start-parent .o_we_hint::after {
+    display: none;
+}
 
-    li .float-start {
-        float: unset !important;
-    }
+#wrapwrap .o-float-end-parent ~ ul[dir],
+#wrapwrap .o-float-end-parent ~ ol[dir],
+.o_mass_mailing_value .o-float-end-parent ~ ul[dir],
+.o_mass_mailing_value .o-float-end-parent ~ ol[dir],
+.o_field_html .o-float-end-parent ~ ul[dir],
+.o_field_html .o-float-end-parent ~ ol[dir] {
+    display: flow-root;
+}
 
-    ul, ol {
-        &[dir] li .float-end {
-            float: unset !important;
-        }
-    }
+#wrapwrap .o-float-end-parent .o_we_hint::after,
+.o_mass_mailing_value .o-float-end-parent .o_we_hint::after,
+.o_field_html .o-float-end-parent .o_we_hint::after {
+    display: none;
+}
+
+#wrapwrap li .float-start,
+.o_mass_mailing_value li .float-start,
+.o_field_html li .float-start {
+    float: unset !important;
+}
+
+#wrapwrap ul[dir] li .float-end,
+#wrapwrap ol[dir] li .float-end,
+.o_mass_mailing_value ul[dir] li .float-end,
+.o_mass_mailing_value ol[dir] li .float-end,
+.o_field_html ul[dir] li .float-end,
+.o_field_html ol[dir] li .float-end {
+    float: unset !important;
 }
