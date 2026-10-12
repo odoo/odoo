@@ -51,7 +51,7 @@ class PaymentProvider(models.Model):
     # ==== CONSTRAINT METHODS ===#
 
     @api.constrains("available_currency_ids")
-    def _limit_available_currency_ids(self):
+    def _limit_asiapay_available_currency_ids(self):
         allowed_codes = set(const.CURRENCY_MAPPING.keys())
         for provider in self.filtered(lambda p: p.code == "asiapay"):
             if len(provider.available_currency_ids) > 1:
