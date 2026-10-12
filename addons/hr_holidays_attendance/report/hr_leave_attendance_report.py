@@ -80,27 +80,36 @@ class HrLeaveAttendanceReport(models.Model):
         """)
 
     def _cte_cal_workday(self):
-        """Aggregate scheduled hours per calendar/weekday, summing split shifts on the same day.
-        Two-weeks calendars keep both weeks apart (`week_type`) so the join in `_from`/
-        `_cte_leave_day` can pick the one that actually applies to a given real date,
-        instead of blending both weeks together.
+        """Aggregate scheduled hours per calendar/day key, summing split shifts on the same day.
+        The day key (see `_sql_day_key`) folds the week parity into the weekday so that
+        two-weeks calendars keep both weeks apart, while one-week calendars (`week_type`
+        NULL) are expanded to both parities. The join in `_from`/`_cte_leave_day` then
+        stays a plain two-keys equality: an `OR` on `week_type` there makes PostgreSQL
+        estimate a single row and pick nested loops over the attendance aggregate.
         """
         return SQL("""
-            SELECT calendar_id,
-                   dayofweek::integer AS dayofweek,
-                   week_type,
-                   SUM(duration_hours) AS hours_per_day
-              FROM resource_calendar_attendance
-          GROUP BY calendar_id, dayofweek, week_type
+            SELECT rca.calendar_id,
+                   rca.dayofweek::integer + 7 * p.parity AS day_key,
+                   SUM(rca.duration_hours) AS hours_per_day
+              FROM resource_calendar_attendance AS rca
+              JOIN (VALUES (0), (1)) AS p(parity)
+                ON rca.week_type IS NULL
+                OR rca.week_type::integer = p.parity
+             WHERE rca.display_type IS NULL
+          GROUP BY rca.calendar_id, day_key
         """)
 
-    def _sql_week_type(self, day_column):
-        """Global week parity of `day_column` (an SQL expression for a date/timestamp
-        column), mirroring resource.calendar.attendance.get_week_type(): the parity of
-        the number of weeks since 0001-01-01 -- the same for every two-weeks calendar,
-        with no per-calendar reference date needed.
+    def _sql_day_key(self, day_column):
+        """Day key of `day_column` (an SQL expression for a date column) matching
+        `cal_workday.day_key`: weekday (0 = Monday) + 7 * week parity, the parity
+        mirroring resource.calendar.attendance.get_week_type(), i.e. the number of
+        weeks since 0001-01-01 -- the same for every two-weeks calendar, with no
+        per-calendar reference date needed.
         """
-        return SQL("MOD((%s::date - DATE '0001-01-01') / 7, 2)", day_column)
+        return SQL(
+            "EXTRACT(ISODOW FROM %s)::integer - 1 + 7 * MOD((%s::date - DATE '0001-01-01') / 7, 2)",
+            day_column, day_column,
+        )
 
     def _cte_emp_day(self):
         """Resolve the effective version once for every employee/day."""
@@ -244,8 +253,7 @@ class HrLeaveAttendanceReport(models.Model):
                            ) AS d(day)
                       JOIN cal_workday AS cw
                         ON cw.calendar_id = ec.calendar_id
-                       AND cw.dayofweek = EXTRACT(ISODOW FROM d.day)::integer - 1
-                       AND (cw.week_type IS NULL OR cw.week_type::integer = %s)
+                       AND cw.day_key = %s
                  LEFT JOIN holiday AS h
                         ON NOT lv.include_public_holidays_in_duration
                        AND h.company_id = ec.company_id
@@ -255,14 +263,14 @@ class HrLeaveAttendanceReport(models.Model):
                      WHERE h.day IS NULL
                    ) AS charge
           GROUP BY charge.employee_id, charge.calendar_id, charge.tz, charge.day
-        """, self._sql_week_type(SQL("d.day")))
+        """, self._sql_day_key(SQL("d.day")))
 
     def _select(self):
         return SQL("""
             SELECT row_number() OVER (ORDER BY ed.day DESC, ed.employee_id) AS id,
                    ed.day AS date,
                    ed.employee_id,
-                   rc.id AS schedule_id,
+                   ed.resource_calendar_id AS schedule_id,
                    ROUND(COALESCE(att.worked_hours, 0.0)::numeric, 2) AS worked_hours,
                    ROUND(COALESCE(cw.hours_per_day, 0.0)::numeric, 2) AS expected_hours,
                    ROUND(COALESCE(ld.leave_hours, 0.0)::numeric, 2) AS leave_hours,
@@ -276,12 +284,9 @@ class HrLeaveAttendanceReport(models.Model):
     def _from(self):
         return SQL("""
               FROM emp_day AS ed
-              JOIN resource_calendar AS rc
-                ON rc.id = ed.resource_calendar_id
               JOIN cal_workday AS cw
                 ON cw.calendar_id = ed.resource_calendar_id
-               AND cw.dayofweek = EXTRACT(ISODOW FROM ed.day)::integer - 1
-               AND (cw.week_type IS NULL OR cw.week_type::integer = %s)
+               AND cw.day_key = %s
          LEFT JOIN attendance AS att
                 ON att.employee_id = ed.employee_id
                AND att.check_date = ed.day
@@ -290,7 +295,7 @@ class HrLeaveAttendanceReport(models.Model):
                AND ld.calendar_id = ed.resource_calendar_id
                AND ld.tz = ed.tz
                AND ld.day = ed.day
-        """, self._sql_week_type(SQL("ed.day")))
+        """, self._sql_day_key(SQL("ed.day")))
 
     def _where(self):
         return SQL("""
