@@ -554,7 +554,7 @@ class TestEdiJson(TestEGEdiCommon):
                             'type': 'F',
                             'id': 'ESF35999705',
                         },
-                        'documentType': 'i',
+                        'documentType': 'ei',
                         'invoiceLines': [
                             {
                                 'description': 'product_a',
@@ -572,6 +572,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 120.98889,
                                 'netTotal': 108.89,
                                 'total': 108.89,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.1,
                             },
                             {
                                 'description': 'product_b',
@@ -589,6 +591,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 4997.74713,
                                 'netTotal': 4348.04,
                                 'total': 4348.04,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.5,
                             },
                         ],
                         'taxTotals': [{'taxType': 'T1', 'amount': 0.0}],
@@ -596,6 +600,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalSalesAmount': 5118.73602,
                         'netAmount': 4456.93,
                         'totalAmount': 4456.93,
+                        'serviceDeliveryDate': '2022-03-15',
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
@@ -660,6 +665,7 @@ class TestEdiJson(TestEGEdiCommon):
                             'type': 'F',
                             'id': 'ESF35999705',
                         },
+                        'documentType': 'ei',
                         'invoiceLines': [
                             {
                                 'description': 'product_a',
@@ -682,6 +688,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 610.68889,
                                 'netTotal': 549.62,
                                 'total': 549.62,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.1,
                             },
                             {
                                 'description': 'product_b',
@@ -704,6 +712,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 25226.22989,
                                 'netTotal': 21946.82,
                                 'total': 21946.82,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.5,
                             },
                         ],
                         'taxTotals': [{'taxType': 'T1', 'amount': 0.0}],
@@ -711,6 +721,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalSalesAmount': 25836.91878,
                         'netAmount': 22496.44,
                         'totalAmount': 22496.44,
+                        'serviceDeliveryDate': '2022-03-15',
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
@@ -770,6 +781,7 @@ class TestEdiJson(TestEGEdiCommon):
                             'type': 'F',
                             'id': 'ESF35999705',
                         },
+                        'documentType': 'ei',
                         'invoiceLines': [
                             {
                                 'description': 'product_a',
@@ -792,6 +804,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 504.75556,
                                 'netTotal': 454.28,
                                 'total': 454.28,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.1,
                             },
                             {
                                 'description': 'product_b',
@@ -814,6 +828,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 2532.57471,
                                 'netTotal': 2203.34,
                                 'total': 2203.34,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.5,
                             },
                         ],
                         'taxTotals': [{'taxType': 'T1', 'amount': 0.0}],
@@ -821,6 +837,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalSalesAmount': 3037.33027,
                         'netAmount': 2657.62,
                         'totalAmount': 2657.62,
+                        'serviceDeliveryDate': '2022-03-15',
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
