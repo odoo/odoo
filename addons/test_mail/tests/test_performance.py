@@ -1550,6 +1550,16 @@ class TestMessageToStorePerformance(BaseMailPerformance):
     def test_assert_initial_values(self):
         self.assertEqual(len(self.messages_all), 2*2)
 
+    @users('employee')
+    @warmup
+    def test_message_read_order(self):
+        messages_all = self.messages_all.with_env(self.env)
+        for fnames in (['author_id', 'is_bookmarked'], ['is_bookmarked', 'author_id']):
+            with self.subTest(fnames=fnames):
+                self.env.invalidate_all()
+                with self.assertQueryCount(employee=5):
+                    messages_all._read_format(fnames)
+
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
     @warmup
