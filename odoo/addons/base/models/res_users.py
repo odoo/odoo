@@ -1581,8 +1581,9 @@ class ChangePasswordOwn(models.TransientModel):
 
     @api.constrains('new_password', 'confirm_password')
     def _check_password_confirmation(self):
-        if self.confirm_password != self.new_password:
-            raise ValidationError(_("The new password and its confirmation must be identical."))
+        for record in self:
+            if record.confirm_password != record.new_password:
+                raise ValidationError(_("The new password and its confirmation must be identical."))
 
     @check_identity
     def change_password(self):
