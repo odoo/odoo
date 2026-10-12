@@ -121,6 +121,7 @@ export class BoardController extends Component {
     saveBoard() {
         const root = document.createElement("rendertostring");
         root.appendChild(renderToFragment("board.arch", this.board));
+        root.querySelector("board").setAttribute("style", this.board.layout);
         const result = xmlSerializer.serializeToString(root);
         const arch = result.slice(result.indexOf("<", 1), result.indexOf("</rendertostring>"));
 
