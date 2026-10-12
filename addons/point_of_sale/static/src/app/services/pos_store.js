@@ -46,6 +46,7 @@ import { Domain } from "@web/core/domain";
 import { PosOrderAccounting } from "@point_of_sale/app/models/accounting/pos_order_accounting";
 import { PosOrderlineAccounting } from "@point_of_sale/app/models/accounting/pos_order_line_accounting";
 import { SIZES } from "@web/core/ui/ui_service";
+import { clearLocalStorage } from "../utils/devices_identifier_sequence";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -414,7 +415,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.device.saveUnusedNumber(orders);
         await this.data.resetIndexedDB();
         sessionStorage.clear();
-        localStorage.clear();
+        clearLocalStorage();
         const url = new URL(window.location.href);
 
         if (fullReload) {
