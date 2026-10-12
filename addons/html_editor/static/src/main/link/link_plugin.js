@@ -122,7 +122,8 @@ async function fetchAttachmentMetaData(url, ormService) {
         const result = (
             await ormService.read("ir.attachment", [attachementId], ["name", "mimetype", "type"])
         )[0];
-        return result || { name: url, type: "url" };
+        // read() skips records that no longer exist: the attachment was deleted
+        return result || { name: url, type: "url", missing: true };
     } catch {
         return { name: url, type: "url" };
     }
