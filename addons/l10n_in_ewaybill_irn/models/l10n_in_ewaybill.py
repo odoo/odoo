@@ -1,8 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-import json
-
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
@@ -46,21 +43,20 @@ class L10nInEwaybill(models.Model):
             'Irn': self.account_move_id._get_l10n_in_edi_response_json().get('Irn'),
             'Distance': str(self.distance),
             **self._prepare_ewaybill_transportation_json_payload(),
-            'DispDtls': self.env['account.move']._get_l10n_in_edi_partner_details(
-                self.partner_ship_from_id, set_phone_and_email=False, set_vat=False)
         }
+        if self.partner_bill_from_id != self.partner_ship_from_id:
+            json_payload['DispDtls'] = self.env['account.move']._get_l10n_in_edi_partner_details(
+                self.partner_ship_from_id, set_phone_and_email=False, set_vat=False)
         if self.account_move_id.l10n_in_gst_treatment == 'overseas':
             json_payload["ExpShipDtls"] = self.env['account.move']._get_l10n_in_edi_partner_details(
                 self.partner_ship_to_id, set_phone_and_email=False, set_vat=False)
             json_payload["ExpShipDtls"].pop('Nm')  # 'Nm'(Name) is not included in ExpShipDtls as per the JSON schema
         return json_payload
 
-    def _compute_content(self):
-        irn_ewaybill = self.filtered('is_process_through_irn')
-        for ewaybill in irn_ewaybill:
-            ewaybill_json = ewaybill._ewaybill_generate_irn_json()
-            ewaybill.content = base64.b64encode(json.dumps(ewaybill_json).encode())
-        super(L10nInEwaybill, self - irn_ewaybill)._compute_content()
+    def _get_ewaybill_request_json(self):
+        if self.is_process_through_irn:
+            return self._ewaybill_generate_irn_json()
+        return super()._get_ewaybill_request_json()
 
     def action_generate_ewaybill(self):
         irn_ewaybill = self.filtered('is_process_through_irn')
