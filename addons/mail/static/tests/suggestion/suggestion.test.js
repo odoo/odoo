@@ -129,6 +129,26 @@ test("suggestion list closed by Escape stays closed when the mention search answ
     await mailContains(".o-mail-Composer-suggestion:has(:text('TestPartner'))");
 });
 
+test("click away from the empty suggestion list keeps the fetched suggestions", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({ name: "Bob" });
+    const { promise: fetchHeld, resolve: releaseFetch } = Promise.withResolvers();
+    onRpc("res.partner", "get_mention_suggestions", async () => {
+        expect.step("get_mention_suggestions");
+        await fetchHeld;
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button:text('Send message')");
+    await insertTextInComposer(".o-mail-Composer", "@Bob");
+    await expect.waitForSteps(["get_mention_suggestions"]);
+    await mailContains(".o-mail-Composer-suggestionList .o-open");
+    await click(".o_form_view");
+    await mailContains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    releaseFetch();
+    await mailContains(".o-mail-Composer-suggestion:has(:text('Bob'))");
+});
+
 test.tags("html composer");
 test("display partner mention suggestions on typing '@'", async () => {
     const pyEnv = await startServer();
