@@ -295,10 +295,16 @@ export class PosStore extends WithLazyGetterTrap {
         const orders = this.models["pos.order"].getAll();
         this.device.saveUnusedNumber(orders);
         await this.data.resetIndexedDB();
+        // Keep the device UUID across the reload so the customer display can
+        // reconnect to the POS with the new device state.
+        const deviceUuid = localStorage.getItem("device_uuid");
         sessionStorage.clear();
         localStorage.clear();
         const url = new URL(window.location.href);
 
+        if (deviceUuid) {
+            localStorage.setItem("device_uuid", deviceUuid);
+        }
         if (fullReload) {
             url.searchParams.set("limited_loading", "0");
         }
