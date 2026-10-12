@@ -412,14 +412,24 @@ class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
     def test_working_hours_with_employee_without_contract(self):
         self.env.user.company_id = self.company_A
         self.env.user.company_ids = [self.company_A.id]
+        date_from = datetime(2023, 12, 25).isoformat()
+        date_to = datetime(2023, 12, 31).isoformat()
 
-        work_hours = self.env['res.partner'].get_working_hours_for_all_attendees(
-            [self.partnerA.id, self.partnerE.id],
-            datetime(2023, 12, 25).isoformat(),
-            datetime(2023, 12, 31).isoformat()
+        work_hours_a = self.env['res.partner'].get_working_hours_for_all_attendees(
+            [self.partnerA.id], date_from, date_to
+        )
+        self.assertTrue(work_hours_a)
+        work_hours_a_e = self.env['res.partner'].get_working_hours_for_all_attendees(
+            [self.partnerA.id, self.partnerE.id], date_from, date_to
+        )
+        # Employee E doesn't have a contract: no known schedule, so E is ignored and only A's working hours are displayed.
+        self.assertEqual(work_hours_a, work_hours_a_e)
+
+        work_hours_e = self.env['res.partner'].get_working_hours_for_all_attendees(
+            [self.partnerE.id], date_from, date_to
         )
         # Employee E doesn't have a contract
-        self.assertEqual(work_hours, [{'daysOfWeek': [7], 'startTime': '00:00', 'endTime': '00:00'}])
+        self.assertEqual(work_hours_e, [])
 
     def test_working_hours_one_employee_with_two_contracts(self):
         self.env.user.company_id = self.company_A
