@@ -1138,7 +1138,7 @@ class IrAttachment(models.Model):
             except OSError:
                 pass
 
-        elif self.url:
+        elif self.url and not self.db_datas:
             return Stream(type='url', url=self.url, **kw)
 
         data = self.raw.content
