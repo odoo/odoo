@@ -338,6 +338,32 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         confirmed_orders = tx._check_amount_and_confirm_order()
         self.assertFalse(confirmed_orders)
 
+    def test_auto_invoice_on_signing_paid_quotation(self):
+        """Test that a quotation paid before being signed is invoiced once signed."""
+        self.env["ir.config_parameter"].sudo().set_param("sale.automatic_invoice", "True")
+        self.sale_order.require_signature = True
+        self.amount = self.sale_order.amount_total
+        tx = self._create_transaction(
+            flow="redirect", sale_order_ids=[self.sale_order.id], state="done"
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            tx._post_process()
+        self.assertEqual(self.sale_order.state, "draft")
+        self.assertFalse(tx.invoice_ids)
+
+        signature = "R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
+        self.make_jsonrpc_request(
+            f"/my/orders/{self.sale_order.id}/accept",
+            {"access_token": self.sale_order._portal_ensure_token(), "signature": signature},
+        )
+        self.assertEqual(self.sale_order.state, "sale")
+        self.assertTrue(tx.invoice_ids)
+        self.assertEqual(tx.invoice_ids, self.sale_order.invoice_ids)
+        self.assertEqual(tx.invoice_ids.state, "posted")
+        self.assertEqual(
+            tx.invoice_ids.payment_state, tx.invoice_ids._get_invoice_in_payment_state()
+        )
+
     def test_already_confirmed_so_payment(self):
         # Set automatic invoice
         self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
