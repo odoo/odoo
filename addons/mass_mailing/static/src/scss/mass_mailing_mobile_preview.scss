@@ -38,15 +38,15 @@
                 padding: 15px;
 
                 $mobile-preview-width: 30vh;
-                $mobile-preview-height: 70vh;
+                --o-mass-mailing-mobile-preview-height: 70vh;
 
                 display: flex;
                 width: $mobile-preview-width + 15;
-                height: $mobile-preview-height;
+                height: var(--o-mass-mailing-mobile-preview-height);
                 transition: all 400ms ease 0s;
 
                 &.o_invert_orientation {
-                    width: $mobile-preview-height;
+                    width: var(--o-mass-mailing-mobile-preview-height);
                     height: $mobile-preview-width + 15;
                 }
 

@@ -3,7 +3,7 @@
     $-stat-button-inner-size: calc(#{$btn-padding-y} * 2 + #{$btn-font-size} * #{$btn-line-height});
     $-stat-button-height: calc(#{$-stat-button-inner-size} + #{$btn-border-width} * 2);
 
-    $-stat-button-icon-size: 1.5em;
+    --o-stat-button-icon-size: 1.5em;
     $-stat-button-icon-margin-end: $btn-padding-x * 0.5;
 
     margin-bottom: var(--ButtonBox-margin-bottom, 0);
@@ -55,7 +55,7 @@
         }
 
         .o_button_icon {
-            font-size: $-stat-button-icon-size;
+            font-size: var(--o-stat-button-icon-size);
             color: var(--o-stat-button-color, var(--primary));
 
             &:before {
@@ -173,7 +173,7 @@
     }
 
     /* Piechart */
-    --PercentPieField-size: #{$-stat-button-icon-size};
+    --PercentPieField-size: var(--o-stat-button-icon-size);
     --PercentPieField-gap: #{$-stat-button-icon-margin-end};
 
     .oe_stat_button:not(:first-child) .o_pie {
