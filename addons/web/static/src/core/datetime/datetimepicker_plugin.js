@@ -15,7 +15,6 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { PopoverPlugin } from "@web/core/popover/popover_plugin";
 import { services } from "@web/core/services";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { onWillRender } from "@web/owl2/utils";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";
@@ -547,28 +546,32 @@ export class DateTimePickerPlugin extends Plugin {
         let stringProps = {};
 
         if (options?.useOwlHooks) {
-            onWillRender(function computeBasePickerProps() {
-                const nextProps = params.pickerProps;
-                const oldStringProps = stringProps;
+            onWillDestroy(
+                immediateEffect(function computeBasePickerProps() {
+                    const nextProps = params.pickerProps;
+                    const nextStringProps = stringifyProps(nextProps);
+                    untrack(() => {
+                        const oldStringProps = stringProps;
+                        stringProps = nextStringProps;
+                        lastAppliedStringValue = stringProps.value;
 
-                stringProps = stringifyProps(nextProps);
-                lastAppliedStringValue = stringProps.value;
+                        if (shallowEqual(oldStringProps, stringProps)) {
+                            return;
+                        }
 
-                if (shallowEqual(oldStringProps, stringProps)) {
-                    return;
-                }
+                        inputsChanged = ensureArray(nextProps.value).map(() => false);
 
-                inputsChanged = ensureArray(nextProps.value).map(() => false);
-
-                for (const [key, value] of Object.entries(nextProps)) {
-                    if (value === undefined) {
-                        continue;
-                    }
-                    if (!areDatesEqual(pickerProps[key], value)) {
-                        pickerProps[key] = value;
-                    }
-                }
-            });
+                        for (const [key, value] of Object.entries(nextProps)) {
+                            if (value === undefined) {
+                                continue;
+                            }
+                            if (!areDatesEqual(pickerProps[key], value)) {
+                                pickerProps[key] = value;
+                            }
+                        }
+                    });
+                })
+            );
 
             onMounted(setup);
             onWillDestroy(destroy);
