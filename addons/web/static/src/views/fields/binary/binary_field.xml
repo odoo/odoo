@@ -4,7 +4,7 @@
     <t t-name="web.BinaryField">
         <t t-if="!this.props.readonly">
             <t t-if="this.props.record.data[this.props.name]">
-                <div class="w-100 d-inline-flex gap-1 cursor-pointer">
+                <div class="w-100 d-inline-flex gap-1 cursor-pointer" t-ref="this.root">
                     <FileUploader
                         acceptedFileExtensions="this.props.acceptedFileExtensions"
                         allowedMIMETypes="this.props.allowedMIMETypes"
@@ -37,7 +37,7 @@
                 </div>
             </t>
             <t t-else="">
-                <label class="o_select_file_button w-100 o_input">
+                <label class="o_select_file_button w-100 o_input" t-ref="this.root">
                     <FileUploader
                         acceptedFileExtensions="this.props.acceptedFileExtensions"
                         allowedMIMETypes="this.props.allowedMIMETypes"
