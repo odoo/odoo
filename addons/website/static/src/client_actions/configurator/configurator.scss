@@ -187,8 +187,8 @@
                     position: absolute;
                     width: 100%;
                     border: none;
-                    border-bottom: 3px solid map-get($theme-colors, primary);
-                    color: map-get($theme-colors, primary);
+                    border-bottom: 3px solid var(--primary);
+                    color: var(--primary);
                     background-color: inherit;
 
                     &:focus {
@@ -213,7 +213,7 @@
             }
 
             .dropdown {
-                box-shadow: inset 0 -3px 0 map-get($theme-colors, primary);
+                box-shadow: inset 0 -3px 0 var(--primary);
 
                 .dropdown-menu button:focus {
                     outline: unset;
@@ -274,7 +274,7 @@
 
                         &.o_no_result, &.o_no_result:hover {
                             background-color: transparent !important;
-                            color: map-get($grays, '600') !important;
+                            color: var(--gray-600) !important;
                             cursor: default;
                             padding: $dropdown-item-padding-y*4 var(--o-bs-dropdown-item-padding-x);
                             font-style: italic;
@@ -371,7 +371,7 @@
                 transition: box-shadow 0.22s ease;
 
                 &:focus-visible, &.selected {
-                    box-shadow: 0 0 0 1px var(--o-bs-card-bg), 0 0 0 3px map-get($theme-colors, "primary");
+                    box-shadow: 0 0 0 1px var(--o-bs-card-bg), 0 0 0 3px var(--primary);
                 }
 
                 @media (min-height: 800px) {
