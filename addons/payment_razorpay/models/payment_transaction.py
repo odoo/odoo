@@ -217,6 +217,8 @@ class PaymentTransaction(models.Model):
 
         try:
             order_data = self._razorpay_create_order()
+            if not order_data:  # The order creation failed and the transaction was set in error.
+                return
             phone = self._validate_phone_number(self.partner_phone)
             customer_id, token_id = self.token_id.provider_ref.split(',')
             payload = {
