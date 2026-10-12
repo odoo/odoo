@@ -177,15 +177,12 @@ class GoogleCalendarSync(models.AbstractModel):
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
 
-        # Check if it is a recurring event that has been rescheduled.
-        # We have to check if an event already exists in Odoo.
-        # Explanation:
-        # A recurrent event with `google_id` is equal to ID_RANGE_TIMESTAMP can be rescheduled.
-        # The new `google_id` will be equal to ID_TIMESTAMP.
-        # We have to delete the event created under the old `google_id`.
-        rescheduled_events = new.filter(lambda gevent: not gevent.is_recurrence_follower())
-        if rescheduled_events:
-            google_ids_to_remove = [event.full_recurring_event_id() for event in rescheduled_events]
+        # Recurring instances whose google_id changed from ID_RANGE_TIMESTAMP to
+        # ID_TIMESTAMP after Google splits the series ("this and following events")
+        # or reschedules an occurrence. Delete the leftover Odoo row.
+        replaced_events = new.filter(lambda gevent: gevent.full_recurring_event_id())
+        if replaced_events:
+            google_ids_to_remove = [event.full_recurring_event_id() for event in replaced_events]
             cancelled_odoo += self.env['calendar.event'].search([('google_id', 'in', google_ids_to_remove)])
 
         cancelled_odoo.exists()._cancel()
