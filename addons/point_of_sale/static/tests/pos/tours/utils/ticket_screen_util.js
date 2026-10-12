@@ -69,7 +69,7 @@ export function deleteOrder(orderName) {
         },
         {
             isActive: ["desktop"],
-            trigger: `.ticket-screen .orders .order-row > td:contains("${orderName}") ~ td.text-end button.text-danger`,
+            trigger: `.ticket-screen .orders .order-row > td:contains("${orderName}") ~ td.text-end button.btn-hover-danger`,
             run: "click",
         },
     ];

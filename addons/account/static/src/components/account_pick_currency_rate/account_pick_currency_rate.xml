@@ -4,7 +4,7 @@
         <button
             type="button"
             t-on-click.prevent="() => this.dateTimePicker.open()"
-            class="btn btn-link text-dark p-0"
+            class="btn btn-hover-dark p-0"
             title="Pick the rate on a certain date"
             t-ref="this.datetimePickerTargetRef"
         >
@@ -17,7 +17,7 @@
             <span>1</span>
             <span class="w-auto" t-out="this.fromCurrency and this.fromCurrency.display_name or ''"/>
             <button type="button" t-on-click.prevent="this.onSwap"
-                    class="btn btn-link text-dark p-0 mx-1"
+                    class="btn btn-hover-dark p-0 mx-1"
                     title="Click to swap currencies">
                 <i class="oi" data-icon="swap_horiz"/>
             </button>

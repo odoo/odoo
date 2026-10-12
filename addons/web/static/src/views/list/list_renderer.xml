@@ -425,7 +425,7 @@
                         t-on-click.stop="hasDeleteButton ? (ev) => this.onRemoveCellClicked(record, ev) : () => {}"
                         tabindex="-1"
                     >
-                        <button class="oi d-print-none btn btn-link text-danger"
+                        <button class="oi d-print-none btn btn-hover-danger"
                             t-if="hasDeleteButton"
                             t-attf-data-icon="{{
                                 !useUnlink and this.activeActions.delete ? 'delete' : useUnlink and this.activeActions.unlink ? 'close' : ''
@@ -440,7 +440,7 @@
                    <button
                         t-on-click.prevent.stop="() => this.props.list.enterEditMode(record)"
                         t-if="this.props.list.model.multiEdit and record.selected and !this.uiService.isSmall"
-                        class="o_mass_edit_btn btn btn-link btn-dark p-0 w-100 text-start"
+                        class="o_mass_edit_btn btn btn-hover-dark p-0 w-100 text-start"
                         name="edit"
                         aria-label="Click to edit the row"
                         title="Click to edit the row"
