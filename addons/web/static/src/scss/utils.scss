@@ -3,18 +3,6 @@
 ///
 
 // ------------------------------------------------------------------
-// Caret
-// ------------------------------------------------------------------
-@mixin utils-caret-boilerplate {
-    content: "";
-    display: inline-block;
-    width: 0;
-    height: 0;
-    vertical-align: middle;
-    -moz-transform: scale(0.9999); // Smooth the caret on firefox
-}
-
-// ------------------------------------------------------------------
 // Position absolute
 // ------------------------------------------------------------------
 @mixin o-position-absolute($top: auto, $right: auto, $bottom: auto, $left: auto) {
@@ -112,38 +100,6 @@
     padding-right: $right;
     padding-bottom: $bottom;
     padding-left: $left;
-}
-
-// ------------------------------------------------------------------
-// Caret
-// ------------------------------------------------------------------
-@mixin o-caret-down($caret-width: $caret-width, $caret-color: var(--o-caret-color, currentColor)) {
-    @include utils-caret-boilerplate;
-    border-bottom: 0;
-    border-left: $caret-width solid transparent;
-    border-right: $caret-width solid transparent;
-    border-top: $caret-width solid $caret-color;
-}
-@mixin o-caret-up($caret-width: $caret-width, $caret-color: var(--o-input-border-color, currentColor)) {
-    @include utils-caret-boilerplate;
-    border-bottom: $caret-width solid $caret-color;
-    border-left: $caret-width solid transparent;
-    border-right: $caret-width solid transparent;
-    border-top: 0;
-}
-@mixin o-caret-left($caret-width: $caret-width, $caret-color: var(--o-input-border-color, currentColor)) {
-    @include utils-caret-boilerplate;
-    border-bottom: $caret-width solid transparent;
-    border-left: 0;
-    border-right: $caret-width solid $caret-color;
-    border-top: $caret-width solid transparent;
-}
-@mixin o-caret-right($caret-width: $caret-width, $caret-color: var(--o-input-border-color, currentColor)) {
-    @include utils-caret-boilerplate;
-    border-bottom: $caret-width solid transparent;
-    border-left: $caret-width solid $caret-color;
-    border-right: 0;
-    border-top: $caret-width solid transparent;
 }
 
 //-------------------------------------------------------------------
