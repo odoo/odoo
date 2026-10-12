@@ -2892,6 +2892,67 @@ class HrEmployee(models.Model):
         """
         return leave_intervals
 
+    def _get_schedule_work_intervals(self, start_dt, stop_dt, calendar_periods_by_employee):
+        """Return raw schedule availability for the periods selected by the caller.
+
+        ``calendar_periods_by_employee`` maps employees to ``(start_date, stop_date,
+        (calendar, timezone))`` periods. The result maps each employee to a
+        list of ``(timezone, Intervals)`` pairs, before display conversion.
+        Duration-based attendances cover whole local days; flexible schedules
+        cover their periods except for absences.
+        """
+        resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
+        for employee, calendar_periods in calendar_periods_by_employee.items():
+            for _start, _stop, (calendar, tz) in calendar_periods:
+                resources_per_calendar[calendar, tz] |= employee.resource_id
+
+        work_intervals_per_calendar = {}
+        leave_intervals_per_calendar = {}
+        for (calendar, tz), resources in resources_per_calendar.items():
+            resources_per_tz = {ZoneInfo(tz): resources}
+            if not calendar._is_flexible() and not any(calendar.attendance_ids.mapped('duration_based')):
+                work_intervals_per_calendar[calendar, tz] = calendar._work_intervals_batch(
+                    start_dt, stop_dt, resources_per_tz=resources_per_tz,
+                )
+                continue
+
+            # Duration-based calendars extend attendances before subtracting adjusted leaves.
+            leave_intervals_per_calendar[calendar, tz] = calendar._leave_intervals_batch(
+                start_dt, stop_dt, resources_per_tz=resources_per_tz,
+            )
+            if calendar._is_flexible():
+                continue
+            attendance_intervals = calendar._attendance_intervals_batch(
+                start_dt, stop_dt, resources_per_tz=resources_per_tz,
+            )
+            for resource_id, intervals in attendance_intervals.items():
+                extended_intervals = []
+                for start, stop, attendance in intervals:
+                    if attendance.duration_based:
+                        start = datetime.combine(start.date(), time.min, ZoneInfo(tz))
+                        stop = datetime.combine(stop.date() + timedelta(days=1), time.min, ZoneInfo(tz))
+                    extended_intervals.append((start, stop, attendance))
+                attendance_intervals[resource_id] = Intervals(extended_intervals)
+            work_intervals_per_calendar[calendar, tz] = attendance_intervals
+
+        result = defaultdict(list)
+        for employee, calendar_periods in calendar_periods_by_employee.items():
+            resource_id = employee.resource_id.id
+            for period_start, period_stop, (calendar, tz) in calendar_periods:
+                period_interval = Intervals([(
+                    datetime.combine(period_start, time.min, ZoneInfo(tz)),
+                    datetime.combine(period_stop + timedelta(days=1), time.min, ZoneInfo(tz)),
+                    calendar,
+                )])
+                if calendar._is_flexible():
+                    intervals = period_interval - leave_intervals_per_calendar[calendar, tz][resource_id]
+                else:
+                    intervals = period_interval & work_intervals_per_calendar[calendar, tz][resource_id]
+                    if (calendar, tz) in leave_intervals_per_calendar:
+                        intervals -= employee._adjust_leaves(leave_intervals_per_calendar[calendar, tz][resource_id])
+                result[employee].append((tz, intervals))
+        return result
+
     def _get_employee_unavailable_intervals(self, start, stop):
         """Return the unavailability intervals of each employee within ``[start, stop]`` (Gantt views).
 
@@ -2920,59 +2981,11 @@ class HrEmployee(models.Model):
             check_contract=True,
         )
 
-        work_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
-        attendance_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
-        leave_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
-        for employee, calendar_periods in calendar_tz_periods_per_employee.items():
-            for period_start, period_stop, (calendar, tz) in calendar_periods:
-                if calendar._is_flexible():
-                    leave_resources_per_calendar[calendar, tz] += employee.resource_id
-                elif any(calendar.attendance_ids.mapped('duration_based')):
-                    attendance_resources_per_calendar[calendar, tz] += employee.resource_id
-                    leave_resources_per_calendar[calendar, tz] += employee.resource_id
-                else:
-                    work_resources_per_calendar[calendar, tz] += employee.resource_id
-
-        work_intervals_per_calendar = defaultdict()
-        attendance_intervals_per_calendar = defaultdict()
-        leave_intervals_per_calendar = defaultdict()
-        # Standard Calendars
-        for (calendar, tz), resources in work_resources_per_calendar.items():
-            work_intervals_per_calendar[calendar, tz] = calendar._work_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
-
-        # Duration Based Calendars
-        for (calendar, tz), resources in attendance_resources_per_calendar.items():
-            attendance_intervals_per_calendar[calendar, tz] = calendar._attendance_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
-            for resource_id, work_intervals in attendance_intervals_per_calendar[calendar, tz].items():
-                extended_intervals = Intervals([])
-                for att_start, att_end, attendance in work_intervals:
-                    if not attendance.duration_based:
-                        extended_intervals |= Intervals([(att_start, att_end, attendance)])
-                        continue
-                    extended_start = datetime.combine(att_start.date(), time.min, ZoneInfo(tz))
-                    extended_end = datetime.combine(att_end.date() + timedelta(days=1), time.min, ZoneInfo(tz))
-                    extended_intervals |= Intervals([(extended_start, extended_end, attendance)])
-                attendance_intervals_per_calendar[calendar, tz][resource_id] = extended_intervals
-
-        # Flexible and Fully Flexible Calendars
-        for (calendar, tz), resources in leave_resources_per_calendar.items():
-            leave_intervals_per_calendar[calendar, tz] = calendar._leave_intervals_batch(start_dt, stop_dt, resources_per_tz={ZoneInfo(tz): resources})
-
-        for employee, calendar_periods in calendar_tz_periods_per_employee.items():
+        work_intervals = self._get_schedule_work_intervals(start_dt, stop_dt, calendar_tz_periods_per_employee)
+        for employee, period_intervals in work_intervals.items():
             employee_work_intervals = []
-            for period_start, period_stop, (calendar, tz) in calendar_periods:
-                period_start_dt = datetime.combine(period_start, time.min).replace(tzinfo=ZoneInfo(tz))
-                period_stop_dt = datetime.combine(period_stop + timedelta(days=1), time.min).replace(tzinfo=ZoneInfo(tz))
-                period_interval = Intervals([(period_start_dt, period_stop_dt, calendar)])
-                current_work_intervals = Intervals([])
-                if calendar._is_flexible():
-                    current_work_intervals = period_interval - leave_intervals_per_calendar[calendar, tz][employee.resource_id.id]
-                elif any(calendar.attendance_ids.mapped('duration_based')):
-                    current_work_intervals = period_interval & attendance_intervals_per_calendar[calendar, tz][employee.resource_id.id] \
-                                          - employee._adjust_leaves(leave_intervals_per_calendar[calendar, tz][employee.resource_id.id])
-                else:
-                    current_work_intervals = period_interval & work_intervals_per_calendar[calendar, tz][employee.resource_id.id]
-                for interval_start, interval_stop, interval_calendar in current_work_intervals:
+            for tz, intervals in period_intervals:
+                for interval_start, interval_stop, interval_calendar in intervals:
                     employee_work_intervals += Intervals([(
                         interval_start.astimezone(ZoneInfo(tz)).replace(tzinfo=self.env.tz),
                         interval_stop.astimezone(ZoneInfo(tz)).replace(tzinfo=self.env.tz),
