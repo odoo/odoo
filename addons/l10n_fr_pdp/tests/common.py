@@ -44,7 +44,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'street': 'Rue Abbé Huet',
             'city': 'Rennes',
             'zip': '35043',
-            'vat': 'FR91746948785',
+            'vat': 'FR74968515759',
             'phone': '+33612345678',
             'pdp_identifier': '968515759_96851575905899'  # Should set company_id, peppol_eas and peppol_endpoint
         })
@@ -77,10 +77,16 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
+<<<<<<< 55f438b630c9ab7d4db1bbe86178a2c3d4f2b245
             'company_registry': '96851575905823',
+||||||| 87872ab5f99a5ef94202b29c3be6c073f92e2d0d
+            'siret': '96851575905823',
+=======
+            'siret': '33417522105821',
+>>>>>>> bdbf568e61dd6c8f708ee65f25b1cdb08dd6601b
             'invoice_edi_format': 'ubl_21_fr',
             'peppol_eas': '0225',
-            'peppol_endpoint': '968515759_96851575905823',
+            'peppol_endpoint': '334175221_33417522105821',
         })
         cls.belgian_partner = cls.partner_b
         cls.belgian_partner.write({
