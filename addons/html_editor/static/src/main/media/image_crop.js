@@ -120,9 +120,34 @@ export class ImageCrop extends Component {
         const data = { ...this.media.dataset };
         this.initialSrc = src;
         this.aspectRatio = data.aspectRatio || "0/0";
+<<<<<<< b08aa20c5143bd2fbea80c8eaba660d36f1a8021
+||||||| f5cfde8452698eb3ed939d30cfff828e83c28d37
+        const mimetype =
+            data.mimetype || src.endsWith(".png")
+                ? "image/png"
+                : src.endsWith(".webp")
+                ? "image/webp"
+                : "image/jpeg";
+        this.mimetype = this.props.mimetype || mimetype;
+=======
+        await loadImageInfo(this.media);
+        this.mimetype =
+            this.props.mimetype ||
+            this.media.dataset.mimetype ||
+            (src.endsWith(".png")
+                ? "image/png"
+                : src.endsWith(".webp")
+                ? "image/webp"
+                : "image/jpeg");
+>>>>>>> 86e39c2fc1744aca1ce5230c37cc64d59122d3db
 
+<<<<<<< b08aa20c5143bd2fbea80c8eaba660d36f1a8021
         // todo: check that the mutations of loadImage are not problematic (they most probably are).
         Object.assign(this.media.dataset, await loadImageInfo(this.media));
+||||||| f5cfde8452698eb3ed939d30cfff828e83c28d37
+        await loadImageInfo(this.media);
+=======
+>>>>>>> 86e39c2fc1744aca1ce5230c37cc64d59122d3db
         const isIllustration = /^\/(?:html|web)_editor\/shape\/illustration\//.test(
             this.media.dataset.originalSrc
         );
@@ -346,6 +371,5 @@ export class ImageCrop extends Component {
     async onCropZoom() {
         // Wait for the zoom event to be fully processed before reseting.
         await new Promise((res) => setTimeout(res, 0));
-        this.resetCropBox();
     }
 }
