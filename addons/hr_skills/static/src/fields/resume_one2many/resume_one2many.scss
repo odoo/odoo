@@ -1,5 +1,5 @@
 .o_field_resume_one2many {
-    $o-hrs-timeline-entry-padding: .5rem;
+    --o-hrs-timeline-entry-padding: .5rem;
     $o-hrs-timeline-dot-size: .6rem;
 
     .o_data_row {
@@ -7,7 +7,7 @@
     }
 
     .o_data_row td {
-        padding: $o-hrs-timeline-entry-padding;
+        padding: var(--o-hrs-timeline-entry-padding);
 
         &.o_resume_timeline_cell {
             overflow: hidden !important;
@@ -51,7 +51,7 @@
     }
 
     .o_resume_group_header + .o_data_row .o_resume_timeline_cell:before {
-        top: $o-hrs-timeline-entry-padding;
+        top: var(--o-hrs-timeline-entry-padding);
     }
 
     .o_data_row.o_data_row_last {
@@ -60,7 +60,7 @@
         }
 
         .o_resume_timeline_cell:before {
-            height: $o-hrs-timeline-entry-padding;
+            height: var(--o-hrs-timeline-entry-padding);
         }
     }
 }

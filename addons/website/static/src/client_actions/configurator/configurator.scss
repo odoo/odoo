@@ -300,7 +300,7 @@
         }
 
         &.o_palette_selection_screen {
-            $-palette-card-height: 3.25rem;
+            --o-configurator-palette-card-height: 3.25rem;
 
             .o_palette_selection_recommendation {
                 min-height: 4.5em;
@@ -316,7 +316,7 @@
             }
 
             .o_palette_selection_logo_row {
-                height: $-palette-card-height;
+                height: var(--o-configurator-palette-card-height);
             }
 
             .o_palette_selection_logo_upload {
@@ -375,7 +375,7 @@
                 }
 
                 @media (min-height: 800px) {
-                    min-height: $-palette-card-height;
+                    min-height: var(--o-configurator-palette-card-height);
                 }
             }
 

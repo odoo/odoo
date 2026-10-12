@@ -4,11 +4,11 @@
     margin-bottom: 0px;
     min-width: 9rem;
 
-    $o-kanban-manage-toggle-height: 35px;
+    --o-kanban-manage-toggle-height: 35px;
 
     /* Arbitrary value to place the dropdown-menu exactly below the */
     /* dropdown-toggle (height is forced so that it works on Firefox) */
-    top: $o-kanban-manage-toggle-height;
+    top: var(--o-kanban-manage-toggle-height);
 
     > div {
         padding: 3px 0 3px 20px;
