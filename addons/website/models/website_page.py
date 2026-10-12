@@ -465,7 +465,12 @@ class WebsitePage(models.Model):
                 if notCache.result:
                     return notCache.result[0]
 
-            if time.time() < response.time + self._CACHE_DURATION:
+            expiration_time = response.time + self._CACHE_DURATION
+            if response.visibility_next_change:
+                # An element of the page must appear or disappear before the
+                # end of the usual cache duration.
+                expiration_time = min(expiration_time, response.visibility_next_change)
+            if time.time() < expiration_time:
                 resp = Response(
                     headers=response.headers.copy(),
                     mimetype=response.mimetype,
@@ -481,6 +486,7 @@ class WebsitePage(models.Model):
             response = self._get_response_raw(request)
             if response:
                 response.flatten()
+                response.visibility_next_change = getattr(request, 'website_visibility_next_change', None)
                 if self._allow_cache_insertion(response.response[-1]):
                     self._get_response_cached.__cache__.add_value(self, request, cache_value=(response, cache_key))
             return response
@@ -504,6 +510,7 @@ class WebsitePage(models.Model):
             raise PageCannotBeCached(result)
 
         response.flatten()
+        response.visibility_next_change = getattr(request, 'website_visibility_next_change', None)
         if not self._allow_cache_insertion(response.response[-1]):
             raise PageCannotBeCached(result)
 
