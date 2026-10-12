@@ -2983,6 +2983,39 @@ class TestPointOfSaleFlow(CommonPosTest):
         data = session.load_data([])
         self.assertTrue(set(ptavs.ids) <= {v['id'] for v in data['product.template.attribute.value']})
 
+    def test_template_without_active_variant_is_not_loaded(self):
+        """A template whose variants are all archived cannot be sold in the PoS, and
+        loading it without any variant makes the PoS crash when it is clicked.
+        Templates with dynamic attributes have no variant until they are sold, and are
+        still loaded."""
+        template = self.env['product.template'].create({
+            'name': 'Template without variant',
+            'available_in_pos': True,
+        })
+        # e.g. through an import, which doesn't archive the template with its last variant
+        template.product_variant_ids.write({'active': False})
+        self.assertTrue(template.active)
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': 'Dynamic Attribute',
+            'create_variant': 'dynamic',
+            'value_ids': [Command.create({'name': 'Value 1'}), Command.create({'name': 'Value 2'})],
+        })
+        dynamic_template = self.env['product.template'].create({
+            'name': 'Dynamic Template',
+            'available_in_pos': True,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': dynamic_attribute.id,
+                'value_ids': [Command.set(dynamic_attribute.value_ids.ids)],
+            })],
+        })
+        self.assertFalse(dynamic_template.product_variant_ids)
+
+        self.pos_config_usd.open_ui()
+        data = self.pos_config_usd.current_session_id.load_data([])
+        loaded_template_ids = {t['id'] for t in data['product.template']}
+        self.assertNotIn(template.id, loaded_template_ids)
+        self.assertIn(dynamic_template.id, loaded_template_ids)
+
     def test_sequence_dynamic_prefix_suffix(self):
         """Test that sequence_number is correctly extracted when sequence has dynamic prefix/suffix."""
         self.pos_config_usd.open_ui()
