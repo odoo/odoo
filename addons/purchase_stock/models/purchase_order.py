@@ -89,18 +89,16 @@ class PurchaseOrder(models.Model):
     # --------------------------------------------------
 
     def write(self, vals):
-        if vals.get('order_line') and self.state == 'purchase':
-            for order in self:
-                pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.mapped('order_line')}
+        orders_to_log = self.filtered(lambda order: order.state == 'purchase') if vals.get('order_line') else self.browse()
+        pre_order_line_qty = {order_line: order_line.product_qty for order_line in orders_to_log.order_line}
         res = super(PurchaseOrder, self).write(vals)
-        if vals.get('order_line') and self.state == 'purchase':
-            for order in self:
-                to_log = {}
-                for order_line in order.order_line:
-                    if pre_order_line_qty.get(order_line, False) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.product_uom.rounding) > 0:
-                        to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
-                if to_log:
-                    order._log_decrease_ordered_quantity(to_log)
+        for order in orders_to_log:
+            to_log = {}
+            for order_line in order.order_line:
+                if pre_order_line_qty.get(order_line, False) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.product_uom.rounding) > 0:
+                    to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
+            if to_log:
+                order._log_decrease_ordered_quantity(to_log)
         return res
 
     # --------------------------------------------------

@@ -1011,3 +1011,25 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         cogs_lines = bill.line_ids.filtered(lambda l: l.display_type == 'cogs')
         self.assertRecordValues(cogs_lines, [{'tax_ids': []} for _ in cogs_lines])
+
+    def test_write_order_line_on_several_confirmed_orders(self):
+        """ Writing the lines of several confirmed purchase orders at once should update
+        each order and log the decreased quantities on the receipt of each order.
+        """
+        po_1, po_2 = self.env['purchase.order'].create([
+            {**self.po_vals, 'partner_id': self.partner_a.id},
+            {**self.po_vals, 'partner_id': self.partner_b.id},
+        ])
+        (po_1 | po_2).button_confirm()
+        lines = po_1.order_line.filtered(lambda l: l.product_id == self.product_id_1)
+        lines |= po_2.order_line.filtered(lambda l: l.product_id == self.product_id_1)
+
+        (po_1 | po_2).write({
+            'order_line': [Command.update(line.id, {'product_qty': 3.0}) for line in lines],
+        })
+
+        self.assertEqual(lines.mapped('product_qty'), [3.0, 3.0])
+        for po in (po_1, po_2):
+            receipt = po.picking_ids
+            self.assertEqual(receipt.move_ids.filtered(lambda m: m.product_id == self.product_id_1).product_uom_qty, 3.0)
+            self.assertTrue(receipt.activity_ids, "The decreased quantity should be logged on the receipt of %s" % po.name)
