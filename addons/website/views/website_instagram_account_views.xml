@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_instagram_account_view_list" model="ir.ui.view">
+        <field name="name">website.instagram.account.view.list</field>
+        <field name="model">website.instagram.account</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <!-- Expired tokens cannot be refreshed: they are displayed in
+                red, as the account must be connected again. -->
+                <field name="access_token_expiration" widget="relative_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Opened from the Website settings. Accounts are connected from the
+    options of the Instagram Carousel block, which checks their access token. -->
+    <record id="website_instagram_account_action" model="ir.actions.act_window">
+        <field name="name">Instagram Accounts</field>
+        <field name="res_model">website.instagram.account</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No Instagram account connected yet</p>
+            <p>Connect one from the options of an Instagram Carousel block.</p>
+        </field>
+    </record>
+
+</odoo>

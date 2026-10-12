@@ -1,0 +1,73 @@
+.s_dynamic_snippet_instagram {
+    &.o_instagram_portrait .o_instagram_post_media {
+        --aspect-ratio: 125%;
+    }
+
+    /* Instagram's line icons, which the icon fonts lack. */
+    .o_instagram_icon {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        background-color: currentColor;
+        mask-position: center;
+        mask-size: contain;
+        mask-repeat: no-repeat;
+    }
+
+    .o_instagram_icon_like {
+        mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 20.5C10 19 2.5 14.5 2.5 8.8A4.8 4.8 0 0 1 7.3 4C9.3 4 11 5.1 12 6.8 13 5.1 14.7 4 16.7 4a4.8 4.8 0 0 1 4.8 4.8C21.5 14.5 14 19 12 20.5z'/></svg>");
+    }
+
+    .o_instagram_icon_comment {
+        mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19.8 16.5 21 21l-4.5-1.2A9 9 0 1 1 19.8 16.5z'/></svg>");
+    }
+
+    .o_instagram_icon_share {
+        mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13.973 20.046 21.77 6.928C22.8 5.195 21.55 3 19.535 3H4.466C2.138 3 .984 5.825 2.646 7.456l4.842 4.752 1.723 7.121c.548 2.266 3.571 2.721 4.762.717ZM7.488 12.208 15.515 7.641'/></svg>");
+    }
+
+    .o_instagram_icon_save {
+        mask-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M19 21 12 14.8 5 21V3h14z'/></svg>");
+    }
+
+    .o_instagram_post_type {
+        text-shadow: 0 0 .5rem #000;
+    }
+
+    .o_instagram_post_overlay {
+        transition: background-color .2s;
+    }
+
+    .o_instagram_post_hover_icon {
+        opacity: 0;
+        transition: opacity .2s;
+    }
+
+    /* Darken the picture with the Instagram logo on hover. */
+    .o_instagram_post_media:hover .o_instagram_post_overlay {
+        background-color: rgba(0, 0, 0, .5);
+
+        .o_instagram_post_hover_icon {
+            opacity: 1;
+        }
+    }
+
+    &:not(.o_instagram_show_profile) .o_instagram_post_header,
+    &:not(.o_instagram_show_caption) .o_instagram_post_caption,
+    &:not(.o_instagram_show_metrics) .o_instagram_post_metric {
+        display: none !important;
+    }
+
+    /* Tile: only the picture is displayed. */
+    &.o_instagram_tile {
+        .o_instagram_post {
+            border: 0;
+            border-radius: 0;
+            background: none;
+        }
+
+        .o_instagram_post_header, .o_instagram_post_body {
+            display: none !important;
+        }
+    }
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.InstagramAccountDialog">
+    <Dialog title.translate="Connect an Instagram account" size="'md'">
+        <p>Display the latest posts of an Instagram account on your website.</p>
+        <div class="row mb-0">
+            <label class="col-sm-3 col-form-label" for="instagram_access_token">Access Token</label>
+            <div class="col">
+                <input type="password" class="form-control" id="instagram_access_token" autocomplete="off"
+                        t-att-class="{ 'is-invalid': this.state.error }"
+                        t-model.proxy="this.state.accessToken"/>
+                <small t-if="this.state.error" class="text-danger" t-out="this.state.error"/>
+                <div class="small form-text text-muted">
+                    <a target="_blank" href="https://developers.facebook.com/docs/instagram-platform/instagram-api-with-instagram-login/get-started">
+                        <i class="oi" data-icon="east" role="img" aria-hidden="true"/>
+                        Get an access token from Meta
+                    </a>
+                </div>
+            </div>
+        </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-att-disabled="this.state.isConnecting" t-on-click="this.onClickConnect" data-hotkey="q">Connect</button>
+            <button class="btn" t-on-click="() => this.props.close()" data-hotkey="x">Discard</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>
