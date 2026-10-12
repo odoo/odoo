@@ -86,6 +86,14 @@ export class MailCoreWeb {
                 this._dropFromNotificationCounter(unloadedMessageIds);
             }
         });
+        window.navigator.serviceWorker?.addEventListener(
+            "message",
+            ({ data: { action, data } }) => {
+                if (action === "OPEN_RECORD") {
+                    this.store["mail.thread"].insert({ id: data.id, model: data.model }).open();
+                }
+            }
+        );
     }
 
     /**
