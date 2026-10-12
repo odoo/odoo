@@ -1,9 +1,13 @@
 from markupsafe import Markup
+from werkzeug.exceptions import Forbidden
 
 from odoo.fields import Command
+from odoo.http import Response
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.l10n_id.controllers.main import L10nIdQrisController
+from odoo.addons.l10n_id.controllers.portal import Portal
 from odoo.tests import tagged
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from freezegun import freeze_time
 
 
@@ -73,6 +77,16 @@ class TestQris(AccountTestInvoicingCommon):
                 "qris_payment_methodby": "Sakuku"
             },
             "qris_api_version_code": "2206091709"
+        }
+
+        cls.qris_webhook_success = {
+            "rrn": "000380970875",
+            "note": "1 PAY-1780021587-FCD7FD 10200",
+            "invoice": "413255111",
+            "qris_status": "success",
+            "qris_paid_date": "2024-02-27 11:15:00",
+            "qris_payment_methodby": "BCA",
+            "qris_payment_customername": "DIKE WIDIA PARAMITA",
         }
 
     @freeze_time("2024-02-27 04:15:00")
@@ -168,6 +182,83 @@ class TestQris(AccountTestInvoicingCommon):
             )
             # One of the QRIS transactions linked to the invoice should be paid already
             self.assertTrue(any(self.qris_qr_invoice.l10n_id_qris_transaction_ids.mapped('paid')))
+
+    @freeze_time("2024-02-27 04:15:00")
+    def test_qris_webhook_payment(self):
+        """ Test that the payment notified by the QRIS webhook is registered on the invoice:
+            - a pending notification is ignored
+            - a successful notification registers the payment, logs the payer and hides the QR code
+            - the same notification received again doesn't register a second payment
+            - a duplicate of the paid invoice displays a new QR code
+        """
+        with patch(
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.success_qris_get
+        ):
+            self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
+
+        self.acc_qris_id.sudo()._l10n_id_qris_process_webhook({**self.qris_webhook_success, 'qris_status': 'pending'})
+        self.assertEqual(self.qris_qr_invoice.payment_state, 'not_paid')
+
+        self.acc_qris_id.sudo()._l10n_id_qris_process_webhook(self.qris_webhook_success)
+        self.assertEqual(self.qris_qr_invoice.payment_state, self.env['account.move']._get_invoice_in_payment_state())
+        self.assertEqual(
+            self.qris_qr_invoice.message_ids[0].body,
+            Markup('<p>This invoice was paid by DIKE WIDIA PARAMITA using QRIS with the payment method BCA.</p>')
+        )
+        # The QR code is no longer displayed once paid
+        self.assertIsNone(self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code())
+
+        # QRIS could notify the same payment again
+        self.acc_qris_id.sudo()._l10n_id_qris_process_webhook(self.qris_webhook_success)
+        self.assertEqual(len(self.qris_qr_invoice.matched_payment_ids), 1)
+
+        duplicated_invoice = self.qris_qr_invoice.copy()
+        duplicated_invoice.action_post()
+        self.assertFalse(duplicated_invoice.l10n_id_qris_transaction_ids)
+        with patch(
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.success_qris_get
+        ):
+            self.assertTrue(duplicated_invoice.with_context({'is_online_qr': True})._generate_qr_code())
+
+    @freeze_time("2024-02-27 04:15:00")
+    def test_qris_webhook_route(self):
+        """ Validate that the webhook URL contains the token, and that notifications sent with a wrong token are rejected """
+        with patch(
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.success_qris_get
+        ):
+            self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
+
+        token = self.acc_qris_id._l10n_id_get_qris_webhook_token()
+        self.assertTrue(self.acc_qris_id.l10n_id_qris_webhook_url.endswith(f'/l10n_id/qris/webhook/{self.acc_qris_id.id}/{token}'))
+
+        request_mock = Mock(
+            env=self.env(user=self.env.ref('base.public_user')),
+            get_json_data=Mock(return_value=self.qris_webhook_success),
+            make_json_response=Mock(return_value=Response()),
+        )
+        with patch('odoo.addons.l10n_id.controllers.main.request', request_mock):
+            with self.assertRaises(Forbidden):
+                L10nIdQrisController().l10n_id_qris_webhook(self.acc_qris_id.id, 'wrong_token')
+            self.assertEqual(self.qris_qr_invoice.payment_state, 'not_paid')
+
+            L10nIdQrisController().l10n_id_qris_webhook(self.acc_qris_id.id, token)
+            self.assertEqual(self.qris_qr_invoice.payment_state, self.env['account.move']._get_invoice_in_payment_state())
+
+    @freeze_time("2024-02-27 04:15:00")
+    def test_portal_qris_payment_status_route(self):
+        """ Test that the route polled by the portal reports the payment registered by the webhook, only to users with access to the invoice """
+        with patch(
+            'odoo.addons.l10n_id.models.res_bank._l10n_id_make_qris_request', return_value=self.success_qris_get
+        ):
+            self.qris_qr_invoice.with_context({'is_online_qr': True})._generate_qr_code()
+
+        access_token = self.qris_qr_invoice._portal_ensure_token()
+        with patch('odoo.addons.portal.controllers.portal.request', Mock(env=self.env(user=self.env.ref('base.public_user')))):
+            self.assertFalse(Portal().l10n_id_qris_payment_status(self.qris_qr_invoice.id, access_token=access_token))
+
+            self.acc_qris_id.sudo()._l10n_id_qris_process_webhook(self.qris_webhook_success)
+            self.assertFalse(Portal().l10n_id_qris_payment_status(self.qris_qr_invoice.id))
+            self.assertTrue(Portal().l10n_id_qris_payment_status(self.qris_qr_invoice.id, access_token=access_token))
 
     @freeze_time("2024-02-27 04:15:00")
     def test_gc_no_remove_transactions_unpaid_within_30(self):

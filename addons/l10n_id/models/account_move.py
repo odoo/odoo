@@ -5,13 +5,16 @@ from odoo import fields, models, _
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_id_qris_transaction_ids = fields.Many2many('l10n_id.qris.transaction', groups='account.group_account_invoice')
+    l10n_id_qris_transaction_ids = fields.Many2many('l10n_id.qris.transaction', groups='account.group_account_invoice', copy=False)
 
     def _generate_qr_code(self, silent_errors=False):
         """
         Adds information about which invoice is triggering the creation of the QR-Code, so that we can link both together.
         """
         # EXTENDS account
+        # Once the invoice has been paid, no QR-Code is generated to avoid a second payment.
+        if any(self.sudo().l10n_id_qris_transaction_ids.mapped('paid')):
+            return None
         return super(
             AccountMove,
             self.with_context(qris_model="account.move", qris_model_id=str(self.id)),
@@ -95,6 +98,9 @@ class AccountMove(models.Model):
                     message = _("This invoice was paid using QRIS.")
                 paid_invoices |= invoice
                 paid_messages[invoice.id] = message
+
+        # The payment could be registered concurrently (webhook, cron or manual action), avoid registering it twice.
+        paid_invoices = paid_invoices.try_lock_for_update().filtered(lambda inv: inv.payment_state == 'not_paid')
 
         # Update paid invoices
         if paid_invoices:
