@@ -111,7 +111,7 @@ class PosConfig(models.Model):
             'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
             'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
             'available_preset_ids', 'default_preset_id', 'epson_printer_ip', 'use_presets', 'iface_tax_included',
-            'status', 'self_ordering_image_background_ids', 'other_devices',
+            'status', 'self_ordering_image_background_ids', 'other_devices', 'write_date',
         ]
 
     def _update_access_token(self):
@@ -188,6 +188,10 @@ class PosConfig(models.Model):
         res = super().write(vals)
         self._ensure_public_attachments()
         self._prepare_self_order_custom_btn()
+        # has_paper is written by the kiosk itself, reloading on it would loop
+        if vals.keys() - {'has_paper'}:
+            for config in self.filtered(lambda c: c.self_ordering_mode == 'kiosk' and c.has_active_session):
+                config._notify('CONFIG_UPDATED', {'write_date': fields.Datetime.to_string(config.write_date)})
         return res
 
     def _ensure_public_attachments(self):
