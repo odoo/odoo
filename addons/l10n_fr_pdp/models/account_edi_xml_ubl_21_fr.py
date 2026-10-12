@@ -179,9 +179,36 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         else:  # id_type == 'siren'
             party_id_scheme = "0002"
         # [UBL-SR-16] Buyer identifier shall occur maximum once
-        vals['party_node']['cac:PartyIdentification'] = {
+        vals['party_node']['cac:PartyIdentification'] = [{
             'cbc:ID': {'_text': party_id, 'schemeID': party_id_scheme},
-        }
+        }]
+
+    def _ubl_get_company_tax_unit_vat(self, company):
+        if 'account_tax_unit_ids' in company._fields:
+            return company.account_tax_unit_ids.vat
+        return False
+
+    def _ubl_add_accounting_supplier_party_identification_nodes(self, vals):
+        # Override account_edi_ubl: [CGI art. 256 C] Member VAT identifier (BT-29a) with scheme 0231 for Single Taxpayer Group
+        super()._ubl_add_accounting_supplier_party_identification_nodes(vals)
+        if self._ubl_get_company_tax_unit_vat(vals['company']):
+            member_vat = vals['party_vals']['partner'].commercial_partner_id.vat
+            if member_vat and member_vat != '/':
+                vals['party_node']['cac:PartyIdentification'].append({
+                    'cbc:ID': {
+                        '_text': member_vat,
+                        'schemeID': '0231',
+                    },
+                })
+
+    def _ubl_add_accounting_supplier_party_tax_scheme_nodes(self, vals):
+        # Override account_edi_ubl: [CGI art. 256 C] Seller VAT identifier (BT-31) must be the Single Taxpayer Group VAT
+        super()._ubl_add_accounting_supplier_party_tax_scheme_nodes(vals)
+        if tax_unit_vat := self._ubl_get_company_tax_unit_vat(vals['company']):
+            vals['party_node']['cac:PartyTaxScheme'] = [{
+                'cbc:CompanyID': {'_text': tax_unit_vat},
+                'cac:TaxScheme': {'cbc:ID': {'_text': 'VAT'}},
+            }]
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3

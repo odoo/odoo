@@ -19,6 +19,24 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         self._send_patched(invoice)
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice")
 
+    def test_export_invoice_partner_fr_tax_unit(self):
+        """
+        Under French Single Taxpayer Group rules (Assujetti Unique, CGI art. 256 C):
+        - BT-31 (Seller VAT Identifier): The Single Taxpayer Group's VAT number must appear
+          in cac:PartyTaxScheme.
+        - BT-29a (Member VAT Identifier): The member company's individual VAT number must
+          appear as an additional cac:PartyIdentification node with schemeID "0231".
+        """
+        def patched_ubl_get_company_tax_unit_vat(self, company):
+            return 'FR05677404089'
+
+        self.patch(self.env.registry['account.edi.xml.ubl_21_fr'], '_ubl_get_company_tax_unit_vat', patched_ubl_get_company_tax_unit_vat)
+
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+        self._send_patched(invoice)
+        self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_tax_unit")
+
     def test_export_invoice_partner_fr_without_pdp(self):
         """
         A French Peppol proxy user must have the BR-FR-05 mandatory notes
