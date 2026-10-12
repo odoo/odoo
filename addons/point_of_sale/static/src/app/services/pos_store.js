@@ -51,6 +51,7 @@ import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
 import { Domain } from "@web/core/domain";
 import { SIZES } from "@web/core/ui/ui_service";
+import { clearLocalStorage } from "../utils/devices_identifier_sequence";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -296,7 +297,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.device.saveUnusedNumber(orders);
         await this.data.resetIndexedDB();
         sessionStorage.clear();
-        localStorage.clear();
+        clearLocalStorage();
         const url = new URL(window.location.href);
 
         if (fullReload) {
