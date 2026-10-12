@@ -34,6 +34,7 @@ PROCESS_CONDITION_CODE_TO_RESPONSE_CODE_PDP = MappingProxyType({
     '203': 'made_available',  # PA-R
     '204': 'in_hand',  # R (receiver)
     '205': 'AP',  # R
+    '206': 'partially_approved',  # R
     '207': 'contested',  # R
     '208': 'suspended',  # R
     '209': 'completed',  # S
@@ -41,7 +42,14 @@ PROCESS_CONDITION_CODE_TO_RESPONSE_CODE_PDP = MappingProxyType({
     '211': 'payment_sent',  # R
     '212': 'PD',  # S (sender)
     '213': 'RE',  # PA-R
+    '214': 'endorsed',  # R
     '220': 'cancelled',  # S
+    '221': 'routing_error',  # PA-R
+    '224': 'direct_payment_requested',  # S
+    '225': 'factored',  # S
+    '226': 'factored_confidential',  # S
+    '227': 'payee_account_changed',  # S
+    '228': 'not_factored',  # S
 })
 
 PROCESS_CONDITION_CODE_TO_RESPONSE_CODE_PPF = MappingProxyType({
@@ -315,7 +323,6 @@ class AccountEdiProxyClientUser(models.Model):
                     peppol_response.peppol_state = 'error'
                     self._pdp_log_einvoicing_chatter(
                         peppol_response.move_id,
-                        pa_status='error',
                         errors=[self._pdp_proxy_error_message(content['error'])],
                         error_source=self.env._("PA Lifecycle"),
                     )
@@ -650,7 +657,6 @@ class AccountEdiProxyClientUser(models.Model):
                 )
             self._pdp_log_einvoicing_chatter(
                 origin_move,
-                pa_status='error' if flow_number == '2' else None,
                 ppf_status='error' if flow_number in ('1', '6') else None,
                 errors=[main_message] + status_details,
                 error_source=self.env._("PA Lifecycle") if flow_number == '2' else self.env._("PPF Lifecycle"),
@@ -674,7 +680,6 @@ class AccountEdiProxyClientUser(models.Model):
                 origin_move,
                 details=status_details if response_code != 'RE' else None,
                 errors=status_details if response_code == 'RE' else None,
-                pa_status='error' if response_code == 'RE' and flow_number == '2' else None,
                 ppf_status='error' if response_code == 'RE' and flow_number in ('1', '6') else None,
                 error_source=(
                     self.env._("PA Lifecycle") if flow_number == '2' else self.env._("PPF Lifecycle")
@@ -794,7 +799,8 @@ class AccountEdiProxyClientUser(models.Model):
     def _pdp_log_einvoicing_chatter(
         self, move, pa_status=None, ppf_status=None, details=None, errors=None, error_source=None,
     ):
-        if pa_status is None and ppf_status is None:
+        # An error does not change the statuses: only log the ones given explicitly.
+        if pa_status is None and ppf_status is None and errors is None:
             pa_status = move.peppol_move_state
             ppf_status = move.pdp_ppf_move_state
 
@@ -864,7 +870,7 @@ class AccountEdiProxyClientUser(models.Model):
             items.append(
                 Markup('<li><strong>')
                 + (
-                    self.env._("Errors from %(error_source)s:", error_source=error_source)
+                    self.env._("%(error_source)s:", error_source=error_source)
                     if error_source else self.env._("Errors:")
                 )
                 + Markup('</strong><ul>')
