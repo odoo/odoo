@@ -9,18 +9,16 @@ patch(registry.category("web_tour.tours").get("generic_localization_tour"), {
             (step) => step.content === "feedback screen has finished the validation"
         );
 
+        const modal = `.modal:has(.modal-title:contains(zatca validation error))`;
         return [
             ...originalSteps.slice(0, stStep),
             {
-                content: "Close the modal that appears with l10n_sa_edi_pos",
-                trigger: `body`,
-                async run({ waitFor, click }) {
-                    const selector = `.modal:has(.modal-title:contains(zatca validation error))`;
-                    const modal = await waitFor(selector, {
-                        timeout: 9000,
-                    }).catch(() => false);
-                    if (modal) {
-                        await click(`${selector} .btn:contains(ok)`);
+                content: "close the ZATCA modal if it shows before the validation finishes",
+                timeout: 20000,
+                trigger: `${modal}, .feedback-screen .button.validation:not([disabled])`,
+                async run({ anchor, click }) {
+                    if (anchor.closest(".modal")) {
+                        await click(`${modal} .btn:contains(ok)`);
                     }
                 },
             },
