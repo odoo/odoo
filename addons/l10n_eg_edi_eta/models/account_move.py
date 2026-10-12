@@ -143,8 +143,11 @@ class AccountMove(models.Model):
 
     def _get_l10n_eg_eta_document_type(self):
         self.ensure_one()
-        return {
+        document_type = {
             'out_invoice': 'd' if self._fields.get('debit_origin_id') and self.debit_origin_id else 'i',  # noqa: OLS03028
             'out_refund': 'c',
             'in_refund': 'd',
         }.get(self.move_type, '')
+        if self.partner_id.commercial_partner_id.country_code != 'EG' and document_type:
+            document_type = f"e{document_type}"  # For export type (ei / ec / ed)
+        return document_type

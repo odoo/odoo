@@ -43,4 +43,5 @@ Integrates with the ETA portal to automatically send and sign the Invoices to th
             'asn1crypto': 'python3-asn1crypto',
         },
     },
+    'post_init_hook': '_enable_group_uom_post_init',
 }
