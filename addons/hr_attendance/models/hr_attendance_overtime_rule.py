@@ -462,7 +462,7 @@ class HrAttendanceOvertimeRule(models.Model):
                 intervals_by_timing_type['leave'][employee] = schedules_intervals_by_employee['leave'][employee] - employee_lunch
             if {'work_days', 'non_work_days'} & timing_type_set:
                 sudo_calendar = employee.sudo().resource_calendar_id
-                if sudo_calendar and sudo_calendar.flexible_hours:
+                if not sudo_calendar or sudo_calendar.flexible_hours:
                     intervals_by_timing_type['work_days'][employee] = _generate_days_intervals(
                         Intervals([(
                             datetime.combine(min_check_in, datetime.min.time()),
