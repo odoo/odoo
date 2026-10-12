@@ -1,0 +1,14 @@
+.pos-scenario-card {
+  .img-container {
+    background-color: hsl(from var(--o-bs-card-bg) h s calc(l - 2));
+  }
+
+  &:hover {
+    background-color: hsl(from var(--o-bs-card-bg) h s calc(l + 4));
+    border-color: var(--o-bs-card-border-color);
+
+    .img-container {
+      background-color: hsl(from var(--o-bs-card-bg) h s calc(l + 4));
+    }
+  }
+}
