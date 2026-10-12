@@ -53,15 +53,22 @@ class StockMove(models.Model):
             invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
             convert_date = self._get_currency_convert_date()
+            bill_rate = self._get_bill_currency_rate()
             receipt_value = 0
             for layer in move_layer:
                 if not layer._should_impact_price_unit_receipt_value():
                     continue
-                receipt_value += layer.currency_id._convert(
-                    layer.value, order.currency_id, order.company_id, convert_date, round=False)
+                if bill_rate:
+                    receipt_value += layer.value * bill_rate
+                else:
+                    receipt_value += layer.currency_id._convert(
+                        layer.value, order.currency_id, order.company_id, convert_date, round=False)
             if invoiced_layer:
-                receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
-                    l.value, order.currency_id, order.company_id, l.create_date, round=False)))
+                if bill_rate:
+                    receipt_value += sum(invoiced_layer.mapped('value')) * bill_rate
+                else:
+                    receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
+                        l.value, order.currency_id, order.company_id, l.create_date, round=False)))
             total_invoiced_value = 0
             invoiced_qty = 0
             for invoice_line in line.sudo().invoice_lines:
@@ -99,9 +106,12 @@ class StockMove(models.Model):
         else:
             price_unit = line._get_gross_price_unit()
         if order.currency_id != order.company_id.currency_id:
-            convert_date = self._get_currency_convert_date()
-            price_unit = order.currency_id._convert(
-                price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
+            if bill_rate := self._get_bill_currency_rate():
+                price_unit /= bill_rate
+            else:
+                convert_date = self._get_currency_convert_date()
+                price_unit = order.currency_id._convert(
+                    price_unit, order.company_id.currency_id, order.company_id, convert_date, round=False)
         if self.product_id.lot_valuated:
             return dict.fromkeys(self.lot_ids, price_unit)
         return {self.env['stock.lot']: price_unit}
@@ -145,6 +155,17 @@ class StockMove(models.Model):
             convert_date = max(posted_bills.mapped('invoice_date'), default=convert_date)
         return convert_date
 
+    def _get_bill_currency_rate(self):
+        """ When invoiced before receipt, return the rate used by the last bill, which may differ
+        from the current rate at the bill date (rate edited after posting, manual bill rate).
+        """
+        self.ensure_one()
+        line = self.purchase_line_id
+        if not line or float_compare(line.qty_invoiced, self._get_qty_received_without_self(), precision_rounding=line.product_uom.rounding) <= 0:
+            return False
+        posted_bills = line.sudo().invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and m.currency_id == line.currency_id)
+        return max(posted_bills, key=lambda m: m.invoice_date).invoice_currency_rate if posted_bills else False
+
     def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po
         """
@@ -170,6 +191,9 @@ class StockMove(models.Model):
                 self.company_id,
                 convert_date
             )
+            if bill_rate := self._get_bill_currency_rate():
+                for line_vals in (rslt['credit_line_vals'], rslt['debit_line_vals']):
+                    line_vals['amount_currency'] = purchase_currency.round(line_vals['balance'] * bill_rate)
             rslt['debit_line_vals']['currency_id'] = purchase_currency.id
             rslt['credit_line_vals']['currency_id'] = purchase_currency.id
         else:
