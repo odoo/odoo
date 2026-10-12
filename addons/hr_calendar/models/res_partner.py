@@ -82,10 +82,12 @@ class ResPartner(models.Model):
         # Compute partner's schedule equals to the union between his employees's schedule
         schedules = defaultdict()
         for partner, employees in employees_by_partner.items():
+            employees_with_schedule = employees.filtered(calendar_periods_by_employee.get)
+            if not employees_with_schedule:
+                continue
             partner_schedule = Intervals([])
-            for employee in employees:
-                if schedule_by_employee[employee]:
-                    partner_schedule = partner_schedule | schedule_by_employee[employee]
+            for employee in employees_with_schedule:
+                partner_schedule = partner_schedule | schedule_by_employee[employee]
             schedules[partner] = partner_schedule
         return schedules
 
