@@ -6,7 +6,7 @@ import { clamp } from "@web/core/utils/numbers";
 
 export class RatingOptionPlugin extends Plugin {
     static id = "ratingOption";
-    static dependencies = ["history", "media"];
+    static dependencies = ["history", "media", "builderActions"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         so_content_addition_selectors: [".s_rating"],
@@ -17,6 +17,27 @@ export class RatingOptionPlugin extends Plugin {
             TotalIconsNumberAction,
         },
     };
+
+    setup() {
+        // Update the score by clicking directly on the icons
+        this.addDomListener(this.editable, "click", (ev) => {
+            const clickedIconEl = ev.target.closest(".s_rating_icons i");
+            if (clickedIconEl) {
+                this.onRatingClick(clickedIconEl);
+            }
+        });
+    }
+
+    onRatingClick(clickedIconEl) {
+        const ratingEl = clickedIconEl.closest(".s_rating");
+        const clickedScore = [...getAllIcons(ratingEl)].indexOf(clickedIconEl) + 1;
+        // Clicking the icon of the current score sets the score to 0
+        const newScore = clickedScore === getActiveIcons(ratingEl).length ? 0 : clickedScore;
+        this.dependencies.builderActions.applyAction("activeIconsNumber", {
+            editingElement: ratingEl,
+            value: newScore,
+        });
+    }
 }
 
 export class SetIconsAction extends BuilderAction {
