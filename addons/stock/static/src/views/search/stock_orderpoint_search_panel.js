@@ -14,7 +14,7 @@ export class StockOrderpointSearchPanel extends SearchPanel {
     }
 
     async getHorizonParameter() {
-        let res = await this.orm.call("stock.warehouse.orderpoint", "get_horizon_days", [0]);
+        let res = await this.orm.call("res.company", "get_horizon_days", [0]);
         this.globalHorizonDays.value = Math.abs(parseInt(res)) || 0;
     }
 

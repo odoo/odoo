@@ -250,3 +250,11 @@ class ResCompany(models.Model):
             local_end_of_day = datetime.combine(to_date.date(), time.max.replace(fold=1), tzinfo=tz)
             to_date = local_end_of_day.astimezone(UTC).replace(tzinfo=None)
         return to_date
+
+    def get_horizon_days(self):
+        """ Return the value for Horizon. This can be (in order of priority):
+        - the value set in context in the replenishment view
+        - the value set on the company of the all the records in self. There should be at most 1 company_id on self.
+        - the value set on the company of the user if all else fail.
+        """
+        return self.env.context.get('global_horizon_days', (self or self.env.company).horizon_days)

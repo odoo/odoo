@@ -342,7 +342,7 @@ class StockWarehouseOrderpoint(models.Model):
         if not (self.product_id and any(r.action == 'buy' for r in routes.rule_ids)):
             return super()._get_replenishment_multiple_alternative(qty_to_order)
         planned_date = self._get_orderpoint_procurement_date()
-        global_horizon_days = self.get_horizon_days()
+        global_horizon_days = self.company_id.get_horizon_days()
         if global_horizon_days:
             planned_date -= relativedelta.relativedelta(days=int(global_horizon_days))
         date_deadline = planned_date or fields.Date.today()
