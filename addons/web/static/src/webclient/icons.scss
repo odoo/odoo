@@ -24,6 +24,12 @@ $icon-sizes: (
 $oi-default-size: 1em;   // Normally 14px
 $oi-fw-ratio: 1.28571429; // Matches .fa-fw
 
+:root,
+:host {
+    --oi-default-size: #{$oi-default-size};
+    --oi-fw-ratio: #{$oi-fw-ratio};
+}
+
 // ================================
 // MIXINS
 // ================================

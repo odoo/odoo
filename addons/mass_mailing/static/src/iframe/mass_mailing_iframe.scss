@@ -13,7 +13,7 @@ body:has(.o_mass_mailing_fullscreen) {
         height: 100vh !important;
         overflow: hidden !important;
         transform: none !important;
-        z-index: ($zindex-fixed + $zindex-modal-backdrop) / 2;
+        z-index: calc((var(--o-bs-zindex-fixed) + var(--o-bs-zindex-modal-backdrop)) / 2);
         background-color: var(--o-view-background-color);
         .o_is_mobile {
             margin: auto;

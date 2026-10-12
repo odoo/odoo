@@ -590,7 +590,7 @@
         font-weight: var(--o-bs-font-weight-bold);
 
         @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
-            font-size: $o-font-size-base-touch;
+            font-size: var(--o-font-size-base-touch);
         }
 
         &.o_form_label_empty, &.o_form_label_false, &.o_form_label_readonly {
@@ -1037,7 +1037,7 @@
 .o_form_view.o_xxs_form_view {
     .o_group {
         .o_form_label {
-            font-size: $o-label-font-size-factor * $o-font-size-base-touch;
+            font-size: calc(var(--o-label-font-size-factor) * var(--o-font-size-base-touch));
             font-weight: var(--o-bs-font-weight-normal);
         }
     }
