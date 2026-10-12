@@ -366,11 +366,13 @@ class PosSession(models.Model):
 
     @api.constrains('config_id')
     def _check_pos_config(self):
-        onboarding_creation = self.env.context.get('onboarding_creation', False)
-        if not onboarding_creation and self.search_count([
-                ('state', '!=', 'closed'),
-                ('config_id', '=', self.config_id.id),
-            ]) > 1:
+        if self.env.context.get('onboarding_creation', False):
+            return
+        if self._read_group(
+            [('state', '!=', 'closed'), ('config_id', 'in', self.config_id.ids)],
+            ['config_id'],
+            having=[('__count', '>', 1)],
+        ):
             raise ValidationError(_("Another session is already opened for this point of sale."))
 
     @api.constrains('start_at')
