@@ -301,11 +301,19 @@ class IrActionsAct_Window(models.Model):
     def _check_help_view_id(self):
         for action in self:
             help_view = action.help_view_id
-            if help_view and (help_view.type != 'help' or help_view.model != action.res_model):
+            if help_view and (help_view.type != 'help' or help_view.model not in (False, action.res_model)):
                 raise ValidationError(_(
-                    'The help view of action “%(action)s” must be a help view on model %(model)s.',
+                    'The help view of action “%(action)s” must be a help view on model %(model)s, or without model.',
                     action=action.name, model=action.res_model,
                 ))
+            if help_view and not help_view.model:
+                # help views without model are validated with the model of the action
+                help_arch = help_view.sudo()._get_combined_arch()
+                help_arch.set('__validate__', '1')
+                try:
+                    help_view._validate_view(help_arch, action.res_model)
+                except ValueError as e:
+                    raise ValidationError(str(e)) from e
 
     @api.constrains('view_mode')
     def _check_view_mode(self):
