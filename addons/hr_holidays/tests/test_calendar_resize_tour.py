@@ -2,12 +2,13 @@
 
 from datetime import date, timedelta
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import freeze_time, HttpCase, tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
 @tagged("post_install", "-at_install")
+@freeze_time("2026-10-01")
 class TestCalendarResizeTour(HttpCase, TestHrHolidaysCommon):
     def test_full_day_leave_resizable_in_month(self):
         # A full-day leave that stays in 'confirm' (manager validation) so the
