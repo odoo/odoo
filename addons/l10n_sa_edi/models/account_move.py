@@ -134,7 +134,10 @@ class AccountMove(models.Model):
 
             amount_total = float(xpath_ns('//cbc:PayableAmount'))
             amount_tax = float(xpath_ns('//cac:TaxTotal/cbc:TaxAmount'))
-            seller_name_enc = self._l10n_sa_get_qr_code_encoding(1, company_id.display_name.encode())
+            seller_name = xpath_ns(
+                '//cac:AccountingSupplierParty//cac:PartyLegalEntity/cbc:RegistrationName'
+            )
+            seller_name_enc = self._l10n_sa_get_qr_code_encoding(1, seller_name.encode())
             seller_vat_enc = self._l10n_sa_get_qr_code_encoding(2, company_id.vat.encode())
             timestamp_enc = self._l10n_sa_get_qr_code_encoding(3,
                                                                invoice_datetime.strftime("%Y-%m-%dT%H:%M:%S").encode())
