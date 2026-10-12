@@ -988,6 +988,8 @@ class SaleOrder(models.Model):
             "state",
         ])
 
+        accessible_orders = self.env['sale.order']._search([])
+
         result = self.env.execute_query(
             SQL(
                 """
@@ -1003,10 +1005,12 @@ class SaleOrder(models.Model):
                         sale_order.origin = duplicate_order.name
                         OR sale_order.client_order_ref = duplicate_order.client_order_ref
                        )
+                   AND duplicate_order.id IN %(accessible_orders)s
                  WHERE sale_order.id IN %(orders)s
               GROUP BY sale_order.id
             """,
                 orders=tuple(orders.ids),
+                accessible_orders=accessible_orders.subselect(),
             )
         )
         return {order_id: set(duplicate_ids) for order_id, duplicate_ids in result}
