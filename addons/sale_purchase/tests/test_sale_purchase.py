@@ -132,6 +132,12 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         with self.assertRaises(UserError):
             self.sale_order_1.action_confirm()
 
+    def test_copy_service_tracking_subcontract(self):
+        """ Duplicating a 'Subcontracting RFQ' service must not raise, as its vendors are not copied """
+        template_copy = self.service_purchase_1.product_tmpl_id.copy()
+        self.assertFalse(template_copy.seller_ids)
+        self.assertEqual(template_copy.service_tracking, 'no')
+
     def test_reconfirm_sale_order(self):
         """ Confirm SO, cancel it, then re-confirm it should not regenerate a purchase line """
         self.sale_order_1.action_confirm()
