@@ -2,7 +2,7 @@
 
 import pprint
 
-from werkzeug.exceptions import Forbidden
+from werkzeug.exceptions import Forbidden, ServiceUnavailable
 
 from odoo import http
 from odoo.exceptions import ValidationError
@@ -62,7 +62,10 @@ class MercadoPagoPaymentController(http.Controller):
         """
         _logger.info("Handling redirection from Mercado Pago with data:\n%s", pprint.pformat(data))
         if data.get('payment_id') != 'null':
-            self._verify_and_process(data)
+            try:
+                self._verify_and_process(data)
+            except ValidationError:
+                _logger.error("Unable to verify the payment data")
         else:  # The customer cancelled the payment by clicking on the return button.
             pass  # Don't try to process this case because the payment id was not provided.
 
@@ -80,6 +83,7 @@ class MercadoPagoPaymentController(http.Controller):
         :param dict _kwargs: The extra query parameters.
         :return: An empty string to acknowledge the notification.
         :rtype: str
+        :raise ServiceUnavailable: If the payment data could not be fetched from Mercado Pago.
         """
         data = request.get_json_data()
         _logger.info("Notification received from Mercado Pago with data:\n%s", pprint.pformat(data))
@@ -90,9 +94,14 @@ class MercadoPagoPaymentController(http.Controller):
         # (type of event) key as it is not populated for IPNs, and we don't want to process the
         # other types of events.
         if data.get('action') in ('payment.created', 'payment.updated'):
-            self._verify_and_process(
-                {'external_reference': reference, 'payment_id': data.get('data', {}).get('id')}
-            )  # Use 'external_reference' as the reference key like in the redirect data.
+            try:
+                self._verify_and_process(
+                    {'external_reference': reference, 'payment_id': data.get('data', {}).get('id')}
+                )  # Use 'external_reference' as the reference key like in the redirect data.
+            except ValidationError as error:
+                # Don't acknowledge the notification so that Mercado Pago sends it again later.
+                _logger.error("Unable to verify the payment data")
+                raise ServiceUnavailable from error
         return ''  # Acknowledge the notification.
 
     @staticmethod
@@ -101,6 +110,7 @@ class MercadoPagoPaymentController(http.Controller):
 
         :param dict data: The payment data.
         :return: None
+        :raise ValidationError: If the payment data could not be fetched from Mercado Pago.
         """
         tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference(
             'mercado_pago', data
@@ -108,14 +118,8 @@ class MercadoPagoPaymentController(http.Controller):
         if not tx_sudo:
             return
 
-        try:
-            verified_data = tx_sudo._send_api_request(
-                'GET', f'/v1/payments/{data.get("payment_id")}'
-            )
-        except ValidationError:
-            _logger.error("Unable to verify the payment data")
-        else:
-            if tx_sudo.reference != verified_data["external_reference"]:
-                _logger.warning("Received payment data with incorrect reference")
-                raise Forbidden()
-            tx_sudo._process('mercado_pago', verified_data)
+        verified_data = tx_sudo._send_api_request('GET', f'/v1/payments/{data.get("payment_id")}')
+        if tx_sudo.reference != verified_data["external_reference"]:
+            _logger.warning("Received payment data with incorrect reference")
+            raise Forbidden()
+        tx_sudo._process('mercado_pago', verified_data)
