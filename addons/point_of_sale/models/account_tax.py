@@ -24,6 +24,38 @@ class AccountTax(models.Model):
             ('pos_order_line_ids', '!=', False),
         ]).is_used = True
 
+    def _resolve_fpos_ids(self, vals):
+        virtual = self.new(
+            {"fiscal_position_ids": vals.get("fiscal_position_ids", [])},
+            origin=self if self else None,
+        )
+        return set(virtual.fiscal_position_ids.ids)
+
+    def _get_fpos_delta(self, vals):
+        self.ensure_one()
+        if 'fiscal_position_ids' not in vals:
+            return set(), set()
+        current = set(self.fiscal_position_ids.ids) if self else set()
+        after = self._resolve_fpos_ids(vals)
+        return after - current, current - after
+
+    def _check_pos_order_usage(self, fpos_ids):
+        if fpos_ids and self.env['pos.order'].sudo().search_count([
+            ('fiscal_position_id', 'in', list(fpos_ids)),
+            ('state', 'in', ['paid', 'done', 'invoiced']),
+        ]):
+            raise UserError(_(
+                    "You cannot modify a fiscal position used in a POS order. "
+                    "You should archive it and create a new one."
+                ))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if {'fiscal_position_ids', 'original_tax_ids', 'replacing_tax_ids'} & vals.keys():
+                self._check_pos_order_usage(self._resolve_fpos_ids(vals))
+        return super().create(vals_list)
+
     def write(self, vals):
         forbidden_fields = {
             'amount_type', 'amount', 'type_tax_use', 'tax_group_id', 'price_include',
@@ -41,6 +73,15 @@ class AccountTax(models.Model):
                         'You must close the POS sessions before modifying the tax.'
                     ))
                 lines_chunk.invalidate_recordset(['tax_ids'])
+        if {'fiscal_position_ids', 'original_tax_ids', 'replacing_tax_ids'} & vals.keys():
+            affected = set()
+            for tax in self:
+                if 'fiscal_position_ids' in vals:
+                    added, removed = tax._get_fpos_delta(vals)
+                    affected |= added | removed
+                if {'original_tax_ids', 'replacing_tax_ids'} & vals.keys():
+                    affected |= set(tax.fiscal_position_ids.ids)
+            self._check_pos_order_usage(affected)
         return super(AccountTax, self).write(vals)
 
     @api.model
@@ -54,3 +95,7 @@ class AccountTax(models.Model):
             'amount_type', 'children_tax_ids', 'amount', 'company_id', 'id', 'sequence', 'tax_group_id',
             'fiscal_position_ids',
         ]
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_used_in_pos_order(self):
+        self._check_pos_order_usage(self.fiscal_position_ids.ids)
