@@ -697,10 +697,11 @@ class TestPosAccounting(AccountTestInvoicingCommon):
                 self.assertEqual(rounding_lines.debit, abs(rounded))
                 self.assertEqual(rounding_lines.credit, 0)
 
-        def create_order_and_check(amount, qty=1, pm=self.cash_pm):
+        def create_order_and_check(amount, qty=1, pm=self.cash_pm, extra_data={}):
             order = self.create_pos_order(
                 payment_method=[[pm, {'amount': amount}]],
                 products=[[self.product_a, {'qty': qty}]],
+                extra_data=extra_data
             )
             rounded = rounding_method.round(order.amount_total)
             self.assertEqual(order.amount_paid, rounded)
@@ -733,6 +734,20 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         difference += create_order_and_check(0.05, 2, self.bank_pm)     # Rounding -0.01 (total is 0.06)
         difference += create_order_and_check(0.10, 3, self.bank_pm)     # Rounding +0.01 (total is 0.09)
         check_difference(session, difference)                           # Difference 0.00
+
+        # Round pay_later payment method as well
+        self.product_a.list_price = 0.03
+        session = self.open_pos_session()
+        difference = 0
+        difference += create_order_and_check(0.05, 2, self.customer_pm, extra_data={'partner_id': self.partner_1.id})     # Rounding -0.01 (total is 0.06)
+        difference += create_order_and_check(0.10, 3, self.customer_pm, extra_data={'partner_id': self.partner_1.id})     # Rounding +0.01 (total is 0.09)
+        check_difference(session, difference)                           # Difference 0.00
+
+        # check for receipt too
+        order_prices = session.order_ids[1].order_receipt_generate_data()['extra_data']['prices']
+        self.assertEqual(order_prices['rounding_amount'], "$ -\ufeff0.01")
+        self.assertEqual(order_prices['total_amount'], "$ 0.05")
+        self.assertEqual(order_prices['subtotal_amount'], "$ 0.06")
 
         # Try to round with mixed payment methods, both should be taken
         # into account for the rounding
