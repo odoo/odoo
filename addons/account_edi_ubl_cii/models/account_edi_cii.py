@@ -1124,7 +1124,7 @@ class AccountEdiCii(models.AbstractModel):
         allowances = collected_values['allowances'] = []
         charges = collected_values['charges'] = []
         for allowance_charge_elem in line_tree.iterfind('.//{*}SpecifiedTradeAllowanceCharge'):
-            charge_indicator = allowance_charge_elem.findtext('.//{*}ChargeIndicator/{*}Indicator')
+            charge_indicator = allowance_charge_elem.findtext('.//{*}ChargeIndicator/{*}Indicator') or 'false'
             amount_str = allowance_charge_elem.findtext('.//{*}ActualAmount')
             base_amount_str = allowance_charge_elem.findtext('.//{*}BasisAmount')
             reason = allowance_charge_elem.findtext('.//{*}Reason')
