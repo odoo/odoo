@@ -41,11 +41,11 @@ export class HRTimesheet extends models.Model {
             </form>
         `,
         list: `
-            <tree editable="bottom">
+            <list editable="bottom">
                 <field name="project_id"/>
                 <field name="task_id"/>
                 <field name="unit_amount"/>
-            </tree>
+            </list>
         `,
         graph: `
             <graph js_class="hr_timesheet_graphview">
