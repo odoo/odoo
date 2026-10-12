@@ -52,7 +52,8 @@ class AccountMoveSendBatchWizard(models.TransientModel):
                     'partner_name': move.partner_id.name or _("No Partner"),
                 }
 
-                for edi in self._get_default_extra_edis(move):
+                extra_edis_for_move = self._get_default_extra_edis(move)
+                for edi in extra_edis_for_move:
                     summary_data[edi]['count'] += 1
                     summary_data[edi]['moves'].append(move_info)
                     if not summary_data[edi]['label']:
@@ -61,7 +62,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
                 sending_methods_for_move = self._get_default_sending_methods(move)
                 lightweight_settings = {
                     'sending_methods': sending_methods_for_move,
-                    'extra_edis': self._get_default_extra_edis(move),
+                    'extra_edis': extra_edis_for_move,
                     'invoice_edi_format': self._get_default_invoice_edi_format(move, sending_methods=sending_methods_for_move),
                 }
                 if 'email' in sending_methods_for_move:

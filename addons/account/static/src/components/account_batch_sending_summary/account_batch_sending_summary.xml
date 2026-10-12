@@ -17,7 +17,7 @@
                                     <t t-foreach="summary_entry_value.moves" t-as="move" t-key="move.id">
                                         <li class="py-1">
                                             <i class="oi me-1" data-icon="doc-text" title="Invoice"/>
-                                            <strong class="text-dark" t-out="move.name"/>
+                                            <a href="#" class="fw-bold" t-out="move.name" t-on-click.prevent="() => this.openMove(move, summary_entry_value)"/>
                                             <span> - </span>
                                             <span t-out="move.partner_name"/>
                                         </li>
