@@ -6,6 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class TeamBoardPlugin extends Plugin {
     static id = "teamBoard";
+    static dependencies = ["builderOptions"];
 
     resources = {
         builder_actions: {
@@ -28,7 +29,27 @@ export class TeamBoardPlugin extends Plugin {
                 return _t("You cannot remove the last card.");
             }
         },
+
+        options_container_top_buttons_providers: (el) => {
+            const buttons = [];
+            if (el.matches("section.s_team_board")) {
+                buttons.push({
+                    class: "oi oi-fw btn o-hb-btn btn-accent-color-hover",
+                    icon: "add",
+                    title: _t("Add Item"),
+                    handler: (el) => this.addTeamBoard(el)
+                });
+            }
+            return buttons;
+        },
     };
+
+    addTeamBoard(sectionEl) {
+        const snippet = this.config.snippetModel.getOriginalSnippet("s_team_board");
+        const newSectionEl = snippet.content.cloneNode(true);
+        sectionEl.after(newSectionEl);
+        this.dependencies.builderOptions.setNextTarget(newSectionEl);
+    }
 
     getOverlayButtons(target) {
         const column = target.closest(".s_team_board_col");
