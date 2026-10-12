@@ -10,7 +10,7 @@ import {
 import { describe, expect, test, waitFor, waitForNone, mockUserAgent } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
 
-import { DELAY_FOR_SPINNER } from "@mail/chatter/web_portal_project/chatter";
+import { DELAY_FOR_SPINNER } from "@mail/chatter/web/chatter_patch";
 import { contains } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
