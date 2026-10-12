@@ -473,7 +473,18 @@ class PosPaymentMethod(models.Model):
                 'currency_id': foreign_currency,
                 'amount': abs(amount_currency),
             })
-
+        if not self.journal_id.inbound_payment_method_line_ids:
+            raise ValidationError(_(
+                "Journal '%(journal_name)s' has no incoming payment method, so the payments of POS method '%(payment_method)s' cannot be recorded. Add a line with the 'Manual Payment' method in the journal's 'Incoming Payments' tab, then close the session again.",
+                journal_name=self.journal_id.name,
+                payment_method=self.name,
+            ))
+        if not self.journal_id.outbound_payment_method_line_ids:
+            raise ValidationError(_(
+                "Journal '%(journal_name)s' has no outgoing payment method, so the payments of POS method '%(payment_method)s' cannot be recorded. Add a line with the 'Manual Payment' method in the journal's 'Outgoing Payments' tab, then close the session again.",
+                journal_name=self.journal_id.name,
+                payment_method=self.name,
+            ))
         account_payment = self.env['account.payment'].sudo().create(payment_vals)
 
         if float_compare(amount, 0, precision_rounding=rounding) < 0:
