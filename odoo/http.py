@@ -2382,6 +2382,8 @@ class Application:
         current_thread.query_count = 0
         current_thread.query_time = 0
         current_thread.perf_t0 = time.time()
+        current_thread.perf_info_done = False
+        current_thread.status = None
         if hasattr(current_thread, 'dbname'):
             del current_thread.dbname
         if hasattr(current_thread, 'uid'):
@@ -2395,6 +2397,12 @@ class Application:
             def fake_start_response(status, headers):
                 return
             ProxyFix(fake_app)(environ, fake_start_response)
+
+        start_response_orig = start_response
+
+        def start_response(status, headers):  # pylint:disable=E0102
+            current_thread.status = status
+            return start_response_orig(status, headers)
 
         with HTTPRequest(environ) as httprequest:
             request = Request(httprequest)
