@@ -15,7 +15,6 @@ async function mountYearCalendar(context = {}, getUnusualDays = () => ({})) {
     onRpc("get_unusual_days", getUnusualDays);
     onRpc("get_special_days_data", () => ({ bankHolidays: [], mandatoryDays: [] }));
     onRpc("hr.employee", "get_time_off_dashboard_data", () => ({
-        has_accrual_allocation: true,
         allocation_data: {},
         allocations_number: "",
     }));
