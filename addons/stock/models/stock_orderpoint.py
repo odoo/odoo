@@ -164,7 +164,7 @@ class StockWarehouseOrderpoint(models.Model):
         # We have to filter by company here in case of multi-company and because horizon_days is a company setting
         for company in orderpoints_to_compute.company_id:
             company_orderpoints = orderpoints_to_compute.filtered(lambda c: c.company_id == company)
-            horizon_date = fields.Date.today() + relativedelta(days=company_orderpoints.get_horizon_days())
+            horizon_date = fields.Date.today() + relativedelta(days=company.get_horizon_days())
             _, domain_move_in, domain_move_out, __, __ = company_orderpoints.product_id._get_domain_locations()
             domain_move_in = Domain.AND([
                 [('product_id', 'in', company_orderpoints.product_id.ids)],
@@ -516,6 +516,7 @@ class StockWarehouseOrderpoint(models.Model):
         self.ensure_one()
         return {
             'days_to_order': self.days_to_order,
+            'orderpoint_id': self,
         }
 
     def _get_product_context(self):
@@ -752,7 +753,7 @@ class StockWarehouseOrderpoint(models.Model):
                             origin = orderpoint.name
                         if orderpoint.uom_id.compare(orderpoint.qty_to_order, 0.0) == 1:
                             date = orderpoint._get_orderpoint_procurement_date()
-                            global_horizon_days = orderpoint.get_horizon_days()
+                            global_horizon_days = orderpoint.company_id.get_horizon_days()
                             if global_horizon_days:
                                 date -= relativedelta(days=int(global_horizon_days))
                             values = orderpoint._prepare_procurement_values(date=date)
@@ -828,14 +829,6 @@ class StockWarehouseOrderpoint(models.Model):
             qty_to_order = fields.Float.round(qty_to_order, precision_digits=0, rounding_method="UP")
             qty_to_order = replenishment_multiple._compute_quantity(qty_to_order, self.product_id.uom_id)
         return qty_to_order
-
-    def get_horizon_days(self):
-        """ Return the value for Horizon. This can be (in order of priority):
-        - the value set in context in the replenishment view
-        - the value set on the company of the all the records in self. There should be at most 1 company_id on self.
-        - the value set on the company of the user if all else fail.
-        """
-        return self.env.context.get('global_horizon_days', (self.company_id or self.env.company).horizon_days)
 
     def _get_period_of_time(self, period=None):
         self.ensure_one()
