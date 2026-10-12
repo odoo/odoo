@@ -61,7 +61,7 @@ class PosSelfOrderController(http.Controller):
 
         return {
             'pos.order': orders,
-            'pos.order.line': order.lines.read(order._load_pos_data_fields(config_id.id), load=False),
+            'pos.order.line': order.lines.read(order.lines._load_pos_data_fields(config_id.id), load=False),
             'pos.payment': order.payment_ids.read(order.payment_ids._load_pos_data_fields(order.config_id.id), load=False),
             'pos.payment.method': order.payment_ids.mapped('payment_method_id').read(order.env['pos.payment.method']._load_pos_data_fields(order.config_id.id), load=False),
             'product.attribute.custom.value':  order.lines.custom_attribute_value_ids.read(order.lines.custom_attribute_value_ids._load_pos_data_fields(config_id.id), load=False),
