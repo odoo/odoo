@@ -8,8 +8,7 @@ import { ViewCompiler } from "@web/views/view_compiler";
  *  - regular html, with the same owl directives as cards (t-if, t-out...)
  *  - `invisible` attributes, evaluated against the action context (no record)
  *  - `data`, the values returned by the `data_method` of the model (if set on
- *    the <help> node), or of the `data_model`, available in owl directives and
- *    `invisible` attributes
+ *    the <help> node), available in owl directives and `invisible` attributes
  *  - <button>/<a> with type "object" or "action" (compiled into ViewButtons,
  *    executed on an empty recordset)
  *  - <widget name="..."/> (from the "view_widgets" registry, without record)

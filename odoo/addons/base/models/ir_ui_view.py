@@ -487,9 +487,7 @@ actual arch.
                     # Check if we know how to apply inheritances
                     sibling_primary_views._get_combined_archs()
 
-                if view.type == 'qweb' or (view.type == 'help' and not view.model):
-                    # help views without model are validated with the model of
-                    # the views using them (see `_validate_view`)
+                if view.type == 'qweb':
                     continue
             except (etree.ParseError, ValueError, TypeError) as e:
                 # Note: lxml < 5.0 raises ValueError; lxml 5.0+ / libxml2 2.12+ raises TypeError
@@ -1773,7 +1771,7 @@ actual arch.
         action's help.
         """
         help_arch, help_view = self._get_view(view_id=int(node.get('help_id')), view_type='help')
-        if help_view.model not in (False, model_name):
+        if help_view.model != model_name:
             self._raise_view_error(_(
                 "The help view %(help_view)s is defined on model %(help_model)s, not %(model)s",
                 help_view=help_view.xml_id or help_view.id, help_model=help_view.model, model=model_name,
@@ -1883,17 +1881,11 @@ actual arch.
 
         if node_info is None and (help_id := node.get('help_id')):
             help_view = self.browse(int(help_id)).sudo()
-            if not help_view.exists() or help_view.type != 'help' or help_view.model not in (False, model_name):
+            if not help_view.exists() or help_view.type != 'help' or help_view.model != model_name:
                 self._raise_view_error(_(
-                    "Attribute help_id must reference a help view on model %(model)s, or without model",
+                    "Attribute help_id must reference a help view on model %(model)s",
                     model=model_name,
                 ), node)
-            if not help_view.model:
-                # help views without model can be used by views of several
-                # models: fully validate it with the model of this view
-                help_arch = help_view._get_combined_arch()
-                help_arch.set('__validate__', '1')
-                help_view._validate_view(help_arch, model_name)
 
         group_definitions = self.env['res.groups']._get_group_definitions()
 
@@ -2109,12 +2101,8 @@ actual arch.
     def _validate_tag_help(self, node, name_manager, node_info):
         if not node_info['validate'] or not (method := node.get('data_method')):
             return
-        # the method is called by the web client, without record, on the
-        # `data_model` if given, on the model of the view otherwise
-        model_name = node.get('data_model') or name_manager.model._name
-        if model_name not in self.env:
-            self._raise_view_error(_("Model not found: %(model)s", model=model_name), node)
-        func = getattr(self.env[model_name], method, None)
+        # the method is called by the web client, without record
+        func = getattr(name_manager.model, method, None)
         if (
             not callable(func)
             or method.startswith('_')
@@ -2123,7 +2111,7 @@ actual arch.
         ):
             msg = _(
                 "Attribute data_method of help views must be the name of a public @api.model method of %(model)s (%(method)s)",
-                model=model_name, method=method,
+                model=name_manager.model._name, method=method,
             )
             self._raise_view_error(msg, node)
 
