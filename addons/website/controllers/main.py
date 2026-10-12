@@ -1540,9 +1540,13 @@ class Website(Home):
             }
             if group_el.attrib['id'] == 'custom':
                 for page in self.env.website._get_website_pages(domain=[('is_new_page_template', '=', True)]):
-                    html_tree = html.fromstring(self.env.website.with_context(inherit_branding=False, lang=website_lang)._render_template(
-                        page.key,
-                    ))
+                    # keep_visibility_datetime_range is to avoid dropping
+                    # elements that are currently hidden based on datetime
+                    html_tree = html.fromstring(self.env.website.with_context(
+                        inherit_branding=False,
+                        keep_visibility_datetime_range=True,
+                        lang=website_lang,
+                    )._render_template(page.key))
                     wrap_el = html_tree.xpath('//div[@id="wrap"]')[0]
                     group['templates'].append({
                         'key': page.key,
