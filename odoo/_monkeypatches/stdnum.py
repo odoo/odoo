@@ -1,5 +1,5 @@
 # ruff: noqa: PLC0415
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 
 from odoo.tools import parse_version
 
@@ -51,9 +51,26 @@ def new_get_soap_client(wsdlurl, timeout=30):
     return _soap_clients[(wsdlurl, timeout)]
 
 
+<<<<<<< de3b22a609e6fd9815bd530569da20d6ec62bb16
 def patch_module():
     if parse_version(version("python-stdnum")) >= parse_version("2.0"):
         return  # nothing to patch
+||||||| fbed2cda74fd235cecbe3222fdff5bf7c989d407
+def patch_stdnum():
+    if parse_version(version("python-stdnum")) >= parse_version("2.0"):
+        return  # nothing to patch
+=======
+def patch_stdnum():
+    try:
+        stdnum_version = version("python-stdnum")
+    except PackageNotFoundError:
+        # No dist-info/egg-info metadata (e.g. distro or vendored copy);
+        # assume legacy (< 2.0) and apply the patch below.
+        stdnum_version = None
+
+    if stdnum_version and parse_version(stdnum_version) >= parse_version("2.0"):
+        return
+>>>>>>> 3c486104604e61f5773d50ca5b3525ad3a620c58
 
     try:
         from stdnum import util
