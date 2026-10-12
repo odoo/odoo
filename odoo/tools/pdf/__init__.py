@@ -657,8 +657,9 @@ class OdooPdfFileWriter(PdfFileWriter):
 
                 annot[NameObject('/F')] = NumberObject(flags)
 
-        outlines = self._root_object['/Outlines'].getObject()
-        outlines[NameObject('/Count')] = NumberObject(1)
+        if '/Outlines' in self._root_object:
+            outlines = self._root_object['/Outlines'].getObject()
+            outlines[NameObject('/Count')] = NumberObject(1)
 
         # [6.7.2.2-1] include a MarkInfo dictionary containing "Marked" with true value
         mark_info = DictionaryObject({NameObject("/Marked"): BooleanObject(True)})
