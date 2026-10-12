@@ -52,6 +52,24 @@ describe("restaurant pos_store.js", () => {
         expect(store.getOrder().id).toBe(blankOrder.id);
     });
 
+    test("openExistingOrder does not select a table order that is syncing", async () => {
+        const store = await setupPosEnv();
+        const table = store.models["restaurant.table"].get(2);
+        const currentOrder = store.addNewOrder();
+        const order = store.addNewOrder({ table_id: table });
+        store.setOrder(currentOrder);
+        patchWithCleanup(store, { async syncAllOrders() {} });
+
+        store.syncingOrders.add(order.uuid);
+        expect(await store.openExistingOrder(order)).toBe(false);
+        expect(store.getOrder()).toBe(currentOrder);
+
+        store.syncingOrders.delete(order.uuid);
+        expect(await store.openExistingOrder(order)).toBe(true);
+        expect(store.getOrder()).toBe(order);
+        expect(store.selectedTable).toBe(table);
+    });
+
     test("sync dirty order when unsetting table", async () => {
         const store = await setupPosEnv();
         const table = store.models["restaurant.table"].get(2);

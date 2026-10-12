@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, signal, useListener, useProps, t } from "@odoo/owl";
+import { Component, proxy, signal, useListener, useOnChange, useProps, t } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
@@ -57,6 +57,13 @@ export class SearchBar extends Component {
                     this.props.config.defaultFilter || this.filterOptionsList[0];
             },
             () => [this.props.config.defaultFilter]
+        );
+        useOnChange(
+            () => [this.props.config.defaultSearchDetails],
+            (searchDetails) => {
+                this.state.searchInput = searchDetails.searchTerm || "";
+            },
+            { initialRun: false }
         );
     }
     _onSelectFilter(key) {

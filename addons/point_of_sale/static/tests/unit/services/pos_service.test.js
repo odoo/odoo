@@ -7,9 +7,12 @@ import {
     filterChangeByCategories,
 } from "@point_of_sale/app/models/utils/order_change";
 import { prepareRoundingVals } from "../accounting/utils";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, MockServer } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { localization } from "@web/core/l10n/localization";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
+import { uuidv4 } from "@point_of_sale/utils";
+import { PosConfig } from "@point_of_sale/app/models/pos_config";
 
 const { DateTime } = luxon;
 
@@ -39,6 +42,73 @@ describe("pos_store.js", () => {
         await store.router.popStateCallback();
 
         expect(store.getOrder().uuid).toBe(newOrder.uuid);
+    });
+
+    test("loadScannedOrder only loads orders of this config and its trusted configs", async () => {
+        const store = await setupPosEnv();
+        const trustedConfig = MockServer.env["pos.config"].create({});
+        const otherConfig = MockServer.env["pos.config"].create({});
+        const raw = { ...store.config.raw, trusted_config_ids: [trustedConfig] };
+        patch(store.config, {
+            get raw() {
+                return raw;
+            },
+        });
+
+        const cases = [
+            { configId: store.config.id, state: "draft", found: true },
+            { configId: trustedConfig, state: "draft", found: true },
+            { configId: otherConfig, state: "draft", found: false },
+            { configId: otherConfig, state: "paid", found: false },
+        ];
+        for (const { configId, state, found } of cases) {
+            const uuid = uuidv4();
+            MockServer.env["pos.order"].create({
+                uuid,
+                state,
+                config_id: configId,
+                session_id: store.session.id,
+                lines: [],
+            });
+
+            const order = await store.loadScannedOrder(uuid);
+
+            expect(order?.uuid).toBe(found ? uuid : undefined, {
+                message: `${state} order of config ${configId}`,
+            });
+        }
+    });
+
+    test("openExistingOrder pushes the pending orders, then opens the order unless it is syncing", async () => {
+        patch(PosConfig.prototype, {
+            get isShareable() {
+                return true;
+            },
+        });
+        const store = await setupPosEnv();
+        const currentOrder = store.addNewOrder();
+        const order = store.addNewOrder();
+        store.setOrder(currentOrder);
+        const ordersWhenSyncing = [];
+        patch(store, {
+            async syncAllOrders() {
+                ordersWhenSyncing.push(store.getOrder());
+            },
+        });
+
+        store.syncingOrders.add(order.uuid);
+        expect(await store.openExistingOrder(order)).toBe(false);
+        expect(ordersWhenSyncing).toHaveLength(0);
+        expect(store.getOrder()).toBe(currentOrder);
+
+        store.syncingOrders.delete(order.uuid);
+        expect(await store.openExistingOrder(order)).toBe(true);
+        // The pending orders are pushed before leaving the current order
+        expect(ordersWhenSyncing).toHaveLength(1);
+        expect(ordersWhenSyncing[0]).toBe(currentOrder);
+        expect(store.getOrder()).toBe(order);
+        expect(store.router.currentScreen()).toBe("ProductScreen");
+        expect(store.router.currentScreenParams()).toEqual({ orderUuid: order.uuid });
     });
 
     test("orderNoteFormat", async () => {
@@ -124,7 +194,7 @@ describe("pos_store.js", () => {
         const printed = [];
         let barFailures = 1;
         let retry;
-        patchWithCleanup(store.ticketPrinter, {
+        patch(store.ticketPrinter, {
             async generateIframe(template, ticket) {
                 return ticket;
             },
@@ -921,7 +991,7 @@ describe("pos_store.js", () => {
             config: { decimalPoint: false },
         });
 
-        patchWithCleanup(localization, { decimalPoint: ".", thousandsSep: "," });
+        patch(localization, { decimalPoint: ".", thousandsSep: "," });
         numberBuffer._setUp();
         expect(numberBuffer.decimalPoint).toBe(".");
 
@@ -1058,13 +1128,13 @@ describe("pos_store.js", () => {
             const order = await getFilledOrder(store);
             order.state = "paid";
             store.data.network.offline = true;
-            patchWithCleanup(store.data, {
+            patch(store.data, {
                 async resetIndexedDB() {
                     expect.step("resetIndexedDB");
                     throw new Error("stop before leaving the page");
                 },
             });
-            patchWithCleanup(store.dialog, {
+            patch(store.dialog, {
                 add(component, props) {
                     expect.step(props.title);
                 },
@@ -1080,7 +1150,7 @@ describe("pos_store.js", () => {
             const store = await setupPosEnv();
             const order = await getFilledOrder(store);
             order.state = "paid";
-            patchWithCleanup(store.data, {
+            patch(store.data, {
                 async resetIndexedDB() {
                     expect.step(`resetIndexedDB, synced: ${order.isSynced}`);
                     throw new Error("stop before leaving the page");
@@ -1090,5 +1160,28 @@ describe("pos_store.js", () => {
             await expect(store.reloadData()).rejects.toThrow("stop before leaving the page");
             expect.verifySteps(["resetIndexedDB, synced: true"]);
         });
+    });
+
+    describe("clickSaveOrder", () => {
+        for (const iface_printbill of [true, false]) {
+            test(`prints the bill of the saved order: ${iface_printbill}`, async () => {
+                const store = await setupPosEnv();
+                const order = await getFilledOrder(store);
+                store.config.iface_printbill = iface_printbill;
+                patch(store, { syncAllOrders() {} });
+                patch(store.ticketPrinter, {
+                    async printOrderReceipt({ order: printedOrder, printBillActionTriggered }) {
+                        expect.step(
+                            `print ${printedOrder === order} bill ${printBillActionTriggered}`
+                        );
+                    },
+                });
+
+                await store.clickSaveOrder();
+
+                expect(store.getOrder()).not.toBe(order);
+                expect.verifySteps(iface_printbill ? ["print true bill true"] : []);
+            });
+        }
     });
 });

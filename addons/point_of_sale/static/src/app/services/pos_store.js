@@ -379,6 +379,18 @@ export class PosStore extends WithLazyGetterTrap {
         this.navigate(page.page, page.params);
     }
 
+    async openExistingOrder(order) {
+        if (this.isOrderSyncing(order)) {
+            return false;
+        }
+        if (this.config.isShareable) {
+            await this.syncAllOrders();
+        }
+        this.setOrder(order);
+        this.navigateToOrderScreen(order);
+        return true;
+    }
+
     navigateToOrderScreen(order) {
         const orderPage = order.getScreenData();
         const page = orderPage?.name || "ProductScreen";
@@ -1858,6 +1870,13 @@ export class PosStore extends WithLazyGetterTrap {
             ["state", "=", "draft"],
         ]);
     }
+    async loadScannedOrder(uuid) {
+        const [order] = await this.data.loadServerOrders([
+            ["uuid", "=", uuid],
+            ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
+        ]);
+        return order;
+    }
     async getProductInfo(productTemplate, quantity, priceExtra = 0, productProduct = false) {
         const order = this.getOrder();
         // check back-end method `get_product_info_pos` to see what it returns
@@ -2894,12 +2913,16 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     clickSaveOrder() {
-        this.syncAllOrders({ orders: [this.getOrder()] });
+        const order = this.getOrder();
+        this.syncAllOrders({ orders: [order] });
         this.notification.add(_t("Order saved for later"), { type: "success" });
         const newOrder = this.getEmptyOrder();
         this.setOrder(newOrder);
         this.navigate("ProductScreen", { orderUuid: newOrder.uuid });
         this.mobile_pane = "right";
+        if (this.config.iface_printbill) {
+            this.ticketPrinter.printOrderReceipt({ order, printBillActionTriggered: true });
+        }
     }
 
     get isSmallProductScreen() {

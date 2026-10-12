@@ -13,6 +13,8 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
+import { BarcodeReader } from "@point_of_sale/app/services/barcode_reader_service";
 import {
     Component,
     onMounted,
@@ -58,6 +60,7 @@ export const ticketScreenProps = {
     reuseSavedUIState: t.boolean().optional(false),
     stateOverride: t.object().optional(),
     ui: t.object().optional({}),
+    scannedOrderUuid: t.string().optional(),
 };
 
 export class TicketScreen extends Component {
@@ -89,6 +92,9 @@ export class TicketScreen extends Component {
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
             useWithBarcode: true,
+        });
+        useBarcodeReader({
+            order: (parsedBarcode) => this.onClickScanOrder(parsedBarcode.code),
         });
 
         this.state = proxy({
@@ -143,8 +149,15 @@ export class TicketScreen extends Component {
     }
     onMounted() {
         setTimeout(() => {
-            // Show updated list of synced orders when going back to the screen.
-            this.onFilterSelected(this.state.filter);
+            const scannedOrder =
+                this.props.scannedOrderUuid &&
+                this.pos.models["pos.order"].getBy("uuid", this.props.scannedOrderUuid);
+            if (scannedOrder) {
+                this.selectScannedOrder(scannedOrder);
+            } else {
+                // Show updated list of synced orders when going back to the screen.
+                this.onFilterSelected(this.state.filter);
+            }
         });
     }
     clearOrderTimers() {
@@ -221,26 +234,47 @@ export class TicketScreen extends Component {
         );
     }
     async onClickScanOrder(qrcode) {
-        if (qrcode) {
-            const uuid = new URL(qrcode).searchParams.get("order_uuid");
-            const orders = await this.pos.data.loadServerOrders([["uuid", "=", uuid]]);
-            const order = orders[0];
-            if (order) {
-                this.state.filter = "SYNCED";
-                this.setSelectedOrder(order);
-                this.pos.scanning = !this.pos.scanning;
-            } else {
-                this.env.services.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
-                    type: "warning",
-                });
-            }
-        } else {
+        if (!qrcode) {
             this.env.services.notification.add(_t("Please, Scan again!"), {
                 type: "warning",
             });
+            return;
         }
+        const uuid = BarcodeReader.getOrderUuidFromQrCode(qrcode);
+        const order = uuid && (await this.pos.loadScannedOrder(uuid));
+        if (!order) {
+            this.env.services.notification.add(_t("Invalid QR Code! Please, Scan again!"), {
+                type: "warning",
+            });
+            return;
+        }
+        this.pos.scanning = false;
+        if (!order.finalized) {
+            await this.setOrder(order);
+            return;
+        }
+        await this.selectScannedOrder(order);
+    }
+    async selectScannedOrder(order) {
+        // Reset what could hide the scanned order from the list
+        this.state.selectedPreset = null;
+        this.state.search = { fieldName: this.state.search.fieldName, searchTerm: "" };
+        this.state.page = 1;
+
+        const filter = this.isOrderCancelled(order)
+            ? "CANCELLED"
+            : this.isOrderDoneOrPaid(order) && order.getScreenData().name !== "TipScreen"
+            ? "SYNCED"
+            : "ACTIVE_ORDERS";
+        await this.onFilterSelected(filter);
+        const index = this.getSortedOrderList().findIndex((o) => o.uuid === order.uuid);
+        this.state.page = Math.floor(Math.max(index, 0) / this.state.nbrByPage) + 1;
+        this.setSelectedOrder(order);
     }
     async onSearch(search) {
+        if (BarcodeReader.getOrderUuidFromQrCode(search.searchTerm)) {
+            return this.onClickScanOrder(search.searchTerm);
+        }
         this.state.search = search;
         this.state.page = 1;
         await this._updateSyncedOrders();
@@ -549,6 +583,12 @@ export class TicketScreen extends Component {
     }
 
     getFilteredOrderList() {
+        return this.getSortedOrderList().slice(
+            (this.state.page - 1) * this.state.nbrByPage,
+            this.state.page * this.state.nbrByPage
+        );
+    }
+    getSortedOrderList() {
         const orderModel = this.pos.models["pos.order"];
         let orders =
             this.state.filter === "SYNCED"
@@ -616,11 +656,7 @@ export class TicketScreen extends Component {
             this.pos.screenState.ticketScreen.totalCount = orders.length;
             sortedOrders = sortOrders(orders, true);
         }
-
-        return sortedOrders.slice(
-            (this.state.page - 1) * this.state.nbrByPage,
-            this.state.page * this.state.nbrByPage
-        );
+        return sortedOrders;
     }
     get buttonClasses() {
         return this.getHasItemsToRefund() ? "btn-primary" : "btn-secondary disabled";
@@ -851,14 +887,7 @@ export class TicketScreen extends Component {
     }
 
     async setOrder(order) {
-        if (this.pos.isOrderSyncing(order)) {
-            return;
-        }
-        if (this.pos.config.isShareable) {
-            await this.pos.syncAllOrders();
-        }
-        this.pos.setOrder(order);
-        this.pos.navigateToOrderScreen(order);
+        return await this.pos.openExistingOrder(order);
     }
 
     onClickNewOrder() {

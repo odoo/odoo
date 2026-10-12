@@ -532,6 +532,13 @@ patch(PosStore.prototype, {
         }
         return super.getDefaultSearchDetails();
     },
+    async openExistingOrder(order) {
+        const isOpened = await super.openExistingOrder(...arguments);
+        if (isOpened && this.config.module_pos_restaurant && order.table_id) {
+            await this.setTable(order.getTable(), order.uuid);
+        }
+        return isOpened;
+    },
     async setTable(table, orderUuid = null) {
         this.deviceSync.readDataFromServer();
         let currentOrder = table
