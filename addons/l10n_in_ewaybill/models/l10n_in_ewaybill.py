@@ -254,7 +254,7 @@ class L10nInEwaybill(models.Model):
         dependent_fields = self._get_ewaybill_dependencies()
         for ewaybill in self:
             if any(ewaybill[d_field] for d_field in dependent_fields):
-                ewaybill_json = ewaybill._ewaybill_generate_direct_json()
+                ewaybill_json = ewaybill._get_ewaybill_request_json()
             else:
                 ewaybill_json = {}
             ewaybill.content = ewaybill_json
@@ -473,6 +473,9 @@ class L10nInEwaybill(models.Model):
             blocking_level = 'warning'
         self._write_error(error_message, blocking_level)
 
+    def _get_ewaybill_request_json(self):
+        return self._ewaybill_generate_direct_json()
+
     def _create_and_post_response_attachment(self, ewb_name, response, is_cancel=False):
         def _create_attachment_vals(name, raw_data, res_field=False):
             vals = {
@@ -487,7 +490,7 @@ class L10nInEwaybill(models.Model):
             return vals
 
         attachment_vals_list = []
-        request_json = self._get_cancellation_request_vals() if is_cancel else self._ewaybill_generate_direct_json()
+        request_json = self._get_cancellation_request_vals() if is_cancel else self._get_ewaybill_request_json()
         request_type = 'cancel_request' if is_cancel else 'request'
         request_name = f'ewaybill_{ewb_name}_{request_type}.json'
         attachment_vals_list.append(_create_attachment_vals(request_name, request_json))
