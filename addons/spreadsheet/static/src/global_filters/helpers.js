@@ -572,8 +572,8 @@ export function getRelativeDateFromTo(now, offset, period) {
         }
         case "last_12_months": {
             const offsetParam = { months: 12 * offset };
-            to = startOfNextDay.minus({ months: 1 }).endOf("month").plus(offsetParam);
-            from = startOfNextDay.minus({ months: 12 }).startOf("month").plus(offsetParam);
+            to = now.minus({ months: 1 }).endOf("month").plus(offsetParam);
+            from = now.minus({ months: 12 }).startOf("month").plus(offsetParam);
             break;
         }
         default:
