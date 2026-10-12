@@ -4881,6 +4881,67 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'amount_currency':    100.0, 'balance':    20.0},  # Receivable line
         ])
 
+    def test_company_currency_line_not_converted_when_invoice_rate_changes(self):
+        """A company-currency line keeps its balance when the invoice rate changes at posting."""
+        self.env['res.currency.rate'].create([
+            {'currency_id': self.other_currency.id, 'name': '2026-01-01', 'rate': 0.5, 'company_id': self.env.company.id},
+            {'currency_id': self.other_currency.id, 'name': '2026-01-02', 'rate': 0.1, 'company_id': self.env.company.id},
+        ])
+        expense = self.company_data['default_account_expense']
+        with freeze_time('2026-01-01'):
+            invoice = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'currency_id': self.other_currency.id,
+                'invoice_line_ids': [Command.create({
+                    'quantity': 1,
+                    'price_unit': 100,
+                    'tax_ids': [],
+                })],
+            })
+            self.env['account.move.line'].create([
+                {
+                    'move_id': invoice.id,
+                    'display_type': 'cogs',
+                    'account_id': expense.id,
+                    'name': 'cogs',
+                    'quantity': 1,
+                    'price_unit': 10,
+                    'amount_currency': -10,
+                    'balance': -10,
+                },
+                {
+                    'move_id': invoice.id,
+                    'display_type': 'cogs',
+                    'account_id': expense.id,
+                    'name': 'cogs',
+                    'quantity': 1,
+                    'price_unit': -10,
+                    'amount_currency': 10,
+                    'balance': 10,
+                },
+            ])
+            self.assertEqual(invoice.invoice_currency_rate, 0.5)
+        # create_date is the database clock, so freezegun does not move it.
+        self.env.cr.execute(
+            "UPDATE account_move SET create_date = %s WHERE id = %s",
+            [fields.Datetime.to_datetime('2026-01-01'), invoice.id],
+        )
+        invoice.invalidate_recordset(['create_date'])
+
+        with freeze_time('2026-01-02'):
+            invoice.action_post()
+
+        self.assertEqual(invoice.invoice_currency_rate, 0.1)
+        cogs_lines = invoice.line_ids.filtered(lambda line: line.display_type == 'cogs')
+        self.assertRecordValues(cogs_lines.sorted('balance'), [
+            {'currency_id': self.company_data['currency'].id, 'currency_rate': 1.0, 'amount_currency': -10.0, 'balance': -10.0},
+            {'currency_id': self.company_data['currency'].id, 'currency_rate': 1.0, 'amount_currency': 10.0, 'balance': 10.0},
+        ])
+        product_line = invoice.line_ids.filtered(lambda line: line.display_type == 'product')
+        self.assertEqual(product_line.amount_currency, -100.0)
+        self.assertEqual(product_line.balance, -1000.0)
+
     def test_invoice_no_followup(self):
         """Make sure that excluding an invoice from follow-up excludes all its receivable lines."""
         installments_payment_term = self.env['account.payment.term'].create({
