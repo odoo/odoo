@@ -1521,3 +1521,47 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.button_confirm()
         with self.assertRaises(UserError):
             client.unlink()
+
+    def test_zero_quantity_billing_status(self):
+        """
+        Test that a Purchase Order does not prematurely jump to 'invoiced'
+        (Fully Billed) when a vendor bill is validated for 0 quantity.
+        """
+        self.product_a.purchase_method = 'receive'
+        self.product_a.type = 'consu'
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_qty': 1.0,
+                    'price_unit': 100.0,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        self.assertEqual(po.order_line.qty_received, 0.0)
+        self.assertEqual(po.order_line.qty_to_invoice, 0.0)
+        self.assertEqual(po.invoice_status, 'no')
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'purchase_line_id': po.order_line.id,
+                    'quantity': 0.0,
+                    'price_unit': 100.0,
+                })
+            ]
+        })
+        invoice.action_post()
+
+        self.assertEqual(
+            po.invoice_status,
+            'no'
+        )

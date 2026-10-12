@@ -62,6 +62,10 @@ class PurchaseOrder(models.Model):
                     for line in order.order_line.filtered(lambda l: not l.display_type)
                 )
                 and order.invoice_ids
+                and any(
+                    not float_is_zero(line.qty_invoiced, precision_digits=precision)
+                    for line in order.order_line.filtered(lambda l: not l.display_type)
+                )
             ):
                 order.invoice_status = 'invoiced'
             else:
