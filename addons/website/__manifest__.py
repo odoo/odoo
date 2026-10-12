@@ -196,6 +196,8 @@
         'views/snippets/s_website_form_bold.xml',
         'views/snippets/s_title_split.xml',
         'views/snippets/s_hero_maintenance.xml',
+        'views/snippets/s_hero_404_box.xml',
+        'views/snippets/s_hero_404_ghost.xml',
         'views/snippets/s_hero_minimalist.xml',
         'views/snippets/s_launch_countdown.xml',
         'views/snippets/s_projects_grid_minimal.xml',
@@ -579,7 +581,7 @@
             '0': ['s_title_split', 's_table_of_content'],
             '1': ['s_title_split', 's_table_of_content'],
             '2': ['s_launch_countdown'],
-            '3': ['s_hero_maintenance'],
+            '3': ['s_hero_maintenance']
         },
     },
     'author': 'Odoo S.A.',
