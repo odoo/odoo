@@ -1,5 +1,7 @@
 import { Component, onMounted, onWillDestroy, onWillStart, t, useProps, xml } from "@odoo/owl";
+import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useSubEnv } from "@web/owl2/utils";
 
 export class DropdownPopover extends Component {
     static components = { DropdownItem };
@@ -33,9 +35,13 @@ export class DropdownPopover extends Component {
             default: t.any().optional(),
             content: t.any().optional(),
         }),
+        nesting: t.object().optional(),
     });
 
     setup() {
+        if (this.props.nesting) {
+            useSubEnv({ [DROPDOWN_NESTING]: this.props.nesting });
+        }
         onWillStart(async () => {
             await this.props.beforeOpen?.();
         });
