@@ -1,5 +1,6 @@
 import { reactive } from "@web/owl2/utils";
 
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 export class MailCoreWeb {
@@ -92,6 +93,14 @@ export class MailCoreWeb {
                 inbox.fetchMoreMessages();
             }
         });
+        browser.navigator.serviceWorker?.addEventListener(
+            "message",
+            ({ data: { action, data } }) => {
+                if (action === "OPEN_RECORD") {
+                    this.store["mail.thread"].insert({ id: data.id, model: data.model }).open();
+                }
+            }
+        );
     }
     /**
      * @param {import("models").Message} message
