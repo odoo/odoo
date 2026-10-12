@@ -1,7 +1,7 @@
 import { DIMENSIONS } from "@mail/convert_inline/core/utils";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
-import { Component, onMounted, proxy, signal, types } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, types, useProps } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
@@ -11,13 +11,14 @@ const { DESKTOP, MOBILE } = DIMENSIONS;
 
 export class DebugConvertInlineDialog extends Component {
     static template = "test_convert_inline.DebugConvertInlineDialog";
-    static props = {
-        fragment: { type: DocumentFragment },
-        close: Function,
-    };
     static components = {
         Dialog,
     };
+
+    props = useProps({
+        fragment: t.instanceOf(DocumentFragment),
+        close: t.function(),
+    });
 
     setup() {
         this.outputIframeRef = signal(null, { type: types.instanceOf(HTMLIFrameElement) });
