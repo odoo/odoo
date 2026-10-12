@@ -394,6 +394,45 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'move_type': 'in_invoice',
             }])
 
+    def test_receive_peppol_document_interrupted_mid_decode_still_gets_attachment_and_error(self):
+        """Simulate the worker process is killed while `_extend_with_attachments` is decoding
+        the document. _extend_with_attachments commits the transaction before decoding
+        (see `rollbackable_transaction` in account_document_import_mixin.py), so the
+        empty move created upfront survives the kill. The uuid is therefore redelivered and
+        detected as a duplicate on the next cron run: that's the only safe place left
+        to notice the move never got filled in and to explain the failure.
+        """
+
+        move = self.env['account.move'].create({
+            'journal_id': self.env.company.peppol_purchase_journal_id.id,
+            'move_type': 'in_invoice',
+            'peppol_move_state': 'done',
+            'peppol_message_uuid': FAKE_UUID[1],
+        })
+        stale_attachment = self.env['ir.attachment'].create({
+            'name': 'test_incoming.xml',
+            'raw': b'<Invoice/>',
+            'res_model': 'account.move',
+            'res_id': move.id,
+        })
+
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+
+        self.assertEqual(move.peppol_move_state, 'error')
+        error_messages = self._get_mail_message(move, limit=10).filtered(
+            lambda m: 'interrupted' in (m.body or '').lower()
+        )
+        self.assertTrue(error_messages, "an error should explain that the import was interrupted")
+        self.assertTrue(stale_attachment.exists())
+        self.assertEqual(stale_attachment.res_id, move.id)
+
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+        self.assertEqual(
+            len(self._get_mail_message(move, limit=10).filtered(lambda m: 'interrupted' in (m.body or '').lower())),
+            1,
+            "the message is repeated again, it musn't happen"
+        )
+
     def test_received_bill_notification(self):
         peppol_purchase_journal = self.env.company.peppol_purchase_journal_id
         peppol_purchase_journal.incoming_einvoice_notification_email = 'oops_another_bill@example.com'
