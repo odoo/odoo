@@ -629,6 +629,54 @@
             </field>
         </record>
 
+        <record id="hr_expense_submit_expense" model="ir.actions.server">
+            <field name="name">Submit Expenses</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="binding_model_id" ref="model_hr_expense"/>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_submit()
+            </field>
+        </record>
+
+        <record id="hr_expense_approve_expense" model="ir.actions.server">
+            <field name="name">Approve Expenses</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="binding_model_id" ref="model_hr_expense"/>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_approve()
+            </field>
+        </record>
+
+        <record id="hr_expense_refuse_expense" model="ir.actions.server">
+            <field name="name">Refuse Expenses</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="binding_model_id" ref="model_hr_expense"/>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_refuse()
+            </field>
+        </record>
+
+        <record id="hr_expense_post_expense" model="ir.actions.server">
+            <field name="name">Post Expenses</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="binding_model_id" ref="model_hr_expense"/>
+            <field name="binding_view_types">list,kanban</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_post()
+            </field>
+        </record>
+
         <menuitem id="menu_hr_expense_root" name="Expenses" sequence="230" web_icon="hr_expense,static/description/icon.png"/>
 
         <menuitem id="menu_hr_expense_my_expenses" name="My Expenses" sequence="1" parent="menu_hr_expense_root" groups="base.group_user"/>
