@@ -1,54 +1,88 @@
-.odoo-editor-editable.odoo-editor-qweb, .o_readonly {
-    t,
-    [t-if],
-    [t-elif],
-    [t-else],
-    [t-foreach] {
-        background-color: rgba(0, 0, 102, 0.1) !important;
-    }
-    t,
-    [t-esc],
-    [t-out],
-    [t-raw],
-    [t-field] {
-        border-radius: 2px;
-    }
-    [t-esc],
-    [t-out],
-    [t-raw],
-    [t-field] {
-        background-color: rgba(36, 154, 255, 0.16) !important;
-    }
-    [t-field]:empty::before {
-        content: attr(t-field);
-    }
-    [t-esc]:empty::before {
-        content: attr(t-esc);
-    }
-    [t-raw]:empty::before {
-        content: attr(t-raw);
-    }
-    [t-out]:empty::before {
-        content: attr(t-out);
-    }
-    t[t-set] {
-        display: none;
-    }
-    t[data-oe-t-inline] {
-        display: inline;
-    }
-    t:not([data-oe-t-inline]) {
-        display: block;
-    }
-    t[data-oe-t-inline]:not([data-oe-t-group-active]) {
-        display: unset;
-    }
-    [data-oe-t-group]:not([data-oe-t-group-active]) {
-        display: none !important;
-    }
-    [data-oe-t-group][data-oe-t-selectable] {
-        outline: 1px dashed rgba(0, 0, 102, 0.4) !important;
-    }
+.odoo-editor-editable.odoo-editor-qweb t,
+.odoo-editor-editable.odoo-editor-qweb [t-if],
+.odoo-editor-editable.odoo-editor-qweb [t-elif],
+.odoo-editor-editable.odoo-editor-qweb [t-else],
+.odoo-editor-editable.odoo-editor-qweb [t-foreach],
+.o_readonly t,
+.o_readonly [t-if],
+.o_readonly [t-elif],
+.o_readonly [t-else],
+.o_readonly [t-foreach] {
+    background-color: rgba(0, 0, 102, 0.1) !important;
+}
+
+.odoo-editor-editable.odoo-editor-qweb t,
+.odoo-editor-editable.odoo-editor-qweb [t-esc],
+.odoo-editor-editable.odoo-editor-qweb [t-out],
+.odoo-editor-editable.odoo-editor-qweb [t-raw],
+.odoo-editor-editable.odoo-editor-qweb [t-field],
+.o_readonly t,
+.o_readonly [t-esc],
+.o_readonly [t-out],
+.o_readonly [t-raw],
+.o_readonly [t-field] {
+    border-radius: 2px;
+}
+
+.odoo-editor-editable.odoo-editor-qweb [t-esc],
+.odoo-editor-editable.odoo-editor-qweb [t-out],
+.odoo-editor-editable.odoo-editor-qweb [t-raw],
+.odoo-editor-editable.odoo-editor-qweb [t-field],
+.o_readonly [t-esc],
+.o_readonly [t-out],
+.o_readonly [t-raw],
+.o_readonly [t-field] {
+    background-color: rgba(36, 154, 255, 0.16) !important;
+}
+
+.odoo-editor-editable.odoo-editor-qweb [t-field]:empty::before,
+.o_readonly [t-field]:empty::before {
+    content: attr(t-field);
+}
+
+.odoo-editor-editable.odoo-editor-qweb [t-esc]:empty::before,
+.o_readonly [t-esc]:empty::before {
+    content: attr(t-esc);
+}
+
+.odoo-editor-editable.odoo-editor-qweb [t-raw]:empty::before,
+.o_readonly [t-raw]:empty::before {
+    content: attr(t-raw);
+}
+
+.odoo-editor-editable.odoo-editor-qweb [t-out]:empty::before,
+.o_readonly [t-out]:empty::before {
+    content: attr(t-out);
+}
+
+.odoo-editor-editable.odoo-editor-qweb t[t-set],
+.o_readonly t[t-set] {
+    display: none;
+}
+
+.odoo-editor-editable.odoo-editor-qweb t[data-oe-t-inline],
+.o_readonly t[data-oe-t-inline] {
+    display: inline;
+}
+
+.odoo-editor-editable.odoo-editor-qweb t:not([data-oe-t-inline]),
+.o_readonly t:not([data-oe-t-inline]) {
+    display: block;
+}
+
+.odoo-editor-editable.odoo-editor-qweb t[data-oe-t-inline]:not([data-oe-t-group-active]),
+.o_readonly t[data-oe-t-inline]:not([data-oe-t-group-active]) {
+    display: unset;
+}
+
+.odoo-editor-editable.odoo-editor-qweb [data-oe-t-group]:not([data-oe-t-group-active]),
+.o_readonly [data-oe-t-group]:not([data-oe-t-group-active]) {
+    display: none !important;
+}
+
+.odoo-editor-editable.odoo-editor-qweb [data-oe-t-group][data-oe-t-selectable],
+.o_readonly [data-oe-t-group][data-oe-t-selectable] {
+    outline: 1px dashed rgba(0, 0, 102, 0.4) !important;
 }
 
 .oe-qweb-select {

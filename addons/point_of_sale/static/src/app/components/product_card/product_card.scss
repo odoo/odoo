@@ -7,16 +7,16 @@
             --btn-hover-bg: var(--o-view-background-color);
         }
     }
+}
 
-    @at-root .rightpane .product {
-        border-bottom: calc(var(--o-bs-border-width) * 6) solid var(--border-color);
+.rightpane .product {
+    border-bottom: calc(var(--o-bs-border-width) * 6) solid var(--border-color);
 
-        &:where(.product:not(:has(.product-img))) {
-            min-height: 6rem;
+    &:where(.product:not(:has(.product-img))) {
+        min-height: 6rem;
 
-            @media (min-width: 992px) {
-                min-height: 5rem;
-            }
+        @media (min-width: 992px) {
+            min-height: 5rem;
         }
     }
 }

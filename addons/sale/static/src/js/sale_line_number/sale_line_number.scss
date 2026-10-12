@@ -23,26 +23,24 @@
             }
         }
 
-        &.o_is_line_section,
-        &.o_is_line_subsection:not(.o_hide_composition),
-        &.o_is_line_note:not(.o_hide_composition) {
-            td.o_handle_cell + td::before {
-                position: absolute;
-                top: 0;
-                left: 0;
-                bottom: auto;
-                right: auto;
+        &.o_is_line_section td.o_handle_cell + td::before,
+        &.o_is_line_subsection:not(.o_hide_composition) td.o_handle_cell + td::before,
+        &.o_is_line_note:not(.o_hide_composition) td.o_handle_cell + td::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: auto;
+            right: auto;
 
-                content: counter(sale_line_counter);
+            content: counter(sale_line_counter);
 
-                width: calc(var(--LineNumber-width) + var(--o-bs-table-cell-padding-x-sm) * 2);
-                padding: var(--o-bs-table-cell-padding-y-sm) var(--o-bs-table-cell-padding-x-sm);
-                white-space: nowrap;
-                overflow: hidden;
+            width: calc(var(--LineNumber-width) + var(--o-bs-table-cell-padding-x-sm) * 2);
+            padding: var(--o-bs-table-cell-padding-y-sm) var(--o-bs-table-cell-padding-x-sm);
+            white-space: nowrap;
+            overflow: hidden;
 
-                font-weight: normal !important;
-                font-style: normal !important;
-            }
+            font-weight: normal !important;
+            font-style: normal !important;
         }
     }
 }
