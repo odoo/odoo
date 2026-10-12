@@ -3,6 +3,12 @@
         --gutter-x: var(--o-wsale-products-grid-gap, 16px);
     }
 
+    // Single scroll mode spaces items with `--o-carousel-gap` instead of the
+    // row gutter, so make it follow the gap set in the design options too.
+    .carousel.o_carousel_multi_items {
+        --o-carousel-gap: var(--o-wsale-products-grid-gap, 16px);
+    }
+
     &.o_wsale_products_opt_design_grid .s_dynamic_snippet_row.row {
         --gutter-x: 0;
         --o-wsale-card-border-width: 1px 1px 1px 0;
