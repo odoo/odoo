@@ -463,8 +463,8 @@ class TestAccountPayment(AccountPaymentCommon):
         wizard = payment_register_wizard(invoice_1 + invoice_2)
         self.assertEqual(wizard.suitable_payment_token_ids, parent_token)
 
-    def test_generate_and_send_invoice_with_qr_code(self):
-        """Test generating & sending invoices with QR codes enabled."""
+    def test_generate_and_send_invoice_with_payment_link(self):
+        """Test generating & sending invoices with the payment link enabled."""
         self.env.company.link_qr_code = True
         move = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -474,13 +474,13 @@ class TestAccountPayment(AccountPaymentCommon):
         move.action_post()
 
         with patch.object(
-            move.__class__, '_generate_portal_payment_qr', wraps=move._generate_portal_payment_qr,
-        ) as payment_qr_mock:
+            move.__class__, '_get_portal_payment_link', wraps=move._get_portal_payment_link,
+        ) as payment_link_mock:
             self._assert_does_not_raise(
                 QWebError,
                 self.env['account.move.send']._generate_and_send_invoices(move),
             )
-            self.assertTrue(payment_qr_mock.called)
+            self.assertTrue(payment_link_mock.called)
 
     def test_partial_reconcile_with_payments_coming_from_provider(self):
         """ Test that we not allow partial reconcile on payments coming from
