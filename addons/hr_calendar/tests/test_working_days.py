@@ -295,13 +295,13 @@ class TestWorkingDaysWithVersion(TestHrContractCalendarCommon):
             datetime(2023, 12, 25).isoformat(),
             datetime(2023, 12, 31).isoformat(),
         )
-        # Employee E doesn't have a contract
+        # Employee E doesn't have a contract -> their calendar should not be grayed out
         expected_days = {
-            "2023-12-25": True,  # Monday
-            "2023-12-26": True,  # Tuesday
-            "2023-12-27": True,  # Wednesday
-            "2023-12-28": True,  # Thursday
-            "2023-12-29": True,  # Friday
+            "2023-12-25": False,  # Monday
+            "2023-12-26": False,  # Tuesday
+            "2023-12-27": False,  # Wednesday
+            "2023-12-28": False,  # Thursday
+            "2023-12-29": False,  # Friday
             "2023-12-30": True,  # Saturday
             "2023-12-31": True,  # Sunday
         }
