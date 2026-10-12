@@ -987,7 +987,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_20
         partner_vals = super()._import_retrieve_partner_vals(tree, role)
         partner_vals.update({
-            'vat': self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cac:PartyIdentification//cbc:ID[string-length(text()) > 5]', tree),
+            'vat': self._find_value(f".//cac:{role}Party/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID='VKN' or @schemeID='TCKN']", tree),
         })
         return partner_vals
 
@@ -1007,6 +1007,15 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             return 'refund', qty_factor
 
         return move_type, qty_factor
+
+    def _import_lines(self, record, tree, xpath, document_type=False, tax_type=False, qty_factor=1):
+        # EXTENDS account_edi_common
+        # In UBL-TR (GİB e-Fatura guide), IADE and TEVKIFATIADE refunds are <Invoice> documents with
+        # cac:InvoiceLine lines, see tests/test_files/refund/refund_iade.xml.
+        if xpath == './{*}CreditNoteLine' and etree.QName(tree).localname == 'Invoice':
+            xpath = './{*}InvoiceLine'
+            document_type = {'in_refund': 'in_invoice', 'out_refund': 'out_invoice'}.get(document_type, document_type)
+        return super()._import_lines(record, tree, xpath, document_type=document_type, tax_type=tax_type, qty_factor=qty_factor)
 
     def _l10n_tr_match_refund_reversed_entry(self, invoice, tree):
         if invoice.move_type not in {'in_refund', 'out_refund'}:
@@ -1035,6 +1044,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # ==== Nilvera UUID ====
         if uuid_node := tree.findtext('./{*}UUID'):
             invoice.l10n_tr_nilvera_uuid = uuid_node
+            # Like the documents fetched from Nilvera, an imported document was already issued: never send it again.
+            invoice.l10n_tr_nilvera_send_status = 'succeed'
 
         self._l10n_tr_match_refund_reversed_entry(invoice, tree)
 
