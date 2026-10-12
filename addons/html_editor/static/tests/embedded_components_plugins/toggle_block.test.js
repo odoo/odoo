@@ -137,7 +137,7 @@ describe("deleteBackward applied to toggle", () => {
                         <div class="ps-4 ms-1">
                             <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
                                 <p data-selection-placeholder=""><br></p>
-                                <table class="table table-bordered o_table">
+                                <div class="o_table_wrapper"><table class="table table-bordered o_table">
                                     <tbody>
                                         <tr>
                                             <td>
@@ -145,7 +145,7 @@ describe("deleteBackward applied to toggle", () => {
                                             </td>
                                         </tr>
                                     </tbody>
-                                </table>
+                                </table></div>
                                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                             </div>
                         </div>
@@ -707,8 +707,8 @@ describe("deleteForward applied to toggle", () => {
                     <div class="ps-4 ms-1">
                         <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
                             <p data-selection-placeholder=""><br></p>
-                            <table><tbody><tr><td>a</td></tr></tbody></table>
-                            <p data-selection-placeholder=""><br></p>
+                            <div class="o_table_wrapper"><table><tbody><tr><td>a</td></tr></tbody></table></div>
+                            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                         </div>
                     </div>
                 </div>

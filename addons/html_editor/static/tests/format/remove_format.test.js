@@ -989,7 +989,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table><p>]<br></p>`
+            `<p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[abc</p></td><td class="o_selected_td"><p><br></p></td></tr></tbody></table></div><p>]<br></p>`
         );
     });
 
@@ -999,7 +999,7 @@ describe("Toolbar", () => {
         );
         await removeFormatClick();
         expect(getContent(el)).toBe(
-            `<p data-selection-placeholder=""><br></p><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p>]<br></p></td></tr></tbody></table><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            `<p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table"><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p>]<br></p></td></tr></tbody></table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         );
     });
 
@@ -1024,7 +1024,7 @@ describe("Toolbar", () => {
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <table class="table table-bordered o_table o_selected_table">
+                <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                     <tbody>
                         <tr style="height: 100px;">
                             <td>1</td>
@@ -1035,7 +1035,7 @@ describe("Toolbar", () => {
                             <td style="" class="o_selected_td">4]</td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div>
                 <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `)
         );

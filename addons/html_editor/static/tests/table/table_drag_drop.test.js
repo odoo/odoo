@@ -52,7 +52,7 @@ test("should move first column after second column on drag and drop", async () =
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="a">[]1</td>
@@ -65,7 +65,7 @@ test("should move first column after second column on drag and drop", async () =
                         <td class="f">6</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -78,7 +78,7 @@ test("should move first column after second column on drag and drop", async () =
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="b">2</td>
@@ -91,7 +91,7 @@ test("should move first column after second column on drag and drop", async () =
                         <td class="f">6</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -143,7 +143,7 @@ test("should be able to drag overlay immediately after activating drag overlay",
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="a td-highlight-right">[]1</td>
@@ -156,7 +156,7 @@ test("should be able to drag overlay immediately after activating drag overlay",
                         <td class="f">6</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -207,7 +207,7 @@ test("should move third column before first column on drag and drop", async () =
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="a td-highlight-left">1</td>
@@ -220,7 +220,7 @@ test("should move third column before first column on drag and drop", async () =
                         <td class="f">6</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -233,7 +233,7 @@ test("should move third column before first column on drag and drop", async () =
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="c">[]3</td>
@@ -246,7 +246,7 @@ test("should move third column before first column on drag and drop", async () =
                         <td class="e">5</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -302,7 +302,7 @@ test("should not allow dropping a column inside a merged column", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="a td-highlight-right">[]1</td>
@@ -317,7 +317,7 @@ test("should not allow dropping a column inside a merged column", async () => {
                         <td class="i">8</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -334,7 +334,7 @@ test("should not allow dropping a column inside a merged column", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="a td-highlight-right">[]1</td>
@@ -349,7 +349,7 @@ test("should not allow dropping a column inside a merged column", async () => {
                         <td class="i">8</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -367,7 +367,7 @@ test("should not allow dropping a column inside a merged column", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="a">[]1</td>
@@ -382,7 +382,7 @@ test("should not allow dropping a column inside a merged column", async () => {
                         <td class="i">8</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -395,7 +395,7 @@ test("should not allow dropping a column inside a merged column", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="b">2</td>
@@ -410,7 +410,7 @@ test("should not allow dropping a column inside a merged column", async () => {
                         <td class="i">8</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -503,7 +503,7 @@ test("undo/redo should work correctly after dragging and dropping a column", asy
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="b">2</td>
@@ -511,7 +511,7 @@ test("undo/redo should work correctly after dragging and dropping a column", asy
                         <td class="a">[]1</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -520,7 +520,7 @@ test("undo/redo should work correctly after dragging and dropping a column", asy
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="a">[]1</td>
@@ -528,7 +528,7 @@ test("undo/redo should work correctly after dragging and dropping a column", asy
                         <td class="c">3</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -537,7 +537,7 @@ test("undo/redo should work correctly after dragging and dropping a column", asy
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="b">2</td>
@@ -545,7 +545,7 @@ test("undo/redo should work correctly after dragging and dropping a column", asy
                         <td class="a">[]1</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -598,7 +598,7 @@ test("should move first header row to last position on drag and drop", async () 
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <th class="a o_table_header">[]1</th>
@@ -613,7 +613,7 @@ test("should move first header row to last position on drag and drop", async () 
                         <td class="f">6</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -626,7 +626,7 @@ test("should move first header row to last position on drag and drop", async () 
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <th class="c o_table_header">3</th>
@@ -641,7 +641,7 @@ test("should move first header row to last position on drag and drop", async () 
                         <td class="b">2</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -694,7 +694,7 @@ test("should move last row above the first header row on drag and drop", async (
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr class="tr-highlight-top">
                         <th class="a o_table_header">1</th>
@@ -709,7 +709,7 @@ test("should move last row above the first header row on drag and drop", async (
                         <td class="f">6</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -722,7 +722,7 @@ test("should move last row above the first header row on drag and drop", async (
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <th class="e o_table_header">[]5</th>
@@ -737,7 +737,7 @@ test("should move last row above the first header row on drag and drop", async (
                         <td class="d">4</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -801,7 +801,7 @@ test("should not allow dropping a row inside a merged row", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr class="tr-highlight-bottom">
                         <td class="a">[]1</td>
@@ -822,7 +822,7 @@ test("should not allow dropping a row inside a merged row", async () => {
                         <td class="h">8</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -841,7 +841,7 @@ test("should not allow dropping a row inside a merged row", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr class="tr-highlight-bottom">
                         <td class="a">[]1</td>
@@ -862,7 +862,7 @@ test("should not allow dropping a row inside a merged row", async () => {
                         <td class="h">8</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -880,7 +880,7 @@ test("should not allow dropping a row inside a merged row", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr class="">
                         <td class="a">[]1</td>
@@ -901,7 +901,7 @@ test("should not allow dropping a row inside a merged row", async () => {
                         <td class="h">8</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -916,7 +916,7 @@ test("should not allow dropping a row inside a merged row", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td class="d">3</td>
@@ -937,7 +937,7 @@ test("should not allow dropping a row inside a merged row", async () => {
                         <td class="h">8</td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
@@ -1028,14 +1028,14 @@ test("undo/redo should work correctly after dragging and dropping a row", async 
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table m-4">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table m-4">
                 <tbody>
                     <tr><td class="b">2</td></tr>
                     <tr class=""><td class="c">3</td></tr>
                     <tr><td class="a">[]1</td></tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder="" style="margin: -13px 0px 12px;"><br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
     // Undo the drag and drop
@@ -1043,14 +1043,14 @@ test("undo/redo should work correctly after dragging and dropping a row", async 
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table m-4">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table m-4">
                 <tbody>
                     <tr><td class="a">[]1</td></tr>
                     <tr><td class="b">2</td></tr>
                     <tr><td class="c">3</td></tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder="" style="margin: -13px 0px 12px;"><br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
     // Redo the drag and drop
@@ -1058,14 +1058,14 @@ test("undo/redo should work correctly after dragging and dropping a row", async 
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table m-4">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table m-4">
                 <tbody>
                     <tr><td class="b">2</td></tr>
                     <tr><td class="c">3</td></tr>
                     <tr><td class="a">[]1</td></tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder="" style="margin: -13px 0px 12px;"><br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
         `)
     );
 });

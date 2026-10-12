@@ -79,22 +79,22 @@ describe("range not collapsed", () => {
         );
         expect(getContent(el)).toBe(
             unformat(
-                `]<table class="o_selected_table"><tbody><tr>
+                `]<div class="o_table_wrapper"><table class="o_selected_table"><tbody><tr>
                     <td class="o_selected_td">
                         <ul><li>a</li><li>b</li><li>c</li></ul>
                     </td>
                     <td class="o_selected_td">[<br></td>
-                </tr></tbody></table>`
+                </tr></tbody></table></div>`
             )
         );
         const clipboardData = new DataTransfer();
         await press(["ctrl", "c"], { dataTransfer: clipboardData });
         expect(clipboardData.getData("text/plain")).toBe("a\nb\nc\n");
         expect(clipboardData.getData("text/html")).toBe(
-            "<table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>"
+            '<div class="o_table_wrapper"><table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table></div>'
         );
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
-            "<table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table>"
+            '<div class="o_table_wrapper"><table><tbody><tr><td><ul><li>a</li><li>b</li><li>c</li></ul></td><td><br></td></tr></tbody></table></div>'
         );
     });
 
@@ -105,10 +105,10 @@ describe("range not collapsed", () => {
         const clipboardData = new DataTransfer();
         await press(["ctrl", "c"], { dataTransfer: clipboardData });
         expect(clipboardData.getData("text/html")).toBe(
-            "<p>abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>"
+            '<p>abcd</p><div class="o_table_wrapper"><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table></div>'
         );
         expect(clipboardData.getData("application/vnd.odoo.odoo-editor")).toBe(
-            "<p>abcd</p><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table>"
+            '<p>abcd</p><div class="o_table_wrapper"><table><tbody><tr><td><br></td><td><br></td></tr></tbody></table></div>'
         );
     });
 

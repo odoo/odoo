@@ -2212,11 +2212,11 @@ describe("Selection not collapsed", () => {
             ),
             contentBeforeEdit: unformat(
                 `[<p data-selection-placeholder=""><br></p>
-                <table class="o_selected_table"><tbody>
+                <div class="o_table_wrapper"><table class="o_selected_table"><tbody>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
                     <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
-                </tbody></table>
-                <p data-selection-placeholder=""><br></p>`
+                </tbody></table></div>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
             ),
             stepFunction: deleteBackward,
             contentAfter: unformat("<p>[]<br></p>"),
