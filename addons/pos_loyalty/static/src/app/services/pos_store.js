@@ -17,6 +17,13 @@ patch(PosStore.prototype, {
                 .map((order) => order.partner_id?.id)
         );
     },
+    async openExistingOrder(order) {
+        const isOpened = await super.openExistingOrder(...arguments);
+        if (isOpened && this.models["loyalty.program"]?.length) {
+            this.updateRewards();
+        }
+        return isOpened;
+    },
     async afterProcessServerData() {
         // Remove reward lines that have no reward anymore (could happen if the program got archived)
         this.models["pos.order.line"]

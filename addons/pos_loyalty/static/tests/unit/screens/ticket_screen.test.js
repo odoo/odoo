@@ -46,3 +46,26 @@ test("TicketScreen.setOrder keeps the reward line and triggers pos.updateRewards
     expect(rewardLines).toHaveLength(1);
     expect(rewardLines[0].reward_id.id).toBe(reward.id);
 });
+
+test("openExistingOrder does not update the rewards when the order is syncing", async () => {
+    const store = await setupPosEnv();
+    const currentOrder = store.addNewOrder();
+    const order = store.addNewOrder();
+    store.setOrder(currentOrder);
+    store.syncAllOrders = async () => {};
+
+    let updateRewardsCalls = 0;
+    const originalUpdateRewards = store.updateRewards.bind(store);
+    store.updateRewards = (...args) => {
+        updateRewardsCalls++;
+        return originalUpdateRewards(...args);
+    };
+
+    store.syncingOrders.add(order.uuid);
+    expect(await store.openExistingOrder(order)).toBe(false);
+    expect(updateRewardsCalls).toBe(0);
+
+    store.syncingOrders.delete(order.uuid);
+    expect(await store.openExistingOrder(order)).toBe(true);
+    expect(updateRewardsCalls).toBe(1);
+});
