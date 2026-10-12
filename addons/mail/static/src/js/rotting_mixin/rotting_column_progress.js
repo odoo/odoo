@@ -13,9 +13,13 @@ export class RottingColumnProgress extends ColumnProgress {
         if (!isRottingField) {
             return {};
         }
+        const { progressBarState } = this.props;
+        const rottingCounts = progressBarState?._pbCounts?.__rotting_counts;
         return {
             title: isRottingField.string,
-            value: group.list.records.filter((record) => record.data.is_rotting).length,
+            value: rottingCounts
+                ? rottingCounts[progressBarState._getGroupValue(group)] || 0
+                : group.list.records.filter((record) => record.data.is_rotting).length,
         };
     }
 
