@@ -73,7 +73,10 @@
                     <hr/>
                     <div class="d-flex rounded-4 bg-secondary p-3 justify-content-between align-items-center order-note">
                         <div>
-                            <div class="fw-bolder" style="font-size: 1.1rem;" t-out="this.orderNote ? 'Order note' : 'Add an order note'"/>
+                            <div class="fw-bolder" style="font-size: 1.1rem;">
+                                <t t-if="this.orderNote">Order note</t>
+                                <t t-else="">Add an order note</t>
+                            </div>
                             <div t-if="this.orderNote" class="text-muted mt-1" t-out="this.orderNote"/>
                             <div t-else="" class="text-muted small">Utensils, special instructions, etc.</div>
                         </div>
