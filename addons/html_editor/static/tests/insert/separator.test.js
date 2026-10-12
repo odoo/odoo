@@ -3,7 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
 import { simulateArrowKeyPress } from "../_helpers/user_actions";
-import { animationFrame, click, tick } from "@odoo/hoot-dom";
+import { animationFrame, click, press, tick } from "@odoo/hoot-dom";
 
 async function insertSeparator(editor) {
     execCommand(editor, "insertSeparator");
@@ -156,5 +156,18 @@ describe("insert separator", () => {
         await tick();
 
         expect(getContent(el)).toBe(`<p>abc</p><hr contenteditable="false"><p>xyz</p>`);
+    });
+
+    test("copy an hr element should remove `o_selected_hr` class", async () => {
+        await setupEditor(`<p>a</p>[<hr contenteditable="false" class="o_selected_hr"><p>xyz]</p>`);
+        await animationFrame();
+
+        const clipboardData = new DataTransfer();
+        await press(["ctrl", "c"], { dataTransfer: clipboardData });
+
+        const html = clipboardData.getData("application/vnd.odoo.odoo-editor");
+        const fragment = document.createRange().createContextualFragment(html);
+        const host = fragment.querySelector(".o_selected_hr");
+        expect(host).toBe(null);
     });
 });
