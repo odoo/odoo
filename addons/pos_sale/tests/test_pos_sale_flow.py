@@ -861,6 +861,28 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
 
         self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
 
+    def test_full_down_payment_so_still_listed(self):
+        """
+        Tests that a Sale Order fully paid by a down payment in the PoS is still listed, so it can be settled
+        """
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'lst_price': 10.0,
+        })
+        so = self.env['sale.order'].sudo().create({
+            'name': 'Full Down Payment SO',
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': product_a.lst_price,
+            })]
+        })
+        so.action_confirm()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_full_down_payment_so_still_listed', login="accountman")
+
     def test_amount_to_invoice(self):
         """
         Checks that the amount to invoice is updated correctly when paying an order in the PoS
