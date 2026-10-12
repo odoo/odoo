@@ -14,3 +14,4 @@ List of contributors:
 
 Jérémy Bethmont jeremy@newlogic.com https://github.com/jerem
 Baptiste baptiste@newlogic.com https://github.com/baptiste-n42
+Roslyn roslyn@newlogic.com https://github.com/hunxoza
