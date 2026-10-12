@@ -102,11 +102,16 @@ export const hootPosModels = [
     BarcodeNomenclature,
 ];
 
+export const initPosMockRpc = () => {
+    onRpc("/pos/ping", () => {});
+    onRpc("/pos/receipt-template", () => []);
+};
+
 export const definePosModels = () => {
     const posModelNames = hootPosModels.map((modelClass) => modelClass.prototype.constructor._name);
     const modelsFromMail = Object.values(mailModels).filter(
         (modelClass) => !posModelNames.includes(modelClass.prototype.constructor._name)
     );
-    onRpc("/pos/ping", () => {});
+    initPosMockRpc();
     defineModels([...modelsFromMail, ...hootPosModels]);
 };
