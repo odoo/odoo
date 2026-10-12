@@ -23,6 +23,7 @@ registry.category("web_tour.tours").add("skip_website_configurator", {
             trigger:
                 ".o_configurator_container .btn.btn-link:contains('Skip and start from scratch')",
             run: "click",
+            expectUnloadPage: true,
         },
         {
             content: "Check that the homepage is loaded",
