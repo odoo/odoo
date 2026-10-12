@@ -21,6 +21,7 @@ from stdnum.se import orgnr as se_en
 
 from odoo.tools.translate import LazyGettext, LazyTranslate
 from odoo.tools.partner_identifier_validation import (
+    in_tan_validate,
     nl_kvk_validate,
     nl_oin_validate,
     pk_cn_validate,
@@ -700,6 +701,13 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'category': 'CN',
         'validation_function': ie_ppsn.validate,
         'countries': ['IE'],
+    },
+    'IN_TAN': {
+        'label': _lt('TAN'),
+        'help': _lt('Tax Deduction and Collection Account Number.'),
+        'placeholder': 'ABCD12345E',
+        'validation_function': in_tan_validate,
+        'countries': ['IN'],
     },
     # Note: 'IT_CODICE' skipped for now, will need a refactor in itself.
     'JP_EN': {

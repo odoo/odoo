@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.sql import column_exists, create_column
 from odoo.tools import SQL
@@ -49,8 +49,9 @@ class ResConfigSettings(models.TransientModel):
         readonly=False
     )
     l10n_in_tan = fields.Char(
-        related='company_id.l10n_in_tan',
-        readonly=False
+        string="TAN",
+        compute='_compute_l10n_in_tan',
+        inverse='_inverse_l10n_in_tan'
     )
 
     # GST settings
@@ -80,6 +81,15 @@ class ResConfigSettings(models.TransientModel):
     module_l10n_in_edi = fields.Boolean("Indian Electronic Invoicing")
     module_l10n_in_ewaybill = fields.Boolean("Indian Electronic Waybill")
     module_l10n_in_boe = fields.Boolean("Bill of Entry")
+
+    @api.depends('company_id.partner_id.additional_identifiers')
+    def _compute_l10n_in_tan(self):
+        for settings in self:
+            settings.l10n_in_tan = settings.company_id.partner_id._get_additional_identifier('IN_TAN')
+
+    def _inverse_l10n_in_tan(self):
+        for settings in self:
+            settings.company_id.partner_id._set_additional_identifier('IN_TAN', settings.l10n_in_tan)
 
     def set_values(self):
         super().set_values()
