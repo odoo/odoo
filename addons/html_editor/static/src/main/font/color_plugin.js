@@ -8,6 +8,7 @@ import {
 } from "@html_editor/utils/color";
 import { fillEmpty, removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import {
+    isElement,
     isEmptyBlock,
     isRedundantElement,
     isTextNode,
@@ -249,6 +250,11 @@ export class ColorPlugin extends Plugin {
                 // it out.
                 if (alreadyWithinFont.has(node)) {
                     return [];
+                }
+                // We apply color on icon element so the background color
+                // adapts when we resize color.
+                if (isElement(node) && node?.matches(".fa")) {
+                    return node;
                 }
                 // Background gradient cannot be applied within text gradient.
                 const shouldBreakGradient = (node) =>
