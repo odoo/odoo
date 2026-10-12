@@ -788,7 +788,7 @@ class HrExpense(models.Model):
                         is_all_approver
                         or expense.employee_id.id in expenses_employee_ids_under_user_ones
                         or expense.employee_id.expense_manager_id == user
-                        or (expense.state in {'draft', 'submitted'} and expense.employee_id.user_id == user)
+                        or (expense.state in {'draft', 'submitted', 'refused'} and expense.employee_id.user_id == user)
                 )
             )
 
