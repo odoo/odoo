@@ -162,13 +162,16 @@ class Website(models.CachedModel):
     social_default_image = fields.Binary(string="Default Social Share Image", help="If set, replaces the website logo as the default social share image.")
     has_social_default_image = fields.Boolean(compute='_compute_has_social_default_image', store=True)
 
-    google_analytics_key = fields.Char('Google Analytics Key')
-    google_search_console = fields.Char(help='Google key, or Enable to access first reply')
+    # API keys and fields tied to the website's domain or analytics accounts are
+    # not copied, as the duplicated website would otherwise use the ones of its
+    # source value
+    google_analytics_key = fields.Char('Google Analytics Key', copy=False)
+    google_search_console = fields.Char(help='Google key, or Enable to access first reply', copy=False)
 
-    google_maps_api_key = fields.Char('Google Maps API Key')
+    google_maps_api_key = fields.Char('Google Maps API Key', copy=False)
 
-    plausible_shared_key = fields.Char()
-    plausible_site = fields.Char()
+    plausible_shared_key = fields.Char(copy=False)
+    plausible_site = fields.Char(copy=False)
 
     cdn_activated = fields.Boolean('Content Delivery Network (CDN)')
     cdn_url = fields.Char('CDN Base URL', default='')
@@ -176,8 +179,8 @@ class Website(models.CachedModel):
     partner_id = fields.Many2one(related='user_id.partner_id', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
     homepage_url = fields.Char(help='E.g. /contactus or /shop')
-    custom_code_head = fields.Html('Custom <head> code', sanitize=False)
-    custom_code_footer = fields.Html('Custom end of <body> code', sanitize=False)
+    custom_code_head = fields.Html('Custom <head> code', sanitize=False, copy=False)
+    custom_code_footer = fields.Html('Custom end of <body> code', sanitize=False, copy=False)
 
     robots_txt = fields.Html('Robots.txt', translate=False, groups='website.group_website_designer', sanitize=False)
     llms_txt = fields.Text('LLMs.txt', translate=False)
@@ -305,8 +308,10 @@ class Website(models.CachedModel):
         websites = super().create(vals_list)
         websites._ensure_logo_media_attachment()
         websites.company_id._compute_website_id()
-        for website in websites:
-            website._bootstrap_homepage()
+        # a duplicated website receives the content of its source instead
+        if not self.env.context.get('copy_website'):
+            for website in websites:
+                website._bootstrap_homepage()
 
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
@@ -541,6 +546,136 @@ class Website(models.CachedModel):
             ('url', '=like', '/_custom/%'),  # customized theme attachment
             ('url', 'ilike', '.assets\\_'),
         ])
+
+    def copy_data(self, default=None):
+        default = default or {}
+        vals_list = super().copy_data(default=default)
+        for count, vals in enumerate(vals_list, start=1):
+            if 'name' in default and count > 1:
+                vals['name'] = f"{default['name']} {count}"
+            if 'domain' not in default:
+                vals['domain'] = False
+        return vals_list
+
+    def copy(self, default=None):
+        """ Duplicate the websites along with their specific content, see
+        :meth:`_duplicate_content`. """
+        if not (self.env.su or self.env.user._is_system()):
+            raise AccessError(self.env._("Only administrators can duplicate a website."))
+        new_websites = super(Website, self.with_context(copy_website=True)).copy(default=default).with_env(self.env)
+        for website, new_website in zip(self, new_websites):
+            website._duplicate_content(new_website)
+        return new_websites
+
+    def _duplicate_content(self, website):
+        """ Copy the content specific to ``self`` onto ``website``, its freshly
+        created duplicate: views, pages, model pages, menus, assets, theme and
+        customized assets attachments, and redirections. The records shared
+        between websites are not duplicated.
+
+        :param website: the duplicate of ``self``
+        :return: a dict mapping the duplicated records to their copy
+        """
+        self = self.with_context(website_id=website.id, active_test=False)  # noqa: PLW0642
+
+        def website_records(model, domain=()):
+            return self.env[model].search([('website_id', '=', self.id), *domain], order='id')
+
+        publication_fields = ['is_published', 'publish_on', 'published_date']
+        views = website_records('ir.ui.view')
+        menus = website_records('website.menu', [('id', 'child_of', self.menu_id.id)])
+        record_map = {}
+
+        # created inactive, as an active view is checked against the views
+        # copied so far and may target an element added by one copied later
+        self._duplicate_records(website, views, record_map, keep=['key', 'theme_template_id', 'visibility_password'],
+                                parent_field='inherit_id', default={'active': False})
+        views.filtered('active').mapped(record_map.get).with_context(no_cow=True).write({'active': True})
+        self._duplicate_records(website, website_records('website.page'), record_map,
+                                keep=['url', 'theme_template_id', *publication_fields], parent_field='parent_id')
+        self._duplicate_records(website, website_records('website.controller.page'), record_map,
+                                keep=['name', 'name_slugified', *publication_fields])
+        self._duplicate_records(website, menus, record_map, keep=['theme_template_id'], parent_field='parent_id')
+        self._duplicate_records(website, website_records('ir.asset'), record_map, keep=['key', 'theme_template_id'])
+        self._duplicate_records(website, website_records('ir.attachment', [
+            '|',
+            ('key', '!=', False),
+            ('url', '=like', '/_custom/%'),
+        ]), record_map, keep=['key', 'theme_template_id'])
+        # the copied pages use the images and documents uploaded on the source
+        # website: share them with all the websites, as a file of another
+        # website cannot be modified, e.g. cropped
+        website_records('ir.attachment', [('res_model', '=', 'ir.ui.view'), ('key', '=', False)]).website_id = False
+        rewrites = website_records('website.rewrite')
+        if '308' in rewrites.mapped('redirect_type'):
+            # build the routing of the copy before its redirections exist, as
+            # it was when they were created, otherwise a 308 one is checked
+            # against the route it adds itself
+            self.env['ir.http'].routing_map()
+        self._duplicate_records(website, rewrites, record_map)
+
+        if self.cookie_policy_id in record_map:
+            website.cookie_policy_id = record_map[self.cookie_policy_id]
+
+        # `<module>.<website id>_<template menu xmlid name>`, given by
+        # `_copy_menu_hierarchy` and needed by the modules installed later on
+        prefix = f'.{self.id}_'
+        self.env['ir.model.data']._update_xmlids([
+            {
+                'xml_id': xmlid.replace(prefix, f'.{website.id}_', 1),
+                'record': record_map[menu],
+                'noupdate': True,
+            }
+            for menu, xmlid in zip(menus, menus.get_external_id().values())
+            if prefix in xmlid
+        ])
+        return record_map
+
+    @api.model
+    def _duplicate_records(self, website, records, record_map, keep=(), parent_field=None, default=None):
+        """ Copy ``records`` onto ``website``. The many2one fields referring to
+        records already duplicated are set to their copy. The parents are
+        copied before their children, so that the copy of a child is linked to
+        the copy of its parent.
+
+        :param records: the records to duplicate
+        :param dict record_map: maps the records duplicated so far to their
+            copy, updated with the copies of ``records``
+        :param keep: the fields to keep as is, even if not copied by default
+        :param parent_field: the many2one field defining the hierarchy of
+            ``records``
+        :param dict default: the values to set on all the copies, as for
+            :meth:`copy`
+        """
+        while records:
+            if parent_field:
+                ids = set(records.ids)
+                batch = records.filtered(lambda record: record[parent_field].id not in ids)
+            else:
+                batch = records
+            vals_list = []
+            for record in batch:
+                # a copied many2one field refers to the copy of its value when
+                # that value has already been duplicated, e.g. the copy of a
+                # menu refers to the copies of its parent menu and of its page;
+                # the other values, like a view shared between websites, are
+                # kept as is by copy_data
+                record_default = {
+                    fname: record_map[record[fname]].id
+                    for fname, field in record._fields.items()
+                    if field.type == 'many2one' and field.copy and record[fname] in record_map
+                }
+                for fname in keep:
+                    field = record._fields[fname]
+                    # keep the value in all languages
+                    translations = field.translate is True and record._get_stored_translations(fname)
+                    record_default[fname] = (
+                        translations.normalize(record.env, field) if translations
+                        else field.convert_to_write(record[fname], record)
+                    )
+                vals_list += record.copy_data({**record_default, **(default or {}), 'website_id': website.id})
+            record_map.update(zip(batch, batch.browse().create(vals_list)))
+            records -= batch
 
     def create_and_redirect_configurator(self):
         self._force()
