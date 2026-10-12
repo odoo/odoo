@@ -1,5 +1,6 @@
 import { reactive } from "@odoo/owl";
 
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 export class MailCoreWeb {
@@ -9,6 +10,7 @@ export class MailCoreWeb {
      */
     constructor(env, services) {
         this.env = env;
+        this.actionService = services.action;
         this.busService = services.bus_service;
         this.store = services["mail.store"];
     }
@@ -85,12 +87,25 @@ export class MailCoreWeb {
                 inbox.fetchMoreMessages();
             }
         });
+        browser.navigator.serviceWorker?.addEventListener(
+            "message",
+            ({ data: { action, data } }) => {
+                if (action === "OPEN_RECORD") {
+                    this.actionService.doAction({
+                        type: "ir.actions.act_window",
+                        res_id: data.id,
+                        res_model: data.model,
+                        views: [[false, "form"]],
+                    });
+                }
+            }
+        );
         this.busService.start();
     }
 }
 
 export const mailCoreWeb = {
-    dependencies: ["bus_service", "mail.store"],
+    dependencies: ["action", "bus_service", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {Partial<import("services").Services>} services

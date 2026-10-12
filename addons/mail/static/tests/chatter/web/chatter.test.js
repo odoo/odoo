@@ -667,6 +667,19 @@ test("Mentions in composer should still work when using pager", async () => {
     await contains(".o-mail-Composer-suggestion", { count: 3 });
 });
 
+test("open record from push notification", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    await start();
+    navigator.serviceWorker.dispatchEvent(
+        new MessageEvent("message", {
+            data: { action: "OPEN_RECORD", data: { id: partnerId, model: "res.partner" } },
+        })
+    );
+    await contains(".o_form_view .o_field_widget[name='name'] input", { value: "John Doe" });
+    await contains(".o-mail-Chatter");
+});
+
 test("form views in dialogs do not have chatter", async () => {
     defineActions([
         {
