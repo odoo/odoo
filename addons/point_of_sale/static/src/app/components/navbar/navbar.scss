@@ -30,8 +30,8 @@
 
 .pos .status-buttons {
     .avatar {
-        height: $pos-avatar-size;
-        width: $pos-avatar-size;
+        height: var(--o-pos-avatar-size);
+        width: var(--o-pos-avatar-size);
     }
 
     > .btn {
@@ -45,8 +45,8 @@
 }
 
 .pos .sub-menu {
-    top: $pos-navbar-height * 2/3;
-    right: $pos-navbar-height * -1/3 ;
+    top: calc(var(--o-pos-navbar-height) * 2 / 3);
+    right: calc(var(--o-pos-navbar-height) * -1 / 3);
 }
 
 .pos .o_pos_burger_menu_buttons {

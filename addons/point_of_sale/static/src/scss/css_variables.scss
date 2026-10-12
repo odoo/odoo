@@ -1,0 +1,13 @@
+/*
+ * CSS variables of point_of_sale: its design variables exposed as CSS
+ * custom properties, so that stylesheets can read them with `var()`
+ * instead of being compiled by libsass. Every bundle including this file
+ * emits its own values.
+ */
+:root,
+:host {
+    --o-pos-avatar-size: #{$pos-avatar-size};
+    --o-pos-left-pane-width: #{$pos-left-pane-width};
+    --o-pos-left-pane-width-tablet: #{$pos-left-pane-width-tablet};
+    --o-pos-navbar-height: #{$pos-navbar-height};
+}

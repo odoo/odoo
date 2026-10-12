@@ -63,12 +63,12 @@ select > option {
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
 .leftpane {
-    width: $pos-left-pane-width;
-    max-width: $pos-left-pane-width;
+    width: var(--o-pos-left-pane-width);
+    max-width: var(--o-pos-left-pane-width);
 
     @media (max-width: 1199.98px) {
-        width: $pos-left-pane-width-tablet;
-        max-width: $pos-left-pane-width-tablet;
+        width: var(--o-pos-left-pane-width-tablet);
+        max-width: var(--o-pos-left-pane-width-tablet);
     }
 }
 
