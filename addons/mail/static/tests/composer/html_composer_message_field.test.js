@@ -305,7 +305,10 @@ describe("Remove attachments", () => {
 test("wait for attachments to be uploaded before sending message", async function () {
     const uploadRelease = new Deferred();
     const mailSent = new Deferred();
-    onRpcBefore("/mail/attachment/upload", async () => await uploadRelease);
+    onRpcBefore("/mail/attachment/upload", async () => {
+        expect.step("upload");
+        await uploadRelease;
+    });
     onRpc("mail.compose.message", "web_save", ({ args }) => {
         expect.step("web_save");
         expect(args[1].attachment_ids).toHaveLength(1);
@@ -339,7 +342,7 @@ test("wait for attachments to be uploaded before sending message", async functio
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
     await click(".o_field_mail_composer_attachment_selector button");
     await setInputFiles([file]);
-    await animationFrame();
+    await expect.waitForSteps(["upload"]);
 
     await click(".o_mail_send");
     await animationFrame();
