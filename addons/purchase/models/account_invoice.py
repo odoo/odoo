@@ -436,8 +436,8 @@ class AccountMove(models.Model):
                         # logic to fill these new fields.
                         purchase_line_candidates[purchase_line] = difflib.SequenceMatcher(
                             None,
-                            invoice_line.label,
-                            purchase_line.label,
+                            invoice_line.label or "",
+                            purchase_line.label or "",
                         ).ratio()
 
                 if len(purchase_line_candidates) > 0:
