@@ -35,6 +35,7 @@
     --o-enterprise-action-color: #{$o-enterprise-action-color};
     --o-enterprise-color: #{$o-enterprise-color};
     --o-field-translate-padding: #{$o-field-translate-padding};
+    --o-font-family-sans-serif: #{inspect($o-font-family-sans-serif)};
     --o-font-size-base: #{$o-font-size-base};
     --o-font-size-base-small: #{$o-font-size-base-small};
     --o-font-size-base-smaller: #{$o-font-size-base-smaller};
@@ -90,10 +91,14 @@
     --o-navbar-badge-padding: #{$o-navbar-badge-padding};
     --o-navbar-badge-size: #{$o-navbar-badge-size};
     --o-navbar-height: #{$o-navbar-height};
+    --o-root-font-size: #{$o-root-font-size};
+    --o-search-bar-menu-max-width: calc(100vw - #{map-get($spacers, 3) * 2});
     --o-shadow-color: #{$o-shadow-color};
     --o-sheet-vpadding: #{$o-sheet-vpadding};
     --o-statusbar-arrow-width: #{$o-statusbar-arrow-width};
     --o-success: #{$o-success};
+    --o-text-color-danger: #{map-get(map-merge($theme-colors, $o-theme-text-colors), 'danger')};
+    --o-text-color-primary: #{map-get(map-merge($theme-colors, $o-theme-text-colors), 'primary')};
     --o-view-background-color: #{$o-view-background-color};
     --o-warning: #{$o-warning};
     --o-webclient-background-color: #{$o-webclient-background-color};
@@ -207,6 +212,7 @@
     --o-bs-zindex-offcanvas: #{$zindex-offcanvas};
     --o-bs-zindex-popover: #{$zindex-popover};
     --o-bs-zindex-sticky: #{$zindex-sticky};
+    --o-bs-zindex-toast: #{$zindex-toast};
     --o-bs-zindex-tooltip: #{$zindex-tooltip};
 
     /* Bootstrap variables whose own custom property some components redefine */
@@ -216,10 +222,12 @@
     --o-bs-border-width: #{$border-width};
     --o-bs-headings-color: #{$headings-color};
 
-    /* Bootstrap variables whose value reads another custom property in some bundles */
+    /* Variables whose value reads another custom property in some bundles */
     --o-bs-btn-link-hover-color: #{$btn-link-hover-color};
     --o-bs-dropdown-bg: #{$dropdown-bg};
+    --o-bs-popover-box-shadow: #{$popover-box-shadow};
     --o-bs-table-border-color: #{$table-border-color};
+    --o-control-panel-border-bottom: #{$o-control-panel-border-bottom};
 
     /* Contrast colors that Bootstrap computes with color-contrast() */
     --o-bs-gray-100-contrast: #{color-contrast($gray-100)};
