@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
+import math
 
-from odoo import models, fields
+from odoo import _, models, fields
+from odoo.exceptions import UserError
+
+MATRIX_COMBINATION_LIMIT = 100000
 
 
 class ProductTemplate(models.Model):
@@ -18,6 +22,17 @@ class ProductTemplate(models.Model):
         Attrib = self.env['product.template.attribute.value']
         first_line_attributes = attribute_lines[0].product_template_value_ids._only_active()
         attribute_ids_by_line = [line.product_template_value_ids._only_active().ids for line in attribute_lines]
+
+        # The whole grid is built in memory
+        combination_count = math.prod(len(ids) for ids in attribute_ids_by_line)
+        if combination_count > MATRIX_COMBINATION_LIMIT:
+            raise UserError(_(
+                "The product %(product)s has too many attribute combinations (%(count)s) to be displayed in a grid "
+                "(the limit is %(limit)s). Reduce the number of attributes or values on the product, or split it into several products.",
+                product=self.display_name,
+                count=combination_count,
+                limit=MATRIX_COMBINATION_LIMIT,
+            ))
 
         header = [{"name": self.display_name}] + [
             attr._grid_header_cell(
