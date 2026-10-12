@@ -30,6 +30,47 @@ class TestMenu(common.TransactionCase):
 
         self.assertEqual(total_menu_items + self.nb_website * 2, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id")
 
+    def test_menu_visible_password_view_skips_handle_visibility(self):
+        """ A password-protected page must stay visible in the menu without
+        its view's `_handle_visibility` being called (it would try the
+        submitted password, meant for another page, against this one). """
+        View = self.env['ir.ui.view']
+        Page = self.env['website.page']
+        Menu = self.env['website.menu']
+        website_1 = self.env['website'].browse(1)
+
+        view = View.create({
+            'name': 'Protected',
+            'type': 'qweb',
+            'arch': '<div>protected</div>',
+            'key': 'test.menu_protected_view',
+            'visibility': 'password',
+            # Simulates a cloned page: visibility is kept but the password is
+            # wiped (visibility_password has copy=False).
+        })
+        page = Page.create({
+            'view_id': view.id,
+            'url': '/menu-protected',
+            'is_published': True,
+            'website_id': website_1.id,
+        })
+        menu = Menu.create({
+            'name': 'Protected menu',
+            'page_id': page.id,
+            'website_id': website_1.id,
+        })
+
+        public_user = self.env.ref('base.public_user')
+        with MockRequest(self.env(user=public_user), website=website_1) as mock_request:
+            # `menu` itself must be bound to the public user's env: the
+            # internal/public check in `_compute_visible` is done on
+            # `menu.env.user`, not on the (sudo'ed) page/view records.
+            menu_pub = mock_request.env['website.menu'].browse(menu.id)
+            with patch.object(type(view), '_handle_visibility') as mocked_handle_visibility:
+                is_visible = menu_pub.is_visible
+                mocked_handle_visibility.assert_not_called()
+            self.assertTrue(is_visible, "Password-protected page should stay visible in the menu")
+
     def test_02_menu_count(self):
         Menu = self.env['website.menu']
         total_menu_items = Menu.search_count([])

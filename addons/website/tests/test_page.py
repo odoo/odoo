@@ -206,6 +206,49 @@ class TestPage(common.TransactionCase):
         self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
 
+    def test_handle_visibility_password_scoped_to_requested_view(self):
+        View = self.env['ir.ui.view']
+        crypt_context = self.env.user._crypt_context()
+
+        protected_view = View.create({
+            'name': 'Protected',
+            'type': 'qweb',
+            'arch': '<div>protected</div>',
+            'key': 'test.protected_view',
+            'visibility': 'password',
+            'visibility_password': crypt_context.hash('secret'),
+        })
+        # Simulates a page clone: visibility is kept but the password is
+        # wiped (visibility_password has copy=False).
+        broken_clone = View.create({
+            'name': 'Broken clone',
+            'type': 'qweb',
+            'arch': '<div>clone</div>',
+            'key': 'test.broken_clone_view',
+            'visibility': 'password',
+        })
+
+        public_user = self.env.ref('base.public_user')
+        website = self.env['website'].browse(1)
+
+        with MockRequest(self.env(user=public_user), website=website) as mock_request:
+            mock_request.params = {'visibility_password': 'secret'}
+
+            # A password submitted for the view actually being accessed must
+            # not be tried against another view found along the way (e.g.
+            # while computing menu visibility, do_raise=False): no crash,
+            # and the other view must stay locked.
+            self.assertFalse(broken_clone._handle_visibility(do_raise=False))
+            self.assertNotIn(broken_clone.id, mock_request.session.get('views_unlock', []))
+
+            self.assertFalse(protected_view._handle_visibility(do_raise=False))
+            self.assertNotIn(protected_view.id, mock_request.session.get('views_unlock', []))
+
+            # The view actually being accessed (do_raise=True) can be unlocked.
+            self.assertTrue(protected_view._handle_visibility(do_raise=True))
+            self.assertIn(protected_view.id, mock_request.session.get('views_unlock', []))
+
+
 @tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
     def setUp(self):
