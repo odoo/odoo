@@ -63,7 +63,7 @@ class WebsiteForm(http.Controller):
         model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
         if not model_record:
             return json.dumps({
-                'error': _("The form's specified model does not exist")
+                'error': _("This form cannot be submitted. Please contact the website administrator.")
             })
 
         try:
