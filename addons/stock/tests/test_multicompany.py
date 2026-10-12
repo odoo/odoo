@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from json import loads
+
 from odoo import Command
 
 from odoo.fields import Domain
@@ -873,3 +875,29 @@ class TestMultiCompany(TransactionCase):
         domain = Domain.AND([base_domain, self.env['stock.quant'].with_company(self.branch_company_a)._get_quants_action()['domain']])
         quants_branch = self.env['stock.quant'].with_company(self.branch_company_a).search(domain)
         self.assertTrue(quants_branch)
+
+    def test_multicompany_orderpoint_horizon_and_deadline(self):
+        """Test that the orderpoint's company determines the receipt deadline
+        and horizon days displayed in replenishment information."""
+        self.company_b.horizon_days = 30
+        product = self.env['product.product'].create({
+            'name': 'Test Storable Product',
+            'is_storable': True,
+            'company_id': self.company_a.id,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'location_id': self.stock_location_a.id,
+            'product_id': product.id,
+            'company_id': self.company_a.id,
+            'product_min_qty': 5,
+            'product_max_qty': 10,
+        })
+        repl_info_action = orderpoint.action_stock_replenishment_info()
+        repl_info = self.env[repl_info_action['res_model']].browse(repl_info_action['res_id'])
+        for company in (self.company_b, self.company_a):
+            orderpoint.with_company(company).action_replenish()
+            receipt = self.env['stock.picking'].search([('origin', '=', orderpoint.name), ('state', '!=', 'cancel')])
+            self.assertEqual(receipt.date_deadline.date(), orderpoint.deadline_date)
+            receipt.action_cancel()
+            lead_days_description = loads(repl_info.with_company(company).json_lead_days)['lead_days_description']
+            self.assertIn(f"{orderpoint.company_id.horizon_days:g}", lead_days_description[0][1])
