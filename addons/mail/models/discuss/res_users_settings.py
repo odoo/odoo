@@ -28,14 +28,8 @@ class ResUsersSettings(models.Model):
         self._store_settings_fields(res[None])
 
     @api.model
-    def _format_settings(self, fields_to_format):
-        res = super()._format_settings(fields_to_format)
-        if 'volume_settings_ids' in fields_to_format:
-            volume_settings = self.volume_settings_ids._discuss_users_settings_volume_format()
-            res.pop('volume_settings_ids', None)
-            if volume_settings:
-                res["volumes"] = [("ADD", volume_settings)]
-        return res
+    def _get_fields_blacklist(self):
+        return [*super()._get_fields_blacklist(), "volume_settings_ids"]
 
     def set_volume_setting(self, partner_id, volume, guest_id=None):
         """

@@ -72,26 +72,6 @@ export class ResUsersSettings extends webModels.ResUsersSettings {
 }
 
 patch(webModels.ResUsersSettings.prototype, {
-    res_users_settings_format(id, fields_to_format) {
-        const kwargs = getKwArgs(arguments, "id", "fields_to_format");
-        id = kwargs.id;
-        delete kwargs.id;
-        fields_to_format = kwargs.fields_to_format;
-        const res = super.res_users_settings_format(id, fields_to_format);
-
-        /** @type {import("mock_models").ResUsersSettingsVolumes} */
-        const ResUsersSettingsVolumes = this.env["res.users.settings.volumes"];
-
-        const [settings] = this.browse(id);
-        if (Reflect.ownKeys(res).includes("volume_settings_ids")) {
-            const volumeSettings = ResUsersSettingsVolumes.discuss_users_settings_volume_format(
-                settings.volume_settings_ids
-            );
-            delete res.volume_settings_ids;
-            res.volumes = [["ADD", volumeSettings]];
-        }
-        return res;
-    },
     set_res_users_settings(idOrIds, new_settings) {
         const kwargs = getKwArgs(arguments, "idOrIds", "new_settings");
         idOrIds = kwargs.idOrIds;

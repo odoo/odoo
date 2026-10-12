@@ -277,6 +277,15 @@ class TestUserSettings(MailCommon):
         result = self.env['res.users.settings']._find_or_create_for_user(self.user_employee)
         self.assertEqual(result, settings, "Correct mail user settings should be returned")
 
+    @users("employee")
+    def test_res_users_settings_format_skips_volumes(self):
+        settings = self.user_employee.res_users_settings_id
+        settings.set_volume_setting(self.partner_admin.id, 0.3)
+        res = settings._res_users_settings_format()
+        self.assertIn("channel_notifications", res)
+        self.assertNotIn("volume_settings_ids", res)
+        self.assertNotIn("volumes", res)
+
     @users('employee')
     def test_set_res_users_settings_should_send_notification_on_bus(self):
         settings = self.user_employee.res_users_settings_id
