@@ -213,6 +213,10 @@ export class GeneratePrinterData {
         const url = `${baseUrl}/pos/ticket?order_uuid=${this.order.uuid}`;
         const useQrCode =
             company.point_of_sale_ticket_portal_url_display_mode !== "url" && this.order.finalized;
+        const orderQrCode =
+            this.config.iface_printbill && !this.order.finalized
+                ? this.generateQrCode(`${baseUrl}/?order_uuid=${this.order.uuid}`)
+                : false;
         const useTips = this.config.set_tip_after_payment && this.order.displayPrice > 0;
         const tipPercentages = [
             this.config.tip_percentage_1,
@@ -252,6 +256,7 @@ export class GeneratePrinterData {
             payments: this.generatePaymentData(),
             image: {
                 invoice_qr_code: useQrCode ? this.generateQrCode(url) : false,
+                order_qr_code: orderQrCode,
                 logo: this.config.receiptLogoUrl,
             },
             conditions: {
