@@ -1869,6 +1869,10 @@ class StockPicking(models.Model):
         self.ensure_one()
         return self.picking_type_id._get_code_report_name()
 
+    def _get_return_slip_report_title(self):
+        self.ensure_one()
+        return self.env._("RETURN OF")
+
     def _get_autoprint_report_actions(self):
         report_actions = []
         pickings_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_delivery_slip)
