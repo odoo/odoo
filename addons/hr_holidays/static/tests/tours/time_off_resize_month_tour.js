@@ -49,8 +49,31 @@ async function waitForExtendedLeave() {
     throw new Error("The leave did not extend after the resize drag");
 }
 
+/*
+This function makes it so that all the given steps will occur as if we were on
+the given date. (it only emulates on the frontend, not on the backend)
+ */
+function freezeDate(date, steps) {
+    const format = "yyyy-MM-dd HH:mm:ss";
+    const realNow = luxon.Settings.now;
+    const frozenTs = luxon.DateTime.fromFormat(date, format).toMillis();
+    return [
+        {
+            content: `Freeze luxon date functions to ${date}`,
+            trigger: "body",
+            run: () => { luxon.Settings.now = () => frozenTs; },
+        },
+        ...steps,
+        {
+            content: `Unfreeze luxon date functions to go back to normal state`,
+            trigger: "body",
+            run: () => { luxon.Settings.now = realNow; },
+        },
+    ];
+}
+
 registry.category("web_tour.tours").add("time_off_resize_month_tour", {
-    steps: () => [
+    steps: () => freezeDate("2026-10-01 12:00:00", [
         stepUtils.showAppsMenuItem(),
         {
             content: "Open Time Off app",
@@ -86,5 +109,5 @@ registry.category("web_tour.tours").add("time_off_resize_month_tour", {
             trigger: ".o_calendar_fc_view_dayGridMonth",
             run: waitForExtendedLeave,
         },
-    ],
+    ]),
 });
