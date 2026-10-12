@@ -460,6 +460,58 @@ describe("board_desktop", () => {
         expect(".o-dashboard-action div:contains(Invalid action)").toHaveCount(1);
     });
 
+    test("saved arch keeps the layout", async () => {
+        onRpc("/web/action/load", () => ({
+            res_model: "partner",
+            views: [[4, "list"]],
+        }));
+        onRpc("/web/view/edit_custom", async (request) => {
+            const { params } = await request.json();
+            const board = new DOMParser()
+                .parseFromString(params.arch, "text/xml")
+                .querySelector("board");
+            expect.step(board.getAttribute("style"));
+            return true;
+        });
+        await mountView({
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form string="My Dashboard" js_class="board">
+                    <board style="2-1">
+                        <column>
+                            <action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>
+                        </column>
+                    </board>
+                </form>`,
+        });
+
+        await contains('.o-dashboard-column[data-idx="0"] .o-dashboard-action-header').dragAndDrop(
+            '.o-dashboard-column[data-idx="1"]'
+        );
+        expect.verifySteps(["2-1"]);
+    });
+
+    test("board without layout", async () => {
+        onRpc("/web/action/load", () => ({
+            res_model: "partner",
+            views: [[4, "list"]],
+        }));
+        await mountView({
+            type: "form",
+            resModel: "board",
+            arch: `
+                <form string="My Dashboard" js_class="board">
+                    <board>
+                        <column>
+                            <action context="{}" view_mode="list" string="ABC" name="51" domain="[]"></action>
+                        </column>
+                    </board>
+                </form>`,
+        });
+        expect("div.o-dashboard-layout-2-1").toHaveCount(1);
+    });
+
     test(`clicking on a kanban's button should trigger the action`, async () => {
         expect.assertions(4);
         Partner._views.kanban = `
