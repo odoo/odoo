@@ -200,3 +200,29 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
             'invoice_date': fields.Date.from_string('2027-01-01'),
             'invoice_date_due': fields.Date.from_string('2027-01-31'),
         }])
+
+    def test_import_document_charge_without_reason(self):
+        """Document-level charge without a reason should get a default name."""
+        _filename, file_content = self._import_file_content(
+            'test_import_document_charge_tax_alignment',
+            'xml',
+        )
+        xml_tree = self.with_applied_xpath(
+            self.get_xml_tree_from_string(file_content),
+            """
+            <xpath expr="//*[local-name()='AllowanceChargeReason']" position="replace"/>
+            """,
+        )
+        attachment = self.env['ir.attachment'].create({
+            'name': 'test_import_document_charge_without_reason.xml',
+            'raw': etree.tostring(xml_tree),
+            'mimetype': 'application/xml',
+        })
+        bill = self._import_invoice_as_attachment_on(
+            attachment=attachment,
+        )
+        self.assertIn('Charge', bill.invoice_line_ids.mapped('name'))
+        self.assertTrue(
+            all(bill.invoice_line_ids.mapped('name')),
+            "All invoice lines should have a name",
+        )
