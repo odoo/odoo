@@ -80,7 +80,7 @@
         <field name="name">FPS</field>
         <field name="code">fps</field>
         <field name="provider_id" ref="payment.payment_provider_asiapay"/>
-        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/fps.png"/>
         <field name="supported_country_ids" eval="[Command.set([ref('base.hk')])]"/>
         <field name="supported_currency_ids" eval="[Command.set([ref('base.HKD')])]"/>
     </record>
@@ -333,7 +333,7 @@
         <field name="name">TTB - TMBThanachart Bank</field>
         <field name="code">ttb</field>
         <field name="provider_id" ref="payment.payment_provider_asiapay"/>
-        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/ttb.png"/>
         <field name="supported_country_ids" eval="[Command.set([ref('base.th')])]"/>
         <field name="supported_currency_ids" eval="[Command.set([ref('base.THB')])]"/>
     </record>

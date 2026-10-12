@@ -17,7 +17,7 @@
         <field name="name">EMI</field>
         <field name="code">emi_india</field>
         <field name="provider_id" ref="payment.payment_provider_payu"/>
-        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="image" type="bytes" file="payment/static/img/emi.png"/>
         <field name="supported_country_ids" eval="[Command.set([ref('base.in')])]"/>
         <field name="supported_currency_ids" eval="[Command.set([ref('base.INR')])]"/>
     </record>
