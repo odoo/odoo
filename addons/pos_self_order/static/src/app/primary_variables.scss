@@ -97,29 +97,6 @@ $o-btns-bs-override: map-merge((
     }
 }
 
-@mixin o-kiosk() {
-    @include media-breakpoint-up(lg) {
-         .kiosk {
-             @content;
-         }
-    }
-}
-
-@mixin o-kiosk-portrait() {
-    @include o-kiosk() {
-        @media (orientation: portrait) and (min-height: 1500px) {
-            @content;
-        }
-    }
-}
-
-@mixin o-kiosk-landscape() {
-    @include o-kiosk() {
-        @media (orientation: landscape) {
-            @content;
-        }
-    }
-}
 
 
 

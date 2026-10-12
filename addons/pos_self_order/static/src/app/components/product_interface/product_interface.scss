@@ -20,8 +20,8 @@
     }
 }
 
-@include o-kiosk-portrait(){
-   .o_self_product_interface {
+@media (min-width: 992px) and (orientation: portrait) and (min-height: 1500px) {
+   .kiosk .o_self_product_interface {
         .o_self_product_image {
             max-width: 350px;
         }

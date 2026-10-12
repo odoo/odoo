@@ -7,8 +7,8 @@
 
 }
 
-@include o-kiosk-portrait() {
-    .self_order_language_popup {
+@media (min-width: 992px) and (orientation: portrait) and (min-height: 1500px) {
+    .kiosk .self_order_language_popup {
         img {
             max-width: 60px !important;
         }

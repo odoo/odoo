@@ -149,33 +149,39 @@ li {
   }
 }
 
-@include o-kiosk{
-    @include generate-kiosk-utilities(kiosk);
+@media (min-width: 992px) {
+    .kiosk {
+        @include generate-kiosk-utilities(kiosk);
+    }
 }
 
 
-@include o-kiosk-portrait{
-    &:root {
+@media (min-width: 992px) and (orientation: portrait) and (min-height: 1500px) {
+    .kiosk:root {
         --root-font-size: var(--o-so-font-size-kiosk);
     }
 
-     .o_self_container {
+     .kiosk .o_self_container {
         width: 100% !important;
         max-width: 1100px !important;
         padding-left: 1.5rem !important;
         padding-right: 1.5rem !important;
     }
 
-    .kiosk-p-btn-lg {
+    .kiosk .kiosk-p-btn-lg {
       padding: var(--o-bs-input-btn-padding-y-lg) var(--o-bs-input-btn-padding-x-lg) !important;
       font-size: 1.25rem;
     }
 
-    @include generate-kiosk-utilities(kiosk-p);
+    .kiosk {
+        @include generate-kiosk-utilities(kiosk-p);
+    }
 }
 
-@include o-kiosk-landscape{
-    @include generate-kiosk-utilities(kiosk-l);
+@media (min-width: 992px) and (orientation: landscape) {
+    .kiosk {
+        @include generate-kiosk-utilities(kiosk-l);
+    }
 }
 
 $shadow-sizes: sm, md, lg, xl;

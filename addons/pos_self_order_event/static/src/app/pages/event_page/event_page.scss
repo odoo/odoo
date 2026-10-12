@@ -70,24 +70,8 @@
 
 }
 
-@mixin o-kiosk() {
-    @media (min-width: 992px) {
-         .kiosk {
-             @content;
-         }
-    }
-}
-
-@mixin o-kiosk-portrait() {
-    @include o-kiosk() {
-        @media (orientation: portrait) and (min-height: 1500px) {
-            @content;
-        }
-    }
-}
-
-@include o-kiosk-portrait() {
-  .o_self_event_page {
+@media (min-width: 992px) and (orientation: portrait) and (min-height: 1500px) {
+  .kiosk .o_self_event_page {
     .o_self_product_image {
       max-width: none;
     }
