@@ -855,6 +855,43 @@ class TestUnityRead(TransactionCase):
             },
         ])
 
+    def test_reference_query_count(self):
+        course_day2 = self.env['test_orm.course'].create({
+            'reference': f'test_orm.lesson,{self.lesson_day2.id}',
+        })
+        self.env.invalidate_all()
+        with self.assertQueryCount(1        # read the courses
+                                   + 1):    # read the names of the lessons
+            read = (self.course + course_day2).web_read(
+                {
+                    'reference': {'fields': {'display_name': {}}},
+                })
+        self.assertEqual(
+            [values['reference']['display_name'] for values in read],
+            ['first day', 'second day'],
+        )
+
+    def test_many2one_reference_query_count(self):
+        courses = self.env['test_orm.course'].create([
+            {'m2o_reference_model': 'test_orm.lesson', 'm2o_reference_id': self.lesson_day1.id},
+            {'m2o_reference_model': 'test_orm.lesson', 'm2o_reference_id': self.lesson_day2.id},
+            {'m2o_reference_model': 'test_orm.person', 'm2o_reference_id': self.author.id},
+            {'m2o_reference_model': 'test_orm.person', 'm2o_reference_id': self.teacher.id},
+        ])
+        self.env.invalidate_all()
+        with self.assertQueryCount(1        # read the courses
+                                   + 1      # read the names of the lessons
+                                   + 1):    # read the names of the persons
+            read = courses.web_read(
+                {
+                    'm2o_reference_id': {'fields': {'display_name': {}}},
+                    'm2o_reference_model': {},
+                })
+        self.assertEqual(
+            [values['m2o_reference_id']['display_name'] for values in read],
+            ['first day', 'second day', 'ged', 'aab'],
+        )
+
     def test_properties(self):
         """Check that the display name of the relational properties are always loaded."""
         discussion = self.env['test_orm.discussion'].create({
