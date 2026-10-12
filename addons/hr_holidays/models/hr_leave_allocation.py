@@ -466,6 +466,7 @@ class HrLeaveAllocation(models.Model):
                 start_date = max(start_date, prev_level_end)
             else:
                 start_date = max(start_date, first_level_start_date)
+            return start_date
 
         date_to = date_to or fields.Date.today()
         already_accrued = {allocation.id: allocation.already_accrued or (allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start') for allocation in self}
@@ -650,9 +651,25 @@ class HrLeaveAllocation(models.Model):
             if allocation.accrual_plan_id.accrued_gain_time == 'start':
                 # check that we are at the start of a period, not on a carry-over or level transition date
                 level_starts = {level._get_level_transition_date(allocation.date_from): level for level in level_ids}
-                current_level = level_starts.get(allocation.actual_lastcall) or current_level or first_level
+                current_level = (
+                    level_starts.get(allocation.actual_lastcall)
+                    or level_starts.get(allocation.lastcall)
+                    or current_level
+                    or first_level
+                )
                 period_start = current_level._get_previous_date(allocation.actual_lastcall)
+                on_longer_level_transition = False
+                if allocation.lastcall in level_starts:
+                    level_transition_level = level_starts[allocation.lastcall]
+                    level_transition_idx = level_ids.ids.index(level_transition_level.id)
+                    if level_transition_idx:
+                        previous_level = level_ids[level_transition_idx - 1]
+                        on_longer_level_transition = (
+                            level_transition_level._get_next_date(allocation.lastcall)
+                            > previous_level._get_next_date(allocation.lastcall)
+                        )
                 if allocation.actual_lastcall in {period_start, allocation.date_from} | set(level_starts.keys())\
+                        or on_longer_level_transition\
                         or (allocation.actual_lastcall - get_timedelta(current_level.accrual_validity_count, current_level.accrual_validity_type)
                         in {period_start, allocation.date_from} | set(level_starts.keys())):
                     period_end = current_level._get_next_date(allocation.lastcall)
