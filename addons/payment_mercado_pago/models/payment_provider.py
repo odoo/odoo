@@ -72,7 +72,7 @@ class PaymentProvider(models.Model):
     # === CONSTRAINT METHODS === #
 
     @api.constrains("available_currency_ids")
-    def _check_currency_is_supported(self):
+    def _check_mercado_pago_currency_is_supported(self):
         for provider in self.filtered(lambda p: p.code == "mercado_pago"):
             account_country = provider.mercado_pago_account_country_id
             account_currency = const.CURRENCY_MAPPING.get(account_country.code)

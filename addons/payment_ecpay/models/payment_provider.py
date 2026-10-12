@@ -49,7 +49,7 @@ class PaymentProvider(models.Model):
     # === CONSTRAINT METHODS === #
 
     @api.constrains("available_currency_ids")
-    def _check_currency_is_supported(self):
+    def _check_ecpay_currency_is_supported(self):
         for provider in self.filtered(lambda p: p.code == "ecpay"):
             if provider.available_currency_ids.filtered(
                 lambda c: c.name != const.SUPPORTED_CURRENCY

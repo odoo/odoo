@@ -58,7 +58,7 @@ class PaymentProvider(models.Model):
     # Authorize.Net supports only one currency: "One gateway account is required for each currency"
     # See https://community.developer.authorize.net/t5/The-Authorize-Net-Developer-Blog/Authorize-Net-UK-Europe-Update/ba-p/35957
     @api.constrains("available_currency_ids")
-    def _limit_available_currency_ids(self):
+    def _limit_authorize_available_currency_ids(self):
         for provider in self.filtered(lambda p: p.code == "authorize"):
             if len(provider.available_currency_ids) > 1:
                 raise ValidationError(
