@@ -1,4 +1,4 @@
-import { animationFrame, waitFor } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, waitFor } from "@odoo/hoot-dom";
 import { contains, getService } from "@web/../tests/web_test_helpers";
 import { ensurePane, isMobile } from "./common";
 import { clickNumpadButtons } from "./numpad_util";
@@ -18,6 +18,7 @@ export async function addOrderlineFromProductScreen(productName, { quantity = 1,
     if (quantity.toString() !== "1") {
         await clickNumpadButtons(quantity);
     }
+    await advanceTime(150);
 }
 
 export async function clickControlButton(label) {
