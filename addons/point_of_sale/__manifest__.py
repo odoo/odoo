@@ -121,7 +121,7 @@
             'point_of_sale/static/src/backend/views/graph/*',
         ],
         "web.assets_web_dark": [
-            'point_of_sale/static/src/scss/pos_dashboard.dark.scss',
+            'point_of_sale/static/src/scss/pos_dashboard.dark.css',
             'point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.dark.css',
         ],
         'web.assets_tests': [
