@@ -537,12 +537,16 @@ class AccountMove(models.Model):
         for company, invoices in invoices_to_fetch_pdf.grouped("company_id").items():
             with _get_nilvera_client(self.env._, company) as client:
                 for invoice in invoices:
+                    invoice_channel = invoice.l10n_tr_nilvera_customer_status
+                    document_category = invoice._l10n_tr_get_document_category(invoice_channel)
+                    if not invoice_channel or not document_category:
+                        continue
                     self._l10n_tr_nilvera_add_pdf_to_invoice(
                         client,
                         invoice,
                         invoice.l10n_tr_nilvera_uuid,
-                        document_category=invoice._l10n_tr_get_document_category(invoice.l10n_tr_nilvera_customer_status),
-                        invoice_channel=invoice.l10n_tr_nilvera_customer_status,
+                        document_category=document_category,
+                        invoice_channel=invoice_channel,
                     )
 
     def _get_starting_sequence(self):
