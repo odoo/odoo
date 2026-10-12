@@ -102,14 +102,8 @@ export class StatusBarField extends Component {
                 if (foldField) {
                     fieldNames.push(foldField);
                 }
-                const value = record.data[fieldName];
                 let domain = getFieldDomain(record, fieldName, props.domain);
                 domain = Domain.and([this.getDomain(props), domain]).toList();
-                if (domain.length && value) {
-                    domain = Domain.or([[["id", "=", value.id]], domain]).toList(
-                        record.evalContext
-                    );
-                }
                 const res = orm.searchRead(relation, domain, fieldNames, { context });
                 forceRecomputeItems = true;
                 return res;
@@ -271,12 +265,22 @@ export class StatusBarField extends Component {
         const currentValue = record.data[name];
         if (this.field.type === "many2one") {
             // Many2one
-            return this.specialData.data.map((option) => ({
+            const items = this.specialData.data.map((option) => ({
                 value: option.id,
                 label: option.display_name,
                 isFolded: option[foldField],
                 isSelected: Boolean(currentValue && option.id === currentValue.id),
             }));
+
+            if (currentValue && !items.find((item) => item.value === currentValue.id)) {
+                items.unshift({
+                    value: currentValue.id,
+                    label: currentValue.display_name,
+                    isFolded: false,
+                    isSelected: true,
+                });
+            }
+            return items;
         } else {
             // Selection
             let { selection } = this.field;
