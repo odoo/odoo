@@ -578,7 +578,7 @@ class TestTrackingInternals(MailCommon):
             ('integer_field', 'integer', 0, 42),
             ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
             ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
-            ('selection_field', 'selection', '', 'FIRST'),
+            ('selection_field', 'selection', '', 'first'),
             ('text_field', 'text', False, 'text_value'),
         ]
         self.assertTracking(new_message, tracking_value_list, strict=True)
@@ -782,7 +782,7 @@ class TestTrackingInternals(MailCommon):
 
         self.flush_tracking()
         self.assertTracking(record.message_ids, [
-            ('selection_type', 'char', invalid_value, 'Second'),
+            ('selection_type', 'char', invalid_value, 'second'),
         ])
 
     def test_track_groups(self):
