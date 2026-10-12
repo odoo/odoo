@@ -101,7 +101,7 @@ const TOOLBAR = (language) =>
                 <span class="px-1">${language}</span>
                 <i class="oi" data-icon="arrow_drop_down"></i>
             </button>
-            <button type="button" class="text-nowrap btn o_clipboard_button">
+            <button type="button" class="text-nowrap btn o_clipboard_button" aria-label="Copy">
                 <span class="oi mx-1" data-icon="assignment"></span>
                 <span>Copy</span>
             </button>

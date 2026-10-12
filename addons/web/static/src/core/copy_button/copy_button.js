@@ -1,4 +1,5 @@
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Component, signal, t, useProps } from "@odoo/owl";
@@ -21,6 +22,10 @@ export class CopyButton extends Component {
 
     setup() {
         this.popover = usePopover(Tooltip);
+    }
+
+    get ariaLabel() {
+        return this.props.copyText || _t("Copy");
     }
 
     showTooltip() {
