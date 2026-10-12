@@ -125,7 +125,7 @@ class ResConfigSettings(models.TransientModel):
     account_fiscal_country_id = fields.Many2one(string="Fiscal Country Code", related="company_id.account_fiscal_country_id", readonly=False, store=False)
 
     qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
-    link_qr_code = fields.Boolean(string='Display Link QR-code', related='company_id.link_qr_code', readonly=False)
+    link_qr_code = fields.Boolean(string='Display Payment Link', related='company_id.link_qr_code', readonly=False)
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
     invoice_terms = fields.Html(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
     invoice_terms_html = fields.Html(related='company_id.invoice_terms_html', string="Terms & Conditions as a Web page",
@@ -286,6 +286,11 @@ class ResConfigSettings(models.TransientModel):
     def onchange_analytic_accounting(self):
         if self.group_analytic_accounting:
             self.module_account_accountant = True
+
+    @api.onchange('module_account_payment')
+    def _onchange_module_account_payment(self):
+        if not self.module_account_payment:
+            self.link_qr_code = False
 
     @api.onchange('module_account_budget')
     def onchange_module_account_budget(self):

@@ -54,6 +54,10 @@
                     </div>
                 </setting>
             </xpath>
+
+            <xpath expr="//field[@name='link_qr_code']/.." position="attributes">
+                <attribute name="invisible">not pay_invoices_online</attribute>
+            </xpath>
         </field>
     </record>
 

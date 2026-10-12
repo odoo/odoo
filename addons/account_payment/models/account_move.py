@@ -5,7 +5,6 @@ from odoo.tools import format_date
 from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.tools.image import image_data_uri
 
 
 class AccountMove(models.Model):
@@ -49,6 +48,11 @@ class AccountMove(models.Model):
                     lambda tx: tx.state in ('authorized', 'done')
                 ).mapped('amount')
             )
+
+    def _compute_display_link_qr_code(self):
+        super()._compute_display_link_qr_code()
+        if not self.env['ir.config_parameter'].sudo().get_bool('account_payment.enable_portal_payment'):
+            self.display_link_qr_code = False
 
     def _has_to_be_paid(self):
         self.ensure_one()
@@ -157,12 +161,6 @@ class AccountMove(models.Model):
             'invoice_amount_due': amount_due,
             **additional_info
         }
-
-    def _generate_portal_payment_qr(self):
-        self.ensure_one()
-        portal_url = self._get_portal_payment_link()
-        barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=portal_url, width=128, height=128, quiet=False)
-        return image_data_uri(barcode)
 
     def _get_portal_payment_link(self):
         self.ensure_one()
