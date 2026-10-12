@@ -25,7 +25,7 @@ class TestDeliveryCarrier(WebsiteSaleCommon):
         """Estimated delivery settings survive a switch between types that support them."""
         self._enable_delivery_estimate(self.carrier)
 
-        self.carrier.delivery_type = "base_on_rule"
+        self.carrier.delivery_type = "in_house"
 
         self.assertRecordValues(
             self.carrier,
@@ -46,9 +46,9 @@ class TestDeliveryCarrier(WebsiteSaleCommon):
         with patch.object(
             self.registry["delivery.carrier"],
             "_get_delivery_estimate_supported_types",
-            return_value=["fixed"],
+            return_value=[],
         ):
-            self.carrier.delivery_type = "base_on_rule"
+            self.carrier.delivery_type = "in_house"
 
         self.assertRecordValues(
             self.carrier,

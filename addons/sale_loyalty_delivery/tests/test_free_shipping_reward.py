@@ -35,7 +35,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         cls.carrier = cls.env["delivery.carrier"].create({
             "name": "The Poste",
             "fixed_price": 20.0,
-            "delivery_type": "base_on_rule",
+            "delivery_type": "in_house",
             "product_id": cls.product_delivery_poste.id,
         })
         cls.env["delivery.price.rule"].create([

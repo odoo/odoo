@@ -54,12 +54,12 @@ class ChooseDeliveryCarrier(models.TransientModel):
 
     @api.onchange("order_id")
     def _onchange_order_id(self):
-        # Fixed and base_on_rule delivery price will compute on each carrier change so no need to
+        # In-house delivery price will compute on each carrier change so no need to
         # recompute here
         if (
             self.carrier_id
             and self.order_id.delivery_set
-            and self.delivery_type not in ("fixed", "base_on_rule")
+            and self.delivery_type != "in_house"
         ):
             vals = self._get_carrier_delivery_rate(self.carrier_id)
             self._set_delivery_vals(vals)

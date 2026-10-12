@@ -162,13 +162,8 @@ class DeliveryCarrier(models.Model):
             "pickup_location_data": sorted(pickup_locations, key=lambda k: k["distance"]),
         }
 
-    def in_store_rate_shipment(self, *_args):
-        return {
-            "success": True,
-            "price": self.product_id.list_price,
-            "error_message": False,
-            "warning_message": False,
-        }
+    def in_store_rate_shipment(self, order):
+        return self._get_in_house_rate(order)
 
     def _get_pickup_locations(self, country=None, country_code=None, **kwargs):
         """Override of `website_sale` to include the selected country from the location selector.

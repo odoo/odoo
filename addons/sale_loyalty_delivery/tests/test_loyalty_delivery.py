@@ -28,7 +28,7 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         cls.delivery_carrier = cls.env["delivery.carrier"].create({
             "name": "Delivery Now Free Over 100",
             "fixed_price": 40,
-            "delivery_type": "fixed",
+            "delivery_type": "in_house",
             "product_id": cls.product_delivery.id,
             "free_over": True,
             "amount": 100,
@@ -234,7 +234,7 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
         reward_ewallet = program_ewallet.reward_ids[0]
         ewallet = program_ewallet.coupon_ids[0]
 
-        self.delivery_carrier.delivery_type = "base_on_rule"
+        self.delivery_carrier.delivery_type = "in_house"
         self.delivery_carrier.price_rule_ids = [
             Command.create({
                 "list_base_price": 30,

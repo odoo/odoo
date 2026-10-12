@@ -19,7 +19,7 @@ class TestDeliveryPickingBatch(TestStockBatchCommon):
             'free_over': True,
             'amount': 50,
             'sequence': 4,
-            'delivery_type': 'fixed',
+            'delivery_type': 'in_house',
             'product_id': cls.env['product.product'].create({
                 'name': 'Local Delivery - Testing',
                 'default_code': 'Delivery_Testing',
