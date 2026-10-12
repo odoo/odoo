@@ -39,6 +39,7 @@
     --o-font-size-base: #{$o-font-size-base};
     --o-font-size-base-small: #{$o-font-size-base-small};
     --o-font-size-base-smaller: #{$o-font-size-base-smaller};
+    --o-font-size-base-touch: #{$o-font-size-base-touch};
     --o-font-weight-bold: #{$o-font-weight-bold};
     --o-font-weight-medium: #{$o-font-weight-medium};
     --o-font-weight-normal: #{$o-font-weight-normal};
@@ -91,6 +92,7 @@
     --o-navbar-badge-padding: #{$o-navbar-badge-padding};
     --o-navbar-badge-size: #{$o-navbar-badge-size};
     --o-navbar-height: #{$o-navbar-height};
+    --o-navbar-padding-v: #{$o-navbar-padding-v};
     --o-root-font-size: #{$o-root-font-size};
     --o-search-bar-menu-max-width: calc(100vw - #{map-get($spacers, 3) * 2});
     --o-shadow-color: #{$o-shadow-color};
@@ -114,7 +116,9 @@
     --o-bs-btn-close-white-filter: #{$btn-close-white-filter};
     --o-bs-btn-disabled-opacity: #{$btn-disabled-opacity};
     --o-bs-btn-focus-width: #{$btn-focus-width};
+    --o-bs-btn-font-size: #{$btn-font-size};
     --o-bs-btn-font-size-lg: #{$btn-font-size-lg};
+    --o-bs-btn-line-height: #{$btn-line-height};
     --o-bs-btn-link-disabled-color: #{$btn-link-disabled-color};
     --o-bs-btn-link-focus-shadow-rgb: #{$btn-link-focus-shadow-rgb};
     --o-bs-btn-padding-x: #{$btn-padding-x};
@@ -133,6 +137,7 @@
     --o-bs-danger-bg-subtle: #{$danger-bg-subtle};
     --o-bs-dropdown-font-size: #{$dropdown-font-size};
     --o-bs-dropdown-item-padding-x: #{$dropdown-item-padding-x};
+    --o-bs-dropdown-border-radius: #{$dropdown-border-radius};
     --o-bs-dropdown-link-color: #{$dropdown-link-color};
     --o-bs-dropdown-link-hover-bg: #{$dropdown-link-hover-bg};
     --o-bs-dropdown-link-hover-color: #{$dropdown-link-hover-color};
@@ -207,6 +212,7 @@
     --o-bs-yellow-200: #{$yellow-200};
     --o-bs-yellow-300: #{$yellow-300};
     --o-bs-zindex-dropdown: #{$zindex-dropdown};
+    --o-bs-zindex-fixed: #{$zindex-fixed};
     --o-bs-zindex-modal: #{$zindex-modal};
     --o-bs-zindex-modal-backdrop: #{$zindex-modal-backdrop};
     --o-bs-zindex-offcanvas: #{$zindex-offcanvas};
@@ -224,8 +230,10 @@
 
     /* Variables whose value reads another custom property in some bundles */
     --o-bs-btn-link-hover-color: #{$btn-link-hover-color};
+    --o-bs-card-border-color: #{$card-border-color};
     --o-bs-dropdown-bg: #{$dropdown-bg};
     --o-bs-popover-box-shadow: #{$popover-box-shadow};
+    --o-bs-popover-header-bg: #{$popover-header-bg};
     --o-bs-table-border-color: #{$table-border-color};
     --o-control-panel-border-bottom: #{$o-control-panel-border-bottom};
 
