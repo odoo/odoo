@@ -988,3 +988,29 @@ class TestAttendanceDefaultShift(TransactionCase):
             self._default_shift(employee, self.wednesday, start_hour=9, stop_hour=11, all_day=False),
             (utc(self.wednesday, 9), utc(self.wednesday, 11)),
             "A time slot selection is kept as is")
+
+    def _working_hours(self, employee, tz=USER_TZ):
+        """Business hours drawn by the attendance calendar for the week of ``self.monday``, viewed in ``tz``."""
+        hours = self.env['hr.attendance'].with_context(tz=tz).get_working_hours_for_calendar(
+            employee.id, str(self.monday), str(self.monday + timedelta(days=6)))
+        return sorted((hour['daysOfWeek'][0], hour['startTime'], hour['endTime']) for hour in hours)
+
+    def test_working_hours_for_calendar(self):
+        """The calendar shades what is outside the schedule of the employee, on the clock of the viewer."""
+        employee = self._employee(self.calendar_two_slots)
+        self.assertEqual(
+            self._working_hours(employee),
+            [(day, start, end) for day in range(1, 6) for start, end in (('08:00', '12:00'), ('13:00', '17:00'))],
+            "FullCalendar numbers the days from Sunday (0)")
+
+        # 09:00 -> 17:00 in Honolulu (UTC-10) is 20:00 -> 04:00 in Brussels (UTC+1): split on each day
+        employee = self._employee(self.calendar_nine_to_five, tz='Pacific/Honolulu')
+        hours = self._working_hours(employee)
+        self.assertIn((1, '20:00', '24:00'), hours, "Monday evening in Brussels")
+        self.assertIn((2, '00:00', '04:00'), hours, "The rest of the Monday shift, on Tuesday in Brussels")
+        self.assertNotIn((1, '00:00', '04:00'), hours, "Sunday's shift is not worked")
+
+        employee = self._employee(self.calendar_flexible)
+        self.assertEqual(
+            self._working_hours(employee), [(day, '00:00', '24:00') for day in range(7)],
+            "A flexible employee may work at any time: nothing is shaded")
