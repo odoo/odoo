@@ -1025,6 +1025,17 @@ class CrmLead(models.Model):
     # ACTIONS
     # ------------------------------------------------------------
 
+    def action_create_from_uploads(self, attachment_ids):
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        record = self.create({'name': attachments[0].name})
+        attachments.write({'res_model': self._name, 'res_id': record.id})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': record.id,
+            'views': [[False, 'form']],
+        }
+
     def action_unarchive(self):
         """ When re-activating, force update probability for both leads and
         opportunities. Note that archiving triggers nothing more, as a lead

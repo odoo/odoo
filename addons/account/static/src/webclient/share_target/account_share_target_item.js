@@ -38,7 +38,7 @@ export class AccountShareTargetItem extends ShareTargetItem {
             resModel: this.modelName,
             resIds: journal ? [journal.id] : [],
             context: { ...this.context, default_move_type: "in_invoice" },
-            files: this.getFiles(),
+            files: this.props.files,
         });
         if (action) {
             await this.action.doAction(action);
