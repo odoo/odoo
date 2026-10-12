@@ -53,12 +53,12 @@
                         .o_cp_statement .o_cp_letterhead img { height: 200px; width: auto; margin-left: -70px; }
                         .o_cp_statement .o_cp_company { font-size: 32px; font-weight: bold; line-height: 1.2; }
                         .o_cp_statement .o_cp_tagline { margin-bottom: 5px; font-size: 18px; font-weight: bold; line-height: 1.2; }
-                        .o_cp_statement .o_cp_letterhead td.o_cp_report_info { text-align: left; white-space: nowrap; }
-                        .o_cp_statement .o_cp_title { margin-bottom: 4px; font-size: 26px; font-weight: bold; line-height: 1.2; }
                         .o_cp_statement table { width: 100%; border-collapse: collapse; }
                         .o_cp_statement table + table.o_cp_table { margin-top: -1px; }
                         .o_cp_statement table.o_cp_customer { border: 1px solid #000; background-color: #C6E0B4; }
                         .o_cp_statement .o_cp_customer td { padding: 5px 12px; vertical-align: top; }
+                        .o_cp_statement .o_cp_customer td.o_cp_report_info { width: 40%; border-right: 1px solid #000; vertical-align: middle; white-space: nowrap; }
+                        .o_cp_statement .o_cp_title { margin-bottom: 2px; font-size: 28px; font-weight: bold; line-height: 1.2; }
                         .o_cp_statement .o_cp_customer td.o_cp_label { width: 1%; padding-right: 8px; font-weight: bold; white-space: nowrap; }
                         .o_cp_statement table.o_cp_table { table-layout: fixed; }
                         .o_cp_statement .o_cp_table th,
@@ -76,8 +76,8 @@
                         .o_cp_statement .o_cp_signatures td.o_cp_spacer { width: 32%; }
                     </style>
                     <div class="page">
-                        <!-- Header: company letterhead as on the Khmer invoice. The right cell holds the report
-                             title and period; it keeps the logo column's width so the company details stay centered. -->
+                        <!-- Header: company letterhead as on the Khmer invoice. The empty right cell mirrors
+                             the logo column so the company details stay centered on the page. -->
                         <table class="o_cp_letterhead">
                             <tr>
                                 <td>
@@ -92,17 +92,18 @@
                                     </div>
                                     <div t-if="o.company_id.phone">Tel: <span t-field="o.company_id.phone"/></div>
                                 </td>
-                                <td class="o_cp_report_info">
+                                <td class="o_cp_spacer"></td>
+                            </tr>
+                        </table>
+
+                        <!-- Customer Information: report title and period on the left, customer details on the right -->
+                        <table class="o_cp_customer">
+                            <tr>
+                                <td class="o_cp_report_info" rowspan="3">
                                     <div class="o_cp_title">របាយការណ៍អតិថិជន</div>
                                     <div>ចាប់ពីប៊ុង: <span t-out="'%02d-%s-%d' % (date_from.day, km_months[date_from.month - 1], date_from.year)"/></div>
                                     <div>រហូតដល់: <span t-out="'%02d-%s-%d' % (date_to.day, km_months[date_to.month - 1], date_to.year)"/></div>
                                 </td>
-                            </tr>
-                        </table>
-
-                        <!-- Customer Information -->
-                        <table class="o_cp_customer">
-                            <tr>
                                 <td class="o_cp_label">អតិថិជនឈ្មោះ:</td>
                                 <td><span t-field="partner.name"/></td>
                             </tr>
