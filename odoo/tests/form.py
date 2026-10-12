@@ -185,8 +185,9 @@ class Form:
         for node in tree.xpath(f'.//field[count(ancestor::field) = {flevel}]'):
             field_name = node.get('name')
 
-            # add field_info into fields
-            field_info = field_infos.get(field_name) or {'type': None}
+            # add field_info into fields; copy it as it is altered below, and
+            # the same model may appear in other (sub)views at another level
+            field_info = dict(field_infos.get(field_name) or {'type': None})
             fields[field_name] = field_info
             fields_spec[field_name] = field_spec = {}
 
