@@ -128,10 +128,15 @@ patch(ExpressCheckout.prototype, {
                 addresses.shipping_option = ev.shippingOption;
             }
             // Update the customer addresses on the related document.
-            this.paymentContext.partnerId = parseInt(await this.waitFor(rpc(
-                this.paymentContext['expressCheckoutRoute'],
-                addresses,
-            )));
+            try {
+                this.paymentContext.partnerId = parseInt(await this.waitFor(rpc(
+                    this.paymentContext['expressCheckoutRoute'],
+                    addresses,
+                )));
+            } catch {
+                ev.complete('fail');
+                return;
+            }
             // Call the transaction route to create the transaction and retrieve the client secret.
             const { client_secret } = await this.waitFor(rpc(
                 this.paymentContext['transactionRoute'],
@@ -177,24 +182,24 @@ patch(ExpressCheckout.prototype, {
                         },
                     },
                 ));
-                const recomputedAmount = await this.waitFor(rpc(
+                const taxDetails = await this.waitFor(rpc(
                     this.paymentContext['shippingAddressUpdateRoute'] + '/compute_taxes',
+                    {include_delivery: true},
                 ));
                 const { delivery_methods, delivery_discount_minor_amount } = availableCarriersData;
-                if (delivery_methods.length === 0 || recomputedAmount.external_tax_error) {
+                if (delivery_methods.length === 0 || taxDetails.external_tax_error) {
                     ev.updateWith({status: 'invalid_shipping_address'});
                 } else {
-                    this.paymentContext['minorAmount'] = recomputedAmount;
+                    this.paymentContext['minorAmount'] = taxDetails.amount_without_delivery;
+                    this.expressDeliveryMethods = delivery_methods;
+                    const shippingOptions = this._getExpressShippingOptions(
+                        delivery_methods, delivery_methods[0].id, taxDetails.delivery_amount,
+                    );
                     ev.updateWith({
                         status: 'success',
-                        shippingOptions: delivery_methods.map(carrier => ({
-                            id: String(carrier.id),
-                            label: carrier.name,
-                            detail: carrier.description ? carrier.description:'',
-                            amount: carrier.minorAmount,
-                        })),
+                        shippingOptions,
                         ...this._getOrderDetails(
-                            delivery_methods[0].minorAmount,
+                            taxDetails.delivery_amount,
                             delivery_discount_minor_amount,
                         ),
                     });
@@ -206,15 +211,49 @@ patch(ExpressCheckout.prototype, {
                 const result = await this.waitFor(rpc('/shop/set_delivery_method', {
                     dm_id: parseInt(ev.shippingOption.id),
                 }));
+                const taxDetails = await this.waitFor(rpc(
+                    this.paymentContext['shippingAddressUpdateRoute'] + '/compute_taxes',
+                    {include_delivery: true},
+                ));
+                if (taxDetails.external_tax_error) {
+                    ev.updateWith({status: 'fail'});
+                    return;
+                }
+                this.paymentContext['minorAmount'] = taxDetails.amount_without_delivery;
                 ev.updateWith({
                     status: 'success',
+                    shippingOptions: this._getExpressShippingOptions(
+                        this.expressDeliveryMethods,
+                        parseInt(ev.shippingOption.id),
+                        taxDetails.delivery_amount,
+                    ),
                     ...this._getOrderDetails(
-                        ev.shippingOption.amount,
+                        taxDetails.delivery_amount,
                         parseInt(result.delivery_discount_minor_amount) || 0,
                     ),
                 });
             });
         }
+    },
+
+    /**
+     * Build the wallet shipping options.
+     *
+     * The selected option uses the tax-included delivery total. The others keep their quoted price.
+     *
+     * @private
+     * @param {Array} deliveryMethods - Delivery methods returned by the address route.
+     * @param {number} selectedCarrierId - The carrier currently applied to the order.
+     * @param {number} taxedDeliveryAmount - Tax-included delivery amount, in minor currency units.
+     * @return {Array}
+     */
+    _getExpressShippingOptions(deliveryMethods, selectedCarrierId, taxedDeliveryAmount) {
+        return (deliveryMethods || []).map(carrier => ({
+            id: String(carrier.id),
+            label: carrier.name,
+            detail: carrier.description ? carrier.description : '',
+            amount: carrier.id === selectedCarrierId ? taxedDeliveryAmount : carrier.minorAmount,
+        }));
     },
 
     /**
