@@ -121,7 +121,9 @@ export class NavigableList extends Component {
         if (this.props.closeOnSelect) {
             this.state.open = false;
             this.state.activeIndex = null;
-            this.props.onClose?.();
+            if (this.props.options.length) {
+                this.props.onClose?.();
+            }
         }
     }
 
