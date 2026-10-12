@@ -5,12 +5,20 @@
         <field name="model">account.tax</field>
         <field name="inherit_id" ref="account.view_tax_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//sheet/group[1]" position="before">
+                <div class="alert alert-warning" role="alert"
+                     invisible="country_code != 'EC' or l10n_ec_tax_group_type != 'ice' or include_base_amount">
+                    Disabling "Affect Base of Subsequent Taxes" means the ICE amount will not be included in the tax base used to calculate subsequent taxes, such as VAT (IVA).
+                    This may result in incorrect tax calculations according to Ecuadorian tax regulations.
+                </div>
+            </xpath>
             <xpath expr="//field[@name='type_tax_use']" position="after">
                 <field name="l10n_ec_code_base" invisible="country_code != 'EC'"
                        groups="base.group_no_one"/>
                 <field name="l10n_ec_code_applied" invisible="country_code != 'EC'"
                        groups="base.group_no_one"/>
                 <field name="l10n_ec_code_ats" invisible="country_code != 'EC'"/>
+                <field name="l10n_ec_code_ice" invisible="country_code != 'EC' or l10n_ec_tax_group_type != 'ice'"/>
             </xpath>
         </field>
     </record>
