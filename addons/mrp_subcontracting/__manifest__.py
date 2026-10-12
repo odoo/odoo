@@ -98,6 +98,7 @@
 
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
+            ('remove', 'web/static/src/core/**/*.dark.scss'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/search/**/*',
             'web/static/src/views/*.js',
@@ -105,6 +106,7 @@
             'web/static/src/views/*.scss',
             'web/static/src/views/fields/**/*',
             'web/static/src/views/form/**/*',
+            ('remove', 'web/static/src/views/form/**/*.dark.scss'),
             'web/static/src/views/card/**/*',
             'web/static/src/views/kanban/**/*',
             'web/static/src/views/list/**/*',

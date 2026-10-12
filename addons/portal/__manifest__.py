@@ -125,6 +125,7 @@ a dependency towards website editing and customization capabilities.""",
             "web/static/src/core/avatar/avatar.scss",
             "web/static/src/core/dropdown/dropdown.scss",
             "web/static/src/core/emoji_picker/**/*",
+            ("remove", "web/static/src/core/emoji_picker/**/*.dark.scss"),
             ("remove", "web/static/src/core/emoji_picker/emoji_data.js"),
             # ensure core.scss before any other style
             "mail/static/src/core/common/core.scss",

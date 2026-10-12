@@ -303,7 +303,6 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/discuss/**/public_web/**/*',
             'mail/static/src/discuss/**/public/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.css'),
-            ('remove', 'web/static/src/**/*.dark.scss'),
         ],
         'mail.assets_markdown': [
             'mail/static/src/markdown_assets/mail_markdown_assets.css',
@@ -335,7 +334,6 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',
             'web/static/src/scss/mimetypes.scss',
-            ('remove', 'web/static/src/**/*.dark.scss'),
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
             'bus/static/src/workers/*.js',

@@ -238,6 +238,7 @@
             "web/static/src/core/debug/**/*",
             'web/static/src/model/**/*',
             'web/static/src/views/**/*',
+            ('remove', 'web/static/src/views/**/*.dark.scss'),
             'web/static/src/search/**/*',
             'web/static/src/webclient/actions/**/*',
             ('remove', 'web/static/src/webclient/actions/reports/report_layouts.scss'),
