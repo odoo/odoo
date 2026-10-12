@@ -280,3 +280,42 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
             {'product_id': product_01.id, 'volume': 20.0, 'weight': 20.0, 'price_average': 200.0, 'qty_to_be_billed': 2.0},
             {'product_id': product_02.id, 'volume': 60.0, 'weight': 60.0, 'price_average': 400.0, 'qty_to_be_billed': 6.0},
         ])
+
+    def test_purchase_report_multi_company_currency(self):
+        """
+        Test purchase report amount consolidation across companies with different currencies.
+
+        - PO 1 (USD): $100.0 at consolidation rate 1.0 -> $100.0
+        - PO 2 (EUR): €100.0 at consolidation rate 0.5 -> €50.0
+
+        Expected consolidated untaxed total: 150.0
+        """
+        company_2 = self.env['res.company'].create({
+            'name': 'Company 2',
+            'currency_id': self.other_currency.id,
+        })
+        companies = self.env.company + company_2
+        orders = self.env['purchase.order'].create([
+            {
+                'partner_id': self.partner_a.id,
+                'company_id': company.id,
+                'currency_id': company.currency_id.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'price_unit': 100.0,
+                    }),
+                ],
+            }
+            for company in companies
+        ])
+        orders.button_confirm()
+
+        res = self.env['purchase.report'].with_context(
+            allowed_company_ids=companies.ids,
+        )._read_group(
+            [('order_id', 'in', orders.ids)],
+            groupby=['date_approve:day'],
+            aggregates=['untaxed_total:sum'],
+        )
+        self.assertEqual(res[0][1], 150.0)
