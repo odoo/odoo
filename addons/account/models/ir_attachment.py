@@ -71,9 +71,8 @@ class IrAttachment(models.Model):
             attachment_data = document.find('{*}Attachment/{*}EmbeddedDocumentBinaryObject')
             if attachment_name is not None and attachment_data is not None:
                 mimetype = attachment_data.attrib.get('mimeCode')
-                if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)):
+                if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)) or not (text := ((attachment_data.text or '').strip())):
                     continue
-                text = attachment_data.text.strip()
                 text += '=' * (len(text) % 3)  # Fix incorrect padding
 
                 # Normalize the name of the file : some e-fff emitters put the full path of the file
