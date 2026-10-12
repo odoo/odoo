@@ -46,7 +46,7 @@ class TestPrivacyWizard(TransactionCase):
 
     def test_wizard_multi_company(self):
         # Check that the record is spotted, even if not available on the Reference field
-        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        company_2 = self.add_company('base.test_company', {'name': 'Company 2'})
         other_partner = self.env['res.partner'].create({
             'name': 'Rintin Tin',
             'email': 'rintin.tin@gmail.com',

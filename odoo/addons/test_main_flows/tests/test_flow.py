@@ -109,7 +109,7 @@ class TestUi(BaseTestUi):
 
     def test_company_switch_access_error(self):
         company1 = self.env.company
-        company2 = self.env["res.company"].create({"name":"second company"})
+        company2 = self.add_company('base.test_company', {"name": "second company"})
         self.env.ref('base.user_admin').write({
             "company_ids": [Command.clear(), Command.link(company1.id), Command.link(company2.id)]
         })
@@ -140,7 +140,7 @@ class TestUi(BaseTestUi):
 
     def test_company_access_error_redirect(self):
         company1 = self.env.company
-        company2 = self.env["res.company"].create({"name": "second company"})
+        company2 = self.add_company('base.test_company', {"name": "second company"})
         self.env.ref('base.user_admin').write({
             "company_ids": [Command.clear(), Command.link(company1.id), Command.link(company2.id)]
         })
@@ -172,7 +172,7 @@ class TestUi(BaseTestUi):
     def test_company_switch_access_error_debug(self):
         # This test is identical to test_company_switch_access_error, but with debug mode enabled
         company1 = self.env.company
-        company2 = self.env["res.company"].create({"name": "second company"})
+        company2 = self.add_company('base.test_company', {"name": "second company"})
         self.env.ref('base.user_admin').write({
             "company_ids": [Command.clear(), Command.link(company1.id), Command.link(company2.id)]
         })

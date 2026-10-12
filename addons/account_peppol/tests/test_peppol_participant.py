@@ -379,7 +379,7 @@ class TestPeppolParticipant(TransactionCase):
         self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')
 
     def test_peppol_commercial_entity(self):
-        company_peppol = self.env["res.company"].create({
+        company_peppol = self.add_company('base.test_company_template', {
             "name": "test_be",
             "country_id": self.env.ref("base.be").id,
         })
@@ -452,7 +452,7 @@ class TestPeppolParticipant(TransactionCase):
 
         company_partner = self.env.company.partner_id
 
-        other_company = self.env['res.company'].create({'name': 'new company 3', 'country_id': be_country.id})
+        other_company = self.add_company('base.test_company_template', {'name': 'new company 3', 'country_id': be_country.id})
         self.env = self.env(context=dict(allowed_company_ids=other_company.ids))
         # Do not raise even if no access to a registered company
 

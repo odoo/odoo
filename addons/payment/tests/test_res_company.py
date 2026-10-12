@@ -16,7 +16,7 @@ class TestResCompany(PaymentCommon):
             ("module_state", "=", "installed"),
         ])
 
-        new_company = self.env["res.company"].create({"name": "New Company"})
+        new_company = self.add_company('base.test_company', {"name": "New Company"})
         new_company_providers_count = self.env["payment.provider"].search_count([
             ("company_id", "=", new_company.id),
             ("module_state", "=", "installed"),

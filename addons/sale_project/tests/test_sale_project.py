@@ -893,7 +893,7 @@ class TestSaleProject(TestSaleProjectCommon):
 
     def test_multi_company_so_creation(self):
         # SO with project template with non-superuser company_id able creates project with proper company
-        company = self.env['res.company'].create({
+        company = self.add_company('base.test_company', {
             'name': 'Multi-Company Test Company',
             'currency_id': self.env.ref('base.EUR').id,
         })

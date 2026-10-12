@@ -91,7 +91,7 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
         - The SOL's analytic distribution should come from project_b, not project_a
         """
         company_a = self.env.company
-        company_b = self.env['res.company'].create({'name': 'Company B'})
+        company_b = self.add_company('base.test_company', {'name': 'Company B'})
         analytic_account_a, analytic_account_b = self.env['account.analytic.account'].create([
             {
                 'name': 'Analytic Account Company A',
