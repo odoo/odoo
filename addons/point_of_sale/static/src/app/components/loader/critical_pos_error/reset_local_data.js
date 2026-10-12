@@ -1,3 +1,5 @@
+import { clearLocalStorage } from "@point_of_sale/app/utils/devices_identifier_sequence";
+
 const ignoreErrors = async (callback) => {
     try {
         await callback();
@@ -19,7 +21,7 @@ const deleteDatabase = (name) =>
 
 export async function resetLocalData() {
     const tasks = [
-        ignoreErrors(() => localStorage.clear()),
+        ignoreErrors(() => clearLocalStorage()),
         ignoreErrors(() => sessionStorage.clear()),
     ];
 
