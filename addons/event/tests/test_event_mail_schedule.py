@@ -723,6 +723,26 @@ class TestMailSchedule(EventMailCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_eventmanager')
+    def test_event_mail_schedule_many_registrations(self):
+        """ Creates 501 registrations and ensures only one mail is generated per registration.
+            501 is chosen because it's right above the batch size of 500 """
+        test_event = self.test_event.with_env(self.env)
+        scheduler = self.env['event.mail'].search([
+            ('event_id', '=', test_event.id),
+            ('interval_type', '=', 'after_sub'),
+            ('interval_unit', '=', 'now'),
+        ])
+        self.assertEqual(len(scheduler), 1)
+
+        with self.mock_datetime_and_now(self.reference_now), self.mock_mail_gateway():
+            registrations = self._create_registrations(test_event, 501)
+
+        self.assertEqual(len(registrations), 501)
+        self.assertEqual(self.env["event.mail.registration"].search_count([("scheduler_id", "=", scheduler.id)]), 501)
+        self.assertEqual(len(self._new_mails), 501)
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @users('user_eventmanager')
     @warmup
     def test_event_mail_schedule_on_subscription(self):
         """ Test emails sent on subscription, notably to avoid bottlenecks """
