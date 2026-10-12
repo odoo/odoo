@@ -90,7 +90,7 @@ test("reply: discard on pressing escape", async () => {
     triggerHotkey("Escape");
     await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
     releaseFetch();
-    await animationFrame(); // a re-open would show up on the next render
+    await animationFrame(); // wait for any re-open of the list by the late answer
     await contains(".o-mail-Composer");
     await click(".o-mail-Composer-input").catch(() => {});
     await contains(".o-mail-Composer.o-focused");
