@@ -239,6 +239,15 @@ class Test_Testing_UtilitiesRecursive(models.Model):
 
     one_to_many_id = fields.Many2one('test_testing_utilities.recursive', readonly=True)
     many_to_one_ids = fields.One2many('test_testing_utilities.recursive', 'one_to_many_id', readonly=True)
+    line_ids = fields.One2many('test_testing_utilities.recursive.line', 'recursive_id')
+
+
+class Test_Testing_UtilitiesRecursiveLine(models.Model):
+    _name = 'test_testing_utilities.recursive.line'
+    _description = 'test_testing_utilities.recursive.line'
+
+    recursive_id = fields.Many2one('test_testing_utilities.recursive')
+    name = fields.Char()
 
 
 class Test_Testing_UtilitiesOnchange_Parent(models.Model):
