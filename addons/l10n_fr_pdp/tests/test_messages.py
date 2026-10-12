@@ -12,6 +12,7 @@ from odoo.tools.misc import file_open
 from odoo.tools import mute_logger
 
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
+from odoo.addons.l10n_fr_pdp.models.account_edi_proxy_user import PROCESS_CONDITION_CODE_TO_RESPONSE_CODE
 
 from .common import FAKE_UUID, FILE_PATH, TestL10nFrPdpCommon
 
@@ -386,7 +387,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertEqual(len(move.message_ids), message_count + 2)
         body = move.message_ids[0].body
         self.assertIn('PPF Status:</strong> Error', body)
-        self.assertIn('Errors from PPF Invoice:', body)
+        self.assertIn('PPF Invoice:', body)
         self.assertIn('The detailed PPF error message', body)
         self.assertIn('PA Status:</strong> Done', move.message_ids[1].body)
 
@@ -410,9 +411,9 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         )
 
         self.assertEqual(len(move.message_ids), message_count + 2)
-        self.assertIn('Errors from PPF Lifecycle:', move.message_ids[0].body)
+        self.assertIn('PPF Lifecycle:', move.message_ids[0].body)
         self.assertIn('The detailed PPF error message', move.message_ids[0].body)
-        self.assertIn('Errors from PA Lifecycle:', move.message_ids[1].body)
+        self.assertIn('PA Lifecycle:', move.message_ids[1].body)
         self.assertIn('The detailed PA error message', move.message_ids[1].body)
 
     def test_pdp_einvoicing_chatter_empty_error_keeps_source(self):
@@ -426,7 +427,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             error_source='PA Lifecycle',
         )
 
-        self.assertIn('Errors from PA Lifecycle:', move.message_ids[0].body)
+        self.assertIn('PA Lifecycle:', move.message_ids[0].body)
 
     def test_pdp_einvoicing_pa_error_does_not_start_ppf(self):
         move = self._create_french_invoice()
@@ -443,7 +444,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertIn('PA Status:', body)
         self.assertIn('Error', body)
         self.assertNotIn('PPF Status:', body)
-        self.assertIn('Errors from PA Invoice:', body)
+        self.assertIn('PA Invoice:', body)
         self.assertIn('The detailed IAP error message', body)
         self.assertNotIn('Tax Extraction Error', body)
 
@@ -464,7 +465,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         body = move.message_ids[0].body
         self.assertIn('PPF Status:', body)
         self.assertNotIn('PA Status:', body)
-        self.assertIn('Errors from PPF Invoice:', body)
+        self.assertIn('PPF Invoice:', body)
         self.assertIn('The detailed PPF error message', body)
 
     def test_pdp_einvoicing_ppf_lifecycle_error(self):
@@ -488,7 +489,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
 
         self.assertEqual(response.pdp_ppf_state, 'error')
         body = move.message_ids[0].body
-        self.assertIn('Errors from PPF Lifecycle:', body)
+        self.assertIn('PPF Lifecycle:', body)
         self.assertNotIn('PA Status:', body)
         self.assertIn('The detailed lifecycle error message', body)
 
@@ -523,6 +524,49 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertNotIn('Errors:', body)
         self.assertIn('[TRANSAC_INC] Unknown transaction', body)
         self.assertIn('Lifecycle note', body)
+
+    def test_pdp_receive_every_lifecycle_status_code(self):
+        # All the status codes allowed by the CDAR schematron (BR-FR-CDV-CL-06)
+        pa_codes = [
+            '200', '201', '202', '203', '204', '205', '206', '207', '208', '209', '210', '211', '212', '213', '214',
+            '220', '221', '224', '225', '226', '227', '228',
+        ]
+        ppf_codes = ['250', '251', '300', '301', '400', '401', '500', '501', '601']
+        move = self._create_french_invoice()
+        move.action_post()
+        move.peppol_message_uuid = FAKE_UUID[0]
+        move.peppol_move_state = 'done'
+        proxy_model = self.env.registry[self.proxy_user._name]
+
+        for code in pa_codes + ppf_codes:
+            with self.subTest(code=code):
+                document = f'''<?xml version="1.0" encoding="UTF-8"?>
+                    <rsm:CrossDomainAcknowledgementAndResponse
+                        xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossDomainAcknowledgementAndResponse:100"
+                        xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+                        xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
+                        <rsm:AcknowledgementDocument>
+                            <ram:IssueDateTime>
+                                <udt:DateTimeString format="204">20241205000000</udt:DateTimeString>
+                            </ram:IssueDateTime>
+                            <ram:ReferenceReferencedDocument>
+                                <ram:ProcessConditionCode>{code}</ram:ProcessConditionCode>
+                            </ram:ReferenceReferencedDocument>
+                        </rsm:AcknowledgementDocument>
+                    </rsm:CrossDomainAcknowledgementAndResponse>'''.encode()
+                with patch.object(proxy_model, '_peppol_get_decoded_document', return_value=document):
+                    response = self.proxy_user._pdp_import_incoming_response(f'lifecycle-{code}', {
+                        'flow_number': '2' if code in pa_codes else '6',
+                        'origin_ref_status_code': None if code in pa_codes else '210',
+                        'origin_peppol_lifecycle_uuid': None,
+                        'state': 'done',
+                    }, move)
+                self.env.flush_all()
+
+                self.assertTrue(response)
+                self.assertEqual(response.response_code, PROCESS_CONDITION_CODE_TO_RESPONSE_CODE[code])
+                self.assertNotIn('Failed to process incoming response', move.message_ids[0].body)
+                self.assertNotIn('PA Status:</strong> Error', move.message_ids[0].body)
 
     def test_pdp_send_invalid_edi_user(self):
         # an invalid edi user should not be able to send invoices via pdp
