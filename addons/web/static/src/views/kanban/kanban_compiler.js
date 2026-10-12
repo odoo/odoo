@@ -31,7 +31,11 @@ export class KanbanCompiler extends ViewCompiler {
     setup() {
         this.compilers.push(
             { selector: "t[t-call]", fn: this.compileTCall },
-            { selector: "img", fn: this.compileImage }
+            { selector: "img", fn: this.compileImage },
+            {
+                selector: "div[class~='o_kanban_card_manage_settings']",
+                fn: this.compileManageSettings,
+            }
         );
     }
 
@@ -153,6 +157,19 @@ export class KanbanCompiler extends ViewCompiler {
             }
         }
 
+        return compiled;
+    }
+
+    /**
+     * @param {Element} el
+     * @param {Object} params
+     * @returns {Element}
+     */
+    compileManageSettings(el, params) {
+        const compiled = this.compileGenericNode(el, params);
+        if (el.querySelector("field[widget='kanban_color_picker']")) {
+            compiled.classList.add("o_kanban_card_manage_settings_colorlist");
+        }
         return compiled;
     }
 
