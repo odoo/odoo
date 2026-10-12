@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_send_batch_wizard_form_annuaire" model="ir.ui.view">
+        <field name="name">account.move.send.batch.wizard.form.annuaire</field>
+        <field name="model">account.move.send.batch.wizard</field>
+        <field name="inherit_id" ref="account.account_move_send_batch_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='alerts']" position="after">
+                <field name="l10n_fr_pdp_not_in_annuaire_partner_ids" invisible="1"/>
+                <div class="alert alert-warning" role="alert"
+                     invisible="not l10n_fr_pdp_not_in_annuaire_partner_ids">
+                    <span>The following customer(s) are not in the French e-invoicing annuaire:</span>
+                    <div class="mt-2">
+                        <field name="l10n_fr_pdp_not_in_annuaire_partner_ids" widget="many2many_tags" nolabel="1"/>
+                    </div>
+                </div>
+                <group invisible="not l10n_fr_pdp_not_in_annuaire_partner_ids">
+                    <field name="l10n_fr_pdp_force_send_einvoicing"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

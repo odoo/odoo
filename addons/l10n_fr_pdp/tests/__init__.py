@@ -1,4 +1,5 @@
 from . import common
+from . import test_annuaire_send
 from . import test_cii_export_facturx_fr
 from . import test_cii_import_facturx_fr
 from . import test_flow_lifecycle
