@@ -122,7 +122,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/views/form/button_box/*.scss',
 
             # Don't include dark mode files in light mode
-            ('remove', 'web/static/src/**/*.dark.scss'),
+            ('remove', 'web/static/src/**/*.dark.css'),
         ],
         'web.assets_backend_lazy': [
             ('include', 'web._assets_helpers'),
@@ -334,6 +334,7 @@ This module provides the core of the Odoo Web Client.
         "web.assets_web_dark": [
             ('include', 'web.assets_web'),
             'web/static/src/**/*.dark.scss',
+            'web/static/src/**/*.dark.css',
         ],
 
         # ---------------------------------------------------------------------

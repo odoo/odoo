@@ -106,7 +106,7 @@
             'web/static/src/views/*.scss',
             'web/static/src/views/fields/**/*',
             'web/static/src/views/form/**/*',
-            ('remove', 'web/static/src/views/form/**/*.dark.scss'),
+            ('remove', 'web/static/src/views/form/**/*.dark.css'),
             'web/static/src/views/card/**/*',
             'web/static/src/views/kanban/**/*',
             'web/static/src/views/list/**/*',
