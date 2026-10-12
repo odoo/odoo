@@ -129,6 +129,7 @@ Featuring
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files
             'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/**/*.dark.scss'),
+            'web/static/src/css/**/*',
             'web/static/src/env.js',
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 

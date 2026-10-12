@@ -100,6 +100,7 @@
             'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/**/*.dark.scss'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
+            'web/static/src/css/**/*',
             'web/static/src/search/**/*',
             'web/static/src/views/*.js',
             'web/static/src/views/*.xml',
