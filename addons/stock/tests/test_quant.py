@@ -1767,6 +1767,38 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
             [{'quantity_product_uom': 5}] * 2
         )
 
+    def test_least_package_removal_strategy_large_loose_quantity(self):
+        """
+        Tests the least package removal strategy when a large quantity is available
+        without package. The loose units must be taken in a single step instead of
+        being explored and fetched one by one.
+        """
+        packages_data = [
+            (False, 100000),
+            (3000, 1),
+        ]
+        self._generate_data(packages_data)
+
+        Quant = self.env['stock.quant']
+        domain = Quant._get_gather_domain(self.product, self.stock_location)
+        with self.assertQueryCount(2):
+            least_packages_domain = Quant._run_least_packages_removal_strategy_astar(domain, 5000)
+        self.assertRecordValues(
+            Quant.search(least_packages_domain).sorted('quantity'),
+            [{'quantity': 3000}, {'quantity': 100000}]
+        )
+
+        move = self.env['stock.move'].create({
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_uom_qty': 5000,
+        })
+        move._action_confirm()
+        move._action_assign()
+        self.assertEqual(move.quantity, 5000)
+
     def test_clean_quant_after_package_move(self):
         """
         A product is at WH/Stock in a package PK. We deliver PK. The user should
