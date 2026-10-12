@@ -86,31 +86,33 @@
     </template>
 
     <template id="website_sale.products_breadcrumb" name="Products Breadcrumb">
-        <ol t-if="category" t-attf-class="breadcrumb #{_classes}">
-            <li class="breadcrumb-item">
-                <a
-                    t-att-class="'d-none d-lg-inline' if len(category.parents_and_self) &gt; 1 else ''"
-                    t-att-href="keep(shop_path, **reset_filters)"
-                >
-                    Products
-                </a>
-                <span t-if="len(category.parents_and_self) &gt; 1" class="d-lg-none">...</span>
-            </li>
-            <t t-foreach="category.parents_and_self" t-as="cat">
-                <li t-if="cat == category" class="breadcrumb-item">
-                    <span class="d-inline-block" t-field="cat.name"/>
-                </li>
-                <li
-                    t-else=""
-                    t-attf-class="breadcrumb-item {{cat_index &lt; cat_size - 2 and 'd-none d-lg-inline'}}"
-                >
+        <nav t-if="category" aria-label="breadcrumb">
+            <ol t-attf-class="breadcrumb #{_classes}">
+                <li class="breadcrumb-item">
                     <a
-                        t-att-href="keep(cat.website_url, **reset_filters)"
-                        t-field="cat.name"
-                    />
+                        t-att-class="'d-none d-lg-inline' if len(category.parents_and_self) &gt; 1 else ''"
+                        t-att-href="keep(shop_path, **reset_filters)"
+                    >
+                        Products
+                    </a>
+                    <span t-if="len(category.parents_and_self) &gt; 1" class="d-lg-none">...</span>
                 </li>
-            </t>
-        </ol>
+                <t t-foreach="category.parents_and_self" t-as="cat">
+                    <li t-if="cat == category" class="breadcrumb-item" aria-current="page">
+                        <span class="d-inline-block" t-field="cat.name"/>
+                    </li>
+                    <li
+                        t-else=""
+                        t-attf-class="breadcrumb-item {{cat_index &lt; cat_size - 2 and 'd-none d-lg-inline'}}"
+                    >
+                        <a
+                            t-att-href="keep(cat.website_url, **reset_filters)"
+                            t-field="cat.name"
+                        />
+                    </li>
+                </t>
+            </ol>
+        </nav>
     </template>
 
     <!-- /shop product listing -->
