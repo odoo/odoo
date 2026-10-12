@@ -34,10 +34,12 @@ class StockPickingType(models.Model):
     default_location_src_id = fields.Many2one(
         'stock.location', 'Source Location', compute='_compute_default_location_src_id',
         check_company=True, store=True, readonly=False, precompute=True, required=True,
+        domain="[('usage', '!=', 'view')]",
         help="This is the default source location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.")
     default_location_dest_id = fields.Many2one(
         'stock.location', 'Destination Location', compute='_compute_default_location_dest_id',
         check_company=True, store=True, readonly=False, precompute=True, required=True,
+        domain="[('usage', '!=', 'view')]",
         help="This is the default destination location when this operation is manually created. However, it is possible to change it afterwards or that the routes use another one by default.")
     code = fields.Selection([('incoming', 'Receipt'), ('outgoing', 'Delivery'), ('internal', 'Internal Transfer')], 'Type of Operation', default='incoming', required=True)
     return_picking_type_id = fields.Many2one(
@@ -609,11 +611,11 @@ class StockPicking(models.Model):
     location_id = fields.Many2one(
         'stock.location', "Source Location",
         compute="_compute_location_id", store=True, precompute=True, readonly=False,
-        check_company=True, required=True)
+        check_company=True, required=True, domain="[('usage', '!=', 'view')]")
     location_dest_id = fields.Many2one(
         'stock.location', "Destination Location",
         compute="_compute_location_id", store=True, precompute=True, readonly=False,
-        check_company=True, required=True)
+        check_company=True, required=True, domain="[('usage', '!=', 'view')]")
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
