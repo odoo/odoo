@@ -1981,9 +1981,9 @@ class HrEmployee(models.Model):
         return all_employees._get_versions_with_contract_overlap_with_period(date_from, date_to)
 
     def _get_unusual_days(self, date_from, date_to=None):
-        def _generate_unusual_days(date_from, date_to):
+        def _generate_unusual_days(date_from, date_to, value=True):
             return {
-                day.strftime('%Y-%m-%d'): True
+                day.strftime('%Y-%m-%d'): value
                 for day in rrule(DAILY, date_from, until=date_to - relativedelta(days=1))
             }
 
@@ -1994,7 +1994,7 @@ class HrEmployee(models.Model):
         employee_versions = self.env['hr.version'].sudo().search([('employee_id', '=', self.id)]).filtered(
             lambda v: v._is_overlapping_period(date_from_date, date_to_date))
         if not employee_versions:
-            return _generate_unusual_days(date_from_date, date_to_date + timedelta(days=1))
+            return _generate_unusual_days(date_from_date, date_to_date + timedelta(days=1), value=False)
         unusual_days = {}
         next_date_to_generate = date_from_date
         for version in employee_versions:
