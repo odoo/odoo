@@ -4055,3 +4055,29 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('PosLoyaltyPartnerListAfterCouponRemoval')
+
+
+@tagged('post_install', '-at_install')
+class TestPosSessionError(TestPointOfSaleHttpCommon):
+
+    def test_missing_gift_card_print_report(self):
+        """Opening the POS displays the missing report error without creating a session."""
+        self.env['loyalty.program'].search([]).active = False
+        program = self.env['loyalty.program'].browse(
+            self.env['loyalty.program'].create_from_template('gift_card')['res_id']
+        )
+        program.write({
+            'pos_report_print_id': False,
+            'pos_config_ids': [Command.clear()],
+            'currency_id': self.main_pos_config.currency_id.id,
+        })
+        program.rule_ids.product_ids.available_in_pos = True
+        self.assertTrue(program.mail_template_id)
+
+        self.authenticate('pos_user', 'pos_user')
+        response = self.url_open(self._get_url())
+        self.assertIn('Oops! Something went wrong.', response.text)
+
+        self.assertEqual(response.status_code, 422)
+        self.assertIn('There is no print report on the gift card program', response.text)
+        self.assertFalse(self.main_pos_config.current_session_id)
