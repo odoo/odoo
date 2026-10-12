@@ -96,11 +96,11 @@ export class LinkPopover extends Component {
     ];
     buttonShapeData = [
         { shape: "", label: "Default" },
-        { shape: "rounded-circle", label: "Default + Rounded" },
+        { shape: "rounded-pill", label: "Default + Rounded" },
         { shape: "outline", label: "Outline" },
-        { shape: "outline rounded-circle", label: "Outline + Rounded" },
+        { shape: "outline rounded-pill", label: "Outline + Rounded" },
         { shape: "fill", label: "Fill" },
-        { shape: "fill rounded-circle", label: "Fill + Rounded" },
+        { shape: "fill rounded-pill", label: "Fill + Rounded" },
         { shape: "flat", label: "Flat" },
     ];
     setup() {
@@ -456,6 +456,9 @@ export class LinkPopover extends Component {
             const regexParts = parts.map((cls) => {
                 if (["outline", "fill"].includes(cls)) {
                     cls = `btn-${cls}`;
+                } else if (cls === "rounded-pill") {
+                    // Rounded matches both rounded-pill and rounded-circle buttons.
+                    cls = "rounded-(pill|circle)";
                 }
                 return `(?=.*\\b${cls}\\b)`;
             });
@@ -607,7 +610,8 @@ export class LinkPopover extends Component {
 
     get classes() {
         const classes = [...this.props.linkElement.classList].filter(
-            (value) => !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
+            (value) =>
+                !value.match(/^(btn.*|rounded-(circle|pill)|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
         );
 
         let stylePrefix = "";
