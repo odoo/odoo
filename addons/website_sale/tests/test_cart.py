@@ -662,3 +662,26 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
             "sale",
             "An empty cart should never be confirmed as a sale order.",
         )
+
+    def test_prepare_order_history_public_user(self):
+        """The public partner is shared by every anonymous visitor: its confirmed orders must
+        not be offered for reorder, and its order history must not be searched at all."""
+        self.product.is_published = True
+        self._create_so(partner_id=self.public_partner.id).action_confirm()
+        website = self.website.with_user(self.public_user)
+        with MockRequest(website.env, website=website):
+            order_history = self.WebsiteSaleCartController._prepare_order_history()
+        self.assertEqual(order_history, {'order_history': []})
+
+    def test_prepare_order_history_portal_user(self):
+        self.product.is_published = True
+        partner = self.user_portal.partner_id
+        order = self._create_so(partner_id=partner.id)
+        order.action_confirm()
+        website = self.website.with_user(self.user_portal)
+        with MockRequest(website.env, website=website):
+            order_history = self.WebsiteSaleCartController._prepare_order_history()
+        history_lines = self.env['sale.order.line'].concat(
+            *(group['lines'] for group in order_history['order_history']),
+        )
+        self.assertEqual(history_lines, order.order_line)
