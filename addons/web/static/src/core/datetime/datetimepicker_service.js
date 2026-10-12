@@ -451,10 +451,10 @@ export const datetimePickerService = {
                         return true;
                     }
                     // Iterate over the current value slots rather than the inputs:
-                    // a target-only picker (e.g. gantt scale selector, builder
-                    // datetimepicker) has no input elements, in which case every
-                    // value must be preserved as-is. Indexing an absent input keeps
-                    // the current value, so the just-selected value is never wiped.
+                    // a target-only picker has no input elements, in which case
+                    // every value must be preserved as-is. Indexing an absent input
+                    // keeps the current value, so the just-selected value is never
+                    // wiped.
                     const values = ensureArray(pickerProps.value).map((currentValue, i) => {
                         const el = inputs[i];
                         if (!el || el.tagName?.toLowerCase() !== "input") {
