@@ -119,6 +119,14 @@ class PosPaymentMethod(models.Model):
 
         return self.sudo()._get_stripe_payment_provider()._send_api_request('POST', endpoint, data=data)
 
+    def stripe_account_mcc(self):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("Do not have access to fetch the Stripe account"))
+
+        account = self.sudo()._get_stripe_payment_provider()._send_api_request('GET', 'account')
+        # Both business_profile and mcc can be null, see https://docs.stripe.com/api/accounts/object
+        return (account.get('business_profile') or {}).get('mcc') or False
+
     def action_stripe_key(self):
         res_id = self._get_stripe_payment_provider().id
         # Redirect
