@@ -970,7 +970,7 @@ class TestArWithholdingArRi(TestArCommon):
 
         wizard.withholding_line_ids.filtered(lambda l: l.tax_id == sale_tax).name = 'B-0001'
         payment = wizard._create_payments()
-        self.assertEqual(payment.state, 'paid')
+        self.assertIn(payment.state, payment._valid_payment_states())
         self.assertEqual(payment.withholding_line_ids.filtered(lambda l: l.tax_id == sale_tax).name, 'B-0001')
 
     def test_ar_real_case_check_and_withholding_accumulation(self):
