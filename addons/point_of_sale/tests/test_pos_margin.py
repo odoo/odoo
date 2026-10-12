@@ -15,11 +15,7 @@ class TestPosMargin(TestPoSCommon):
         super(TestPosMargin, self).setUp()
         self.config = self.basic_config
 
-        self.stock_location = self.env['stock.warehouse'].create({
-            'partner_id': self.env.user.partner_id.id,
-            'name': 'Stock location',
-            'code': 'WH'
-        }).lot_stock_id
+        self.stock_location = self.company_data['default_warehouse'].lot_stock_id
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
