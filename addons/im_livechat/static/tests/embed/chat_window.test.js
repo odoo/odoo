@@ -259,3 +259,16 @@ test("should not allow preview of PDF attachments when embedded externally", asy
     await click(".o-mail-Composer button[title='Send']:enabled");
     await click(".o-mail-Message .o-mail-AttachmentContainer:contains(test.pdf)");
 });
+
+test("thread actions are not displayed on temporary thread", async () => {
+    const pyEnv = await startServer();
+    await loadDefaultEmbedConfig();
+    const [partnerUser] = pyEnv["res.users"].search_read([["id", "=", serverState.partnerId]]);
+    await start({ authenticateAs: partnerUser });
+    await mountWithCleanup(LivechatButton);
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatWindow-command", { count: 2 });
+    await contains(".o-mail-ChatWindow-command[title='Fold']");
+    await contains(".o-mail-ChatWindow-command[title*='Close Chat Window']");
+});
