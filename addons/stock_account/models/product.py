@@ -508,6 +508,8 @@ class ProductProduct(models.Model):
                         value = average_cost * quantity
                 if move.is_out:
                     out_qty = move._get_valued_qty()
+                    if lot and quantity <= 0 and out_qty:
+                        average_cost = move.value / out_qty
                     out_value = out_qty * average_cost
                     if lot:
                         lot_qty = move._get_valued_qty(lot)

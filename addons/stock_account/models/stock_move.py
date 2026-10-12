@@ -345,8 +345,12 @@ class StockMove(models.Model):
                 if move.product_id.lot_valuated:
                     value = 0.0
                     for move_line in move.move_line_ids:
-                        if move_line.lot_id:
-                            value += move_line.lot_id.standard_price * move_line.quantity_product_uom
+                        lot = move_line.lot_id
+                        # edge case for when first move for a lot is an out move
+                        if lot and not lot.standard_price and move.product_id.cost_method != 'standard' and move.product_id.uom_id.compare(lot.product_qty, 0) <= 0:
+                            lot.with_context(disable_auto_revaluation=True).standard_price = move.product_id.standard_price
+                        if lot:
+                            value += lot.standard_price * move_line.quantity_product_uom
                         else:
                             value += move.product_id.standard_price * move_line.quantity_product_uom
                     move.value = value
