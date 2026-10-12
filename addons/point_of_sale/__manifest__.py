@@ -205,6 +205,7 @@
 
             # scss variables and utilities
             'point_of_sale/static/src/scss/pos_variables_extra.scss',
+            'point_of_sale/static/src/scss/css_variables.scss',
             'web/static/src/scss/bootstrap_overridden.scss',
             'web/static/fonts/fonts.scss',
             "web/static/src/scss/ui.scss",
@@ -264,6 +265,7 @@
             "point_of_sale/static/src/app/utils/use_timed_press.js",
             "point_of_sale/static/src/utils.js",
             "point_of_sale/static/src/scss/pos_variables_extra.scss",
+            "point_of_sale/static/src/scss/css_variables.scss",
             "point_of_sale/static/src/customer_display/**/*",
             "point_of_sale/static/src/app/hooks/time_hook.js",
             "point_of_sale/static/src/app/pos_app.scss",
