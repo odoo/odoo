@@ -88,6 +88,26 @@ test("suggestion list closed by Escape stays closed when the composer re-renders
     await contains(".o-mail-Composer-suggestionList .o-open");
 });
 
+test("click away from the empty suggestion list keeps the fetched suggestions", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].create({ name: "Bob" });
+    const fetchHeld = new Deferred();
+    onRpc("res.partner", "get_mention_suggestions", async () => {
+        step("get_mention_suggestions");
+        await fetchHeld;
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "@Bob");
+    await assertSteps(["get_mention_suggestions"]);
+    await contains(".o-mail-Composer-suggestionList .o-open");
+    await click(".o_form_view");
+    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    fetchHeld.resolve();
+    await contains(".o-mail-Composer-suggestion", { text: "Bob" });
+});
+
 test("can @user in restricted (group_public_id) channels", async () => {
     const pyEnv = await startServer();
     const groupId = pyEnv["res.groups"].create({
