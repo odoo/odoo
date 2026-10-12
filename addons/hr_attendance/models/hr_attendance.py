@@ -715,3 +715,40 @@ class HrAttendance(models.Model):
         employee_id = self.env.context.get('employee_id', False)
         employee = self.env['hr.employee'].browse(employee_id) if employee_id else self.env.user.employee_id
         return employee.sudo(False)._get_unusual_days(date_from, date_to)
+
+    @api.model
+    def get_working_hours_for_calendar(self, employee_id, date_from, date_to):
+        """Return FullCalendar `businessHours` for the employee.
+
+        :param employee_id: ID of the employee.
+        :param date_from: Start date (YYYY-MM-DD).
+        :param date_to: End date (YYYY-MM-DD).
+        """
+        employee = self.env["hr.employee"].browse(employee_id).exists()
+        if not employee:
+            return []
+
+        tz = ZoneInfo(self.env.user.tz or "UTC")
+        start_period = datetime.fromisoformat(date_from).replace(hour=0, minute=0, second=0, tzinfo=tz)
+        stop_period = datetime.fromisoformat(date_to).replace(hour=23, minute=59, second=59, tzinfo=tz)
+
+        business_hours = []
+        for start, stop, _meta in employee._get_expected_attendances(start_period, stop_period):
+            start = max(start.astimezone(tz), start_period)
+            stop = min(stop.astimezone(tz), stop_period)
+            if start >= stop:
+                continue
+
+            day = start.date()
+            last_day = (stop - timedelta(microseconds=1)).date()
+            while day <= last_day:
+                day_start = datetime.combine(day, time.min, tzinfo=tz)
+                day_end = datetime.combine(day + timedelta(days=1), time.min, tzinfo=tz)
+                seg_start, seg_stop = max(start, day_start), min(stop, day_end)
+                business_hours.append({
+                    "daysOfWeek": [(day.weekday() + 1) % 7],
+                    "startTime": seg_start.strftime("%H:%M"),
+                    "endTime": "24:00" if seg_stop == day_end else seg_stop.strftime("%H:%M"),
+                })
+                day += timedelta(days=1)
+        return business_hours
