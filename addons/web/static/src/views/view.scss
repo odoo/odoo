@@ -69,21 +69,21 @@
 /* of `.o_field_widget` so it needs to be placed at an upper level. */
 .o_status {
     border-radius: 50%;
-    background-color: map-get($grays, '200');
+    background-color: var(--gray-200);
     height: var(--Status-size, 12px);
     width: var(--Status-size, 12px);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--o-bs-black) 20%, transparent);
 
     &.o_status_green {
-        background-color: map-get($theme-colors, "success");
+        background-color: var(--success);
     }
 
     &.o_status_red {
-        background-color: map-get($theme-colors, "danger");
+        background-color: var(--danger);
     }
 
     &.o_status_changes_requested {
-        background-color: map-get($theme-colors, "warning");
+        background-color: var(--warning);
     }
 }
 

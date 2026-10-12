@@ -60,10 +60,10 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
 
 /* BASE SETTINGS LAYOUT */
 .o_base_settings_view .o_form_renderer {
-   --settings__tab-bg: #{map-get($grays, '100')};
+   --settings__tab-bg: var(--gray-100);
    --settings__tab-bg--active: var(--o-component-active-bg);
    --settings__tab-color: var(--body-color);
-   --settings__title-bg: #{map-get($grays, '200')};
+   --settings__title-bg: var(--gray-200);
 
    height: 100%;
 
@@ -165,7 +165,7 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
                align-items: center;
                margin-bottom: 10px;
                @include o-base-settings-horizontal-padding(.8rem);
-               background-color: map-get($grays, '200');
+               background-color: var(--gray-200);
 
                .icon {
                    width: 1.4em;
