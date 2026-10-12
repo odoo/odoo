@@ -401,7 +401,9 @@ class StockRule(models.Model):
         bypass_global_horizon_days = self.env.context.get('bypass_global_horizon_days')
         if bypass_global_horizon_days:
             return delays, delay_description
-        global_horizon_days = self.env['stock.warehouse.orderpoint'].get_horizon_days()
+        orderpoint = values.get('orderpoint_id') or self.env['stock.warehouse.orderpoint']
+        # keep the rules' context: mrp sets global_horizon_days=0 on pre-production rules
+        global_horizon_days = orderpoint.with_context(self.env.context).get_horizon_days()
         if global_horizon_days:
             delays['horizon_time'] += global_horizon_days
             if not bypass_delay_description:
