@@ -44,3 +44,19 @@ export function fillHtmlTransferData(
         ev[transferObjectProperty].setData("application/vnd.odoo.odoo-editor", htmlContent);
     }
 }
+
+/**
+ * Fill the clipboard with the current selection, html included, so that it
+ * keeps its formatting once pasted in an editor. Meant as a `copy` handler for
+ * readonly content.
+ *
+ * @param {ClipboardEvent} ev
+ */
+export function fillClipboardWithSelection(ev) {
+    ev.preventDefault();
+    const selection = ev.target.ownerDocument.defaultView.getSelection();
+    const clonedContents = selection.getRangeAt(0).cloneContents();
+    fillHtmlTransferData(ev, "clipboardData", clonedContents, {
+        textContent: selection.toString(),
+    });
+}
