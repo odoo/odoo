@@ -104,6 +104,13 @@ registry.category("web_tour.tours").add("snippets_all_drag_and_drop", {
                     trigger: ":iframe .modal-footer .btn-secondary",
                     run: "click",
                 });
+            } else if (snippet.name === "s_dynamic_snippet_instagram") {
+                snippetSteps.splice(2, 0, {
+                    content: "Close the Instagram account popup",
+                    trigger:
+                        ".modal:has(#instagram_access_token) .modal-footer button:contains(Discard)",
+                    run: "click",
+                });
             } else if (isModal) {
                 snippetSteps.splice(5, 0, {
                     content: `Make sure ${snippet.name} is shown`,

@@ -1093,6 +1093,11 @@ class Website(Home):
         dynamic_filter_found = single_record_filter or dynamic_filter_sudo
         return dynamic_filter_sudo._render(**kwargs) if dynamic_filter_found else []
 
+    @http.route('/website/snippet/instagram_feed', type='jsonrpc', auth='public', website=True, replica=True)
+    def get_instagram_feed(self, account_id, limit, **kwargs):
+        account = request.env['website.instagram.account'].sudo().browse(account_id).exists()
+        return account._get_feed(limit) if account else {'posts': ()}
+
     @http.route('/website/snippet/options_filters', type='jsonrpc', auth='user', website=True, replica=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
