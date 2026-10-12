@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Paper Format: the statement carries its own title block, so no header band is reserved -->
+    <record id="paperformat_customer_payment_statement" model="report.paperformat">
+        <field name="name">Customer Payment Statement</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top" eval="15"/>
+        <field name="margin_bottom" eval="15"/>
+        <field name="margin_left" eval="20"/>
+        <field name="margin_right" eval="20"/>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing" eval="0"/>
+        <field name="dpi">90</field>
+    </record>
+
     <!-- Report Action -->
     <record id="action_report_customer_payment" model="ir.actions.report">
         <field name="name">Customer Payment Statement</field>
@@ -8,179 +23,167 @@
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">customer_payment.report_customer_payment_document</field>
         <field name="report_file">customer_payment.report_customer_payment_document</field>
+        <field name="paperformat_id" ref="paperformat_customer_payment_statement"/>
         <field name="binding_model_id" ref="model_customer_payment"/>
         <field name="binding_type">report</field>
         <field name="print_report_name">'Customer Payment - %s' % object.name</field>
     </record>
 
-    <!-- Report Template -->
+    <!-- Report Template: Khmer Customer Summary Statement -->
     <template id="report_customer_payment_document">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-call="web.external_layout">
+                <t t-set="partner" t-value="o.partner_id"/>
+                <t t-set="partner_address" t-value="' '.join(filter(None, [partner.street, partner.street2, partner.city, partner.state_id.name]))"/>
+                <t t-set="invoices" t-value="o.invoice_ids.sorted(key=lambda inv: (inv.invoice_date or inv.date, inv.id))"/>
+                <t t-set="all_payments" t-value="(o.previous_payment_entry_ids + o.payment_entry_ids).sorted(key=lambda p: (p.payment_date, p.id))"/>
+                <!-- Period runs from the first bill to the last bill (whole year when there is no bill) -->
+                <t t-set="invoice_dates" t-value="invoices.filtered('invoice_date').mapped('invoice_date')"/>
+                <t t-set="date_from" t-value="min(invoice_dates) if invoice_dates else datetime.date(o.year, 1, 1)"/>
+                <t t-set="date_to" t-value="max(invoice_dates) if invoice_dates else datetime.date(o.year, 12, 31)"/>
+                <t t-set="km_months" t-value="['មករា', 'កុម្ភៈ', 'មីនា', 'មេសា', 'ឧសភា', 'មិថុនា', 'កក្កដា', 'សីហា', 'កញ្ញា', 'តុលា', 'វិច្ឆិកា', 'ធ្នូ']"/>
+
+                <div class="article o_cp_statement" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" t-att-data-oe-lang="o.env.context.get('lang')">
+                    <style>
+                        .o_cp_statement { color: #000; font-size: 16px; line-height: 1.5; }
+                        .o_cp_statement .o_cp_company { padding-left: 5%; }
+                        .o_cp_statement .o_cp_title { margin-top: 2px; font-size: 26px; font-weight: bold; text-align: center; }
+                        .o_cp_statement .o_cp_subtitle { font-size: 14px; text-align: center; }
+                        .o_cp_statement .o_cp_period { margin-bottom: 4px; text-align: center; }
+                        .o_cp_statement .o_cp_customer { padding: 2px 6px; background-color: #C6E0B4; line-height: 2; }
+                        .o_cp_statement table.o_cp_table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+                        .o_cp_statement table.o_cp_table + table.o_cp_table { margin-top: -1px; }
+                        .o_cp_statement .o_cp_table th,
+                        .o_cp_statement .o_cp_table td { padding: 3px 6px; border: 1px solid #000; vertical-align: middle; }
+                        .o_cp_statement .o_cp_table th { background-color: #DDEBF7; font-weight: bold; text-align: center; }
+                        .o_cp_statement .o_cp_table tr { page-break-inside: avoid; }
+                        .o_cp_statement .o_cp_center { text-align: center; }
+                        .o_cp_statement .o_cp_amount { text-align: right; white-space: nowrap; }
+                        .o_cp_statement .o_cp_symbol { float: left; }
+                        .o_cp_statement .o_cp_total td { padding-top: 5px; padding-bottom: 5px; font-size: 18px; font-weight: bold; }
+                        .o_cp_statement .o_cp_total .o_cp_amount { color: #FF0000; }
+                        .o_cp_statement .o_cp_notes { margin-top: 10px; }
+                        .o_cp_statement table.o_cp_signatures { width: 100%; margin-top: 16px; page-break-inside: avoid; }
+                        .o_cp_statement .o_cp_signatures td { width: 34%; padding-bottom: 80px; text-align: center; }
+                        .o_cp_statement .o_cp_signatures td.o_cp_spacer { width: 32%; }
+                    </style>
                     <div class="page">
                         <!-- Header -->
-                        <div class="row mb-4">
-                            <div class="col-12 text-center">
-                                <h2>Customer Payment Statement</h2>
-                                <p>
-                                    <strong>Period:</strong>
-                                    <span t-esc="'01-' + str(o.year)"/> to <span t-esc="'31-12-' + str(o.year)"/>
-                                </p>
-                            </div>
+                        <div class="o_cp_company"><span t-field="o.company_id.name"/></div>
+                        <div class="o_cp_title">របាយការណ៍អតិថិជន</div>
+                        <div class="o_cp_subtitle">Customer Summary Statement</div>
+                        <div class="o_cp_period">
+                            ចាប់ពីប៊ុង: <span t-out="'%02d-%s-%d' % (date_from.day, km_months[date_from.month - 1], date_from.year)"/>
+                            រហូតដល់: <span t-out="'%02d-%s-%d' % (date_to.day, km_months[date_to.month - 1], date_to.year)"/>
                         </div>
 
                         <!-- Customer Information -->
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <strong>Customer:</strong> <span t-field="o.partner_id.name"/><br/>
-                                <t t-if="o.partner_id.street">
-                                    <span t-field="o.partner_id.street"/><br/>
-                                </t>
-                                <t t-if="o.partner_id.phone">
-                                    <strong>Phone:</strong> <span t-field="o.partner_id.phone"/><br/>
-                                </t>
-                            </div>
-                            <div class="col-6 text-end">
-                                <strong>Reference:</strong> <span t-field="o.name"/><br/>
-                                <strong>Year:</strong> <span t-field="o.year"/><br/>
-                                <strong>Status:</strong>
-                                <span t-if="o.state == 'draft'" class="badge bg-secondary">Draft</span>
-                                <span t-if="o.state == 'processed'" class="badge bg-success">Processed</span>
-                            </div>
+                        <div class="o_cp_customer">
+                            <div>អតិថិជនឈ្មោះ: <span t-field="partner.name"/></div>
+                            <div>អាស័យដ្ឋាន: <span t-out="partner_address"/></div>
+                            <div>ទូរស័ព្ទ: <span t-field="partner.phone"/></div>
                         </div>
 
                         <!-- Invoices Section -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h4>Invoices</h4>
-                                <table class="table table-sm table-bordered">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>No.</th>
-                                            <th>Date</th>
-                                            <th>Invoice</th>
-                                            <th class="text-end">Amount</th>
-                                            <!-- <th>Status</th> -->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-set="inv_no" t-value="1"/>
-                                        <tr t-foreach="o.invoice_ids" t-as="invoice">
-                                            <td><span t-esc="inv_no"/></td>
-                                            <td><span t-field="invoice.invoice_date"/></td>
-                                            <td><span t-field="invoice.name"/></td>
-                                            <td class="text-end">
-                                                <span t-field="invoice.amount_total"
-                                                      t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
-                                            </td>
-                                            <!-- <td>
-                                                <span t-if="invoice.state == 'draft'" class="badge bg-secondary">Draft</span>
-                                                <span t-if="invoice.state == 'posted'" class="badge bg-info">Posted</span>
-                                                <span t-if="invoice.state == 'cancel'" class="badge bg-danger">Cancelled</span>
-                                            </td> -->
-                                            <t t-set="inv_no" t-value="inv_no + 1"/>
-                                        </tr>
-                                        <tr class="table-secondary fw-bold">
-                                            <td colspan="3" class="text-end">Total Invoices</td>
-                                            <td class="text-end">
-                                                <span t-field="o.total_invoice_amount"
-                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <table class="o_cp_table">
+                            <colgroup>
+                                <col style="width: 7%;"/>
+                                <col style="width: 23%;"/>
+                                <col style="width: 30%;"/>
+                                <col style="width: 40%;"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>ល.រ</th>
+                                    <th>ថ្ងៃ.ខែ.ឆ្នាំ</th>
+                                    <th>សរុបទឹកប្រាក់ក្នុងប៊ុង</th>
+                                    <th>ផ្សេងៗ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="invoices" t-as="invoice">
+                                    <td class="o_cp_center"><span t-out="invoice_index + 1"/></td>
+                                    <td class="o_cp_center"><span t-out="invoice.invoice_date and invoice.invoice_date.strftime('%d-%m-%y')"/></td>
+                                    <td class="o_cp_amount">
+                                        <span class="o_cp_symbol" t-out="invoice.currency_id.symbol"/>
+                                        <span t-out="invoice.amount_total" t-options="{'widget': 'float', 'precision': invoice.currency_id.decimal_places}"/>
+                                    </td>
+                                    <td class="o_cp_center"><span t-field="invoice.name"/></td>
+                                </tr>
+                                <tr t-if="not invoices">
+                                    <td>&#160;</td><td></td><td></td><td></td>
+                                </tr>
+                                <tr class="o_cp_total">
+                                    <td colspan="2" class="o_cp_center">សរុបនៅខ្វះ</td>
+                                    <td colspan="2" class="o_cp_amount">
+                                        <span class="o_cp_symbol" t-out="o.currency_id.symbol"/>
+                                        <span t-out="o.total_invoice_amount" t-options="{'widget': 'float', 'precision': o.currency_id.decimal_places}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                        <!-- Payment Entries Section -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h4>Payment Entries</h4>
-
-                                <!-- All Payment Entries (Combined) -->
-                                <t t-set="all_payments" t-value="(o.previous_payment_entry_ids + o.payment_entry_ids).sorted(key=lambda p: p.payment_date)"/>
-                                <t t-if="all_payments">
-                                    <table class="table table-sm table-bordered">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>No.</th>
-                                                <th>Date</th>
-                                                <th class="text-end">Amount</th>
-                                                <th>Note</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <t t-set="pay_no" t-value="1"/>
-                                            <tr t-foreach="all_payments" t-as="payment">
-                                                <td><span t-esc="pay_no"/></td>
-                                                <td><span t-field="payment.payment_date"/></td>
-                                                <td class="text-end">
-                                                    <span t-field="payment.amount"
-                                                          t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
-                                                </td>
-                                                <td><span t-field="payment.note"/></td>
-                                                <t t-set="pay_no" t-value="pay_no + 1"/>
-                                            </tr>
-                                            <tr class="table-success fw-bold">
-                                                <td colspan="2" class="text-end">Total Payments</td>
-                                                <td class="text-end">
-                                                    <span t-field="o.total_payment_amount"
-                                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                                </td>
-                                                <td></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </t>
-                                <t t-if="not all_payments">
-                                    <p class="text-muted">No payment entries recorded.</p>
-                                </t>
-                            </div>
-                        </div>
-
-                        <!-- Summary Section -->
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h4>Summary</h4>
-                                <table class="table table-sm table-bordered">
-                                    <tbody>
-                                        <tr>
-                                            <td style="width: 70%;"><strong>Total Invoices</strong></td>
-                                            <td class="text-end" style="width: 30%;">
-                                                <span t-field="o.total_invoice_amount"
-                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>Total Payments</strong></td>
-                                            <td class="text-end">
-                                                <span t-field="o.total_payment_amount"
-                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                            </td>
-                                        </tr>
-                                        <tr class="table-warning fw-bold">
-                                            <td><strong>Balance (Remaining)</strong></td>
-                                            <td class="text-end">
-                                                <span t-field="o.balance"
-                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <!-- Payment Entries Section (previous + current records) -->
+                        <table class="o_cp_table">
+                            <colgroup>
+                                <col style="width: 7%;"/>
+                                <col style="width: 23%;"/>
+                                <col style="width: 30%;"/>
+                                <col style="width: 40%;"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>ល.រ</th>
+                                    <th>ថ្ងៃ.ខែ.ឆ្នាំ</th>
+                                    <th>ទឹកប្រាក់បានសង</th>
+                                    <th>ផ្សេងៗ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="all_payments" t-as="payment">
+                                    <td class="o_cp_center"><span t-out="payment_index + 1"/></td>
+                                    <td class="o_cp_center"><span t-out="payment.payment_date.strftime('%d-%m-%y')"/></td>
+                                    <td class="o_cp_amount">
+                                        <span class="o_cp_symbol" t-out="payment.currency_id.symbol"/>
+                                        <span t-out="payment.amount" t-options="{'widget': 'float', 'precision': payment.currency_id.decimal_places}"/>
+                                    </td>
+                                    <td class="o_cp_center"><span t-field="payment.note"/></td>
+                                </tr>
+                                <tr t-if="not all_payments">
+                                    <td>&#160;</td><td></td><td></td><td></td>
+                                </tr>
+                                <tr class="o_cp_total">
+                                    <td colspan="2" class="o_cp_center">សរុបសងបាន</td>
+                                    <td colspan="2" class="o_cp_amount">
+                                        <span class="o_cp_symbol" t-out="o.currency_id.symbol"/>
+                                        <span t-out="o.total_payment_amount" t-options="{'widget': 'float', 'precision': o.currency_id.decimal_places}"/>
+                                    </td>
+                                </tr>
+                                <tr class="o_cp_total">
+                                    <td colspan="2" class="o_cp_center">សរុបនៅខ្វះ</td>
+                                    <td colspan="2" class="o_cp_amount">
+                                        <span class="o_cp_symbol" t-out="o.currency_id.symbol"/>
+                                        <span t-out="o.balance" t-options="{'widget': 'float', 'precision': o.currency_id.decimal_places}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
                         <!-- Notes Section -->
-                        <div class="row mt-4" t-if="o.notes">
-                            <div class="col-12">
-                                <h5>Notes</h5>
-                                <p t-field="o.notes"/>
-                            </div>
+                        <div t-if="o.notes" class="o_cp_notes">
+                            <strong>កំណត់សម្គាល់:</strong> <span t-field="o.notes"/>
                         </div>
 
+                        <!-- Signatures -->
+                        <table class="o_cp_signatures">
+                            <tr>
+                                <td>អ្នកលក់ ហត្ថលេខា</td>
+                                <td class="o_cp_spacer"></td>
+                                <td>អ្នកទិញ ហត្ថលេខា</td>
+                            </tr>
+                        </table>
                     </div>
-                </t>
+                </div>
             </t>
         </t>
     </template>
