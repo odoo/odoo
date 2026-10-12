@@ -14,8 +14,12 @@
 }
 
 .options-container:has(.o_wsale_products_list_page_options) {
-    div[data-label="Style"].hb-row-sublevel-1 .hb-row-label::after {
-        height: $o-hb-row-min-height * 1.5;
+    .o_wsale_categories_style_label::after {
+        height: $o-hb-row-min-height + $o-hb-row-spacing;
+    }
+
+    .o_wsale_sublevel_line_offset::after {
+        top: -$o-hb-row-min-height - $o-hb-row-spacing;
     }
 }
 
