@@ -376,7 +376,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         constraints = {}
 
         if vals['supplier'].country_id.code == 'NO':
-            vat = vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cac:PartyTaxScheme'][0]['cbc:CompanyID']['_text']
+            vat = vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cac:PartyTaxScheme'][0]['cbc:CompanyID']
             constraints.update({
                 # NO-R-001: For Norwegian suppliers, a VAT number MUST be the country code prefix NO followed by a
                 # valid Norwegian organization number (nine numbers) followed by the letters MVA.

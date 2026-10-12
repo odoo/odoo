@@ -25,7 +25,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
     def _get_document_type_code_node(self, invoice, invoice_data):
         # [UBL-SR-43] DocumentTypeCode should only show up on a CreditNote XML with the value '50'
         if invoice.move_type == 'out_refund':
-            return {'_text': '50'}
+            return '50'
 
     # -------------------------------------------------------------------------
     # EXPORT: Templates
@@ -38,7 +38,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
     def _ubl_add_customization_id_node(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_customization_id_node(vals)
-        vals['document_node']['cbc:CustomizationID']['_text'] = 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
+        vals['document_node']['cbc:CustomizationID'] = 'urn:cen.eu:en16931:2017#compliant#urn:efactura.mfinante.ro:CIUS-RO:1.0.1'
 
     def _ubl_get_partner_address_node(self, vals, partner):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -47,11 +47,11 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         if not partner.state_id:
             return node
 
-        node['cbc:CountrySubentity']['_text'] = f'{partner.country_code}-{partner.state_id.code}'
+        node['cbc:CountrySubentity'] = f'{partner.country_code}-{partner.state_id.code}'
 
         # Romania requires the CityName to be in the format of "SECTORX" if the address state is in Bucharest.
         if partner.state_id.code == 'B' and partner.city:
-            node['cbc:CityName']['_text'] = get_formatted_sector_ro(partner.city)
+            node['cbc:CityName'] = get_formatted_sector_ro(partner.city)
 
         return node
 
@@ -69,9 +69,9 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             company_id = ro_vat
 
         vals['party_node']['cac:PartyTaxScheme'] = [{
-            'cbc:CompanyID': {'_text': company_id},
+            'cbc:CompanyID': company_id,
             'cac:TaxScheme': {
-                'cbc:ID': {'_text': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT'},
+                'cbc:ID': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT',
             },
         }] if company_id else []
 
@@ -85,7 +85,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         if _has_vat(ro_vat):
             # RO legal registration id is the (RO-prefixed) VAT, not the bare CUI/RO_EN.
             vals['party_node']['cac:PartyLegalEntity'] = [{
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
                 'cbc:CompanyID': {
                     '_text': ro_vat,
                     'schemeID': None,
@@ -95,7 +95,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             value = commercial_partner._get_additional_identifier('RO_EN')
             if value:
                 vals['party_node']['cac:PartyLegalEntity'] = [{
-                    'cbc:RegistrationName': {'_text': commercial_partner.name},
+                    'cbc:RegistrationName': commercial_partner.name,
                     'cbc:CompanyID': {
                         '_text': value,
                         'schemeID': None,
@@ -118,9 +118,9 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             company_id = ro_vat
 
         vals['party_node']['cac:PartyTaxScheme'] = [{
-            'cbc:CompanyID': {'_text': company_id},
+            'cbc:CompanyID': company_id,
             'cac:TaxScheme': {
-                'cbc:ID': {'_text': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT'},
+                'cbc:ID': 'VAT' if company_id[:2].isalpha() else 'NOT_EU_VAT',
             },
         }] if company_id else []
 
@@ -134,7 +134,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         if _has_vat(ro_vat):
             # RO legal registration id is the (RO-prefixed) VAT, not the bare CUI/RO_EN.
             vals['party_node']['cac:PartyLegalEntity'] = [{
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
                 'cbc:CompanyID': {
                     '_text': ro_vat,
                     'schemeID': None,
@@ -142,7 +142,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             }]
         else:
             vals['party_node']['cac:PartyLegalEntity'] = [{
-                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:RegistrationName': commercial_partner.name,
                 'cbc:CompanyID': {
                     '_text': DEFAULT_VAT,
                     'schemeID': None,
@@ -165,18 +165,18 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         super()._ubl_add_line_item_name_description_nodes(vals)
         item_node = vals['item_node']
 
-        if name := item_node['cbc:Name'] and item_node['cbc:Name'].get('_text'):
-            item_node['cbc:Name']['_text'] = name[:100]
-        if description := item_node['cbc:Description'] and item_node['cbc:Description'].get('_text'):
-            item_node['cbc:Description']['_text'] = description[:200]
+        if name := item_node['cbc:Name']:
+            item_node['cbc:Name'] = name[:100]
+        if description := item_node['cbc:Description']:
+            item_node['cbc:Description'] = description[:200]
 
     def _ubl_add_notes_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._ubl_add_notes_nodes(vals)
         document_node = vals['document_node']
 
-        if note := document_node['cbc:Note']['_text']:
-            document_node['cbc:Note']['_text'] = note[:300]
+        if note := document_node['cbc:Note']:
+            document_node['cbc:Note'] = note[:300]
 
     # -------------------------------------------------------------------------
     # EXPORT: Constraints

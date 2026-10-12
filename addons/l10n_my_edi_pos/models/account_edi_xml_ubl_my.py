@@ -228,10 +228,10 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
         document_node.update({
             'cbc:UBLVersionID': None,
-            'cbc:ID': {'_text': vals['document_name']},
+            'cbc:ID': vals['document_name'],
             # The issue date and time must be the current time set in the UTC time zone
-            'cbc:IssueDate': {'_text': utc_now.strftime("%Y-%m-%d")},
-            'cbc:IssueTime': {'_text': utc_now.strftime("%H:%M:%SZ")},
+            'cbc:IssueDate': utc_now.strftime("%Y-%m-%d"),
+            'cbc:IssueTime': utc_now.strftime("%H:%M:%SZ"),
             'cbc:DueDate': None,
 
             # The current version is 1.1 (document with signature), the type code depends on the move type.
@@ -239,9 +239,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 '_text': '01',
                 'listVersionID': '1.1',
             },
-            'cbc:DocumentCurrencyCode': {'_text': vals['currency_id'].name},
+            'cbc:DocumentCurrencyCode': vals['currency_id'].name,
             'cac:OrderReference': None,
-            'cac:AdditionalDocumentReference': {'cbc:ID': {'_text': vals['export_custom_form_reference']}},
+            'cac:AdditionalDocumentReference': {'cbc:ID': vals['export_custom_form_reference']},
         })
 
         if vals['currency_id'].name != 'MYR':
@@ -253,9 +253,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             rate = self.env.ref('base.MYR').round(abs(total_amount_in_company_currency) / (total_amount_in_currency or 1))
             # Exchange rate information must be provided if applicable
             document_node['cac:TaxExchangeRate'] = {
-                'cbc:SourceCurrencyCode': {'_text': vals['currency_id'].name},
-                'cbc:TargetCurrencyCode': {'_text': 'MYR'},
-                'cbc:CalculationRate': {'_text': rate},
+                'cbc:SourceCurrencyCode': vals['currency_id'].name,
+                'cbc:TargetCurrencyCode': 'MYR',
+                'cbc:CalculationRate': rate,
             }
 
     def _add_consolidated_invoice_accounting_supplier_party_nodes(self, document_node, vals):
@@ -310,31 +310,29 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 "name": partner.commercial_partner_id.l10n_my_edi_industrial_classification.name,
             } if role == "supplier" else None,
             "cac:PartyName": {
-                "cbc:Name": {"_text": partner.display_name},
+                "cbc:Name": partner.display_name,
             },
             "cac:PostalAddress": self._get_address_node(vals),
             "cac:PartyTaxScheme": {
-                "cbc:RegistrationName": {"_text": commercial_partner.name},
-                "cbc:CompanyID": {"_text": commercial_partner.vat},
+                "cbc:RegistrationName": commercial_partner.name,
+                "cbc:CompanyID": commercial_partner.vat,
                 "cac:RegistrationAddress": self._get_address_node(
                     {**vals, "partner": commercial_partner}
                 ),
-                "cac:TaxScheme": {"cbc:ID": {"_text": "VAT"}},
+                "cac:TaxScheme": {"cbc:ID": "VAT"},
             },
             "cac:PartyLegalEntity": {
-                "cbc:RegistrationName": {"_text": commercial_partner.name},
-                "cbc:CompanyID": {"_text": commercial_partner.vat},
+                "cbc:RegistrationName": commercial_partner.name,
+                "cbc:CompanyID": commercial_partner.vat,
                 "cac:RegistrationAddress": self._get_address_node(
                     {**vals, "partner": commercial_partner}
                 ),
             },
             "cac:Contact": {
-                "cbc:ID": {"_text": partner.id},
-                "cbc:Name": {"_text": partner.name},
-                "cbc:Telephone": {
-                    "_text": self._l10n_my_edi_get_formatted_phone_number(partner.phone)
-                },
-                "cbc:ElectronicMail": {"_text": partner.email},
+                "cbc:ID": partner.id,
+                "cbc:Name": partner.name,
+                "cbc:Telephone": self._l10n_my_edi_get_formatted_phone_number(partner.phone),
+                "cbc:ElectronicMail": partner.email,
             },
         }
 
@@ -352,20 +350,20 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
 
         return {
             'cac:AddressLine': [
-                {'cbc:Line': {'_text': partner.street or None}},
-                {'cbc:Line': {'_text': partner.street2 or None}},
+                {'cbc:Line': partner.street or None},
+                {'cbc:Line': partner.street2 or None},
             ],
-            'cbc:CityName': {'_text': partner.city},
-            'cbc:PostalZone': {'_text': partner.zip},
-            'cbc:CountrySubentity': {'_text': partner.state_id.name},
-            'cbc:CountrySubentityCode': {'_text': subentity_code},
+            'cbc:CityName': partner.city,
+            'cbc:PostalZone': partner.zip,
+            'cbc:CountrySubentity': partner.state_id.name,
+            'cbc:CountrySubentityCode': subentity_code,
             'cac:Country': {
                 'cbc:IdentificationCode': {
                     'listID': 'ISO3166-1',
                     'listAgencyID': '6',
                     '_text': COUNTRY_CODE_MAP.get(partner.country_id.code),
                 },
-                'cbc:Name': {'_text': partner.country_id.name},
+                'cbc:Name': partner.country_id.name,
             },
         }
 
@@ -390,8 +388,8 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             return
 
         line_node['cac:Item'] = {
-            'cbc:Description': {'_text': vals['base_line']['line_name']},
-            'cbc:Name': {'_text': vals['base_line']['line_name']},
+            'cbc:Description': vals['base_line']['line_name'],
+            'cbc:Name': vals['base_line']['line_name'],
             'cac:CommodityClassification': {
                 'cbc:ItemClassificationCode': {
                     '_text': '004',

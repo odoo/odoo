@@ -53,3 +53,24 @@ class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
             xml_template = f.read().encode().replace(b'create_date_placeholder', current_date.encode())
             expected_xml = etree.fromstring(xml_template)
         self.assertXmlTreeEqual(generated_xml, expected_xml)
+
+    def test_purchase_order_supplier_product_name(self):
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'product_name': 'Supplier product name',
+            'product_code': 'SUPPLIER-CODE',
+        })
+        order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_qty': 1,
+                'price_unit': 50,
+            })],
+        })
+
+        xml_content = self.env['purchase.edi.xml.ubl_bis3']._export_order(order)
+        item = etree.fromstring(xml_content).find('.//{*}OrderLine/{*}LineItem/{*}Item')
+        self.assertEqual(item.findtext('{*}Name'), 'Supplier product name')
+        self.assertEqual(item.findtext('{*}SellersItemIdentification/{*}ID'), 'SUPPLIER-CODE')

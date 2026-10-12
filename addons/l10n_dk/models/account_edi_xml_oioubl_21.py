@@ -81,7 +81,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         super()._add_invoice_header_nodes(document_node, vals)
         document_node.update({
-            'cbc:CustomizationID': {'_text': self._get_customization_id()},
+            'cbc:CustomizationID': self._get_customization_id(),
             'cbc:ProfileID': {
                 '_text': 'Procurement-BilSim-1.0',
                 'schemeID': 'urn:oioubl:id:profileid-1.6',
@@ -126,8 +126,8 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
                 'listAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
                 'listID': 'urn:oioubl:codelist:addressformatcode-1.1',
             },
-            'cbc:StreetName': {'_text': street_name},
-            'cbc:BuildingNumber': {'_text': building_number},
+            'cbc:StreetName': street_name,
+            'cbc:BuildingNumber': building_number,
         })
 
         return address_node
@@ -160,7 +160,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
                         '_text': 63,
                         'schemeID': 'urn:oioubl:id:taxschemeid-1.5',
                     },
-                    'cbc:Name': {'_text': 'Moms'},
+                    'cbc:Name': 'Moms',
                 },
             })
         if partner.nemhandel_identifier_type and partner.nemhandel_identifier_value:
@@ -226,17 +226,17 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
         # EXTENDS account_edi_xml_ubl_20
         tax_category_node = super()._get_tax_category_node(vals)
         # TaxCategory https://www.oioubl.info/Classes/en/TaxCategory.html
-        tax_category_node['cbc:ID'].update({
-            '_text': UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING.get(tax_category_node['cbc:ID']['_text']),
+        tax_category_node['cbc:ID'] = {
+            '_text': UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING.get(tax_category_node['cbc:ID']),
             'schemeID': 'urn:oioubl:id:taxcategoryid-1.3',
             'schemeAgencyID': DANISH_NATIONAL_IT_AND_TELECOM_AGENCY_ID,
-        })
+        }
         tax_category_node['cac:TaxScheme'] = {
             'cbc:ID': {
                 '_text': 63,
                 'schemeID': 'urn:oioubl:id:taxschemeid-1.5',
             },
-            'cbc:Name': {'_text': 'Moms'},
+            'cbc:Name': 'Moms',
         }
 
         # OIOUBL can't contain name for category
@@ -253,15 +253,15 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
             sign = 1 if invoice.is_inbound(include_receipts=True) else -1
             document_node['cac:PaymentTerms'] = [
                 {
-                    'cbc:ID': {'_text': line.id},
-                    'cbc:Note': {'_text': html2plaintext(payment_term.note)},
+                    'cbc:ID': line.id,
+                    'cbc:Note': html2plaintext(payment_term.note),
                     'cbc:Amount': {
                         '_text': self.format_float(sign * line.amount_currency, 2),  # OIOUBL needs format to 2 decimals
                         'currencyID': line.currency_id.name,
                     },
                     'cac:SettlementPeriod': {
-                        'cbc:StartDate': {'_text': invoice.invoice_date},
-                        'cbc:EndDate': {'_text': line.date_maturity},
+                        'cbc:StartDate': invoice.invoice_date,
+                        'cbc:EndDate': line.date_maturity,
                     },
                 }
                 for line in
