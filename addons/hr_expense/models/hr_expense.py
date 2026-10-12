@@ -1143,7 +1143,7 @@ class HrExpense(models.Model):
     def _can_be_autovalidated(self):
         """ Check whether the given expenses can be auto-validated (no approver) """
         self.ensure_one()
-        return (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
+        return (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id or (self.employee_id.user_id.has_group('hr_expense.group_hr_expense_manager') and not self.employee_id.expense_manager_id)
 
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
