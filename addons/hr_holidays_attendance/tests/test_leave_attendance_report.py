@@ -292,6 +292,25 @@ class TestLeaveAttendanceReport(TestHrHolidaysCommon):
         self.assertRecordValues(row(monday), [{'expected_hours': 8.0, 'difference_hours': -8.0}])
         self.assertRecordValues(row(tuesday), [{'expected_hours': 4.0, 'difference_hours': -4.0}])
 
+        # A leave over both days (12h) must be split following each day's
+        # scheduled hours, not evenly (6h / 6h).
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Uneven schedule leave',
+            'requires_allocation': False,
+            'company_id': self.company.id,
+        })
+        self.env['hr.leave'].create({
+            'employee_id': emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': monday,
+            'request_date_to': monday + timedelta(days=2),
+        }).action_approve()
+        # the report rows were already read above: drop their cached values
+        self.env.invalidate_all()
+
+        self.assertRecordValues(row(monday), [{'leave_hours': 8.0, 'difference_hours': 0.0}])
+        self.assertRecordValues(row(tuesday), [{'leave_hours': 4.0, 'difference_hours': 0.0}])
+
     def test_expected_hours_follow_biweekly_schedule(self):
         """ `expected_hours` on a two-weeks calendar must follow the exact week
             actually in effect for a given date, not blend both weeks together. """
