@@ -1,5 +1,6 @@
 import { proxy } from "@odoo/owl";
 
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 export class MailCoreWeb {
@@ -86,6 +87,14 @@ export class MailCoreWeb {
                 this._dropFromNotificationCounter(unloadedMessageIds);
             }
         });
+        browser.navigator.serviceWorker?.addEventListener(
+            "message",
+            ({ data: { action, data } }) => {
+                if (action === "OPEN_RECORD") {
+                    this.store["mail.thread"].insert({ id: data.id, model: data.model }).open();
+                }
+            }
+        );
     }
 
     /**
