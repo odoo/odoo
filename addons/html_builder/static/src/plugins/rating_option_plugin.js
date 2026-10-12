@@ -6,7 +6,7 @@ import { clamp } from "@web/core/utils/numbers";
 
 export class RatingOptionPlugin extends Plugin {
     static id = "ratingOption";
-    static dependencies = ["history", "media"];
+    static dependencies = ["history", "media", "operation"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         so_content_addition_selectors: [".s_rating"],
@@ -17,6 +17,41 @@ export class RatingOptionPlugin extends Plugin {
             TotalIconsNumberAction,
         },
     };
+
+    setup() {
+        this.addDomListener(this.editable, "click", (ev) => {
+            if (ev.target.closest(".s_rating_icons i")) {
+                this.dependencies.operation.next(() => this.onRatingClick(ev));
+            }
+        });
+    }
+
+    onRatingClick(ev) {
+        const clickedIcon = ev.target.closest(".s_rating_icons i");
+        const ratingElement = clickedIcon?.closest(".s_rating");
+
+        if (!ratingElement) {
+            return;
+        }
+
+        const allIcons = Array.from(getAllIcons(ratingElement));
+        const clickedIndex = allIcons.indexOf(clickedIcon);
+
+        const newActiveCount = clickedIndex + 1;
+        const nbTotalIcons = allIcons.length;
+
+        createIcons({
+            editingElement: ratingElement,
+            nbActiveIcons: newActiveCount,
+            nbTotalIcons: nbTotalIcons,
+        });
+        updateAriaLabel({
+            editingElement: ratingElement,
+            nbActiveIcons: newActiveCount,
+            nbTotalIcons: nbTotalIcons,
+        });
+        this.dependencies.history.commit();
+    }
 }
 
 export class SetIconsAction extends BuilderAction {
