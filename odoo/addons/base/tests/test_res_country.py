@@ -1,3 +1,4 @@
+from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 
 
@@ -66,3 +67,16 @@ class TestResCountryState(TransactionCase):
                     self.env['res.country.state'].name_search(name, operator='in'),
                     [(altan.id, altan.display_name)]
                 )
+
+    def test_unlink_default_and_custom_states(self):
+        default_state = self.env.ref('base.state_us_1')
+        with self.assertRaises(UserError):
+            default_state.unlink()
+
+        custom_state = self.env['res.country.state'].create({
+            'country_id': self.env.ref('base.be').id,
+            'code': 'ZZ_TEST',
+            'name': 'Test State',
+        })
+        custom_state.unlink()
+        self.assertFalse(custom_state.exists())
