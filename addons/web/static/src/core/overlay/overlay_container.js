@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { ErrorHandler } from "@web/core/utils/components";
 
@@ -32,6 +32,14 @@ class OverlayItem extends Component {
                 contains: (target) => this.contains(target),
             },
         });
+
+        const app = this.__owl__.app;
+        const root = app.createRoot(this.props.component, {
+            props: this.props.props,
+            env: this.__owl__.childEnv,
+        });
+        onMounted(() => root.mount(this.rootRef.el));
+        onWillDestroy(() => root.destroy());
     }
 
     get subOverlays() {
