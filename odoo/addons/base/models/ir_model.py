@@ -17,7 +17,7 @@ from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import pycompat, unique, OrderedSet, lazy_property
-from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
+from odoo.tools.safe_eval import safe_eval, test_python_expr, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
 
@@ -607,6 +607,13 @@ class IrModelFields(models.Model):
                 models.check_pg_name(field.name)
             except ValidationError:
                 msg = _("Field names can only contain characters, digits and underscores (up to 63).")
+                raise ValidationError(msg)
+
+    @api.constrains('compute')
+    def _check_python_compute(self):
+        for action in self.filtered('compute'):
+            msg = test_python_expr(expr=action.compute.strip(), mode="exec")
+            if msg:
                 raise ValidationError(msg)
 
     _sql_constraints = [
