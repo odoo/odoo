@@ -2,7 +2,6 @@ import { Component, onWillDestroy, proxy, t, usePlugin, useProps } from "@odoo/o
 import { FileUploadPlugin } from "@web/core/file_upload/file_upload_plugin";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
-import { checkFileSize } from "@web/core/utils/files";
 import { Record } from "@web/model/record";
 import { Field } from "@web/views/fields/field";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -20,8 +19,6 @@ export class ShareTargetItem extends Component {
         super.setup();
         this.action = useService("action");
         this.dialog = useService("dialog");
-        this.http = useService("http");
-        this.notification = useService("notification");
         this.orm = useService("orm");
         this.fileUpload = usePlugin(FileUploadPlugin);
 
@@ -43,20 +40,6 @@ export class ShareTargetItem extends Component {
                 display_name: user.activeCompany.name,
             },
         };
-    }
-
-    /**
-     * @return {File[]}
-     */
-    getFiles() {
-        return this.props.files.filter((file) => this.isAllowedUploadFile(file));
-    }
-
-    /**
-     * @param {File} file
-     */
-    isAllowedUploadFile(file) {
-        return checkFileSize(file.size, this.notification);
     }
 
     async checkAndActiveIfNeededUserCompany() {
@@ -82,6 +65,9 @@ export class ShareTargetItem extends Component {
 
     async process() {
         const attachments = await this.uploadAttachments();
+        if (!attachments) {
+            return;
+        }
         const resId = await this.createRecordWithFile(attachments);
         await this.openCreatedRecord(resId);
     }
@@ -167,18 +153,12 @@ export class ShareTargetItem extends Component {
         }
     }
 
-    async uploadAttachments() {
-        const params = {
-            csrf_token: odoo.csrf_token,
-            ufile: this.getFiles(),
+    uploadAttachments() {
+        return this.fileUpload.sendFiles("/web/binary/upload_attachment", {
+            ufile: this.props.files,
             model: this.modelName,
             id: 0,
-        };
-        const attachments = await this.http.post("/web/binary/upload_attachment", params);
-        if (attachments.error) {
-            throw new Error(attachments.error);
-        }
-        return attachments;
+        });
     }
 
     async openCreatedRecord(resId) {

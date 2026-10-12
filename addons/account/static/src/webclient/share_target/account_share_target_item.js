@@ -32,16 +32,16 @@ export class AccountShareTargetItem extends ShareTargetItem {
 
     async process() {
         const journal = this.state.selected_journal_id;
-        const action = await this.fileUpload.uploadFiles({
-            method: "create_document_from_attachment",
-            resModel: this.modelName,
-            resIds: journal ? [journal.id] : [],
-            context: { ...this.context, default_move_type: "in_invoice" },
-            files: this.getFiles(),
-        });
-        if (action) {
-            await this.action.doAction(action);
-        }
+        await this.action.doActionButton(
+            {
+                type: "upload",
+                name: "create_document_from_attachment",
+                resModel: this.modelName,
+                resIds: journal ? [journal.id] : [],
+                context: { ...this.context, default_move_type: "in_invoice" },
+            },
+            { files: this.props.files }
+        );
     }
 
     onCompanyChange(companyId) {

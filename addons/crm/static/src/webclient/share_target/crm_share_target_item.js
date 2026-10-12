@@ -43,6 +43,19 @@ export class CrmShareTargetItem extends ShareTargetItem {
     get modelName() {
         return "crm.lead";
     }
+
+    async process() {
+        await this.action.doActionButton(
+            {
+                type: "upload",
+                name: "action_create_from_uploads",
+                resModel: this.modelName,
+                context: this.context,
+            },
+            { files: this.props.files }
+        );
+    }
+
     get context() {
         return {
             ...super.context,

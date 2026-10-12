@@ -7,15 +7,15 @@ export class ExpenseShareTargetItem extends ShareTargetItem {
     static sequence = 1;
 
     async process() {
-        const action = await this.fileUpload.uploadFiles({
-            method: "action_create_from_uploads",
-            resModel: "hr.expense",
-            context: this.context,
-            files: this.getFiles(),
-        });
-        if (action) {
-            await this.action.doAction(action);
-        }
+        await this.action.doActionButton(
+            {
+                type: "upload",
+                name: "action_create_from_uploads",
+                resModel: "hr.expense",
+                context: this.context,
+            },
+            { files: this.props.files }
+        );
     }
 }
 
