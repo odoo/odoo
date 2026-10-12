@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -27,3 +27,8 @@ class ResConfigSettings(models.TransientModel):
         check_company=True,
         related='company_id.account_interco_receivable_id',
     )
+
+    @api.onchange('pay_invoices_online')
+    def _onchange_pay_invoices_online(self):
+        if not self.pay_invoices_online:
+            self.link_qr_code = False
