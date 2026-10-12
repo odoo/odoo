@@ -1,12 +1,48 @@
 import { test, expect, describe } from "@odoo/hoot";
 import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
-import { click, waitFor } from "@odoo/hoot-dom";
+import { click, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 
 definePosModels();
+
+const createSaleOrderWithFixedTax = (store) => {
+    const percentTax = store.models["account.tax"].create({
+        name: "20% incl",
+        amount_type: "percent",
+        amount: 20,
+        price_include: true,
+        sequence: 1,
+        tax_group_id: 1,
+    });
+    const fixedTax = store.models["account.tax"].create({
+        name: "1 fixed incl",
+        amount_type: "fixed",
+        amount: 1,
+        price_include: true,
+        sequence: 1,
+        tax_group_id: 1,
+    });
+    return store.models["sale.order"].create({
+        name: "S00101",
+        amount_unpaid: 100,
+        order_line: [
+            [
+                "create",
+                {
+                    product_id: 5,
+                    product_uom_qty: 1,
+                    price_unit: 100,
+                    price_total: 100,
+                    discount: 0,
+                    tax_ids: [["link", percentTax, fixedTax]],
+                },
+            ],
+        ],
+    });
+};
 
 describe("onClickSaleOrder", () => {
     test("no selection → abort", async () => {
@@ -214,5 +250,66 @@ describe("onClickSaleOrder", () => {
         await new Promise((resolve) => setTimeout(resolve, 50));
         expect(currentOrder.lines.length).toBe(1);
         expect(currentOrder.lines[0].price_unit).toBe(110);
+    });
+
+    test("percentage down payment popup shows the amount of the down payment line", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const saleOrder = createSaleOrderWithFixedTax(store);
+        await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+
+        // 50% of 99.00 (the order without its 1.00 fixed tax)
+        const downPaymentAmount = 49.5;
+
+        const downPaymentApplied = store.downPaymentSO(saleOrder, true);
+        await waitFor(".modal-body .numpad");
+        await click(".modal-body .numpad .numpad-button[value='5']");
+        await click(".modal-body .numpad .numpad-button[value='0']");
+        await waitFor(`.modal-body:contains('${downPaymentAmount.toFixed(2)}')`);
+        await click(".modal-footer .btn:contains('Apply')");
+        await downPaymentApplied;
+
+        await waitUntil(() => order.lines.length === 1);
+        const downPaymentLine = order.lines[0];
+        expect(downPaymentLine.product_id.id).toBe(store.config.down_payment_product_id.id);
+        expect(downPaymentLine.prices.total_included).toBe(downPaymentAmount);
+    });
+
+    test("second percentage down payment subtracts the exact amount of the first one", async () => {
+        const store = await setupPosEnv();
+        const saleOrder = createSaleOrderWithFixedTax(store);
+
+        const firstPosDownPaymentOrder = store.addNewOrder();
+        await store.addDownPaymentProductOrderlineToOrder(saleOrder, 50, true);
+        await waitUntil(() => firstPosDownPaymentOrder.lines.length === 1);
+        const firstDownPaymentLine = firstPosDownPaymentOrder.lines[0];
+        expect(firstDownPaymentLine.product_id.id).toBe(store.config.down_payment_product_id.id);
+        saleOrder.update({
+            order_line: [
+                [
+                    "create",
+                    {
+                        is_downpayment: true,
+                        product_id: firstDownPaymentLine.product_id,
+                        product_uom_qty: 0,
+                        price_unit: firstDownPaymentLine.price_unit,
+                        tax_ids: [["link", ...firstDownPaymentLine.tax_ids]],
+                        extra_tax_data: firstDownPaymentLine.extra_tax_data,
+                    },
+                ],
+            ],
+        });
+
+        const secondPosDownPaymentOrder = store.addNewOrder();
+        await store.addDownPaymentProductOrderlineToOrder(saleOrder, 50, true);
+        await waitUntil(() => secondPosDownPaymentOrder.lines.length === 1);
+        const secondDownPaymentLine = secondPosDownPaymentOrder.lines[0];
+        expect(secondDownPaymentLine.product_id.id).toBe(store.config.down_payment_product_id.id);
+
+        // 50% of (99.00 (the order without its 1.00 fixed tax) - 49.50 (the first down payment))
+        const secondDownPaymentAmount = 24.75;
+        expect(secondDownPaymentLine.prices.total_included).toBeCloseTo(secondDownPaymentAmount, {
+            margin: 0.001,
+        });
     });
 });
