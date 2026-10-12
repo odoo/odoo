@@ -540,7 +540,7 @@ class DiscussChannel(models.Model):
             stores[member].add(member.channel_id, "_store_channel_fields").add(
                 member,
                 lambda res: (
-                    res.from_method("_store_persona_default_fields"),
+                    res.from_method("_store_member_fields"),
                     res.attr("unpin_dt"),
                 ),
             )
