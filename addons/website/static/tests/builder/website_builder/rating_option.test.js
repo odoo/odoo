@@ -2,7 +2,8 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
-import { expect, test } from "@odoo/hoot";
+import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
+import { animationFrame, expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
@@ -51,4 +52,55 @@ test("custom icons are preserved after score change", async () => {
     expect(":iframe .s_rating_active_icons i").toHaveCount(4);
     expect(":iframe .s_rating_active_icons i").toHaveAttribute("data-icon", "favorite");
     expect(":iframe .s_rating_inactive_icons i").toHaveAttribute("data-icon", "star");
+});
+
+test("clicking on a rating icon updates the score and aria-label", async () => {
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_rating", {
+        loadIframeBundles: true,
+    });
+    const editor = getEditor();
+
+    await contains(":iframe .s_rating_inactive_icons i:nth-child(1)").click();
+    expect(":iframe .s_rating_icons").toHaveAttribute("aria-label", "4 out of 5 stars");
+    expect(":iframe .s_rating_icons i.oi-filled").toHaveCount(4);
+    expect(":iframe .s_rating_icons i:not(.oi-filled)").toHaveCount(1);
+    expect("[data-action-id='activeIconsNumber'] input").toHaveValue(4);
+
+    await contains(":iframe .s_rating_active_icons i:nth-child(1)").click();
+    expect(":iframe .s_rating_icons").toHaveAttribute("aria-label", "1 out of 5 stars");
+    expect(":iframe .s_rating_icons i.oi-filled").toHaveCount(1);
+    expect(":iframe .s_rating_icons i:not(.oi-filled)").toHaveCount(4);
+    expect("[data-action-id='activeIconsNumber'] input").toHaveValue(1);
+
+    undo(editor);
+    await animationFrame();
+    expect(":iframe .s_rating_icons").toHaveAttribute("aria-label", "4 out of 5 stars");
+    expect(":iframe .s_rating_icons i.oi-filled").toHaveCount(4);
+    expect("[data-action-id='activeIconsNumber'] input").toHaveValue(4);
+
+    redo(editor);
+    await animationFrame();
+    expect(":iframe .s_rating_icons").toHaveAttribute("aria-label", "1 out of 5 stars");
+    expect(":iframe .s_rating_icons i.oi-filled").toHaveCount(1);
+    expect("[data-action-id='activeIconsNumber'] input").toHaveValue(1);
+});
+
+test("clicking the icon of the current score sets the score to 0", async () => {
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_rating", {
+        loadIframeBundles: true,
+    });
+    const editor = getEditor();
+    expect(":iframe .s_rating_icons").toHaveAttribute("aria-label", "3 out of 5 stars");
+
+    await contains(":iframe .s_rating_active_icons i:nth-child(3)").click();
+    expect(":iframe .s_rating_icons").toHaveAttribute("aria-label", "0 out of 5 stars");
+    expect(":iframe .s_rating_icons i.oi-filled").toHaveCount(0);
+    expect(":iframe .s_rating_icons i:not(.oi-filled)").toHaveCount(5);
+    expect("[data-action-id='activeIconsNumber'] input").toHaveValue(0);
+
+    undo(editor);
+    await animationFrame();
+    expect(":iframe .s_rating_icons").toHaveAttribute("aria-label", "3 out of 5 stars");
+    expect(":iframe .s_rating_active_icons i").toHaveCount(3);
+    expect("[data-action-id='activeIconsNumber'] input").toHaveValue(3);
 });
