@@ -2152,6 +2152,17 @@ class ProjectTask(models.Model):
                   } | values
         return self.with_context(copy_from_template=True).copy(default=default).id
 
+    def action_create_from_uploads(self, attachment_ids):
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        record = self.create({'name': attachments[0].name})
+        attachments.write({'res_model': self._name, 'res_id': record.id})
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': record.id,
+            'views': [[False, 'form']],
+        }
+
     def action_archive(self):
         child_tasks = self.child_ids.filtered(lambda child_task: not child_task.display_in_project)
         if child_tasks:

@@ -1768,11 +1768,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         # Description: If the user is applying for leave from the calendar dashboard and has selected a duration in weeks or days.
         # This indicates that the user intends to apply for an hourly leave type.
         # As a result, only hourly leave types should be shown, if available.
-        #  ===================================================================
+        #  ============================================================
         #  | Case 1 -> Choose hour leave type if hour leave type exists      |
         #  | Case 2 -> Choose first leave type if hour leave type not exists |
         #  | Case 3 -> Choose none if not leave type exists                  |
-        #  ===================================================================
+        #  ============================================================
         self.env['hr.work.entry.type'].search([]).action_archive()
 
         half_day_work_entry_type = self.env['hr.work.entry.type'].create({
@@ -1884,10 +1884,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     @freeze_time('2011-12-24 10:00:00')
     def test_validated_leave_back_to_approval(self):
         """
-        =====================================================================================================================
+        ==============================================================================================================
         | case 1: An approved leave can be moved back to confirm state if user has group `group_hr_holidays_user`           |
         | case 2: An approved leave can't be moved back to confirm state if user doesn't have group `group_hr_holidays_user`|
-        =====================================================================================================================
+        ==============================================================================================================
         """
         sick_work_entry_type = self.env['hr.work.entry.type'].create({
             'name': 'leave in days',
@@ -3592,3 +3592,12 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                          (overtime_rule.work_entry_type_id,
                           self._utc(self._wall(self.monday, 16)), self._utc(self._wall(self.monday, 18))),
                          "the 2 hours beyond the schedule are overtime")
+
+    @users('enguerran')
+    def test_create_leave_from_uploads(self):
+        attachment = self.env['ir.attachment'].create({'name': 'certificate.pdf', 'raw': b'certificate'})
+        attachment.sudo().write({'res_model': 'res.partner', 'res_id': self.env.user.partner_id.id})
+        action = self.env['hr.leave'].action_create_from_uploads(attachment.ids)
+        self.assertEqual(action['context'], {'default_attachment_ids': attachment.ids})
+        self.assertEqual(attachment.res_model, 'hr.leave')
+        self.assertFalse(attachment.res_id)

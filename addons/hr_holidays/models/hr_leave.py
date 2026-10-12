@@ -1934,6 +1934,16 @@ class HrLeave(models.Model):
             result[user.id].append(meeting_values)
         return result
 
+    def action_create_from_uploads(self, attachment_ids):
+        self.env['ir.attachment'].browse(attachment_ids).write({'res_model': self._name, 'res_id': 0})
+        return {
+            'name': _("New Time Off"),
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'views': [[False, 'form']],
+            'context': {'default_attachment_ids': attachment_ids},
+        }
+
     def action_cancel(self):
         self.ensure_one()
 
