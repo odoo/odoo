@@ -57,9 +57,10 @@
                         .o_cp_statement table + table.o_cp_table { margin-top: -1px; }
                         .o_cp_statement table.o_cp_customer { border: 1px solid #000; background-color: #C6E0B4; }
                         .o_cp_statement .o_cp_customer td { padding: 5px 12px; vertical-align: top; }
-                        .o_cp_statement .o_cp_customer td.o_cp_report_info { width: 40%; border-right: 1px solid #000; vertical-align: middle; white-space: nowrap; }
-                        .o_cp_statement .o_cp_title { margin-bottom: 2px; font-size: 28px; font-weight: bold; line-height: 1.2; }
-                        .o_cp_statement .o_cp_customer td.o_cp_label { width: 1%; padding-right: 8px; font-weight: bold; white-space: nowrap; }
+                        .o_cp_statement .o_cp_customer td.o_cp_report_info { width: 40%; white-space: nowrap; }
+                        .o_cp_statement .o_cp_customer td.o_cp_customer_info { text-align: right; }
+                        .o_cp_statement .o_cp_customer .o_cp_title,
+                        .o_cp_statement .o_cp_customer .o_cp_label { font-weight: bold; }
                         .o_cp_statement table.o_cp_table { table-layout: fixed; }
                         .o_cp_statement .o_cp_table th,
                         .o_cp_statement .o_cp_table td { padding: 6px 12px; border: 1px solid #000; vertical-align: middle; }
@@ -96,24 +97,20 @@
                             </tr>
                         </table>
 
-                        <!-- Customer Information: report title and period on the left, customer details on the right -->
+                        <!-- Customer Information: report title and period on the left (left aligned),
+                             customer details on the right (right aligned) -->
                         <table class="o_cp_customer">
                             <tr>
-                                <td class="o_cp_report_info" rowspan="3">
-                                    <div class="o_cp_title">របាយការណ៍អតិថិជន</div>
-                                    <div>ចាប់ពីប៊ុង: <span t-out="'%02d-%s-%d' % (date_from.day, km_months[date_from.month - 1], date_from.year)"/></div>
-                                    <div>រហូតដល់: <span t-out="'%02d-%s-%d' % (date_to.day, km_months[date_to.month - 1], date_to.year)"/></div>
-                                </td>
-                                <td class="o_cp_label">អតិថិជនឈ្មោះ:</td>
-                                <td><span t-field="partner.name"/></td>
+                                <td class="o_cp_report_info o_cp_title">របាយការណ៍អតិថិជន</td>
+                                <td class="o_cp_customer_info"><span class="o_cp_label">អតិថិជនឈ្មោះ:</span> <span t-field="partner.name"/></td>
                             </tr>
                             <tr>
-                                <td class="o_cp_label">អាស័យដ្ឋាន:</td>
-                                <td><span t-out="partner_address"/></td>
+                                <td class="o_cp_report_info">ចាប់ពីប៊ុង: <span t-out="'%02d-%s-%d' % (date_from.day, km_months[date_from.month - 1], date_from.year)"/></td>
+                                <td class="o_cp_customer_info"><span class="o_cp_label">អាស័យដ្ឋាន:</span> <span t-out="partner_address"/></td>
                             </tr>
                             <tr>
-                                <td class="o_cp_label">ទូរស័ព្ទ:</td>
-                                <td><span t-field="partner.phone"/></td>
+                                <td class="o_cp_report_info">រហូតដល់: <span t-out="'%02d-%s-%d' % (date_to.day, km_months[date_to.month - 1], date_to.year)"/></td>
+                                <td class="o_cp_customer_info"><span class="o_cp_label">ទូរស័ព្ទ:</span> <span t-field="partner.phone"/></td>
                             </tr>
                         </table>
 
