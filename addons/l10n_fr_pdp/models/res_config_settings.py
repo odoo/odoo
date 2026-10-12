@@ -96,10 +96,12 @@ class ResConfigSettings(models.TransientModel):
 
     # TODO: remove in master
     @api.model
-    def _pdp_ensure_selection_value(self, model_name, field_name, new_value):
+    def _pdp_ensure_selection_value(self, model_name, field_name, new_value=None):
         # hack to load new selection values in stable
         field = self.env[model_name]._fields[field_name]
-        if new_value not in {value for value, name in field.get_description(self.env)['selection']}:
+        existing_values = {value for value, name in field.get_description(self.env)['selection']}
+        missing_values = {new_value} if new_value else set(field.get_values(self.env))
+        if missing_values - existing_values:
             self.env['ir.model.fields'].invalidate_model(['selection_ids'])
             self.env['ir.model.fields.selection'].sudo()._update_selection(model_name, field_name, field.selection)
             self.env.registry.clear_cache()
