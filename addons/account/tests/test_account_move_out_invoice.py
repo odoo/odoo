@@ -5234,6 +5234,17 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             'label': 'product_a',
         }])
 
+    def test_change_product_on_unsaved_invoice(self):
+        self.product_a.description_sale = 'Test description'
+        move_form = Form(self.env['account.move'].with_context(default_move_type='out_invoice'))
+        move_form.partner_id = self.partner_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+            line_form.product_id = self.product_b
+        invoice = move_form.save()
+
+        self.assertEqual(invoice.invoice_line_ids.product_id, self.product_b)
+
     def test_out_invoice_fiscal_position_branch_taxes(self):
         """Price should be recomputed when tax inclusion changes via fiscal position"""
         # Create price-included taxes
