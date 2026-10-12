@@ -499,6 +499,7 @@ export class HierarchyForest {
 
 export class HierarchyModel extends Model {
     static services = ["notification"];
+    static RECORD_COUNT_LIMIT = 1000;
 
     setup(params, { notification }) {
         this.keepLast = new KeepLast();
@@ -852,13 +853,23 @@ export class HierarchyModel extends Model {
                     this.childFieldName,
                     orderByToString(config.orderBy),
                 ],
-                { context: this.context }
+                { context: { ...this.context, record_limit: this.constructor.RECORD_COUNT_LIMIT }}
             );
         };
         let result = await hierarchyRead();
         if (!result.length && onlyRoots) {
             domain = config.domain;
             result = await hierarchyRead();
+        }
+        if (result.length > this.constructor.RECORD_COUNT_LIMIT){
+            result.pop()  // We set a limit on hierarchy read to be the record count limit + 1
+            this.notification.add(
+                _t(
+                    "The hierarchy cannot display more than %s records. Try to refine your search criteria",
+                    this.constructor.RECORD_COUNT_LIMIT
+                ),
+                { type: "warning" }
+            )
         }
         return this._formatData(result);
     }
