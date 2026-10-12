@@ -474,6 +474,17 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
         img.dataset.mimetype = original.mimetype;
+    } else {
+        const { original } = await rpc({
+            route: '/web_editor/get_image_info',
+            params: { src: decodeURI(relativeSrc) },
+        });
+
+        if (original && original.image_src) {
+            img.dataset.originalId = original.id;
+            img.dataset.originalSrc = original.image_src;
+            img.dataset.mimetype = original.mimetype;
+        }
     }
 }
 
