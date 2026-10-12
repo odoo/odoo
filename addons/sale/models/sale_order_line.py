@@ -1590,15 +1590,15 @@ class SaleOrderLine(models.Model):
 
     @api.onchange("product_id")
     def _onchange_product_id(self):
-        if self._is_product_line():
-            if not self.product_id or self.env.context.get("sale_onchange_first_call"):
+        if self._is_product_line() and not self.env.context.get("sale_onchange_first_call"):
+            if not self.product_id:
                 self.name = ""
                 return
             self._reset_price_unit()
 
     @api.onchange("product_template_id")
     def _onchange_product_template_id(self):
-        if self._is_product_line():
+        if self._is_product_line() and not self.env.context.get("sale_onchange_first_call"):
             if not self.product_template_id:
                 self.product_id = False
                 self.name = ""
