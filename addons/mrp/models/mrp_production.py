@@ -1957,7 +1957,7 @@ class MrpProduction(models.Model):
                     expected_qty = line.uom_id._compute_quantity(
                         line.product_qty * bom_factors[line.bom_id.id], move.uom_id)
                 picked_qty = sum(ml.uom_id._compute_quantity(ml.quantity, move.uom_id, round=False)
-                    for ml in move.move_line_ids)
+                    for ml in move.move_line_ids if ml.picked or not move._should_bypass_set_qty_producing())
                 if move.uom_id.compare(picked_qty, expected_qty):
                     issues.append((order, move.product_id, move.uom_id, move, picked_qty, expected_qty))
             # Once we've matched every orphaned BoM line we could match with orphaned moves, we consider
@@ -2435,7 +2435,7 @@ class MrpProduction(models.Model):
 
         self.workorder_ids.button_finish()
         for production in self.filtered(lambda p: not p.uom_id.is_zero(p.qty_producing)):
-            production.move_raw_ids.filtered(lambda m: not m.picked).picked = True
+            production.move_raw_ids.filtered(lambda m: not m.picked and not m._should_bypass_set_qty_producing()).picked = True
         productions_not_to_backorder._post_inventory(cancel_backorder=True)
         productions_to_backorder._post_inventory(cancel_backorder=True)
 
