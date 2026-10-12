@@ -19,3 +19,8 @@ class AccountTax(models.Model):
         string="Code ATS",
         help="Ecuador: Indicates if the purchase invoice supports tax credit or cost or expenses, conforming table 5 of ATS.",
     )
+    l10n_ec_code_ice = fields.Char(
+        string="ICE Code",
+        help="Ecuador: ICE rate code (codigoPorcentaje), conforming table 18 of the SRI electronic documents technical sheet.",
+    )
+    l10n_ec_tax_group_type = fields.Selection(related="tax_group_id.l10n_ec_type")
