@@ -3,6 +3,7 @@ import {
     setUtmsHtmlDataset,
     getClosestLiEls,
     unhideConditionalElements,
+    hideOutOfDatetimeRangeElements,
 } from "@website/utils/misc";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     htmlEl.dataset.logged = !session.is_website_user;
 
     unhideConditionalElements();
+    hideOutOfDatetimeRangeElements();
 
     document
         .querySelectorAll(".o_mega_menu > section.o_snippet_desktop_invisible")

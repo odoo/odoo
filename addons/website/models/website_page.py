@@ -399,6 +399,18 @@ class WebsitePage(models.Model):
         return True
 
     @api.model
+    def _get_cache_duration(self, request, response):
+        """ Return the cache duration, in seconds, for ``response``.
+        Overrides must return ``min(super(), ...)``, so that it
+        does not extend a limit that another module sets. """
+        next_change = getattr(request, 'website_visibility_next_change', None)
+        if next_change:
+            # If ``request`` contains a ``website_visibility_next_change``
+            # attribute, then the cache duration can't last longer than that.
+            return min(self._CACHE_DURATION, next_change - response.time)
+        return self._CACHE_DURATION
+
+    @api.model
     def _post_process_response_from_cache(self, request, response) -> None:
         """ A hook called after a response is retrieved from the cache. This
         method allows for post-processing, such as incrementing counters or
@@ -444,6 +456,7 @@ class WebsitePage(models.Model):
         -  `_allow_cache_insertion`
         -  `_post_process_response_from_cache`
         - `_get_cache_key`
+        - `_get_cache_duration`
 
         The cache is an ORM cache from `_get_response_cached` with an added
         mechanism to update its values. After a certain period, the system will
@@ -460,7 +473,7 @@ class WebsitePage(models.Model):
                 if notCache.result:
                     return notCache.result[0]
 
-            if time.time() < response.time + self._CACHE_DURATION:
+            if time.time() < response.time + response.cache_duration:
                 resp = Response(
                     headers=response.headers.copy(),
                     mimetype=response.mimetype,
@@ -476,6 +489,7 @@ class WebsitePage(models.Model):
             response = self._get_response_raw(request)
             if response:
                 response.flatten()
+                response.cache_duration = self._get_cache_duration(request, response)
                 if self._allow_cache_insertion(response.response[-1]):
                     self._get_response_cached.__cache__.add_value(self, request, cache_value=(response, cache_key))
             return response
@@ -499,6 +513,7 @@ class WebsitePage(models.Model):
             raise PageCannotBeCached(result)
 
         response.flatten()
+        response.cache_duration = self._get_cache_duration(request, response)
         if not self._allow_cache_insertion(response.response[-1]):
             raise PageCannotBeCached(result)
 

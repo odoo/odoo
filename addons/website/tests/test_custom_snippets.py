@@ -1,6 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timezone
+
 from odoo import Command
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.tests import HttpCase, TransactionCase, tagged
 
 
@@ -303,6 +306,25 @@ class TestCustomSnippet(TransactionCase):
         self.assertEqual(list(view2._get_stored_translations('arch_db').keys()), ['en_US', '_pa_GB', 'pa_GB'])
         self.assertNotIn('Texte Francais', view2.with_context(lang=parseltongue.code).arch)
         self.assertIn('Texte Francais', view2.with_context(lang=parseltongue.code, check_translations=True).arch)
+
+    def test_custom_snippet_visibility_datetime_range(self):
+        self.env['ir.ui.view'].save_snippet(
+            name='Custom Snippet Test Visibility',
+            arch='''
+                <section class="s_text_block s_custom_snippet" data-name="Custom Snippet Test Visibility">
+                    <div class="out_of_range_element" data-visibility="conditional" data-visibility-until="1000000000">Expired</div>
+                </section>
+            ''',
+            thumbnail_url='/website/static/src/img/snippets_thumbs/thumb_snippets_text.svg',
+            snippet_key='s_text_block',
+            template_key='website.snippets',
+        )
+        with self.mock_datetime_and_now(datetime.fromtimestamp(2000000000, timezone.utc).replace(tzinfo=None)), \
+                MockRequest(self.env, website=self.env.ref('base.default_website')) as request:
+            rendered = request.env['ir.ui.view'].with_context(rendering_bundle=True).render_public_asset('website.snippets')
+        # Out-of-range elements should survive when their block is saved, and
+        # should be inserted on the page when the custom snippet is dropped
+        self.assertIn('class="out_of_range_element"', rendered)
 
 
 @tagged('post_install', '-at_install')

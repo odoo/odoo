@@ -49,6 +49,24 @@ export function unhideConditionalElements() {
     }
 }
 
+/**
+ * Hide the elements that are out of their visibility datetime range. The
+ * server removes these elements from the HTML document, but not when branding
+ * is active (edit mode or translation mode). In this case, this function hides
+ * them.
+ */
+export function hideOutOfDatetimeRangeElements() {
+    const conditionalEls = document.querySelectorAll('[data-visibility="conditional"]');
+    const now = Math.floor(Date.now() / 1000);
+    for (const conditionalEl of conditionalEls) {
+        const visibleFrom = Number(conditionalEl.dataset.visibilityFrom) || null;
+        const visibleUntil = Number(conditionalEl.dataset.visibilityUntil) || null;
+        if ((visibleFrom && now < visibleFrom) || (visibleUntil && now >= visibleUntil)) {
+            conditionalEl.classList.add("o_datetime_range_hidden");
+        }
+    }
+}
+
 export function setUtmsHtmlDataset() {
     const htmlEl = document.documentElement;
     const cookieNamesToDataNames = {

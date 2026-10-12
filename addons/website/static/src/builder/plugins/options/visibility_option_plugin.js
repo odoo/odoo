@@ -93,6 +93,8 @@ export class VisibilityOptionPlugin extends Plugin {
             }
             delete target.dataset.visibilitySelectors;
             delete target.dataset.visibilityId;
+            delete target.dataset.visibilityFrom;
+            delete target.dataset.visibilityUntil;
             return;
         }
         // There are 2 data attributes per option:
