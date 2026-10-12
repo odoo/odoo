@@ -11,8 +11,8 @@
         font-size: 14px;
     }
 }
- @include o-kiosk-portrait() {
-    .self_order_product_name {
+@media (min-width: 992px) and (orientation: portrait) and (min-height: 1500px) {
+    .kiosk .self_order_product_name {
         .product_info_icon {
             width: 28px;
             height: 28px;

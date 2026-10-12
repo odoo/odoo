@@ -71,8 +71,8 @@
 
 }
 
-@include o-kiosk-portrait() {
-  .o_self_combo_page {
+@media (min-width: 992px) and (orientation: portrait) and (min-height: 1500px) {
+  .kiosk .o_self_combo_page {
     .product_img {
       max-width: none;
     }

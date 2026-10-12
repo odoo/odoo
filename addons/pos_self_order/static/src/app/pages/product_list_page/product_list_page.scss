@@ -105,9 +105,9 @@
   }
 }
 
-@include o-kiosk-portrait(){
+@media (min-width: 992px) and (orientation: portrait) and (min-height: 1500px) {
 
-   .o_self_product_list_page {
+   .kiosk .o_self_product_list_page {
       .child_category_all {
          min-width: 110px;
       }

@@ -30,8 +30,8 @@
   to { opacity: 0;  }
 }
 
-@include o-kiosk-portrait(){
-   .o_self_cart_page {
+@media (min-width: 992px) and (orientation: portrait) and (min-height: 1500px) {
+   .kiosk .o_self_cart_page {
        .product_img{
          max-width: 150px !important;
       }
