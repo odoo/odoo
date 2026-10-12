@@ -2852,11 +2852,15 @@ export class PosStore extends WithLazyGetterTrap {
         await validation.validateOrder(false);
     }
 
-    clickSaveOrder() {
-        this.syncAllOrders({ orders: [this.getOrder()] });
+    async clickSaveOrder() {
+        const order = this.getOrder();
+        this.syncAllOrders({ orders: [order] });
         this.notification.add(_t("Order saved for later"), { type: "success" });
         this.setOrder(this.getEmptyOrder());
         this.mobile_pane = "right";
+        if (this.config.iface_printbill) {
+            await this.ticketPrinter.printOrderReceipt({ order, printBillActionTriggered: true });
+        }
     }
 
     get isSmallProductScreen() {

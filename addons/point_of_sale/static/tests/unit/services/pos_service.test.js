@@ -7,7 +7,8 @@ import {
     filterChangeByCategories,
 } from "@point_of_sale/app/models/utils/order_change";
 import { prepareRoundingVals } from "../accounting/utils";
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { localization } from "@web/core/l10n/localization";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 
@@ -841,7 +842,7 @@ describe("pos_store.js", () => {
             config: { decimalPoint: false },
         });
 
-        patchWithCleanup(localization, { decimalPoint: ".", thousandsSep: "," });
+        patch(localization, { decimalPoint: ".", thousandsSep: "," });
         numberBuffer._setUp();
         expect(numberBuffer.decimalPoint).toBe(".");
 
@@ -978,13 +979,13 @@ describe("pos_store.js", () => {
             const order = await getFilledOrder(store);
             order.state = "paid";
             store.data.network.offline = true;
-            patchWithCleanup(store.data, {
+            patch(store.data, {
                 async resetIndexedDB() {
                     expect.step("resetIndexedDB");
                     throw new Error("stop before leaving the page");
                 },
             });
-            patchWithCleanup(store.dialog, {
+            patch(store.dialog, {
                 add(component, props) {
                     expect.step(props.title);
                 },
@@ -1000,7 +1001,7 @@ describe("pos_store.js", () => {
             const store = await setupPosEnv();
             const order = await getFilledOrder(store);
             order.state = "paid";
-            patchWithCleanup(store.data, {
+            patch(store.data, {
                 async resetIndexedDB() {
                     expect.step(`resetIndexedDB, synced: ${order.isSynced}`);
                     throw new Error("stop before leaving the page");
@@ -1010,5 +1011,28 @@ describe("pos_store.js", () => {
             await expect(store.reloadData()).rejects.toThrow("stop before leaving the page");
             expect.verifySteps(["resetIndexedDB, synced: true"]);
         });
+    });
+
+    describe("clickSaveOrder", () => {
+        for (const iface_printbill of [true, false]) {
+            test(`prints the bill of the saved order: ${iface_printbill}`, async () => {
+                const store = await setupPosEnv();
+                const order = await getFilledOrder(store);
+                store.config.iface_printbill = iface_printbill;
+                patch(store, { syncAllOrders() {} });
+                patch(store.ticketPrinter, {
+                    async printOrderReceipt({ order: printedOrder, printBillActionTriggered }) {
+                        expect.step(
+                            `print ${printedOrder === order} bill ${printBillActionTriggered}`
+                        );
+                    },
+                });
+
+                await store.clickSaveOrder();
+
+                expect(store.getOrder()).not.toBe(order);
+                expect.verifySteps(iface_printbill ? ["print true bill true"] : []);
+            });
+        }
     });
 });

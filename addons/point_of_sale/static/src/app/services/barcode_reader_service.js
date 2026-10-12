@@ -8,6 +8,14 @@ import { GS1BarcodeError } from "@barcodes_gs1_nomenclature/js/barcode_parser";
 import { logPosMessage } from "../utils/pretty_console_log";
 
 export class BarcodeReader {
+    static getOrderUuidFromQrCode(code) {
+        try {
+            return new URL(code).searchParams.get("order_uuid");
+        } catch {
+            return null;
+        }
+    }
+
     constructor(parser, services) {
         this.setup(...arguments);
     }
@@ -53,7 +61,7 @@ export class BarcodeReader {
 
         let parseBarcode;
         try {
-            parseBarcode = this.parser.parse_barcode(code);
+            parseBarcode = this.parseBarcode(this.parser, code);
             if (
                 Array.isArray(parseBarcode) &&
                 !parseBarcode.some((element) => element.type === "product")
@@ -63,7 +71,7 @@ export class BarcodeReader {
         } catch (error) {
             if (error instanceof GS1BarcodeError) {
                 if (this.fallbackParser) {
-                    parseBarcode = this.fallbackParser.parse_barcode(code);
+                    parseBarcode = this.parseBarcode(this.fallbackParser, code);
                 } else {
                     this.showGS1IncompatibleBarcodeWarning();
                     return;
@@ -83,6 +91,12 @@ export class BarcodeReader {
                 await cb(parseBarcode);
             }
         }
+    }
+    parseBarcode(parser, code) {
+        if (!BarcodeReader.getOrderUuidFromQrCode(code)) {
+            return parser.parse_barcode(code);
+        }
+        return { type: "order", code, base_code: code, encoding: "", value: 0 };
     }
     showNotFoundNotification(code) {
         this.notification.add(
