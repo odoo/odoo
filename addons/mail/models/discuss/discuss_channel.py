@@ -540,11 +540,7 @@ class DiscussChannel(models.Model):
             members = members.with_prefetch(new_members.ids)
             Store(bus_channel=bus_channel).add(members.channel_id).add(
                 members,
-                [
-                    Store.One("channel_id", [], as_thread=True),
-                    *self.env["discuss.channel.member"]._to_store_persona(),
-                    "unpin_dt",
-                ],
+                extra_fields=["unpin_dt"],
             ).bus_send()
 
     def _subscribe_users_automatically_get_members(self):
