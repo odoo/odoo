@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="hr_work_entry.WorkEntryTypeBadgeField">
-        <t t-call="hr_work_entry.WorkEntryType" data="this.props.record.data" label="this.props.record.data.name"/>
+        <t t-call="hr_work_entry.WorkEntryType" data="this.props.record.data" label="this.props.record.data.display_name"/>
     </t>
 
     <t t-name="hr_work_entry.Many2OneWorkEntryTypeField">

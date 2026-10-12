@@ -1,6 +1,13 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { defineModels, fields, getService, models, mountWebClient, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    getService,
+    models,
+    mountWebClient,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import { defineHrHolidaysModels } from "./hr_holidays_test_helpers";
 
 describe.current.tags("desktop");
@@ -31,7 +38,7 @@ class HrLeave extends models.Model {
     date_from = fields.Datetime();
     date_to = fields.Datetime();
     department_id = fields.Many2one({ relation: "hr.department" });
-    employee_id =  fields.Many2one({ relation: "hr.employee" });
+    employee_id = fields.Many2one({ relation: "hr.employee" });
     work_entry_type_id = fields.Many2one({ relation: "hr.work.entry.type" });
     holiday_type = fields.Char();
     name = fields.Char();
@@ -47,14 +54,14 @@ class HrWorkEntryType extends models.Model {
 defineHrHolidaysModels();
 defineModels([HrLeave, HrWorkEntryType]);
 
-onRpc("hr.employee", "get_time_off_dashboard_data", () => (
-    {has_accrual_allocation: true, allocation_data: {}, allocations_number: ""}
-));
+onRpc("hr.employee", "get_time_off_dashboard_data", () => ({
+    allocation_data: {},
+    allocations_number: "",
+}));
 onRpc("hr.employee", "get_mandatory_days", () => ({}));
 onRpc("hr.employee", "get_special_days_data", () => ({ mandatoryDays: [], bankHolidays: [] }));
 onRpc("hr.leave", "get_unusual_days", () => ({}));
 onRpc("hr.leave", "has_access", () => true);
-onRpc("hr.work.entry.type", "has_accrual_allocation", () => true);
 
 test(`test employee is passed to get_time_off_dashboard_data`, async () => {
     onRpc("hr.employee", "get_time_off_dashboard_data", ({ kwargs }) => {
