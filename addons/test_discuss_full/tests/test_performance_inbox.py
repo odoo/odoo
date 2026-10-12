@@ -15,17 +15,14 @@ class TestInboxPerformance(HttpCase, MailCommon):
         Computation of rating_stats should run a single query per model with rating_stats enabled.
         """
         # Queries (in order):
-        #   - search website (by domain)
-        #   - search website (default)
-        #   - sometimes could occur depending on the routing cache (website_rewrite, ir_config_parameter, res.lang flag_image)
-        #   4 messaging_menu/load_more:
+        #   3 messaging_menu/load_more:
         #       - fetch res_users (search_needaction)
+        #       - search mail_message (notification tab)
         #       - search mail_message (_filter_accessible_from_query)
-        #       - search mail_notification
-        #       - fetch mail_notification
         #   - search bus_bus (_bus_last_id)
-        #   29 store add message:
+        #   31 store add message:
         #       - fetch mail_message (_records_by_model_name/prefetch)
+        #       - search mail_message_reaction
         #       - search mail_message_schedule
         #       - search mail_followers
         #       - read group rating_rating (_rating_get_stats_per_record for slide.channel)
@@ -37,10 +34,11 @@ class TestInboxPerformance(HttpCase, MailCommon):
         #       - search mail_message_res_partner_bookmarked_rel (_compute_is_bookmarked)
         #       - search message_attachment_rel
         #       - search mail_message_res_partner_rel
-        #       - search mail_message_reaction
+        #       - search mail_message_res_partner_cc_rel
         #       - search mail_poll (start_message_id)
         #       - search mail_poll (end_message_id)
         #       - search mail_message_link_preview
+        #       - search mail_notification
         #       - fetch mail_notification
         #       2 _compute_rating_id:
         #           - search rating_rating
@@ -77,7 +75,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
                 rating_value="4",
             )
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        with self.assertQueryCount(37):
+        with self.assertQueryCount(35):
             self.make_jsonrpc_request(
                 "/mail/store",
                 {

@@ -15,14 +15,6 @@ from odoo.tests.common import users, tagged, HttpCase, warmup
 @tagged("is_query_count")
 class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
-    #   1: search res_partner (odooot ref exists)
-    #   1: search res_groups (internalUserGroupId ref exists)
-    #   5: settings:
-    #       - search res_users_settings (_find_or_create_for_user)
-    #       - fetch res_users_settings (_store_settings_fields)
-    #       - search res_lang_res_users_settings_rel (livechat_lang_ids)
-    #       - search im_livechat_expertise_res_users_settings_rel (livechat_expertise_ids)
-    #       - search res_users_settings_volumes (volume_settings_ids)
     #   2: hasCannedResponses
     #       - fetch res_groups_users_rel
     #       - search_count mail_canned_response
@@ -30,31 +22,34 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   [enterprise] search_count voip_call (_get_number_of_missed_calls)
     #   11: store add odoobot:
     #       - fetch res_partner (_read_format)
-    #         [enterprise] search ai_agent (_compute_im_status ai override)
     #       - search res_users (_compute_im_status)
+    #         [enterprise] search ai_agent (_compute_im_status ai override)
     #       - fetch res_users (_compute_im_status)
-    #       - search presence (_compute_im_status)
-    #       - fetch presence (_compute_im_status)
     #       - search employee (_store_im_status_fields)
     #       - fetch res_users (_read_format)
-    #       - search hr_employee_location (_store_im_status_fields hr_homeworking override)
+    #       - search presence (_compute_im_status)
+    #       - fetch presence (_compute_im_status)
     #       - fetch hr_employee (_compute_work_location_type)
+    #       - search hr_employee_location (_store_im_status_fields hr_homeworking override)
     #       - search hr_leave (_compute_leave_status)
     #       - read group resource_calendar_leaves (_compute_leave_status)
-    _query_count_init_store = 20
+    #   5: settings:
+    #       - search res_users_settings (_find_or_create_for_user)
+    #       - fetch res_users_settings (_store_settings_fields)
+    #       - search res_lang_res_users_settings_rel (livechat_lang_ids)
+    #       - search im_livechat_expertise_res_users_settings_rel (livechat_expertise_ids)
+    #       - search res_users_settings_volumes (volume_settings_ids)
+    _query_count_init_store = 18
     # Queries for _query_count_init_messaging (in order):
     #   2: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
     #       - fetch res_users
     #       - fetch discuss_channel_member
     #   1. search discuss_channel (chathub given channel ids)
-    #   1: search bus_bus (_bus_last_id)
-    #   31: _process_request_for_all (discuss):
+    #   30: init_messaging:
     #       - search_fetch discuss_channel (channels_domain)
-    #       2: check permissions
-    #       - fetch discuss_channel (chathub given channel ids, missing search_fetch)
+    #       - fetch discuss_channel (_search_is_member)
+    #       - search_fetch discuss_channel (odoobot chat)
     #       27: store add channel:
-    #           - search discuss_channel (has_meeting_today, resolved upfront for the whole
-    #             recordset; [calendar] joins the meetings of today into that domain)
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - fetch discuss_channel_member (invited member, _compute_invited_member_ids)
@@ -71,20 +66,21 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - search mail_presence (_compute_im_status)
     #                   - fetch mail_presence (_compute_im_status)
     #                   - search hr_employee (_store_im_status_fields override)
-    #                   - search hr_employee_location (_store_im_status_fields override)
     #                   - fetch hr_employee (_compute_work_location_type)
+    #                   - search hr_employee_location (_store_im_status_fields override)
     #                   - search hr_leave (_compute_leave_status)
     #                   - read group resource_calendar_leaves (_compute_leave_status)
     #                   - fetch res_users (_read_format)
     #           - search bus_bus (_bus_last_id)
+    #           - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
+    #           - [calendar] search calendar_event (calendar_event_ids, _compute_meeting_dt)
     #           - count discuss_channel_member (member_count)
     #           - _compute_message_needaction
-    #           - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
-    #           - fetch res_partner (image_128, _compute_avatar_128 reads the chat correspondent)
     #           - search discuss_channel_res_groups_rel (group_ids)
+    #           - _compute_message_unread
     #           - fetch res_groups (group_public_id)
     #           - select the current db snapshot
-    _query_count_init_messaging = 35
+    _query_count_init_messaging = 33
     # Queries for _query_count_messaging_menu_channels (in order):
     #   2: self_member_id of the current user (first occurrence)
     #       - fetch res_users
@@ -96,7 +92,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   1: search discuss_channel (last message of each channel, add_channels_last_message)
     #   1: search mail_message (_compute_message_needaction)
     #   1: search discuss_channel (add_channels_last_needaction)
-    #   37: channel _to_store_defaults:
+    #   36: channel _to_store_defaults:
     #       - read group member (_compute_invited_member_ids)
     #       - fetch discuss_channel_member (invited member)
     #       - search discuss_channel_rtc_session
@@ -129,9 +125,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - fetch res_country (livechat override)
     #       - search bus_bus (_bus_last_id)
     #       - fetch ir_attachment (_compute_avatar_128)
-    #       - [calendar] search calendar_event (meeting_ids, resolved upfront for the
+    #       - [calendar] search calendar_event (calendar_event_ids, resolved upfront for the
     #         whole recordset)
-    #       - fetch ir_attachment (image_128, _compute_avatar_128 of the chat correspondent)
     #       - count discuss_channel_member (member_count)
     #       - search discuss_channel_res_groups_rel (group_ids)
     #         [enterprise] fetch discuss_channel (sudo fields, ai_agent_id)
@@ -166,7 +161,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_fetch mail_call_artifact (_compute_recording_media)
     #       - search mail_message_schedule (last message of the needaction message)
     #   1: select the current db snapshot
-    _query_count_messaging_menu_channels = 75
+    _query_count_messaging_menu_channels = 74
 
     def setUp(self):
         super().setUp()
