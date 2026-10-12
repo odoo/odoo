@@ -785,10 +785,9 @@ class AccountEdiCommon(models.AbstractModel):
             attachment_data = document.find('{*}Attachment/{*}EmbeddedDocumentBinaryObject')
             if attachment_name is not None and attachment_data is not None:
                 mimetype = attachment_data.attrib.get('mimeCode')
-                if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)):
-                    continue
                 # Strip internal newlines/spaces to prevent 'raw' field validation failure on create
-                text = ''.join((attachment_data.text or '').split())
+                if not (extension := SUPPORTED_FILE_TYPES.get(mimetype)) or not (text := ''.join((attachment_data.text or '').split())):
+                    continue
                 # Normalize the name of the file : some e-fff emitters put the full path of the file
                 # (Windows or Linux style) and/or the name of the xml instead of the pdf.
                 # Get only the filename with the right extension.
