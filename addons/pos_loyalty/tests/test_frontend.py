@@ -3800,6 +3800,76 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.trusted_config_ids += trusted_pos_config
         self.start_pos_tour("test_loyalty_is_not_processed_for_draft_order", login="pos_user")
 
+    def test_promotion_reward_of_order_loaded_on_another_device(self):
+        """A promotion reward line saved in a draft order has no coupon on the server
+        (its coupon is temporary): the order must still load and pay correctly on
+        another device."""
+        self.env['loyalty.program'].search([]).write({'active': False})
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        partner = self.env['res.partner'].create({'name': 'AAAA'})
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': partner.id,
+            'points': 0,
+        })
+        promotion = self.env['loyalty.program'].create({
+            'name': 'Auto Discount 10%',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'unit',
+                'reward_point_amount': 1,
+                'product_ids': self.whiteboard_pen.product_variant_id,
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_product_ids': self.whiteboard_pen.product_variant_id.ids,
+            })],
+        })
+        self.start_pos_tour("test_promotion_reward_of_order_loaded_on_another_device_make_order", login="pos_user")
+        order = self.env['pos.order'].search([('config_id', '=', self.main_pos_config.id)])
+        reward_line = order.lines.filtered('is_reward_line')
+        self.assertEqual(order.state, 'draft')
+        self.assertFalse(reward_line.coupon_id)
+
+        self.start_pos_tour("test_promotion_reward_of_order_loaded_on_another_device", login="pos_user")
+        reward_line = order.lines.filtered('is_reward_line')
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(order.amount_total, 90)
+        self.assertEqual(len(reward_line), 1)
+        self.assertEqual(reward_line.coupon_id.program_id, promotion)
+        self.assertEqual(loyalty_card.points, 90)
+
+    def test_promo_code_reward_of_order_loaded_on_another_device(self):
+        """The promo code entered on the first device is not saved with the order: the
+        reward line of the code must still be kept on another device."""
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.code_promo_program.active = True
+        loyalty_program = self.create_programs([('Loyalty P', 'loyalty')])['Loyalty P']
+        partner = self.env['res.partner'].create({'name': 'AAAA'})
+        self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': partner.id,
+            'points': 0,
+        })
+        self.start_pos_tour("test_promo_code_reward_of_order_loaded_on_another_device_make_order", login="pos_user")
+        order = self.env['pos.order'].search([('config_id', '=', self.main_pos_config.id)])
+        reward_line = order.lines.filtered('is_reward_line')
+        self.assertEqual(order.state, 'draft')
+        self.assertFalse(reward_line.coupon_id)
+
+        self.start_pos_tour("test_promo_code_reward_of_order_loaded_on_another_device", login="pos_user")
+        reward_line = order.lines.filtered('is_reward_line')
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(order.amount_total, 50)
+        self.assertEqual(len(reward_line), 1)
+        self.assertEqual(reward_line.coupon_id.program_id, self.code_promo_program)
+
     def test_race_conditions_update_program(self):
         """This test ensures that the loyalty program update are correctly applied, even if a lot of programs applies on one order."""
         product_test = self.env['product.product'].create({
