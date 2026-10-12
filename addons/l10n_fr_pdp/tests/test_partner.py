@@ -22,59 +22,11 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'country_id': self.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '96851575905877',
+            'company_registry': '33417522117412',
             'invoice_edi_format': 'ubl_21_fr',
         })
         self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
-            'peppol_eas': '0225',
-        }])
-
-        partner = self.env["res.partner"].create({
-            'name': 'SUPER FRENCH PARTNER 2',
-            'street': 'Rue Fabricy, 16',
-            'zip': '59000',
-            'city': 'Lille',
-            'country_id': self.env.ref('base.fr').id,
-            'phone': '+33 1 23 45 67 89',
-            'vat': 'FR23334175221',
-            'company_registry': '96851575905877',
-            'invoice_edi_format': 'ubl_21_fr',
-        })
-        self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
-            'peppol_eas': '0225',
-        }])
-
-        partner = self.env["res.partner"].create({
-            'name': 'SUPER FRENCH PARTNER 2',
-            'street': 'Rue Fabricy, 16',
-            'zip': '59000',
-            'city': 'Lille',
-            'country_id': self.env.ref('base.fr').id,
-            'phone': '+33 1 23 45 67 89',
-            'vat': 'FR23334175221',
-            'company_registry': '968515759',
-            'invoice_edi_format': 'ubl_21_fr',
-        })
-        self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
-            'peppol_eas': '0225',
-        }])
-
-        partner = self.env["res.partner"].create({
-            'name': 'SUPER FRENCH PARTNER 2',
-            'street': 'Rue Fabricy, 16',
-            'zip': '59000',
-            'city': 'Lille',
-            'country_id': self.env.ref('base.fr').id,
-            'phone': '+33 1 23 45 67 89',
-            'vat': 'FR23334175221',
-            'company_registry': '968515759',
-            'invoice_edi_format': 'ubl_21_fr',
-        })
-        self.assertRecordValues(partner, [{
-            'peppol_endpoint': '968515759',
+            'peppol_endpoint': '334175221',
             'peppol_eas': '0225',
         }])
 
@@ -236,7 +188,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner = self.partner_a
         self.assertEqual(
             partner._get_pdp_receiver_identification_info(),
-            ('pdp', "0225:968515759_96851575905823")
+            ('pdp', "0225:334175221_33417522105821")
         )
         partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(partner, [{
@@ -250,10 +202,10 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
             if r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
                 pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
-                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905823")
-            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A968515759_96851575905823"):
+                return self._get_annuaire_lookup_response(pdp_identifier, "334175221_33417522105821")
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A334175221_33417522105821"):
                 peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
-                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:334175221_33417522105821")
 
         partner.invoice_sending_method = False
         with (
@@ -272,7 +224,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner = self.partner_a
         self.assertEqual(
             partner._get_pdp_receiver_identification_info(),
-            ('pdp', "0225:968515759_96851575905823")
+            ('pdp', "0225:334175221_33417522105821")
         )
         partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(partner, [{
@@ -286,10 +238,10 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
             if r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
                 pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
-                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905823", b2g=True)
-            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A968515759_96851575905823"):
+                return self._get_annuaire_lookup_response(pdp_identifier, "334175221_33417522105821", b2g=True)
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A334175221_33417522105821"):
                 peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
-                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:334175221_33417522105821")
 
         partner.invoice_sending_method = False
         with (
@@ -383,14 +335,14 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             if r.url.startswith(f"{origin}/api/pdp/1/pdp_annuaire_lookup"):
                 response = requests.Response()
                 response.status_code = 200
-                response._content = b'{"annuaire_lines": [{"identifier": "968515759_96851575900034"}, {"identifier": "968515759"}, {"identifier": "968515759_96851575905823"}]}'
+                response._content = b'{"annuaire_lines": [{"identifier": "968515759_96851575900034"}, {"identifier": "968515759"}, {"identifier": "334175221_33417522105821"}]}'
                 return response
             elif r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
                 pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
-                return self._get_annuaire_lookup_response(pdp_identifier, "968515759_96851575905823")
+                return self._get_annuaire_lookup_response(pdp_identifier, "334175221_33417522105821")
             elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier="):
                 peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
-                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759_96851575905823")
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:334175221_33417522105821")
             return requests.Response()
 
         with (
@@ -404,7 +356,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
 
             self.assertRecordValues(self.partner_a, [{
                 'peppol_eas': '0225',
-                'peppol_endpoint': '968515759_96851575905823',
+                'peppol_endpoint': '334175221_33417522105821',
                 'peppol_verification_state': 'valid',
                 'pdp_verification_display_state': 'pdp_valid',
             }])
