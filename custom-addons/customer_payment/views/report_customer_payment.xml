@@ -47,7 +47,12 @@
                 <div class="article o_cp_statement" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" t-att-data-oe-lang="o.env.context.get('lang')">
                     <style>
                         .o_cp_statement { color: #000; font-size: 18px; line-height: 1.5; }
-                        .o_cp_statement .o_cp_company { font-size: 20px; font-weight: bold; }
+                        .o_cp_statement table.o_cp_letterhead { margin-bottom: 15px; table-layout: fixed; }
+                        .o_cp_statement .o_cp_letterhead td { width: 25%; padding: 0; vertical-align: middle; }
+                        .o_cp_statement .o_cp_letterhead td.o_cp_company_info { width: 50%; font-size: 16px; text-align: center; }
+                        .o_cp_statement .o_cp_letterhead img { height: 200px; width: auto; margin-left: -70px; }
+                        .o_cp_statement .o_cp_company { font-size: 32px; font-weight: bold; line-height: 1.2; }
+                        .o_cp_statement .o_cp_tagline { margin-bottom: 5px; font-size: 18px; font-weight: bold; line-height: 1.2; }
                         .o_cp_statement .o_cp_title { margin-top: 4px; font-size: 32px; font-weight: bold; text-align: center; }
                         .o_cp_statement .o_cp_period { margin: 2px 0 12px; text-align: center; }
                         .o_cp_statement table { width: 100%; border-collapse: collapse; }
@@ -71,8 +76,25 @@
                         .o_cp_statement .o_cp_signatures td.o_cp_spacer { width: 32%; }
                     </style>
                     <div class="page">
-                        <!-- Header -->
-                        <div class="o_cp_company"><span t-field="o.company_id.name"/></div>
+                        <!-- Header: company letterhead as on the Khmer invoice. The empty right cell mirrors
+                             the logo column so the company details stay centered on the page. -->
+                        <table class="o_cp_letterhead">
+                            <tr>
+                                <td>
+                                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" alt="Company Logo"/>
+                                </td>
+                                <td class="o_cp_company_info">
+                                    <div class="o_cp_company"><span t-field="o.company_id.name"/></div>
+                                    <div class="o_cp_tagline">រោងម៉ាស៊ីនតកិនស្រូវ ទិញ លក់ ស្រូវ អង្ករ ជី និងថ្នាំកសិកម្មគ្រប់ប្រភេទ</div>
+                                    <div t-if="o.company_id.street or o.company_id.street2">
+                                        <span t-field="o.company_id.street"/>
+                                        <span t-if="o.company_id.street2" t-field="o.company_id.street2"/>
+                                    </div>
+                                    <div t-if="o.company_id.phone">Tel: <span t-field="o.company_id.phone"/></div>
+                                </td>
+                                <td class="o_cp_spacer"></td>
+                            </tr>
+                        </table>
                         <div class="o_cp_title">របាយការណ៍អតិថិជន</div>
                         <div class="o_cp_period">
                             ចាប់ពីប៊ុង: <span t-out="'%02d-%s-%d' % (date_from.day, km_months[date_from.month - 1], date_from.year)"/>
