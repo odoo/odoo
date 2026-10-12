@@ -492,7 +492,7 @@ class AccountMove(models.Model):
         compute='_compute_display_qr_code',
     )
     display_link_qr_code = fields.Boolean(
-        string="Display Link QR-code",
+        string="Display Payment Link",
         compute='_compute_display_link_qr_code',
     )
 
@@ -7668,13 +7668,6 @@ class AccountMove(models.Model):
 
         unstruct_ref = self.payment_reference or self.name
         return self.partner_bank_id.build_qr_code_base64(self.amount_residual, unstruct_ref, self.payment_reference, self.currency_id, self.partner_id, qr_code_method, silent_errors=silent_errors)
-
-    def _generate_portal_payment_qr(self):
-        # This method is designed to prevent traceback.
-        # Scenario: A traceback occurs when `account.payment` is not installed, and the user attempts to
-        # preview or print the invoice.
-        self.ensure_one()
-        return None
 
     def _get_portal_payment_link(self):
         # This method is designed to prevent traceback.

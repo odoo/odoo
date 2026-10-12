@@ -223,7 +223,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
 
     def test_payment_link_wizard_defaults_from_invoice(self):
         """
-        Test that the payment link wizard opened from the QR code
+        Test that the payment link wizard opened from the invoice PDF link
         correctly uses default values from the invoice.
         """
         payment_term = self.env['account.payment.term'].create({
@@ -250,7 +250,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         invoice.invoice_payment_term_id = payment_term
         invoice.action_post()
 
-        # Simulate the opening of the payment link wizard from the invoice QR code.
+        # Simulate the opening of the payment link wizard from the invoice PDF link.
         link = invoice._get_portal_payment_link()
         self.assertIsNotNone(link, "A payment link should be generated for the invoice.")
         self.assertIn('amount=300.0', link)  # 30% of 1000 first installment
