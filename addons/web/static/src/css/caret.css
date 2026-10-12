@@ -1,0 +1,16 @@
+/* Down caret drawn in the ::after of an element: the ones with the class, and the toggles */
+/* of the dropdown fields, rendered by components also used outside fields */
+.o_caret_down::after,
+.o_field_widget .o_input_dropdown .o_dropdown_button::after {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    -moz-transform: scale(0.9999); /* Smooth the caret on firefox */
+    border-bottom: 0;
+    /* The frontend bundles do not hold the CSS variables: Bootstrap's default width */
+    border-left: var(--o-bs-caret-width, .3em) solid transparent;
+    border-right: var(--o-bs-caret-width, .3em) solid transparent;
+    border-top: var(--o-bs-caret-width, .3em) solid var(--o-caret-color, currentColor);
+}

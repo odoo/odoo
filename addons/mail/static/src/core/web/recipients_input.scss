@@ -1,15 +1,19 @@
 .o-mail-RecipientsInput {
     border-bottom: 1px solid transparent;
+    /* Show the caret of the o_caret_down class only on hover */
+    &:not(:hover)::after {
+        content: none;
+    }
     &:focus-within:hover {
         border-bottom-color: var(--o-bs-input-focus-border-color);
-        &:after {
-            @include o-caret-down($caret-color: $input-focus-border-color);
+        &::after {
+            --o-caret-color: var(--o-bs-input-focus-border-color);
         }
     }
     &:hover {
         border-bottom-color: $border-color;
-        &:after {
-            @include o-caret-down($caret-color: $border-color);
+        &::after {
+            --o-caret-color: #{$border-color};
         }
     }
     .o_input {
