@@ -751,6 +751,25 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.start_pos_tour('test_settle_so_with_non_pos_groupable_uom')
 
+    def test_settle_so_price_unit_not_rounded(self):
+        product = self.env['product.product'].create({
+            'name': 'Cable',
+            'available_in_pos': True,
+            'taxes_id': False,
+            'lst_price': 0.1838,
+        })
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 100,
+                'price_unit': 0.1838,
+                'discount': 10,
+            })],
+        })
+        self.assertEqual(sale_order.amount_total, 16.54)
+        self.start_pos_tour('test_settle_so_price_unit_not_rounded')
+
     def test_settle_so_with_pos_downpayment(self):
         so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
@@ -1696,7 +1715,12 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pos_order = self.env['pos.order'].search([('partner_id', '=', test_partner.id)], limit=1)
 
         self.assertEqual(pos_order.lines[0].qty, 12.0, "quantity should be 12.0")
-        self.assertEqual(pos_order.lines[0].price_unit, 0.83, "price of product should be 0.83")
+        self.assertEqual(pos_order.lines[0].price_unit, sale_order.order_line.price_unit / 12)
+        self.assertEqual(pos_order.amount_total, sale_order.amount_total)
+
+        session = self.main_pos_config.current_session_id
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
 
     def test_multiple_lots_sale_order(self):
         self.product = self.env['product.product'].create({
