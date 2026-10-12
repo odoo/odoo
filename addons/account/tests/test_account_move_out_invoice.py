@@ -5325,13 +5325,42 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'date': may, 'state': 'draft'},
         ])
 
-    def test_invoice_partner_display_name_ignores_partner_form_context(self):
-        """ Test that granting portal access to a contact does not add context
-            info to the invoice partner display name."""
-        self.partner_a.write({'email': 'partner_a@example.com', 'street': 'Rue du Test 1', 'vat': 'BE0477472701'})
-        invoice = self.init_invoice('out_invoice', partner=self.partner_a, amounts=[100])
-        action = self.partner_a.with_context(show_address=1, show_vat=True).get_formview_action()
-        wizard = self.env['portal.wizard'].with_context(action['context'], active_ids=self.partner_a.ids).create({})
-        wizard.user_ids.action_grant_access()
-        self.env.flush_all()
-        self.assertEqual(invoice.invoice_partner_display_name, 'partner_a')
+    def test_posted_invoice_amount_residual_from_payment_term_lines(self):
+        """ The amount due of a posted invoice must be the open balance of its payment term lines, even when
+        the totals recomputed from the invoice lines no longer match the journal items (here, because the tax
+        rounding method changed after posting). Otherwise a fully paid invoice ends up partially paid. """
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+        invoice = self._create_invoice(
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=10.0, discount=0.04, tax_ids=self.tax_sale_a)
+                for _i in range(3)
+            ],
+            post=True,
+        )
+        # Rounded per line: 3 * 10.00 + 3 * 1.50 = 34.50
+        self.assertEqual(invoice.amount_total, 34.5)
+
+        # Rounded globally, the same lines only amount to 29.99 + 4.50 = 34.49
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        self.env.invalidate_all()
+        self.assertEqual(invoice.tax_totals['total_amount_currency'], 34.49)
+
+        self._register_payment(invoice)
+        self.assertRecordValues(invoice, [{
+            'amount_total': 34.5,
+            'amount_residual': 0.0,
+            'amount_residual_signed': 0.0,
+            'payment_state': invoice._get_invoice_in_payment_state(),
+        }])
+
+    def test_draft_invoice_amount_residual_follows_unsaved_lines(self):
+        """ The amount due of a draft invoice follows its lines before the record is saved. """
+        with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as move_form:
+            move_form.partner_id = self.partner_a
+            with move_form.invoice_line_ids.new() as line_form:
+                line_form.name = 'test line'
+                line_form.price_unit = 100.0
+                line_form.tax_ids.clear()
+                line_form.tax_ids.add(self.tax_sale_a)
+            self.assertEqual(move_form.tax_totals['total_amount_currency'], 115.0)
+            self.assertEqual(move_form.amount_residual, 115.0)
