@@ -42,6 +42,7 @@ class TestWorkorder(TestMrpCommon):
         self.workcenter_1.write({
             'time_efficiency': 100, 'time_start': 0, 'time_stop': 0,
             'resource_calendar_id': calendar.id,
+            'tz': 'Europe/Brussels',
         })
         self.workcenter_1.capacity_ids.write({'time_start': 0, 'time_stop': 0})
         mo = self.env['mrp.production'].create({
