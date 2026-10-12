@@ -53,10 +53,14 @@ class TestEGEdiCommon(AccountEdiTestCommon):
             'street': '12th dec. street',
         })
 
-        cls.product_a.write({'barcode': '1KGS1TEST', })
+        cls.product_a.write({
+            'barcode': '1KGS1TEST',
+            'weight': 0.1,
+        })
         cls.product_b.write({
             'barcode': 'EG-EGS-TEST',
             'uom_id': cls.env.ref('uom.product_uom_cm').id,
+            'weight': 0.1,
         })
         cls.company_branch = cls.env['res.partner'].create({
             'name': 'branch partner',
@@ -87,6 +91,7 @@ class TestEGEdiCommon(AccountEdiTestCommon):
                 'partner_id': cls.partner_a.id,
                 'invoice_date': '2022-03-15',
                 'date': '2022-03-15',
+                'delivery_date': '2022-03-15',
                 **kwargs,
                 'invoice_line_ids': [Command.create({**line_vals, }) for line_vals in kwargs.get('invoice_line_ids', [])]
             })
