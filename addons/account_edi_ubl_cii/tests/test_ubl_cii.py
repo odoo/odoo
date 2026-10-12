@@ -693,6 +693,46 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         for line in imported_invoice.invoice_line_ids:
             self.assertFalse(line.discount, "A discount on the imported lines signals a rounding error in the discount computation")
 
+    def test_import_document_allowance_charge_percentage(self):
+        """ A document level charge expressed as a percentage of a basis amount is imported
+        as quantity = percentage / 100: that quantity must not be rounded to the UoM precision.
+        """
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 4771.54,
+            })],
+        })
+        invoice.action_post()
+        cii_root = etree.fromstring(self.env['account.edi.xml.cii']._export_invoice(invoice)[0])
+        charge_xpath = f"""
+            <xpath expr="//*[local-name()='ApplicableHeaderTradeSettlement']/*[local-name()='InvoiceCurrencyCode']" position="after">
+                <ram:SpecifiedTradeAllowanceCharge xmlns:ram="{self.namespaces['ram']}" xmlns:udt="{self.namespaces['udt']}">
+                    <ram:ChargeIndicator><udt:Indicator>true</udt:Indicator></ram:ChargeIndicator>
+                    <ram:CalculationPercent>9.57</ram:CalculationPercent>
+                    <ram:BasisAmount>4771.54</ram:BasisAmount>
+                    <ram:ActualAmount>456.64</ram:ActualAmount>
+                    <ram:Reason>Fuel surcharge</ram:Reason>
+                    <ram:CategoryTradeTax>
+                        <ram:TypeCode>VAT</ram:TypeCode>
+                        <ram:CategoryCode>S</ram:CategoryCode>
+                        <ram:RateApplicablePercent>{self.tax_sale_a.amount}</ram:RateApplicablePercent>
+                    </ram:CategoryTradeTax>
+                </ram:SpecifiedTradeAllowanceCharge>
+            </xpath>"""
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': etree.tostring(self.with_applied_xpath(cii_root, charge_xpath)),
+            'name': 'test_invoice.xml',
+        })
+        bill = self.import_attachment(xml_attachment, self.company_data["default_journal_purchase"])
+        self.assertRecordValues(bill.invoice_line_ids.filtered(lambda line: line.name == 'Fuel surcharge'), [{
+            'price_unit': 4771.54,
+            'price_subtotal': 456.64,
+        }])
+        self.assertRecordValues(bill, [{'amount_untaxed': 5228.18}])
+
     def test_payment_means_code_in_facturx_xml(self):
         bank_ing = self.env['res.bank'].create({'name': 'ING', 'bic': 'BBRUBEBB'})
         partner_bank = self.env['res.partner.bank'].create({
