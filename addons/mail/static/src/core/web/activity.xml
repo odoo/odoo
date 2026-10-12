@@ -39,7 +39,7 @@
             <div t-if="this.activity().phone" class="o-mail-Activity-phoneNumber d-flex align-items-center gap-2">
                 <span t-out="this.activity().phone"/>
                 <CopyButton
-                    className="'o-mail-Activity-copy btn-link text-action p-0'"
+                    className="'o-mail-Activity-copy btn-hover-action p-0'"
                     content="this.activity().phone"
                     copyText.translate="Copy"
                     icon="'content_copy'"

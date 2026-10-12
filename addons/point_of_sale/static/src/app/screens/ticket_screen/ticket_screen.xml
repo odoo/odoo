@@ -101,12 +101,12 @@
                                                 </div>
                                             </td>
                                             <td class="align-middle text-end info-column" name="info-column">
-                                                <button t-on-click.stop="() => this._onInfoOrder(order)" class="btn btn-link p-0 lh-1 text-info">
+                                                <button t-on-click.stop="() => this._onInfoOrder(order)" class="btn btn-hover-info p-0 lh-1">
                                                     <i class="oi oi-lg oi-filled align-middle" data-icon="info" aria-hidden="true"/>
                                                 </button>
                                             </td>
                                             <td class="align-middle text-end delete-column" name="delete-column">
-                                                <button t-if="!this.shouldHideDeleteButton(order) and this.pos.accessRight.canDeleteOrder" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
+                                                <button t-if="!this.shouldHideDeleteButton(order) and this.pos.accessRight.canDeleteOrder" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-hover-danger btn-lg">
                                                     <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                                                 </button>
                                                 <div t-if="this.state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">

@@ -31,7 +31,7 @@
             class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2 border-0"
             t-att-class="{
                 'btn fw-normal': !this.isCurrent,
-                'btn-link text-primary': this.isCompanyAllowed,
+                'btn btn-hover-primary': this.isCompanyAllowed,
                 'disabled': !this.isCompanyAllowed,
             }"
             t-on-click="() => this.logIntoCompany()"
