@@ -1087,6 +1087,21 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
 
         self.assertFalse(invoice.id in po.invoice_ids.ids)
 
+    def test_match_invoice_line_without_name(self):
+        """Test matching an invoice when an invoice line has no name"""
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        invoice = self.init_invoice(
+            'in_invoice',
+            partner=self.partner_a,
+            products=[self.product_order, self.service_order]
+        )
+
+        invoice.invoice_line_ids.filtered(lambda l: l.product_id == self.product_order).name = False
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+
+        self.assertEqual(invoice.invoice_line_ids.purchase_line_id, po.order_line)
+
     def test_po_match_from_ocr(self):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', products=[self.product_a])
