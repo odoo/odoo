@@ -7,7 +7,7 @@ patch(threadActionsInternal, {
         const visitorActions = ["fold-chat-window", "close", "restart", "settings"];
         if (
             component.thread?.channel_type === "livechat" &&
-            !component.store.self.isInternalUser &&
+            (!component.store.self.isInternalUser || component.thread.isTransient) &&
             !visitorActions.includes(id)
         ) {
             return false;

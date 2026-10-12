@@ -152,3 +152,14 @@ test("livechat is shown as bubble on page reload", async () => {
     await click(".o-mail-ChatBubble");
     await contains(".o-mail-ChatWindow-header", { text: "MitchellOp" });
 });
+
+test("thread actions are not displayed on temporary thread", async () => {
+    const pyEnv = await startServer();
+    await loadDefaultEmbedConfig();
+    const [partnerUser] = pyEnv["res.users"].search_read([["id", "=", serverState.partnerId]]);
+    await start({ authenticateAs: partnerUser });
+    await mountWithCleanup(LivechatButton);
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-ChatWindow");
+    await contains("[title='Open Actions Menu']", { count: 0 });
+});
