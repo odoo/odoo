@@ -452,7 +452,7 @@ class TestCIIFR(TestUBLCommon):
             'invoice_lines': [
                 {'price_unit': 95.24, 'price_subtotal': 95.24, 'quantity': 1, 'discount': 0, 'tax_ids': self.tax_5_purchase.ids},
                 {'price_unit': 100, 'price_subtotal': 100, 'quantity': 1, 'discount': 0, 'tax_ids': self.tax_5_purchase.ids},
-                {'price_unit': 190.48, 'price_subtotal': 171.43, 'quantity': 1, 'discount': 10.001049979000411, 'tax_ids': self.tax_5_purchase.ids},
+                {'price_unit': 171.43 + 19.05, 'price_subtotal': 171.43, 'quantity': 1, 'discount': 10.0010499790004, 'tax_ids': self.tax_5_purchase.ids},
                 {'price_unit': 200, 'price_subtotal': 180, 'quantity': 1, 'discount': 10.0, 'tax_ids': self.tax_5_purchase.ids},
             ]
         }
@@ -461,7 +461,7 @@ class TestCIIFR(TestUBLCommon):
             filename='facturx_out_invoice_tax_incl.xml',
             # Discount of line 3: when exporting the invoice, we compute the price tax excluded = 200/1.05 ~= 190.48
             # then, when computing the discount amount: 190.48 * 0.1 ~= 19.05 => price net amount = 171.43
-            # Thus, at import: price_unit = 190.48, and discount = 100 * (1 - 171.43 / 190.48) = 10.001049979
+            # Thus, at import: price_unit = 171.43 + 19.05, and discount = 100 * (1 - 171.43 / 190.48) = 10.001049979
             move_type='in_invoice',
             invoice_vals=invoice_vals,
         )
