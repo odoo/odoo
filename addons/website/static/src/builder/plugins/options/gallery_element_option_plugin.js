@@ -59,7 +59,7 @@ export class GalleryElementOptionPlugin extends Plugin {
 
 export class SetGalleryElementPositionAction extends BuilderAction {
     static id = "setGalleryElementPosition";
-    apply({ editingElement: activeItemEl, value: position }) {
+    async apply({ editingElement: activeItemEl, value: position }) {
         const optionName = activeItemEl.classList.contains("carousel-item")
             ? "Carousel"
             : "GalleryImageList";
@@ -95,7 +95,9 @@ export class SetGalleryElementPositionAction extends BuilderAction {
         }
 
         // Update the DOM with the new items order.
-        this.dispatchTo("reorder_items_handlers", activeItemEl, itemEls, optionName);
+        const prom = Promise.withResolvers();
+        this.dispatchTo("reorder_items_handlers", activeItemEl, itemEls, optionName, prom);
+        await prom.promise;
     }
 }
 
