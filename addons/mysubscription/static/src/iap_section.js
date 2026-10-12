@@ -45,7 +45,14 @@ class IapContainer extends Component {
 
     imageUrl = computed(() => {
         const service = this.props.account.service_name;
-        const existingIcon = ["sms", "reveal", "snailmail", "partner_autocomplete", "invoice_ocr"];
+        const existingIcon = [
+            "sms",
+            "reveal",
+            "snailmail",
+            "partner_autocomplete",
+            "invoice_ocr",
+            "phone_service",
+        ];
         if (existingIcon.includes(service)) {
             return `/mysubscription/static/src/img/${service}_icon.png`;
         }
