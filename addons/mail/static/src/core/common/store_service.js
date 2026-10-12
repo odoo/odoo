@@ -4,6 +4,7 @@ import {
     attClassObjectToString,
     cleanTerm,
     generateEmojisOnHtml,
+    getPartnerMentionName,
     prettifyMessageText,
 } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
@@ -599,7 +600,7 @@ export class Store extends BaseStore {
             return segments.some((segment) => segment.includes(mention));
         });
         // Longest mention text first, so e.g. "@John" inside "@John Doe" isn't kept.
-        const mentionText = (partner) => `@${thread?.getPersonaName?.(partner) ?? partner.name}`;
+        const mentionText = (partner) => `@${getPartnerMentionName(partner, thread)}`;
         const remaining = [...segments];
         const kept = new Set(
             [...mentionedPartners]

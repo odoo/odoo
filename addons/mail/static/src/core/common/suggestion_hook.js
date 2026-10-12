@@ -4,6 +4,7 @@ import {
     generatePartnerMentionElement,
     generateRoleMentionElement,
     generateSpecialMentionElement,
+    getPartnerMentionName,
     generateThreadMentionElement,
 } from "@mail/utils/common/format";
 import { status, useComponent, useEffect, useState } from "@odoo/owl";
@@ -357,7 +358,7 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                         };
                     }
                     return {
-                        label: thread?.getPersonaName(suggestion) ?? suggestion.name,
+                        label: getPartnerMentionName(suggestion, thread),
                         partner: suggestion,
                         thread,
                         classList,
