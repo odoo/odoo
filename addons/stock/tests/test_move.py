@@ -3,6 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from json import loads
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
@@ -7108,3 +7109,28 @@ class TestStockMove(TestStockCommon):
         } for product in (self.productA, self.product_lot)])
         self.assertTrue(untracked_move.show_quant)
         self.assertFalse(tracked_move.show_quant)
+
+    def test_multicompany_orderpoint_horizon_and_deadline(self):
+        """Test that the orderpoint's company determines the receipt deadline
+        and horizon days displayed in replenishment information."""
+        company_b = self.env['res.company'].create({'name': 'company B', 'horizon_days': 30})
+        product = self.env['product.product'].create({
+            'name': 'Test Storable Product',
+            'is_storable': True,
+            'company_id': self.env.company.id,
+        })
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'company_id': self.env.company.id,
+            'product_min_qty': 5,
+            'product_max_qty': 10,
+        })
+        repl_info_action = orderpoint.action_stock_replenishment_info()
+        repl_info = self.env[repl_info_action['res_model']].browse(repl_info_action['res_id'])
+        for company in (company_b, self.env.company):
+            orderpoint.with_company(company).action_replenish()
+            receipt = self.env['stock.picking'].search([('origin', '=', orderpoint.name), ('state', '!=', 'cancel')])
+            self.assertEqual(receipt.date_deadline.date(), orderpoint.deadline_date)
+            receipt.action_cancel()
+            lead_days_description = loads(repl_info.with_company(company).json_lead_days)['lead_days_description']
+            self.assertIn(f"{orderpoint.company_id.horizon_days:g}", lead_days_description[0][1])

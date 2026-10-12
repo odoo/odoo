@@ -483,6 +483,7 @@ class StockWarehouseOrderpoint(models.Model):
         self.ensure_one()
         return {
             'days_to_order': self.days_to_order,
+            'orderpoint_id': self,
         }
 
     def _get_product_context(self):
