@@ -1297,6 +1297,72 @@ class TestUpdateEvents(TestCommon):
                 ms_events_to_update[e.microsoft_id]["dateTime"]
             )
 
+    def _sync_outlook_events_from_attendee_calendar(self, events):
+        """
+        Sync the given Outlook events of the organizer calendar from the attendee calendar
+        (other Outlook ids, same iCalUIds), and check that nothing is sent to Outlook.
+        """
+        events = [dict(events[0], id='ATT_REC123')] + [
+            dict(e, id=f'ATT_{e["id"]}', seriesMasterId='ATT_REC123')
+            for e in events[1:]
+        ]
+        with patch.object(MicrosoftCalendarService, 'get_events', return_value=(MicrosoftEvent(events), None)), \
+                patch.object(MicrosoftCalendarService, 'insert') as mock_insert, \
+                patch.object(MicrosoftCalendarService, 'patch') as mock_patch, \
+                patch.object(MicrosoftCalendarService, 'delete') as mock_delete:
+            self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+            self.call_post_commit_hooks()
+        mock_insert.assert_not_called()
+        mock_patch.assert_not_called()
+        mock_delete.assert_not_called()
+
+    def test_update_start_of_all_events_of_recurrence_from_outlook_attendee_calendar(self):
+        """
+        Update all event start date of a recurrence from Outlook attendee calendar, where
+        the occurrences are not linked to Outlook anymore (as after a recurrence time change).
+        """
+        self.recurrent_events[1:].with_context(dont_notify=True).write({
+            'microsoft_id': False,
+            'ms_universal_event_id': False,
+        })
+        events = self._prepare_outlook_events_for_all_events_start_date_update(self.recurrent_events_count)
+
+        self._sync_outlook_events_from_attendee_calendar(events)
+
+        recurrent_events = self.recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(recurrent_events.mapped('start'), [parse(e['start']['dateTime']) for e in events[1:]])
+        self.assertEqual(recurrent_events.mapped('ms_universal_event_id'), [e['iCalUId'] for e in events[1:]])
+        self.assertFalse(self.recurrent_events[1:].exists())
+
+    def test_update_start_of_all_events_of_recurrence_from_outlook_attendee_calendar_keeps_ids(self):
+        """
+        Update all event start date of a recurrence from Outlook attendee calendar: the Outlook
+        ids of the organizer calendar must be kept, as they are used to update Outlook.
+        """
+        events = self._prepare_outlook_events_for_all_events_start_date_update(self.recurrent_events_count)
+
+        self._sync_outlook_events_from_attendee_calendar(events)
+
+        recurrent_events = self.recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(recurrent_events.mapped('start'), [parse(e['start']['dateTime']) for e in events[1:]])
+        self.assertEqual(recurrent_events.mapped('microsoft_id'), [e['id'] for e in events[1:]])
+
+    def test_update_start_of_all_events_of_recurrence_from_outlook_attendee_calendar_missing_event(self):
+        """
+        Update all event start date of a recurrence from Outlook attendee calendar, where
+        an occurrence is missing only from this calendar (e.g. declined by the attendee):
+        it must not be removed from Odoo.
+        """
+        events = self._prepare_outlook_events_for_all_events_start_date_update(self.recurrent_events_count)
+        missing_event = events.pop(4)
+
+        self._sync_outlook_events_from_attendee_calendar(events)
+
+        recurrent_events = self.recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(recurrent_events.mapped('start'), [parse(e['start']['dateTime']) for e in events[1:]])
+        kept_event = self.env['calendar.event'].search([('microsoft_id', '=', missing_event['id'])])
+        self.assertTrue(kept_event.active)
+
     @patch.object(MicrosoftCalendarService, 'get_events')
     def test_update_start_of_all_events_of_recurrence_with_more_events(self, mock_get_events):
         """
