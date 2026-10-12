@@ -261,6 +261,7 @@
         'wizard/blocked_third_party_domains.xml',
         'wizard/website_robots.xml',
         'wizard/website_llms.xml',
+        'wizard/website_duplicate.xml',
         # Replaces a post_init_hook that should be run on upgrade too.
         'data/update_theme_images.xml',
         'views/website_templates_svg.xml',
