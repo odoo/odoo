@@ -418,7 +418,7 @@ class EventTrackController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>/track_proposal/post'''], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
-        if not event.can_access_from_current_website():
+        if not event.can_access_from_current_website() or not event.website_track_proposal:
             return json.dumps({'error': 'forbidden'})
 
         # Only accept existing tag indices. Use search instead of browse + exists:
