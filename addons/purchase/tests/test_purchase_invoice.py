@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import timedelta
 
+from freezegun import freeze_time
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
@@ -829,6 +831,38 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         analytic_account.invalidate_recordset(['purchase_order_count'])
         self.assertEqual(analytic_account.purchase_order_count, 1)
         self.assertEqual(analytic_account.action_view_purchase_orders()['domain'], [['id', 'in', purchase_order.ids]])
+
+    @freeze_time('2017-01-12')
+    def test_bill_from_purchase_order_date_with_year_range_sequence(self):
+        """The accounting date of a bill created from a purchase order and dated in a
+        fiscal year that is already over is pushed to the last day of that fiscal year,
+        so the fiscal year range sequence of the purchase journal stays increasing."""
+        # The fiscal year ends on March 31st.
+        self.env.company.write({'fiscalyear_last_day': 31, 'fiscalyear_last_month': '3'})
+
+        # Give the purchase journal a sequence resetting on the fiscal year range.
+        first_bill = self._create_invoice('in_invoice', invoice_date='2015-06-01')
+        first_bill.name = 'BILL/15-16/0001'
+        first_bill.action_post()
+
+        purchase_order = self.init_purchase(confirm=True, products=[self.product_order])
+        invoice_action = purchase_order.action_create_invoice()
+        bill = self.env['account.move'].browse(invoice_action['res_id'])
+        self.assertEqual(purchase_order.invoice_ids, bill)
+
+        # Encode the vendor's bill date as the accountant would, in the form view.
+        # Its fiscal year (2015-04-01 -> 2016-03-31) is over, so the bill is
+        # accounted on the last day of it instead of on the bill date.
+        with Form(bill) as bill_form:
+            bill_form.invoice_date = fields.Date.from_string('2016-01-01')
+        self.assertRecordValues(bill, [{
+            'invoice_date': fields.Date.from_string('2016-01-01'),
+            'date': fields.Date.from_string('2016-03-31'),
+        }])
+
+        # The number follows the fiscal year of the accounting date.
+        bill.action_post()
+        self.assertEqual(bill.name, 'BILL/15-16/0002')
 
 
 @tagged('post_install', '-at_install')
