@@ -200,10 +200,10 @@ class TestReports(TestReportsCommon):
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
     def test_report_quantity_1(self):
-        product_form = Form(self.env['product.product'])
-        product_form.is_storable = True
-        product_form.name = 'Product'
-        product = product_form.save()
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'is_storable': True,
+        })
 
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         stock = self.env['stock.location'].create({
@@ -316,10 +316,10 @@ class TestReports(TestReportsCommon):
     def test_report_quantity_2(self):
         """ Not supported case.
         """
-        product_form = Form(self.env['product.product'])
-        product_form.is_storable = True
-        product_form.name = 'Product'
-        product = product_form.save()
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'is_storable': True,
+        })
 
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         stock = self.env['stock.location'].create({
@@ -373,10 +373,10 @@ class TestReports(TestReportsCommon):
         self.assertEqual(sum(product_qty for state, product_qty in report_records if state == 'forecast'), 40.0)
 
     def test_report_quantity_3(self):
-        product_form = Form(self.env['product.product'])
-        product_form.is_storable = True
-        product_form.name = 'Product'
-        product = product_form.save()
+        product = self.env['product.product'].create({
+            'name': 'Product',
+            'is_storable': True,
+        })
 
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         stock = self.env['stock.location'].create({
