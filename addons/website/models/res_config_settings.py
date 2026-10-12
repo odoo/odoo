@@ -73,6 +73,10 @@ class ResConfigSettings(models.TransientModel):
         'Google Search Console Key',
         related='website_id.google_search_console',
         readonly=False)
+    website_instagram_access_token = fields.Char(
+        "Website's Instagram Access Token",
+        related='website_id.instagram_access_token',
+        readonly=False)
     plausible_shared_key = fields.Char(
         'Plausible auth Key',
         related='website_id.plausible_shared_key',

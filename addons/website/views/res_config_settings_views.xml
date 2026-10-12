@@ -98,6 +98,18 @@
                         >
                             <field name="module_website_address_autocomplete"/>
                         </setting>
+                        <setting
+                            id="instagram_setting"
+                            string="Instagram"
+                            help="Connect your Instagram account to display your posts on your website"
+                        >
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label class="col-lg-3 o_light_label" string="Access Token" for="website_instagram_access_token"/>
+                                    <field name="website_instagram_access_token" password="True"/>
+                                </div>
+                            </div>
+                        </setting>
                     </block>
                     <block title="Tracking &amp; SEO" id="website_settings" invisible="not website_id">
                         <setting

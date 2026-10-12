@@ -150,6 +150,8 @@ class Website(models.CachedModel):
 
     google_maps_api_key = fields.Char('Google Maps API Key')
 
+    instagram_access_token = fields.Char('Instagram Access Token', groups='base.group_system')
+
     plausible_shared_key = fields.Char()
     plausible_site = fields.Char()
 
