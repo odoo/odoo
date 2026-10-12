@@ -1500,7 +1500,6 @@ export class Configurator extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.action = useService("action");
         this.website = useService("website");
 
         // Using the back button must update the router state.
@@ -1707,14 +1706,21 @@ export class Configurator extends Component {
             title: _t("Building your website."),
             bottomMessageTemplate: "website.website_loader.tour_tip",
         });
-        const redirectUrl = await this.orm.call("website", "configurator_skip");
+        await this.orm.call("website", "configurator_skip");
         this.clearStorage();
-        redirectUrl.params.path = "/website/lang/default?r=/";
-        redirectUrl.params.enable_editor = true;
         // Here the website service goToWebsite method is not used because
         // the web client needs to be reloaded after the configurator has
         // updated the website.
-        await this.action.doAction(redirectUrl);
+        const defaultLanguagePath = encodeURIComponent("/website/lang/default?r=/");
+        this.website.redirectOutFromLoader({
+            redirectAction: () => {
+                redirect(
+                    `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
+                        this.websiteId
+                    )}&path=${defaultLanguagePath}&enable_editor=1`
+                );
+            },
+        });
     }
 }
 
