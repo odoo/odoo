@@ -7,6 +7,7 @@ import {
     onWillDestroy,
     Plugin,
     proxy,
+    signal,
     untrack,
     usePlugin,
 } from "@odoo/owl";
@@ -138,7 +139,7 @@ export class DateTimePickerPlugin extends Plugin {
         function focusActiveInput() {
             const inputEl = getInput(pickerProps.focusedDateIndex);
             if (!inputEl) {
-                shouldFocus = true;
+                shouldFocus.set(true);
                 return;
             }
 
@@ -361,7 +362,7 @@ export class DateTimePickerPlugin extends Plugin {
 
             setFocusClass(inputEl);
 
-            shouldFocus = false;
+            shouldFocus.set(false);
         }
 
         function setup() {
@@ -402,7 +403,7 @@ export class DateTimePickerPlugin extends Plugin {
                 }
             }
 
-            shouldFocus = true;
+            shouldFocus.set(true);
         }
 
         /**
@@ -541,7 +542,7 @@ export class DateTimePickerPlugin extends Plugin {
         let strPickerProps = JSON.stringify(pickerProps);
         /** @type {(() => void) | null} */
         let restoreTargetMargin = null;
-        let shouldFocus = false;
+        const shouldFocus = signal(false);
         /** @type {Partial<DateTimePickerProps>} */
         let stringProps = {};
 
@@ -591,7 +592,7 @@ export class DateTimePickerPlugin extends Plugin {
             onPatched(initInputsIfChanged);
 
             onPatched(() => {
-                if (shouldFocus && isOpen() && !this.shouldUseBottomSheet()) {
+                if (shouldFocus() && isOpen() && !this.shouldUseBottomSheet()) {
                     focusActiveInput();
                 }
             });
