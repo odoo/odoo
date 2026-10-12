@@ -16,7 +16,7 @@
                             <li t-attf-class="breadcrumb-item #{'active' if not view_user else ''}">
                                 <a href="/profile/users">Users</a>
                             </li>
-                            <li t-if="view_user" class="breadcrumb-item active">
+                            <li t-if="view_user" class="breadcrumb-item active" aria-current="page">
                                 <a><t t-out="view_user"/></a>
                             </li>
                         </ol>

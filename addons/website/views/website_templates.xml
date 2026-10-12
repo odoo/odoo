@@ -3412,7 +3412,7 @@ Disallow: /*/my/*
 
 <template id="step_wizard" name="Step Checkout">
     <!-- wizard_step: A recordset of all published website.checkout.steps-->
-    <div class="o_wizard d-flex flex-wrap row-gap-2 my-3 small">
+    <div class="o_wizard d-flex flex-wrap row-gap-2 my-3 small" aria-label="Checkout steps">
         <t t-foreach="wizard_step" t-as="step">
             <t
                 t-set="is_current_step"
@@ -3426,6 +3426,7 @@ Disallow: /*/my/*
                 <div
                     name="step_name"
                     t-attf-class="d-flex align-items-center {{'fw-bold' if is_current_step else 'text-muted'}}"
+                    t-att-aria-current="'step' if is_current_step else None"
                 >
                     <p class="text-center mb-0">
                         <span t-field="step.name"/>
