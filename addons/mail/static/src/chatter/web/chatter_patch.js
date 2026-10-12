@@ -51,8 +51,6 @@ Object.assign(Chatter.components, {
 
 /**
  * @type {import("@mail/chatter/web_portal_project/chatter").Chatter }
- * @typedef {Object} Props
- * @property {function} [close]
  */
 const chatterPatch = {
     setup() {
@@ -62,7 +60,6 @@ const chatterPatch = {
         this.onActivityChanged = this.onActivityChanged.bind(this);
         this.reloadParentView = this.reloadParentView.bind(this);
         this.webChatterProps = useProps({
-            close: t.function([]).optional(),
             has_activities: t.boolean().optional(true),
             hasAttachmentPreview: t.boolean().optional(false),
             hasParentReloadOnActivityChanged: t.boolean().optional(false),
@@ -71,7 +68,6 @@ const chatterPatch = {
             hasParentReloadOnMessagePosted: t.boolean().optional(false),
             isAttachmentBoxVisibleInitially: t.boolean().optional(false),
             isChatterAside: t.boolean().optional(false),
-            isInFormSheetBg: t.boolean().optional(true),
             record: t.instanceOf(Record).optional(),
             saveRecord: t.function([]).optional(),
         });
@@ -79,7 +75,6 @@ const chatterPatch = {
         // window from the messaging menu), fall back to the one carried by the action
         // context.
         this.highlightMessage ??= this.webChatterProps.record?.context?.highlight_message_id;
-        this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
         useEffect(() => {
             const record = this.webChatterProps.record;
@@ -283,9 +278,6 @@ const chatterPatch = {
         return _t("Show Followers");
     },
 
-    get followingText() {
-        return _t("Following");
-    },
     get hasPinnedMessages() {
         return (
             this.state.thread?.has_pinned_messages || this.state.thread?.pinnedMessages?.length > 0
@@ -463,10 +455,6 @@ const chatterPatch = {
         this.load(thread, ["scheduledMessages", "messages"]);
         // sending a message could trigger another action (eg. move so to quotation sent)
         this.reloadParentView();
-    },
-
-    onSuggestedRecipientAdded(thread) {
-        this.load(thread, ["suggestedRecipients"]);
     },
 
     /** @param {import("models").Thread} thread */

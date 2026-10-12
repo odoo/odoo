@@ -63,7 +63,6 @@ patch(FormCompiler.prototype, {
         );
         setAttributes(chatterContainerXml, {
             isChatterAside: "false",
-            isInFormSheetBg: "false",
             saveRecord: "__comp__.props.saveRecord",
         });
         if (chatterContainerHookXml.parentNode.classList.contains("o_form_sheet")) {
@@ -88,17 +87,9 @@ patch(FormCompiler.prototype, {
                 "t-if": `__comp__.mailLayout(${hasPreview}) == "COMBO"`,
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
-            const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector(
-                "t[t-component='__comp__.mailComponents.Chatter']"
-            );
-            setAttributes(sheetBgChatterContainerXml, {
-                isInFormSheetBg: "true",
-                isChatterAside: "false",
-            });
         }
         // after sheet bg (standard position, either aside or below)
         setAttributes(chatterContainerXml, {
-            isInFormSheetBg: `["COMBO", "BOTTOM_CHATTER"].includes(__comp__.mailLayout(${hasPreview}))`,
             isChatterAside: `["SIDE_CHATTER", "EXTERNAL_COMBO_XXL"].includes(__comp__.mailLayout(${hasPreview}))`,
         });
         const { ["t-if"]: tIf } = extractAttributes(chatterContainerHookXml, ["t-if"]);
