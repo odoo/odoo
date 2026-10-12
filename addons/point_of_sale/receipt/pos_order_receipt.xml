@@ -140,7 +140,7 @@
                             </div>
                             <div t-if="partner.get('street')"><span t-out="partner['street']"/></div>
                             <div t-if="partner.get('city') or partner.get('zip')">
-                                <span t-out="partner.get('zip', '')"/>&#160;<span t-out="partner.get('city', '')"/>
+                                <span t-out="partner['zip'] || ''"/><t t-if="partner['city'] and partner['zip']">&#160;</t><span t-out="partner['city'] || ''"/>
                             </div>
                         </t>
                         <div t-if="order['mobile']"><span t-out="order['mobile']"/></div>
