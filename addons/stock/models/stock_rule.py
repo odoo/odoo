@@ -705,6 +705,8 @@ class StockRule(models.Model):
 
         orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
 
+        self._recompute_manual_orderpoints_qty_to_order()
+
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain(company_id)
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
@@ -748,3 +750,10 @@ class StockRule(models.Model):
         if company_id:
             domain += [('company_id', '=', company_id)]
         return domain
+
+    @api.model
+    def _recompute_manual_orderpoints_qty_to_order(self, company_id=False):
+        domain = [('trigger', '=', 'manual'), ('product_id.active', '=', True)]
+        if company_id:
+            domain += [('company_id', '=', company_id)]
+        self.env['stock.warehouse.orderpoint'].search(domain).sudo()._compute_qty_to_order_computed()
