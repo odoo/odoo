@@ -1,0 +1,22 @@
+/* Message of an empty screen */
+.o_nocontent_help {
+    pointer-events: auto;
+    max-width: 650px;
+    margin: auto;
+    padding: 15px;
+    z-index: 1000;
+    text-align: center;
+    color: var(--o-bs-body-color, var(--body-color));
+    font-size: 115%;
+
+    > p:first-of-type {
+        margin-top: 0;
+        color: var(--o-bs-headings-color, var(--heading-color));
+        font-weight: bold;
+        font-size: 125%;
+    }
+
+    a {
+        cursor: pointer;
+    }
+}

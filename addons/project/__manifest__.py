@@ -170,6 +170,7 @@
             'web/static/src/core/utils/transitions.scss',
             'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/**/*.dark.scss'),
+            'web/static/src/css/**/*',
             'web/static/src/model/**/*',
             'web/static/src/search/**/*',
             'web/static/src/webclient/icons.scss', # variables required in list_controller.scss

@@ -225,6 +225,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
             ('remove', 'web/static/src/core/**/*.dark.scss'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
+            'web/static/src/css/**/*',
             'web/static/src/core/commands/default_providers.js',
             'web/static/src/core/commands/command_palette.js',
             'web/static/src/public/**/*.js',
@@ -365,6 +366,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/**/*.dark.scss'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'), # always lazy-loaded
+            'web/static/src/css/**/*',
         ],
         'web._assets_primary_variables': [
             'web/static/src/scss/primary_variables.scss',
