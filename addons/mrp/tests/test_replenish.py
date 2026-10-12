@@ -445,3 +445,17 @@ class TestMrpReplenish(TestMrpCommon):
             ('location_dest_id.usage', '=', 'internal'),
         ]).route_id
         self.assertIn(wizard_form.route_id.id, manufacture_routes.ids)
+
+    def test_multicompany_mo_deadline_from_orderpoint(self):
+        """Test that an orderpoint's company determines its MO deadline."""
+        company_2 = self.env['res.company'].create({'name': 'Company 2', 'horizon_days': 30})
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.bom_1.product_id.id,
+            'product_min_qty': 5,
+            'product_max_qty': 10,
+        })
+        for company in (company_2, self.env.company):
+            orderpoint.with_company(company).action_replenish()
+            mo = self.env['mrp.production'].search([('orderpoint_id', '=', orderpoint.id), ('state', '!=', 'cancel')])
+            self.assertEqual(orderpoint.deadline_date, mo.date_deadline.date())
+            mo.action_cancel()
