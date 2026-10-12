@@ -1256,6 +1256,18 @@ class AccountEdiCii(models.AbstractModel):
             and billed_quantity
         ):
             quantity = billed_quantity
+
+            # Some suppliers report the item price discount (BT-147) a second time as a line allowance (BT-136)
+            # without deducting it from the line total (BT-131), i.e. BT-131 = net price * quantity + charges.
+            # In that case, the line allowances are only informative and must not be applied twice.
+            if price_amount and price_discount_amount and total_allowances:
+                net_amount = price_amount * quantity / price_quantity + total_charges
+                if (
+                    currency.compare_amounts(net_amount - total_allowances, line_total_amount) != 0
+                    and currency.compare_amounts(net_amount, line_total_amount) == 0
+                ):
+                    total_allowances = 0.0
+
             price_unit = subtotal / quantity
             discount_amount = total_allowances
 
