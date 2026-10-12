@@ -141,17 +141,6 @@
     }
 }
 
-@mixin o-message-bubble-colors {
-    .o-mail-Message-bubble, .o-mail-Message-bubbleTail {
-        @each $_type in map-keys($o-bubble-colors) {
-            &.#{$_type} {
-                @include o-bubble-color-vars($_type);
-            }
-        }
-    }
-}
-@include o-message-bubble-colors;
-
 .o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
     flex-direction: row-reverse;
 

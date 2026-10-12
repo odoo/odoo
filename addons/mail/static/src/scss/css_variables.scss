@@ -11,4 +11,21 @@
     --o-mail-Chatter-minWidth: #{$o-mail-Chatter-minWidth};
     --o-mail-Meeting-bgColor: #{$o-mail-Meeting-bgColor};
     --o-mail-Message-sidebarWidth: #{$o-mail-Message-sidebarWidth};
+
+    /* Tints of the messages and chat bubble previews with a bubble color */
+    @each $-type, $-color in (blue: $info, green: $success, orange: $warning) {
+        @if $o-webclient-color-scheme == dark {
+            $-dark-color: if($-type == blue, darken($info, 10%), if($-type == green, lighten($success, 2.5%), $warning));
+            $-base-bg: mix($white, $gray-100, 35%);
+            --o-mail-bubble-#{$-type}-bg: #{mix($-base-bg, $-dark-color, if($-type == orange, 55%, 75%))};
+            --o-mail-bubble-#{$-type}-bg-muted: #{mix(mix($white, $gray-100, 75%), $-dark-color, 82.5%)};
+            --o-mail-bubble-#{$-type}-border-color: #{mix($-base-bg, mix($-dark-color, $body-color, 90%), 70%)};
+            --o-mail-bubble-#{$-type}-color-base: #{$-dark-color};
+        } @else {
+            --o-mail-bubble-#{$-type}-bg: #{mix($o-view-background-color, $-color, if($-type == orange, 80%, 90%))};
+            --o-mail-bubble-#{$-type}-bg-muted: color-mix(in srgb, #{$o-view-background-color} 97.5%, #{$-color} 2.5%);
+            --o-mail-bubble-#{$-type}-border-color: #{mix($o-view-background-color, mix($-color, $body-color, 75%), if($-type == orange, 65%, 80%))};
+            --o-mail-bubble-#{$-type}-color-base: #{$-color};
+        }
+    }
 }

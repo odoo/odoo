@@ -44,32 +44,30 @@ $o-discuss-talkingColor: lighten($success, 10%);
     @return calc((#{$border-radius} + #{$border-radius-lg}) * 7 / 8);
 }
 
-// Colors used to tint a `bubbleColor`-ed message's bubble.
-// See `o-bubble-color-vars` below.
-$o-bubble-colors: (
-    'o-blue': $info,
-    'o-green': $success,
-    'o-orange': $warning,
-);
-
-// Sets the CSS custom properties of bubbleColor. These are consumed by
-// specific component that wants the bubbleColor tint with the color
-// registered for $type in $o-bubble-colors.
-@mixin o-bubble-color-vars($type) {
-    $_color: map-get($o-bubble-colors, $type);
-    $_border-base: mix($_color, $body-color, 75%);
-    // The orange bubble marks an important message: given it more tint/contrast
-    // than the other colors makes it stand out in the conversation at a glance.
-    $_bg-ratio: if($type == 'o-orange', 80%, 90%);
-    $_border-ratio: if($type == 'o-orange', 65%, 80%);
-    --o-bubble-bg: #{mix($o-view-background-color, $_color, $_bg-ratio)};
-    --o-bubble-bg-muted: #{color-mix(
-        in srgb,
-        #{$o-view-background-color} 97.5%,
-        var(--o-bubble-color-base) 2.5%
-    )};
-    --o-bubble-border-color: #{mix($o-view-background-color, $_border-base, $_border-ratio)};
-    --o-bubble-color-base: #{$_color};
+/* Tint of the messages and chat bubble previews with a bubble color */
+.o-mail-Message-bubble.o-blue,
+.o-mail-Message-bubbleTail.o-blue,
+.o_popover:has(> .o-mail-ChatBubble-preview.o-blue) {
+    --o-bubble-bg: var(--o-mail-bubble-blue-bg);
+    --o-bubble-bg-muted: var(--o-mail-bubble-blue-bg-muted);
+    --o-bubble-border-color: var(--o-mail-bubble-blue-border-color);
+    --o-bubble-color-base: var(--o-mail-bubble-blue-color-base);
+}
+.o-mail-Message-bubble.o-green,
+.o-mail-Message-bubbleTail.o-green,
+.o_popover:has(> .o-mail-ChatBubble-preview.o-green) {
+    --o-bubble-bg: var(--o-mail-bubble-green-bg);
+    --o-bubble-bg-muted: var(--o-mail-bubble-green-bg-muted);
+    --o-bubble-border-color: var(--o-mail-bubble-green-border-color);
+    --o-bubble-color-base: var(--o-mail-bubble-green-color-base);
+}
+.o-mail-Message-bubble.o-orange,
+.o-mail-Message-bubbleTail.o-orange,
+.o_popover:has(> .o-mail-ChatBubble-preview.o-orange) {
+    --o-bubble-bg: var(--o-mail-bubble-orange-bg);
+    --o-bubble-bg-muted: var(--o-mail-bubble-orange-bg-muted);
+    --o-bubble-border-color: var(--o-mail-bubble-orange-border-color);
+    --o-bubble-color-base: var(--o-mail-bubble-orange-color-base);
 }
 
 .o-discuss-dropdownMenu {
