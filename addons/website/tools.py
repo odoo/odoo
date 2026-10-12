@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import colorsys
 import re
+import time
 from urllib.parse import urlsplit
 
 import werkzeug.urls
@@ -217,6 +218,34 @@ def add_form_signature(html_fragment, env_sudo):
             hash_value += ':email_cc'
         hash_node = etree.Element('input', attrib={'type': "hidden", 'value': hash_value, 'class': "form-control s_website_form_input s_website_form_custom", 'name': "website_form_signature"})
         form_values['email_to'].addnext(hash_node)
+
+
+def parse_visibility_timestamp(value):
+    """ Convert ``value`` to a POSIX timestamp in seconds. The
+    BuilderDateTimePicker keeps the date and time in this format. Return None
+    if ``value`` is empty or not valid. """
+    if not value:
+        return None
+    try:
+        return int(value)
+    except ValueError:
+        return None
+
+
+def is_now_in_datetime_range(visible_from, visible_until):
+    """ Return True if the current time is in the visibility range. The range
+    includes ``visible_from`` and does not include ``visible_until``. A limit
+    that is None does not apply. """
+    now = time.time()
+    return (visible_from is None or visible_from <= now) and (visible_until is None or now < visible_until)
+
+
+def get_next_visibility_change(visible_from, visible_until):
+    """ Return the first limit of the visibility range that is after the
+    current time. Return None if the visibility does not change again. """
+    now = time.time()
+    limits = [limit for limit in (visible_from, visible_until) if limit is not None and limit > now]
+    return min(limits, default=None)
 
 
 def create_image_attachment(env, image_path, image_name):

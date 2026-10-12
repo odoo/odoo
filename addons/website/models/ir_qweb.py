@@ -5,7 +5,13 @@ from collections import OrderedDict
 
 from odoo import models
 from odoo.http import request
-from odoo.addons.website.tools import add_form_signature
+from odoo.addons.base.models.ir_qweb import indent_code
+from odoo.addons.website.tools import (
+    add_form_signature,
+    get_next_visibility_change,
+    is_now_in_datetime_range,
+    parse_visibility_timestamp,
+)
 
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
@@ -117,3 +123,60 @@ class IrQweb(models.AbstractModel):
         if isinstance(atts.get('style'), str) and 'background-image' in atts['style']:
             atts['style'] = re_background_image.sub(lambda m: '%s%s' % (m[1], url_adapter(m[2])), atts['style'])
         return atts
+
+    def _check_datetime_visibility(self, visible_from, visible_until):
+        """ Return True if the current time is in the given range. If a request
+        is present, store the time of the closest future visibility change
+        on `request.website_visibility_next_change`. This is used to determine
+        for how long the page can be cached. """
+        if request:
+            next_change = get_next_visibility_change(visible_from, visible_until)
+            known_next_change = getattr(request, 'website_visibility_next_change', None)
+            if next_change and (not known_next_change or next_change < known_next_change):
+                # A page could have different elements with their own visibility
+                # ranges. We keep track of the closest change in the future.
+                request.website_visibility_next_change = next_change
+        return is_now_in_datetime_range(visible_from, visible_until)
+
+    def _compile_directive_datetime_range(self, el, compile_context, level):
+        """ Compile the `t-datetime-range` directive.
+        Generates a t-if branch which renders the node only if the current time
+        is in the range of `data-visibility-from` and `data-visibility-until`.
+        The time check must occur at render time, because the compiled view may
+        be cached.
+        """
+        el.attrib.pop('t-datetime-range')
+        visible_from = parse_visibility_timestamp(el.get('data-visibility-from'))
+        visible_until = parse_visibility_timestamp(el.get('data-visibility-until'))
+        code = self._flush_text(compile_context, level)
+        code.append(indent_code(f"if self._check_datetime_visibility({visible_from!r}, {visible_until!r}):", level))
+        code.extend([
+            *self._compile_directives(el, compile_context, level + 1),
+            *self._flush_text(compile_context, level + 1, rstrip=True),
+        ] or [indent_code('pass', level + 1)])
+
+        return code
+
+    def _directives_eval_order(self):
+        directives = super()._directives_eval_order()
+        directives.insert(directives.index('if') + 1, 'datetime-range')
+        return directives
+
+    def _compile_node(self, el, compile_context, level):
+        """ Add `t-datetime-range` to conditionally-visible nodes that have
+        `data-visibility-from` and/or `data-visibility-until`. Then
+        `_compile_directive_datetime_range` removes the node from the HTML
+        document when the current time is out of range. Thus, the visitor
+        cannot see the node in the page source.
+
+        Do not add the directive when branding is active (edit mode or
+        translation mode), because the user must be able to edit or translate
+        the node. In this case, `hideOutOfDatetimeRangeElements` hides the node
+        in the browser. """
+        is_branded = compile_context.get("inherit_branding") or compile_context.get("edit_translations")
+        if not is_branded:
+            is_conditional = el.attrib.get("data-visibility") == "conditional"
+            has_datetime_range = "data-visibility-from" in el.attrib or "data-visibility-until" in el.attrib
+            if is_conditional and has_datetime_range:
+                el.set('t-datetime-range', 'True')
+        return super()._compile_node(el, compile_context, level)
