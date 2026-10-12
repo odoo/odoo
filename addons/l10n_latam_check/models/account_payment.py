@@ -27,6 +27,7 @@ class AccountPayment(models.Model):
 
     @api.constrains('state', 'move_id')
     def _check_move_id(self):
+        super()._check_move_id()
         for payment in self:
             if (
                 not payment.move_id and

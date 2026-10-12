@@ -191,7 +191,7 @@ class SaleOrder(models.Model):
         for order in self:
             declaration = order.l10n_it_edi_doi_id
             if not declaration:
-                return
+                continue
             partner = order.partner_id.commercial_partner_id
             errors = declaration._get_validity_warnings(
                 order.company_id, partner, order.currency_id, order.l10n_it_edi_doi_date, only_blocking=True, sales_order=True

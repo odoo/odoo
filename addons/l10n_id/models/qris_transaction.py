@@ -30,8 +30,10 @@ class L10n_IdQrisTransaction(models.Model):
     @api.constrains('model')
     def _constraint_model(self):
         # only allow supported models
-        if self.model not in self._get_supported_models():
-            raise ValidationError(_("QRIS capability is not extended to model %s yet!", self.model))
+        supported_models = self._get_supported_models()
+        for transaction in self:
+            if transaction.model not in supported_models:
+                raise ValidationError(_("QRIS capability is not extended to model %s yet!", transaction.model))
 
     def _get_record(self):
         """ Get the backend invoice record that the qris transaction is handling
