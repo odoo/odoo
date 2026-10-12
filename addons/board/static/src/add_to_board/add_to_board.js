@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { rpc } from "@web/core/network/rpc";
+import { rpc, rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { Component, proxy, signal } from "@odoo/owl";
@@ -61,13 +61,10 @@ export class AddToBoard extends Component {
         });
 
         if (result) {
-            this.notification.add(
-                _t("Please refresh your browser for the changes to take effect."),
-                {
-                    title: _t("“%s” added to dashboard", this.state.name),
-                    type: "warning",
-                }
-            );
+            rpcBus.trigger("CLEAR-CACHES", "get_views");
+            this.notification.add(_t("“%s” added to dashboard", this.state.name), {
+                type: "success",
+            });
             this.state.name = this.env.config.getDisplayName();
         } else {
             this.notification.add(_t("Could not add filter to dashboard"), {
