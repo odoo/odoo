@@ -52,8 +52,9 @@ class SaleOrderLine(models.Model):
 
     @api.constrains('event_booth_registration_ids')
     def _check_event_booth_registration_ids(self):
-        if len(self.event_booth_registration_ids.event_booth_id.event_id) > 1:
-            raise ValidationError(_('Registrations from the same Order Line must belong to a single event.'))
+        for so_line in self:
+            if len(so_line.event_booth_registration_ids.event_booth_id.event_id) > 1:
+                raise ValidationError(_('Registrations from the same Order Line must belong to a single event.'))
 
     @api.onchange('product_id')
     def _onchange_product_id_booth(self):

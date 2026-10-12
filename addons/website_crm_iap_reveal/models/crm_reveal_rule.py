@@ -79,11 +79,12 @@ class CrmRevealRule(models.Model):
 
     @api.constrains('regex_url')
     def _check_regex_url(self):
-        try:
-            if self.regex_url:
-                re.compile(self.regex_url)
-        except Exception:
-            raise ValidationError(_('Enter Valid Regex.'))
+        for rule in self:
+            try:
+                if rule.regex_url:
+                    re.compile(rule.regex_url)
+            except re.error:
+                raise ValidationError(_('Enter Valid Regex.'))
 
     def action_get_lead_tree_view(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
