@@ -99,17 +99,6 @@
     }
 }
 
-@mixin o-chat-bubble-preview-colors {
-    .o_popover {
-        @each $_type in map-keys($o-bubble-colors) {
-            &:has(> .o-mail-ChatBubble-preview.#{$_type}) {
-                @include o-bubble-color-vars($_type);
-            }
-        }
-    }
-}
-@include o-chat-bubble-preview-colors;
-
 .o-mail-ChatBubble-status {
     z-index: 6;
     bottom: 0px;
