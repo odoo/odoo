@@ -958,3 +958,122 @@ class TestPosMrp(TestPointOfSaleCommon):
         # Close the PoS session - this should not raise a singleton error
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed')
+
+    def test_bom_kit_different_uom_invoice_valuation_avco(self):
+        """This test make sure that when a kit is made of product using UoM A but the bom line uses UoM B
+            the price unit is correctly computed on the invoice lines.
+        """
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        category = self.env['product.category'].create({
+            'name': 'Category for kit',
+            'property_cost_method': 'average',
+            'property_valuation': 'real_time',
+        })
+
+        self.kit = self.env['product.product'].create({
+            'name': 'Final Kit',
+            'available_in_pos': True,
+            'taxes_id': False,
+            'is_storable': True,
+        })
+
+        self.component_a = self.env['product.product'].create({
+            'name': 'Comp A',
+            'categ_id': category.id,
+            'taxes_id': False,
+            'uom_id': self.env.ref('uom.product_uom_dozen').id,
+            'is_storable': True,
+        })
+
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_tmpl_id = self.kit.product_tmpl_id
+        bom_product_form.product_qty = 1.0
+        bom_product_form.type = 'phantom'
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.component_a
+            bom_line.product_qty = 2.0
+            bom_line.product_uom_id = self.env.ref('uom.product_uom_unit')
+        self.bom_a = bom_product_form.save()
+
+        picking_type_in = self.env['stock.picking.type'].search([
+            ('code', '=', 'incoming')
+        ], limit=1)
+        picking1 = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_in.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': picking_type_in.default_location_dest_id.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.component_a.name,
+            'product_id': self.component_a.id,
+            'product_uom_qty': 1.0,
+            'product_uom': self.component_a.uom_id.id,
+            'picking_id': picking1.id,
+            'location_id': picking1.location_id.id,
+            'location_dest_id': picking1.location_dest_id.id,
+            'price_unit': 12.0,
+        })
+        picking1.action_confirm()
+        picking1.button_validate()
+
+        self.assertEqual(self.component_a.standard_price, 12)
+
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        order_data = {'to_invoice': False,
+            'amount_paid': 5.0,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 5.0,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'lines': [[0,
+                        0,
+                        {'discount': 0,
+                        'pack_lot_ids': [],
+                        'price_unit': 5,
+                        'product_id': self.kit.id,
+                        'price_subtotal': 5,
+                        'price_subtotal_incl': 5,
+                        'qty': 1,
+                        'tax_ids': []}],
+                        ],
+                'name': 'Order 00042-003-0014',
+                'partner_id': self.partner1.id,
+                'session_id': current_session.id,
+                'sequence_number': 2,
+                'payment_ids': [[0,
+                                    0,
+                                    {'amount': 5.0,
+                                    'name': fields.Datetime.now(),
+                                    'payment_method_id': self.cash_payment_method.id}]],
+                'uuid': '00042-003-0014',
+                'user_id': self.env.uid}
+        order = self.env['pos.order'].sync_from_ui([order_data])
+        order = self.env['pos.order'].browse(order['pos.order'][0]['id'])
+
+        picking2 = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_in.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': picking_type_in.default_location_dest_id.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.component_a.name,
+            'product_id': self.component_a.id,
+            'product_uom_qty': 1.0,
+            'product_uom': self.component_a.uom_id.id,
+            'picking_id': picking2.id,
+            'location_id': picking2.location_id.id,
+            'location_dest_id': picking2.location_dest_id.id,
+            'price_unit': 24.0,
+        })
+        picking2.action_confirm()
+        picking2.button_validate()
+        self.assertEqual(fields.Float.round(self.component_a.standard_price, 2), 18.55)
+
+        current_session.action_pos_session_closing_control()
+
+        accounts = self.kit.product_tmpl_id.get_product_accounts()
+        interim_line = current_session.move_id.line_ids.filtered(lambda l: l.account_id.id == accounts['stock_output'].id)
+        self.assertEqual(interim_line.balance, -2)
