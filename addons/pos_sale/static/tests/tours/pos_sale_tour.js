@@ -740,6 +740,7 @@ registry.category("web_tour.tours").add("test_settle_cancelled_sale_order", {
         ].flat(),
 });
 
+<<<<<<< HEAD
 registry.category("web_tour.tours").add("test_settle_so_archived_attribute", {
     steps: () =>
         [
@@ -783,6 +784,8 @@ registry.category("web_tour.tours").add("test_settled_line_price_is_not_crossed_
         ].flat(),
 });
 
+=======
+>>>>>>> 2631b9adefb8 ([FIX] pos_sale: show fully downpaid SO in PoS)
 registry.category("web_tour.tours").add("test_full_down_payment_so_still_listed", {
     steps: () =>
         [
@@ -795,7 +798,11 @@ registry.category("web_tour.tours").add("test_full_down_payment_so_still_listed"
                 run: "click",
             },
             Numpad.enterValue("100"),
+<<<<<<< HEAD
             Dialog.confirm("Apply"),
+=======
+            Dialog.confirm("Ok"),
+>>>>>>> 2631b9adefb8 ([FIX] pos_sale: show fully downpaid SO in PoS)
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
