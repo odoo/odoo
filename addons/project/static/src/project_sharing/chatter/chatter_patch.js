@@ -1,7 +1,7 @@
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 import { providePlugins, t, usePlugin, useProps } from "@odoo/owl";
 import { ProjectSharingPlugin } from "@project/project_sharing/chatter/project_sharing_plugin";
-import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
 
 patch(Chatter.prototype, {
@@ -15,7 +15,7 @@ patch(Chatter.prototype, {
         Object.assign(this.state, {
             isFollower: this.projectSharingProps.isFollower,
         });
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         providePlugins([ProjectSharingPlugin]);
         this.projectSharingPlugin = usePlugin(ProjectSharingPlugin);
         this.projectSharingPlugin.projectSharingId.set(this.projectSharingProps.projectSharingId);

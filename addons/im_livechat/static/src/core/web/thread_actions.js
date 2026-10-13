@@ -63,7 +63,7 @@ patch(joinChannelAction, {
     },
     async onSelected({ channel, store }) {
         if (channel.livechat_status === "need_help") {
-            const hasJoined = await store.env.services.orm.call(
+            const hasJoined = await store.orm.call(
                 "discuss.channel",
                 "livechat_join_channel_needing_help",
                 [[channel.id]]

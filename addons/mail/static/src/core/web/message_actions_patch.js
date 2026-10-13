@@ -91,14 +91,9 @@ registerMessageAction("forward", {
             signature: thread.effectiveSelf.main_user_id?.getSignatureBlock(),
         });
         const attachmentIds = message.attachment_ids.map((a) => a.id);
-        const newAttachmentIds = await store.env.services.orm.call(
-            "ir.attachment",
-            "copy",
-            [attachmentIds],
-            {
-                default: { res_model: "mail.compose.message", res_id: 0 },
-            }
-        );
+        const newAttachmentIds = await store.orm.call("ir.attachment", "copy", [attachmentIds], {
+            default: { res_model: "mail.compose.message", res_id: 0 },
+        });
         const context = {
             default_attachment_ids: newAttachmentIds,
             default_body: body,

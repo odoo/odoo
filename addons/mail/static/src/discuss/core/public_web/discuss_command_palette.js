@@ -26,7 +26,6 @@ class CreateChannelDialog extends Component {
             name: t.string().optional(),
         });
         this.store = useService("mail.store");
-        this.orm = useService("orm");
         this.state = proxy({
             name: this.props.name || "",
             isInvalid: false,
@@ -128,7 +127,6 @@ export class DiscussCommandPalette {
         this.dialog = env.services.dialog;
         /** @type {import("models").Store} */
         this.store = env.services["mail.store"];
-        this.orm = env.services.orm;
         this.suggestion = env.services["mail.suggestion"];
         this.ui = env.services.ui;
         this.commands = [];

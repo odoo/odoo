@@ -1,10 +1,12 @@
 import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
+import { usePlugin } from "@odoo/owl";
 
 export class ActivityCalendarYearPopover extends CalendarYearPopover {
     setup() {
         super.setup();
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.actionService = useService("action");
     }
 

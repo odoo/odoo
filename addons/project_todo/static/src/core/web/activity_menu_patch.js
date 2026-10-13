@@ -3,12 +3,14 @@ import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useCommand } from "@web/core/commands/command_hook";
 import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
+import { usePlugin } from "@odoo/owl";
 
 patch(ActivityMenu.prototype, {
     setup() {
         super.setup(...arguments);
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.dialogService = useService("dialog");
         useCommand(
             _t("Add a To-Do"),

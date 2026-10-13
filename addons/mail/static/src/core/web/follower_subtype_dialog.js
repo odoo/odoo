@@ -92,7 +92,7 @@ export class FollowerSubtypeDialog extends Component {
         );
         let followerRemoved = false;
         if (updateAll) {
-            await this.env.services.orm.call(
+            await this.store.orm.call(
                 thread.model,
                 "message_update_siblings_subscription",
                 [[thread.id]],
@@ -105,7 +105,7 @@ export class FollowerSubtypeDialog extends Component {
             await this.props.follower.remove();
             followerRemoved = true;
         } else {
-            await this.env.services.orm.call(thread.model, "message_subscribe", [[thread.id]], {
+            await this.store.orm.call(thread.model, "message_subscribe", [[thread.id]], {
                 partner_ids: [this.props.follower.partner_id.id],
                 subtype_ids: selectedSubtypes.map((subtype) => subtype.id),
             });

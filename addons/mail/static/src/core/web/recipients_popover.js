@@ -1,9 +1,9 @@
 import { PopoverCard } from "@mail/core/common/popover_card/popover_card";
 
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 
-import { Component, onWillStart, types, useProps } from "@odoo/owl";
+import { Component, onWillStart, types, usePlugin, useProps } from "@odoo/owl";
 
 /**
  * This popover is used to show a card with details for the recipients' partner with its name,
@@ -20,7 +20,7 @@ export class RecipientsPopover extends Component {
             id: types.number(),
             viewProfileBtnOverride: types.function([]),
         });
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         onWillStart(async () => {
             [this.partner] = await this.orm.read("res.partner", [this.props.id], this.fieldNames);
         });

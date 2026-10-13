@@ -1,14 +1,16 @@
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { user } from "@web/core/user";
+import { usePlugin } from "@odoo/owl";
 
 /** @type {MessagingMenu} */
 const messagingMenuPatch = {
     setup() {
         super.setup();
         this.action = useService("action");
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
     },
 
     /** @type {Parameters<MessagingMenu.prototype.onClickMessage>} */

@@ -1,7 +1,8 @@
-import { onWillStart } from "@odoo/owl";
+import { onWillStart, usePlugin } from "@odoo/owl";
 import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { referenceField, ReferenceField } from "@web/views/fields/reference/reference_field";
 
 export class MailPreviewRecordField extends ReferenceField {
@@ -14,7 +15,7 @@ export class MailPreviewRecordField extends ReferenceField {
     setup() {
         super.setup();
         this.notification = useService("notification");
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
 
         if (this.currentResId) {
             onWillStart(async () => {

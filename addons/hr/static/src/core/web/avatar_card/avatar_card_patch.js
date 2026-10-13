@@ -1,8 +1,9 @@
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
 import { user } from "@web/core/user";
-import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
+import { usePlugin } from "@odoo/owl";
 
 patch(AvatarCard, {
     get allowedModels() {
@@ -13,7 +14,7 @@ patch(AvatarCard, {
 const avatarCardPatch = {
     setup() {
         super.setup();
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
     },
     /**
      * Whether the employee's company is not active but can be activated by the

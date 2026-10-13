@@ -12,11 +12,9 @@ patch(Activity.prototype, {
 /** @type {import("models").Activity} */
 const activityPatch = {
     async rescheduleMeeting() {
-        const action = await this.store.env.services.orm.call(
-            "mail.activity",
-            "action_create_calendar_event",
-            [[this.id]]
-        );
+        const action = await this.store.orm.call("mail.activity", "action_create_calendar_event", [
+            [this.id],
+        ]);
         this.store.env.services.action.doAction(action);
     },
 };

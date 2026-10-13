@@ -1,6 +1,5 @@
 import { parseEmail } from "@mail/utils/common/format";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
-import { useService } from "@web/core/utils/hooks";
 import { isEmail } from "@web/core/utils/strings";
 
 import { Component, signal, types, useListener, useProps } from "@odoo/owl";
@@ -20,7 +19,6 @@ export class RecipientsInputTagsListPopover extends Component {
             onUpdateTag: types.function([types.string()]),
             tagToUpdate: types.object({ onDelete: types.function([]) }),
         });
-        this.orm = useService("orm");
         this.inputValue = signal("");
         this.inError = signal(false);
         useListener(window, "click", (ev) => {
