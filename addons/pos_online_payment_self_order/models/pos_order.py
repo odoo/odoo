@@ -67,7 +67,7 @@ class PosOrder(models.Model):
 
     def get_and_set_online_payments_data(self, next_online_payment_amount=False):
         res = super().get_and_set_online_payments_data(next_online_payment_amount)
-        if 'paid_order' not in res and not res.get('deleted', False) and not isinstance(next_online_payment_amount, bool):
+        if 'paid_order' not in res and not isinstance(next_online_payment_amount, bool):
             # This method is only called in the POS frontend flow, not self order.
             # If the next online payment is 0, then the online payment of the frontend
             # flow is cancelled, and the default flow is self order if it is configured.
