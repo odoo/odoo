@@ -611,12 +611,7 @@ export class DiscussChannel extends Record {
     async executeCommand(command, body = "") {
         await command.onExecute?.(this);
         if (command.methodName) {
-            await this.store.env.services.orm.call(
-                "discuss.channel",
-                command.methodName,
-                [[this.id]],
-                { body }
-            );
+            await this.store.orm.call("discuss.channel", command.methodName, [[this.id]], { body });
         }
     }
 
@@ -706,9 +701,7 @@ export class DiscussChannel extends Record {
     }
 
     async leaveChannelRpc() {
-        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
-            this.id,
-        ]);
+        await this.store.orm.silent.call("discuss.channel", "action_unfollow", [this.id]);
     }
 
     /**
@@ -801,12 +794,9 @@ export class DiscussChannel extends Record {
             (newName || this.channel_type === "group")
         ) {
             this.name = newName;
-            await this.store.env.services.orm.call(
-                "discuss.channel",
-                "channel_rename",
-                [[this.id]],
-                { name: newName }
-            );
+            await this.store.orm.call("discuss.channel", "channel_rename", [[this.id]], {
+                name: newName,
+            });
         }
     }
 

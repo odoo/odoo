@@ -23,7 +23,6 @@ export class AttachmentPanel extends Component {
         });
         this.thread = computed(() => this.props.channel.thread);
         this.offlineService = useService("offline");
-        this.ormService = useService("orm");
         this.attachmentUploadService = useService("mail.attachment_upload");
         useOnChange(
             () => [this.props.channel],

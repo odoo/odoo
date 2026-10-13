@@ -1,14 +1,15 @@
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { useSelectCreate } from "@web/views/fields/relational_utils";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { usePlugin } from "@odoo/owl";
 
 export class DiscussChannelMemberListField extends X2ManyField {
     setup() {
         super.setup();
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.selectPartners = useSelectCreate({
             activeActions: { create: false, link: true },
             onSelected: async (partnerIds) => {

@@ -18,7 +18,6 @@ export class MentionList extends Component {
 
     setup() {
         super.setup();
-        this.orm = useService("orm");
         this.store = useService("mail.store");
         this.props = useProps({
             close: t.function([]).optional(() => {}),

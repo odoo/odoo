@@ -45,7 +45,6 @@ export class Discuss extends Component {
         });
         this.menuState = computed(() => this.store.discuss.sidebarState);
         providePlugins([MessageHighlightPlugin], { thread: () => this.thread });
-        this.orm = useService("orm");
         this.effect = usePlugin(EffectPlugin);
         this.ui = usePlugin(UIPlugin);
         useAncestors({ inDiscussApp: true });

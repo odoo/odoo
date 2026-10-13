@@ -716,7 +716,7 @@ export class Thread extends Record {
     }
 
     async markAllMessagesAsRead() {
-        await this.store.env.services.orm.silent.call("mail.message", "mark_all_as_read", [
+        await this.store.orm.silent.call("mail.message", "mark_all_as_read", [
             [
                 ["model", "=", this.model],
                 ["res_id", "=", this.id],
@@ -885,13 +885,13 @@ export class Thread extends Record {
     /** @param {number} index */
     async setMainAttachmentFromIndex(index) {
         this.message_main_attachment_id = this.attachmentsInWebClientView[index];
-        await this.store.env.services.orm.call("ir.attachment", "register_as_main_attachment", [
+        await this.store.orm.call("ir.attachment", "register_as_main_attachment", [
             this.message_main_attachment_id.id,
         ]);
     }
 
     async setMessagePin(message, pinned) {
-        await this.store.env.services.orm.call(this.model, "set_message_pin", [this.id], {
+        await this.store.orm.call(this.model, "set_message_pin", [this.id], {
             message_id: message.id,
             pinned,
         });

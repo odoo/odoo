@@ -75,7 +75,7 @@ const messagingMenuPatch = {
         );
     },
     cancelNotifications(failure) {
-        return this.env.services.orm.call(failure.resModel, "notify_cancel_by_type", [], {
+        return this.store.orm.call(failure.resModel, "notify_cancel_by_type", [], {
             notification_type: failure.type,
         });
     },

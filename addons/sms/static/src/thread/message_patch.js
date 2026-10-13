@@ -13,12 +13,12 @@ patch(Message.prototype, {
             hasAccountFailure &&
             (await user.hasGroup("base.group_system"))
         ) {
-            const [accountId] = await this.env.services.orm.call("iap.account", "get", [], {
+            const [accountId] = await this.store.orm.call("iap.account", "get", [], {
                 service_name: "sms",
                 force_create: false,
             });
             if (accountId) {
-                const action = await this.env.services.orm.call("iap.account", "action_manage", [accountId]);
+                const action = await this.store.orm.call("iap.account", "action_manage", [accountId]);
                 this.env.services.action.doAction(action);
             }
         }

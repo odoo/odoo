@@ -1,5 +1,5 @@
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
-import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
 import { WebClient } from "@web/webclient/webclient";
 import { onWillDestroy, usePlugin } from "@odoo/owl";
@@ -13,7 +13,7 @@ patch(WebClient.prototype, {
      */
     setup() {
         super.setup();
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.notification = usePlugin(NotificationPlugin);
         if (this._canSendNativeNotification) {
             this.env.bus.addEventListener("WEB_CLIENT_READY", () => this._subscribePush(), {
@@ -64,10 +64,11 @@ patch(WebClient.prototype, {
         // This may occur if the subscription was refreshed by the browser,
         // but it may also happen if the subscription has been revoked or lost.
         if (!subscription) {
+            const applicationServerKey = await this._getApplicationServerKey();
             try {
                 subscription = await pushManager.subscribe({
                     userVisibleOnly: true,
-                    applicationServerKey: await this._getApplicationServerKey(),
+                    applicationServerKey,
                 });
             } catch (error) {
                 console.warn(error);
@@ -101,6 +102,11 @@ patch(WebClient.prototype, {
             );
             await this.orm.call(USER_DEVICES_MODEL, "register_devices", [], kwargs);
         } catch (e) {
+            // The component was destroyed during the call: rethrow so the AbortError skips the
+            // error handling below and reaches the global handler, which silently ignores it.
+            if (e.name === "AbortError") {
+                throw e;
+            }
             const invalidVapidErrorClass = "odoo.addons.mail.tools.jwt.InvalidVapidError";
             const warningMessage = "Error sending subscription information to the server";
             if (e.data?.name === invalidVapidErrorClass) {

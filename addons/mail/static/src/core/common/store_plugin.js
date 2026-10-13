@@ -11,6 +11,7 @@ import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { ORM } from "@web/core/orm_plugin";
 import { PopoverPlugin } from "@web/core/popover/popover_plugin";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
@@ -185,6 +186,8 @@ export class Store extends BaseStore {
     ui;
     /** @type {NotificationPlugin} */
     notification;
+    /** @type {ORM} */
+    orm;
 
     /** @param {Readonly<Record<string, any>>} [ancestors] @see useAncestors */
     discussDropdownMenuClass(ancestors) {
@@ -858,12 +861,14 @@ export class StorePlugin extends Plugin {
     popover = usePlugin(PopoverPlugin);
     ui = usePlugin(UIPlugin);
     notification = usePlugin(NotificationPlugin);
+    orm = usePlugin(ORM);
 
     setup() {
         /** @type {import("models").Store} */
         this.store = makeStore(this.env);
         this.store.ui = this.ui;
         this.store.notification = this.notification;
+        this.store.orm = this.orm;
         this.store.insert(session.storeData);
         /**
          * Add a default for `self` because in livechat there could be no user and no guest yet

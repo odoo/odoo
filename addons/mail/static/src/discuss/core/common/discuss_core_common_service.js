@@ -10,7 +10,6 @@ export class DiscussCoreCommon {
     constructor(env, services) {
         this.busService = services.bus_service;
         this.env = env;
-        this.orm = services.orm;
         this.presence = services.presence;
         this.store = services["mail.store"];
     }
@@ -115,7 +114,7 @@ export class DiscussCoreCommon {
 }
 
 export const discussCoreCommon = {
-    dependencies: ["bus_service", "mail.out_of_focus", "mail.store", "orm", "presence"],
+    dependencies: ["bus_service", "mail.out_of_focus", "mail.store", "presence"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services

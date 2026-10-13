@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { isEmail } from "@web/core/utils/strings";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { useSelectCreate } from "@web/views/fields/relational_utils";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
@@ -12,7 +13,7 @@ import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook
 import { uniqueId } from "@web/core/utils/functions";
 import { RecipientTag, useRecipientChecker } from "./recipient_tag";
 
-import { Component, computed, signal, types, useProps } from "@odoo/owl";
+import { Component, computed, signal, types, usePlugin, useProps } from "@odoo/owl";
 
 export class RecipientsInput extends Component {
     static template = "mail.RecipientsInput";
@@ -21,7 +22,7 @@ export class RecipientsInput extends Component {
     recipientsInputRef = signal.ref();
 
     setup() {
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.store = useService("mail.store");
         this.props = useProps({
             thread: types.instanceOf(this.store["mail.thread"]),
