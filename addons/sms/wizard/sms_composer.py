@@ -99,7 +99,6 @@ class SmsComposer(models.TransientModel):
     template_name = fields.Char(string='Template Name')
 
     @api.depends('res_ids_count')
-    @api.depends_context('sms_composition_mode')
     def _compute_composition_mode(self):
         for composer in self:
             if self.env.context.get('sms_composition_mode') == 'guess' or not composer.composition_mode:
