@@ -4,6 +4,7 @@ import logging
 import pprint
 
 import werkzeug
+from markupsafe import Markup
 from psycopg2.errorcodes import SERIALIZATION_FAILURE
 from psycopg2.errors import SerializationFailure
 
@@ -142,6 +143,15 @@ class TestHttp(http.Controller):
     @http.route('/test_http/echo-json-null', type='jsonrpc', auth='none', readonly=True)
     def echo_json_null(self):
         return
+
+    @http.route('/test_http/echo-json-markup', type='jsonrpc', auth='none', readonly=True)
+    def echo_json_markup(self, **kwargs):
+        """ Echoes ``kwargs``, string values whose key starts with
+        ``markup_`` are converted to markup. """
+        return {
+            k: Markup(v) if k.startswith('markup_') and isinstance(v, str) else v
+            for k, v in kwargs.items()
+        }
 
     # =====================================================
     # Models
