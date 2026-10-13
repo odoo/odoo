@@ -121,7 +121,9 @@ class MailActivity(models.Model):
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
         index=True, required=False, ondelete='cascade',
-        compute='_compute_user_id', precompute=True, store=True, readonly=False)
+        compute='_compute_user_id', precompute=True, store=True, readonly=False,
+        domain=lambda self: [('share', '=', False), ('role', '!=', 'light_user')],
+    )
     role_id = fields.Many2one(
         'res.role', 'Role',
         index='btree_not_null', required=False, ondelete='set null',
