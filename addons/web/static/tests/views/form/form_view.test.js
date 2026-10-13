@@ -6,7 +6,6 @@ import {
     click,
     expect,
     hover,
-    manuallyDispatchProgrammaticEvent,
     middleClick,
     mockTimeZone,
     mockTouch,
@@ -49,7 +48,6 @@ import {
     mockOffline,
     MockServer,
     mockService,
-    mockUpload,
     models,
     mountView,
     mountViewInDialog,
@@ -81,7 +79,6 @@ import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { FormController } from "@web/views/form/form_controller";
-import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
 import { WebClient } from "@web/webclient/webclient";
 
 const fieldsRegistry = registry.category("fields");
@@ -10157,25 +10154,33 @@ test(`widget with readonly attribute`, async () => {
 
 test.tags("desktop");
 test(`support header button as widgets on form statusbar on desktop`, async () => {
+    class TestHeaderWidget extends Component {
+        static template = xml`<button class="o_test_header_widget">Attach document</button>`;
+    }
+    registry.category("view_widgets").add("test_header_widget", { component: TestHeaderWidget });
     await mountView({
         resModel: "partner",
         type: "form",
-        arch: `<form><header><widget name="attach_document" string="Attach document"/></header></form>`,
+        arch: `<form><header><widget name="test_header_widget"/></header></form>`,
     });
-    expect(`button.o_attachment_button`).toHaveCount(1);
-    expect(`span.o_attach_document`).toHaveText("Attach document");
+    expect(`button.o_test_header_widget`).toHaveCount(1);
+    expect(`button.o_test_header_widget`).toHaveText("Attach document");
 });
 
 test.tags("mobile");
 test(`support header button as widgets on form statusbar on mobile`, async () => {
+    class TestHeaderWidget extends Component {
+        static template = xml`<button class="o_test_header_widget">Attach document</button>`;
+    }
+    registry.category("view_widgets").add("test_header_widget", { component: TestHeaderWidget });
     await mountView({
         resModel: "partner",
         type: "form",
-        arch: `<form><header><widget name="attach_document" string="Attach document"/></header></form>`,
+        arch: `<form><header><widget name="test_header_widget"/></header></form>`,
     });
     await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
-    expect(`button.o_attachment_button`).toHaveCount(1);
-    expect(`span.o_attach_document`).toHaveText("Attach document");
+    expect(`button.o_test_header_widget`).toHaveCount(1);
+    expect(`button.o_test_header_widget`).toHaveText("Attach document");
 });
 
 test.tags("mobile");
@@ -13197,6 +13202,10 @@ test(`statusbar buttons are correctly rendered in mobile`, async () => {
 
 test.tags("mobile");
 test(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
+    class TestHeaderWidget extends Component {
+        static template = xml`<button class="o_test_header_widget">Attach document</button>`;
+    }
+    registry.category("view_widgets").add("test_header_widget", { component: TestHeaderWidget });
     await mountView({
         type: "form",
         resModel: "partner",
@@ -13204,7 +13213,7 @@ test(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
         arch: `
             <form>
                 <header>
-                    <widget name="attach_document" string="Attach document" />
+                    <widget name="test_header_widget" />
                     <button string="Ciao" invisible="name == 'first record'" />
                 </header>
                 <sheet>
@@ -13409,49 +13418,6 @@ test(`preserve current scroll position on form view while closing dialog`, async
 
     expect(window.scrollY).toBe(265, { message: "Should have scrolled 265 px vertically" });
     expect(window.scrollX).toBe(0, { message: "Should be 0 px from left as it is" });
-});
-
-test.tags("mobile");
-test("attach_document widget also works inside a dropdown", async () => {
-    let fileInput;
-    patchWithCleanup(AttachDocumentWidget.prototype, {
-        setup() {
-            super.setup();
-            fileInput = this.fileInput;
-        },
-    });
-    mockUpload((route, params) => {
-        expect.step("post");
-        expect(route).toBe("/web/binary/upload_attachment");
-        expect(params.model).toBe("partner");
-        expect(params.id).toBe("1");
-        return '[{ "id": 5 }, { "id": 2 }]';
-    });
-
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: `
-            <form>
-                <header>
-                    <button string="Confirm" />
-                    <widget name="attach_document" string="Attach Document"/>
-                </header>
-                <sheet>
-                    <group>
-                        <button name="name" />
-                    </group>
-                </sheet>
-            </form>
-        `,
-    });
-
-    await contains(".o_statusbar_buttons button.dropdown-toggle-split").click();
-    await contains(".o_attach_document").click();
-    await manuallyDispatchProgrammaticEvent(fileInput, "change");
-    await animationFrame();
-    expect.verifySteps(["post"]);
 });
 
 test(`do not perform button action for records with invalid datas`, async () => {
