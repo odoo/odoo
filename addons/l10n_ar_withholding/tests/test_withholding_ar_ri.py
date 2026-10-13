@@ -1398,3 +1398,8 @@ class TestArWithholdingArRi(TestArCommon):
             wizard.withholding_line_ids.tax_id,
             self.tax_wth_purchase_iibb_untaxed | self.tax_wth_purchase_iibb_total,
         )
+
+    def test_register_payment_on_draft_invoice_with_no_customer(self):
+        invoice = self.create_invoice(post=False, partner_id=False)
+        wizard = self.create_payment_register(invoice)
+        self.assertEqual(len(wizard.withholding_line_ids), 0)
