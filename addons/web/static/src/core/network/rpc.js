@@ -1,4 +1,4 @@
-import { EventBus } from "@odoo/owl";
+import { EventBus, markup } from "@odoo/owl";
 import { browser } from "../browser/browser";
 import { omit } from "../utils/objects";
 
@@ -73,6 +73,37 @@ export function makeErrorFromResponse(response) {
 }
 
 // -----------------------------------------------------------------------------
+// Markup
+// -----------------------------------------------------------------------------
+
+/**
+ * Wraps the markup values of the result of a JSON-RPC response in markup, in
+ * place.
+ *
+ * The server lists the paths to its `Markup` values in the `markup` member
+ * of the response, each path being a list of object keys and array indices
+ * from the root of the result.
+ *
+ * @param {{ result: unknown; markup?: (string | number)[][] }} response
+ * @returns {unknown} the hydrated result
+ */
+function hydrateMarkup(response) {
+    for (const path of response.markup || []) {
+        if (!path.length) {
+            response.result = markup(response.result);
+            continue;
+        }
+        let parent = response.result;
+        for (let i = 0; i < path.length - 1; i++) {
+            parent = parent[path[i]];
+        }
+        const key = path.at(-1);
+        parent[key] = markup(parent[key]);
+    }
+    return response.result;
+}
+
+// -----------------------------------------------------------------------------
 // Cache RPC method
 // -----------------------------------------------------------------------------
 
@@ -97,20 +128,67 @@ export function rpc(url, params = {}, settings = {}) {
 rpc._rpc = function (url, params, settings) {
     validateRPCSettings(settings);
     if (settings.cache && rpcCache) {
-        return rpcCache.read(
-            params?.method || url, // table
-            JSON.stringify({ url, params }), // key
-            () => rpc._rpc(url, params, omit(settings, "cache")),
-            typeof settings.cache === "boolean" ? {} : settings.cache // cache can be boolean or an object with options (or an empty object of course)
-        );
+        // cache can be boolean or an object with options (or an empty object of course)
+        const cacheSettings = typeof settings.cache === "boolean" ? {} : { ...settings.cache };
+        const { callback } = cacheSettings;
+        // values are copied via a JSON roundtrip for each callback, as well as
+        // the cache result (in both cache hit and cache miss cases), so need
+        // hydration every time
+        if (callback) {
+            cacheSettings.callback = (response, hasChanged) =>
+                callback(hydrateMarkup(response), hasChanged);
+        }
+        return rpcCache
+            .read(
+                params?.method || url, // table
+                JSON.stringify({ url, params }), // key
+                () => fetchResponse(url, params, settings),
+                cacheSettings
+            )
+            .then(hydrateMarkup);
     }
-    const XHR = browser.XMLHttpRequest;
+    const promise = fetchResponse(url, params, settings);
+    const result = promise.then((response) => response.result);
+    result.abort = promise.abort;
+    return result;
+};
+
+/**
+ * Performs a JSON-RPC request, and resolves with its response, whose result is
+ * hydrated (cf `hydrateMarkup`). Triggers the RPC:RESPONSE event on success.
+ *
+ * @param {string} url
+ * @param {unknown} params
+ * @param {Object} settings
+ */
+function fetchResponse(url, params, settings) {
     const data = {
         id: rpcId++,
         jsonrpc: "2.0",
         method: "call",
         params: params,
     };
+    const promise = jsonrpc(url, data, settings);
+    const response = promise.then((response) => {
+        const result = hydrateMarkup(response);
+        rpcBus.trigger("RPC:RESPONSE", { data, settings, result });
+        return response;
+    });
+    response.abort = promise.abort;
+    return response;
+}
+
+/**
+ * Sends a JSON-RPC request, and resolves with the raw `result` and `markup` of
+ * its response. Triggers the RPC:REQUEST event, and the RPC:RESPONSE event if
+ * the request fails (it is up to the caller to trigger it on success).
+ *
+ * @param {string} url
+ * @param {{ id: number; jsonrpc: "2.0"; method: "call"; params: unknown }} data
+ * @param {Object} settings
+ */
+function jsonrpc(url, data, settings) {
+    const XHR = browser.XMLHttpRequest;
     const request = settings.xhr || new XHR();
     let rejectFn;
     const promise = new Promise((resolve, reject) => {
@@ -144,10 +222,9 @@ rpc._rpc = function (url, params, settings) {
                 rpcBus.trigger("RPC:RESPONSE", { data, settings, error });
                 return reject(error);
             }
-            const { error: responseError, result: responseResult } = params;
+            const { error: responseError } = params;
             if (!params.error) {
-                rpcBus.trigger("RPC:RESPONSE", { data, settings, result: params.result });
-                return resolve(responseResult);
+                return resolve({ result: params.result, markup: params.markup });
             }
             const error = makeErrorFromResponse(responseError);
             error.model = data.params.model;
@@ -184,4 +261,4 @@ rpc._rpc = function (url, params, settings) {
         }
     };
     return promise;
-};
+}
