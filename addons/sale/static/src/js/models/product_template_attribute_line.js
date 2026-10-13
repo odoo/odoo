@@ -30,6 +30,7 @@ export class ProductTemplateAttributeLine {
                 name: ptav.name,
                 price_extra: ptav.price_extra,
                 custom_value: productConfiguratorPtal.customValue,
+                is_custom: ptav.is_custom,
             }));
         return new ProductTemplateAttributeLine({
             id: productConfiguratorPtal.id,
@@ -49,12 +50,12 @@ export class ProductTemplateAttributeLine {
     }
 
     /**
-     * Check whether this PTAL has selected custom PTAVs.
+     * Check whether this PTAL has a selected custom PTAV with a non-empty custom value.
      *
-     * @return {Boolean} Whether this PTAL has selected custom PTAVs.
+     * @return {Boolean} Whether a selected custom PTAV has a non-empty custom value.
      */
     get hasSelectedCustomPtav() {
-        return this.selected_ptavs.some(ptav => ptav.custom_value);
+        return this.selected_ptavs.some(ptav => (ptav.custom_value || "").trim());
     }
 
     /**

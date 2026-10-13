@@ -22,7 +22,13 @@ export class ProductCard extends Component {
     shouldShowPtal(ptal) {
         return (
             ptal.selected_ptavs.length > 0 &&
-            (ptal.hasSelectedCustomPtav || ptal.create_variant === 'no_variant')
+            (
+                ptal.hasSelectedCustomPtav
+                || (
+                    ptal.create_variant === "no_variant"
+                    && !ptal.selected_ptavs.some(ptav => ptav.is_custom)
+                )
+            )
         );
     }
 }
