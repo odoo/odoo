@@ -76,6 +76,11 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 120, 'You should have 80 products in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 10, 'You should have consumed all the 5 product in stock')
 
+        # set the finished move lines quantity to 0 so qty_produced of mo recomputes to 0.
+        mo.move_finished_ids.move_line_ids.write({'quantity': 0})
+        unbuild = Form.from_action(self.env, mo.button_unbuild()).save()
+        self.assertTrue(unbuild.action_unbuild())
+
     def test_unbuild_with_final_lot(self):
         """ This test creates a MO and then creates 3 unbuild
         orders for the final product. Only the final product is tracked
