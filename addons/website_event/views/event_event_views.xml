@@ -79,6 +79,28 @@
         </field>
     </record>
 
+    <record id="event_event_view_kanban" model="ir.ui.view">
+        <field name="name">event.event.kanban.inherit.website</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <field name="cover_image_url"/>
+            </xpath>
+            <xpath expr="//aside" position="before">
+                <t t-set="has_cover" t-value="!!record.cover_image_url.raw_value"/>
+            </xpath>
+            <xpath expr="//aside/div" position="before">
+                <img t-if="has_cover" t-att-src="record.cover_image_url.raw_value" class="position-absolute top-0 start-0 w-100 object-fit-cover" t-att-alt="record.name.value"/>
+                <span class="position-absolute top-0 start-0 w-100 bg-black bg-opacity-25"/>
+            </xpath>
+            <xpath expr="//aside/div" position="attributes">
+                <attribute name="class" remove="text-bg-600" separator=" "/>
+                <attribute name="t-att-class">has_cover ? '' : 'text-bg-600'</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="event_event_view_search" model="ir.ui.view">
         <field name="name">event.event.search.inherit.website</field>
         <field name="model">event.event</field>
