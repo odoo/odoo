@@ -1668,6 +1668,10 @@ class IrQweb(models.AbstractModel):
             'product' value and not an 'NoneType' object has no attribute
             'price' error.
         """
+        # compile_context is unused
+        cache = self.env.cr.cache.setdefault('qweb_compile_expr', {})
+        if expr in cache and not raise_on_missing:
+            return cache[expr]
         # Parentheses are useful for compiling multi-line expressions such as
         # conditions existing in some templates. (see test_compile_expr tests)
         readable = io.BytesIO(f"({expr or ''})".encode('utf-8'))
@@ -1688,7 +1692,8 @@ class IrQweb(models.AbstractModel):
 
         assert_valid_codeobj(_SAFE_QWEB_OPCODES, compile(expression, '<>', 'eval'), expr)
 
-        return f"({expression})"
+        cache[expr] = f"({expression})"
+        return cache[expr]
 
     def _compile_bool(self, attr, default=False):
         """Convert the statements as a boolean."""
