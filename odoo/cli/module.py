@@ -178,7 +178,7 @@ class Module(Command):
                 if (fullpath := self._get_zip_path(module))
             ]
             if importable_zipfiles:
-                if 'imported' not in env['ir.module.module']._fields:
+                if 'base_import_module' not in env.registry._init_modules:
                     _logger.warning("Cannot import data modules unless the `base_import_module` module is installed")
                 elif parsed_args.dry_run:
                     _logger.warning("Dry-run does not support importable zip files")

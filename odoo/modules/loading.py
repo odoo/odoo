@@ -99,7 +99,7 @@ def force_demo(env: Environment) -> None:
     env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
     env.cr.execute('UPDATE ir_module_module SET demo=True')
     env.cr.execute(
-        "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
+        "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove') AND imported IS NOT TRUE"
     )
     module_list = [name for (name,) in env.cr.fetchall()]
     graph = ModuleGraph(env.cr, mode='load')
@@ -441,7 +441,7 @@ def load_modules(
         if reinit_modules:
             modules = Module.search([('state', 'in', ('installed', 'to upgrade')), ('name', 'in', tuple(reinit_modules))])
             reinit_modules = modules.downstream_dependencies(exclude_states=('uninstalled', 'uninstallable', 'to remove', 'to install')) + modules
-            registry._reinit_modules.update(m for m in reinit_modules.mapped('name') if m not in graph._imported_modules)
+            registry._reinit_modules.update(reinit_modules.filtered(lambda m: not m.imported).mapped('name'))
 
         env.flush_all()
         cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
@@ -463,7 +463,7 @@ def load_modules(
             states = ('installed', 'to upgrade', 'to remove', 'to install')
         else:
             states = ('installed', 'to upgrade', 'to remove')
-        env.cr.execute("SELECT name from ir_module_module WHERE state IN %s", [states])
+        env.cr.execute("SELECT name from ir_module_module WHERE state IN %s AND imported IS NOT TRUE", [states])
         module_list = [name for (name,) in env.cr.fetchall() if name not in graph]
         if not module_list:
             break
@@ -498,7 +498,7 @@ def load_modules(
 
     # check that all installed modules have been loaded by the registry
     Module = env['ir.module.module']
-    modules = Module.search_fetch(Module._get_modules_to_load_domain(), ['name'], order='name')
+    modules = Module.search_fetch([('state', '=', 'installed'), ('imported', '=', False)], ['name'], order='name')
     missing = [name for name in modules.mapped('name') if name not in graph]
     if missing:
         _logger.error("Some modules are not loaded, some dependencies or manifest may be missing: %s", missing)
@@ -510,7 +510,7 @@ def load_modules(
             migrations.migrate_module(package, 'end')
 
     # check that new module dependencies have been properly installed after a migration/upgrade
-    cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade')")
+    cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade') AND imported IS NOT TRUE")
     module_list = [name for (name,) in cr.fetchall()]
     if module_list:
         _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
@@ -540,7 +540,7 @@ def load_modules(
 
         env.flush_all()
 
-    # STEP 5: Uninstall modules to remove
+    # STEP 5: Uninstall imported and non-imported 'to remove' modules
     if update_module:
         # Remove records referenced from ir_model_data for modules to be
         # removed (and removed the references from ir_model_data).

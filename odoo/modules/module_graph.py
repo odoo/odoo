@@ -237,23 +237,12 @@ class ModuleGraph:
         for name in names:
             module = self._modules[name] = ModuleNode(name, self)
             if not module.manifest.get('installable'):
-                if name in self._imported_modules:
-                    self._remove(name, log_dependents=False)
-                else:
-                    _logger.warning('module %s: not installable, skipped', name)
-                    self._remove(name)
+                _logger.warning('module %s: not installable, skipped', name)
+                self._remove(name)
 
         self._update_depends(names)
         self._update_depth(names)
         self._update_from_database(names)
-
-    @functools.cached_property
-    def _imported_modules(self) -> OrderedSet[str]:
-        result = ['studio_customization']
-        if column_exists(self._cr, 'ir_module_module', 'imported'):
-            self._cr.execute('SELECT name FROM ir_module_module WHERE imported')
-            result += [m[0] for m in self._cr.fetchall()]
-        return OrderedSet(result)
 
     def _update_depends(self, names: Iterable[str]) -> None:
         for name in names:
@@ -317,10 +306,9 @@ class ModuleGraph:
             module.load_version = installed_version
             module.load_state = state
 
-    def _remove(self, name: str, log_dependents: bool = True) -> None:
+    def _remove(self, name: str) -> None:
         module = self._modules.pop(name)
         for another, another_module in list(self._modules.items()):
             if module in another_module.depends and another_module.name in self._modules:
-                if log_dependents:
-                    _logger.info('module %s: its direct/indirect dependency is skipped, skipped', another)
+                _logger.info('module %s: its direct/indirect dependency is skipped, skipped', another)
                 self._remove(another)

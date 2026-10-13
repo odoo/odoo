@@ -23,7 +23,7 @@ from odoo.http import request
 from odoo.modules.module import Manifest, MissingDependency
 from odoo.tools import SQL, BinaryBytes, config
 from odoo.tools.business_data import get_flag
-from odoo.tools.misc import file_open, topological_sort
+from odoo.tools.misc import OrderedSet, file_open, topological_sort
 from odoo.tools.parse_version import parse_version
 from odoo.tools.translate import (
     TranslationImporter,
@@ -164,12 +164,11 @@ class IrModuleModule(models.Model):
     _order = 'application desc,sequence,name'
     _allow_sudo_commands = False
     _clear_cache_name = 'stable'      # cache to clear on create/write/update
-    _clear_cache_on_fields = ('name', 'state')
+    _clear_cache_on_fields = ('name', 'state', 'imported')
 
     @classmethod
     def get_module_info(cls, name):
         if isinstance(name, str):
-            # we have no info for studio_customization
             # imported modules are not found using this method
             return modules.Manifest.for_addon(name, display_warning=False) or {}
         if isinstance(name, modules.Manifest):
@@ -329,6 +328,7 @@ class IrModuleModule(models.Model):
     icon_flag = fields.Char(string='Flag', compute='_get_icon_image')
     to_buy = fields.Boolean('Odoo Enterprise Module', default=False)
     iap_paid_service = fields.Boolean("Contains In-App Purchases")
+    imported = fields.Boolean(string="Imported Module")
 
     _name_uniq = models.Constraint(
         'UNIQUE (name)',
@@ -340,10 +340,6 @@ class IrModuleModule(models.Model):
         for module in self:
             if module.state in ('installed', 'to upgrade', 'to remove', 'to install'):
                 raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
-
-    def _get_modules_to_load_domain(self):
-        """ Domain to retrieve the modules that should be loaded by the registry. """
-        return [('state', '=', 'installed')]
 
     def check_external_dependencies(self, module_name, newstate='to install'):
         manifest = modules.Manifest.for_addon(module_name)
@@ -702,6 +698,7 @@ class IrModuleModule(models.Model):
 
     @assert_log_admin_access
     def button_upgrade(self):
+        self = self.filtered(lambda m: not m.imported)  # noqa: PLW0642
         if not self:
             return
         Dependency = self.env['ir.module.module.dependency']
@@ -715,7 +712,7 @@ class IrModuleModule(models.Model):
             # install the new dependency.
             todo.extend(self.search([
                 ('state', '=', 'installed'),
-                ('name', '!=', 'studio_customization'),
+                ('imported', '=', False),
                 ('id', 'not in', self.ids),
             ]))
         i = 0
@@ -730,7 +727,7 @@ class IrModuleModule(models.Model):
                 if (
                     dep.module_id.state == 'installed'
                     and dep.module_id not in todo
-                    and dep.module_id.name != 'studio_customization'
+                    and not dep.module_id.imported
                 ):
                     todo.append(dep.module_id)
 
@@ -925,6 +922,11 @@ class IrModuleModule(models.Model):
             module.name: module.id
             for module in self.sudo().search([('state', '=', 'installed')])
         }
+
+    @api.model
+    @api.ormcache(cache='stable')
+    def _get_imported_module_names(self):
+        return OrderedSet(self.sudo().search_fetch([('imported', '=', True), ('state', '=', 'installed')], ['name']).mapped('name'))
 
     @api.model
     def search_panel_select_range(self, field_name, **kwargs):
