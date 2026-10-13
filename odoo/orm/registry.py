@@ -156,7 +156,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         from odoo.http.requestlib import borrow_request, request  # noqa: PLC0415
         from odoo.modules import db  # noqa: PLC0415
-        from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
+        from odoo.modules.loading import MAX_REMOVED_MODULES, load_modules, reset_modules_state  # noqa: PLC0415
 
         t0 = time.time()
         registry: Registry = object.__new__(cls)
@@ -210,6 +210,16 @@ class Registry(Mapping[str, type["BaseModel"]]):
                         # multiple workers were loading the database and try to upgrade it, only one will succeed
                         raise ConcurrencyError("Deadlock when waiting for lock to update the registry") from None
                     cr.commit()  # commit after acquiring the lock to re-start the transaction
+                    retries = 5
+                    if db.is_initialized(cr):
+                        cr.execute("""
+                            SELECT COUNT(*)
+                            FROM ir_module_module
+                            WHERE state = 'to remove'
+                        """)
+                        retries += cr.fetchone()[0] // MAX_REMOVED_MODULES
+                else:
+                    retries = 1
 
                 # now load modules
                 if new_db_demo is None:
@@ -218,7 +228,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     exit_stack.enter_context(gc.disabling_gc())
                 if request:
                     exit_stack.enter_context(borrow_request())
-                retries = 5 if update_module else 1
                 for _ in range(retries):
                     # load_modules multiple times in case there are modules to be uninstalled
                     try:
