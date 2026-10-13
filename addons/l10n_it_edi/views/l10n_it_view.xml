@@ -10,6 +10,7 @@
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="l10n_it_codice_fiscale"/>
                 <field name="l10n_it_pa_index"/>
+                <field name="l10n_it_administration_reference"/>
             </xpath>
         </field>
     </record>
@@ -25,6 +26,7 @@
                 <field name="l10n_it_pec_email" invisible="'IT' not in fiscal_country_codes or parent_id"/>
                 <field name="l10n_it_codice_fiscale" invisible="'IT' not in fiscal_country_codes or parent_id"/>
                 <field name="l10n_it_pa_index" invisible="'IT' not in fiscal_country_codes or parent_id"/>
+                <field name="l10n_it_administration_reference" invisible="'IT' not in fiscal_country_codes or parent_id"/>
             </xpath>
         </data>
         </field>

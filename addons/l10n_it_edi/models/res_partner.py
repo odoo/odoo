@@ -21,6 +21,15 @@ class ResPartner(models.Model):
              "associated with the office which, within the addressee administration, deals "
              "with receiving (and processing) the invoice.",
     )
+    l10n_it_administration_reference = fields.Char(
+        string="Administration Reference",
+        size=20,
+        help="Administrative reference (Riferimento Amministrazione) code agreed "
+             "with the customer. Fill it in only when the recipient asks for it, "
+             "in order to register the invoice in their system. The allowed value "
+             "is between 1 to 20 characters (inclusive), restricted to "
+             "basic latin charactes when used in Sistema di Interscambio (SdI).",
+    )
 
     _l10n_it_codice_fiscale = models.Constraint(
         "CHECK(l10n_it_codice_fiscale IS NULL OR l10n_it_codice_fiscale = '' OR LENGTH(l10n_it_codice_fiscale) >= 11)",
@@ -29,6 +38,11 @@ class ResPartner(models.Model):
     _l10n_it_pa_index = models.Constraint(
         "CHECK(l10n_it_pa_index IS NULL OR l10n_it_pa_index = '' OR LENGTH(l10n_it_pa_index) >= 6)",
         'Destination Code (SDI) must have between 6 and 7 characters.',
+    )
+    _l10n_it_administration_reference = models.Constraint(
+        "CHECK(l10n_it_administration_reference IS NULL OR LENGTH(l10n_it_administration_reference) >= 1)",
+        'Administrative reference (Riferimento Amministrazione) must have '
+        'between 1 and 20 characters (inclusive).',
     )
 
     def _l10n_it_edi_is_public_administration(self):
