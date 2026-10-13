@@ -407,6 +407,33 @@ describe(parseUrl(import.meta.url), () => {
         expect.verifySteps(["new-element"]);
     });
 
+    test("waitFor: waits for matching count", async () => {
+        const el1 = document.createElement("div");
+        el1.className = "new-element";
+
+        const el2 = document.createElement("div");
+        el2.className = "new-element";
+
+        waitFor(".new-element", { count: 2 }).then(() => expect.step("found"));
+        getFixture().append(el1);
+
+        await animationFrame();
+
+        expect.verifySteps([]);
+
+        getFixture().append(el2);
+
+        await animationFrame();
+
+        expect.verifySteps(["found"]);
+    });
+
+    test("waitFor: rejects with unmatched count", async () => {
+        await expect(waitFor("never", { count: 1, timeout: 1 })).rejects.toThrow(
+            `expected at least 1 element after 1ms and found 0 elements instead of 1: 0 matching "never"`
+        );
+    });
+
     test("waitForNone: DOM empty", async () => {
         waitForNone(".title").then(() => expect.step("none"));
         expect.verifySteps([]);
