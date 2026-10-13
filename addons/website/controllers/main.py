@@ -1926,12 +1926,12 @@ class Website(Home):
             'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
         }
 
-    @http.route(['/website/theme_computed_colors'], type='jsonrpc', auth='user', website=True, readonly=True)
-    def theme_computed_colors(self, colors, user_keys=(), min_contrast_ratio=None, areas=None):
+    @http.route(['/website/theme_computed_colors'], type='jsonrpc', auth='user', readonly=True)
+    def theme_computed_colors(self, colors, user_keys, min_contrast_ratio, areas):
         """Return the colors the compile computes from the given ones, and
         the theme gates they switch, for the builder's preview of colors (see
         `color_system.compute_colors`)."""
-        values, gates = compute_colors(colors, user_keys, min_contrast_ratio or 2.9, areas)
+        values, gates = compute_colors(colors, user_keys, min_contrast_ratio, areas)
         return {'values': values, 'gates': gates}
 
     @http.route(['/website/update_footer_template'], type='jsonrpc', auth='user', website=True)

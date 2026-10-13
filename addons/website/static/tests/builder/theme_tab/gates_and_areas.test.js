@@ -1,4 +1,5 @@
 import { expect, queryFirst, test } from "@odoo/hoot";
+import { AREAS } from "@website/builder/plugins/customize_website_plugin";
 import {
     AREA_SELECTORS,
     THEME_GATES,
@@ -15,10 +16,17 @@ defineWebsiteModels();
 test("the theme gates and areas the builder knows are the compiled CSS's", async () => {
     await setupWebsiteBuilder("", { loadIframeBundles: true });
     const selectors = [];
+    // The custom properties the CSS declares.
+    const properties = new Set();
     const collect = (rules) => {
         for (const rule of rules) {
             if (rule.selectorText) {
                 selectors.push(rule.selectorText);
+            }
+            for (const property of rule.style || []) {
+                if (property.startsWith("--")) {
+                    properties.add(property.slice(2));
+                }
             }
             if (rule.cssRules) {
                 collect(rule.cssRules);
@@ -39,6 +47,12 @@ test("the theme gates and areas the builder knows are the compiled CSS's", async
         [...cssGates].filter((gate) => !(gate in THEME_GATES || computedGates.includes(gate)))
     ).toEqual([]);
     expect(Object.keys(THEME_GATES).filter((gate) => !cssGates.has(gate))).toEqual([]);
+    expect(computedGates.filter((gate) => !cssGates.has(gate))).toEqual([]);
+    // The values a gate compares are the ones the CSS reads (the others may
+    // be unset, then not printed).
+    const names = Object.values(THEME_GATES).flatMap(({ apart = [] }) => apart);
+    expect(names.filter((name) => !properties.has(name))).toEqual([]);
+    expect(Object.keys(AREA_SELECTORS)).toEqual(AREAS);
     // An area's selector, as the builder marks it, ends with the one the CSS
     // gives the area's rules (it may narrow it, e.g. to the website's header).
     const parts = selectors.flatMap((selector) => selector.split(",").map((part) => part.trim()));

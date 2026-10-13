@@ -1,6 +1,8 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
+import { parseHTML } from "@html_editor/utils/html";
 import { registry } from "@web/core/registry";
-import { ASSETS, VIEWS } from "./customize_website_plugin";
+import { ASSETS, VIEWS, WebsiteConfigAction } from "./customize_website_plugin";
 
 /**
  * @typedef { Object } WebsiteViewsPreviewShared
@@ -8,7 +10,7 @@ import { ASSETS, VIEWS } from "./customize_website_plugin";
  */
 
 /**
- * @typedef {((parts: { oldEl: HTMLElement, newEl: HTMLElement }) => void)[]} on_chrome_replaced_handlers
+ * @typedef {((parts: { oldEl: HTMLElement|null, newEl: HTMLElement }) => void)[]} on_chrome_replaced_handlers
  */
 
 /**
@@ -76,25 +78,39 @@ function findCounterpart(el, fromEl, toEl, byPosition = false) {
 export class WebsiteViewsPreviewPlugin extends Plugin {
     static id = "websiteViewsPreview";
     static dependencies = [
-        ...["customizeWebsite", "themeComputedPreview", "domObserver", "dom", "domReferenceMap"],
-        ...["setup_editor_plugin", "builderOptions", "edit_interaction"],
+        ...["customizeWebsite", "domObserver", "dom", "domReferenceMap", "setup_editor_plugin"],
+        ...["builderOptions", "edit_interaction"],
     ];
     static shared = ["previewViews"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        on_theme_preview_changed_handlers: () => this.updateChrome(),
+        builder_actions: {
+            PreviewWebsiteConfigAction,
+            PreviewPageConfigAction,
+            PreviewableWebsiteConfigAction,
+        },
+        on_theme_preview_changed_handlers: (state) => {
+            if (Object.values(state).some(({ file }) => file === VIEWS)) {
+                this.updateChrome();
+            }
+        },
+        // A swap in progress ends before the page is saved (it restarts the
+        // page's interactions). A failed one was reported when it failed.
+        on_will_save_handlers: () => this.lastChromeUpdate?.catch(() => {}),
     };
 
-    /** @type {Object<string, Promise>} the page's renders, by previewed views */
+    /** @type {Object<string, Promise<Object>>} the page's renders, by previewed views */
     chromeRenders = {};
-    /** @type {Object<string, HTMLElement>} the elements a views switch took out, by render */
+    /** @type {Object<string, HTMLElement>} the parts a views switch took out, by render */
     chromeElements = {};
-    /** The previewed views the page shows (see `updateChrome`). */
-    chromeKey = "{}";
+    /** @type {Object<string, boolean>} the previewed views the page shows (see `updateChrome`) */
+    chromeViews = {};
     chromeRequestId = 0;
     /** @type {Promise|null} the scheduled `updateChrome` */
     chromeUpdate = null;
+    /** @type {Promise|null} the latest `updateChrome`, scheduled or running */
+    lastChromeUpdate = null;
     /** @type {Set<string>} views the page shows by itself (see `previewViews`) */
     shownViews = new Set();
     /** @type {Set<string>} views of the page's own content (see `previewViews`) */
@@ -124,7 +140,12 @@ export class WebsiteViewsPreviewPlugin extends Plugin {
                 this.pageViews.add(view);
             }
         }
-        this.dependencies.customizeWebsite.previewPendingValues(areAssets ? ASSETS : VIEWS, views);
+        const file = areAssets ? ASSETS : VIEWS;
+        this.dependencies.customizeWebsite.previewStep(
+            Object.fromEntries(
+                Object.entries(views).map(([view, pending]) => [view, { file, pending }])
+            )
+        );
         return this.updateChrome();
     }
     /**
@@ -139,50 +160,53 @@ export class WebsiteViewsPreviewPlugin extends Plugin {
      * @returns {Promise} resolved once the page shows the previewed views
      */
     updateChrome() {
-        return (this.chromeUpdate ??= new Promise((resolve) =>
+        this.chromeUpdate ??= new Promise((resolve) =>
             setTimeout(() => {
                 this.chromeUpdate = null;
                 resolve(this._updateChrome());
             })
-        ));
+        );
+        this.lastChromeUpdate = this.chromeUpdate;
+        return this.chromeUpdate;
     }
     async _updateChrome() {
-        const { getPendingViews, getSavedConfigKey } = this.dependencies.customizeWebsite;
-        const views = Object.entries(getPendingViews())
-            .map(([view, pending]) => [view, pending === true])
-            // Unknown saved state: kept, the server knows.
-            .filter(([view, active]) => active !== getSavedConfigKey(view));
-        const key = JSON.stringify(Object.fromEntries(views.sort()));
+        const { getPendingValues, getSavedConfigKey } = this.dependencies.customizeWebsite;
+        const views = Object.fromEntries(
+            Object.entries(getPendingValues(VIEWS))
+                .map(([view, pending]) => [view, pending === true])
+                // Unknown saved state: kept, the server knows.
+                .filter(([view, active]) => active !== getSavedConfigKey(view))
+                .sort()
+        );
         const requestId = ++this.chromeRequestId;
+        const keyOf = (views, isKept) =>
+            JSON.stringify(Object.entries(views).filter(([view]) => isKept(view)));
         // The views the page shows by itself need no render, but are part of
         // the renders' key: a render shows them too.
-        const withoutShown = (viewsKey) =>
-            JSON.stringify(
-                Object.entries(JSON.parse(viewsKey)).filter(([view]) => !this.shownViews.has(view))
-            );
-        if (withoutShown(key) === withoutShown(this.chromeKey)) {
-            this.chromeKey = key;
+        const isRendered = (view) => !this.shownViews.has(view);
+        if (keyOf(views, isRendered) === keyOf(this.chromeViews, isRendered)) {
+            this.chromeViews = views;
             return;
         }
         // The page's content is only swapped for its own views: its render is
         // never quite the same (tokens...).
-        const pageKey = (viewsKey) =>
-            JSON.stringify(
-                Object.entries(JSON.parse(viewsKey)).filter(([view]) => this.pageViews.has(view))
-            );
-        const [fromPageKey, toPageKey] = [pageKey(this.chromeKey), pageKey(key)];
-        const wrapwrapEl = this.document.getElementById("wrapwrap");
+        const isPage = (view) => this.pageViews.has(view);
+        const [fromPageKey, toPageKey] = [this.chromeViews, views].map((v) => keyOf(v, isPage));
         const parts = ["header#top", "footer#bottom"];
         if (fromPageKey !== toPageKey) {
             parts.push("main");
         }
-        const targetEl = this.dependencies.builderOptions.getTarget();
+        const wrapwrapEl = this.document.getElementById("wrapwrap");
+        const [fromKey, toKey] = [this.chromeViews, views].map((v) => JSON.stringify(v));
         let loadingEls = [];
-        if (!(this.chromeKey in this.chromeRenders && key in this.chromeRenders)) {
-            // The part being edited (else both) shows that it's on its way.
-            const partEls = parts.map((part) => wrapwrapEl.querySelector(`:scope > ${part}`));
-            loadingEls = partEls.filter((el) => el?.contains(targetEl));
-            loadingEls = loadingEls.length ? loadingEls : partEls.filter(Boolean);
+        if (!(fromKey in this.chromeRenders && toKey in this.chromeRenders)) {
+            // The part being edited (else all) shows that it's on its way.
+            const targetEl = this.dependencies.builderOptions.getTarget();
+            const partEls = parts
+                .map((part) => wrapwrapEl.querySelector(`:scope > ${part}`))
+                .filter(Boolean);
+            loadingEls = partEls.filter((el) => el.contains(targetEl));
+            loadingEls = loadingEls.length ? loadingEls : partEls;
             this.dependencies.domObserver.ignore(() => {
                 loadingEls.forEach((el) => el.classList.add("o_we_chrome_loading"));
             });
@@ -190,7 +214,7 @@ export class WebsiteViewsPreviewPlugin extends Plugin {
         let from, to;
         try {
             [from, to] = await Promise.all(
-                [this.chromeKey, key].map((viewsKey) => this.getChromeRender(viewsKey))
+                [fromKey, toKey].map((key) => this.getChromeRender(key))
             );
         } finally {
             this.dependencies.domObserver.ignore(() => {
@@ -200,67 +224,60 @@ export class WebsiteViewsPreviewPlugin extends Plugin {
         if (requestId !== this.chromeRequestId || this.isDestroyed) {
             return;
         }
-        let mainEl = wrapwrapEl.querySelector(":scope > main");
+        // The options' element, as it is now that the page is rendered.
+        const targetEl = this.dependencies.builderOptions.getTarget();
         let newTargetEl;
         // The options of the parts taken out go to their counterparts, so that
         // the panel is updated rather than rebuilt (see `builderOptions`).
         const replacements = new Map();
         this.dependencies.domObserver.ignore(() => {
-            for (const [part, insert] of [
-                [
-                    "main",
-                    (el) => {
-                        mainEl.before(el);
-                        mainEl.remove();
-                    },
-                ],
-                ["header#top", (el) => mainEl.before(el)],
-                ["footer#bottom", (el) => mainEl.after(el)],
-            ]) {
-                if (!parts.includes(part)) {
-                    continue;
-                }
+            for (const part of parts) {
                 // Only a part rendered differently is replaced, and the live
                 // element is kept for when that render shows again (the
                 // page's content: by its views).
-                let [fromKey, toKey] = [from[part]?.outerHTML || "", to[part]?.outerHTML || ""];
-                if (part === "main") {
-                    [fromKey, toKey] = [`main ${fromPageKey}`, `main ${toPageKey}`];
-                } else if (fromKey === toKey) {
+                const isMain = part === "main";
+                const [fromPartKey, toPartKey] = isMain
+                    ? [`main ${fromPageKey}`, `main ${toPageKey}`]
+                    : [from[part], to[part]];
+                if (fromPartKey === toPartKey) {
                     continue;
                 }
                 const currentEl = wrapwrapEl.querySelector(`:scope > ${part}`);
                 const nextEl =
-                    this.chromeElements[toKey] ||
-                    (to[part] && this.document.importNode(to[part], true));
-                this.chromeElements[fromKey] = currentEl;
-                delete this.chromeElements[toKey];
+                    this.chromeElements[toPartKey] ||
+                    (to[part] && parseHTML(this.document, to[part]).firstElementChild);
+                this.chromeElements[fromPartKey] = currentEl;
+                delete this.chromeElements[toPartKey];
                 const hadTarget = !!currentEl?.contains(targetEl);
                 if (currentEl && nextEl) {
                     this.carryEdits(currentEl, nextEl);
                     for (const { element } of this.dependencies.builderOptions.getContainers()) {
                         const counterpartEl =
                             currentEl.contains(element) &&
-                            findCounterpart(element, currentEl, nextEl, part === "main");
+                            findCounterpart(element, currentEl, nextEl, isMain);
                         if (counterpartEl) {
                             replacements.set(element, counterpartEl);
                         }
                     }
                 }
-                if (part === "main") {
-                    insert(nextEl);
-                    mainEl = nextEl;
-                } else {
-                    currentEl?.remove();
+                if (currentEl) {
                     if (nextEl) {
-                        insert(nextEl);
+                        currentEl.before(nextEl);
+                    }
+                    currentEl.remove();
+                } else if (nextEl) {
+                    // A part the page didn't have: around its content.
+                    const mainEl = wrapwrapEl.querySelector(":scope > main");
+                    if (part === "footer#bottom") {
+                        mainEl.after(nextEl);
+                    } else {
+                        mainEl.before(nextEl);
                     }
                 }
                 if (hadTarget && !targetEl.isConnected) {
                     // The options were on the part taken out: on the new one.
                     newTargetEl =
-                        (nextEl && findCounterpart(targetEl, currentEl, nextEl, part === "main")) ||
-                        nextEl;
+                        (nextEl && findCounterpart(targetEl, currentEl, nextEl, isMain)) || nextEl;
                 }
                 if (nextEl) {
                     // Inserted unobserved: known from now on, so that its
@@ -268,12 +285,10 @@ export class WebsiteViewsPreviewPlugin extends Plugin {
                     this.dependencies.domReferenceMap.register(nextEl);
                     this.dependencies.setup_editor_plugin.markSavableAreas(nextEl);
                     this.dependencies.dom.normalize(nextEl);
-                    if (currentEl) {
-                        this.trigger("on_chrome_replaced_handlers", {
-                            oldEl: currentEl,
-                            newEl: nextEl,
-                        });
-                    }
+                    this.trigger("on_chrome_replaced_handlers", {
+                        oldEl: currentEl,
+                        newEl: nextEl,
+                    });
                 }
             }
             // Some views set classes on the page's root elements.
@@ -284,12 +299,9 @@ export class WebsiteViewsPreviewPlugin extends Plugin {
                 el.classList.add(...toClasses.filter((c) => !fromClasses.includes(c)));
             }
         });
-        this.chromeKey = key;
-        // A new part shows the previewed area presets too.
-        this.dependencies.themeComputedPreview.updateAreaClasses();
+        this.chromeViews = views;
         if (newTargetEl || replacements.size) {
-            this.dependencies.builderOptions.replaceContainerElements(replacements);
-            this.dependencies.builderOptions.updateContainers(newTargetEl);
+            this.dependencies.builderOptions.updateContainers(newTargetEl, { replacements });
             // The options read their element once rendered with the new one.
             requestAnimationFrame(
                 () => !this.isDestroyed && this.trigger("on_dom_updated_handlers")
@@ -326,34 +338,126 @@ export class WebsiteViewsPreviewPlugin extends Plugin {
     }
     /**
      * @param {string} key the previewed views, as JSON
-     * @returns {Promise<Object>} the page's header, footer and root classes,
-     *          as rendered with them
+     * @returns {Promise<Object>} the page's header, footer and `main` (as
+     *          HTML, "" if none) and root classes, as rendered with them
      */
     getChromeRender(key) {
         this.chromeRenders[key] ??= (async () => {
             const { pathname, search } = this.document.defaultView.location;
             const url = new URL(pathname + search, window.location.origin);
             url.searchParams.set("theme_preview_views", key);
+            // Not only a success: an error page is rendered with its status.
             const response = await fetch(url);
-            if (!response.ok) {
+            const doc = new DOMParser().parseFromString(await response.text(), "text/html");
+            if (!doc.getElementById("wrapwrap")) {
                 throw new Error(`The page's render failed (${response.status})`);
             }
-            const doc = new DOMParser().parseFromString(await response.text(), "text/html");
-            const classes = {};
-            for (const selector of ["html", "body", "#wrapwrap"]) {
-                classes[selector] = [...(doc.querySelector(selector)?.classList || [])];
+            const render = { classes: {} };
+            for (const part of ["header#top", "footer#bottom", "main"]) {
+                render[part] = doc.querySelector(`#wrapwrap > ${part}`)?.outerHTML || "";
             }
-            return {
-                "header#top": doc.querySelector("#wrapwrap > header#top"),
-                "footer#bottom": doc.querySelector("#wrapwrap > footer#bottom"),
-                main: doc.querySelector("#wrapwrap > main"),
-                classes,
-            };
+            for (const selector of ["html", "body", "#wrapwrap"]) {
+                render.classes[selector] = [...doc.querySelector(selector).classList];
+            }
+            return render;
         })().catch((error) => {
             delete this.chromeRenders[key];
             throw error;
         });
         return this.chromeRenders[key];
+    }
+}
+
+/**
+ * Same as `websiteConfig`, without the reload: the views and the variables
+ * are previewed (see `previewViews`) and written on save.
+ */
+export class PreviewWebsiteConfigAction extends WebsiteConfigAction {
+    static id = "previewWebsiteConfig";
+    static dependencies = [...WebsiteConfigAction.dependencies, "websiteViewsPreview"];
+    /** Whether the views are the page's own content's (see `previewViews`). */
+    arePage = false;
+    // Drop the parent's reload. No hover preview: a switch shows once the
+    // server rendered it, which the apply waits for, however long it takes.
+    setup() {
+        this.preview = false;
+        this.canTimeout = false;
+    }
+    _customizeVariables(variables, clean, previewValues) {
+        this.dependencies.customizeWebsite.previewWebsiteVariables(
+            Object.fromEntries(
+                Object.entries(variables).map(([name, value]) => [name, clean ? "" : value ?? ""])
+            ),
+            "null",
+            previewValues
+        );
+    }
+    _customizeThemeData(isViewData, shouldReset, toEnable, toDisable) {
+        return this.dependencies.websiteViewsPreview.previewViews(
+            {
+                ...Object.fromEntries([...toEnable].map((view) => [view, true])),
+                ...Object.fromEntries(
+                    [...toDisable].map((view) => [view, shouldReset ? "reset" : false])
+                ),
+            },
+            { areAssets: !isViewData, arePage: this.arePage }
+        );
+    }
+}
+
+/**
+ * `previewWebsiteConfig` for the views of the page's own content: the page's
+ * `main` is rendered again too (see `updateChrome`).
+ */
+export class PreviewPageConfigAction extends PreviewWebsiteConfigAction {
+    static id = "previewPageConfig";
+    arePage = true;
+}
+
+export class PreviewableWebsiteConfigAction extends BuilderAction {
+    static id = "previewableWebsiteConfig";
+    static dependencies = ["websiteViewsPreview"];
+    getPriority({ params }) {
+        return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
+    }
+    isApplied({ editingElement: el, params }) {
+        if (params.previewClass === undefined || params.previewClass === "") {
+            return true;
+        }
+        return params.previewClass.split(/\s+/).every((cls) => el.classList.contains(cls));
+    }
+    apply({ editingElement: el, isPreviewing, params }) {
+        if (params.previewClass) {
+            params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
+        }
+        if (!isPreviewing) {
+            this.previewViews(params.views, true);
+        }
+    }
+    clean({ editingElement: el, isPreviewing, params }) {
+        if (params.previewClass) {
+            params.previewClass.split(/\s+/).forEach((cls) => el.classList.remove(cls));
+        }
+        if (!isPreviewing) {
+            this.previewViews(params.views, false);
+        }
+    }
+    /**
+     * The class shows the views: they are written on save, and part of the
+     * page's renders (see `websiteViewsPreview.previewViews`).
+     *
+     * @param {string[]} views
+     * @param {boolean} active
+     */
+    previewViews(views = [], active) {
+        this.dependencies.websiteViewsPreview.previewViews(
+            Object.fromEntries(
+                views.map((view) =>
+                    view.startsWith("!") ? [view.slice(1), !active] : [view, active]
+                )
+            ),
+            { areShown: true }
+        );
     }
 }
 

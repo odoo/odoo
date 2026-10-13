@@ -4,7 +4,10 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { isHeaderBgBlurAvailable } from "@website/builder/plugins/options/header/header_template_option";
 import {
     defineWebsiteModels,
+    mockThemeRpcs,
+    saveWebsite,
     setupWebsiteBuilder,
+    USER_VALUES_URL,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -78,18 +81,29 @@ describe("header blur option", () => {
 });
 
 describe("header width option", () => {
-    for (const [layout, views] of [
-        ["the default template", []],
-        ["templates with several containers", ["website.template_header_boxed"]],
-    ]) {
-        test(`the content width is previewed on ${layout}`, async () => {
-            onRpc("/website/theme_customize_data_get", async () => views);
-            await setupWebsiteBuilder("", { headerContent });
-            await contains(":iframe #wrapwrap > header").click();
-            await waitFor("[data-label='Content Width']");
-            expect(
-                "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
-            ).toHaveCount(3);
-        });
-    }
+    // Its behavior on each layout: `header_class_options.test.js`.
+    test("the content width is previewed", async () => {
+        await setupWebsiteBuilder("", { headerContent });
+        await contains(":iframe #wrapwrap > header").click();
+        await waitFor("[data-label='Content Width']");
+        expect(
+            "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
+        ).toHaveCount(3);
+    });
+});
+
+describe("header font size", () => {
+    test("an emptied font size is the theme's again", async () => {
+        mockThemeRpcs();
+        await setupWebsiteBuilder("", { headerContent });
+        await contains(":iframe #wrapwrap > header").click();
+        const inputSelector = "[data-action-param='header-font-size'] input";
+        await contains(inputSelector).edit("20");
+        await contains(inputSelector).clear();
+        expect(queryOne(":iframe html").style.getPropertyValue("--header-font-size")).toBe(
+            "initial"
+        );
+        await saveWebsite();
+        expect.verifySteps([`${USER_VALUES_URL} {"header-font-size":"null"}`]);
+    });
 });

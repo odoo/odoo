@@ -2,8 +2,6 @@
 import re
 import unittest
 
-from PIL import ImageColor
-
 from odoo.tests import BaseCase, tagged
 from odoo.tools.misc import file_open, file_path
 
@@ -45,11 +43,14 @@ class TestColorSystem(BaseCase):
     def assertSameColor(self, scss_value, python_value, message):
         if isinstance(python_value, tuple):
             python_value = cs.format_color(python_value)
-            # libsass prints some colors by their name.
-            if re.fullmatch(r'[a-z]+', scss_value):
-                scss_value = '#%02x%02x%02x' % ImageColor.getrgb(scss_value)
             scss_value = cs.format_color(cs.parse_color(scss_value))
         self.assertEqual(scss_value, python_value, message)
+
+    def test_named_colors(self):
+        """libsass prints some computed colors by their name."""
+        self.assertEqual(cs.parse_color('gray'), (128, 128, 128, 1))
+        values, _gates = cs.compute_colors({'o-cc1-bg': 'gray', 'primary': 'purple', 'secondary': 'silver'})
+        self.assertEqual(values['body-bg-rgb'], '128, 128, 128')
 
     def test_translucent_area_color_keeps_the_area_text(self):
         """Too translucent for a contrast, an area's custom color keeps the
@@ -92,12 +93,10 @@ class TestColorSystem(BaseCase):
                 f'link-hover-{i}': cs.increase_contrast(cs.adjust_lightness(color, -15), background),
                 f'lighten-{i}': cs.adjust_lightness(color, 40),
                 f'lightness-{i}': f'{cs.format_number(cs.lightness(color))}%',
-                f'outline-{i}-contrast': contrast.button_outline_variant(color)['hover-color'],
+                f'outline-{i}-contrast': contrast(color),
                 f'outline-{i}-rgb': cs.to_rgb(color),
             })
             variant = contrast.button_variant(color, cs.parse_color('#714B67'))
-            variant['text'] = variant.pop('color')
-            del variant['disabled-color']
             variant['focus-shadow-rgb'] = cs.to_rgb(variant['focus-shadow-rgb'])
             expected.update({f'button-{i}-{key}': value for key, value in variant.items()})
         compiled = self.compile(''.join(rules))

@@ -41,7 +41,7 @@
     // 4) The Odoo values map, $o-website-values, must be printed. The color
     // combinations' and areas' gradients unquoted: their rules read them.
     @each $key, $value in $o-website-values {
-        @if $value and ((str-index($key, 'o-cc') == 1 and str-index($key, '-bg-gradient')) or index(('menu-gradient', 'menu-secondary-gradient', 'footer-gradient', 'copyright-gradient', 'breadcrumb-gradient', 'portal-gradient'), $key)) {
+        @if $value and ((str-index($key, 'o-cc') == 1 and str-index($key, '-bg-gradient')) or index($o-area-gradient-keys, $key)) {
             --#{$key}: #{$value};
         } @else {
             @include print-variable($key, $value);
@@ -51,9 +51,8 @@
     // 5) Use final value used by the theme
     @include print-variable('logo-height', $o-theme-navbar-logo-height);
     // The header text color as CSS (a color's name refers to it).
-    $-header-text-color: o-website-value('header-text-color');
-    @if $-header-text-color {
-        --o-header-text-color: #{o-color-css(if(type-of($-header-text-color) == 'string', unquote($-header-text-color), $-header-text-color))};
+    @if $o-header-text-color {
+        --o-header-text-color: #{o-color-css(if(type-of($o-header-text-color) == 'string', unquote($o-header-text-color), $o-header-text-color))};
     }
     @include print-variable('fixed-logo-height', $o-theme-navbar-fixed-logo-height);
     // The page's background image as CSS (see `body-image-bg-style`).
@@ -238,13 +237,10 @@
     // without the user's own. That's the theme's, else what the compile falls
     // back to, which can be another value (a heading level follows the
     // headings one).
-    $-fallbacks: (
-        'input-border-width': $input-btn-border-width,
-        'display-1-font-size': 5rem,
-        'display-2-font-size': 4.5rem,
-        'display-3-font-size': 4rem,
-        'display-4-font-size': 3.5rem,
-    );
+    $-fallbacks: ('input-border-width': $input-btn-border-width);
+    @each $level in (1, 2, 3, 4) {
+        $-fallbacks: map-merge($-fallbacks, ('display-#{$level}-font-size': map-get($o-display-font-sizes-default, $level)));
+    }
     @each $level, $multiplier in (1: $o-theme-h1-font-size-multiplier, 2: $o-theme-h2-font-size-multiplier, 3: $o-theme-h3-font-size-multiplier, 4: $o-theme-h4-font-size-multiplier, 5: $o-theme-h5-font-size-multiplier, 6: $o-theme-h6-font-size-multiplier) {
         $-fallbacks: map-merge($-fallbacks, ('h#{$level}-font-size': $font-size-base * $multiplier));
     }
@@ -274,8 +270,16 @@
             $-keys: append($-keys, 'box-shadow#{$size}-#{$property}');
         }
     }
+    // A theme that sets the Bootstrap variable itself wins over the user's
+    // value (as for the weights, see `o-font-weight-var`): it's the default.
+    $-theme-values: ();
+    @each $key, $compiled in ('font-size-base': $font-size-base, 'small-font-size': $o-small-font-size, 'paragraph-margin-top': $paragraph-margin-top, 'paragraph-margin-bottom': $paragraph-margin-bottom, 'headings-line-height': $headings-line-height, 'headings-margin-top': $headings-margin-top, 'headings-margin-bottom': $headings-margin-bottom) {
+        @if o-website-value($key) != null and o-website-value($key) != $compiled {
+            $-theme-values: map-merge($-theme-values, ($key: $compiled));
+        }
+    }
     @each $key in join($-keys, map-keys($-fallbacks)) {
-        @include print-variable('o-default-#{$key}', map-get($o-default-website-values, $key) or map-get($-fallbacks, $key));
+        @include print-variable('o-default-#{$key}', map-get($-theme-values, $key) or map-get($o-default-website-values, $key) or map-get($-fallbacks, $key));
     }
 
     @include print-variable('color-palettes-name', $o-original-color-palette-name);
@@ -327,8 +331,7 @@ body {
     // The page layouts are theme gates, so that the builder previews them.
     @include o-theme-gate('layout-boxed', not (o-website-value('layout') == 'full')) {
         // `force-opaque-bg-color()`, from the color's variable.
-        $-color: o-color('body');
-        background-color: var(--o-body-fill, #{mix(change-color($-color, $alpha: 1), white, percentage(alpha($-color)))});
+        background-color: var(--o-body-fill, #{o-body-fill()});
     }
     @include o-theme-gate('layout-full', o-website-value('layout') == 'full') {
         // Only if necessary as, if already opaque, the background color of the
@@ -604,14 +607,6 @@ body {
     @include o-area-gradient('menu-gradient');
 }
 
-@function format-color($color) {
-    // Check if the value is wrapped in quotes (initially it wasn't, and it
-    // didn't work) because we don't want the text color of the navbar to
-    // change once the fix is applied for users who tried the option when it
-    // wasn't working.
-    @return if(str-index(inspect($color), '"') == 1 or str-index(inspect($color), "'") == 1, o-color($color), $color);
-}
-
 // TODO this should be reviewed. While it allowed to choose a color for the
 // navbar text, there is no :hover effect, the active item is not visible and
 // the selector is probably too specific and should rather be about extending
@@ -734,36 +729,26 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
         }
     }
 }
+// The logo's padding centers it in a nav link's height.
+@mixin o-header-logo-padding($nav-link-height) {
+    $-logo-padding-y: #{"max(0px, calc((#{$nav-link-height} - var(--logo-height)) / 2))"};
+    header .navbar-brand {
+        &, &.logo {
+            padding-top: $-logo-padding-y;
+            padding-bottom: $-logo-padding-y;
+        }
+    }
+}
 @if $o-theme-navbar-logo-height {
     // With default values, this makes it slightly bigger than standard
     // navbar-brand, which is what we want
     header .navbar-brand {
         font-size: calc(var(--logo-height) / #{$line-height-base});
     }
-    // The logo's padding centers it in a nav link's height, which depends on
-    // the header font size when set.
-    @each $gate, $nav-link-height in (
-        '': $nav-link-height,
-        'header-font-size': calc(var(--header-font-size) * #{$line-height-base} + #{$nav-link-padding-y * 2}),
-    ) {
-        $-logo-padding-y: #{"max(0px, calc((#{$nav-link-height} - var(--logo-height)) / 2))"};
-        @if $gate == '' {
-            header .navbar-brand {
-                &, &.logo {
-                    padding-top: $-logo-padding-y;
-                    padding-bottom: $-logo-padding-y;
-                }
-            }
-        } @else {
-            @include o-theme-gate($gate) {
-                header .navbar-brand {
-                    &, &.logo {
-                        padding-top: $-logo-padding-y;
-                        padding-bottom: $-logo-padding-y;
-                    }
-                }
-            }
-        }
+    // The nav link's height depends on the header font size when set.
+    @include o-header-logo-padding($nav-link-height);
+    @include o-theme-gate('header-font-size') {
+        @include o-header-logo-padding(calc(var(--header-font-size) * #{$line-height-base} + #{$nav-link-padding-y * 2}));
     }
 }
 
@@ -830,12 +815,6 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-.btn {
-    @if ($o-theme-buttons-font != $o-theme-font) {
-        font-family: var(--buttons-font-family);
-    }
-}
-
 // Texts
 p {
     margin-top: var(--paragraph-margin-top);
@@ -872,7 +851,8 @@ $-btn-font-weight-fallback: $btn-font-weight;
     $-btn-font-weight-fallback: o-font-weight-var('font-weight-normal', $font-weight-normal);
 }
 .btn {
-    // Empty when unset, as Bootstrap compiles it: the button inherits its font.
+    // The buttons font, which Bootstrap's rule reads. Empty when unset, as
+    // Bootstrap compiles it: the button inherits its font.
     @if not $btn-font-family {
         --#{$prefix}btn-font-family: var(--buttons-font-family, );
     }
@@ -1127,19 +1107,10 @@ font[class*='bg-'] {
         // mobile navbar's in the sidebar layout) and mobile navbar.
         &:where(:not(.o_header_sidebar)) nav.navbar,
         &:where(.o_header_sidebar) nav.navbar.o_header_mobile {
-            &::before {
-                --o-bg-blur: var(--header-bg-blur);
-            }
-        }
-        .o_navbar_mobile {
-            --o-bg-blur: var(--header-bg-blur);
-        }
-
-        &:where(:not(.o_header_sidebar)) nav.navbar,
-        &:where(.o_header_sidebar) nav.navbar.o_header_mobile {
             position: relative;
 
             &::before {
+                --o-bg-blur: var(--header-bg-blur);
                 content: "";
                 position: absolute;
                 inset: 0;
@@ -1164,6 +1135,7 @@ font[class*='bg-'] {
         }
 
         .o_navbar_mobile {
+            --o-bg-blur: var(--header-bg-blur);
             @include o-bg-blur-option;
         }
     }
@@ -2482,14 +2454,10 @@ header {
 // Navbar Links Styles
 @mixin active-link-border-color {
     // The header text color, if set (see above).
-    @if o-website-value('header-text-color') {
-        border-color: var(--o-header-text-color);
-    } @else {
-        border-color: var(--o-header-text-color, var(--#{$variable-prefix}nav-active-color));
+    border-color: var(--o-header-text-color, var(--#{$variable-prefix}nav-active-color));
 
-        &:hover {
-            border-color: var(--o-header-text-color, var(--#{$variable-prefix}nav-link-color));
-        }
+    &:hover {
+        border-color: var(--o-header-text-color, var(--#{$variable-prefix}nav-link-color));
     }
 }
 

@@ -317,7 +317,9 @@
 // variable): rfs needs a number at compile time. Same result: the size as is
 // up to `$rfs-base-value`, else a fluid size below `$rfs-breakpoint`.
 // `tan(atan2(a, b))` is `a / b` as a number (`calc()` can't divide lengths).
-// rfs keeps its base value and breakpoint in px, without the unit.
+// rfs keeps its base value and breakpoint in px, without the unit. This
+// assumes rfs's default mode (`$rfs-mode: min-media-query`, which Odoo keeps)
+// and reuses its private media query mixin.
 @mixin o-font-size-var($size, $property: font-size) {
     @if $enable-rfs {
         $-base: $rfs-base-value * 1px;

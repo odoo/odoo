@@ -382,7 +382,7 @@ describe("operations", () => {
         await contains(":iframe .test-options-target").click();
         // What the browser reports while "10." is typed in a number input.
         // Typing it with Hoot sets the value instead, which the input sanitizes.
-        const inputEl = queryFirst(".options-container input");
+        const inputEl = queryFirst(".o_hb_options_container input");
         Object.defineProperty(inputEl, "validity", { value: { badInput: true } });
         inputEl.value = "";
         inputEl.dispatchEvent(new Event("input", { bubbles: true }));

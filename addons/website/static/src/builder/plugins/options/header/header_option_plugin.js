@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { HeaderTemplateChoice } from "./header_template_option";
 import { HeaderTopOptions } from "./header_top_options";
-import { PreviewWebsiteConfigAction } from "../../customize_website_plugin";
+import { PreviewWebsiteConfigAction } from "../../website_views_preview_plugin";
 import { MENU_BOX_SHADOWS } from "./header_box_option_plugin";
 
 /** @typedef {import("@odoo/owl").Component} Component */

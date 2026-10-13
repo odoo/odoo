@@ -1103,25 +1103,7 @@ export function useInputBuilderComponent(
         // `value: undefined`: the dependency getValue() below keys its DOM
         // fallback on `"value" in state`, so a spurious `value` key would
         // disarm it.
-        if (value === undefined) {
-            return {};
-        }
-        return { value, actionDefaultValue: getActionDefaultValue(editingElement) };
-    }
-
-    /**
-     * @param {Element} editingElement
-     */
-    function getActionDefaultValue(editingElement) {
-        for (const { actionId, actionParam } of getAllActions()) {
-            const value = getAction(actionId).getDefaultValue({
-                editingElement,
-                params: actionParam,
-            });
-            if (value !== undefined) {
-                return value;
-            }
-        }
+        return value === undefined ? {} : { value };
     }
 
     /**

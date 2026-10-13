@@ -513,5 +513,5 @@ test("marks the action's default value", async () => {
     });
     await setupHTMLBuilder(`<div class="test-options-target">10</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(".o-hb-range-default").toHaveAttribute("style", "--o-hb-range-default-position: 0.5;");
+    expect(".o_hb_range_default").toHaveAttribute("style", "--o-hb-range-default-position: 0.5;");
 });

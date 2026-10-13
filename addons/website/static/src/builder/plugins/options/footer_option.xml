@@ -37,7 +37,6 @@
     <BuilderRow label.translate="Background">
         <BuilderColorPicker
             enabledTabs="['theme', 'custom', 'gradient']"
-            preview="true"
             defaultColor="''"
             action="'previewAreaColor'"
             actionParam="{
@@ -80,7 +79,7 @@
 </t>
 
 <t t-name="website.FooterBorder">
-    <BorderConfigurator label.translate="Border" withSliders="true"/>
+    <BorderConfigurator label.translate="Border" widthAction="'borderSidesWidth'" withSliders="true"/>
     <ShadowOption/>
 </t>
 

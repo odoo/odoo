@@ -133,13 +133,13 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Check that the setting for ${fontSizeClass} is correct`,
             trigger:
                 `[data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]` +
-                ` input.o-hb-input-number:value("${classNameInfo.get(fontSizeClass).start}")`,
+                ` input.o_hb_input_number:value("${classNameInfo.get(fontSizeClass).start}")`,
         },
         {
             content: `Change the setting value of ${fontSizeClass}`,
             trigger: `[data-action-param="${
                 classNameInfo.get(fontSizeClass).scssVariableName
-            }"] input.o-hb-input-number`,
+            }"] input.o_hb_input_number`,
             // TODO: Remove "&& click body"
             run: `edit ${classNameInfo.get(fontSizeClass).end} && click body`,
         },
@@ -165,7 +165,7 @@ function getFontSizeTestSteps(fontSizeClass) {
             content: `Check that the setting of ${fontSizeClass} has been updated`,
             trigger:
                 `[data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]` +
-                ` input.o-hb-input-number:value("${classNameInfo.get(fontSizeClass).end}")`,
+                ` input.o_hb_input_number:value("${classNameInfo.get(fontSizeClass).end}")`,
         },
         {
             trigger: `body:not(:has(.o_we_ui_loading))`,

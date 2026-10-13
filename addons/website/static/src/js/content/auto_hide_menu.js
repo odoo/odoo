@@ -379,7 +379,7 @@ async function adaptHeaderMenu() {
 }
 document.addEventListener("DOMContentLoaded", adaptHeaderMenu);
 // The website builder renders the header again to preview a views switch (see
-// `customizeWebsite`'s `updateChrome`): a menu not adapted yet is adapted too.
+// `websiteViewsPreview`'s `updateChrome`): a menu not adapted yet is adapted too.
 document.addEventListener("o_header_rendered", () => {
     if (document.querySelector("header#top .top_menu")?.classList.contains("o_menu_loading")) {
         adaptHeaderMenu();

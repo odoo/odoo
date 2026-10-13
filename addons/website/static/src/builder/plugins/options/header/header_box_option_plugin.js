@@ -26,7 +26,6 @@ export class HeaderBoxOptionPlugin extends Plugin {
     resources = {
         builder_actions: {
             StyleActionHeaderAction,
-            StyleActionHeaderColorAction,
             SetShadowClassHeaderAction,
             SetShadowModeHeaderAction,
             SetShadowStyleHeaderAction,
@@ -37,7 +36,6 @@ export class HeaderBoxOptionPlugin extends Plugin {
 export class StyleActionHeaderAction extends StyleAction {
     static id = "styleActionHeader";
     static dependencies = ["customizeWebsite", "color"];
-    setup() {}
     getValue(...args) {
         const { params } = args[0];
         const value = super.getValue(...args);
@@ -47,25 +45,20 @@ export class StyleActionHeaderAction extends StyleAction {
         return value;
     }
     apply({ params: { mainParam: styleName }, value }) {
+        if (styleName === "border-color") {
+            this.dependencies.customizeWebsite.previewWebsiteColors({ "menu-border-color": value });
+            return;
+        }
         const previewValues = {};
         if (styleName === "border-width") {
-            // The bottom (or right) border only takes the first width.
-            previewValues["o-menu-border-bottom-width"] = value.split(" ")[0];
+            // The layouts with a bottom (or right) border only.
+            previewValues["o-menu-border-bottom-width"] = value;
         }
         this.dependencies.customizeWebsite.previewWebsiteVariables(
             { [`menu-${styleName}`]: value },
             "null",
             previewValues
         );
-    }
-}
-
-export class StyleActionHeaderColorAction extends StyleAction {
-    static id = "styleActionHeaderColor";
-    static dependencies = ["customizeWebsite", "color"];
-    setup() {}
-    apply({ value }) {
-        this.dependencies.customizeWebsite.previewWebsiteColors({ "menu-border-color": value });
     }
 }
 

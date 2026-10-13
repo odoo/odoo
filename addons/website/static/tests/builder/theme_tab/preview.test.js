@@ -1,48 +1,31 @@
 import { expect, queryFirst, test } from "@odoo/hoot";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
-import {
-    contains,
-    defineModels,
-    models,
-    onRpc,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { assets } from "@web/core/assets";
+import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
+    mockThemeRpcs,
+    PALETTE_URL,
+    saveWebsite,
     setupWebsiteBuilder,
+    USER_VALUES_URL as USER_VALUES,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
-const USER_VALUES = "/website/static/src/scss/options/user_values.scss";
-
-function mockThemeRpcs() {
-    class WebsiteAssets extends models.Model {
-        _name = "website.assets";
-        make_scss_customization(location, changes) {
-            expect.step(`${location} ${JSON.stringify(changes)}`);
-        }
-    }
-    defineModels([WebsiteAssets]);
-    onRpc("/website/theme_customize_bundle_reload", () => {
-        expect.step("asset reload");
-        return "";
-    });
-}
+const PARAGRAPH = "[data-container-title='Paragraph']";
+const HEADINGS = "[data-container-title='Headings']";
+const BUTTONS = "[data-container-title='Button']";
+const INPUTS = "[data-container-title='Input Fields']";
 
 // The number box of a slider.
 function numberInput(variable) {
-    return `[data-action-param='${variable}'] input.o-hb-input-number`;
+    return `[data-action-param='${variable}'] input.o_hb_input_number`;
 }
 
 function websiteRootStyle() {
     return queryFirst(":iframe html").style;
-}
-
-async function save() {
-    await contains(".o-snippets-top-actions [data-action='save']").click();
-    await waitForNone(".o-snippets-top-actions");
 }
 
 test("theme tab: a value is previewed, undone, redone and written on save", async () => {
@@ -53,28 +36,52 @@ test("theme tab: a value is previewed, undone, redone and written on save", asyn
     await contains(numberInput("paragraph-margin-top")).edit("8");
     expect(websiteRootStyle().getPropertyValue("--paragraph-margin-top")).toBe("8px");
 
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='undo']").click();
     expect(websiteRootStyle().getPropertyValue("--paragraph-margin-top")).toBe("");
 
-    await contains(".o-snippets-top-actions button[data-icon='redo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='redo']").click();
     expect(websiteRootStyle().getPropertyValue("--paragraph-margin-top")).toBe("8px");
     expect.verifySteps([]);
 
-    await save();
+    await saveWebsite();
     expect.verifySteps([`${USER_VALUES} {"paragraph-margin-top":"8px"}`]);
 });
 
-test("theme tab: discard writes no previewed value", async () => {
-    mockThemeRpcs();
-    await setupWebsiteBuilder("");
-    await contains("#theme-tab").click();
+// Each kind of previewed value has its own pending values.
+const DISCARDED_CHANGES = {
+    value: () => contains(numberInput("paragraph-margin-top")).edit("8"),
+    color: async () => {
+        await contains("div[data-label='Normal'] button.o_we_color_preview").click();
+        await contains(".o_popover button.o_color_button[data-color='#FF0000']").click();
+    },
+    palette: async () => {
+        await contains(".o_hb_theme_color_slider_btn").click();
+        await contains(".o_theme_tab [data-icon='palette']").click();
+        await contains(
+            `[data-action-value="'default-light-1'"] .o_hb_color_palette_card span`
+        ).click();
+    },
+    view: () => contains("[data-label='Show Header'] input[type='checkbox']").click(),
+};
+for (const [kind, change] of Object.entries(DISCARDED_CHANGES)) {
+    test(`theme tab: discard writes no previewed ${kind}`, async () => {
+        mockThemeRpcs();
+        onRpc("/website/theme_customize_data", () => expect.step("views written"));
+        // The page as the server renders it, whatever the views.
+        onRpc(
+            "/blank",
+            () => new Response(`<html><body><div id="wrapwrap"><main/></div></body></html>`)
+        );
+        await setupWebsiteBuilder("");
+        await contains("#theme-tab").click();
 
-    await contains(numberInput("paragraph-margin-top")).edit("8");
-    await contains(".o-snippets-top-actions [data-action='cancel']").click();
-    await contains(".modal-content button.btn-primary").click();
-    await waitForNone(".o-snippets-top-actions");
-    expect.verifySteps([]);
-});
+        await change();
+        await contains(".o_hb_snippets_top_actions [data-action='cancel']").click();
+        await contains(".modal-content button.btn-primary").click();
+        await waitForNone(".o_hb_snippets_top_actions");
+        expect.verifySteps([]);
+    });
+}
 
 // A saved value, over the compiled one (which is the default here).
 const SAVED_VALUES = `html:root { --body-line-height: 2; --headings-line-height: 2; }`;
@@ -95,7 +102,7 @@ test("theme tab: a reset previews the default and is written on save", async () 
     expect(":iframe p").toHaveStyle({ "line-height": "24px" });
     expect(numberInput("body-line-height")).toHaveValue(1.5);
 
-    await save();
+    await saveWebsite();
     expect.verifySteps([`${USER_VALUES} {"body-line-height":"null"}`]);
 });
 
@@ -133,13 +140,11 @@ test("theme tab: a reset heading level follows the headings value", async () => 
     expect(":iframe h4").toHaveStyle({ "line-height": "40px" });
 });
 
-const PALETTE = "/website/static/src/scss/options/colors/user_color_palette.scss";
-
 async function openColorPicker(preset, label) {
-    await contains(".o-hb-theme-color-slider-btn").click();
+    await contains(".o_hb_theme_color_slider_btn").click();
     await contains(`.o_cc_preview_wrapper:eq(${preset - 1})`).click();
     await contains(
-        `.hb-sliding-panel [data-label='${label}'] button.o_we_color_preview:visible`
+        `.o_hb_sliding_panel [data-label='${label}'] button.o_we_color_preview:visible`
     ).click();
 }
 
@@ -161,56 +166,106 @@ test("theme tab: a preset color is previewed, the colors computed from it follow
     expect.verifySteps(["computed colors of o-cc2-bg #0000FF"]);
     expect(":iframe section p").toHaveStyle({ color: "rgb(255, 255, 255)" });
 
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='undo']").click();
     expect(":iframe section").not.toHaveStyle({ "background-color": "rgb(0, 0, 255)" });
     expect(websiteRootStyle().getPropertyValue("--o-cc2-bg-contrast")).toBe("");
     expect.verifySteps([]);
-    await contains(".o-snippets-top-actions button[data-icon='redo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='redo']").click();
     expect(":iframe section").toHaveStyle({ "background-color": "rgb(0, 0, 255)" });
     expect.verifySteps(["computed colors of o-cc2-bg #0000FF"]);
 
-    await save();
+    await saveWebsite();
     expect.verifySteps([
         `${USER_VALUES} {"o-cc2-bg-gradient":"null"}`,
-        `${PALETTE} {"o-cc2-bg":"#0000FF"}`,
+        `${PALETTE_URL} {"o-cc2-bg":"#0000FF"}`,
     ]);
+});
+
+test("theme tab: the colors computed from a preset's know its text color, when set", async () => {
+    mockThemeRpcs();
+    onRpc("/website/theme_computed_colors", async (request) => {
+        const { params } = await request.json();
+        expect.step(`o-cc1-text ${params.colors["o-cc1-text"]}`);
+        return { values: {}, gates: {} };
+    });
+    await setupWebsiteBuilder(`<section class="o_cc o_cc1"><p>Text</p></section>`, {
+        loadIframeBundles: true,
+        // Set by the palette.
+        styleContent: "html:root { --o-cc1-text: #112233; --o-default-o-cc1-text: #112233; }",
+    });
+    await contains("#theme-tab").click();
+    await openColorPicker(1, "Background");
+    await contains(".o_popover [data-color='#0000FF']").click();
+    await expect.waitForSteps(["o-cc1-text #112233"]);
+});
+
+test("theme tab: the gray sliders keep their values while previewed", async () => {
+    mockThemeRpcs();
+    await setupWebsiteBuilder("", { loadIframeBundles: true });
+    await contains("#theme-tab").click();
+    await contains(".o_hb_theme_color_slider_btn").click();
+    await contains(".o_hb_sliding_panel [data-label='Grays'] div").click();
+    const hueInputEl = await waitFor("[data-label='Hue'] input[type='range']");
+    const hue = Number(hueInputEl.value);
+    // The grays are rounded to 8-bit colors: read back from them, the
+    // values would drift.
+    await contains("[data-label='Saturation'] input.o_hb_input_number").edit("10");
+    expect("[data-label='Saturation'] input.o_hb_input_number").toHaveValue(10);
+    expect(hueInputEl).toHaveValue(hue);
+    await contains("[data-label='Saturation'] input.o_hb_input_number").edit("20");
+    expect("[data-label='Saturation'] input.o_hb_input_number").toHaveValue(20);
+    expect(hueInputEl).toHaveValue(hue);
 });
 
 test("theme tab: palette and status colors are previewed where they are used", async () => {
     mockThemeRpcs();
-    onRpc("/website/theme_computed_colors", () => ({ values: {}, gates: {} }));
     await setupWebsiteBuilder(
         `<a class="btn btn-primary">B</a><span class="text-success">S</span>`,
         {
             loadIframeBundles: true,
+            // The gates the server renders on a website page (the test page
+            // has none).
+            onIframeLoaded: (iframe) => {
+                iframe.contentDocument.documentElement.dataset.oThemeGates =
+                    "btn-primary-fill btn-secondary-fill";
+            },
         }
     );
     await contains("#theme-tab").click();
-    // The gates the server renders on a website page (the test page has none).
-    queryFirst(":iframe html").dataset.oThemeGates = "btn-primary-fill btn-secondary-fill";
-    await contains(".o-hb-theme-color-slider-btn").click();
+    await contains(".o_hb_theme_color_slider_btn").click();
     // Primary buttons are the first palette color's (through the primary
     // theme color and the first color preset's buttons).
-    await contains(".hb-sliding-panel button.o_we_color_preview[title='Primary']").click();
+    await contains(".o_hb_sliding_panel button.o_we_color_preview[title='Primary']").click();
     // These pickers open on their custom tab.
     await contains(".o_popover .solid-tab").click();
     await contains(".o_popover [data-color='#FF0000']").click();
     expect(":iframe .btn-primary").toHaveStyle({ "background-color": "rgb(255, 0, 0)" });
-    await contains(".hb-sliding-panel button.o_we_color_preview[title='Success']").click();
+    await contains(".o_hb_sliding_panel button.o_we_color_preview[title='Success']").click();
     await contains(".o_popover .solid-tab").click();
     await contains(".o_popover [data-color='#0000FF']").click();
     expect(":iframe .text-success").toHaveStyle({ color: "rgb(0, 0, 255)" });
 
-    await save();
+    await saveWebsite();
     expect.verifySteps([
-        `${PALETTE} {"o-color-1":"#FF0000"}`,
+        `${PALETTE_URL} {"o-color-1":"#FF0000"}`,
         `/website/static/src/scss/options/colors/user_theme_color_palette.scss {"success":"#0000FF"}`,
     ]);
 });
 
+test("theme tab: a page without theme gates (e.g. cached) gets the saved ones' rules", async () => {
+    await setupWebsiteBuilder(`<a class="btn btn-primary">B</a>`, { loadIframeBundles: true });
+    const htmlEl = queryFirst(":iframe html");
+    const getBackground = () =>
+        getComputedStyle(queryFirst(":iframe .btn-primary")).backgroundColor;
+    const background = getBackground();
+    htmlEl.dataset.oThemeGates = "btn-primary-fill btn-secondary-fill";
+    expect(getBackground()).toBe(background);
+    htmlEl.dataset.oThemeGates = "";
+    expect(getBackground()).not.toBe(background);
+});
+
 test("theme tab: a preset headings color applies once set", async () => {
     mockThemeRpcs();
-    onRpc("/website/theme_computed_colors", () => ({ values: {}, gates: {} }));
     await setupWebsiteBuilder(`<section class="o_cc o_cc1"><h2>Title</h2></section>`, {
         loadIframeBundles: true,
     });
@@ -228,32 +283,30 @@ test("theme tab: the sliders mark the theme default", async () => {
     await contains("#theme-tab").click();
 
     // The Paragraph block mounts once the page's fonts are ready.
-    const mark = await waitFor(`${PARAGRAPH} [data-label='Line Height'] .o-hb-range-default`);
+    const mark = await waitFor(`${PARAGRAPH} [data-label='Line Height'] .o_hb_range_default`);
+    const getPosition = () =>
+        parseFloat(mark.style.getPropertyValue("--o-hb-range-default-position"));
     // 1.5 on the paragraph line height's 1-2.5 range.
-    const position = "--o-hb-range-default-position: 0.3333333333333333;";
-    expect(mark).toHaveAttribute("style", position);
+    expect(getPosition()).toBeCloseTo(1 / 3);
     // Moving the value does not move the mark.
     await contains(numberInput("body-line-height")).edit("2");
-    expect(mark).toHaveAttribute("style", position);
+    expect(getPosition()).toBeCloseTo(1 / 3);
 });
 
 // Each value changes the page at once: the compiled CSS reads it from its
 // variable. `expand` is the row that holds `option` in its collapse (its
 // option, or a selector). `select` is the row of a select, where `value` is
-// picked; `input`, the input to edit when it isn't found by its option. Font sizes stay at most 20px, where Bootstrap's rfs doesn't make
-// them fluid; the line height probes have a fixed font size. The fonts are the
-// system ones, which load nothing.
-const PARAGRAPH = "[data-container-title='Paragraph']";
-const HEADINGS = "[data-container-title='Headings']";
-const BUTTONS = "[data-container-title='Button']";
-const INPUTS = "[data-container-title='Input Fields']";
+// picked; `picker`, the row of the color picker where it is; `input`, the
+// input to edit when it isn't found by its option. Font sizes stay at most
+// 20px (no fluid size); the line height probes have a fixed font size. The
+// fonts are the system ones, which load nothing.
 const INPUT = ".form-control:not(.form-control-sm, .form-control-lg)";
 const SYSTEM_FONTS =
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, "Odoo Unicode Support Noto", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 // prettier-ignore
 const PREVIEWED_VALUES = [
     { option: "box-shadow-offset-x", value: "20", expand: "[data-label='Normal']", element: ".shadow", property: "box-shadow", expected: "rgba(0, 0, 0, 0.12) 20px 4px 16px 0px" },
-    { option: "box-shadow-color", value: "#FF0000", element: ".shadow", property: "box-shadow", expected: "rgb(255, 0, 0) 0px 4px 16px 0px" },
+    { option: "box-shadow-color", value: "#FF0000", picker: "div[data-label='Normal']", element: ".shadow", property: "box-shadow", expected: "rgb(255, 0, 0) 0px 4px 16px 0px" },
     { option: "font-size-base", value: "18", element: "p", property: "font-size", expected: "18px" },
     { option: "small-font-size", value: "12", expand: "font-size-base", element: "small", property: "font-size", expected: "12px" },
     { option: "body-line-height", value: "2", element: "p", property: "line-height", expected: "32px" },
@@ -290,7 +343,7 @@ const PREVIEWED_VALUES = [
     { option: "input-padding-y-lg", value: "14", expand: "input-padding-y", element: ".form-control-lg", property: "padding-top", expected: "14px" },
     { option: "input-font-size", value: "18", element: INPUT, property: "font-size", expected: "18px" },
     { option: "input-font-size-sm", value: "12", expand: "input-font-size", element: ".form-control-sm", property: "font-size", expected: "12px" },
-    { option: "input-border-width", value: "3", input: `${INPUTS} [data-label='Border Width'] input.o-hb-input-number`, element: INPUT, property: "border-top-width", expected: "3px" },
+    { option: "input-border-width", value: "3", input: `${INPUTS} [data-label='Border Width'] input.o_hb_input_number`, element: INPUT, property: "border-top-width", expected: "3px" },
     { option: "input-border-radius", value: "12", element: INPUT, property: "border-top-left-radius", expected: "12px" },
     { option: "input-border-radius-lg", value: "20", expand: "input-border-radius", element: ".form-control-lg", property: "border-top-left-radius", expected: "20px" },
     { option: "btn-primary-outline", value: "outline", select: `${BUTTONS} [data-label='Primary Style']`, element: ".btn:not(.btn-lg, .btn-sm)", property: "background-color", expected: "rgba(0, 0, 0, 0)" },
@@ -300,7 +353,7 @@ const PREVIEWED_VALUES = [
 ];
 
 // prettier-ignore
-for (const { option, value, expand, select, input, element, property, expected } of PREVIEWED_VALUES) {
+for (const { option, value, expand, select, picker, input, element, property, expected } of PREVIEWED_VALUES) {
     test(`theme tab: ${option} is previewed on the page`, async () => {
         mockThemeRpcs();
         await setupWebsiteBuilder(
@@ -335,11 +388,11 @@ for (const { option, value, expand, select, input, element, property, expected }
         }
         expect(`:iframe ${element}`).not.toHaveStyle({ [property]: expected });
 
-        if (value.startsWith("#")) {
-            await contains("div[data-label='Normal'] button.o_we_color_preview").click();
+        if (picker) {
+            await contains(`${picker} button.o_we_color_preview`).click();
             await contains(`.o_popover button.o_color_button[data-color='${value}']`).click();
         } else if (select) {
-            await contains(`${select} .o-hb-select-toggle`).click();
+            await contains(`${select} .o_hb_select_toggle`).click();
             await contains(`.o-dropdown--menu [data-action-value="${value}"]`).click();
         } else {
             await contains(input || numberInput(option)).edit(value);
@@ -348,6 +401,20 @@ for (const { option, value, expand, select, input, element, property, expected }
         expect.verifySteps([]);
     });
 }
+
+test("theme tab: a shadow is written on save in rem, with its color", async () => {
+    mockThemeRpcs();
+    await setupWebsiteBuilder("");
+    await contains("#theme-tab").click();
+    await contains("[data-label='Normal'] .o_hb_collapse_toggler").click();
+    await contains(numberInput("box-shadow-offset-x")).edit("20");
+    await contains("div[data-label='Normal'] button.o_we_color_preview").click();
+    await contains(".o_popover button.o_color_button[data-color='#FF0000']").click();
+    await saveWebsite();
+    expect.verifySteps([
+        `${USER_VALUES} {"box-shadow-offset-x":"1.25rem","box-shadow-color":"#FF0000"}`,
+    ]);
+});
 
 test("theme tab: a display font size is previewed on the page", async () => {
     mockThemeRpcs();
@@ -367,15 +434,15 @@ test("theme tab: a border side set apart is previewed", async () => {
     mockThemeRpcs();
     await setupWebsiteBuilder(`<input class="form-control"/>`, { loadIframeBundles: true });
     await contains("#theme-tab").click();
-    await contains(`${INPUTS} [data-label='Border Width'] input.o-hb-input-number`).edit("2");
+    await contains(`${INPUTS} [data-label='Border Width'] input.o_hb_input_number`).edit("2");
     await contains(`${INPUTS} [data-label='Border Width'] .o_hb_collapse_toggler`).click();
-    await contains(`${INPUTS} [data-label='Bottom'] input.o-hb-input-number`).edit("5");
+    await contains(`${INPUTS} [data-label='Bottom'] input.o_hb_input_number`).edit("5");
     // Its rule is gated on `data-o-theme-gates`.
     expect(":iframe html").toHaveAttribute("data-o-theme-gates", /input-border-bottom-width/);
     expect(":iframe .form-control").toHaveStyle({ "border-top-width": "2px" });
     expect(":iframe .form-control").toHaveStyle({ "border-bottom-width": "5px" });
 
-    await save();
+    await saveWebsite();
     expect.verifySteps([
         `${USER_VALUES} {"input-border-width":"null","input-border-top-width":"0.125rem","input-border-right-width":"0.125rem","input-border-bottom-width":"0.3125rem","input-border-left-width":"0.125rem"}`,
     ]);
@@ -393,7 +460,7 @@ test("theme tab: hovering a color previews it, leaving the picker reverts it", a
     await contains(".o_popover .o_font_color_selector").hover();
     expect(websiteRootStyle().getPropertyValue("--box-shadow-color")).toBe("");
 
-    await save();
+    await saveWebsite();
     expect.verifySteps([]);
 });
 
@@ -408,13 +475,13 @@ test("theme tab: a font change moves a weight the new font lacks to its nearest"
             @font-face { font-family: "Inter"; font-weight: 700; src: local("Arial"); }`,
     });
     await contains("#theme-tab").click();
-    await contains(`${HEADINGS} [data-label='Font Weight'] .o-hb-select-toggle`).click();
+    await contains(`${HEADINGS} [data-label='Font Weight'] .o_hb_select_toggle`).click();
     await contains(`.o-dropdown--menu [data-action-value="300"]`).click();
     expect(":iframe h2").toHaveStyle({ "font-weight": "300" });
-    await contains(`${HEADINGS} [data-label='Font Family'] .o-hb-select-toggle`).click();
+    await contains(`${HEADINGS} [data-label='Font Family'] .o_hb_select_toggle`).click();
     await contains(`.o-dropdown--menu [data-action-value="'Inter'"]`).click();
     expect(":iframe h2").toHaveStyle({ "font-weight": "400" });
-    await save();
+    await saveWebsite();
     expect.verifySteps([
         // The headings' weight picker sets the display weight too.
         `${USER_VALUES} {"headings-font-weight":"400","display-font-weight":"400","headings-font":"'Inter'"}`,
@@ -423,7 +490,7 @@ test("theme tab: a font change moves a weight the new font lacks to its nearest"
 
 test("theme tab: the icons' font is loaded, then previewed", async () => {
     mockThemeRpcs();
-    patchWithCleanup(assets, {
+    patch(assets, {
         loadBundle(bundle) {
             if (!bundle.startsWith("web.material_symbols")) {
                 return super.loadBundle(...arguments);
@@ -438,6 +505,6 @@ test("theme tab: the icons' font is loaded, then previewed", async () => {
     expect(websiteRootStyle().getPropertyValue("--icon-font-family")).toBe(
         "Material Symbols Rounded"
     );
-    await save();
+    await saveWebsite();
     expect.verifySteps([`${USER_VALUES} {"icon-font-family":"Material Symbols Rounded"}`]);
 });

@@ -28,7 +28,6 @@ function mockPageRenders() {
 
 test("a views switch is previewed without a reload, undone, and written on save", async () => {
     mockPageRenders();
-    onRpc("/website/theme_customize_data_get", () => []);
     onRpc("/website/theme_customize_data", async (request) => {
         const { params } = await request.json();
         expect.step(`write ${JSON.stringify(params)}`);
@@ -44,18 +43,18 @@ test("a views switch is previewed without a reload, undone, and written on save"
     await waitFor("[data-label='Show Header'] input[type='checkbox']:not(:checked)");
     expect.verifySteps([`render {}`, `render {"${HIDE_HEADER}":true}`]);
 
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='undo']").click();
     await waitFor(":iframe header#top");
     // The same element, with its state.
     expect(queryFirst(":iframe header#top")).toBe(liveHeaderEl);
     expect("[data-label='Show Header'] input[type='checkbox']").toBeChecked();
 
-    await contains(".o-snippets-top-actions button[data-icon='redo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='redo']").click();
     await waitForNone(":iframe header#top");
     expect.verifySteps([]);
 
-    await contains(".o-snippets-top-actions [data-action='save']").click();
-    await waitForNone(".o-snippets-top-actions");
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
     expect.verifySteps([
         `write {"is_view_data":true,"enable":["${HIDE_HEADER}"],"disable":[],"reset_view_arch":false}`,
     ]);
@@ -81,8 +80,8 @@ test("a views switch that resets its view is written with the reset on save", as
     await contains(".o_customize_tab input[type='checkbox']").click();
     expect(".o_customize_tab input[type='checkbox']").not.toBeChecked();
     await expect.waitForSteps([`render {}`, `render {"test_view":false}`]);
-    await contains(".o-snippets-top-actions [data-action='save']").click();
-    await waitForNone(".o-snippets-top-actions");
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
     expect.verifySteps([
         `write {"is_view_data":true,"disable":["test_view"],"reset_view_arch":true}`,
     ]);
@@ -120,8 +119,8 @@ test("a footer template is previewed, written on save with its copyright width",
     await contains(".o_popover [title='Descriptive']").click();
     await waitFor(":iframe footer#bottom:contains(Descriptive)");
     expect.verifySteps([]);
-    await contains(".o-snippets-top-actions [data-action='save']").click();
-    await waitForNone(".o-snippets-top-actions");
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
     expect.verifySteps([
         "write website.template_footer_descriptive",
         "footer website.template_footer_descriptive",
@@ -130,7 +129,6 @@ test("a footer template is previewed, written on save with its copyright width",
 });
 
 test("the click effect's assets are written on save, without a reload", async () => {
-    onRpc("/website/theme_customize_data_get", () => []);
     onRpc("/website/theme_customize_data", async (request) => {
         const { params } = await request.json();
         expect.step(`write ${JSON.stringify(params)}`);
@@ -147,10 +145,10 @@ test("the click effect's assets are written on save, without a reload", async ()
     await contains("[data-label='On Click Effect'] .dropdown-toggle").click();
     await contains(".o_popover .dropdown-item:contains('Ripple')").click();
     expect.verifySteps([]);
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
-    await contains(".o-snippets-top-actions button[data-icon='redo']").click();
-    await contains(".o-snippets-top-actions [data-action='save']").click();
-    await waitForNone(".o-snippets-top-actions");
+    await contains(".o_hb_snippets_top_actions button[data-icon='undo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='redo']").click();
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
     expect.verifySteps([
         `write {"is_view_data":false,"enable":["website.ripple_effect_scss","website.ripple_effect_js"],"disable":[]}`,
         `scss {"btn-ripple":"true"}`,
@@ -172,7 +170,6 @@ test("a views switch isn't previewed on hover, and the page shows it's loading",
             }</header><main></main></div></body></html>`
         );
     });
-    onRpc("/website/theme_customize_data_get", () => []);
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`
@@ -201,7 +198,6 @@ test("a views switch shown by a class needs no render, and later renders show it
             `<html><body><div id="wrapwrap"><header id="top">Header</header><main></main></div></body></html>`
         );
     });
-    onRpc("/website/theme_customize_data_get", () => []);
     onRpc("/website/theme_customize_data", async (request) => {
         const { params } = await request.json();
         expect.step(`write ${params.enable.join(",")}`);
@@ -232,8 +228,8 @@ test("a views switch shown by a class needs no render, and later renders show it
         `render {"shown_view":true}`,
         `render {"rendered_view":true,"shown_view":true}`,
     ]);
-    await contains(".o-snippets-top-actions [data-action='save']").click();
-    await waitForNone(".o-snippets-top-actions");
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
     expect.verifySteps(["write shown_view,rendered_view"]);
 });
 
@@ -252,7 +248,6 @@ test("a view of the page's content renders it again, keeping its unsaved edits",
             )}</div></body></html>`
         );
     });
-    onRpc("/website/theme_customize_data_get", () => []);
     addBuilderOption({
         selector: ".test-options-target",
         editableOnly: false,
@@ -276,13 +271,12 @@ test("a view of the page's content renders it again, keeping its unsaved edits",
     expect(queryFirst(":iframe main .o_savable")).toBe(savableEl);
     expect(":iframe main .o_savable").toHaveText("Edited");
     expect(".o_customize_tab input[type='checkbox']").toBeChecked();
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='undo']").click();
     await waitForNone(":iframe main .test-view-on");
     expect(queryFirst(":iframe main .o_savable")).toBe(savableEl);
 });
 
 test("an edit in a part rendered for a views switch is recorded", async () => {
-    onRpc("/website/theme_customize_data_get", () => []);
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`
@@ -305,12 +299,11 @@ test("an edit in a part rendered for a views switch is recorded", async () => {
     const newEl = queryFirst(":iframe header#top .new");
     newEl.classList.add("edited");
     getEditor().shared.history.commit();
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='undo']").click();
     expect(newEl).not.toHaveClass("edited");
 });
 
 test("the options of a part rendered for a views switch are updated, not rebuilt", async () => {
-    onRpc("/website/theme_customize_data_get", () => []);
     onRpc("/blank", (request) => {
         const views = JSON.parse(new URL(request.url).searchParams.get("theme_preview_views"));
         return new Response(
@@ -332,21 +325,20 @@ test("the options of a part rendered for a views switch are updated, not rebuilt
         headerContent: `<header id="top">Header</header><main></main>`,
     });
     await contains(":iframe header#top").click();
-    const containerEl = queryFirst(
-        ".o_customize_tab .options-container:has([data-label='Layout'])"
+    const containerEl = await waitFor(
+        ".o_customize_tab .o_hb_options_container:has([data-label='Layout'])"
     );
     await contains("[data-label='Layout'] input[type='checkbox']").click();
     await waitFor(":iframe header#top:contains(New)");
     await waitFor("[data-label='Layout'] input[type='checkbox']:checked");
     await runAllTimers();
     await animationFrame();
-    expect(queryFirst(".o_customize_tab .options-container:has([data-label='Layout'])")).toBe(
+    expect(queryFirst(".o_customize_tab .o_hb_options_container:has([data-label='Layout'])")).toBe(
         containerEl
     );
 });
 
 test("after a layout switch, the options go to the same element, not the same position", async () => {
-    onRpc("/website/theme_customize_data_get", () => []);
     onRpc("/blank", (request) => {
         const views = JSON.parse(new URL(request.url).searchParams.get("theme_preview_views"));
         const content = views.other_view
@@ -366,9 +358,13 @@ test("after a layout switch, the options go to the same element, not the same po
             </BuilderRow>
         `,
     });
-    for (const name of ["logo", "text"]) {
+    for (const [name, selector] of [
+        ["logo", ".test-logo"],
+        ["text", ".test-text"],
+        ["header", "#wrapwrap > header"],
+    ]) {
         addBuilderOption({
-            selector: `.test-${name}`,
+            selector,
             editableOnly: false,
             template: xml`<BuilderRow label="'${name}'"><BuilderButton classAction="'x'"/></BuilderRow>`,
         });
@@ -381,12 +377,12 @@ test("after a layout switch, the options go to the same element, not the same po
     await contains("[data-label='Layout'] input[type='checkbox']").click();
     await waitFor(":iframe header#top .test-logo");
     await waitForNone("[data-label='Layout']");
+    expect("[data-label='header']").toHaveCount(1);
     expect("[data-label='logo']").toHaveCount(0);
     expect("[data-label='text']").toHaveCount(0);
 });
 
 test("after a views switch, the options stay on an element known by its classes", async () => {
-    onRpc("/website/theme_customize_data_get", () => []);
     onRpc("/blank", (request) => {
         const views = JSON.parse(new URL(request.url).searchParams.get("theme_preview_views"));
         return new Response(
@@ -414,4 +410,53 @@ test("after a views switch, the options stay on an element known by its classes"
     await runAllTimers();
     await animationFrame();
     expect("[data-label='Bar'] input[type='checkbox']").toBeChecked();
+});
+
+test("the page shows the latest views switch, whatever its renders' order", async () => {
+    const firstRender = Promise.withResolvers();
+    onRpc("/blank", async (request) => {
+        const views = new URL(request.url).searchParams.get("theme_preview_views");
+        if (views === `{"view_a":true}`) {
+            await firstRender.promise;
+        }
+        return new Response(
+            `<html><body><div id="wrapwrap"><header id="top">${views}</header><main></main></div></body></html>`
+        );
+    });
+    const { getEditor } = await setupWebsiteBuilder("", {
+        headerContent: `<header id="top">{}</header><main></main>`,
+    });
+    const { previewViews } = getEditor().shared.websiteViewsPreview;
+    previewViews({ view_a: true });
+    await runAllTimers();
+    await previewViews({ view_b: true });
+    expect(":iframe header#top").toHaveText(`{"view_a":true,"view_b":true}`);
+    firstRender.resolve();
+    await runAllTimers();
+    expect(":iframe header#top").toHaveText(`{"view_a":true,"view_b":true}`);
+});
+
+test("a views switch on an error page shows its render", async () => {
+    onRpc("/blank", (request) => {
+        const views = JSON.parse(new URL(request.url).searchParams.get("theme_preview_views"));
+        // The page is served with its error status, rendered all the same.
+        return new Response(
+            `<html><body><div id="wrapwrap"><header id="top">Header</header><main>${
+                views.page_view ? "Shown" : "Hidden"
+            }</main></div></body></html>`,
+            { status: 404 }
+        );
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderCheckbox action="'previewPageConfig'" actionParam="{views: ['page_view']}"/>
+        `,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
+        headerContent: `<header id="top">Header</header><main>Hidden</main>`,
+    });
+    await contains(":iframe .test-options-target").click();
+    await contains(".o_customize_tab input[type='checkbox']").click();
+    await waitFor(":iframe main:contains(Shown)");
 });

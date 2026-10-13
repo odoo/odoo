@@ -5,7 +5,7 @@
     .nav-link:focus-visible {
         // Replace "focus-visible" shadow with an inner shadow so that it's visible with container
         // that use "overflow: hidden".
-        box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width var(--#{$prefix}focus-ring-color);
+        box-shadow: inset 0 0 $focus-ring-blur $focus-ring-width var(--focus-ring-color);
     }
 
     .nav-underline {
@@ -93,7 +93,7 @@
                     padding: map-get($spacers, 1) map-get($spacers, 3);
 
                     &.active {
-                        border-left: $border-width * 2 solid var(--#{$prefix}link-color);
+                        border-left: $border-width * 2 solid var(--link-color);
                         border-bottom: 0;
                     }
                 }

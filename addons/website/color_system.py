@@ -16,16 +16,30 @@ and 1.
 import math
 import re
 
+from PIL import ImageColor
+
 WHITE = (255, 255, 255, 1)
 BLACK = (0, 0, 0, 1)
 TRANSPARENT = (0, 0, 0, 0)
 
+AREAS = (
+    'menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four',
+    'footer', 'copyright', 'breadcrumb', 'portal-card',
+)
+THEME_COLORS = ('primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark')
+GRAYS = ('100', '200', '300', '400', '500', '600', '700', '800', '900', 'white', 'black')
+# web's `$o-yiq-min-opacity-threshold`: a color more transparent has no
+# contrast color of its own.
+MIN_OPACITY_THRESHOLD = 0.3
+
 _HEX_RE = re.compile(r'#([0-9a-f]{3,8})', re.IGNORECASE)
 _RGB_RE = re.compile(r'rgba?\(([^)]*)\)', re.IGNORECASE)
+_NAME_RE = re.compile(r'[a-z]+', re.IGNORECASE)
 
 
 def parse_color(value):
-    """Parse a hexadecimal, `rgb()` or `rgba()` color.
+    """Parse a hexadecimal, `rgb()`, `rgba()` or named color (libsass prints
+    some colors by their name).
 
     :param str value:
     :rtype: tuple | None
@@ -45,10 +59,15 @@ def parse_color(value):
         if len(parts) not in (3, 4):
             return None
         try:
-            numbers = [float(part[:-1]) / 100 if part.endswith('%') else float(part) for part in parts]
+            numbers = [float(part) for part in parts]
         except ValueError:
             return None
         return (*numbers[:3], numbers[3] if len(numbers) == 4 else 1)
+    if _NAME_RE.fullmatch(value):
+        try:
+            return (*ImageColor.getrgb(value), 1)
+        except ValueError:
+            return None
     return None
 
 
@@ -235,13 +254,14 @@ class ColorContrast:
         return max_ratio_color
 
     def button_variant(self, background, border):
-        """Bootstrap's `button-variant()` colors (with its default amounts)."""
+        """Bootstrap's `button-variant()` colors (with its default amounts), by
+        the names web's `o-button-variant-colors()` prints them with."""
         color = self(background)
         is_light = color == self.light
         hover_background = shade_color(background, 15) if is_light else tint_color(background, 15)
         active_background = shade_color(background, 20) if is_light else tint_color(background, 20)
         return {
-            'color': color,
+            'text': color,
             'hover-color': self(hover_background),
             'hover-bg': hover_background,
             'hover-border-color': shade_color(border, 20) if is_light else tint_color(border, 10),
@@ -249,25 +269,10 @@ class ColorContrast:
             'active-color': self(active_background),
             'active-bg': active_background,
             'active-border-color': shade_color(border, 25) if is_light else tint_color(border, 10),
-            'disabled-color': color,
-        }
-
-    def button_outline_variant(self, color):
-        """Bootstrap's `button-outline-variant()` colors that are not `color`."""
-        return {
-            'hover-color': self(color),
-            'focus-shadow-rgb': color,
-            'active-color': self(color),
         }
 
 
 # --- The color system's computed values --------------------------------------
-
-AREAS = (
-    'menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four',
-    'footer', 'copyright', 'breadcrumb', 'portal-card',
-)
-
 
 def compute_colors(colors, user_keys=(), min_contrast_ratio=2.9, areas=None):
     """The colors the compile computes from the given ones (the custom
@@ -320,7 +325,7 @@ def _compute_areas(colors, contrast, areas):
     footer = area_color('footer')
     for area in AREAS:
         custom = colors.get(f'{area}-custom')
-        if custom and custom[3] > 0.3:
+        if custom and custom[3] > MIN_OPACITY_THRESHOLD:
             background = (footer or TRANSPARENT) if area == 'copyright' else body_background
             values[f'{area}-custom-contrast'] = contrast(custom, main_background=background)
         elif custom:
@@ -331,14 +336,14 @@ def _compute_areas(colors, contrast, areas):
     # The footer's scroll-to-top button.
     footer_fill = opaque(body_background, footer or TRANSPARENT)
     copyright_fill = opaque(footer_fill, area_color('copyright') or TRANSPARENT)
-    footer_contrast = contrast(footer_fill, main_background=footer_fill)
+    footer_contrast = contrast(footer_fill)
     values['o-footer-scrolltop-bg'] = footer_fill
     values['o-footer-scrolltop-contrast'] = footer_contrast
     values['o-footer-scrolltop-color'] = (
         with_alpha(contrast(footer_fill), 0.5) if footer_fill == copyright_fill else footer_contrast
     )
     values['o-footer-scrolltop-hover-bg'] = copyright_fill
-    values['o-footer-scrolltop-hover-color'] = contrast(copyright_fill, main_background=footer_fill)
+    values['o-footer-scrolltop-hover-color'] = contrast(copyright_fill)
     # The portal cards' hover.
     portal_card = area_color('portal-card') or body_background
     values['o-portal-card-hover-bg'] = (
@@ -352,18 +357,12 @@ def _compute_areas(colors, contrast, areas):
     return values, gates
 
 
-THEME_COLORS = ('primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark')
-
-
 def _compute_root(colors, contrast, user_keys):
     """The `:root` values of Bootstrap that website computes from the colors
     (see `o-after-bootstrap-root`)."""
     values = {}
     body_background = colors['o-cc1-bg']
     body_color = colors.get('o-cc1-text') or contrast(body_background)
-    for name in THEME_COLORS:
-        if name in colors:
-            values[f'{name}-rgb'] = colors[name]
     primary = colors['primary']
     is_dark_palette = contrast(body_color) == contrast.dark
     if is_dark_palette:
@@ -390,13 +389,27 @@ def _compute_root(colors, contrast, user_keys):
     values['link-hover-color-rgb'] = link_hover
     values['o-btn-link-focus-shadow-rgb'] = mix(contrast(link), link, 15)
     for name in THEME_COLORS:
-        if color := colors.get(name):
-            # Bootstrap's `.link-<color>` hover.
-            is_light = contrast(color) == contrast.light
-            values[f'{name}-link-hover-rgb'] = shade_color(color, 20) if is_light else tint_color(color, 20)
-            # The badges' (website.scss).
-            values[f'{name}-badge-text'] = increase_contrast(color, tint_color(color, 90))
-            values[f'{name}-badge-contrast'] = contrast(color, min_ratio=3)
+        if not (color := colors.get(name)):
+            continue
+        values[f'{name}-rgb'] = color
+        # Bootstrap's `.link-<color>` hover.
+        is_light = contrast(color) == contrast.light
+        values[f'{name}-link-hover-rgb'] = shade_color(color, 20) if is_light else tint_color(color, 20)
+        # The badges' (website.scss).
+        values[f'{name}-badge-text'] = increase_contrast(color, tint_color(color, 90))
+        values[f'{name}-badge-contrast'] = contrast(color, min_ratio=3)
+        # The buttons (see website's `o-after-bootstrap-root`): primary and
+        # secondary are the first color combination's.
+        if name in ('primary', 'secondary'):
+            border = colors.get(f'o-cc1-btn-{name}-border') or colors.get(f'o-cc1-btn-{name}') or color
+        else:
+            border = color
+            variant = contrast.button_variant(color, border)
+            values.update({f'o-btn-fill-{name}-{key}': value for key, value in variant.items()})
+        outline = increase_contrast(border, body_background)
+        values[f'o-btn-outline-{name}'] = outline
+        values[f'o-btn-outline-{name}-contrast'] = contrast(outline)
+        values[f'o-btn-outline-{name}-rgb'] = outline
     if dark := colors.get('dark'):
         values.update(_variant_colors('o-figure-caption', with_alpha(dark, 0.6), contrast))
     # The inputs, cards' body and dropdowns (see website's
@@ -412,40 +425,19 @@ def _compute_root(colors, contrast, user_keys):
     for name in variant_names:
         if color := colors.get(name):
             values.update(_variant_colors(name, color, contrast))
-    # The buttons (see website's `o-after-bootstrap-root`): primary and
-    # secondary are the first color combination's.
-    for name in THEME_COLORS:
-        if name not in colors:
-            continue
-        if name in ('primary', 'secondary'):
-            button = colors.get(f'o-cc1-btn-{name}') or colors[name]
-            border = colors.get(f'o-cc1-btn-{name}-border') or button
-        else:
-            button = border = colors[name]
-            variant = contrast.button_variant(button, border)
-            values[f'o-btn-fill-{name}-text'] = variant.pop('color')
-            variant.pop('disabled-color')
-            values.update({f'o-btn-fill-{name}-{key}': value for key, value in variant.items()})
-        outline = increase_contrast(border, body_background)
-        values[f'o-btn-outline-{name}'] = outline
-        values[f'o-btn-outline-{name}-contrast'] = contrast(outline)
-        values[f'o-btn-outline-{name}-rgb'] = outline
     return values
-
-
-GRAYS = ('100', '200', '300', '400', '500', '600', '700', '800', '900', 'white', 'black')
 
 
 def _variant_colors(name, color, contrast):
     """web's `o-print-variant-colors()`: the text and background utilities'
     colors (frontend's `text-emphasis-variant()` and `bg-variant()`)."""
     values = {}
-    if color[3] > 0.3:
+    if color[3] > MIN_OPACITY_THRESHOLD:
         values[f'{name}-contrast'] = contrast(color)
     values[f'{name}-text-hover'] = adjust_lightness(color, -20)
     hover = adjust_lightness(color, -10)
     values[f'{name}-bg-hover'] = hover
-    if hover[3] > 0.3:
+    if hover[3] > MIN_OPACITY_THRESHOLD:
         values[f'{name}-bg-hover-contrast'] = contrast(hover)
     return values
 
@@ -470,13 +462,10 @@ def _compute_combination(cc, colors, contrast, user_keys):
         button_color = button or colors[button_type]
         border = colors.get(f'{name}-border') or button_color
         variant = contrast.button_variant(button_color, border)
-        values[f'{name}-text'] = variant.pop('color')
-        variant.pop('disabled-color')
         values.update({f'{name}-{key}': value for key, value in variant.items()})
         outline = button_color if button else increase_contrast(border, background)
         values[f'{name}-outline'] = outline
-        outline_variant = contrast.button_outline_variant(outline)
-        values[f'{name}-outline-contrast'] = outline_variant['hover-color']
+        values[f'{name}-outline-contrast'] = contrast(outline)
         values[f'{name}-outline-rgb'] = outline
     values[f'{cc}-btn-close-filter'] = 'initial' if lightness(background) < 50 else 'none'
     return values

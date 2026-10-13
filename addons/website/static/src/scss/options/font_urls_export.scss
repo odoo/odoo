@@ -1,11 +1,12 @@
 // This file is compiled separately (not as part of the main bundle) to extract
-// the values the server needs to know to build the <head>: the Google/local
-// font URLs to load and the icon font the page renders with.
+// the values the server needs to know to build the page: the Google/local font
+// URLs to load, the icon font the page renders with, and the theme gates.
 
-// The contrast settings of the frontend (see website's
-// `bootstrap_overridden.scss`), which this bundle doesn't compile.
-$white: o-color('white') !default;
-$black: o-color('black') !default;
+// The last-resort contrast colors of `color-contrast()`, as the frontend sets
+// them (see website's `bootstrap_overridden.scss`), which this bundle doesn't
+// compile.
+$white: #FFF !default;
+$black: #000 !default;
 
 .o-website-font-urls {
     $-i: 1;
@@ -63,14 +64,14 @@ $black: o-color('black') !default;
     }
     // Header and portal cards.
     @each $key in ('header-font-size', 'header-text-color', 'menu-border-width', 'menu-border-radius', 'portal-card-border-width', 'portal-card-border-radius') {
-        @if o-website-value($key) {
+        @if if($key == 'header-text-color', $o-header-text-color, o-website-value($key)) {
             $-gates: append($-gates, $key);
         }
     }
     @if o-website-value('body-image') {
         $-gates: append($-gates, 'body-image');
     }
-    @if o-website-value('header-bg-blur') != 0 {
+    @if (o-website-value('header-bg-blur') or 0) != 0 {
         $-gates: append($-gates, 'header-bg-blur');
     }
     @if index(('shadow', 'shadow-sm', 'shadow-lg', 'o-shadow-custom'), o-website-value('menu-shadow-class')) {
@@ -80,7 +81,7 @@ $black: o-color('black') !default;
         $-gates: append($-gates, 'navbar-font');
     }
     // A dark body background (see `website.scss`).
-    @if lightness(o-color(o-color('o-cc1-bg'))) < 50 {
+    @if lightness(o-color('o-cc1-bg')) < 50 {
         $-gates: append($-gates, 'body-dark');
     }
     // A dark header color (see `website.scss`).
@@ -118,12 +119,12 @@ $black: o-color('black') !default;
         $-gates: append($-gates, 'link-underline-always');
     }
     // The areas' custom colors and gradients (see `o-area-colors`).
-    @each $area in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'copyright', 'breadcrumb', 'portal-card') {
+    @each $area in $o-area-names {
         @if o-color('#{$area}-custom') {
             $-gates: append($-gates, '#{$area}-custom');
         }
     }
-    @each $key in ('menu-gradient', 'menu-secondary-gradient', 'footer-gradient', 'copyright-gradient', 'breadcrumb-gradient', 'portal-gradient') {
+    @each $key in $o-area-gradient-keys {
         @if o-website-value($key) {
             $-gates: append($-gates, $key);
         }

@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { BG_CLASSES_REGEX, TEXT_CLASSES_REGEX } from "@html_editor/utils/color";
 import { registry } from "@web/core/registry";
 import { rgbaToHex } from "@web/core/utils/colors";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -154,9 +155,12 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
      * page on save: a header or footer the builder swaps in for a views
      * preview (see `websiteViewsPreview.updateChrome`) keeps them.
      *
-     * @param {{ oldEl: HTMLElement, newEl: HTMLElement }} parts
+     * @param {{ oldEl: HTMLElement|null, newEl: HTMLElement }} parts
      */
     keepPageOptions({ oldEl, newEl }) {
+        if (!oldEl) {
+            return;
+        }
         for (const cls of ["o_snippet_invisible", "d-none"]) {
             newEl.classList.toggle(cls, oldEl.classList.contains(cls));
         }
@@ -166,17 +170,15 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
             delete newEl.dataset.invisible;
         }
         if (newEl.matches("#wrapwrap > header")) {
-            for (const [property, classPrefix] of [
-                ["background-color", "bg-o-color-"],
-                ["color", "text-o-color-"],
+            for (const [property, classRegex] of [
+                ["background-color", BG_CLASSES_REGEX],
+                ["color", TEXT_CLASSES_REGEX],
             ]) {
                 newEl.style.setProperty(property, oldEl.style.getPropertyValue(property));
                 newEl.classList.remove(
-                    ...[...newEl.classList].filter((cls) => cls.startsWith(classPrefix))
+                    ...[...newEl.classList].filter((cls) => classRegex.test(cls))
                 );
-                newEl.classList.add(
-                    ...[...oldEl.classList].filter((cls) => cls.startsWith(classPrefix))
-                );
+                newEl.classList.add(...[...oldEl.classList].filter((cls) => classRegex.test(cls)));
             }
         }
     }

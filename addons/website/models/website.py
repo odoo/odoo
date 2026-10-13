@@ -1714,9 +1714,11 @@ class Website(models.CachedModel):
     @api.model
     def is_view_active(self, key):
         """
-            Return True if active, False if not active, None if not found
+            Return True if active, False if not active, None if not found;
+            as previewed by the builder if the context's
+            `website_preview_views` toggles it
         """
-        previewed = dict(self.env.context.get('website_preview_views') or ())
+        previewed =dict(self.env.context.get('website_preview_views') or ())
         if key in previewed:
             return previewed[key]
         return self.env['ir.ui.view'].with_context(active_test=False)._get_cached_template_info(key).get('active')

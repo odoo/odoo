@@ -57,14 +57,14 @@ test("the header's content width is previewed on the elements printing it", asyn
     expect(":iframe .test-outer").toHaveClass("container-fluid");
     expect(":iframe #o_main_nav").toHaveClass("container-fluid");
     expect("[data-label='Content Width'] button[title='Full']").toHaveClass("active");
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='undo']").click();
     expect(":iframe #o_main_nav").toHaveClass("container");
-    await contains(".o-snippets-top-actions button[data-icon='redo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='redo']").click();
     await runAllTimers();
     // Shown by the class: no render.
     expect.verifySteps([]);
-    await contains(".o-snippets-top-actions [data-action='save']").click();
-    await waitForNone(".o-snippets-top-actions");
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
     expect.verifySteps(["write website.header_width_full"]);
 });
 
@@ -77,9 +77,9 @@ test("the header's scroll effect renders on click, the header with its class", a
     await waitFor(":iframe header#top.o_header_fixed");
     await waitFor("[data-label='Scroll Effect'] .dropdown-toggle:contains('Fixed')");
     // Once rendered, the pick is committed.
-    await waitFor(".o-snippets-top-actions button[data-icon='undo']:enabled");
+    await waitFor(".o_hb_snippets_top_actions button[data-icon='undo']:enabled");
     expect.verifySteps(["render", "render"]);
-    await contains(".o-snippets-top-actions button[data-icon='undo']").click();
+    await contains(".o_hb_snippets_top_actions button[data-icon='undo']").click();
     await waitFor(":iframe header#top.o_header_standard");
     await waitFor("[data-label='Scroll Effect'] .dropdown-toggle:contains('Standard')");
 });

@@ -1,13 +1,15 @@
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import {
     AREA_GRADIENT_KEYS,
-    AREA_NONE,
     AREAS,
+    COLOR_FILES_URL,
+    getUserColorKeys,
     NULL_VALUES,
     PALETTE_URL,
     PRINTED_NAMES,
@@ -17,14 +19,14 @@ import {
 
 /**
  * @typedef { Object } ThemeComputedPreviewShared
- * @property { ThemeComputedPreviewPlugin['updateAreaClasses'] } updateAreaClasses
  * @property { ThemeComputedPreviewPlugin['updatePreviewCopies'] } updatePreviewCopies
  */
 
 // Theme settings that switch CSS rules on (`o-theme-gate` in the SCSS): the
 // server marks the saved ones on `<html data-o-theme-gates>`. While a setting
 // is previewed, its gate follows it:
-// - `set`: on when the setting has a value (that `isOn`, if given);
+// - `set`: on when the setting has a value (that `isOn`, if given, which can
+//   read the other values);
 // - `apart`: on when the setting differs from the one it otherwise follows;
 // - `color`: on when the color is set (by the user or the palette).
 export const THEME_GATES = {};
@@ -78,11 +80,11 @@ THEME_GATES["body-image"] = { set: "body-image" };
 for (const which of ["primary", "secondary"]) {
     THEME_GATES[`btn-${which}-fill`] = {
         set: `btn-${which}-outline`,
-        isOn: (value) => value !== "true",
+        isOn: (value, getValue) => value !== "true" || getValue(`btn-${which}-flat`) === "true",
     };
     THEME_GATES[`btn-${which}-outline`] = {
         set: `btn-${which}-outline`,
-        isOn: (value) => value === "true",
+        isOn: (value, getValue) => value === "true" && getValue(`btn-${which}-flat`) !== "true",
     };
     THEME_GATES[`btn-${which}-flat`] = {
         set: `btn-${which}-flat`,
@@ -139,17 +141,26 @@ const THEME_GATES_ATTRIBUTE = "data-o-theme-gates";
  */
 export class ThemeComputedPreviewPlugin extends Plugin {
     static id = "themeComputedPreview";
-    static dependencies = ["customizeWebsite", "domObserver"];
-    static shared = ["updateAreaClasses", "updatePreviewCopies"];
+    static dependencies = ["customizeWebsite", "domObserver", "history"];
+    static shared = ["updatePreviewCopies"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        on_theme_preview_changed_handlers: () => {
+        on_theme_preview_changed_handlers: (state) => {
             this.updateThemeGates();
             this.updateAreaClasses();
             this.updatePreviewCopies();
-            this.updateComputedColors();
+            if (
+                Object.entries(state).some(
+                    ([name, { file }]) =>
+                        file?.startsWith(COLOR_FILES_URL) || name === "color-palettes-name"
+                )
+            ) {
+                this.updateComputedColors();
+            }
         },
+        // A new part of the page shows the previewed area presets too.
+        on_chrome_replaced_handlers: () => this.updateAreaClasses(),
         clean_for_save_processors: (root) => {
             this.cleanAreaClasses(root);
             return root;
@@ -164,36 +175,36 @@ export class ThemeComputedPreviewPlugin extends Plugin {
     computedGates = {};
     computedColorsRequestId = 0;
 
+    setup() {
+        this.savedThemeGates = new Set(
+            (this.document.documentElement.getAttribute(THEME_GATES_ATTRIBUTE) || "")
+                .split(" ")
+                .filter(Boolean)
+        );
+    }
     /**
      * Previews the areas' color presets (header, footer...): their elements get
      * the preset as a class, marked `data-o-cc-area` so that the compiled
      * preset stops applying to them (see `o-area-colors`), while the preset is
-     * previewed (or a palette switch). No preset (`AREA_NONE`): marked, without
-     * a class. Not edits of the page: not recorded.
+     * previewed (or a palette switch). No preset: marked, without a class.
+     * Not edits of the page: not recorded.
      */
     updateAreaClasses() {
-        const pendingPalette = this.dependencies.customizeWebsite.getPendingValues(PALETTE_URL);
-        const isPaletteSwitched =
-            "color-palettes-name" in
-            this.dependencies.customizeWebsite.getPendingValues(USER_VALUES_URL);
+        const { getPendingValues, getWebsiteVariableValue } = this.dependencies.customizeWebsite;
+        const pendingPalette = getPendingValues(PALETTE_URL);
+        const isPaletteSwitched = "color-palettes-name" in getPendingValues(USER_VALUES_URL);
         const updates = [];
         for (const [area, selector] of Object.entries(AREA_SELECTORS)) {
             // A preset's number, "" for none, false when not previewed.
-            let preset = false;
-            if (pendingPalette[area] === AREA_NONE) {
-                preset = "";
-            } else if (area in pendingPalette || isPaletteSwitched) {
-                preset = this.dependencies.customizeWebsite.getWebsiteVariableValue(area);
-                preset = /^[1-5]$/.test(preset) && preset;
-            }
+            const isPreviewed = area in pendingPalette || isPaletteSwitched;
+            const value = isPreviewed && getWebsiteVariableValue(area);
+            const preset = isPreviewed && (/^[1-5]$/.test(value) ? value : "");
             for (const el of this.document.querySelectorAll(selector)) {
-                const presetClass = PRESET_CLASSES.find((cls) => el.classList.contains(cls));
-                const isUpToDate =
-                    preset === false
-                        ? !el.dataset.oCcArea
-                        : !!el.dataset.oCcArea &&
-                          (preset ? presetClass === `o_cc${preset}` : !presetClass);
-                if (!isUpToDate) {
+                // The element's preview, as `preset`.
+                const elPreset =
+                    !!el.dataset.oCcArea &&
+                    (PRESET_CLASSES.find((cls) => el.classList.contains(cls))?.slice(-1) || "");
+                if (elPreset !== preset) {
                     updates.push([el, area, preset]);
                 }
             }
@@ -222,7 +233,7 @@ export class ThemeComputedPreviewPlugin extends Plugin {
      * @param {HTMLElement} root
      */
     cleanAreaClasses(root) {
-        for (const el of root.querySelectorAll("[data-o-cc-area]")) {
+        for (const el of selectElements(root, "[data-o-cc-area]")) {
             el.classList.remove(...PRESET_CLASSES);
             delete el.dataset.oCcArea;
         }
@@ -233,56 +244,45 @@ export class ThemeComputedPreviewPlugin extends Plugin {
      * follow undo and redo without being part of the history steps.
      */
     updateThemeGates() {
-        const htmlEl = this.document.documentElement;
-        this.savedThemeGates ??= new Set(
-            (htmlEl.getAttribute(THEME_GATES_ATTRIBUTE) || "").split(" ").filter(Boolean)
-        );
-        const gates = new Set(this.savedThemeGates);
-        const pendingPalette = this.dependencies.customizeWebsite.getPendingValues(PALETTE_URL);
-        const isPaletteSwitched =
-            "color-palettes-name" in
-            this.dependencies.customizeWebsite.getPendingValues(USER_VALUES_URL);
-        for (const [gate, { set, isOn: isValueOn, apart, color }] of Object.entries(THEME_GATES)) {
-            let isOn;
+        const { getPendingValues, getWebsiteVariableValue, getWebsiteVariableDefault } =
+            this.dependencies.customizeWebsite;
+        const pendingValues = getPendingValues(USER_VALUES_URL);
+        const pendingPalette = getPendingValues(PALETTE_URL);
+        const isPaletteSwitched = "color-palettes-name" in pendingValues;
+        // The previewed gates, on or off.
+        const states = {};
+        for (const [gate, { set, isOn, apart, color }] of Object.entries(THEME_GATES)) {
             if (color) {
-                if (!(color in pendingPalette) && !isPaletteSwitched) {
-                    continue;
+                if (color in pendingPalette || isPaletteSwitched) {
+                    // A color reset to `null` is the palette's, if any.
+                    const value = pendingPalette[color];
+                    states[gate] =
+                        value === undefined || value === "null"
+                            ? !!getWebsiteVariableDefault(color)
+                            : !NULL_VALUES.includes(value);
                 }
-                // A color reset to `null` is the palette's, if any.
-                const value = pendingPalette[color];
-                isOn =
-                    value === undefined || value === "null"
-                        ? !!this.dependencies.customizeWebsite.getWebsiteVariableDefault(color)
-                        : !NULL_VALUES.includes(value);
-            } else if (
-                !(set ? [set] : apart).some(
-                    (name) =>
-                        name in this.dependencies.customizeWebsite.getPendingValues(USER_VALUES_URL)
-                )
-            ) {
-                continue;
-            } else {
-                const value =
-                    this.dependencies.customizeWebsite.getPendingValues(USER_VALUES_URL)[set];
-                isOn = set
-                    ? !NULL_VALUES.includes(value) && (!isValueOn || isValueOn(value))
-                    : this.dependencies.customizeWebsite.getWebsiteVariableValue(apart[0]) !==
-                      this.dependencies.customizeWebsite.getWebsiteVariableValue(apart[1]);
+            } else if (set) {
+                if (set in pendingValues) {
+                    const value = pendingValues[set];
+                    states[gate] =
+                        !NULL_VALUES.includes(value) &&
+                        (!isOn || isOn(value, getWebsiteVariableValue));
+                }
+            } else if (apart.some((name) => name in pendingValues)) {
+                states[gate] =
+                    getWebsiteVariableValue(apart[0]) !== getWebsiteVariableValue(apart[1]);
             }
+        }
+        Object.assign(states, this.computedGates);
+        const gates = new Set(this.savedThemeGates);
+        for (const [gate, isOn] of Object.entries(states)) {
             if (isOn) {
                 gates.add(gate);
             } else {
                 gates.delete(gate);
             }
         }
-        for (const [gate, isOn] of Object.entries(this.computedGates)) {
-            if (isOn) {
-                gates.add(gate);
-            } else {
-                gates.delete(gate);
-            }
-        }
-        htmlEl.setAttribute(THEME_GATES_ATTRIBUTE, [...gates].join(" "));
+        this.document.documentElement.setAttribute(THEME_GATES_ATTRIBUTE, [...gates].join(" "));
     }
     /**
      * While colors are previewed, sets the colors the compile computes from
@@ -318,8 +318,11 @@ export class ThemeComputedPreviewPlugin extends Plugin {
         this.computedGates = gates;
         this.updateThemeGates();
         this.updatePreviewCopies();
-        // The options showing these colors (e.g. a preset's text) follow.
-        this.trigger("on_dom_updated_handlers");
+        // The options showing these colors (e.g. a preset's text) follow, but
+        // not a hovered color: the panel shows the applied one.
+        if (!this.dependencies.history.getIsPreviewing()) {
+            this.trigger("on_dom_updated_handlers");
+        }
     }
     /**
      * @returns {Object} what the server computes the colors from: the colors
@@ -329,7 +332,7 @@ export class ThemeComputedPreviewPlugin extends Plugin {
         const style = getHtmlStyle(this.document);
         const get = (name) => getCSSVariableValue(name, style);
         const pendingPalette = this.dependencies.customizeWebsite.getPendingValues(PALETTE_URL);
-        const userKeys = new Set(get("o-user-color-keys").replace(/['"]/g, "").split(" "));
+        const userKeys = new Set(getUserColorKeys(style));
         for (const [name, value] of Object.entries(pendingPalette)) {
             if (NULL_VALUES.includes(value)) {
                 userKeys.delete(name);
@@ -354,6 +357,7 @@ export class ThemeComputedPreviewPlugin extends Plugin {
         for (let i = 1; get(`o-cc${i}-bg`); i++) {
             colors[`o-cc${i}-bg`] = get(`o-cc${i}-bg`);
             for (const key of [
+                "text",
                 "link",
                 "btn-primary",
                 "btn-primary-border",
@@ -369,10 +373,7 @@ export class ThemeComputedPreviewPlugin extends Plugin {
         // The areas (header, footer...): their color preset, their custom
         // color if set.
         const areas = {};
-        for (const area of [
-            ...["menu", "header-sales_one", "header-sales_two", "header-sales_three"],
-            ...["header-sales_four", "footer", "copyright", "breadcrumb", "portal-card"],
-        ]) {
+        for (const area of AREAS) {
             areas[area] = get(area);
             if (isSet(`${area}-custom`)) {
                 colors[`${area}-custom`] = get(`${area}-custom`);
@@ -381,7 +382,7 @@ export class ThemeComputedPreviewPlugin extends Plugin {
         return {
             colors,
             areas,
-            user_keys: [...userKeys].filter(Boolean),
+            user_keys: [...userKeys],
             min_contrast_ratio: parseFloat(get("o-min-contrast-ratio")),
         };
     }

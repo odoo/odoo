@@ -28,14 +28,12 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Format" tooltip.translate="Default Text Size and Color">
-        <BuilderRange
+        <BuilderNumberInput
             action="'previewWebsiteVariable'"
             actionParam="'header-font-size'"
+            default="null"
             unit="'px'"
             saveUnit="'rem'"
-            min="10"
-            max="32"
-            withNumberInput="true"
         />
         <BuilderColorPicker
             action="'previewColorVariable'"

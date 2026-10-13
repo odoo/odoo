@@ -143,21 +143,22 @@ $h4-font-size: o-website-value('h4-font-size') or $font-size-base * $o-theme-h4-
 $h5-font-size: o-website-value('h5-font-size') or $font-size-base * $o-theme-h5-font-size-multiplier !default;
 $h6-font-size: o-website-value('h6-font-size') or $font-size-base * $o-theme-h6-font-size-multiplier !default;
 
+// If the theme does not configure, default to Bootstrap values. It has to be
+// duplicated here as Bootstrap does not merge the default map with the
+// overridden ones anymore.
+$o-display-font-sizes-default: (1: 5rem, 2: 4.5rem, 3: 4rem, 4: 3.5rem, 5: 3rem, 6: 2.5rem);
 $display-font-sizes: (
-    // If the theme does not configure, default to Bootstrap values. It has to
-    // be duplicated here as Bootstrap does not merge the default map with the
-    // overridden ones anymore.
-    1: o-website-value('display-1-font-size') or 5rem,
-    2: o-website-value('display-2-font-size') or 4.5rem,
-    3: o-website-value('display-3-font-size') or 4rem,
-    4: o-website-value('display-4-font-size') or 3.5rem,
+    1: o-website-value('display-1-font-size') or map-get($o-display-font-sizes-default, 1),
+    2: o-website-value('display-2-font-size') or map-get($o-display-font-sizes-default, 2),
+    3: o-website-value('display-3-font-size') or map-get($o-display-font-sizes-default, 3),
+    4: o-website-value('display-4-font-size') or map-get($o-display-font-sizes-default, 4),
 
     // Unused in Odoo templates and not configurable through the editor but we
     // still want default Bootstrap classes to work for now. Also using
     // o-website-value for those still allows to configure them through custom
     // code more easily if needed.
-    5: o-website-value('display-5-font-size') or 3rem,
-    6: o-website-value('display-6-font-size') or 2.5rem
+    5: o-website-value('display-5-font-size') or map-get($o-display-font-sizes-default, 5),
+    6: o-website-value('display-6-font-size') or map-get($o-display-font-sizes-default, 6)
 ) !default;
 
 // H2~H6 font families are custom variables.
@@ -525,11 +526,9 @@ $--enable-no-overflow-of-text-columns: false !default;
 
 // The small size is a ratio of the base one, in `em` (see `$small-font-size`).
 // Browsers without trigonometric functions keep the compiled size declared
-// before (see `o-font-size-var`).
+// before (see `o-font-size-var`), as does a theme's own small size.
 @mixin o-small-font-size-var() {
-    @if $small-font-size != ($o-small-font-size / $font-size-base) * 1em {
-        font-size: $small-font-size;
-    } @else {
+    @if $small-font-size == ($o-small-font-size / $font-size-base) * 1em {
         @supports (width: calc(tan(atan2(1px, 1px)) * 1px)) {
             font-size: calc(tan(atan2(var(--small-font-size, #{$o-small-font-size}), var(--font-size-base, #{$font-size-base}))) * 1em);
         }
@@ -722,9 +721,9 @@ $--enable-no-overflow-of-text-columns: false !default;
                 }
             }
         }
+        $-maps: ('text-emphasis': $theme-colors-text, 'bg-subtle': $theme-colors-bg-subtle, 'border-subtle': $theme-colors-border-subtle);
         @each $name, $variants in (light: ('text-emphasis' 700, 'border-subtle' 200), dark: ('text-emphasis' 700, 'bg-subtle' 400, 'border-subtle' 500)) {
             @each $variant, $gray in $variants {
-                $-maps: ('text-emphasis': $theme-colors-text, 'bg-subtle': $theme-colors-bg-subtle, 'border-subtle': $theme-colors-border-subtle);
                 @include o-print-color-css('#{$name}-#{$variant}', map-get(map-get($-maps, $variant), $name), o-ref('#{$gray}', map-get($grays, '#{$gray}')), map-get($grays, '#{$gray}'));
             }
         }
@@ -766,8 +765,6 @@ $--enable-no-overflow-of-text-columns: false !default;
             $-outline: increase-contrast($-border, $body-bg);
             --o-btn-outline-#{$name}: #{$-outline};
             @include o-print-button-outline-variant('o-btn-outline-#{$name}', $-outline);
-        }
-        @each $name, $value in $theme-colors {
             --#{$name}-link-hover-rgb: #{to-rgb(o-link-hover-color($value))};
             // The badges' (see `website.scss`).
             --#{$name}-badge-text: #{increase-contrast($value, tint-color($value, 90%))};
@@ -777,7 +774,7 @@ $--enable-no-overflow-of-text-columns: false !default;
         $-figure-caption: rgba(map-get($theme-colors, 'dark'), $o-theme-figcaption-opacity);
         @include o-color-mix(--o-figure-caption, 'color-mix(in srgb, var(--dark) #{$o-theme-figcaption-opacity * 100%}, transparent)', $-figure-caption);
         @include o-print-variant-colors('o-figure-caption', $-figure-caption);
-        --o-btn-link-focus-shadow-rgb: #{to-rgb(mix(color-contrast($link-color), $link-color, 15%))};
+        --o-btn-link-focus-shadow-rgb: #{$btn-link-focus-shadow-rgb};
         $-active-bg: o-color('o-cc1-btn-primary') or $primary;
         // The inputs' colors (`$input-bg` falls back to the body's) and the
         // cards' body.
@@ -785,23 +782,20 @@ $--enable-no-overflow-of-text-columns: false !default;
             // Not empty, as Bootstrap prints it: the fallback applies.
             --input: initial;
         }
-        @include o-print-color-css('o-input-bg', $input-bg, 'var(--input, var(--#{$prefix}body-bg))', o-color('input') or $body-bg);
+        @include o-print-color-css('o-input-bg', $input-bg, 'var(--input, var(--body-bg))', o-color('input') or $body-bg);
         --o-input-color: #{$input-color};
         // The page background behind a boxed layout (see `website.scss`).
-        $-body: o-color('body');
-        @if $-body {
-            --o-body-fill: #{mix(change-color($-body, $alpha: 1), white, percentage(alpha($-body)))};
-        }
+        @include print-variable('o-body-fill', o-body-fill());
         @if $card-bg == $body-bg {
             $-card-body-bg: rgba($card-bg, $o-card-body-bg-opacity);
-            @include o-color-mix(--o-card-body-bg, 'color-mix(in srgb, var(--#{$prefix}body-bg) #{$o-card-body-bg-opacity * 100%}, transparent)', $-card-body-bg);
+            @include o-color-mix(--o-card-body-bg, 'color-mix(in srgb, var(--body-bg) #{$o-card-body-bg-opacity * 100%}, transparent)', $-card-body-bg);
             @include o-print-variant-colors('o-card-body-bg', $-card-body-bg);
         }
         --o-dropdown-link-active-color: #{$dropdown-link-active-color};
         // The areas (header, footer...): their custom colors' text (see
         // `o-apply-colors`), and the colors computed from the areas'.
         $-footer: o-color('footer-custom') or o-color('footer');
-        @each $area in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'copyright', 'breadcrumb', 'portal-card') {
+        @each $area in $o-area-names {
             $-custom: o-color('#{$area}-custom');
             @if $-custom and alpha($-custom) > $o-yiq-min-opacity-threshold {
                 $-background: if($area == 'copyright', $-footer or rgba(0, 0, 0, 0), $body-bg);
@@ -856,6 +850,16 @@ $--enable-no-overflow-of-text-columns: false !default;
     );
 }
 
+// The page background behind a boxed layout: the body color, made opaque over
+// white (see `website.scss`).
+@function o-body-fill() {
+    $-body: o-color('body');
+    @if not $-body {
+        @return null;
+    }
+    @return mix(change-color($-body, $alpha: 1), white, percentage(alpha($-body)));
+}
+
 // The portal cards' hover background (see `portal.scss`).
 @function o-portal-card-hover-bg() {
     $-bg: o-color('portal-card-custom');
@@ -892,7 +896,7 @@ $--enable-no-overflow-of-text-columns: false !default;
 // A focus ring shadow with `--focus-ring-color`, if it is `$focus-ring-box-shadow`.
 @function o-focus-ring-shadow-css($shadow) {
     @if $shadow == $focus-ring-box-shadow and $focus-ring-color == rgba($primary, .25) {
-        @return 0 0 $focus-ring-blur $focus-ring-width var(--#{$prefix}focus-ring-color);
+        @return 0 0 $focus-ring-blur $focus-ring-width var(--focus-ring-color);
     }
     @return null;
 }
@@ -901,12 +905,11 @@ $--enable-no-overflow-of-text-columns: false !default;
 // variables of `o-after-bootstrap-root`, right after Bootstrap's own (see
 // `o-bootstrap-hook`): each color only where it gives the compiled one.
 @mixin o-after-bootstrap-colors($part) {
-    $-active-bg: o-color('o-cc1-btn-primary') or $primary;
-    $-active-bg-css: o-color-css-if(o-ref('o-cc1-btn-primary', $-active-bg), $component-active-bg, $-active-bg);
-    $-active-color-css: o-color-css-if(o-ref('o-cc1-btn-primary-text', color-contrast($-active-bg)), $component-active-color, color-contrast($-active-bg));
+    $-active-bg-css: o-component-active-bg-var($component-active-bg);
+    $-active-color-css: var(--o-component-active-color, #{$component-active-color});
     $-light-css: o-color-css-if('var(--light)', $light, map-get($theme-colors, 'light'));
     $-light-contrast-css: o-color-css-if('var(--light-contrast)', color-contrast($light), color-contrast(map-get($theme-colors, 'light')));
-    $-body-bg-css: o-color-css-if('var(--#{$prefix}body-bg)', $body-bg, o-color('o-cc1-bg'));
+    $-body-bg-css: o-color-css-if('var(--body-bg)', $body-bg, o-color('o-cc1-bg'));
     @if $part == dropdown {
         .dropdown-menu {
             @include o-print-css('dropdown-bg', if($dropdown-bg == $body-bg, $-body-bg-css, null));
@@ -930,7 +933,7 @@ $--enable-no-overflow-of-text-columns: false !default;
         }
     } @else if $part == buttons {
         .btn-link {
-            --#{$prefix}btn-focus-shadow-rgb: var(--o-btn-link-focus-shadow-rgb, #{to-rgb(mix(color-contrast($link-color), $link-color, 15%))});
+            --#{$prefix}btn-focus-shadow-rgb: var(--o-btn-link-focus-shadow-rgb, #{$btn-link-focus-shadow-rgb});
             @include o-print-css('btn-disabled-color', o-color-css-if(o-ref('600', $gray-600), $btn-link-disabled-color, map-get($grays, '600')));
         }
     } @else if $part == nav {
@@ -1249,9 +1252,8 @@ $--enable-no-overflow-of-text-columns: false !default;
 
     // Colors, each only where it gives the compiled one (see
     // `o-after-bootstrap-colors`).
-    $-active-bg: o-color('o-cc1-btn-primary') or $primary;
-    $-active-bg-css: o-color-css-if(o-ref('o-cc1-btn-primary', $-active-bg), $component-active-bg, $-active-bg);
-    $-focus-border: o-color-css-if('color-mix(in srgb, #{o-ref('o-cc1-btn-primary', $-active-bg)}, white 50%)', $input-focus-border-color, tint-color($-active-bg, 50%));
+    $-active-bg-css: o-component-active-bg-var($component-active-bg);
+    $-focus-border: o-color-css-if('color-mix(in srgb, #{$-active-bg-css}, white 50%)', $input-focus-border-color, tint-color($component-active-bg, 50%));
     $-focus-ring: o-focus-ring-shadow-css($input-focus-box-shadow);
     .form-control:focus {
         @include o-color-mix(border-color, $-focus-border, $input-focus-border-color);
@@ -1275,10 +1277,10 @@ $--enable-no-overflow-of-text-columns: false !default;
             border-color: if($form-check-input-indeterminate-border-color == $component-active-bg, $-active-bg-css, null);
         }
     }
-    $-thumb-focus: if($-focus-ring and $form-range-thumb-focus-box-shadow == (0 0 0 1px $body-bg, $input-focus-box-shadow), (0 0 0 1px var(--#{$prefix}body-bg), $-focus-ring), null);
-    $-thumb-border: if($form-range-thumb-border == ($border-width solid $primary), $border-width solid var(--#{$prefix}primary), null);
-    $-thumb-active-bg: if($form-range-thumb-active-bg == $primary, var(--#{$prefix}primary), null);
-    $-thumb-bg: if($form-range-thumb-bg == $body-bg, var(--#{$prefix}body-bg), null);
+    $-thumb-focus: if($-focus-ring and $form-range-thumb-focus-box-shadow == (0 0 0 1px $body-bg, $input-focus-box-shadow), (0 0 0 1px var(--body-bg), $-focus-ring), null);
+    $-thumb-border: if($form-range-thumb-border == ($border-width solid $primary), $border-width solid var(--primary), null);
+    $-thumb-active-bg: if($form-range-thumb-active-bg == $primary, var(--primary), null);
+    $-thumb-bg: if($form-range-thumb-bg == $body-bg, var(--body-bg), null);
     $-track-bg: o-mix-css($-mix, disabled-bg, $form-range-track-bg);
     $-thumb-disabled-bg: o-mix-css($-mix, disabled-bg, $form-range-thumb-disabled-bg);
     .form-range {

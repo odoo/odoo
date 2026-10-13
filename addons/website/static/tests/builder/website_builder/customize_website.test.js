@@ -15,7 +15,7 @@ import {
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
-import { ToggleBodyBgImageAction } from "@website/builder/plugins/customize_website_plugin";
+import { MediaPlugin } from "@html_editor/main/media/media_plugin";
 
 defineWebsiteModels();
 
@@ -440,10 +440,12 @@ test("theme background image is previewed, written on save", async () => {
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
         "A".repeat(1000);
 
-    patch(ToggleBodyBgImageAction.prototype, {
-        async apply() {
+    patch(MediaPlugin.prototype, {
+        openMediaDialog({ save }) {
             // The image picked in the media dialog.
-            this.dependencies.customizeWebsite.previewBodyImage({ "body-image": base64Image });
+            const imageEl = document.createElement("img");
+            imageEl.src = base64Image;
+            save(imageEl);
         },
     });
 

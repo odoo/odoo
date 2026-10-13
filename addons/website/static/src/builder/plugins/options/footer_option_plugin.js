@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { VIEWS } from "../customize_website_plugin";
 import { FooterTemplateChoice } from "./footer_template_option";
 import { _t } from "@web/core/l10n/translation";
 
@@ -73,7 +74,7 @@ export class FooterOptionPlugin extends Plugin {
      */
     async saveFooterTemplate() {
         const views = (await this.getFooterTemplates()).map(({ props }) => props.view);
-        const pendingViews = this.dependencies.customizeWebsite.getPendingViews();
+        const pendingViews = this.dependencies.customizeWebsite.getPendingValues(VIEWS);
         const view = views.find((view) => pendingViews[view] === true);
         if (view) {
             await rpc("/website/update_footer_template", {
@@ -114,8 +115,10 @@ export class WebsiteConfigFooterAction extends BuilderAction {
     static id = "websiteConfigFooter";
     static dependencies = ["builderActions", "customizeWebsite", "websiteViewsPreview"];
     setup() {
-        // No hover preview: the footer shows once the server rendered it.
+        // No hover preview: the footer shows once the server rendered it,
+        // however long it takes.
         this.preview = false;
+        this.canTimeout = false;
     }
     isApplied({ params: { vars } }) {
         for (const [name, value] of Object.entries(vars)) {

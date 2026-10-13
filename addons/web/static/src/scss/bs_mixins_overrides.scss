@@ -235,7 +235,9 @@ $o-color-extras-nesting-selector: '&' !default;
     @if alpha($color) > $o-yiq-min-opacity-threshold {
         --#{$name}-contrast: #{color-contrast($color)};
     }
-    --#{$name}-text-hover: #{darken($color, $link-shade-percentage)};
+    @if $link-shade-percentage != 0 {
+        --#{$name}-text-hover: #{darken($color, $link-shade-percentage)};
+    }
     $-hover: darken($color, 10%);
     --#{$name}-bg-hover: #{$-hover};
     @if alpha($-hover) > $o-yiq-min-opacity-threshold {

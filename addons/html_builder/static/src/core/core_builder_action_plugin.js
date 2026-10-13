@@ -40,7 +40,7 @@ export class CoreBuilderActionPlugin extends Plugin {
             ClassAction,
             AttributeAction,
             StyleAction,
-            BorderWidthSliderAction,
+            BorderSidesWidthAction,
             DataAttributeAction,
             SetClassRangeAction,
         },
@@ -328,17 +328,17 @@ export class StyleAction extends BuilderAction {
 }
 
 /**
- * A border's width as one value, for a slider: its widest side's. A new width
- * goes to the sides that have a border (all of them when none has), so that
- * e.g. a top border stays a top border.
+ * A border's width as one value (e.g. for a slider): its widest side's. A new
+ * width goes to the sides that have a border (all of them when none has), so
+ * that e.g. a top border stays a top border.
  */
-export class BorderWidthSliderAction extends StyleAction {
-    static id = "borderWidthSlider";
+export class BorderSidesWidthAction extends StyleAction {
+    static id = "borderSidesWidth";
     getValue(context) {
         return `${Math.max(...this.getSideWidths(context))}px`;
     }
     apply(context) {
-        const width = parseFloat(context.value) || 0;
+        const width = parseFloat(context.value);
         const sideWidths = this.getSideWidths(context);
         const hasBorder = sideWidths.some(Boolean);
         super.apply({

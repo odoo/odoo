@@ -80,18 +80,18 @@ export class SetupEditorPlugin extends Plugin {
     }
 
     /**
-     * Marks the savable elements contained in the given root element (or the
-     * editable if none is specified), e.g. for content replaced after setup.
+     * Marks the savable elements of the given root element, itself included
+     * (or of the editable if none is specified), e.g. for content replaced
+     * after setup.
      *
      * @param {HTMLElement|undefined} rootEl
      */
     markSavableAreas(rootEl = this.editable) {
         const savableSelectors = this.getResource("savable_selectors").join(", ");
         for (const savableEl of selectElements(rootEl, savableSelectors)) {
-            if (!this.isSavableElement(savableEl)) {
-                continue;
+            if (this.isSavableElement(savableEl)) {
+                savableEl.classList.add("o_savable");
             }
-            savableEl.classList.add("o_savable");
         }
     }
 

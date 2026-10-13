@@ -3,7 +3,6 @@
     <t t-name="website.PortalOption">
         <BuilderRow label.translate="Background Color">
             <BuilderColorPicker
-                preview="true"
                 defaultColor="''"
                 action="'previewAreaColor'"
                 actionParam="{
@@ -24,7 +23,7 @@
                 step="1"
                 withNumberInput="true"/>
         </BuilderRow>
-        <BorderConfigurator label.translate="Border" withBSClass="false" action="'setStylePortalCard'" colorAction="'setStylePortalCardColor'"/>
+        <BorderConfigurator label.translate="Border" withBSClass="false" action="'setStylePortalCard'"/>
     </t>
 
     <t t-name="website.PortalCardDisplayOption">

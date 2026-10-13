@@ -6,6 +6,29 @@
 /// 'prevent-backend-colors-alteration'.
 ///
 
+// A color combination's button colors (`$type`: 'primary' or 'secondary'):
+// its fill and border, the theme's unless set, and its outline: the fill if
+// set, else the border made readable on the background.
+@function o-cc-btn-colors($cc, $type, $bg-color) {
+    $-name: '#{$cc}-btn-#{$type}';
+    $-btn: map-get($colors, $-name);
+    $-border: map-get($colors, '#{$-name}-border');
+    $-color: if($-btn, o-color($-btn), map-get($theme-colors, $type));
+    $-border-color: if($-border, o-color($-border), $-color);
+    @return (
+        'color': $-color,
+        'border': $-border-color,
+        'outline': if($-btn, $-color, increase-contrast($-border-color, $bg-color)),
+    );
+}
+
+// A color the color combinations' rules read: from its custom property where
+// theme colors can change at runtime (see `o-cc-color-rule`), else compiled,
+// for the engines without custom properties (wkhtmltopdf, for reports).
+@function o-cc-color-var($name, $compiled) {
+    @return if(mixin-exists(o-theme-gate), var(--#{$name}, #{$compiled}), $compiled);
+}
+
 :root {
     // Background the editor adjusts the contrast of the content against.
     // Defaults to the background the editable is usually drawn on, and can be
@@ -46,21 +69,17 @@
 
         @each $type in ('primary', 'secondary') {
             $-name: '#{$-cc}-btn-#{$type}';
-            $-btn: map-get($colors, $-name);
-            $-btn-color: if($-btn, o-color($-btn), map-get($theme-colors, $type));
-            $-border: map-get($colors, '#{$-name}-border');
-            $-border-color: if($-border, o-color($-border), $-btn-color);
-            @if not $-btn {
+            $-btn-colors: o-cc-btn-colors($-cc, $type, $-bg-color);
+            $-btn-color: map-get($-btn-colors, 'color');
+            $-outline-color: map-get($-btn-colors, 'outline');
+            @if not map-get($colors, $-name) {
                 --#{$-name}: var(--#{$type}, #{$-btn-color});
             }
-            @if not $-border {
+            @if not map-get($colors, '#{$-name}-border') {
                 --#{$-name}-border: var(--#{$-name}, #{$-btn-color});
             }
-            @include o-print-button-variant($-name, $-btn-color, $-border-color);
-            // The outline buttons use the fill color if set, else the border
-            // color, made readable on the background.
-            $-outline-color: if($-btn, $-btn-color, increase-contrast($-border-color, $-bg-color));
-            @if $-btn {
+            @include o-print-button-variant($-name, $-btn-color, map-get($-btn-colors, 'border'));
+            @if map-get($colors, $-name) {
                 --#{$-name}-outline: var(--#{$-name}, #{$-btn-color});
             } @else {
                 --#{$-name}-outline: #{$-outline-color};
@@ -591,10 +610,11 @@ pre {
 }
 // A rule that applies only when a color of a combination is set. Where theme
 // settings can gate rules (`o-theme-gate`), it is always emitted, gated on
-// the color, so that it can apply at runtime.
+// the color, so that it can apply at runtime; a page without gates (not
+// rendered by website's layout) gets the compiled condition.
 @mixin o-cc-color-rule($name, $is-set) {
     @if mixin-exists(o-theme-gate) {
-        @include o-theme-gate($name) {
+        @include o-theme-gate($name, $is-set != null) {
             @content;
         }
     } @else if $is-set {
@@ -609,8 +629,7 @@ pre {
     $-headings: map-get($colors, '#{$-cc}-headings');
     $-link: map-get($colors, '#{$-cc}-link');
     $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
-    $-btn-primary: map-get($colors, '#{$-cc}-btn-primary');
-    $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), map-get($theme-colors, 'primary'));
+    $-btn-primary-color: map-get(o-cc-btn-colors($-cc, 'primary', $-bg-color), 'color');
 
     // Those color classes color multiple elements when applied on a snippet.
     // Those rules are not important so that they can be overridden through
@@ -619,11 +638,11 @@ pre {
     // they can change at runtime.
     .o_cc#{$index} {
         // Background & Text: `o-bg-color()`, with a 0 opacity threshold.
-        $-bg-var: var(--#{$-cc}-bg, #{$-bg-color});
+        $-bg-var: o-cc-color-var('#{$-cc}-bg', $-bg-color);
         --background-color: #{$-bg-var};
         background-color: $-bg-var;
         @if $-text-color {
-            $-text-var: var(--#{$-cc}-text, #{$-text-color});
+            $-text-var: o-cc-color-var('#{$-cc}-text', $-text-color);
             --color: #{$-text-var};
             color: $-text-var;
             @if alpha($-bg-color) > 0 {
@@ -645,47 +664,44 @@ pre {
             // Headings: 'inherit' (`o-bg-color()`) unless set.
             @include o-cc-color-rule('#{$-cc}-headings', $-headings) {
                 h1, h2, h3, h4, h5, h6 {
-                    color: var(--#{$-cc}-headings, #{o-color($-headings)});
+                    color: o-cc-color-var('#{$-cc}-headings', o-color($-headings));
                 }
             }
             @each $level in (2, 3, 4, 5, 6) {
                 $-level-color: map-get($colors, '#{$-cc}-h#{$level}');
                 @include o-cc-color-rule('#{$-cc}-h#{$level}', $-level-color) {
                     h#{$level} {
-                        color: var(--#{$-cc}-h#{$level}, #{o-color($-level-color)});
+                        color: o-cc-color-var('#{$-cc}-h#{$level}', o-color($-level-color));
                     }
                 }
             }
 
             // Links
             a:not(.btn):where(:not(.o_cc)), .btn-link:where(:not(.o_cc)) {
-                color: var(--#{$-cc}-link, #{auto-contrast($-link-color, $-bg-color, '#{$-cc}-link')});
+                color: o-cc-color-var('#{$-cc}-link', auto-contrast($-link-color, $-bg-color, '#{$-cc}-link'));
 
                 &:hover {
-                    color: var(--#{$-cc}-link-hover, #{auto-contrast(darken($-link-color, 15%), $-bg-color, '#{$-cc}-link')});
+                    color: o-cc-color-var('#{$-cc}-link-hover', auto-contrast(darken($-link-color, 15%), $-bg-color, '#{$-cc}-link'));
                 }
             }
 
             // Buttons
             @each $type in ('primary', 'secondary') {
                 $-name: '#{$-cc}-btn-#{$type}';
-                $-btn: map-get($colors, $-name);
-                $-btn-color: if($-btn, o-color($-btn), map-get($theme-colors, $type));
-                $-border: map-get($colors, '#{$-name}-border');
-                $-border-color: if($-border, o-color($-border), $-btn-color);
+                $-btn-colors: o-cc-btn-colors($-cc, $type, $-bg-color);
                 @include o-button-style-rule('fill', $type) {
-                    @include o-button-variant-var($-name, $-btn-color, $-border-color);
+                    @include o-button-variant-var($-name, map-get($-btn-colors, 'color'), map-get($-btn-colors, 'border'));
                 }
                 @include o-button-style-rule('outline', $type) {
-                    @include o-button-outline-variant-var('#{$-name}-outline', if($-btn, $-btn-color, increase-contrast($-border-color, $-bg-color)));
+                    @include o-button-outline-variant-var('#{$-name}-outline', map-get($-btn-colors, 'outline'));
                 }
             }
 
             // 'Active' states. Note: this only emulates very common components
             // used in snippets. This might need to be more complex the day we
             // can apply color combinations anywhere (page-item, ...).
-            $-active-bg: var(--#{$-cc}-btn-primary, #{$-btn-primary-color});
-            $-active-color: var(--#{$-cc}-btn-primary-text, #{color-contrast($-btn-primary-color)});
+            $-active-bg: o-cc-color-var('#{$-cc}-btn-primary', $-btn-primary-color);
+            $-active-color: o-cc-color-var('#{$-cc}-btn-primary-text', color-contrast($-btn-primary-color));
             .nav-pills, .nav-tabs {
                 .nav-link.active,
                 .show > .nav-link {

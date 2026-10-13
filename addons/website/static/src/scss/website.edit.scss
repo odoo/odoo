@@ -27,12 +27,14 @@ header#top:not(.o_header_is_scrolled) + main #wrap .oe_drop_zone:first-child {
 
 // While theme values are previewed, the page shows them at once rather than
 // animating to them (see `customizeWebsite`'s `setPreviewState`).
-html.o_we_theme_previewing * {
-    transition: none !important;
+html.o_we_theme_previewing {
+    *, *::before, *::after {
+        transition: none !important;
+    }
 }
 
 // A header or footer waiting for the server's render of a views switch (see
-// `customizeWebsite`'s `updateChrome`).
+// `websiteViewsPreview`'s `updateChrome`).
 .o_we_chrome_loading {
     opacity: .5;
     pointer-events: none;

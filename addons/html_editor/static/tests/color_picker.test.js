@@ -1,4 +1,4 @@
-import { test, expect } from "@odoo/hoot";
+import { after, test, expect } from "@odoo/hoot";
 import {
     press,
     click,
@@ -375,7 +375,7 @@ test("previewing a theme color in its own picker does not move the colors", asyn
     // in, and the revert happens later.
     defineStyle(`:root { --o-color-1: #714B67; --600: #6C757D; }`);
     const rootStyle = document.documentElement.style;
-    let revertPreview;
+    after(() => rootStyle.removeProperty("--o-color-1"));
     await mountWithCleanup(ColorPicker, {
         props: {
             state: {
@@ -386,9 +386,8 @@ test("previewing a theme color in its own picker does not move the colors", asyn
             applyColorPreview(color) {
                 rootStyle.setProperty("--o-color-1", `var(--${color})`);
             },
-            applyColorResetPreview() {
-                revertPreview = () => rootStyle.removeProperty("--o-color-1");
-            },
+            // Reverted later, as the builder does.
+            applyColorResetPreview() {},
         },
     });
     const customColorsSelector = ".o_font_color_selector .o_colorpicker_section:first-child button";
@@ -400,7 +399,6 @@ test("previewing a theme color in its own picker does not move the colors", asyn
     // The revert is pending: the previewed color is still the gray.
     expect(rootStyle.getPropertyValue("--o-color-1")).toBe("var(--600)");
     expect(customColorsSelector).toHaveCount(0);
-    revertPreview();
 });
 
 test("re-entering the picker previews the custom color again", async () => {

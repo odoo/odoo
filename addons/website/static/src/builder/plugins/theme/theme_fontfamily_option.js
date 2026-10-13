@@ -3,7 +3,7 @@ import { useDomState } from "@html_builder/core/utils";
 import { BuilderFontFamilyPicker } from "@html_builder/core/building_blocks/builder_fontfamilypicker";
 import { BuilderButton } from "@html_builder/core/building_blocks/builder_button";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
-import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
+import { PreviewWebsiteVariableAction } from "../customize_website_plugin";
 import { FONT_VARIABLES_TO_RESET } from "../font/font_plugin";
 import { getParsedWeight } from "./theme_font_weight_option";
 import { useProps, t } from "@odoo/owl";
@@ -40,33 +40,9 @@ export class ThemeFontFamilyOption extends BaseOptionComponent {
     }
 }
 
-export class CustomizeWebsiteFontFamilyAction extends CustomizeWebsiteVariableAction {
-    static id = "customizeWebsiteFontFamily";
-
-    async apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
-        const variables = { [variable]: value };
-        for (const resetVariable of FONT_VARIABLES_TO_RESET[variable] || []) {
-            variables[resetVariable] = nullValue;
-        }
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables, nullValue);
-    }
-}
-
-/**
- * The CSS variable that holds the family of a font setting (see the font
- * families printed in `website.scss`).
- *
- * @param {string} fontVariable e.g. "headings-font"
- */
-function getFamilyVariable(fontVariable) {
-    return fontVariable === "font" ? "font-sans-serif" : `${fontVariable}-family`;
-}
-
-export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteVariableAction {
+export class PreviewWebsiteFontFamilyAction extends PreviewWebsiteVariableAction {
     static id = "previewWebsiteFontFamily";
     static dependencies = ["customizeWebsite", "themeTab"];
-    // Drop the parent's `preview = false` and blocking `withCustomHistory`.
-    setup() {}
     /**
      * The page only loads the fonts it uses: loads the previewed one, so that
      * it renders and its weights are known. A reset previews the font the
@@ -109,7 +85,7 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteVariableActi
             }
             return {
                 name,
-                family: style.getPropertyValue(`--font-family-${i}`),
+                family: getCSSVariableValue(`font-family-${i}`, style),
                 weights: await this.dependencies.themeTab.getFontWeights(name),
             };
         }
@@ -117,9 +93,11 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteVariableActi
     }
     apply({ params: { mainParam: variable, nullValue = "null" }, value, loadResult }) {
         const variables = { [variable]: value };
+        // The font's family, as `website.scss` prints it.
+        const familyVariable = variable === "font" ? "font-sans-serif" : `${variable}-family`;
         const previewValues = {
             [variable]: loadResult.name,
-            [getFamilyVariable(variable)]: loadResult.family,
+            [familyVariable]: loadResult.family,
         };
         if (variable !== "font") {
             previewValues[`set-${variable}`] = value ? loadResult.family : "initial";
@@ -130,7 +108,6 @@ export class PreviewWebsiteFontFamilyAction extends CustomizeWebsiteVariableActi
         for (const weightVariable of FONT_VARIABLES_TO_RESET[variable] || []) {
             if (!weights.length) {
                 variables[weightVariable] = nullValue;
-                previewValues[weightVariable] = "initial";
                 continue;
             }
             const weight = getParsedWeight(

@@ -32,7 +32,7 @@ test("'Show Empty' renders the header without a reload, written on save", async 
     await waitFor(":iframe header#top .o_wsale_my_cart");
     await waitFor("[data-label='Show Empty'] .o_btn_show_empty_cart.active");
     expect.verifySteps(["render {}", `render {"${HIDE_EMPTY_CART}":false}`]);
-    await contains(".o-snippets-top-actions [data-action='save']").click();
-    await waitForNone(".o-snippets-top-actions");
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
     expect.verifySteps([`write ["${HIDE_EMPTY_CART}"]`]);
 });

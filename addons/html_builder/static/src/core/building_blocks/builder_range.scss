@@ -1,4 +1,7 @@
 .o_hb_range {
+    // For the default value's mark (see below).
+    position: relative;
+
     .popover & {
         --o-hb-range-thumb-color: var(--o-hb-range-thumb-color-popover, #{$o-we-bg-darkest});
     }
@@ -152,10 +155,7 @@
 
 // The actions' default value (e.g. a theme's), on the track, which the thumb
 // shortens by half its width at each end.
-.o-hb-range:has(.o-hb-range-default) {
-    position: relative;
-}
-.o-hb-range-default {
+.o_hb_range_default {
     $-thumb-width: $o-we-sidebar-content-field-progress-control-height;
     position: absolute;
     top: 50%;

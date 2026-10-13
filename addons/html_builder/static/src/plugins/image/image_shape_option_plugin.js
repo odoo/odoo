@@ -144,8 +144,8 @@ export class ImageShapeOptionPlugin extends Plugin {
      *
      * @param {String[]} updatedColorVariables - Updated theme color variables.
      */
-    async syncImageShapeColorsWithTheme(updatedColorVariables, { isPreviewing = false } = {}) {
-        if (isPreviewing) {
+    async syncImageShapeColorsWithTheme(updatedColorVariables) {
+        if (this.dependencies.history.getIsPreviewing()) {
             // Images are processed asynchronously: a preview could be reverted
             // before they are done.
             return;

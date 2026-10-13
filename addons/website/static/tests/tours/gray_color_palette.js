@@ -13,15 +13,6 @@ function checkGray900(color) {
     };
 }
 
-function waitForCSSReload() {
-    return [
-        {
-            content: "Wait for no loading",
-            trigger: "body:not(:has(.o_we_ui_loading)) :iframe body:not(:has(.o_we_ui_loading))",
-        },
-    ];
-}
-
 registerWebsitePreviewTour(
     "website_gray_color_palette",
     {
@@ -44,14 +35,12 @@ registerWebsitePreviewTour(
             trigger: ".o_we_slider_tint [data-action-param=gray-hue] input",
             run: "range 100",
         },
-        ...waitForCSSReload(),
         checkGray900("rgb(36, 41, 33)"),
         {
             content: "Drag the saturation slider",
             trigger: "div[data-action-param=gray-extra-saturation] input",
             run: "range 15",
         },
-        ...waitForCSSReload(),
         checkGray900("rgb(34, 47, 27)"),
         ...clickOnSave(),
         {

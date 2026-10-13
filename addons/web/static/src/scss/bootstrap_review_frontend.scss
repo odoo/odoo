@@ -337,9 +337,11 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
 }
 
 // The inputs' colors are read from custom properties (`--o-input-bg` and
-// `--o-input-color`), which a module can print to change them at runtime.
+// `--o-input-color`), which a module can print to change them at runtime. The
+// text color only follows at runtime as the background's contrast: one set
+// apart stays compiled.
 $-input-bg: var(--o-input-bg, #{$input-bg});
-$-input-color: var(--o-input-color, #{$input-color});
+$-input-color: if($input-color == color-contrast($input-bg), var(--o-input-color, #{$input-color}), $input-color);
 .form-control {
     &:disabled, &[readonly] {
         @if $form-select-disabled-color == mix($input-color, $input-bg) {

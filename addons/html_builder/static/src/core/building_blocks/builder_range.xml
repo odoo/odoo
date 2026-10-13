@@ -26,7 +26,7 @@
                 t-on-input="this.onInputRange"
                 t-on-keydown="this.onKeydownRange"/>
             <t t-set="defaultValuePosition" t-value="this.getDefaultValuePosition()"/>
-            <span t-if="defaultValuePosition !== undefined" class="o-hb-range-default"
+            <span t-if="defaultValuePosition !== undefined" class="o_hb_range_default"
                 t-attf-style="--o-hb-range-default-position: {{defaultValuePosition}};"/>
         </div>
         <BuilderNumberInputBase

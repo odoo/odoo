@@ -244,7 +244,7 @@ class IrHttp(models.AbstractModel):
         ):
             with contextlib.suppress(ValueError, AttributeError):
                 ctx['website_preview_views'] = tuple(sorted(
-                    (str(key), bool(active)) for key, active in json.loads(views).items()
+                    (key, bool(active)) for key, active in json.loads(views).items()
                 ))
         return ctx
 

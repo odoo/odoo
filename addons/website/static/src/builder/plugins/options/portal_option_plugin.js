@@ -5,13 +5,12 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class PortalOptionPlugin extends Plugin {
     static id = "portalOption";
-    static dependencies = ["customizeWebsite", "domObserver"];
+    static dependencies = ["domObserver"];
     static shared = ["getPortalCards", "loadPortalCards", "updatePortalCards"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             SetStylePortalCardAction,
-            SetStylePortalCardColorAction,
             UpdatePortalCardListAction,
         },
         anchor_excluded_selectors: ".o_portal_index_card",
@@ -106,7 +105,6 @@ export class PortalOptionPlugin extends Plugin {
 export class SetStylePortalCardAction extends StyleAction {
     static id = "setStylePortalCard";
     static dependencies = ["customizeWebsite", "color"];
-    setup() {}
     /**
      * Previews the specified style of the portal cards.
      *
@@ -114,20 +112,14 @@ export class SetStylePortalCardAction extends StyleAction {
      * @param {string} value - The value to apply for the style property
      */
     apply({ params: { mainParam: styleName }, value }) {
+        if (styleName === "border-color") {
+            this.dependencies.customizeWebsite.previewWebsiteColors({
+                "portal-card-border-color": value,
+            });
+            return;
+        }
         this.dependencies.customizeWebsite.previewWebsiteVariables({
             [`portal-card-${styleName}`]: value,
-        });
-    }
-}
-
-// The color is written right away, until colors are previewed too.
-export class SetStylePortalCardColorAction extends StyleAction {
-    static id = "setStylePortalCardColor";
-    static dependencies = ["customizeWebsite", "color"];
-    setup() {}
-    apply({ value }) {
-        this.dependencies.customizeWebsite.previewWebsiteColors({
-            "portal-card-border-color": value,
         });
     }
 }

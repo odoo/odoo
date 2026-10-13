@@ -85,6 +85,11 @@ $o-default-website-values: o-add-font-config($-default-values-with-user-fonts);
 $o-theme-navbar-logo-height: o-website-value('logo-height') !default;
 $o-theme-navbar-fixed-logo-height: o-website-value('fixed-logo-height') !default;
 
+// The header text color: a color, or a color's name, quoted. An unquoted name
+// (what the option first wrote) never applied, and still doesn't.
+$-header-text-color: o-website-value('header-text-color');
+$o-header-text-color: if(type-of($-header-text-color) != 'string' or str-index(inspect($-header-text-color), '"') == 1 or str-index(inspect($-header-text-color), "'") == 1, $-header-text-color, null);
+
 //------------------------------------------------------------------------------
 // Colors
 //------------------------------------------------------------------------------
@@ -129,10 +134,15 @@ $o-has-customized-13-0-color-system:
     or map-get($o-user-theme-color-palette, 'delta')
     or map-get($o-user-theme-color-palette, 'epsilon'));
 
-// The areas' colors (header, footer...) stay through a palette switch: they
-// aren't customizations it would reset.
+// The areas (header, footer...), which have a color preset and a custom
+// color each, and their gradients.
+$o-area-names: ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'copyright', 'breadcrumb', 'portal-card');
+$o-area-gradient-keys: ('menu-gradient', 'menu-secondary-gradient', 'footer-gradient', 'copyright-gradient', 'breadcrumb-gradient', 'portal-gradient');
+
+// The areas' colors stay through a palette switch: they aren't
+// customizations it would reset.
 $o-area-color-keys: ('menu-border-color',);
-@each $area in ('menu', 'header-sales_one', 'header-sales_two', 'header-sales_three', 'header-sales_four', 'footer', 'copyright', 'breadcrumb', 'portal-card') {
+@each $area in $o-area-names {
     $o-area-color-keys: join($o-area-color-keys, ($area, '#{$area}-custom'));
 }
 $o-has-customized-colors:
