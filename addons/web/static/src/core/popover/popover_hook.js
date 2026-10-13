@@ -1,4 +1,4 @@
-import { onWillUnmount, useScope } from "@odoo/owl";
+import { onWillUnmount, signal, untrack, useScope } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -24,23 +24,23 @@ import { useService } from "@web/core/utils/hooks";
  * @returns {PopoverHookReturnType}
  */
 export function makePopover(addFn, component, options) {
-    let removeFn = null;
+    const removeFn = signal(null);
     function close() {
-        removeFn?.();
+        untrack(removeFn)?.();
     }
     return {
         open(target, props) {
             close();
             const newOptions = Object.create(options);
             newOptions.onClose = () => {
-                removeFn = null;
+                removeFn.set(null);
                 options.onClose?.();
             };
-            removeFn = addFn(target, component, props, newOptions);
+            removeFn.set(addFn(target, component, props, newOptions));
         },
         close,
         get isOpen() {
-            return Boolean(removeFn);
+            return Boolean(removeFn());
         },
     };
 }
