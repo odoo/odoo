@@ -213,7 +213,6 @@ class HrEmployee(models.Model):
         super()._store_avatar_card_fields(res)
         res.many("employee_skill_ids", ["color", "display_name"])
 
-    @api.model
     def load_demo_data(self):
         super().load_demo_data()
         convert.convert_file(env=self.env, module='hr_skills', filename='data/scenarios/hr_skills_scenario.xml', idref=None, mode='init')

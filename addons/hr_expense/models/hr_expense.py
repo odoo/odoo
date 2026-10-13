@@ -1160,20 +1160,17 @@ class HrExpense(models.Model):
             }).send()
 
     @api.model
-    def _get_empty_list_mail_alias(self):
+    def get_help_data(self, domain):
+        # used by the help view (see `hr_expense_view_help`)
+        data = {}
         use_mailgateway = self.env['ir.config_parameter'].sudo().get_bool('hr_expense.use_mailgateway')
         expense_alias = self.env.ref('hr_expense.mail_alias_expense', raise_if_not_found=False) if use_mailgateway else False
         if expense_alias and expense_alias.alias_domain and expense_alias.alias_name:
             # encode, but force %20 encoding for space instead of a + (URL / mailto difference)
             params = werkzeug.urls.url_encode({'subject': _("Lunch with customer $12.32")}).replace('+', '%20')
-            return Markup(
-                """<div class="text-muted mt-4">%(send_string)s <a class="text-body" href="mailto:%(alias_email)s?%(params)s">%(alias_email)s</a></div>"""
-            ) % {
-                'alias_email': expense_alias.display_name,
-                'params': params,
-                'send_string': _("Tip: try sending receipts by email"),
-            }
-        return ""
+            data['alias_email'] = expense_alias.display_name
+            data['alias_mailto'] = f"mailto:{expense_alias.display_name}?{params}"
+        return data
 
     def _track_log_get_default_body(self, track_init_values):
         if (
@@ -1321,10 +1318,6 @@ class HrExpense(models.Model):
                 all_submitted_expenses.last_notification_date = fields.Datetime.now()
         if new_mails:
             self.env['mail.mail'].sudo().create(new_mails).send()
-
-    @api.model
-    def get_empty_list_help(self, help_message):
-        return super().get_empty_list_help((help_message or '') + self._get_empty_list_mail_alias())
 
     @api.model
     def get_views(self, views, options=None):

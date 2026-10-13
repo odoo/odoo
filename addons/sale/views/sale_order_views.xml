@@ -222,6 +222,21 @@
         </field>
     </record>
 
+    <record id="sale_order_view_help" model="ir.ui.view">
+        <field name="name">sale.order.help</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <help>
+                <div class="container">
+                    <widget name="video" title="Sale"
+                            preview="/sale/static/src/img/sales_quotation_thumbnail.webp"
+                            url="https://www.youtube.com/embed/N4zw-2t6spk?autoplay=1"/>
+                    <t t-out="action_help"/>
+                </div>
+            </help>
+        </field>
+    </record>
+
     <record id="view_quotation_tree_with_onboarding" model="ir.ui.view">
         <field name="name">sale.order.list</field>
         <field name="model">sale.order</field>
@@ -230,6 +245,7 @@
         <field name="arch" type="xml">
             <list position="attributes">
                 <attribute name="js_class">sale_onboarding_list</attribute>
+                <attribute name="help_id">%(sale.sale_order_view_help)d</attribute>
             </list>
         </field>
     </record>
@@ -242,6 +258,7 @@
         <field name="arch" type="xml">
             <kanban position="attributes">
                 <attribute name="js_class">sale_onboarding_kanban</attribute>
+                <attribute name="help_id">%(sale.sale_order_view_help)d</attribute>
             </kanban>
         </field>
     </record>
@@ -1195,6 +1212,7 @@
         <field name="arch" type="xml">
             <list position="attributes">
                 <attribute name="js_class">sale_dashboard_list</attribute>
+                <attribute name="help_id">%(sale.sale_order_view_help)d</attribute>
             </list>
         </field>
     </record>
@@ -1207,6 +1225,7 @@
         <field name="arch" type="xml">
             <kanban position="attributes">
                 <attribute name="js_class">sale_dashboard_kanban</attribute>
+                <attribute name="help_id">%(sale.sale_order_view_help)d</attribute>
             </kanban>
         </field>
     </record>

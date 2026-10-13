@@ -552,12 +552,26 @@
             </field>
         </record>
 
+        <record id="view_account_move_help" model="ir.ui.view">
+            <field name="name">account.move.help</field>
+            <field name="model">account.move</field>
+            <field name="arch" type="xml">
+                <help>
+                    <div invisible="context.get('default_move_type') != 'in_invoice'">
+                        <widget name="bill_upload_guide" large_icons="1"/>
+                    </div>
+                    <t t-out="action_help" invisible="context.get('default_move_type') == 'in_invoice'"/>
+                </help>
+            </field>
+        </record>
+
         <record id="view_invoice_tree" model="ir.ui.view">
             <field name="name">account.invoice.list</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <list string="Invoices"
                       js_class="account_tree"
+                      help_id="%(account.view_account_move_help)d"
                       decoration-info="state == 'draft'"
                       decoration-muted="state == 'cancel'"
                       expand="context.get('expand', False)"

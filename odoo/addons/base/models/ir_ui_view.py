@@ -162,6 +162,7 @@ class IrUiView(models.Model):
                              ('kanban', 'Kanban'),
                              ('search', 'Search'),
                              ('card', "Card"),
+                             ('help', "Help"),
                              ('qweb', 'QWeb')], string='View Type')
     arch = fields.Text(compute='_compute_arch', inverse='_inverse_arch', string='View Architecture',
                        help="""This field should be used when accessing view arch. It will use translation.
@@ -1468,6 +1469,9 @@ actual arch.
 
         name_manager = NameManager(model, parent=parent_name_manager, model_groups=model_groups)
 
+        if node_info is None and root.get('help_id'):
+            self._inline_help_view(root, model_name)
+
         root_info = {
             'view_type': root.tag,
             'view_editable': editable and self._editable_node(root, name_manager),
@@ -1749,6 +1753,31 @@ actual arch.
         node_info['children'] = []
         self._postprocess_view(node, name_manager.model._name, editable=False, node_info=node_info)
 
+    def _postprocess_tag_help(self, node, name_manager, node_info):
+        # Same as cards: when called as the root of the nested sub-view below,
+        # let the inner stack process the children normally.
+        if node_info.get('view_type') == 'help':
+            return
+        # help nodes (inlined from a help view, see `_inline_help_view`) are
+        # processed as nested sub-views, so that nothing they contain leaks into
+        # the parent view.
+        node_info['children'] = []
+        self._postprocess_view(node, name_manager.model._name, editable=False, node_info=node_info)
+
+    def _inline_help_view(self, node, model_name):
+        """ Inline the help view referenced by the ``help_id`` attribute of the
+        given root node, as a ``<help>`` child of that node. The web client
+        renders it when the view has no record to display, instead of the
+        action's help.
+        """
+        help_arch, help_view = self._get_view(view_id=int(node.get('help_id')), view_type='help')
+        if help_view.model != model_name:
+            self._raise_view_error(_(
+                "The help view %(help_view)s is defined on model %(help_model)s, not %(model)s",
+                help_view=help_view.xml_id or help_view.id, help_model=help_view.model, model=model_name,
+            ), node)
+        node.append(help_arch)
+
     def _postprocess_tag_label(self, node, name_manager, node_info):
         if not node.get('for'):
             return
@@ -1849,6 +1878,14 @@ actual arch.
 
         if model_name not in self.env:
             self._raise_view_error(_('Model not found: %(model)s', model=model_name), node)
+
+        if node_info is None and (help_id := node.get('help_id')):
+            help_view = self.browse(int(help_id)).sudo()
+            if not help_view.exists() or help_view.type != 'help' or help_view.model != model_name:
+                self._raise_view_error(_(
+                    "Attribute help_id must reference a help view on model %(model)s",
+                    model=model_name,
+                ), node)
 
         group_definitions = self.env['res.groups']._get_group_definitions()
 
@@ -2061,6 +2098,23 @@ actual arch.
                     )
                     self._raise_view_error(msg, node)
 
+    def _validate_tag_help(self, node, name_manager, node_info):
+        if not node_info['validate'] or not (method := node.get('data_method')):
+            return
+        # the method is called by the web client, without record
+        func = getattr(name_manager.model, method, None)
+        if (
+            not callable(func)
+            or method.startswith('_')
+            or getattr(func, '_api_private', False)
+            or not getattr(func, '_api_model', False)
+        ):
+            msg = _(
+                "Attribute data_method of help views must be the name of a public @api.model method of %(model)s (%(method)s)",
+                model=name_manager.model._name, method=method,
+            )
+            self._raise_view_error(msg, node)
+
     def _validate_tag_button(self, node, name_manager, node_info):
         if not node_info['validate']:
             return
@@ -2090,9 +2144,18 @@ actual arch.
                         method=name, model=name_manager.model._name,
                     )
                     self._raise_view_error(msg, node)
+                if getattr(func, '_api_model', False):
+                    # buttons always pass record ids (possibly an empty list) as first argument
+                    msg = _(
+                        "%(method)s on %(model)s is decorated with @api.model and cannot be called from a button",
+                        method=name, model=name_manager.model._name,
+                    )
+                    self._raise_view_error(msg, node)
                 try:
-                    inspect.signature(func).bind()
-                except TypeError:
+                    # buttons may pass additional positional arguments with the 'args' attribute
+                    nb_args = len(ast.literal_eval(node.get('args') or '[]'))
+                    inspect.signature(func).bind(*range(nb_args))
+                except (TypeError, ValueError, SyntaxError):
                     msg = "%s on %s has parameters and cannot be called from a button"
                     self._log_view_warning(msg % (name, name_manager.model._name), node)
             elif type_ == 'action':
@@ -2214,7 +2277,7 @@ actual arch.
                 self._log_view_warning(msg, node)
 
     def _is_qweb_based_view(self, view_type):
-        return view_type == 'kanban' or view_type == 'card' or view_type == 'calendar'
+        return view_type in ('kanban', 'card', 'calendar', 'help')
 
     def _validate_attributes(self, node, name_manager, node_info):
         """ Generic validation of node attributes. """
@@ -2808,18 +2871,6 @@ class Base(models.AbstractModel):
         """
         self.ensure_one()
         return self.get_record_default_action(access_uid=access_uid)
-
-    @api.model
-    def get_empty_list_help(self, help_message: str) -> str:
-        """ Hook method to customize the help message in empty list/kanban views.
-
-        By default, it returns the help received as parameter.
-
-        :param help_message: ir.actions.act_window help content
-        :return: help message displayed when there is no result to display
-          in a list/kanban view (by default, it returns the action help)
-        """
-        return help_message
 
     #
     # Override this method if you need a window title that depends on the context
@@ -3435,6 +3486,9 @@ class NameManager:
         access_groups = node_info['model_groups'] & node_info['view_groups']
         for name in names:
             if name == 'id':
+                continue
+            if name == 'data' and node_info.get('view_type') == 'help':
+                # values returned by the `data_method` of help views
                 continue
             if not name.startswith('parent.'):
                 self.used_fields[name][access_groups] = (use, node)

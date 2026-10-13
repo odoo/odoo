@@ -1010,19 +1010,16 @@ class ProjectTask(models.Model):
         return copied_tasks
 
     @api.model
-    def get_empty_list_help(self, help_message):
-        tname = _("task")
-        project_id = self.env.context.get('default_project_id', False)
-        if project_id:
-            name = self.env['project.project'].browse(project_id).label_tasks
-            if name: tname = name.lower()
-
-        self = self.with_context(
-            empty_list_help_id=self.env.context.get('default_project_id'),
-            empty_list_help_model='project.project',
-            empty_list_help_document_name=tname,
-        )
-        return super().get_empty_list_help(help_message)
+    def get_help_data(self, domain):
+        # used by the help view (see `project_task_view_help`): alias of the project
+        data = {}
+        project_id = self.env.context.get('default_project_id')
+        project = self.env['project.project'].sudo().browse(project_id if isinstance(project_id, int) else []).exists()
+        alias = project.alias_id
+        if alias.alias_name and alias.alias_domain and alias.alias_model_id.model == self._name and not alias.alias_force_thread_id:
+            data['alias_email'] = alias.display_name
+            data['document_name'] = (project.label_tasks or _("task")).lower()
+        return data
 
     # ------------------------------------------------
     # CRUD overrides

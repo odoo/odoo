@@ -44,5 +44,27 @@
         </field>
     </record>
 
+
+    <record id="survey_survey_view_help" model="ir.ui.view">
+        <field name="name">survey.survey.view.help.inherit.crm</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_help"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_survey_sample_cards')]" position="inside">
+                <div class="col-12 col-md-4 col-xl-3">
+                    <a name="action_load_survey_template_sample" type="object" args="['lead_qualification']"
+                       class="o_survey_load_sample o_survey_sample_card card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
+                       aria-label="Select Lead Qualification template">
+                        <img class="o_image_64_contain mx-auto" src="/survey_crm/static/src/img/survey_sample_lead_qualification.svg" alt="Lead Qualification"/>
+                        <div class="card-body p-0 text-start text-md-center">
+                            <h3 class="card-title">Lead Qualification</h3>
+                            <p class="card-text">Create leads when key answers are chosen</p>
+                        </div>
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
 </data>
 </odoo>

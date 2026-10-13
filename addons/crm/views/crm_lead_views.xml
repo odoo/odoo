@@ -1098,6 +1098,49 @@
             <field name="act_window_id" ref="crm_lead_action_my_activities"/>
         </record>
 
+        <record id="crm_lead_view_help" model="ir.ui.view">
+            <field name="name">crm.lead.help</field>
+            <field name="model">crm.lead</field>
+            <field name="type">help</field>
+            <field name="arch" type="xml">
+                <help data_method="get_help_data">
+                    <p class="o_view_nocontent_smiling_face">
+                        <t invisible="context.get('default_type') != 'lead'">Create a new lead</t>
+                        <t invisible="context.get('default_type') == 'lead'">Create an opportunity to start playing with your pipeline.</t>
+                    </p>
+                    <p invisible="not data.get('no_team')">
+                        As you are a member of no Sales Team, you are showed the entire Pipeline.<br/>
+                        <t groups="sales_team.group_sale_manager">To work with the CRM, you should <a name="%(sales_team.crm_team_action_config)d" type="action" tabindex="-1">join a Team.</a></t>
+                        <t groups="!sales_team.group_sale_manager">To work with the CRM, you should be added to a Team.</t>
+                    </p>
+                    <div name="default_help" invisible="data.get('no_team')">
+                        <p class="oe_view_nocontent_alias" invisible="not data.get('alias_email')">
+                            Use the <i>New</i> button, or send an email to <b><a t-att-href="'mailto:' + data.alias_email" t-out="data.alias_email"/></b> to test the email gateway.
+                        </p>
+                    </div>
+                </help>
+            </field>
+        </record>
+
+        <!-- help of actions having their own help: it is only replaced to invite
+             the user to join a team (see `get_help_data`) -->
+        <record id="crm_lead_view_help_with_action_help" model="ir.ui.view">
+            <field name="name">crm.lead.help.with.action.help</field>
+            <field name="model">crm.lead</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="crm_lead_view_help"/>
+            <field name="arch" type="xml">
+                <div name="default_help" position="replace">
+                    <div name="default_help" invisible="data.get('no_team')">
+                        <t t-out="action_help"/>
+                    </div>
+                </div>
+                <p class="o_view_nocontent_smiling_face" position="attributes">
+                    <attribute name="invisible">not data.get('no_team')</attribute>
+                </p>
+            </field>
+        </record>
+
         <!-- 'My Pipeline' menu : Server action, act_window_views and act_windows -->
         <record model="ir.actions.act_window" id="crm_lead_opportunities">
             <field name="name">Opportunities</field>
@@ -1109,6 +1152,7 @@
                 }
             </field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="help_view_id" ref="crm_lead_view_help"/>
         </record>
 
         <record id="crm_lead_opportunities_view_kanban" model="ir.actions.act_window.view">
@@ -1160,6 +1204,7 @@
                     'show_user_team_stages': True,
             }</field>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="help_view_id" ref="crm_lead_view_help"/>
         </record>
 
         <record id="crm_lead_action_pipeline_view_kanban" model="ir.actions.act_window.view">
@@ -1208,7 +1253,6 @@
                 'search_default_forecast': 1,
                 'search_default_date_deadline': 1,
                 'forecast_field': 'date_deadline',
-                'crm_lead_prioritize_team_help': 1,
                 'show_team_switcher': True,
             }</field>
             <field name="help" type="html">
@@ -1219,6 +1263,7 @@
                 </p>
             </field>
             <field name="search_view_id" ref="crm.crm_lead_view_search_forecast"/>
+            <field name="help_view_id" ref="crm_lead_view_help_with_action_help"/>
         </record>
 
         <record id="crm_lead_action_forecast_view_kanban" model="ir.actions.act_window.view">

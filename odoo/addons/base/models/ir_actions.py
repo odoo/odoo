@@ -281,6 +281,32 @@ class IrActionsAct_Window(models.Model):
                 views.extend([(False, mode) for mode in missing_modes])
             act.views = views
 
+    @api.depends('help_view_id', 'res_model')
+    @api.depends_context('uid', 'lang')
+    def _compute_help_view_arch(self):
+        """ Postprocessed arch of the help view, for the current user (groups
+        are applied). The web client uses it in the views of the action that
+        don't reference their own help view (see `help_id`).
+        """
+        for action in self:
+            arch = False
+            if action.help_view_id and action.res_model in self.env:
+                try:
+                    arch = self.env[action.res_model].get_view(action.help_view_id.id, 'help')['arch']
+                except AccessError:
+                    pass
+            action.help_view_arch = arch
+
+    @api.constrains('help_view_id', 'res_model')
+    def _check_help_view_id(self):
+        for action in self:
+            help_view = action.help_view_id
+            if help_view and (help_view.type != 'help' or help_view.model != action.res_model):
+                raise ValidationError(_(
+                    'The help view of action “%(action)s” must be a help view on model %(model)s.',
+                    action=action.name, model=action.res_model,
+                ))
+
     @api.constrains('view_mode')
     def _check_view_mode(self):
         for rec in self:
@@ -316,6 +342,12 @@ class IrActionsAct_Window(models.Model):
     group_ids = fields.Many2many('res.groups', 'ir_act_window_group_rel',
                                  'act_id', 'gid', string='Groups')
     search_view_id = fields.Many2one('ir.ui.view', string='Search View Ref.')
+    help_view_id = fields.Many2one(
+        'ir.ui.view', string='Help View', domain="[('type', '=', 'help')]", ondelete='set null',
+        help="Help displayed by the views of this action when they have no record to display, "
+             "unless they reference their own help view (help_id attribute). Takes precedence "
+             "over the action's description.")
+    help_view_arch = fields.Text(compute='_compute_help_view_arch')
     embedded_action_ids = fields.One2many('ir.embedded.actions', compute="_compute_embedded_actions")
     filter = fields.Boolean()
     cache = fields.Boolean(string="Data Caching", default=True, help="If enabled, this action will cache the related data used in list, Kanban and form views with the aim to increase the loading speed")
@@ -330,22 +362,6 @@ class IrActionsAct_Window(models.Model):
         for action in self:
             model = self.env.get(action.res_model)
             action.can_expand = model is not None and not model.is_transient()
-
-    def read(self, fields=None, load='_classic_read'):
-        """ call the method get_empty_list_help of the model and set the window action help message
-        """
-        result = super().read(fields, load=load)
-        if not fields or 'help' in fields:
-            for values in result:
-                model = values.get('res_model')
-                if model in self.env:
-                    eval_ctx = dict(self.env.context)
-                    try:
-                        ctx = safe_eval(values.get('context', '{}'), eval_ctx)
-                    except Exception:  # noqa: BLE001
-                        ctx = {}
-                    values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
-        return result
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -368,6 +384,7 @@ class IrActionsAct_Window(models.Model):
         return super()._get_readable_fields() | {
             "context", "cache", "mobile_view_mode", "domain", "filter", "group_ids", "limit",
             "res_id", "res_model", "search_view_id", "target", "view_id", "view_mode", "views", "embedded_action_ids",
+            "help_view_arch",
             # this is used by frontend, with the document layout wizard before send and print
             "close_on_report_download",
             # this is used by the frontend to identify wizards

@@ -596,68 +596,9 @@ class LoyaltyProgram(models.Model):
 
         return res
 
-    @api.model
-    def get_program_templates(self):
-        """Return the templates to be used for promotional programs."""
-        ctx_menu_type = self.env.context.get("menu_type")
-        if ctx_menu_type == "gift_ewallet":
-            return {
-                "gift_card": {
-                    "title": self.env._("Gift Card"),
-                    "description": self.env._(
-                        "Sell gift cards that people can use to buy products."
-                    ),
-                    "icon": "gift_card",
-                },
-                "ewallet": {
-                    "title": self.env._("eWallet"),
-                    "description": self.env._(
-                        "Add money to your eWallet to pay for future orders."
-                    ),
-                    "icon": "ewallet",
-                },
-            }
-        return {
-            "promotion": {
-                "title": self.env._("Promotional Program"),
-                "description": self.env._("Automatic promo: 10% off on orders higher than $50"),
-                "icon": "promotional_program",
-            },
-            "promo_code": {
-                "title": self.env._("Promo Code"),
-                "description": self.env._("Get 10% off on some products, with a code"),
-                "icon": "promo_code",
-            },
-            "buy_x_get_y": {
-                "title": self.env._("Buy X Get Y"),
-                "description": self.env._("Buy 2 products and get a third one for free"),
-                "icon": "2_plus_1",
-            },
-            "next_order_coupons": {
-                "title": self.env._("Next Order Coupon"),
-                "description": self.env._("Send a coupon after an order, valid for next purchase"),
-                "icon": "coupons",
-            },
-            "loyalty": {
-                "title": self.env._("Loyalty Card"),
-                "description": self.env._("Win points with each purchase, and claim gifts"),
-                "icon": "loyalty_cards",
-            },
-            "coupons": {
-                "title": self.env._("Coupon"),
-                "description": self.env._("Generate and share unique coupons with your customers"),
-                "icon": "coupons",
-            },
-            "fidelity": {
-                "title": self.env._("Fidelity Card"),
-                "description": self.env._("Buy 10 products to get 10$ off on the 11th one"),
-                "icon": "fidelity_cards",
-            },
-        }
-
-    @api.model
     def create_from_template(self, template_id):
-        """Create the program from the template id defined in `get_program_templates`.
+        """Create the program from the given template id (see `_get_template_values`). Called on
+        an empty recordset by the loyalty help view (see `loyalty_program_view_help`).
 
         Returns an action leading to that new record.
         """

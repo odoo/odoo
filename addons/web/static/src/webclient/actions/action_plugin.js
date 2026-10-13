@@ -781,11 +781,15 @@ export function useActionManager(router = _router) {
             }
         }
 
-        const specialKeys = ["help", "useSampleModel", "limit", "count"];
+        const specialKeys = ["help", "help_view_arch", "useSampleModel", "limit", "count"];
         for (const key of specialKeys) {
             if (key in action) {
                 if (key === "help") {
                     viewProps.noContentHelp = action.help;
+                } else if (key === "help_view_arch") {
+                    if (action.help_view_arch) {
+                        viewProps.noContentHelpArch = action.help_view_arch;
+                    }
                 } else {
                     viewProps[key] = action[key];
                 }

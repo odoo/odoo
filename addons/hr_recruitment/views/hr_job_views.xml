@@ -7,6 +7,39 @@
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
     </record>
 
+    <record id="action_load_demo_data" model="ir.actions.server">
+        <field name="name">Load demo data</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_job"/>
+        <field name="state">code</field>
+        <field name="code">action = model._action_load_recruitment_scenario()</field>
+    </record>
+
+    <record id="hr_job_view_help" model="ir.ui.view">
+        <field name="name">hr.job.help</field>
+        <field name="model">hr.job</field>
+        <field name="arch" type="xml">
+            <help>
+                <p class="o_view_nocontent_smiling_face">
+                    Ready to recruit more efficiently?
+                </p>
+                <p>
+                    <a name="%(hr.action_create_job_position)d" type="action" class="btn btn-link mt-3" role="button">
+                        Let's create a job position.
+                    </a>
+                </p>
+                <div groups="hr_recruitment.group_hr_recruitment_user">
+                    <div class="d-flex gap-3 align-items-center or-separator">
+                        <hr class="flex-grow-1"/> or <hr class="flex-grow-1"/>
+                    </div>
+                    <button name="%(hr_recruitment.action_load_demo_data)d" type="action" class="btn-secondary mt-3"
+                            confirm="Sample job positions, applicants and interviews will be created. Continue?">
+                        Load sample data
+                    </button>
+                </div>
+            </help>
+        </field>
+    </record>
+
     <record id="view_hr_job_kanban" model="ir.ui.view">
         <field name="name">hr.job.kanban</field>
         <field name="model">hr.job</field>
@@ -19,6 +52,7 @@
                 action="%(action_hr_job_applications)d"
                 type="action"
                 js_class="recruitment_kanban_view"
+                help_id="%(hr_recruitment.hr_job_view_help)d"
                 >
                 <field name="active"/>
                 <field name="alias_email"/>
@@ -445,17 +479,11 @@
             </field>
             <list position="attributes">
                 <attribute name="js_class">recruitment_list_view</attribute>
+                <attribute name="help_id">%(hr_recruitment.hr_job_view_help)d</attribute>
             </list>
         </field>
     </record>
 
-    <!-- hr related job position menu action -->
-    <record id="action_load_demo_data" model="ir.actions.server">
-        <field name="name">Load demo data</field>
-        <field name="model_id" ref="hr_recruitment.model_hr_job"/>
-        <field name="state">code</field>
-        <field name="code">action = model._action_load_recruitment_scenario()</field>
-    </record>
 
     <record model="ir.actions.act_window" id="action_hr_job">
         <field name="name">Job Positions</field>

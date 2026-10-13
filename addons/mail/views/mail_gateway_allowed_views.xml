@@ -20,9 +20,28 @@
         </field>
     </record>
 
+    <record id="mail_gateway_allowed_view_help" model="ir.ui.view">
+        <field name="name">mail.gateway.allowed.view.help</field>
+        <field name="model">mail.gateway.allowed</field>
+        <field name="type">help</field>
+        <field name="arch" type="xml">
+            <help data_method="get_help_data">
+                <p class="o_view_nocontent_smiling_face">
+                    Add addresses to the Allowed List
+                </p><p>
+                    To protect you from spam and reply loops, Odoo automatically blocks emails
+                    coming to your gateway past a threshold of <b t-out="data.threshold"/> emails every <b t-out="data.minutes"/>
+                    minutes. If there are some addresses from which you need to receive very frequent
+                    updates, you can however add them below and Odoo will let them go through.
+                </p>
+            </help>
+        </field>
+    </record>
+
     <record id="mail_gateway_allowed_action" model="ir.actions.act_window">
         <field name="name">Mail Gateway Allowed</field>
         <field name="res_model">mail.gateway.allowed</field>
         <field name="view_mode">list</field>
+        <field name="help_view_id" ref="mail_gateway_allowed_view_help"/>
     </record>
 </odoo>

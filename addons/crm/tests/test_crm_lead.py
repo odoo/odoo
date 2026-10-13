@@ -848,10 +848,11 @@ class TestCRMLead(TestCrmCommon):
 
         for team in teams:
             with self.subTest(team=team):
+                alias_email = self.env['crm.lead'].sudo().get_help_data([])['alias_email']
                 if team != team_other_comp:
-                    self.assertIn(f"<a href='mailto:{team.alias_email}'>{team.alias_email}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                    self.assertEqual(alias_email, team.alias_email)
                 else:
-                    self.assertNotIn(f"<a href='mailto:{team.alias_email}'>{team.alias_email}</a>", self.env['crm.lead'].sudo().get_empty_list_help(""))
+                    self.assertNotEqual(alias_email, team.alias_email)
                 team.active = False
 
     @mute_logger('odoo.addons.mail.models.mail_thread')

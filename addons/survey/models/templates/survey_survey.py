@@ -15,33 +15,10 @@ class SurveySurvey(models.Model):
 
     _inherit = 'survey.survey'
 
-    @api.model
     def action_load_survey_template_sample(self, template_key):
+        """ Called on an empty recordset by the survey help view (see `survey_survey_view_help`). """
         template_values = self._get_survey_template_values(template_key)
         return self.env['survey.survey'].create(template_values).action_show_sample()
-
-    @api.model
-    def get_survey_templates_data(self):
-        return {
-            'survey': {
-                'description': _('Gather feedbacks from your employees and customers'),
-                'icon': '/survey/static/src/img/survey_sample_survey.png',
-                'template_key': 'survey',
-                'title': _('Survey'),
-            },
-            'assessment': {
-                'description': _('Handle quiz & certifications'),
-                'icon': '/survey/static/src/img/survey_sample_assessment.png',
-                'template_key': 'assessment',
-                'title': _('Assessment'),
-            },
-            'live_session': {
-                'description': _('Make your presentations more fun by sharing questions live'),
-                'icon': '/survey/static/src/img/survey_sample_live_session.png',
-                'template_key': 'live_session',
-                'title': _('Live Session'),
-            },
-        }
 
     def _get_survey_template_values(self, template_key):
         # Load the correct template
@@ -285,8 +262,8 @@ class SurveySurvey(models.Model):
             ]
         }
 
-    @api.model
     def action_load_sample_custom(self):
+        """ Called on an empty recordset by the survey help view (see `survey_survey_view_help`). """
         return self.env['survey.survey'].create({
             'survey_type': 'custom',
             'title': '',

@@ -746,11 +746,38 @@ action = {
         </field>
     </record>
 
+    <!-- Product catalog: creation of a product from the no content helper -->
+    <record id="product_product_action_catalog_create" model="ir.actions.act_window">
+        <field name="name">Create a product</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="product_view_help_catalog" model="ir.ui.view">
+        <field name="name">product.view.help.catalog</field>
+        <field name="model">product.product</field>
+        <field name="arch" type="xml">
+            <help>
+                <p class="o_view_nocontent_smiling_face">
+                    No products could be found.<br/>
+                    <button name="%(product.product_product_action_catalog_create)d" type="action" class="btn-primary mt-2">
+                        Create a product
+                    </button>
+                </p>
+                <p>
+                    You must define a product for everything you sell or purchase,
+                    whether it's a storable product, a consumable or a service.
+                </p>
+            </help>
+        </field>
+    </record>
+
     <record id="product_view_kanban_catalog" model="ir.ui.view">
         <field name="name">product.view.kanban.catalog</field>
         <field name="model">product.product</field>
         <field name="arch" type="xml">
-            <kanban records_draggable="0" js_class="product_kanban_catalog" default_order="is_favorite desc, default_code, name, id">
+            <kanban records_draggable="0" js_class="product_kanban_catalog" help_id="%(product.product_view_help_catalog)d" default_order="is_favorite desc, default_code, name, id">
                 <field name="id"/>
                 <templates>
                     <t t-name="menu">

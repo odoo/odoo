@@ -1,15 +1,20 @@
-.o_nocontent_help:has(.oe_view_nocontent_attendance) {
-    max-width: none !important;
-    margin: 0% !important;
-    padding: 0% !important;
+// the help view contains both layouts, only one of them being visible
+@include media-breakpoint-up(md) {
+    .o_nocontent_help:has(.oe_view_nocontent_attendance) {
+        max-width: none !important;
+        margin: 0% !important;
+        padding: 0% !important;
+    }
 }
 
-.o_view_nocontent:has(.oe_view_nocontent_attendance_mobile) {
-    position: sticky !important;
-}
+@include media-breakpoint-down(md) {
+    .o_view_nocontent:has(.oe_view_nocontent_attendance_mobile) {
+        position: sticky !important;
+    }
 
-.o_nocontent_help:has(.oe_view_nocontent_attendance_mobile) {
-    position: relative;
+    .o_nocontent_help:has(.oe_view_nocontent_attendance_mobile) {
+        position: relative;
+    }
 }
 
 .att_container {

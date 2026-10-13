@@ -30,11 +30,56 @@
             </field>
         </record>
 
+        <record id="action_install_barcode" model="ir.actions.server">
+            <field name="name">Install Barcode</field>
+            <field name="model_id" ref="stock.model_stock_picking_type"/>
+            <field name="binding_model_id" ref="stock.model_stock_picking_type"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_redirect_to_barcode_installation()
+            </field>
+        </record>
+
+        <record id="stock_picking_view_help" model="ir.ui.view">
+            <field name="name">stock.picking.help</field>
+            <field name="model">stock.picking</field>
+            <field name="type">help</field>
+            <field name="arch" type="xml">
+                <help data_method="get_help_data">
+                    <p name="top_help_message" class="o_view_nocontent_smiling_face o_view_nocontent_stock">
+                        <t name="receipt_message" invisible="data.get('picking_type_code') != 'incoming'">
+                            No receipt yet! Create a new one.
+                        </t>
+                        <t name="delivery_message" invisible="data.get('picking_type_code') != 'outgoing'">
+                            No delivery to do!
+                        </t>
+                        <t name="transfer_message" invisible="data.get('picking_type_code') in ['incoming', 'outgoing']">
+                            No transfer found. Let's create one!
+                        </t>
+                    </p>
+                    <p name="bottom_help_message" class="text-muted">
+                        <t name="receipt_message" invisible="data.get('picking_type_code') != 'incoming'">
+                            Reduce stockouts with alerts, barcode app, replenishment propositions,
+                            locations management traceability, quality control, etc.
+                        </t>
+                        <t name="delivery_message" invisible="data.get('picking_type_code') != 'outgoing'"/>
+                        <t name="transfer_message" invisible="data.get('picking_type_code') in ['incoming', 'outgoing']">
+                            Transfers allow you to move products from one location to another.
+                        </t>
+                    </p>
+                    <p name="footer_help_message" class="text-muted">
+                        <br/>
+                        Want to speed up operations? <a class="btn-link" name="%(stock.action_install_barcode)d" type="action" role="button">Install</a> the barcode app
+                    </p>
+                </help>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="stock_picking_kanban">
             <field name="name">stock.picking.kanban</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" sample="1">
+                <kanban class="o_kanban_mobile" sample="1" help_id="%(stock.stock_picking_view_help)d">
                     <field name="scheduled_date"/>
                     <field name="picking_type_id"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -67,7 +112,7 @@
             <field name="name">stock.picking.list</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <list string="Picking list" multi_edit="1" sample="1" js_class="stock_list_view">
+                <list string="Picking list" multi_edit="1" sample="1" help_id="%(stock.stock_picking_view_help)d">
                     <header>
                         <button name="action_assign" type="object" string="Reserve"/>
                     </header>
@@ -123,6 +168,7 @@
                 <xpath expr="//list" position="attributes">
                     <attribute name="default_order">batch_sequence</attribute>
                     <attribute name="create">False</attribute>
+                    <attribute name="help_id"></attribute>
                 </xpath>
                 <xpath expr="//list" position="inside">
                     <control>
@@ -697,55 +743,6 @@
             <field name="context">{'contact_display': 'partner_address', 'search_default_backorder': 1}</field>
         </record>
 
-        <template id="help_message_template" name="Help Message" groups="base.group_user">
-            <p name="top_help_message" class="o_view_nocontent_smiling_face o_view_nocontent_stock">
-                <t name="receipt_message">
-                    <t t-if="picking_type_code == 'incoming'">
-                        No receipt yet! Create a new one.
-                    </t>
-                </t>
-                <t name="delivery_message">
-                    <t t-if="picking_type_code == 'outgoing'">
-                        No delivery to do!
-                    </t>
-                </t>
-                <t name="transfer_message">
-                    <t t-if="picking_type_code not in ['incoming', 'outgoing']">
-                        No transfer found. Let's create one!
-                    </t>
-                </t>
-            </p>
-            <p name="bottom_help_message" class="text-muted">
-                <t name="receipt_message">
-                    <t t-if="picking_type_code == 'incoming'">
-                        Reduce stockouts with alerts, barcode app, replenishment propositions,
-                        locations management traceability, quality control, etc.
-                    </t>
-                </t>
-                <t name="delivery_message">
-                    <t t-if="picking_type_code == 'outgoing'"></t>
-                </t>
-                <t name="transfer_message">
-                    <t t-if="picking_type_code not in ['incoming', 'outgoing']">
-                        Transfers allow you to move products from one location to another.
-                    </t>
-                </t>
-            </p>
-            <p name="footer_help_message" class="text-muted">
-                <br/>
-                Want to speed up operations? <a class="btn-link" name="stock.action_install_barcode" type="action">Install</a> the barcode app
-            </p>
-        </template>
-
-        <record id="action_install_barcode" model="ir.actions.server">
-            <field name="name">Install Barcode</field>
-            <field name="model_id" ref="stock.model_stock_picking_type"/>
-            <field name="binding_model_id" ref="stock.model_stock_picking_type"/>
-            <field name="state">code</field>
-            <field name="code">
-                action = model.action_redirect_to_barcode_installation()
-            </field>
-        </record>
 
         <record id="action_get_picking_type_operations" model="ir.actions.act_window">
             <field name="name">Operations</field>

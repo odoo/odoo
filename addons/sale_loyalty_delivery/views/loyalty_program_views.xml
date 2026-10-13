@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="loyalty_program_view_help" model="ir.ui.view">
+        <field name="name">loyalty.program.view.help.inherit.delivery</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty.loyalty_program_view_help"/>
+        <field name="arch" type="xml">
+            <xpath expr="//a[hasclass('o_loyalty_template_promotion')]//p[hasclass('card-text')]" position="replace">
+                <p class="card-text">Automatic promotion: free shipping on orders higher than $50</p>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

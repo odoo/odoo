@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+        <record id="project_task_view_help" model="ir.ui.view">
+            <field name="name">project.task.help</field>
+            <field name="model">project.task</field>
+            <field name="type">help</field>
+            <field name="arch" type="xml">
+                <help data_method="get_help_data">
+                    <t t-out="action_help"/>
+                    <p class="oe_view_nocontent_alias" invisible="not data.get('alias_email')">
+                        Create new <t t-out="data.document_name"/> by sending an email to <a t-att-href="'mailto:' + data.alias_email" t-out="data.alias_email"/>
+                    </p>
+                </help>
+            </field>
+        </record>
+
         <!-- Base search view, contains the fields and filters common to project, project sharing and fsm -->
         <record id="view_task_search_form_base" model="ir.ui.view">
             <field name="name">project.task.search.form</field>
@@ -776,6 +790,7 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                 <kanban
+                    help_id="%(project.project_task_view_help)d"
                     highlight_color="color"
                     default_group_by="stage_id"
                     class="o_kanban_small_column o_kanban_project_tasks"
@@ -822,7 +837,7 @@
             <field name="name">project.task.view.list.main.base</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <list string="Tasks" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc">
+                <list string="Tasks" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc" help_id="%(project.project_task_view_help)d">
                     <field name="sequence" readonly="1" column_invisible="True"/>
                     <field name="allow_milestones" column_invisible="True"/>
                     <field name="subtask_count" column_invisible="True"/>
