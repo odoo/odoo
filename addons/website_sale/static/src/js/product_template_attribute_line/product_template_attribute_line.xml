@@ -7,7 +7,13 @@
             <attribute name="class" remove="o_input" separator=" "/>
         </div>
         <div name="ptal" position="after">
-            <t t-elif="this.isSelectedPTAVCustom() || this.props.create_variant === 'no_variant'">
+            <t
+                t-elif="this.hasCustomValue()
+                    or (
+                        this.props.create_variant === 'no_variant'
+                        and !this.isSelectedPTAVCustom()
+                    )"
+            >
                 <div t-out="this.getPtalDisplayName()" class="text-muted small"/>
             </t>
         </div>

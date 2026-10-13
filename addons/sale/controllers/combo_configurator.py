@@ -242,6 +242,7 @@ class SaleComboConfiguratorController(Controller):
                 if currency
                 else ptav.price_extra,
                 "custom_value": custom_value_by_ptav_id.get(ptav.id),
+                "is_custom": ptav.is_custom,
             }
             for ptav in selected_ptavs
         ]
