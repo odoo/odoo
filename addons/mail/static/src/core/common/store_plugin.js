@@ -92,6 +92,8 @@ export class Store extends BaseStore {
     menu = { counter: 0 };
     chatHub = this.computed(() => this.ChatHub.insert({}));
     failures = fields.Many("Failure");
+    /** Messages not posted yet, lost when leaving the page */
+    unpostedMessages = fields.Many("mail.message", { inverse: "storeAsUnposted" });
     sortedFailures = this.computedShallowEqual(() =>
         [...this.failures].sort((f1, f2) => {
             if (f1.lastMessage?.id && !f2.lastMessage?.id) {
@@ -508,6 +510,19 @@ export class Store extends BaseStore {
             this._flushFetchStoreData,
             Store.FETCH_DATA_DEBOUNCE_DELAY
         );
+        this.onChange(
+            () => [this.unpostedMessages.length > 0],
+            (hasUnpostedMessages) => {
+                if (!hasUnpostedMessages) {
+                    return;
+                }
+                // only while needed, since Firefox then keeps the page out of the bfcache
+                const onBeforeUnload = (ev) => ev.preventDefault();
+                window.addEventListener("beforeunload", onBeforeUnload);
+                return () => window.removeEventListener("beforeunload", onBeforeUnload);
+            },
+            { immediate: true }
+        );
     }
 
     onPushNotificationDisplayed(payload) {
@@ -782,6 +797,7 @@ export class Store extends BaseStore {
             if (uploading.length) {
                 uploadService.cancelUploads(uploading);
             }
+            uploadService.forgetFailedUploads(attachments.filter(({ uploadError }) => uploadError));
         }
         const stored = attachments.filter(({ id }) => id > 0);
         let keptIds = [];

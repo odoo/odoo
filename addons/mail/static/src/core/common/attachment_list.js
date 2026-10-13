@@ -1,4 +1,5 @@
 import { AttachmentDeleteDialog } from "@mail/core/common/attachment_delete_dialog";
+import { UPLOAD_ERROR } from "@mail/core/common/attachment_model";
 import { Gif } from "@mail/core/common/gif";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
@@ -90,7 +91,7 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     getImageUrl(attachment) {
-        if (attachment.uploading && attachment.tmpUrl) {
+        if ((attachment.uploading || attachment.uploadError) && attachment.tmpUrl) {
             return attachment.tmpUrl;
         }
         return url(attachment.urlRoute, {
@@ -102,7 +103,7 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     canDownload(attachment) {
-        return !attachment.uploading && !this.ancestors.inComposer;
+        return !attachment.uploading && !attachment.uploadError && !this.ancestors.inComposer;
     }
 
     /**
@@ -113,7 +114,15 @@ export class AttachmentList extends Component {
     }
 
     hasUnlinkConfirmation(attachment) {
-        return true;
+        // removing an uploading or failed attachment only drops it from its message
+        return !attachment.uploading && !attachment.uploadError;
+    }
+
+    /** @param {import("models").Attachment} attachment */
+    uploadErrorText(attachment) {
+        return attachment.uploadError === UPLOAD_ERROR.TOO_LARGE
+            ? _t("Too large")
+            : _t("Upload failed");
     }
 
     /**
@@ -255,7 +264,12 @@ export class AttachmentList extends Component {
         }
         // in messages users are expected to delete the message instead of just the attachment
         const message = this.ancestors.inMessage?.message;
-        return !message || message.hasTextContent || this.props.attachmentGroups.length > 1;
+        return (
+            !message ||
+            message.isPending ||
+            message.hasTextContent ||
+            this.props.attachmentGroups.length > 1
+        );
     }
 
     get showInConversationTooltip() {

@@ -1,9 +1,11 @@
+import { UPLOAD_ERROR } from "@mail/core/common/attachment_model";
 import { AND, fields, Record } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
 
 /**
@@ -212,6 +214,8 @@ export class Thread extends Record {
      * when fetching newer messages.
      */
     pendingNewMessages = fields.Many("mail.message");
+    /** @type {Promise<void>|undefined} resolved once the queued pending messages are posted */
+    postQueuePromise;
     /** @type {'0'|'1'|'2'|'3'} */
     priority;
     /** @type {Array<[string,string]>} */
@@ -817,11 +821,17 @@ export class Thread extends Record {
 
     /**
      * @param {import("models").Message} message
-     * @param {import("models").Message} tmpMsg
+     * @param {import("models").Message} [tmpMsg]
      */
     addOrReplaceMessage(message, tmpMsg) {
-        // The message from other personas (not self) should not replace the tmpMsg
-        if (tmpMsg && tmpMsg.in(this.messages) && message.isSelfAuthored) {
+        // Only self messages replace tmpMsg, once its post is sent: other tabs can reuse its id
+        if (
+            tmpMsg &&
+            tmpMsg.in(this.messages) &&
+            message.isSelfAuthored &&
+            !tmpMsg.isWaitingToPost &&
+            !tmpMsg.hasPostFailed
+        ) {
             this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
             return;
         }
@@ -834,12 +844,18 @@ export class Thread extends Record {
 
     /**
      *  @param {ReturnType<import("@odoo/owl").markup>} body
+     *  @param {Object} postData
+     *  @param {Promise<import("models").Attachment>[]} [postData.attachmentUploadPromises]
+     *      the result of `detachUploads` for the attachments, in a channel. It must
+     *      be called before `post`, so before any override can await.
      *  @param {Object} extraData
+     *  @returns {Promise<import("models").Message|undefined>} the posted message, also
+     *      after a retry for a channel message that failed, or undefined when discarded
      */
     async post(body, postData = {}, extraData = {}) {
         let tmpMsg;
         postData.attachments = postData.attachments ? [...postData.attachments] : []; // to not lose them on composer clear
-        const { attachments, parentId } = postData;
+        const { attachments, parentId, attachmentUploadPromises } = postData;
         const params = await this.store.getMessagePostParams({ body, postData, thread: this });
         Object.assign(params, extraData);
         const tmpId = this.store.getNextTemporaryId();
@@ -854,7 +870,8 @@ export class Thread extends Record {
             const tmpData = {
                 id: tmpId,
                 message_type: params.post_data.message_type,
-                attachment_ids: attachments,
+                // without the uploads completed in the meantime, posted anyway
+                attachment_ids: attachments.filter((attachment) => attachment.exists()),
             };
             if (this.store.self_user) {
                 tmpData.author_id = this.store.self_user.partner_id;
@@ -864,16 +881,23 @@ export class Thread extends Record {
             if (parentId) {
                 tmpData.parent_id = this.store["mail.message"].get(parentId);
             }
+            const { promise: postPromise, resolve: resolvePost } = Promise.withResolvers();
             tmpMsg = this.store["mail.message"].insert({
                 ...tmpData,
                 body: await generateEmojisOnHtml(body),
                 isPending: true,
                 postParams: params,
+                resolvePost,
                 thread: this,
             });
             this.messages.push(tmpMsg);
             this.onNewSelfMessage(tmpMsg);
-            return this._sendPendingMessage(tmpMsg);
+            await this._postPendingMessage(
+                tmpMsg,
+                attachmentUploadPromises &&
+                    this._receiveUploads(tmpMsg, attachments, attachmentUploadPromises)
+            );
+            return postPromise;
         }
         const data = await this.store.doMessagePost(params);
         if (!data) {
@@ -883,15 +907,92 @@ export class Thread extends Record {
     }
 
     /**
+     * Post the given pending message, once the messages queued before it in
+     * this thread are posted and its uploads are done.
+     *
      * @param {import("models").Message} tmpMsg
+     * @param {Promise} [uploadsPromise] see `_receiveUploads`
      * @returns {Promise<import("models").Message|undefined>} the posted message
      */
-    async _sendPendingMessage(tmpMsg) {
-        const data = await this._doPendingMessagePost(tmpMsg);
+    async _postPendingMessage(tmpMsg, uploadsPromise) {
+        const previousPostPromise = this.postQueuePromise;
+        let dataPromise;
+        if (previousPostPromise || uploadsPromise) {
+            const { promise: postPromise, resolve: resolvePost } = Promise.withResolvers();
+            this.postQueuePromise = postPromise;
+            tmpMsg.isWaitingToPost = true;
+            try {
+                await previousPostPromise;
+                await uploadsPromise;
+                if (!tmpMsg.exists()) {
+                    return;
+                }
+                tmpMsg.isWaitingToPost = false;
+                if (tmpMsg.attachment_ids.some(({ uploadError }) => uploadError)) {
+                    // Not posted without its files: the next messages do not wait for it.
+                    this.updateUploadFailure(tmpMsg);
+                    return;
+                }
+                if (tmpMsg.isEmpty) {
+                    // All its uploads were cancelled: nothing left to post.
+                    tmpMsg.delete();
+                    return;
+                }
+                // Messages received meanwhile are before it on the server: show
+                // them before it, and before the messages queued behind it.
+                const index = this.messages.indexOf(tmpMsg);
+                if (index !== -1) {
+                    const nextMessages = this.messages.slice(index);
+                    this.messages.splice(
+                        index,
+                        nextMessages.length,
+                        ...nextMessages.filter(({ isPending }) => !isPending),
+                        ...nextMessages.filter(({ isPending }) => isPending)
+                    );
+                }
+                dataPromise = this._doPendingMessagePost(tmpMsg);
+            } finally {
+                if (this.postQueuePromise === postPromise) {
+                    this.postQueuePromise = undefined;
+                }
+                resolvePost();
+            }
+        } else {
+            dataPromise = this._doPendingMessagePost(tmpMsg);
+        }
+        const data = await dataPromise;
         if (!data) {
             return;
         }
         return this._insertPostedMessage(data, tmpMsg);
+    }
+
+    /**
+     * Put the uploaded attachments in the given pending message in place of
+     * their temporary ones, as their detached uploads end.
+     *
+     * @param {import("models").Message} tmpMsg
+     * @param {import("models").Attachment[]} attachments
+     * @param {Promise<import("models").Attachment|undefined>[]} attachmentUploadPromises see
+     *  `detachUploads`, for these attachments
+     * @returns {Promise} resolved once all of them ended
+     */
+    _receiveUploads(tmpMsg, attachments, attachmentUploadPromises) {
+        return Promise.all(
+            attachments.map(async (attachment, index) => {
+                const uploaded = await attachmentUploadPromises[index];
+                if (!uploaded || uploaded.eq(attachment)) {
+                    return;
+                }
+                const attachmentIndex = tmpMsg.exists()
+                    ? tmpMsg.attachment_ids.indexOf(attachment)
+                    : -1;
+                if (attachmentIndex !== -1) {
+                    tmpMsg.attachment_ids.splice(attachmentIndex, 1, uploaded);
+                }
+                attachment.delete();
+            })
+        );
     }
 
     /**
@@ -909,17 +1010,69 @@ export class Thread extends Record {
 
     /**
      * Post again the given message that failed to be posted, after the
-     * messages posted meanwhile, with the changes made in edition.
+     * messages posted meanwhile, with the changes made in edition. The files
+     * that failed to upload are uploaded again first, unless one of them is
+     * too large: it has to be removed in edition.
      *
      * @param {import("models").Message} tmpMsg
      * @returns {Promise<import("models").Message|undefined>} the posted message
      */
     async repostMessage(tmpMsg) {
+        if (
+            tmpMsg.attachment_ids.some(({ uploadError }) => uploadError === UPLOAD_ERROR.TOO_LARGE)
+        ) {
+            this.updateUploadFailure(tmpMsg);
+            return;
+        }
         tmpMsg.postFailRedo = undefined;
         tmpMsg.postFailMessage = undefined;
         this.messages.delete(tmpMsg);
         this.messages.add(tmpMsg);
-        return this._sendPendingMessage(tmpMsg);
+        const failedAttachments = tmpMsg.attachment_ids.filter(({ uploadError }) => uploadError);
+        let uploadsPromise;
+        if (failedAttachments.length) {
+            const uploadService = this.store.env.services["mail.attachment_upload"];
+            uploadsPromise = this._receiveUploads(
+                tmpMsg,
+                failedAttachments,
+                uploadService.retryUploads(failedAttachments, this)
+            );
+        }
+        return this._postPendingMessage(tmpMsg, uploadsPromise);
+    }
+
+    /**
+     * Show why the given pending message is not posted, after some of its
+     * uploads failed, and what clicking its failure does. Discard it when
+     * nothing is left to post.
+     *
+     * @param {import("models").Message} tmpMsg
+     */
+    updateUploadFailure(tmpMsg) {
+        if (tmpMsg.isEmpty) {
+            tmpMsg.delete();
+            return;
+        }
+        const names = (error) =>
+            formatList(
+                tmpMsg.attachment_ids
+                    .filter(({ uploadError }) => uploadError === error)
+                    .map(({ name }) => name)
+            );
+        const tooLargeNames = names(UPLOAD_ERROR.TOO_LARGE);
+        const failedNames = names(UPLOAD_ERROR.FAILED);
+        if (tooLargeNames) {
+            tmpMsg.postFailMessage = _t(
+                "Too large to be uploaded: %(file_names)s. Click to edit the message",
+                { file_names: tooLargeNames }
+            );
+            tmpMsg.postFailRedo = () => tmpMsg.enterEditMode();
+        } else {
+            tmpMsg.postFailMessage = failedNames
+                ? _t("Failed to upload %(file_names)s. Click to retry", { file_names: failedNames })
+                : _t("The message is not posted. Click to post it");
+            tmpMsg.postFailRedo = () => this.repostMessage(tmpMsg);
+        }
     }
 
     /**
@@ -935,6 +1088,7 @@ export class Thread extends Record {
         const message = this.store["mail.message"].get(data.message_id);
         this.addOrReplaceMessage(message, tmpMsg);
         this.onNewSelfMessage(message);
+        tmpMsg?.resolvePost?.(message);
         // Only delete the temporary message now that seen_message_id is updated
         // to avoid flickering.
         tmpMsg?.delete();

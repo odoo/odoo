@@ -1,6 +1,8 @@
 import {
+    click,
     defineMailModels,
     mockGetMedia,
+    onRpcBefore,
     openDiscuss,
     patchVoiceMessageAudio,
     patchVoicePlayerFile,
@@ -8,7 +10,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, mockDate, queryOne, test, waitFor, waitForNone } from "@odoo/hoot";
-import { Command, contains, serverState } from "@web/../tests/web_test_helpers";
+import { Command, contains, getService, serverState } from "@web/../tests/web_test_helpers";
 
 import { Mp3Encoder } from "@mail/discuss/voice_message/common/mp3_encoder";
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
@@ -166,4 +168,23 @@ test("can change voice message playback speed and replay it once it ends", async
     await contains(".o-mail-VoicePlayer button[title='Replay']:count(1)").click();
     await waitFor(".o-mail-VoicePlayer-time:text('00 : 00 / 00 : 03'):count(1)");
     await waitFor(".o-mail-VoicePlayer button[title='Pause']:count(1)");
+});
+
+test("voice message whose upload failed stays a voice message once retried", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const { promise: firstUpload, resolve: endFirstUpload } = Promise.withResolvers();
+    const uploads = [firstUpload];
+    onRpcBefore("/mail/attachment/upload", () => uploads.shift());
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer:count(1)");
+    const { thread } = getService("mail.store")["discuss.channel"].get(channelId);
+    const file = new File([new Uint8Array(25000)], "test.mp3", { type: "audio/mp3" });
+    getService("mail.attachment_upload").upload(thread, thread.composer, file, { voice: true });
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    endFirstUpload(new Response(null, { status: 500 }));
+    await click(".o-mail-Message button[title='Failed to upload test.mp3. Click to retry']");
+    await waitFor(".o-mail-Message:not(:has(.o-mail-Message-content.opacity-50)):count(1)");
+    expect(pyEnv["discuss.voice.metadata"].search_count([])).toBe(1);
 });
