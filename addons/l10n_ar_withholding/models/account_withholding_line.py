@@ -20,8 +20,9 @@ class AccountWithholdingLine(models.AbstractModel):
                 date=date,
             )
             same_period_withheld = 0.0
-            if line.tax_id.l10n_ar_withholding_tax_type in EARNINGS_TAX_TYPES:
-                same_period_vals = line._get_comodel_partner()._l10n_ar_get_period_accumulation(
+            partner = line._get_comodel_partner()
+            if partner and line.tax_id.l10n_ar_withholding_tax_type in EARNINGS_TAX_TYPES:
+                same_period_vals = partner._l10n_ar_get_period_accumulation(
                     tax=line.tax_id,
                     date=date,
                     exclude_payment=line._l10n_ar_get_payment(),
