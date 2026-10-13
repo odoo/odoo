@@ -9,7 +9,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, ValidationError
-from odoo.tests import Form, common, tagged, WhitespaceInsensitive
+from odoo.tests import Form, common, new_test_user, tagged, WhitespaceInsensitive
 from odoo.tools import mute_logger
 
 
@@ -472,6 +472,35 @@ if env.context.get('old_values', None):  # on write
         self.assertEqual(lead.state, 'draft')
         self.assertEqual(lead.user_id, self.user_demo)
 
+    def test_020_recursive_reverse_order(self):
+        """ Same as test_020_recursive, with the rule reacting to the secondary
+        change created first: it must be executed all the same.
+        """
+        create_automation(
+            self,
+            model_id=self.lead_model.id,
+            trigger='on_create_or_write',
+            filter_domain="[('state', '=', 'draft')]",
+            _actions={'state': 'code', 'code': "record.write({'user_id': %s})" % (self.user_demo.id)},
+        )
+        create_automation(
+            self,
+            model_id=self.lead_model.id,
+            trigger='on_create_or_write',
+            _actions={
+                'state': 'code',
+                'code': """
+if env.context.get('old_values', None):  # on write
+    if 'partner_id' in env.context['old_values'][record.id]:
+        record.write({'state': 'draft'})""",
+            },
+        )
+
+        lead = self.create_lead(state='open')
+        lead.write({'partner_id': self.res_partner_1.id})
+        self.assertEqual(lead.state, 'draft')
+        self.assertEqual(lead.user_id, self.user_demo)
+
     def test_021_recursive(self):
         """ Check what it does with a recursive infinite loop """
         automations = [
@@ -629,6 +658,34 @@ if env.context.get('old_values', None):  # on write
         # search_result = self.env['test_base_automation.project'].name_search('foo')
         # self.assertEqual(len(search_result), 3, 'Another record on the secondary model should have been created')
         # ----------------------------
+
+    def test_051_on_create_with_trigger_fields_from_write_action(self):
+        """ A record created by an automation triggered on write must trigger
+        the automations on its creation, even if they have trigger fields.
+        """
+        create_automation(
+            self,
+            model_id=self.lead_model.id,
+            trigger='on_create_or_write',
+            _actions={
+                'state': 'code',
+                'code': """
+if env.context.get('old_values', None):  # on write
+    env['test_base_automation.project'].create({'name': 'from lead', 'priority': '2'})""",
+            },
+        )
+        create_automation(
+            self,
+            model_id=self.project_model.id,
+            trigger='on_create_or_write',
+            trigger_field_ids=[self.env['ir.model.fields']._get('test_base_automation.project', 'priority').id],
+            _actions={'state': 'code', 'code': "record.write({'name': 'triggered'})"},
+        )
+
+        lead = self.create_lead()
+        lead.write({'name': 'renamed lead'})
+        project = self.env['test_base_automation.project'].search([('name', 'in', ('from lead', 'triggered'))])
+        self.assertEqual(project.name, 'triggered')
 
     def test_060_on_stage_set(self):
         stage_field = self.env['ir.model.fields'].search([
@@ -1506,6 +1563,103 @@ class TestCompute(common.TransactionCase):
             'effective_hours': 8,
             'remaining_hours': 32,
         }])
+
+    def test_no_activity_created_on_transient_state(self):
+        """
+        `immediate` and `delayed` are both meant to end up equal, but
+        `delayed` is only resynced by write() after reading `immediate`.
+        That read wakes up an automation watching `delayed` before the resync
+        happens, so it can see a stale `delayed` while `immediate` is already
+        up to date. The automation must not act on that transient mismatch.
+        """
+        model = self.env['ir.model']._get('base_automation.transient.test')
+        create_automation(
+            self,
+            model_id=model.id,
+            trigger='on_create_or_write',
+            filter_domain="[('immediate', '!=', 0), ('delayed', '=', 0)]",
+            _actions={
+                'state': 'next_activity',
+                'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+            },
+        )
+
+        record = self.env['base_automation.transient.test'].create({'immediate_setter': 0})
+        self.assertFalse(record.activity_ids)
+
+        record.write({'immediate_setter': 1})
+
+        self.assertEqual(record.immediate, 1)
+        self.assertEqual(record.delayed, 1, "delayed should have caught up with immediate")
+        self.assertFalse(
+            record.activity_ids,
+            "no activity should have been created: the final state doesn't match the automation's condition",
+        )
+
+    def _create_transient_activity_automation(self, trigger_field):
+        model = self.env['ir.model']._get('base_automation.transient.test')
+        return create_automation(
+            self,
+            model_id=model.id,
+            trigger='on_create_or_write',
+            trigger_field_ids=[self.env['ir.model.fields']._get(model.model, trigger_field).id],
+            _actions={
+                'state': 'next_activity',
+                'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+            },
+        )
+
+    def test_transient_state_mixed_recordset(self):
+        """ A write() nested in the write() of a record, on that record and
+        another one, must write both and trigger the automations on the other one.
+        """
+        self._create_transient_activity_automation('delayed')
+        peer = self.env['base_automation.transient.test'].create({})
+        record = self.env['base_automation.transient.test'].create({'peer_id': peer.id})
+        self.assertEqual(len(record.activity_ids), 1)
+        self.assertEqual(len(peer.activity_ids), 1, "the automation must be triggered on the peer")
+
+        record.write({'immediate_setter': 1})
+
+        self.assertEqual(record.delayed, 1)
+        self.assertEqual(peer.delayed, 1, "the peer must be written along with the record")
+        self.assertEqual(len(record.activity_ids), 2)
+        self.assertEqual(len(peer.activity_ids), 2, "the automation must be triggered on the peer")
+
+    def test_transient_state_write_error(self):
+        """ A write() that fails must not disable the automations on its records
+        for the rest of the transaction.
+        """
+        self._create_transient_activity_automation('delayed')
+        record = self.env['base_automation.transient.test'].create({})
+        self.assertEqual(len(record.activity_ids), 1)
+
+        with self.assertRaises(ValueError), self.env.cr.savepoint():
+            record.write({'immediate_setter': 'not an integer'})
+        self.assertFalse(self.env.cr.cache.get('base_automation_write_ids'))
+        self.assertEqual(record.delayed, 0)
+        self.assertEqual(len(record.activity_ids), 1, "the failed write must not trigger the automation")
+
+        # the trigger field actually changes now
+        record.write({'delayed': 1})
+        self.assertEqual(len(record.activity_ids), 2)
+
+    def test_transient_state_restricted_trigger_field(self):
+        """ The values of trigger fields the user cannot read are compared
+        without raising an AccessError.
+        """
+        self._create_transient_activity_automation('restricted')
+        user = new_test_user(self.env, login='transient_state_user', groups='base.group_user')
+        record = self.env['base_automation.transient.test'].create({})
+        self.assertEqual(len(record.activity_ids), 1)
+
+        record.with_user(user).write({'immediate_setter': 1})
+
+        self.assertEqual(record.delayed, 1)
+        self.assertEqual(len(record.activity_ids), 1, "the trigger field didn't change")
+
+        record.restricted = 1
+        self.assertEqual(len(record.activity_ids), 2)
 
     def test_recursion(self):
         project = self.env['test_base_automation.project'].create({})

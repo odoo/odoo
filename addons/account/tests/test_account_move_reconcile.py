@@ -400,6 +400,64 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         }])
         self.assertTrue(payment_term_line.reconciled)
 
+    def test_invoice_draft_paid_automation_not_triggered(self):
+        """ While the dynamic lines of a draft invoice are synced, `payment_state`
+        transiently computes as 'paid' when `amount_total` goes from zero to a
+        positive amount. An automation on 'paid' must not run on that state.
+        """
+        if 'base_automation' not in self.env['ir.module.module']._installed():
+            self.skipTest("base_automation is not installed")
+        from odoo.addons.test_base_automation.tests.test_flow import create_automation  # noqa: PLC0415, OLS03003
+
+        create_automation(
+            self,
+            model_id=self.env['ir.model']._get_id('account.move'),
+            trigger='on_create_or_write',
+            filter_domain="[('payment_state', '=', 'paid')]",
+            trigger_field_ids=[self.env['ir.model.fields']._get('account.move', 'payment_state').id],
+            _actions={
+                'state': 'next_activity',
+                'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+            },
+        )
+
+        invoice_vals = {
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+        }
+
+        with self.subTest("create"):
+            invoice = self.env['account.move'].create({
+                **invoice_vals,
+                'invoice_line_ids': [Command.create({'name': 'Something', 'price_unit': 100})],
+            })
+            self.assertRecordValues(invoice, [{'state': 'draft', 'amount_total': 100.0, 'payment_state': 'not_paid'}])
+            self.assertFalse(invoice.activity_ids)
+
+        with self.subTest("write"):
+            invoice = self.env['account.move'].create({
+                **invoice_vals,
+                'invoice_line_ids': [Command.create({'name': 'Something', 'price_unit': 0})],
+            })
+            # a draft invoice with a zero total doesn't qualify for a payment state yet
+            self.assertRecordValues(invoice, [{'state': 'draft', 'amount_total': 0.0, 'payment_state': 'not_paid'}])
+            self.assertFalse(invoice.activity_ids)
+            invoice.write({'invoice_line_ids': [Command.update(invoice.invoice_line_ids.id, {'price_unit': 100})]})
+            self.assertRecordValues(invoice, [{'state': 'draft', 'amount_total': 100.0, 'payment_state': 'not_paid'}])
+            self.assertFalse(invoice.activity_ids)
+
+        with self.subTest("really paid"):
+            invoice = self.env['account.move'].create({
+                **invoice_vals,
+                'invoice_line_ids': [Command.create({'name': 'Nope', 'price_unit': 0})],
+            })
+            self.assertFalse(invoice.activity_ids)
+            # sanity check that the automation runs once the invoice is actually paid
+            invoice.action_post()
+            self.assertRecordValues(invoice, [{'state': 'posted', 'payment_state': 'paid'}])
+            self.assertEqual(len(invoice.activity_ids), 1)
+
     def test_reconcile_lines_corner_case_1_zero_balance_same_foreign_currency(self):
         """ Test the reconciliation of lines having a zero balance in different currencies. In that case, the reconciliation should not be full until
         an additional move is added with the right foreign currency amount. """

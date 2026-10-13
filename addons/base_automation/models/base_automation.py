@@ -836,15 +836,15 @@ class BaseAutomation(models.Model):
             # all fields are implicit triggers
             return True
 
-        if self.env.context.get('old_values') is None:
+        if self.env.context.get('comparison_values') is None:
             # this is a create: all fields are considered modified
             return True
 
         # note: old_vals are in the record format
-        old_vals = self.env.context['old_values'].get(record.id, {})
+        old_vals = self.env.context['comparison_values'].get(record.id, {})
 
         def differ(name):
-            return name in old_vals and record[name] != old_vals[name]
+            return name in old_vals and record.sudo()[name] != old_vals[name]
 
         return any(differ(field.name) for field in self_sudo.trigger_field_ids)
 
@@ -860,6 +860,8 @@ class BaseAutomation(models.Model):
         # defined inside a loop; in that case, the variable 'create' is bound to
         # the last function defined by the loop.
         #
+        def cache_key(record):
+            return record._name, record.id
 
         def make_create():
             """ Instanciate a create method that processes automation rules. """
@@ -872,7 +874,7 @@ class BaseAutomation(models.Model):
                 # call original method
                 records = create.origin(self.with_env(automations.env), vals_list, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
-                for automation in automations.with_context(old_values=None):
+                for automation in automations.with_context(old_values=None, comparison_values=None):
                     _logger.debug(
                         "Processing automation rule %s (#%s) on %s records (create)",
                         automation.sudo().name, automation.sudo().id, len(records),
@@ -887,10 +889,17 @@ class BaseAutomation(models.Model):
             """ Instanciate a write method that processes automation rules. """
             def write(self, vals, **kw):
                 # retrieve the automation rules to possibly execute
+                stack = self.env.cr.cache.setdefault('base_automation_write_ids', set())
+                in_stack = self.filtered(lambda rec: cache_key(rec) in stack)
+                not_in_stack = self - in_stack
                 automations = self.env['base.automation']._get_actions(self, WRITE_TRIGGERS)
-                if not (automations and self):
+                if not automations:
                     return write.origin(self, vals, **kw)
-                records = self.with_env(automations.env).filtered('id')
+                if in_stack:
+                    write.origin(in_stack, vals, **kw)
+                if not not_in_stack:
+                    return True
+                records = not_in_stack.with_env(automations.env).filtered('id')
                 written_fields = [records._fields[n] for n in vals if n in records._fields]
                 # check preconditions on records
                 with _keep_to_compute(self.env, written_fields):
@@ -900,10 +909,18 @@ class BaseAutomation(models.Model):
                     record.id: {field_name: record[field_name] for field_name in vals if field_name in record._fields and record._fields[field_name].store}
                     for record in records
                 }
+                comparison_values = {
+                    record.id: {field_name: record[field_name] for field_name in automations.sudo().trigger_field_ids.mapped('name')}
+                    for record in records.sudo()
+                }
                 # call original method
-                write.origin(self.with_env(automations.env), vals, **kw)
+                stack |= set(not_in_stack.mapped(cache_key))
+                try:
+                    write.origin(not_in_stack.with_env(automations.env), vals, **kw)
+                finally:
+                    stack -= set(not_in_stack.mapped(cache_key))
                 # check postconditions, and execute actions on the records that satisfy them
-                for automation in automations.with_context(old_values=old_values):
+                for automation in automations.with_context(old_values=old_values, comparison_values=comparison_values):
                     with _keep_to_compute(self.env, written_fields):
                         _logger.debug(
                             "Processing automation rule %s (#%s) on %s records (write)",
@@ -923,14 +940,19 @@ class BaseAutomation(models.Model):
             def _compute_field_value(self, field):
                 # determine fields that may trigger an automation
                 stored_fnames = [f.name for f in self.pool.field_computed[field] if f.store]
-                if not stored_fnames:
-                    return _compute_field_value.origin(self, field)
+                stack = self.env.cr.cache.setdefault('base_automation_write_ids', set())
+                in_stack = self.filtered(lambda rec: cache_key(rec) in stack)
+                not_in_stack = self - in_stack
                 # retrieve the action rules to possibly execute
                 automations = self.env['base.automation']._get_actions(self, WRITE_TRIGGERS)
-                records = self.filtered('id').with_env(automations.env)
-                if not (automations and records):
+                if not automations or not stored_fnames:
                     _compute_field_value.origin(self, field)
                     return True
+                if in_stack:
+                    _compute_field_value.origin(in_stack, field)
+                if not not_in_stack:
+                    return True
+                records = not_in_stack.filtered('id').with_env(automations.env)
                 # check preconditions on records
                 # changed fields are all fields computed by the function
                 changed_fields = [f for f in records._fields.values() if f.compute == field.compute]
@@ -941,10 +963,14 @@ class BaseAutomation(models.Model):
                         record.id: {fname: record[fname] for fname in stored_fnames}
                         for record in records
                     }
+                    comparison_values = {
+                        record.id: {fname: record[fname] for fname in automations.sudo().trigger_field_ids.mapped('name')}
+                        for record in records.sudo()
+                    }
                 # call original method
-                _compute_field_value.origin(self, field)
+                _compute_field_value.origin(not_in_stack, field)
                 # check postconditions, and execute automations on the records that satisfy them
-                for automation in automations.with_context(old_values=old_values):
+                for automation in automations.with_context(old_values=old_values, comparison_values=comparison_values):
                     with _keep_to_compute(self.env, changed_fields):
                         _logger.debug(
                             "Processing automation rule %s (#%s) on %s records (_compute_field_value)",
@@ -1026,7 +1052,7 @@ class BaseAutomation(models.Model):
                 # if author is not set, it means the message is coming from outside
                 mail_trigger = "on_message_received" if not message_sudo.author_id or message_sudo.author_id.partner_share else "on_message_sent"
                 automations = self.env['base.automation']._get_actions(self, [mail_trigger])
-                for automation in automations.with_context(old_values=None):
+                for automation in automations.with_context(old_values=None, comparison_values=None):
                     with _keep_to_compute(self.env, self.env._protected):
                         records = automation._filter_pre(self, feedback=True)
                         _logger.debug(
