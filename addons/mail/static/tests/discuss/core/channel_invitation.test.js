@@ -292,3 +292,24 @@ test("Invite sidebar action has the correct title for group chats", async () => 
     await click(".o-dropdown-item:text('Invite People')");
     await waitFor(".modal-title:text('Mitchell Admin and Demo'):count(1)");
 });
+
+test("invite email from chat invites it to the new group chat", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(chatId);
+    await click(".o-mail-DiscussContent-header button[title='Invite People']");
+    await insertText(".o-discuss-ChannelInvitation-search", "john@test.com");
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text('john@test.com'))");
+    await click("button:text('Create Group Chat'):enabled");
+    await waitFor(".o-discuss-ChannelMember:has(:text('john@test.com')):count(1)");
+    await waitFor(".o-discuss-ChannelMember:has(:text('Invitation Pending')):count(1)");
+});

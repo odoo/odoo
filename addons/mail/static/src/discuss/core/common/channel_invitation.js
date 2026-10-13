@@ -235,7 +235,6 @@ export class ChannelInvitation extends Component {
             this.props.close?.();
             return;
         }
-        let channelId = this.props.channel.id;
         if (this.props.channel?.channel_type === "chat") {
             const partnerIds = this.selectedPartners.map((partner) => partner.id);
             if (this.props.channel.correspondent?.partner_id) {
@@ -253,13 +252,16 @@ export class ChannelInvitation extends Component {
                     ]),
                 ];
                 const group = await this.store.createGroupChat({ users_to });
-                channelId = group.id;
+                await this.store.fetchStoreData("/discuss/channel/add_members", {
+                    channel_id: group.id,
+                    emails: this.state.selectedEmails,
+                });
             } else {
                 await this.store.startChat(partnerIds);
             }
         } else if (this.selectedPartners.length || this.state.selectedEmails.length) {
             await this.store.fetchStoreData("/discuss/channel/add_members", {
-                channel_id: channelId,
+                channel_id: this.props.channel.id,
                 partner_ids: this.selectedPartners.map((partner) => partner.id),
                 emails: this.state.selectedEmails,
                 invite_to_rtc_call: this.rtc.localChannel?.eq(this.props.channel),
