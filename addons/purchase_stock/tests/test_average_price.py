@@ -205,6 +205,73 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
 
         self.assertEqual(avco_product.avg_cost, 300)
 
+    def test_bill_before_receipt_bill_qty_excess(self):
+        """ A receipt bigger than the billed and not received quantity is valued at the average bill price. """
+        eur = self.setup_other_currency('EUR', rates=[('2024-01-01', 0.5)])
+        avco_product = self.env['product.product'].create({
+            'name': 'Average Ice Cream',
+            'is_storable': True,
+            'categ_id': self.stock_account_product_categ.id,
+            'purchase_method': 'purchase',
+        })
+        avco_product.categ_id.property_cost_method = 'average'
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': eur.id,
+            'order_line': [(0, 0, {
+                'product_id': avco_product.id,
+                'product_qty': 100.0,
+                'price_unit': 100.0,
+                'taxes_id': False,
+            })]
+        })
+        purchase_order.button_confirm()
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = '2024-01-15'
+        bill.invoice_line_ids.quantity = 40.01
+        bill.action_post()
+
+        receipt = purchase_order.picking_ids
+        receipt.move_ids.quantity = 40.0
+        receipt.with_context(skip_backorder=True).button_validate()
+
+        # The rate of the bill date changes after the first receipt
+        eur.rate_ids.create({'name': '2024-01-15', 'rate': 0.4, 'currency_id': eur.id, 'company_id': self.env.company.id})
+        backorder = receipt.backorder_ids
+        backorder.button_validate()
+
+        self.assertAlmostEqual(backorder.move_ids.stock_valuation_layer_ids.unit_cost, 250.0)
+
+        # Partial bill then a bigger receipt: the whole receipt is valued at the bill price
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': avco_product.id,
+                'product_qty': 100.0,
+                'price_unit': 100.0,
+                'taxes_id': False,
+            })]
+        })
+        purchase_order.button_confirm()
+
+        def post_bill(qty):
+            purchase_order.action_create_invoice()
+            bill = purchase_order.invoice_ids.filtered(lambda m: m.state == 'draft')
+            bill.invoice_date = '2024-01-15'
+            bill.invoice_line_ids.quantity = qty
+            bill.invoice_line_ids.price_unit = 110.0
+            bill.action_post()
+
+        post_bill(50.0)
+        receipt = purchase_order.picking_ids
+        receipt.button_validate()
+        self.assertAlmostEqual(receipt.move_ids.stock_valuation_layer_ids.unit_cost, 110.0)
+
+        post_bill(50.0)
+        self.assertAlmostEqual(sum(receipt.move_ids.stock_valuation_layer_ids.mapped('value')), 11000.0)
+
     def test_svl_avco_with_discount(self):
         """
             Ensure the stock valuation is correct when
