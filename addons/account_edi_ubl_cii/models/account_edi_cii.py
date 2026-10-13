@@ -1340,6 +1340,9 @@ class AccountEdiCii(models.AbstractModel):
         gross_subtotal = price_unit * quantity
         discount = (discount_amount * 100 / gross_subtotal) if gross_subtotal else 0.0
 
+        # TODO remove this when France enforce stricter rules
+        quantity, discount, price_unit = self._import_fix_line_price_unit_quantity_discount(quantity, discount, price_unit, line_total_amount, currency)
+
         to_write = collected_values['to_write']
         to_write['quantity'] = quantity
         to_write['price_unit'] = price_unit
