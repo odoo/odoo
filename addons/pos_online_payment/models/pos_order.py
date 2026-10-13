@@ -21,21 +21,12 @@ class PosOrder(models.Model):
             return self.currency_id.round(self.amount_total - self.amount_paid)
         return self.currency_id.round(self._get_rounded_amount(self.amount_total) - self.amount_paid)
 
-    def _clean_payment_lines(self):
-        self.ensure_one()
-        order_payments = self.env['pos.payment'].search(['&', ('pos_order_id', '=', self.id), ('online_account_payment_id', '=', False), ('payment_method_id.type', '=', 'online')])
-        order_payments.unlink()
-
     def get_and_set_online_payments_data(self, next_online_payment_amount=False):
         """ Allows to update the amount to pay for the next online payment and
             get online payments already made and how much remains to be paid.
             If next_online_payment_amount is different than False, updates the
             next online payment amount, otherwise, the next online payment amount
             is unchanged.
-            If next_online_payment_amount is 0 and the order has no successful
-            online payment, is in draft state, is not a restaurant order and the
-            pos.config has no trusted config, then the order is deleted from the
-            database, because it was probably added for the online payment flow.
         """
         self.ensure_one()
         is_paid = self.state in ('paid', 'done')
@@ -51,12 +42,8 @@ class PosOrder(models.Model):
             'online_payments': online_payments,
             'amount_unpaid': self.get_amount_unpaid(),
         }
-        if not isinstance(next_online_payment_amount, bool):
-            if tools.float_is_zero(next_online_payment_amount, precision_rounding=self.currency_id.rounding) and len(online_payments) == 0 and self.state == 'draft' and not self.config_id.module_pos_restaurant and len(self.config_id.trusted_config_ids) == 0:
-                self.sudo()._clean_payment_lines()  # Needed to delete the order
-                return_data['deleted'] = True
-            elif self._check_next_online_payment_amount(next_online_payment_amount):
-                self.next_online_payment_amount = next_online_payment_amount
+        if not isinstance(next_online_payment_amount, bool) and self._check_next_online_payment_amount(next_online_payment_amount):
+            self.next_online_payment_amount = next_online_payment_amount
 
         return return_data
 
@@ -68,13 +55,3 @@ class PosOrder(models.Model):
         self.ensure_one()
         amount = self.next_online_payment_amount
         return amount if self._check_next_online_payment_amount(amount) else False
-
-    @api.model
-    def _process_order(self, order, existing_order):
-        draft = order.get('state') == 'draft'
-        pos_session = self.env['pos.session'].browse(order['session_id'])
-        online_payment_methods = pos_session.config_id.payment_method_ids.filtered(lambda pm: pm.type == 'online')
-        if draft and online_payment_methods:
-            # online payment lines should not be created in draft orders
-            order['payment_ids'] = [payment for payment in order.get('payment_ids', []) if payment[0] not in [0, 1] or (payment[2].get('payment_method_id') not in online_payment_methods.ids)]
-        return super()._process_order(order, existing_order)

@@ -2,48 +2,9 @@ import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_valid
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { generateQRCodeDataUrl } from "@point_of_sale/utils";
-import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 patch(OrderPaymentValidation.prototype, {
-    getRemainingOnlinePaymentLines() {
-        return this.paymentLines.filter(
-            (line) => line.payment_method_id.type === "online" && line.payment_status !== "done"
-        );
-    },
-    checkRemainingOnlinePaymentLines(unpaidAmount) {
-        const remainingLines = this.getRemainingOnlinePaymentLines();
-        let remainingAmount = 0;
-        let amount = 0;
-        for (const line of remainingLines) {
-            amount = line.getAmount();
-            if (amount <= 0) {
-                this.pos.dialog.add(AlertDialog, {
-                    title: _t("Invalid online payment"),
-                    body: _t(
-                        "Online payments cannot have a negative amount (%s: %s).",
-                        line.payment_method_id.name,
-                        this.pos.formatCurrency(amount)
-                    ),
-                });
-                return false;
-            }
-            remainingAmount += amount;
-        }
-        if (!this.pos.currency.isZero(unpaidAmount - remainingAmount)) {
-            this.pos.dialog.add(AlertDialog, {
-                title: _t("Invalid online payments"),
-                body: _t(
-                    "The total amount of remaining online payments to execute (%s) doesn't correspond to the remaining unpaid amount of the order (%s).",
-                    this.pos.formatCurrency(remainingAmount),
-                    this.pos.formatCurrency(unpaidAmount)
-                ),
-            });
-            return false;
-        }
-        return true;
-    },
     //@override
     async isOrderValid(isForceValidate) {
         if (!(await super.isOrderValid(...arguments))) {
@@ -59,133 +20,34 @@ patch(OrderPaymentValidation.prototype, {
             return false;
         }
 
-        const onlinePaymentLines = this.getRemainingOnlinePaymentLines();
-        if (onlinePaymentLines.length > 0) {
-            if (!this.order.id) {
-                this.cancelOnlinePayment(this.order);
-                this.pos.dialog.add(AlertDialog, {
-                    title: _t("Online payment unavailable"),
-                    body: _t("The QR code payment could not be generated."),
-                });
-                return false;
-            }
-            if (
-                this.order.paymentsRequireCustomer(onlinePaymentLines) &&
-                !this.order.partner_id?.email
-            ) {
-                this.pos.dialog.add(AlertDialog, {
-                    title: _t("Payment provider requirement"),
-                    body: _t(
-                        "Please ensure you have a customer with an email address on this order."
-                    ),
-                });
-                return false;
-            }
-            let prevOnlinePaymentLine = null;
-            let lastOrderServerOPData = null;
-            for (const onlinePaymentLine of onlinePaymentLines) {
-                const onlinePaymentLineAmount = onlinePaymentLine.getAmount();
-                // The local state is not aware if the online payment has already been done.
-                lastOrderServerOPData = await this.pos.updateOnlinePaymentsDataWithServer(
-                    this.order,
-                    onlinePaymentLineAmount
-                );
-                if (!lastOrderServerOPData) {
-                    this.pos.dialog.add(AlertDialog, {
-                        title: _t("Online payment unavailable"),
-                        body: _t(
-                            "There is a problem with the server. The order online payment status cannot be retrieved."
-                        ),
-                        showReloadButton: true,
-                    });
-                    return false;
-                }
-                if (!lastOrderServerOPData.isPaid) {
-                    if (lastOrderServerOPData.modified_payment_lines) {
-                        this.cancelOnlinePayment(this.order);
-                        this.pos.dialog.add(AlertDialog, {
-                            title: _t("Updated online payments"),
-                            body: _t("There are online payments that were missing in your view."),
-                        });
-                        return false;
-                    }
-                    if (
-                        (prevOnlinePaymentLine &&
-                            prevOnlinePaymentLine?.payment_status !== "done") ||
-                        !this.checkRemainingOnlinePaymentLines(lastOrderServerOPData.amount_unpaid)
-                    ) {
-                        this.cancelOnlinePayment(this.order);
-                        return false;
-                    }
+        if (!this.order.isSynced) {
+            return true;
+        }
 
-                    await this.pos.syncAllOrders({ orders: [this.order] });
-                    onlinePaymentLine.payment_status = "waiting";
-                    this.order.selectPaymentline(onlinePaymentLine);
-                    const qrCodeUrl = `${this.pos.config._base_url}/pos/pay/${this.order.id}?access_token=${this.order.access_token}`;
-                    const onlinePaymentData = {
-                        amount: this.pos.formatCurrency(onlinePaymentLineAmount),
-                        qrCode: generateQRCodeDataUrl(qrCodeUrl),
-                    };
-                    this.order.onlinePaymentData = onlinePaymentData;
-                    const qrCodePopupCloser = this.pos.dialog.add(QRPopup, onlinePaymentData, {
-                        onClose: () => {
-                            onlinePaymentLine.onlinePaymentResolver(false);
-                            this.order.onlinePaymentData = {};
-                        },
-                    });
-                    const paymentResult = await new Promise(
-                        (r) => (onlinePaymentLine.onlinePaymentResolver = r)
-                    );
-                    if (!paymentResult) {
-                        this.cancelOnlinePayment(this.order);
-                        onlinePaymentLine.payment_status = "retry";
-                        return false;
-                    }
-                    qrCodePopupCloser();
-                    prevOnlinePaymentLine = onlinePaymentLine;
-                }
-            }
-
-            if (!lastOrderServerOPData || !lastOrderServerOPData.isPaid) {
-                lastOrderServerOPData = await this.pos.updateOnlinePaymentsDataWithServer(
-                    this.order,
-                    0
-                );
-            }
-            if (!lastOrderServerOPData || !lastOrderServerOPData.isPaid) {
-                return false;
-            }
-
-            await this.afterPaidOrderSavedOnServer(lastOrderServerOPData.paid_order);
+        // The server finalizes the order once its online payments cover the total
+        const orderServerOPData = await this.pos.updateOnlinePaymentsDataWithServer(this.order, 0);
+        if (!orderServerOPData) {
+            return ask(this.pos.dialog, {
+                title: _t("Online payment unavailable"),
+                body: _t(
+                    "There is a problem with the server. The order online payment status cannot be retrieved. Are you sure there is no online payment for this order ?"
+                ),
+                confirmLabel: _t("Yes"),
+            });
+        }
+        if (orderServerOPData.isPaid) {
+            await this.afterPaidOrderSavedOnServer(orderServerOPData.paid_order);
             return false; // Cancel normal flow because the current order is already saved on the server.
-        } else if (this.order.isSynced) {
-            const orderServerOPData = await this.pos.updateOnlinePaymentsDataWithServer(
-                this.order,
-                0
-            );
-            if (!orderServerOPData) {
-                return ask(this.pos.dialog, {
-                    title: _t("Online payment unavailable"),
-                    body: _t(
-                        "There is a problem with the server. The order online payment status cannot be retrieved. Are you sure there is no online payment for this order ?"
-                    ),
-                    confirmLabel: _t("Yes"),
-                });
-            }
-            if (orderServerOPData.modified_payment_lines) {
-                this.pos.dialog.add(AlertDialog, {
-                    title: _t("Updated online payments"),
-                    body: _t("There are online payments that were missing in your view."),
-                });
-                return false;
-            }
+        }
+        if (orderServerOPData.modified_payment_lines) {
+            this.pos.dialog.add(AlertDialog, {
+                title: _t("Updated online payments"),
+                body: _t("There are online payments that were missing in your view."),
+            });
+            return false;
         }
 
         return true;
-    },
-    cancelOnlinePayment(order) {
-        // Remove the draft order from the server if there is no done online payment
-        this.pos.updateOnlinePaymentsDataWithServer(order, 0);
     },
     async afterPaidOrderSavedOnServer(orderJSON) {
         if (!orderJSON) {
