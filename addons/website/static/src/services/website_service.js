@@ -239,6 +239,22 @@ export const websiteService = {
             get is404() {
                 return currentMetadata.viewXmlid === "website.page_404";
             },
+            get isUnpublishedPage() {
+                return (
+                    currentMetadata.mainObject.model === "website.page" &&
+                    !currentMetadata.isPublished
+                );
+            },
+            /**
+             * Updates the publication state of the current page and notifies
+             * the components displaying it.
+             *
+             * @param {boolean} isPublished
+             */
+            setPublishedState(isPublished) {
+                currentMetadata.isPublished = isPublished;
+                websiteSystrayRegistry.trigger("PUBLISHED-UPDATED");
+            },
             get currentLocation() {
                 const path = decodeURIComponent(this.contentWindow.location.pathname);
                 if (!this.currentWebsite.metadata.translatable) {
