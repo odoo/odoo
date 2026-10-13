@@ -17,7 +17,7 @@ test("bancontact_pay_failed_to_create_payment: the payment request is refused wi
     await Utils.initOrder();
     const order = store.getOrder();
 
-    await Utils.clickPaymentMethod(Utils.DISPLAY);
+    await Utils.clickPaymentMethod(Utils.DISPLAY, true);
     await Utils.clickSendButton();
     expect(await Utils.dialogBody()).toInclude("(ERR: 401)");
 
@@ -43,7 +43,7 @@ test("bancontact_pay_can_send_request: a sticker handles a single payment at a t
     const order1 = store.getOrder();
 
     // Two display payments can run side by side. [A] and [B]
-    await Utils.clickPaymentMethod(Utils.DISPLAY);
+    await Utils.clickPaymentMethod(Utils.DISPLAY, true);
     await Utils.clickSendButton();
     await Utils.closeQrPopup();
     expect(Utils.actionState()).toBe("waiting_scan");
@@ -54,7 +54,7 @@ test("bancontact_pay_can_send_request: a sticker handles a single payment at a t
     expect(Utils.actionState()).toBe("waiting_scan");
 
     // [C] takes the sticker.
-    await Utils.clickPaymentMethod(Utils.STICKER_1);
+    await Utils.clickPaymentMethod(Utils.STICKER_1, true);
     await Utils.clickSendButton();
     expect(Utils.actionState()).toBe("waiting_scan");
 
@@ -81,7 +81,7 @@ test("bancontact_pay_can_send_request: a sticker handles a single payment at a t
     expect(Utils.actionState()).toBe("retry");
 
     // [E] takes the second sticker.
-    await Utils.clickPaymentMethod(Utils.STICKER_2);
+    await Utils.clickPaymentMethod(Utils.STICKER_2, true);
     await Utils.clickSendButton();
     expect(Utils.actionState()).toBe("waiting_scan");
 
@@ -89,13 +89,13 @@ test("bancontact_pay_can_send_request: a sticker handles a single payment at a t
     await Utils.createFloatingOrder();
     await Utils.initOrder();
     const order2 = store.getOrder();
-    await Utils.clickPaymentMethod(Utils.DISPLAY);
+    await Utils.clickPaymentMethod(Utils.DISPLAY, true);
     await Utils.clickSendButton();
     await Utils.closeQrPopup();
     expect(Utils.actionState()).toBe("waiting_scan");
 
     // A sticker busy on another order is refused as well.
-    await Utils.clickPaymentMethod(Utils.STICKER_2);
+    await Utils.clickPaymentMethod(Utils.STICKER_2, true);
     expect(await Utils.dialogBody()).toInclude(STICKER_BUSY);
     await Utils.confirmDialog();
     expect(Utils.countPaymentlines()).toBe(1);
@@ -127,7 +127,7 @@ test("bancontact_pay_show_qr_code: the QR code popup follows its own payment lin
     await Utils.initOrder();
 
     // A display payment opens the popup by itself. (bancontact_show_qr_code_0)
-    await Utils.clickPaymentMethod(Utils.DISPLAY);
+    await Utils.clickPaymentMethod(Utils.DISPLAY, true);
     await Utils.clickSendButton();
     expect(Utils.selectedPaymentline()).toEqual({
         name: Utils.DISPLAY,
@@ -156,7 +156,7 @@ test("bancontact_pay_show_qr_code: the QR code popup follows its own payment lin
     await Utils.closeQrPopup();
 
     // A sticker payment never opens the popup on its own. (…_2)
-    await Utils.clickPaymentMethod(Utils.STICKER_1);
+    await Utils.clickPaymentMethod(Utils.STICKER_1, true);
     await Utils.clickSendButton();
     expect(Utils.selectedPaymentline()).toEqual({
         name: Utils.STICKER_1,
@@ -193,7 +193,7 @@ test("bancontact_pay_show_qr_code: the QR code popup follows its own payment lin
     await Utils.closeNotifications();
 
     // A failed payment closes the popup too. (…_4)
-    await Utils.clickPaymentMethod(Utils.DISPLAY);
+    await Utils.clickPaymentMethod(Utils.DISPLAY, true);
     await Utils.clickSendButton();
     expect(Utils.selectedPaymentline()).toEqual({
         name: Utils.DISPLAY,
@@ -214,7 +214,7 @@ test("bancontact_pay_success_payment: paid orders are notified and validated", a
 
     // [A] 5.00 and [B] 2.00 on the first order. (bancontact_success_1 and _3)
     for (const amount of ["5", "2"]) {
-        await Utils.clickPaymentMethod(Utils.DISPLAY);
+        await Utils.clickPaymentMethod(Utils.DISPLAY, true);
         await Utils.clickSendButton();
         expect(Utils.selectedPaymentline().amount).toBe("$10.00");
         await Utils.closeQrPopup();
@@ -335,7 +335,7 @@ test("bancontact_pay_failed_payment: every failure status is reported to the cas
         ["CANCELLED", "Payment cancelled"],
     ];
     for (const [index, [status, message]] of failures.entries()) {
-        await Utils.clickPaymentMethod(Utils.DISPLAY);
+        await Utils.clickPaymentMethod(Utils.DISPLAY, true);
         await Utils.clickSendButton();
         expect(Utils.actionState()).toBe("waiting_scan");
 
@@ -366,7 +366,7 @@ test("bancontact_pay_failed_to_cancel_payment_error_422: the cancellation can be
     await Utils.initOrder();
     const order = store.getOrder();
 
-    await Utils.clickPaymentMethod(Utils.DISPLAY);
+    await Utils.clickPaymentMethod(Utils.DISPLAY, true);
     await Utils.clickSendButton();
     await Utils.closeQrPopup();
     expect(Utils.actionState()).toBe("waiting_scan");
@@ -398,7 +398,7 @@ test("bancontact_pay_failed_to_cancel_payment_error_429: other errors cancel sil
     await Utils.initOrder();
     const order = store.getOrder();
 
-    await Utils.clickPaymentMethod(Utils.DISPLAY);
+    await Utils.clickPaymentMethod(Utils.DISPLAY, true);
     await Utils.clickSendButton();
     await Utils.closeQrPopup();
     expect(Utils.actionState()).toBe("waiting_scan");
