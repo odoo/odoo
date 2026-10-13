@@ -1737,21 +1737,21 @@ export class PosStore extends Reactive {
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, cancelled = false) {
         let isPrinted = false;
+        const orderChange = changesToOrder(
+            order,
+            false,
+            this.orderPreparationCategories,
+            cancelled
+        );
         if (this.printers_category_ids_set.size) {
             try {
-                const orderChange = changesToOrder(
-                    order,
-                    false,
-                    this.orderPreparationCategories,
-                    cancelled
-                );
                 isPrinted = await this.printChanges(order, orderChange);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
             }
         }
 
-        order.updateLastOrderChange();
+        order.updateLastOrderChange(orderChange);
         // Ensure that other devices are aware of the changes
         // Otherwise several devices can print the same changes
         // We need to check if a preparation display is configured to avoid unnecessary sync
