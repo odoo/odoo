@@ -51,7 +51,7 @@
                             t-out="this.env.formatAmount(this.props.subtotal)"
                         />
                         <div
-                            t-if="this.isSelected"
+                            t-if="this.isSelected and this.env.canCreateSections()"
                             class="ms-auto align-items-center o_section_toggle"
                         >
                             <span class="me-2">Filter</span>
@@ -67,7 +67,7 @@
                         </div>
                     </span>
                 </div>
-                <Dropdown noClasses="true">
+                <Dropdown t-if="this.env.canCreateSections()" noClasses="true">
                     <button
                         t-attf-class="o_section_dropdown_button btn border-0 bg-transparent rounded-start-0 px-2 {{this.props.id ? '' : 'opacity-0 pe-none'}}"
                         t-att-tabindex="this.props.id ? '0' : '-1'"
