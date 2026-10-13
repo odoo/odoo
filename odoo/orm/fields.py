@@ -579,13 +579,6 @@ class Field[T]:
             if not isinstance(self.readonly, bool):
                 self._setup_warning(f'property readonly should be a boolean ({self.readonly})')
 
-            if self.store and self._depends_context and not all(
-                (self.translate and c == 'lang')
-                or (self.company_dependent and c == 'company')
-                for c in self._depends_context
-            ):
-                self._setup_warning(f'stored field should not depend on context ({self._depends_context})')
-
             self._setup_done = True
             # column_type might be changed during Field.setup
             reset_cached_properties(self)

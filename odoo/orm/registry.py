@@ -580,7 +580,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for field in model._fields.values():
                 depends, depends_context = field.get_depends(model)
                 self.field_depends[field] = tuple(depends)
-                self.field_depends_context[field] = tuple(depends_context)
+                self.field_depends_context[field] = depends_context = tuple(depends_context)
+                # check the context
+                if field.store and not all(
+                    (field.translate and c == 'lang')
+                    or (field.company_dependent and c == 'company')
+                    for c in depends_context
+                ):
+                    field._setup_warning(f'stored field should not depend on context {depends_context}')
 
         # clean the lazy_property again in case they are cached by another ongoing registry readonly request
         reset_cached_properties(self)
