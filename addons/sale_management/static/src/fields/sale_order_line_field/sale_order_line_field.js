@@ -3,7 +3,7 @@ import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
 import {
     SaleOrderLineListRenderer,
     SaleOrderLineOne2Many,
-} from "@sale/js/sale_order_line_field/sale_order_line_field";
+} from "@sale/views/fields/sale_order_line_field/sale_order_line_field";
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";

@@ -1,5 +1,5 @@
 import { registry } from '@web/core/registry';
-import configuratorTourUtils from '@sale/js/tours/combo_configurator_tour_utils';
+import configuratorTourUtils from '@sale/tours/combo_configurator_tour_utils';
 import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
 import stockConfiguratorTourUtils from '@website_sale_stock/js/tours/combo_configurator_tour_utils';
 

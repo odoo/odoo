@@ -1,5 +1,5 @@
-import { SaleOrderLineProductField } from "@sale/js/sale_product_field/sale_product_field";
-import { SaleLabelTextField } from "@sale/js/sale_label_text/sale_label_text";
+import { SaleOrderLineProductField } from "@sale/views/fields/sale_product_field/sale_product_field";
+import { SaleLabelTextField } from "@sale/views/fields/sale_label_text/sale_label_text";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
