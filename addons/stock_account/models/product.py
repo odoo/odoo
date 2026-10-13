@@ -764,6 +764,12 @@ class ProductCategory(models.Model):
         selection_add=[('fifo', "First In First Out (FIFO)")],
         ondelete={'fifo': 'set default'},
     )
+
+    valuation_account_id = fields.Many2one(
+            'account.account', 'Cost of Production 2',
+            domain=[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))],
+            help="Expense account used to re-qualify products removed from stock and sent to this location")
+
     anglo_saxon_accounting = fields.Boolean(
         string="Use Anglo-Saxon Accounting", compute="_compute_anglo_saxon_accounting",
         help="If checked, the product will be valued using the Anglo-Saxon accounting method.")

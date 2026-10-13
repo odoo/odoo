@@ -53,6 +53,7 @@ def _configure_stock_account_company_data(env):
         'res.company': {
             'account_production_wip_account_id',
             'account_production_wip_overhead_account_id',
+            'valuation_account_id',
         },
         'stock.location': {
             'valuation_account_id',

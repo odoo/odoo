@@ -296,9 +296,9 @@ class StockMove(models.Model):
     def _get_account_move_line_vals(self):
         if self.location_id.valuation_account_id:
             debit_acc = self.product_id._get_product_accounts()['stock_valuation']
-            credit_acc = self.location_id.valuation_account_id
+            credit_acc = self._get_production_valuation_account(self.location_id)
         else:
-            debit_acc = self.location_dest_id.valuation_account_id
+            debit_acc = self._get_production_valuation_account(self.location_dest_id)
             credit_acc = self.product_id._get_product_accounts()['stock_valuation']
         value = self.value if self.is_in else -self.value
         return [{
@@ -754,15 +754,34 @@ class StockMove(models.Model):
             'category': 'other',
         }
 
+    def _get_production_valuation_account(self, production_location=None):
+        self.ensure_one()
+        location = production_location or (
+            self.location_id if self.location_id.usage == 'production' else self.location_dest_id
+        )
+
+        if location and location.valuation_account_id:
+            return location.valuation_account_id
+
+        categ = self.product_id.categ_id
+        if hasattr(categ, 'valuation_account_id') and categ.valuation_account_id:
+            return categ.valuation_account_id
+
+        company = self.company_id or self.env.company
+        return company.valuation_account_id or self.env['account.account']
+
     def _should_create_account_move(self):
         """Determines if an account move should be created for this move.
         :return: True if an account move should be created, False otherwise.
         """
         self.ensure_one()
-        return self.product_id.is_storable and self.is_valued\
-        and (self.location_dest_id.valuation_account_id or self.location_id.valuation_account_id)\
-        and not self.uom_id.is_zero(self.quantity)\
-        and self.product_id.valuation == 'real_time'
+        cond1 = self.product_id.is_storable
+        cond2 = self.is_valued
+        cond3 = self._get_production_valuation_account(self.location_dest_id) or self._get_production_valuation_account(self.location_id)
+        cond4 = not self.uom_id.is_zero(self.quantity)
+        cond5 = self.product_id.valuation == 'real_time'
+        result = cond1 and cond2 and cond3 and cond4 and cond5
+        return result
 
     def _should_exclude_for_valuation(self):
         """Determines if this move should be excluded from valuation based on its partner.
