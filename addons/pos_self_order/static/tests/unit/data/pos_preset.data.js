@@ -25,6 +25,7 @@ const presetDefaults = {
     attendance_ids: [],
     available_in_self: true,
     mail_template_id: false,
+    sequence: 70,
 };
 
 PosPreset._records = [
@@ -40,6 +41,7 @@ PosPreset._records = [
         name: "Test-In",
         identification: "none",
         service_at: "table",
+        sequence: 70,
     },
     {
         ...presetDefaults,
@@ -47,6 +49,7 @@ PosPreset._records = [
         name: "Test-Takeout",
         identification: "name",
         service_at: "counter",
+        sequence: 80,
     },
     {
         ...presetDefaults,
@@ -54,6 +57,7 @@ PosPreset._records = [
         name: "Dine in",
         identification: "none",
         service_at: "table",
+        sequence: 90,
     },
     {
         ...presetDefaults,
@@ -64,6 +68,7 @@ PosPreset._records = [
         use_timing: true,
         slots_per_interval: 5,
         interval_time: 20,
+        sequence: 100,
     },
     {
         ...presetDefaults,
@@ -71,5 +76,6 @@ PosPreset._records = [
         name: "Delivery",
         identification: "address",
         service_at: "delivery",
+        sequence: 110,
     },
 ];
