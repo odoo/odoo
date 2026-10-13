@@ -33,7 +33,7 @@ class ForumForum(models.Model):
                 <div class="text-white">
                     <p class="lead" style="text-align: center;">%(message_post)s</p>
                     <p style="text-align: center;">
-                        <a class="btn btn-primary forum_register_url o_translate_inline" href="/web/login">%(register_text)s</a>
+                        <button type="button" class="btn btn-primary forum_register_url o_translate_inline">%(register_text)s</button>
                         <button type="button" class="btn btn-light js_close_intro" aria-label="Dismiss message">
                             %(hide_text)s
                         </button>
@@ -141,6 +141,10 @@ class ForumForum(models.Model):
     tag_ids = fields.One2many('forum.tag', 'forum_id', string='Tags')
     tag_most_used_ids = fields.One2many('forum.tag', string="Most used tags", compute='_compute_tag_most_used_ids')
     tag_unused_ids = fields.One2many('forum.tag', string="Unused tags", compute='_compute_tag_unused_ids')
+
+    # specific custom view
+    custom_forum_top = fields.Html('Top HTML Container', sanitize_attributes=False)
+    custom_forum_header_bottom = fields.Html('Bottom HTML Container', sanitize_attributes=False)
 
     def _compute_website_url(self):
         super()._compute_website_url()
