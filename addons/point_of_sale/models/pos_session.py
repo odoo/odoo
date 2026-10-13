@@ -993,7 +993,8 @@ class PosSession(models.Model):
             'partner_id': self.config_id.default_partner_id.id,
             'date': today,
             'invoice_date_due': today,
-            'pos_session_ids': [(4, self.id)],
+            # set at creation, so that the move is known as a closing entry when it is posted
+            'pos_session_refunds_id' if move_type == 'out_refund' else 'pos_session_sales_id': self.id,
             'always_tax_exigible': True,
         }
 
