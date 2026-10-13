@@ -111,19 +111,6 @@ export class PosData {
 
     reconnectWebSocket() {
         this.initializeWebsocket();
-        const channels = [...this.channels];
-        this.channels = [];
-        while (channels.length) {
-            const channel = channels.pop();
-            this.connectWebSocket(channel.channel, channel.method);
-
-            logPosMessage(
-                "DataService",
-                "reconnectWebSocket",
-                `Reconnecting to channe ${channel.channel}`,
-                CONSOLE_COLOR
-            );
-        }
     }
 
     connectWebSocket(channel, method) {
