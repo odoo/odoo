@@ -362,20 +362,15 @@ class AccountBankStatement(models.Model):
 
         statement_ids = self.ids
         if not self.is_valid and (previous_statement := self._get_previous_statement()):
-            statement_line_ids = self.line_ids + previous_statement.line_ids
             statement_ids += previous_statement.ids
-        else:
-            statement_line_ids = self.line_ids
 
-        return statement_line_ids._get_records_action(
-            name=self.env._("Review Statements"),
-            domain=[],  # We use a filter to allow users to quickly switch back to all statement lines
-            views=[[False, 'kanban'], [False, 'list']],
-            context={
-                **self.env.context,
+        return self.env['account.bank.statement.line']._action_open_bank_reconciliation_widget(
+            default_context={
+                'search_default_statement_to_review': True,
+                'search_default_journal_id': self.journal_id.id,
                 'review_statement_ids': statement_ids,
-                'search_default_statement_to_review': 1,
             },
+            name=self.env._("Review Statements"),
         )
 
     # -------------------------------------------------------------------------
