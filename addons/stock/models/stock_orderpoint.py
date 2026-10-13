@@ -674,7 +674,12 @@ class StockWarehouseOrderpoint(models.Model):
         be used in move/po creation.
         """
         date_deadline = date or fields.Date.today()
-        dates_info = self.product_id._get_dates_info(date_deadline, self.location_id, route_ids=self.route_id)
+        supplier = self.supplier_id if 'supplier_id' in self else False
+        product_with_context = self.product_id.with_context(
+            orderpoint_qty_to_order=self.qty_to_order,
+            orderpoint_supplier_id=supplier.id if supplier else False
+        )
+        dates_info = product_with_context._get_dates_info(date_deadline, self.location_id, route_ids=self.route_id)
         values = {
             'route_ids': self.route_id,
             'date_planned': dates_info['date_planned'],
