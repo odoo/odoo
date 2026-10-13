@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import HttpCase, tagged, Form
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -48,3 +49,39 @@ class TestControllersAccessRights(HttpCase, TestSaleCommon):
                 allow_redirects=False,
             )
             self.assertEqual(response.status_code, 200, 'Should be correct %s' % ('with a connected user' if login else 'using access token'))
+
+
+@tagged('post_install', '-at_install')
+class TestSaleStockAccessRights(TestSaleCommon):
+
+    def test_sale_stock_order_search_access(self):
+        """
+        Test that an inventory user restricted to their own sales records
+        can access sale orders linked to stock moves, even if they are linked to the sale order of another user.
+        """
+        so, so_stock = self.env['sale.order'].create([{
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.service_product.id})],   # Service product, no picking will be created
+        }, {
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product.id}),
+            ],
+        }])
+        (so | so_stock).action_confirm()
+
+        user_own_sale = mail_new_test_user(
+            self.env,
+            login='test_sale_own_doc',
+            groups='sales_team.group_sale_salesman',
+        )
+        visible_orders = self.env['sale.order'].with_user(user_own_sale).search([])
+        self.assertNotIn(so_stock, visible_orders, "A sale user without inventory rights should not see that sale order as it's related to another user")
+
+        user_own_sale.group_ids += self.env.ref('stock.group_stock_user')
+        visible_orders = self.env['sale.order'].with_user(user_own_sale).search([])
+        self.assertIn(so_stock, visible_orders, "The sale user should be able to access the sale order since it is linked to a stock moves they have access to")
+        self.assertNotIn(so, visible_orders, "The sale user with inventory rights should however not see that sale order as it's related to another user and doesn't have any pickings linked to it")
+
+        self.assertEqual(Form(so_stock.with_user(user_own_sale)).partner_id, self.partner_a)
