@@ -1,57 +1,45 @@
-import { render } from "@web/owl2/utils";
-import { RelativeTime } from "@mail/core/common/relative_time";
+import { incrementFn } from "@mail/utils/common/signal";
+
+import { Component, computed, onWillDestroy, props, signal, types, xml } from "@odoo/owl";
+
 import { _t } from "@web/core/l10n/translation";
 
 const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 
-export class RelativePublishTime extends RelativeTime {
-    static props = {
-        datetime: {
-            type: Object,
-            optional: true,
-        },
-        negativeDeltaCallback: {
-            type: Function,
-            optional: true,
-        },
-    };
+export class RelativePublishTime extends Component {
+    static template = xml`<t t-out="this.relativeTime()"/>`;
 
-    computeRelativeTime(datetime) {
-        if (this.timeout) {
+    setup() {
+        super.setup();
+        this.recomputeSignal = signal(0);
+        this.props = props({
+            datetime: types.instanceOf(luxon.DateTime).optional(),
+            negativeDeltaCallback: types.function().optional(),
+        });
+        this.timeout = null;
+        onWillDestroy(() => clearTimeout(this.timeout));
+        this.relativeTime = computed(() => {
+            void this.recomputeSignal();
             clearTimeout(this.timeout);
-            this.timeout = null;
-        }
-
-        if (!datetime) {
-            this.relativeTime = "";
-            return;
-        }
-
-        const delta = datetime.ts - Date.now();
-
-        if (delta < 0) {
-            this.relativeTime = "";
-            const callback = this.props.negativeDeltaCallback;
-            if (typeof callback === "function") {
-                callback();
+            const datetime = this.props.datetime;
+            if (!datetime) {
+                return "";
             }
-            return;
-        }
-
-        if (delta < MINUTE) {
-            this.relativeTime = _t("Published shortly");
-        } else {
-            this.relativeTime = _t("Published %(datetime)s", {
-                datetime: datetime.toRelative(),
-            });
-        }
-
-        const updateDelay = delta < HOUR ? MINUTE : HOUR;
-
-        this.timeout = setTimeout(() => {
-            this.computeRelativeTime(this.props.datetime ?? datetime);
-            render(this);
-        }, updateDelay);
+            const delta = datetime.ts - Date.now();
+            if (delta < 0) {
+                // The callback changes the state of the parent: not during a render.
+                this.timeout = setTimeout(() => this.props.negativeDeltaCallback?.());
+                return "";
+            }
+            this.timeout = setTimeout(
+                incrementFn(this.recomputeSignal),
+                delta < HOUR ? MINUTE : HOUR
+            );
+            if (delta < MINUTE) {
+                return _t("Published shortly");
+            }
+            return _t("Published %(datetime)s", { datetime: datetime.toRelative() });
+        });
     }
 }
