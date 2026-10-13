@@ -24,6 +24,7 @@ import {
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useBackButton, useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
@@ -64,15 +65,15 @@ export class ChatWindow extends Component {
             jumpThreadPresent: 0,
             editingGuestName: false,
         });
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.chatWindowContentRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
         this.quickActionsList = computed(() =>
-            this.threadActions.partition.quick.slice(0, this.ui.isSmall ? 2 : 4).reverse()
+            this.threadActions.partition.quick.slice(0, this.ui.isSmall() ? 2 : 4).reverse()
         );
         this.dropdownActionsList = computed(() => {
             const partition = this.threadActions.partition;
-            const quickInDropdown = partition.quick.slice(this.ui.isSmall ? 2 : 4);
+            const quickInDropdown = partition.quick.slice(this.ui.isSmall() ? 2 : 4);
             return [quickInDropdown, partition.other, ...partition.group];
         });
         this.actionsMenuButtonHover = useHover(this.actionsMenuButtonRef);
@@ -105,8 +106,8 @@ export class ChatWindow extends Component {
         return (
             partition.group.length > 0 ||
             partition.other.length > 0 ||
-            (this.ui.isSmall && partition.quick.length > 2) ||
-            (!this.ui.isSmall && partition.quick.length > 3)
+            (this.ui.isSmall() && partition.quick.length > 2) ||
+            (!this.ui.isSmall() && partition.quick.length > 3)
         );
     }
 
@@ -116,8 +117,8 @@ export class ChatWindow extends Component {
 
     get attClass() {
         return {
-            "w-100 h-100 o-mobile": this.ui.isSmall,
-            "border border-dark mb-2": !this.ui.isSmall,
+            "w-100 h-100 o-mobile": this.ui.isSmall(),
+            "border border-dark mb-2": !this.ui.isSmall(),
             "o-highlighted": this.props.chatWindow.highlighted,
         };
     }
@@ -137,15 +138,15 @@ export class ChatWindow extends Component {
 
     get displayNameFontSizeClass() {
         if (this.hasNameSubline) {
-            return this.ui.isSmall ? "fs-5" : "fs-6";
+            return this.ui.isSmall() ? "fs-5" : "fs-6";
         }
-        return this.ui.isSmall ? "fs-4" : "fs-5";
+        return this.ui.isSmall() ? "fs-4" : "fs-5";
     }
 
     get style() {
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
-        const visibleOffset = this.ui.isSmall ? 0 : this.props.right;
+        const visibleOffset = this.ui.isSmall() ? 0 : this.props.right;
         const oppositeFrom = offsetFrom === "right" ? "left" : "right";
         return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto;`;
     }
@@ -194,7 +195,7 @@ export class ChatWindow extends Component {
 
     onClickHeader(ev) {
         if (
-            this.ui.isSmall ||
+            this.ui.isSmall() ||
             this.editingName() ||
             this.props.chatWindow.actionsDisabled ||
             isEventHandled(ev, "Action.onSelected")

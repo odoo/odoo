@@ -35,7 +35,6 @@ export class CallInvitation extends Component {
         this.props = useProps({
             channel: types.instanceOf(this.store["discuss.channel"]),
         });
-        this.ui = useService("ui");
         this.state = proxy({
             activateCamera: 0,
             activateMicrophone: 0,

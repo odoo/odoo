@@ -6,7 +6,7 @@ const DiscussChannelPatch = {
     get isCallDisplayedInChatWindow() {
         return (
             super.isCallDisplayedInChatWindow &&
-            (this.store.env.services.ui.isSmall || !this.store.discuss.isActive)
+            (this.store.ui.isSmall() || !this.store.discuss.isActive)
         );
     },
 };

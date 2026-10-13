@@ -46,7 +46,7 @@ export class DiscussClientAction extends Component {
             action.context.active_id ??
             action.params?.active_id ??
             this.store["mail.thread"].localIdToActiveId(this.store.discuss.thread?.localId) ??
-            (this.env.services.ui.isSmall ? undefined : this.store.discuss.lastActiveId)
+            (this.store.ui.isSmall() ? undefined : this.store.discuss.lastActiveId)
         );
     }
 

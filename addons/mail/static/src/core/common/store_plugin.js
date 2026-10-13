@@ -13,6 +13,7 @@ import { rpc } from "@web/core/network/rpc";
 import { PopoverPlugin } from "@web/core/popover/popover_plugin";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { user } from "@web/core/user";
 import { Mutex } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
@@ -71,7 +72,7 @@ export class Store extends BaseStore {
     /** @type {boolean|undefined} */
     isOdooWhiteTheme;
     odoobot = fields.One("res.partner");
-    useMobileView = this.computed(() => this.store.env.services.ui.isSmall || isMobileOS());
+    useMobileView = this.computed(() => this.store.ui.isSmall() || isMobileOS());
     /** @type {number|undefined} id of the mail.action_discuss action */
     action_discuss_id;
     /** @type {number|undefined} */
@@ -179,6 +180,8 @@ export class Store extends BaseStore {
     debugMode;
     /** @type {PopoverPlugin} */
     popover;
+    /** @type {UIPlugin} */
+    ui;
 
     /** @param {Readonly<Record<string, any>>} [ancestors] @see useAncestors */
     discussDropdownMenuClass(ancestors) {
@@ -477,7 +480,7 @@ export class Store extends BaseStore {
                 return true;
             }
         } else if (
-            this.env.services.ui.isSmall &&
+            this.ui.isSmall() &&
             ev.target.closest(".o-mail-ChatWindow") &&
             link.href &&
             !link.href.startsWith("#")
@@ -850,10 +853,12 @@ export class StorePlugin extends Plugin {
     env = useEnv();
     debugMode = usePlugin(DebugModePlugin);
     popover = usePlugin(PopoverPlugin);
+    ui = usePlugin(UIPlugin);
 
     setup() {
         /** @type {import("models").Store} */
         this.store = makeStore(this.env);
+        this.store.ui = this.ui;
         this.store.insert(session.storeData);
         /**
          * Add a default for `self` because in livechat there could be no user and no guest yet
@@ -877,7 +882,7 @@ services.add(StorePlugin);
  * -----------------------------------------------------------------------------
  */
 export const storeService = {
-    dependencies: ["bus_service", "im_status", "ui", "discuss.upgrade"],
+    dependencies: ["bus_service", "im_status", "discuss.upgrade"],
     /**
      * @returns {import("models").Store}
      */

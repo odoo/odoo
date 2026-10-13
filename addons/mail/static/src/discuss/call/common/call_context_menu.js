@@ -2,6 +2,7 @@ import { Component, onMounted, onWillUnmount, proxy, types, usePlugin, useProps 
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
@@ -22,7 +23,7 @@ export class CallContextMenu extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.props = useProps({
             rtcSession: types.instanceOf(this.store["discuss.channel.rtc.session"]),
         });

@@ -3,9 +3,10 @@ import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_ind
 import { useHover } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 
 import { ActionSwiper, onSwipeType } from "@web/core/action_swiper/action_swiper";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
@@ -24,7 +25,7 @@ export class NotificationItem extends Component {
         super.setup();
         this.ancestors = useAncestors({ inNotificationItem: true });
         this.DateTime = DateTime;
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.store = useService("mail.store");
         this.props = useProps({
             className: t.string().optional(""),
@@ -74,8 +75,8 @@ export class NotificationItem extends Component {
             "o-important": this.props.important,
             "o-interest": this.props.muted === 0,
             "opacity-50": this.props.muted === 2,
-            "px-1 py-2 gap-1 o-small": this.ui.isSmall,
-            "o-px-1_5 py-2 gap-2": !this.ui.isSmall,
+            "px-1 py-2 gap-1 o-small": this.ui.isSmall(),
+            "o-px-1_5 py-2 gap-2": !this.ui.isSmall(),
             "o-active": this.props.isActive,
             [this.props.className]: this.props.className,
         };

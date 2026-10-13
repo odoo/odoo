@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.QuickReactionMenu">
-        <t t-if="this.ui.isSmall" t-call="mail.QuickReactionMenu.toggler"/>
+        <t t-if="this.ui.isSmall()" t-call="mail.QuickReactionMenu.toggler"/>
         <Dropdown t-else="" state="this.dropdown" manual="true" menuClass="`o-mail-QuickReactionMenu-popover shadow-none`" position="'top-middle'" navigationOptions="this.navigationOptions" bottomSheet="false">
             <t t-call="mail.QuickReactionMenu.toggler"/>
             <t t-set-slot="content">

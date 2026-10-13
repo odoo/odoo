@@ -196,7 +196,7 @@ const discussChannelPatch = {
     },
     /** @override */
     _openChannel() {
-        if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
+        if (this.store.discuss.isActive && !this.store.ui.isSmall()) {
             this.setAsDiscussThread();
             return true;
         }

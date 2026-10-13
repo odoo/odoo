@@ -1,8 +1,8 @@
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 
-import { Component, t, useProps } from "@odoo/owl";
+import { Component, t, usePlugin, useProps } from "@odoo/owl";
 
 export const avatarProps = {
     resModel: t.string(),
@@ -20,11 +20,11 @@ export class Avatar extends Component {
 
     setup() {
         this.avatarCard = usePopover(AvatarCard);
-        this.uiService = useService("ui");
+        this.uiService = usePlugin(UIPlugin);
     }
 
     get canOpenPopover() {
-        return this.props.canOpenPopover && !this.uiService.isSmall && !!this.props.resId;
+        return this.props.canOpenPopover && !this.uiService.isSmall() && !!this.props.resId;
     }
 
     get popoverProps() {

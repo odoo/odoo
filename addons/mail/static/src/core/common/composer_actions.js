@@ -55,8 +55,7 @@ export function pickerGetAnchor({ action, owner }) {
 
 registerComposerAction("send-message", {
     condition: ({ ancestors, composer, store }) =>
-        (store.env.services.ui.isSmall && composer.message) ||
-        (!ancestors.inChatter && !composer.message),
+        (store.ui.isSmall() && composer.message) || (!ancestors.inChatter && !composer.message),
     disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
     hasBtnBg: true,
     icon: "send",
@@ -87,7 +86,7 @@ registerComposerAction("add-emoji", {
         }),
     },
     setup({ store }) {
-        if (!store.env.services.ui.isSmall) {
+        if (!store.ui.isSmall()) {
             this.emojiStoreScroll = useEmojiPickerStoreScroll();
         }
     },

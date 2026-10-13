@@ -15,7 +15,7 @@
         <p t-if="this.linkPreview.og_description" class="o-mail-LinkPreviewCard-description o_line_clamp o_line_clamp_3 mt-1 mb-0 text-muted smaller" t-out="this.linkPreview.og_description"/>
     </t>
     <t t-name="mail.LinkPreviewCard">
-        <div class="o-mail-LinkPreviewCard card mb-1 rounded bg-view shadow-sm overflow-hidden" t-att-class="{ 'o-mail-LinkPreviewCard-noImage': !this.linkPreview.og_image, 'w-100': this.ui.isSmall or this.ancestors.inChatWindow }" t-attf-class="{{ this.className }}">
+        <div class="o-mail-LinkPreviewCard card mb-1 rounded bg-view shadow-sm overflow-hidden" t-att-class="{ 'o-mail-LinkPreviewCard-noImage': !this.linkPreview.og_image, 'w-100': this.ui.isSmall() or this.ancestors.inChatWindow }" t-attf-class="{{ this.className }}">
             <t t-if="this.linkPreview.og_image and this.linkPreview.hasSquarishCardImage and this.linkPreview.og_description">
                 <div class="d-flex align-items-center px-2 o-pt-0_5 pb-1 w-100">
                     <div class="flex-grow-1 pe-1">
