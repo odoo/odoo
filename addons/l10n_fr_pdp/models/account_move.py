@@ -9,7 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict, html2plaintext
 
 from odoo.addons.l10n_fr_pdp.models.account_edi_proxy_user import STATUS_TO_PROCESS_CONDITION_CODE_PDP
-from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import PDP_CUSTOMIZATION_ID, CPRO_CUSTOMIZATION_ID
+from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_CUSTOMIZATION_ID, EN16931_CUSTOMIZATION_ID
 from odoo.addons.l10n_fr_pdp.models.account_peppol_response import NEW_STATUSES
 from odoo.addons.l10n_fr_pdp.models.pdp_flow import FLOW_OPEN_STATES_SELECTION, FLOW_SENT_STATES, FLOW_SENT_STATES_SELECTION
 from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
@@ -281,14 +281,13 @@ class AccountMove(models.Model):
     def _get_ubl_cii_builder_from_xml_tree(self, tree):
         # Extends account_edi_ubl_cii
         customization_id = tree.findtext('{*}CustomizationID')
-        # Note: The CustomizationID alone is not enough because e.g. SuperPDP just sends `urn:cen.eu:en16931:2017`
-        #       but still expects the full French validation.
         if customization_id == CPRO_CUSTOMIZATION_ID:
             return self.env['account.edi.xml.ubl_21_fr']
-        if customization_id == PDP_CUSTOMIZATION_ID:
-            receiver_endpoint_node = tree.find('./{*}AccountingCustomerParty/{*}Party/{*}EndpointID')
-            if receiver_endpoint_node is not None and receiver_endpoint_node.get('schemeID') == '0225':
-                return self.env['account.edi.xml.ubl_21_fr']
+        # Note: The CustomizationID alone is not enough because e.g. SuperPDP just sends `urn:cen.eu:en16931:2017`
+        #       but still expects the full French validation.
+        company = self.company_id or self.env.company
+        if customization_id == EN16931_CUSTOMIZATION_ID and company._get_peppol_proxy_type() == 'pdp':
+            return self.env['account.edi.xml.ubl_21_fr']
         return super()._get_ubl_cii_builder_from_xml_tree(tree)
 
     def action_pdp_open_response_wizard(self, **wizard_kwargs):
