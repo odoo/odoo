@@ -44,6 +44,7 @@ class ResCompany(models.Model):
         return {
             'name': _('40 hours/week'),
             'company_id': self.id,
+            'reference_calendar_id': False,
         }
 
     @api.model_create_multi
