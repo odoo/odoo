@@ -68,7 +68,6 @@ class HrApplicant(models.Model):
             applicant.missing_skill_ids = job_skills.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
             applicant.is_degree_score_matching = bool(job.expected_degree) and applicant.type_id.score >= job.expected_degree.sudo().score
 
-    @api.depends_context("matching_job_id")
     @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree")
     def _compute_matching_score(self):
         matching_job_id = self.env.context.get("matching_job_id")

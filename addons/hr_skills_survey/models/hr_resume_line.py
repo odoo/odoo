@@ -8,7 +8,7 @@ from odoo import api, fields, models
 class HrResumeLine(models.Model):
     _inherit = 'hr.resume.line'
 
-    department_id = fields.Many2one(related="employee_id.department_id", store=True)
+    department_id = fields.Many2one(related="employee_id.department_id", store=True, depends=('employee_id.department_id',))
     survey_id = fields.Many2one('survey.survey', string='Certification', readonly=True)
     expiration_status = fields.Selection([
         ('expired', 'Expired'),
