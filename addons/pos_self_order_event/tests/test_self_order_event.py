@@ -79,3 +79,78 @@ class TestSelfOrderEventPrice(TestUi):
             )
 
         self.assertEqual(str(rpc_error.exception), "werkzeug.exceptions.NotFound")
+
+    def test_event_registration_payload_is_sanitized(self):
+        """Registrations are created as superuser from the self-order payload: they must not
+        carry commands or fields reaching records outside of the new registration."""
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        ticket = self.test_event.event_ticket_ids[0]
+        question = self.test_event.question_ids[0]
+        victim = self.env["event.registration"].create({
+            "event_id": self.test_event.id,
+            "event_ticket_id": ticket.id,
+            "registration_answer_ids": [Command.create({
+                "question_id": question.id,
+                "value_answer_id": question.answer_ids[0].id,
+            })],
+        })
+        victim_answer = victim.registration_answer_ids
+        other_question = self.env["event.question"].create({
+            "title": "Other event question",
+            "question_type": "simple_choice",
+            "answer_ids": [Command.create({"name": "Other answer"})],
+        })
+
+        def check_line(registration_vals):
+            line = [Command.CREATE, 0, {
+                "product_id": ticket.product_id.id,
+                "qty": 1,
+                "event_ticket_id": ticket.id,
+                "event_registration_ids": [Command.create(registration_vals)],
+            }]
+            return self.env["pos.order"]._check_pos_order_lines(
+                self.main_pos_config, {}, line, self.env["account.fiscal.position"],
+            )
+
+        invalid_answer_commands = [
+            Command.update(victim_answer.id, {"value_text_box": "Hacked"}),
+            Command.delete(victim_answer.id),
+            Command.unlink(victim_answer.id),
+            Command.link(victim_answer.id),
+            Command.set([victim_answer.id]),
+            Command.create({"question_id": other_question.id, "value_answer_id": other_question.answer_ids.id}),
+            Command.create({"question_id": question.id, "value_answer_id": self.test_event.question_ids[1].answer_ids[0].id}),
+        ]
+        for answer_command in invalid_answer_commands:
+            with self.subTest(answer_command=answer_command), self.assertRaises(ValueError):
+                check_line({"name": "Attacker", "registration_answer_ids": [answer_command]})
+
+        result = check_line({
+            "name": "Guest",
+            "email": "guest@example.com",
+            "event_id": self.test_event_registration_not_mandatory.id,
+            "event_ticket_id": self.test_event.event_ticket_ids[1].id,
+            "state": "done",
+            "mail_registration_ids": [Command.clear()],
+            "registration_answer_ids": [Command.create({
+                "question_id": question.id,
+                "value_answer_id": question.answer_ids[1].id,
+                "registration_id": victim.id,
+                "partner_id": self.partner_a.id,
+            })],
+        })
+        self.assertEqual(result[2]["event_registration_ids"], [Command.create({
+            "event_id": self.test_event.id,
+            "event_ticket_id": ticket.id,
+            "event_slot_id": False,
+            "name": "Guest",
+            "email": "guest@example.com",
+            "phone": None,
+            "company_name": None,
+            "registration_answer_ids": [Command.create({
+                "question_id": question.id,
+                "value_answer_id": question.answer_ids[1].id,
+                "value_text_box": None,
+            })],
+        })])
+        self.assertEqual(victim.registration_answer_ids, victim_answer)
