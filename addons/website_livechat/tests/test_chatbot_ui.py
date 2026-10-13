@@ -243,6 +243,18 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
         self.env.ref("website.default_website").channel_id = livechat_channel.id
         self.start_tour("/contactus", "website_livechat.chatbot_trigger_selection")
 
+    def test_chatbot_lang_change(self):
+        self.env["res.lang"]._activate_lang("fr_FR")
+        self.env.ref("website.default_website").language_ids = self.env["res.lang"].search(
+            [("code", "in", ("fr_FR", "en_US"))],
+        )
+        self.step_hello.update_field_translations("message", {"fr_FR": "Bonjour ! Je suis un bot !"})
+        self.step_dispatch.update_field_translations(
+            "message", {"fr_FR": "Comment puis-je vous aider ?"},
+        )
+        self.step_dispatch_pricing.update_field_translations("name", {"fr_FR": "Question de prix"})
+        self.start_tour("/", "website_livechat_chatbot_lang_change")
+
     def test_chatbot_fw_operator_matching_lang(self):
         fr_op = self._create_operator(lang_code="fr_FR")
         en_op = self._create_operator(lang_code="en_US")
