@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { usePageManager } from "./page_manager_hook";
+import { confirmPageUrlUpdate, usePageManager } from "./page_manager_hook";
 import { PageSearchModel } from "./page_search_model";
 import { registry } from "@web/core/registry";
 import { listView } from "@web/views/list/list_view";
@@ -78,6 +78,16 @@ export class PageListController extends listView.Controller {
             };
         }
         return menuItems;
+    }
+
+    /**
+     * @override
+     */
+    onAskMultiSaveConfirmation(changes, validSelectedRecords) {
+        if (this.props.resModel === "website.page" && "url" in changes) {
+            return confirmPageUrlUpdate(this.dialog);
+        }
+        return super.onAskMultiSaveConfirmation(changes, validSelectedRecords);
     }
 
     async onDeleteSelectedRecords() {

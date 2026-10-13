@@ -1399,7 +1399,7 @@ class Website(Home):
     @http.route([
         '/website/search',
         '/website/search/<string:search_type>',
-    ], type='http', auth="public", website=True, sitemap=False, readonly=True)
+    ], type='http', auth="public", website=True, sitemap=False, readonly=True, list_as_website_content=_lt("Search"))
     def hybrid_list(self, search='', limit=24, search_type='all', **kw):
         if not search:
             return request.render('website.list_hybrid')
