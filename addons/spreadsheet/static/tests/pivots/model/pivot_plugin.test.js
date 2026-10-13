@@ -32,6 +32,7 @@ import {
 } from "@spreadsheet/../tests/helpers/getters";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/helpers/pivot";
+import { makeStoreWithModel } from "@spreadsheet/../tests/helpers/stores";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { localization } from "@web/core/l10n/localization";
@@ -45,6 +46,7 @@ import { Partner, Product } from "../../helpers/data";
 import { createSheet, deleteSheet } from "../../helpers/commands";
 const { toZone } = spreadsheet.helpers;
 const { pivotRegistry, pivotNormalizationValueRegistry } = spreadsheet.registries;
+const { PivotSidePanelStore } = spreadsheet.stores;
 
 describe.current.tags("headless");
 defineSpreadsheetModels();
@@ -2693,6 +2695,26 @@ test("Groupable fields in pivot", async function () {
             message: `Field ${fieldType} should not be normalizable`,
         });
     }
+});
+
+test("Reference fields are available as pivot measures", async function () {
+    Partner._fields = {
+        ...Partner._fields,
+        ref: fields.Reference({
+            string: "Reference",
+            selection: [["product", "Product"]],
+        }),
+        non_stored_ref: fields.Reference({
+            string: "Non-stored Reference",
+            selection: [["product", "Product"]],
+            store: false,
+        }),
+    };
+    const { model, pivotId } = await createSpreadsheetWithPivot();
+    const { store } = makeStoreWithModel(model, PivotSidePanelStore, pivotId);
+    const referenceMeasures = store.measureFields.filter((field) => field.type === "reference");
+
+    expect(referenceMeasures.map((field) => field.name)).toEqual(["ref"]);
 });
 
 test("REFRESH_PIVOT properly invalidates a pivot table", async function () {

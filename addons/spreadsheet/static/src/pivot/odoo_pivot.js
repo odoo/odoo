@@ -685,7 +685,8 @@ pivotRegistry.add("ODOO", {
     dateGranularities: [...granularities],
     datetimeGranularities: [...granularities, "hour_number", "minute_number", "second_number"],
     isMeasureCandidate: (field) =>
-        ((MEASURES_TYPES.includes(field.type) && field.aggregator) || field.type === "many2one") &&
+        ((MEASURES_TYPES.includes(field.type) && field.aggregator) ||
+            ["many2one", "reference"].includes(field.type)) &&
         field.name !== "id" &&
         !field.name.includes(".") && // relational field path are not supported as measures (e.g. 'company_id.partner_id')
         (field.store || field.aggregator),
