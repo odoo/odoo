@@ -1,4 +1,5 @@
 import { Plugin, shared } from "@html_editor/plugin";
+import { _t } from "@web/core/l10n/translation";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { splitTextNode } from "@html_editor/utils/dom";
 import {
@@ -48,18 +49,20 @@ export class TabulationPlugin extends Plugin {
         user_commands: [
             {
                 id: "tab",
+                title: _t("Indent"),
                 run: this.handleTab.bind(this),
                 isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
             {
                 id: "shiftTab",
+                title: _t("Outdent"),
                 run: this.handleShiftTab.bind(this),
                 isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
         ],
         shortcuts: [
-            { hotkey: "tab", commandId: "tab" },
-            { hotkey: "shift+tab", commandId: "shiftTab" },
+            { categoryId: "tabulation", hotkey: "tab", commandId: "tab" },
+            { categoryId: "tabulation", hotkey: "shift+tab", commandId: "shiftTab" },
         ],
         content_not_editable_providers: (rootEl) => selectElements(rootEl, ".oe-tabs"),
         contenteditable_to_remove_selector: "span.oe-tabs",

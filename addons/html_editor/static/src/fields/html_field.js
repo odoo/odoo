@@ -39,6 +39,7 @@ import { useRecordObserver } from "@web/model/relational_model/utils";
 import "@web/views/fields/html/html_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { TranslationButton } from "@web/views/fields/translation/translation";
+import { AccessibilityPlugin } from "../main/accessibility/accessibility_plugin";
 
 const HTML_FIELD_METADATA_ATTRIBUTES = ["data-last-history-commits"];
 
@@ -64,6 +65,7 @@ export const htmlFieldProps = {
     collaborativeTrigger: t.string().optional(),
     dynamicField: t.boolean().optional(false),
     dynamicFieldReferenceModel: t.string().optional(),
+    accessibilityDialog: t.boolean().optional(false),
     migrateHTML: t.boolean().optional(),
     cssReadonlyAssetId: t.string().optional(),
     sandboxedPreview: t.boolean().optional(),
@@ -315,6 +317,7 @@ export class HtmlField extends Component {
                 ...MAIN_PLUGINS,
                 ...(this.props.isCollaborative ? COLLABORATION_PLUGINS : []),
                 ...(this.props.dynamicField ? DYNAMIC_FIELD_PLUGINS : []),
+                ...(this.props.accessibilityDialog ? [AccessibilityPlugin] : []),
                 ...(this.props.embeddedComponents
                     ? EMBEDDED_COMPONENT_PLUGINS
                     : NO_EMBEDDED_COMPONENTS_FALLBACK_PLUGINS),
@@ -482,6 +485,7 @@ export const htmlField = {
             migrateHTML: "migrateHTML" in options ? Boolean(options.migrateHTML) : true,
             dynamicField: options.dynamic_placeholder,
             dynamicFieldReferenceModel: options.dynamic_placeholder_model_reference_field,
+            accessibilityDialog: Boolean(options.accessibilityDialog),
             embeddedComponents:
                 "embedded_components" in options ? Boolean(options.embedded_components) : true,
             sandboxedPreview: Boolean(options.sandboxedPreview),

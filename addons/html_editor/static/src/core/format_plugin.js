@@ -93,6 +93,7 @@ export class FormatPlugin extends Plugin {
         user_commands: [
             {
                 id: "formatBold",
+                title: _t("Bold"),
                 description: _t("Toggle bold"),
                 icon: "format_bold",
                 run: this.requestFormat.bind(this, "bold"),
@@ -100,6 +101,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "formatItalic",
+                title: _t("Italic"),
                 description: _t("Toggle italic"),
                 icon: "format_italic",
                 run: this.requestFormat.bind(this, "italic"),
@@ -107,6 +109,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "formatUnderline",
+                title: _t("Underline"),
                 description: _t("Toggle underline"),
                 icon: "format_underlined",
                 run: this.requestFormat.bind(this, "underline"),
@@ -114,6 +117,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "formatStrikethrough",
+                title: _t("Strikethrough"),
                 description: _t("Toggle strikethrough"),
                 icon: "strikethrough_s",
                 run: this.requestFormat.bind(this, "strikeThrough"),
@@ -121,6 +125,7 @@ export class FormatPlugin extends Plugin {
             },
             {
                 id: "removeFormat",
+                title: _t("Remove Format"),
                 description: (sel, nodes) =>
                     nodes && this.canRemoveFormat(nodes)
                         ? _t("Remove Format (Ctrl + Space)")
@@ -131,11 +136,31 @@ export class FormatPlugin extends Plugin {
             },
         ],
         shortcuts: [
-            { hotkey: "control+b", commandId: "formatBold" },
-            { hotkey: "control+i", commandId: "formatItalic" },
-            { hotkey: "control+u", commandId: "formatUnderline" },
-            { hotkey: "control+5", commandId: "formatStrikethrough" },
-            { hotkey: "control+space", commandId: "removeFormat" },
+            {
+                categoryId: "format",
+                hotkey: "control+b",
+                commandId: "formatBold",
+            },
+            {
+                categoryId: "format",
+                hotkey: "control+i",
+                commandId: "formatItalic",
+            },
+            {
+                categoryId: "format",
+                hotkey: "control+u",
+                commandId: "formatUnderline",
+            },
+            {
+                categoryId: "format",
+                hotkey: "control+5",
+                commandId: "formatStrikethrough",
+            },
+            {
+                categoryId: "format",
+                hotkey: "control+space",
+                commandId: "removeFormat",
+            },
         ],
         toolbar_groups: withSequence(20, { id: "decoration" }),
         toolbar_items: [
