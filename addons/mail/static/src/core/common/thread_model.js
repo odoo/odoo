@@ -212,6 +212,14 @@ export class Thread extends Record {
      * when fetching newer messages.
      */
     pendingNewMessages = fields.Many("mail.message");
+    /**
+     * Set while a message posted in this thread waits for its attachments to
+     * be uploaded: resolved once that message (and the ones queued behind it
+     * to keep their order) has been sent to the server.
+     *
+     * @type {Promise<void>|undefined}
+     */
+    postQueuePromise;
     /** @type {'0'|'1'|'2'|'3'} */
     priority;
     /** @type {Array<[string,string]>} */
@@ -831,6 +839,13 @@ export class Thread extends Record {
         let tmpMsg;
         postData.attachments = postData.attachments ? [...postData.attachments] : []; // to not lose them on composer clear
         const { attachments, parentId } = postData;
+        const hasUploadingAttachments = attachments.some(({ uploading }) => uploading);
+        // Start waiting before any await: a completed upload deletes its
+        // temporary attachment and forgets its promise.
+        const uploadedAttachmentsPromise =
+            this.channel && hasUploadingAttachments
+                ? this.store.env.services["mail.attachment_upload"].waitForUploads(attachments)
+                : undefined;
         const params = await this.store.getMessagePostParams({ body, postData, thread: this });
         Object.assign(params, extraData);
         const tmpId = this.store.getNextTemporaryId();
@@ -845,7 +860,8 @@ export class Thread extends Record {
             const tmpData = {
                 id: tmpId,
                 message_type: params.post_data.message_type,
-                attachment_ids: attachments,
+                // without the uploads completed in the meantime, posted anyway
+                attachment_ids: attachments.filter((attachment) => attachment.exists()),
             };
             if (this.store.self_user) {
                 tmpData.author_id = this.store.self_user.partner_id;
@@ -864,7 +880,38 @@ export class Thread extends Record {
             this.messages.push(tmpMsg);
             this.onNewSelfMessage(tmpMsg);
         }
-        const data = await this.store.doMessagePost(params, tmpMsg);
+        const previousPostPromise = this.postQueuePromise;
+        let dataPromise;
+        if (tmpMsg && (previousPostPromise || hasUploadingAttachments)) {
+            const { promise: postPromise, resolve: resolvePost } = Promise.withResolvers();
+            this.postQueuePromise = postPromise;
+            try {
+                await previousPostPromise;
+                if (uploadedAttachmentsPromise) {
+                    const uploadedAttachments = await uploadedAttachmentsPromise;
+                    if (!uploadedAttachments.length && tmpMsg.isEmpty) {
+                        // All uploads were cancelled or failed: nothing left to post.
+                        tmpMsg.delete();
+                        return;
+                    }
+                    Object.assign(params.post_data, {
+                        attachment_ids: uploadedAttachments.map(({ id }) => id),
+                        attachment_tokens: uploadedAttachments.map(
+                            ({ ownership_token }) => ownership_token
+                        ),
+                    });
+                }
+                dataPromise = this.store.doMessagePost(params, tmpMsg);
+            } finally {
+                if (this.postQueuePromise === postPromise) {
+                    this.postQueuePromise = undefined;
+                }
+                resolvePost();
+            }
+        } else {
+            dataPromise = this.store.doMessagePost(params, tmpMsg);
+        }
+        const data = await dataPromise;
         if (!data) {
             return;
         }

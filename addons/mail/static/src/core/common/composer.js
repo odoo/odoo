@@ -638,8 +638,16 @@ export class Composer extends Component {
         return (
             !this.state.active ||
             (this.props.composer.isComposerHtmlEmpty && attachments.length === 0) ||
-            attachments.some(({ uploading }) => Boolean(uploading))
+            (!this.canPostWhileUploading && attachments.some(({ uploading }) => uploading))
         );
+    }
+
+    /**
+     * Whether the message can be sent before its attachments are uploaded: it
+     * is then displayed as pending until the uploads are done and it is posted.
+     */
+    get canPostWhileUploading() {
+        return Boolean(this.thread?.channel) && !this.props.composer.message;
     }
 
     /**
@@ -942,7 +950,10 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        if (this.props.composer.attachments.some(({ uploading }) => uploading)) {
+        if (
+            !this.canPostWhileUploading &&
+            this.props.composer.attachments.some(({ uploading }) => uploading)
+        ) {
             this.notification.add(_t("Please wait while the file is uploading."), {
                 type: "warning",
             });
