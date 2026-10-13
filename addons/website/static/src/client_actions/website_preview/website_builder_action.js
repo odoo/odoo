@@ -36,6 +36,7 @@ import { standardActionServiceProps } from "@web/webclient/actions/action_plugin
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { ResourceEditor } from "@website/components/resource_editor/resource_editor";
 import { CreatePageMessage } from "./create_page_message";
+import { PublishPageMessage } from "./publish_page_message";
 import { isHTTPSorNakedDomainRedirection } from "./utils";
 import { WebsiteSystrayItem } from "./website_systray_item";
 
@@ -49,6 +50,7 @@ export class WebsiteBuilderClientAction extends Component {
         ResizablePanel,
         ResourceEditor,
         CreatePageMessage,
+        PublishPageMessage,
     };
     props = useProps({
         ...standardActionServiceProps,
@@ -94,16 +96,23 @@ export class WebsiteBuilderClientAction extends Component {
         this.snippetsTemplate = "website.snippets";
 
         this.containerRef = signal.ref();
-        this.state = proxy({ isEditing: false, showSidebar: true, key: 1, is404: false });
+        this.state = proxy({
+            isEditing: false,
+            showSidebar: true,
+            key: 1,
+            is404: false,
+            isUnpublishedPage: false,
+        });
         this.websiteContext = proxy(this.websiteService.context);
 
         const scope = useScope();
 
-        useBus(
-            websiteSystrayRegistry,
-            "CONTENT-UPDATED",
-            () => (this.state.is404 = this.websiteService.is404)
-        );
+        const updatePageState = () => {
+            this.state.is404 = this.websiteService.is404;
+            this.state.isUnpublishedPage = this.websiteService.isUnpublishedPage;
+        };
+        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", updatePageState);
+        useBus(websiteSystrayRegistry, "PUBLISHED-UPDATED", updatePageState);
 
         let disposeToggleMobileEffect = () => {};
         onMounted(() => {
@@ -322,6 +331,12 @@ export class WebsiteBuilderClientAction extends Component {
             params.forcedURL = this.websiteService.currentLocation;
         }
         this.dialog.add(AddPageDialog, params);
+    }
+
+    async onPublishPage() {
+        const { mainObject } = this.websiteService.currentWebsite.metadata;
+        await this.orm.write(mainObject.model, [mainObject.id], { is_published: true });
+        this.websiteService.setPublishedState(true);
     }
 
     async onEditPage() {
