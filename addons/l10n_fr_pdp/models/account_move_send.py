@@ -21,7 +21,7 @@ class AccountMoveSend(models.AbstractModel):
         if (
             'peppol' in kwargs.get('sending_methods', [])
             and move.company_id._get_peppol_proxy_type() == 'pdp'
-            and move.partner_id._get_pdp_receiver_identification_info()[0] == 'pdp'
+            and move.partner_id.commercial_partner_id._get_pdp_receiver_identification_info()[0] == 'pdp'
         ):
             return 'ubl_21_fr'
         return super()._get_default_invoice_edi_format(move, **kwargs)
