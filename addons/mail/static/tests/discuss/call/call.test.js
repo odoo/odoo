@@ -513,7 +513,6 @@ test("show call UI in chat window when in call", async () => {
 test("joining a video call from a chat window opens the wide meeting view", async () => {
     const { isBrowserFullscreen } = mockBrowserFullscreen();
     const pyEnv = await startServer();
-    onRpc("/mail/rtc/session/notify_call_members", () => true);
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
@@ -548,7 +547,6 @@ test("joining a video call from a chat window opens the wide meeting view", asyn
 test("starting a video call from a chat window opens the wide meeting view", async () => {
     const { isBrowserFullscreen } = mockBrowserFullscreen();
     const pyEnv = await startServer();
-    onRpc("/mail/rtc/session/notify_call_members", () => true);
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({
@@ -575,7 +573,6 @@ test("starting a video call from a chat window opens the wide meeting view", asy
 test("starting a video call from the Discuss app opens the wide meeting view", async () => {
     const { isBrowserFullscreen } = mockBrowserFullscreen();
     const pyEnv = await startServer();
-    onRpc("/mail/rtc/session/notify_call_members", () => true);
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
@@ -590,7 +587,6 @@ test("starting a video call from the Discuss app opens the wide meeting view", a
 
 test("starting a plain call from the Discuss app stays inline (no meeting view)", async () => {
     const pyEnv = await startServer();
-    onRpc("/mail/rtc/session/notify_call_members", () => true);
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     mockService("mail.sound_effects", {
@@ -1784,7 +1780,6 @@ test("shows warning on infinite mirror effect (screen-sharing then fullscreen)",
 
 test("single 'join' (without camera) button when last call was audio-only", async () => {
     const pyEnv = await startServer();
-    onRpc("/mail/rtc/session/notify_call_members", () => true);
     const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
@@ -1811,7 +1806,6 @@ test("single 'join' (without camera) button when last call was audio-only", asyn
 
 test("single 'join' (with camera) button when last call had camera on", async () => {
     const pyEnv = await startServer();
-    onRpc("/mail/rtc/session/notify_call_members", () => true);
     const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
