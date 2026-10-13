@@ -112,7 +112,6 @@ export class Call extends Component {
                 dropInset: (surfaceKey) => this.dropInset(surfaceKey),
             },
         });
-        this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
         this.isMobileOs = isMobileOS();
         this.ui = usePlugin(UIPlugin);

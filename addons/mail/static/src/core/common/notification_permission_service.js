@@ -1,4 +1,4 @@
-import { proxy } from "@odoo/owl";
+import { proxy, usePlugin } from "@odoo/owl";
 
 import {
     isAndroidApp,
@@ -7,6 +7,7 @@ import {
     isIosApp,
 } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { registry } from "@web/core/registry";
 
 async function getIosPwaPermission() {
@@ -15,8 +16,6 @@ async function getIosPwaPermission() {
 }
 
 export const notificationPermissionService = {
-    dependencies: ["notification"],
-
     _normalizePermission(permission) {
         switch (permission) {
             case "default":
@@ -28,12 +27,8 @@ export const notificationPermissionService = {
         }
     },
 
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} services
-     */
-    async start(env, services) {
-        const notification = services.notification;
+    async start() {
+        const notification = usePlugin(NotificationPlugin);
         let permission;
         try {
             if (isIOS() && isDisplayStandalone()) {

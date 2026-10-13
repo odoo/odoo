@@ -37,7 +37,7 @@ export class DeleteThreadDialog extends Component {
             toOpenThread.open();
         }
         this.props.close();
-        this.env.services.notification.add(
+        this.store.notification.add(
             _t('Thread "%(thread_name)s" has been deleted', { thread_name: threadName }),
             { type: "info" }
         );

@@ -262,7 +262,7 @@ export class ChannelMember extends Record {
 
     async resendInvitation() {
         await rpc("/discuss/channel/member/resend_invitation", { member_id: this.id });
-        this.store.env.services.notification.add(
+        this.store.notification.add(
             _t("Invitation sent again to %(member_name)s.", { member_name: this.name }),
             { type: "success" }
         );

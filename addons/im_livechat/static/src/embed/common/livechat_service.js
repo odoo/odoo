@@ -31,8 +31,8 @@ export class LivechatService {
      */
     setup(env, services) {
         this.env = env;
-        this.notificationService = services.notification;
         this.store = services["mail.store"];
+        this.notificationService = this.store.notification;
         this.initializedPromise = new Promise((r) => (this._resolveInitializedPromise = r));
     }
 
@@ -161,7 +161,7 @@ export class LivechatService {
 }
 
 export const livechatService = {
-    dependencies: ["mail.store", "notification"],
+    dependencies: ["mail.store"],
     start(env, services) {
         const livechat = proxy(new LivechatService(env, services));
         if (canLoadLivechat()) {

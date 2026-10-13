@@ -1,4 +1,13 @@
-import { Component, onWillUnmount, proxy, types, useProps, useScope, xml } from "@odoo/owl";
+import {
+    Component,
+    onWillUnmount,
+    proxy,
+    types,
+    usePlugin,
+    useProps,
+    useScope,
+    xml,
+} from "@odoo/owl";
 
 import { BaseAction } from "@mail/core/common/action_list";
 
@@ -6,6 +15,7 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_service";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { _t } from "@web/core/l10n/translation";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { Mp3Encoder } from "./mp3_encoder";
 
@@ -99,7 +109,7 @@ export function useVoiceRecorder(params = {}, options = {}) {
         },
     });
     const dialog = useService("dialog");
-    const notification = useService("notification");
+    const notification = usePlugin(NotificationPlugin);
     const store = useService("mail.store");
     const config = { bitRate: 128 }; // 128 or 160 kbit/s – mid-range bitrate quality
     onWillUnmount(() => {

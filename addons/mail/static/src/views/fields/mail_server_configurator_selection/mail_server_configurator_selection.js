@@ -1,6 +1,7 @@
-import { proxy } from "@odoo/owl";
+import { proxy, usePlugin } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { registry } from "@web/core/registry";
 import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
 import { user } from "@web/core/user";
@@ -13,7 +14,7 @@ export class MailServerConfiguratorSelection extends SelectionField {
         super.setup();
         this.action = useService("action");
         this.orm = useService("orm");
-        this.notification = useService("notification");
+        this.notification = usePlugin(NotificationPlugin);
         this.state = proxy({
             value: null,
             connectionFailed: false,
