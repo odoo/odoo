@@ -1,0 +1,34 @@
+// Edit mode
+// =========
+// No clone is created in edit mode (see references_carousel.edit.js): the
+// single strip of logos is laid out as a wrapping grid so that every logo stays
+// visible, selectable and replaceable.
+//
+// Plain values below: Bootstrap's `_variables.scss` is not part of the builder
+// iframe bundle, so `$spacer` and `$spacers` are undefined here.
+.s_references_carousel {
+    overflow-x: visible;
+    caret-color: transparent;
+    user-select: none;
+
+    .s_references_carousel_marquee_container {
+        transform: none !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: 1rem;
+    }
+
+    .s_references_carousel_marquee_item {
+        animation: none !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        row-gap: 1rem;
+        // The trailing strip padding is only there to space out clones.
+        padding-inline-end: 0;
+    }
+
+    .s_references_carousel_item, .s_references_carousel_item img {
+        cursor: pointer !important;
+    }
+}
