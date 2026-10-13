@@ -1,5 +1,4 @@
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
-import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 import { propSignal } from "@mail/utils/common/hooks";
 
 import {
@@ -7,7 +6,6 @@ import {
     computed,
     onMounted,
     onWillUnmount,
-    providePlugins,
     signal,
     t,
     useListener,
@@ -16,15 +14,18 @@ import {
     useProps,
 } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
+import { isEventHandled } from "@web/core/utils/misc";
 
 import { DiscussContent } from "@mail/core/public_web/discuss_content";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useService } from "@web/core/utils/hooks";
+import { ChannelPanel } from "@mail/discuss/core/common/channel_panel";
 
 export class Discuss extends Component {
     static components = {
+        ChannelPanel,
         DiscussContent,
         MessagingMenu,
         ResizablePanel,
@@ -43,7 +44,6 @@ export class Discuss extends Component {
             optional: true,
         });
         this.menuState = computed(() => this.store.discuss.sidebarState);
-        providePlugins([MessageHighlightPlugin], { thread: () => this.thread });
         this.orm = useService("orm");
         this.effect = usePlugin(EffectPlugin);
         this.ui = useService("ui");
@@ -93,5 +93,27 @@ export class Discuss extends Component {
 
     get thread() {
         return this.channel?.()?.thread || this.store.discuss.thread;
+    }
+
+    closeSideChannel() {
+        this.store.discuss.sideChannel = undefined;
+        this.focusComposer();
+    }
+
+    focusComposer() {
+        if (this.thread?.composer) {
+            this.thread.composer.autofocus++;
+        }
+    }
+
+    /** @param {KeyboardEvent} ev */
+    onKeydownSideChannel(ev) {
+        if (
+            getActiveHotkey(ev) === "escape" &&
+            !isEventHandled(ev, "NavigableList.close") &&
+            !isEventHandled(ev, "Composer.discard")
+        ) {
+            this.closeSideChannel();
+        }
     }
 }

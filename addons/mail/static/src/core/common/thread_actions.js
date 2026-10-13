@@ -13,7 +13,7 @@ import {
 } from "@mail/core/common/action";
 import { RenameThreadPlugin } from "@mail/core/common/rename_thread_plugin";
 import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
-import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
+import { ChannelPanel } from "@mail/discuss/core/common/channel_panel";
 import { useMaybePlugin } from "@mail/utils/common/hooks";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
@@ -99,7 +99,8 @@ registerThreadAction("search-messages", {
         }),
 });
 registerThreadAction("meeting-chat", {
-    actionPanelComponent: MeetingChat,
+    actionPanelComponent: ChannelPanel,
+    actionPanelComponentProps: ({ channel }) => ({ channel, title: _t("In call messages") }),
     actionPanelOuterClass: "bg-100 border",
     availableOffline: true,
     badge: ({ thread }) => thread.isUnread,
