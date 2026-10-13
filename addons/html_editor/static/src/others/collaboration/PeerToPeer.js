@@ -220,9 +220,9 @@ export class PeerToPeer {
 
     closeAllConnections() {
         for (const peerId of Object.keys(this.peersInfos)) {
-            this.notifyAllPeers("ptp_disconnect");
             this.removePeer(peerId);
         }
+        this.notifyAllPeers("ptp_disconnect");
     }
 
     async notifyAllPeers(notificationName, notificationPayload, { transport = "server" } = {}) {
