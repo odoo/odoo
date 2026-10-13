@@ -152,7 +152,7 @@ export class CallProfile {
  * @returns {CallProfileType}
  */
 function resolveType(call) {
-    if (call.ui.isSmall) {
+    if (call.ui.isSmall()) {
         return CALL_PROFILE_TYPE.MOBILE;
     }
     // Fullscreen on one channel does not turn another channel's call view into a meeting.

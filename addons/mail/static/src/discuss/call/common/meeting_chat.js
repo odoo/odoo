@@ -21,7 +21,6 @@ export class MeetingChat extends Component {
     setup() {
         this.props = useProps({ close: types.function([types.instanceOf(MouseEvent)]) });
         this.store = useService("mail.store");
-        this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
         this.state = proxy({ jumpPresent: 0 });
         this.panelContentRef = signal.ref();

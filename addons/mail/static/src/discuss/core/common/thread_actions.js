@@ -56,13 +56,13 @@ registerThreadAction("add-to-favorites", {
      * @param {import("models").DiscussChannel} param0.channel
      * @param {import("models").Store} param0.store
      */
-    onSelected: async ({ ancestors, channel, owner, store }) => {
+    onSelected: async ({ ancestors, channel, store }) => {
         store.fetchStoreData(
             "/discuss/channel/favorite",
             { channel_id: channel.id, is_favorite: true },
             { silent: false }
         );
-        if (ancestors.inDiscussApp && !owner.env.services.ui.isSmall) {
+        if (ancestors.inDiscussApp && !store.ui.isSmall()) {
             return;
         }
         store.env.services.notification.add(
@@ -87,13 +87,13 @@ registerThreadAction("remove-from-favorites", {
      * @param {import("models").DiscussChannel} param0.channel
      * @param {import("models").Store} param0.store
      */
-    onSelected: async ({ ancestors, channel, owner, store }) => {
+    onSelected: async ({ ancestors, channel, store }) => {
         store.fetchStoreData(
             "/discuss/channel/favorite",
             { channel_id: channel.id, is_favorite: false },
             { silent: false }
         );
-        if (ancestors.inDiscussApp && !owner.env.services.ui.isSmall) {
+        if (ancestors.inDiscussApp && !store.ui.isSmall()) {
             return;
         }
         store.env.services.notification.add(

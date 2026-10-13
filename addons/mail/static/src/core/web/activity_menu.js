@@ -1,9 +1,10 @@
-import { Component } from "@odoo/owl";
+import { Component, usePlugin } from "@odoo/owl";
 
 import { useDiscussSystray } from "@mail/utils/common/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { registry } from "@web/core/registry";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
@@ -19,7 +20,7 @@ export class ActivityMenu extends Component {
         this.store = useService("mail.store");
         this.action = useService("action");
         this.userId = user.userId;
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.dropdown = useDropdownState();
         this.discussSystray = useDiscussSystray(this.dropdown);
         useCommand(_t("Activity"), () => this.store.scheduleActivity(false, false), {
@@ -28,9 +29,9 @@ export class ActivityMenu extends Component {
             global: true,
             hotkeyOptions: { bypassEditableProtection: true },
             isAvailable: () =>
-                !this.ui.activeElement.querySelector(
-                    "[data-hotkey='shift+a'], .o_mail_activity_schedule_wizard"
-                ),
+                !this.ui
+                    .activeElement()
+                    .querySelector("[data-hotkey='shift+a'], .o_mail_activity_schedule_wizard"),
         });
     }
 

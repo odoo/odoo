@@ -4,9 +4,18 @@ import { Call } from "@mail/discuss/call/common/call";
 import { CallActionList } from "@mail/discuss/call/common/call_action_list";
 import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plugin";
 
-import { Component, onMounted, onWillUnmount, providePlugins, types, useProps } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    providePlugins,
+    types,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -39,7 +48,7 @@ export class Meeting extends Component {
             isPip: types.boolean().optional(),
         });
         this.store = useService("mail.store");
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.rtc = useService("discuss.rtc");
         useAncestors({
             inDiscussCallTheme: true,
@@ -98,7 +107,7 @@ export class Meeting extends Component {
     }
 
     get hasSideActions() {
-        return !this.rtc.isPipMode && !this.ui.isSmall;
+        return !this.rtc.isPipMode && !this.ui.isSmall();
     }
 
     get pipExtraActions() {

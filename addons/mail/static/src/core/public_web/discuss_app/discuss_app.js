@@ -21,6 +21,7 @@ import { DiscussContent } from "@mail/core/public_web/discuss_content";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu/messaging_menu";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 export class Discuss extends Component {
@@ -46,7 +47,7 @@ export class Discuss extends Component {
         providePlugins([MessageHighlightPlugin], { thread: () => this.thread });
         this.orm = useService("orm");
         this.effect = usePlugin(EffectPlugin);
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         useAncestors({ inDiscussApp: true });
         useListener(
             window,
@@ -67,7 +68,7 @@ export class Discuss extends Component {
         );
         if (this.store.inPublicPage) {
             useOnChange(
-                () => [this.thread, this.ui.isSmall],
+                () => [this.thread, this.ui.isSmall()],
                 (thread, isSmall) => {
                     if (!thread) {
                         return;

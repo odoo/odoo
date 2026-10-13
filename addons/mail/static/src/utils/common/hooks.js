@@ -15,6 +15,7 @@ import {
     useScope,
 } from "@odoo/owl";
 
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useLayoutEffect } from "@web/owl2/utils";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
@@ -423,7 +424,7 @@ export function useMicrophoneVolume() {
 }
 
 export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => false }) {
-    const ui = useService("ui");
+    const ui = usePlugin(UIPlugin);
     const elRef = ref;
     const getEl = () => untrack(elRef);
     function onSelectionChange() {
@@ -466,7 +467,7 @@ export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => 
         moveCursor(position) {
             model.start = model.end = position;
             const el = getEl();
-            if (el && !ui.isSmall) {
+            if (el && !ui.isSmall()) {
                 // In mobile, selection seems to adjust correctly.
                 // Don't programmatically adjust, otherwise it shows soft keyboard!
                 el.selectionStart = el.selectionEnd = position;
@@ -685,7 +686,7 @@ export function useSequential() {
 
 /** @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} [dropdownState] */
 export function useDiscussSystray(dropdownState) {
-    const ui = useService("ui");
+    const ui = usePlugin(UIPlugin);
     if (dropdownState) {
         useEffect(() => {
             if (dropdownState.isOpen) {
@@ -699,12 +700,12 @@ export function useDiscussSystray(dropdownState) {
         class: "o-mail-DiscussSystray-class",
         get contentClass() {
             return `d-flex flex-column flex-grow-1 ${
-                ui.isSmall ? "overflow-auto o-scrollbar-thin w-100 mh-100" : ""
+                ui.isSmall() ? "overflow-auto o-scrollbar-thin w-100 mh-100" : ""
             }`;
         },
         get menuClass() {
             return `p-0 o-mail-DiscussSystray ${
-                ui.isSmall
+                ui.isSmall()
                     ? "o-mail-systrayFullscreenDropdownMenu start-0 w-100 mh-100 d-flex flex-column mt-0 border-0 shadow-lg"
                     : ""
             }`;

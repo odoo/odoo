@@ -1,10 +1,11 @@
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { propSignal } from "@mail/utils/common/hooks";
-import { Component, onWillUnmount, t, useProps, xml } from "@odoo/owl";
+import { Component, onWillUnmount, t, usePlugin, useProps, xml } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Action as ActionModel, ACTION_TAGS } from "@mail/core/common/action";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { computedShallowEqual } from "@mail/utils/common/signal";
 
@@ -79,7 +80,7 @@ export class BaseAction extends Component {
             ...actionListPropsSchema,
         });
         this.store = useService("mail.store");
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         if (this.props.action.definition?.isMoreAction) {
             onWillUnmount(() => {
                 this.props.action.dropdownState.close();
@@ -266,15 +267,15 @@ export class DropdownAction extends BaseAction {
     get alignmentClass() {
         return {
             "d-flex align-items-center dropdown-item_active_noarrow": true,
-            "gap-2": this.ui.isSmall,
-            "text-start gap-1": !this.ui.isSmall,
+            "gap-2": this.ui.isSmall(),
+            "text-start gap-1": !this.ui.isSmall(),
         };
     }
 
     get paddingClass() {
         return {
-            "px-3 py-2": this.ui.isSmall,
-            "px-2 py-1": !this.ui.isSmall,
+            "px-3 py-2": this.ui.isSmall(),
+            "px-2 py-1": !this.ui.isSmall(),
         };
     }
 
@@ -344,7 +345,6 @@ export class ActionList extends Component {
             ...actionListPropsSchema,
         });
         this.store = useService("mail.store");
-        this.ui = useService("ui");
         this.actionListProps = actionListProps;
     }
 

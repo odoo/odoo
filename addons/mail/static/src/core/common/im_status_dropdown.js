@@ -1,9 +1,10 @@
-import { Component } from "@odoo/owl";
+import { Component, usePlugin } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { ImStatus } from "./im_status";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
@@ -13,7 +14,7 @@ export class ImStatusDropdown extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.uiService = useService("ui");
+        this.uiService = usePlugin(UIPlugin);
         this.readableImStatusByCode = {
             online: _t("Online"),
             away: _t("Away"),

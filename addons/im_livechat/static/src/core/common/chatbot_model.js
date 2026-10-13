@@ -287,7 +287,7 @@ export class Chatbot extends Record {
         );
         if (!redirectionAlreadyDone) {
             this.redirect(answer.redirect_link);
-        } else if (this.store.env.services.ui.isSmall) {
+        } else if (this.store.ui.isSmall()) {
             await this.store.chatHub.initPromise;
             this.channel_id.channel.chatWindow?.fold();
         }

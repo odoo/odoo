@@ -22,6 +22,7 @@ import {
     t,
     untrack,
     useApp,
+    usePlugin,
     useProps,
     useScope,
 } from "@odoo/owl";
@@ -32,6 +33,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
 import { nbsp } from "@web/core/utils/strings";
@@ -149,7 +151,7 @@ export class Message extends Component {
         this.shadowBody = signal.ref(HTMLDivElement);
         this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
         this.dialog = useService("dialog");
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
         this.isActive = computed(() => Boolean(this._isActive));
@@ -343,7 +345,7 @@ export class Message extends Component {
             "o-squashed": this.props.squashed,
             "mt-2": !this.props.squashed && this.props.thread && !this.ancestors.inMessageCardList,
             "px-1": this.ancestors.inChatWindow,
-            "o-actionMenuMobileOpen": this.ui.isSmall && this.optionsDropdown.isOpen,
+            "o-actionMenuMobileOpen": this.ui.isSmall() && this.optionsDropdown.isOpen,
             "o-editing": this.isEditing,
         };
     }

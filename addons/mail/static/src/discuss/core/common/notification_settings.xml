@@ -12,7 +12,7 @@
         <div class="o-discuss-NotificationSettings">
             <t t-if="this.props.channel.channel_type === 'channel'">
                 <t t-call="discuss.NotificationSettings.unMuteSttings" />
-                <Dropdown position="this.ui.isSmall ? 'bottom-end' : 'right-start'" state="this.muteConversationDropdownState" menuClass="'o-mail-NotificationSettings-submenu my-0 p-0 ' + this.store.discussDropdownMenuClass(this.ancestors)" menuRef="this.muteMenuRef" manual="true">
+                <Dropdown position="this.ui.isSmall() ? 'bottom-end' : 'right-start'" state="this.muteConversationDropdownState" menuClass="'o-mail-NotificationSettings-submenu my-0 p-0 ' + this.store.discussDropdownMenuClass(this.ancestors)" menuRef="this.muteMenuRef" manual="true">
                     <button class="btn rounded-3 w-100 d-flex border-0" t-att-class="{
                         'o-px-2_5': this.env[this.DROPDOWN_NESTING],
                         'o-ps-2_5 o-pe-1_5': !this.env[this.DROPDOWN_NESTING],

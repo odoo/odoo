@@ -123,8 +123,8 @@ export class ChatHub extends Record {
 
     get maxOpened() {
         const chatBubblesWidth = this.BUBBLE_START + this.BUBBLE + this.BUBBLE_OUTER * 2;
-        const startGap = this.store.env.services.ui.isSmall ? 0 : this.WINDOW_GAP;
-        const endGap = this.store.env.services.ui.isSmall ? 0 : this.WINDOW_GAP;
+        const startGap = this.store.ui.isSmall() ? 0 : this.WINDOW_GAP;
+        const endGap = this.store.ui.isSmall() ? 0 : this.WINDOW_GAP;
         const available = window.innerWidth - startGap - endGap - chatBubblesWidth;
         const maxAmountWithoutHidden = Math.max(
             1,

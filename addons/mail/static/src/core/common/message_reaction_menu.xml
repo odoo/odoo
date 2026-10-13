@@ -9,7 +9,7 @@
                         <span class="mx-1 fs-2" t-out="reaction.content"/>
                         <span class="mx-1" t-out="reaction.count"/>
                     </t>
-                    <div t-foreach="reaction.personas" t-as="persona" t-key="persona.id" class="o-mail-MessageReactionMenu-persona d-flex p-1 align-items-center" t-att-class="{'o-isDeviceSmall': this.ui.isSmall}">
+                    <div t-foreach="reaction.personas" t-as="persona" t-key="persona.id" class="o-mail-MessageReactionMenu-persona d-flex p-1 align-items-center" t-att-class="{'o-isDeviceSmall': this.ui.isSmall()}">
                         <img class="rounded object-fit-cover o-mail-MessageReactionMenu-avatar" t-att-src="persona.avatarUrl"/>
                         <span class="d-flex flex-grow-1 align-items-center">
                             <span class="mx-2 text-truncate fs-6" t-out="this.props.message.getPersonaName(persona)"/>

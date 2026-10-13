@@ -48,7 +48,7 @@ export function describeComposerActionGroup(id, definition) {
 }
 
 export function pickerGetAnchor({ action, owner }) {
-    if (owner.ui.isSmall) {
+    if (owner.ui.isSmall()) {
         return null;
     }
     if (action.sequenceQuick) {
@@ -60,8 +60,7 @@ export function pickerGetAnchor({ action, owner }) {
 
 registerComposerAction("send-message", {
     condition: ({ ancestors, composer, store }) =>
-        (store.env.services.ui.isSmall && composer.message) ||
-        (!ancestors.inChatter && !composer.message),
+        (store.ui.isSmall() && composer.message) || (!ancestors.inChatter && !composer.message),
     disabledCondition: ({ owner }) => owner.isSendButtonDisabled,
     hasBtnBg: true,
     icon: "send",
@@ -97,7 +96,7 @@ registerComposerAction("add-emoji", {
         markEventHandled(ev, "Composer.onClickAddEmoji");
     },
     setup({ store }) {
-        if (store.env.services.ui.isSmall) {
+        if (store.ui.isSmall()) {
             return;
         }
         this.emojiStoreScroll = useEmojiPickerStoreScroll();
