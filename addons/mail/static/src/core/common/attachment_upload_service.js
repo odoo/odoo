@@ -1,7 +1,17 @@
+import { UPLOAD_ERROR } from "@mail/core/common/attachment_model";
+
 import { EventBus, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { registry } from "@web/core/registry";
+
+/**
+ * @typedef {Object} UploadOptions
+ * @property {import("models").Activity} [activity]
+ * @property {boolean} [detached] whether the attachment belongs to the caller
+ *  rather than to a composer, so it is kept when the upload ends, even failed
+ * @property {boolean} [voice]
+ */
 
 export class AttachmentUploadService {
     constructor(env, services) {
@@ -19,10 +29,14 @@ export class AttachmentUploadService {
         this.abortByAttachmentId = new Map();
         /** @type {Map<number, (value?: void) => void} */
         this.resolveUploadByAttachmentId = new Map();
+        /** @type {Map<number, Promise<import("models").Attachment|undefined>>} */
+        this.uploadPromiseByAttachmentId = new Map();
+        /** @type {Map<number, File>} files of the uploading and failed attachments */
+        this.fileByAttachmentId = new Map();
         this.deletingAttachmentIds = new Set();
         this.uploadingAttachmentIds = new Set();
         this._fileUploadBus = new EventBus();
-        /** @type {Map<number, {composer: import("models").Composer, thread: import("models").Thread}>} */
+        /** @type {Map<number, {composer: import("models").Composer, detached: boolean, thread: import("models").Thread}>} */
         this.targetsByTmpId = new Map();
         this.fileUploadService.bus.addEventListener(
             "FILE_UPLOAD_ADDED",
@@ -31,11 +45,19 @@ export class AttachmentUploadService {
                 if (!this.uploadingAttachmentIds.has(tmpId)) {
                     return;
                 }
-                const { thread, composer } = this.targetsByTmpId.get(tmpId);
+                const { thread, composer, detached } = this.targetsByTmpId.get(tmpId);
                 const tmpUrl = upload.data.get("tmp_url");
                 this.abortByAttachmentId.set(tmpId, upload.xhr.abort.bind(upload.xhr));
+                upload.xhr.upload.addEventListener("progress", (ev) =>
+                    this._onUploadProgress(tmpId, ev)
+                );
                 const attachment = this.store["ir.attachment"].insert(
-                    this._makeAttachmentData(upload, tmpId, composer ? undefined : thread, tmpUrl)
+                    this._makeAttachmentData(
+                        upload,
+                        tmpId,
+                        composer || detached ? undefined : thread,
+                        tmpUrl
+                    )
                 );
                 composer?.attachments.push(attachment);
             }
@@ -50,21 +72,18 @@ export class AttachmentUploadService {
                 const resolveUpload = this.resolveUploadByAttachmentId.get(tmpId);
                 if (upload.xhr.status === 413) {
                     this.notificationService.add(_t("File too large"), { type: "danger" });
-                    resolveUpload();
-                    this._cleanupUploading(tmpId);
+                    this._failUpload(tmpId, UPLOAD_ERROR.TOO_LARGE);
                     return;
                 }
                 if (upload.xhr.status !== 200) {
                     this.notificationService.add(_t("Server error"), { type: "danger" });
-                    resolveUpload();
-                    this._cleanupUploading(tmpId);
+                    this._failUpload(tmpId, UPLOAD_ERROR.FAILED);
                     return;
                 }
                 const response = JSON.parse(upload.xhr.response);
                 if (response.error) {
                     this.notificationService.add(response.error, { type: "danger" });
-                    resolveUpload();
-                    this._cleanupUploading(tmpId);
+                    this._failUpload(tmpId, UPLOAD_ERROR.FAILED);
                     return;
                 }
                 const { thread, composer } = this.targetsByTmpId.get(tmpId);
@@ -78,9 +97,11 @@ export class AttachmentUploadService {
                 if (!this.uploadingAttachmentIds.has(tmpId)) {
                     return;
                 }
-                const resolveUpload = this.resolveUploadByAttachmentId.get(tmpId);
-                resolveUpload();
-                this._cleanupUploading(tmpId);
+                // 413: Content Too Large
+                this._failUpload(
+                    tmpId,
+                    upload.xhr.status === 413 ? UPLOAD_ERROR.TOO_LARGE : UPLOAD_ERROR.FAILED
+                );
             }
         );
     }
@@ -103,12 +124,113 @@ export class AttachmentUploadService {
         this._cleanupUploading(tmpId);
     }
 
-    _cleanupUploading(tmpId) {
+    /**
+     * The attachment of a detached upload is kept, for whoever detached it to
+     * replace or remove it, and its file too when it failed.
+     *
+     * @param {number} tmpId
+     * @param {Object} [options]
+     * @param {boolean} [options.failed]
+     */
+    _cleanupUploading(tmpId, { failed = false } = {}) {
+        const detached = this.targetsByTmpId.get(tmpId)?.detached;
         this.abortByAttachmentId.delete(tmpId);
         this.resolveUploadByAttachmentId.delete(tmpId);
+        this.uploadPromiseByAttachmentId.delete(tmpId);
         this.uploadingAttachmentIds.delete(tmpId);
         this.targetsByTmpId.delete(tmpId);
-        this.store["ir.attachment"].get(tmpId)?.delete();
+        if (!detached || !failed) {
+            this.fileByAttachmentId.delete(tmpId);
+        }
+        if (!detached) {
+            this.store["ir.attachment"].get(tmpId)?.delete();
+        }
+    }
+
+    /**
+     * Stop the given upload, which failed. The attachment of a detached upload
+     * is kept as failed, to maybe upload it again.
+     *
+     * @param {number} tmpId
+     * @param {keyof typeof UPLOAD_ERROR} error
+     */
+    _failUpload(tmpId, error) {
+        const resolveUpload = this.resolveUploadByAttachmentId.get(tmpId);
+        const { detached } = this.targetsByTmpId.get(tmpId);
+        this._cleanupUploading(tmpId, { failed: true });
+        if (detached) {
+            Object.assign(this.store["ir.attachment"].get(tmpId), {
+                uploadError: error,
+                uploading: false,
+            });
+        }
+        resolveUpload();
+    }
+
+    /**
+     * Detach the given uploads from their composer, keeping their attachment.
+     *
+     * @param {import("models").Attachment[]} attachments
+     * @returns {Promise<import("models").Attachment|undefined>[]} the uploaded
+     *  attachment of each one, undefined when its upload failed or was cancelled
+     */
+    detachUploads(attachments) {
+        return attachments.map((attachment) => {
+            if (!attachment.uploading) {
+                return Promise.resolve(attachment);
+            }
+            Object.assign(this.targetsByTmpId.get(attachment.id), {
+                composer: undefined,
+                detached: true,
+            });
+            return this.uploadPromiseByAttachmentId.get(attachment.id);
+        });
+    }
+
+    /**
+     * Upload again the files of the given detached attachments, whose upload
+     * failed.
+     *
+     * @param {import("models").Attachment[]} attachments
+     * @param {import("models").Thread} thread
+     * @returns {Promise<import("models").Attachment|undefined>[]} see `detachUploads`
+     */
+    retryUploads(attachments, thread) {
+        return attachments.map((attachment) => {
+            Object.assign(attachment, { uploadError: undefined, uploading: true });
+            this._upload(
+                thread,
+                undefined,
+                this.fileByAttachmentId.get(attachment.id),
+                { detached: true, voice: attachment.voice },
+                attachment.id,
+                attachment.tmpUrl
+            );
+            return this.uploadPromiseByAttachmentId.get(attachment.id);
+        });
+    }
+
+    /**
+     * Forget the files of the given attachments whose upload failed, as they
+     * are removed.
+     *
+     * @param {import("models").Attachment[]} attachments
+     */
+    forgetFailedUploads(attachments) {
+        for (const { id } of attachments) {
+            this.fileByAttachmentId.delete(id);
+        }
+    }
+
+    /**
+     * @param {number} tmpId
+     * @param {ProgressEvent} ev
+     */
+    _onUploadProgress(tmpId, { loaded, total }) {
+        const attachment = this.store["ir.attachment"].get(tmpId);
+        if (attachment && total) {
+            attachment.uploadProgress = Math.min(loaded / total, 1);
+        }
     }
 
     getUploadURL(thread) {
@@ -125,6 +247,7 @@ export class AttachmentUploadService {
             const resolveUpload = this.resolveUploadByAttachmentId.get(tmpId);
             const abort = this.abortByAttachmentId.get(tmpId);
             this._cleanupUploading(tmpId);
+            this.store["ir.attachment"].get(tmpId)?.delete();
             resolveUpload();
             abort();
         }
@@ -157,12 +280,28 @@ export class AttachmentUploadService {
     async upload(thread, composer, file, options) {
         const tmpId = this.nextId--;
         const tmpURL = URL.createObjectURL(file);
+        this.fileByAttachmentId.set(tmpId, file);
         return this._upload(thread, composer, file, options, tmpId, tmpURL);
     }
 
+    /**
+     * @param {import("models").Thread} thread
+     * @param {import("models").Composer} [composer]
+     * @param {File} file
+     * @param {UploadOptions} [options]
+     * @param {number} tmpId
+     * @param {string} tmpURL
+     */
     async _upload(thread, composer, file, options, tmpId, tmpURL) {
-        this.targetsByTmpId.set(tmpId, { composer, thread });
+        this.targetsByTmpId.set(tmpId, {
+            composer,
+            detached: Boolean(options?.detached),
+            thread,
+        });
         this.uploadingAttachmentIds.add(tmpId);
+        const { promise: uploadPromise, resolve: resolveUpload } = Promise.withResolvers();
+        this.resolveUploadByAttachmentId.set(tmpId, resolveUpload);
+        this.uploadPromiseByAttachmentId.set(tmpId, uploadPromise);
         await this.fileUploadService
             .upload(this.getUploadURL(thread), [file], {
                 buildFormData: (formData) => {
@@ -174,8 +313,6 @@ export class AttachmentUploadService {
                     throw e;
                 }
             });
-        const { promise: uploadPromise, resolve: resolveUpload } = Promise.withResolvers();
-        this.resolveUploadByAttachmentId.set(tmpId, resolveUpload);
         return uploadPromise;
     }
 
@@ -191,11 +328,23 @@ export class AttachmentUploadService {
         });
     }
 
+    /**
+     * Fill the form data of the upload request. An attachment uploaded from a
+     * composer, or detached, is pending, so it is not linked to the thread yet.
+     *
+     * @param {FormData} formData
+     * @param {string} tmpURL
+     * @param {import("models").Thread} thread
+     * @param {import("models").Composer} [composer]
+     * @param {number} tmpId
+     * @param {UploadOptions} [options]
+     * @returns {FormData}
+     */
     _buildFormData(formData, tmpURL, thread, composer, tmpId, options) {
         formData.append("thread_id", thread.id);
         formData.append("tmp_url", tmpURL);
         formData.append("thread_model", thread.model);
-        formData.append("is_pending", Boolean(composer));
+        formData.append("is_pending", Boolean(composer || options?.detached));
         formData.append("temporary_id", tmpId);
         if (options?.activity) {
             formData.append("activity_id", options.activity.id);
@@ -210,6 +359,8 @@ export class AttachmentUploadService {
             name: upload.title,
             thread,
             extension: upload.title.split(".").pop(),
+            file_size: upload.data.get("ufile")?.size,
+            uploadProgress: 0,
             uploading: true,
             tmpUrl,
         };
