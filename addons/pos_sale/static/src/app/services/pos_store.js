@@ -84,6 +84,12 @@ patch(PosStore.prototype, {
         return result["sale.order"][0];
     },
     async settleSO(sale_order, orderFiscalPos) {
+        if (sale_order.order_line.some((line) => line.is_downpayment)) {
+            await this.loadDownPaymentProduct();
+            if (!this.config.down_payment_product_id) {
+                return;
+            }
+        }
         const order = this.getOrder();
         // Suppress expensive reactive work (order summary and customer display
         // re-renders, loyalty updates) for the whole settle. Not in uiState:
