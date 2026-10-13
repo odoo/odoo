@@ -83,6 +83,7 @@ import { TableBorderPlugin } from "./main/table/table_border_plugin";
 import { ContrastPlugin } from "./main/font/contrast_plugin";
 import { DatePlugin } from "./others/embedded_components/plugins/date_plugin/date_plugin";
 import { EmbeddedWhiteboardPlugin } from "./others/embedded_components/plugins/embedded_whiteboard_plugin/embedded_whiteboard_plugin";
+import { AccessibilityPlugin } from "./main/accessibility_plugin";
 
 export const CORE_PLUGINS = [
     LegacyCompatibilityPlugin,
@@ -161,6 +162,7 @@ export const MAIN_PLUGINS = [
     PlaceholderPlugin,
     SelectionPlaceholderPlugin,
     ResizePlugin,
+    AccessibilityPlugin,
 ];
 
 export const COLLABORATION_PLUGINS = [
