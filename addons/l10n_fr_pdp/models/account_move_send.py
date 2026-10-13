@@ -20,7 +20,7 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         if (
             'peppol' in kwargs.get('sending_methods', [])
-            and move.partner_id.with_company(move.company_id).l10n_fr_is_pdp
+            and move.partner_id.commercial_partner_id.with_company(move.company_id).l10n_fr_is_pdp
         ):
             return 'ubl_21_fr'
         return super()._get_default_invoice_edi_format(move, **kwargs)
