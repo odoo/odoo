@@ -58,9 +58,9 @@ export class SetIconsAction extends BuilderAction {
     static id = "setIcons";
     apply({ editingElement, params: { mainParam: iconParam } }) {
         editingElement.dataset.ratingIcon = iconParam;
-        renderIcons(editingElement);
         delete editingElement.dataset.activeCustomIcon;
         delete editingElement.dataset.inactiveCustomIcon;
+        renderIcons(editingElement);
     }
     isApplied({ editingElement, params: { mainParam: iconParam } }) {
         return getIconType(editingElement) === iconParam;
@@ -188,14 +188,17 @@ function getInactiveIcons(editingElement) {
 }
 function renderIcons(editingElement) {
     const iconType = getIconType(editingElement);
+    const activeIcon = getActiveCustomIcons(editingElement) || iconType;
+    const inactiveIcon = getInactiveCustomIcons(editingElement) || iconType;
+
     const activeIconEls = getActiveIcons(editingElement);
     const inactiveIconEls = getInactiveIcons(editingElement);
     activeIconEls.forEach((activeIconEl) => {
         activeIconEl.className = "oi oi-filled";
-        activeIconEl.dataset.icon = iconType;
+        activeIconEl.dataset.icon = activeIcon;
     });
     inactiveIconEls.forEach((inactiveIconEl) => {
         inactiveIconEl.className = "oi";
-        inactiveIconEl.dataset.icon = iconType;
+        inactiveIconEl.dataset.icon = inactiveIcon;
     });
 }
