@@ -572,6 +572,18 @@ class AccountEdiCommon(models.AbstractModel):
     # Import invoice
     # -------------------------------------------------------------------------
 
+    def _import_fix_line_price_unit_quantity_discount(self, quantity, discount, price_unit, line_total_amount, currency):
+        """ Recompute the quantity, discount and price unit so the line subtotal matches the line total amount
+        (LineExtensionAmount in UBL, LineTotalAmount in CII).
+        """
+        # TODO remove when France enforce stricter rules
+        current_line_subtotal = (1 - discount / 100) * (quantity * price_unit)
+        if not currency.is_zero((line_total_amount or 0.0) - current_line_subtotal):
+            quantity = quantity or 1
+            discount = 0
+            price_unit = (line_total_amount or 0.0) / quantity
+        return quantity, discount, price_unit
+
     def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
         invoice.ensure_one()
         if invoice.invoice_line_ids:
