@@ -157,6 +157,9 @@ class TestChannelRTC(MailCommon, HttpCase):
                         "discuss.channel": [
                             {
                                 "id": self.channel_internal.id,
+                                "invited_member_ids": [
+                                    ("DELETE", self.member_of_employee_in_channel_internal.ids),
+                                ],
                                 "rtc_session_ids": [("ADD", rtc_session.ids)],
                             },
                         ],
@@ -508,6 +511,9 @@ class TestChannelRTC(MailCommon, HttpCase):
                         "discuss.channel": [
                             {
                                 "id": self.chat.id,
+                                "invited_member_ids": [
+                                    ("DELETE", self.member_of_employee_in_chat.ids),
+                                ],
                                 "rtc_session_ids": [("ADD", rtc_session.ids)],
                             },
                         ],
@@ -650,6 +656,9 @@ class TestChannelRTC(MailCommon, HttpCase):
                         "discuss.channel": [
                             {
                                 "id": self.channel_group_a.id,
+                                "invited_member_ids": [
+                                    ("DELETE", self.member_of_employee_in_group_a.ids),
+                                ],
                                 "rtc_session_ids": [("ADD", rtc_session.ids)],
                             },
                         ],
@@ -841,6 +850,9 @@ class TestChannelRTC(MailCommon, HttpCase):
                         "discuss.channel": [
                             {
                                 "id": self.channel_group_a.id,
+                                "invited_member_ids": [
+                                    ("DELETE", self.member_of_test_user_in_group_a.ids),
+                                ],
                                 "rtc_session_ids": [("ADD", rtc_session.ids)],
                             },
                         ],
@@ -923,6 +935,9 @@ class TestChannelRTC(MailCommon, HttpCase):
                         "discuss.channel": [
                             {
                                 "id": self.channel_group_a.id,
+                                "invited_member_ids": [
+                                    ("DELETE", self.member_of_guest_in_group_a.ids),
+                                ],
                                 "rtc_session_ids": [("ADD", rtc_session.ids)],
                             },
                         ],

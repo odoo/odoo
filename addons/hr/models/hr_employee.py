@@ -44,7 +44,7 @@ class HrEmployee(models.Model):
     _name = 'hr.employee'
     _description = "Employee"
     _order = 'name, id'
-    _inherit = ['mail.thread.main.attachment', 'mail.thread.phone', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
+    _inherit = ['mail.thread.main.attachment', 'mail.thread.phone', 'mail.activity.mixin', 'discuss.call.log.mixin', 'resource.mixin', 'avatar.mixin']
     _mail_post_access = 'read'
     _mailing_enabled = True
     _primary_email = 'work_email'
