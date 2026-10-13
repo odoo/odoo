@@ -72,6 +72,12 @@ class AccountPayment(models.Model):
         if msgs:
             error_msg = "\n".join(f"* {msg}" for msg in msgs)
             raise ValidationError(error_msg)
+        # resetting to draft unlinks the own checks from their liquidity lines: rebuild them to link them back
+        to_relink = self.filtered(lambda payment:
+            payment.state == 'draft' and payment.move_id and payment.payment_method_code == 'own_checks'
+            and any(not check.outstanding_line_id for check in payment.l10n_latam_new_check_ids)
+        )
+        to_relink._synchronize_to_moves({'l10n_latam_new_check_ids'})
         super().action_post()
 
     def _get_latam_checks(self):
