@@ -107,6 +107,7 @@ class StockWarehouseOrderpoint(models.Model):
             product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
             res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.product_uom, round=False)
 
+        orderpoint_by_id = {orderpoint._origin.id: orderpoint for orderpoint in orderpoints_without_kit}
         bom_manufacture = self.env['mrp.bom']._bom_find(orderpoints_without_kit.product_id, bom_type='normal')
         bom_manufacture = self.env['mrp.bom'].concat(*bom_manufacture.values())
         # add quantities coming from draft MOs
@@ -120,6 +121,7 @@ class StockWarehouseOrderpoint(models.Model):
             ['orderpoint_id', 'product_uom_id'],
             ['product_qty:sum'])
         for orderpoint, uom, product_qty_sum in productions_group:
+            orderpoint = orderpoint_by_id[orderpoint.id]
             res[orderpoint.id] += uom._compute_quantity(
                 product_qty_sum, orderpoint.product_uom, round=False)
 
@@ -132,7 +134,7 @@ class StockWarehouseOrderpoint(models.Model):
             ('id', 'not in', self.env.context.get('ignore_mo_ids', [])),
         ])
         for prod in in_progress_productions:
-            date_start, date_finished, orderpoint = prod.date_start, prod.date_finished, prod.orderpoint_id
+            date_start, date_finished, orderpoint = prod.date_start, prod.date_finished, orderpoint_by_id[prod.orderpoint_id.id]
             lead_days_date = datetime.combine(orderpoint.lead_days_date, time.max)
             if date_start <= lead_days_date < date_finished:
                 res[orderpoint.id] += prod.product_uom_id._compute_quantity(
