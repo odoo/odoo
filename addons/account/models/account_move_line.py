@@ -1406,6 +1406,8 @@ class AccountMoveLine(models.Model):
 
     @api.onchange('product_id')
     def _inverse_product_id(self):
+        if self.env.context.get('preserve_copied_account') and self.account_id:
+            return
         if self.product_id or not self.account_id:
             self._conditional_add_to_compute('account_id', lambda line: (
                 line.display_type == 'product' and line.move_id.is_invoice(True)
