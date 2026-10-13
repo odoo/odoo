@@ -615,6 +615,7 @@ class MailMessage(models.Model):
         # {document_model_name: {document_id: message_ids}}
         model_docid_msgids = defaultdict(lambda: defaultdict(list))
         for mid, message in messages_to_check.items():
+<<<<<<< c77a704469058bdca354ba9908208e1439ac03bb
             if (
                 (model := message['model'])
                 and (res_id := message['res_id'])
@@ -624,6 +625,25 @@ class MailMessage(models.Model):
 
         for mid in _find_allowed_doc_ids(self.env, model_docid_msgids, operation):
             messages_to_check.pop(mid)
+||||||| f328b25bff611d3411ace20929ee4d510328bb5b
+            if (message.get('model') and message.get('res_id') and
+                    message.get('message_type') != 'user_notification'):
+                model_docid_msgids[message['model']][message['res_id']].append(mid)
+        for model, docid_msgids in model_docid_msgids.items():
+            allowed = self._filter_records_for_message_operation(model, docid_msgids, operation)
+            for doc_id, msg_ids in docid_msgids.items():
+                if doc_id in allowed.ids:
+                    for mid in msg_ids:
+                        messages_to_check.pop(mid)
+=======
+            if (message.get('model') and message.get('res_id') and
+                    message.get('message_type') != 'user_notification'):
+                model_docid_msgids[message['model']][message['res_id']].append(mid)
+        for model, docid_msgids in model_docid_msgids.items():
+            for doc_id in self._filter_records_for_message_operation(model, docid_msgids, operation).ids:
+                for mid in docid_msgids.get(doc_id, []):
+                    messages_to_check.pop(mid)
+>>>>>>> e66971069d5f15c0c3b0a01e91c81087cd8920bb
 
         if not messages_to_check:
             return accessible
