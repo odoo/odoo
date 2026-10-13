@@ -665,8 +665,8 @@ class BaseAutomation(models.Model):
         try:
             return self._process(record)
         except Exception as e: # noqa: BLE001
-            msg = "Webhook #%s failed with error:\n%s"
-            msg_args = (self.id, traceback.format_exc())
+            msg = "Webhook #%s failed on record %s with error:\n%s"
+            msg_args = (self.id, record, traceback.format_exc())
             _logger.warning(msg, *msg_args)
             if self.log_webhook_calls:
                 ir_logging_sudo.create(self._prepare_loggin_values(message=msg % msg_args, level="ERROR"))
@@ -1215,13 +1215,18 @@ class BaseAutomation(models.Model):
             now = self.env.cr.now()
             records = automation._search_time_based_automation_records(until=now)
             # run the automation on the records
+            record = None
             try:
                 for record in records:
                     automation._process(record, trigger='time-based')
+                record = None  # a flush error can't be attributed to a record
                 self.env.flush_all()
             except Exception as e:
                 self.env['ir.cron']._rollback_progress()
-                _logger.exception("Error in time-based automation rule `%s`.", automation.name)
+                if record:
+                    _logger.exception("Error in time-based automation rule `%s` on record %s.", automation.name, record)
+                else:
+                    _logger.exception("Error in time-based automation rule `%s`.", automation.name)
                 final_exception = e
                 continue
 
