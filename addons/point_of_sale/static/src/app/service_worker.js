@@ -34,6 +34,7 @@ self.addEventListener("fetch", (event) => {
         url.includes("extension") ||
         url.includes("web/dataset") ||
         url.includes("Cashdro3WS/index3.php") ||
+        event.request.headers.get("X-No-SW-Cache") ||
         event.request.method !== "GET"
     ) {
         return;
