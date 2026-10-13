@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from bisect import bisect_right
 import csv
-from dataclasses import dataclass, field
 from io import StringIO
 import logging
 import operator
@@ -46,14 +45,22 @@ class AccountGroupGraph:
         return len(self.agroups)
 
 
-@dataclass(frozen=True)
+# for dataclass(frozen=True), python 3.14 raises:
+# AttributeError: 'NoneType' object has no attribute '__dict__'.
+# when loaded using `importlib.util.spec_from_file_location` because __module__
+# is not set on the class
 class AccountGroup:  # noqa: PLW1641
     start: str
     end: str
     xmlid: str
-    children: AccountGroupGraph = field(default_factory=AccountGroupGraph)
+    children: AccountGroupGraph
 
-    def __post_init__(self):
+    def __init__(self, start, end, xmlid):
+        self.start = start
+        self.end = end
+        self.xmlid = xmlid
+        self.children = AccountGroupGraph()
+
         if len(self.start) != len(self.end):
             raise ValueError(f'start and end must have the same length: {self.start} - {self.end}')
 
