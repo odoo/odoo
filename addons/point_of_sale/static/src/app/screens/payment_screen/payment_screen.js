@@ -104,6 +104,49 @@ export class PaymentScreen extends Component {
         );
     }
 
+    get displayedPaymentMethods() {
+        const groups = this.pos.paymentMethods.defaultGroups;
+        const displayed = [];
+        const seenProviders = new Set();
+        for (const pm of this.payment_methods_from_config) {
+            if (!this.showPaymentMethod(pm)) {
+                continue;
+            }
+            if (!groups[pm.payment_provider]?.includes(pm)) {
+                displayed.push(pm);
+                continue;
+            }
+            const provider = pm.payment_provider;
+            if (seenProviders.has(provider)) {
+                continue;
+            }
+            seenProviders.add(provider);
+            displayed.push(
+                this.pos.paymentMethods.getDefault(provider) || this.getProviderButton(pm)
+            );
+        }
+        return displayed;
+    }
+
+    getProviderButton(paymentMethod) {
+        const provider = paymentMethod.payment_provider;
+        return {
+            id: `provider_${provider}`,
+            isProvider: true,
+            provider,
+            name: paymentMethod._payment_provider_name,
+            paymentMethod,
+        };
+    }
+
+    async onClickProvider(provider) {
+        const confirmed = await this.pos.paymentMethods.selectDefaults([provider]);
+        const paymentMethod = confirmed && this.pos.paymentMethods.getDefault(provider);
+        if (paymentMethod) {
+            await this.addNewPaymentLine(paymentMethod);
+        }
+    }
+
     get _getNumberBufferConfig() {
         const config = {
             // When the buffer is updated, trigger this event.
@@ -173,7 +216,7 @@ export class PaymentScreen extends Component {
         }
     }
     updateSelectedPaymentline(amount = false) {
-        if (this.paymentLines.every((line) => line.paid)) {
+        if (!this.paymentLines.length) {
             this.currentOrder.addPaymentline(this.payment_methods_from_config[0]);
         }
         if (!this.selectedPaymentLine) {

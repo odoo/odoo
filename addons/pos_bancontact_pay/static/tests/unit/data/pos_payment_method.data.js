@@ -6,6 +6,10 @@ patch(PosPaymentMethod.prototype, {
         return [...super._load_pos_data_fields(), "bancontact_usage"];
     },
 
+    _get_payment_provider_names() {
+        return { ...super._get_payment_provider_names(), bancontact_pay: "Bancontact Pay" };
+    },
+
     create_bancontact_payment(id, data) {
         if (this[id].payment_provider !== "bancontact_pay") {
             throw new Error("Error Server: Wrong Provider");
