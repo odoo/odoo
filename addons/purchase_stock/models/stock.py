@@ -297,7 +297,13 @@ class StockWarehouseOrderpoint(models.Model):
         return super()._get_replenishment_order_notification()
 
     def _prepare_procurement_values(self, date=False):
-        values = super()._prepare_procurement_values(date=date)
+        values = super(
+            StockWarehouseOrderpoint,
+            self.with_context(
+                orderpoint_qty_to_order=self.qty_to_order,
+                orderpoint_supplier_id=self.supplier_id.id,
+            ),
+        )._prepare_procurement_values(date=date)
         values['supplierinfo_id'] = self.supplier_id
         return values
 
