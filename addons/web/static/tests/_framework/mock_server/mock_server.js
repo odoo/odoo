@@ -418,7 +418,7 @@ export class MockServer {
         decimal_point: ".",
         direction: "ltr",
         grouping: [3, 0],
-        time_format: "%H:%M:%S",
+        time_format: "%I:%M:%S %p",
         thousands_sep: ",",
         week_start: 7,
     };
