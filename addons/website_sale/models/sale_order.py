@@ -579,6 +579,7 @@ class SaleOrder(models.Model):
         uom_id,
         linked_line_id=False,
         no_variant_attribute_value_ids=None,
+        product_custom_attribute_values=None,
         **_kwargs,
     ):
         """Find the cart line matching the given parameters.
@@ -592,6 +593,8 @@ class SaleOrder(models.Model):
             of `product.product` ids
         :param list no_variant_attribute_value_ids: list of `product.template.attribute.value` ids
             whose attribute is configured as `no_variant`
+        :param list product_custom_attribute_values: optional, the custom attribute values of the
+            product being added, as a list of dicts
         :param dict kwargs: unused parameters, maybe used in overrides or other cart update methods
         :return: matching order lines in the cart, if any
         :rtype: `sale.order.line` recordset
@@ -605,6 +608,13 @@ class SaleOrder(models.Model):
             return self.env["sale.order.line"]
 
         if product.type == "combo":
+            return self.env["sale.order.line"]
+
+        # A product with a custom value is never merged into an existing line
+        if any(
+            (custom_value.get("custom_value") or "").strip()
+            for custom_value in product_custom_attribute_values or []
+        ):
             return self.env["sale.order.line"]
 
         domain = [
@@ -909,19 +919,11 @@ class SaleOrder(models.Model):
                 Command.set(no_variant_attribute_values.ids)
             ]
 
-        # add is_custom attribute values that were not received
-        custom_values = product_custom_attribute_values or []
-        received_custom_values = product.env["product.template.attribute.value"].browse([
-            int(ptav["custom_product_template_attribute_value_id"]) for ptav in custom_values
-        ])
-
-        for ptav in combination.filtered(
-            lambda ptav: ptav.is_custom and ptav not in received_custom_values
-        ):
-            custom_values.append({
-                "custom_product_template_attribute_value_id": ptav.id,
-                "custom_value": "",
-            })
+        custom_values = [
+            custom_value
+            for custom_value in product_custom_attribute_values or []
+            if (custom_value.get("custom_value") or "").strip()
+        ]
 
         if custom_values:
             values["product_custom_attribute_value_ids"] = [

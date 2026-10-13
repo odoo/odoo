@@ -582,14 +582,15 @@ class SaleOrderLine(models.Model):
 
         lines = []
 
-        custom_ptavs = (
-            self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
-        )
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == "multi").sorted()
 
-        # display the no_variant attributes, except those that are also
-        # displayed by a custom (avoid duplicate description)
-        lines.extend((no_variant_ptavs - multi_ptavs - custom_ptavs).mapped("display_name"))
+        # display the no_variant attributes, except custom ones: those are displayed through their
+        # custom value, if any (avoid duplicate or empty descriptions)
+        lines.extend(
+            (no_variant_ptavs - multi_ptavs)
+            .filtered(lambda ptav: not ptav.is_custom)
+            .mapped("display_name")
+        )
 
         # display the selected values per attribute on a single for a multi checkbox
         for pta, ptavs in groupby(multi_ptavs, lambda ptav: ptav.attribute_id):

@@ -1414,6 +1414,7 @@ class SaleOrder(models.Model):
                         + [
                             Command.create(attribute_value)
                             for attribute_value in combo_item["product_custom_attribute_values"]
+                            if (attribute_value.get("custom_value") or "").strip()
                         ],
                         # Combo item lines should come directly after their combo product line.
                         "sequence": line.sequence + item_index + 1,
