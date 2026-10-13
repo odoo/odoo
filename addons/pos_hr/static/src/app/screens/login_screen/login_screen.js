@@ -35,11 +35,14 @@ patch(LoginScreen.prototype, {
             this.pos.login = false;
         });
     },
-    async barcodeCashierAction(code) {
+    barcodeCashierAction(code) {
+        return this.loginWithBadge(code.code);
+    },
+    async loginWithBadge(badge) {
         if (!this.pos.config.module_pos_hr) {
             return;
         }
-        const employee = this.pos.accessRight.getEmployeeByBarcode(code.code);
+        const employee = this.pos.accessRight.getEmployeeByBarcode(badge);
         if (
             employee &&
             employee !== this.loggedCashier &&
