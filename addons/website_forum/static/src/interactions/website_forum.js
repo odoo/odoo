@@ -74,10 +74,12 @@ export class WebsiteForum extends Interaction {
         // welcome message action button
         const forumRegisterUrlEl = this.el.querySelector(".forum_register_url");
         if (forumRegisterUrlEl) {
-            const forumLogin = `${location.origin}/odoo?redirect=${encodeURIComponent(
+            const forumSignUpUrl = `${location.origin}/web/signup?redirect=${encodeURIComponent(
                 location.href
             )}`;
-            forumRegisterUrlEl.href = forumLogin;
+            forumRegisterUrlEl.addEventListener("click", () => {
+                window.location.href = forumSignUpUrl;
+            });
         }
 
         this.el.querySelectorAll("[data-bs-toggle='popover']").forEach((el) => {
