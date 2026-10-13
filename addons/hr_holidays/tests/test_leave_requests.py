@@ -4,7 +4,7 @@ from datetime import datetime, date, timedelta
 import time
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
-from pytz import timezone
+from pytz import timezone, utc
 
 from odoo import fields, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -2566,3 +2566,51 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             self.assertEqual(leave.number_of_days, 5)
             self.assertEqual(allocation.virtual_remaining_leaves, 5,
                 'A validated future leave should already reduce the allocation remaining balance')
+
+    def test_unavailable_intervals_contiguous_leaves_duration_based_calendar(self):
+        """
+        Time off following each other without any gap must not break the unavailabilities of
+        an employee working on a duration-based schedule.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration-based 40h/week',
+            'duration_based': True,
+            'attendance_ids': [
+                Command.create({'name': 'Full day', 'dayofweek': str(day), 'duration_hours': 8.0, 'day_period': 'full_day'})
+                for day in range(5)
+            ],
+        })
+        employee = self.env['hr.employee'].create({
+            'name': 'Duration Based Employee',
+            'resource_calendar_id': calendar.id,
+            'tz': 'UTC',
+            'contract_date_start': date(2026, 1, 1),
+        })
+        hours, half_day = self.holidays_type_hours, self.holidays_type_half
+        self.env['hr.leave'].create([
+            {
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': day,
+                'request_date_to': day,
+                **values,
+            } for day, leave_type, values in [
+                # Two time off in hours
+                (date(2026, 1, 1), hours, {'request_hour_from': 9, 'request_hour_to': 12}),
+                (date(2026, 1, 1), hours, {'request_hour_from': 12, 'request_hour_to': 15}),
+                # The morning and the afternoon
+                (date(2026, 1, 2), half_day, {'request_date_from_period': 'am', 'request_date_to_period': 'am'}),
+                (date(2026, 1, 2), half_day, {'request_date_from_period': 'pm', 'request_date_to_period': 'pm'}),
+            ]
+        ])
+
+        unavailabilities = employee._get_employee_unavailable_intervals(
+            datetime(2026, 1, 1, tzinfo=utc),
+            datetime(2026, 1, 3, tzinfo=utc),
+        )
+        self.assertEqual(unavailabilities[employee.id], [
+            # Time off in hours only cover their own hours
+            {'start': datetime(2026, 1, 1, 9, tzinfo=utc), 'stop': datetime(2026, 1, 1, 15, tzinfo=utc)},
+            # The morning and the afternoon cover the whole day
+            {'start': datetime(2026, 1, 2, tzinfo=utc), 'stop': datetime(2026, 1, 3, tzinfo=utc)},
+        ])
