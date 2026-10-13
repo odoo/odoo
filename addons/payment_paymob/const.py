@@ -9,6 +9,12 @@ CURRENCY_MAPPING = {
     'SA': 'SAR',
 }
 
+# Mapping of currency codes to the number of decimals that Paymob rounds Visa payments down to,
+# when Visa doesn't support the number of decimals of the currency as per the ISO 4217 norm.
+VISA_CURRENCY_DECIMALS = {
+    'OMR': 2,
+}
+
 # Mapping of account's country codes to API URL prefixes.
 API_MAPPING = {
     'AE': 'uae',
