@@ -128,6 +128,37 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
         self.days += 1
         return out_move
 
+    def _test_several_lc_on_receipt_without_po(self):
+        """ A receipt without purchase order is valued at the product cost. Each landed cost
+        must only add its own amount, and not the landed costs already included in that cost. """
+        # Set the product cost prior to the receipt so it is applied when its value is computed.
+        with freeze_time('2020-01-01'):
+            self.product1.standard_price = 500
+        warehouse = self.company_data['default_warehouse']
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.product1.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        receipt.action_confirm()
+        receipt.move_ids.quantity = 1
+        receipt.button_validate()
+        move = receipt.move_ids
+        self.assertEqual(move.value, 500)
+
+        self._make_lc(move, 100)
+        self.assertEqual(move.value, 600)
+        self.assertEqual(self.product1.standard_price, 600)
+
+        self._make_lc(move, 200)
+        self.assertEqual(move.value, 800)
+        self.assertEqual(self.product1.standard_price, 800)
+        self.assertEqual(self.product1.total_value, 800)
+
     def test_out_move_validate_as_stock_user(self):
         """An Inventory/User (no landed costs access) must be able to validate the delivery
         of a dropship product with an AVCO costing method."""
@@ -275,6 +306,9 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         move2 = self._make_out_move(self.product1, 1)
         self.assertEqual(move2.value, 115)
 
+    def test_several_lc_on_receipt_without_po(self):
+        self._test_several_lc_on_receipt_without_po()
+
     def test_landed_cost_different_uom(self):
         """
         Check that the receipt value is correctly updated with the landed cost when the receipt
@@ -334,6 +368,9 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
 
         self.assertEqual(self.product1.total_value, 380)
         self.assertEqual(self.product1.qty_available, 19)
+
+    def test_several_lc_on_receipt_without_po(self):
+        self._test_several_lc_on_receipt_without_po()
 
     def test_lc_generated_from_bill_multi_comapnies(self):
         """
