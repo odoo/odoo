@@ -416,7 +416,10 @@ export class ToolbarPlugin extends Plugin {
         if (
             !(
                 selectionData.documentSelectionIsInEditable &&
-                this.dependencies.selection.editableDocumentHasFocus()
+                // Check if editor is within the focused iframe:
+                this.dependencies.selection.editableDocumentHasFocus() &&
+                // Check if a full screen mobile dialog is displayed:
+                !this.document.querySelector(".o_touch_device .fixed-bottom")
             ) ||
             selectionData.documentSelectionIsProtected ||
             selectionData.documentSelectionIsProtecting
