@@ -562,6 +562,7 @@ class ResGroups(models.Model):
                 privilege.id: {
                     'id': privilege.id,
                     'name': privilege.name,
+                    'sequence': privilege.sequence,
                     'category_id': privilege.category_id.id,
                     'description': privilege.description,
                     'placeholder': privilege.placeholder,
