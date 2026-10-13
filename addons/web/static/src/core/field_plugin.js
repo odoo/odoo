@@ -1,6 +1,6 @@
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
-import { plugin, Plugin, usePlugin } from "@odoo/owl";
+import { Plugin, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 import { ORM } from "@web/core/orm_plugin";
 
@@ -25,7 +25,7 @@ function makeString(value) {
 }
 
 export class FieldPlugin extends Plugin {
-    orm = plugin(ORM);
+    orm = usePlugin(ORM);
 
     /**
      * @param {string} resModel
@@ -132,7 +132,11 @@ export class FieldPlugin extends Plugin {
         let subResult;
         const relation = getRelation(fieldDef, followRelationalProperties);
         if (relation) {
-            subResult = await this._loadPath(relation, await this.loadFields(relation), remainingNames);
+            subResult = await this._loadPath(
+                relation,
+                await this.loadFields(relation),
+                remainingNames
+            );
         } else if (fieldDef.type === "properties") {
             subResult = await this._loadPath(
                 followRelationalProperties ? resModel : "*",
