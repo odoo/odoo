@@ -15,6 +15,8 @@ class TestSessionInfo(common.HttpCase):
         cls.company_a = cls.env['res.company'].create({'name': "A"})
         cls.company_b = cls.env['res.company'].create({'name': "B"})
         cls.company_c = cls.env['res.company'].create({'name': "C"})
+        cls.company_a.calendar_weekend_days = [5]
+        cls.company_c.calendar_weekend_days = [5, 6]
         cls.company_b_branch = cls.env['res.company'].create({'name': "B Branch", 'parent_id': cls.company_b.id})
         cls.company_c_branch = cls.env['res.company'].create({'name': "C Branch", 'parent_id': cls.company_c.id})
         cls.company_c_branch_branch = cls.env['res.company'].create({'name': "C Branch Branch", 'parent_id': cls.company_c_branch.id})
@@ -57,6 +59,7 @@ class TestSessionInfo(common.HttpCase):
                 'sequence': company.sequence,
                 'child_ids': company.child_ids.ids,
                 'currency_id': company.currency_id.id,
+                'calendar_weekend_days': company.calendar_weekend_days or [],
                 'parent_id': company.parent_id.id,
             } for company in self.allowed_companies
         }

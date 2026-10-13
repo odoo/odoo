@@ -8,6 +8,7 @@ import {
     useProps,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
+import { user } from "@web/core/user";
 import { odooCalendarTheme } from "@web/views/calendar/calendar_theme";
 
 /**
@@ -18,11 +19,21 @@ export function useFullCalendar(ref, params) {
     const props = useProps();
     const instance = signal(null);
 
+    const getHiddenDays = () =>
+        props.model.scale === "day" || props.isWeekendVisible !== false
+            ? []
+            : (user.activeCompany?.calendar_weekend_days ?? [0, 6]);
+
     onWillStart(() => loadBundle("web.fullcalendar_lib"));
     onMounted(() => {
         try {
             instance.set(
-                new FullCalendar.Calendar(ref(), { plugins: [odooCalendarTheme], ...params })
+                new FullCalendar.Calendar(ref(), {
+                    plugins: [odooCalendarTheme],
+                    ...params,
+                    weekends: true,
+                    hiddenDays: getHiddenDays(),
+                })
             );
             instance().render();
         } catch (e) {
@@ -31,7 +42,7 @@ export function useFullCalendar(ref, params) {
     });
     onPatched(() => {
         instance().refetchEvents();
-        instance().setOption("weekends", props.isWeekendVisible);
+        instance().setOption("hiddenDays", getHiddenDays());
         if (params.weekNumbers && props.model.scale === "year") {
             instance().destroy();
             instance().render();
