@@ -415,14 +415,18 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'product_uom_qty': 20,
             'order_id': sale_order.id,
         })
-        so_line_deliver_timesheet = self.env['sale.order.line'].create({
-            'product_id': self.product_delivery_timesheet1.id,
-            'product_uom_qty': 5,
-            'order_id': sale_order.id,
+        # Order without any project or task line, unreadable for a user without sales access
+        sale_order_no_project = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_delivery_timesheet1.id,
+                'product_uom_qty': 5,
+            })],
         })
+        so_line_deliver_timesheet = sale_order_no_project.order_line
 
         # confirm SO
-        sale_order.action_confirm()
+        (sale_order | sale_order_no_project).action_confirm()
         task_serv1 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_global_project.id)])
         task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_task_project.id)])
         project_serv2 = self.env['project.project'].search([('sale_line_id', '=', so_line_deliver_task_project.id)])
