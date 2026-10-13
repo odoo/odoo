@@ -666,6 +666,21 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSSaleOrderWithDownpayment', login="accountman")
 
+    def test_settle_so_without_downpayment_product(self):
+        self.product_a.available_in_pos = True
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        })
+        so.action_confirm()
+        self.env['sale.advance.payment.inv'].create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 20,
+            'sale_order_ids': so.ids,
+        }).create_invoices()
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_so_without_downpayment_product', login="accountman")
+
     def test_downpayment_with_taxed_product(self):
         tax_1 = self.env['account.tax'].create({
             'name': '10',
