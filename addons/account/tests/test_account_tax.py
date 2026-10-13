@@ -399,6 +399,51 @@ class TestAccountTax(AccountTestInvoicingCommon):
         search_method_ignored = get_search_method(0.125, 'REC 0.12 (Kopie)', amount_type='percent')
         self.assertIsNone(search_method_ignored)
 
+    def test_import_retrieve_tax_with_foreign_vat_fiscal_position(self):
+        """ When an EDI import resolves a foreign-VAT fiscal position for the invoice,
+        `_import_retrieve_tax` must not let the `invoice_predictive` country filter
+        fall back to the invoice's default fiscal country: that would exclude every tax
+        from the fiscal position's own foreign country, even though the fiscal position
+        was correctly resolved. """
+        company = self.company_data['company']
+        domestic_tax = self.company_data['default_tax_purchase']
+        foreign_country = self.env.ref('base.be')
+        foreign_vat = 'BE0477472701'
+
+        foreign_tax_group = domestic_tax.tax_group_id.copy({'country_id': foreign_country.id})
+        foreign_tax = domestic_tax.copy({
+            'country_id': foreign_country.id,
+            'tax_group_id': foreign_tax_group.id,
+        })
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'foreign vat fpos',
+            'company_id': company.id,
+            'country_id': foreign_country.id,
+            'foreign_vat': foreign_vat,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'company_id': company.id,
+        })
+        self.assertEqual(invoice.tax_country_id, domestic_tax.country_id)
+
+        tax_values = {
+            'amount_type': domestic_tax.amount_type,
+            'type_tax_use': domestic_tax.type_tax_use,
+            'amount': domestic_tax.amount,
+            'invoice_predictive': {'invoice': invoice, 'name': 'Test item', 'partner': self.partner_a},
+            'fiscal_position': fiscal_position,
+        }
+        AccountTax = self.env['account.tax']
+        AccountTax._import_retrieve_tax(
+            search_plan=[AccountTax._import_retrieve_tax_from_price_include_exclude],
+            company=company,
+            tax_values_list=[tax_values],
+        )
+
+        self.assertEqual(tax_values.get('tax'), foreign_tax)
+
     def test_quick_create_purchase_tax(self):
         """ Test that quick-creating a tax preserves the default purchase type. """
         tax_id, _ = self.env['account.tax'].with_context(
