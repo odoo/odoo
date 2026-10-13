@@ -17,6 +17,7 @@ export class WelcomePage extends Component {
         super.setup();
         this.props = useProps({ proceed: types.function([]).optional() });
         this.description = signal();
+        this.busService = useService("bus_service");
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
@@ -74,8 +75,18 @@ export class WelcomePage extends Component {
     }
 
     async joinChannel() {
-        if (!this.store.self_user) {
-            await this.store.self_guest?.updateGuestName(this.state.userName.trim());
+        const guestName = this.state.userName.trim();
+        if (!this.store.self_user && this.store.self_guest?.id > 0) {
+            await this.store.self_guest.updateGuestName(guestName);
+        }
+        await this.store.fetchStoreData("/discuss/channel/join_from_invitation", {
+            channel_id: this.channel.id,
+            email_token: this.store.invitation_email_token,
+            guest_name: guestName,
+            invitation_token: this.channel.uuid,
+        });
+        if (this.store.guest_token) {
+            this.busService.addChannel(`mail.guest_${this.store.guest_token}`);
         }
         window.localStorage.setItem("discuss_call_preview_join_mute", !this.state.hasMicrophone);
         window.localStorage.setItem(

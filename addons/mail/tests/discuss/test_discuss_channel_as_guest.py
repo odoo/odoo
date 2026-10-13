@@ -121,6 +121,38 @@ class TestMailPublicPage(HttpCaseWithUserPortal):
         internal_response = self.url_open(internal_channel.invitation_url)
         self.assertEqual(internal_response.status_code, 404)
 
+    def test_invitation_link_does_not_join_before_welcome_page(self):
+        channel = self.env["discuss.channel"]._create_group(
+            name="Group 1",
+            users_to=self.env.ref("base.user_admin"),
+        )
+        guest_count = self.env["mail.guest"].search_count([])
+        members = channel.channel_member_ids
+        message = channel._get_last_messages()
+        response = self.url_open(channel.invitation_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.env["mail.guest"].search_count([]), guest_count)
+        self.assertEqual(channel.channel_member_ids, members)
+        self.assertEqual(channel._get_last_messages(), message)
+        self.make_jsonrpc_request(
+            "/mail/store",
+            {
+                "fetch_params": [
+                    [
+                        "/discuss/channel/join_from_invitation",
+                        {
+                            "channel_id": channel.id,
+                            "guest_name": "Alfred",
+                            "invitation_token": channel.uuid,
+                        },
+                    ],
+                ],
+            },
+        )
+        self.assertEqual(self.env["mail.guest"].search_count([]), guest_count + 1)
+        self.assertEqual((channel.channel_member_ids - members).guest_id.name, "Alfred")
+        self.assertIn('data-oe-type="channel-joined"', channel._get_last_messages().body)
+
     def test_sidebar_in_public_page(self):
         guest = self.env['mail.guest'].create({'name': 'Guest'})
         channel_1 = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)

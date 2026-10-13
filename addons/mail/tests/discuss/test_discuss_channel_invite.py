@@ -12,6 +12,24 @@ from odoo.tools.misc import hash_sign
 
 
 class TestDiscussChannelInvite(HttpCase, MailCommon):
+    def _join_from_invitation(self, channel, guest_name, email_token):
+        self.make_jsonrpc_request(
+            "/mail/store",
+            {
+                "fetch_params": [
+                    [
+                        "/discuss/channel/join_from_invitation",
+                        {
+                            "channel_id": channel.id,
+                            "email_token": email_token,
+                            "guest_name": guest_name,
+                            "invitation_token": channel.uuid,
+                        },
+                    ],
+                ],
+            },
+        )
+
     def test_01_invite_by_email_flow(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
         john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
@@ -103,12 +121,13 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         group_chat = (
             self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
         )
-        # Guest email is filled at create
-        self.url_open(
-            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alfred@test.com')}"
-        )
+        # Guest email is filled at join
+        email_token = hash_sign(self.env, "mail.invite_email", "alfred@test.com")
+        self.url_open(f"{group_chat.invitation_url}?email_token={email_token}")
+        self.assertEqual(group_chat.channel_member_ids.partner_id, bob.partner_id)
+        self._join_from_invitation(group_chat, "Alfred", email_token)
         self.assertEqual(group_chat.channel_member_ids.guest_id.email, "alfred@test.com")
-        self.assertEqual(group_chat.channel_member_ids.guest_id.name, "alfred@test.com")
+        self.assertEqual(group_chat.channel_member_ids.guest_id.name, "Alfred")
         # Guest email is updated if empty when invited from email
         guest = self.env["mail.guest"].create({"name": "Alice"})
         self.assertFalse(guest.email)
@@ -242,9 +261,10 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             pending_member,
         )
         # Once the invitation is accepted, the address is no longer invitable.
-        self.url_open(
-            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alfred@test.com')}"
-        )
+        email_token = hash_sign(self.env, "mail.invite_email", "alfred@test.com")
+        self.url_open(f"{group_chat.invitation_url}?email_token={email_token}")
+        self.assertTrue(pending_member.invitation_sent_dt)
+        self._join_from_invitation(group_chat, "Alfred", email_token)
         self.assertFalse(pending_member.invitation_sent_dt)
         result = self.env["res.partner"].search_for_channel_invite(
             "alfred@test.com", channel_id=group_chat.id
