@@ -7,7 +7,19 @@
             <MessagingMenu t-if="this.store.discuss.hasRestoredThread" state="this.menuState"/>
         </ResizablePanel>
         <MessagingMenu t-if="this.ui.isSmall" state="this.menuState"/>
-        <DiscussContent t-else="" channel="this.channel"/>
+        <div t-else="" class="d-flex flex-row flex-grow-1 gap-1">
+            <DiscussContent channel="this.channel"/>
+            <t t-set="sideChannel" t-value="this.store.discuss.sideChannel"/>
+            <div t-if="sideChannel" class="o-mail-DiscussSideChannel rounded-4 border d-print-none" t-on-keydown="this.onKeydownSideChannel">
+                <ChannelPanel channel="sideChannel" close.bind="this.closeSideChannel" title="sideChannel.displayName">
+                    <t t-set-slot="header-extra">
+                        <button title="Open in Full View" class="btn opacity-75 opacity-100-hover p-1 position-relative" t-on-click="() => sideChannel.setAsDiscussThread()">
+                            <i class="oi" data-icon="expand_content"/>
+                        </button>
+                    </t>
+                </ChannelPanel>
+            </div>
+        </div>
     </div>
 </t>
 

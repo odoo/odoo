@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ChannelPanel">
+        <ActionPanel close="this.props.close" title="this.props.title" resizable="true" minWidth="300" initialWidth="400" icon="'forum'" contentRef="this.panelContentRef">
+            <t t-set-slot="header-extra">
+                <t t-call-slot="header-extra"/>
+                <button t-if="this.env.pinMenu and this.channel.pinnedMessages.length > 0" title="Pinned Messages" class="btn opacity-75 opacity-100-hover p-1 me-3 position-relative" t-on-click="() => this.env.pinMenu.open()">
+                    <i class="oi" data-icon="push_pin"/>
+                    <span class="o-mail-ChannelPanel-pinCounter badge rounded-circle position-absolute" t-out="this.channel.pinnedMessages.length"/>
+                </button>
+            </t>
+            <Thread t-key="this.channel.thread.localId" thread="this.channel.thread" jumpPresent="this.state.jumpPresent"/>
+            <t t-call="mail.ChatWindow.memberTyping"/>
+            <Composer
+                composer="this.channel.composer"
+                autofocus="!this.isMobileOS"
+                onDiscardCallback="this.channel.composer.replyToMessage ? () => (this.channel.composer.replyToMessage = undefined) : undefined"
+                onPostCallback.bind="() => this.state.jumpPresent++"
+                dropzoneRef="this.panelContentRef"
+                sidebar="false"
+           />
+        </ActionPanel>
+    </t>
+</templates>

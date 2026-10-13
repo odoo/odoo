@@ -775,16 +775,20 @@ export class DiscussChannel extends Record {
         return this.store.fetchStoreData("/discuss/channel/add_members", params);
     }
 
-    /** @returns {boolean} true if the channel was opened, false otherwise */
-    openChannel() {
+    /**
+     * @param {Object} [options] same as {@link Thread.open}
+     * @returns {boolean} true if the channel was opened, false otherwise
+     */
+    openChannel(options) {
         if (this.self_member_id && !this.self_member_id.is_pinned && !this.parent_channel_id) {
             this.self_member_id.unpin_dt = false;
             this.pinRpc({ pinned: true });
         }
-        return this._openChannel();
+        return this._openChannel(options);
     }
 
-    _openChannel() {
+    /** @param {Object} [options] same as {@link Thread.open} */
+    _openChannel(options) {
         return false;
     }
 
