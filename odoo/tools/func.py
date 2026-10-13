@@ -76,13 +76,16 @@ def filter_kwargs(func: Callable, kwargs: dict[str, typing.Any]) -> dict[str, ty
     """ Filter the given keyword arguments to only return the kwargs
         that binds to the function's signature.
     """
+    parameters = signature(func).parameters
     leftovers = set(kwargs)
-    for p in signature(func).parameters.values():
+    for p in parameters.values():
         if p.kind in (Parameter.POSITIONAL_OR_KEYWORD, Parameter.KEYWORD_ONLY):
             leftovers.discard(p.name)
         elif p.kind == Parameter.VAR_KEYWORD:  # **kwargs
             leftovers.clear()
             break
+    if 'self' in kwargs and next(iter(parameters), None) == 'self':
+        leftovers.add('self')
 
     if not leftovers:
         return kwargs
