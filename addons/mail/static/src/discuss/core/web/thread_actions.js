@@ -51,11 +51,9 @@ registerThreadAction("advanced-settings", {
 registerThreadAction("view-recordings", {
     condition: ({ channel, owner }) => channel && !owner.isDiscussContent,
     async onSelected({ channel, store }) {
-        const action = await store.env.services.orm.call(
-            "discuss.channel",
-            "action_view_recordings",
-            [[channel.id]]
-        );
+        const action = await store.orm.call("discuss.channel", "action_view_recordings", [
+            [channel.id],
+        ]);
         if (action) {
             await store.env.services.action.doAction(action);
         }

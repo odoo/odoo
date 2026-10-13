@@ -2,9 +2,10 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { Record } from "@web/model/relational_model/record";
 
-import { Component, onWillStart, proxy, types, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, types, usePlugin, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
@@ -16,7 +17,7 @@ export class MailComposerTemplateSelector extends Component {
     setup() {
         this.props = useProps({ record: types.instanceOf(Record) });
         this.action = useService("action");
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.limit = 80;
 
         const { context } = this.props.record.evalContext;

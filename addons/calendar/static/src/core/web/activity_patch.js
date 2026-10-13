@@ -2,12 +2,10 @@ import { Activity } from "@mail/core/web/activity";
 import { formatList } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 
 patch(Activity.prototype, {
     setup() {
         super.setup();
-        this.orm = useService("orm");
         this.isToday = (datetime) => {
             if (!datetime) {
                 return false;

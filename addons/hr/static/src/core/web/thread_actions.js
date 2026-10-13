@@ -11,11 +11,9 @@ registerThreadAction("hr-view-profile", {
     iconClass: "oi-filled",
     name: _t("View Profile"),
     onSelected: async ({ channel, store }) => {
-        const action = await store.env.services.orm.call(
-            "hr.employee",
-            "get_record_default_action",
-            [channel.correspondent.partner_id?.employeeId]
-        );
+        const action = await store.orm.call("hr.employee", "get_record_default_action", [
+            channel.correspondent.partner_id?.employeeId,
+        ]);
         store.env.services.action.doAction(action);
     },
     async setup({ channel, owner }) {
@@ -24,7 +22,7 @@ registerThreadAction("hr-view-profile", {
         }
         const partner = channel?.correspondent?.partner_id;
         if (partner && !partner.employeeId) {
-            const employees = await this.store.env.services.orm.silent.searchRead(
+            const employees = await this.store.orm.silent.searchRead(
                 "hr.employee",
                 [["user_partner_id", "=", partner.id]],
                 ["id"]

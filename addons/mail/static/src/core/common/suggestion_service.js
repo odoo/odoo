@@ -1,9 +1,12 @@
+import { usePlugin } from "@odoo/owl";
+
 import { COMPOSER_TYPES } from "@mail/core/common/composer";
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 
 import { compareDatetime } from "@mail/utils/common/misc";
 import { localeCompare, normalize } from "@web/core/l10n/utils";
+import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 
 /** @typedef {import("@mail/core/common/suggestion_hook").SuggestionDelimiter} SuggestionDelimiter */
@@ -15,7 +18,7 @@ export class SuggestionService {
      */
     constructor(env, services) {
         this.env = env;
-        this.orm = services.orm;
+        this.orm = usePlugin(ORM);
         this.store = services["mail.store"];
     }
 
@@ -308,7 +311,7 @@ export class SuggestionService {
 }
 
 export const suggestionService = {
-    dependencies: ["orm", "mail.store"],
+    dependencies: ["mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services

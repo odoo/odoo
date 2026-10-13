@@ -824,9 +824,7 @@ export class Message extends Record {
         );
     }
     async markAsUnread() {
-        await this.store.env.services.orm.silent.call("mail.message", "mark_as_unread", [
-            [this.id],
-        ]);
+        await this.store.orm.silent.call("mail.message", "mark_as_unread", [[this.id]]);
         this.store.notification.add(_t("Marked as unread"), { type: "info" });
     }
 
@@ -912,9 +910,7 @@ export class Message extends Record {
     }
 
     async setDone() {
-        await this.store.env.services.orm.silent.call("mail.message", "set_message_done", [
-            [this.id],
-        ]);
+        await this.store.orm.silent.call("mail.message", "set_message_done", [[this.id]]);
     }
 
     /**

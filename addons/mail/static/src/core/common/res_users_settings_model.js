@@ -50,7 +50,7 @@ export class ResUsersSettings extends Record {
      */
     async _onSaveVolumeSettingTimeout({ key, partnerId, guestId, volume }) {
         this.volumeSettingsTimeouts.delete(key);
-        await this.store.env.services.orm.call(
+        await this.store.orm.call(
             "res.users.settings",
             "set_volume_setting",
             [[this.id], partnerId, volume],

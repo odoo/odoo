@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 
 export class MailServerConfiguratorSelection extends SelectionField {
     static template = "mail.MailServerConfiguratorSelection";
@@ -13,7 +14,7 @@ export class MailServerConfiguratorSelection extends SelectionField {
     setup() {
         super.setup();
         this.action = useService("action");
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.notification = usePlugin(NotificationPlugin);
         this.state = proxy({
             value: null,
@@ -48,6 +49,11 @@ export class MailServerConfiguratorSelection extends SelectionField {
                 this.action.doAction(action);
             }
         } catch (error) {
+            // The component was destroyed during the call: rethrow so the AbortError skips the
+            // error handling below and reaches the global handler, which silently ignores it.
+            if (error.name === "AbortError") {
+                throw error;
+            }
             this.state.value = oldValue;
             this.notification.add(error.data.message, {
                 type: "danger",
@@ -62,6 +68,11 @@ export class MailServerConfiguratorSelection extends SelectionField {
             this.state.connectionFailed = false;
             this.action.doAction(action);
         } catch (error) {
+            // The component was destroyed during the call: rethrow so the AbortError skips the
+            // error handling below and reaches the global handler, which silently ignores it.
+            if (error.name === "AbortError") {
+                throw error;
+            }
             this.notification.add(_t("Connection failed: %s", error.data.message), {
                 type: "danger",
             });

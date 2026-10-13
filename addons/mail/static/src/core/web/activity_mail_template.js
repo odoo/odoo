@@ -64,7 +64,7 @@ export class ActivityMailTemplate extends Component {
             model: this.activity().res_model,
             id: this.activity().res_id,
         });
-        await this.env.services.orm.call(this.activity().res_model, "activity_send_mail", [
+        await this.store.orm.call(this.activity().res_model, "activity_send_mail", [
             [this.activity().res_id],
             mailTemplate.id,
         ]);

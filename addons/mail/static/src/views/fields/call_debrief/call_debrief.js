@@ -7,13 +7,14 @@ import {
     useEffect,
     useListener,
     useOnChange,
+    usePlugin,
     useProps,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { CallDebriefTimeline } from "@mail/views/fields/call_debrief/call_debrief_timeline";
 import { CallDebriefMediaControls } from "@mail/views/fields/call_debrief/call_debrief_media_controls";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
@@ -41,7 +42,7 @@ export class CallDebrief extends Component {
         this.mediaPlayer = signal.ref();
         this.rootElement = signal.ref();
 
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.state = proxy({
             currentTime: 0,
             mediaSegments: [],
@@ -262,6 +263,11 @@ export class CallDebrief extends Component {
         try {
             artifacts = await this.orm.read("mail.call.artifact", artifactIds, fieldsToRead);
         } catch (e) {
+            // The component was destroyed during the call: rethrow so the AbortError skips the
+            // error handling below and reaches the global handler, which silently ignores it.
+            if (e.name === "AbortError") {
+                throw e;
+            }
             if (this.activeResId !== initialResId) {
                 return;
             }

@@ -9,14 +9,14 @@ const threadPatch = {
         return this.recipientsCount === this.recipients.length;
     },
     async loadMoreFollowers() {
-        const data = await this.store.env.services.orm.call(this.model, "message_get_followers", [
+        const data = await this.store.orm.call(this.model, "message_get_followers", [
             [this.id],
             this.followers.at(-1).id,
         ]);
         this.store.insert(data);
     },
     async loadMoreRecipients() {
-        const data = await this.store.env.services.orm.call(
+        const data = await this.store.orm.call(
             this.model,
             "message_get_followers",
             [[this.id], this.recipients.at(-1).id],
