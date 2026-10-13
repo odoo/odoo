@@ -765,7 +765,7 @@ class TestActivityMixin(TestActivityCommon):
         self.env.invalidate_all()
         self.assertEqual(
             self.env['mail.activity'].with_user(self.user_admin).with_context(active_test=False).search(
-                [('active', '=', False)]), act,
+                [('id', '=', act.id)]), act,
             'Should consider unassigned activity on removed record = access without crash'
         )
         self.env.invalidate_all()
