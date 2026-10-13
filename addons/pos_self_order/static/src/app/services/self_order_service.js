@@ -2,7 +2,7 @@ import { Mutex } from "@web/core/utils/concurrency";
 import { ConnectionLostError, RPCError, rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { formatCurrency as webFormatCurrency } from "@web/core/currency";
-import { markup, proxy, usePlugin } from "@odoo/owl";
+import { proxy, usePlugin } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
@@ -57,7 +57,6 @@ export class SelfOrder {
         this.company = this.config.company_id;
         this.currency = this.config.currency_id;
 
-        this.markupDescriptions();
         this.access_token = odoo.access_token;
         this.lastEditedProductId = null;
         this.currentProduct = 0;
@@ -562,14 +561,6 @@ export class SelfOrder {
 
     get kioskMode() {
         return this.config.self_ordering_mode === "kiosk";
-    }
-
-    markupDescriptions() {
-        for (const product of this.models["product.template"].getAll()) {
-            product.public_description = product.public_description
-                ? markup(product.public_description)
-                : "";
-        }
     }
 
     initProducts() {

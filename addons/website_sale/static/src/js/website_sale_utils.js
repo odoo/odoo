@@ -3,7 +3,6 @@ import { _t } from '@web/core/l10n/translation';
 import { rpc } from "@web/core/network/rpc";
 import { createElementWithContent, setElementContent } from '@web/core/utils/html';
 import { redirect } from '@web/core/utils/urls';
-import { markup } from '@odoo/owl';
 
 /**
  * Updates both navbar cart
@@ -159,7 +158,7 @@ async function updateShopContent(interaction, {
             paramsObject.category = headerEl.dataset.categoryId;
         }
         const data = await interaction.waitFor(rpc('/shop/reload', paramsObject));
-        const updatedShopPage = createElementWithContent("div", markup(data.html));
+        const updatedShopPage = createElementWithContent("div", data.html);
         const shopPageEl = document.querySelector('.o_wsale_products_page');
         interaction.services['public.interactions'].stopInteractions(shopPageEl);
 

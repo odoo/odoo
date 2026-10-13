@@ -11,7 +11,7 @@ import { insertThousandsSep, formatFloat } from '@web/core/utils/numbers';
 import { renderToFragment } from '@web/core/utils/render';
 import { isEmail } from '@web/core/utils/strings';
 import { throttleForAnimation } from '@web/core/utils/timing';
-import { markup, usePlugin } from '@odoo/owl';
+import { usePlugin } from '@odoo/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 import { ProductImageViewer } from '@website_sale/js/components/website_sale_image_viewer';
 import { BootstrapInstance } from '@web/core/utils/bootstrap_plugin';
@@ -475,19 +475,6 @@ export class ProductPage extends Interaction {
             'product_template_id': productTemplateId,
             'combination': combination,
         }));
-        const htmlKeys = [
-            'product_tags',
-            'out_of_stock_message',
-            'documents',
-            'carousel',
-            'packaging_selector',
-        ];
-        for (const key of htmlKeys) {
-            if (combinationInfo[key]) {
-                combinationInfo[key] = markup(combinationInfo[key]);
-            }
-        }
-
         this._onChangeCombination(ev, parent, combinationInfo, attributeValueImages);
         this._checkExclusions(parent, combination);
     }

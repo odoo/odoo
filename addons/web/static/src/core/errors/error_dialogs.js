@@ -205,9 +205,6 @@ export class RedirectWarningDialog extends Component {
         if (this.additionalContext) {
             options.additionalContext = this.additionalContext;
         }
-        if (this.actionId.help) {
-            this.actionId.help = markup(this.actionId.help);
-        }
         await this.actionService.doAction(this.actionId, options);
         this.props.close();
     }

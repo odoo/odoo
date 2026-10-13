@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
-import { markup, EventBus } from "@odoo/owl";
+import { EventBus } from "@odoo/owl";
 
 const websiteSlidesService = {
     dependencies: [],

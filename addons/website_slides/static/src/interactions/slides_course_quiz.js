@@ -3,7 +3,6 @@ import { SlideQuizFinishDialog } from "@website_slides/js/public/components/slid
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { markup } from "@odoo/owl";
 import { session } from "@web/session";
 import { user } from "@web/core/user";
 
@@ -136,7 +135,7 @@ export class WebsiteSlidesQuiz extends Interaction {
         for (const el of this.el.querySelectorAll(".o_wslides_js_lesson_quiz_question")) {
             el.classList.add("completed-disabled");
         }
-        for (const el of this.el.querySelectorAll("input[type='radio'")) {
+        for (const el of this.el.querySelectorAll("input[type='radio']")) {
             el.disabled = this.slide.completed;
         }
     }
@@ -213,22 +212,12 @@ export class WebsiteSlidesQuiz extends Interaction {
         this.slide.completed = data.completed;
         this.channel.completion = data.channel_completion;
 
-        // three of the rankProgress properties are HTML messages, mark if set
-        const rankProgress = data.rankProgress;
-        if ("description" in rankProgress) {
-            rankProgress.description = markup(rankProgress.description || "");
-            rankProgress.previous_rank.motivational = markup(
-                rankProgress.previous_rank.motivational || ""
-            );
-            rankProgress.new_rank.motivational = markup(rankProgress.new_rank.motivational || "");
-        }
-
         this.slidesService.setQuiz({
             answers: data.answers,
             karmaWon: data.quizKarmaWon,
             karmaGain: data.quizKarmaGain,
             attemptsCount: data.quizAttemptsCount,
-            rankProgress: rankProgress,
+            rankProgress: data.rankProgress,
         });
 
         if (this.slide.completed) {

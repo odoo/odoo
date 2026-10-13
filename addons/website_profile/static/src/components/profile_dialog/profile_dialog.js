@@ -1,7 +1,6 @@
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import {
     Component,
-    markup,
     onMounted,
     onWillStart,
     useProps,
@@ -85,7 +84,7 @@ export class ProfileDialog extends Component {
             ]);
             const userData = users[0];
             userData.country_id = userData.country_id && userData.country_id[0]; // keep only id
-            userData.website_description = markup(userData.website_description || "");
+            userData.website_description ||= "";
             isUserInitialized = true;
             Object.assign(this.user, userData);
             this.countries = countries;

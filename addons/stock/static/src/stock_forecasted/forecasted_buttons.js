@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { Component, markup, t, useProps } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class ForecastedButtons extends Component {
     static template = "stock.ForecastedButtons";
@@ -52,9 +52,6 @@ export class ForecastedButtons extends Component {
         const action = await this.orm.call(this.resModel, "action_open_quants", [[this.productId]]);
         if (action.res_model === "stock.quant") { // Quant view in inventory mode.
             action.views = [[false, "list"]];
-        }
-        if (action.help) {
-            action.help = markup(action.help);
         }
         return this.actionService.doAction(action, { onClose: this._onClose.bind(this) });
     }

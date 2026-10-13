@@ -467,7 +467,6 @@ export class PaymentForm extends Interaction {
             const processingValues = await this.waitFor(rpc(
                 this.paymentContext['transactionRoute'], this._prepareTransactionRouteParams()
             ));
-            processingValues['redirect_form_html'] = markup(processingValues['redirect_form_html']);
             if (processingValues.state === 'error') {
                 this._handlePaymentProcessingError(processingValues);
                 return;

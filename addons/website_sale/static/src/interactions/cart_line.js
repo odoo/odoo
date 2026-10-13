@@ -1,4 +1,3 @@
-import { markup } from '@odoo/owl';
 import { Interaction } from '@web/public/interaction';
 import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
@@ -65,12 +64,6 @@ export class CartLine extends Interaction {
             this.services.cart.showWarning(error.data.message);
         });
         if (!data) {return;}
-
-        data['website_sale.cart_lines'] = markup(data['website_sale.cart_lines']);
-        data['website_sale.quick_reorder_history'] = markup(
-            data['website_sale.quick_reorder_history']
-        );
-        data['website_sale.total'] = markup(data['website_sale.total']);
 
         if (data.tracking_info?.length) {
             wSaleUtils.dispatchTrackingEvent("update_cart_event", {

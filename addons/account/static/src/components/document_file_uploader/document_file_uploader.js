@@ -2,7 +2,7 @@ import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-import { Component, markup, t, useProps } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export const AbstractDocumentFileUploader = (T = Component)  => class AbstractDocumentFileUploader extends T {
 
@@ -66,9 +66,6 @@ export const AbstractDocumentFileUploader = (T = Component)  => class AbstractDo
                 });
             }
             delete action.context.notifications;
-        }
-        if (action.help?.length) {
-            action.help = markup(action.help);
         }
         this.action.doAction(action);
     }

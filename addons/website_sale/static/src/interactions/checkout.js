@@ -1,9 +1,9 @@
-import { Interaction } from '@web/public/interaction';
-import { registry } from '@web/core/registry';
-import { _t } from '@web/core/l10n/translation';
-import { rpc } from '@web/core/network/rpc';
-import { setElementContent, createElementWithContent } from '@web/core/utils/html';
-import { markup } from '@odoo/owl';
+import {Interaction} from '@web/public/interaction';
+import {registry} from '@web/core/registry';
+import {_t} from '@web/core/l10n/translation';
+import {rpc} from '@web/core/network/rpc';
+import {createElementWithContent, setElementContent} from '@web/core/utils/html';
+import { markup } from '@owl/owl';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
 
 export class Checkout extends Interaction {
@@ -440,9 +440,7 @@ export class Checkout extends Interaction {
      * @return {Object} The delivery rate data.
      */
     async _getDeliveryRate(radio) {
-        const deliveryRateData = await this.waitFor(rpc('/shop/get_delivery_rate', {'dm_id': radio.dataset.dmId}));
-        deliveryRateData.amount_delivery = markup(deliveryRateData.amount_delivery);
-        return deliveryRateData;
+        return this.waitFor(rpc('/shop/get_delivery_rate', {'dm_id': radio.dataset.dmId}));
     }
 
     /**
@@ -453,32 +451,9 @@ export class Checkout extends Interaction {
      * @return {Object} The result values.
      */
     async _setDeliveryMethod(dmId) {
-        const deliveryMethodData = await this.waitFor(
+        return this.waitFor(
             rpc('/shop/set_delivery_method', {'dm_id': dmId})
         );
-        return this._markupOrderSummaryValues(deliveryMethodData);
-    }
-
-    /**
-     * Wrap the HTML values returned by the order summary in markup.
-     *
-     * @private
-     * @param {Object} values - The order summary values.
-     * @return {Object} The order summary values, with HTML values marked up.
-     */
-    _markupOrderSummaryValues(values) {
-        const amountKeys = [
-            'amount_delivery',
-            'amount_untaxed',
-            'amount_tax_lines',
-            'amount_total',
-        ];
-        for (const key of amountKeys) {
-            if (values[key]) {
-                values[key] = markup(values[key]);
-            }
-        }
-        return values;
     }
 
     // #=== GETTERS & SETTERS ===#
