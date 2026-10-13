@@ -159,6 +159,18 @@ class PdpFlow(models.Model):
         but it DOES NOT verify if move is eligible for flow 10
         """
         report_type = move.l10n_fr_pdp_flow_10_report_type
+        last_sent_flow = move.l10n_fr_pdp_sent_in_flow_ids.sorted('id')[-1:]
+        if not report_type and last_sent_flow:
+            # The move left the Flow 10 scope after being reported (e.g. the customer got a VAT
+            # number, or the invoice was sent through the PDP). Its RE must target the scope it
+            # was reported in, not its current (empty) one.
+            return {
+                'company_id': last_sent_flow.company_id.id,
+                'period_start': last_sent_flow.period_start,
+                'period_end': last_sent_flow.period_end,
+                'operation_type': last_sent_flow.operation_type,
+                'report_type': last_sent_flow.report_type,
+            }
         period_data = self._get_period_flow_properties(move.company_id, move.date, report_type)
         if report_type == 'transaction':
             operation_type = 'purchase' if move._l10n_fr_pdp_is_purchase() else 'sale'
@@ -166,7 +178,7 @@ class PdpFlow(models.Model):
             operation_type = 'purchase' if matched_transactions[0]._l10n_fr_pdp_is_purchase() else 'sale'
         else:
             # The related transaction can already be out of scope when a sent payment needs an RE.
-            operation_type = move.l10n_fr_pdp_sent_in_flow_ids.sorted('id')[-1].operation_type
+            operation_type = last_sent_flow.operation_type or move.l10n_fr_pdp_flow_10_operation_type
         return {
             'company_id': move.company_id.id,
             'period_start': period_data['period_start'],
