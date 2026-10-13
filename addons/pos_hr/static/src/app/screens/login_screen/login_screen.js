@@ -38,7 +38,7 @@ patch(LoginScreen.prototype, {
     barcodeCashierAction(code) {
         return this.loginWithBadge(code.code);
     },
-    async loginWithBadge(badge) {
+    async loginWithBadge(badge, needsPin = () => true) {
         if (!this.pos.config.module_pos_hr) {
             return;
         }
@@ -46,7 +46,9 @@ patch(LoginScreen.prototype, {
         if (
             employee &&
             employee !== this.loggedCashier &&
-            (!employee._pin || (await this.pos.accessRight.checkPin(employee))) &&
+            (!employee._pin ||
+                !needsPin(employee) ||
+                (await this.pos.accessRight.checkPin(employee))) &&
             this.pos.canLoginCashier(employee)
         ) {
             this.pos.setCashier(employee);
