@@ -1,4 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
@@ -49,7 +48,6 @@ registerThreadAction("show-threads", {
                 popoverClass: this.actionPanelOuterClass,
             });
         }
-        useSubEnv({ subChannelMenu: { open: () => this.actionPanelOpen() } });
     },
     sequence: ({ ancestors }) => (ancestors.inChatWindow ? 40 : 5),
     sequenceGroup: 10,
