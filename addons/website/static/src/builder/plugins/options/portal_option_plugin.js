@@ -140,7 +140,6 @@ export class SetStylePortalCardAction extends StyleAction {
 
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     /**
      * Applies the specified style to portal cards.

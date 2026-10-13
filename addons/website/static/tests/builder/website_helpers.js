@@ -9,8 +9,16 @@ import { Builder } from "@html_builder/builder";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { describe } from "@odoo/hoot";
-import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
+import { describe, expect } from "@odoo/hoot";
+import {
+    advanceTime,
+    animationFrame,
+    click,
+    queryOne,
+    tick,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -56,6 +64,66 @@ export const setupWebsiteBuilderOeId = 539;
 
 export const invisibleEl =
     '<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element" data-invisible="1"></div>';
+
+export { PALETTE_URL, USER_VALUES_URL } from "@website/builder/plugins/customize_website_plugin";
+
+/**
+ * Mocks the writes of the Theme tab's values and the preview CSS, as steps
+ * (`<file> <values as JSON>`, `preview <file name> <values as JSON>...`).
+ * The preview CSS prints the pending values on the root, as the compiled CSS
+ * prints most of them.
+ */
+export function mockThemeRpcs() {
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
+        make_scss_customization(location, changes) {
+            expect.step(`${location} ${JSON.stringify(changes)}`);
+        }
+    }
+    defineModels([WebsiteAssets]);
+    onRpc("/website/theme_preview_css", async (request) => {
+        const { params } = await request.json();
+        const files = Object.entries(params.values_by_url);
+        const previewed = files.map(([url, values]) => [
+            url.split("/").at(-1),
+            JSON.stringify(values),
+        ]);
+        expect.step(["preview", ...previewed.flat()].join(" "));
+        const declarations = files.flatMap(([, values]) =>
+            // "null" resets the value to its SCSS default: an empty string here.
+            Object.entries(values).map(
+                ([name, value]) => `--${name}: ${value === "null" ? "''" : value};`
+            )
+        );
+        return { css: `:root { ${declarations.join(" ")} }`, font_urls: [] };
+    });
+}
+
+/**
+ * Saves, as the builder's Save button does, and waits for the builder to
+ * close.
+ */
+export async function saveWebsite() {
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
+}
+
+/**
+ * Switches the color palette, from the Theme tab's colors.
+ */
+export async function switchPalette(name = "default-light-1") {
+    await contains(".o_theme_tab [data-icon='palette']").click();
+    await contains(`[data-action-value="'${name}'"] .o_hb_color_palette_card span`).click();
+}
+
+/**
+ * Picks red as the primary color, from the Theme tab's colors.
+ */
+export async function setPrimaryColor() {
+    await contains(".o_hb_sliding_panel button.o_we_color_preview[title='Primary']").click();
+    await contains(".o_popover .solid-tab").click();
+    await contains(".o_popover [data-color='#FF0000']").click();
+}
 
 export function defineWebsiteModels({ includeMailModels = true } = {}) {
     describe.current.tags("desktop");
@@ -433,10 +501,7 @@ export async function setupWebsiteBuilder(
 
 async function openBuilderSidebar(editAssetsLoaded) {
     // The next line allow us to await asynchronous fetches and cache them before it is used
-    await Promise.all([
-        getWebsiteSnippets(),
-        loadBundle("html_editor.assets_image_cropper"),
-    ]);
+    await Promise.all([getWebsiteSnippets(), loadBundle("html_editor.assets_image_cropper")]);
 
     await click(".o_website_btn_custo_primary");
     await editAssetsLoaded;

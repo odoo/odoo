@@ -20,10 +20,31 @@ import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position
 import { loadImage } from "@html_editor/utils/image_processing";
 
 /**
+ * A previewed value: written in `file` on save, unless `pending` is undefined.
+ *
+ * @typedef {{ file: string, pending?: string|number }} PreviewEntry
+ * @typedef {Object<string, PreviewEntry>} PreviewState by name
+ *
  * @typedef {((colors: string[]) => void)[]} on_website_color_updated_handlers
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
+export const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
+const COLOR_FILES_URL = "/website/static/src/scss/options/colors/";
+export const PALETTE_URL = `${COLOR_FILES_URL}user_color_palette.scss`;
+const THEME_PALETTE_URL = `${COLOR_FILES_URL}user_theme_color_palette.scss`;
+const GRAY_PALETTE_URL = `${COLOR_FILES_URL}user_gray_color_palette.scss`;
+// What a palette switch resets besides the palette and gray colors (see the
+// server's `_get_color_palette_resets`).
+const PALETTE_RESET_STATUS_COLORS = ["success", "info", "warning", "danger"];
+const PALETTE_RESET_GRADIENTS = [
+    "menu-gradient",
+    "menu-secondary-gradient",
+    "footer-gradient",
+    "copyright-gradient",
+    "breadcrumb-gradient",
+    ...[1, 2, 3, 4, 5].map((i) => `o-cc${i}-bg-gradient`),
+];
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
@@ -32,15 +53,17 @@ export class CustomizeWebsitePlugin extends Plugin {
         "savePlugin",
         "edit_interaction",
         "websiteBridge",
+        "operation",
         "history",
     ];
     static shared = shared([
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
+        "previewColorPalette",
+        "setPreviewCSS",
         "loadTemplateKey",
         "makeSCSSCusto",
         "toggleTemplate",
-        "withCustomHistory",
         "populateCache",
         "loadConfigKey",
         "getConfigKey",
@@ -78,6 +101,11 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
+        // The snippets' previews show the pending values too.
+        snippet_preview_dialog_stylesheets_processors: (params) => {
+            this.setPreviewCSS(params.iframe.contentDocument);
+            return params;
+        },
     };
 
     async onSave() {
@@ -88,6 +116,10 @@ export class CustomizeWebsitePlugin extends Plugin {
                 disable: [...this.viewsToDisableOnSave],
                 reset_view_arch: false,
             });
+        }
+        // No bundle reload: the iframe is reloaded after save.
+        for (const [url, values] of Object.entries(this.getPendingValuesByUrl())) {
+            await this.makeSCSSCusto(url, values);
         }
     }
     cache = {};
@@ -110,8 +142,21 @@ export class CustomizeWebsitePlugin extends Plugin {
      * @type pendingThemeRequest[]
      */
     pendingThemeRequests = [];
-    variablesToCustomize = {};
-    colorsToCustomize = {};
+    /**
+     * By file, in the order they are saved (a palette switch resets the
+     * colors): the values to write in it on save.
+     *
+     * @type {Object<string, Object<string, string|number>>}
+     */
+    pendingValues = Object.fromEntries(
+        [USER_VALUES_URL, PALETTE_URL, THEME_PALETTE_URL, GRAY_PALETTE_URL].map((url) => [url, {}])
+    );
+    /** The update of the preview CSS after undo or redo (see `previewStep`). */
+    replayedPreviewCSS = null;
+    /** The latest request of the preview CSS (see `updatePreviewCSS`). */
+    previewCSSRequest = null;
+    /** The latest preview CSS and the font URLs it uses (see `updatePreviewCSS`). */
+    preview = { css: null, font_urls: [] };
     resolves = {};
     getPendingThemeRequests() {
         return this.pendingThemeRequests;
@@ -146,42 +191,97 @@ export class CustomizeWebsitePlugin extends Plugin {
         }
         return finalValue;
     }
+    /**
+     * Sets website variables, written in `user_values.scss` on save (see
+     * `previewValues`).
+     *
+     * @param {Object<string, string>} variables
+     * @param {string} [nullValue="null"]
+     * @param {boolean} [clean=false] whether to reset the variables instead
+     * @param {boolean} [reloadBundles=true]
+     */
     async customizeWebsiteVariables(
         variables = {},
         nullValue = "null",
         clean = false,
         reloadBundles = true
     ) {
-        this.variablesToCustomize = Object.assign(this.variablesToCustomize, variables);
-        if (!Object.keys(this.variablesToCustomize).length) {
+        if (!Object.keys(variables).length) {
             return;
         }
         if (clean) {
-            for (const variable in variables) {
-                this.variablesToCustomize[variable] = nullValue;
-            }
+            variables = Object.fromEntries(Object.keys(variables).map((name) => [name, nullValue]));
         }
-        await this.debouncedSCSSVariablesCusto(nullValue);
+        await this.previewValues(USER_VALUES_URL, variables, nullValue, reloadBundles);
+    }
+    /**
+     * Sets values as pending, written in a file on save, as one history step.
+     *
+     * @param {string} file
+     * @param {Object<string, string|number>} values
+     * @param {string} [nullValue="null"] what an empty value is written as
+     * @param {boolean} [reloadBundles=true] whether to update the page's CSS
+     *        now (see `updatePreviewCSS`), else a later call does
+     */
+    async previewValues(file, values, nullValue = "null", reloadBundles = true) {
+        const state = {};
+        for (const [name, value] of Object.entries(values)) {
+            state[name] = { file, pending: value || nullValue };
+        }
+        this.previewStep(state);
         if (reloadBundles) {
-            await this.reloadBundles();
+            await this.updatePreviewCSS();
         }
     }
-    debouncedSCSSVariablesCusto = debounce(async (nullValue) => {
-        const variables = this.variablesToCustomize;
-        this.variablesToCustomize = {};
-        await this.makeSCSSCusto(
-            "/website/static/src/scss/options/user_values.scss",
-            variables,
-            nullValue
-        );
-    }, 0);
+    /**
+     * Previews values as one history step: undo and redo set the previous or
+     * next values again, and update the page's CSS.
+     *
+     * @param {PreviewState} state
+     */
+    previewStep(state) {
+        const previous = {};
+        for (const [name, { file }] of Object.entries(state)) {
+            previous[name] = { file, pending: this.pendingValues[file][name] };
+        }
+        // The change itself: its caller updates the page's CSS.
+        let isStaged = false;
+        const setState = (stepState) => {
+            this.setPreviewState(stepState);
+            if (isStaged) {
+                // Once for all the steps undone or redone together.
+                this.replayedPreviewCSS ??= Promise.resolve().then(() => {
+                    this.replayedPreviewCSS = null;
+                    return this.updatePreviewCSS();
+                });
+            }
+        };
+        this.dependencies.history.stageCustomOperation({
+            apply: () => setState(state),
+            revert: () => setState(previous),
+        });
+        isStaged = true;
+    }
+    /**
+     * Same as `customizeWebsiteVariables`, for colors (written in their own
+     * files).
+     *
+     * @param {Object<string, string>} colors
+     * @param {Object} [options]
+     * @param {string} [options.colorType] the file: "theme", "gray", or the
+     *        palette's by default
+     * @param {string} [options.combinationColor] the color preset's variable,
+     *        set when a color is a color preset (`o_cc<n>`)
+     * @param {string} [options.nullValue="null"]
+     * @param {boolean} [options.resetCcOnEmpty] whether an empty color also
+     *        resets the color preset
+     * @param {boolean} [options.reloadBundles=true]
+     */
     async customizeWebsiteColors(
         colors = {},
         { colorType, combinationColor, nullValue, resetCcOnEmpty, reloadBundles = true } = {}
     ) {
-        const baseURL = "/website/static/src/scss/options/colors/";
-        colorType = colorType ? colorType + "_" : "";
-        const url = `${baseURL}user_${colorType}color_palette.scss`;
+        const file = { theme: THEME_PALETTE_URL, gray: GRAY_PALETTE_URL }[colorType] ?? PALETTE_URL;
 
         const finalColors = {};
         for (const [colorName, color] of Object.entries(colors)) {
@@ -204,17 +304,134 @@ export class CustomizeWebsitePlugin extends Plugin {
                 finalColors[colorName] = "";
             }
         }
-        this.colorsToCustomize = Object.assign(this.colorsToCustomize, finalColors);
-        await this.debouncedSCSSColorsCusto(url, nullValue);
-        if (reloadBundles) {
-            await this.reloadBundles();
+        await this.previewValues(file, finalColors, nullValue, reloadBundles);
+    }
+    /**
+     * Previews a palette switch. On save, the server resets the colors when
+     * it writes the palette's name, and the colors changed afterwards are
+     * written after it (see `onSave`): the pending values it resets are
+     * dropped.
+     *
+     * @param {string} paletteName as written in SCSS (quoted)
+     */
+    async previewColorPalette(paletteName) {
+        const state = { "color-palettes-name": { file: USER_VALUES_URL, pending: paletteName } };
+        const reset = (file, names = Object.keys(this.pendingValues[file])) => {
+            for (const name of names.filter((name) => name in this.pendingValues[file])) {
+                state[name] = { file, pending: undefined };
+            }
+        };
+        reset(USER_VALUES_URL, PALETTE_RESET_GRADIENTS);
+        reset(PALETTE_URL);
+        reset(THEME_PALETTE_URL, PALETTE_RESET_STATUS_COLORS);
+        reset(GRAY_PALETTE_URL);
+        this.previewStep(state);
+        await this.updatePreviewCSS();
+    }
+    /**
+     * @returns {Object<string, Object<string, string|number>>} by file with
+     *          pending values, in the order they are saved, the values to
+     *          write in it
+     */
+    getPendingValuesByUrl() {
+        return Object.fromEntries(
+            Object.entries(this.pendingValues).filter(([, values]) => Object.keys(values).length)
+        );
+    }
+    /**
+     * Sets values as pending, or not pending anymore when `pending` is
+     * undefined.
+     *
+     * @param {PreviewState} state
+     */
+    setPreviewState(state) {
+        for (const [name, { file, pending }] of Object.entries(state)) {
+            if (pending === undefined) {
+                delete this.pendingValues[file][name];
+            } else {
+                this.pendingValues[file][name] = pending;
+            }
         }
     }
-    debouncedSCSSColorsCusto = debounce(async (url, nullValue) => {
-        const colors = this.colorsToCustomize;
-        this.colorsToCustomize = {};
-        await this.makeSCSSCusto(url, colors, nullValue);
-    }, 0);
+    /**
+     * Puts the frontend bundle's CSS compiled with the pending values in the
+     * page, in place of the saved one, which is back when none is pending,
+     * and loads the fonts it uses. Nothing is written: the server compiles it
+     * in memory. The latest call wins: an earlier one resolves without
+     * changing the page.
+     */
+    async updatePreviewCSS() {
+        const valuesByUrl = this.getPendingValuesByUrl();
+        const request = Object.keys(valuesByUrl).length
+            ? rpc("/website/theme_preview_css", { values_by_url: valuesByUrl })
+            : Promise.resolve({ css: null, font_urls: [] });
+        this.previewCSSRequest = request;
+        // Undo and redo don't wait for the compile: their operation, and its
+        // loading effect, are over before it. The UI is blocked until then,
+        // so that changes don't pile up behind the compile.
+        const removeLoadingElement = this.dependencies.operation.addLoadingElement(true, 500);
+        this.services.ui.block({ delay: 2500 });
+        const preview = await request.finally(() => {
+            removeLoadingElement();
+            this.services.ui.unblock();
+        });
+        if (request !== this.previewCSSRequest || this.isDestroyed) {
+            return;
+        }
+        this.preview = preview;
+        for (const document of [this.document, this.config.extraPreviewDocument].filter(Boolean)) {
+            this.setPreviewCSS(document);
+        }
+        setBuilderCSSVariables(getHtmlStyle(this.document));
+        this.dependencies.edit_interaction.restartInteractions();
+        this.trigger("on_dom_updated_handlers");
+    }
+    /**
+     * Puts the latest preview CSS in a document in place of the frontend
+     * bundle's, which is back when none is pending, and loads the fonts it
+     * uses.
+     *
+     * @param {Document} document
+     */
+    setPreviewCSS(document) {
+        const { css, font_urls: fontURLs } = this.preview;
+        const linkEls = document.querySelectorAll('link[href*="web.assets_frontend"]');
+        let styleEl = document.querySelector("style.o_theme_preview_css");
+        if (css === null) {
+            styleEl?.remove();
+        } else {
+            if (!styleEl) {
+                styleEl = document.createElement("style");
+                styleEl.classList.add("o_theme_preview_css");
+                // Where the bundle is: the stylesheets after it still come
+                // after it.
+                if (linkEls.length) {
+                    linkEls[linkEls.length - 1].after(styleEl);
+                } else {
+                    document.head.append(styleEl);
+                }
+            }
+            styleEl.textContent = css;
+        }
+        for (const linkEl of linkEls) {
+            // The sheet, not the link: a link enabled again loads its sheet
+            // again, after the builder has read the page's colors.
+            linkEl.sheet.disabled = css !== null;
+        }
+        // The saved fonts' links stay: the page still uses them on undo.
+        // Those `reloadBundles` added end with `#t=<time>`.
+        const linkURLs = [...document.head.querySelectorAll("link[href]")].map(
+            (el) => el.getAttribute("href").split("#")[0]
+        );
+        for (const url of fontURLs) {
+            if (!linkURLs.includes(url)) {
+                const linkEl = document.createElement("link");
+                linkEl.rel = "stylesheet";
+                linkEl.href = url;
+                document.head.append(linkEl);
+            }
+        }
+    }
     async makeSCSSCusto(url, values, defaultValue = "null") {
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
@@ -273,7 +490,9 @@ export class CustomizeWebsitePlugin extends Plugin {
                 el.remove();
             }
         });
-        this.dependencies.edit_interaction.restartInteractions();
+        // The pending values stay on top of what was written meanwhile (e.g.
+        // by the AI website builder), as the save will write them after it.
+        await this.updatePreviewCSS();
     }
 
     // -------------------------------------------------------------------------
@@ -329,26 +548,6 @@ export class CustomizeWebsitePlugin extends Plugin {
             return !this.activeRecords[key.substring(1)];
         }
         return this.activeRecords[key];
-    }
-
-    withCustomHistory(action) {
-        const applyFn = action.apply.bind(action);
-        action.apply = async (arg) => {
-            const oldValue = action.getValue(arg);
-            const { value } = arg;
-            const blockedApply = (v) => {
-                this.services.ui.block({ delay: 2500 });
-                return applyFn({ ...arg, value: v })
-                    .then(() => {
-                        this.trigger("on_dom_updated_handlers");
-                    })
-                    .finally(() => this.services.ui.unblock());
-            };
-            await this.dependencies.history.stageCustomOperation({
-                apply: () => blockedApply(value),
-                revert: () => blockedApply(oldValue),
-            });
-        };
     }
 
     async loadTemplateKey(key) {
@@ -496,20 +695,12 @@ export class AddLanguageAction extends BuilderAction {
 
 export class ToggleBodyBgImageAction extends BuilderAction {
     static id = "toggleBodyBgImage";
-    static dependencies = ["builderActions", "customizeWebsite", "media", "history"];
+    static dependencies = ["builderActions", "customizeWebsite", "media"];
     setup() {
         this.canTimeout = false;
     }
     isApplied() {
         return !!this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image");
-    }
-    async applyConfigWithLoader(config) {
-        this.services.ui.block({ delay: 2500 });
-        try {
-            await this.setBodyBgConfig(config);
-        } finally {
-            this.services.ui.unblock();
-        }
     }
     async setBodyBgConfig(config) {
         // Store the current body bg selection (image + type).
@@ -524,7 +715,6 @@ export class ToggleBodyBgImageAction extends BuilderAction {
             variables["body-image-pattern-height"] = "";
         }
         await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables);
-        this.trigger("on_dom_updated_handlers");
     }
     getCurrentConfig() {
         return {
@@ -533,12 +723,6 @@ export class ToggleBodyBgImageAction extends BuilderAction {
                 "image",
             image: this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image") || "",
         };
-    }
-    async applyConfig(oldConfig, newConfig) {
-        await this.dependencies.history.stageCustomOperation({
-            apply: () => this.applyConfigWithLoader(newConfig),
-            revert: () => this.applyConfigWithLoader(oldConfig),
-        });
     }
     async apply({ editingElement: el } = {}) {
         await this.dependencies.media.openMediaDialog(
@@ -550,18 +734,13 @@ export class ToggleBodyBgImageAction extends BuilderAction {
             onlyImages: true,
             node: editingElement,
             save: async (imageEl) => {
-                const { type: currentType, image: currentImage } = this.getCurrentConfig();
-                const oldConfig = { type: currentType, image: currentImage };
-                const newConfig = { type: currentType, image: imageEl.src };
-                await this.applyConfig(oldConfig, newConfig);
+                const { type: currentType } = this.getCurrentConfig();
+                await this.setBodyBgConfig({ type: currentType, image: imageEl.src });
             },
         };
     }
     async clean() {
-        const { type: currentType, image: currentImage } = this.getCurrentConfig();
-        const oldConfig = { type: currentType, image: currentImage };
-        const newConfig = { type: "image", image: "" };
-        await this.applyConfig(oldConfig, newConfig);
+        await this.setBodyBgConfig({ type: "image", image: "" });
     }
 }
 
@@ -583,29 +762,13 @@ export class RemoveBodyBgImageAction extends BuilderAction {
 
 export class BodyBgPositionOverlayAction extends BuilderAction {
     static id = "bodyBgPositionOverlay";
-    static dependencies = [
-        "overlayButtons",
-        "backgroundPositionOption",
-        "customizeWebsite",
-        "history",
-    ];
+    static dependencies = ["overlayButtons", "backgroundPositionOption", "customizeWebsite"];
     setup() {
         this.withLoadingEffect = false;
         this.canTimeout = false;
     }
     async apply({ editingElement }) {
         const imageEl = await loadImage(getBgImageURLFromEl(editingElement));
-        const clearInlinePosition = () => {
-            // Remove inline position used for preview once value is stored in
-            // variables.
-            editingElement.style.backgroundPosition = "";
-        };
-        const setBackgroundPosition = async (value) => {
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                "body-image-background-position": value,
-            });
-            clearInlinePosition();
-        };
         const bgPosition = await new Promise((resolve) => {
             const removeOverlay = this.services.overlay.add(ImagePositionOverlay, {
                 targetEl: editingElement,
@@ -625,17 +788,12 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
             });
         });
         if (bgPosition) {
-            const currentPosition =
-                this.dependencies.customizeWebsite.getWebsiteVariableValue(
-                    "body-image-background-position"
-                ) || "";
-            this.dependencies.history.stageCustomOperation({
-                apply: () => setBackgroundPosition(bgPosition),
-                revert: () => setBackgroundPosition(currentPosition),
+            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
+                "body-image-background-position": bgPosition,
             });
-        } else {
-            clearInlinePosition();
         }
+        // The inline position previewed the drag: now stored, or cancelled.
+        editingElement.style.backgroundPosition = "";
     }
 }
 
@@ -681,19 +839,22 @@ export class WebsiteConfigAction extends BuilderAction {
         // step 1: enable and disable records
         const updateViews = this._toggleTheme(action, "views", apply);
         const updateAssets = this._toggleTheme(action, "assets", apply);
-        // step 2: customize vars
+        // step 2: customize vars (no preview: written by the save before the
+        // reload)
         const updateVars =
             !apply && action.params.varsOnClean
                 ? this.dependencies.customizeWebsite.customizeWebsiteVariables(
                       action.params.varsOnClean,
                       "null",
-                      apply
+                      apply,
+                      false
                   )
                 : action.params.vars
                 ? this.dependencies.customizeWebsite.customizeWebsiteVariables(
                       action.params.vars,
                       "null",
-                      !apply
+                      !apply,
+                      false
                   )
                 : Promise.resolve();
         await Promise.all([updateViews, updateAssets, updateVars]);
@@ -938,7 +1099,6 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
     static dependencies = ["customizeWebsite"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     isApplied({ params: { mainParam: variable } = {}, value }) {
         const currentValue = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
@@ -1017,7 +1177,6 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
     static dependencies = ["customizeWebsite"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     getValue({ params: { mainParam: color, colorType, gradientColor, combinationColor } }) {
         const style = getHtmlStyle(this.document);
@@ -1072,7 +1231,6 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
                 { colorType, combinationColor, resetCcOnEmpty: true, nullValue }
             );
         }
-        setBuilderCSSVariables(getHtmlStyle(this.document));
         await Promise.allSettled(
             this.getResource("on_website_color_updated_handlers").map((handler) => handler([color]))
         );
@@ -1084,7 +1242,6 @@ export class CustomizeButtonStyleAction extends BuilderAction {
     static dependencies = ["customizeWebsite"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     isApplied({ params, value }) {
         return this.getValue({ params }) === value;
