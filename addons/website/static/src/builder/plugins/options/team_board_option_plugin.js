@@ -7,7 +7,7 @@ import { localeCompare } from "@web/core/l10n/utils/collation";
 
 export class TeamBoardPlugin extends Plugin {
     static id = "teamBoard";
-    static dependencies = ["builderOptions"];
+    static dependencies = ["builderOptions", "blockTab"];
 
     resources = {
         builder_actions: {
@@ -26,12 +26,12 @@ export class TeamBoardPlugin extends Plugin {
 
         options_container_top_buttons_providers: (el) => {
             const buttons = [];
-            if (el.matches("section.s_team_board")) {
+            if (el.matches(".s_team_board")) {
                 buttons.push({
                     class: "oi oi-fw btn o-hb-btn btn-accent-color-hover",
                     icon: "add",
                     title: _t("Add Item"),
-                    handler: (el) => this.addTeamBoard(el)
+                    handler: (el) => this.addTeamBoard(el),
                 });
             }
             return buttons;
@@ -43,6 +43,7 @@ export class TeamBoardPlugin extends Plugin {
         const newSectionEl = snippet.content.cloneNode(true);
         sectionEl.after(newSectionEl);
         this.dependencies.builderOptions.setNextTarget(newSectionEl);
+        this.dependencies.blockTab.scrollToDroppedSnippet(newSectionEl);
     }
 
     getOverlayButtons(target) {
