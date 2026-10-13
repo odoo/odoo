@@ -52,3 +52,27 @@ class PaymobTest(PaymobCommon, PaymentHttpCommon):
         """Test that changing the Paymob account country will change the currency accordingly."""
         self.provider.paymob_account_country_id = self.quick_ref("base.sa")
         self.assertEqual(self.provider.available_currency_ids.name, "SAR")
+
+    def test_visa_payment_rounded_to_supported_decimals_is_accepted(self):
+        """Test that a Visa payment rounded down by Paymob to the decimals supported by Visa for the
+        currency (e.g., 4.725 OMR charged as 4.720 OMR) doesn't fail the amount validation."""
+        omr = self._enable_currency("OMR")
+        tx = self._create_transaction("redirect", amount=4.725, currency_id=omr.id)
+        payment_data = dict(self.redirection_data, amount_cents="4720", currency="OMR")
+        tx._process("paymob", payment_data)
+        self.assertEqual(tx.state, "done")
+
+    @mute_logger("odoo.addons.payment.models.payment_transaction")
+    def test_non_visa_payment_is_validated_with_currency_decimals(self):
+        """Test that the amount of a non-Visa payment is still validated with the decimals of the
+        currency as per the ISO 4217 norm."""
+        omr = self._enable_currency("OMR")
+        tx = self._create_transaction("redirect", amount=4.725, currency_id=omr.id)
+        payment_data = dict(
+            self.redirection_data,
+            amount_cents="4720",
+            currency="OMR",
+            **{"source_data.sub_type": "MasterCard"},
+        )
+        tx._process("paymob", payment_data)
+        self.assertEqual(tx.state, "error")
