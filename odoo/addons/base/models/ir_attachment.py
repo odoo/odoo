@@ -674,6 +674,7 @@ class IrAttachment(models.Model):
         # collect the records to check (by model)
         model_ids = defaultdict(set)            # {model_name: set(ids)}
         att_model_ids = []                      # [(att_id, (res_model, res_id))]
+        att_parent_ids = []                     # [(att_id, parent_att_id)] for parents in self
         # DLE P173: `test_01_portal_attachment`
         self.fetch(SECURITY_FIELDS)  # fetch only these fields
         user_model = self.sudo(False)
@@ -695,11 +696,21 @@ class IrAttachment(models.Model):
                     if field is None or not user_model.has_field_access(field, operation):
                         forbidden_ids.add(att_id)
                         continue
-            if res_model and res_id:
+            if res_model == self._name and res_id in self._ids:
+                # attachment of an attachment being checked here (e.g. a PDF
+                # thumbnail): checking the parent separately would read its
+                # access while it is being computed, use its result instead
+                att_parent_ids.append((att_id, res_id))
+            elif res_model and res_id:
                 model_ids[res_model].add(res_id)
                 att_model_ids.append((att_id, (res_model, res_id)))
         forbidden_res_model_id = set(user_model._inaccessible_comodel_records(model_ids, operation))
         forbidden_ids.update(att_id for att_id, res in att_model_ids if res in forbidden_res_model_id)
+        while forbidden_children := {
+            att_id for att_id, parent_id in att_parent_ids
+            if parent_id in forbidden_ids and att_id not in forbidden_ids
+        }:
+            forbidden_ids.update(forbidden_children)
 
         if forbidden_ids:
             forbidden = self.browse(forbidden_ids)

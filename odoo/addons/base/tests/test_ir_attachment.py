@@ -433,6 +433,23 @@ class TestPermissions(TransactionCaseWithUserDemo):
         self.assertNotEqual(SUPERUSER_ID, admin_user.id)
         attachment_admin.with_user(admin_user).raw
 
+    def test_read_permission_parent_in_same_batch(self):
+        """An attachment linked to another attachment (e.g. a PDF thumbnail)
+        follows the access of its parent, also when both are checked together.
+        """
+        record = self.Attachments.browse(self.vals['res_id'])
+        records = record + self.attachment
+        self.env.invalidate_all()
+        self.env.transaction.reset()
+        self.assertEqual(records._filtered_access('read'), records)
+        records.check_access('read')
+
+        # prevent read access on the parent attachment
+        self.rule.operation = 'crud'
+        self.env.invalidate_all()
+        self.env.transaction.reset()
+        self.assertFalse(records._filtered_access('read'))
+
     def test_search_without_res_model(self):
         """A search without res_model returns the attachments the user may read,
         including the ones granted by an extra access rule."""
