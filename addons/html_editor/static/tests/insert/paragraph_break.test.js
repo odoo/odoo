@@ -680,10 +680,10 @@ describe("Selection collapsed", () => {
             test("should insert a paragraph after an empty h1 with styles and a zero-width space", async () => {
                 await testEditor({
                     contentBefore:
-                        '<h1><font style="color: red;" data-oe-zws-empty-inline="">[]\u200B</font></h1>',
+                        '<h1><span style="color: red;" data-oe-zws-empty-inline="">[]\u200B</span></h1>',
                     stepFunction: splitBlock,
                     contentAfterEdit:
-                        '<h1><font style="color: red;" data-oe-zws-empty-inline="">\u200b</font></h1>' +
+                        '<h1><span style="color: red;" data-oe-zws-empty-inline="">\u200b</span></h1>' +
                         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                     contentAfter: "<h1><br></h1><p>[]<br></p>",
                 });
@@ -708,19 +708,19 @@ describe("Selection collapsed", () => {
         describe("Styles", () => {
             test("should split a paragraph at the end of style node (1)", async () => {
                 await testEditor({
-                    contentBefore: '<p><font style="color: red;">abc[]</font></p>',
+                    contentBefore: '<p><span style="color: red;">abc[]</span></p>',
                     stepFunction: splitBlock,
-                    contentAfterEdit: `<p><font style="color: red;">abc</font></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="color: red;" data-oe-zws-empty-inline="">[]\u200b</font></p>`,
-                    contentAfter: `<p><font style="color: red;">abc</font></p><p>[]<br></p>`,
+                    contentAfterEdit: `<p><span style="color: red;">abc</span></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><span style="color: red;" data-oe-zws-empty-inline="">[]\u200b</span></p>`,
+                    contentAfter: `<p><span style="color: red;">abc</span></p><p>[]<br></p>`,
                 });
             });
 
             test("should split a paragraph at the end of style node (2)", async () => {
                 await testEditor({
-                    contentBefore: '<p><font style="background-color: red;">abc[]</font></p>',
+                    contentBefore: '<p><span style="background-color: red;">abc[]</span></p>',
                     stepFunction: splitBlock,
-                    contentAfterEdit: `<p><font style="background-color: red;">abc</font></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="background-color: red;" data-oe-zws-empty-inline="">[]\u200b</font></p>`,
-                    contentAfter: `<p><font style="background-color: red;">abc</font></p><p>[]<br></p>`,
+                    contentAfterEdit: `<p><span style="background-color: red;">abc</span></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><span style="background-color: red;" data-oe-zws-empty-inline="">[]\u200b</span></p>`,
+                    contentAfter: `<p><span style="background-color: red;">abc</span></p><p>[]<br></p>`,
                 });
             });
 

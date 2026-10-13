@@ -688,19 +688,19 @@ describe("select a full table on cross over", () => {
                 },
                 contentAfterEdit: unformat(`
                     <p>
-                        a<font style="color: aquamarine;">[bc</font>
+                        a<span style="color: aquamarine;">[bc</span>
                     </p>
                     <table class="o_selected_table">
                         <tbody>
                             <tr>
                                 <td class="o_selected_td">
-                                    <font style="color: aquamarine;">ab</font>
+                                    <span style="color: aquamarine;">ab</span>
                                 </td>
                                 <td class="o_selected_td">
-                                    <font style="color: aquamarine;">cd</font>
+                                    <span style="color: aquamarine;">cd</span>
                                 </td>
                                 <td class="o_selected_td">
-                                    <font style="color: aquamarine;">ef]</font>
+                                    <span style="color: aquamarine;">ef]</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -729,18 +729,18 @@ describe("select a full table on cross over", () => {
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">[ab</font>
+                                <span style="color: aquamarine;">[ab</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
+                                <span style="color: aquamarine;">cd</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ef</font>
+                                <span style="color: aquamarine;">ef</span>
                             </td>
                         </tr></tbody>
                     </table>
                     <p>
-                        <font style="color: aquamarine;">a]</font>bc
+                        <span style="color: aquamarine;">a]</span>bc
                     </p>`),
             });
         });
@@ -758,23 +758,23 @@ describe("select a full table on cross over", () => {
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
                     <p>
-                        a<font style="color: aquamarine;">[bc</font>
+                        a<span style="color: aquamarine;">[bc</span>
                     </p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ab</font>
+                                <span style="color: aquamarine;">ab</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
+                                <span style="color: aquamarine;">cd</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ef</font>
+                                <span style="color: aquamarine;">ef</span>
                             </td>
                         </tr></tbody>
                     </table>
                     <p>
-                        <font style="color: aquamarine;">a]</font>bc
+                        <span style="color: aquamarine;">a]</span>bc
                     </p>`),
             });
         });
@@ -816,34 +816,34 @@ describe("select a full table on cross over", () => {
                 },
                 contentAfterEdit: unformat(`
                     <p>
-                        a<font style="color: aquamarine;">[bc</font>
+                        a<span style="color: aquamarine;">[bc</span>
                     </p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ab</font>
+                                <span style="color: aquamarine;">ab</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
+                                <span style="color: aquamarine;">cd</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ef</font>
+                                <span style="color: aquamarine;">ef</span>
                             </td>
                         </tr></tbody>
                     </table>
                     <p>
-                        <font style="color: aquamarine;">abc</font>
+                        <span style="color: aquamarine;">abc</span>
                     </p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ab</font>
+                                <span style="color: aquamarine;">ab</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
+                                <span style="color: aquamarine;">cd</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ef]</font>
+                                <span style="color: aquamarine;">ef]</span>
                             </td>
                         </tr></tbody>
                     </table>
@@ -870,36 +870,36 @@ describe("select a full table on cross over", () => {
                 stepFunction: setColor("aquamarine", "color"),
                 contentAfterEdit: unformat(`
                     <p>
-                        a<font style="color: aquamarine;">[bc</font>
+                        a<span style="color: aquamarine;">[bc</span>
                     </p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ab</font>
+                                <span style="color: aquamarine;">ab</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
+                                <span style="color: aquamarine;">cd</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ef</font>
+                                <span style="color: aquamarine;">ef</span>
                             </td>
                         </tr></tbody>
                     </table>
-                    <p><font style="color: aquamarine;">abc</font></p>
+                    <p><span style="color: aquamarine;">abc</span></p>
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ab</font>
+                                <span style="color: aquamarine;">ab</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
+                                <span style="color: aquamarine;">cd</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ef</font>
+                                <span style="color: aquamarine;">ef</span>
                             </td>
                         </tr></tbody>
                     </table>
-                    <p><font style="color: aquamarine;">a]</font>bc</p>`),
+                    <p><span style="color: aquamarine;">a]</span>bc</p>`),
             });
         });
     });
@@ -1401,10 +1401,10 @@ describe("select columns on cross over", () => {
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">a[b</font>
+                                <span style="color: aquamarine;">a[b</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">c]d</font>
+                                <span style="color: aquamarine;">c]d</span>
                             </td>
                             <td>ef</td>
                         </tr></tbody>
@@ -1427,13 +1427,13 @@ describe("select columns on cross over", () => {
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">a[b</font>
+                                <span style="color: aquamarine;">a[b</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
+                                <span style="color: aquamarine;">cd</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">e]f</font>
+                                <span style="color: aquamarine;">e]f</span>
                             </td>
                         </tr>
                         <tr>
@@ -1472,21 +1472,21 @@ describe("select columns on cross over", () => {
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">a[b</font>
+                                <span style="color: aquamarine;">a[b</span>
                             </td>
                             <td>cd</td>
                             <td>ef</td>
                         </tr>
                         <tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ab</font>
+                                <span style="color: aquamarine;">ab</span>
                             </td>
                             <td>cd</td>
                             <td>ef</td>
                         </tr>
                         <tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">a]b</font>
+                                <span style="color: aquamarine;">a]b</span>
                             </td>
                             <td>cd</td>
                             <td>ef</td>
@@ -1522,19 +1522,19 @@ describe("select columns on cross over", () => {
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">a[b</font>
+                                <span style="color: aquamarine;">a[b</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
+                                <span style="color: aquamarine;">cd</span>
                             </td>
                             <td>ef</td>
                         </tr>
                         <tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ab</font>
+                                <span style="color: aquamarine;">ab</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">c]d</font>
+                                <span style="color: aquamarine;">c]d</span>
                             </td>
                             <td>ef</td>
                         </tr>
@@ -1574,35 +1574,35 @@ describe("select columns on cross over", () => {
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">a[b</font>
+                                <span style="color: aquamarine;">a[b</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
+                                <span style="color: aquamarine;">cd</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ef</font>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="o_selected_td">
-                                <font style="color: aquamarine;">ab</font>
-                            </td>
-                            <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
-                            </td>
-                            <td class="o_selected_td">
-                                <font style="color: aquamarine;">ef</font>
+                                <span style="color: aquamarine;">ef</span>
                             </td>
                         </tr>
                         <tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ab</font>
+                                <span style="color: aquamarine;">ab</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">cd</font>
+                                <span style="color: aquamarine;">cd</span>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">e]f</font>
+                                <span style="color: aquamarine;">ef</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="o_selected_td">
+                                <span style="color: aquamarine;">ab</span>
+                            </td>
+                            <td class="o_selected_td">
+                                <span style="color: aquamarine;">cd</span>
+                            </td>
+                            <td class="o_selected_td">
+                                <span style="color: aquamarine;">e]f</span>
                             </td>
                         </tr></tbody>
                     </table>

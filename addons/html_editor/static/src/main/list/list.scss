@@ -13,7 +13,7 @@
     li {
         &[style*="color"],
         &[class*="text-"] {
-            font[class*="bg-"]:not([class*="text-"]):not([style*="color"]) {
+            :is(font, span)[class*="bg-"]:not([class*="text-"]):not([style*="color"]) {
                 color: inherit !important;
             }
         }
