@@ -84,8 +84,8 @@
                                 <i class="oi" data-icon="schedule" role="img" aria-label="Date" title="Date"/> <field name="date" readonly="state != 'new'"/>
                             </div>
                         </div>
-                        <div class="row mt4">
-                            <div class="col-6">
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <div class="d-flex gap-1 align-items-center">
                                 <a class="btn btn-sm btn-success" role="button" name="action_order" string="Order" type="object" invisible="state in ['sent', 'ordered', 'confirmed']" groups="lunch.group_lunch_manager">
                                     <i class="oi oi-filled" data-icon="phone" role="img" aria-label="Order button" title="Order button"/>
                                 </a>
@@ -102,9 +102,7 @@
                                     <i class="oi oi-filled" data-icon="mail" role="img" aria-label="Send notification" title="Send notification"/>
                                 </a>
                             </div>
-                            <div class="col-6">
-                                <field name="user_id" widget="many2one_avatar_user" readonly="state != 'new'" class="float-end"/>
-                            </div>
+                            <field name="user_id" widget="many2one_avatar_user" readonly="state != 'new'" class="float"/>
                         </div>
                     </t>
                 </templates>

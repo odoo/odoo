@@ -108,28 +108,22 @@
                 <field name="currency_id"/>
                 <field name="is_new"/>
                 <templates>
-                    <t t-name="card" class="row g-0">
-                        <aside class="col-4">
+                    <t t-name="card" class="flex-row gap-2">
+                        <main>
+                            <field name="name" class="fw-bold fs-5"/>
+                            <field name="price" widget="monetary" class="fw-bold mb-2"/>
+                            <field name="supplier_id" />
+                            <field name="description" class="text-muted"/>
+                        </main>
+                        <aside class="d-flex flex-column gap-2">
+                            <div class="d-flex gap-1 justify-content-end align-items-center">
+                                <div t-if="record.is_new.raw_value" class="o_lunch_new_product badge rounded-pill text-bg-success">
+                                    New
+                                </div>
+                                <field name="is_favorite" widget="lunch_is_favorite" nolabel="1"/>
+                            </div>
                             <field name="image_128" options="{'placeholder': '/lunch/static/img/lunch.png', 'size': [94, 94], 'img_class': 'w-100 h-100'}" widget="image"/>
                         </aside>
-                        <main class="col">
-                            <div class="d-flex">
-                                <div class="d-flex">
-                                    <field class="pe-1 pt-1" name="is_favorite" widget="lunch_is_favorite" nolabel="1"/>
-                                    <field name="name" class="fw-bolder fs-5" />
-                                </div>
-                                <div class="text-primary ms-auto">
-                                    <div t-if="record.is_new.raw_value" class="o_lunch_new_product me-1 py-1 fs-6 badge rounded-pill text-bg-success">
-                                        New
-                                    </div>
-                                    <field name="price" widget="monetary" class="fw-bold "/>
-                                </div>
-                            </div>
-                            <field name="supplier_id" />
-                            <footer class="pt-0 mt-0">
-                                <field name="description" class="text-muted"/>
-                            </footer>
-                        </main>
                     </t>
                 </templates>
             </kanban>
