@@ -37,6 +37,8 @@ if typing.TYPE_CHECKING:
 
 _logger = logging.getLogger(__name__)
 
+MAX_REMOVED_MODULES = 50
+
 
 def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, package: ModuleNode) -> bool:
     """
@@ -527,7 +529,8 @@ def load_modules(
                 # trigger after a small delay to give time for assets to regenerate
                 vacuum_cron._trigger(at=datetime.datetime.now() + datetime.timedelta(minutes=1))
 
-            env.flush_all()
+            # Commit once everything is installed and clean
+            env.cr.commit()
 
         # STEP 5: Uninstall modules to remove
         if update_module:
@@ -536,16 +539,25 @@ def load_modules(
             cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('to remove',))
             modules_to_remove = dict(cr.fetchall())
             if modules_to_remove:
-                pkgs = reversed([p for p in graph if p.name in modules_to_remove])
-                for pkg in pkgs:
-                    uninstall_hook = pkg.manifest.get('uninstall_hook')
-                    if uninstall_hook:
-                        py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
-                        getattr(py_module, uninstall_hook)(env)
-                        env.flush_all()
+                static_modules, imported_modules = tools.partition(lambda m: m in graph, modules_to_remove)
+                if imported_modules:
+                    # remove all imported modules (not in graph) together to avoid checking dependencies between them
+                    removing_modules = imported_modules
+                else:
+                    # remove at most MAX_REMOVED_MODULES in inverse order of dependencies
+                    removing_modules = [p.name for p in reversed(list(graph)) if p.name in static_modules]
+                    removing_modules = removing_modules[:MAX_REMOVED_MODULES]
 
-                Module = env['ir.module.module']
-                Module.browse(modules_to_remove.values()).module_uninstall()
+                registry.uninstalling_modules = set(removing_modules)
+                if not imported_modules:
+                    for name in removing_modules:
+                        if (uninstall_hook := graph[name].manifest.get('uninstall_hook')):
+                            py_module = sys.modules[f'odoo.addons.{name}']
+                            getattr(py_module, uninstall_hook)(env)
+                            env.flush_all()
+                module = env['ir.module.module'].browse(map(modules_to_remove.__getitem__, removing_modules))
+                module.module_uninstall()
+
                 # Recursive reload, should only happen once, because there should be no
                 # modules to remove next time
                 cr.commit()
