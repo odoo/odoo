@@ -140,3 +140,16 @@ export default class DeviceIdentifierSequence {
         return parseInt(reference.split("-")[2]);
     }
 }
+
+/**
+ * Clears local storage while preserving the device identifier so the customer
+ * display can reconnect to the POS after reload.
+ */
+export function clearLocalStorage() {
+    const key = DeviceIdentifierSequence.uniqueDeviceIdentifierKey;
+    const deviceIdentifier = localStorage.getItem(key);
+    localStorage.clear();
+    if (deviceIdentifier) {
+        localStorage.setItem(key, deviceIdentifier);
+    }
+}
