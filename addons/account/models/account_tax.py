@@ -5131,6 +5131,13 @@ class AccountTax(models.Model):
                 # tax itself isn't, so ignore the amount and rely on the category code instead.
                 tax_domain &= Domain('ubl_cii_tax_category_code', '=', 'AE')
             orders = ['sequence', 'id']
+            if invoice_predictive := tax_values.get('invoice_predictive'):
+                fiscal_position = tax_values.get('fiscal_position')
+                if fiscal_position and fiscal_position.foreign_vat:
+                    country = fiscal_position.country_id
+                else:
+                    country = invoice_predictive['invoice'].tax_country_id
+                tax_domain &= Domain('country_id', '=', country.id)
             if name := tax_values.get('name'):
                 tax_domain &= Domain('name', '=', name)
             if tax_exigibility := tax_values.get('tax_exigibility'):
