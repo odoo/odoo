@@ -1583,8 +1583,8 @@ class Base_ImportImport(models.TransientModel):
                 name_create_enabled_fields=name_create_enabled_fields,
                 import_set_empty_fields=options.get('import_set_empty_fields', []),
                 import_skip_records=options.get('import_skip_records', []),
-                _import_limit=import_limit)
-            import_result = model.load(import_fields, merged_data)
+            )
+            import_result = model.load(import_fields, merged_data, limit=import_limit)
             _logger.info('done importing data into model: %s', model._name)
 
             import_savepoint.close(rollback=dryrun)

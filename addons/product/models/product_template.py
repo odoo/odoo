@@ -765,7 +765,7 @@ class ProductTemplate(models.Model):
             template.base_unit_name = template.base_unit_id.name or template.uom_name
 
     @api.model
-    def load(self, fields, data):
+    def load(self, fields, data, *, limit=None):
         """
         Data import for products depends on the presence of variants.
         If 'import_attribute_values' is present, then the product.template files
@@ -793,7 +793,7 @@ class ProductTemplate(models.Model):
         if data_list_templates:
             template_fields = list(fields)
             template_fields.pop(column_no)
-            result = super().load(template_fields, data_list_templates)
+            result = super().load(template_fields, data_list_templates, limit=limit)
             if any(message['type'] == 'error' for message in result['messages']):
                 return result
         else:
@@ -801,7 +801,7 @@ class ProductTemplate(models.Model):
 
         if data_list_products:
             ProductProduct = self.env['product.product'].with_context(from_template_import=True)
-            result_product = ProductProduct.load(fields, data_list_products)
+            result_product = ProductProduct.load(fields, data_list_products, limit=limit)
             if any(message['type'] == 'error' for message in result_product['messages']):
                 return result_product
 
