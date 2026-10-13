@@ -1925,6 +1925,20 @@ class Website(Home):
             'web.assets_frontend': request.env['ir.qweb']._get_asset_link_urls('web.assets_frontend', request.session.debug),
         }
 
+    @http.route(['/website/theme_preview_css'], type='jsonrpc', auth='user', website=True, readonly=True)
+    def theme_preview_css(self, values_by_url):
+        """
+        Returns the CSS of the frontend bundle as if the given SCSS
+        customizations were saved (see `make_scss_customization`), for the
+        editor's preview. Nothing is written.
+
+        :param values_by_url: by SCSS file URL, in the order they would be
+            saved, the key,value mapping to write in its map
+        """
+        if not request.env.user.has_group('website.group_website_designer'):
+            raise werkzeug.exceptions.Forbidden()
+        return request.env['website.assets']._get_theme_preview_css(values_by_url)
+
     @http.route(['/website/update_footer_template'], type='jsonrpc', auth='user', website=True)
     def update_footer_template(self, template_key, possible_values):
         """ Enables the footer template and its corresponding copyright template

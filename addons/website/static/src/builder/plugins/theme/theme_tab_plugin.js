@@ -341,10 +341,9 @@ export class ThemeTabPlugin extends Plugin {
 
 export class CustomizeGrayAction extends BuilderAction {
     static id = "customizeGray";
-    static dependencies = ["customizeWebsite", "themeTab"];
+    static dependencies = ["customizeWebsite", "themeTab", "domObserver"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     getValue({ params: { mainParam: grayParamName } }) {
         return this.dependencies.themeTab.getGrayParams()[grayParamName];
@@ -358,11 +357,28 @@ export class CustomizeGrayAction extends BuilderAction {
         // migration if the computation here was to change: the user grays would
         // still be unchanged as saved in the database.
 
-        this.dependencies.themeTab.setGrayParams(grayParamName, parseInt(value));
+        const { themeTab } = this.dependencies;
+        const previous = [{ ...themeTab.getGrayParams() }, { ...themeTab.getGrays() }];
+        themeTab.setGrayParams(grayParamName, parseInt(value));
         for (let i = 1; i < 10; i++) {
             const key = (100 * i).toString();
-            this.dependencies.themeTab.setGrays(key, this.dependencies.themeTab.buildGray(key));
+            themeTab.setGrays(key, themeTab.buildGray(key));
         }
+        // The pending grays follow undo and redo; the parameters, not read
+        // back from the page (the grays are rounded), follow them here.
+        const next = [{ ...themeTab.getGrayParams() }, { ...themeTab.getGrays() }];
+        const restore = (grayParams, grays) => {
+            for (const [name, paramValue] of Object.entries(grayParams)) {
+                themeTab.setGrayParams(name, paramValue);
+            }
+            for (const [key, gray] of Object.entries(grays)) {
+                themeTab.setGrays(key, gray);
+            }
+        };
+        this.dependencies.domObserver.stageCustomMutation({
+            apply: () => restore(...next),
+            revert: () => restore(...previous),
+        });
 
         // Save all computed (JS side) grays in database
         await this.dependencies.customizeWebsite.customizeWebsiteColors(
@@ -379,7 +395,6 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
     static dependencies = ["customizeWebsite"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     async load() {
         const style = this.window.getComputedStyle(this.document.body);
@@ -402,7 +417,8 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
         if (!context.loadResult) {
             return;
         }
-        await super.apply(context);
+        this.dependencies.customizeWebsite.previewColorPalette(unquote(context.value));
+        await this.dependencies.customizeWebsite.updatePreviewCSS();
         setBuilderCSSVariables(getHtmlStyle(this.document));
         await Promise.allSettled(
             this.getResource("on_website_color_updated_handlers").map((handler) =>

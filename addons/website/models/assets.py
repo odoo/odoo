@@ -6,8 +6,9 @@ import requests
 from werkzeug.urls import url_parse
 
 from odoo import api, models
+from odoo.exceptions import UserError
 from odoo.tools import BinaryBytes, file_open
-from odoo.addons.base.models.assetsbundle import EXTENSIONS
+from odoo.addons.base.models.assetsbundle import EXTENSIONS, AssetsBundle
 
 _match_asset_file_url_regex = re.compile(r"^(/_custom/([^/]+))?/(\w+)/([/\w]+\.\w+)$")
 
@@ -206,25 +207,11 @@ class WebsiteAssets(models.AbstractModel):
 
         IrAttachment = self.env['ir.attachment']
         if 'color-palettes-name' in values:
-            self.reset_asset('/website/static/src/scss/options/colors/user_color_palette.scss', 'web.assets_frontend')
-            self.reset_asset('/website/static/src/scss/options/colors/user_gray_color_palette.scss', 'web.assets_frontend')
-            # Do not reset all theme colors for compatibility (not removing alpha -> epsilon colors)
-            self.make_scss_customization('/website/static/src/scss/options/colors/user_theme_color_palette.scss', {
-                'success': 'null',
-                'info': 'null',
-                'warning': 'null',
-                'danger': 'null',
-            })
-            # Also reset gradients which are in the "website" values palette
-            preset_gradients = {f'o-cc{cc}-bg-gradient': 'null' for cc in range(1, 6)}
-            self.make_scss_customization('/website/static/src/scss/options/user_values.scss', {
-                'menu-gradient': 'null',
-                'menu-secondary-gradient': 'null',
-                'footer-gradient': 'null',
-                'copyright-gradient': 'null',
-                'breadcrumb-gradient': 'null',
-                **preset_gradients,
-            })
+            for reset_url, reset_values in self._get_color_palette_resets().items():
+                if reset_values is None:
+                    self.reset_asset(reset_url, 'web.assets_frontend')
+                else:
+                    self.make_scss_customization(reset_url, reset_values)
 
         delete_attachment_id = values.pop('delete-font-attachment-id', None)
         if delete_attachment_id:
@@ -296,9 +283,51 @@ class WebsiteAssets(models.AbstractModel):
             # {'font_x': 45, 'font_y': 55} -> "('font_x': 45, 'font_y': 55)"
             values['google-local-fonts'] = str(google_local_fonts).replace('{', '(').replace('}', ')')
 
+        updatedFileContent = self._customize_scss_content(self._get_scss_content(url), values)
+        self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss')
+
+    @api.model
+    def _get_color_palette_resets(self):
+        """
+        Return the customizations a color palette switch resets: by URL, the
+        values to write in the file, or None to reset the file to its original
+        content.
+        """
+        preset_gradients = {f'o-cc{cc}-bg-gradient': 'null' for cc in range(1, 6)}
+        return {
+            '/website/static/src/scss/options/colors/user_color_palette.scss': None,
+            '/website/static/src/scss/options/colors/user_gray_color_palette.scss': None,
+            # Do not reset all theme colors for compatibility (not removing alpha -> epsilon colors)
+            '/website/static/src/scss/options/colors/user_theme_color_palette.scss': {
+                'success': 'null',
+                'info': 'null',
+                'warning': 'null',
+                'danger': 'null',
+            },
+            # Also reset gradients which are in the "website" values palette
+            '/website/static/src/scss/options/user_values.scss': {
+                'menu-gradient': 'null',
+                'menu-secondary-gradient': 'null',
+                'footer-gradient': 'null',
+                'copyright-gradient': 'null',
+                'breadcrumb-gradient': 'null',
+                **preset_gradients,
+            },
+        }
+
+    @api.model
+    def _get_scss_content(self, url):
+        """ Return the current content of a (possibly customized) SCSS file. """
         custom_url = self._make_custom_asset_url(url, 'web.assets_frontend')
-        updatedFileContent = self._get_content_from_url(custom_url) or self._get_content_from_url(url)
-        updatedFileContent = updatedFileContent.decode('utf-8')
+        content = self._get_content_from_url(custom_url) or self._get_content_from_url(url)
+        return content.decode('utf-8')
+
+    @api.model
+    def _customize_scss_content(self, content, values):
+        """
+        Return the content of a SCSS file with the given key,value pairs
+        written in its map (see `make_scss_customization`), without saving it.
+        """
         for name, value in values.items():
             # Protect variable names so they cannot be computed as numbers
             # on SCSS compilation (e.g. var(--700) => var(700)).
@@ -310,12 +339,59 @@ class WebsiteAssets(models.AbstractModel):
             pattern = "'%s': %%s,\n" % name
             regex = re.compile(pattern % ".+")
             replacement = pattern % value
-            if regex.search(updatedFileContent):
-                updatedFileContent = re.sub(regex, replacement, updatedFileContent)
+            if regex.search(content):
+                content = re.sub(regex, replacement, content)
             else:
-                updatedFileContent = re.sub(r'^( *)(.*hook.*)', r'\1%s\1\2' % replacement, updatedFileContent, count=1, flags=re.MULTILINE)
+                content = re.sub(r'^( *)(.*hook.*)', r'\1%s\1\2' % replacement, content, count=1, flags=re.MULTILINE)
+        return content
 
-        self.save_asset(url, 'web.assets_frontend', updatedFileContent, 'scss')
+    @api.model
+    def _get_theme_preview_css(self, values_by_url):
+        """
+        Compile the website's frontend CSS as if the given customizations had
+        been saved with `make_scss_customization`, without writing anything:
+        the customized files' content is replaced in memory, for this compile
+        only.
+
+        Params:
+            values_by_url (dict):
+                by SCSS file URL, in the order they would be saved, the
+                key,value mapping to write in its map
+
+        Returns:
+            str: the CSS of the website's web.assets_frontend bundle
+        """
+        contents = {}
+        for url, values in values_by_url.items():
+            if 'color-palettes-name' in values:
+                for reset_url, reset_values in self._get_color_palette_resets().items():
+                    if reset_values is None:
+                        contents[reset_url] = self._get_content_from_url(reset_url).decode('utf-8')
+                    else:
+                        contents[reset_url] = self._customize_scss_content(
+                            contents.get(reset_url) or self._get_scss_content(reset_url), reset_values)
+            contents[url] = self._customize_scss_content(contents.get(url) or self._get_scss_content(url), values)
+
+        IrQweb = self.env['ir.qweb']
+        assets_params = self.env['ir.asset']._get_asset_params()
+        files, external_assets = IrQweb._get_asset_content('web.assets_frontend', assets_params)
+        original_urls = {self._make_custom_asset_url(url, 'web.assets_frontend'): url for url in contents}
+        for file in files:
+            url = original_urls.get(file['url'], file['url'])
+            if url in contents:
+                # A file's content makes it an inline asset: it isn't read.
+                file['content'] = contents[url]
+        # As `ir.qweb._get_asset_links` decides it for the page.
+        rtl = self.env['res.lang'].sudo()._lang_get(code=(self.env.lang or self.env.user.lang)).direction == 'rtl'
+        bundle = AssetsBundle('web.assets_frontend', files, external_assets, env=self.env,
+                              js=False, rtl=rtl, assets_params=assets_params)
+        css = bundle.preprocess_css()
+        if bundle.css_errors:
+            raise UserError('\n'.join(bundle.css_errors))
+        # Move the @import rules up to the top, as `AssetsBundle.css` does.
+        imports = []
+        css = bundle.rx_css_import.sub(lambda matchobj: imports.append(matchobj.group(0)) and '', css)
+        return '\n'.join([*imports, css])
 
     @api.model
     def _get_custom_attachment(self, custom_url, op='='):

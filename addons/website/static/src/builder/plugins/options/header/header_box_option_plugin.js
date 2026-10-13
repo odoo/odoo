@@ -30,7 +30,6 @@ export class StyleActionHeaderAction extends StyleAction {
     static dependencies = ["customizeWebsite", "color"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     getValue(...args) {
         const { params } = args[0];
@@ -59,7 +58,6 @@ export class SetShadowModeHeaderAction extends SetShadowModeAction {
     static dependencies = ["customizeWebsite"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     async apply({ value: shadowMode }) {
         const defaultShadow = getDefaultShadow(shadowMode);
@@ -74,7 +72,6 @@ export class SetShadowStyleHeaderAction extends SetShadowStyleAction {
     static dependencies = ["customizeWebsite"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     async apply({ editingElement, params: { mainParam: attributeName }, value }) {
         const shadow = getCurrentShadow(editingElement);
@@ -91,7 +88,6 @@ export class SetShadowClassHeaderAction extends BuilderAction {
     static dependencies = ["customizeWebsite"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     isApplied({ params: { mainParam: shadowClass } }) {
         const currentShadowClass =
@@ -99,20 +95,12 @@ export class SetShadowClassHeaderAction extends BuilderAction {
         return currentShadowClass === shadowClass;
     }
     async apply({ params: { mainParam: shadowClass } }) {
-        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
-            {
-                "menu-shadow-class": shadowClass,
-            },
-            "''"
-        );
-        const currentShadowClass =
-            this.dependencies.customizeWebsite.getWebsiteVariableValue("menu-shadow-class");
-        if (currentShadowClass === "o-shadow-custom") {
-            const defaultShadow = getDefaultShadow();
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                "menu-box-shadow-style": defaultShadow,
-            });
+        // One step, one preview compile.
+        const variables = { "menu-shadow-class": shadowClass };
+        if (shadowClass === "o-shadow-custom") {
+            variables["menu-box-shadow-style"] = getDefaultShadow();
         }
+        await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables, "''");
     }
     async clean() {
         const currentShadowClass =

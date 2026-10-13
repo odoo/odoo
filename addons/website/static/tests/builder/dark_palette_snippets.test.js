@@ -1,33 +1,18 @@
 import { getSnippetStructure } from "@html_builder/../tests/helpers";
-import { expect, test, waitForNone } from "@odoo/hoot";
+import { animationFrame, expect, test, waitForNone } from "@odoo/hoot";
 import { isDarkColorPalette } from "@website/components/dialog/dark_palette_utils";
-import {
-    contains,
-    defineModels,
-    defineStyle,
-    getService,
-    models,
-    onRpc,
-} from "@web/../tests/web_test_helpers";
+import { contains, defineStyle, getService, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder, waitForSnippetDialog } from "./website_helpers";
 import { getStructureSnippet } from "../snippet_helpers";
 
 defineWebsiteModels();
 
 test("snippet dialog uses dark palette content adaptations", async () => {
-    class WebsiteAssets extends models.Model {
-        _name = "website.assets";
-
-        make_scss_customization() {}
-    }
-    defineModels([WebsiteAssets]);
-
     let pageDocument;
-    const reloadPromise = Promise.withResolvers();
-    onRpc("/website/theme_customize_bundle_reload", () => {
-        pageDocument.documentElement.style.setProperty("--color-palettes-name", "'default-dark-1'");
-        reloadPromise.resolve();
-        return {};
+    const previewPromise = Promise.withResolvers();
+    onRpc("/website/theme_preview_css", () => {
+        previewPromise.resolve();
+        return ":root { --color-palettes-name: 'default-dark-1'; }";
     });
 
     const coverEl = await getStructureSnippet("s_cover");
@@ -69,7 +54,8 @@ test("snippet dialog uses dark palette content adaptations", async () => {
     await contains(".o_hb_tab_content .o_hb_theme_color_slider_btn").click();
     await contains(".o_theme_tab [data-icon='palette']").click();
     await contains(`[data-action-value="'default-dark-1'"] .o_hb_color_palette_card span`).click();
-    await reloadPromise.promise;
+    await previewPromise.promise;
+    await animationFrame();
     expect(isDarkColorPalette(pageDocument)).toBe(true);
 
     // Reopening the dialog creates a viewer for the new dark palette. The

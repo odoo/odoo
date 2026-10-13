@@ -58,9 +58,9 @@ registerWebsitePreviewTour(
             run: `edit ${TARGET_FONT_SIZE} && click body`,
         },
         {
-            // Waiting the CSS to be reloaded: the code adds a new assets bundle
-            // with a #t=... at the end then removes the old one.
-            trigger: ':iframe html:not(:has(link[href$="web.assets_frontend.min.css"]))',
+            // Waiting for the CSS compiled with the pending value, which
+            // replaces the bundle's.
+            trigger: ":iframe html:has(style.o_theme_preview_css)",
         },
         {
             content: "Check the font size was properly adapted",

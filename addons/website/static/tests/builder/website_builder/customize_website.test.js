@@ -12,6 +12,7 @@ import {
 import { patch } from "@web/core/utils/patch";
 import {
     defineWebsiteModels,
+    saveWebsite,
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
@@ -442,10 +443,7 @@ test("theme background image is properly set", async () => {
 
     patch(ToggleBodyBgImageAction.prototype, {
         async apply(params) {
-            const { type: currentType, image: currentImage } = this.getCurrentConfig();
-            const oldConfig = { type: currentType, image: currentImage };
-            const newConfig = { type: "image", image: base64Image };
-            await this.applyConfig(oldConfig, newConfig);
+            await this.applyConfigWithLoader({ type: "image", image: base64Image });
         },
     });
 
@@ -461,9 +459,9 @@ test("theme background image is properly set", async () => {
     }
     defineModels([WebsiteAssets]);
 
-    onRpc("/website/theme_customize_bundle_reload", async (request) => {
-        expect.step("bundle_reload");
-        return { success: true };
+    onRpc("/website/theme_preview_css", () => {
+        expect.step("preview_css");
+        return "";
     });
 
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`, {
@@ -474,8 +472,9 @@ test("theme background image is properly set", async () => {
     await animationFrame();
     expect(".o_theme_tab button[data-action-id='toggleBodyBgImage']").toHaveCount(1);
     await contains(".o_theme_tab button[data-action-id='toggleBodyBgImage']").click();
-    await animationFrame();
-    await expect.verifySteps(["scss_customization", "bundle_reload"]);
+    await expect.waitForSteps(["preview_css"]);
+    await saveWebsite();
+    expect.verifySteps(["scss_customization"]);
 });
 
 test("BuilderButton with action “templatePreviewableWebsiteConfig”", async () => {

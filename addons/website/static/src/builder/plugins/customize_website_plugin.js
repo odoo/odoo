@@ -23,10 +23,12 @@ import { loadImage } from "@html_editor/utils/image_processing";
  * @typedef { Object } CustomizeWebsiteShared
  * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
  * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
+ * @property { CustomizeWebsitePlugin['previewColorPalette'] } previewColorPalette
+ * @property { CustomizeWebsitePlugin['getPendingValues'] } getPendingValues
+ * @property { CustomizeWebsitePlugin['updatePreviewCSS'] } updatePreviewCSS
  * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
  * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
  * @property { CustomizeWebsitePlugin['toggleTemplate'] } toggleTemplate
- * @property { CustomizeWebsitePlugin['withCustomHistory'] } withCustomHistory
  * @property { CustomizeWebsitePlugin['populateCache'] } populateCache
  * @property { CustomizeWebsitePlugin['loadConfigKey'] } loadConfigKey
  * @property { CustomizeWebsitePlugin['getConfigKey'] } getConfigKey
@@ -39,21 +41,50 @@ import { loadImage } from "@html_editor/utils/image_processing";
  */
 
 /**
+ * A previewed value: written in `file` on save (`pending`, unless undefined),
+ * shown meanwhile as `--<name>` on the page's root (`inline`).
+ *
+ * @typedef {{ file?: string, pending?: string, inline?: string }} PreviewEntry
+ * @typedef {Object<string, PreviewEntry>} PreviewState by name
+ *
  * @typedef {((colors: string[]) => void)[]} on_website_color_updated_handlers
  */
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
+export const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
+export const COLOR_FILES_URL = "/website/static/src/scss/options/colors/";
+export const PALETTE_URL = `${COLOR_FILES_URL}user_color_palette.scss`;
+const THEME_PALETTE_URL = `${COLOR_FILES_URL}user_theme_color_palette.scss`;
+const GRAY_PALETTE_URL = `${COLOR_FILES_URL}user_gray_color_palette.scss`;
+// Saved after the user values (a palette switch resets them), in this order.
+const COLOR_FILE_URLS = [PALETTE_URL, THEME_PALETTE_URL, GRAY_PALETTE_URL];
+// What a palette switch resets besides the palette and gray colors (see the
+// server's `_get_color_palette_resets`).
+const PALETTE_RESET_STATUS_COLORS = ["success", "info", "warning", "danger"];
+const PALETTE_RESET_GRADIENTS = [
+    ...["menu-gradient", "menu-secondary-gradient", "footer-gradient"],
+    ...["copyright-gradient", "breadcrumb-gradient"],
+    ...[1, 2, 3, 4, 5].map((i) => `o-cc${i}-bg-gradient`),
+];
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"];
+    static dependencies = [
+        "builderActions",
+        "savePlugin",
+        "edit_interaction",
+        "websiteBridge",
+        "operation",
+    ];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
+        "previewColorPalette",
+        "getPendingValues",
+        "updatePreviewCSS",
         "loadTemplateKey",
         "makeSCSSCusto",
         "toggleTemplate",
-        "withCustomHistory",
         "populateCache",
         "loadConfigKey",
         "getConfigKey",
@@ -91,6 +122,72 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
+
+        // Previewed values (see `previewStep`) are history commit data: each
+        // step holds the previous and next state to apply.
+        history_commit_data_properties: ["themePreview"],
+        pending_history_commit_data_processors: (data) =>
+            this.pendingPreviewSteps.length
+                ? { ...data, themePreview: [...this.pendingPreviewSteps] }
+                : data,
+        on_committed_to_history_handlers: () => {
+            this.pendingPreviewSteps = [];
+        },
+        has_history_commit_changes_predicates: (commit) => {
+            if (commit.data.themePreview?.length) {
+                return true;
+            }
+        },
+        // Like the DOM mutations, `ensureNewMutations` records what is applied
+        // or reverted as new changes (e.g. in the undo commit, which is what
+        // redo reverts).
+        on_apply_history_commit_handlers: (commit, { ensureNewMutations = false } = {}) => {
+            for (const step of commit.data.themePreview || []) {
+                this.setPreviewState(step.next);
+                if (ensureNewMutations) {
+                    this.pendingPreviewSteps.push(step);
+                }
+            }
+            if (commit.data.themePreview?.length) {
+                this.updatePreviewCSS();
+            }
+        },
+        on_revert_history_commit_handlers: (commit, { ensureNewMutations = false } = {}) => {
+            for (const step of [...(commit.data.themePreview || [])].reverse()) {
+                this.setPreviewState(step.previous);
+                if (ensureNewMutations) {
+                    this.pendingPreviewSteps.push({ previous: step.next, next: step.previous });
+                }
+            }
+            if (commit.data.themePreview?.length) {
+                this.updatePreviewCSS();
+            }
+        },
+        on_will_invalidate_pending_changes_handlers: () => {
+            for (const step of this.pendingPreviewSteps.reverse()) {
+                this.setPreviewState(step.previous);
+            }
+            if (this.pendingPreviewSteps.length) {
+                this.updatePreviewCSS();
+            }
+            this.pendingPreviewSteps = [];
+        },
+        on_pending_changes_unstashed_handlers: (stashedCommit) => {
+            this.pendingPreviewSteps.push(...(stashedCommit.data.themePreview || []));
+        },
+        save_point_history_commit_data_processors: (data) => ({
+            ...data,
+            themePreview: [...this.pendingPreviewSteps],
+        }),
+        on_savepoint_restored_handlers: (savePoint) => {
+            for (const step of savePoint.data.themePreview) {
+                this.setPreviewState(step.next);
+            }
+            if (savePoint.data.themePreview.length) {
+                this.updatePreviewCSS();
+            }
+            this.pendingPreviewSteps.push(...savePoint.data.themePreview);
+        },
     };
 
     async onSave() {
@@ -101,6 +198,13 @@ export class CustomizeWebsitePlugin extends Plugin {
                 disable: [...this.viewsToDisableOnSave],
                 reset_view_arch: false,
             });
+        }
+        // No bundle reload: the iframe is reloaded after save.
+        for (const url of [USER_VALUES_URL, ...COLOR_FILE_URLS]) {
+            const values = this.getPendingValues(url);
+            if (Object.keys(values).length) {
+                await this.makeSCSSCusto(url, values);
+            }
         }
     }
     cache = {};
@@ -123,8 +227,14 @@ export class CustomizeWebsitePlugin extends Plugin {
      * @type pendingThemeRequest[]
      */
     pendingThemeRequests = [];
-    variablesToCustomize = {};
-    colorsToCustomize = {};
+    /** @type {Object<string, string>} values to write in `user_values.scss` on save */
+    pendingVariables = {};
+    /** @type {Object<string, Object<string, string>>} colors to write on save, by file */
+    pendingColors = {};
+    /** Preview steps not committed to the history yet. */
+    pendingPreviewSteps = [];
+    /** The latest request of the preview CSS (see `updatePreviewCSS`). */
+    previewCSSRequest = null;
     resolves = {};
     getPendingThemeRequests() {
         return this.pendingThemeRequests;
@@ -159,75 +269,254 @@ export class CustomizeWebsitePlugin extends Plugin {
         }
         return finalValue;
     }
+    /**
+     * Sets website variables, written in `user_values.scss` on save (see
+     * `previewWebsiteVariables`).
+     *
+     * @param {Object<string, string>} variables
+     * @param {string} [nullValue="null"] what an empty value is written as
+     * @param {boolean} [clean=false] whether to reset the variables instead
+     * @param {boolean} [reloadBundles=true] whether to update the page's CSS
+     *        now (see `updatePreviewCSS`), else a later call does
+     */
     async customizeWebsiteVariables(
         variables = {},
         nullValue = "null",
         clean = false,
         reloadBundles = true
     ) {
-        this.variablesToCustomize = Object.assign(this.variablesToCustomize, variables);
-        if (!Object.keys(this.variablesToCustomize).length) {
+        if (!Object.keys(variables).length) {
             return;
         }
         if (clean) {
-            for (const variable in variables) {
-                this.variablesToCustomize[variable] = nullValue;
-            }
+            variables = Object.fromEntries(Object.keys(variables).map((name) => [name, nullValue]));
         }
-        await this.debouncedSCSSVariablesCusto(nullValue);
+        this.previewWebsiteVariables(variables, nullValue);
         if (reloadBundles) {
-            await this.reloadBundles();
+            await this.updatePreviewCSS();
         }
     }
-    debouncedSCSSVariablesCusto = debounce(async (nullValue) => {
-        const variables = this.variablesToCustomize;
-        this.variablesToCustomize = {};
-        await this.makeSCSSCusto(
-            "/website/static/src/scss/options/user_values.scss",
-            variables,
-            nullValue
-        );
-    }, 0);
+    /**
+     * Sets website variables as pending values, written in
+     * `user_values.scss` on save, as one history step.
+     *
+     * @param {Object<string, string>} variables
+     * @param {string} [nullValue="null"]
+     */
+    previewWebsiteVariables(variables, nullValue = "null") {
+        this.previewStep(this.getVariablesStep(variables, nullValue));
+    }
+    /**
+     * @see previewWebsiteVariables
+     * @returns {PreviewState} what previews the variables
+     */
+    getVariablesStep(variables, nullValue = "null") {
+        const state = {};
+        for (const [name, value] of Object.entries(variables)) {
+            state[name] = { pending: value || nullValue };
+        }
+        return state;
+    }
+    /**
+     * Previews values as one history step: the step goes to the history as
+     * commit data, which undo and redo apply.
+     *
+     * @param {PreviewState} state
+     */
+    previewStep(state) {
+        const style = this.document.documentElement.style;
+        const previous = {};
+        for (const [name, { file = USER_VALUES_URL }] of Object.entries(state)) {
+            previous[name] = {
+                file,
+                pending: this.getPendingValues(file)[name],
+                inline: style.getPropertyValue(`--${name}`),
+            };
+        }
+        this.setPreviewState(state);
+        this.pendingPreviewSteps.push({ previous, next: state });
+    }
+    /**
+     * Same as `customizeWebsiteVariables`, for colors (written in their own
+     * files).
+     *
+     * @param {Object<string, string>} colors
+     * @param {Object} [options]
+     * @param {string} [options.colorType] the file: "theme", "gray", or the
+     *        palette's by default
+     * @param {string} [options.combinationColor] the color preset's variable,
+     *        set when a color is a color preset (`o_cc<n>`)
+     * @param {string} [options.nullValue="null"]
+     * @param {boolean} [options.resetCcOnEmpty] whether an empty color also
+     *        resets the color preset
+     * @param {boolean} [options.reloadBundles=true]
+     */
     async customizeWebsiteColors(
         colors = {},
         { colorType, combinationColor, nullValue, resetCcOnEmpty, reloadBundles = true } = {}
     ) {
-        const baseURL = "/website/static/src/scss/options/colors/";
-        colorType = colorType ? colorType + "_" : "";
-        const url = `${baseURL}user_${colorType}color_palette.scss`;
-
         const finalColors = {};
         for (const [colorName, color] of Object.entries(colors)) {
             finalColors[colorName] = color;
-            if (color) {
-                const isColorCombination = /^o_cc[12345]$/.test(color);
-                if (isColorCombination) {
-                    finalColors[combinationColor] = parseInt(color.substring(4));
-                    finalColors[colorName] = "";
-                } else if (isCSSVariable(color)) {
-                    const customProperty = color.match(/var\(--(.+?)\)/)[1];
-                    finalColors[colorName] = this.getWebsiteVariableValue(customProperty);
-                } else if (!isCSSColor(color)) {
-                    finalColors[colorName] = `'${color}'`;
-                }
-            } else {
-                if (resetCcOnEmpty) {
-                    finalColors[combinationColor] = "";
-                }
+            if (/^o_cc[12345]$/.test(color)) {
+                finalColors[combinationColor] = parseInt(color.substring(4));
                 finalColors[colorName] = "";
+            } else if (!color && resetCcOnEmpty) {
+                finalColors[combinationColor] = "";
             }
         }
-        this.colorsToCustomize = Object.assign(this.colorsToCustomize, finalColors);
-        await this.debouncedSCSSColorsCusto(url, nullValue);
+        this.previewWebsiteColors(finalColors, { colorType, nullValue });
         if (reloadBundles) {
-            await this.reloadBundles();
+            await this.updatePreviewCSS();
         }
     }
-    debouncedSCSSColorsCusto = debounce(async (url, nullValue) => {
-        const colors = this.colorsToCustomize;
-        this.colorsToCustomize = {};
-        await this.makeSCSSCusto(url, colors, nullValue);
-    }, 0);
+    /**
+     * Same as `previewWebsiteVariables`, for colors (written in their own
+     * files). A color given as another one's name follows it.
+     *
+     * @param {Object<string, string>} colors
+     * @param {Object} [options]
+     * @param {string} [options.colorType] the file: "theme", "gray", or the
+     *        palette's by default
+     * @param {string} [options.nullValue="null"]
+     */
+    previewWebsiteColors(colors, options) {
+        this.previewStep(this.getColorsStep(colors, options));
+    }
+    /**
+     * @see previewWebsiteColors
+     * @returns {PreviewState} what previews the colors
+     */
+    getColorsStep(colors, { colorType, nullValue = "null" } = {}) {
+        const file = `${COLOR_FILES_URL}user_${colorType ? colorType + "_" : ""}color_palette.scss`;
+        const state = {};
+        for (const [name, color] of Object.entries(colors)) {
+            const value = color && this.getSCSSColorValue(color);
+            state[name] = { file, pending: value || nullValue };
+        }
+        return state;
+    }
+    /**
+     * Previews a palette switch. On save, the server resets the colors when
+     * it writes the palette's name, and the colors changed afterwards are
+     * written after it (see `onSave`): the pending values it resets are
+     * dropped.
+     *
+     * @param {string} paletteName
+     */
+    previewColorPalette(paletteName) {
+        const state = { "color-palettes-name": { pending: `'${paletteName}'` } };
+        const reset = (file, names) => {
+            const pendingValues = this.getPendingValues(file);
+            for (const name of names.filter((name) => name in pendingValues)) {
+                state[name] = { file, pending: undefined };
+            }
+        };
+        reset(USER_VALUES_URL, PALETTE_RESET_GRADIENTS);
+        reset(PALETTE_URL, Object.keys(this.getPendingValues(PALETTE_URL)));
+        reset(THEME_PALETTE_URL, PALETTE_RESET_STATUS_COLORS);
+        reset(GRAY_PALETTE_URL, Object.keys(this.getPendingValues(GRAY_PALETTE_URL)));
+        this.previewStep(state);
+    }
+    /**
+     * @param {string|number} color a color, a color's name, a CSS variable
+     *        or a color preset's number
+     * @returns {string|number} the color as written in a colors file: a name
+     *          is quoted, a CSS variable is its value
+     */
+    getSCSSColorValue(color) {
+        if (/^\d+$/.test(color)) {
+            // A color preset's number.
+            return color;
+        }
+        if (isCSSVariable(color)) {
+            return this.getWebsiteVariableValue(color.match(/var\(--(.+?)\)/)[1]);
+        }
+        return isCSSColor(color) ? color : `'${color}'`;
+    }
+    /**
+     * @param {string} file
+     * @returns {Object<string, string>} the values to write in it on save
+     */
+    getPendingValues(file) {
+        if (file === USER_VALUES_URL) {
+            return this.pendingVariables;
+        }
+        return (this.pendingColors[file] ??= {});
+    }
+    setPreviewState(state) {
+        const style = this.document.documentElement.style;
+        for (const [name, { pending, inline, file = USER_VALUES_URL }] of Object.entries(state)) {
+            const pendingValues = this.getPendingValues(file);
+            if (pending === undefined) {
+                delete pendingValues[name];
+            } else {
+                pendingValues[name] = pending;
+            }
+            if (inline) {
+                style.setProperty(`--${name}`, inline);
+            } else {
+                style.removeProperty(`--${name}`);
+            }
+        }
+    }
+    /**
+     * Puts the frontend bundle's CSS compiled with the pending values in the
+     * page, in place of the saved one, which is back when none is pending.
+     * Nothing is written: the server compiles it in memory. The latest call
+     * wins: an earlier one resolves without changing the page.
+     */
+    async updatePreviewCSS() {
+        const valuesByUrl = {};
+        for (const url of [USER_VALUES_URL, ...COLOR_FILE_URLS]) {
+            const values = this.getPendingValues(url);
+            if (Object.keys(values).length) {
+                valuesByUrl[url] = values;
+            }
+        }
+        const request = Object.keys(valuesByUrl).length
+            ? rpc("/website/theme_preview_css", { values_by_url: valuesByUrl })
+            : Promise.resolve(null);
+        this.previewCSSRequest = request;
+        // Undo and redo don't wait for the compile: their operation, and its
+        // loading effect, are over before it.
+        const removeLoadingElement = this.dependencies.operation.addLoadingElement(true, 500);
+        let css;
+        try {
+            css = await request;
+        } finally {
+            removeLoadingElement();
+        }
+        if (request !== this.previewCSSRequest || this.isDestroyed) {
+            return;
+        }
+        for (const document of [this.document, this.config.extraPreviewDocument].filter(Boolean)) {
+            const linkEls = document.querySelectorAll('link[href*="web.assets_frontend"]');
+            let styleEl = document.querySelector("style.o_theme_preview_css");
+            if (css === null) {
+                styleEl?.remove();
+            } else {
+                if (!styleEl) {
+                    styleEl = document.createElement("style");
+                    styleEl.classList.add("o_theme_preview_css");
+                    // Where the bundle is: the stylesheets after it still
+                    // come after it.
+                    if (linkEls.length) {
+                        linkEls[linkEls.length - 1].after(styleEl);
+                    } else {
+                        document.head.append(styleEl);
+                    }
+                }
+                styleEl.textContent = css;
+            }
+            for (const linkEl of linkEls) {
+                linkEl.disabled = css !== null;
+            }
+        }
+        setBuilderCSSVariables(getHtmlStyle(this.document));
+        this.dependencies.edit_interaction.restartInteractions();
+        this.trigger("on_dom_updated_handlers");
+    }
     async makeSCSSCusto(url, values, defaultValue = "null") {
         Object.keys(values).forEach((key) => {
             values[key] = values[key] || defaultValue;
@@ -334,27 +623,6 @@ export class CustomizeWebsitePlugin extends Plugin {
             return !this.activeRecords[key.substring(1)];
         }
         return this.activeRecords[key];
-    }
-
-    withCustomHistory(action) {
-        const applyFn = action.apply.bind(action);
-        action.apply = async (arg) => {
-            const oldValue = action.getValue(arg);
-            const { value } = arg;
-            const blockedApply = (v) => {
-                this.services.ui.block({ delay: 2500 });
-                return applyFn({ ...arg, value: v })
-                    .then(() => {
-                        this.trigger("on_dom_updated_handlers");
-                    })
-                    .finally(() => this.services.ui.unblock());
-            };
-            await blockedApply(value);
-            this.dependencies.domObserver.stageCustomMutation({
-                apply: () => blockedApply(value),
-                revert: () => blockedApply(oldValue),
-            });
-        };
     }
 
     async loadTemplateKey(key) {
@@ -502,7 +770,7 @@ export class AddLanguageAction extends BuilderAction {
 
 export class ToggleBodyBgImageAction extends BuilderAction {
     static id = "toggleBodyBgImage";
-    static dependencies = ["builderActions", "domObserver", "customizeWebsite", "media"];
+    static dependencies = ["builderActions", "customizeWebsite", "media"];
     setup() {
         this.canTimeout = false;
     }
@@ -540,13 +808,6 @@ export class ToggleBodyBgImageAction extends BuilderAction {
             image: this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image") || "",
         };
     }
-    async applyConfig(oldConfig, newConfig) {
-        await this.applyConfigWithLoader(newConfig);
-        this.dependencies.domObserver.stageCustomMutation({
-            apply: () => this.applyConfigWithLoader(newConfig),
-            revert: () => this.applyConfigWithLoader(oldConfig),
-        });
-    }
     async apply({ editingElement: el } = {}) {
         await this.dependencies.media.openMediaDialog(
             this.getMediaDialogProps({ editingElement: el })
@@ -557,18 +818,13 @@ export class ToggleBodyBgImageAction extends BuilderAction {
             onlyImages: true,
             node: editingElement,
             save: async (imageEl) => {
-                const { type: currentType, image: currentImage } = this.getCurrentConfig();
-                const oldConfig = { type: currentType, image: currentImage };
-                const newConfig = { type: currentType, image: imageEl.src };
-                await this.applyConfig(oldConfig, newConfig);
+                const { type: currentType } = this.getCurrentConfig();
+                await this.applyConfigWithLoader({ type: currentType, image: imageEl.src });
             },
         };
     }
     async clean() {
-        const { type: currentType, image: currentImage } = this.getCurrentConfig();
-        const oldConfig = { type: currentType, image: currentImage };
-        const newConfig = { type: "image", image: "" };
-        await this.applyConfig(oldConfig, newConfig);
+        await this.applyConfigWithLoader({ type: "image", image: "" });
     }
 }
 
@@ -590,12 +846,7 @@ export class RemoveBodyBgImageAction extends BuilderAction {
 
 export class BodyBgPositionOverlayAction extends BuilderAction {
     static id = "bodyBgPositionOverlay";
-    static dependencies = [
-        "overlayButtons",
-        "domObserver",
-        "backgroundPositionOption",
-        "customizeWebsite",
-    ];
+    static dependencies = ["overlayButtons", "backgroundPositionOption", "customizeWebsite"];
     setup() {
         this.withLoadingEffect = false;
         this.canTimeout = false;
@@ -632,14 +883,7 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
             });
         });
         if (bgPosition) {
-            const currentPosition =
-                this.dependencies.customizeWebsite.getWebsiteVariableValue(
-                    "body-image-background-position"
-                ) || "";
-            this.dependencies.domObserver.applyCustomMutation({
-                apply: () => setBackgroundPosition(bgPosition),
-                revert: () => setBackgroundPosition(currentPosition),
-            });
+            await setBackgroundPosition(bgPosition);
         } else {
             clearInlinePosition();
         }
@@ -688,19 +932,22 @@ export class WebsiteConfigAction extends BuilderAction {
         // step 1: enable and disable records
         const updateViews = this._toggleTheme(action, "views", apply);
         const updateAssets = this._toggleTheme(action, "assets", apply);
-        // step 2: customize vars
+        // step 2: customize vars (no preview: written by the save before the
+        // reload)
         const updateVars =
             !apply && action.params.varsOnClean
                 ? this.dependencies.customizeWebsite.customizeWebsiteVariables(
                       action.params.varsOnClean,
                       "null",
-                      apply
+                      apply,
+                      false
                   )
                 : action.params.vars
                 ? this.dependencies.customizeWebsite.customizeWebsiteVariables(
                       action.params.vars,
                       "null",
-                      !apply
+                      !apply,
+                      false
                   )
                 : Promise.resolve();
         await Promise.all([updateViews, updateAssets, updateVars]);
@@ -955,7 +1202,6 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
     static dependencies = ["customizeWebsite"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     isApplied({ params: { mainParam: variable } = {}, value }) {
         const currentValue = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
@@ -1034,7 +1280,6 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
     static dependencies = ["customizeWebsite"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     getValue({ params: { mainParam: color, colorType, gradientColor, combinationColor } }) {
         const style = getHtmlStyle(this.document);
@@ -1101,7 +1346,6 @@ export class CustomizeButtonStyleAction extends BuilderAction {
     static dependencies = ["customizeWebsite"];
     setup() {
         this.preview = false;
-        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
     isApplied({ params, value }) {
         return this.getValue({ params }) === value;
