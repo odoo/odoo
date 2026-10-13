@@ -104,6 +104,14 @@
                                     attachmentGroups="this.attachmentGroups"
                                     unlinkAttachments.bind="this.onClickAttachmentUnlink"/>
                             </div>
+                            <div t-if="this.message.uploadProgress !== undefined" class="d-flex align-items-center gap-1">
+                                <div class="o-mail-Message-uploadProgress progress flex-grow-1" style="height: 0.25rem;" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" t-att-aria-valuenow="this.uploadProgressPercent" t-att-title="this.uploadProgressText">
+                                    <div class="progress-bar" t-att-style="`width: ${this.uploadProgressPercent}%;`"/>
+                                </div>
+                                <button class="o-mail-Message-cancelUpload btn btn-link p-0 text-body" title="Cancel upload" t-on-click="this.onClickCancelUpload">
+                                    <i class="oi oi-fw" data-icon="close" role="img" aria-label="Cancel upload"/>
+                                </button>
+                            </div>
                             <MessageLinkPreviewList t-if="(this.message.message_link_preview_ids.length > 0 and this.store.hasLinkPreviewFeature and !this.message.linkPreviewSquash) or (!this.isEditing and this.message.linkPreviewSquash and this.message.parent_id)" messageLinkPreviews="this.message.message_link_preview_ids"/>
                         </div>
                         <t t-if="this.message.bubbleColor and (!this.message.hasTextContent or this.ancestors.inChatWindow)" t-call="mail.Message.actions"/>

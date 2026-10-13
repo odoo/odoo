@@ -136,6 +136,10 @@ export class Message extends Record {
     postFailMessage = undefined;
     /** @type {Object|undefined} params to post this pending message (again) */
     postParams = undefined;
+    /** @type {(message?: Message) => void} resolves the `post` of this pending message */
+    resolvePost = undefined;
+    /** @type {(() => void)|undefined} posts the next messages, held as its upload failed */
+    releasePostQueue = undefined;
     reactions = fields.Many("MessageReactions", { inverse: "message" });
     sortedReactions = this.computedShallowEqual(() =>
         [...this.reactions].sort((r1, r2) => r1.sequence - r2.sequence)
@@ -353,6 +357,15 @@ export class Message extends Record {
     );
 
     isPending = false;
+    /** Whether this pending message waits for its uploads or a previous message to be posted. */
+    isWaitingToPost = false;
+    storeAsUnposted = fields.One("Store", {
+        compute() {
+            return this.isWaitingToPost || this.hasPostFailed ? this.store : null;
+        },
+        eager: true,
+        inverse: "unpostedMessages",
+    });
 
     /** Whether this pending message failed to be posted, to retry, edit or delete it. */
     get hasPostFailed() {
@@ -363,6 +376,24 @@ export class Message extends Record {
     get isBeingPosted() {
         return this.isPending && !this.postFailRedo;
     }
+
+    /** Upload progress (between 0 and 1) of this pending message, if uploading */
+    uploadProgress = this.computed(() => {
+        if (!this.isPending || !this.attachment_ids.some(({ uploading }) => uploading)) {
+            return undefined;
+        }
+        const progressOf = ({ uploading, uploadProgress }) => (uploading ? uploadProgress ?? 0 : 1);
+        const weights = this.attachment_ids.map(({ file_size }) => file_size);
+        if (weights.some((weight) => !weight)) {
+            const progresses = this.attachment_ids.map(progressOf);
+            return progresses.reduce((sum, progress) => sum + progress, 0) / progresses.length;
+        }
+        const uploaded = this.attachment_ids.reduce(
+            (sum, attachment, index) => sum + progressOf(attachment) * weights[index],
+            0
+        );
+        return uploaded / weights.reduce((sum, weight) => sum + weight, 0);
+    });
 
     get hasActions() {
         return !this.is_transient && !this.isBeingPosted;
@@ -955,6 +986,12 @@ export class Message extends Record {
                 { silent: true }
             )
         );
+    }
+
+    delete() {
+        this.resolvePost?.();
+        this.releasePostQueue?.();
+        super.delete();
     }
 
     async remove({ removeFromThread = false } = {}) {

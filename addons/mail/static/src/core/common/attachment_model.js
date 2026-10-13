@@ -7,6 +7,12 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { imageUrl, url } from "@web/core/utils/urls";
 
+/** Why the upload of an attachment of a pending message failed */
+export const UPLOAD_ERROR = Object.freeze({
+    FAILED: "FAILED",
+    TOO_LARGE: "TOO_LARGE",
+});
+
 export class Attachment extends FileModelMixin(Record) {
     static _name = "ir.attachment";
     setup() {
@@ -42,6 +48,10 @@ export class Attachment extends FileModelMixin(Record) {
     thread = fields.One("mail.thread", { inverse: "attachments" });
     /** @type {number} */
     file_size;
+    /** @type {number} upload progress (between 0 and 1) while uploading */
+    uploadProgress;
+    /** @type {keyof typeof UPLOAD_ERROR|undefined} */
+    uploadError;
     /** @type {string} */
     raw_access_token;
     res_name;
@@ -121,6 +131,11 @@ export class Attachment extends FileModelMixin(Record) {
     }
 
     get isDeletable() {
+        const pendingMessage = this.message_ids.find((m) => m.isPending);
+        if (pendingMessage) {
+            // cancel the upload or remove the failed one, without posting the message
+            return (this.uploading || Boolean(this.uploadError)) && pendingMessage.allowsEdition;
+        }
         if (this.message_ids.length && this.store.self_user?.share !== false) {
             return this.message_ids.some((m) => m.editable);
         }
@@ -136,6 +151,18 @@ export class Attachment extends FileModelMixin(Record) {
 
     get uploading() {
         return this.id < 0;
+    }
+
+    get isViewable() {
+        return !this.uploadError && super.isViewable;
+    }
+
+    get urlQueryParams() {
+        return this.uploadError ? {} : super.urlQueryParams;
+    }
+
+    get urlRoute() {
+        return this.uploadError ? this.tmpUrl : super.urlRoute;
     }
 
     /** Remove the given attachment globally. */

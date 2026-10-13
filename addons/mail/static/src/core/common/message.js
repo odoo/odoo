@@ -397,6 +397,14 @@ export class Message extends Component {
         return groupAttachments(this.message.extra_body_attachment_ids);
     }
 
+    get uploadProgressPercent() {
+        return Math.round(this.message.uploadProgress * 100);
+    }
+
+    get uploadProgressText() {
+        return _t("Uploading… %(progress)s", { progress: `${this.uploadProgressPercent}%` });
+    }
+
     get showTextVisually() {
         return (
             !this.message.linkPreviewSquash &&
@@ -564,8 +572,17 @@ export class Message extends Component {
     }
 
     /** @param {import("models").Attachment[]} attachments */
-    onClickAttachmentUnlink(attachments) {
-        return this.store.removeAttachments(attachments);
+    async onClickAttachmentUnlink(attachments) {
+        await this.store.removeAttachments(attachments);
+        if (this.message.hasPostFailed) {
+            this.message.thread.updateUploadFailure(this.message);
+        }
+    }
+
+    onClickCancelUpload() {
+        return this.store.removeAttachments(
+            this.message.attachment_ids.filter(({ uploading }) => uploading)
+        );
     }
 
     /**

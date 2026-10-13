@@ -72,6 +72,13 @@ patch(Thread.prototype, {
             return channel.post(...arguments).then(() => channel.resolveReadyToSwap());
         }
         const message = await super.post(...arguments);
+        if (!message) {
+            // Not posted, e.g. when all its uploads were cancelled: no answer to process.
+            if (this.channel?.chatbot) {
+                this.channel.chatbot.isProcessingAnswer = false;
+            }
+            return;
+        }
         if (this.channel?.chatbot?.currentStep?.step_type === "free_input_multi") {
             // Multi-line answers are processed after a debounce delay: do not wait to swap
             // temporary thread with persisted one.
