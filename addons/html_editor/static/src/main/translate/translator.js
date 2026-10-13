@@ -1,5 +1,52 @@
 import { rpc } from "@web/core/network/rpc";
 
+const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer, document) => {
+    let lines = content.split("\n");
+    if (baseContainer.toUpperCase() === "P") {
+        // P has a margin bottom which is used as an interline, no need to
+        // keep empty lines in that case.
+        lines = lines.filter((line) => line.trim().length);
+    }
+    const fragment = document.createDocumentFragment();
+    let parentUl, parentOl;
+    let lineIndex = 0;
+    for (const line of lines) {
+        if (line.trim().startsWith("- ")) {
+            // Create or continue an unordered list.
+            parentUl = parentUl || document.createElement("ul");
+            const li = document.createElement("li");
+            li.textContent = line.trim().slice(2);
+            parentUl.appendChild(li);
+        } else if (
+            (parentOl && line.startsWith(`${parentOl.children.length + 1}. `)) ||
+            (!parentOl && line.startsWith("1. ") && lines[lineIndex + 1]?.startsWith("2. "))
+        ) {
+            // Create or continue an ordered list (only if the line starts
+            // with the next number in the current ordered list (or 1 if no
+            // ordered list was in progress and it's followed by a 2).
+            parentOl = parentOl || document.createElement("ol");
+            const li = document.createElement("li");
+            li.textContent = line.slice(line.indexOf(".") + 2);
+            parentOl.appendChild(li);
+        } else if (line.trim().length === 0) {
+            const emptyLine = document.createElement("DIV");
+            emptyLine.append(document.createElement("BR"));
+            fragment.appendChild(emptyLine);
+        } else {
+            // Insert any list in progress, and a new block for the current
+            // line.
+            [parentUl, parentOl].forEach((list) => list && fragment.appendChild(list));
+            parentUl = parentOl = undefined;
+            const block = document.createElement(line.startsWith("Title: ") ? "h2" : baseContainer);
+            block.textContent = line;
+            fragment.appendChild(block);
+        }
+        lineIndex += 1;
+    }
+    [parentUl, parentOl].forEach((list) => list && fragment.appendChild(list));
+    return fragment;
+};
+
 class Translator {
     constructor(id, name) {
         this.id = id;
@@ -13,23 +60,27 @@ class Translator {
      * @param {String} originalText the text needs to be translated
      * @param {String} targetLang the destination language
      *
-     * @returns {Object} { translatedText: String, isError: Boolean }
+     * @returns {Object} { translatedContent: String, isError: Boolean }
      */
-    async translate(originalText, targetLang) {
-        const translatedText = `Translated content`; // Placeholder for actual translation logic
+    async translate(originalText, targetLang, baseContainer, document) {
+        const translatedContent = `Translated content`; // Placeholder for actual translation logic
         return {
-            translatedText: translatedText,
+            translatedContent: translatedContent,
             isError: false,
         };
     }
 }
 
 export class GoogleTranslator extends Translator {
-    async translate(originalText, targetLang) {
+    async translate(fragment, targetLang, baseContainer, document) {
         const protectedCallback = (content) => {
             delete this.pendingRpcPromise;
             return {
-                translatedText: content.translated_text,
+                translatedContent: POSTPROCESS_GENERATED_CONTENT(
+                    content.translated_text,
+                    baseContainer,
+                    document
+                ),
                 isError: content.isError || false,
             };
         };
@@ -37,7 +88,7 @@ export class GoogleTranslator extends Translator {
         this.pendingRpcPromise = rpc(
             "/html_editor/google_translate",
             {
-                originalText,
+                originalText: fragment.textContent,
                 targetLang: googleLanguageCode,
             },
             { silent: true }
@@ -60,11 +111,16 @@ export class ChatGPTTranslator extends Translator {
             {
                 role: "system",
                 content:
-                    "You are a translation assistant. You goal is to translate text while maintaining the original format and" +
-                    "respecting specific instructions. \n" +
-                    "Instructions: \n" +
-                    "- You must respect the format (wrapping the translated text between <generated_text> and </generated_text>)\n" +
-                    "- Do not write HTML.",
+                    "You are an HTML-aware translation assistant. Your goal is to translate the text content of the provided HTML into the target language while preserving the HTML structure exactly.\n" +
+                    "Instructions:\n" +
+                    "- Wrap the entire output between <generated_html> and </generated_html>. Output nothing outside these tags.\n" +
+                    "- The input is an HTML fragment. Translate only the human-readable text nodes (including text inside nested elements).\n" +
+                    "- Preserve every tag, attribute (names and values), attribute order, inline style, class, id, data-* attribute, and nesting exactly as given. Do not add, remove, reorder, or merge elements.\n" +
+                    "- Preserve whitespace, line breaks, and HTML entities (e.g. &nbsp;, &amp;) as in the input.\n" +
+                    "- Do not translate or alter: code/pre content, URLs.\n" +
+                    "- Keep the text flowing naturally in the target language; word order inside a sentence may change as long as the surrounding tags still wrap the equivalent words.\n" +
+                    "- Do not wrap the output in markdown code fences, do not add explanations, comments, or notes.\n" +
+                    "- If the input contains no translatable text, return it unchanged inside the tags.\n",
             },
         ];
     }
@@ -87,12 +143,14 @@ export class ChatGPTTranslator extends Translator {
             .catch((error) => protectedCallback(error.data?.message || error.message, true));
     }
 
-    async translate(originalText, targetLang) {
-        const query = `Translate <generated_text>${originalText}</generated_text> to ${targetLang.languageName}`;
+    async translate(fragment, targetLang, baseContainer, document) {
+        const content = document.createElement("div");
+        content.appendChild(fragment.cloneNode(true));
+        const query = `Translate <generated_html>${content.innerHTML}</generated_html> to ${targetLang.languageName}`;
         function contentCleaningCallback(content, isError) {
-            const translatedText = content
-                .replace(/^[\s\S]*<generated_text>/, "")
-                .replace(/<\/generated_text>[\s\S]*$/, "");
+            const translatedContent = content
+                .replace(/^[\s\S]*<generated_html>/, "")
+                .replace(/<\/generated_html>[\s\S]*$/, "");
             if (!isError) {
                 // There was no error, add the response to the history.
                 this.conversationHistory.push(
@@ -106,9 +164,11 @@ export class ChatGPTTranslator extends Translator {
                     }
                 );
             }
-
+            const doc = new DOMParser().parseFromString(translatedContent, "text/html");
+            const fragment = document.createDocumentFragment();
+            fragment.append(...doc.body.childNodes);
             return {
-                translatedText,
+                translatedContent: fragment,
                 isError,
             };
         }
