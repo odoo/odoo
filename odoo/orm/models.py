@@ -2507,11 +2507,16 @@ class BaseModel(metaclass=MetaModel):
         update_custom_fields = self.env.context.get('update_custom_fields', False)
         must_create_table = not sql.table_exists(cr, self._table)
         parent_path_compute = False
+        # parent_path is compared character by character (see
+        # _parent_store_update), whatever the collation of the database
+        parent_path_type = SQL('varchar COLLATE "C"')
 
         if self._auto:
             if must_create_table:
                 def make_type(field):
                     typ = field.stored_sql_column_type
+                    if self._parent_store and field.name == 'parent_path':
+                        typ = parent_path_type
                     if field.required:
                         typ = SQL("%s NOT NULL", typ)
                     return typ
@@ -2536,8 +2541,10 @@ class BaseModel(metaclass=MetaModel):
 
             if self._parent_store:
                 if not sql.column_exists(cr, self._table, 'parent_path'):
-                    sql.create_column(self.env.cr, self._table, 'parent_path', 'varchar')
+                    sql.create_column(self.env.cr, self._table, 'parent_path', parent_path_type)
                     parent_path_compute = True
+                elif sql.column_collation(cr, self._table, 'parent_path') != 'C':
+                    sql.convert_column(cr, self._table, 'parent_path', parent_path_type)
                 self._check_parent_path()
 
             if not must_create_table:
@@ -4607,7 +4614,9 @@ class BaseModel(metaclass=MetaModel):
             # whose pattern comes from a column, so PostgreSQL gets no index
             # bounds and scans the table. The range below selects the same rows
             # from the index: parent_path ends with '/' and '0' is the next
-            # character, so left(parent_path, -1) || '0' closes the range.
+            # character, so left(parent_path, -1) || '0' closes the range. This
+            # holds because the column has the "C" collation: others, like
+            # glibc's en_US.UTF-8, ignore the '/' and sort '12/14/' after '120'.
             updated = dict(self.env.execute_query(SQL(
                 """ UPDATE %(table)s child
                     SET parent_path = concat(%(prefix)s, substr(child.parent_path,

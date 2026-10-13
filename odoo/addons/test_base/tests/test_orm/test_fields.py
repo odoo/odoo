@@ -12,7 +12,7 @@ from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import TransactionCase, tagged, users
-from odoo.tools import BinaryBytes, float_repr, mute_logger
+from odoo.tools import BinaryBytes, float_repr, mute_logger, sql
 from odoo.tools.image import binary_to_image, image_data_uri
 
 from .test_domain_expression import TransactionExpressionCase
@@ -4252,6 +4252,18 @@ class TestParentStore(TransactionCaseWithUserDemo):
         self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
         self.assertParentOf(self.cats(5), self.cats(0, 5))
         self.assertParentOf(self.cats(9), self.cats(0, 6, 9))
+
+    def test_parent_path_collation(self):
+        """ parent_path has the "C" collation, which the range matching the
+        descendants of the moved nodes relies on, whatever the collation of
+        the database. """
+        Cat = self.env['test_orm.category']
+        self.assertEqual(sql.column_collation(self.env.cr, Cat._table, 'parent_path'), 'C')
+
+        self.cats(6).write({'parent': self.cats(1).id})
+        self.assertChildOf(self.cats(1), self.cats(1, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertParentOf(self.cats(9), self.cats(0, 1, 6, 9))
 
     def test_move_1_cycle(self):
         """ Move a node to create a cycle. """

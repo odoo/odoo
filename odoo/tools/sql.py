@@ -344,6 +344,26 @@ def column_exists(cr: Cursor, tablename: str, columnname: str) -> bool:
     return cr.rowcount
 
 
+def column_collation(cr: Cursor, tablename: str, columnname: str) -> str | None:
+    """ Return the name of the collation of the given column, ``'default'``
+    for the default collation of the database, or ``None`` when the column
+    does not exist or its type is not collatable. """
+    cr.execute(SQL(
+        """ SELECT co.collname
+              FROM pg_attribute a
+              JOIN pg_class c ON a.attrelid = c.oid
+              JOIN pg_namespace nc ON c.relnamespace = nc.oid
+              JOIN pg_collation co ON a.attcollation = co.oid
+             WHERE nc.nspname = current_schema
+               AND c.relname = %s
+               AND a.attname = %s
+               AND NOT a.attisdropped """,
+        tablename, columnname,
+    ))
+    row = cr.fetchone()
+    return row[0] if row else None
+
+
 def create_column(
     cr: Cursor,
     tablename: str,
