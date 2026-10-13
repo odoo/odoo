@@ -26,6 +26,7 @@ export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel 
         this.childField = this.env.model.config.context.child_field;
         this.orderId = this.env.model.config.context.order_id;
         this.currencyId = this.env.model.config.context.product_catalog_currency_id;
+        this.canCreateSections = true;
 
         this.orm = useService("orm");
 
@@ -37,6 +38,7 @@ export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel 
         });
 
         useSubEnv({
+            canCreateSections: () => this.canCreateSections,
             formatAmount: this.formatAmount.bind(this),
             showSectionAmounts: this.showPrices,
             setSelectedSection: this.setSelectedSection.bind(this),
@@ -80,7 +82,7 @@ export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel 
                 return Boolean(node.parent_id) === Boolean(targetParentId);
             },
 
-            preventDrag: () => this.editingSection,
+            preventDrag: () => this.editingSection || !this.canCreateSections,
 
             onDrop: (params) => this.resequenceSections(params),
         });
@@ -100,7 +102,7 @@ export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel 
     }
 
     get editingSection() {
-        return this.editingSectionId !== undefined;
+        return this.state.editingSectionId !== undefined;
     }
 
     formatAmount(amount) {
@@ -123,8 +125,9 @@ export class AccountProductCatalogSearchPanel extends ProductCatalogSearchPanel 
     }
 
     enableSectionInput(parentId = null) {
-        if (this.editingSection) {
-            // forbid editing another line when one is still being edited
+        if (this.editingSection || !this.canCreateSections) {
+            // forbid creating sections when not allowed, or editing another
+            // line when one is still being edited
             return;
         }
 

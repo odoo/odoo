@@ -34,6 +34,7 @@
         <header class="d-flex align-items-center cursor-default mb-3">
             <b class="me-2" t-out="this.orderName"/>
             <button
+                t-if="this.canCreateSections"
                 t-attf-class="btn btn-sm ms-auto #{this.uiService.isSmall ? 'btn-link p-0' : 'btn-secondary'}"
                 t-on-click="() => this.enableSectionInput()"
                 title="Add a section"
