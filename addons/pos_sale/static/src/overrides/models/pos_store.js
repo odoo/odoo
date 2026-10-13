@@ -83,6 +83,12 @@ patch(PosStore.prototype, {
         return sale_order;
     },
     async settleSO(sale_order, orderFiscalPos) {
+        if (
+            sale_order.order_line.some((line) => line.is_downpayment) &&
+            !(await this.loadDownPaymentProduct())
+        ) {
+            return;
+        }
         const order = this.get_order();
         // Suppress expensive reactive work (tax recomputation, order summary and
         // customer display re-renders, loyalty updates) for the whole settle. The
