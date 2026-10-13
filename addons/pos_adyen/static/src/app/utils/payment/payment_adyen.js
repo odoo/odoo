@@ -244,7 +244,7 @@ export class PaymentAdyen extends PaymentInterface {
     _adyenHandleResponse(response) {
         var line = this.pendingAdyenline();
 
-        if (!response || (response.error && response.error.status_code == 401)) {
+        if (!response || (response.error && [401, 403].includes(response.error.status_code))) {
             this._show_error(_t("Authentication failed. Please check your Adyen credentials."));
             if (line) {
                 line.setPaymentStatus("force_done");
