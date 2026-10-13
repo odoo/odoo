@@ -1885,6 +1885,17 @@ export class TablePlugin extends Plugin {
             td.classList.toggle("o_selected_td", true);
             this.processThrough("deselect_custom_selected_nodes_processors", td);
         }
+        // Force a non-collapsed selection when selecting a single cell to avoid
+        // having a collapsed selection that is actually selecting something.
+        if (tdsToSelect.size === 1 && selection.isCollapsed) {
+            const [cell] = tdsToSelect.values();
+            this.dependencies.selection.setSelection({
+                anchorNode: cell,
+                anchorOffset: 0,
+                focusNode: cell,
+                focusOffset: nodeSize(cell),
+            });
+        }
     }
 
     /**

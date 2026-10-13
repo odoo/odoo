@@ -3047,7 +3047,7 @@ describe("keyboard navigation with multiline", () => {
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
-                        <div class="o-paragraph">P1[]L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>
+                        [<div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>]
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
@@ -3109,7 +3109,7 @@ describe("keyboard navigation with multiline", () => {
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
-                        <div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2[]L2</div>
+                        [<div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>]
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
@@ -3171,7 +3171,7 @@ describe("keyboard navigation with multiline", () => {
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
-                        <div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2[]L1<br>P2L2</div>
+                        [<div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>]
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
@@ -3202,7 +3202,7 @@ describe("keyboard navigation with multiline", () => {
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
-                        <div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2[]L1<br>P2L2</div>
+                        [<div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>]
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
@@ -3237,7 +3237,7 @@ describe("keyboard navigation with multiline", () => {
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
-                        <div class="o-paragraph">P1[]L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>
+                        [<div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>]
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
@@ -3256,7 +3256,7 @@ describe("keyboard navigation with multiline", () => {
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td class="o_selected_td">C2]</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
-                        <div class="o-paragraph">P1[L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>
+                        <div class="o-paragraph">[P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
@@ -3307,7 +3307,7 @@ describe("keyboard navigation with multiline", () => {
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
-                        <div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2[]L2</div>
+                        [<div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>]
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td>C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
@@ -3326,7 +3326,7 @@ describe("keyboard navigation with multiline", () => {
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
                     <tr><td>A2</td><td>B2</td><td>C2</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
-                        <div class="o-paragraph">P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2[L2</div>
+                        <div class="o-paragraph">[P1L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>
                     </td><td>D3</td><td>E3</td></tr>
                     <tr><td>A4</td><td>B4</td><td class="o_selected_td">]C4</td><td>D4</td><td>E4</td></tr>
                     <tr><td>A5</td><td>B5</td><td>C5</td><td>D5</td><td>E5</td></tr>
