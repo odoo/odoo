@@ -204,9 +204,11 @@ class MicrosoftSync(models.AbstractModel):
         # the seriesMaster then keeps the iCalUId of the former single event. Those
         # single events are now represented by the recurrences, so remove them to
         # avoid leaving duplicates next to the recurrences' first occurrences.
-        if new_recurrence:
+        # Empty UIDs would also match unrelated, unsynchronized events.
+        recurrence_uids = [uid for uid in new_recurrence.mapped('ms_universal_event_id') if uid]
+        if recurrence_uids:
             duplicate_singles = self.env['calendar.event'].search([
-                ('ms_universal_event_id', 'in', new_recurrence.mapped('ms_universal_event_id')),
+                ('ms_universal_event_id', 'in', recurrence_uids),
                 ('recurrence_id', '=', False),
             ])
             duplicate_singles.microsoft_id = False
@@ -308,7 +310,7 @@ class MicrosoftSync(models.AbstractModel):
         # remove cancelled events and recurrences
         cancelled_recurrences = self.env['calendar.recurrence'].search([
             '|',
-            ('ms_universal_event_id', 'in', cancelled.uids),
+            ('ms_universal_event_id', 'in', [uid for uid in cancelled.uids if uid]),
             ('microsoft_id', 'in', cancelled.ids),
         ])
         cancelled_events = self.browse([
