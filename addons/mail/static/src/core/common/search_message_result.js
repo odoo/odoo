@@ -12,6 +12,7 @@ export class SearchMessageResult extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = useProps({
+            closePanel: t.function([]).optional(),
             messageSearch: t.instanceOf(MessageSearchState),
             onClickJump: t.function([]).optional(),
             thread: t.instanceOf(this.store["mail.thread"]),

@@ -21,6 +21,7 @@ export class MessageCardList extends Component {
         this.store = useService("mail.store");
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.props = useProps({
+            closePanel: t.function([]).optional(),
             emptyText: t.string().optional(),
             loadMore: t.boolean().optional(),
             messageSearch: t.instanceOf(MessageSearchState).optional(),
@@ -49,7 +50,7 @@ export class MessageCardList extends Component {
         this.props.onClickJump?.();
         if (this.ui.isSmall || this.ancestors.inChatWindow || this.ancestors.inMeetingView) {
             this.env.pinMenu?.close();
-            this.env.searchMenu?.close();
+            this.props.closePanel?.();
             this.ancestors.inMeetingView?.openChat();
         }
         // Give the time for menus to close before scrolling to the message.

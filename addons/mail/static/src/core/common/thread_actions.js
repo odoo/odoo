@@ -1,5 +1,3 @@
-import { useSubEnv } from "@web/owl2/utils";
-
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
@@ -86,17 +84,6 @@ registerThreadAction("search-messages", {
     name: ({ action }) => (action.isActive ? _t("Close Search") : _t("Search Messages")),
     sequence: 20,
     sequenceGroup: 20,
-    setup: ({ action }) =>
-        useSubEnv({
-            searchMenu: {
-                open: () => action.actionPanelOpen(),
-                close: () => {
-                    if (action.isActive) {
-                        action.actionPanelClose();
-                    }
-                },
-            },
-        }),
 });
 registerThreadAction("meeting-chat", {
     actionPanelComponent: MeetingChat,

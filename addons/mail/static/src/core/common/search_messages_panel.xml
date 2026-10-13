@@ -11,7 +11,7 @@
             <t t-set-slot="header">
                 <SearchMessageInput closeSearch="this.props.closeSearch" messageSearch="this.messageSearch" thread="this.props.thread"/>
             </t>
-            <SearchMessageResult thread="this.props.thread" messageSearch="this.messageSearch"/>
+            <SearchMessageResult closePanel="this.props.close" thread="this.props.thread" messageSearch="this.messageSearch"/>
         </ActionPanel>
     </t>
 </templates>

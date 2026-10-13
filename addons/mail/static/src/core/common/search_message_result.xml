@@ -6,6 +6,7 @@
                 <t t-out="this.MESSAGE_FOUND" />
             </p>
             <MessageCardList
+                closePanel="this.props.closePanel"
                 messages="this.props.messageSearch.messages"
                 thread="this.props.thread"
                 mode="'search'"
