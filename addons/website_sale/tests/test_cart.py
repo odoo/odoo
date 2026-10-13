@@ -22,13 +22,13 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 @tagged("post_install", "-at_install")
 class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
-        'website.group_website_designer',  # website config (prevent_sale)
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
+        "website.group_website_designer",  # website config (prevent_sale)
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = "Test Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -180,15 +180,17 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
                 product_template_id=combo_product.product_tmpl_id.id,
                 product_id=combo_product.id,
                 quantity=1,
-                linked_products=[{
-                    "product_template_id": combo_item.product_tmpl_id.id,
-                    "parent_product_template_id": combo_product.product_tmpl_id.id,
-                    "product_id": combo_item.id,
-                    "combo_item_id": combo.combo_item_ids.id,
-                    "product_custom_attribute_values": [],
-                    "no_variant_attribute_value_ids": [],
-                    "quantity": 1,
-                }],
+                linked_products=[
+                    {
+                        "product_template_id": combo_item.product_tmpl_id.id,
+                        "parent_product_template_id": combo_product.product_tmpl_id.id,
+                        "product_id": combo_item.id,
+                        "combo_item_id": combo.combo_item_ids.id,
+                        "product_custom_attribute_values": [],
+                        "no_variant_attribute_value_ids": [],
+                        "quantity": 1,
+                    }
+                ],
             )
 
         self.assertEqual(request.cart.order_line.product_id, combo_product + combo_item)
@@ -323,12 +325,17 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         self.assertEqual(len(cart.with_user(self.public_user).sudo()._cart_accessories()), 0)
 
     def test_cart_new_fpos_from_geoip(self):
-        fpos_be = self.env["account.fiscal.position"].sudo().create({
-            "name": "Fiscal Position BE",
-            "country_id": self.country_be.id,
-            "company_id": self.company.id,
-            "auto_apply": True,
-        })
+        fpos_be = (
+            self
+            .env["account.fiscal.position"]
+            .sudo()
+            .create({
+                "name": "Fiscal Position BE",
+                "country_id": self.country_be.id,
+                "company_id": self.company.id,
+                "auto_apply": True,
+            })
+        )
 
         with self.mock_request(country_code="BE") as request:
             self.assertEqual(request.fiscal_position, fpos_be)
@@ -350,21 +357,26 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         # Create fiscal position mapping taxes 10% -> 6%
         fpos = self.env["account.fiscal.position"].sudo().create({"name": "test"})
         # Add 10% tax on product
-        tax10, tax6 = self.env["account.tax"].sudo().create([
-            {
-                "name": "Test tax 10",
-                "amount": 10,
-                "price_include_override": "tax_included",
-                "amount_type": "percent",
-            },
-            {
-                "name": "Test tax 6",
-                "fiscal_position_ids": fpos,
-                "amount": 6,
-                "price_include_override": "tax_included",
-                "amount_type": "percent",
-            },
-        ])
+        tax10, tax6 = (
+            self
+            .env["account.tax"]
+            .sudo()
+            .create([
+                {
+                    "name": "Test tax 10",
+                    "amount": 10,
+                    "price_include_override": "tax_included",
+                    "amount_type": "percent",
+                },
+                {
+                    "name": "Test tax 6",
+                    "fiscal_position_ids": fpos,
+                    "amount": 6,
+                    "price_include_override": "tax_included",
+                    "amount_type": "percent",
+                },
+            ])
+        )
         tax6.sudo().original_tax_ids = tax10
 
         test_product = self.env["product.product"].create({
@@ -406,21 +418,26 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         # into account when updating the cart for no_variant product
         # Add 10% tax on product
         fpos = self.env["account.fiscal.position"].sudo().create({"name": "test"})
-        tax10, tax0 = self.env["account.tax"].sudo().create([
-            {
-                "name": "Test tax 10",
-                "amount": 10,
-                "price_include_override": "tax_included",
-                "amount_type": "percent",
-            },
-            {
-                "name": "Test tax 0",
-                "fiscal_position_ids": fpos,
-                "amount": 0,
-                "price_include_override": "tax_included",
-                "amount_type": "percent",
-            },
-        ])
+        tax10, tax0 = (
+            self
+            .env["account.tax"]
+            .sudo()
+            .create([
+                {
+                    "name": "Test tax 10",
+                    "amount": 10,
+                    "price_include_override": "tax_included",
+                    "amount_type": "percent",
+                },
+                {
+                    "name": "Test tax 0",
+                    "fiscal_position_ids": fpos,
+                    "amount": 0,
+                    "price_include_override": "tax_included",
+                    "amount_type": "percent",
+                },
+            ])
+        )
         tax0.sudo().original_tax_ids = tax10
 
         # create an attribute with one variant
@@ -503,34 +520,85 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         self.assertEqual(len(cart.order_line), 2)
         self.assertEqual(cart.order_line.mapped("product_uom_qty"), [4, 1])
 
+    def test_add_to_cart_saves_only_filled_custom_values_on_separate_lines(self):
+        """An empty custom value is not saved, and a product with a custom value selected is never
+        merged into an existing cart line."""
+        self.product.product_tmpl_id.attribute_line_ids = [
+            Command.create({
+                "attribute_id": self.custom_attribute.id,
+                "value_ids": [Command.set(self.custom_attribute.value_ids.ids)],
+            })
+        ]
+        custom_ptav = self.product.product_tmpl_id.attribute_line_ids.product_template_value_ids
+
+        with self.mock_request() as request:
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id.id,
+                product_id=self.product.id,
+                quantity=1,
+                product_custom_attribute_values=[
+                    {
+                        "custom_product_template_attribute_value_id": custom_ptav.id,
+                        "custom_value": "",
+                    }
+                ],
+            )
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id.id,
+                product_id=self.product.id,
+                quantity=1,
+                product_custom_attribute_values=[
+                    {
+                        "custom_product_template_attribute_value_id": custom_ptav.id,
+                        "custom_value": "Wood",
+                    }
+                ],
+            )
+            cart = request.cart
+
+        self.assertEqual(
+            [line.product_custom_attribute_value_ids.custom_value for line in cart.order_line],
+            [False, "Wood"],
+        )
+
     def test_cart_new_pricelist_from_geoip(self):
         """Check that, when adding a new partner to a website order, the partner's GeoIP
         is factored into the pricelist recomputation.
         """
         self.pricelist = self._enable_pricelists()
         eu_group = self.env.ref("base.europe")
-        not_eu_group = self.env["res.country.group"].sudo().create({
-            "name": "Not EU",
-            "country_ids": self
-            .env["res.country"]
-            .search([("id", "not in", eu_group.country_ids.ids)])
-            .ids,
-        })
-
-        _pricelist_eu, pricelist_not_eu = self.env["product.pricelist"].sudo().create([
-            {
-                "name": "EU",
-                "country_group_ids": eu_group.ids,
-                "website_id": self.website.id,
-                "sequence": 1,
-            },
-            {
+        not_eu_group = (
+            self
+            .env["res.country.group"]
+            .sudo()
+            .create({
                 "name": "Not EU",
-                "country_group_ids": not_eu_group.ids,
-                "website_id": self.website.id,
-                "sequence": 2,
-            },
-        ])
+                "country_ids": self
+                .env["res.country"]
+                .search([("id", "not in", eu_group.country_ids.ids)])
+                .ids,
+            })
+        )
+
+        _pricelist_eu, pricelist_not_eu = (
+            self
+            .env["product.pricelist"]
+            .sudo()
+            .create([
+                {
+                    "name": "EU",
+                    "country_group_ids": eu_group.ids,
+                    "website_id": self.website.id,
+                    "sequence": 1,
+                },
+                {
+                    "name": "Not EU",
+                    "country_group_ids": not_eu_group.ids,
+                    "website_id": self.website.id,
+                    "sequence": 2,
+                },
+            ])
+        )
 
         with self.mock_request(country_code="US") as request:
             self.WebsiteSaleCartController.add_to_cart(
@@ -611,16 +679,20 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
         """Test that a product/website from a company branch
         can be added to the cart.
         """
-        branch_a = self.env["res.company"].sudo().create({
-            "name": "Branch A",
-            "parent_id": self.env.company.id,
-        })
+        branch_a = (
+            self
+            .env["res.company"]
+            .sudo()
+            .create({"name": "Branch A", "parent_id": self.env.company.id})
+        )
         # sudo: creating a website with a company recomputes res.company.website_id
         # (writes res.company), which the restricted user cannot modify — setup.
-        website = self.env["website"].sudo().create({
-            "name": "Branch A Website",
-            "company_id": branch_a.id,
-        })
+        website = (
+            self
+            .env["website"]
+            .sudo()
+            .create({"name": "Branch A Website", "company_id": branch_a.id})
+        )
         self.product.company_id = branch_a
         with self.mock_request(website=website):
             branch_a.invalidate_recordset()

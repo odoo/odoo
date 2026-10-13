@@ -479,8 +479,8 @@ class SaleOrderLine(models.Model):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
         domain = Domain("product_id.product_tmpl_id", operator, value)
-        if operator == 'in' and False in value:  # relation may be falsy
-            domain |= Domain('product_id', '=', False)
+        if operator == "in" and False in value:  # relation may be falsy
+            domain |= Domain("product_id", "=", False)
         return domain
 
     @api.depends("product_id")
@@ -575,21 +575,21 @@ class SaleOrderLine(models.Model):
         """
         no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin.filtered(
             # Only describe the attributes where a choice was made by the customer
-            lambda ptav: ptav.display_type == "multi" or ptav.attribute_line_id.value_count > 1
+            # Custom values are skipped as they will be added only when some text is typed
+            lambda ptav: (
+                not ptav.is_custom
+                and (ptav.display_type == "multi" or ptav.attribute_line_id.value_count > 1)
+            )
         )
         if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
 
         lines = []
 
-        custom_ptavs = (
-            self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
-        )
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == "multi").sorted()
 
-        # display the no_variant attributes, except those that are also
-        # displayed by a custom (avoid duplicate description)
-        lines.extend((no_variant_ptavs - multi_ptavs - custom_ptavs).mapped("display_name"))
+        # display the no_variant attributes
+        lines.extend((no_variant_ptavs - multi_ptavs).mapped("display_name"))
 
         # display the selected values per attribute on a single for a multi checkbox
         for pta, ptavs in groupby(multi_ptavs, lambda ptav: ptav.attribute_id):
@@ -1306,7 +1306,16 @@ class SaleOrderLine(models.Model):
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
                 ) and line._affects_qty_invoiced(invoice_line):
                     if line.is_downpayment:
-                        if not line.currency_id.is_zero(sum(invoice_lines.filtered(lambda l: l.move_id.state != 'cancel' or l.move_id.payment_state == 'invoicing_legacy').mapped('balance'))):
+                        if not line.currency_id.is_zero(
+                            sum(
+                                invoice_lines.filtered(
+                                    lambda l: (
+                                        l.move_id.state != "cancel"
+                                        or l.move_id.payment_state == "invoicing_legacy"
+                                    )
+                                ).mapped("balance")
+                            )
+                        ):
                             invoiced_qties[line] = 1
                             line.qty_invoiced = 1
                         else:
@@ -1576,9 +1585,7 @@ class SaleOrderLine(models.Model):
 
             line.untaxed_amount_to_invoice = amount_to_invoice
 
-    @api.depends(
-        "discount", "price_total", "product_uom_qty", "qty_invoiced_posted"
-    )
+    @api.depends("discount", "price_total", "product_uom_qty", "qty_invoiced_posted")
     def _compute_amount_to_invoice(self):
         for line in self:
             if line.product_uom_qty:
