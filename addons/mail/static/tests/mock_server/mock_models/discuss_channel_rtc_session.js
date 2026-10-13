@@ -128,4 +128,38 @@ export class DiscussChannelRtcSession extends models.ServerModel {
             channelId: channel.id,
         });
     }
+
+    /**
+     * @param {number} id
+     * @param {[number[], string][]} notifications
+     */
+    _notify_peers(id, notifications) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const payloadByTargetId = {};
+        for (const [targetSessionIds, content] of notifications) {
+            for (const target of this.browse(targetSessionIds)) {
+                payloadByTargetId[target.id] ??= { sender: id, notifications: [] };
+                payloadByTargetId[target.id].notifications.push(content);
+            }
+        }
+        for (const target of this.browse(Object.keys(payloadByTargetId).map(Number))) {
+            const [member] = DiscussChannelMember.browse(target.channel_member_id);
+            const [persona] = member.partner_id
+                ? ResPartner.browse(member.partner_id)
+                : MailGuest.browse(member.guest_id);
+            BusBus._sendone(
+                persona,
+                "discuss.channel.rtc.session/peer_notification",
+                payloadByTargetId[target.id]
+            );
+        }
+    }
 }
