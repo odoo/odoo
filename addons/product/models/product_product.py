@@ -874,12 +874,12 @@ class ProductProduct(models.Model):
         return imported_product.exists() + products
 
     @api.model
-    def load(self, fields, data):
+    def load(self, fields, data, *, limit=None):
         if 'import_attribute_values' in fields and not self.env.context.get('from_template_import'):
             res = self.env['product.template'].load(fields, data)
             res['ids'] = self.search(Domain('product_tmpl_id', 'in', res['ids'])).ids
             return res
-        return super().load(fields, data)
+        return super().load(fields, data, limit=limit)
 
     @api.model_create_multi
     def create(self, vals_list):
