@@ -22,6 +22,7 @@ export class SectionRow extends Component {
 
     setup() {
         this.uiService = useService("ui");
+        this.canCreateSections = true;
         onMounted(() => {
             // New (sub)section
             if (this.props.editing) {
