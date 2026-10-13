@@ -60,15 +60,19 @@ class PosPaymentMethod(models.Model):
         auth = requests.auth.HTTPBasicAuth(self.viva_wallet_client_id, self.viva_wallet_client_secret)
         try:
             resp = session.post(f"{self._viva_wallet_account_get_endpoint()}/connect/token", auth=auth, data=data, timeout=TIMEOUT)
-        except requests.exceptions.RequestException:
+        except requests.exceptions.RequestException as e:
             _logger.exception("Failed to call viva_wallet_bearer_token endpoint")
+            raise UserError(_("There are some issues between us and Viva Wallet, try again later.")) from e
 
-        access_token = resp.json().get('access_token')
-        if access_token:
-            self.viva_wallet_bearer_token = access_token
-            return {'Authorization': f"Bearer {access_token}"}
-        else:
+        try:
+            access_token = resp.json().get('access_token')
+        except ValueError:
+            access_token = False
+
+        if not access_token:
             raise UserError(_('Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client ID and Client Secret are correct'))
+        self.viva_wallet_bearer_token = access_token
+        return {'Authorization': f"Bearer {access_token}"}
 
     def _get_verification_key(self, endpoint, viva_wallet_merchant_id, viva_wallet_api_key):
         # Get a key to configure the webhook.
@@ -80,9 +84,18 @@ class PosPaymentMethod(models.Model):
         auth = requests.auth.HTTPBasicAuth(viva_wallet_merchant_id, viva_wallet_api_key)
         try:
             resp = requests.get(f"{endpoint}/api/messages/config/token", auth=auth, timeout=TIMEOUT)
-        except requests.exceptions.RequestException:
-            _logger.exception('Failed to call https://%s/api/messages/config/token endpoint', endpoint)
-        return resp.json().get('Key')
+        except requests.exceptions.RequestException as e:
+            _logger.exception('Failed to call %s/api/messages/config/token endpoint', endpoint)
+            raise UserError(_("There are some issues between us and Viva Wallet, try again later.")) from e
+
+        try:
+            key = resp.json().get('Key')
+        except ValueError:
+            key = False
+
+        if not key:
+            raise UserError(_('Unable to retrieve Viva Wallet webhook verification key: Please verify that the Merchant ID and API Key are correct'))
+        return key
 
     def _call_viva_wallet(self, endpoint, action, data=None, should_retry=True):
         session = get_viva_wallet_session(should_retry)
@@ -93,8 +106,14 @@ class PosPaymentMethod(models.Model):
         except requests.exceptions.RequestException as e:
             return {'error': _("There are some issues between us and Viva Wallet, try again later.%s)", e)}
         if resp.text and resp.json().get('detail') == 'Could not validate credentials':
-            session.headers.update(self._bearer_token(session))
-            resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)
+            try:
+                session.headers.update(self._bearer_token(session))
+            except UserError as e:
+                return {'error': str(e)}
+            try:
+                resp = session.request(action, endpoint, json=data, timeout=TIMEOUT)
+            except requests.exceptions.RequestException:
+                return {'error': _("There are some issues between us and Viva Wallet, try again later.")}
 
         if resp.status_code == 200:
             if resp.text:
