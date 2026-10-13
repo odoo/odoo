@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 
 from odoo import _, api, fields, models
 
@@ -19,31 +20,46 @@ class StockLot(models.Model):
     )
 
     @api.depends('product_id.lot_valuated', 'product_id.product_tmpl_id.lot_valuated', 'product_id.stock_move_ids.value', 'standard_price')
-    @api.depends_context('to_date', 'company', 'warehouse_id')
+    @api.depends_context('to_date', 'company', 'warehouse_id', 'allowed_company_ids')
     def _compute_value(self):
         """Compute totals of multiple svl related values"""
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
         at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
         lots = self.with_context(owners=[False, self.env.company.partner_id.id])
-        for lot in lots:
-            if not lot.lot_valuated:
-                lot.total_value = 0.0
-                lot.avg_cost = 0.0
-                continue
-            valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
-            qty_valued = lot.product_qty
-            qty_available = lot.with_context(warehouse_id=False).product_qty
-            if valuated_product.uom_id.is_zero(qty_valued):
-                lot.total_value = 0
-                lot.avg_cost = 0.0
-            elif valuated_product.cost_method == 'standard' or valuated_product.uom_id.is_zero(qty_available):
-                lot.total_value = lot.standard_price * qty_valued
-            elif valuated_product.cost_method == 'average':
-                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot.with_context(warehouse_id=False))[1] * qty_valued / qty_available
-            else:
-                lot.total_value = valuated_product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date, lot=lot.with_context(warehouse_id=False)) * qty_valued / qty_available
-            lot.avg_cost = lot.total_value / qty_valued if qty_valued else 0.0
+        total_value_by_lot_id = defaultdict(float)
+        valued_quantity_by_lot_id = defaultdict(float)
+
+        for company in self.env.companies:
+            lots = lots.with_company(company.id).with_context(allowed_company_ids=company.ids)
+
+            for lot in lots:
+                if not lot.lot_valuated:
+                    continue
+                valuated_product = lot.product_id.with_context(at_date=at_date, lot_id=lot.id)
+                qty_valued = lot.product_qty
+                qty_available = lot.with_context(warehouse_id=False).product_qty
+                if valuated_product.uom_id.is_zero(qty_valued):
+                    continue
+                elif valuated_product.cost_method == 'standard' or valuated_product.uom_id.is_zero(qty_available):
+                    total_value = lot.standard_price * qty_valued
+                    total_value_by_lot_id[lot.id] += company.currency_id._convert(total_value, self.env.company.currency_id)
+                    valued_quantity_by_lot_id[lot.id] += qty_valued
+                elif valuated_product.cost_method == 'average':
+                    avco_result = valuated_product.with_context(warehouse_id=False)._run_avco(at_date=at_date, lot=lot.with_context(warehouse_id=False))
+                    total_value = avco_result[1] * qty_valued / qty_available
+                    total_value_by_lot_id[lot.id] += company.currency_id._convert(total_value, self.env.company.currency_id)
+                    valued_quantity_by_lot_id[lot.id] += qty_valued
+                else:
+                    fifo_value = valuated_product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date, lot=lot.with_context(warehouse_id=False))
+                    total_value = fifo_value * qty_valued / qty_available
+                    total_value_by_lot_id[lot.id] += company.currency_id._convert(total_value, self.env.company.currency_id)
+                    valued_quantity_by_lot_id[lot.id] += qty_valued
+
+        for lot in self:
+            lot.total_value = total_value_by_lot_id[lot.id]
+            quantity = valued_quantity_by_lot_id[lot.id]
+            lot.avg_cost = total_value_by_lot_id[lot.id] / quantity if quantity else 0
 
     # TODO: remove avg cost column in master and merge the two compute methods
     def _compute_avg_cost(self):
