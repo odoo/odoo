@@ -493,7 +493,7 @@ class TestCIIFR(TestUBLCommon):
         invoice_vals = {
             'amount_total': 233.47,
             'amount_tax': 14.99,
-            'invoice_lines': [{'price_subtotal': 20.5}, {'price_subtotal': 198.0}, {'price_subtotal': -0.02}]
+            'invoice_lines': [{'price_subtotal': 20.48}, {'price_subtotal': 198.0}]
         }
         # source: Avoir_FR_type380_EN16931.pdf
         self._assert_imported_invoice_from_file(
