@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="html_editor.AccessibilityDialog">
+        <Dialog size="'md'">
+            <t t-set-slot="header">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="oi border border-2 border-dark rounded-circle p-1" data-icon="accessibility" aria-hidden="true"/>
+                    <h3 class="modal-title">Accessibility help</h3>
+                </div>
+                <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="this.props.close"/>
+            </t>
+
+            <p>Below, you can find a list of keyboard shortcuts that can be used in the editor.</p>
+
+            <t t-if="this.props.shortcuts.length">
+                <h4 class="mt-4 mb-3">Content editing keystrokes</h4>
+                <p class="mb-4">These keyboard shortcuts allow for quick access to content editing features.</p>
+
+                <t t-foreach="this.props.shortcuts" t-as="group" t-key="group.category">
+                    <h5 class="mt-4" t-out="group.category"/>
+                    <table class="table table-sm border-top">
+                        <tbody>
+                            <tr t-foreach="group.shortcuts" t-as="shortcut" t-key="shortcut.label">
+                                <th scope="row" class="fw-normal" t-out="shortcut.label"/>
+                                <td class="text-end text-nowrap">
+                                    <t t-foreach="shortcut.keyCombinations" t-as="combination" t-key="combination_index">
+                                        <t t-foreach="combination" t-as="key" t-key="key_index">
+                                            <kbd t-out="key"/>
+                                            <span t-if="!key_last"> + </span>
+                                        </t>
+                                        <span t-if="!combination_last" class="mx-2 text-muted"> or </span>
+                                    </t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </t>
+
+            <t t-if="this.props.shorthands.length">
+                <h5 class="mt-4">Shorthands</h5>
+                <p>Type block shorthands at the start of a line, then press Space. Inline shorthands also work within text.</p>
+                <table class="table table-sm border-top">
+                    <tbody>
+                        <tr t-foreach="this.props.shorthands" t-as="shorthand" t-key="shorthand_index">
+                            <th scope="row" class="fw-normal">
+                                <t t-out="shorthand.label"/>
+                                <span t-if="shorthand.inline" class="text-muted small"> (inline)</span>
+                            </th>
+                            <td class="text-end">
+                                <t t-foreach="shorthand.literals" t-as="literal" t-key="literal_index">
+                                    <code t-out="literal"/>
+                                    <span t-if="!literal_last"> or </span>
+                                </t>
+                                <span> then </span><kbd>Space</kbd>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+
+            <t t-set-slot="footer">
+                <button type="button" t-ref="this.closeButton" class="btn btn-primary" t-on-click="this.props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

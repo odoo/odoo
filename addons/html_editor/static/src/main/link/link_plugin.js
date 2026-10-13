@@ -26,6 +26,8 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
 import { session } from "@web/session";
 
+const LINK_SHORTCUT = "control+k";
+
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
@@ -249,6 +251,8 @@ export class LinkPlugin extends Plugin {
                 run: this.removeLinkFromSelection.bind(this),
             },
         ],
+
+        shortcuts: [{ label: _t("Create link"), hotkey: LINK_SHORTCUT, category: _t("Link") }],
 
         toolbar_groups: [
             withSequence(40, { id: "link", namespaces: ["compact", "expanded"] }),
@@ -492,7 +496,7 @@ export class LinkPlugin extends Plugin {
                 setTimeout(() => this.openLinkPopover());
             },
             {
-                hotkey: "control+k",
+                hotkey: LINK_SHORTCUT,
                 category: "shortcut_conflict",
                 isAvailable: () => {
                     const selectionData = this.dependencies.selection.getSelectionData();

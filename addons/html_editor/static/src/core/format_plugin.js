@@ -142,11 +142,36 @@ export class FormatPlugin extends Plugin {
             },
         ],
         shortcuts: [
-            { hotkey: "control+b", commandId: "formatBold" },
-            { hotkey: "control+i", commandId: "formatItalic" },
-            { hotkey: "control+u", commandId: "formatUnderline" },
-            { hotkey: "control+5", commandId: "formatStrikethrough" },
-            { hotkey: "control+space", commandId: "removeFormat" },
+            {
+                category: _t("Text formatting"),
+                label: _t("Bold"),
+                hotkey: "control+b",
+                commandId: "formatBold",
+            },
+            {
+                category: _t("Text formatting"),
+                label: _t("Italic"),
+                hotkey: "control+i",
+                commandId: "formatItalic",
+            },
+            {
+                category: _t("Text formatting"),
+                label: _t("Underline"),
+                hotkey: "control+u",
+                commandId: "formatUnderline",
+            },
+            {
+                category: _t("Text formatting"),
+                label: _t("Strikethrough"),
+                hotkey: "control+5",
+                commandId: "formatStrikethrough",
+            },
+            {
+                category: _t("Text formatting"),
+                label: _t("Remove Format"),
+                hotkey: "control+space",
+                commandId: "removeFormat",
+            },
         ],
         toolbar_groups: withSequence(20, { id: "decoration" }),
         toolbar_items: [
