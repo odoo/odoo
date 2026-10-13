@@ -99,8 +99,12 @@
         <xpath expr="//span[@t-field='line.l10n_gcc_invoice_tax_amount']" position="attributes">
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </xpath>
-        <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
-            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        <xpath expr="//span[@t-field='line.price_unit']" position="replace">
+            <span class="text-nowrap">
+                <t t-if="o.currency_id.position == 'before'" t-out="o.currency_id.symbol"/>
+                <t>$0</t>
+                <t t-if="o.currency_id.position == 'after'" t-out="o.currency_id.symbol"/>
+            </span>
         </xpath>
         <xpath expr="//div[hasclass('clearfix')]//strong" position="attributes">
             <attribute name="class">d-none</attribute>
