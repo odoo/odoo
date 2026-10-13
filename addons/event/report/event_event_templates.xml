@@ -19,8 +19,8 @@
                                 <div t-if="attendee" class="text-center">
                                     <span
                                         t-foreach="attendee.registration_answer_choice_ids" t-as="answer"
-                                        t-if="len(answer.question_id.answer_ids) &gt; 1" t-out="answer.display_name"/>
-                                        class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer"
+                                        t-if="len(answer.question_id.answer_ids) &gt; 1" t-out="answer.display_name"
+                                        class="px-2 py-1 d-inline-block bg-200 text-black m-1 o_event_foldable_badge_answer"/>
                                 </div>
                                 <!-- Ticket Type -->
                                 <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
