@@ -646,16 +646,22 @@ class MrpWorkorder(models.Model):
         """
         total = 0
         for workorder in self:
-            if workorder._should_estimate_cost():
-                duration = workorder.duration_expected / 60
-            else:
-                intervals = Intervals([
-                    [t.date_start, t.date_end, t]
-                    for t in workorder.time_ids if t.date_end and (not date or t.date_end < date)
-                ])
-                duration = sum_intervals(intervals)
-            total += duration * (workorder.costs_hour or workorder.workcenter_id.costs_hour)
+            total += workorder._get_cost_duration(date) * (workorder.costs_hour or workorder.workcenter_id.costs_hour)
         return total
+
+    def _get_cost_duration(self, date=False):
+        """Returns the duration (in hours) used to compute the cost of the workorder.
+
+        :param datetime date: Only consider time_ids that ended before this date
+        """
+        self.ensure_one()
+        if self._should_estimate_cost():
+            return self.duration_expected / 60
+        intervals = Intervals([
+            [t.date_start, t.date_end, t]
+            for t in self.time_ids if t.date_end and (not date or t.date_end < date)
+        ])
+        return sum_intervals(intervals)
 
     def button_start(self, raise_on_invalid_state=False):
         if any(wo.working_state == 'blocked' for wo in self):

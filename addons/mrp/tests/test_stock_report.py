@@ -740,6 +740,35 @@ class TestMrpStockReports(TestReportsCommon):
         self.assertEqual(overview_values_no_bom['data']['components'][0]['summary']['bom_cost'], 120)
         self.assertEqual(overview_values_no_bom['data']['components'][0]['summary']['mo_cost'], 120)
 
+    def test_mo_overview_done_operation_cost(self):
+        """ Test that the real cost of the operations of a done MO is computed on the
+        exact worked time, as the valuation is.
+        """
+        workcenter = self.env['mrp.workcenter'].create({
+            'name': 'Workcenter',
+            'costs_hour': 50,
+        })
+        self.env['mrp.bom'].create({
+            'product_id': self.product.id,
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'operation_ids': [Command.create({'name': 'Operation', 'workcenter_id': workcenter.id})],
+        })
+        mo = self.env['mrp.production'].create({'product_id': self.product.id})
+        mo.action_confirm()
+        self.env['mrp.workcenter.productivity'].create({
+            'workorder_id': mo.workorder_ids.id,
+            'workcenter_id': workcenter.id,
+            'loss_id': self.env.ref('mrp.block_reason7').id,
+            'date_start': '2024-01-01 08:00:00',
+            'date_end': '2024-01-01 10:17:07',
+        })
+        mo.button_mark_done()
+
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        # 137 minutes 7 seconds at 50/h = 114.2639
+        self.assertEqual(overview_values['data']['operations']['details'][0]['real_cost'], 114.26)
+
     def test_forecast_report_cross_warehouse_mo(self):
         """
         Test that when an MO is planned between two warehouses,
