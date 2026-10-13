@@ -38,6 +38,7 @@ _logger = logging.getLogger(__name__)
 
 
 _FORCED_MODULES = ('base',)
+MAX_REMOVED_MODULES = 50
 
 
 def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, package: ModuleNode) -> bool:
@@ -67,7 +68,7 @@ def load_demo(env: Environment, package: ModuleNode, idref: IdRef, mode: LoadMod
     try:
         if package.manifest.get('demo'):
             _logger.info("Module %s: loading demo", package.name)
-            with env.cr.savepoint(flush=False):
+            with env.cr.savepoint(flush=False):  # flush managed in load_data
                 load_data(env(su=True, context=dict(env.context, install_demo=True)), idref, mode, kind='demo', package=package)
         return True
     except Exception:  # noqa: BLE001
@@ -274,7 +275,6 @@ def load_module_graph(
 
                 # tests may have reset the environment
                 module = env['ir.module.module'].browse(module_id)
-
 
         extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
         extras = []
@@ -498,7 +498,6 @@ def load_modules(
     if update_module:
         env.transaction.will_change_registry()
     if registry.updated_modules:
-
         cr.execute("SELECT model from ir_model")
         for (model,) in cr.fetchall():
             if model in registry:
@@ -514,26 +513,44 @@ def load_modules(
             # trigger after a small delay to give time for assets to regenerate
             vacuum_cron._trigger(at=datetime.datetime.now() + datetime.timedelta(minutes=1))
 
-        env.flush_all()
+        # Compute the groups as light or regular
+        # When `_apply_group_regular()` runs, thes groups already exists in the
+        # database, but the overrides of `_get_light_group_xmlids` is not yet in
+        # the registry (Modules load one by one, models first then data).  As a
+        # result, the group is categorized as regular and linked to
+        # `base.group_user_regular`, and no subsequent process runs to update
+        # it.  Redo the classification now that every module is in.
+        env['res.groups']._apply_group_regular()
+
+        # Commit once everything is installed and clean
+        env.cr.commit()
 
     # STEP 5: Uninstall modules to remove
     if update_module:
         # Remove records referenced from ir_model_data for modules to be
         # removed (and removed the references from ir_model_data).
         cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('to remove',))
-        modules_to_remove = dict(cr.fetchall())
+        modules_to_remove = dict[str, int](cr.fetchall())
         if modules_to_remove:
-            registry.uninstalling_modules = set(modules_to_remove)
-            pkgs = reversed([p for p in graph if p.name in modules_to_remove])
-            for pkg in pkgs:
-                uninstall_hook = pkg.manifest.get('uninstall_hook')
-                if uninstall_hook:
-                    py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
-                    getattr(py_module, uninstall_hook)(env)
-                    env.flush_all()
+            static_modules, imported_modules = tools.partition(lambda m: m in graph, modules_to_remove)
+            if imported_modules:
+                # remove all imported modules (not in graph) together to avoid checking dependencies between them
+                removing_modules = imported_modules
+            else:
+                # remove at most MAX_REMOVED_MODULES in inverse order of dependencies
+                removing_modules = [p.name for p in reversed(list(graph)) if p.name in static_modules]
+                removing_modules = removing_modules[:MAX_REMOVED_MODULES]
 
-            Module = env['ir.module.module']
-            Module.browse(modules_to_remove.values()).module_uninstall()
+            registry.uninstalling_modules = set(removing_modules)
+            if not imported_modules:
+                for name in removing_modules:
+                    if (uninstall_hook := graph[name].manifest.get('uninstall_hook')):
+                        py_module = sys.modules[f'odoo.addons.{name}']
+                        getattr(py_module, uninstall_hook)(env)
+                        env.flush_all()
+            module = env['ir.module.module'].browse(map(modules_to_remove.__getitem__, removing_modules))
+            module.module_uninstall()
+
             registry.loaded = False
             _logger.info('Reloading registry once more after uninstalling modules')
             return
@@ -562,17 +579,6 @@ def load_modules(
                 View._validate_custom_views(model)
             except Exception as e:  # noqa: BLE001
                 _logger.warning('invalid custom view(s) for model %s: %s', model, e)
-
-    # STEP 7: compute the groups as light or regular
-    # When `_apply_group_regular()` runs, thes groups already exists in the
-    # database, but the overrides of `_get_light_group_xmlids` is not yet in the
-    # registry (Modules load one by one, models first then data).
-    # As a result, the group is categorized as regular and linked to
-    # `base.group_user_regular`, and no subsequent process runs to update it.
-    # Redo the classification now that every module is in.
-    if update_module:
-        env['res.groups']._apply_group_regular()
-        env.flush_all()
 
     if not registry._assertion_report or registry._assertion_report.wasSuccessful():
         _logger.info('Modules loaded.')
