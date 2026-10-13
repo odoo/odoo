@@ -6,8 +6,8 @@
         <div class="my-2"/>
         <div class="o-mail-MessagingMenuEmptyChannel-popularChannels d-flex flex-column gap-1 w-100 mt-2" t-foreach="this.store.most_popular_channels" t-as="channel" t-key="channel.localId">
             <div class="d-flex px-2 py-1 gap-2 align-items-start">
-                <div class="o-mail-MessagingMenuItem-avatarContainer" t-att-class="{'o-small': this.ui.isSmall}">
-                    <img class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': this.ui.isSmall, 'rounded': !this.ui.isSmall }" alt="Channel image" t-att-src="channel.avatarUrl"/>
+                <div class="o-mail-MessagingMenuItem-avatarContainer" t-att-class="{'o-small': this.ui.isSmall()}">
+                    <img class="o_avatar w-100 h-100" t-att-class="{ 'rounded-3': this.ui.isSmall(), 'rounded': !this.ui.isSmall() }" alt="Channel image" t-att-src="channel.avatarUrl"/>
                 </div>
                 <div class="d-flex flex-column align-items-start flex-grow-1 text-start overflow-hidden">
                     <span class="fw-semibold text-truncate w-100"><t t-out="channel.displayName"/></span>

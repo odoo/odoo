@@ -30,7 +30,6 @@ export class ChatHub extends Component {
         super.setup();
         this.ancestors = useAncestors();
         this.store = useService("mail.store");
-        this.ui = useService("ui");
         this.busMonitoring = useService("bus.monitoring_service");
         this.bubblesHover = useHover(this.bubblesRef);
         this.moreHover = useHover([this.moreButtonRef, this.hiddenMenuRef], {
@@ -171,7 +170,7 @@ export class ChatHub extends Component {
 }
 
 export const chatHubService = {
-    dependencies: ["bus.monitoring_service", "mail.store", "ui"],
+    dependencies: ["bus.monitoring_service", "mail.store"],
     start() {
         registry.category("main_components").add("mail.ChatHub", { Component: ChatHub });
     },

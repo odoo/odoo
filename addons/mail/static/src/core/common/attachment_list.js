@@ -4,7 +4,7 @@ import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plug
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { propSignal, useMaybePlugin } from "@mail/utils/common/hooks";
 
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -15,6 +15,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
@@ -71,7 +72,7 @@ export class AttachmentList extends Component {
                 t.or([t.promise(), t.literal(undefined)])
             ),
         });
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.dialog = useService("dialog");
         this.fileViewer = useFileViewer(this.rootRef);
         this.actionsMenuState = useDropdownState();
@@ -170,7 +171,7 @@ export class AttachmentList extends Component {
 
     /** @param {import("models").Attachment} attachment */
     async onClickShowInConversation(attachment) {
-        if (this.ui.isSmall || this.ancestors.inChatWindow || this.ancestors.inMeetingView) {
+        if (this.ui.isSmall() || this.ancestors.inChatWindow || this.ancestors.inMeetingView) {
             this.ancestors.inActionPanel?.close({ closeAll: true });
             this.ancestors.inMeetingView?.openChat();
         }

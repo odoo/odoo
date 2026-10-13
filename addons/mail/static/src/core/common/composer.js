@@ -48,6 +48,7 @@ import {
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import {
     htmlFormatList,
@@ -183,7 +184,7 @@ export class Composer extends Component {
             computed(() => this.thread ?? this.composer().message.thread),
             { composer: this.composer }
         );
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.composerService = useService("mail.composer");
         this.inputContainerRef = signal.ref(HTMLSpanElement);
         this.pickerContainerRef = signal.ref(HTMLDivElement);
@@ -235,7 +236,7 @@ export class Composer extends Component {
             (ev) => {
                 const target = ev.composedPath()[0];
                 if (
-                    this.ui.isSmall &&
+                    this.ui.isSmall() &&
                     this.composerActions.panelAction &&
                     this.pickerContainerRef() &&
                     target !== this.pickerContainerRef() &&
@@ -488,7 +489,7 @@ export class Composer extends Component {
             baseContainers: ["DIV", "P"],
             Plugins: !this.composerService.htmlEnabled
                 ? MAIL_TEXT_PLUGINS
-                : this.ui.isSmall
+                : this.ui.isSmall()
                 ? MAIL_HTML_PLUGINS_SMALL_UI
                 : MAIL_HTML_PLUGINS,
             composerPluginDependencies: {
@@ -588,7 +589,7 @@ export class Composer extends Component {
         if (action.definition.isMoreAction) {
             return { type: PANEL_CONTAINER_TYPE.DROPDOWN, position: "top-start" };
         }
-        if (!this.ui.isSmall) {
+        if (!this.ui.isSmall()) {
             return {
                 type: PANEL_CONTAINER_TYPE.POPOVER,
                 arrow: false,
@@ -1124,7 +1125,7 @@ export class Composer extends Component {
     onClickInsertCannedResponse(ev) {
         markEventHandled(ev, "composer.clickInsertCannedResponse");
         this.editor.shared.mail_composer.insert("::", { spaceBefore: true });
-        if (!this.ui.isSmall || !this.ancestors.inChatter) {
+        if (!this.ui.isSmall() || !this.ancestors.inChatter) {
             this.props.composer.autofocus++;
         }
     }
@@ -1146,7 +1147,7 @@ export class Composer extends Component {
 
     addEmoji(str) {
         this.editor.shared.mail_composer.insert(str);
-        if (this.ui.isSmall && !this.ancestors.inChatter) {
+        if (this.ui.isSmall() && !this.ancestors.inChatter) {
             return false;
         } else {
             this.props.composer.autofocus++;

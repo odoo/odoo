@@ -18,7 +18,7 @@ const StorePatch = {
     },
     onLinkFollowed(fromThread) {
         super.onLinkFollowed(...arguments);
-        if (!this.env.services.ui.isSmall && fromThread?.channel) {
+        if (!this.ui.isSmall() && fromThread?.channel) {
             fromThread.open({ focus: false });
         }
     },

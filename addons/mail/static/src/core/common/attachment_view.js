@@ -1,7 +1,8 @@
 import { propSignal } from "@mail/utils/common/hooks";
 
-import { Component, onWillUnmount, signal, t, useOnChange } from "@odoo/owl";
+import { Component, onWillUnmount, signal, t, useOnChange, usePlugin } from "@odoo/owl";
 
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -17,7 +18,7 @@ class AbstractAttachmentView extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.thread = propSignal("thread", t.instanceOf(this.store["mail.thread"]));
-        this.uiService = useService("ui");
+        this.uiService = usePlugin(UIPlugin);
         this.isMobileOS = isMobileOS();
         useOnChange(
             () => [this.iframeViewerPdfRef()],
@@ -74,7 +75,7 @@ export class PopoutAttachmentView extends AbstractAttachmentView {
  * @param {import("@odoo/owl").Signal<import("models").Thread>} signals.thread
  */
 export function usePopoutAttachment({ thread }) {
-    const uiService = useService("ui");
+    const uiService = usePlugin(UIPlugin);
     const mailPopoutService = useService("mail.popout");
     const notification = useService("notification");
 

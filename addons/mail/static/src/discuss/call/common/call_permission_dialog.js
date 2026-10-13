@@ -19,7 +19,6 @@ export class CallPermissionDialog extends Component {
         /** @type {import("@odoo/owl").Signal<Element>} */
         this.rootRef = signal();
         this.rtc = useService("discuss.rtc");
-        this.ui = useService("ui");
     }
 
     async onClickUseMicrophone() {

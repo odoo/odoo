@@ -22,7 +22,6 @@ export class MessagingMenuInDropdown extends Component {
         this.dropdown = useDropdownState();
         this.discussSystray = useDiscussSystray(this.dropdown);
         this.store = useService("mail.store");
-        this.ui = useService("ui");
         this.menuState = computed(() => this.store.messagingMenuSystrayState);
         // Bound once so `close` is a stable (useProps.static) handler.
         this.closeDropdown = this.dropdown.close.bind(this.dropdown);

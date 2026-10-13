@@ -22,6 +22,7 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 import { batched } from "@web/core/utils/timing";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 
 /**
  * Version of usePlugin() where the plugin is allowed to not be provided by any parented component.
@@ -444,7 +445,7 @@ export function useMicrophoneVolume() {
 }
 
 export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => false }) {
-    const ui = useService("ui");
+    const ui = usePlugin(UIPlugin);
     const elRef = ref;
     const getEl = () => untrack(elRef);
     function onSelectionChange() {
@@ -484,7 +485,7 @@ export function useSelection({ ref, model, preserveOnClickAwayPredicate = () => 
         moveCursor(position) {
             model.start = model.end = position;
             const el = getEl();
-            if (el && !ui.isSmall) {
+            if (el && !ui.isSmall()) {
                 // In mobile, selection seems to adjust correctly.
                 // Don't programmatically adjust, otherwise it shows soft keyboard!
                 el.selectionStart = el.selectionEnd = position;
@@ -715,7 +716,7 @@ export function useSequential() {
 
 /** @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} [dropdownState] */
 export function useDiscussSystray(dropdownState) {
-    const ui = useService("ui");
+    const ui = usePlugin(UIPlugin);
     if (dropdownState) {
         useEffect(() => {
             if (dropdownState.isOpen) {
@@ -729,12 +730,12 @@ export function useDiscussSystray(dropdownState) {
         class: "o-mail-DiscussSystray-class",
         get contentClass() {
             return `d-flex flex-column flex-grow-1 ${
-                ui.isSmall ? "overflow-auto o-scrollbar-thin w-100 mh-100" : ""
+                ui.isSmall() ? "overflow-auto o-scrollbar-thin w-100 mh-100" : ""
             }`;
         },
         get menuClass() {
             return `p-0 o-mail-DiscussSystray ${
-                ui.isSmall
+                ui.isSmall()
                     ? "o-mail-systrayFullscreenDropdownMenu start-0 w-100 mh-100 d-flex flex-column mt-0 border-0 shadow-lg"
                     : ""
             }`;

@@ -5,7 +5,6 @@ import {
     NotificationAlertDialog,
     notificationAlertDialogProps,
 } from "@web/core/notification_alert_dialog/notification_alert_dialog";
-import { useService } from "@web/core/utils/hooks";
 
 export class CallPermissionDeniedDialog extends NotificationAlertDialog {
     props = useProps({
@@ -14,10 +13,6 @@ export class CallPermissionDeniedDialog extends NotificationAlertDialog {
         permissionType: t.any().optional(),
     });
     static template = "discuss.CallPermissionDeniedDialog";
-
-    setup() {
-        this.ui = useService("ui");
-    }
 
     get title() {
         const permissionType = this.props.permissionType;

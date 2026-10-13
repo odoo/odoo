@@ -24,12 +24,14 @@ import {
     signal,
     t,
     useOnChange,
+    usePlugin,
     useProps,
     useScope,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
@@ -88,7 +90,7 @@ export class Thread extends Component {
             showJumpPresent: t.boolean().optional(true),
             thread: t.instanceOf(this.store["mail.thread"]),
         });
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.state = proxy({
             isReplyingTo: false,
             mountedAndLoaded: false,
@@ -106,7 +108,6 @@ export class Thread extends Component {
         this.incrementResetCount = incrementFn(this.resetCount);
         this.lastJumpPresent = this.props.jumpPresent;
         this.orm = useService("orm");
-        this.ui = useService("ui");
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.scrollingToHighlight = false;
         // from the patch rendering the highlight, or its message (e.g. after loading around it):
@@ -628,7 +629,7 @@ export class Thread extends Component {
             this.state.showJumpPresent = false;
         }
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
-        if (!this.ui.isSmall) {
+        if (!this.ui.isSmall()) {
             this.props.thread.composer.autofocus++;
         }
     }

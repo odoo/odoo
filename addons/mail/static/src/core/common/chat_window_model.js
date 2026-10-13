@@ -42,7 +42,7 @@ export class ChatWindow extends Record {
     canShow = this.computed(() => this.computeCanShow());
 
     computeCanShow() {
-        if (this.store.env.services.ui.isSmall) {
+        if (this.store.ui.isSmall()) {
             return !this.hubAsFolded || !this.store.discuss?.isActive;
         }
         return !this.store.discuss?.isActive;

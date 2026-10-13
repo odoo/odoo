@@ -9,7 +9,7 @@ registerThreadAction("expand-discuss", {
     condition: ({ ancestors, channel, owner, store }) =>
         channel &&
         ancestors.inChatWindow &&
-        !store.env.services.ui.isSmall &&
+        !store.ui.isSmall() &&
         !owner.isDiscussSidebarChannelActions,
     icon: "expand_content",
     name: _t("Open in Discuss"),
