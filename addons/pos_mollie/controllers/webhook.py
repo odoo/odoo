@@ -1,4 +1,5 @@
 from odoo import http
+from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import verify_hash_signed
 import logging
@@ -12,7 +13,10 @@ class PosMollie(http.Controller):
         _logger.info("Received webhook from Mollie for payment '%s'", id)
 
         payment_method_sudo = request.env["pos.payment.method"].sudo()
-        decoded_payload = verify_hash_signed(payment_method_sudo.env, "pos_mollie", payload)
+        try:
+            decoded_payload = verify_hash_signed(payment_method_sudo.env, "pos_mollie", payload)
+        except ValueError:
+            decoded_payload = None
         if not decoded_payload:
             _logger.warning("Invalid payload received in Mollie webhook, ignoring")
             return "OK"
@@ -23,29 +27,13 @@ class PosMollie(http.Controller):
         if not payment_method_sudo:
             _logger.warning("No payment method found matching Mollie webhook, ignoring")
             return "OK"
-        pos_session_sudo = request.env["pos.session"].sudo().browse(pos_session_id).exists()
-        if not pos_session_sudo:
-            _logger.warning("No POS session found matching Mollie webhook, ignoring")
+
+        try:
+            payment = payment_method_sudo.mollie_get_payment(id, pos_session_id, decoded_payload["payment_uuid"])
+        except ValidationError as e:
+            _logger.warning("Mollie payment '%s' rejected: %s, ignoring", id, e)
             return "OK"
-
-        payment_info = payment_method_sudo.mollie_get_payment(id)
-        payment_details = payment_info["details"]
-
-        message = {
-            'session_id': int(pos_session_id),
-            'payment_id': id,
-            'status': payment_info["status"],
-        }
-        if message['status'] == "paid":
-            message |= {
-                'card_type': payment_details.get("cardFunding"),
-                'card_no': payment_details.get("cardNumber"),
-                'card_brand': payment_details.get("cardLabel"),
-            }
-        elif message['status'] in ['expired', 'failed', 'canceled']:
-            message |= {
-                'status_reason': payment_info.get("statusReason"),
-            }
-        pos_session_sudo.config_id._notify('MOLLIE_PAYMENT_STATUS', message)
+        pos_session_sudo = request.env["pos.session"].sudo().browse(pos_session_id).exists()
+        pos_session_sudo.config_id._notify('MOLLIE_PAYMENT_STATUS', payment)
 
         return "OK"
