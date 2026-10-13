@@ -29,3 +29,26 @@ test("changing score should update the aria-label", async () => {
 
     expect(":iframe .s_rating_icons").toHaveAttribute("aria-label", "1 out of 10 stars");
 });
+
+test("standard icons are preserved after score change", async () => {
+    await setupWebsiteBuilderWithSnippet("s_rating", { loadIframeBundles: true });
+    await contains(":iframe .s_rating").click();
+
+    await contains("[data-action-id='activeIconsNumber'] input").edit("2");
+    expect(":iframe .s_rating_icons i").toHaveAttribute("data-icon", "star");
+});
+
+test("custom icons are preserved after score change", async () => {
+    await setupWebsiteBuilderWithSnippet("s_rating", { loadIframeBundles: true });
+    await contains(":iframe .s_rating").click();
+
+    await contains("[data-action-id='customIcon'][data-action-param='customActiveIcon']").click();
+    await contains(".o_select_media_dialog .font-icons-icons span[data-icon='favorite']").click();
+    expect(":iframe .s_rating_active_icons i").toHaveAttribute("data-icon", "favorite");
+    expect(":iframe .s_rating_inactive_icons i").toHaveAttribute("data-icon", "star");
+
+    await contains("[data-action-id='activeIconsNumber'] input").edit("4");
+    expect(":iframe .s_rating_active_icons i").toHaveCount(4);
+    expect(":iframe .s_rating_active_icons i").toHaveAttribute("data-icon", "favorite");
+    expect(":iframe .s_rating_inactive_icons i").toHaveAttribute("data-icon", "star");
+});
