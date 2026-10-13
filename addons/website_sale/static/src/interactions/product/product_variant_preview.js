@@ -12,7 +12,7 @@ export class ProductVariantPreview extends Interaction {
 
     setup() {
         // Class `gap-1` on parent adds 4px margin for each ptav.
-        this.margin = 4;
+        this.margin = 8;
         this.updateVariantPreview();
     }
 
@@ -106,7 +106,7 @@ export class ProductVariantPreview extends Interaction {
 
             // ---- Phase 1: Initiate the values needed for each attribute previewer ---------------
             // Split into two sub-loops to avoid a forced reflow per product:
-            
+
             // ---- Phase 1a: all DOM writes (resetDisplay, textContent, classList) ----------------
             for (const attributePreviewer of attributePreviewers) {
                 this._resetDisplay(attributePreviewer);
@@ -156,7 +156,7 @@ export class ProductVariantPreview extends Interaction {
                     currentValues.offsetWidthPTAVS.set(ptav, ptav.offsetWidth);
                 }
                 currentValues.hiddenCountSpanWidth = (
-                    currentValues.hiddenCountSpan.offsetWidth + this.margin * 2
+                    currentValues.hiddenCountSpan.offsetWidth + this.margin
                 );
             }
 
