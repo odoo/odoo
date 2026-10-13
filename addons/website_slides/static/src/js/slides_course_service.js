@@ -138,7 +138,8 @@ const websiteSlidesService = {
                     });
                     Object.assign(data.quiz, {
                         sessionAnswers: quizData.session_answers || [],
-                        description: quizData.description || "",
+                        // cc @beje /slides/slide/quiz/get returns `slide_description` not `slide`?
+                        description: quizData.slide_description || "",
                         questions: quizData.slide_questions || [],
                         questionCount: quizData.slide_questions.length,
                         attemptsCount: quizData.quiz_attempts_count || 0,
@@ -148,7 +149,8 @@ const websiteSlidesService = {
                         slideResources: quizData.slide_resource_ids || [],
                     });
                 }
-                data.quiz.descriptionSafe = markup(data.quiz.description || "");
+                // TODO: change quiz cache to be similar to the RPC cache? Or stop having a quiz cache?
+                data.quiz.descriptionSafe = data.quiz.description;
                 quizCache[data.slide.id] = structuredClone(data.quiz);
                 data.slide.hasQuestion = data.quiz.questionCount > 0;
             },
