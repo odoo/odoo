@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Add website builder topic to the Ask AI agent -->
+        <record id="ai.ai_agent_natural_language_search" model="ai.agent">
+            <field name="topic_ids" eval="[(4, ref('website_ai_builder.ai_topic_website_builder'))]"/>
+        </record>
+
+        <!-- Composer rule for the website builder AI button -->
+        <record id="ai_composer_website_builder" model="ai.composer">
+            <field name="name">Website Builder AI</field>
+            <field name="interface_key">website_builder_ai</field>
+            <field name="ai_agent_id" ref="ai.ai_agent_natural_language_search"/>
+            <field name="default_prompt">You are helping the user edit their website page. For content changes (improve title, reword, change text, update buttons), ALWAYS use action="edit_content" with content_replacements — this preserves the page layout. The new_inner_html supports formatting (bold, italic, links, etc.). NEVER use action="replace" for content edits. Only fetch building blocks when adding a brand new section. Use predefined Odoo CSS classes for styling. Apply changes directly — do not show HTML code in chat.</field>
+            <field name="is_system_default">True</field>
+        </record>
+    </data>
+</odoo>
