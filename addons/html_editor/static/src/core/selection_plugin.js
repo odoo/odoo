@@ -429,7 +429,11 @@ export class SelectionPlugin extends Plugin {
     }
 
     editableDocumentHasFocus() {
-        return this.focusEditableDocument;
+        return (
+            this.focusEditableDocument &&
+            // Check if a full screen mobile dialog is displayed:
+            !this.document.querySelector(".o_touch_device .fixed-bottom")
+        );
     }
 
     getCachedSelection() {
