@@ -179,9 +179,10 @@ patch(Checkout.prototype, {
      * @return {Dict} - Updated cart summary.
      */
     async _setPickupLocation(pickupLocationData) {
-        return await rpc('/website_sale_stock/set_pickup_location',
+        const orderSummaryValues = await this.waitFor(rpc('/website_sale_stock/set_pickup_location',
             { pickup_location_data: pickupLocationData }
-        );
+        ));
+        return this._markupOrderSummaryValues(orderSummaryValues);
     },
 
     /**
