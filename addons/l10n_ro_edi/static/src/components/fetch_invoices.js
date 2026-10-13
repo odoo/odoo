@@ -30,13 +30,17 @@ export const CogMenuItem = {
     groupNumber: 20,
     async isDisplayed() {
         const env = useEnv();
-        const data = await env.searchModel.orm.read("res.company", [user.activeCompany.id], ["country_code"]);
-        return (
-            data[0]?.country_code === 'RO' &&
+        if (
             env.searchModel.resModel === "account.move" &&
             ["kanban", "list"].includes(env.config.viewType) &&
             env.config.actionType === "ir.actions.act_window"
-        );
+        ) {
+            const data = await env.searchModel.orm
+                .cache({ type: "disk" })
+                .read("res.company", [user.activeCompany.id], ["country_code"]);
+            return data[0]?.country_code === 'RO';
+        }
+        return false;
     },
 };
 
