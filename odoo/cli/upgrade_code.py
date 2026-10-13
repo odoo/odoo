@@ -31,10 +31,9 @@ bullets.
 
 import argparse
 import functools
+import importlib.util
 import sys
-
 from collections.abc import Iterator
-from importlib.machinery import SourceFileLoader
 from pathlib import Path
 from types import ModuleType
 
@@ -150,7 +149,9 @@ def get_upgrade_code_scripts(from_version: tuple[int, ...], to_version: tuple[in
     for script_path in sorted(UPGRADE.glob('*.py')):
         version = parse_version(script_path.name.partition('-')[0])
         if from_version <= version <= to_version:
-            module = SourceFileLoader(script_path.name, str(script_path)).load_module()
+            spec = importlib.util.spec_from_file_location(script_path.name, str(script_path))
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
             modules.append((script_path.name, module))
     return modules
 
@@ -172,7 +173,9 @@ def migrate(
             else:
                 raise FileNotFoundError(script)
         script_path.relative_to(UPGRADE)  # safeguard, prevent going up
-        module = SourceFileLoader(script_path.name, str(script_path)).load_module()
+        spec = importlib.util.spec_from_file_location(script_path.name, str(script_path))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
         modules = [(script_path.name, module)]
     else:
         modules = get_upgrade_code_scripts(from_version, to_version)
