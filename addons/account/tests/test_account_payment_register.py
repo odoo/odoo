@@ -2267,3 +2267,15 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
 
         self.assertRecordValues(payment_a, [{'amount': 1100.0, 'partner_id': self.partner_a.id}])
         self.assertRecordValues(payment_b, [{'amount': 3000.0, 'partner_id': self.partner_b.id}])
+
+    def test_unreconile_payment(self):
+        """ Tests that unreconciled payments created from invoice don't keep trace of invoice """
+        payment = self._register_payment(self.out_invoice_1)
+        self.assertEqual(len(self.out_invoice_1.matched_payment_ids), 1)
+        self.assertEqual(len(payment.invoice_ids), 1)
+        (
+            self.out_invoice_1.line_ids
+            + payment.move_id.line_ids.filtered(lambda l: l.matched_debit_ids)
+        ).remove_move_reconcile()
+        self.assertEqual(len(self.out_invoice_1.matched_payment_ids), 0)
+        self.assertEqual(len(payment.invoice_ids), 0)
