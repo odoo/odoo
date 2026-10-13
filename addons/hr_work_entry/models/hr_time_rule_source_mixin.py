@@ -153,13 +153,14 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
 
         by_range = defaultdict(list)
         for employee, (date_from, date_to) in ranges_by_employee.items():
-            start_dt = datetime.combine(date_from, time.min).replace(tzinfo=UTC)
-            end_dt = datetime.combine(date_to, time.max).replace(tzinfo=UTC)
+            tz = ZoneInfo(employee._get_tz())
+            start_dt = datetime.combine(date_from, time.min, tzinfo=tz)
+            end_dt = datetime.combine(date_to, time.max, tzinfo=tz)
             by_range[start_dt, end_dt].append(employee)
 
         for (start_dt, end_dt), employees in by_range.items():
             employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
-            sources = self._get_source_records_for_time_rules(start_dt, end_dt, employee_rs)
+            sources = self._get_source_records_for_time_rules(start_dt.astimezone(UTC), end_dt.astimezone(UTC), employee_rs)
             if not sources:
                 continue
 
@@ -249,8 +250,8 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
 
         day_rules_ranges = defaultdict(lambda: [None, None])
         for employee, date_from, date_to in affected:
-            df = date_from.date() if hasattr(date_from, 'date') else date_from
-            dt = date_to.date() if hasattr(date_to, 'date') else date_to
+            df = employee._get_date_in_employee_tz_or_utc(date_from)
+            dt = employee._get_date_in_employee_tz_or_utc(date_to)
             r = day_rules_ranges[employee]
             r[0] = df if r[0] is None else min(r[0], df)
             r[1] = dt if r[1] is None else max(r[1], dt)
@@ -316,11 +317,9 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         else:
             latest_week_start = today - timedelta(days=today.weekday())
 
-        def to_date(dt):
-            return dt.date() if hasattr(dt, 'date') else dt
-        past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
-        today_list = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
-        past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_week_start]
+        past_day = [(e, df, dt) for e, df, dt in affected if e._get_date_in_employee_tz_or_utc(dt) < today]
+        today_list = [(e, df, dt) for e, df, dt in affected if e._get_date_in_employee_tz_or_utc(dt) >= today]
+        past_week = [(e, df, dt) for e, df, dt in affected if e._get_date_in_employee_tz_or_utc(dt) < latest_week_start]
         self._process_time_rules_for(past_day, rule_period='day')
         self._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
         # weekly undertime is cron-only: triggering it on every record write would create
