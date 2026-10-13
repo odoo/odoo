@@ -591,7 +591,7 @@ class ProductProduct(models.Model):
 
         moves_domain = Domain([
             ('product_id', '=', self.id),
-            ('company_id', 'in', self.env.companies.ids),
+            ('company_id', '=', self.env.company.id),
         ])
         if lot:
             moves_domain &= Domain([('move_line_ids.lot_id', 'in', lot.id)])
@@ -631,7 +631,7 @@ class ProductProduct(models.Model):
         self_ctx = self.with_context(disable_auto_revaluation=True, mail_notrack=True)
         for product in self_ctx:
             if product.lot_valuated and product.cost_method != 'standard':
-                product.sudo().standard_price = product.avg_cost
+                product.sudo().standard_price = product.with_context(allowed_company_ids=self.env.company.ids).avg_cost
                 continue
             products_by_cost_method[product.cost_method].add(product.id)
         for cost_method, product_ids in products_by_cost_method.items():
