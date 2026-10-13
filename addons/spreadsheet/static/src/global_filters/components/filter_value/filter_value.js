@@ -1,4 +1,3 @@
-import { FieldPlugin } from "@web/core/field_plugin";
 /** @ts-check */
 
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
@@ -6,6 +5,7 @@ import { DateFilterValue } from "../date_filter_value/date_filter_value";
 
 import { Component, onWillStart, usePlugin, t, useProps, providePlugins } from "@odoo/owl";
 import { components, owlPlugins } from "@odoo/o-spreadsheet";
+import { FieldPlugin } from "@web/core/field_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";

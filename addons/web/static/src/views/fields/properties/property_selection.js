@@ -1,8 +1,8 @@
-import { Component, props, asyncComputed, computed } from "@odoo/owl";
+import { Component, props, asyncComputed, computed, usePlugin } from "@odoo/owl";
+import { FieldPlugin } from "@web/core/field_plugin";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { _t } from "@web/core/l10n/translation";
-import { useService } from "@web/core/utils/hooks";
 
 export class PropertySelectionField extends Component {
     static template = "web.PropertySelectionField";
@@ -13,13 +13,12 @@ export class PropertySelectionField extends Component {
         propertyModelName: String,
     });
 
-    
-    fieldService = useService("field");
+    fieldService = usePlugin(FieldPlugin);
     selectedValue = computed(() => this.props.record.data[this.props.name]);
-    propertyName = computed(() => this.props.record.data[this.props.propertyName])
-    propertyFieldName = computed(() => this.props.record.data[this.props.propertyFieldName])
-    propertyModelName = computed(() => this.props.record.data[this.props.propertyModelName])
-    selectionItems = asyncComputed(() => this.loadFieldInfos(), { initial: [] })
+    propertyName = computed(() => this.props.record.data[this.props.propertyName]);
+    propertyFieldName = computed(() => this.props.record.data[this.props.propertyFieldName]);
+    propertyModelName = computed(() => this.props.record.data[this.props.propertyModelName]);
+    selectionItems = asyncComputed(() => this.loadFieldInfos(), { initial: [] });
 
     async loadFieldInfos() {
         const propertiesDef = await this.fieldService.loadPropertyDefinitions(
@@ -27,7 +26,7 @@ export class PropertySelectionField extends Component {
             this.propertyFieldName()
         );
         const propertyDef = propertiesDef[this.propertyName()];
-        return propertyDef?.selection ?? []
+        return propertyDef?.selection ?? [];
     }
 
     onValueChange(value) {

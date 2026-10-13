@@ -1,6 +1,6 @@
-import { FieldPlugin } from "@web/core/field_plugin";
 import { usePlugin } from "@odoo/owl";
 import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_selector_operator_editor";
+import { FieldPlugin } from "@web/core/field_plugin";
 import { condition } from "@web/core/tree_editor/condition_tree";
 import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
 import { getDefaultValue } from "@web/core/tree_editor/tree_editor_value_editors";
