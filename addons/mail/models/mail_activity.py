@@ -663,9 +663,9 @@ class MailActivity(models.Model):
                     activities_to_remove += activity
 
                 message_attachments = activity_attachments.get(activity.id) or self.env['ir.attachment']
-                attachment_ids = (attachment_ids or []) + message_attachments.ids
-                if attachment_ids:
-                    activity.attachment_ids = attachment_ids
+                activity_attachment_ids = (attachment_ids or []) + message_attachments.ids
+                if activity_attachment_ids:
+                    activity.attachment_ids = activity_attachment_ids
 
                 # Moving the attachments in the message
                 # TODO: Fix void res_id on attachment when you create an activity with an image
