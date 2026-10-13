@@ -3,7 +3,7 @@ import { animationFrame, waitFor, queryAll } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 
 export async function selectLocation(name) {
-    await contains(`.o_self_eating_location_box .preset_btn:contains('${name}')`).click();
+    await contains(`.o_self_eating_location_box .preset_btn:has(span:text('${name}'))`).click();
     await animationFrame();
 }
 
