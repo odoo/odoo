@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.Meeting">
         <div t-if="this.store.rtc.channel" class="o-mail-Meeting h-100 w-100 d-flex flex-column" t-att-class="{'o-fullscreen': this.store.rtc.isFullscreen, 'p-2': this.ui.isSmall(), 'p-1 pb-0': !this.ui.isSmall() and this.props.isPip, 'px-3 pt-3': !this.ui.isSmall() and !this.props.isPip}" t-att-data-active="this.store.meetingViewOpened">
-            <div class="d-flex flex-grow-1 h-100 o-min-height-0 gap-1 position-relative">
+            <div class="d-flex flex-grow-1 h-100 o-min-height-0 gap-2 position-relative">
                 <t t-set="activePanel" t-value="this.threadActions.activePanel"/>
                 <div class="o-mail-Meeting-callContainer h-100 flex-grow-1 min-w-0" t-att-class="{'d-none': this.ui.isSmall() and activePanel, 'pb-0': this.ui.isSmall()}">
                     <Call hasOverlay="false" isPip="this.props.isPip"/>

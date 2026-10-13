@@ -8,3 +8,21 @@
     z-index: 10;
     width: 5px;
 }
+
+/* Fits a gap-2 next to the panel, to stay clear of a neighbouring scrollbar. */
+.o_resizable_panel_outer_handle {
+    width: 0.5rem;
+
+    /* Only shown when the pointer rests on it, not when it crosses it. */
+    &:hover {
+        transition: opacity 0s 0.25s;
+    }
+}
+
+.o_resizable_panel_outer_handle_end {
+    left: 100%;
+}
+
+.o_resizable_panel_outer_handle_start {
+    right: 100%;
+}
