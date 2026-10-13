@@ -67,7 +67,7 @@ export class ProductProduct {
      * @return {{id: Number, value: String}[]} The selected custom PTAVs.
      */
     get selectedCustomPtavs() {
-        return this.ptals.filter(ptal => ptal.hasSelectedCustomPtav).flatMap(
+        return this.ptals.filter(ptal => ptal.hasCustomValue).flatMap(
             ptal => ptal.selected_ptavs
         ).map(ptav => ({
             'id': ptav.id,

@@ -607,6 +607,15 @@ class SaleOrder(models.Model):
         if product.type == "combo":
             return self.env["sale.order.line"]
 
+        # A product with a custom value selected is never merged into an existing line, even if no
+        # text was typed
+        combination = product.product_tmpl_id._get_closest_possible_combination(
+            product.product_template_attribute_value_ids
+            | self.env["product.template.attribute.value"].browse(no_variant_attribute_value_ids)
+        )
+        if combination.filtered("is_custom"):
+            return self.env["sale.order.line"]
+
         domain = [
             ("product_id", "=", product_id),
             ("product_uom_id", "=", uom_id),
@@ -907,19 +916,12 @@ class SaleOrder(models.Model):
                 Command.set(no_variant_attribute_values.ids)
             ]
 
-        # add is_custom attribute values that were not received
-        custom_values = product_custom_attribute_values or []
-        received_custom_values = product.env["product.template.attribute.value"].browse([
-            int(ptav["custom_product_template_attribute_value_id"]) for ptav in custom_values
-        ])
-
-        for ptav in combination.filtered(
-            lambda ptav: ptav.is_custom and ptav not in received_custom_values
-        ):
-            custom_values.append({
-                "custom_product_template_attribute_value_id": ptav.id,
-                "custom_value": "",
-            })
+        # Ignore the custom values left empty
+        custom_values = [
+            custom_value
+            for custom_value in product_custom_attribute_values or []
+            if (custom_value.get("custom_value") or "").strip()
+        ]
 
         if custom_values:
             values["product_custom_attribute_value_ids"] = [
