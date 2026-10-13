@@ -144,8 +144,12 @@
                 <span class="text-nowrap" t-field="line.price_total">31.05</span>
             </td>
         </t>
-        <xpath expr="//td[@name='td_price_unit']/span" position="attributes">
-            <attribute name="t-options">{'widget': 'monetary', 'display_currency': o.currency_id}</attribute>
+        <xpath expr="//td[@name='td_price_unit']/span" position="replace">
+            <span class="text-nowrap">
+                <t t-if="o.currency_id.position == 'before'" t-out="o.currency_id.symbol"/>
+                <t>$0</t>
+                <t t-if="o.currency_id.position == 'after'" t-out="o.currency_id.symbol"/>
+            </span>
         </xpath>
         <td name="td_subtotal_grouped" position="before">
             <td name="td_vat_amount_grouped" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
