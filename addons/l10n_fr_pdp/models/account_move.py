@@ -170,7 +170,7 @@ class AccountMove(models.Model):
             move.pdp_can_send_response = (
                 bool(move.peppol_message_uuid)
                 and move.peppol_is_sent
-                and move.partner_id.with_company(move.company_id).l10n_fr_is_pdp
+                and move.partner_id.commercial_partner_id.with_company(move.company_id).l10n_fr_is_pdp
             )
 
     @api.depends('pdp_can_send_response')
