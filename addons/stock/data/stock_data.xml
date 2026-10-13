@@ -104,5 +104,11 @@
             <field name="key">stock.barcode_separator</field>
             <field name="value">,</field>
         </record>
+
+        <record model="stock.putaway.rule" id="default_putaway">
+            <field name="location_in_id" ref="stock.stock_location_stock"/>
+            <field name="location_out_id" ref="stock.stock_location_stock"/>
+            <field name="sublocation">last_used</field>
+        </record>
     </data>
 </odoo>
