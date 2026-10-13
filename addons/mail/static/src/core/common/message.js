@@ -394,6 +394,14 @@ export class Message extends Component {
         return groupAttachments(this.message.extra_body_attachment_ids);
     }
 
+    get uploadProgressPercent() {
+        return Math.round(this.message.uploadProgress * 100);
+    }
+
+    get uploadProgressText() {
+        return _t("Uploading… %(progress)s", { progress: `${this.uploadProgressPercent}%` });
+    }
+
     get showTextVisually() {
         return (
             !this.message.linkPreviewSquash &&
