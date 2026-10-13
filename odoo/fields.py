@@ -4246,14 +4246,14 @@ class PropertiesDefinition(Field):
                     ', '.join(invalid_keys),
                 )
 
-            check_property_field_value_name(property_definition['name'])
-
             required_keys = set(cls.REQUIRED_KEYS) - property_definition_keys
             if required_keys:
                 raise ValueError(
                     'Some key are missing for a properties definition [%s].' %
                     ', '.join(required_keys),
                 )
+
+            check_property_field_value_name(property_definition['name'])
 
             property_name = property_definition.get('name')
             if not property_name or property_name in properties_names:
