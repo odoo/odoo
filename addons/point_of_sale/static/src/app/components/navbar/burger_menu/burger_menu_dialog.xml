@@ -56,6 +56,12 @@
                    onClick="() => this.pos.ticketPrinter.selectPrinter(true)"
                    btnLabel.translate="Printers"
                 />
+                <t t-if="this.showDefaultPaymentMethodButton"
+                   t-call="point_of_sale.BurgerDialogMenuButton"
+                   dataIcon="'credit_card'"
+                   onClick="() => this.pos.paymentMethods.selectDefaults()"
+                   btnLabel.translate="Payment Methods"
+                />
                 <t t-set="barcodeLabel">
                     <t t-if="this.pos.scanning">Stop</t> Barcode Scanner
                 </t>

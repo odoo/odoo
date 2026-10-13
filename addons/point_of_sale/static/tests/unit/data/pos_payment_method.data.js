@@ -17,6 +17,19 @@ export class PosPaymentMethod extends models.ServerModel {
         ];
     }
 
+    // Labels of the `payment_provider` selection, extended by the provider modules
+    _get_payment_provider_names() {
+        return {};
+    }
+
+    _load_pos_data_read(records) {
+        const names = this._get_payment_provider_names();
+        for (const record of records) {
+            record._payment_provider_name = names[record.payment_provider] || false;
+        }
+        return records;
+    }
+
     _records = [
         {
             id: 2,

@@ -142,6 +142,14 @@ class PosPaymentMethod(models.Model):
             'default_qr', 'currency_ids',
         ]
 
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        provider_names = dict(self._fields['payment_provider']._description_selection(self.env))
+        for record in read_records:
+            record['_payment_provider_name'] = provider_names.get(record.get('payment_provider'), False)
+        return read_records
+
     @api.depends('payment_method_type')
     def _compute_hide_qr_code_method(self):
         for payment_method in self:

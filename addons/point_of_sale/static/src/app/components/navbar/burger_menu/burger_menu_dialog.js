@@ -40,6 +40,10 @@ export class BurgerMenuDialog extends Component {
         return this.pos.config.other_devices && this.pos.config.receipt_printer_ids.length > 1;
     }
 
+    get showDefaultPaymentMethodButton() {
+        return Object.keys(this.pos.paymentMethods.defaultGroups).length > 0;
+    }
+
     openLnaPopup() {
         this.props.openLnaPopup();
         this.props.close();
