@@ -311,6 +311,37 @@ export class DiscussChannel extends models.ServerModel {
 
     /**
      * @param {number[]} ids
+     * @param {string[]} emails
+     */
+    invite_by_email(ids, emails) {
+        const kwargs = getKwArgs(arguments, "ids", "emails");
+        ids = kwargs.ids;
+        emails = kwargs.emails;
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+        const [channel] = this.browse(ids);
+        const memberIds = emails.map((email) =>
+            DiscussChannelMember.create({
+                channel_id: channel.id,
+                guest_id: MailGuest.create({ email, name: email }),
+                invitation_sent_dt: serializeDateTime(DateTime.now()),
+            })
+        );
+        BusBus._sendone(
+            channel,
+            "mail.record/insert",
+            new Store()
+                .add(DiscussChannelMember.browse(memberIds), "_store_member_fields")
+                .as_dict()
+        );
+    }
+
+    /**
+     * @param {number[]} ids
      * @param {string} description
      */
     channel_change_description(ids, description) {
