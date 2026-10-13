@@ -156,7 +156,7 @@ class AccountPaymentRegister(models.TransientModel):
         """
         super()._compute_withholding_line_ids()
         for wizard in self:
-            if wizard.country_code != 'AR' or not wizard.display_withholding or not wizard.can_edit_wizard:
+            if wizard.country_code != 'AR' or not wizard.display_withholding or not wizard.can_edit_wizard or not wizard.partner_id:
                 continue
 
             type_tax_use = 'purchase' if wizard.partner_type == 'supplier' else 'sale'
