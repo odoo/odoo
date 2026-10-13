@@ -3,7 +3,16 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { AccountMoveListController } from "@account/views/account_move_list/account_move_list_controller";
-import { isSentInvoice } from "@account_peppol/web/account_move_form_controller";
+
+const SALE_MOVE_TYPES = ['out_invoice', 'out_refund', 'out_receipt'];
+
+/**
+ * Mirrors the `_check_draftable` and `_unlink_except_sent_peppol` conditions of `account.move`:
+ * an invoice sent via Peppol / PDP can neither be reset to draft nor deleted.
+ */
+function isSentInvoice(record) {
+    return record.peppol_is_sent && SALE_MOVE_TYPES.includes(record.move_type);
+}
 
 
 patch(AccountMoveListController.prototype, {
