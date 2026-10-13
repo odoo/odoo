@@ -405,7 +405,7 @@ export function flushPendingOrdersSync() {
 
 export function mockClearStorage() {
     return {
-        content: "Mock .clear() for session and local storage.",
+        content: "Mock .clear() and .removeItem() for session and local storage.",
         trigger: "body",
         run: function () {
             window.sessionStorage.constructor.prototype.clear = function () {
@@ -413,6 +413,9 @@ export function mockClearStorage() {
             };
             window.localStorage.constructor.prototype.clear = function () {
                 console.log("Mock: localStorage.clear() blocked");
+            };
+            window.localStorage.constructor.prototype.removeItem = function () {
+                console.log("Mock: localStorage.removeItem() blocked");
             };
         },
     };
