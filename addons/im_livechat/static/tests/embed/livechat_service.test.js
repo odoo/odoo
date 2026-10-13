@@ -10,6 +10,7 @@ import { GUEST_TOKEN_STORAGE_KEY } from "@im_livechat/embed/common/store_service
 import {
     click,
     contains,
+    editInput,
     listenStoreFetch,
     onRpcBefore,
     setupChatHub,
@@ -25,6 +26,7 @@ import {
     insertTextInComposer,
 } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
+import { waitFor } from "@odoo/hoot-dom";
 import { Command, destroyApp, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -257,4 +259,36 @@ test("Only create one channel when posting multiple lines on chat bot multi-line
         "/mail/message/post - <div>Line 2</div>",
         "/mail/message/post - <div>Line 3</div>",
     ]);
+});
+
+test("cancelling the upload of a chat bot answer enables the composer again", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const scriptId = pyEnv["chatbot.script"].create({
+        operator_partner_id: serverState.odoobotId,
+        title: "Bot",
+    });
+    pyEnv["chatbot.script.step"].create({
+        chatbot_script_id: scriptId,
+        message: "What do you need?",
+        sequence: 1,
+        step_type: "free_input_single",
+    });
+    pyEnv["im_livechat.channel.rule"].create({
+        channel_id: livechatChannelId,
+        chatbot_script_id: scriptId,
+    });
+    onRpcBefore("/mail/attachment/upload", () => new Promise(() => {})); // simulates an attachment upload that never completes
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
+    await click(".o-livechat-LivechatButton");
+    await contains(".o-mail-Message", { text: "What do you need?" });
+    await waitFor(".o-mail-Composer:not(.o-disabled) input[type=file]:count(1)");
+    const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    await editInput(document.body, ".o-mail-Composer input[type=file]", [file]);
+    await waitFor(".o-mail-Composer .o-mail-AttachmentContainer.o-isUploading:count(1)");
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await waitFor(".o-mail-Message .o-mail-AttachmentContainer.o-isUploading:count(1)");
+    await waitFor(".o-mail-Composer.o-disabled:count(1)");
+    await click(".o-mail-Message .o-mail-Attachment-unlink");
+    await waitFor(".o-mail-Composer:not(.o-disabled):count(1)");
 });
