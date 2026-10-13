@@ -51,6 +51,8 @@
                         <group>
                             <field name="company_id" options="{'no_create': 1, 'no_quick_create': 1}"
                                    placeholder="Visible to all" domain="[('id', 'in', allowed_company_ids)]"/>
+                            <field name="country_id" options="{'no_create': 1, 'no_quick_create': 1}"
+                                   readonly="company_id" placeholder="All countries"/>
                         </group>
                         <group name="resource_working_hours">
                             <field name="reference_calendar_id" placeholder="from company"/>
