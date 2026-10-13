@@ -25,8 +25,12 @@ class ProductTemplate(models.Model):
 
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
-        if 'uom_id' in fields_list and not res.get('uom_id') or self.env.context.get('default_uom_id') is False:
-            res['uom_id'] = self._get_default_uom_id().id
+        if 'uom_id' in fields_list and not res.get('uom_id'):
+            clean_ctxt = dict(self.env.context)
+            clean_ctxt.pop('default_uom_id', None)
+            # Since uom is required, always fallback on a default (if any) even when the context
+            # gives an empty default value.
+            res['uom_id'] = self.with_context(clean_ctxt).default_get(['uom_id']).get('uom_id', False)
         return res
 
     @tools.ormcache()
