@@ -31,7 +31,7 @@ patch(DiscussClientAction.prototype, {
         if (
             hasFullScreenUrl &&
             this.store.discuss.thread?.channel.default_display_mode === "video_full_screen" &&
-            this.store.discuss.thread.channel?.hasRtcSessionActive
+            (this.store.discuss.thread.channel?.hasRtcSessionActive || call === "join")
         ) {
             this.joinCallWithDefaultSettings();
         }
