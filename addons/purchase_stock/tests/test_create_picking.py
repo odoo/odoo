@@ -848,3 +848,165 @@ class TestCreatePicking(common.TestProductCommon):
         # Exchange: receipt for 1 item
         self.assertEqual(po.picking_ids[2].picking_type_id, picking_type_in)
         self.assertEqual(po.picking_ids[2].move_ids.quantity, 1)
+
+    def test_decrease_qty_after_receipt_rerouted_to_sublocation(self):
+        """ Decreasing the ordered quantity after a receipt move was manually
+        rerouted to a sub-location of its final destination (e.g. a reception
+        bay) must reduce the open pending move and not create a return.
+        """
+        warehouse = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1)
+        warehouse.reception_steps = 'one_step'
+        bay = self.env['stock.location'].create({
+            'name': 'Bay 1',
+            'location_id': warehouse.lot_stock_id.id,
+            'usage': 'internal',
+        })
+        product = self.env['product.product'].create({
+            'name': 'Bay Test Product',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': 10.0,
+                'price_unit': 10.0,
+                'name': product.name,
+            })],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.unlink()
+        self.env['stock.move.line'].create({
+            'move_id': receipt.move_ids.id,
+            'product_id': product.id,
+            'product_uom_id': product.uom_id.id,
+            'quantity': 5.0,
+            'location_id': receipt.move_ids.location_id.id,
+            'location_dest_id': receipt.move_ids.location_dest_id.id,
+            'picking_id': receipt.id,
+        })
+        action = receipt.button_validate()
+        if isinstance(action, dict) and action.get('res_model') == 'stock.backorder.confirmation':
+            self.env['stock.backorder.confirmation'].with_context(
+                **action.get('context', {})
+            ).create({}).process()
+
+        backorder = po.picking_ids - receipt
+        backorder.move_ids.location_dest_id = bay.id
+
+        po.order_line.product_qty = 7.0
+
+        return_moves = self.env['stock.move'].search([
+            ('purchase_line_id', '=', po.order_line.id),
+            ('location_dest_id.usage', '=', 'supplier'),
+        ])
+        self.assertFalse(return_moves,
+            "No return move should be generated when decreasing qty"
+            " after rerouting the pending receipt move to a sub-location.")
+        self.assertEqual(len(po.picking_ids), 2,
+            "No additional picking should be created.")
+        self.assertEqual(backorder.move_ids.product_uom_qty, 2.0,
+            "Open pending move quantity should drop from 5 to 2.")
+        self.assertEqual(po.order_line.product_qty, 7.0)
+        self.assertEqual(po.order_line.qty_received, 5.0)
+
+    def test_decrease_qty_after_price_unit_diverged(self):
+        """ Decreasing the ordered quantity after the line's price_unit has
+        diverged from the pending move's price_unit (typical of external
+        integrations writing ``product_qty`` and ``price_unit`` in separate
+        calls) must reduce the open pending move and not create a return.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Price Diverge Product',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': 7000.0,
+                'price_unit': 0.18,
+                'name': product.name,
+            })],
+        })
+        po.button_confirm()
+        pending = po.order_line.move_ids
+        self.assertEqual(pending.price_unit, 0.18)
+
+        # Diverge the price on the line without propagating to the move
+        # (mimicking an external integration that updates the database
+        # without going through ``write``).
+        self.env.cr.execute(
+            "UPDATE purchase_order_line SET price_unit = 10.0 WHERE id = %s",
+            (po.order_line.id,),
+        )
+        po.order_line.invalidate_recordset()
+        self.assertEqual(po.order_line.price_unit, 10.0)
+        self.assertEqual(pending.price_unit, 0.18)
+
+        po.order_line.product_qty = 0.0
+
+        return_moves = self.env['stock.move'].search([
+            ('purchase_line_id', '=', po.order_line.id),
+            ('location_dest_id.usage', '=', 'supplier'),
+        ])
+        self.assertFalse(return_moves,
+            "No return move should be generated when zeroing qty after the"
+            " price_unit on the line has diverged from the pending move.")
+        self.assertEqual(pending.state, 'cancel')
+
+    def test_decrease_qty_after_date_planned_diverged(self):
+        """ Decreasing the ordered quantity after the line's date_planned
+        has diverged from the pending move's date_deadline (typical of
+        ``_compute_price_unit_and_date_planned_and_name`` resetting
+        ``line.date_planned`` to the order default on a quantity write
+        that finds no matching seller) must reduce the open pending move
+        and not create a return.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Date Diverge Product',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': 10.0,
+                'price_unit': 1.0,
+                'date_planned': '2026-06-19 00:00:00',
+                'name': product.name,
+            })],
+        })
+        po.button_confirm()
+        pending = po.order_line.move_ids
+        original_deadline = pending.date_deadline
+
+        # Diverge the planned date on the line without propagating to the
+        # move (mimicking the recompute path that updates the line in
+        # isolation).
+        new_planned = original_deadline - timedelta(days=30)
+        self.env.cr.execute(
+            "UPDATE purchase_order_line SET date_planned = %s WHERE id = %s",
+            (new_planned, po.order_line.id),
+        )
+        po.order_line.invalidate_recordset()
+        self.assertEqual(po.order_line.date_planned, new_planned)
+        self.assertEqual(pending.date_deadline, original_deadline)
+
+        po.order_line.product_qty = 0.0
+
+        return_moves = self.env['stock.move'].search([
+            ('purchase_line_id', '=', po.order_line.id),
+            ('location_dest_id.usage', '=', 'supplier'),
+        ])
+        self.assertFalse(return_moves,
+            "No return move should be generated when zeroing qty after the"
+            " date_planned on the line has diverged from the pending move.")
+        self.assertEqual(pending.state, 'cancel')
