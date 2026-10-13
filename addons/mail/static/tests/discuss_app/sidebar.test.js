@@ -365,7 +365,6 @@ test("Can unpin chat channel", async () => {
 
 test("No 'Hide Until New Message' on conversation with self in call", async () => {
     const pyEnv = await startServer();
-    onRpc("/mail/rtc/session/notify_call_members", () => true);
     const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
