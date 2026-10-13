@@ -21,6 +21,22 @@ export class Settings extends Record {
 
     messageSound = this.localStorage(true);
     useCallAutoFocus = this.localStorage(true);
+    /**
+     * Visual layout of the messages in Discuss: "bubble" (default) shows chat
+     * bubbles, "compact" shows one IRC-like line per message.
+     *
+     * @type {"bubble"|"compact"}
+     */
+    messageLayout = this.localStorage("bubble");
+
+    /** Compact layout is only available to internal users for now. */
+    get useCompactMessageLayout() {
+        return (
+            this.messageLayout === "compact" &&
+            Boolean(this.store.self_user) &&
+            !this.store.self_user.share
+        );
+    }
 
     // Voice settings
     // DeviceId of the audio input selected by the user

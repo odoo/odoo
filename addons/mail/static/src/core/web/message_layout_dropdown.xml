@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MessageLayoutDropdown">
+        <Dropdown menuClass="'o-mail-MessageLayoutDropdown'">
+            <a href="#" class="o-mail-MessageLayoutDropdown-toggler" t-att-class="{ 'd-block text-body py-2 d-flex flex-row align-items-baseline gap-2': this.uiService.isSmall }" title="Discuss message layout">
+                <i class="oi me-1" t-att-data-icon="this.currentLayout.icon" role="img"/> <span t-out="this.currentLayout.name"/> <i t-if="this.uiService.isSmall" class="oi ms-auto mt-1" data-icon="chevron_forward"/>
+            </a>
+            <t t-set-slot="content">
+                <t t-foreach="this.layouts" t-as="layout" t-key="layout.code">
+                    <DropdownItem class="{ 'active': layout.code === this.currentLayout.code }" onSelected="() => this.setMessageLayout(layout.code)">
+                        <i class="oi me-1" t-att-data-icon="layout.icon" role="img"/> <t t-out="layout.name"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>
