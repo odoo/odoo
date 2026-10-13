@@ -24,6 +24,7 @@ class TestImLivechatCalls(TestImLivechatCommon):
                 agent.sudo()._rtc_join_call(result["store_data"])
             return result
 
+        self.env.registry.clear_cache('routing')
         with patch.object(LivechatController, "get_session", wraps(og_get_session)(_patched_get_session)):
             # The routing map is cached (the "routing" ormcache) with the controller endpoints
             # baked in. When it was already built with the original method, the monkeypatch above

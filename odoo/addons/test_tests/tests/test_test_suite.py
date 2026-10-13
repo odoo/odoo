@@ -37,6 +37,65 @@ class TestTestSuite(TestCase):
             return []
 
 
+@tagged('registry_cache_warmup')
+class TestRegistryCacheWarmup(TransactionCase):
+    """ checks that the basic routing cache population works"""
+    def setUp(self):
+        self.assertTrue(self.registry._Registry__caches['routing']._values.keys())
+        super().setUp()
+        self.assertTrue(self.registry._Registry__caches['routing']._values.keys())
+
+    def test_cache_warmup_first_test(self):
+        self.assertTrue(self.registry._Registry__caches['routing']._values.keys())
+        self.registry.clear_cache('routing')
+
+    def test_cache_warmup_second_test(self):
+        self.assertTrue(self.registry._Registry__caches['routing']._values.keys())
+        self.registry.clear_cache('routing')
+
+
+@tagged('registry_cache_warmup')
+class TestRegistryCacheWarmupInvalidated(TransactionCase):
+    """ checks that an invalidation during setupclass won't be repopulated by the setup of the next test"""
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # we make some operation during the setup that will invalidated a part of the registry_cache
+        cls.registry.clear_cache('routing')
+        assert not cls.registry._Registry__caches['routing']._values.keys()
+
+    def test_cache_warmup_first_test(self):
+        self.assertFalse(self.registry._Registry__caches['routing']._values.keys())
+
+    def test_cache_warmup_second_test(self):
+        self.assertFalse(self.registry._Registry__caches['routing']._values.keys())
+
+
+@tagged('registry_cache_warmup')
+class TestRegistryCacheWarmupSetupClass(TransactionCase):
+    """ checks that a cache populated in setupclass is kept for all tests"""
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.registry.clear_cache('routing')
+        cls.registry._Registry__caches['routing']._values['test'] = 'value'
+
+    def setUp(self):
+        self.assertEqual(['test'], list(self.registry._Registry__caches['routing']._values.keys()))
+        super().setUp()
+        self.assertEqual(['test'], list(self.registry._Registry__caches['routing']._values.keys()))
+
+    def test_cache_warmup_first_test(self):
+        self.assertEqual(['test'], list(self.registry._Registry__caches['routing']._values.keys()))
+        self.registry.clear_cache('routing')
+
+    def test_cache_warmup_second_test(self):
+        self.assertEqual(['test'], list(self.registry._Registry__caches['routing']._values.keys()))
+        self.registry.clear_cache('routing')
+
+
+
+
 @tagged('at_install', '-post_install')
 class TestRunnerLoggingCommon(TransactionCase):
     """
