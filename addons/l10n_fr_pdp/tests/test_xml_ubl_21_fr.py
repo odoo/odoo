@@ -181,3 +181,23 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
             {'price_subtotal': 1000.0, 'price_total': 1200.0},
             {'price_subtotal': 400.0, 'price_total': 480.0},
         ])
+
+# Tests below tests unusuals invoice line.
+# Since ubl 2.1 doesn't include the peppol rule https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-peppol/PEPPOL-EN16931-R120/
+# People can ends up with weird invoices that were validated by the Approved Plateform
+# At the end, the imported line subtotal should match LineExtensionAmount
+
+    def test_import_partial_invoice_line_charges_price_details(self):
+        # Some invoice provider (FedEx) uses allowances and charges to details the price of an items
+        invoice = self._import_invoice_as_attachment_on('ubl_21_fr_in_partial_invoice_line_charges_price_details')
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'quantity': 1, 'price_subtotal': 100.0},
+        ])
+
+    def test_import_partial_invoice_line_wrong_unit_price(self):
+        # Some invoice provider puts the subtotal of the line (without charges and allowances) on the PriceAmount in the price section.
+        # Without taking into account the invoiced quantity or the implicite PriceAmount quantity.
+        invoice = self._import_invoice_as_attachment_on('ubl_21_fr_in_partial_invoice_line_wrong_unit_price')
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'quantity': 10, 'price_subtotal': 100.0},
+        ])
