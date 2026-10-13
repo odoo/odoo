@@ -1,6 +1,12 @@
 import { expect, test } from "@odoo/hoot";
-import { defineModels, makeMockEnv, models } from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    makeMockEnv,
+    models,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 import { RPCError } from "@web/core/network/rpc";
+import { mailModels } from "@mail/../tests/mail_test_helpers";
 
 class PosSession extends models.ServerModel {
     _name = "pos.session";
@@ -138,4 +144,36 @@ test("don't retry sending data to the server if the reason that caused the failu
         expect(env.services.pos_data.network.unsyncData.length).toBe(0);
     }
     expect.verifySteps(["create failed"]);
+});
+
+test("websocket reconnections don't duplicate the notification listeners", async () => {
+    patchWithCleanup(odoo, { access_token: "pos_token" });
+    await defineModels({ ...mailModels, PosSession });
+    const env = await makeMockEnv();
+    let activeListeners = 0;
+    patchWithCleanup(env.services.bus_service, {
+        addChannel(channel) {
+            if (channel === "pos_token") {
+                expect.step(`addChannel ${channel}`);
+            }
+            return super.addChannel(...arguments);
+        },
+        subscribe() {
+            activeListeners++;
+            return super.subscribe(...arguments);
+        },
+        unsubscribe() {
+            activeListeners--;
+            return super.unsubscribe(...arguments);
+        },
+    });
+
+    env.services.pos_data.connectWebSocket("TEST_NOTIF", () => {});
+    expect(activeListeners).toBe(1);
+
+    // Going offline then online again triggers a "connect" event on each reconnection
+    env.services.bus_service.trigger("connect");
+    env.services.bus_service.trigger("connect");
+    expect.verifySteps(["addChannel pos_token", "addChannel pos_token"]);
+    expect(activeListeners).toBe(1);
 });

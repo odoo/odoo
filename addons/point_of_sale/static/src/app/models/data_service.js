@@ -74,15 +74,6 @@ export class PosData extends Reactive {
 
     reconnectWebSocket() {
         this.intializeWebsocket();
-
-        const channels = [...this.channels];
-        this.channels = [];
-        while (channels.length) {
-            const channel = channels.pop();
-            this.connectWebSocket(channel.channel, channel.method);
-
-            console.warn("Reconnecting to channel", channel.channel);
-        }
     }
 
     connectWebSocket(channel, method) {
