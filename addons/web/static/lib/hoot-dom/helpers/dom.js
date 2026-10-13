@@ -989,6 +989,7 @@ function registerQueryMessage(filteredNodes, expectedCount) {
  *
  * @param {Target} target
  * @param {QueryOptions} options
+ * @returns {Node[] | null} `null` if the given 'count' option is not matched
  */
 function _guardedQueryAll(target, options) {
     try {
@@ -1005,6 +1006,7 @@ function _guardedQueryAll(target, options) {
 /**
  * @param {Target} target
  * @param {QueryOptions} options
+ * @returns {Node[] | null} `null` if the given 'count' option is not matched
  */
 function _queryAll(target, options) {
     queryAllLevel++;
@@ -1058,15 +1060,11 @@ function _queryAll(target, options) {
     }
     const filteredNodes = applyFilters(modifierFilters, nodes);
 
-    // Register query message (if needed), and/or throw an error accordingly
     const message = registerQueryMessage(filteredNodes, count);
-    if (message) {
-        throw new HootDomError(message);
-    }
 
     queryAllLevel--;
 
-    return filteredNodes;
+    return message ? null : filteredNodes;
 }
 
 /**
@@ -1074,7 +1072,22 @@ function _queryAll(target, options) {
  * @param {QueryOptions} options
  */
 function _queryOne(target, options) {
-    return _guardedQueryAll(target, { ...options, count: 1 })[0];
+    return _strictQueryAll(target, { ...options, count: 1 })[0];
+}
+
+/**
+ * Same as {@link _guardedQueryAll}, but throws if the given 'count' option is not
+ * matched.
+ *
+ * @param {Target} target
+ * @param {QueryOptions} options
+ */
+function _strictQueryAll(target, options) {
+    const nodes = _guardedQueryAll(target, options);
+    if (!nodes) {
+        throw new HootDomError(lastQueryMessage);
+    }
+    return nodes;
 }
 
 /**
@@ -1084,7 +1097,7 @@ function _queryOne(target, options) {
  */
 function _waitForFirst(target, options, isLast) {
     shouldRegisterQueryMessage = isLast;
-    const result = _guardedQueryAll(target, options)[0];
+    const result = _guardedQueryAll(target, options)?.[0];
     shouldRegisterQueryMessage = false;
     return result;
 }
@@ -1096,7 +1109,7 @@ function _waitForFirst(target, options, isLast) {
  */
 function _waitForNone(target, options, isLast) {
     shouldRegisterQueryMessage = isLast;
-    const result = _guardedQueryAll(target, options).length === 0;
+    const result = _guardedQueryAll(target, options)?.length === 0;
     shouldRegisterQueryMessage = false;
     return result;
 }
@@ -1929,7 +1942,7 @@ export function matches(target, selector) {
  */
 export function queryAll(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _guardedQueryAll(target, options);
+    return _strictQueryAll(target, options);
 }
 
 /**
@@ -1942,7 +1955,7 @@ export function queryAll(target, options) {
  * @returns {string[]}
  */
 export function queryAllAttributes(target, attribute, options) {
-    return _guardedQueryAll(target, options).map((node) => _getNodeAttribute(node, attribute));
+    return _strictQueryAll(target, options).map((node) => _getNodeAttribute(node, attribute));
 }
 
 /**
@@ -1955,7 +1968,7 @@ export function queryAllAttributes(target, attribute, options) {
  * @returns {any[]}
  */
 export function queryAllProperties(target, property, options) {
-    return _guardedQueryAll(target, options).map((node) => node[property]);
+    return _strictQueryAll(target, options).map((node) => node[property]);
 }
 
 /**
@@ -1973,7 +1986,7 @@ export function queryAllProperties(target, property, options) {
  */
 export function queryAllRects(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _guardedQueryAll(target, options).map(_getNodeRect);
+    return _strictQueryAll(target, options).map(_getNodeRect);
 }
 
 /**
@@ -1986,7 +1999,7 @@ export function queryAllRects(target, options) {
  */
 export function queryAllTexts(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _guardedQueryAll(target, options).map((node) => _getNodeText(node, options));
+    return _strictQueryAll(target, options).map((node) => _getNodeText(node, options));
 }
 
 /**
@@ -1999,7 +2012,7 @@ export function queryAllTexts(target, options) {
  */
 export function queryAllValues(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _guardedQueryAll(target, options).map((node) => _getNodeValue(node, options));
+    return _strictQueryAll(target, options).map((node) => _getNodeValue(node, options));
 }
 
 /**
@@ -2040,7 +2053,7 @@ export function queryAttribute(target, attribute, options) {
  */
 export function queryFirst(target, options) {
     [target, options] = parseRawArgs(arguments);
-    return _guardedQueryAll(target, options)[0] || null;
+    return _strictQueryAll(target, options)[0] || null;
 }
 
 /**
