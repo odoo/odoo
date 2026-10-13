@@ -968,8 +968,8 @@ class AccountMove(models.Model):
 
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):
-        for m in self:
-            m.suitable_journal_ids = self._get_suitable_journal_ids(m.move_type, m.company_id)
+        for (move_type, company), moves in self.grouped(lambda m: (m.move_type, m.company_id)).items():
+            moves.suitable_journal_ids = self._get_suitable_journal_ids(move_type, company)
 
     @api.depends('posted_before', 'state', 'journal_id', 'date', 'move_type', 'origin_payment_id')
     def _compute_name(self):
