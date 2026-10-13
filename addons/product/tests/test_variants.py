@@ -508,6 +508,17 @@ class TestVariants(ProductVariantsCommon):
         product = product_form.save()
         self.assertEqual(uom_unit, product.uom_id)
 
+    def test_open_product_form_with_default_uom_id_is_false_and_ir_default(self):
+        """ Test default UoM is used when a ir.default record defines a specific value,
+        and when default_uom_id is false. """
+        self.env['ir.default'].set("product.template", "uom_id", self.uom_dozen.id)
+        product_form = Form(self.env['product.product'].with_context(
+            default_uom_id=False,
+        ))
+        product_form.name = 'Test Product'
+        product = product_form.save()
+        self.assertEqual(self.uom_dozen.id, product.uom_id.id)
+
     def test_single_variant_template_computed_values_after_creation(self):
         """Check that variant-related fields on templates are correctly set."""
         product_template = self.env['product.template'].create({
