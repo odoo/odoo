@@ -89,10 +89,12 @@
                                 <field name="display_type" column_invisible="True"/>
                                 <field name="currency_id" column_invisible="True"/>
                                 <field name="sequence" widget="handle"/>
-                                <column>
+                                <column name="product_and_description">
                                     <field name="product_id"
                                            widget="account_product_field"
                                            required="not display_type"
+                                           invisible="display_type"
+                                           optional="show"
                                            domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" optional="show"/>
                                 </column>
