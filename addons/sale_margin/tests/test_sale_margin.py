@@ -325,6 +325,17 @@ class TestSaleMargin(SaleCommon):
         self._test_margin_onchange("margin", TAX_INCL_VALUES)
         self._test_margin_onchange("margin_percent", TAX_INCL_VALUES)
 
+    def test_margin_onchange_full_discount(self):
+        # A 100% discount makes _get_discount() return 0. Editing the margin on
+        # such a line used to raise ZeroDivisionError in _onchange_margin.
+        self.sol.discount = 100
+        with Form(self.so) as so_form, so_form.order_line.edit(0) as sol_form:
+            self.assertTrue(sol_form.price_unit)
+            # Must not raise; with a 100% discount the unit price is set to 0 as
+            # there is no unit price to back-compute from the target margin.
+            sol_form.margin = sol_form.margin + 10
+            self.assertEqual(sol_form.price_unit, 0)
+
     def _test_margin_onchange(self, fname, vals_list):
         with Form(self.so) as so_form, so_form.order_line.edit(0) as sol_form:
             for values in vals_list:
