@@ -91,7 +91,9 @@ class MailActivitySchedule(models.TransientModel):
         readonly=False, store=True, sanitize_style=True)
     activity_user_id = fields.Many2one(
         'res.users', 'Assigned to', compute='_compute_activity_user_id',
-        readonly=False, store=True)
+        readonly=False, store=True,
+        domain=lambda self: [('share', '=', False), ('role', '!=', 'light_user')],
+    )
     activity_role_id = fields.Many2one(
         'res.role', 'Role', compute='_compute_activity_role_id',
         readonly=False, store=True)
