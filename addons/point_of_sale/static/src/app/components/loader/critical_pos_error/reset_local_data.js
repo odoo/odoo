@@ -17,9 +17,18 @@ const deleteDatabase = (name) =>
         new Promise((resolve) => setTimeout(resolve, 1500)),
     ]);
 
+// Keep the device receipt counters, otherwise every device restarts its receipt numbers at 1
+export function clearLocalStorage() {
+    for (const key of Object.keys(localStorage)) {
+        if (!key.endsWith("-unique_device_identifier")) {
+            localStorage.removeItem(key);
+        }
+    }
+}
+
 export async function resetLocalData() {
     const tasks = [
-        ignoreErrors(() => localStorage.clear()),
+        ignoreErrors(() => clearLocalStorage()),
         ignoreErrors(() => sessionStorage.clear()),
     ];
 

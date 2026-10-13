@@ -48,6 +48,7 @@ import { DebugWidget } from "../utils/debug/debug_widget";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
+import { clearLocalStorage } from "@point_of_sale/app/components/loader/critical_pos_error/reset_local_data";
 import { initLNA } from "../utils/init_lna";
 import { Domain } from "@web/core/domain";
 import { SIZES } from "@web/core/ui/ui_service";
@@ -296,7 +297,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.device.saveUnusedNumber(orders);
         await this.data.resetIndexedDB();
         sessionStorage.clear();
-        localStorage.clear();
+        clearLocalStorage();
         const url = new URL(window.location.href);
 
         if (fullReload) {

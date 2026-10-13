@@ -3,6 +3,7 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { PosOrder } from "../data/pos_order.data";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
+import { clearLocalStorage } from "@point_of_sale/app/components/loader/critical_pos_error/reset_local_data";
 
 definePosModels();
 
@@ -160,4 +161,24 @@ test("Numbers of another device or config stay on the reuse stack", async () => 
         { pos_reference: `${year}${device.identifier}-${config}9-${digits}` },
     ]);
     expect(device.data.unsynced_number_stack).toEqual([number]);
+});
+
+test("Clearing the local data keeps every device receipt counter", async () => {
+    const store = await setupPosEnv();
+    const identifier = store.device.identifier;
+    const number = store.device.useNext();
+    const otherConfigKey = "other_config_token-unique_device_identifier";
+    const otherConfigCounter = JSON.stringify({
+        device_identifier: 7,
+        next_number: 42,
+        unsynced_number_stack: [],
+    });
+    localStorage.setItem(otherConfigKey, otherConfigCounter);
+    localStorage.setItem("pos_test_key", "1");
+
+    clearLocalStorage();
+    expect(localStorage.getItem("pos_test_key")).toBe(null);
+    expect(store.device.identifier).toBe(identifier);
+    expect(store.device.useNext()).toBe(number + 1);
+    expect(localStorage.getItem(otherConfigKey)).toBe(otherConfigCounter);
 });
