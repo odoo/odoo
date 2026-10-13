@@ -60,15 +60,15 @@ class PosPaymentMethod(models.Model):
         auth = requests.auth.HTTPBasicAuth(self.viva_wallet_client_id, self.viva_wallet_client_secret)
         try:
             resp = session.post(f"{self._viva_wallet_account_get_endpoint()}/connect/token", auth=auth, data=data, timeout=TIMEOUT)
-        except requests.exceptions.RequestException:
+            access_token = resp.json().get('access_token')
+        except (requests.exceptions.RequestException, ValueError):
             _logger.exception("Failed to call viva_wallet_bearer_token endpoint")
+            access_token = False
 
-        access_token = resp.json().get('access_token')
-        if access_token:
-            self.viva_wallet_bearer_token = access_token
-            return {'Authorization': f"Bearer {access_token}"}
-        else:
+        if not access_token:
             raise UserError(_('Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client ID and Client Secret are correct'))
+        self.viva_wallet_bearer_token = access_token
+        return {'Authorization': f"Bearer {access_token}"}
 
     def _get_verification_key(self, endpoint, viva_wallet_merchant_id, viva_wallet_api_key):
         # Get a key to configure the webhook.
@@ -80,9 +80,14 @@ class PosPaymentMethod(models.Model):
         auth = requests.auth.HTTPBasicAuth(viva_wallet_merchant_id, viva_wallet_api_key)
         try:
             resp = requests.get(f"{endpoint}/api/messages/config/token", auth=auth, timeout=TIMEOUT)
-        except requests.exceptions.RequestException:
-            _logger.exception('Failed to call https://%s/api/messages/config/token endpoint', endpoint)
-        return resp.json().get('Key')
+            key = resp.json().get('Key')
+        except (requests.exceptions.RequestException, ValueError):
+            _logger.exception('Failed to call %s/api/messages/config/token endpoint', endpoint)
+            key = False
+
+        if not key:
+            raise UserError(_('Unable to retrieve Viva Wallet webhook verification key: Please verify that the Merchant ID and API Key are correct'))
+        return key
 
     def _call_viva_wallet(self, endpoint, action, data=None, should_retry=True):
         session = get_viva_wallet_session(should_retry)
