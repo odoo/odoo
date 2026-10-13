@@ -1,5 +1,5 @@
 from odoo import fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.payment_mollie import const
 
 from odoo.tools import hash_sign
@@ -17,8 +17,13 @@ class PosPaymentMethod(models.Model):
     mollie_terminal_id = fields.Char("Mollie Terminal ID", copy=False)
     mollie_payment_provider_id = fields.Many2one("payment.provider", domain=[("code", "=", "mollie")])
 
+    def _check_mollie_access_right(self):
+        if not self.env.su and not self.env.user.has_group("point_of_sale.group_pos_user"):
+            raise AccessError(self.env._("You do not have the necessary permissions to access this payment."))
+
     def mollie_create_payment(self, amount: float, payment_uuid: str, pos_session_id: int):
         self.ensure_one()
+        self._check_mollie_access_right()
 
         if not self.sudo().mollie_payment_provider_id.mollie_api_key:
             raise ValidationError(self.env._("Please set the API key on the Mollie payment provider before making a payment."))
@@ -47,6 +52,7 @@ class PosPaymentMethod(models.Model):
 
     def mollie_create_refund(self, original_payment_id: str, amount: float, payment_uuid: str, pos_session_id: int):
         self.ensure_one()
+        self._check_mollie_access_right()
 
         currency = self.journal_id.currency_id or self.company_id.currency_id
         payment_request = {
@@ -60,8 +66,10 @@ class PosPaymentMethod(models.Model):
 
     def mollie_cancel_payment(self, payment_id: str):
         self.ensure_one()
+        self._check_mollie_access_right()
         return self.sudo().mollie_payment_provider_id._send_api_request("DELETE", f"/payments/{payment_id}")
 
     def mollie_get_payment(self, payment_id: str):
         self.ensure_one()
+        self._check_mollie_access_right()
         return self.sudo().mollie_payment_provider_id._send_api_request("GET", f"/payments/{payment_id}")
