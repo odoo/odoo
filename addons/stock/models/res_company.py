@@ -22,7 +22,7 @@ class ResCompany(models.Model):
         'stock.location', 'Default Stock Location', compute='_compute_default_stock_location_id', check_company=True)
     stock_move_email_validation = fields.Boolean("Email Confirmation picking", default=False)
     stock_mail_confirmation_template_id = fields.Many2one('mail.template', string="Email Template confirmation picking",
-        domain="[('model', '=', 'stock.picking')]",
+        ui_domain="[('model', '=', 'stock.picking')]",
         default=_default_confirmation_mail_template,
         help="Email sent to the customer once the order is done.")
     annual_inventory_month = fields.Selection([

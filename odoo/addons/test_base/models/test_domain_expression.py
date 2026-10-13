@@ -28,7 +28,7 @@ class TestOrmDomainExpressionPartner(models.Model):
     child_ids = fields.One2many('test_orm.domain_expression.partner', 'parent_id', domain=[('active', '=', True)])
     bank_ids = fields.One2many('test_orm.domain_expression.partner.bank', 'partner_id')
     country_id = fields.Many2one('test_orm.domain_expression.country')
-    state_id = fields.Many2one('test_orm.domain_expression.country.state', domain="[('country_id', '=?', country_id)]")
+    state_id = fields.Many2one('test_orm.domain_expression.country.state', ui_domain="[('country_id', '=?', country_id)]")
 
     @api.depends('parent_id.commercial_partner_id', 'parent_id')
     def _compute_commercial_partner(self):

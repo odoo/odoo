@@ -133,7 +133,7 @@ class AccountAccount(models.Model):
     parent_id = fields.Many2one(
         comodel_name='account.account',
         string="Parent Account",
-        domain="['!', ('id', 'child_of', id)]",
+        ui_domain="['!', ('id', 'child_of', id)]",
         ondelete='restrict',
         context={'active_test': False},
         check_company=True,

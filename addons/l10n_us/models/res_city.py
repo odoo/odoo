@@ -9,5 +9,5 @@ class ResCity(models.Model):
     l10n_us_county_id = fields.Many2one(
         comodel_name='l10n_us.res.county',
         string='County',
-        domain="[('state_id', '=', state_id)]",
+        ui_domain="[('state_id', '=', state_id)]",
     )

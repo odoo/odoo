@@ -128,7 +128,7 @@ class SurveySurvey(models.Model):
                                    readonly=False, store=True, precompute=True)
     certification_mail_template_id = fields.Many2one(
         'mail.template', 'Certified Email Template',
-        domain="[('model', '=', 'survey.user_input')]",
+        ui_domain="[('model', '=', 'survey.user_input')]",
         help="Automated email sent to the user when they succeed the certification, containing their certification document.")
     certification_report_layout = fields.Selection([
         ('modern_company', 'Modern'),

@@ -354,7 +354,7 @@ class ResPartner(models.Model):
     street2 = fields.Char()
     zip = fields.Char(change_default=True)
     city = fields.Char()
-    state_id: ResCountryState = fields.Many2one("res.country.state", string='State', ondelete='restrict', index='btree_not_null', domain="[('country_id', '=?', country_id)]")
+    state_id: ResCountryState = fields.Many2one("res.country.state", string='State', ondelete='restrict', index='btree_not_null', ui_domain="[('country_id', '=?', country_id)]")
     country_id: ResCountry = fields.Many2one('res.country', string='Country', ondelete='restrict', index='btree_not_null', inverse='_inverse_vat')
     country_code = fields.Char(related='country_id.code', string="Country Code")
     partner_latitude = fields.Float(string='Latitude', digits=(10, 7))

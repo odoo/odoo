@@ -16,7 +16,7 @@ class AccountMove(models.Model):
         readonly=False,
         ondelete="set null",
         tracking=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        ui_domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
 
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked

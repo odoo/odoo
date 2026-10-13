@@ -16,7 +16,7 @@ class ProductReplenish(models.TransientModel):
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', required=True)
     product_has_variants = fields.Boolean('Has variants', default=False, required=True)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
-    uom_id = fields.Many2one('uom.uom', string='Unity of measure', domain="[('id', 'in', allowed_uom_ids)]", required=True)
+    uom_id = fields.Many2one('uom.uom', string='Unity of measure', ui_domain="[('id', 'in', allowed_uom_ids)]", required=True)
     forecast_uom_id = fields.Many2one(related='product_id.uom_id')
     quantity = fields.Float('Quantity', default=1, required=True)
     date_planned = fields.Datetime('Scheduled Date', required=True, compute="_compute_date_planned", readonly=False,

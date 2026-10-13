@@ -45,9 +45,9 @@ class HrIndividualSkillMixin(models.AbstractModel):
         return self.env['hr.skill.type'].search([], limit=1)
 
     skill_id = fields.Many2one('hr.skill', compute='_compute_skill_id', store=True,
-        domain="[('skill_type_id', '=', skill_type_id)]", readonly=False, required=True, ondelete='cascade')
+        ui_domain="[('skill_type_id', '=', skill_type_id)]", readonly=False, required=True, ondelete='cascade')
     skill_level_id = fields.Many2one('hr.skill.level', compute='_compute_skill_level_id',
-        domain="[('skill_type_id', '=', skill_type_id)]", store=True, readonly=False, required=True, index=True, ondelete='cascade')
+        ui_domain="[('skill_type_id', '=', skill_type_id)]", store=True, readonly=False, required=True, index=True, ondelete='cascade')
     skill_type_id = fields.Many2one('hr.skill.type',
                                     default=_default_skill_type_id,
                                     required=True, index=True, ondelete='cascade')

@@ -14,7 +14,7 @@ class PeppolRejectionWizard(models.TransientModel):
         comodel_name='account.peppol.clarification',
         relation='account_peppol_rejection_reason_rel',
         default=lambda self: self.env.ref('account_peppol.peppol_clarification_reason_unr', raise_if_not_found=False),
-        domain="[('list_identifier', '=', 'OPStatusReason')]",
+        ui_domain="[('list_identifier', '=', 'OPStatusReason')]",
         required=True,
         string='Rejection reasons',
         help="The reasons to reject the received PEPPOL document. "
@@ -23,7 +23,7 @@ class PeppolRejectionWizard(models.TransientModel):
     action_ids = fields.Many2many(
         comodel_name='account.peppol.clarification',
         relation='account_peppol_rejection_action_rel',
-        domain="[('list_identifier', '=', 'OPStatusAction')]",
+        ui_domain="[('list_identifier', '=', 'OPStatusAction')]",
         string='Rejection actions',
         help="The actions to be suggested to the document's sender in order for the document to be accepted when sent again (eventually). "
         "These will be sent to the document's sender. Not mandatory.",

@@ -207,7 +207,7 @@ class WebsitePageProperties(models.TransientModel):
     has_parent_page = fields.Boolean(compute='_compute_has_parent_page', readonly=False,
         help="Improve navigation and hierarchy of site by adding parent page in breadcrumbs format.")
     parent_id = fields.Many2one(related='target_model_id.parent_id', readonly=False,
-        domain="['|', ('website_id', '=?', website_id), ('website_id', '=', False), ('id', '!=', target_model_id)]")
+        ui_domain="['|', ('website_id', '=?', website_id), ('website_id', '=', False), ('id', '!=', target_model_id)]")
     old_url = fields.Char()
     redirect_old_url = fields.Boolean(default=False, store=False)
     redirect_type = fields.Selection(

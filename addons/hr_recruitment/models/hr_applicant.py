@@ -90,7 +90,7 @@ class HrApplicant(models.Model):
     create_date = fields.Datetime("Applied on", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
                                compute='_compute_stage', store=True, readonly=False,
-                               domain="['&', '|', ('job_ids', '=', False), ('job_ids', '=', job_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+                               ui_domain="['&', '|', ('job_ids', '=', False), ('job_ids', '=', job_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
                                copy=False, index=True,
                                group_expand='_read_group_stage_ids')
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
@@ -98,14 +98,14 @@ class HrApplicant(models.Model):
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags", tracking=True)
     currency_id = fields.Many2one('res.currency', string='Currency', related='company_id.currency_id')
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, index=True, readonly=False, tracking=True, domain=lambda self: [('id', 'in', self.env.companies.ids)])
-    recruiter_id = fields.Many2one('hr.employee', "Recruiter", compute='_compute_recruiter', domain=lambda self: str(self._recruiter_domain()),
+    recruiter_id = fields.Many2one('hr.employee', "Recruiter", compute='_compute_recruiter', ui_domain=lambda self: str(self._recruiter_domain()),
         tracking=True, store=True, index=True, readonly=False)
     date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True, copy=False)
     date_open = fields.Datetime("Assigned", readonly=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
     salary_proposed = fields.Monetary("Proposed", aggregator="avg", currency_field='currency_id', help="Salary Proposed by the Organisation", groups="hr_recruitment.group_hr_recruitment_user")
-    job_id = fields.Many2one('hr.job', "Job Position", domain="company_id and [('company_id', '=', company_id)] or []", tracking=True, index=True, copy=False)
+    job_id = fields.Many2one('hr.job', "Job Position", ui_domain="company_id and [('company_id', '=', company_id)] or []", tracking=True, index=True, copy=False)
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", groups="hr_recruitment.group_hr_recruitment_user")
     salary_expected = fields.Monetary("Expected", aggregator="avg", currency_field='currency_id', help="Salary Expected by Applicant", groups="hr_recruitment.group_hr_recruitment_user")
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", groups="hr_recruitment.group_hr_recruitment_user")
@@ -119,7 +119,7 @@ class HrApplicant(models.Model):
     ], string='Schedule Pay', default='monthly', required=True, groups="hr_recruitment.group_hr_recruitment_user")
     department_id = fields.Many2one(
         'hr.department', "Department", compute='_compute_department', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
+        ui_domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
     day_open = fields.Float(compute='_compute_day', string="Days to Open", compute_sudo=True)
     day_close = fields.Float(compute='_compute_day', string="Days to Close", compute_sudo=True)
     delay_close = fields.Float(compute="_compute_delay", string='Delay to Close', readonly=True, aggregator="avg", help="Number of days to close", store=True)
@@ -142,7 +142,7 @@ class HrApplicant(models.Model):
     source_id = fields.Many2one(ondelete='set null')
     interviewer_ids = fields.Many2many('res.users', 'hr_applicant_res_users_interviewers_rel',
         string='Interviewers', index=True, tracking=True, copy=False,
-        domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
+        ui_domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
     application_status = fields.Selection([
         ('ongoing', 'Ongoing'),
         ('hired', 'Hired'),

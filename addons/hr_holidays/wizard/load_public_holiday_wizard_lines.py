@@ -14,7 +14,7 @@ class ResourceCalendarPublicHolidayWizardLine(models.TransientModel):
     company_id = fields.Many2one('res.company', required=True)
     work_entry_type_id = fields.Many2one('hr.work.entry.type', string="Time Type",
         compute='_compute_work_entry_type', readonly=False, store=True,
-        domain="[('id', 'in', allowed_work_entry_type_ids)]")
+        ui_domain="[('id', 'in', allowed_work_entry_type_ids)]")
     allowed_work_entry_type_ids = fields.Many2many('hr.work.entry.type', compute='_compute_work_entry_type', store=True)
 
     @api.depends('company_id')

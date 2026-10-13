@@ -24,7 +24,7 @@ class HrEmployee(models.Model):
         'res.users', store=True, readonly=False,
         string="Attendance Approver",
         compute='_compute_attendance_manager',
-        domain=_get_attendance_manager_domain,
+        ui_domain=_get_attendance_manager_domain,
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer",
         help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.")
     attendance_ids = fields.One2many(

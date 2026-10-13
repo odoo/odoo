@@ -581,13 +581,13 @@ class ResPartner(models.Model):
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         check_company=True,
         string="Account Payable",
-        domain="[('account_type', '=', 'liability_payable')]",
+        ui_domain="[('account_type', '=', 'liability_payable')]",
         ondelete='restrict')
     property_account_payable_active = fields.Boolean(related='property_account_payable_id.active', string="Account Payable Active")
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         check_company=True,
         string="Account Receivable",
-        domain="[('account_type', '=', 'asset_receivable')]",
+        ui_domain="[('account_type', '=', 'asset_receivable')]",
         ondelete='restrict')
     property_account_receivable_active = fields.Boolean(related='property_account_receivable_id.active', string="Account Receivable Active")
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
@@ -638,7 +638,7 @@ class ResPartner(models.Model):
     invoice_template_pdf_report_id = fields.Many2one(
         string="Invoice report",
         comodel_name='ir.actions.report',
-        domain="[('id', 'in', available_invoice_template_pdf_report_ids)]",
+        ui_domain="[('id', 'in', available_invoice_template_pdf_report_ids)]",
         readonly=False,
         store=True,
     )

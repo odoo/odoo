@@ -13,6 +13,6 @@ class ResConfigSettings(models.TransientModel):
     l10n_vn_edi_stock_default_sinvoice_symbol_id = fields.Many2one(
         comodel_name='l10n_vn.symbol',
         related='company_id.l10n_vn_edi_stock_default_sinvoice_symbol_id',
-        domain="[('company_id', '=', company_id), ('usage', '=', 'delivery_document')]",
+        ui_domain="[('company_id', '=', company_id), ('usage', '=', 'delivery_document')]",
         readonly=False,
     )

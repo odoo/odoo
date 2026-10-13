@@ -7,7 +7,7 @@ class ResConfigSettings(models.TransientModel):
 
     l10n_vn_default_invoice_symbol_id = fields.Many2one(
         related='company_id.l10n_vn_symbol_id',
-        domain="[('company_id', '=', company_id), ('usage', '=', 'invoice')]",
+        ui_domain="[('company_id', '=', company_id), ('usage', '=', 'invoice')]",
         string='Default Symbol',
         groups='base.group_system',
         help='This symbol will be used on invoices by default.',

@@ -254,7 +254,7 @@ class HrExpense(models.Model):
         comodel_name='account.payment.method.line',
         string="Payment Method",
         compute='_compute_payment_method_line_id', store=True, index=True, readonly=False,
-        domain="[('id', 'in', selectable_payment_method_line_ids)]",
+        ui_domain="[('id', 'in', selectable_payment_method_line_ids)]",
         help="The payment method used when the expense is paid by the company.",
     )
     has_existing_bill = fields.Boolean(
@@ -267,7 +267,7 @@ class HrExpense(models.Model):
         string="Existing Bill",
         comodel_name='account.move',
         index='btree_not_null',
-        domain="""[
+        ui_domain="""[
             ('company_id', '=', company_id),
             ('move_type', '=', 'in_invoice'),
             ('state', 'in', ['posted', 'draft']),
@@ -300,7 +300,7 @@ class HrExpense(models.Model):
         string="Account",
         compute='_compute_account_id', precompute=True, store=True, readonly=False,
         check_company=True,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
+        ui_domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
         help="An expense account is expected for employee paid expenses and company paid expenses without a matched bill.\n"
              "For company paid expenses with a matched bill, the account needs to be the payable account of the bill.",
     )
@@ -311,7 +311,7 @@ class HrExpense(models.Model):
         column2='tax_id',
         string="Included taxes",
         compute='_compute_tax_ids', precompute=True, store=True, readonly=False,
-        domain="[('type_tax_use', '=', 'purchase')]",
+        ui_domain="[('type_tax_use', '=', 'purchase')]",
         check_company=True,
         help="Both price-included and price-excluded taxes will behave as price-included taxes for expenses.",
     )

@@ -10,7 +10,7 @@ class HrVersion(models.Model):
         compute="_compute_private_city_id",
         inverse="_inverse_private_city_id",
         readonly=False, store=True, index='btree_not_null',
-        domain="[('country_id', '=?', private_country_id), ('state_id', '=?', private_state_id)]")
+        ui_domain="[('country_id', '=?', private_country_id), ('state_id', '=?', private_state_id)]")
     private_country_enforce_cities = fields.Boolean(
         related='private_country_id.enforce_cities', groups="hr.group_hr_user", readonly=True)
 

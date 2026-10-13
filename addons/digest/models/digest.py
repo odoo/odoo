@@ -27,7 +27,7 @@ class DigestDigest(models.Model):
 
     # Digest description
     name = fields.Char(string='Name', required=True, translate=True)
-    user_ids = fields.Many2many('res.users', string='Recipients', domain="[('share', '=', False)]")
+    user_ids = fields.Many2many('res.users', string='Recipients', ui_domain="[('share', '=', False)]")
     periodicity = fields.Selection([('daily', 'Daily'),
                                     ('weekly', 'Weekly'),
                                     ('monthly', 'Monthly'),

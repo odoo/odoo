@@ -81,7 +81,7 @@ class ProductPricelistItem(models.Model):
         comodel_name='product.product',
         string="Variant",
         ondelete='cascade', check_company=True, index='btree_not_null',
-        domain="[('product_tmpl_id', '=', product_tmpl_id)]",
+        ui_domain="[('product_tmpl_id', '=', product_tmpl_id)]",
         help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
     product_uom_name = fields.Char(related='product_tmpl_id.uom_name')
     product_variant_count = fields.Integer(related='product_tmpl_id.product_variant_count')

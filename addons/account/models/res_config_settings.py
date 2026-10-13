@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.currency_exchange_journal_id', readonly=False,
         string="Currency Exchange Journal",
         check_company=True,
-        domain="[('type', '=', 'general')]",
+        ui_domain="[('type', '=', 'general')]",
         help='The accounting journal where automatic exchange differences will be registered')
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
@@ -24,7 +24,7 @@ class ResConfigSettings(models.TransientModel):
         string="Gain Exchange Rate Account",
         readonly=False,
         check_company=True,
-        domain="[('internal_group', '=', 'income')]")
+        ui_domain="[('internal_group', '=', 'income')]")
     income_currency_exchange_account_active = fields.Boolean(related='income_currency_exchange_account_id.active', string="Gain Exchange Rate Account Active")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
@@ -32,7 +32,7 @@ class ResConfigSettings(models.TransientModel):
         string="Loss Exchange Rate Account",
         readonly=False,
         check_company=True,
-        domain="[('account_type', 'in', ('expense', 'expense_other'))]")
+        ui_domain="[('account_type', 'in', ('expense', 'expense_other'))]")
     expense_currency_exchange_account_active = fields.Boolean(related='expense_currency_exchange_account_id.active', string="Loss Exchange Rate Account Active")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template = fields.Selection(selection=lambda self: self.env.company._chart_template_selection(), default=lambda self: self.env.company.chart_template)
@@ -69,7 +69,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         related='company_id.account_journal_suspense_account_id',
         check_company=True,
-        domain="[('account_type', 'in', ('asset_current', 'liability_current'))]",
+        ui_domain="[('account_type', 'in', ('asset_current', 'liability_current'))]",
         help='Bank Transactions are posted immediately after import or synchronization. '
              'Their counterparty is the bank suspense account.\n'
              'Reconciliation replaces the latter by the definitive account(s).')
@@ -180,7 +180,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         related='company_id.account_journal_early_pay_discount_loss_account_id',
         check_company=True,
-        domain="[('account_type', 'in', ('expense', 'expense_other', 'income', 'income_other'))]",
+        ui_domain="[('account_type', 'in', ('expense', 'expense_other', 'income', 'income_other'))]",
     )
     account_journal_early_pay_discount_loss_account_active = fields.Boolean(related='account_journal_early_pay_discount_loss_account_id.active', string="Early Discount Loss Account Active")
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(
@@ -190,7 +190,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         check_company=True,
         related='company_id.account_journal_early_pay_discount_gain_account_id',
-        domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
+        ui_domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
     )
     account_journal_early_pay_discount_gain_account_active = fields.Boolean(related='account_journal_early_pay_discount_gain_account_id.active', string="Early Discount Gain Account Active")
 
@@ -200,7 +200,7 @@ class ResConfigSettings(models.TransientModel):
         string='Vendor Bills Discounts Account',
         readonly=False,
         related='company_id.account_discount_income_allocation_id',
-        domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
+        ui_domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
     )
     account_discount_income_allocation_active = fields.Boolean(related='account_discount_income_allocation_id.active', string="Vendor Bills Discounts Account Active")
     account_discount_expense_allocation_id = fields.Many2one(
@@ -208,7 +208,7 @@ class ResConfigSettings(models.TransientModel):
         string='Customer Invoices Discounts Account',
         readonly=False,
         related='company_id.account_discount_expense_allocation_id',
-        domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
+        ui_domain="[('account_type', 'in', ('income', 'income_other', 'expense', 'expense_other'))]",
     )
     account_discount_expense_allocation_active = fields.Boolean(related='account_discount_expense_allocation_id.active', string="Customer Invoices Discounts Account Active")
 
@@ -232,12 +232,12 @@ class ResConfigSettings(models.TransientModel):
     # Cash rounding default accounts
     cash_rounding_profit_account_id = fields.Many2one(
         related='company_id.cash_rounding_profit_account_id',
-        domain="[('internal_group', '=', 'income')]",
+        ui_domain="[('internal_group', '=', 'income')]",
         readonly=False, check_company=True,
     )
     cash_rounding_loss_account_id = fields.Many2one(
         related='company_id.cash_rounding_loss_account_id',
-        domain="[('internal_group', '=', 'expense')]",
+        ui_domain="[('internal_group', '=', 'expense')]",
         readonly=False, check_company=True,
     )
 

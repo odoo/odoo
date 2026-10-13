@@ -44,7 +44,7 @@ class ProjectProject(models.Model):
              "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee.")
     timesheet_product_id = fields.Many2one(
         'product.product', string='Timesheet Product',
-        domain="""[
+        ui_domain="""[
             ('type', '=', 'service'),
             ('invoice_policy', '=', 'delivery'),
             ('service_type', '=', 'timesheet'),

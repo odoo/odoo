@@ -37,7 +37,7 @@ class CrmMergeOpportunity(models.TransientModel):
         string='Leads/Opportunities',
         context={'active_test': False})
     user_id = fields.Many2one(
-        'res.users', 'Salesperson', domain="[('share', '=', False)]",
+        'res.users', 'Salesperson', ui_domain="[('share', '=', False)]",
         compute='_compute_user_id', readonly=False, store=True)
     team_id = fields.Many2one(
         'crm.team', 'Sales Team',

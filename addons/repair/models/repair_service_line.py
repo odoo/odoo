@@ -11,10 +11,10 @@ class RepairServiceLine(models.Model):
     repair_id = fields.Many2one('repair.order', check_company=True, index='btree_not_null', copy=False, ondelete='cascade')
     product_id = fields.Many2one(
         'product.product', string='Service',
-        domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+        ui_domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
         check_company=True)
     uom_id = fields.Many2one(
-        'uom.uom', 'Unit', domain="[('id', 'in', allowed_uom_ids)]",
+        'uom.uom', 'Unit', ui_domain="[('id', 'in', allowed_uom_ids)]",
         readonly=False, required=True, compute='_compute_uom_id', store=True, copy=True, precompute=True)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     quantity = fields.Float(

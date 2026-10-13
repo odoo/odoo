@@ -20,7 +20,7 @@ class StockPickingType(models.Model):
     dock_ids = fields.Many2many(
         'stock.location',
         'dock_location_stock_picking_type_rel',
-        domain="[('warehouse_id', '=', warehouse_id), ('usage', '=', 'internal')]",
+        ui_domain="[('warehouse_id', '=', warehouse_id), ('usage', '=', 'internal')]",
         compute='_compute_dock_ids', store=True, readonly=False
     )
 

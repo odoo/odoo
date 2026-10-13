@@ -10,7 +10,7 @@ class ResPartner(models.Model):
     l10n_pa_corregimiento = fields.Many2one(
         comodel_name='l10n_pa.res.city.corregimiento',
         string='Corregimiento',
-        domain="[('city_id', '=?', city_id)]",
+        ui_domain="[('city_id', '=?', city_id)]",
         help='Corregimientos are part of a district.',
     )
     l10n_pa_corregimiento_name = fields.Char(

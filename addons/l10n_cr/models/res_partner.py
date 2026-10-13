@@ -9,7 +9,7 @@ class ResPartner(models.Model):
     l10n_cr_district_id = fields.Many2one(
         comodel_name='l10n_cr.res.city.district',
         string='District (CR)',
-        domain="[('city_id', '=?', city_id)]",
+        ui_domain="[('city_id', '=?', city_id)]",
     )
     l10n_cr_district_name = fields.Char(string='District Name', related='l10n_cr_district_id.name')
 

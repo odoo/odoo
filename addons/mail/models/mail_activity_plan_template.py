@@ -22,7 +22,7 @@ class MailActivityPlanTemplate(models.Model):
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Activity Type',
         default=lambda self: self.env.ref('mail.mail_activity_data_todo'),
-        domain="['|', ('res_model', '=', False), '&', ('res_model', '!=', False), ('res_model', '=', parent.res_model)]",
+        ui_domain="['|', ('res_model', '=', False), '&', ('res_model', '!=', False), ('res_model', '=', parent.res_model)]",
         ondelete='restrict', required=True, index=True,
     )
     # Activity type delay fields are ignored in favor of these

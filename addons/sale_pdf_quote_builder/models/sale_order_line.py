@@ -20,7 +20,7 @@ class SaleOrderLine(models.Model):
         help="The product documents for this order line that will be merged in the PDF quote.",
         comodel_name="product.document",
         relation="sale_order_line_product_document_rel",
-        domain="[('id', 'in', available_product_document_ids)]",
+        ui_domain="[('id', 'in', available_product_document_ids)]",
         readonly=False,
     )
 

@@ -50,7 +50,7 @@ class MailTemplate(models.Model):
     email_from = fields.Char('Send From',
                              help="Sender address (placeholders may be used here). If not set, the default "
                                   "value will be the author's email alias if configured, or email address.")
-    user_id = fields.Many2one('res.users', string='Owner', domain="[('share', '=', False)]")
+    user_id = fields.Many2one('res.users', string='Owner', ui_domain="[('share', '=', False)]")
     # recipients
     use_default_to = fields.Boolean(
         'Default Recipients',
@@ -81,7 +81,7 @@ class MailTemplate(models.Model):
         column1='mail_template_id',
         column2='ir_actions_report_id',
         string='Dynamic Reports',
-        domain="[('model', '=', model)]")
+        ui_domain="[('model', '=', model)]")
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
     email_layout_force_header = fields.Boolean('Force Header', default=False,
         help="If checked, the header will be always shown in the email body when this template is used with"

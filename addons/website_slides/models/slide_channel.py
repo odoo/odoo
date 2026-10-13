@@ -198,7 +198,7 @@ class SlideChannel(models.Model):
     prerequisite_channel_ids = fields.Many2many(
         'slide.channel', 'slide_channel_prerequisite_slide_channel_rel', 'channel_id', 'prerequisite_channel_id',
         string='Prerequisites', help='Prerequisite courses to complete before accessing this one.',
-        domain="[('id', '!=', id), ('visibility', '=', visibility), ('website_published', '=', website_published)]")
+        ui_domain="[('id', '!=', id), ('visibility', '=', visibility), ('website_published', '=', website_published)]")
     prerequisite_of_channel_ids = fields.Many2many(
         'slide.channel', 'slide_channel_prerequisite_slide_channel_rel', 'prerequisite_channel_id', 'channel_id',
         string='Prerequisite Of', help='Courses that have this course as prerequisite.')

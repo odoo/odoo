@@ -19,13 +19,13 @@ class ResConfigSettings(models.TransientModel):
     module_hr_payroll_expense = fields.Boolean(string='Reimburse Expenses in Payslip')
     module_hr_expense_extract = fields.Boolean(string='Send bills to OCR to generate expenses')
     module_hr_expense_stripe = fields.Boolean(string='Link your Stripe issuing account to manage company credit cards for your employees through Odoo')
-    expense_journal_id = fields.Many2one('account.journal', related='company_id.expense_journal_id', readonly=False, check_company=True, domain="[('type', '=', 'purchase')]")
+    expense_journal_id = fields.Many2one('account.journal', related='company_id.expense_journal_id', readonly=False, check_company=True, ui_domain="[('type', '=', 'purchase')]")
     company_expense_allowed_payment_method_line_ids = fields.Many2many(
         comodel_name='account.payment.method.line',
         check_company=True,
         related='company_id.company_expense_allowed_payment_method_line_ids',
         readonly=False,
-        domain="[('payment_type', '=', 'outbound'), ('journal_id.active', '=', True)]",
+        ui_domain="[('payment_type', '=', 'outbound'), ('journal_id.active', '=', True)]",
     )
 
     @api.model

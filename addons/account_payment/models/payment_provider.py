@@ -23,7 +23,7 @@ class PaymentProvider(models.Model):
         compute='_compute_journal_id',
         inverse='_inverse_journal_id',
         check_company=True,
-        domain='[("type", "=", "bank")]',
+        ui_domain='[("type", "=", "bank")]',
         copy=False,
     )
     available_pricelist_ids = fields.Many2many(

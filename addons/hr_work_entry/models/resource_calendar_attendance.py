@@ -12,7 +12,7 @@ class ResourceCalendarAttendance(models.Model):
 
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type', 'Time Type', groups="hr.group_hr_user", index='btree_not_null',
-        domain="[('id', 'in', allowed_work_entry_type_ids)]")
+        ui_domain="[('id', 'in', allowed_work_entry_type_ids)]")
     allowed_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
     display_code = fields.Char(related='work_entry_type_id.display_code')

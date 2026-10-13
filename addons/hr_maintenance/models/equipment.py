@@ -100,7 +100,7 @@ class MaintenanceRequest(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string='Employee', default=_default_employee_get)
     owner_user_id = fields.Many2one(compute='_compute_owner', store=True)
-    equipment_id = fields.Many2one(domain="['|', ('employee_id', '=', employee_id), ('employee_id', '=', False)]")
+    equipment_id = fields.Many2one(ui_domain="['|', ('employee_id', '=', employee_id), ('employee_id', '=', False)]")
 
     @api.depends('employee_id')
     def _compute_owner(self):
