@@ -100,6 +100,9 @@ class IrActionsServer(models.Model):
             default_composition_mode='comment' if self.sms_method == 'comment' else 'mass',
             default_template_id=self.sms_template_id.id,
             default_mass_keep_log=self.sms_method == 'note',
+            # server actions run within business transactions (e.g. automation
+            # rules cron): queue SMS so that a rollback does not leave them sent
+            sms_put_in_queue=True,
         ).create({})
         composer.action_send_sms()
         return False

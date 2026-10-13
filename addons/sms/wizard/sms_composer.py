@@ -244,7 +244,8 @@ class SmsComposer(models.TransientModel):
                 all_bodies[record.id],
                 subtype_id=subtype_id,
                 number_field=self.number_field_name,
-                sms_numbers=self.sanitized_numbers.split(',') if self.sanitized_numbers else None)
+                sms_numbers=self.sanitized_numbers.split(',') if self.sanitized_numbers else None,
+                put_in_queue=self.env.context.get('sms_put_in_queue', False))
         return messages
 
     def _action_send_sms_mass(self, records=None):
