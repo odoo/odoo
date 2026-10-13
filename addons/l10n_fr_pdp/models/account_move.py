@@ -709,14 +709,16 @@ class AccountMove(models.Model):
                 and move.state == 'posted'
                 and move.l10n_fr_pdp_last_flow_id.state != 'error'
             ):
+                # Ensure the RE flow exists for the move period. This must happen before clearing
+                # l10n_fr_pdp_sent_in_flow_ids: a move that left the Flow 10 scope gets its RE scope
+                # from the last flow it was sent in.
+                self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
                 # When a flow is sent it compares the moves it sends vs the moves of the previous
                 # flow to avoid sending the data twice if it's strictly the same.
                 # Setting "l10n_fr_pdp_sent_in_flow_ids" to None will ensure the move is not already
                 # considered as sent in previous flow, and allow the current flow to be sent even if
                 # it's the only diffrence between the 2 flows.
                 move.l10n_fr_pdp_sent_in_flow_ids = False
-                # Ensure RE flow exist for current move period.
-                self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
         return super().button_draft()
 
     def _get_import_file_type(self, file_data):
