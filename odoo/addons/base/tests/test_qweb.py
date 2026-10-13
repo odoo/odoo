@@ -11,6 +11,7 @@ from lxml import etree, html
 from lxml.builder import E
 from copy import deepcopy
 from textwrap import dedent
+from psycopg2.extensions import TransactionRollbackError
 
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.ir_qweb import QWebException, render
@@ -19,6 +20,18 @@ from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.exceptions import UserError, ValidationError, MissingError
 
 unsafe_eval = eval
+
+
+class QWebTestError(Exception):
+    pass
+
+
+def _raise_qweb_test_error():
+    raise QWebTestError('probe payload')
+
+
+def _raise_transaction_rollback_error():
+    raise TransactionRollbackError('probe serialization failure')
 
 
 class TestQWebTField(TransactionCase):
@@ -1899,6 +1912,76 @@ class TestQWebBasic(TransactionCase):
         self.assertEqual(str(rendered), result)
 
 class TestQwebCache(TransactionCase):
+    def _create_qweb_view(self, arch):
+        return self.env['ir.ui.view'].create({
+            'name': 'qweb_nocache_error_test',
+            'type': 'qweb',
+            'arch': arch,
+        })
+
+    def test_nocache_t_call_error_keeps_original_exception(self):
+        sub_view = self._create_qweb_view('<t t-name="base.qweb_nocache_sub">sub</t>')
+        view = self._create_qweb_view(f'''
+            <t t-name="base.qweb_nocache_main">
+                <div t-nocache="">
+                    <t t-out="boom()"/>
+                    <t t-call="{sub_view.id}"/>
+                </div>
+            </t>
+        ''')
+
+        with self.assertRaises(QWebException) as caught:
+            self.env['ir.qweb']._render(view.id, {'boom': _raise_qweb_test_error})
+
+        self.assertIsInstance(caught.exception.__cause__, QWebTestError)
+        self.assertIs(caught.exception.__context__, caught.exception.__cause__)
+        self.assertEqual(caught.exception.name, view.id)
+
+    def test_nocache_t_call_successful_rendering(self):
+        sub_view = self._create_qweb_view('<t t-name="base.qweb_nocache_sub">sub</t>')
+        view = self._create_qweb_view(
+            f'<t t-name="base.qweb_nocache_main"><div t-nocache="">'
+            f'<t t-out="\'before\'"/><t t-call="{sub_view.id}"/></div></t>',
+        )
+
+        self.assertEqual(
+            self.env['ir.qweb']._render(view.id),
+            '<div>beforesub</div>',
+        )
+
+    def test_nocache_error_wraps_ordinary_exception(self):
+        view = self._create_qweb_view('''
+            <t t-name="base.qweb_nocache_main">
+                <div t-nocache=""><t t-out="boom()"/></div>
+            </t>
+        ''')
+
+        with self.assertRaises(QWebException) as caught:
+            self.env['ir.qweb']._render(view.id, {'boom': _raise_qweb_test_error})
+
+        self.assertIsInstance(caught.exception.__cause__, QWebTestError)
+        self.assertEqual(caught.exception.name, view.id)
+
+    def test_nocache_preserves_transaction_rollback_error(self):
+        view = self._create_qweb_view('''
+            <t t-name="base.qweb_nocache_main">
+                <div t-nocache=""><t t-out="boom()"/></div>
+            </t>
+        ''')
+
+        with self.assertRaises(TransactionRollbackError):
+            self.env['ir.qweb']._render(view.id, {'boom': _raise_transaction_rollback_error})
+
+    def test_transaction_rollback_error_outside_nocache_is_unwrapped(self):
+        view = self._create_qweb_view('''
+            <t t-name="base.qweb_outer_error">
+                <div><t t-out="boom()"/></div>
+            </t>
+        ''')
+
+        with self.assertRaises(TransactionRollbackError):
+            self.env['ir.qweb']._render(view.id, {'boom': _raise_transaction_rollback_error})
+
     def test_render_xml_cache_base(self):
         view1 = self.env['ir.ui.view'].create({
             'name': "dummy",
