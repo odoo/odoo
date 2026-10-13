@@ -61,6 +61,7 @@ import { PosTicketPrinterPlugin } from "../plugins/pos_ticket_printer_plugin";
 import { PosAlertPlugin } from "../plugins/pos_alert_plugin";
 import { PosNumberBufferPlugin } from "@point_of_sale/app/plugins/pos_number_buffer_plugin";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { clearLocalStorage } from "../utils/devices_identifier_sequence";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -450,7 +451,7 @@ export class PosStore extends WithLazyGetterTrap {
             this.device.saveUnusedNumber(orders);
             await this.data.resetIndexedDB();
             sessionStorage.clear();
-            localStorage.clear();
+            clearLocalStorage();
             window.location.reload();
         };
         if (showWarning) {
