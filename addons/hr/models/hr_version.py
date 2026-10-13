@@ -141,7 +141,14 @@ class HrVersion(models.Model):
 
     resource_calendar_id = fields.Many2one(
         'resource.calendar', required=True, default=lambda self: self.env.company.resource_calendar_id, inverse='_inverse_resource_calendar_id', string="Working Hours", index='btree_not_null', tracking=1,
-        domain="['|', ('company_id', '=', False), ('company_id.id', 'parent_of', company_id)]")
+        domain="""['&',
+            '|',
+                ('company_id', '=', False),
+                ('company_id.id', 'parent_of', company_id),
+            '|',
+                ('country_id', '=', False),
+                ('country_id', '=', company_country_id)
+        ]""")
     tz = fields.Selection(_tz_get, string='Timezone', required=True, default=lambda self: self.env.context.get('tz') or self.env.user.tz or 'UTC')
 
     # Contract Information

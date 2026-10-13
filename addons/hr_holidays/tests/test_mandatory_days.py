@@ -15,14 +15,15 @@ class TestHrLeaveMandatoryDays(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.default_calendar = cls.env['resource.calendar'].create({
-            'name': 'moon calendar',
-        })
-
         cls.company = cls.add_class_company('base.test_company', {
             'name': 'super company',
-            'resource_calendar_id': cls.default_calendar.id,
         })
+
+        cls.default_calendar = cls.env['resource.calendar'].create({
+            'name': 'moon calendar',
+            'company_id': cls.company.id,
+        })
+        cls.company.resource_calendar_id = cls.default_calendar
 
         cls.employee_user = new_test_user(cls.env, login='user', groups='base.group_user,hr_holidays.group_hr_holidays_employee', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)
         cls.manager_user = new_test_user(cls.env, login='manager', groups='base.group_user,hr_holidays.group_hr_holidays_manager', company_ids=[(6, 0, cls.company.ids)], company_id=cls.company.id)

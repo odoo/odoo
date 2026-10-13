@@ -110,7 +110,14 @@ class HrEmployee(models.Model):
         inherited=True,
         index=False,
         store=False,
-        domain="['|', ('company_id', '=', False), ('company_id.id', 'parent_of', company_id)]")
+        domain="""['&',
+            '|',
+                ('company_id', '=', False),
+                ('company_id.id', 'parent_of', company_id),
+            '|',
+                ('country_id', '=', False),
+                ('country_id', '=', company_country_id)
+        ]""")
     user_id = fields.Many2one(
         'res.users', 'User',
         related='resource_id.user_id',
