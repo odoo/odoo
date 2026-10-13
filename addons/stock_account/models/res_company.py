@@ -14,6 +14,10 @@ class ResCompany(models.Model):
         selection_add=[('fifo', "First In First Out (FIFO)")],
         ondelete={'fifo': 'set default'},
     )
+    valuation_account_id = fields.Many2one(
+        'account.account', 'Cost of Production 1',
+        domain=[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))],
+        help="Expense account used to re-qualify products removed from stock and sent to this location")
 
     def write(self, vals):
         companies = self.filtered(lambda c: c.cost_method != vals['cost_method']) if 'cost_method' in vals else []

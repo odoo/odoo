@@ -126,3 +126,6 @@ class ProductCategory(models.Model):
         check_company=True,
         help="""This account will be used as a valuation counterpart for both components and final products for manufacturing orders.
                 If there are any workcenter/employee costs, this value will remain on the account once the production is completed.""")
+
+    account_production_wip_account_id = fields.Many2one('account.account', string='Production WIP Account', check_company=True)
+    account_production_wip_overhead_account_id = fields.Many2one('account.account', string='Production WIP Overhead Account', check_company=True)
