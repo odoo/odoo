@@ -556,6 +556,16 @@ export class WebsitePreview extends Component {
         if (!this.websiteContext.edition && websiteDoc?.body && fallbackDoc?.body) {
             if (this._hasIframeFallbackStyles(websiteDoc, fallbackDoc)) {
                 replaceAttributes(websiteDoc.documentElement, fallbackDoc.documentElement);
+                fallbackDoc.head.querySelectorAll("style").forEach((styleEl) => styleEl.remove());
+                for (const styleEl of websiteDoc.head.querySelectorAll("style")) {
+                    const styleCloneEl = styleEl.cloneNode(true);
+                    if (styleEl.sheet) {
+                        styleCloneEl.textContent = [...styleEl.sheet.cssRules]
+                            .map((rule) => rule.cssText)
+                            .join("\n");
+                    }
+                    fallbackDoc.head.append(styleCloneEl);
+                }
                 const fallbackLinkEls = fallbackDoc.head.querySelectorAll('link[rel="stylesheet"]');
                 const fallbackHrefs = new Set([...fallbackLinkEls].map(linkEl => linkEl.href));
                 for (const linkEl of websiteDoc.head.querySelectorAll('link[rel="stylesheet"]')) {
