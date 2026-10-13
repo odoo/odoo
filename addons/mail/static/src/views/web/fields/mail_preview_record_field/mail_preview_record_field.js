@@ -13,7 +13,6 @@ export class MailPreviewRecordField extends ReferenceField {
 
     setup() {
         super.setup();
-        this.notification = useService("notification");
         this.orm = useService("orm");
 
         if (this.currentResId) {

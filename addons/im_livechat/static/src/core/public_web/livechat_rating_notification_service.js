@@ -5,9 +5,9 @@ import { convertLineBreakToBr } from "@mail/utils/common/format";
 import { renderToMarkup } from "@web/core/utils/render";
 
 export const livechatRatingNotificationService = {
-    dependencies: ["bus_service", "notification", "mail.store"],
+    dependencies: ["bus_service", "mail.store"],
 
-    start(env, { bus_service, notification, ["mail.store"]: store }) {
+    start(env, { bus_service, ["mail.store"]: store }) {
         bus_service.subscribe(
             "livechat_rating_notification",
             ({ guest_id, user_id, feedback, rating_image_url, channel_id, store_data }) => {
@@ -21,7 +21,7 @@ export const livechatRatingNotificationService = {
                     rating_image_url,
                     channel: store["discuss.channel"].get(channel_id),
                 });
-                notification.add(message, { type: "info" });
+                store.notification.add(message, { type: "info" });
             }
         );
         bus_service.start();

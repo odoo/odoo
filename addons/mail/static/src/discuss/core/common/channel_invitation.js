@@ -54,7 +54,6 @@ export class ChannelInvitation extends Component {
                 .optional(),
         });
         this.rtc = useService("discuss.rtc");
-        this.notification = useService("notification");
         this.suggestionService = useService("mail.suggestion");
         this.sequential = useSequential();
         this.state = proxy({

@@ -10,6 +10,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { user } from "@web/core/user";
@@ -176,6 +177,8 @@ export class Store extends BaseStore {
 
     /** @type {DebugModePlugin} */
     debugMode;
+    /** @type {NotificationPlugin} */
+    notification;
 
     /** @param {Readonly<Record<string, any>>} [ancestors] @see useAncestors */
     discussDropdownMenuClass(ancestors) {
@@ -430,7 +433,7 @@ export class Store extends BaseStore {
                 if (thread) {
                     thread.open({ focus: true });
                 } else {
-                    this.env.services.notification.add(_t("This thread is no longer available."), {
+                    this.notification.add(_t("This thread is no longer available."), {
                         type: "danger",
                     });
                 }
@@ -444,7 +447,7 @@ export class Store extends BaseStore {
             const message = this["mail.message"].get(id);
             const targetThread = message?.thread;
             const showAccessError = () =>
-                this.env.services.notification.add(_t("This conversation isn’t available."), {
+                this.notification.add(_t("This conversation isn’t available."), {
                     type: "danger",
                 });
             if (targetThread) {
@@ -518,7 +521,7 @@ export class Store extends BaseStore {
         if (userId) {
             const user = await this["res.users"].getOrFetch(userId, ["partner_id"]);
             if (!user?.partner_id) {
-                this.env.services.notification.add(_t("You can only chat with existing users."), {
+                this.notification.add(_t("You can only chat with existing users."), {
                     type: "warning",
                 });
                 return;
@@ -527,7 +530,7 @@ export class Store extends BaseStore {
         } else if (partnerId) {
             partner = await this["res.partner"].getOrFetch(partnerId, ["main_user_id"]);
             if (!partner?.main_user_id) {
-                this.env.services.notification.add(
+                this.notification.add(
                     _t("You can only chat with partners that have a dedicated user."),
                     { type: "info" }
                 );
@@ -542,7 +545,7 @@ export class Store extends BaseStore {
             chat = await this.joinChat(partner.id);
         }
         if (!chat) {
-            this.env.services.notification.add(
+            this.notification.add(
                 _t("An unexpected error occurred during the creation of the chat."),
                 { type: "warning" }
             );
@@ -846,10 +849,12 @@ export class StorePlugin extends Plugin {
     /** @private */
     env = useEnv();
     debugMode = usePlugin(DebugModePlugin);
+    notification = usePlugin(NotificationPlugin);
 
     setup() {
         /** @type {import("models").Store} */
         this.store = makeStore(this.env);
+        this.store.notification = this.notification;
         this.store.insert(session.storeData);
         /**
          * Add a default for `self` because in livechat there could be no user and no guest yet

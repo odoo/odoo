@@ -743,7 +743,7 @@ export class Thread extends Record {
 
     messagePin(message) {
         this.setMessagePin(message, true).then(() => {
-            const closeFn = this.store.env.services.notification.add(_t("Message pinned"), {
+            const closeFn = this.store.notification.add(_t("Message pinned"), {
                 buttons: [
                     {
                         name: _t("Undo"),
@@ -760,7 +760,7 @@ export class Thread extends Record {
 
     messageUnpin(message) {
         this.setMessagePin(message, false).then(() => {
-            const closeFn = this.store.env.services.notification.add(_t("Message unpinned"), {
+            const closeFn = this.store.notification.add(_t("Message unpinned"), {
                 buttons: [
                     {
                         name: _t("Undo"),

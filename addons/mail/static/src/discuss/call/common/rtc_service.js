@@ -539,7 +539,7 @@ export class Rtc extends Record {
         this.dialog = undefined;
         /** @type {Services["mail.fullscreen"]} */
         this.fullscreen = undefined;
-        /** @type {Services["notification"]} */
+        /** @type {import("@web/core/notifications/notification_plugin").NotificationPlugin} */
         this.notification = undefined;
         /** @type {Services["discuss.p2p"]} */
         this.p2pService = undefined;
@@ -556,7 +556,7 @@ export class Rtc extends Record {
 
     start() {
         const services = this.store.env.services;
-        this.notification = services.notification;
+        this.notification = this.store.notification;
         this.dialog = services.dialog;
         this.soundEffectsService = services["mail.sound_effects"];
         this.pttExtService = services["discuss.ptt_extension"];
@@ -2957,7 +2957,6 @@ export const rtcService = {
         "mail.fullscreen",
         "mail.sound_effects",
         "mail.store",
-        "notification",
         "presence",
     ],
     /**

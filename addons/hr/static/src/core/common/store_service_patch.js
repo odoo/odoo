@@ -14,7 +14,7 @@ const storeServicePatch = {
             "employee_id",
         ]);
         if (!employeePublic?.employee_id?.user_id) {
-            this.env.services.notification.add(
+            this.notification.add(
                 _t("You can only chat with employees that have a dedicated user."),
                 { type: "info" }
             );
