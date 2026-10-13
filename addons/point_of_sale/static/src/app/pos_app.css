@@ -44,6 +44,27 @@ html {
 .pos .oe_invisible{
     visibility: hidden !important;
 }
+
+ /* The PoS bundle does not include webclient.scss, which normally draws this */
+ /* indicator for selected entries in the backend search panel. */
+.pos .o_search_bar_menu .dropdown-item.selected {
+    position: relative;
+    font-weight: var(--o-bs-font-weight-bold);
+}
+
+.pos .o_search_bar_menu .dropdown-item.selected:not(.dropdown-item_active_noarrow)::before {
+    position: absolute;
+    inset: 0 auto auto;
+    transform: translate(-1.25em, 50%);
+    font: 1em/1 "Material Symbols Outlined";
+    color: var(--link-color);
+    content: "check";
+}
+
+.pos .o_search_bar_menu .dropdown-item.selected.disabled:not(.dropdown-item_active_noarrow)::before {
+    color: var(--bs-dropdown-link-disabled-color);
+}
+
 .pos .clearfix:after {
     content:" ";
     display: block;
