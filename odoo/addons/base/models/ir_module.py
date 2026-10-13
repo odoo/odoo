@@ -26,6 +26,7 @@ from odoo.modules.module import Manifest, MissingDependency
 from odoo.tools import config, SQL
 from odoo.tools.misc import get_flag, topological_sort
 from odoo.tools.parse_version import parse_version
+from odoo.tools.sql import column_exists
 from odoo.tools.translate import (
     TranslationImporter,
     get_datafile_translation_path,
@@ -746,10 +747,20 @@ class IrModuleModule(models.Model):
                 ):
                     todo.append(dep.module_id)
 
-        self.browse(module.id for module in todo).write({'state': 'to upgrade'})
+        to_upgrade_modules = self.browse(module.id for module in todo)
+        # skip imported modules since they cannot be upgraded;
+        # the column 'imported' is defined in base_import_module, hence the SQL
+        if column_exists(self.env.cr, 'ir_module_module', 'imported'):
+            rows = self.env.execute_query(SQL("""
+                SELECT id
+                  FROM ir_module_module
+                 WHERE imported IS NOT TRUE AND id IN %s
+            """, tuple(to_upgrade_modules.ids)))
+            to_upgrade_modules = self.browse(id_ for id_, in rows)
+        to_upgrade_modules.state = 'to upgrade'
 
         to_install = []
-        for module in todo:
+        for module in to_upgrade_modules:
             if not self.get_module_info(module.name).get("installable", True):
                 continue
             for dep in module.dependencies_id:
