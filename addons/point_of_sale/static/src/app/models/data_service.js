@@ -79,6 +79,7 @@ export class PosData extends Reactive {
         this.channels = [];
         while (channels.length) {
             const channel = channels.pop();
+            this.bus.unsubscribe(`${odoo.access_token}-${channel.channel}`, channel.method);
             this.connectWebSocket(channel.channel, channel.method);
 
             console.warn("Reconnecting to channel", channel.channel);
