@@ -8,6 +8,7 @@
                     class="selection-item d-flex align-items-center justify-content-between btn btn-lg btn-outline-secondary w-100 p-3 text-start"
                     t-attf-class="o_colorlist_item_color_{{ item.color }}"
                     t-att-class="{ 'selected active': item.isSelected }"
+                    t-ref="item.isSelected ? this.selectedItemRef : this.unselectedItemRef"
                     t-on-click="() => this.selectItem(item.id)">
 
                <div class="d-flex align-items-center">
