@@ -1,6 +1,7 @@
 import { usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { formatFloatTime } from "@web/views/fields/formatters";
 import { TimeOffPlugin } from "./time_off_plugin";
 import { AllocationFormViewDialog } from "./view_dialog/allocation_form_view_dialog";
 
@@ -21,17 +22,9 @@ export function useMandatoryDays(props) {
 }
 
 export function useExpectedHours(props) {
-    return (info) => {
-        const date = luxon.DateTime.fromJSDate(info.date).toISODate();
-        const hours = props.model.expectedHours?.[date];
-        if (!hours || hours <= 0) {
-            return "";
-        }
-        const h = Math.floor(hours);
-        const m = Math.round((hours - h) * 60);
-        return m > 0
-            ? _t("%(hours)sh%(minutes)sm", { hours: h, minutes: m.toString().padStart(2, "0") })
-            : _t("%sh", h);
+    return (isoDate) => {
+        const hours = props.model.expectedHours?.[isoDate];
+        return hours > 0 ? formatFloatTime(hours) : "";
     };
 }
 
