@@ -1,10 +1,28 @@
 import { animationFrame, tick, waitFor, queryAll } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { normalizeText } from "./common";
+import { confirmDialog } from "./dialog_util";
 
-export async function clickPaymentMethod(name) {
+export async function clickPaymentMethod(name, changeDefault = false) {
+    if (changeDefault) {
+        await selectDefaultPaymentMethod(name);
+    }
     await contains(`.paymentmethod:contains("${name}")`).click();
     await animationFrame();
+}
+
+export async function selectDefaultPaymentMethod(name) {
+    await contains(
+        ".pos-leftheader button:has([data-icon='menu']), .pos-topheader button:has([data-icon='menu'])"
+    ).click();
+    await animationFrame();
+    await contains(".o_pos_burger_menu_buttons button:contains('Payment Methods')").click();
+    await selectDefaultPaymentMethodInPopup(name);
+}
+
+export async function selectDefaultPaymentMethodInPopup(name) {
+    await contains(`.modal-body button:contains("${name}")`).click();
+    await confirmDialog("Confirm");
 }
 
 export async function clickCurrencyWisePaymentMethod(name, currencyCode, amount) {

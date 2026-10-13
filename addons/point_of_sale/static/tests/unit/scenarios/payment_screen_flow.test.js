@@ -1,8 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, waitFor, advanceTime } from "@odoo/hoot-dom";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { localization } from "@web/core/l10n/localization";
-import { setupAndMountPosApp, enableCashRounding } from "@point_of_sale/../tests/unit/utils";
+import {
+    setupAndMountPosApp,
+    enableCashRounding,
+    addTestTerminals,
+} from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import * as Utils from "@point_of_sale/../tests/unit/ui_utils";
 
@@ -163,7 +168,7 @@ test.tags("desktop");
 
 test("test_add_money_button_with_different_decimal_separator: +50 button works with comma separator", async () => {
     await setupAndMountPosApp();
-    patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
+    patch(localization, { decimalPoint: ",", thousandsSep: "." });
 
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickPayButton();
@@ -227,7 +232,7 @@ test("Check flow with multi currency payment lines", async () => {
 
 test("AutofillCashCount: cash count autofill with comma decimal separator", async () => {
     const store = await setupAndMountPosApp({ use_pricelist: false });
-    patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
+    patch(localization, { decimalPoint: ",", thousandsSep: "." });
 
     const productTmpl = store.models["product.template"].get(5);
     productTmpl.list_price = 123456;
@@ -258,4 +263,33 @@ test("AutofillCashCount: cash count autofill with comma decimal separator", asyn
     await waitFor(".close-pos-popup");
     expect(document.querySelector(".close-pos-popup .cash-difference").textContent).toInclude("0");
     expect(document.querySelector(".close-pos-popup .cash-input input").value).toBe("123.456,00");
+});
+
+test("Default payment method: selected once, then used directly", async () => {
+    const store = await setupAndMountPosApp({
+        module_pos_restaurant: false,
+        available_preset_ids: [],
+        fast_payment_method_ids: [],
+    });
+    const [terminal1, terminal2] = addTestTerminals(store);
+
+    await Utils.clickDisplayedProduct("TEST");
+    await Utils.clickPayButton();
+    await waitFor(".payment-screen");
+    expect(".paymentmethod:contains('Test Terminal')").toHaveCount(0);
+
+    // The provider button asks for the default, then adds the payment line
+    await Utils.clickPaymentMethod("Test Provider");
+    await Utils.selectDefaultPaymentMethodInPopup("Test Terminal 2");
+    await animationFrame();
+    expect(store.paymentMethods.getDefault("test_terminal")).toBe(terminal2);
+    expect(Utils.selectedPaymentline().name).toBe("Test Terminal 2");
+    expect(".paymentmethod:contains('Test Provider')").toHaveCount(0);
+    expect(".paymentmethod:contains('Test Terminal 1')").toHaveCount(0);
+
+    // The default can be changed from the burger menu
+    await Utils.clickPaymentMethod("Test Terminal 1", true);
+    expect(store.paymentMethods.getDefault("test_terminal")).toBe(terminal1);
+    expect(Utils.selectedPaymentline().name).toBe("Test Terminal 1");
+    expect(".paymentmethod:contains('Test Terminal 2')").toHaveCount(0);
 });
