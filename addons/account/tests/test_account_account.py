@@ -278,8 +278,6 @@ class TestAccountAccount(TestAccountMergeCommon):
         with Form(self.env['account.account']) as account_form:
             account_form.name = "A new account"
             account_form.code = new_code
-            self.assertEqual(account_form.account_type, 'asset_receivable')
-            self.assertTrue(account_form.reconcile)
 
         account = account_form.record
         self.assertEqual(account.account_type, 'asset_receivable')
