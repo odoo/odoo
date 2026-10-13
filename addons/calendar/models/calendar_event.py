@@ -1522,10 +1522,10 @@ class CalendarEvent(models.Model):
             events = self
         attendee = events.attendee_ids.filtered(lambda x: x.partner_id == self.env.user.partner_id)
         if status == 'accepted':
-            return attendee.do_accept()
+            return attendee.do_accept(recurrence_update_setting)
         if status == 'declined':
-            return attendee.do_decline()
-        return attendee.do_tentative()
+            return attendee.do_decline(recurrence_update_setting)
+        return attendee.do_tentative(recurrence_update_setting)
 
     def find_partner_customer(self):
         self.ensure_one()

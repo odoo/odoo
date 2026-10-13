@@ -222,11 +222,11 @@ class CalendarAttendee(models.Model):
     # STATE MANAGEMENT
     # ------------------------------------------------------------
 
-    def do_tentative(self):
+    def do_tentative(self, recurrence_update_setting=None):
         """ Makes event invitation as Tentative. """
         return self.write({'state': 'tentative'})
 
-    def do_accept(self):
+    def do_accept(self, recurrence_update_setting=None):
         """ Marks event invitation as Accepted. """
         for attendee in self:
             attendee.event_id.message_post(
@@ -236,7 +236,7 @@ class CalendarAttendee(models.Model):
             )
         return self.write({'state': 'accepted'})
 
-    def do_decline(self):
+    def do_decline(self, recurrence_update_setting=None):
         """ Marks event invitation as Declined. """
         for attendee in self:
             attendee.event_id.message_post(
