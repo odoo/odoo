@@ -444,6 +444,8 @@ def load_modules(
                 registry._reinit_modules.update(m for m in reinit_modules.mapped('name') if m not in graph._imported_modules)
 
             env.flush_all()
+            if update_module and odoo.tools.sql.column_exists(cr, 'ir_module_module', 'imported'):
+                cr.execute("Update ir_module_module set state='installed' where state='to upgrade' and imported")
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
             Module.invalidate_model(['state'])
 
