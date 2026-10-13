@@ -143,6 +143,7 @@ export class CollaborationOdooPlugin extends Plugin {
         }
 
         this.collaborationChannelName = channelName;
+        this.collaborationPeerChannelName = `${channelName}:${this.config.collaboration.peerId}`;
         this.historyStepsBuffer = [];
         // Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
@@ -162,10 +163,12 @@ export class CollaborationOdooPlugin extends Plugin {
         const { busService } = this.config.collaboration;
         busService.subscribe("editor_collaboration", collaborationBusListener);
         busService.addChannel(this.collaborationChannelName);
+        busService.addChannel(this.collaborationPeerChannelName);
         this.collaborationStopBus = () => {
             // Wysiwyg.activeCollaborationChannelNames.delete(this.collaborationChannelName);
             busService.unsubscribe("editor_collaboration", collaborationBusListener);
             busService.deleteChannel(this.collaborationChannelName);
+            busService.deleteChannel(this.collaborationPeerChannelName);
         };
 
         this.startCollaborationTime = new Date().getTime();
