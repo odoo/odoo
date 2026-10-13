@@ -65,7 +65,7 @@ const ScheduledMessagePatch = {
     },
 
     notifyAlreadySent() {
-        this.store.env.services.notification.add(_t("This message has already been sent."), {
+        this.store.notification.add(_t("This message has already been sent."), {
             type: "warning",
         });
     },

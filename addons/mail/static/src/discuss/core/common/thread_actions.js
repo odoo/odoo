@@ -50,10 +50,9 @@ registerThreadAction("add-to-favorites", {
         if (ancestors.inDiscussApp && !store.ui.isSmall()) {
             return;
         }
-        store.env.services.notification.add(
-            _t("Added %(name)s to Favorites", { name: channel.displayName }),
-            { type: "success" }
-        );
+        store.notification.add(_t("Added %(name)s to Favorites", { name: channel.displayName }), {
+            type: "success",
+        });
     },
     sequence: 40,
     sequenceGroup: 20,
@@ -81,7 +80,7 @@ registerThreadAction("remove-from-favorites", {
         if (ancestors.inDiscussApp && !store.ui.isSmall()) {
             return;
         }
-        store.env.services.notification.add(
+        store.notification.add(
             _t("Removed %(name)s from Favorites", { name: channel.displayName }),
             { type: "warning" }
         );

@@ -26,6 +26,7 @@ import {
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 
@@ -64,7 +65,7 @@ export class CallPreview extends Component {
                 .optional(),
         });
         this.dialog = useService("dialog");
-        this.notification = useService("notification");
+        this.notification = usePlugin(NotificationPlugin);
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.ui = usePlugin(UIPlugin);
