@@ -1120,12 +1120,45 @@ class TestTemplating(ViewCase):
         })
         arch_string = view1.with_context(inherit_branding=True).get_combined_arch()
         arch = etree.fromstring(arch_string)
-        self.View.distribute_branding(arch)
         [initial] = arch.xpath("//div[@role='search']")
         self.assertEqual(
             '1',
             initial.get('data-oe-no-branding'),
             'Injected view must be marked as no-branding')
+        self.View.distribute_branding(arch)
+        self.assertEqual(
+            [],
+            arch.xpath('//*[@data-oe-xpath]'),
+            'the branding was discarded and not added to the copy')
+
+    def test_branding_t0_lowering(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<root>
+                <p role="search">initial content</p>
+            </root>
+            """
+        })
+        self.View.create({
+            'name': "Extension view",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """<xpath expr="//p[@role='search']" position="replace">
+                <form id="wrapper">
+                    <div>$0</div>
+                    <p id="added_content">content of sibling</p>
+                </form>
+            </xpath>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).get_combined_arch()
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+        [wrapper] = arch.xpath("//*[@id='wrapper']")
+        [added_content] = arch.xpath("//*[@id='added_content']")
+        self.assertIsNone(wrapper.get('data-oe-xpath'), "branding should be lowered for the copied target")
+        self.assertIsNotNone(added_content.get('data-oe-xpath'))
 
     def test_branding_inherit(self):
         view1 = self.View.create({
