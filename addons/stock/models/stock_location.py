@@ -292,10 +292,11 @@ class StockLocation(models.Model):
 
     def _get_putaway_strategy(
         self, product, quantity=0, package=None, packaging=None, additional_qty=None,
-        package_products=None, locations=None, excluded_sml_ids=None,
+        package_products=None, locations=None, excluded_sml_ids=None, return_remainder=False,
     ):
         """Returns the location where the product has to be put, if any compliant
-        putaway strategy is found. Otherwise returns self.
+        putaway strategy is found. Otherwise returns self. If asked to, returns the
+        space and weight left (i.e. remaining for other products) at the location.
         The quantity should be in the default UOM of the product, it is used when
         no package is specified.
 
@@ -304,6 +305,7 @@ class StockLocation(models.Model):
         :param locations: candidate locations, defaults to the child internal locations
         :param excluded_sml_ids: ids of the move lines to ignore when computing
             the occupation of the locations
+        :param return_remainder: flag to return the remainder alongside the location
         """
         self = self._check_access_putaway()
         products = (package_products or self.env['product.product']) | product
@@ -372,7 +374,7 @@ class StockLocation(models.Model):
             if additional_qty:
                 for location_id, qty in additional_qty.items():
                     qty_by_location[location_id] += qty
-            putaway_location = putaway_rules._get_putaway_location(
+            putaway_location, remainder = putaway_rules._get_putaway_location(
                 product, quantity, package, packaging, qty_by_location,
                 package_products=package_products, excluded_sml_ids=excluded_sml_ids,
             )
@@ -380,6 +382,8 @@ class StockLocation(models.Model):
         if not putaway_location:
             putaway_location = locations[0] if locations and self.usage == 'view' else self
 
+        if return_remainder:
+            return putaway_location, remainder
         return putaway_location
 
     def _get_next_inventory_date(self):
@@ -452,22 +456,28 @@ class StockLocation(models.Model):
             if package and package.package_type_id:
                 # check weight
                 package_smls = self.env['stock.move.line'].search([('result_package_id', '=', package.id), ('state', 'not in', ['done', 'cancel'])])
-                if self.storage_category_id.max_weight < forecast_weight + sum(package_smls.mapped(lambda sml: sml.quantity_product_uom * sml.product_id.weight)):
+                package_weight = sum(package_smls.mapped(lambda sml: sml.quantity_product_uom * sml.product_id.weight))
+                remaining_weight = self.storage_category_id.max_weight - forecast_weight - package_weight
+                if remaining_weight < 0:
                     return False
                 # check if enough space
                 package_capacity = self.storage_category_id.package_capacity_ids.filtered(lambda pc: pc.package_type_id == package.package_type_id)
-                if package_capacity and location_qty >= package_capacity.quantity:
+                remaining_capacity = package_capacity and package_capacity.quantity - location_qty
+                if remaining_capacity and remaining_capacity <= 0:
                     return False
             else:
                 # check weight
-                if self.storage_category_id.max_weight < forecast_weight + product.weight * quantity:
+                remaining_weight = self.storage_category_id.max_weight - forecast_weight - product.weight * quantity
+                if remaining_weight < 0:
                     return False
                 product_capacity = self.storage_category_id.product_capacity_ids.filtered(lambda pc: pc.product_id == product)
+                remaining_capacity = product_capacity and product_capacity.quantity - location_qty
                 # To handle new line without quantity in order to avoid suggesting a location already full
                 if product_capacity and location_qty >= product_capacity.quantity:
                     return False
                 if product_capacity and quantity + location_qty > product_capacity.quantity:
                     return False
+            return remaining_capacity or 0, remaining_weight
         return True
 
     def _child_of(self, other_location):
