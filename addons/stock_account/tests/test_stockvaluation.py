@@ -3790,6 +3790,32 @@ class TestStockValuation(TestStockValuationCommon):
         # Company B should not have the cost from Company A, so the standard_price should remain 0.0
         self.assertEqual(product.standard_price, 0.0)
 
+    def test_multi_company_fifo_stack_isolation(self):
+        """ Check that when multiple companies are selected, the fifo logic only uses moves
+        from the main company to compute the value of the outgoing move
+        """
+        self.product_fifo.categ_id.with_company(self.other_company).property_cost_method = 'fifo'
+
+        self._make_in_move(product=self.product_fifo, quantity=10.0, unit_cost=200.0, company=self.company)
+        self._make_in_move(product=self.product_fifo, quantity=10.0, unit_cost=100.0, company=self.other_company)
+
+        other_warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.other_company.id)], limit=1)
+        out_move = self.env['stock.move'].create({
+            'product_id': self.product_fifo.id,
+            'location_id': other_warehouse.lot_stock_id.id,
+            'location_dest_id': self.customer_location.id,
+            'product_uom_qty': 1,
+            'company_id': self.other_company.id,
+        })
+        out_move_with_comp = out_move.with_company(self.other_company).with_context(allowed_company_ids=[self.other_company.id, self.company.id])
+        out_move_with_comp._action_confirm()
+        out_move_with_comp._action_assign()
+        out_move_with_comp.move_line_ids.quantity = 1.0
+        out_move_with_comp.picked = True
+        out_move_with_comp._action_done()
+
+        self.assertEqual(out_move_with_comp.value, 100)
+
     def test_standard_price_in_qty_history_report_after_recount(self):
         """Ensure the quantity history report reflects the product's standard price
         when inventory is recounted at a date preceding the product's creation."""
