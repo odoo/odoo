@@ -545,11 +545,9 @@ class Message(models.Model):
                     message.get('message_type') != 'user_notification'):
                 model_docid_msgids[message['model']][message['res_id']].append(mid)
         for model, docid_msgids in model_docid_msgids.items():
-            allowed = self._filter_records_for_message_operation(model, docid_msgids, operation)
-            for doc_id, msg_ids in docid_msgids.items():
-                if doc_id in allowed.ids:
-                    for mid in msg_ids:
-                        messages_to_check.pop(mid)
+            for doc_id in self._filter_records_for_message_operation(model, docid_msgids, operation).ids:
+                for mid in docid_msgids.get(doc_id, []):
+                    messages_to_check.pop(mid)
 
         if not messages_to_check:
             return forbidden
