@@ -2,8 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ActionPanel">
-        <ResizablePanel t-if="this.props.resizable and !this.ancestors.inChatWindow and !this.ancestors.inChatter and !this.ui.isSmall" class="this.classNames" handleSide="'start'" initialWidth="this.initialWidth" minWidth="this.minWidth">
-            <t t-call="mail.ActionPanel.content"/>
+        <ResizablePanel t-if="this.props.resizable and !this.ancestors.inChatWindow and !this.ancestors.inChatter and !this.ui.isSmall" class="'o-mail-ActionPanel-resizable rounded-4 flex-shrink-0 h-100 bg-inherit'" handleSide="'start'" outerHandle="true" initialWidth="this.initialWidth" minWidth="this.minWidth">
+            <div t-att-class="this.classNames">
+                <t t-call="mail.ActionPanel.content"/>
+            </div>
         </ResizablePanel>
         <div t-else="" t-att-class="this.classNames">
             <t t-call="mail.ActionPanel.content"/>

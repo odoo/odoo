@@ -19,7 +19,8 @@ function useResizable({
 }) {
     const resizeableProps = useProps(resizablePanelProps);
 
-    let isChangingSize = false;
+    const isChangingSize = signal(false);
+    let grabOffset = 0;
 
     useListener(document, "mouseup", () => onMouseUp());
     useListener(document, "mousemove", (ev) => onMouseMove(ev));
@@ -56,20 +57,26 @@ function useResizable({
         handleRef()?.removeEventListener("mousedown", onMouseDown);
     });
 
-    function onMouseDown() {
-        isChangingSize = true;
+    function onMouseDown(ev) {
+        isChangingSize.set(true);
+        grabOffset = getContainerRect().width - getPointerWidth(ev);
         document.body.classList.add("pe-none", "user-select-none");
     }
 
     function onMouseUp() {
-        isChangingSize = false;
+        isChangingSize.set(false);
         document.body.classList.remove("pe-none", "user-select-none");
     }
 
     function onMouseMove(ev) {
-        if (!isChangingSize || !containerRef()) {
+        if (!isChangingSize() || !containerRef()) {
             return;
         }
+        resize(computeFinalWidth(getPointerWidth(ev) + grabOffset));
+    }
+
+    /** @param {MouseEvent} ev */
+    function getPointerWidth(ev) {
         const resizeSide = getResizeSide(resizeableProps);
         const direction =
             (docDirection === "ltr" && resizeSide === "end") ||
@@ -77,15 +84,13 @@ function useResizable({
                 ? 1
                 : -1;
         const fixedSide = direction === 1 ? "left" : "right";
-        const containerRect = getContainerRect();
-        const newWidth = (ev.clientX - containerRect[fixedSide]) * direction;
-        resize(computeFinalWidth(newWidth));
+        return (ev.clientX - getContainerRect()[fixedSide]) * direction;
     }
 
     function computeFinalWidth(targetContainerWidth) {
         const handleEl = handleRef();
         const handlerSpacing = handleEl ? handleEl.offsetWidth / 2 : 10;
-        const w = Math.max(getMinWidth(resizeableProps), targetContainerWidth + handlerSpacing);
+        const w = Math.max(getMinWidth(resizeableProps), targetContainerWidth);
         const limit = getLimitWidth();
         return Math.min(w, limit - handlerSpacing);
     }
@@ -113,6 +118,8 @@ function useResizable({
         containerRef().style.setProperty("width", `${width}px`);
         onResize(width);
     }
+
+    return { isChangingSize };
 }
 
 export const resizablePanelProps = {
@@ -121,6 +128,7 @@ export const resizablePanelProps = {
     minWidth: t.number().optional(400),
     class: t.string().optional(""),
     handleSide: t.selection(["start", "end"]).optional("end"),
+    outerHandle: t.boolean().optional(false),
 };
 
 export class ResizablePanel extends Component {
@@ -133,7 +141,7 @@ export class ResizablePanel extends Component {
     handleRef = signal.ref();
 
     setup() {
-        useResizable({
+        this.resizable = useResizable({
             containerRef: this.containerRef,
             handleRef: this.handleRef,
             onResize: this.props.onResize,
@@ -149,5 +157,17 @@ export class ResizablePanel extends Component {
             classes.push("position-relative");
         }
         return classes.join(" ");
+    }
+
+    handleClass() {
+        const side = this.props.handleSide;
+        const outerHandle = this.props.outerHandle;
+        return {
+            "start-0": !outerHandle && side === "start",
+            "end-0": !outerHandle && side === "end",
+            [`o_resizable_panel_outer_handle o_resizable_panel_outer_handle_${side} d-flex justify-content-center`]:
+                outerHandle,
+            "opacity-0 opacity-100-hover": outerHandle && !this.resizable.isChangingSize(),
+        };
     }
 }
