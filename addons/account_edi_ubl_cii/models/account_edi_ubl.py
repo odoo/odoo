@@ -2483,6 +2483,15 @@ class AccountEdiUBL(models.AbstractModel):
                 'reason_code': reason_code,
             }
 
+    def _import_ubl_invoice_line_get_base_quantity(self, collected_values):
+        """ Return the quantity 'cbc:PriceAmount' is expressed for, or None when there is none.
+
+        Some formats report 'cbc:PriceAmount' as the price of a single unit whatever
+        'cbc:BaseQuantity' is: for those, it must not be used as a divisor.
+        """
+        base_quantity_str = collected_values['line_tree'].findtext('./{*}Price/{*}BaseQuantity')
+        return float(base_quantity_str) if base_quantity_str else None
+
     def _import_ubl_invoice_line_add_price_unit_quantity_discount(self, collected_values):
         file_document_sign = collected_values['file_document_sign']
         line_tree = collected_values['line_tree']
@@ -2494,11 +2503,10 @@ class AccountEdiUBL(models.AbstractModel):
             line_tree.findtext('.//{*}InvoicedQuantity')
             or line_tree.findtext('.//{*}CreditedQuantity')
         )
-        base_quantity_str = line_tree.findtext('./{*}Price/{*}BaseQuantity')
         line_extension_amount = line_extension_amount_str and float(line_extension_amount_str) * file_document_sign
         price_amount = price_amount_str and float(price_amount_str)
         invoiced_quantity = invoiced_quantity_str and float(invoiced_quantity_str) * file_document_sign
-        base_quantity = base_quantity_str and float(base_quantity_str)
+        base_quantity = self._import_ubl_invoice_line_get_base_quantity(collected_values)
 
         total_allowances = sum(allowance['amount'] for allowance in collected_values['allowances'])
         total_charges = sum(charge['amount'] for charge in collected_values['charges'])
