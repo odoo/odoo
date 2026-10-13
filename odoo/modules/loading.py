@@ -72,7 +72,7 @@ def load_demo(env: Environment, package: ModuleNode, idref: IdRef, mode: LoadMod
     try:
         if package.manifest.get('demo') or package.manifest.get('demo_xml'):
             _logger.info("Module %s: loading demo", package.name)
-            with env.cr.savepoint(flush=False):
+            with env.cr.savepoint(flush=False):  # flush managed in load_data
                 load_data(env(su=True, context=dict(env.context, install_demo=True)), idref, mode, kind='demo', package=package)
         return True
     except Exception:  # noqa: BLE001
@@ -275,7 +275,6 @@ def load_module_graph(
 
                 # tests may have reset the environment
                 module = env['ir.module.module'].browse(module_id)
-
 
         extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
         extras = []
@@ -499,7 +498,6 @@ def load_modules(
     if update_module:
         env.transaction.will_change_registry()
     if registry.updated_modules:
-
         cr.execute("SELECT model from ir_model")
         for (model,) in cr.fetchall():
             if model in registry:
@@ -515,7 +513,8 @@ def load_modules(
             # trigger after a small delay to give time for assets to regenerate
             vacuum_cron._trigger(at=datetime.datetime.now() + datetime.timedelta(minutes=1))
 
-        env.flush_all()
+        # Commit once everything is installed and clean
+        env.cr.commit()
 
     # STEP 5: Uninstall modules to remove
     if update_module:
@@ -525,6 +524,12 @@ def load_modules(
         modules_to_remove = dict(cr.fetchall())
         if modules_to_remove:
             registry.uninstalling_modules = set(modules_to_remove)
+            # remove first all modules not in the graph (imported modules), then
+            # all modules in the graph in the reverse order of dependencies
+            imported_modules = env['ir.module.module'].browse(id_ for name, id_ in modules_to_remove.items() if name not in graph)
+            if imported_modules:
+                imported_modules.module_uninstall()
+                env.cr.commit()
             pkgs = reversed([p for p in graph if p.name in modules_to_remove])
             for pkg in pkgs:
                 uninstall_hook = pkg.manifest.get('uninstall_hook')
@@ -532,9 +537,10 @@ def load_modules(
                     py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
                     getattr(py_module, uninstall_hook)(env)
                     env.flush_all()
+                module = env['ir.module.module'].browse(modules_to_remove[pkg.name])
+                module.module_uninstall()
+                env.cr.commit()
 
-            Module = env['ir.module.module']
-            Module.browse(modules_to_remove.values()).module_uninstall()
             registry.loaded = False
             _logger.info('Reloading registry once more after uninstalling modules')
             return
