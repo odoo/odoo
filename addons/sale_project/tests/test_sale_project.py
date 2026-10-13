@@ -2130,3 +2130,39 @@ class TestSaleProject(TestSaleProjectCommon):
         line_vendor_bill = self.env['account.analytic.line'].search([('account_id', '=', self.project_global.account_id.id), ('category', '=', 'vendor_bill')])
         self.assertEqual(line_vendor_bill.category_report, 'costs')
         self.assertEqual(line_vendor_bill.billable_type, '12_vendor_bill')
+
+    def test_sale_project_order_search_access(self):
+        """ Test that a sale user with own documents rights can access a sale order linked to a project he has access to, even if the sale order is not his.
+            Ensure that the user can access all fields of the sale order they have access to.
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Project Test Customer'}).id,
+            'order_line': [
+                Command.create({'product_id': self.product.id}),
+            ],
+        })
+        so.action_confirm()
+        so_project = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Project Test Customer'}).id,
+            'order_line': [
+                Command.create({'product_id': self.product.id}),
+                Command.create({'product_id': self.product_order_service2.id}),
+            ],
+        })
+        so_project.action_confirm()
+
+        user_own_sale = new_test_user(
+            self.env,
+            login='test_sale_own_doc',
+            groups='sales_team.group_sale_salesman',
+        )
+        visible_orders = self.env['sale.order'].with_user(user_own_sale).search([])
+        self.assertNotIn(so_project, visible_orders, "A sale user with own documents rights should not see that sale order as it's related to another user")
+
+        user_own_sale.group_ids += self.env.ref('project.group_project_user')
+        visible_orders = self.env['sale.order'].with_user(user_own_sale).search([])
+        self.assertIn(so_project, visible_orders, "The sale user should now be able to access the sale order since it is linked to a task he has access to")
+        self.assertNotIn(so, visible_orders, "The sale user with project rights should not have access to that sale order as it's related to another user and doesn't have any projects or tasks linked to it")
+
+        # Ensure that the user can access all fields of the sale order they have access to.
+        self.assertTrue(Form(so_project.with_user(user_own_sale)))

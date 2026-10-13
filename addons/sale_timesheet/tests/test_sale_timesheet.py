@@ -5,7 +5,7 @@ from odoo import Command
 from odoo.fields import Date
 from odoo.fields import Domain
 from odoo.tools import float_is_zero
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.tests import Form, tagged, new_test_user
 
@@ -462,9 +462,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'unit_amount': 30,
             'employee_id': self.employee_manager.id
         })
-
-        with self.assertRaises(AccessError, msg="The user should not have access to the SOL"):
-            so_line_deliver_timesheet.with_user(self.user_employee_without_sales_access).read(['name'])
 
         # invalidate cache to make sure the SOL set on the timesheet is not in the cache since the user
         # should not be able to access on the SOL.
