@@ -357,12 +357,9 @@ test("reference in form view", async () => {
 
     await click(".o_field_widget[name=reference] .o_select_menu input");
     await animationFrame();
-    expect(queryAllTexts(".o_select_menu_item")).toEqual(
-        ["Partner", "Partner Type", "Product"],
-        {
-            message: "the options should be correctly set",
-        }
-    );
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Partner", "Partner Type", "Product"], {
+        message: "the options should be correctly set",
+    });
     await click(".o_select_menu_item:contains(Product)");
     await animationFrame();
 
@@ -783,7 +780,7 @@ test("Reference field with default value in list view", async () => {
     await click('.o_list_char[name="name"] input');
     await edit("Blabla");
     await runAllTimers();
-    await click(".o_control_panel_main_buttons .o_list_button_save");
+    await click(".o_control_panel_main .o_list_button_save");
     await animationFrame();
 });
 

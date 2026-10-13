@@ -256,14 +256,13 @@ registry.category('web_tour.tours').add('test_inventory_adjustment_apply_all', {
         trigger: 'div[name=inventory_quantity] input',
         run: "edit 123",
     },
-    // Unfocus to show the "New" button again
-    {
-        trigger: '.o_searchview_input_container',
-        run: "click",
-    },
     {
         trigger: '.o_list_button_add',
         run: "click",
+    },
+    // Wait for the new row to be rendered
+    {
+        trigger : ".o_data_row:eq(1)",
     },
     {
         trigger: 'div[name=product_id] input',
