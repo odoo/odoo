@@ -48,6 +48,7 @@ import { OfflinePlugin } from "@web/core/offline/offline_plugin";
  *  fields: Record<string, Field>;
  *  activeFields: Record<string, FieldInfo>;
  *  fieldsToAggregate: string[];
+ *  searchOrderBy?: SearchParams["orderBy"];
  *  isMonoRecord: boolean;
  *  isRoot: boolean;
  *  resIds?: number[];
@@ -468,10 +469,16 @@ export class RelationalModel extends Model {
             });
 
             // orderBy
-            config.orderBy = "orderBy" in params ? params.orderBy : config.orderBy;
-            // re-apply previous orderBy if not given (or no order)
-            if (!config.orderBy.length) {
-                config.orderBy = currentConfig.orderBy || [];
+            config.orderBy = config.orderBy || [];
+            // Apply the search orderBy (e.g. from a favorite) only when it changes.
+            // Otherwise keep the local sort (column click), even after coming back
+            // from a breadcrumb.
+            if ("orderBy" in params) {
+                const previous = orderByToString(currentConfig.searchOrderBy || []);
+                if (orderByToString(params.orderBy) !== previous) {
+                    config.orderBy = params.orderBy;
+                }
+                config.searchOrderBy = params.orderBy;
             }
             // apply default order if no order
             if (this.defaultOrderBy && !config.orderBy.length) {
