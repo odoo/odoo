@@ -7,7 +7,7 @@ from datetime import UTC
 from typing import NamedTuple
 
 from odoo import api, Command, fields, models
-from odoo.tools import OrderedSet
+from odoo.tools import OrderedSet, is_list_of
 from odoo.tools.translate import _, code_translations, LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -212,6 +212,17 @@ class IrFieldsConverter(models.AbstractModel):
         except ValueError:
             msg = self.env._("'%s' does not seem to be a valid JSON for field '%%(field)s'")
             raise self._format_import_error(ValueError, msg, value)
+
+    def _str_to_properties_definition(self, model, field, value, savepoint):
+        definition, warnings = self._str_to_json(model, field, value, savepoint)
+        try:
+            if not is_list_of(definition, dict):
+                raise ValueError("Properties definitions must be dicts")  # noqa: TRY301
+            field.convert_to_cache(definition, model)
+        except ValueError as error:
+            msg = _("'%(value)s' does not seem to be a valid properties definition for field '%%(field)s': %(error)s")
+            raise self._format_import_error(ValueError, msg, {'value': value, 'error': str(error)})
+        return definition, warnings
 
     def _str_to_properties(self, model, field, value, savepoint):
 
