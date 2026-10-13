@@ -5154,11 +5154,17 @@ class AccountTax(models.Model):
         static_domain = Domain(self._check_company_domain(company))
         for tax_values in tax_values_list:
             tax_domain = (
-               Domain('amount_type', '=', tax_values['amount_type']) &
-               Domain('type_tax_use', '=', tax_values['type_tax_use']) &
-               Domain('amount', '=', tax_values['amount']) &
-               Domain([*([('country_id', '=', tax_values['invoice_predictive']['invoice'].tax_country_id.id)] if 'invoice_predictive' in tax_values else [])])
+                    Domain('amount_type', '=', tax_values['amount_type']) &
+                    Domain('type_tax_use', '=', tax_values['type_tax_use']) &
+                    Domain('amount', '=', tax_values['amount'])
             )
+            if invoice_predictive := tax_values.get('invoice_predictive'):
+                fiscal_position = tax_values.get('fiscal_position')
+                if fiscal_position and fiscal_position.foreign_vat:
+                    country = fiscal_position.country_id
+                else:
+                    country = invoice_predictive['invoice'].tax_country_id
+                tax_domain &= Domain('country_id', '=', country.id)
             orders = ['sequence', 'id']
             if name := tax_values.get('name'):
                 tax_domain &= Domain('name', '=', name)
