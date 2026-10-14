@@ -85,6 +85,41 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         with Form(invoice.with_context(allowed_company_ids=self.branch_a.ids)):
             pass
 
+    def test_parent_company_reconcile_model_in_branch(self):
+        reco_model = self.env['account.reconcile.model'].create({
+            'name': "Root model",
+            'company_id': self.root_company.id,
+            'line_ids': [Command.create({'account_id': self.company_data['default_account_revenue'].id})],
+        })
+        self.assertEqual(
+            self.env['account.reconcile.model'].search([
+                *self.env['account.reconcile.model']._check_company_domain(self.branch_a),
+                ('id', '=', reco_model.id),
+            ]),
+            reco_model,
+        )
+
+        # A journal item of a branch can reference a reconcile model of its parent company.
+        move = self.env['account.move'].create({
+            'company_id': self.branch_a.id,
+            'date': '2016-01-01',
+            'line_ids': [
+                Command.create({
+                    'name': 'debit',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'balance': 100.0,
+                    'reconcile_model_id': reco_model.id,
+                }),
+                Command.create({
+                    'name': 'credit',
+                    'account_id': self.company_data['default_account_expense'].id,
+                    'balance': -100.0,
+                }),
+            ],
+        })
+        move.action_post()
+        self.assertEqual(move.line_ids.reconcile_model_id, reco_model)
+
     def test_reconciliation_foreign_currency(self):
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
