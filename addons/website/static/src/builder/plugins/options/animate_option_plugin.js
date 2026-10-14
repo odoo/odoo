@@ -29,13 +29,12 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 
 /**
  * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_hover_effect_predicates
- * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_scroll_effect_predicates
  * @typedef {((el: HTMLElement) => Promise<boolean>)[]} hover_effect_allowed_predicates
  */
 
 export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
-    static dependencies = ["history", "selection", "split"];
+    static dependencies = ["history", "selection", "split", "region"];
     static shared = [
         "forceAnimation",
         "getDirectionsItems",
@@ -97,7 +96,7 @@ export class AnimateOptionPlugin extends Plugin {
     }
 
     canHaveScrollEffect(el) {
-        return this.checkPredicates("can_have_scroll_effect_predicates", el) ?? true;
+        return this.dependencies.region.getProperty(el, "scrollEffect") ?? true;
     }
 
     async canHaveHoverEffect(el) {
