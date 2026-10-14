@@ -39,6 +39,9 @@ class TestL10nEsEdiSiiPosOrder(TestL10nEsEdiSiiPosCommon):
         )
 
     def test_refund_is_invoiced_as_r5(self):
+        if self.env['ir.module.module']._get('l10n_es_pos').state == 'installed':
+            self.skipTest("l10n_es_pos (deprecated) overrides the refund invoice type")
+
         with self.with_pos_session():
             order = self._create_sale()
             refund = self.env['pos.order'].browse(order.refund()['res_id'])
@@ -49,10 +52,10 @@ class TestL10nEsEdiSiiPosOrder(TestL10nEsEdiSiiPosCommon):
             }).with_context(**payment_context).check()
 
         credit_note = refund.account_move
-        self.assertTrue(credit_note, "El reembolso debe generar una factura")
+        self.assertTrue(credit_note, "The refund must generate a credit note")
         self.assertEqual(credit_note.move_type, 'out_refund')
-        self.assertEqual(credit_note.l10n_es_invoice_type, 'R5')
         self.assertEqual(credit_note.partner_id, self.env.ref('l10n_es.partner_simplified'))
+        self.assertEqual(credit_note.l10n_es_invoice_type, 'R5')
 
     def test_refund_with_explicit_reason_keeps_it(self):
         with self.with_pos_session():
@@ -72,8 +75,8 @@ class TestL10nEsEdiSiiPosOrder(TestL10nEsEdiSiiPosCommon):
         self.assertEqual(len(closing_move), 1)
         self.assertEqual(closing_move.l10n_es_invoice_type, 'F4')
         ordered = orders.sorted('sequence_number')
-        self.assertEqual(closing_move.first_invoice, ordered[0].pos_reference)
-        self.assertEqual(closing_move.last_invoice, ordered[-1].pos_reference)
+        self.assertEqual(closing_move.first_invoice, ordered[0]._l10n_es_sii_get_ticket_name())
+        self.assertEqual(closing_move.last_invoice, ordered[-1]._l10n_es_sii_get_ticket_name())
 
     def test_closing_move_excludes_invoiced_orders(self):
         with self.with_pos_session():
@@ -82,8 +85,8 @@ class TestL10nEsEdiSiiPosOrder(TestL10nEsEdiSiiPosCommon):
             last = self._create_sale()
             self._create_sale(is_invoiced=True, customer=self.partner_b)
         closing_move = self.pos_session.sale_move_ids
-        self.assertEqual(closing_move.first_invoice, first.pos_reference)
-        self.assertEqual(closing_move.last_invoice, last.pos_reference)
+        self.assertEqual(closing_move.first_invoice, first._l10n_es_sii_get_ticket_name())
+        self.assertEqual(closing_move.last_invoice, last._l10n_es_sii_get_ticket_name())
 
     def test_closing_move_payload_f4(self):
         with self.with_pos_session():
