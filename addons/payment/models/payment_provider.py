@@ -1012,6 +1012,31 @@ class PaymentProvider(models.Model):
         self.ensure_one()
         return self.redirect_form_view_id
 
+    def _get_apple_pay_domain_association_file_path(self):
+        """Return the path of the Apple Pay domain association file of the provider.
+
+        For a provider to serve its domain association file, it must override this method and
+        return the path of the file.
+
+        Note: `self.ensure_one()`
+
+        :return: The path of the domain association file, if any.
+        :rtype: str
+        """
+        self.ensure_one()
+        return ""
+
+    @api.model
+    def _get_apple_pay_provider(self):
+        """Return the enabled providers accepting Apple Pay and having a domain association file.
+
+        :return: The Apple Pay providers.
+        :rtype: recordset of `payment.provider`
+        """
+        return self.search([
+            ("payment_method_ids", "any", [("code", "=", "apple_pay"), ("active", "=", True)])
+        ]).filtered(lambda provider: provider._get_apple_pay_domain_association_file_path())[:1]
+
     # === REQUEST HELPERS === #
 
     def _send_api_request(
