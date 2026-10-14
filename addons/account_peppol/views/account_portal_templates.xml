@@ -1,7 +1,7 @@
 <odoo>
     <template id="portal_my_details" inherit_id="portal.portal_my_details">
         <select name="invoice_sending_method" position="after">
-            <div t-if="peppol_eas_list" class="col-xl-6 portal_peppol_toggle">
+            <fieldset t-if="peppol_eas_list" class="col-xl-6 portal_peppol_toggle">
                 <label class="col-form-label label-optional" for="peppol_eas">
                     Peppol e-Address (EAS)
                 </label>
@@ -23,7 +23,7 @@
                     class="form-control"
                     t-att-value="peppol_endpoint or partner_sudo.peppol_endpoint"
                 />
-            </div>
+            </fieldset>
         </select>
     </template>
 </odoo>
