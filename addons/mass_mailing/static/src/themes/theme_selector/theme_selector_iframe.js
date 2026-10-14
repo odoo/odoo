@@ -96,7 +96,7 @@ export class ThemeSelectorIframe extends Component {
                 iframe.contentDocument.body.style.setProperty("direction", localization.direction);
 
                 this.themeSelectorRoot = this.app.createRoot(ThemeSelector, {
-                    env: this.env,
+                    pluginManager: this.scope.pluginManager,
                     props: {
                         config: this.props.config,
                         iframeRef: this.iframeRef,

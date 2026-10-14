@@ -1,8 +1,9 @@
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
-import { Component, types, useApp, usePlugin, useProps, xml } from "@odoo/owl";
+import { Component, types, useApp, usePlugin, useProps, useScope, xml } from "@odoo/owl";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { registry } from "@web/core/registry";
+import { useSubEnv } from "@web/owl2/utils";
 
 const DEFAULT_ID = Symbol("default");
 
@@ -17,6 +18,8 @@ class OverlayWrapper extends Component {
         componentProps: types.object(),
     });
     setup() {
+        const env = useProps.static("env", types.object());
+        useSubEnv(env);
         this.overlayService = usePlugin(OverlayPlugin);
         useOwnDebugContext();
     }
@@ -32,7 +35,9 @@ export const mailPopoutService = {
     async addAssets(window) {},
 
     dependencies: ["hotkey"],
-    start(env, { hotkey }) {
+    start(_env, { hotkey }) {
+        const scope = useScope();
+
         /**
          * @type {Map<any, {
          *  externalWindow: Window | null;
@@ -138,17 +143,20 @@ export const mailPopoutService = {
             }
             await reset(id, { useAlternativeAssets });
             externalWindow.document.host = { ...externalWindow.document.host, id };
-            const rootEnv = Object.assign({}, env, {
-                /**
-                 * Some sub components may need a reference to the external window to
-                 * access window information such as its dimensions, or to attach event listeners.
-                 */
-                pipWindow: externalWindow,
-                rootId: id,
-            });
             popout.root = app.createRoot(OverlayWrapper, {
-                env: rootEnv,
-                props: { component, componentProps: props },
+                pluginManager: scope.pluginManager,
+                props: {
+                    component,
+                    componentProps: props,
+                    env: {
+                        /**
+                         * Some sub components may need a reference to the external window to
+                         * access window information such as its dimensions, or to attach event listeners.
+                         */
+                        pipWindow: externalWindow,
+                        rootId: id,
+                    },
+                },
             });
             popout.root.mount(externalWindow.document.body);
             hotkey.registerWindow(externalWindow);

@@ -51,7 +51,7 @@ import { useEnv } from "@web/owl2/utils";
  * synchronously clear the host's children just before the component's rendered
  * HTML is inserted (i.e., just before the original `fiber.complete` runs).
  *
- * @param {import("@odoo/owl").App} app
+ * @param {import("@odoo/owl").Scope} scope
  * @param {typeof import("@odoo/owl").Component} Component
  * @param {HTMLElement} host
  * @param {Object} props
@@ -66,14 +66,21 @@ import { useEnv } from "@web/owl2/utils";
  * @returns {{ root: object, mountPromise: Promise }}
  */
 export function mountComponent(
-    app,
+    scope,
     Component,
     host,
     props,
     env,
     { onBeforeComplete, onAfterComplete } = {}
 ) {
-    const root = app.createRoot(Component, { props, env });
+    // TEMPORARY HACK: creates a sub plugin manager with custom env
+    const pluginManager = Object.assign(Object.create(scope.pluginManager), {
+        plugins: Object.assign(Object.create(scope.pluginManager.plugins), {
+            __ENV__: { env },
+        }),
+    });
+
+    const root = scope.app.createRoot(Component, { pluginManager, props });
     const mountPromise = root.prepare().then(() => {
         if (root.destroyed || onBeforeComplete?.() === false) {
             return;

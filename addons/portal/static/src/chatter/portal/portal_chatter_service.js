@@ -1,19 +1,21 @@
 import { loadCssFromBundle } from "@mail/utils/common/misc";
-import { onWillDestroy, useApp } from "@odoo/owl";
+import { onWillDestroy, useApp, useScope } from "@odoo/owl";
 import { PortalChatter } from "@portal/chatter/portal/portal_chatter";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 
 export class PortalChatterService {
-    constructor(env, services) {
-        this.setup(env, services);
+    constructor(services) {
+        this.setup(services);
     }
 
     app = useApp();
     /** @type {import("@odoo/owl").Root<PortalChatter> | null} */
     root = null;
 
-    setup(env, services) {
+    scope = useScope();
+
+    setup(services) {
         this.store = services["mail.store"];
         this.busService = services.bus_service;
 
@@ -40,19 +42,17 @@ export class PortalChatterService {
         };
     }
 
-    /** @param {import("@web/env").OdooEnv} env */
-    async initialize(env) {
+    async initialize() {
         const chatterEl = document.querySelector(".o_portal_chatter");
         const props = this.getProps(chatterEl);
         const root = chatterEl.querySelector("#chatterRoot");
         if (props.twoColumns) {
             root.classList.add("p-0");
         }
+        props.rootId = root.getAttribute("id");
         this.createShadow(root).then((shadow) => {
             this.root = this.app.createRoot(PortalChatter, {
-                env: Object.assign(Object.create(env), {
-                    rootId: root.getAttribute("id"),
-                }),
+                pluginManager: this.scope.pluginManager,
                 props,
             });
             return this.root.mount(shadow);
@@ -74,9 +74,9 @@ export class PortalChatterService {
 
 export const portalChatterService = {
     dependencies: ["mail.store", "bus_service"],
-    start(env, services) {
-        const portalChatter = new PortalChatterService(env, services);
-        portalChatter.initialize(env);
+    start(_env, services) {
+        const portalChatter = new PortalChatterService(services);
+        portalChatter.initialize();
         return portalChatter;
     },
 };
