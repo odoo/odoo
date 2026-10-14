@@ -13,7 +13,6 @@ import traceback
 from datetime import datetime
 from glob import glob
 from pathlib import Path
-from xmlrpc import client as xmlrpclib
 
 import pexpect
 
@@ -34,7 +33,6 @@ VERSION = version.split('-')[0].replace('saas~', '')
 GPGPASSPHRASE = os.getenv('GPGPASSPHRASE')
 GPGID = os.getenv('GPGID')
 DOCKERVERSION = VERSION.replace('+', '')
-INSTALL_TIMEOUT = 600
 
 DOCKERUSER = """
 RUN mkdir /var/lib/odoo && \
@@ -46,38 +44,9 @@ USER odoo
 """ % {'group_id': os.getgid(), 'user_id': os.getuid()}
 
 
-class OdooTestTimeoutError(Exception):
-    pass
-
-
-class OdooTestError(Exception):
-    pass
-
-
 def run_cmd(cmd, chdir=None, timeout=None):
     logging.info("Running command: '%s'", ' '.join(cmd))
     return subprocess.run(cmd, cwd=chdir, timeout=timeout)
-
-
-def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
-    uid = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/common' % (addr, port)).authenticate(
-        dbname, 'admin', 'admin', {}
-    )
-    modules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/object' % (addr, port)).execute(
-        dbname, uid, 'admin', 'ir.module.module', 'search', [('state', '=', 'installed')]
-    )
-    if len(modules) > 1:
-        toinstallmodules = xmlrpclib.ServerProxy('%s:%s/xmlrpc/2/object' % (addr, port)).execute(
-            dbname, uid, 'admin', 'ir.module.module', 'search', [('state', '=', 'to install')]
-        )
-        if toinstallmodules:
-            logging.error("Package test: FAILED. Not able to install dependencies of base.")
-            raise OdooTestError("Installation of package failed")
-        else:
-            logging.info("Package test: successfuly installed %s modules" % len(modules))
-    else:
-        logging.error("Package test: FAILED. Not able to install base.")
-        raise OdooTestError("Package test: FAILED. Not able to install base.")
 
 
 def publish(args, pub_type, extensions):
@@ -120,7 +89,7 @@ def gen_deb_package(args, published_files):
     def _gen_file(args, command, file_name, path):
         cur_tmp_file_path = os.path.join(path, file_name)
         with open(cur_tmp_file_path, 'w') as out:
-            subprocess.call(command, stdout=out, cwd=path)
+            subprocess.run(command, stdout=out, cwd=path, check=True)
         shutil.copy(cur_tmp_file_path, os.path.join(args.pub, 'deb', file_name))
 
     # Copy files to a temp directory (required because the working directory must contain only the
@@ -143,7 +112,7 @@ def gen_deb_package(args, published_files):
     if args.sign:
         # Generate Release.gpg (= signed Release)
         # Options -abs: -a (Create ASCII armored output), -b (Make a detach signature), -s (Make a signature)
-        subprocess.call(['gpg', '--default-key', GPGID, '--passphrase', GPGPASSPHRASE, '--yes', '-abs', '--no-tty', '-o', 'Release.gpg', 'Release'], cwd=os.path.join(args.pub, 'deb'))
+        subprocess.run(['gpg', '--default-key', GPGID, '--passphrase', GPGPASSPHRASE, '--yes', '-abs', '--no-tty', '-o', 'Release.gpg', 'Release'], cwd=os.path.join(args.pub, 'deb'), check=True)
 
 
 # ---------------------------------------------------------
@@ -243,29 +212,6 @@ class Docker():
         ])
         run_cmd(docker_cmd, timeout=timeout).check_returncode()
 
-    def is_running(self):
-        dinspect = subprocess.run(['docker', 'container', 'inspect', self.container_name], stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
-        return True if dinspect.returncode == 0 else False
-
-    def stop(self):
-        run_cmd(["docker", "stop", self.container_name]).check_returncode()
-
-    def test_odoo(self):
-        logging.info('Starting to test Odoo install test')
-        start_time = time.time()
-        while self.is_running() and (time.time() - start_time) < INSTALL_TIMEOUT:
-            time.sleep(5)  # give some time for odoo to install and start
-            if os.path.exists(os.path.join(args.build_dir, 'odoo.pid')):
-                try:
-                    _rpc_count_modules(port=self.exposed_port)
-                    return
-                finally:
-                    self.stop()
-        if self.is_running():
-            self.stop()
-            raise OdooTestTimeoutError('Odoo pid file never appeared after %s sec' % INSTALL_TIMEOUT)
-        raise OdooTestError('Error while installing/starting Odoo after %s sec.\nSee testlogs.txt in build dir' % int(time.time() - start_time))
-
     def build(self):
         """To be overriden by specific builder"""
         pass
@@ -299,11 +245,9 @@ class DockerTgz(Docker):
             'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/python3 -m pip install -r /opt/release/requirements.txt"',
             f'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/python3 -m pip install /data/src/odoo_{VERSION}.{TSTAMP}.tar.gz"',
             'su odoo -s /bin/bash -c "createdb mycompany"',
-            'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/odoo -d mycompany -i base --stop-after-init"',
-            'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/odoo -d mycompany --pidfile=/data/src/odoo.pid --http-interface 0.0.0.0"',
+            'su odoo -s /bin/bash -c "/var/lib/odoo/odoovenv/bin/odoo -d mycompany -i base --stop-after-init --test-tags packaging"',
         ]
-        self.run(' && '.join(cmds), self.args.build_dir, 'odoo-src-test-%s' % TSTAMP, user='root', detach=True, exposed_port=8069, timeout=300)
-        self.test_odoo()
+        self.run(' && '.join(cmds), self.args.build_dir, 'odoo-src-test-%s' % TSTAMP, user='root', timeout=300)
         logging.info('Finished testing tgz package')
 
 
@@ -333,10 +277,9 @@ class DockerDeb(Docker):
             'service postgresql start',
             '/usr/bin/apt-get update -y',
             f'/usr/bin/apt-get install -y /data/src/odoo_{VERSION}.{TSTAMP}_all.deb',
-            'su odoo -s /bin/bash -c "odoo -d mycompany -i base --pidfile=/data/src/odoo.pid --http-interface 0.0.0.0"',
+            'su odoo -s /bin/bash -c "odoo -d mycompany -i base --stop-after-init --test-tags packaging"',
         ]
-        self.run(' && '.join(cmds), self.args.build_dir, 'odoo-deb-test-%s' % TSTAMP, user='root', detach=True, exposed_port=8069, timeout=300)
-        self.test_odoo()
+        self.run(' && '.join(cmds), self.args.build_dir, 'odoo-deb-test-%s' % TSTAMP, user='root', timeout=300)
         logging.info('Finished testing debian package')
 
 
@@ -372,11 +315,9 @@ class DockerRpm(Docker):
             'su postgres -c "createuser -s odoo"',
             'su odoo -c "createdb mycompany"',
             'dnf install -q /data/src/odoo_%s.%s.rpm -y' % (VERSION, TSTAMP),
-            'su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany -i base --stop-after-init"',
-            'su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany --pidfile=/data/src/odoo.pid --http-interface 0.0.0.0"',
+            'su odoo -s /bin/bash -c "odoo -c /etc/odoo/odoo.conf -d mycompany -i base --stop-after-init --test-tags packaging"',
         ]
-        self.run(' && '.join(cmds), args.build_dir, 'odoo-rpm-test-%s' % TSTAMP, user='root', detach=True, exposed_port=8069, timeout=300)
-        self.test_odoo()
+        self.run(' && '.join(cmds), self.args.build_dir, 'odoo-rpm-test-%s' % TSTAMP, user='root', timeout=300)
         logging.info('Finished testing rpm package')
 
     def gen_rpm_repo(self, args, rpm_filepath):
@@ -480,6 +421,7 @@ def parse_args():
 
 
 def main(args):
+    exit_code = 0
     try:
         if args.build_tgz:
             _prepare_build_dir(args)
@@ -489,6 +431,7 @@ def main(args):
                 docker_tgz.start_test()
                 published_files = publish(args, 'tgz', ['tar.gz', 'zip'])
             except Exception as e:
+                exit_code = 1
                 logging.error("Won't publish the tgz release.\n Exception: %s" % str(e))
         if args.build_rpm:
             _prepare_build_dir(args)
@@ -503,6 +446,7 @@ def main(args):
                     logging.info('Generate rpm repo')
                     docker_rpm.gen_rpm_repo(args, published_files[0])
             except Exception as e:
+                exit_code = 1
                 logging.error("Won't publish the rpm release.\n Exception: %s" % str(e))
         if args.build_deb:
             _prepare_build_dir(args, move_addons=False)
@@ -513,6 +457,7 @@ def main(args):
                 published_files = publish(args, 'deb', ['deb', 'dsc', 'changes', 'tar.xz'])
                 gen_deb_package(args, published_files)
             except Exception as e:
+                exit_code = 1
                 logging.error("Won't publish the deb release.\n Exception: %s" % str(e))
         if args.build_win:
             _prepare_build_dir(args, win32=True)
@@ -521,6 +466,7 @@ def main(args):
             try:
                 published_files = publish(args, 'windows', ['exe'])
             except Exception as e:
+                exit_code = 1
                 logging.error("Won't publish the exe release.\n Exception: %s" % str(e))
         if args.build_iot:
             _prepare_build_dir(args, win32=True)
@@ -529,8 +475,10 @@ def main(args):
             try:
                 published_files = publish(args, 'iot', ['exe'])
             except Exception as e:
+                exit_code = 1
                 logging.error("Won't publish the iot release.\n Exception: %s" % str(e))
     except Exception as e:
+        exit_code = 1
         logging.error('Something bad happened ! : {}'.format(e))
         traceback.print_exc()
     finally:
@@ -540,6 +488,7 @@ def main(args):
             if os.path.exists(args.build_dir):
                 shutil.rmtree(args.build_dir)
                 logging.info('Build dir %s removed' % args.build_dir)
+    return exit_code
 
 
 if __name__ == '__main__':
@@ -547,4 +496,4 @@ if __name__ == '__main__':
     if os.path.exists(args.build_dir):
         logging.error('Build dir "%s" already exists.', args.build_dir)
         sys.exit(1)
-    main(args)
+    sys.exit(main(args))
