@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { on, setFrameRate } from "@odoo/hoot-dom";
+import { on } from "@odoo/hoot-dom";
 import { proxy, signal, t, untrack } from "@odoo/owl";
-import { cleanupDOM, defineRootNode } from "@web/../lib/hoot-dom/helpers/dom";
-import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
-import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
+import { _cleanupDOM, _defineRootNode } from "@web/../lib/hoot-dom/helpers/dom";
+import { _cleanupEvents, _enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
+import { _cleanupTime, _setFrameRate, _setupTime } from "@web/../lib/hoot-dom/helpers/time";
 import { exposeHelpers, isInstanceOf, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     CASE_EVENT_TYPES,
@@ -1017,7 +1017,7 @@ export class Runner {
         }
 
         // Setup fixture
-        defineRootNode(this.fixture.getFixture);
+        _defineRootNode(this.fixture.getFixture);
 
         if (!this.debug) {
             // Warn user events
@@ -2046,21 +2046,21 @@ export class Runner {
         }
 
         // Register default hooks
-        this.beforeEach(this.fixture.setup, setupWindow, setupTime);
+        this.beforeEach(this.fixture.setup, setupWindow, _setupTime);
         this.afterEach(
             this.fixture.cleanup,
             cleanupAnimations,
             cleanupWindow,
             cleanupNetwork,
             cleanupNavigator,
-            cleanupEvents,
-            cleanupDOM,
+            _cleanupEvents,
+            _cleanupDOM,
             cleanupDate,
-            cleanupTime
+            _cleanupTime
         );
 
-        enableEventLogs(logger.canLog("debug"));
-        setFrameRate(this.config.fps());
+        _enableEventLogs(logger.canLog("debug"));
+        _setFrameRate(this.config.fps());
 
         await this._callbacks.call("before-all", this, logger.error);
     }

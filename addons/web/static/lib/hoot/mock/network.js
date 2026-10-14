@@ -2,8 +2,8 @@
 
 import { delay, tick } from "@odoo/hoot-dom";
 import {
-    mockedCancelAnimationFrame,
-    mockedRequestAnimationFrame,
+    _mockedCancelAnimationFrame,
+    _mockedRequestAnimationFrame,
 } from "@web/../lib/hoot-dom/helpers/time";
 import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
 import { makeNetworkLogger } from "../core/logger";
@@ -577,9 +577,9 @@ export class MockDedicatedWorkerGlobalScope {
         $assign(
             this,
             {
-                cancelanimationframe: mockedCancelAnimationFrame,
+                cancelAnimationFrame: _mockedCancelAnimationFrame,
                 onconnect: null,
-                requestanimationframe: mockedRequestAnimationFrame,
+                requestAnimationFrame: _mockedRequestAnimationFrame,
                 self: this,
             },
             worker
