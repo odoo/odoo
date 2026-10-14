@@ -11,6 +11,7 @@ from . import (
     test_websocket_check_session,
     test_websocket_controller,
     test_websocket_dispatching,
+    test_websocket_groups,
     test_websocket_rate_limiting,
     test_websocket_timeouts,
 )
