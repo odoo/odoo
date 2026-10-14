@@ -55,7 +55,7 @@ export class OpeningControlPopup extends Component {
         // queue only when known offline, so the reconnect loop is sure to replay it
         const queue = this.pos.data.network.offline;
         try {
-            await this.pos.data.call(
+            await this.pos.data.callRelated(
                 "pos.session",
                 "set_opening_control",
                 [this.pos.session.id, parseFloat(this.state.openingCash), this.state.notes],
