@@ -111,17 +111,18 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             document_node['cbc:DueDate'] = {'_text': invoice._pdp_get_payment_date() or invoice.invoice_date}
 
         # Profile ID X4 - Final invoice with downpayments
-        if profile_id in ('B4', 'S4', 'M4'):
+        if vals['document_type'] == 'invoice' and profile_id in ('B4', 'S4', 'M4'):
             downpayment_moves = invoice.invoice_line_ids._get_downpayment_lines().move_id.filtered(lambda m: m != invoice)
-            document_node['cac:BillingReference'] = []
-            for downpayment_move in downpayment_moves:
-                document_node['cac:BillingReference'].append({
-                    'cac:InvoiceDocumentReference': {
-                        'cbc:ID': {'_text': downpayment_move.name},
-                        'cbc:IssueDate': {'_text': downpayment_move.invoice_date},
-                        'cbc:DocumentTypeCode': {'_text': 386 if downpayment_move.move_type == 'out_invoice' else 503},  # downpayment invoice or downpayment credit note
-                    },
-                })
+            document_type_code_per_name = {
+                downpayment_move.name: 386 if downpayment_move.move_type == 'out_invoice' else 503
+                for downpayment_move in downpayment_moves
+            }
+            for node in document_node['cac:BillingReference']:
+                reference = node.get('cac:InvoiceDocumentReference')
+                if reference and reference['cbc:ID']['_text'] in document_type_code_per_name:
+                    reference['cbc:DocumentTypeCode'] = {
+                        '_text': document_type_code_per_name[reference['cbc:ID']['_text']],
+                    }
 
         # B2G
         if not b2g:
@@ -149,15 +150,6 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             payment_due_date = invoice._pdp_get_payment_date() or invoice.invoice_date
             for node in document_node['cac:PaymentMeans']:
                 node['cbc:PaymentDueDate'] = {'_text': payment_due_date}
-
-    def _ubl_add_invoice_type_code_node(self, vals):
-        # Override account_edi_ubl: [BR-FR-04] Downpayment code for invoice is 386
-        invoice = vals['invoice']
-        vals['document_node']['cbc:InvoiceTypeCode'] = {'_text': None}
-        if self._is_document(vals, 'invoice') and invoice._is_downpayment():
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 386
-        else:
-            super()._ubl_add_invoice_type_code_node(vals)
 
     def _ubl_add_credit_note_type_code_node(self, vals):
         # Override account_edi_ubl: [BR-FR-04] Downpayment code for credit note is 503
