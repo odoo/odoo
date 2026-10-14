@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import Command
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -113,6 +115,14 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         self.assertFalse(channel.lead_ids)
         channel.with_user(bob_operator).execute_command_lead(body="/lead BobLead")
         self.assertEqual(channel.lead_ids.name, "BobLead")
+        self.assertEqual(
+            channel.message_ids[0].body,
+            Markup(
+                '<div class="o_mail_notification" data-oe-type="create-lead">created a new lead: '
+                '<a href="/mail/view?model=crm.lead&amp;res_id=%(id)s" data-oe-model="crm.lead" data-oe-id="%(id)s">'
+                "BobLead</a></div>",
+            ) % {"id": channel.lead_ids.id},
+        )
 
     def test_convert_whatsapp_visitor_to_lead(self):
         """Lead created from a WhatsApp channel via /lead command should have
