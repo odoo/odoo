@@ -7,14 +7,14 @@
             --#{$variable-prefix}breadcrumb-font-size: #{$small-font-size};
         }
 
-        @include media-breakpoint-down(md) {
+        @media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
             &.o_mobile_sticky {
                 @include o-position-sticky();
                 z-index: 10;
             }
         }
 
-        @include media-breakpoint-up(lg) {
+        @media screen and (min-width: 992px), print and (min-width: 190mm) {
             .o_control_panel_breadcrumbs, .o_control_panel_navigation {
                 flex: 1;
             }
@@ -24,7 +24,7 @@
             }
         }
 
-        @include media-breakpoint-up(xl) {
+        @media screen and (min-width: 1200px), print and (min-width: 220mm) {
             .o_control_panel_actions {
                 min-width: MIN(600px, 33%);
             }
@@ -107,7 +107,7 @@
     }
 }
 
-@include media-breakpoint-down(md) {
+@media screen and (max-width: 767.98px), print and (max-width: 187.98mm) {
     .o_rtl .o_control_panel .o_back_button:before {
         transform: rotate(180deg);
     }

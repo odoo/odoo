@@ -12,7 +12,7 @@
         width: $dropdown-item-padding-x;
     }
 
-    @include media-breakpoint-up(md) {
+    @media screen and (min-width: 768px), print and (min-width: 188mm) {
         .o_accordion_values .o_input {
             max-width: 17ch;
             text-overflow: ellipsis;
@@ -30,7 +30,7 @@
         }
     }
 
-    @include media-breakpoint-up(lg) {
+    @media screen and (min-width: 992px), print and (min-width: 190mm) {
         .o_dropdown_container {
             max-width: calc(var(--o-search-bar-menu-max-width) / 6);
         }
