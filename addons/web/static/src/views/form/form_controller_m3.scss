@@ -116,7 +116,7 @@
                     margin-bottom: map-get($spacers, 3);
                 }
 
-                label {
+                &:not(.o_property_folded) label {
                     @extend %-o-field-label;
 
                     &:has(+ *:focus-within) {
