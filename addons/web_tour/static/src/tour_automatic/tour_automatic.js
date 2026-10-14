@@ -1,5 +1,6 @@
 import * as hootDom from "@odoo/hoot-dom";
 import { _enableEventLogs, _setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
+import { _setDefaultWaitTimeout } from "@web/../lib/hoot-dom/helpers/time";
 import { browser } from "@web/core/browser/browser";
 import { Macro } from "@web/core/macro";
 import { config as transitionConfig } from "@web/core/transition";
@@ -29,6 +30,7 @@ export class TourAutomatic {
 
     start() {
         _setupEventActions(document.createElement("div"), { allowSubmit: true });
+        _setDefaultWaitTimeout(10_000);
         _enableEventLogs(this.debugMode);
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
