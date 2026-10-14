@@ -70,6 +70,8 @@ export class PositionPlugin extends Plugin {
     }
     destroy() {
         this.resizeObserver.disconnect();
+        this.layoutGeometryChange.cancel();
+        this.debouncedLayoutGeometryChange.cancel();
         super.destroy();
     }
     layoutGeometryChange() {
