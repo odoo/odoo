@@ -87,7 +87,7 @@
                                             onSelected="() => this.switchView(view.type)"
                                             class="{ 'selected': view.active }">
                                                 <i class="oi oi-fw" t-att-data-icon="view.icon"/>
-                                                <span class="ms-1" t-out="view.name"/>
+                                                <span class="ms-1 text-truncate" t-out="view.name"/>
                                         </DropdownItem>
                                     </t>
                                 </t>

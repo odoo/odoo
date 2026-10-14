@@ -182,11 +182,13 @@
 
     &::placeholder {
         opacity: 40%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
         .o-mail-Composer.o-focused & {
             opacity: 50%;
         }
-        @include text-truncate();
     }
 }
 
