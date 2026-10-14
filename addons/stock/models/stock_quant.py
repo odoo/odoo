@@ -1110,8 +1110,12 @@ class StockQuant(models.Model):
         quant = None
         if quants:
             # quants are already ordered in _gather
-            # lock the first available
-            quant = quants.try_lock_for_update(allow_referencing=True, limit=1)
+            # lock the first available, unless the caller already locked some of them
+            locked_quant_ids = self.env.context.get('locked_quant_ids', ())
+            quant = (
+                next((q for q in quants if q.id in locked_quant_ids), None)
+                or quants.try_lock_for_update(allow_referencing=True, limit=1)
+            )
 
         if quant:
             vals = {'in_date': in_date}

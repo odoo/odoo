@@ -3,6 +3,7 @@
 from collections import Counter, defaultdict
 from ast import literal_eval
 from operator import itemgetter
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.addons.web.controllers.utils import clean_action
@@ -685,10 +686,11 @@ class StockMoveLine(models.Model):
                 self.env['stock.package.history'].create(package_history_vals)
 
         moves_to_check_pack = set()
-        for ml in mls_todo.with_context(quants_cache=quants_cache):
+        # lock every quant that can be moved at once, instead of one query per quant update
+        locked_quant_ids = set(self.env['stock.quant'].concat(*quants_cache.values()).try_lock_for_update(allow_referencing=True).ids)
+        for ml in mls_todo.with_context(quants_cache=quants_cache, locked_quant_ids=locked_quant_ids):
             # if this move line is force assigned, unreserve elsewhere if needed
-            ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
-            available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
+            available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="available_and_reserved")
             ml._synchronize_quant(ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id, in_date=in_date)
             if available_qty < 0:
                 moves_to_check = ml.with_context(quants_cache=None, bypass_entire_pack=True)._free_reservation(
@@ -740,8 +742,15 @@ class StockMoveLine(models.Model):
         available_qty = 0
         if not self.product_id.is_storable or self.uom_id.is_zero(quantity):
             return 0, False
-        if action == "available":
-            available_qty, in_date = self.env['stock.quant']._update_available_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date)
+        if action in ("available", "available_and_reserved"):
+            available_qty, in_date = self.env['stock.quant']._update_available_quantity(
+                self.product_id, location, quantity,
+                reserved_quantity=quantity if (
+                    action == "available_and_reserved"
+                    and not self.move_id._should_bypass_reservation(location)
+                ) else False,
+                lot_id=lot, package_id=package, owner_id=owner, in_date=in_date,
+            )
         elif action == "reserved" and not self.move_id._should_bypass_reservation(location):
             self.env['stock.quant']._update_reserved_quantity(self.product_id, location, quantity, lot_id=lot, package_id=package, owner_id=owner)
         if available_qty < 0 and lot:
@@ -799,25 +808,26 @@ class StockMoveLine(models.Model):
             lot = lots[key_to_index[key]].with_prefetch(lots._ids)   # With prefetch to reconstruct the ones broke by accessing by index
             mls.with_prefetch(self._prefetch_ids).write({'lot_id': lot.id})
 
-    def _log_message(self, record, move, template, vals):
-        data = vals.copy()
-        if 'lot_id' in vals and vals['lot_id'] != move.lot_id.id:
-            data['lot_name'] = self.env['stock.lot'].browse(vals.get('lot_id')).name
-        if 'location_id' in vals:
-            data['location_name'] = self.env['stock.location'].browse(vals.get('location_id')).name
-        if 'location_dest_id' in vals:
-            data['location_dest_name'] = self.env['stock.location'].browse(vals.get('location_dest_id')).name
-        if 'package_id' in vals and vals['package_id'] != move.package_id.id:
-            data['package_name'] = self.env['stock.package'].browse(vals.get('package_id')).name
-        if 'package_result_id' in vals and vals['package_result_id'] != move.package_result_id.id:
-            data['result_package_dest_name'] = self.env['stock.package'].browse(vals.get('result_package_id')).name
-        if 'owner_id' in vals and vals['owner_id'] != move.owner_id.id:
-            data['owner_name'] = self.env['res.partner'].browse(vals.get('owner_id')).name
-        record.message_post_with_source(
-            template,
-            render_values={'move': move, 'vals': dict(vals, **data)},
-            subtype_xmlid='mail.mt_note',
-        )
+    def _log_message(self, record, moves, template, vals):
+        """ Post a single message on `record` logging the changes of `vals` for each of `moves`. """
+        bodies = []
+        for move in moves:
+            data = vals.copy()
+            if 'lot_id' in vals and vals['lot_id'] != move.lot_id.id:
+                data['lot_name'] = self.env['stock.lot'].browse(vals.get('lot_id')).name
+            if 'location_id' in vals:
+                data['location_name'] = self.env['stock.location'].browse(vals.get('location_id')).name
+            if 'location_dest_id' in vals:
+                data['location_dest_name'] = self.env['stock.location'].browse(vals.get('location_dest_id')).name
+            if 'package_id' in vals and vals['package_id'] != move.package_id.id:
+                data['package_name'] = self.env['stock.package'].browse(vals.get('package_id')).name
+            if 'package_result_id' in vals and vals['package_result_id'] != move.package_result_id.id:
+                data['result_package_dest_name'] = self.env['stock.package'].browse(vals.get('result_package_id')).name
+            if 'owner_id' in vals and vals['owner_id'] != move.owner_id.id:
+                data['owner_name'] = self.env['res.partner'].browse(vals.get('owner_id')).name
+            bodies.append(self.env['ir.qweb']._render(
+                template, {'move': move, 'vals': dict(vals, **data)}, minimal_qcontext=True))
+        record.message_post(body=Markup().join(bodies), subtype_xmlid='mail.mt_note')
 
     def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, ml_ids_to_ignore=None):
         """ When editing a done move line or validating one with some forced quantities, it is
