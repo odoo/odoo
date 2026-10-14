@@ -10,7 +10,7 @@ declare module "plugins" {
     import { on_replicated_handlers } from "@html_builder/core/field_change_replication_plugin";
     import { MediaWebsiteShared } from "@html_builder/core/media_website_plugin";
     import { OperationShared } from "@html_builder/core/operation_plugin";
-    import { get_overlay_buttons, OverlayButtonsShared, should_show_overlay_buttons_of_ancestor_predicates } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
+    import { get_overlay_buttons, OverlayButtonsShared } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
     import { is_node_empty_predicates, is_unremovable_selectors, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
     import { on_saved_handlers, on_will_save_handlers, dirty_els_providers, dirty_trackers, on_will_save_element_handlers, save_elements_overrides, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
     import { submit_button_selectors } from "@html_builder/core/save_snippet_plugin";
@@ -110,7 +110,6 @@ declare module "plugins" {
 
         // Predicates
         should_keep_overlay_options_predicates: should_keep_overlay_options_predicates;
-        should_show_overlay_buttons_of_ancestor_predicates: should_show_overlay_buttons_of_ancestor_predicates;
         is_element_in_invisible_panel_predicates: is_element_in_invisible_panel_predicates;
         should_ignore_background_color_for_shapes_predicates: should_ignore_background_color_for_shapes_predicates;
         is_node_empty_predicates: is_node_empty_predicates;
