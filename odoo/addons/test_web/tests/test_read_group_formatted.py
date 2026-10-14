@@ -1344,6 +1344,65 @@ class TestFormattedReadGroup(common.TransactionCase):
                 'same number of records as counted in the group',
             )
 
+    def test_groupby_reference(self):
+        Model = self.env['test_orm.mixed']
+        deleted = self.env['test_orm.mixed_relations'].create({'name': 'Deleted'})
+        aggregate = self.env['test_read_group.aggregate'].create({'display_name': 'Aggregate'})
+        partner = self.env['test_read_group.partner'].create({'name': 'Partner'})
+        Model.create([
+            {'reference': f'test_orm.mixed_relations,{deleted.id}'},
+            {'reference': f'test_read_group.aggregate,{aggregate.id}'},
+            {'reference': f'test_read_group.partner,{partner.id}'},
+            {},
+        ])
+        deleted.unlink()
+        # as if the module of the model was uninstalled
+        uninstalled = Model.create({})
+        self.env.cr.execute("UPDATE test_orm_mixed SET reference = 'unknown.model,1' WHERE id = %s", [uninstalled.id])
+        self.env.invalidate_all()
+
+        # base_user can't read 'test_read_group.aggregate' but gets its name, like for many2one
+        self.assertEqual(
+            Model.with_user(self.base_user).formatted_read_group([], ['reference'], ['__count']),
+            [
+                {
+                    '__extra_domain': [('reference', '=', f'test_orm.mixed_relations,{deleted.id}')],
+                    'reference': (f'test_orm.mixed_relations,{deleted.id}', f'test_orm.mixed_relations,{deleted.id}'),
+                    '__count': 1,
+                },
+                {
+                    '__extra_domain': [('reference', '=', f'test_read_group.aggregate,{aggregate.id}')],
+                    'reference': (f'test_read_group.aggregate,{aggregate.id}', 'Aggregate'),
+                    '__count': 1,
+                },
+                {
+                    '__extra_domain': [('reference', '=', f'test_read_group.partner,{partner.id}')],
+                    'reference': (f'test_read_group.partner,{partner.id}', 'Partner'),
+                    '__count': 1,
+                },
+                {
+                    '__extra_domain': [('reference', '=', 'unknown.model,1')],
+                    'reference': ('unknown.model,1', 'unknown.model,1'),
+                    '__count': 1,
+                },
+                {
+                    '__extra_domain': [('reference', '=', False)],
+                    'reference': False,
+                    '__count': 1,
+                },
+            ],
+        )
+
+    def test_groupby_reference_perf(self):
+        Model = self.env['test_orm.mixed']
+        partners = self.env['test_read_group.partner'].create([{'name': f'Partner {i}'} for i in range(5)])
+        Model.create([{'reference': f'test_read_group.partner,{partner.id}'} for partner in partners])
+        self.env.invalidate_all()
+
+        # groups, exists() and display names: the names are read in batch
+        with self.assertQueryCount(3):
+            Model.formatted_read_group([], ['reference'], ['__count'])
+
     def test_related(self):
         RelatedBar = self.env['test_read_group.related_bar']
         RelatedFoo = self.env['test_read_group.related_foo']

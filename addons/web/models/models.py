@@ -1499,6 +1499,28 @@ class Base(models.AbstractModel):
 
             raise ValueError(f"{granularity!r} isn't a valid granularity")
 
+        if field.type == 'reference':
+            # read the display names in batch, one model at a time
+            ids_by_model = defaultdict(list)
+            for value in values:
+                if value:
+                    model_name, record_id = value.split(',')
+                    if model_name in self.env:
+                        ids_by_model[model_name].append(int(record_id))
+            display_names = {
+                f'{model_name},{record.id}': record.display_name
+                for model_name, record_ids in ids_by_model.items()
+                for record in self.env[model_name].browse(record_ids).sudo().exists()
+            }
+
+            def formatter_reference(value):
+                if not value:
+                    return value, Domain(field_name, '=', value)
+                # deleted records and uninstalled models keep their raw value
+                return (value, display_names.get(value, value)), Domain(field_name, '=', value)
+
+            return formatter_reference
+
         if field.type == "properties":
             return self._web_read_group_groupby_properties_formatter(groupby_spec, values)
 

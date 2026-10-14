@@ -1235,12 +1235,12 @@ test("performRPC: formatted_read_group, group by reference", async () => {
         })
     ).resolves.toEqual([
         {
-            partner_ref: "res.partner,1",
+            partner_ref: ["res.partner,1", "Jean-Michel"],
             __extra_domain: [["partner_ref", "=", "res.partner,1"]],
             __count: 1,
         },
         {
-            partner_ref: "res.partner,2",
+            partner_ref: ["res.partner,2", "Raoul"],
             __extra_domain: [["partner_ref", "=", "res.partner,2"]],
             __count: 1,
         },
