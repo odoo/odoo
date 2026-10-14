@@ -5,7 +5,11 @@
         height: 100%;
         .arrow {
             width: 5%;
-            @include o-position-absolute(50%, 0);
+            position: absolute;
+            top: 50%;
+            left: auto;
+            bottom: auto;
+            right: 0;
             @include o-FileViewer-arrow;
             transition: width 0.3s;
             padding-top: 30px;
