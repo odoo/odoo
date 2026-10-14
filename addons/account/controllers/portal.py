@@ -241,12 +241,15 @@ class PortalAccount(CustomerPortal):
         if not country:
             return {}
         ResPartner = request.env['res.partner']
-        partner = ResPartner.new({'country_id': country.id})
-        metadata = partner.available_additional_identifiers_metadata
         whitelist = ResPartner._get_portal_additional_identifiers_whitelist(
             company=request.env.company,
             country=country,
         )
+        metadata = {
+            key: ResPartner._lazy_translate_additional_identifiers_metadata(entry)
+            for key, entry in ResPartner._get_all_additional_identifiers_metadata().items()
+            if key in whitelist
+        }
         return {
             key: {
                 'label': entry.get('label') or key,
@@ -254,7 +257,6 @@ class PortalAccount(CustomerPortal):
                 'help': entry.get('help') or '',
             }
             for key, entry in sorted(metadata.items(), key=lambda item: item[1].get('sequence', 100))
-            if key in whitelist
         }
 
     def _prepare_address_form_values(self, partner_sudo, *args, **kwargs):
