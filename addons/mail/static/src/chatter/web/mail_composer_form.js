@@ -1,12 +1,13 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { formView } from "@web/views/form/form_view";
 import { registry } from "@web/core/registry";
-import { EventBus, t, useOnChange, useProps } from "@odoo/owl";
+import { EventBus, t, useOnChange, usePlugin, useProps } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { formControllerProps } from "@web/views/form/form_controller";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 
@@ -56,7 +57,7 @@ export class MailComposerFormController extends formView.Controller {
 export class MailComposerFormRenderer extends formView.Renderer {
     setup() {
         super.setup();
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         // Autofocus the visible editor in edition mode.
         useOnChange(
             () => [this.props.record.isInEdition, this.rootRef(), this.props.record.resId],

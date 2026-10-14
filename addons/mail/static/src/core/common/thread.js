@@ -106,7 +106,6 @@ export class Thread extends Component {
         this.resetCount = signal(0);
         this.incrementResetCount = incrementFn(this.resetCount);
         this.lastJumpPresent = this.props.jumpPresent;
-        this.orm = useService("orm");
         this.ui = useService("ui");
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
         this.scrollingToHighlight = false;

@@ -48,7 +48,7 @@ patch(Activity.prototype, {
     },
     /** @param {number[]} attachmentIds */
     async markAsDone(attachmentIds = []) {
-        await this.store.env.services.orm.call("mail.activity", "action_feedback", [[this.id]], {
+        await this.store.orm.call("mail.activity", "action_feedback", [[this.id]], {
             attachment_ids: attachmentIds,
             feedback: this.feedback,
         });
@@ -59,7 +59,7 @@ patch(Activity.prototype, {
     },
     /** @returns {Promise<import("@web/webclient/actions/action_plugin").ActionDescription>} */
     async markAsDoneAndScheduleNext() {
-        const action = await this.store.env.services.orm.call(
+        const action = await this.store.orm.call(
             "mail.activity",
             "action_feedback_schedule_next",
             [[this.id]],

@@ -2,9 +2,10 @@ import { PopoverCard } from "@mail/core/common/popover_card/popover_card";
 import { propSignal } from "@mail/utils/common/hooks";
 
 import { imageUrl } from "@web/core/utils/urls";
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class ActivityAssignPopover extends Component {
@@ -14,7 +15,7 @@ export class ActivityAssignPopover extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.responsibleLabel = _t("Responsible");
         this.activity = propSignal("activity", t.instanceOf(this.store["mail.activity"]));
         this.close = useProps.static("close", t.function([t.instanceOf(MouseEvent)]).optional());

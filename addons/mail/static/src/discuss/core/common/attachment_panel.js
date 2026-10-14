@@ -22,7 +22,6 @@ export class AttachmentPanel extends Component {
             close: t.function([]).optional(),
         });
         this.offlineService = useService("offline");
-        this.ormService = useService("orm");
         this.attachmentUploadService = useService("mail.attachment_upload");
         useOnChange(
             () => [this.props.channel],

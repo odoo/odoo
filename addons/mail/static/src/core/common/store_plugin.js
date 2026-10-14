@@ -10,6 +10,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { user } from "@web/core/user";
@@ -176,6 +177,8 @@ export class Store extends BaseStore {
 
     /** @type {DebugModePlugin} */
     debugMode;
+    /** @type {ORM} */
+    orm;
 
     /** @param {Readonly<Record<string, any>>} [ancestors] @see useAncestors */
     discussDropdownMenuClass(ancestors) {
@@ -846,10 +849,12 @@ export class StorePlugin extends Plugin {
     /** @private */
     env = useEnv();
     debugMode = usePlugin(DebugModePlugin);
+    orm = usePlugin(ORM);
 
     setup() {
         /** @type {import("models").Store} */
         this.store = makeStore(this.env);
+        this.store.orm = this.orm;
         this.store.insert(session.storeData);
         /**
          * Add a default for `self` because in livechat there could be no user and no guest yet

@@ -171,8 +171,8 @@ const StorePatch = {
         await this.store.fetchStoreData("remove_all_bookmarks");
     },
     async markNeedactionMessagesAsRead() {
-        const { orm, notification } = this.env.services;
-        const readMessageIds = await orm.silent.call("mail.message", "mark_all_as_read");
+        const { notification } = this.env.services;
+        const readMessageIds = await this.orm.silent.call("mail.message", "mark_all_as_read");
         // Everything was read: any filter combination including "notification_unread" is
         // now empty and fully loaded.
         const notificationTab = this.store.messagingMenu.notificationTab;
@@ -193,7 +193,9 @@ const StorePatch = {
                         name: _t("Undo"),
                         icon: "undo",
                         onClick: () => {
-                            orm.silent.call("mail.message", "mark_as_unread", [readMessageIds]);
+                            this.orm.silent.call("mail.message", "mark_as_unread", [
+                                readMessageIds,
+                            ]);
                             close();
                         },
                     },

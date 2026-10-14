@@ -2,13 +2,14 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 
-import { Component, onWillStart, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { useDebounced } from "@web/core/utils/timing";
 
 /**
@@ -39,7 +40,7 @@ export class ChannelInvitation extends Component {
     setup() {
         super.setup();
         this.ancestors = useAncestors();
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.store = useService("mail.store");
         this.props = useProps({
             channel: t.instanceOf(this.store["discuss.channel"]).optional(),

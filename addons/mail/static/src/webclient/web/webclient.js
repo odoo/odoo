@@ -1,7 +1,8 @@
 import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
 import { WebClient } from "@web/webclient/webclient";
-import { onWillDestroy } from "@odoo/owl";
+import { onWillDestroy, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 const USER_DEVICES_MODEL = "mail.push.device";
@@ -12,7 +13,7 @@ patch(WebClient.prototype, {
      */
     setup() {
         super.setup();
-        this.orm = useService("orm");
+        this.orm = usePlugin(ORM);
         this.notification = useService("notification");
         if (this._canSendNativeNotification) {
             this.env.bus.addEventListener("WEB_CLIENT_READY", () => this._subscribePush(), {
@@ -69,6 +70,11 @@ patch(WebClient.prototype, {
                     applicationServerKey: await this._getApplicationServerKey(),
                 });
             } catch (error) {
+                // The component was destroyed during the call: rethrow so the AbortError skips the
+                // error handling below and reaches the global handler, which silently ignores it.
+                if (error.name === "AbortError") {
+                    throw error;
+                }
                 console.warn(error);
                 this.notification.add(error.message, {
                     title: _t("Failed to enable push notifications"),
@@ -100,6 +106,11 @@ patch(WebClient.prototype, {
             );
             await this.orm.call(USER_DEVICES_MODEL, "register_devices", [], kwargs);
         } catch (e) {
+            // The component was destroyed during the call: rethrow so the AbortError skips the
+            // error handling below and reaches the global handler, which silently ignores it.
+            if (e.name === "AbortError") {
+                throw e;
+            }
             const invalidVapidErrorClass = "odoo.addons.mail.tools.jwt.InvalidVapidError";
             const warningMessage = "Error sending subscription information to the server";
             if (e.data?.name === invalidVapidErrorClass) {

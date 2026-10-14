@@ -1,9 +1,9 @@
-import { useProps } from "@odoo/owl";
+import { usePlugin, useProps } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { useService } from "@web/core/utils/hooks";
+import { ORM } from "@web/core/orm_plugin";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 
 /**
@@ -79,7 +79,7 @@ export function useAssignUserCommand() {
         }));
     };
 
-    const orm = useService("orm");
+    const orm = usePlugin(ORM);
     const options = {
         category: "smart_action",
         global: true,

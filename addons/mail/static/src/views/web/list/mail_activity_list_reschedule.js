@@ -20,7 +20,6 @@ export class MailActivityListRescheduleDropdown extends Component {
 
     setup() {
         this.props = useProps({ record: types.instanceOf(Record) });
-        this.orm = useService("orm");
         this.action = useService("action");
         const today = DateTime.now().startOf("day");
         this.targetDays = {
