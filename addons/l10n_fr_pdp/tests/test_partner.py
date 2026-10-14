@@ -2,6 +2,7 @@ import requests
 from unittest import mock
 from urllib.parse import parse_qs
 
+from odoo import api
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
@@ -150,6 +151,12 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         partner_fields = self.env['res.partner'].with_company(company_fr_peppol).fields_get(['invoice_sending_method'])
         sending_methods = dict(partner_fields['invoice_sending_method']['selection'])
         self.assertEqual(sending_methods['peppol'], "by the Approved Platform")
+
+    def test_einvoicing_terminology_without_user(self):
+        # auth='none' routes (e.g. /auth_oauth/signin) run without user, so with an empty env.company
+        env_no_user = api.Environment(self.env.cr, None, {})
+        partner_fields = env_no_user['res.partner'].fields_get(['invoice_sending_method'], attributes=())
+        self.assertIn('invoice_sending_method', partner_fields)
 
     def test_validate_partner_be_invalid_format(self):
         partner = self.belgian_partner
