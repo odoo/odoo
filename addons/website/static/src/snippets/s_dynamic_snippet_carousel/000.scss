@@ -52,6 +52,11 @@
 
     .carousel-control-prev,	.carousel-control-next {
         width: auto;
+        &:focus-visible {
+            .o_carousel_arrow {
+                box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+            }
+        }
     }
 
     // Rounded arrows (default selected)
