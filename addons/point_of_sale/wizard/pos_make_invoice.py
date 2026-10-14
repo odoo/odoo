@@ -34,6 +34,7 @@ class PosMakeInvoice(models.TransientModel):
         invoices = self.env['account.move']
 
         if not self.consolidated_billing or len(selected_orders) == 1:
+            self._create_orders_picking(selected_orders)
             for order in selected_orders:
                 invoices |= order._generate_pos_order_invoice()
         else:
@@ -63,8 +64,16 @@ class PosMakeInvoice(models.TransientModel):
                         for fiscal_position, fiscal_position_orders in user_orders.grouped('fiscal_position_id').items():
                             grouped_orders.append(((config, partner, user, fiscal_position), fiscal_position_orders))
 
+            self._create_orders_picking(selected_orders)
             for _key, orders in grouped_orders:
                 invoices |= orders._generate_pos_order_invoice()
 
         if invoices:
             return selected_orders.action_view_invoice()
+
+    def _create_orders_picking(self, orders):
+        for order in orders:
+            is_picking_created = order._should_create_picking_real_time()
+            order.to_invoice = True
+            if not is_picking_created and order._should_create_picking_real_time() and order.session_id.state != 'closed':
+                order._create_order_picking()
