@@ -13,13 +13,11 @@
 .o_field_properties.o_field_invalid,
 .o_property_field_popover {
     .o_input,
-    .o_dropdown_button,
-    .o_datepicker_button {
+    .o_dropdown_button {
         @include print-variable(o-input-border-color, $o-form-lightsecondary);
         color: var(--o-main-text-color) !important;
     }
-    .o_dropdown_button,
-    .o_datepicker_button {
+    .o_dropdown_button {
         color: initial !important;
     }
     .o_input_dropdown {
@@ -30,7 +28,6 @@
         .o_input:focus,
         .dropdown:focus ~ .o_dropdown_button,
         .dropdown:focus-within ~ .o_dropdown_button,
-        .o_input:focus ~ .o_datepicker_button,
         .o_dropdown_button:focus {
             @include print-variable(o-input-border-color, $o-action);
             * {
