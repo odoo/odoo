@@ -4976,7 +4976,7 @@ class BaseModel(metaclass=MetaModel):
         return self.browse(i for i in self._ids if i in valid_ids)
 
     @api.private
-    def lock_for_update(self, *, allow_referencing: bool = False) -> None:
+    def lock_for_update(self, *, allow_referencing: bool = False, wait: bool = False) -> None:
         """ Grab an exclusive write-lock to the rows with the given ids.
 
         This avoids blocking processing on the records due to concurrent
@@ -4986,6 +4986,10 @@ class BaseModel(metaclass=MetaModel):
         :param allow_referencing: Acquire a row lock which allows for other
             transactions to reference this record. Use only when modifying
             values that are not identifiers.
+
+        :param wait: Block execution and wait for the lock to be available
+            before acquiring it.
+
         :raises: ``LockError`` when some records could not be locked
         """
         ids = {id_ for id_ in self._ids if id_}
@@ -4996,7 +5000,12 @@ class BaseModel(metaclass=MetaModel):
         # Use SKIP LOCKED instead of NOWAIT because the later aborts the
         # transaction and we do not want to use SAVEPOINTS.
         if allow_referencing:
-            lock_sql = SQL("FOR NO KEY UPDATE SKIP LOCKED")
+            if wait:
+                lock_sql = SQL("FOR NO KEY UPDATE")
+            else:
+                lock_sql = SQL("FOR NO KEY UPDATE SKIP LOCKED")
+        elif wait:
+            lock_sql = SQL("FOR UPDATE")
         else:
             lock_sql = SQL("FOR UPDATE SKIP LOCKED")
         rows = self.env.execute_query(SQL("%s %s", query.select(), lock_sql))
