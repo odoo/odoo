@@ -37,7 +37,7 @@
     <t t-set="language_ids" t-value="this.env.services.website.currentWebsite.language_ids || []"/>
 
     <t t-set="geoip_country_code" t-value="this.websiteSession.geoip_country_code"/>
-    <BuilderRow label.translate="Visibility" expand="true" observeCollapseContent="true">
+    <BuilderRow label.translate="Visibility" observeCollapseContent="true">
         <t t-call="website.DeviceVisibility"/>
         <BuilderSelect dataAttributeAction="'visibility'" action="'forceVisible'" preview="false">
             <BuilderSelectItem dataAttributeActionValue="null">No condition</BuilderSelectItem>

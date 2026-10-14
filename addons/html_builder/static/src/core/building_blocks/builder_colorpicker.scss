@@ -1,31 +1,31 @@
 .o_hb_colorpicker_popover {
-    --popover-bg: #{$o-we-bg-darker};
-    --popover-border-color: #{$o-we-bg-darker};
+    --popover-bg: var(--o-view-background-color);
+    --popover-border-color: var(--border-color);
 }
 
 .o_custom_gradient_button {
-    border: 1px solid $o-we-item-clickable-color;
+    border: 1px solid var(--body-color);
 
     &, &:hover, &:focus {
         color: #000000;
     }
 
     &[style*="background-image"] {
-        color: $o-we-item-clickable-color;
+        color: var(--body-color);
     }
 }
 
 .o_hb_colorpicker {
-    --o-hb-colorpicker-active-bg: #{rgba($o-we-color-accent, .15)};
-    --o-color-picker-active-color: var(--o-hb-select-item-active-color, #{$o-we-sidebar-content-field-toggle-active-bg});
+    --o-hb-colorpicker-active-bg: var(--o-component-active-bg);
+    --o-color-picker-active-color: var(--o-hb-select-item-active-color, var(--o-action));
 
-    --o-color-picker-bg: #{$o-we-item-clickable-bg};
+    --o-color-picker-bg: var(--o-view-background-color);
 
-    background-color: $o-we-item-clickable-bg;
-    color: $white;
+    background-color: var(--o-view-background-color);
+    color: var(--body-color);
 
     .o_color_button {
-        box-shadow: inset 0 0 0 1px rgba($o-we-fg-light, .5);
+        box-shadow: inset 0 0 0 1px var(--border-color);
     }
 
     &:has(.theme-tab){
@@ -33,64 +33,27 @@
     }
 
     & > div:first-child {
-        background-color: $o-we-bg-darker;
+        background-color: var(--o-view-background-color);
         padding-block: 0.5em;
     }
 
-    & > div:not(:first-child) {
-        .btn:not(.o_hb_theme_tab_link) {
-            @include button-variant(
-                $background: $o-we-item-clickable-bg,
-                $border: transparent,
-                $color: $o-we-item-clickable-color,
-                $hover-background: $o-we-item-clickable-hover-bg,
-                $hover-border: transparent,
-                $hover-color: $o-we-item-clickable-color,
-                $active-background: var(--o-hb-colorpicker-active-bg),
-                $active-border: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg),
-                $active-color: $o-we-fg-lighter,
-                $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
-                $disabled-border: transparent,
-                $disabled-color: $o-we-item-clickable-color,
-            );
-        }
+    .btn:not(.o_hb_theme_tab_link) {
+        --btn-color: var(--body-color);
+        --btn-bg: transparent;
+        --btn-border-color: transparent;
+        --btn-hover-color: var(--emphasis-color);
+        --btn-hover-bg: var(--gray-200);
+        --btn-hover-border-color: transparent;
+        --btn-active-color: var(--o-component-active-color);
+        --btn-active-bg: var(--o-hb-colorpicker-active-bg);
+        --btn-active-border-color: var(--o-color-picker-active-color);
+        --btn-disabled-color: var(--secondary-color);
+        --btn-disabled-bg: transparent;
+        --btn-disabled-border-color: transparent;
     }
 
     .btn {
         --gradient: none;
-    }
-
-    .btn.o_color_picker_reset {
-        @include button-variant(
-            $background: $o-we-bg-light,
-            $border: transparent,
-            $color: $o-we-item-clickable-color,
-            $hover-background: $o-we-bg-lighter,
-            $hover-border: transparent,
-            $hover-color: $o-we-item-clickable-color,
-            $active-background: $o-we-bg-lighter,
-            $active-border: transparent,
-            $active-color: $o-we-fg-lighter,
-            $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
-            $disabled-border: transparent,
-            $disabled-color: $o-we-item-clickable-color,
-        );
-    }
-    .btn-tab {
-        @include button-variant(
-            $background: $o-we-bg-darker,
-            $border: transparent,
-            $color: $o-we-item-clickable-color,
-            $hover-background: $o-we-bg-light,
-            $hover-border: transparent,
-            $hover-color: $o-we-item-clickable-color,
-            $active-background: var(--o-hb-colorpicker-active-bg),
-            $active-border: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg),
-            $active-color: $o-we-fg-lighter,
-            $disabled-background: rgba($o-we-item-clickable-hover-bg, 0.5),
-            $disabled-border: transparent,
-            $disabled-color: $o-we-item-clickable-color,
-        );
     }
 
     .btn:focus-visible {
@@ -104,7 +67,7 @@
 
     .o_hb_color_combination_button {
         &.selected {
-            box-shadow: inset 0 0 0 $o-we-border-width rgba($o-we-fg-light, 0.3), 0 0 0 2px var(--o-color-picker-active-color);
+            box-shadow: inset 0 0 0 $o-we-border-width var(--border-color), 0 0 0 2px var(--o-color-picker-active-color);
 
             h1::before {
                 content: "check";
@@ -118,8 +81,8 @@
 
         &:focus-visible {
             box-shadow:
-                inset 0 0 0 $o-we-border-width rgba($o-we-fg-light, 0.5),
-                0 0 0 1px $o-we-bg-darker,
+                inset 0 0 0 $o-we-border-width var(--border-color),
+                0 0 0 1px var(--o-view-background-color),
                 0 0 0 3px var(--o-color-picker-active-color);
             outline: none;
         }
@@ -127,15 +90,15 @@
 
     // Gradients
     .o_custom_gradient_button {
-        color: $o-we-item-clickable-color;
+        color: var(--body-color);
     }
 
     .gradient-angle-thumb {
-        background-color: $white;
+        background-color: var(--body-color);
     }
 
     .o_color_picker_inputs, .o_color_gradient_input {
-        --o-iframe-input-color: #{$o-we-item-clickable-color};
+        --o-iframe-input-color: var(--body-color);
         color: var(--o-iframe-input-color);
 
         & input {
@@ -151,13 +114,7 @@
         }
 
         .form-check-input {
-            &:focus:not(:checked) {
-                --form-switch-bg: #{escape-svg($form-switch-bg-image)};
-            }
-
             &:checked {
-                --form-switch-bg: #{escape-svg($o-hb-form-switch-checked-bg-image)};
-
                 background-color: var(--o-color-picker-active-color);
                 border-color: var(--o-color-picker-active-color);
             }
@@ -167,8 +124,8 @@
 
 .o_builder_open:has(.o_hb_snippets_tabs [data-name='theme'].active) {
     .o_hb_colorpicker {
-        --o-hb-colorpicker-active-bg: #{rgba($o-we-color-global, .15)};
-        --o-hb-select-item-active-color: #{$o-we-color-global};
-        --o-color-picker-active-color: #{$o-we-color-global};
+        --o-hb-colorpicker-active-bg: color-mix(in srgb, var(--o-text-color-primary) 15%, var(--o-view-background-color));
+        --o-hb-select-item-active-color: var(--o-text-color-primary);
+        --o-color-picker-active-color: var(--o-text-color-primary);
     }
 }

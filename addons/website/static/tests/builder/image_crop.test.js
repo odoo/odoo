@@ -28,6 +28,7 @@ test("Image cropper Enter saves and Escape closes in website builder", async () 
     );
     await contains(":iframe .test-options-target img").click();
     await waitSidebarUpdated();
+    await contains("[data-label='Media'] .o_hb_collapse_toggler").click();
 
     const openCropper = async () => {
         const ready = waitCropperReady();

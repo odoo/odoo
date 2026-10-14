@@ -1,6 +1,4 @@
 @mixin o_hb_select_wrapper {
-    --border-color: var(--o-hb-border-color);
-
     // TODO: the following rules essentially overrides utility classes
     // "inherited" from the backend and apply BuilderSelect rules on top.
     // To be improved by removing the unwanted classes and share relevant
@@ -21,23 +19,21 @@
         padding-right: .95rem;
 
         &, &.btn-light.bg-light {
-            --border-color: #{$o-we-bg-light};
+            --border-color: var(--btn-border-color);
             --btn-padding-x: #{map-get($spacers , 2)};
 
-            @include button-variant(
-                $background: $o-we-item-clickable-bg,
-                $border: $o-we-bg-light,
-                $color: $o-we-item-clickable-color,
-                $hover-background: $o-we-item-clickable-hover-bg,
-                $hover-border: $o-we-bg-light,
-                $hover-color: $o-we-item-clickable-color,
-                $active-background: var(--o-hb-btn-secondary-active-bg, RGBA(#{to-rgb($o-we-color-accent)}, 0.4)),
-                $active-border: $o-we-bg-light,
-                $active-color: $o-we-fg-lighter,
-                $disabled-background: transparent,
-                $disabled-border: transparent,
-                $disabled-color: $o-we-fg-darker,
-            );
+            --btn-bg: var(--o-view-background-color);
+            --btn-border-color: var(--gray-300);
+            --btn-color: var(--body-color);
+            --btn-hover-bg: var(--gray-200);
+            --btn-hover-border-color: var(--gray-300);
+            --btn-hover-color: var(--emphasis-color);
+            --btn-active-bg: var(--o-hb-btn-secondary-active-bg, var(--o-component-active-bg));
+            --btn-active-border-color: var(--o-component-active-border);
+            --btn-active-color: var(--o-component-active-color);
+            --btn-disabled-bg: transparent;
+            --btn-disabled-border-color: transparent;
+            --btn-disabled-color: var(--secondary-color);
 
             // Handle native o_select_menu_toggler_caret icon inconsistencies
             > span.o_select_menu_toggler_caret {
@@ -69,7 +65,7 @@
                 --background-color: var(--btn-hover-bg);
 
                 color: var(--btn-active-color);
-                border-color: var(--o-hb-btn-active-color, $o-we-color-accent) !important;
+                border-color: var(--o-hb-btn-active-color, var(--o-action)) !important;
             }
         }
 
@@ -86,24 +82,24 @@
     // we also need to reduce the width by an extra “Spacer 2” to compensate for the
     // editor’s scrollbar.
     width: o-to-rem($o-we-sidebar-width) - (2 * map-get($spacers, 2)) - o-to-rem($o-hb-row-padding-left);
-    scrollbar-color: $o-we-bg-lightest $o-we-bg-darker;
+    scrollbar-color: var(--gray-400) var(--o-view-background-color);
 
     .o_filtered_text {
-        --SelectMenu__filteredText-bg-color: #{rgba($o-we-color-accent, .25)};
-        --SelectMenu__filteredText-color: #{lighten($o-we-color-accent, 25%)};
+        --SelectMenu__filteredText-bg-color: var(--o-component-active-bg);
+        --SelectMenu__filteredText-color: var(--o-component-active-color);
     }
 
     .o_select_menu_searchbox {
-        --o-hb-select-color: #{$o-we-fg-lighter};
+        --o-hb-select-color: var(--body-color);
 
         @include border-top-radius(var(--#{$prefix}popover-inner-border-radius));
-        background-color: $o-we-sidebar-content-field-input-bg;
+        background-color: var(--o-bs-input-bg);
 
         &:hover, &:focus-within {
-            --o-hb-select-bg-hover: #{$o-we-sidebar-content-field-input-bg};
+            --o-hb-select-bg-hover: var(--o-bs-input-bg);
         }
         &:focus-within {
-            box-shadow: 0 0 $o-we-border-width $o-we-border-width inset var(--o-hb-input-active-border, $o-we-sidebar-content-field-input-border-color);
+            box-shadow: 0 0 $o-we-border-width $o-we-border-width inset var(--o-hb-input-active-border, var(--o-bs-input-focus-border-color));
         }
         &::before {
             color: var(--o-hb-select-color);
@@ -116,8 +112,8 @@
     .o_select_menu_group {
         margin: 0 !important;
         padding: 6px var(--dropdown-item-padding-x);
-        background-color: $o-we-bg-darker;
-        color: var(--o-hb-select-color, $white);
+        background-color: var(--gray-100);
+        color: var(--o-hb-select-color, var(--body-color));
         font-size: $o-we-font-size-lg;
         line-height: 1.7;
         z-index: 2;
@@ -136,7 +132,7 @@
     }
 
     .dropdown-item.o_we_m2o_search_more {
-        color: $o-we-fg-lighter;
+        color: var(--emphasis-color);
     }
 }
 

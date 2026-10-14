@@ -1,6 +1,6 @@
 .o_hb_range {
     .popover & {
-        --o-hb-range-thumb-color: var(--o-hb-range-thumb-color-popover, #{$o-we-bg-darkest});
+        --o-hb-range-thumb-color: var(--o-hb-range-thumb-color-popover, var(--o-action));
     }
     &:has(output) {
         .o_hb_rangeInput {
@@ -28,13 +28,13 @@
         }
         &:focus-visible {
             &::-webkit-slider-thumb {
-                box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-sidebar-content-field-progress-active-color;
+                box-shadow: 0 0 0 1px var(--o-view-background-color), 0 0 0 3px var(--o-hb-btn-active-color, var(--o-action));
             }
             &::-moz-range-thumb {
-                box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-sidebar-content-field-progress-active-color;
+                box-shadow: 0 0 0 1px var(--o-view-background-color), 0 0 0 3px var(--o-hb-btn-active-color, var(--o-action));
             }
             &::-ms-thumb {
-                box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-sidebar-content-field-progress-active-color;
+                box-shadow: 0 0 0 1px var(--o-view-background-color), 0 0 0 3px var(--o-hb-btn-active-color, var(--o-action));
             }
         }
         &::-moz-focus-outer {
@@ -46,19 +46,19 @@
             margin-top: ($o-we-sidebar-content-field-progress-height - $o-we-sidebar-content-field-progress-control-height) / 2;
             border: none;
             border-radius: 10rem;
-            background-color: var(--o-hb-range-thumb-color, #{$o-we-fg-lighter});
+            background-color: var(--o-hb-range-thumb-color, var(--o-action));
             box-shadow: none;
             appearance: none;
 
             &:active {
-                background-color: $o-we-sidebar-content-field-progress-active-color;
+                background-color: var(--o-hb-btn-active-color, var(--o-action));
             }
         }
         &::-webkit-slider-runnable-track {
             width: 100%;
             height: $o-we-sidebar-content-field-progress-height;
             // Unfortunately, Chrome does not support customizing the lower part of the track
-            background-color: $o-we-sidebar-content-field-progress-color;
+            background-color: var(--gray-400);
             border-color: transparent;
             border-radius: 10rem;
             box-shadow: none;
@@ -71,24 +71,24 @@
             height: $o-we-sidebar-content-field-progress-control-height;
             border: none;
             border-radius: 10rem;
-            background-color: var(--o-hb-range-thumb-color, #{$o-we-fg-lighter});
+            background-color: var(--o-hb-range-thumb-color, var(--o-action));
             box-shadow: none;
             appearance: none;
 
             &:active {
-                background-color: $o-we-sidebar-content-field-progress-active-color;
+                background-color: var(--o-hb-btn-active-color, var(--o-action));
             }
         }
         &::-moz-range-track {
             width: 100%;
             height: $o-we-sidebar-content-field-progress-height;
-            background-color: $o-we-sidebar-content-field-progress-color;
+            background-color: var(--gray-400);
             border-color: transparent;
             border-radius: 10rem;
             box-shadow: none;
         }
         &::-moz-range-progress {
-            background-color: $o-we-sidebar-content-field-progress-active-color;
+            background-color: var(--o-hb-btn-active-color, var(--o-action));
             height: $o-we-sidebar-content-field-progress-height;
             border-color: transparent;
             border-radius: 10rem;
@@ -101,12 +101,12 @@
             margin-left: 0;
             border: none;
             border-radius: 10rem;
-            background-color: var(--o-hb-range-thumb-color, #{$o-we-fg-lighter});
+            background-color: var(--o-hb-range-thumb-color, var(--o-action));
             box-shadow: none;
             appearance: none;
 
             &:active {
-                background-color: $o-we-sidebar-content-field-progress-active-color;
+                background-color: var(--o-hb-btn-active-color, var(--o-action));
             }
         }
         &::-ms-track {
@@ -118,12 +118,12 @@
             box-shadow: none;
         }
         &::-ms-fill-lower {
-            background-color: $o-we-sidebar-content-field-progress-active-color;
+            background-color: var(--o-hb-btn-active-color, var(--o-action));
             border-radius: 10rem;
             @include border-radius($form-range-track-border-radius);
         }
         &::-ms-fill-upper {
-            background-color: $o-we-sidebar-content-field-progress-color;
+            background-color: var(--gray-400);
             border-radius: 10rem;
         }
 
@@ -131,16 +131,16 @@
             transform: rotate(180deg);
 
             &::-moz-range-track {
-                background-color: $o-we-sidebar-content-field-progress-active-color;
+                background-color: var(--o-hb-btn-active-color, var(--o-action));
             }
             &::-moz-range-progress {
-                background-color: $o-we-sidebar-content-field-progress-color;
+                background-color: var(--gray-400);
             }
             &::-ms-fill-lower {
-                background-color: $o-we-sidebar-content-field-progress-color;
+                background-color: var(--gray-400);
             }
             &::-ms-fill-upper {
-                background-color: $o-we-sidebar-content-field-progress-active-color;
+                background-color: var(--o-hb-btn-active-color, var(--o-action));
             }
         }
     }

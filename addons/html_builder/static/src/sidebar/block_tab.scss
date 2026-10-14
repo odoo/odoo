@@ -7,7 +7,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     position: relative;
     z-index: $o-we-zindex;
     width: 77px;
-    background-color: $o-we-sidebar-blocks-content-snippet-bg;
+    background-color: var(--gray-200);
 
     &.o_draggable_dragging {
         transform: rotate(-3deg) scale(1.2);
@@ -28,9 +28,14 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         .o_snippet_thumbnail_img {
             width: 30px;
             height: 30px;
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: center;
+
+            [fill="white"] {
+                fill: currentColor;
+            }
+
+            [fill="#00FDA3"] {
+                fill: var(--o-action);
+            }
 
             .o_snippets_container:not(#snippet_custom_content) & {
                 margin-block: map-get($spacers, 2);
@@ -39,10 +44,10 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     }
 
     &:hover:not(.o_disabled):not(.o_to_install) {
-        background: $o-we-bg-light;
+        background: var(--gray-300);
 
         .o_snippet_thumbnail_title {
-            color: $o-we-fg-lighter;
+            color: var(--emphasis-color);
         }
     }
 }
@@ -60,7 +65,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     .o_snippets_container_header {
         position: sticky;
         top: 0;
-        background-color: $o-we-bg-darker;
+        background-color: var(--gray-100);
         padding-top: $o-we-sidebar-blocks-content-spacing;
         z-index: 1;
     }
@@ -105,7 +110,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
                 cursor: inherit;
 
                 &:focus-visible {
-                    border: $o-we-border-width * 2 solid $o-we-color-success;
+                    border: $o-we-border-width * 2 solid var(--o-success);
                     border-radius: $border-radius;
                     outline: none;
                     box-shadow: none;
@@ -120,7 +125,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
             &.o_disabled, &.o_to_install {
                 cursor: default;
-                background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .2);
+                background-color: var(--gray-200);
 
                 .o_snippet_thumbnail_img {
                     opacity: $o-opacity-disabled;

@@ -32,7 +32,7 @@
         margin-bottom: 0.2em;
     }
 
-    &.o_hb_btn_has_img_icon .o_hb_svg {
+    .o_hb_svg {
         flex-shrink: 0;
 
         &, .o_graphic, .o_subdle {
@@ -47,4 +47,9 @@
     .oi, &:before {
         line-height: inherit;
     }
+}
+
+.o_hb_row .o_hb_btn > .oi {
+    font-size: $o-we-font-size-lg;
+    line-height: 1;
 }

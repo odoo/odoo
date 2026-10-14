@@ -1,13 +1,13 @@
 .o_hb_snippets_menu {
-    background-color: $o-we-bg-darker;
+    background-color: var(--gray-100);
     font-family: $o-we-font-family;
     font-size: $o-we-font-size;
-    color: $o-we-fg-light;
+    color: var(--body-color);
     width: $o-we-sidebar-width;
 }
 
 .o_hb_snippets_top_actions {
-    border-bottom: $o-we-border-width solid $o-we-bg-lighter;
+    border-bottom: $o-we-border-width solid var(--border-color);
     height: 46px;
 }
 
@@ -23,8 +23,8 @@
 .o_hb_snippets_tabs {
     .o_hb_snippets_tabs_highlighter {
         --x: -50%;
-        --border-color: #{$o-we-color-accent};
-        --bg-color: #{rgba($o-we-color-accent, .15)};
+        --border-color: var(--o-action);
+        --bg-color: var(--o-component-active-bg);
 
         width: percentage(1/3);
         transition: all .5s, transform .25s;
@@ -34,14 +34,14 @@
 
         &.o_hb_highlight_blocks {
             --x: -150%;
-            --border-color: #{$o-we-color-success};
-            --bg-color: #{rgba($o-we-color-success, .15)};
+            --border-color: var(--o-success);
+            --bg-color: color-mix(in srgb, var(--o-success) 15%, transparent);
         }
 
         &.o_hb_highlight_theme {
             --x: 50%;
-            --border-color: #{$o-we-color-global};
-            --bg-color: #{rgba($o-we-color-global, .15)};
+            --border-color: var(--o-text-color-primary);
+            --bg-color: color-mix(in srgb, var(--o-text-color-primary) 15%, transparent);
         }
 
         .o_rtl & {
@@ -59,9 +59,9 @@
 
     .nav-underline {
         --nav-underline-gap: 0;
-        --nav-link-color: #{$o-we-fg-light};
-        --nav-link-hover-color: #{$o-we-fg-lighter};
-        --nav-underline-link-active-color: #{$o-we-fg-light};
+        --nav-link-color: var(--body-color);
+        --nav-link-hover-color: var(--emphasis-color);
+        --nav-underline-link-active-color: var(--body-color);
 
         .nav-item {
             width:  percentage(1/3);
@@ -72,18 +72,18 @@
         }
 
         .nav-link[data-name="blocks"]{
-            --o-snippets-tabs-accent-color: #{$o-we-color-success};
-            --o-snippets-tabs-border-color-hover: #{rgba($o-we-color-success, .5)};
+            --o-snippets-tabs-accent-color: var(--o-success);
+            --o-snippets-tabs-border-color-hover: color-mix(in srgb, var(--o-success) 50%, transparent);
         }
 
         .nav-link[data-name="customize"] {
-            --o-snippets-tabs-accent-color: #{$o-we-color-accent};
-            --o-snippets-tabs-border-color-hover: #{rgba($o-we-color-accent, .5)};
+            --o-snippets-tabs-accent-color: var(--o-action);
+            --o-snippets-tabs-border-color-hover: color-mix(in srgb, var(--o-action) 50%, transparent);
         }
 
         .nav-link[data-name="theme"] {
-            --o-snippets-tabs-accent-color: #{$o-we-color-global};
-            --o-snippets-tabs-border-color-hover: #{rgba($o-we-color-global, .5)};
+            --o-snippets-tabs-accent-color: var(--o-text-color-primary);
+            --o-snippets-tabs-border-color-hover: color-mix(in srgb, var(--o-text-color-primary) 50%, transparent);
         }
 
         .nav-link.active, .nav-link:hover, & .show > .nav-link {
@@ -104,8 +104,8 @@
 }
 
 .o_hb_tab_content {
-    border-top: $o-we-border-width solid $o-we-bg-lighter;
-    scrollbar-color: $o-we-bg-lightest $o-we-bg-darker;
+    border-top: $o-we-border-width solid var(--border-color);
+    scrollbar-color: var(--gray-600) var(--gray-100);
     scrollbar-width: thin;
     will-change: scroll-position;
     opacity: 1;
@@ -118,26 +118,26 @@
 }
 
 .o_theme_tab {
-    --o-hb-btn-active-color: #{$o-we-color-global};
-    --o-hb-btn-secondary-active-bg: RGBA(#{to-rgb($o-we-color-global)}, 0.4);
-    --o-hb-input-active-border: #{$o-we-color-global};
-    --o-hb-form-switch-color-active: #{$o-we-color-global};
+    --o-hb-btn-active-color: var(--o-text-color-primary);
+    --o-hb-btn-secondary-active-bg: color-mix(in srgb, var(--o-text-color-primary) 15%, var(--o-view-background-color));
+    --o-hb-input-active-border: var(--o-text-color-primary);
+    --o-hb-form-switch-color-active: var(--o-text-color-primary);
 
     .o_hb_range .o_hb_rangeInput:focus-visible {
         &::-webkit-slider-thumb {
-            box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-color-global;
+            box-shadow: 0 0 0 1px var(--o-view-background-color), 0 0 0 3px var(--o-text-color-primary);
         }
         &::-moz-range-thumb {
-            box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-color-global;
+            box-shadow: 0 0 0 1px var(--o-view-background-color), 0 0 0 3px var(--o-text-color-primary);
         }
         &::-ms-thumb {
-            box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-color-global;
+            box-shadow: 0 0 0 1px var(--o-view-background-color), 0 0 0 3px var(--o-text-color-primary);
         }
     }
 }
 
 .o_customize_tab {
-    --o-hb-form-switch-color-active: #{$o-we-color-accent};
+    --o-hb-form-switch-color-active: var(--o-action);
 }
 
 .o_we_color_preview {
@@ -146,7 +146,7 @@
     display: block;
     width: $o-we-sidebar-content-field-colorpicker-size;
     height: $o-we-sidebar-content-field-colorpicker-size;
-    border: $o-we-sidebar-content-field-border-width solid $o-we-bg-darkest;
+    border: $o-we-sidebar-content-field-border-width solid var(--border-color);
     background: unset;
     border-radius: 10rem;
     cursor: pointer;
@@ -157,7 +157,7 @@
     }
 
     &:active, &:focus-visible {
-        outline: #{$o-we-border-width} solid  var(--o-hb-btn-active-color, #{$o-we-color-accent});
+        outline: #{$o-we-border-width} solid  var(--o-hb-btn-active-color, var(--o-action));
     }
 }
 
@@ -165,8 +165,8 @@
     z-index: 11;
     max-height: 220px;
     overflow-y: auto;
-    background-color: $o-we-sidebar-blocks-content-bg;
-    box-shadow: $o-we-item-standup-top $o-we-bg-lighter;
+    background-color: var(--o-view-background-color);
+    box-shadow: $o-we-item-standup-top var(--border-color);
 
     &:has(*) {
         padding: $o-we-sidebar-blocks-content-spacing;
@@ -183,7 +183,7 @@
         cursor: pointer;
 
         &:hover {
-            background-color: $o-we-sidebar-bg;
+            background-color: var(--gray-200);
         }
     }
 
@@ -206,10 +206,10 @@
 }
 @for $level from 1 through 3 {
     .o_we_sublevel_#{$level} {
-        --o-we-checkbox-color: #{$o-we-fg-light};
+        --o-we-checkbox-color: var(--body-color);
 
         @extend %o_we_sublevel;
-        color: $o-we-fg-light;
+        color: var(--body-color);
 
         @if $level > 1 {
             > div.o_title {
@@ -235,9 +235,9 @@
 .o_hb_theme_tab_link {
     align-self: center;
     border: none;
-    color: $o-we-color-global;
+    color: var(--o-text-color-primary);
 
     &:hover {
-        color: $o-we-fg-lighter;
+        color: var(--emphasis-color);
     }
 }

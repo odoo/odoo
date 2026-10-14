@@ -1,9 +1,20 @@
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { asyncComputed, onMounted, onWillStart, useProps, signal, t, useListener } from "@odoo/owl";
+import {
+    asyncComputed,
+    onMounted,
+    onWillStart,
+    useProps,
+    signal,
+    t,
+    useEffect,
+    useListener,
+} from "@odoo/owl";
 import { user } from "@web/core/user";
+import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import { BaseOptionComponent } from "../core/base_option_component";
+import { animateExpand } from "../core/building_blocks/collapse_animation";
 import { useOperation } from "../core/operation_plugin";
 import { useApplyVisibility, useGetItemValue, useVisibilityObserver } from "../core/utils";
 
@@ -38,6 +49,53 @@ export class OptionsContainer extends BaseOptionComponent {
         this.notification = useService("notification");
         this.getItemValue = useGetItemValue();
         useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
+        this.transition = useTransition({
+            name: "o_hb_options_container_content",
+            initialVisibility: !this.props.folded,
+            leaveDuration: 150,
+        });
+        useEffect(() => {
+            this.transition.shouldMount = !this.props.folded;
+        });
+
+        let wasFolded = !!this.props.folded;
+        useEffect(() => {
+            const contentEl = this.contentRef();
+            if (this.props.folded) {
+                wasFolded = true;
+                if (contentEl) {
+                    const animation = animateExpand(contentEl.parentElement, false);
+                    return () => animation?.cancel();
+                }
+                return;
+            }
+            if (!contentEl || !wasFolded) {
+                return;
+            }
+            wasFolded = false;
+            let cancelled = false;
+            let animation;
+            let animationFrame;
+            Promise.resolve().then(() => {
+                if (!cancelled) {
+                    animation = animateExpand(contentEl.parentElement);
+                    if (animation) {
+                        animation.pause();
+                        animationFrame = requestAnimationFrame(() => {
+                            animationFrame = requestAnimationFrame(() => {
+                                animation.cancel();
+                                animation = animateExpand(contentEl.parentElement);
+                            });
+                        });
+                    }
+                }
+            });
+            return () => {
+                cancelled = true;
+                cancelAnimationFrame(animationFrame);
+                animation?.cancel();
+            };
+        });
 
         useListener(window, "focusin", this.updateOverlayPreview.bind(this));
         useListener(window, "pointermove", this.updateOverlayPreview.bind(this));

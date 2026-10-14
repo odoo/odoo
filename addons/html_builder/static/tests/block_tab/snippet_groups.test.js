@@ -36,13 +36,13 @@ test("display group snippet", async () => {
     const snippetGroupsSelector = ".o_hb_snippets_menu #snippet_groups .o_snippet";
     expect(snippetGroupsSelector).toHaveCount(3);
     expect(queryAllTexts(snippetGroupsSelector)).toEqual(["A", "B", "C"]);
-    const thumbnailImgUrls = queryAll(`${snippetGroupsSelector} .o_snippet_thumbnail_img`).map(
-        (thumbnail) => thumbnail.style.backgroundImage
+    const thumbnailImgUrls = queryAll(`${snippetGroupsSelector} .o_snippet_thumbnail_img img`).map(
+        (thumbnailEl) => thumbnailEl.dataset.src
     );
     expect(thumbnailImgUrls).toEqual([
-        'url("/web/static/img/logo.png")',
-        'url("/web/static/img/logo2.png")',
-        'url("/web/static/img/nologo.png")',
+        "/web/static/img/logo.png",
+        "/web/static/img/logo2.png",
+        "/web/static/img/nologo.png",
     ]);
 });
 

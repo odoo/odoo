@@ -8,6 +8,10 @@ import {
     useVisibilityObserver,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
+import { animateExpand } from "./collapse_animation";
+
+const builderRows = new WeakMap();
+const initializedContainers = new WeakSet();
 
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
@@ -34,14 +38,31 @@ export class BuilderRow extends Component {
 
     setup() {
         useBuilderComponent(this.props);
-        useVisibilityObserver(this.contentRef, useApplyVisibility(this.rootRef));
+        const applyVisibility = useApplyVisibility(this.rootRef);
+        useVisibilityObserver(this.contentRef, (hasContent) => {
+            applyVisibility(hasContent);
+            refreshSublevelRows(this.rootRef());
+        });
 
         this.state = proxy({
             expanded: this.props.expand,
+            sublevelIds: null,
+            hidden: null,
         });
+        this.rowId = uniqueId("builder_row_");
+        this.expandAnimations = [];
 
         if (this.props.slots.collapse) {
-            useVisibilityObserver(this.collapseContentRef, useApplyVisibility(this.collapseRef));
+            const applyCollapseVisibility = useApplyVisibility(this.collapseRef);
+            let hadContent;
+            useVisibilityObserver(this.collapseContentRef, (hasContent) => {
+                applyCollapseVisibility(hasContent);
+                if (this.props.observeCollapseContent && hadContent === false && hasContent) {
+                    this.state.expanded = true;
+                    this.transition.shouldMount = true;
+                }
+                hadContent = hasContent;
+            });
 
             this.collapseContentId = uniqueId("builder_collapse_content_");
         }
@@ -58,7 +79,7 @@ export class BuilderRow extends Component {
 
         this.transition = useTransition({
             initialVisibility: this.props.expand,
-            leaveDuration: 350,
+            leaveDuration: 150,
             name: "o_hb_collapse_content",
         });
 
@@ -95,8 +116,23 @@ export class BuilderRow extends Component {
             contentEl.style.height = "0px";
         });
 
-        onMounted(() => refreshSublevelLines(this.rootRef()));
-        onPatched(() => refreshSublevelLines(this.rootRef()));
+        useEffect(() => {
+            const rowEl = this.rootRef();
+            if (!rowEl) {
+                return;
+            }
+            const optionsContainerEl = rowEl.closest(".o_hb_options_container");
+            builderRows.set(rowEl, this);
+            refreshSublevelRows(rowEl);
+            return () => {
+                this.expandAnimations.forEach((animation) => animation.cancel());
+                builderRows.delete(rowEl);
+                this.state.sublevelIds = null;
+                this.state.hidden = null;
+                refreshSublevelRows(optionsContainerEl);
+            };
+        });
+        onPatched(() => refreshSublevelRows(this.rootRef()));
     }
 
     getLevelClass() {
@@ -110,8 +146,14 @@ export class BuilderRow extends Component {
     }
 
     toggleCollapseContent() {
+        if (!this.props.slots.collapse && !this.state.sublevelIds) {
+            return;
+        }
         this.state.expanded = !this.state.expanded;
-        this.transition.shouldMount = this.state.expanded;
+        if (this.props.slots.collapse) {
+            this.transition.shouldMount = this.state.expanded;
+        }
+        refreshSublevelRows(this.rootRef());
     }
 
     get displayCollapseContent() {
@@ -124,11 +166,96 @@ export class BuilderRow extends Component {
     }
 }
 
-function refreshSublevelLines(rowEl) {
+async function refreshSublevelRows(rowEl) {
     const optionsContainerEl = rowEl?.closest(".o_hb_options_container");
     if (!optionsContainerEl) {
         return;
     }
+    await Promise.resolve();
+    if (!optionsContainerEl.isConnected) {
+        return;
+    }
+    const rowEls = [...optionsContainerEl.querySelectorAll(".o_hb_row")].filter(
+        (rowEl) =>
+            rowEl.closest(".o_hb_options_container") === optionsContainerEl &&
+            !rowEl.closest(".o_hb_collapse_content")
+    );
+    if (!rowEls.length) {
+        initializedContainers.delete(optionsContainerEl);
+        return;
+    }
+    const groups = new Map();
+    const parentRows = new Map();
+    let parentRow;
+    for (const rowEl of rowEls) {
+        const row = builderRows.get(rowEl);
+        if (!row) {
+            continue;
+        }
+        if (!row.props.level) {
+            parentRow =
+                row.props.label?.trim() && !row.props.slots.collapse && !rowEl.closest(".d-none")
+                    ? row
+                    : null;
+            groups.set(row, []);
+        } else if (parentRow) {
+            if (!rowEl.closest(".d-none")) {
+                groups.get(parentRow).push(row.rowId);
+            }
+            parentRows.set(row, parentRow);
+        }
+    }
+    for (const [row, ids] of groups) {
+        const previousIds = row.state.sublevelIds?.split(" ");
+        if (
+            !row.props.slots.collapse &&
+            initializedContainers.has(optionsContainerEl) &&
+            ids.some((id) => !previousIds?.includes(id))
+        ) {
+            row.state.expanded = true;
+        }
+        row.state.sublevelIds = ids.join(" ");
+    }
+    for (const rowEl of rowEls) {
+        const row = builderRows.get(rowEl);
+        if (row) {
+            const parentIds = parentRows.get(row)?.state.sublevelIds?.split(" ") || [];
+            rowEl.classList.toggle("o_hb_row_group_child", parentIds.includes(row.rowId));
+            rowEl.classList.toggle("o_hb_row_group_first", parentIds[0] === row.rowId);
+            rowEl.classList.toggle("o_hb_row_group_last", parentIds.at(-1) === row.rowId);
+            const hidden = parentRows.has(row) && !parentRows.get(row).state.expanded;
+            if (hidden !== row.state.hidden) {
+                row.expandAnimations.forEach((animation) => animation.cancel());
+                row.expandAnimations = [];
+                for (const contentEl of [rowEl, row.collapseContentRef()].filter(Boolean)) {
+                    contentEl.hidden = false;
+                    if (
+                        (!hidden || row.state.hidden !== null) &&
+                        parentRows.has(row) &&
+                        initializedContainers.has(optionsContainerEl)
+                    ) {
+                        const animation = animateExpand(contentEl, !hidden);
+                        if (animation) {
+                            row.expandAnimations.push(animation);
+                            animation.addEventListener(
+                                "finish",
+                                () => {
+                                    contentEl.hidden = hidden;
+                                    animation.cancel();
+                                    alignSublevelLines(optionsContainerEl);
+                                },
+                                { once: true }
+                            );
+                            continue;
+                        }
+                    }
+                    contentEl.hidden = hidden;
+                }
+                row.state.hidden = hidden;
+            }
+        }
+    }
+    initializedContainers.add(optionsContainerEl);
     alignSublevelLines(optionsContainerEl);
 }
 
@@ -148,7 +275,7 @@ function alignSublevelLines(optionsContainerEl) {
         if (labelEl) {
             labelEl.style.removeProperty("--o-hb-row-sublevel-top");
         }
-        if (getComputedStyle(rowEl).display !== "none") {
+        if (getComputedStyle(rowEl).display !== "none" && !rowEl.closest("[hidden]")) {
             visibleRowEls.push(rowEl);
         }
     }
@@ -195,4 +322,4 @@ function getRowLevel(rowEl) {
     return parseInt(sublevelClass.replace("o_hb_row_sublevel_", ""), 10) || 0;
 }
 
-export { refreshSublevelLines };
+export { refreshSublevelRows };

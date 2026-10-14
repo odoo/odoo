@@ -3,11 +3,11 @@
     font-size: $o-we-sidebar-font-size;
     padding-top: 0;
     padding-bottom: 0;
-    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
+    border: $o-we-sidebar-content-field-border-width solid var(--border-color);
     border-top: none;
     border-radius: $o-we-item-border-radius;
     overflow: hidden;
-    background-color: $o-we-sidebar-content-field-dropdown-bg;
+    background-color: var(--o-view-background-color);
     box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
     margin-top: $o-we-sidebar-content-field-dropdown-spacing;
 
@@ -18,15 +18,15 @@
     .pac-item {
         @include o-text-overflow(block);
         line-height: $o-we-sidebar-content-field-dropdown-item-height;
-        color: $o-we-sidebar-content-field-clickable-color;
-        border-top: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
+        color: var(--body-color);
+        border-top: $o-we-sidebar-content-field-border-width solid var(--border-color);
         border-radius: $o-we-sidebar-content-field-border-radius;
-        background-color: $o-we-sidebar-content-field-clickable-bg;
-        color: $o-we-sidebar-content-field-clickable-color;
+        background-color: var(--o-view-background-color);
+        color: var(--body-color);
         font-size: $o-we-sidebar-font-size;
 
         &:hover, &:focus, &.pac-item-selected {
-            background-color: $o-we-sidebar-content-field-dropdown-item-bg-hover;
+            background-color: var(--o-bs-dropdown-link-hover-bg);
             cursor: pointer;
         }
 

@@ -1,6 +1,6 @@
 .o_hb_input_base {
     .popover & {
-        --o-hb-field-input-bg: var(--o-hb-field-input-bg-popover, #{$o-we-fg-lighter});
+        --o-hb-field-input-bg: var(--o-hb-field-input-bg-popover, var(--o-bs-input-bg));
     }
     @extend %o-hb-input-base;
 }
@@ -10,7 +10,7 @@
     margin-right: 3px;
 
     font-size: $o-we-font-size-xs;
-    color: var(--o-hb-field-color, #{$o-we-sidebar-content-field-color});
+    color: var(--o-hb-field-color, var(--secondary-color));
 }
 
 .o_hb_input_transparent {

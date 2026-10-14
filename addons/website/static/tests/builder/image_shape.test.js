@@ -926,6 +926,7 @@ test("Should reset shape transformation with reset button and when switching sha
 
     await contains(imgSelector).click();
     await waitSidebarUpdated();
+    await contains("[data-label='Media'] ~ [data-label='Shape'] .o_hb_collapse_toggler").click();
 
     await contains("[data-action-id='resetImageShapeTransformation']").click();
     await waitSidebarUpdated();

@@ -40,12 +40,9 @@ test("Display inner content snippet", async () => {
     expect(snippetInnerContentSelector).toHaveCount(2);
     expect(queryAllTexts(snippetInnerContentSelector)).toEqual(["Button A", "Button B"]);
     const thumbnailImgUrls = queryAll(
-        `${snippetInnerContentSelector} .o_snippet_thumbnail_img`
-    ).map((thumbnail) => thumbnail.style.backgroundImage);
-    expect(thumbnailImgUrls).toEqual([
-        'url("/web/static/img/logo.png")',
-        'url("/web/static/img/logo2.png")',
-    ]);
+        `${snippetInnerContentSelector} .o_snippet_thumbnail_img img`
+    ).map((thumbnailEl) => thumbnailEl.dataset.src);
+    expect(thumbnailImgUrls).toEqual(["/web/static/img/logo.png", "/web/static/img/logo2.png"]);
 });
 
 test("Drag & drop inner content block", async () => {

@@ -29,7 +29,7 @@
         &.show {
             color: var(--btn-hover-color);
             background-color: var(--btn-hover-bg);
-            border-color: var(--o-hb-btn-active-color, $o-we-color-accent);
+            border-color: var(--o-hb-btn-active-color, var(--o-action));
         }
 
         > img {
@@ -69,8 +69,8 @@
 // Image format badge.
 .o_hb_select_toggle.dropdown-toggle, .o_hb_select_dropdown_item {
     > div > .badge {
-        color: $o-we-item-clickable-color;
-        background-color: $o-we-bg-darker;
+        color: var(--body-color);
+        background-color: var(--gray-200);
     }
 }
 
@@ -79,13 +79,10 @@
 // remove most '!important' needed here to override Bootstrap classes. See
 // implementations of Many2X builder components for examples.
 .o_hb_select_dropdown {
-    --o-hb-select-bg: #{$o-we-item-clickable-bg};
-    --o-hb-select-color: #{$o-we-fg-light};
-    --o-hb-select-bg-hover: #{$o-we-bg-lighter};
-    --o-hb-select-color-hover: #{$o-we-fg-lighter};
-    --o-hb-border-color: #{$o-we-bg-darker};
-
-    --border-color: var(--o-hb-border-color);
+    --o-hb-select-bg: var(--o-view-background-color);
+    --o-hb-select-color: var(--body-color);
+    --o-hb-select-bg-hover: var(--o-bs-dropdown-link-hover-bg);
+    --o-hb-select-color-hover: var(--o-bs-dropdown-link-hover-color);
     --#{$prefix}popover-border-radius: #{map-get($spacers, 2)};
     --#{$prefix}popover-inner-border-radius: calc(var(--#{$prefix}popover-border-radius) - var(--#{$prefix}popover-border-width));
     --#{$prefix}dropdown-item-border-radius: 0;
@@ -100,9 +97,9 @@
         --dropdown-item-padding-y: 0;
         --gradient: none;
 
-        $active-color: var(--o-hb-select-item-active-color, $o-we-sidebar-content-field-toggle-active-bg);
+        $active-color: var(--o-hb-select-item-active-color, var(--o-action));
 
-        color: var(--o-hb-select-color, $white);
+        color: var(--o-hb-select-color, var(--body-color));
         line-height: 2rem;
         border-bottom: $o-we-border-width solid var(--border-color);
 
@@ -141,14 +138,14 @@
     }
 
     .text-muted {
-        color: var(--o-hb-select-color, $white) !important;
+        color: var(--o-hb-select-color, var(--body-color)) !important;
     }
 }
 
 .o_builder_open {
     &:has(.o_hb_snippets_tabs [data-name='theme'].active) {
         .o_hb_select_dropdown {
-            --o-hb-select-item-active-color: #{$o-we-color-global};
+            --o-hb-select-item-active-color: var(--o-text-color-primary);
         }
     }
 }

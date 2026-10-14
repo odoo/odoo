@@ -5,8 +5,8 @@
     font-family: $o-we-font-monospace;
 
     .popover & {
-        --o-hb-field-input-bg: var(--o-hb-field-input-bg-popover, #{$o-we-fg-lighter});
-        --o-hb-field-color: var(--o-hb-field-color-popover, #{$o-we-bg-lightest});
+        --o-hb-field-input-bg: var(--o-hb-field-input-bg-popover, var(--o-bs-input-bg));
+        --o-hb-field-color: var(--o-hb-field-color-popover, var(--secondary-color));
     }
 
     .o_hb_input_number {
@@ -19,7 +19,7 @@
     }
 
     .o_hb_input_field_unit {
-        color: var(--o-hb-field-color, #{$o-we-sidebar-content-field-color});
+        color: var(--o-hb-field-color, var(--secondary-color));
         font-size: $o-we-font-size-xs;
     }
 }

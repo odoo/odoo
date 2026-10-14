@@ -1,6 +1,6 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
-import { refreshSublevelLines } from "@html_builder/core/building_blocks/builder_row";
-import { describe, expect, test } from "@odoo/hoot";
+import { refreshSublevelRows } from "@html_builder/core/building_blocks/builder_row";
+import { describe, expect, mockMatchMedia, test } from "@odoo/hoot";
 import {
     advanceTime,
     animationFrame,
@@ -9,10 +9,12 @@ import {
     queryAllTexts,
     queryOne,
     waitFor,
+    waitUntil,
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, defineStyle } from "@web/../tests/web_test_helpers";
+import { contains, defineStyle, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { OPEN_DELAY } from "@web/core/tooltip/tooltip_plugin";
+import { config as transitionConfig } from "@web/core/transition";
 
 function reapplyCollapseTransition() {
     defineStyle(/* css */ `
@@ -111,6 +113,8 @@ test("reconnects lines across mixed levels", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await waitFor(".o_hb_options_container .o_hb_row_label");
+    await contains("[data-label='root-1'] .o_hb_collapse_toggler").click();
+    await contains("[data-label='root-2'] .o_hb_collapse_toggler").click();
 
     const labelEls = queryAll(".o_hb_options_container .o_hb_row_label");
     const rowEls = queryAll(".o_hb_options_container .o_hb_row");
@@ -131,13 +135,510 @@ test("reconnects lines across mixed levels", async () => {
     labelEls.forEach((labelEl, index) => {
         labelEl.getBoundingClientRect = () => rects[index];
     });
-    refreshSublevelLines(rowEls[10]);
+    refreshSublevelRows(rowEls[10]);
     await animationFrame();
 
     const offsets = labelEls.map((labelEl) =>
         labelEl.style.getPropertyValue("--o-hb-row-sublevel-top")
     );
     expect(offsets).toEqual(["", "", "", "-40px", "", "", "", "", "", "", "-80px", "-200px"]);
+});
+
+describe("BuilderRow sub-option groups", () => {
+    test("groups span option components and preserve their levels and controls", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Media'">
+                    <BuilderButton classAction="'media'">Media</BuilderButton>
+                </BuilderRow>
+            `,
+        });
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Transform'" level="1">
+                    <BuilderButton classAction="'transform'">Transform</BuilderButton>
+                </BuilderRow>
+                <BuilderRow label="'Direction'" level="2">
+                    <BuilderButton classAction="'direction'">Direction</BuilderButton>
+                </BuilderRow>
+                <BuilderRow label="'Shape'">
+                    <BuilderButton classAction="'shape'">Shape</BuilderButton>
+                </BuilderRow>
+                <BuilderRow label="'Stretch'" level="1">
+                    <BuilderButton classAction="'stretch'">Stretch</BuilderButton>
+                </BuilderRow>
+                <BuilderRow label="'Description'">
+                    <BuilderTextInput attributeAction="'title'"/>
+                </BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const toggler = "[data-label='Media'] .o_hb_collapse_toggler";
+        const transformEl = queryOne("[data-label='Transform']");
+        const directionEl = queryOne("[data-label='Direction']");
+        expect(".o_hb_row_group").toHaveCount(2);
+        expect(toggler).toHaveAttribute("aria-expanded", "false");
+        expect(toggler).toHaveAttribute("aria-controls", `${transformEl.id} ${directionEl.id}`);
+        expect("[data-label='Shape']").toHaveClass("o_hb_row_group");
+        expect("[data-label='Transform']").toHaveClass("o_hb_row_sublevel_1");
+        expect("[data-label='Direction']").toHaveClass("o_hb_row_sublevel_2");
+        expect("[data-label='Description'] .o_hb_collapse_toggler").toHaveCount(0);
+        expect(transformEl).not.toBeVisible();
+        expect(directionEl).not.toBeVisible();
+        expect(transformEl.inert).toBe(true);
+        expect("[data-label='Stretch']").not.toBeVisible();
+
+        await contains("[data-class-action='media']").click();
+        expect(":iframe .test-options-target").toHaveClass("media");
+        expect(toggler).toHaveAttribute("aria-expanded", "false");
+        await contains(toggler).click();
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+        await contains("[data-label='Shape'] .o_hb_collapse_toggler").click();
+        await contains(toggler).click();
+        expect(toggler).toHaveAttribute("aria-expanded", "false");
+        expect(transformEl).not.toBeVisible();
+        expect(directionEl).not.toBeVisible();
+        expect(transformEl.inert).toBe(true);
+        expect("[data-label='Stretch']").toBeVisible();
+        expect("[data-label='Description']").toBeVisible();
+
+        await contains("[data-label='Media'] .o_hb_row_label").click();
+        expect(queryOne("[data-label='Transform']")).toBe(transformEl);
+        expect(transformEl).toBeVisible();
+        expect(directionEl).toBeVisible();
+        expect(transformEl.inert).toBe(false);
+        await contains("[data-class-action='transform']").click();
+        expect(":iframe .test-options-target").toHaveClass("transform");
+    });
+
+    test("group toggles support keyboard activation", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Media'">Media</BuilderRow>
+                <BuilderRow label="'Transform'" level="1">Transform</BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const toggler = "[data-label='Media'] .o_hb_collapse_toggler";
+        expect(toggler).toHaveAttribute("type", "button");
+        expect(toggler).toHaveAttribute("aria-expanded", "false");
+        await contains(toggler).press("Enter");
+        expect(toggler).toBeFocused();
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+        expect("[data-label='Transform']").toBeVisible();
+        await contains(toggler).press("Enter");
+        expect(toggler).toBeFocused();
+        expect(toggler).toHaveAttribute("aria-expanded", "false");
+        expect("[data-label='Transform']").not.toBeVisible();
+    });
+
+    test("conditional sub-options expand the group when they appear again", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Media'">
+                    <BuilderButton classAction="'enabled'" id="'enabled_opt'">Enable</BuilderButton>
+                </BuilderRow>
+                <BuilderRow label="'Transform'" level="1">
+                    <BuilderButton t-if="this.isActiveItem('enabled_opt')" classAction="'transform'">
+                        Transform
+                    </BuilderButton>
+                </BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const toggler = "[data-label='Media'] .o_hb_collapse_toggler";
+        expect(toggler).toHaveCount(0);
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+        expect("[data-label='Transform']").toBeVisible();
+        await contains(toggler).click();
+        expect("[data-label='Transform']").not.toBeVisible();
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect(toggler).toHaveCount(0);
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+        expect("[data-label='Transform']").toBeVisible();
+    });
+
+    test("new sub-options expand an existing collapsed group", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Media'">
+                    <BuilderButton classAction="'enabled'" id="'enabled_opt'">Enable</BuilderButton>
+                </BuilderRow>
+                <BuilderRow label="'Transform'" level="1">Transform</BuilderRow>
+                <BuilderRow label="'Filter'" level="1" t-if="this.isActiveItem('enabled_opt')">
+                    Filter
+                </BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const toggler = "[data-label='Media'] .o_hb_collapse_toggler";
+        expect(toggler).toHaveAttribute("aria-expanded", "false");
+        expect("[data-label='Transform']").not.toBeVisible();
+        expect("[data-label='Filter']").toHaveCount(0);
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+        expect("[data-label='Transform']").toBeVisible();
+        expect("[data-label='Filter']").toBeVisible();
+
+        await contains(toggler).click();
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect(toggler).toHaveAttribute("aria-expanded", "false");
+        expect("[data-label='Transform']").not.toBeVisible();
+        expect("[data-label='Filter']").toHaveCount(0);
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+        expect("[data-label='Filter']").toBeVisible();
+    });
+
+    test("option updates preserve the group's expanded or collapsed state", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Media'">
+                    <BuilderButton classAction="'enabled'">Enable</BuilderButton>
+                </BuilderRow>
+                <BuilderRow label="'Transform'" level="1">
+                    <BuilderButton classAction="'transform'">Transform</BuilderButton>
+                </BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const toggler = "[data-label='Media'] .o_hb_collapse_toggler";
+        await contains(toggler).click();
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+        expect("[data-label='Transform']").toBeVisible();
+        await contains("[data-class-action='transform']").click();
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+
+        await contains(toggler).click();
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect(toggler).toHaveAttribute("aria-expanded", "false");
+        expect("[data-label='Transform']").not.toBeVisible();
+    });
+
+    test("reopening an options container keeps its sub-option groups collapsed", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            title: "Image",
+            template: xml`
+                <BuilderRow label="'Media'">Media</BuilderRow>
+                <BuilderRow label="'Transform'" level="1">Transform</BuilderRow>
+                <BuilderRow label="'Shape'">Shape</BuilderRow>
+                <BuilderRow label="'Stretch'" level="1">Stretch</BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const containerToggler =
+            "[data-container-title='Image'] .o_hb_options_container_label_actionable";
+        expect("[data-label='Media'] .o_hb_collapse_toggler").toHaveAttribute(
+            "aria-expanded",
+            "false"
+        );
+        expect("[data-label='Shape'] .o_hb_collapse_toggler").toHaveAttribute(
+            "aria-expanded",
+            "false"
+        );
+        await contains(containerToggler).click();
+        expect(containerToggler).toHaveAttribute("aria-expanded", "false");
+        await advanceTime(400);
+        await animationFrame();
+        expect("[data-container-title='Image'] .o_hb_row").toHaveCount(0);
+        await contains(containerToggler).click();
+        await animationFrame();
+        expect(containerToggler).toHaveAttribute("aria-expanded", "true");
+        expect("[data-label='Media'] .o_hb_collapse_toggler").toHaveAttribute(
+            "aria-expanded",
+            "false"
+        );
+        expect("[data-label='Shape'] .o_hb_collapse_toggler").toHaveAttribute(
+            "aria-expanded",
+            "false"
+        );
+        expect("[data-label='Transform']").not.toBeVisible();
+        expect("[data-label='Stretch']").not.toBeVisible();
+    });
+
+    test("sub-option expansion animates its height and cancels when collapsed", async () => {
+        patchWithCleanup(transitionConfig, { disabled: false });
+        mockMatchMedia({ "prefers-reduced-motion": "no-preference" });
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Media'">Media</BuilderRow>
+                <BuilderRow label="'Transform'" level="1">Transform</BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const toggler = "[data-label='Media'] .o_hb_collapse_toggler";
+        const transformEl = queryOne("[data-label='Transform']");
+        expect(transformEl.getAnimations()).toHaveLength(0);
+        await contains(toggler).click();
+        expect(transformEl.getAnimations()).toHaveLength(1);
+        const animation = transformEl.getAnimations()[0];
+        animation.pause();
+        const expandedHeight = parseFloat(animation.effect.getKeyframes().at(-1).height);
+        expect(expandedHeight).toBeGreaterThan(0);
+        animation.currentTime = 0;
+        expect(parseFloat(getComputedStyle(transformEl).height)).toBe(0);
+        animation.currentTime = animation.effect.getTiming().duration / 2;
+        expect(parseFloat(getComputedStyle(transformEl).height)).toBeGreaterThan(0);
+        expect(parseFloat(getComputedStyle(transformEl).height)).toBeLessThan(expandedHeight);
+
+        await contains(toggler).click();
+        expect(animation.playState).toBe("idle");
+        const closingAnimation = transformEl.getAnimations()[0];
+        expect(closingAnimation.effect.getTiming().direction).toBe("reverse");
+        expect(transformEl.inert).toBe(true);
+        closingAnimation.finish();
+        await animationFrame();
+        expect(transformEl.getAnimations()).toHaveLength(0);
+        expect(transformEl).not.toBeVisible();
+        await contains(toggler).click();
+        const nextAnimation = transformEl.getAnimations()[0];
+        nextAnimation.finish();
+        expect(transformEl).toBeVisible();
+        expect(parseFloat(getComputedStyle(transformEl).height)).toBe(expandedHeight);
+    });
+
+    test("options container expansion measures only its visible rows", async () => {
+        patchWithCleanup(transitionConfig, { disabled: false });
+        mockMatchMedia({ "prefers-reduced-motion": "no-preference" });
+        addBuilderOption({
+            selector: ".test-options-target",
+            title: "Image",
+            template: xml`
+                <BuilderRow label="'Media'">Media</BuilderRow>
+                <BuilderRow label="'Transform'" level="1">Transform</BuilderRow>
+                <BuilderRow label="'Shape'">Shape</BuilderRow>
+                <BuilderRow label="'Stretch'" level="1">Stretch</BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const contentSelector = "[data-container-title='Image'] .o_hb_options_container_content";
+        const expandedHeight = parseFloat(getComputedStyle(queryOne(contentSelector)).height);
+        const toggler = "[data-container-title='Image'] .o_hb_options_container_label_actionable";
+        await contains(toggler).click();
+        await contains(toggler).click();
+        const contentEl = queryOne(contentSelector);
+        await waitUntil(() => contentEl.getAnimations()[0]?.playState === "running");
+        expect(contentEl.getAnimations()).toHaveLength(1);
+        const animation = contentEl.getAnimations()[0];
+        animation.pause();
+        expect(parseFloat(animation.effect.getKeyframes().at(-1).height)).toBe(expandedHeight);
+        animation.currentTime = 0;
+        expect(parseFloat(getComputedStyle(contentEl).height)).toBe(0);
+        animation.currentTime = animation.effect.getTiming().duration / 2;
+        expect(parseFloat(getComputedStyle(contentEl).height)).toBeGreaterThan(0);
+        expect(parseFloat(getComputedStyle(contentEl).height)).toBeLessThan(expandedHeight);
+        expect("[data-label='Transform']").not.toBeVisible();
+        expect("[data-label='Stretch']").not.toBeVisible();
+        expect(queryOne("[data-label='Transform']").getAnimations()).toHaveLength(0);
+        expect(queryOne("[data-label='Stretch']").getAnimations()).toHaveLength(0);
+        animation.finish();
+        expect(parseFloat(getComputedStyle(contentEl).height)).toBe(expandedHeight);
+    });
+
+    test("sub-option expansion respects disabled transitions and reduced motion", async () => {
+        patchWithCleanup(transitionConfig, { disabled: true });
+        mockMatchMedia({ "prefers-reduced-motion": "no-preference" });
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Media'">Media</BuilderRow>
+                <BuilderRow label="'Transform'" level="1">Transform</BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const toggler = "[data-label='Media'] .o_hb_collapse_toggler";
+        const transformEl = queryOne("[data-label='Transform']");
+        await contains(toggler).click();
+        expect(transformEl).toBeVisible();
+        expect(transformEl.getAnimations()).toHaveLength(0);
+        await contains(toggler).click();
+        transitionConfig.disabled = false;
+        mockMatchMedia({ "prefers-reduced-motion": "reduce" });
+        await contains(toggler).click();
+        expect(transformEl).toBeVisible();
+        expect(transformEl.getAnimations()).toHaveLength(0);
+    });
+
+    test("groups register rows when their editing element becomes available", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Controls'">
+                    <BuilderButton applyTo="'.child-target'" classAction="'enabled'">Enable</BuilderButton>
+                </BuilderRow>
+                <BuilderRow label="'Media'" applyTo="'.child-target.enabled'">Media</BuilderRow>
+                <BuilderRow label="'Transform'" level="1" applyTo="'.child-target.enabled'">
+                    Transform
+                </BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`
+            <div class="test-options-target"><div class="child-target">b</div></div>
+        `);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        expect("[data-label='Media']").toHaveCount(0);
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        const toggler = "[data-label='Media'] .o_hb_collapse_toggler";
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+        await contains(toggler).click();
+        expect("[data-label='Transform']").not.toBeVisible();
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect("[data-label='Media']").toHaveCount(0);
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+        expect("[data-label='Transform']").toBeVisible();
+    });
+
+    test("removing a conditional row updates its nested section's group", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderOptionsSection title="'Nested section'">
+                    <BuilderRow label="'Media'">
+                        <BuilderButton classAction="'enabled'" id="'enabled_opt'">Enable</BuilderButton>
+                    </BuilderRow>
+                    <BuilderRow label="'Transform'" level="1" t-if="this.isActiveItem('enabled_opt')">
+                        Transform
+                    </BuilderRow>
+                </BuilderOptionsSection>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target enabled">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const toggler = "[data-label='Media'] .o_hb_collapse_toggler";
+        expect(toggler).toHaveAttribute("aria-expanded", "false");
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect("[data-label='Transform']").toHaveCount(0);
+        expect(toggler).toHaveCount(0);
+        await contains("[data-class-action='enabled']").click();
+        await animationFrame();
+        expect(toggler).toHaveAttribute("aria-expanded", "true");
+        expect("[data-label='Transform']").toBeVisible();
+    });
+
+    test("explicit collapse slots and automatic groups toggle independently", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Visibility'" expand="true" observeCollapseContent="true">
+                    Visibility
+                    <t t-set-slot="collapse">
+                        <BuilderRow label="'Condition'" level="1">Condition</BuilderRow>
+                    </t>
+                </BuilderRow>
+                <BuilderRow label="'Animation'">Animation</BuilderRow>
+                <BuilderRow label="'Effect'" level="1">Effect</BuilderRow>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        expect(".o_hb_collapse_toggler").toHaveCount(2);
+        expect("[data-label='Effect']").not.toBeVisible();
+        expect("[data-label='Condition']").toBeVisible();
+        await contains("[data-label='Animation'] .o_hb_collapse_toggler").click();
+        expect("[data-label='Effect']").toBeVisible();
+        expect("[data-label='Condition']").toBeVisible();
+        await contains("[data-label='Visibility'] .o_hb_collapse_toggler").click();
+        await advanceTime(400);
+        await animationFrame();
+        expect("[data-label='Condition']").not.toBeVisible();
+        await contains("[data-label='Animation'] .o_hb_collapse_toggler").click();
+        expect("[data-label='Effect']").not.toBeVisible();
+        expect("[data-label='Condition']").not.toBeVisible();
+        await contains("[data-label='Visibility'] .o_hb_collapse_toggler").click();
+        expect("[data-label='Condition']").toBeVisible();
+    });
+
+    test("groups stay within their options container", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label="'Media'">Media</BuilderRow>
+                <BuilderRow label="'Transform'" level="1">Transform</BuilderRow>
+                <BuilderOptionsSection title="'Nested section'">
+                    <BuilderRow label="'Animation'">Animation</BuilderRow>
+                    <BuilderRow label="'Effect'" level="1">Effect</BuilderRow>
+                </BuilderOptionsSection>
+            `,
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        await animationFrame();
+
+        const mediaToggler = "[data-label='Media'] .o_hb_collapse_toggler";
+        expect(mediaToggler).toHaveAttribute(
+            "aria-controls",
+            queryOne("[data-label='Transform']").id
+        );
+        expect("[data-label='Transform']").not.toBeVisible();
+        expect("[data-label='Animation']").toBeVisible();
+        expect("[data-label='Effect']").not.toBeVisible();
+        await contains("[data-label='Animation'] .o_hb_collapse_toggler").click();
+        expect("[data-label='Effect']").toBeVisible();
+        expect("[data-label='Transform']").not.toBeVisible();
+        await contains(mediaToggler).click();
+        expect("[data-label='Transform']").toBeVisible();
+        expect("[data-label='Effect']").toBeVisible();
+        await contains("[data-label='Animation'] .o_hb_collapse_toggler").click();
+        expect("[data-label='Effect']").not.toBeVisible();
+        expect("[data-label='Transform']").toBeVisible();
+    });
 });
 
 /* ================= Collapse template ================= */
@@ -195,6 +696,38 @@ describe("BuilderRow with collapse content", () => {
         await contains(":iframe .test-options-target").click();
         expect(".o_hb_options_container").toBeVisible();
         expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(0);
+    });
+
+    test("observed collapse content expands when a dependency becomes active", async () => {
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: collapseOptionTemplate({
+                dependency: true,
+                observeCollapseContent: true,
+            }),
+        });
+        await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+        await contains(":iframe .test-options-target").click();
+        expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(0);
+
+        await contains(".o_hb_options_container button[data-class-action='a']").click();
+        await animationFrame();
+        expect(".o_hb_collapse_toggler:not(.d-none)").toHaveAttribute("aria-expanded", "true");
+        expect(".o_hb_options_container button[data-class-action='b']").toBeVisible();
+        await contains(".o_hb_options_container button[data-class-action='b']").click();
+        expect(".o_hb_collapse_toggler:not(.d-none)").toHaveAttribute("aria-expanded", "true");
+
+        await contains(".o_hb_collapse_toggler:not(.d-none)").click();
+        await advanceTime(400);
+        await animationFrame();
+        expect(".o_hb_options_container button[data-class-action='b']").not.toBeVisible();
+        await contains(".o_hb_options_container button[data-class-action='a']").click();
+        await animationFrame();
+        expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(0);
+        await contains(".o_hb_options_container button[data-class-action='a']").click();
+        await animationFrame();
+        expect(".o_hb_collapse_toggler:not(.d-none)").toHaveAttribute("aria-expanded", "true");
+        expect(".o_hb_options_container button[data-class-action='b']").toBeVisible();
     });
 
     test("expand=true works when a dependency becomes active", async () => {
@@ -267,6 +800,7 @@ describe("BuilderRow with collapse content", () => {
         const contentEl = queryOne(".o_hb_options_container .o_hb_collapse_content");
         expect(contentEl.style.height).toBe(`${ONE_ROW_HEIGHT}px`);
         expect(parseFloat(getComputedStyle(contentEl).height)).toBeLessThan(ONE_ROW_HEIGHT);
+        await waitUntil(() => parseFloat(getComputedStyle(contentEl).height) >= ONE_ROW_HEIGHT - 1);
         // Collapsing pins the measured height, then targets 0 for the CSS transition.
         await contains(".o_hb_collapse_toggler:not(.d-none)").click();
         expect(contentEl.style.height).toBe("0px");

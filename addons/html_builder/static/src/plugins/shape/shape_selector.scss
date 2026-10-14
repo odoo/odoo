@@ -1,6 +1,6 @@
 .o_hb_select_pager_tab_container {
-    border-top: $o-we-border-width solid $o-we-bg-lighter;
-    border-bottom: $o-we-border-width solid $o-we-bg-lighter;
+    border-top: $o-we-border-width solid var(--border-color);
+    border-bottom: $o-we-border-width solid var(--border-color);
 }
 
 .o_hb_select_pager_tab {
@@ -11,7 +11,7 @@
     border: none;
     border-radius: 0;
     background-color: transparent;
-    color: $o-we-fg-light;
+    color: var(--body-color);
     font-weight: normal;
 
     > span {
@@ -21,14 +21,14 @@
     }
 
     &:hover > span {
-        color: $o-we-fg-lighter;
-        border-bottom-color: #{rgba($o-we-sidebar-tabs-active-border-color, .5)};
+        color: var(--emphasis-color);
+        border-bottom-color: color-mix(in srgb, var(--o-action) 50%, transparent);
     }
 
     &.active > span {
-        background-color: $o-we-sidebar-tabs-active-background-color;
-        color: $o-we-sidebar-content-field-colorpicker-dropdown-active-color;
-        border-bottom-color: $o-we-sidebar-tabs-active-border-color;
+        background-color: var(--o-component-active-bg);
+        color: var(--o-component-active-color);
+        border-bottom-color: var(--o-component-active-border);
     }
 }
 
@@ -37,7 +37,7 @@
     grid-template-columns: repeat(var(--o-hb-shape-selector-grid-columns, 4), 1fr);
     gap: $o-we-item-spacing / 2;
     padding: $o-we-item-spacing;
-    background-color: $o-we-bg-lighter;
+    background-color: var(--o-view-background-color);
 
     [data-shape-group-id="devices"] & {
         --o-hb-shape-selector-grid-columns: 3;
@@ -65,7 +65,7 @@
             height: 50px;
         }
         .o_we_shape {
-            background-color: rgba(27, 27, 27, 0.2);
+            background-color: rgba(var(--emphasis-color-rgb), 0.2);
         }
     }
 
@@ -77,7 +77,7 @@
 
     .o_hb_img_shape_btn,  .o_hb_bg_shape_btn {
         > .o_hb_btn {
-            --o-highlight-shape-color: var(--o-hb-btn-active-color, #{$o-we-color-accent});
+            --o-highlight-shape-color: var(--o-hb-btn-active-color, var(--o-action));
             --o-highlight-shape-bg-opacity: 0%;
             --o-highlight-shape-bg-color: color-mix(
                 in srgb,
@@ -114,8 +114,8 @@
 .o_we_shape_animated_label {
     @include o-position-absolute(0, 0);
     padding: 0 4px;
-    background: $o-we-toolbar-color-accent;
-    color: white;
+    background: var(--o-component-active-bg);
+    color: var(--o-component-active-color);
 
     > span {
         @include o-text-overflow(inline-block);

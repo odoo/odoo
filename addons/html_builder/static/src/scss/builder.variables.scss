@@ -679,15 +679,20 @@ $o-bg-shapes: (
 }
 
 %o-hb-input-base {
-    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+    border: $o-we-sidebar-content-field-border-width solid var(--border-color);
     border-radius: $o-we-sidebar-content-field-border-radius;
-    background-color: var(--o-hb-field-input-bg, #{$o-we-sidebar-content-field-input-bg});
+    background-color: var(--o-hb-field-input-bg, var(--o-view-background-color));
     padding: 0.15rem $o-we-sidebar-content-field-clickable-spacing;
     color: inherit;
 
+    &::placeholder, input::placeholder {
+        color: var(--secondary-color);
+        opacity: 1;
+    }
+
     &:focus, &:focus-within {
-        border-color: var(--o-hb-input-active-border, #{$o-we-sidebar-content-field-input-border-color});
-        color: var(--o-hb-row-color-active, #{$o-we-fg-lighter});
+        border-color: var(--o-hb-input-active-border, var(--o-bs-input-focus-border-color));
+        color: var(--o-hb-row-color-active, var(--emphasis-color));
     }
 }
 

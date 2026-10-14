@@ -25,8 +25,8 @@
     }
 
     .o_hb_text_effect_options {
-        --o-hb-text-effect-option-bg: $white;
-        --o-hb-text-effect-shadow-bg: rgba(0, 0, 0, 0.05);
+        --o-hb-text-effect-option-bg: var(--popover-bg, var(--o-view-background-color));
+        --o-hb-text-effect-shadow-bg: rgba(var(--emphasis-color-rgb), 0.05);
 
         width: 330px;
         font-size: $o-we-font-size;

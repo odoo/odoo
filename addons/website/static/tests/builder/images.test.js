@@ -290,6 +290,7 @@ describe("Image format/optimize", () => {
         const editor = getEditor();
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
+        await contains("[data-label='Media'] .o_hb_collapse_toggler").click();
         await contains("[data-label='Format'] .dropdown").click();
         await waitFor('[data-action-id="setImageFormat"]');
         queryAll(`[data-action-id="setImageFormat"]`)
@@ -317,6 +318,7 @@ describe("Image format/optimize", () => {
         const img = await waitFor(":iframe .test-options-target img");
         await contains(":iframe .test-options-target img").click();
         await waitSidebarUpdated();
+        await contains("[data-label='Media'] .o_hb_collapse_toggler").click();
         await setInputRange(`[data-action-id="setImageQuality"] input`, 50);
         // ensure the shape action has been applied
         await editor.shared.operation.next(() => {});
@@ -372,12 +374,15 @@ describe("Image format/optimize", () => {
     `);
         await contains(":iframe .test-options-target img.first").click();
         await waitSidebarUpdated();
+        await contains("[data-label='Media'] .o_hb_collapse_toggler").click();
         expect(`[data-action-id="setImageQuality"]`).toBeVisible();
         await contains(":iframe .test-options-target img.second").click();
         await waitSidebarUpdated();
+        await contains("[data-label='Media'] .o_hb_collapse_toggler").click();
         expect(`[data-action-id="setImageQuality"]`).toBeVisible();
         await contains(":iframe .test-options-target img.third").click();
         await waitSidebarUpdated();
+        await contains("[data-label='Media'] .o_hb_collapse_toggler").click();
         expect(`[data-action-id="setImageQuality"]`).toBeVisible();
     });
 });

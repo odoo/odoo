@@ -2,7 +2,7 @@
 
     @include o-input-number-no-arrows();
 
-    background-color: $o-we-bg-darker;
+    background-color: var(--o-view-background-color);
     z-index: 10;
 
     .o_hb_sliding_panel_header {
@@ -17,10 +17,10 @@
     // Regular
     &:not(.o_hb_sliding_panel_dark) {
         .o_hb_sliding_panel_content {
-            background-color: $o-we-bg-lighter;
+            background-color: var(--o-view-background-color);
 
             .o_hb_sliding_panel_header {
-                background-color: $o-we-bg-light;
+                background-color: var(--gray-100);
             }
         }
     }
@@ -28,7 +28,7 @@
     // Dark
     &.o_hb_sliding_panel_dark {
         .o_hb_sliding_panel_content, .o_hb_sliding_panel_header {
-            background-color: $o-we-bg-darker;
+            background-color: var(--o-view-background-color);
         }
     }
     

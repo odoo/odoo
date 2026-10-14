@@ -59,12 +59,14 @@
                 </t>
             </div>
         </div>
-        <div t-att-id="this.containerId" t-if="!this.props.folded" class="o_hb_bg_options_container pb-3" t-ref="this.contentRef">
-            <t t-foreach="this.options()" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template + '-' + OptionClass_index">
-                <BuilderContext applyTo="OptionClass.applyTo">
-                    <t t-component="OptionClass" t-props="OptionClass.propsValue || {}"></t>
-                </BuilderContext>
-            </t>
+        <div t-if="this.transition.shouldMount" class="o_hb_options_container_content" t-att-inert="this.props.folded">
+            <div t-att-id="this.containerId" class="o_hb_bg_options_container pb-3" t-ref="this.contentRef">
+                <t t-foreach="this.options()" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template + '-' + OptionClass_index">
+                    <BuilderContext applyTo="OptionClass.applyTo">
+                        <t t-component="OptionClass" t-props="OptionClass.propsValue || {}"></t>
+                    </BuilderContext>
+                </t>
+            </div>
         </div>
     </div>
 </t>
