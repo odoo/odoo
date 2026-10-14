@@ -882,9 +882,12 @@ Please change the quantity done or the rounding precision in your settings.""",
         if 'uom_id' in vals and any(move.state == 'done' for move in self) and not self.env.context.get('skip_uom_conversion'):
             raise UserError(_('You cannot change the UoM for a stock move that has been set to \'Done\'.'))
         if 'product_uom_qty' in vals:
-            for move in self.filtered(lambda m: m.state not in ('done', 'draft') and m.picking_id):
-                if move.uom_id.compare(vals['product_uom_qty'], move.product_uom_qty):
-                    self.env['stock.move.line']._log_message(move.picking_id, move, 'stock.track_move_template', vals)
+            moves_to_log = self.filtered(
+                lambda m: m.state not in ('done', 'draft') and m.picking_id and
+                m.uom_id.compare(vals['product_uom_qty'], m.product_uom_qty)
+            )
+            for picking, moves in moves_to_log.grouped('picking_id').items():
+                self.env['stock.move.line']._log_message(picking, moves, 'stock.track_move_template', vals)
             if self.env.context.get('do_not_unreserve') is None:
                 move_to_unreserve = self.filtered(
                     lambda m: m.state not in ['draft', 'done', 'cancel'] and m.uom_id.compare(m.quantity, vals.get('product_uom_qty')) == 1
@@ -1990,17 +1993,33 @@ Please change the quantity done or the rounding precision in your settings.""",
             )
         return vals
 
-    def _update_reserved_quantity(self, need, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
+    def _update_reserved_quantity(self, need, location_id, lot_id=None, package_id=None, owner_id=None, strict=True, pending_move_line_vals=None):
         """ Create or update move lines and reserves quantity from quants
             Expects the need (qty to reserve) and location_id to reserve from.
             `quant_ids` can be passed as an optimization since no search on the database
             is performed and reservation is done on the passed quants set
+            `pending_move_line_vals` can be passed to defer the move line creation, see `_action_assign`
         """
         self.ensure_one()
+        self._create_pending_move_lines(pending_move_line_vals)
         move_line_vals, taken_quantity = self._update_reserved_quantity_vals(need, location_id, lot_id, package_id, owner_id, strict)
         if move_line_vals:
-            self.env['stock.move.line'].create(move_line_vals)
+            if pending_move_line_vals is not None:
+                pending_move_line_vals[self.product_id.id] += move_line_vals
+            else:
+                self.env['stock.move.line'].create(move_line_vals)
         return taken_quantity
+
+    def _create_pending_move_lines(self, pending_move_line_vals):
+        """
+        Create the move lines `_action_assign` deferred for the products of `self`
+        """
+        if pending_move_line_vals:
+            vals_list = []
+            for product in self.product_id:
+                vals_list += pending_move_line_vals.pop(product.id, [])
+            if vals_list:
+                self.env['stock.move.line'].create(vals_list)
 
     def _update_reserved_quantity_vals(self, need, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
         self.ensure_one()
@@ -2162,8 +2181,10 @@ Please change the quantity done or the rounding precision in your settings.""",
                 lambda m: not m.picked and m.state in ['confirmed', 'waiting', 'partially_available']
             )
 
+        pending_move_line_vals = defaultdict(list)
         for move in moves_to_assign:
             move = move.with_company(move.company_id)
+            move._create_pending_move_lines(pending_move_line_vals)
             if not force_qty:
                 missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
             else:
@@ -2223,7 +2244,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                         assigned_moves_ids.add(move.id)
                         continue
                     # Reserve new quants and create move lines accordingly.
-                    taken_quantity = move._update_reserved_quantity(need, move.location_id, strict=False)
+                    taken_quantity = move._update_reserved_quantity(need, move.location_id, strict=False, pending_move_line_vals=pending_move_line_vals)
                     if move.product_id.uom_id.is_zero(taken_quantity):
                         continue
                     moves_to_redirect.add(move.id)
@@ -2249,8 +2270,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                         all_move_line_vals += move_line_vals
                         if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
                             taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
-                    if all_move_line_vals:
-                        self.env['stock.move.line'].create(all_move_line_vals)
+                    pending_move_line_vals[move.product_id.id] += all_move_line_vals
 
                     for (need, location_id, lot_id, package_id, owner_id), taken_quantity in taken_quantities.items():
                         # `quantity` is what is brought by chained done move lines. We double check
@@ -2269,6 +2289,8 @@ Please change the quantity done or the rounding precision in your settings.""",
             if move.product_id.tracking == 'serial':
                 move.next_serial_count = move.product_uom_qty
 
+        for vals_list in pending_move_line_vals.values():
+            move_line_vals_list += vals_list
         self.env['stock.move.line'].create(move_line_vals_list)
         StockMove.browse(partially_available_moves_ids).write({'state': 'partially_available'})
         StockMove.browse(assigned_moves_ids).write({'state': 'assigned'})
@@ -2444,17 +2466,12 @@ Please change the quantity done or the rounding precision in your settings.""",
         return True
 
     def _create_backorder(self):
-        # Split moves where necessary and move quants
-        backorder_moves_vals = []
-        for move in self:
-            # To know whether we need to create a backorder or not, round to the general product's
-            # decimal precision and not the product's UOM.
-            rounding = self.env['decimal.precision'].precision_get('Product Unit')
-            if float_compare(move.quantity, move.product_uom_qty, precision_digits=rounding) < 0:
-                # Need to do some kind of conversion here
-                qty_split = move.uom_id._compute_quantity(move.product_uom_qty - move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
-                new_move_vals = move._split(qty_split)
-                backorder_moves_vals += new_move_vals
+        rounding = self.env['decimal.precision'].precision_get('Product Unit')
+        moves_to_split = self.filtered(lambda m: float_compare(m.quantity, m.product_uom_qty, precision_digits=rounding) < 0)
+        backorder_moves_vals = moves_to_split._split({
+            move: move.uom_id._compute_quantity(move.product_uom_qty - move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+            for move in moves_to_split
+        })
         backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
         # The backorder moves are not yet in their own picking. We do not want to check entire packs for those
         # ones as it could messed up the result_package_id of the moves being currently validated
@@ -2490,46 +2507,47 @@ Please change the quantity done or the rounding precision in your settings.""",
         return vals
 
     def _split(self, qty, restrict_partner_id=False):
-        """ Splits `self` quantity and return values for a new moves to be created afterwards
+        """ Splits the quantity of each move of `self` and return values for new moves to be created afterwards
 
-        :param qty: float. quantity to split (given in product UoM)
+        :param qty: float, or dict {move: float} to split each move by its own quantity. quantity to split (given in product UoM)
         :param restrict_partner_id: optional partner that can be given in order to force the new move to restrict its choice of quants to the ones belonging to this partner.
         :returns: list of dict. stock move values """
-        self.ensure_one()
-        if self.state in ('done', 'cancel'):
+        if not isinstance(qty, dict):
+            qty = dict.fromkeys(self, qty)
+        if any(move.state in ('done', 'cancel') for move in self):
             raise UserError(_('You cannot split a stock move that has been set to \'Done\' or \'Cancel\'.'))
-        elif self.state == 'draft':
+        elif any(move.state == 'draft' for move in self):
             # we restrict the split of a draft move because if not confirmed yet, it may be replaced by several other moves in
             # case of phantom bom (with mrp module). And we don't want to deal with this complexity by copying the product that will explode.
             raise UserError(_('You cannot split a draft move. It needs to be confirmed first.'))
 
-        if self.product_id.uom_id.is_zero(qty):
-            return []
-
         decimal_precision = self.env['decimal.precision'].precision_get('Product Unit')
+        new_move_vals = []
+        moves_by_new_qty = defaultdict(lambda: self.env['stock.move'])
+        for move in self:
+            move_qty = qty[move]
+            if move.product_id.uom_id.is_zero(move_qty):
+                continue
 
-        # `qty` passed as argument is the quantity to backorder and is always expressed in the
-        # quants UOM. If we're able to convert back and forth this quantity in the move's and the
-        # quants UOM, the backordered move can keep the UOM of the move. Else, we'll create is in
-        # the UOM of the quants.
-        uom_qty = self.product_id.uom_id._compute_quantity(qty, self.uom_id, rounding_method='HALF-UP')
-        if float_compare(qty, self.uom_id._compute_quantity(uom_qty, self.product_id.uom_id, rounding_method='HALF-UP'), precision_digits=decimal_precision) == 0:
-            defaults = self._prepare_move_split_vals(uom_qty)
-        else:
-            defaults = self.with_context(force_split_uom_id=self.product_id.uom_id.id)._prepare_move_split_vals(qty)
+            # `qty` is in the product UoM: keep the move's UoM for the backorder if it converts back losslessly
+            uom_qty = move.product_id.uom_id._compute_quantity(move_qty, move.uom_id, rounding_method='HALF-UP')
+            if float_compare(move_qty, move.uom_id._compute_quantity(uom_qty, move.product_id.uom_id, rounding_method='HALF-UP'), precision_digits=decimal_precision) == 0:
+                defaults = move._prepare_move_split_vals(uom_qty)
+            else:
+                defaults = move.with_context(force_split_uom_id=move.product_id.uom_id.id)._prepare_move_split_vals(move_qty)
 
-        if restrict_partner_id:
-            defaults['restrict_partner_id'] = restrict_partner_id
+            if restrict_partner_id:
+                defaults['restrict_partner_id'] = restrict_partner_id
 
-        new_move_vals = self.copy_data(defaults)
+            new_move_vals += move.copy_data(defaults)
 
-        # Update the original `product_qty` of the move. Use the general product's decimal
-        # precision and not the move's UOM to handle case where the `quantity_done` is not
-        # compatible with the move's UOM.
-        new_product_qty = self.product_id.uom_id._compute_quantity(max(0, self.product_qty - qty), self.uom_id, round=False)
-        new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit'))
-        self.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
-        self._recompute_state()
+            # round with the product's decimal precision, not the move's UoM
+            new_product_qty = move.product_id.uom_id._compute_quantity(max(0, move.product_qty - move_qty), move.uom_id, round=False)
+            moves_by_new_qty[float_round(new_product_qty, precision_digits=decimal_precision)] |= move
+
+        for new_product_qty, moves in moves_by_new_qty.items():
+            moves.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
+        self.env['stock.move'].concat(moves_by_new_qty.values())._recompute_state()
         return new_move_vals
 
     def _post_process_created_moves(self):
@@ -2707,15 +2725,9 @@ Please change the quantity done or the rounding precision in your settings.""",
                     ('location_dest_id', '=', move.location_dest_id.id),
                     ('action', '!=', 'push')
                 ]
-                warehouse = move.warehouse_id or move.picking_type_id.warehouse_id
-                rule = self.env['stock.rule']
                 if picking_type_code:
                     domain.append(('picking_type_id.code', '=', picking_type_code))
-                elif move.picking_type_id:
-                    # Several rules can match, prefer one of the same operation type as the move.
-                    rule = self.env['stock.rule']._search_rule(False, move.packaging_uom_id, product_id, warehouse, domain + [('picking_type_id.code', '=', move.picking_type_id.code)])
-                if not rule:
-                    rule = self.env['stock.rule']._search_rule(False, move.packaging_uom_id, product_id, warehouse, domain)
+                rule = self.env['stock.rule']._search_rule(False, move.packaging_uom_id, product_id, move.warehouse_id or move.picking_type_id.warehouse_id, domain)
                 if rule:
                     break
                 location = location.location_id

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="track_move_template" technical_usage="mail_post_source">
-        <div>
+        <div t-foreach="moves" t-as="move">
+            <t t-set="vals" t-value="vals_by_move[move]"/>
             <t t-call="stock.message_head"/>
             <t t-call="stock.message_body"/>
         </div>
