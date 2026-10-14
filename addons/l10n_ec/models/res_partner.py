@@ -43,6 +43,15 @@ class ResPartner(models.Model):
     def _get_all_additional_identifiers_metadata(self):
         return {**super()._get_all_additional_identifiers_metadata(), **EC_ADDITIONAL_IDENTIFIERS_METADATA}
 
+    @api.model
+    def _get_portal_additional_identifiers_whitelist(self, company=None, country=None):
+        whitelist = super()._get_portal_additional_identifiers_whitelist(company=company, country=country)
+        if company and company.account_fiscal_country_id.code == 'EC':
+            whitelist.add('PASSPORT')
+            if country and country.code == 'EC':
+                whitelist.add('EC_DNI')
+        return whitelist
+
     @api.depends("vat", "country_id", "additional_identifiers",
                  "commercial_partner_id.vat", "commercial_partner_id.additional_identifiers")
     def _compute_l10n_ec_vat_validation(self):
