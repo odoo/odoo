@@ -14,7 +14,7 @@ class AgeVerificationOptionPlugin extends Plugin {
         builder_actions: {
             SetAgeConfirmationTemplateAction,
         },
-        immutable_link_selectors: [".o_age_verification_btn"],
+        properties: { predicate: ".o_age_verification_btn", immutableLink: true },
         submit_button_selectors: [".o_age_verification_btn"],
     };
 }

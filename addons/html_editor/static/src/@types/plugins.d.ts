@@ -35,7 +35,7 @@ declare module "plugins" {
     import { hint_targets_providers } from "@html_editor/main/hint_plugin";
     import { to_inline_code_processors } from "@html_editor/main/inline_code";
     import { paste_url_overrides } from "@html_editor/main/link/link_paste_plugin";
-    import { on_link_created_handlers, immutable_link_selectors, is_link_editable_predicates, is_empty_link_legit_predicates, is_link_allowed_on_selection_predicates, link_popovers, LinkShared, advanced_popover_options } from "@html_editor/main/link/link_plugin";
+    import { on_link_created_handlers, is_link_editable_predicates, is_empty_link_legit_predicates, is_link_allowed_on_selection_predicates, link_popovers, LinkShared, advanced_popover_options } from "@html_editor/main/link/link_plugin";
     import { is_link_eligible_for_visual_indication_predicates, is_link_eligible_for_zwnbsp_predicates } from "@html_editor/main/link/link_selection_plugin";
     import { paste_media_url_command_providers } from "@html_editor/main/link/powerbox_url_paste_plugin";
     import { LocalOverlayShared } from "@html_editor/main/local_overlay_plugin";
@@ -275,7 +275,6 @@ declare module "plugins" {
         font_type_items: font_type_items,
         format_specs: format_specs;
         history_commit_data_properties: history_commit_data_properties;
-        immutable_link_selectors: immutable_link_selectors;
         link_popovers: link_popovers;
         media_dialog_extra_tabs: media_dialog_extra_tabs;
         move_node_blacklist_selectors: move_node_blacklist_selectors;
