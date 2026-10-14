@@ -895,20 +895,12 @@ class DiscussChannel(models.Model):
                 .browse(self.env.context.get("selected_answer_id"))
                 .exists()
             )
+            # sudo - chatbot.message: finding the question message to update the user answer is allowed.
+            question_msg = self.env["chatbot.message"].sudo().search([
+                ("discuss_channel_id", "=", self.id),
+                ("script_step_id", "=", self.chatbot_current_step_id.id),
+            ], order="id ASC", limit=1)
             if selected_answer and selected_answer in self.chatbot_current_step_id.answer_ids:
-                # sudo - chatbot.message: finding the question message to update the user answer is allowed.
-                question_msg = (
-                    self.env["chatbot.message"]
-                    .sudo()
-                    .search(
-                        [
-                            ("discuss_channel_id", "=", self.id),
-                            ("script_step_id", "=", self.chatbot_current_step_id.id),
-                        ],
-                        order="id DESC",
-                        limit=1,
-                    )
-                )
                 question_msg.user_script_answer_id = selected_answer
                 question_msg.user_raw_script_answer_id = selected_answer.id
                 if store := self.env.context.get("message_post_store"):
@@ -925,13 +917,21 @@ class DiscussChannel(models.Model):
                     },
                 )
 
-            self.env["chatbot.message"].sudo().create(
-                {
-                    "mail_message_id": message.id,
-                    "discuss_channel_id": self.id,
-                    "script_step_id": self.chatbot_current_step_id.id,
-                },
-            )
+            chatbot_message_vals = {
+                "mail_message_id": message.id,
+                "discuss_channel_id": self.id,
+                "script_step_id": self.chatbot_current_step_id.id,
+            }
+            if self.chatbot_current_step_id.step_type in (
+                "question_selection",
+                "free_input_single",
+                "free_input_multi",
+            ) and (
+                message.author_id in self.livechat_customer_partner_ids
+                or message.author_guest_id in self.livechat_customer_guest_ids
+            ):
+                chatbot_message_vals["question_chatbot_message_id"] = question_msg.id
+            self.env["chatbot.message"].sudo().create(chatbot_message_vals)
 
         author_history = self.env["im_livechat.channel.member.history"]
         # sudo - discuss.channel: accessing history to update its state is acceptable

@@ -1,5 +1,4 @@
 import { AND, fields, Record } from "@mail/model/export";
-import { createElementFromContent } from "@mail/utils/common/html";
 
 export class ChatbotStep extends Record {
     static id = AND("scriptStep", "message");
@@ -50,9 +49,11 @@ export class ChatbotStep extends Record {
     selectedAnswer = fields.One("chatbot.script.answer");
     /** Same unversioned-model problem, and same one-way fix, as `operatorFoundEver`. */
     selectedAnswerEver = fields.One("chatbot.script.answer");
-    rawAnswer = fields.Html("");
     step_type = this.computed(() => this.scriptStep?.step_type);
     isLast = false;
+    user_answer_chatbot_message_ids = fields.Many("chatbot.message", {
+        sort: (c1, c2) => c1.id - c2.id,
+    });
 
     get expectAnswer() {
         return [
@@ -62,20 +63,6 @@ export class ChatbotStep extends Record {
             "question_email",
             "question_phone",
         ].includes(this.step_type);
-    }
-
-    get answer() {
-        switch (this.step_type) {
-            case "free_input_multi":
-            case "free_input_single":
-            case "question_email":
-            case "question_phone":
-                return createElementFromContent(this.rawAnswer).textContent;
-            case "question_selection":
-                return this.selectedAnswerEver?.name;
-            default:
-                return "";
-        }
     }
 }
 ChatbotStep.register();
