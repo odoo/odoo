@@ -1145,55 +1145,6 @@ test("Can group by many2one_reference field ", async () => {
 });
 
 test("Can group by reference field ", async () => {
-    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) =>
-        // The mock server doesn't support well reference.
-        // It is fixed in master/saas-19.1, but for now we have to mock the correct output ourselves.
-        [
-            [{ __count: 3, "probability:avg": 11, __extra_domain: [] }],
-            [
-                {
-                    ref: "partner,2",
-                    __extra_domain: [["ref", "=", "partner,2"]],
-                    __count: 1,
-                    "probability:avg": 11,
-                },
-                {
-                    ref: "partner,3",
-                    __extra_domain: [["ref", "=", "partner,3"]],
-                    __count: 1,
-                    "probability:avg": 12,
-                },
-                {
-                    ref: false,
-                    __extra_domain: [["ref", "=", false]],
-                    __count: 1,
-                    "probability:avg": 13,
-                },
-            ],
-        ]
-    );
-    Partner._fields = {
-        ...Partner._fields,
-        ref: fields.Reference({
-            selection: [["partner", "Partner"]],
-        }),
-    };
-    Partner._records = [
-        {
-            id: 1,
-            ref: "partner,2",
-            probability: 11,
-        },
-        {
-            id: 2,
-            ref: "partner,3",
-            probability: 12,
-        },
-        {
-            id: 3,
-            probability: 13,
-        },
-    ];
     const { model } = await createSpreadsheetWithPivot({
         pivotType: "static",
         arch: /* xml */ `
@@ -1202,19 +1153,24 @@ test("Can group by reference field ", async () => {
                 <field name="probability" type="measure"/>
             </pivot>`,
     });
-    expect(getCellFormula(model, "A3")).toBe('=PIVOT.HEADER(1,"ref","partner,2")');
-    expect(getCellFormula(model, "A4")).toBe('=PIVOT.HEADER(1,"ref","partner,3")');
+    expect(getCellFormula(model, "A3")).toBe('=PIVOT.HEADER(1,"ref","product,37")');
+    expect(getCellFormula(model, "A4")).toBe('=PIVOT.HEADER(1,"ref","res.currency,1")');
     expect(getCellFormula(model, "A5")).toBe('=PIVOT.HEADER(1,"ref",FALSE)');
-    expect(getCellFormula(model, "B3")).toBe('=PIVOT.VALUE(1,"probability:avg","ref","partner,2")');
-    expect(getCellFormula(model, "B4")).toBe('=PIVOT.VALUE(1,"probability:avg","ref","partner,3")');
+    expect(getCellFormula(model, "B3")).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","ref","product,37")'
+    );
+    expect(getCellFormula(model, "B4")).toBe(
+        '=PIVOT.VALUE(1,"probability:avg","ref","res.currency,1")'
+    );
     expect(getCellFormula(model, "B5")).toBe('=PIVOT.VALUE(1,"probability:avg","ref",FALSE)');
 
-    expect(getCellValue(model, "A3")).toBe("partner,2");
-    expect(getCellValue(model, "A4")).toBe("partner,3");
+    expect(getCellValue(model, "A3")).toBe("xphone");
+    expect(getCellValue(model, "A4")).toBe("EUR");
     expect(getCellValue(model, "A5")).toBe("None");
-    expect(getCellValue(model, "B3")).toBe(11);
-    expect(getCellValue(model, "B4")).toBe(12);
-    expect(getCellValue(model, "B5")).toBe(13);
+    expect(getCellValue(model, "B3")).toBe(10);
+    expect(getCellValue(model, "B4")).toBe(11);
+    // "None" group = partners 3 and 4 (95, 15): mock server avg is a sum (see mock_model.js)
+    expect(getCellValue(model, "B5")).toBe(110);
 });
 
 test("PIVOT.HEADER grouped by date field without value", async function () {
