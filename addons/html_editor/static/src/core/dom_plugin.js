@@ -110,8 +110,6 @@ const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NO
  * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
  *
  * @typedef {((parent: HTMLElement, block: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
- * @typedef {((block: HTMLElement) => boolean)[]} is_retagging_safe_predicates
- * Allows to bypass the check in `isRetaggingSafe`, to handle the block in `on_will_set_tag_handlers`
  *
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
@@ -120,7 +118,15 @@ const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NO
 
 export class DomPlugin extends Plugin {
     static id = "dom";
-    static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "split",
+        "delete",
+        "lineBreak",
+        "properties",
+    ];
     static shared = [
         "normalize",
         "insert",
@@ -773,7 +779,7 @@ export class DomPlugin extends Plugin {
      */
     isRetaggingSafe(block) {
         return (
-            this.checkPredicates("is_retagging_safe_predicates", block) ??
+            this.dependencies.properties.get(block, "retaggable") ??
             !(
                 (isParagraphRelatedElement(block) ||
                     isListItemElement(block) ||
