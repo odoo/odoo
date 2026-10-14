@@ -3,16 +3,16 @@
 from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, users
 from odoo.tools.safe_eval import expr_eval
 
 
 class TestPackingCommon(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User'
 
     @classmethod
     def setUpClass(cls):
@@ -29,11 +29,11 @@ class TestPackingCommon(TestStockCommon):
 class TestPacking(TestPackingCommon):
 
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def test_put_in_pack(self):
         """ In a pick pack ship scenario, create two packs in pick and check that
@@ -139,7 +139,7 @@ class TestPacking(TestPackingCommon):
             the location_id of the package is the one where the package is once it is validated.
         """
         pack = self.env['stock.package'].create({'name': 'The pack to pick'})
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].sudo().create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -169,12 +169,12 @@ class TestPacking(TestPackingCommon):
             location should trigger a wizard. This wizard applies the same destination
             location to all the move lines
         """
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].sudo().create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].sudo().create({
             'name': 'shelf2',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -350,26 +350,26 @@ class TestPacking(TestPackingCommon):
         self.env.user.write({'group_ids': [(3, grp_multi_loc.id)]})
         self.env.user.write({'group_ids': [(3, grp_multi_step_rule.id)]})
         self.env.user.write({'group_ids': [(3, grp_pack.id)]})
-        self.warehouse_1.reception_steps = 'two_steps'
+        self.warehouse_1.sudo().reception_steps = 'two_steps'
 
         # Creates two new locations for putaway.
-        location_form = Form(self.env['stock.location'])
+        location_form = Form(self.env['stock.location'].sudo())
         location_form.name = 'Shelf A'
         location_form.location_id = self.stock_location
         loc_shelf_A = location_form.save()
 
         # Creates a new putaway rule for productA and productB.
-        putaway_A = self.env['stock.putaway.rule'].create({
+        putaway_A = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': loc_shelf_A.id,
         })
-        putaway_B = self.env['stock.putaway.rule'].create({
+        putaway_B = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productB.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': loc_shelf_A.id,
         })
-        self.stock_location.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0)]
+        self.stock_location.sudo().putaway_rule_ids = [Command.link(putaway_A.id), Command.link(putaway_B.id)]
 
         # Create a new receipt with the two products.
         receipt_form = Form(self.env['stock.picking'])
@@ -467,30 +467,30 @@ class TestPacking(TestPackingCommon):
         self.env.user.write({'group_ids': [(3, grp_multi_loc.id)]})
         self.env.user.write({'group_ids': [(3, grp_multi_step_rule.id)]})
         self.env.user.write({'group_ids': [(3, grp_pack.id)]})
-        self.warehouse_1.reception_steps = 'two_steps'
+        self.warehouse_1.sudo().reception_steps = 'two_steps'
 
         # Creates two new locations for putaway.
-        location_form = Form(self.env['stock.location'])
+        location_form = Form(self.env['stock.location'].sudo())
         location_form.name = 'Shelf A'
         location_form.location_id = self.stock_location
         loc_shelf_A = location_form.save()
-        location_form = Form(self.env['stock.location'])
+        location_form = Form(self.env['stock.location'].sudo())
         location_form.name = 'Shelf B'
         location_form.location_id = self.stock_location
         loc_shelf_B = location_form.save()
 
         # Creates a new putaway rule for productA and productB.
-        putaway_A = self.env['stock.putaway.rule'].create({
+        putaway_A = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': loc_shelf_A.id,
         })
-        putaway_B = self.env['stock.putaway.rule'].create({
+        putaway_B = self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productB.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': loc_shelf_B.id,
         })
-        self.stock_location.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0)]
+        self.stock_location.sudo().putaway_rule_ids = [Command.link(putaway_A.id), Command.link(putaway_B.id)]
         # location_form = Form(self.stock_location)
         # location_form.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0), ],
         # self.stock_location = location_form.save()
@@ -585,7 +585,7 @@ class TestPacking(TestPackingCommon):
         supplier_location = self.env.ref('stock.stock_location_suppliers')
 
         # Creates a new putaway rule for Boxes -> Shelf 1 and Pallets -> Shelf 2.
-        self.env['stock.putaway.rule'].create([
+        self.env['stock.putaway.rule'].sudo().create([
             {
                 'package_type_ids': [Command.link(self.pack_type_box.id)],
                 'location_in_id': self.stock_location.id,
@@ -676,7 +676,7 @@ class TestPacking(TestPackingCommon):
         """ Create a simple delivery order with a serial tracked product. Then split the move lines into two
          different packages. """
         self.productA.tracking = 'serial'
-        self.warehouse_1.delivery_steps = 'ship_only'
+        self.warehouse_1.sudo().delivery_steps = 'ship_only'
         serials = self.env['stock.lot'].create([{
             'product_id': self.productA.id,
             'name': f'SN{i}',
@@ -775,7 +775,7 @@ class TestPacking(TestPackingCommon):
         Test the scenario of overshipping: we send the customer an entire package, even though it might be more than
         what they initially ordered, and update the quantity on the sales order to reflect what was actually sent.
         """
-        self.warehouse_1.delivery_steps = 'ship_only'
+        self.warehouse_1.sudo().delivery_steps = 'ship_only'
         package = self.env["stock.package"].create({"name": "Src Pack"})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
         picking = self.env['stock.picking'].create({
@@ -869,7 +869,7 @@ class TestPacking(TestPackingCommon):
             picking.action_assign()
             return picking, move_A, move_B
 
-        self.warehouse_1.delivery_steps = 'pick_ship'
+        self.warehouse_1.sudo().delivery_steps = 'pick_ship'
         pick_type = self.warehouse_1.pick_type_id
 
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
@@ -900,12 +900,12 @@ class TestPacking(TestPackingCommon):
         When moving these P to another child location of pack location, the source location of the
         related package level should be shelf1
         """
-        shelf1_location = self.env['stock.location'].create({
+        shelf1_location = self.env['stock.location'].sudo().create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.pack_location.id,
         })
-        shelf2_location = self.env['stock.location'].create({
+        shelf2_location = self.env['stock.location'].sudo().create({
             'name': 'shelf2',
             'usage': 'internal',
             'location_id': self.pack_location.id,
@@ -935,7 +935,7 @@ class TestPacking(TestPackingCommon):
         The Storage Category adds some constraints on weight/pallets capacity
         """
         warehouse = self.stock_location.warehouse_id
-        warehouse.reception_steps = "two_steps"
+        warehouse.sudo().reception_steps = "two_steps"
         self.productA.weight = 1.0
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
         # Required for `result_package_id` to be visible in the view
@@ -949,7 +949,7 @@ class TestPacking(TestPackingCommon):
 
         # max 100kg (so 100 x P) and max 1 pallet -> we will work with pallets,
         # so the pallet capacity constraint should be the effective one
-        stor_category = self.env['stock.storage.category'].create({
+        stor_category = self.env['stock.storage.category'].sudo().create({
             'name': 'Super Storage Category',
             'max_weight': 60,
             'package_capacity_ids': [(0, 0, {
@@ -960,14 +960,14 @@ class TestPacking(TestPackingCommon):
 
         # 3 sub locations with the storage category
         # (the third location should never be used)
-        sub_loc_01, sub_loc_02, dummy = self.env['stock.location'].create([{
+        sub_loc_01, sub_loc_02, _dummy = self.env['stock.location'].sudo().create([{
             'name': 'Sub Location %s' % i,
             'usage': 'internal',
             'location_id': self.stock_location.id,
             'storage_category_id': stor_category.id,
         } for i in [1, 2, 3]])
 
-        self.env['stock.putaway.rule'].create({
+        self.env['stock.putaway.rule'].sudo().create({
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'package_type_ids': [Command.link(self.pack_type_pallet.id)],
@@ -1034,7 +1034,7 @@ class TestPacking(TestPackingCommon):
         Then, same with max 200kg max 1 pallet => same result, this time because of pallet count constraint
         """
         warehouse = self.stock_location.warehouse_id
-        warehouse.reception_steps = "two_steps"
+        warehouse.sudo().reception_steps = "two_steps"
         self.productA.weight = 1.0
         self.productB.weight = 1.0
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_stock_multi_locations').id)]})
@@ -1047,7 +1047,7 @@ class TestPacking(TestPackingCommon):
         } for i in [1, 2]])
 
         # max 100kg and max 2 pallets
-        stor_category = self.env['stock.storage.category'].create({
+        stor_category = self.env['stock.storage.category'].sudo().create({
             'name': 'Super Storage Category',
             'max_weight': 100,
             'package_capacity_ids': [(0, 0, {
@@ -1058,7 +1058,7 @@ class TestPacking(TestPackingCommon):
 
         # 3 sub locations with the storage category
         # (the third location should never be used)
-        sub_loc_01, sub_loc_02, dummy = self.env['stock.location'].create([{
+        sub_loc_01, sub_loc_02, _dummy = self.env['stock.location'].sudo().create([{
             'name': 'Sub Location %s' % i,
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -1067,7 +1067,7 @@ class TestPacking(TestPackingCommon):
 
         self.env['stock.quant']._update_available_quantity(self.productA, sub_loc_01, 10, package_id=package_01)
 
-        self.env['stock.putaway.rule'].create({
+        self.env['stock.putaway.rule'].sudo().create({
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'package_type_ids': [Command.link(self.pack_type_pallet.id)],
@@ -1138,9 +1138,9 @@ class TestPacking(TestPackingCommon):
         constraint), then P02 should be redirected to L4 (because of "same
         product" policy)
         """
-        self.warehouse_1.reception_steps = "two_steps"
+        self.warehouse_1.sudo().reception_steps = "two_steps"
 
-        storage_category = self.env['stock.storage.category'].create({
+        storage_category = self.env['stock.storage.category'].sudo().create({
             'name': "storage category",
             'allow_new_product': "same",
             'max_weight': 1000,
@@ -1150,14 +1150,14 @@ class TestPacking(TestPackingCommon):
             })],
         })
 
-        loc01, loc02, loc03, loc04 = self.env['stock.location'].create([{
+        loc01, loc02, loc03, loc04 = self.env['stock.location'].sudo().create([{
             'name': 'loc 0%d' % i,
             'usage': 'internal',
             'location_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
         } for i in range(1, 5)])
 
-        self.env['stock.putaway.rule'].create({
+        self.env['stock.putaway.rule'].sudo().create({
             'location_in_id': self.stock_location.id,
             'location_out_id': self.stock_location.id,
             'storage_category_id': storage_category.id,
@@ -1318,11 +1318,11 @@ class TestPacking(TestPackingCommon):
     def test_put_out_of_pack_transfer(self):
         """ When a transfer has multiple products all in the same package, removing a product from the destination package
         (i.e. removing it from the package but still putting it in the same location) shouldn't remove it for other products. """
-        loc_1 = self.env['stock.location'].create({
+        loc_1 = self.env['stock.location'].sudo().create({
             'name': 'Location A',
             'location_id': self.stock_location.id,
         })
-        loc_2 = self.env['stock.location'].create({
+        loc_2 = self.env['stock.location'].sudo().create({
             'name': 'Location B',
             'location_id': self.stock_location.id,
         })
@@ -1571,11 +1571,11 @@ class TestPacking(TestPackingCommon):
     def test_action_split_transfer(self):
         """ Check Split Picking if quantity `0 <= done < demand`
         """
-        loc_1 = self.env['stock.location'].create({
+        loc_1 = self.env['stock.location'].sudo().create({
             'name': 'Location A',
             'location_id': self.stock_location.id,
         })
-        loc_2 = self.env['stock.location'].create({
+        loc_2 = self.env['stock.location'].sudo().create({
             'name': 'Location B',
             'location_id': self.stock_location.id,
         })
@@ -1633,7 +1633,7 @@ class TestPacking(TestPackingCommon):
 
         self.assertItemsEqual(picking.move_line_ids.mapped('quantity'), [1.0] * 5)
 
-        sub_location = self.env['stock.location'].create({
+        sub_location = self.env['stock.location'].sudo().create({
             'name': 'Sub Location',
             'location_id': self.stock_location.id,
         })
@@ -1658,7 +1658,7 @@ class TestPacking(TestPackingCommon):
         Ensure it results with the two first package reserved. The first and the third package
         should be picked.
         """
-        self.warehouse_1.delivery_steps = 'ship_only'
+        self.warehouse_1.sudo().delivery_steps = 'ship_only'
 
         pack1, pack2, pack3 = self.env['stock.package'].create([
             {'name': 'pack1'},
@@ -1699,7 +1699,7 @@ class TestPacking(TestPackingCommon):
         already being reserved by an other picking.
         """
         pack = self.env['stock.package'].create({'name': 'The pack to pick'})
-        locations = self.env['stock.location'].create([
+        locations = self.env['stock.location'].sudo().create([
             {
                 'name': 'Depot 1',
                 'usage': 'internal',
@@ -1770,18 +1770,18 @@ class TestPacking(TestPackingCommon):
 class TestPackagePropagation(TestPackingCommon):
 
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def test_reusable_package_propagation(self):
         """ Test a reusable package should not be propagated to the next picking
         of a mto chain """
         # Make the Pallet type resuable while the Box type stays disposable.
-        self.pack_type_pallet.package_use = 'reusable'
-        self.pack_type_box.package_use = 'disposable'
+        self.pack_type_pallet.sudo().package_use = 'reusable'
+        self.pack_type_box.sudo().package_use = 'disposable'
         reusable_package = self.env['stock.package'].create({
             'name': 'Reusable Package',
             'package_type_id': self.pack_type_pallet.id,
@@ -1921,6 +1921,7 @@ class TestPackagePropagation(TestPackingCommon):
         ])
         self.assertEqual(smol_pack.dest_complete_name, 'Big > Mid > Smol')
 
+    @users('julie')
     def test_add_only_child_package(self):
         """ Ensures that when adding packages directly into a picking, if that package has a
             parent package but it isn't selected, then the parent won't be set as destination,
@@ -1993,7 +1994,7 @@ class TestPackagePropagation(TestPackingCommon):
             container with the new one, and clears destination packages for now isolated packages.
         """
         # Make sure `Set Package Type` is disabled as we don't want to bother with wizards.
-        self.picking_type_in.set_package_type = False
+        self.picking_type_in.sudo().set_package_type = False
         supplier_loc_id = self.ref('stock.stock_location_suppliers')
         receipt = self.env['stock.picking'].create({
             'picking_type_id': self.picking_type_in.id,
@@ -2046,8 +2047,8 @@ class TestPackagePropagation(TestPackingCommon):
         Check that the packages total shipping weight is 31 kg and 17kg respectively.
         """
         self.productA.weight = 2
-        self.pack_type_box.base_weight = 5
-        self.pack_type_pallet.base_weight = 10
+        self.pack_type_box.sudo().base_weight = 5
+        self.pack_type_pallet.sudo().base_weight = 10
         box, box2, pallet, pallet2 = self.env['stock.package'].create([{
             'package_type_id': pack_type.id,
         } for pack_type in [self.pack_type_box, self.pack_type_box, self.pack_type_pallet, self.pack_type_pallet]])
@@ -2141,8 +2142,8 @@ class TestPackagePropagation(TestPackingCommon):
         ])
         self.assertFalse((pack1 | pack2).package_dest_id)
 
-        # Remove pack1 from picking, this should also remove its related move & move line
-        pack1.with_context(picking_ids=pick.ids).action_remove_package()
+        # Remove pack1 from picking, this should also remove its related move & move line (requires stock manager rights)
+        pack1.with_user(self.user_stock_manager).with_context(picking_ids=pick.ids).action_remove_package()
         self.assertRecordValues(pick.move_ids.sorted('product_id'), [
             {'product_id': self.productB.id, 'package_ids': pack2.ids, 'product_uom_qty': 2},
         ])
@@ -2195,8 +2196,8 @@ class TestPackagePropagation(TestPackingCommon):
 
     def test_package_propagation_different_uom(self):
         supplier_location = self.env.ref('stock.stock_location_suppliers')
-        self.warehouse_1.in_type_id.set_package_type = False
-        self.warehouse_1.reception_steps = "two_steps"
+        self.warehouse_1.in_type_id.sudo().set_package_type = False
+        self.warehouse_1.sudo().reception_steps = "two_steps"
         pack_of_6 = self.env.ref('uom.product_uom_pack_6')
         self.productA.uom_ids = [Command.link(pack_of_6.id)]
 

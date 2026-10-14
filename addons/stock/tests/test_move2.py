@@ -7,7 +7,7 @@ from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 
 from odoo import Command
-from odoo.tests import tagged, Form
+from odoo.tests import tagged, Form, users
 from odoo.tools import float_is_zero, float_compare
 
 from datetime import datetime
@@ -16,11 +16,11 @@ from dateutil.relativedelta import relativedelta
 
 class TestPickShip(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',  # FIXME: stock.group_stock_user
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def create_pick_ship(self):
         picking_client = self.env['stock.picking'].create({
@@ -346,12 +346,12 @@ class TestPickShip(TestStockCommon):
         """
         picking_pick, picking_pack, picking_ship = self.create_pick_pack_ship()
         warehouse_1 = self.warehouse_1
-        warehouse_1.delivery_steps = 'pick_pack_ship'
+        warehouse_1.sudo().delivery_steps = 'pick_pack_ship'
         warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Small Warehouse',
             'code': 'SWH'
         })
-        warehouse_1.resupply_wh_ids = [Command.set([warehouse_2.id])]
+        warehouse_1.sudo().resupply_wh_ids = [Command.set([warehouse_2.id])]
         resupply_route = self.env['stock.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
         self.assertTrue(resupply_route)
         self.productA.route_ids = [Command.set([resupply_route.id, self.route_mto.id])]
@@ -536,7 +536,7 @@ class TestPickShip(TestStockCommon):
         delivery pickings.
         """
         picking_pick, picking_ship = self.create_pick_ship()
-        picking_ship.picking_type_id.return_picking_type_id = False
+        picking_ship.picking_type_id.sudo().return_picking_type_id = False
         self.productA.tracking = 'lot'
         lot = self.env['stock.lot'].create({
             'product_id': self.productA.id,
@@ -796,7 +796,7 @@ class TestPickShip(TestStockCommon):
         location and one in a return location that is located in another warehouse.
         """
         return_warehouse = self.env['stock.warehouse'].sudo().create({'name': 'return warehouse', 'code': 'rw'})
-        return_location = self.env['stock.location'].create({
+        return_location = self.env['stock.location'].sudo().create({
             'name': 'return internal',
             'usage': 'internal',
             'location_id': return_warehouse.view_location_id.id
@@ -893,11 +893,8 @@ class TestPickShip(TestStockCommon):
 @tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestSinglePicking(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
+        'product.group_product_manager',
         'stock.group_stock_user',
-        # FIXME: test_unlink_move_1 removes a move from a picking, which unlinks
-        # a stock.move; deleting stock.move requires stock.group_stock_manager.
-        'stock.group_stock_manager',
     )
 
     _test_user_name = 'Test Stock User & Product Manager'
@@ -2095,6 +2092,8 @@ class TestSinglePicking(TestStockCommon):
         back_order = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
         self.assertFalse(back_order, 'There should be no back order')
 
+    # Deleting a stock move requires the Inventory Administrator rights.
+    @users('julie')
     def test_unlink_move_1(self):
         picking = Form(self.env['stock.picking'])
         picking.picking_type_id = self.picking_type_out
@@ -2276,7 +2275,7 @@ class TestSinglePicking(TestStockCommon):
         to define the `location_dest_id`.
         """
         partner = self.env['res.partner'].sudo().create({'name': 'Partner'})
-        shelf_location = self.env['stock.location'].create({
+        shelf_location = self.env['stock.location'].sudo().create({
             'name': 'shelf1',
             'usage': 'internal',
             'location_id': self.stock_location.id,
@@ -2285,7 +2284,7 @@ class TestSinglePicking(TestStockCommon):
         # We need to activate multi-locations to use putaway rules.
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         self.env.user.group_ids = [Command.link(grp_multi_loc.id)]
-        putaway_product = self.env['stock.putaway.rule'].create({
+        self.env['stock.putaway.rule'].sudo().create({
             'product_id': self.productA.id,
             'location_in_id': self.stock_location.id,
             'location_out_id': shelf_location.id,
@@ -2481,7 +2480,7 @@ class TestSinglePicking(TestStockCommon):
                 })
             ]
         })
-        delivery.picking_type_id.reservation_method = 'at_confirm'
+        delivery.picking_type_id.sudo().reservation_method = 'at_confirm'
         delivery.action_confirm()
         self.assertEqual(delivery.move_line_ids.mapped(lambda sml: (sml.location_id.name, sml.lot_id.name, sml.quantity)), [
             ('Shell 1', 'LOT005', 10.0),
@@ -2708,7 +2707,7 @@ class TestSinglePicking(TestStockCommon):
         - If no available quantity can be assigned from existing quants, the lot should be assigned a
           minimum quantity of 1 in product.uom_id.
         """
-        sublocations = self.env['stock.location'].create([
+        sublocations = self.env['stock.location'].sudo().create([
             {'name': f'Super location{i + 1}', 'location_id': self.stock_location.id} for i in range(3)
         ])
         product_serial, product_lot = self.product, self.productA
@@ -2742,7 +2741,7 @@ class TestSinglePicking(TestStockCommon):
                 }),
             ]
         })
-        self.picking_type_out.reservation_method = 'at_confirm'
+        self.picking_type_out.sudo().reservation_method = 'at_confirm'
         delivery.action_confirm()
         with Form(delivery) as delivery_form:
             with delivery_form.move_ids.edit(0) as move_form:
@@ -2862,7 +2861,7 @@ class TestSinglePicking(TestStockCommon):
         Check which destination a delivery gets when both its operation type and
         its contact define one.
         """
-        customer_stock, customer_location, transit_location = self.env['stock.location'].create([
+        customer_stock, customer_location, transit_location = self.env['stock.location'].sudo().create([
             {'name': 'Customer stock', 'usage': 'customer', 'location_id': self.customer_location.id},
             {'name': 'Customer location', 'usage': 'customer', 'location_id': self.customer_location.id},
             {'name': 'Inter-warehouse transit', 'usage': 'transit', 'location_id': self.stock_location.id},
@@ -2876,7 +2875,7 @@ class TestSinglePicking(TestStockCommon):
             'default_location_dest_id': customer_stock.id,
         })
         delivery_type = self.picking_type_out
-        customer, sibling_company = self.env['res.partner'].create([
+        customer, sibling_company = self.env['res.partner'].sudo().create([
             {'name': 'Customer', 'property_stock_customer': customer_location.id},
             {'name': 'Sibling company', 'property_stock_customer': transit_location.id},
         ])
@@ -2897,7 +2896,7 @@ class TestSinglePicking(TestStockCommon):
         Check which source a receipt gets when both its operation type and
         its contact define one.
         """
-        vendor_stock, vendor_location, transit_location = self.env['stock.location'].create([
+        vendor_stock, vendor_location, transit_location = self.env['stock.location'].sudo().create([
             {'name': 'Vendor stock', 'usage': 'supplier', 'location_id': self.supplier_location.id},
             {'name': 'Vendor location', 'usage': 'supplier', 'location_id': self.supplier_location.id},
             {'name': 'Inter-warehouse transit', 'usage': 'transit', 'location_id': self.stock_location.id},
@@ -2911,7 +2910,7 @@ class TestSinglePicking(TestStockCommon):
             'default_location_dest_id': self.warehouse_1.lot_stock_id.id,
         })
         receipt_type = self.picking_type_in
-        vendor, sibling_company = self.env['res.partner'].create([
+        vendor, sibling_company = self.env['res.partner'].sudo().create([
             {'name': 'Vendor', 'property_stock_supplier': vendor_location.id},
             {'name': 'Sibling company', 'property_stock_supplier': transit_location.id},
         ])
@@ -2930,11 +2929,11 @@ class TestSinglePicking(TestStockCommon):
 
 class TestStockUOM(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
+        'product.group_product_manager',
         'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -3056,11 +3055,11 @@ class TestStockUOM(TestStockCommon):
 
 class TestRoutes(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -3073,7 +3072,7 @@ class TestRoutes(TestStockCommon):
 
     def _enable_pick_ship(self):
         # create and get back the pick ship route
-        self.warehouse_1.delivery_steps = 'pick_ship'
+        self.warehouse_1.sudo().delivery_steps = 'pick_ship'
         self.pick_ship_route = self.warehouse_1.route_ids.filtered(lambda r: '(pick + ship)' in r.name)
 
     def test_replenish_pick_ship_1(self):
@@ -3087,7 +3086,7 @@ class TestRoutes(TestStockCommon):
             'name': 'Small Warehouse',
             'code': 'SWH'
         })
-        warehouse_1.resupply_wh_ids = [Command.set([warehouse_2.id])]
+        warehouse_1.sudo().resupply_wh_ids = [Command.set([warehouse_2.id])]
         resupply_route = self.env['stock.route'].search([('supplier_wh_id', '=', warehouse_2.id), ('supplied_wh_id', '=', warehouse_1.id)])
         self.assertTrue(resupply_route, "Ressuply route not found")
         self.product1.route_ids = [Command.set([resupply_route.id, self.route_mto.id])]
@@ -3119,8 +3118,8 @@ class TestRoutes(TestStockCommon):
         it will still trigger the push rule from the sublocation as well to continue the route.
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.delivery_steps = 'pick_ship'
-        subloc = self.env['stock.location'].create({
+        warehouse.sudo().delivery_steps = 'pick_ship'
+        subloc = self.env['stock.location'].sudo().create({
             'name': 'Fancy Spot',
             'location_id': warehouse.wh_output_stock_loc_id.id,
             'usage': 'internal',
@@ -3161,7 +3160,7 @@ class TestRoutes(TestStockCommon):
         self._enable_pick_ship()
 
         # Create sublocation of Customer
-        subloc = self.env['stock.location'].create({
+        subloc = self.env['stock.location'].sudo().create({
             'name': 'Fancy Spot',
             'location_id': self.customer_location.id,
             'usage': 'internal',
@@ -3190,13 +3189,13 @@ class TestRoutes(TestStockCommon):
         """
         self._enable_pick_ship()
 
-        push_location = self.env['stock.location'].create({
+        push_location = self.env['stock.location'].sudo().create({
             'location_id': self.stock_location.location_id.id,
             'name': 'push location',
         })
 
         # TODO: maybe add a new type on the "applicable on" fields?
-        route = self.env['stock.route'].create({
+        route = self.env['stock.route'].sudo().create({
             'name': 'new route',
             'rule_ids': [Command.create({
                 'name': 'create a move to push location',
@@ -3229,7 +3228,7 @@ class TestRoutes(TestStockCommon):
         with auto field set to transparent is done correctly. The stock_move
         is create with the move line directly to pass into action_confirm() via
         action_done(). """
-        new_loc = self.env['stock.location'].create({
+        new_loc = self.env['stock.location'].sudo().create({
             'name': 'New_location',
             'usage': 'internal',
         })
@@ -3241,7 +3240,7 @@ class TestRoutes(TestStockCommon):
             'default_location_dest_id': new_loc.id,
             'warehouse_id': self.warehouse_1.id,
         })
-        route = self.env['stock.route'].create({
+        route = self.env['stock.route'].sudo().create({
             'name': 'new route',
             'rule_ids': [Command.create({
                 'name': 'create a move to push location',
@@ -3335,8 +3334,8 @@ class TestRoutes(TestStockCommon):
         at the end of a push chain.
         """
         warehouse = self.warehouse_1
-        warehouse.delivery_steps = 'pick_ship'
-        final_location = self.env['stock.location'].create({
+        warehouse.sudo().delivery_steps = 'pick_ship'
+        final_location = self.env['stock.location'].sudo().create({
             'name': 'Partner Stock',
             'location_id': self.partner.property_stock_customer.id,
         })
@@ -3366,12 +3365,12 @@ class TestRoutes(TestStockCommon):
         rule.location_src_id if it's a child of the old_move.location_dest_id
         """
         warehouse = self.warehouse_1
-        warehouse.reception_steps = 'two_steps'
-        input_subloc = self.env['stock.location'].create({
+        warehouse.sudo().reception_steps = 'two_steps'
+        input_subloc = self.env['stock.location'].sudo().create({
             'name': 'Sublocation',
             'location_id': warehouse.wh_input_stock_loc_id.id,
         })
-        self.env['stock.rule'].create({
+        self.env['stock.rule'].sudo().create({
             'name': 'Input/Sub -> Scrap',
             'location_src_id': input_subloc.id,
             'location_dest_id': self.scrap_location.id,
@@ -3416,14 +3415,14 @@ class TestRoutes(TestStockCommon):
 
 class TestAutoAssign(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     def create_pick_ship(self):
-        self.warehouse_1.delivery_route_id.rule_ids.action = 'pull'
+        self.warehouse_1.delivery_route_id.rule_ids.sudo().action = 'pull'
         picking_client = self.env['stock.picking'].create({
             'location_id': self.pack_location.id,
             'location_dest_id': self.customer_location.id,
@@ -3466,7 +3465,7 @@ class TestAutoAssign(TestStockCommon):
         validate a incoming move to check if the outgoing move is automatically
         assigned.
         """
-        self.picking_type_out.reservation_method = 'at_confirm'
+        self.picking_type_out.sudo().reservation_method = 'at_confirm'
 
         # create customer picking and move
         customer_picking = self.env['stock.picking'].create({
@@ -3519,7 +3518,7 @@ class TestAutoAssign(TestStockCommon):
         automatically assigned.
         """
         picking_pick, picking_client = self.create_pick_ship()
-        self.picking_type_out.reservation_method = 'at_confirm'
+        self.picking_type_out.sudo().reservation_method = 'at_confirm'
 
         # make some stock
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
@@ -3784,7 +3783,7 @@ class TestAutoAssign(TestStockCommon):
         Ensure the description_picking of a move matches the product template's
         description in a multi-step reception process.
         """
-        self.warehouse_1.reception_steps = 'two_steps'
+        self.warehouse_1.sudo().reception_steps = 'two_steps'
 
         self.productA.product_tmpl_id.description_picking = 'transfer'
         receipt = self.env['stock.picking'].create({
@@ -3804,11 +3803,11 @@ class TestAutoAssign(TestStockCommon):
 
 class TestPickShipBackorder(TestStockCommon):
     _test_user_groups = (
-        'product.group_product_manager',  # FIXME: use base.group_user
-        'stock.group_stock_manager',
+        'product.group_product_manager',
+        'stock.group_stock_user',
     )
 
-    _test_user_name = 'Test Product Manager'
+    _test_user_name = 'Test Stock User & Product Manager'
 
     @classmethod
     def setUpClass(cls):
@@ -3848,7 +3847,7 @@ class TestPickShipBackorder(TestStockCommon):
 
     def test_pick_assign_and_backorder(self):
         ref = self.env["stock.reference"].create({"name": "sale order"})
-        self.warehouse_1.delivery_steps = "pick_ship"
+        self.warehouse_1.sudo().delivery_steps = "pick_ship"
         self.env["stock.rule"].run(
             [
                 self.env["stock.rule"].Procurement(
@@ -3886,7 +3885,7 @@ class TestPickShipBackorder(TestStockCommon):
             )
         ]
 
-        picking.picking_type_id.create_backorder = "always"
+        picking.picking_type_id.sudo().create_backorder = "always"
         picking.button_validate()
 
         backorder = self.env["stock.picking"].search(
