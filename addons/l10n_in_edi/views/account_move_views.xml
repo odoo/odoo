@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="action_l10n_in_edi_send_invoices_batch" model="ir.actions.server">
+        <field name="name">Send to E-Invoicing (India)</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_l10n_in_edi_send_invoices_batch()</field>
+    </record>
+
     <record id="invoice_form_inherit_l10n_in_edi" model="ir.ui.view">
         <field name="name">account.move.form.inherit.l10n.in.edi</field>
         <field name="model">account.move</field>
