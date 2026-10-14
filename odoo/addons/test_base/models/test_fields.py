@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.tools.translate import xml_translate
 
 
 class TestOrmFields(models.Model):
@@ -60,3 +61,34 @@ class TestOrmFieldsUsers(models.Model):
 
     name = fields.Char(related='partner_id.name', inherited=True, readonly=False)
     partner_id = fields.Many2one('test_orm.fields.partner', required=True, ondelete='restrict')
+
+
+class TestOrmCleaned(models.Model):
+    _name = 'test_orm.cleaned'
+    _description = 'Test ORM Cleaned Fields'
+
+    # clean is not called on empty values
+    name = fields.Char(clean=lambda name: name.strip().upper())
+    count = fields.Integer(clean=lambda count: max(count, 0))
+    # clean changes 0: an omitted value is cleaned like 0
+    capacity = fields.Integer(clean=lambda capacity: max(capacity, 100))
+    code = fields.Char(compute='_compute_code', store=True, readonly=False, clean=lambda code: code.replace('-', ''))
+    # clean changes 0, but the field is computed
+    rank = fields.Integer(compute='_compute_rank', store=True, readonly=False, clean=lambda rank: max(rank, 1))
+    # each translation is cleaned
+    label = fields.Char(translate=True, clean=lambda label: label.strip())
+    # each translation of model terms is cleaned, too
+    note = fields.Text(translate=xml_translate, clean=lambda note: note.replace('colour', 'color'))
+    parent_id = fields.Many2one('test_orm.cleaned')
+    # clean is inherited from the related field
+    parent_name = fields.Char('Parent Name', related='parent_id.name', readonly=False)
+
+    @api.depends('name')
+    def _compute_code(self):
+        for record in self:
+            record.code = record.name and f'-{record.name}-'
+
+    @api.depends('count')
+    def _compute_rank(self):
+        for record in self:
+            record.rank = record.count * 10

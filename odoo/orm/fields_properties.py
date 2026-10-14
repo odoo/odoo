@@ -53,6 +53,7 @@ class Properties(Field['Property', dict]):
     """
     type = 'properties'
     _column_type = ('jsonb', 'jsonb')
+    _clean_supported = False
     copy = False
     prefetch = False
     write_sequence = 10              # because it must be written after the definition field
@@ -981,6 +982,7 @@ class PropertiesDefinition(Field[list[dict], list[dict]]):
     definition. """
     type = 'properties_definition'
     _column_type = ('jsonb', 'jsonb')
+    _clean_supported = False
     copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
     prefetch = True
