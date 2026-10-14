@@ -31,11 +31,10 @@ export class FooterOptionPlugin extends Plugin {
         },
         auto_unfold_container_providers: { selector: "#footer > section", target: "footer" },
         on_prepare_drag_handlers: this.prepareDrag.bind(this),
-        region_properties: {
-            is: (node) => node.id === "o_footer_scrolltop",
-            removable: false,
-        },
-        immutable_link_selectors: [".o_cookie_policy_link_container a.oe_unremovable"],
+        region_properties: [
+            { is: (node) => node.id === "o_footer_scrolltop", removable: false },
+            { is: ".o_cookie_policy_link_container a.oe_unremovable", immutableLink: true },
+        ],
         footer_templates_providers: [
             () =>
                 [

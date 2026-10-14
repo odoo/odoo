@@ -15,7 +15,7 @@ export class NewsletterSubscribeCommonOptionPlugin extends Plugin {
         ],
         on_snippet_dropped_handlers: withSequence(-1, (args) => this.onSnippetDropped(args)),
         is_unremovable_selectors: ".js_subscribe_btn",
-        immutable_link_selectors: [".js_subscribe_btn"],
+        region_properties: { is: ".js_subscribe_btn", immutableLink: true },
         submit_button_selectors: [".js_subscribe_btn"],
     };
 
