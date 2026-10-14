@@ -127,6 +127,138 @@ let nextDummyId = 1;
 let timeOffset = 0;
 
 //-----------------------------------------------------------------------------
+// Internal exports (inside Hoot/Hoot-DOM)
+//-----------------------------------------------------------------------------
+
+export function _cleanupTime() {
+    allowTimers = false;
+    frozen = false;
+
+    cancelAllTimers();
+
+    // Wait for remaining async code to run
+    return delay();
+}
+
+export function _getTimeOffset() {
+    return timeOffset;
+}
+
+export function _isTimeFrozen() {
+    return frozen;
+}
+
+/** @type {typeof cancelAnimationFrame} */
+export function _mockedCancelAnimationFrame(handle) {
+    if (!frozen) {
+        cancelAnimationFrame(handle);
+    }
+    timers.delete(animationToId(handle));
+}
+
+/** @type {typeof clearInterval} */
+export function _mockedClearInterval(intervalId) {
+    if (!frozen) {
+        clearInterval(intervalId);
+    }
+    timers.delete(intervalToId(intervalId));
+}
+
+/** @type {typeof clearTimeout} */
+export function _mockedClearTimeout(timeoutId) {
+    if (!frozen) {
+        clearTimeout(timeoutId);
+    }
+    timers.delete(timeoutToId(timeoutId));
+}
+
+/** @type {typeof requestAnimationFrame} */
+export function _mockedRequestAnimationFrame(callback) {
+    if (!allowTimers) {
+        return 0;
+    }
+
+    function handler() {
+        _mockedCancelAnimationFrame(handle);
+        return callback(now());
+    }
+
+    const animationValues = [handler, now(), frameDelay];
+    const handle = frozen ? nextDummyId++ : requestAnimationFrame(handler);
+    const internalId = animationToId(handle);
+    timers.set(internalId, animationValues);
+
+    return handle;
+}
+
+/** @type {typeof setInterval} */
+export function _mockedSetInterval(callback, ms, ...args) {
+    if (!allowTimers) {
+        return 0;
+    }
+
+    ms = parseNat(ms);
+
+    function handler() {
+        if (allowTimers) {
+            intervalValues[1] = $max(now(), intervalValues[1] + ms);
+        } else {
+            _mockedClearInterval(intervalId);
+        }
+        return callback(...args);
+    }
+
+    const intervalValues = [handler, now(), ms];
+    const intervalId = frozen ? nextDummyId++ : setInterval(handler, ms);
+    const internalId = intervalToId(intervalId);
+    timers.set(internalId, intervalValues);
+
+    return intervalId;
+}
+
+/** @type {typeof setTimeout} */
+export function _mockedSetTimeout(callback, ms, ...args) {
+    if (!allowTimers) {
+        return 0;
+    }
+
+    ms = parseNat(ms);
+
+    function handler() {
+        _mockedClearTimeout(timeoutId);
+        return callback(...args);
+    }
+
+    const timeoutValues = [handler, now(), ms];
+    const timeoutId = frozen ? nextDummyId++ : setTimeout(handler, ms);
+    const internalId = timeoutToId(timeoutId);
+    timers.set(internalId, timeoutValues);
+
+    return timeoutId;
+}
+
+export function _resetTimeOffset() {
+    timeOffset = 0;
+}
+
+/**
+ * Sets the current frame rate (in fps) used by animation frames (default to 60fps).
+ *
+ * @param {number} frameRate
+ */
+export function _setFrameRate(frameRate) {
+    frameRate = parseNat(frameRate);
+    if (frameRate < 1 || frameRate > 1000) {
+        throw new HootTimingError("frame rate must be an number between 1 and 1000");
+    }
+    frameDelay = 1000 / frameRate;
+}
+
+export function _setupTime() {
+    allowTimers = true;
+}
+
+//-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
@@ -209,16 +341,6 @@ export function cancelAllTimers() {
     }
 }
 
-export function cleanupTime() {
-    allowTimers = false;
-    frozen = false;
-
-    cancelAllTimers();
-
-    // Wait for remaining async code to run
-    return delay();
-}
-
 /**
  * Returns a promise resolved after a given amount of milliseconds (default to 0).
  *
@@ -239,14 +361,6 @@ export function unfreezeTime() {
     frozen = false;
 }
 
-export function getTimeOffset() {
-    return timeOffset;
-}
-
-export function isTimeFrozen() {
-    return frozen;
-}
-
 /**
  * Returns a promise resolved after the next microtask tick.
  *
@@ -254,99 +368,6 @@ export function isTimeFrozen() {
  */
 export function microTick() {
     return new Promise(queueMicrotask);
-}
-
-/** @type {typeof cancelAnimationFrame} */
-export function mockedCancelAnimationFrame(handle) {
-    if (!frozen) {
-        cancelAnimationFrame(handle);
-    }
-    timers.delete(animationToId(handle));
-}
-
-/** @type {typeof clearInterval} */
-export function mockedClearInterval(intervalId) {
-    if (!frozen) {
-        clearInterval(intervalId);
-    }
-    timers.delete(intervalToId(intervalId));
-}
-
-/** @type {typeof clearTimeout} */
-export function mockedClearTimeout(timeoutId) {
-    if (!frozen) {
-        clearTimeout(timeoutId);
-    }
-    timers.delete(timeoutToId(timeoutId));
-}
-
-/** @type {typeof requestAnimationFrame} */
-export function mockedRequestAnimationFrame(callback) {
-    if (!allowTimers) {
-        return 0;
-    }
-
-    function handler() {
-        mockedCancelAnimationFrame(handle);
-        return callback(now());
-    }
-
-    const animationValues = [handler, now(), frameDelay];
-    const handle = frozen ? nextDummyId++ : requestAnimationFrame(handler);
-    const internalId = animationToId(handle);
-    timers.set(internalId, animationValues);
-
-    return handle;
-}
-
-/** @type {typeof setInterval} */
-export function mockedSetInterval(callback, ms, ...args) {
-    if (!allowTimers) {
-        return 0;
-    }
-
-    ms = parseNat(ms);
-
-    function handler() {
-        if (allowTimers) {
-            intervalValues[1] = $max(now(), intervalValues[1] + ms);
-        } else {
-            mockedClearInterval(intervalId);
-        }
-        return callback(...args);
-    }
-
-    const intervalValues = [handler, now(), ms];
-    const intervalId = frozen ? nextDummyId++ : setInterval(handler, ms);
-    const internalId = intervalToId(intervalId);
-    timers.set(internalId, intervalValues);
-
-    return intervalId;
-}
-
-/** @type {typeof setTimeout} */
-export function mockedSetTimeout(callback, ms, ...args) {
-    if (!allowTimers) {
-        return 0;
-    }
-
-    ms = parseNat(ms);
-
-    function handler() {
-        mockedClearTimeout(timeoutId);
-        return callback(...args);
-    }
-
-    const timeoutValues = [handler, now(), ms];
-    const timeoutId = frozen ? nextDummyId++ : setTimeout(handler, ms);
-    const internalId = timeoutToId(timeoutId);
-    timers.set(internalId, timeoutValues);
-
-    return timeoutId;
-}
-
-export function resetTimeOffset() {
-    timeOffset = 0;
 }
 
 /**
@@ -364,23 +385,6 @@ export function runAllTimers(options) {
 
     const endts = $max(...[...timers.values()].map(([, init, delay]) => init + delay));
     return advanceTime($ceil(endts - now()), options);
-}
-
-/**
- * Sets the current frame rate (in fps) used by animation frames (default to 60fps).
- *
- * @param {number} frameRate
- */
-export function setFrameRate(frameRate) {
-    frameRate = parseNat(frameRate);
-    if (frameRate < 1 || frameRate > 1000) {
-        throw new HootTimingError("frame rate must be an number between 1 and 1000");
-    }
-    frameDelay = 1000 / frameRate;
-}
-
-export function setupTime() {
-    allowTimers = true;
 }
 
 /**
@@ -451,4 +455,3 @@ export async function waitUntil(predicate, options) {
         cancelAnimationFrame(handle);
     });
 }
-
