@@ -561,7 +561,6 @@ export function htmlToHtmlInline(htmlString) {
             if ([...node.classList].some((cls) => MENTION_CLASSNAMES.has(cls))) {
                 parent.append(node);
             } else if (
-                href === "#" &&
                 Object.keys(node.dataset).some((attr) => JS_HANDLED_LINK_ATTRIBUTES.has(attr))
             ) {
                 appendText(parent, node.textContent);
