@@ -211,6 +211,7 @@ class PaymentCommon(BaseCommon):
             "reference": self.reference,
             "operation": f"online_{flow}",
             "partner_id": self.partner.id,
+            "billing_partner_id": self.partner.id,
         }
         return self.env["payment.transaction"].sudo(sudo).create(dict(default_values, **values))
 

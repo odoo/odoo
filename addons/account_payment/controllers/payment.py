@@ -58,14 +58,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
     def _process_transaction(self, partner_id, currency_id, invoice_ids, payment_reference, **kwargs):
         kwargs.update({
-            'currency_id': currency_id,
-            'partner_id': partner_id,
-            'reference_prefix': payment_reference,
+            "currency_id": currency_id,
+            "partner_id": partner_id,
+            "reference_prefix": payment_reference,
         })  # Inject the create values taken from the invoice into the kwargs.
         tx_sudo = self._create_transaction(
-            custom_create_values={
-                'invoice_ids': [Command.set(invoice_ids)],
-            },
+            custom_create_values={'invoice_ids': [Command.set(invoice_ids)]},
             **kwargs,
         )
 
@@ -150,3 +148,19 @@ class PaymentPortal(payment_portal.PaymentPortal):
                 'access_token': invoice_sudo.access_token,
             })
         return form_values
+
+    def _create_transaction(self, *args, **kwargs):
+        """ Override of `payment` to fill in the billing and delivery addresses from the invoice.
+
+        This is only done as a fallback: flows that already know their billing/delivery partner
+        (e.g. sale) set `billing_partner_id`/`delivery_partner_id` themselves through
+        `custom_create_values` and are left untouched.
+        """
+        tx_sudo = super()._create_transaction(*args, **kwargs)
+        if not tx_sudo.billing_partner_id and not tx_sudo.delivery_partner_id and tx_sudo.invoice_ids:
+            invoice_sudo = tx_sudo.invoice_ids[:1]
+            tx_sudo.with_context(payment_safe_write=True).write({
+                'billing_partner_id': invoice_sudo.partner_id.id,
+                'delivery_partner_id': invoice_sudo.partner_shipping_id.id,
+            })
+        return tx_sudo

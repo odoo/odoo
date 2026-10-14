@@ -863,6 +863,7 @@ class PaymentProvider(models.Model):
         self,
         partner_id,
         *,
+        billing_partner_id=None,
         currency_id=None,
         force_tokenization=False,
         is_express_checkout=False,
@@ -872,6 +873,8 @@ class PaymentProvider(models.Model):
         """Find the providers' payment methods available for the given payment context.
 
         :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param int billing_partner_id: The billing address of the document being paid, as a
+                                       `res.partner` id
         :param int currency_id: The payment currency, as a `res.currency` id
         :param bool force_tokenization: Whether payment methods must support tokenization
         :param bool is_express_checkout: Whether payment methods must support express checkout
@@ -897,6 +900,18 @@ class PaymentProvider(models.Model):
                 unfiltered_pms - payment_methods,
                 available=False,
                 reason=REPORT_REASONS_MAPPING["incompatible_country"],
+            )
+
+        # Handle the billing address requirement
+        billing_partner = self.env["res.partner"].browse(billing_partner_id).exists()
+        if not billing_partner or not billing_partner._check_billing_address():
+            unfiltered_pms = payment_methods
+            payment_methods = payment_methods.filtered(lambda pm: not pm.require_billing_address)
+            payment_utils.add_to_report(
+                report,
+                unfiltered_pms - payment_methods,
+                available=False,
+                reason=REPORT_REASONS_MAPPING["missing_billing_address"],
             )
 
         # Handle the supported currencies; allow all currencies if the list is empty
