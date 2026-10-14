@@ -335,6 +335,20 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         self.assertEqual(self.product1.total_value, 380)
         self.assertEqual(self.product1.qty_available, 19)
 
+    def test_lc_after_manual_cost_update(self):
+        """ A landed cost validated after a manual update of the product cost must still be
+        added to the product cost, as it is added to the stock valuation account. """
+        with freeze_time('2026-01-01'):
+            move = self._make_in_move(self.product1, 1, unit_cost=500, create_picking=True)
+        self.assertEqual(self.product1.standard_price, 500)
+        with freeze_time('2026-01-02'):
+            self.product1.standard_price = 600
+        self.assertEqual(self.product1.standard_price, 600)
+        with freeze_time('2026-01-03'):
+            self._make_lc(move, 200)
+        self.assertEqual(self.product1.standard_price, 800)
+        self.assertEqual(self.product1.total_value, 800)
+
     def test_lc_generated_from_bill_multi_comapnies(self):
         """
         In a multi-company environment:

@@ -118,8 +118,16 @@ class StockLandedCost(models.Model):
                 'line_ids': [],
                 'move_type': 'entry',
             }
-            for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
+            lines = cost.valuation_adjustment_lines.filtered(lambda line: line.move_id)
+            last_manual_value_by_product = lines.move_id.product_id.filtered(
+                lambda p: p.cost_method == 'average' and not p.lot_valuated,
+            )._get_last_product_value()
+            extra_value_by_product = defaultdict(float)
+            for line in lines:
                 product = line.move_id.product_id
+                last_manual_value = last_manual_value_by_product.get(product)
+                if last_manual_value and line.move_id.date <= last_manual_value.date and line.quantity:
+                    extra_value_by_product[product] += line.additional_landed_cost * line.move_id.remaining_qty / line.quantity
                 # Products with manual inventory valuation are ignored because they do not need to create journal entries.
                 if product.valuation != "real_time":
                     continue
@@ -150,7 +158,31 @@ class StockLandedCost(models.Model):
             if cost.account_move_id:
                 move._post()
             cost.valuation_adjustment_lines.move_id._set_value()
+            cost._update_average_cost_after_manual_value(extra_value_by_product)
         return True
+
+    def _update_average_cost_after_manual_value(self, extra_value_by_product):
+        """ The average cost is recomputed from the last manual cost update, so the landed costs
+        of moves done before it are ignored, while they are still added to the stock valuation.
+        Report them in a new manual cost update.
+        """
+        self.ensure_one()
+        product_values = []
+        for product, extra_value in extra_value_by_product.items():
+            qty_available = product.qty_available
+            if product.uom_id.compare(qty_available, 0) <= 0:
+                continue
+            new_price = product.standard_price + extra_value / qty_available
+            product_values.append({
+                'product_id': product.id,
+                'value': new_price,
+                'company_id': self.company_id.id,
+                'description': _('Price update from %(old_price)s to %(new_price)s by %(landed_cost)s',
+                    old_price=product.standard_price, new_price=new_price, landed_cost=self.name),
+            })
+        if product_values:
+            self.env['product.value'].sudo().create(product_values)
+            self.env['product.product'].browse(p['product_id'] for p in product_values)._update_standard_price()
 
     def get_valuation_lines(self):
         self.ensure_one()
