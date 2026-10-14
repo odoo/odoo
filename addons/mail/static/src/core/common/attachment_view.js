@@ -1,11 +1,12 @@
 import { propSignal } from "@mail/utils/common/hooks";
 
-import { Component, onWillUnmount, signal, t, useOnChange } from "@odoo/owl";
+import { Component, onWillUnmount, signal, t, useOnChange, usePlugin } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { hidePDFJSButtons } from "@web/core/utils/pdfjs";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 
 class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";
@@ -76,7 +77,7 @@ export class PopoutAttachmentView extends AbstractAttachmentView {
 export function usePopoutAttachment({ thread }) {
     const uiService = useService("ui");
     const mailPopoutService = useService("mail.popout");
-    const notification = useService("notification");
+    const notification = usePlugin(NotificationPlugin);
 
     function attachmentViewParentElementClassList() {
         const attachmentViewEl = document.querySelector(".o-mail-Attachment");

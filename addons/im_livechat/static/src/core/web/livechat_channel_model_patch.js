@@ -11,7 +11,7 @@ const livechatChannelPatch = {
     async join({ notify = true } = {}) {
         this.are_you_inside = true;
         if (notify) {
-            this.store.env.services.notification.add(_t("You joined %s.", this.name), {
+            this.store.notification.add(_t("You joined %s.", this.name), {
                 type: "info",
             });
         }
@@ -25,7 +25,7 @@ const livechatChannelPatch = {
     async leave({ notify = true } = {}) {
         this.are_you_inside = false;
         if (notify) {
-            this.store.env.services.notification.add(_t("You left %s.", this.name), {
+            this.store.notification.add(_t("You left %s.", this.name), {
                 type: "info",
             });
         }

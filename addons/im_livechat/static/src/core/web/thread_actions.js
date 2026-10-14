@@ -69,10 +69,9 @@ patch(joinChannelAction, {
                 [[channel.id]]
             );
             if (!hasJoined && channel?.isDisplayed) {
-                store.env.services.notification.add(
-                    _t("Someone has already joined this conversation"),
-                    { type: "warning" }
-                );
+                store.notification.add(_t("Someone has already joined this conversation"), {
+                    type: "warning",
+                });
             }
         } else {
             super.onSelected(...arguments);

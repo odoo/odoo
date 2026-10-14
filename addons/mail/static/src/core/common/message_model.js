@@ -680,7 +680,7 @@ export class Message extends Record {
             notification = _t("Message Link Copy Failed (Permission denied?)");
             type = "danger";
         }
-        this.store.env.services.notification.add(notification, { type });
+        this.store.notification.add(notification, { type });
     }
 
     get canCopyMessageText() {
@@ -692,11 +692,11 @@ export class Message extends Record {
         try {
             await window.navigator.clipboard.writeText(messageBody);
         } catch {
-            this.store.env.services.notification.add(_t("Text Copy Failed (Permission denied?)"), {
+            this.store.notification.add(_t("Text Copy Failed (Permission denied?)"), {
                 type: "danger",
             });
         }
-        this.store.env.services.notification.add(_t("Text copied"), { type: "success" });
+        this.store.notification.add(_t("Text copied"), { type: "success" });
     }
 
     /**
@@ -833,7 +833,7 @@ export class Message extends Record {
         await this.store.env.services.orm.silent.call("mail.message", "mark_as_unread", [
             [this.id],
         ]);
-        this.store.env.services.notification.add(_t("Marked as unread"), { type: "info" });
+        this.store.notification.add(_t("Marked as unread"), { type: "info" });
     }
 
     async toggleTranslation() {
@@ -853,7 +853,7 @@ export class Message extends Record {
         if (!this.thread?.channel || this.thread.autoTranslateEnabled === this.showTranslation) {
             return;
         }
-        const closeNotification = this.store.env.services.notification.add(
+        const closeNotification = this.store.notification.add(
             this.showTranslation
                 ? _t("Auto-translate future messages?")
                 : _t("Cancel auto-translate?"),
@@ -942,22 +942,19 @@ export class Message extends Record {
             return;
         }
         this.closeNotificationFn?.();
-        this.closeNotificationFn = this.store.env.services.notification.add(
-            _t("Bookmark removed"),
-            {
-                type: "success",
-                buttons: [
-                    {
-                        name: "Undo",
-                        icon: "undo",
-                        onClick: async () => {
-                            await this.addBookmark();
-                            this.closeNotificationFn();
-                        },
+        this.closeNotificationFn = this.store.notification.add(_t("Bookmark removed"), {
+            type: "success",
+            buttons: [
+                {
+                    name: "Undo",
+                    icon: "undo",
+                    onClick: async () => {
+                        await this.addBookmark();
+                        this.closeNotificationFn();
                     },
-                ],
-            }
-        );
+                },
+            ],
+        });
     }
 
     async unfollow() {
@@ -966,7 +963,7 @@ export class Message extends Record {
             await thread.markAllMessagesAsRead();
         }
         await thread.selfFollower.remove();
-        this.store.env.services.notification.add(
+        this.store.notification.add(
             _t('You are no longer following "%(thread_name)s".', {
                 thread_name: thread.display_name,
             }),

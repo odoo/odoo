@@ -121,7 +121,7 @@ export class FollowerSubtypeDialog extends Component {
                       follower_name: followerName,
                   });
         }
-        this.env.services.notification.add(message, { type: "success" });
+        this.store.notification.add(message, { type: "success" });
         this.props.onFollowerChanged(thread);
         this.props.close();
     }

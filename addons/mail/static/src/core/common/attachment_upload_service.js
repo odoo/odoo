@@ -1,5 +1,6 @@
-import { EventBus } from "@odoo/owl";
+import { EventBus, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { registry } from "@web/core/registry";
 
 export class AttachmentUploadService {
@@ -12,7 +13,7 @@ export class AttachmentUploadService {
         this.fileUploadService = services["file_upload"];
         /** @type {import("@mail/core/common/store_plugin").Store} */
         this.store = services["mail.store"];
-        this.notificationService = services["notification"];
+        this.notificationService = usePlugin(NotificationPlugin);
 
         this.nextId = -1;
         this.abortByAttachmentId = new Map();
@@ -217,7 +218,7 @@ export class AttachmentUploadService {
 }
 
 export const attachmentUploadService = {
-    dependencies: ["file_upload", "mail.store", "notification"],
+    dependencies: ["file_upload", "mail.store"],
     start(env, services) {
         return new AttachmentUploadService(env, services);
     },

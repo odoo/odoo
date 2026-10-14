@@ -31,7 +31,6 @@ export class DiscussContent extends Component {
             optional: true,
         });
         this.ui = useService("ui");
-        this.notification = useService("notification");
         this.rootRef = signal.ref(HTMLDivElement);
         this.threadAvatarRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });

@@ -1,7 +1,8 @@
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { WebClient } from "@web/webclient/webclient";
-import { onWillDestroy } from "@odoo/owl";
+import { onWillDestroy, usePlugin } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 const USER_DEVICES_MODEL = "mail.push.device";
@@ -13,7 +14,7 @@ patch(WebClient.prototype, {
     setup() {
         super.setup();
         this.orm = useService("orm");
-        this.notification = useService("notification");
+        this.notification = usePlugin(NotificationPlugin);
         if (this._canSendNativeNotification) {
             this.env.bus.addEventListener("WEB_CLIENT_READY", () => this._subscribePush(), {
                 once: true,
