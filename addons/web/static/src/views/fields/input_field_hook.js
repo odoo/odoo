@@ -141,7 +141,14 @@ export function useInputField(params) {
         // so we can't only rely on the validity to keep the (invalid) value typed by the user.
         const isInvalid = props.record.isFieldInvalid(fieldName);
         if (!isDirty && (!isInvalid || modelValueChanged)) {
+            const isFullySelected =
+                el === el.ownerDocument.activeElement &&
+                el.selectionStart === 0 &&
+                el.selectionEnd === el.value.length;
             el.value = value;
+            if (isFullySelected) {
+                el.select();
+            }
             lastSetValue = el.value;
         }
     };
