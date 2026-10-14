@@ -32,6 +32,7 @@ class PosMakeInvoice(models.TransientModel):
             raise UserError(_("The following refund orders can't be part of a consolidated invoice because they refunded invoiced orders. Each refund order should be handled separately.\n\n%s", order_names))
 
         invoices = self.env['account.move']
+        self._create_orders_picking(selected_orders)
 
         if not self.consolidated_billing or len(selected_orders) == 1:
             for order in selected_orders:
@@ -68,3 +69,10 @@ class PosMakeInvoice(models.TransientModel):
 
         if invoices:
             return selected_orders.action_view_invoice()
+
+    def _create_orders_picking(self, orders):
+        for order in orders:
+            is_picking_created = order._should_create_picking_real_time()
+            order.to_invoice = True
+            if not is_picking_created and order._should_create_picking_real_time() and order.session_id.state != 'closed':
+                order._create_order_picking()
