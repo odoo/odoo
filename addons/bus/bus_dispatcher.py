@@ -160,8 +160,8 @@ class ChannelTopic:
         # When subscribing, put websockets in a waiting room until catch-up. Otherwise, we
         # could miss notifications (e.g. already ``IN_FLIGHT`` with a greater id).
         self._waiting_room: dict[Websocket, LastFetchedId] = {}
-        # Snapshot of the waiting room taken when the topic is claimed, for the worker
-        # that currently owns this topic.
+        # Snapshot of the waiting room taken when the topic is claimed: the websockets that the
+        # batch in flight catches up.
         self._waiting_room_snapshot: dict[Websocket, LastFetchedId] = {}
         # Frozen so `_dispatch/_kick_invalid_sessions` can iterate it while `unsubscribe`
         # removes a websocket concurrently.
@@ -312,8 +312,10 @@ class BusDispatcher(threading.Thread):
             stop_event.wait(ERROR_RETRY_DELAY + random.uniform(0, ERROR_RETRY_JITTER))
 
     def _listener_loop(self):
-        """Listen for NOTIFY imbus and queue the channels for a worker to dispatch
-        notifications to the topic's subscribers."""
+        """Listen for NOTIFY imbus and imbus_resubscribe. For imbus, queue the channels for a
+        worker to dispatch notifications to the topic's subscribers. For imbus_resubscribe,
+        ask the workers of the websockets of the given records to subscribe again, each new
+        channel of a websocket starting after the lowest ``last`` of its records."""
         db_system = config["db_system"]
         _logger.info("Bus._listener_loop listen imbus on db %s", db_system)
         with (
@@ -321,6 +323,7 @@ class BusDispatcher(threading.Thread):
             selectors.DefaultSelector() as sel,
         ):
             cr.execute("listen imbus")
+            cr.execute("listen imbus_resubscribe")
             cr.commit()
             conn = cr._cnx
             sel.register(conn, selectors.EVENT_READ)
@@ -329,8 +332,19 @@ class BusDispatcher(threading.Thread):
                     continue
                 conn.poll()
                 channels_by_dbname = defaultdict(list)
+                resubscribe_by_dbname = defaultdict(list)
                 while conn.notifies:
-                    payload = conn.notifies.pop().payload
+                    notify = conn.notifies.pop()
+                    payload = notify.payload
+                    if notify.channel == "imbus_resubscribe":
+                        try:
+                            dbname, model, last, ids = orjson.loads(payload)
+                            channels = tuple((dbname, model, id_) for id_ in ids)
+                            hash(channels)  # used as keys of _topic_by_channel
+                            resubscribe_by_dbname[dbname].append((int(last), channels))
+                        except (TypeError, ValueError):
+                            _logger.warning("Bus: malformed imbus_resubscribe payload.")
+                        continue
                     try:
                         for channel in orjson.loads(payload):
                             channel = tuplify(channel)
@@ -338,9 +352,10 @@ class BusDispatcher(threading.Thread):
                             channels_by_dbname[channel[0]].append(channel)
                     except (ValueError, LookupError, TypeError):
                         _logger.warning("Bus._listener_loop ignored malformed imbus payload: %r", payload)
-                for dbname, channels in channels_by_dbname.items():
+                last_by_websocket = {}
+                for dbname in channels_by_dbname.keys() | resubscribe_by_dbname.keys():
                     with self._lock_for_db(dbname):
-                        for channel in channels:
+                        for channel in channels_by_dbname.get(dbname, ()):
                             topic = self._topic_by_channel.get(channel)
                             if topic is None:
                                 continue
@@ -352,6 +367,26 @@ class BusDispatcher(threading.Thread):
                                 # be guaranteed.
                                 topic._state = DispatchState.DIRTY
                             # DIRTY and QUEUED: stay in that state.
+                        for last, channels in resubscribe_by_dbname.get(dbname, ()):
+                            for channel in channels:
+                                topic = self._topic_by_channel.get(channel)
+                                if topic is None:
+                                    continue
+                                for websocket in chain(
+                                    topic._websockets,
+                                    topic._waiting_room,
+                                    topic._waiting_room_snapshot,
+                                ):
+                                    last_by_websocket[websocket] = min(
+                                        last,
+                                        last_by_websocket.get(websocket, last),
+                                    )
+                count = len(last_by_websocket)
+                for websocket, last in last_by_websocket.items():
+                    websocket.send_worker_internal_message(
+                        "bus/subscribe_again",
+                        {"count": count, "last": last},
+                    )
 
     def run(self):
         self._run_with_retry(self._listener_loop, "Bus._listener_loop")
@@ -568,8 +603,9 @@ class BusDispatcher(threading.Thread):
             if websocket.state is ConnectionState.OPEN:
                 websocket.close(CloseCode.SESSION_EXPIRED)
             self.unsubscribe(websocket)
-            for topic in topics:
-                topic._waiting_room_snapshot.pop(websocket, None)
+            with self._lock_for_db(websocket._db):
+                for topic in topics:
+                    topic._waiting_room_snapshot.pop(websocket, None)
 
 
 # Partially undo a2ed3d3d5bdb6025a1ba14ad557a115a86413e65

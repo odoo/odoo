@@ -16,6 +16,7 @@ from ..models.bus import (
     SKIP_NOTIFICATION,
     BusBus,
     get_notify_payloads,
+    get_resubscribe_payloads,
     json_dump,
 )
 
@@ -63,6 +64,18 @@ class NotifyTests(TransactionCase):
                          "as it contains only 1 channel")
         with self.assertRaises(AssertionError):
             check_payloads_size(payloads)
+
+    def test_get_resubscribe_payloads(self):
+        ids = list(range(1_000_000, 1_002_000))
+        payloads = get_resubscribe_payloads("dummy_db", "res.users", 42, ids)
+        self.assertGreater(len(payloads), 1)
+        received_ids = []
+        for payload in payloads:
+            self.assertLess(len(payload.encode()), NOTIFY_PAYLOAD_MAX_LENGTH)
+            dbname, model, last, payload_ids = json.loads(payload)
+            self.assertEqual((dbname, model, last), ("dummy_db", "res.users", 42))
+            received_ids += payload_ids
+        self.assertEqual(received_ids, ids)
 
     def test_postcommit(self):
         """Asserts all ``postcommit`` channels are fetched with a single listen."""

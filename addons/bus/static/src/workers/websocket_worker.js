@@ -59,6 +59,8 @@ export class WebsocketWorker {
     static OUTGOING_BATCH_DELAY = 500;
     INITIAL_RECONNECT_DELAY = 1000;
     RECONNECT_JITTER = 30000;
+    SUBSCRIBE_AGAIN_MAX_SPREAD = 30_000;
+    SUBSCRIBE_AGAIN_SPREAD_PER_WEBSOCKET = 5;
     CONNECTION_CHECK_DELAY = 60_000;
 
     /**
@@ -242,6 +244,19 @@ export class WebsocketWorker {
                     10_000,
                     [...this.seenNotificationIds].filter((id) => id <= newLastSeenId)
                 );
+                return;
+            }
+            case "bus/subscribe_again": {
+                const { count, last } = payload;
+                const spread = Math.min(
+                    count * this.SUBSCRIBE_AGAIN_SPREAD_PER_WEBSOCKET,
+                    this.SUBSCRIBE_AGAIN_MAX_SPREAD
+                );
+                setTimeout(() => {
+                    const pendingMinId = this.nextSubscribeData?.minId;
+                    this._scheduleUpdateChannels({ force: true });
+                    this.nextSubscribeData.minId = Math.min(pendingMinId ?? last, last);
+                }, Math.random() * spread);
                 return;
             }
         }

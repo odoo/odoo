@@ -2,6 +2,7 @@ import datetime
 import logging
 import math
 import os
+from collections import defaultdict
 
 import odoo
 from odoo import api, fields, models
@@ -66,6 +67,27 @@ def get_notify_payloads(channels):
         pivot = math.ceil(len(channels) / 2)
         return (get_notify_payloads(channels[:pivot]) +
                 get_notify_payloads(channels[pivot:]))
+
+
+def get_resubscribe_payloads(dbname, model, last, ids):
+    """Generates the json payloads for the imbus_resubscribe NOTIFY, splitting ``ids`` while
+    the payload is too large."""
+    payload = json_dump([dbname, model, last, ids])
+    if len(ids) == 1 or len(payload.encode()) < NOTIFY_PAYLOAD_MAX_LENGTH:
+        return [payload]
+    pivot = math.ceil(len(ids) / 2)
+    return (
+        get_resubscribe_payloads(dbname, model, last, ids[:pivot])
+        + get_resubscribe_payloads(dbname, model, last, ids[pivot:])
+    )
+
+
+def send_notify_payloads(name, payloads):
+    with odoo.sql_db.db_connect(config["db_system"]).cursor() as cr:
+        for payload in payloads:
+            cr.execute(
+                SQL("SELECT %s(%s, %s)", SQL.identifier(ODOO_NOTIFY_FUNCTION), name, payload),
+            )
 
 
 class BusBus(models.Model):
@@ -159,15 +181,39 @@ class BusBus(models.Model):
                         "The imbus notification payload was too large, it's been split into %d payloads.",
                         len(payloads),
                     )
-                with odoo.sql_db.db_connect(config['db_system']).cursor() as cr:
-                    for payload in payloads:
-                        cr.execute(
-                            SQL(
-                                "SELECT %s('imbus', %s)",
-                                SQL.identifier(ODOO_NOTIFY_FUNCTION),
-                                payload,
-                            )
-                        )
+                send_notify_payloads("imbus", payloads)
+
+    def _bus_resubscribe(self, records):
+        """Make the websockets listening to the bus channel of ``records`` (users, guests,
+        channels) subscribe again once the transaction is committed, to follow a change of
+        the channels `_build_bus_channel_list` gives them, such as groups."""
+        if not records:
+            return
+        if "bus.bus.resubscribe" not in self.env.cr.postcommit.data:
+            self.env.cr.postcommit.data["bus.bus.resubscribe"] = {
+                # sudo - bus.bus: reading the last bus id isn't sensitive.
+                "last": self.sudo()._bus_last_id(),
+                "ids_by_model": defaultdict(OrderedSet),
+            }
+
+            @self.env.cr.postcommit.add
+            def notify():
+                data = self.env.cr.postcommit.data.pop("bus.bus.resubscribe", None)
+                if not data:
+                    return
+                send_notify_payloads("imbus_resubscribe", [
+                    payload
+                    for model, ids in data["ids_by_model"].items()
+                    for payload in get_resubscribe_payloads(
+                        self.env.cr.dbname,
+                        model,
+                        data["last"],
+                        list(ids),
+                    )
+                ])
+        self.env.cr.postcommit.data["bus.bus.resubscribe"]["ids_by_model"][records._name].update(
+            records.ids,
+        )
 
     @api.model
     def _poll(self, channels, last=0, ignore_ids=None):
