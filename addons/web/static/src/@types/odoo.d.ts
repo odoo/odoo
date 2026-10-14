@@ -11,7 +11,7 @@ interface OdooModuleFactory {
     ignoreMissingDeps: boolean;
 }
 
-class OdooModuleLoader {
+export class OdooModuleLoader {
     bus: EventTarget;
     checkErrorProm: Promise<void> | null;
     debug: boolean;
