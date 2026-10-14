@@ -51,7 +51,6 @@ module.exports = [
             "valid-typeof": ["error"],
             "no-restricted-syntax": [
                 "error",
-                "PrivateIdentifier",
                 {
                     selector:
                         "ClassDeclaration[superClass.name='Component']:not(:has(ClassBody.body > PropertyDefinition[key.name='template'][static='true']))",
