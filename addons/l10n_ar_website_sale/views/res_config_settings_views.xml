@@ -12,6 +12,16 @@
                     <label for='l10n_ar_website_sale_show_both_prices'/>
                 </div>
             </setting>
+            <setting id='website_tax_inclusion_setting' position='after'>
+                <setting
+                    id='l10n_ar_final_consumer_limit_setting'
+                    string='Final Consumer Max Amount'
+                    help='Above this amount, Final Consumers must provide a DNI at checkout.'
+                    invisible='country_code != "AR"'
+                >
+                    <field name='l10n_ar_final_consumer_limit'/>
+                </setting>
+            </setting>
         </field>
     </record>
 

@@ -10,6 +10,12 @@ class Website(models.Model):
         readonly=False,
         store=True,
     )
+    l10n_ar_final_consumer_limit = fields.Float(
+        string="AR Final Consumer Max Amount",
+        default=10_000_000,
+        help="Order total, in company currency, above which a Consumidor Final must provide their DNI"
+        " at checkout. Set by ARCA for sales to an unidentified Consumidor Final.",
+    )
 
     @api.depends('company_id')
     def _compute_l10n_ar_website_sale_show_both_prices(self):
