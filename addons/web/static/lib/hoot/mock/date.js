@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { getTimeOffset, isTimeFrozen, resetTimeOffset } from "@web/../lib/hoot-dom/helpers/time";
+import { _getTimeOffset, _isTimeFrozen, _resetTimeOffset } from "@web/../lib/hoot-dom/helpers/time";
 import { createMock, HootError, isNil } from "../hoot_utils";
 import { ensureTest } from "../main_runner";
 
@@ -69,7 +69,7 @@ function computeOffsetParams(args) {
     //  - the elapsed time from the beginning of the test;
     //  - the artifical offset, affected by helpers such as 'advanceTime';
     //  - the real TZ offset, as the 'dateParams' object holds UTC values.
-    let offset = getTimeStampDiff() + getTimeOffset() + realOffset;
+    let offset = getTimeStampDiff() + _getTimeOffset() + realOffset;
 
     // Add the offset to each part:
     //  - starting from the 'milliseconds' part (index 6)
@@ -109,10 +109,10 @@ function computeTimeZoneOffset(baseDate) {
 
 /**
  * Returns the elapsed time from the beginning of a test (in milliseconds), or 0
- * if time has been frozen (see {@link isTimeFrozen} for more info).
+ * if time has been frozen (see {@link _isTimeFrozen} for more info).
  */
 function getTimeStampDiff() {
-    return isTimeFrozen() ? 0 : $now() - dateTimeStamp;
+    return _isTimeFrozen() ? 0 : $now() - dateTimeStamp;
 }
 
 /**
@@ -140,7 +140,7 @@ function setDateParams(newDateParams) {
     dateParams = newDateParams;
     dateTimeStamp = $now();
 
-    resetTimeOffset();
+    _resetTimeOffset();
 }
 
 /**
