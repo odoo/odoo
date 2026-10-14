@@ -1043,6 +1043,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_as_invoice_lines')
 
+<<<<<<< 51353aeba3ab80e76eabe1df58ad447e889be7d2
     def test_invoice_customer_license_plate(self):
         """
         Test if vehicle is set on lines, its license plate should be exported in the XML under
@@ -1090,6 +1091,28 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_with_vehicle_license_plate')
 
+||||||| 228dbcd79bde916749ef20b5f164678b4cee4485
+=======
+    def test_export_collapsed_sections_amounts(self):
+        """ Test that the amounts of collapsed sections are correctly exported. """
+        tax_21 = self.percent_tax(21.0)
+        for rounding_method, sections in (
+            ('round_globally', [[(10.03, tax_21)], [(10.03, tax_21)]]),
+            ('round_per_line', [[(10.03, tax_21), (10.03, tax_21)]]),
+        ):
+            self.env.company.tax_calculation_rounding_method = rounding_method
+            invoice_line_ids = []
+            for index, lines in enumerate(sections):
+                invoice_line_ids.append(self._prepare_invoice_line(name=f"Section {index}", display_type='line_section', collapse_composition=True, price_unit=0.0))
+                invoice_line_ids += [self._prepare_invoice_line(product_id=self.product_a, price_unit=price_unit, tax_ids=tax) for price_unit, tax in lines]
+            invoice = self._create_invoice(partner_id=self.partner_be, invoice_line_ids=invoice_line_ids, post=True)
+
+            xml_tree = etree.fromstring(self.env['account.edi.xml.ubl_bis3']._export_invoice(invoice)[0])
+            self.assertEqual(float(xml_tree.findtext('./{*}TaxTotal/{*}TaxAmount')), invoice.amount_tax)
+            self.assertEqual(float(xml_tree.findtext('./{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')), invoice.amount_untaxed)
+            self.assertEqual(float(xml_tree.findtext('./{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')), invoice.amount_total)
+
+>>>>>>> 2809f0e5637c126d6387c5316bd7f90cd7167dc4
     def test_invoice_tax_subtotal_exempt_amount(self):
         """ Test that the taxable amount for exempt taxes is correctly computed,
         regardless of the tax calculation rounding method.
