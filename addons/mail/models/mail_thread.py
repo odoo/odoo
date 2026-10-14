@@ -1755,7 +1755,10 @@ class MailThread(models.AbstractModel):
             raise ValueError(_('Message should be a valid EmailMessage instance'))
         msg_dict = {'message_type': 'email'}
 
-        message_id = message.get('Message-Id')
+        try:
+            message_id = message.get('Message-Id')
+        except IndexError:
+            message_id = False
         if not message_id:
             # Very unusual situation, be we should be fault-tolerant here
             message_id = "<%s@localhost>" % time.time()
