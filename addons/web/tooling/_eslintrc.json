@@ -31,7 +31,6 @@
     "curly": ["error", "all"],
     "no-restricted-syntax": [
       "error",
-      "PrivateIdentifier",
       {
         "selector": "CallExpression[callee.name='useEffect'][arguments.length>1]",
         "message": "Owl 3 useEffect takes a single callback: the dependency argument is silently ignored. Read the signals inside the callback, or use useOnChange."
