@@ -267,7 +267,7 @@ test("inlineElement copies rel and target attributes from links", () => {
 test("inlineHtml keeps only the text of JS-handled links", () => {
     expect(
         inlineHtml(
-            markup`<a href="#" data-oe-type="highlight" data-oe-id="1">Pinned.</a> <a href="#" data-oe-type="pin-menu">See all.</a>`
+            markup`<a href="#" data-oe-type="highlight" data-oe-id="1">Pinned.</a> <a href="#" data-oe-type="pin-menu">See all.</a> <a href="/mail/view?model=res.partner&amp;res_id=3" data-oe-model="res.partner" data-oe-id="3">Mitchell</a>`
         ).toString()
-    ).toBe("Pinned. See all.");
+    ).toBe("Pinned. See all. Mitchell");
 });

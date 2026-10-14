@@ -372,7 +372,7 @@ class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
                 self.assertEqual(len(self._new_msgs), 1, 'Should have generated one tracking message')
                 self.assertMessageFields(self._new_msgs, {
                     'author_id': self.env.user.partner_id,
-                    'body': f'<a href="#" data-oe-model="{active_exception._name}" data-oe-id="{active_exception.id}">'
+                    'body': f'<a href="/mail/view?model={active_exception._name}&amp;res_id={active_exception.id}" data-oe-model="{active_exception._name}" data-oe-id="{active_exception.id}">'
                             f'Exception</a> for {self.env.user.name} valid until {format_datetime(self.env, self.fakenow + timedelta(hours=24))} for \'{active_exception.reason}\'.',
                     'message_type': 'tracking',
                     'model': self.env.company._name,
@@ -410,7 +410,7 @@ class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
                 self.assertEqual(len(self._new_msgs), 1, 'Should have generated one tracking message')
                 self.assertMessageFields(self._new_msgs, {
                     'author_id': self.env.user.partner_id,
-                    'body': f'<a href="#" data-oe-model="{new_exception._name}" data-oe-id="{new_exception.id}">'
+                    'body': f'<a href="/mail/view?model={new_exception._name}&amp;res_id={new_exception.id}" data-oe-model="{new_exception._name}" data-oe-id="{new_exception.id}">'
                             f'Exception</a> for {self.env.user.name} valid until {format_datetime(self.env, self.fakenow + timedelta(hours=24))} for \'{new_exception.reason}\'.',
                     'message_type': 'tracking',
                     'model': self.env.company._name,
