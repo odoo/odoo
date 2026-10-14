@@ -130,7 +130,14 @@ export function useInputField(params) {
             isDirty = false;
         }
         if (!isDirty && !props.record.isFieldInvalid(fieldName)) {
+            const isFullySelected =
+                el === el.ownerDocument.activeElement &&
+                el.selectionStart === 0 &&
+                el.selectionEnd === el.value.length;
             el.value = value;
+            if (isFullySelected) {
+                el.select();
+            }
             lastSetValue = el.value;
         }
     };
