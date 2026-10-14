@@ -1439,6 +1439,28 @@ class Base(models.AbstractModel):
 
             return formatter_many2one
 
+        if field.type == 'reference':
+            # read the display names in batch, one model at a time
+            ids_by_model = defaultdict(list)
+            for value in values:
+                if value:
+                    model_name, record_id = value.split(',')
+                    if model_name in self.env:
+                        ids_by_model[model_name].append(int(record_id))
+            display_names = {
+                f'{model_name},{record.id}': record.display_name
+                for model_name, record_ids in ids_by_model.items()
+                for record in self.env[model_name].browse(record_ids).exists()._filtered_access('read')
+            }
+
+            def formatter_reference(value):
+                if not value:
+                    return value, Domain(field_name, '=', value)
+                # records the user can't read, deleted records and uninstalled models keep their raw value
+                return (value, display_names.get(value) or str(value)), Domain(field_name, '=', value)
+
+            return formatter_reference
+
         if field.type in ('date', 'datetime'):
             assert ':' in groupby_spec, "Granularity is missing"
             granularity = groupby_spec.split(':')[1]
