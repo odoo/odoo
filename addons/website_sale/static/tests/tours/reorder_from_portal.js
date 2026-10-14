@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("website_sale.reorder_from_portal", {
         ...assertCartContains({ productName: "Reorder Product 2" }),
         {
             content: "Check that quantity is 1",
-            trigger: ".js_quantity[value='1']",
+            trigger: ".js_quantity:value(1)",
             run: "edit Test",
         },
     ],

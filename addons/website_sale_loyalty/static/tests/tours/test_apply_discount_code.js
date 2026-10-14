@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add('website_sale_loyalty.apply_discount_cod
         {
             content: "check claimed reward",
             trigger:
-                "#cart_products.js_cart_lines .o_cart_product h6:contains(10% on Super Chair)",
+                "#cart_products .o_cart_product h6:contains(10% on Super Chair)",
         },
         // Try to reapply the same promo code
         ...submitCouponCode('12345'),

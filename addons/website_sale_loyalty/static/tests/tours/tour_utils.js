@@ -15,7 +15,7 @@ export function submitCouponCode(code) {
     return [
         {
             content: "Enter gift card code",
-            trigger: "form[name='coupon_code'] input[name='promo']",
+            trigger: "input[name='promo']",
             run: `edit ${code}`,
         },
         {

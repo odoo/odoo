@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("website_sale_loyalty.update_shipping_af
         },
         {
             content: "Check pay with eWallet is applied",
-            trigger: ".o_cart_product [name=website_sale_cart_line_price]:contains(- 100.00)",
+            trigger: ".o_cart_product [name=website_sale_cart_line_price]:contains(-100.00)",
         },
         wsTourUtils.goToCheckout(),
         wsTourUtils.selectDeliveryCarrier("delivery1"),
@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("website_sale_loyalty.update_shipping_af
             total: "0.00", // $100 total is covered by eWallet
             delivery: "0.00", // $100 is over $75 `free_over` amount, so free shipping
         }),
-        ...assertRewardAmounts({ discount: "- 100.00" }),
+        ...assertRewardAmounts({ discount: "-100.00" }),
         wsTourUtils.confirmOrder(),
         ...submitCouponCode('test-50pc'),
         ...wsTourUtils.assertCartAmounts({
