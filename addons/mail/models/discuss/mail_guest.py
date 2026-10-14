@@ -159,7 +159,8 @@ class MailGuest(models.Model):
         res.extend(["name", "write_date"])
 
     def _store_im_status_fields(self, res: Store.FieldList):
-        res.attr("im_status")
+        # sudo: mail.presence - can access presence of accessible guest
+        res.attr("im_status", version=lambda g: g.sudo().presence_ids.last_poll)
         res.attr("im_status_access_token", lambda g: g._get_im_status_access_token())
 
     def _set_auth_cookie(self):

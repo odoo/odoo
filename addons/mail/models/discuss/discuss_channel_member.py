@@ -400,13 +400,14 @@ class DiscussChannelMember(models.Model):
         """ Broadcast the typing notification to channel members
             :param is_typing: (boolean) tells whether the members are typing or not
         """
+        version = self.env.cr.now()
         for member in self:
             Store(bus_channel=member.channel_id).add(
                 member,
                 lambda res: (
                     res.from_method("_store_member_fields"),
-                    res.attr("isTyping", is_typing),
-                    res.attr("is_typing_dt", fields.Datetime.now()),
+                    res.attr("isTyping", is_typing, version=version),
+                    res.attr("is_typing_dt", fields.Datetime.now(), version=version),
                 ),
             )
 
