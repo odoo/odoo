@@ -32,12 +32,22 @@ export const CogMenuItem = {
             searchModel.resModel === "account.move" &&
             ["kanban", "list"].includes(config.viewType) &&
             config.actionType === "ir.actions.act_window"
+<<<<<<< 6159da4b6fbf3280f09881dc92f2e532d435e996
         ) {
             const data = await searchModel.orm
                 .cache({ type: "disk" })
                 .read("res.company", [user.activeCompany.id], ["country_code"]);
             return data[0]?.country_code === 'RO';
         }
+||||||| f1724fcca60f0935a522d28c179c643483991d03
+        );
+=======
+        ) {
+            const data = await searchModel.orm.read("res.company", [user.activeCompany.id], ["country_code"]);
+            return data[0]?.country_code === 'RO';
+        }
+        return false;
+>>>>>>> 9fad8baf4744cc72d81c3322c79624bd6498997f
     },
 };
 
