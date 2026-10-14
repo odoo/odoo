@@ -14,3 +14,8 @@ class ResCompany(models.Model):
         string="Nomenclature",
         default=_get_default_nomenclature,
     )
+
+    # read on every product search when stock_barcode is installed
+    @property
+    def _cached_data_fields(self):
+        return (*super()._cached_data_fields, 'nomenclature_id')
