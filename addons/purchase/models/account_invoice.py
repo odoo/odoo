@@ -259,8 +259,8 @@ class AccountMove(models.Model):
     def _find_matching_po_and_inv_lines(self, po_lines, inv_lines, timeout):
         """Finds purchase order lines that match some of the invoice lines.
 
-        We try to find a purchase order line for every invoice line matching on the unit price and having at least
-        the same quantity to invoice.
+        We try to find a purchase order line for every invoice line matching on the unit price and discount and
+        having at least the same quantity to invoice.
 
         :param po_lines: list of purchase order lines that can be matched
         :param inv_lines: list of invoice lines to be matched
@@ -282,6 +282,7 @@ class AccountMove(models.Model):
         try:
             start_time = time.time()
             precision = self.env["decimal.precision"].precision_get("Product Price")
+            precision_discount = self.env["decimal.precision"].precision_get("Discount")
             for invoice_line in invoice_lines:
                 # There are no purchase order lines left. We are done matching.
                 if not purchase_lines:
@@ -299,6 +300,7 @@ class AccountMove(models.Model):
                         break
 
                     if (float_compare(invoice_line.price_unit, purchase_line.price_unit, precision_digits=precision) == 0
+                            and float_compare(invoice_line.discount, purchase_line.discount, precision_digits=precision_discount) == 0
                             and invoice_line.quantity <= purchase_line.product_qty - purchase_line.qty_invoiced):
                         # The current purchase line is a possible match for the current invoice line.
                         # We calculate the name match ratio and continue with other possible matches.
@@ -357,7 +359,7 @@ class AccountMove(models.Model):
                     this invoice (OCR only)
                 * `po_match`: only the purchase order reference matches (OCR only)
                 * `subset_match`: a subset of the referenced purchase orders' lines matches a subset of the invoice
-                    lines based on unit prices (EDI only)
+                    lines based on unit prices and discounts (EDI only)
                 * `no_match`: no result found
             * recordset of `purchase.order.line` containing purchase order lines matched with an invoice line
             * list of tuple containing every `purchase.order.line` id and its related `account.move.line`
