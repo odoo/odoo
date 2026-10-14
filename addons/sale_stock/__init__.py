@@ -20,7 +20,7 @@ def _split_partial_sale_order_lines(env):
     lines_to_create = []
 
     for line in partial_orders.order_line:
-        if 0 < line.qty_delivered < line.product_uom_qty:
+        if line.product_id.type == 'consu' and 0 < line.qty_delivered < line.product_uom_qty:
             new_line = line.copy_data({
                 'order_id': line.order_id.id,
                 'product_uom_qty': line.product_uom_qty - line.qty_delivered,
