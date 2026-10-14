@@ -17,12 +17,12 @@
                      class="form-check form-switch align-self-center me-2 mb-0"
                      data-tooltip="Cumulative"
                 >
-                    <label class="form-check-label small" for="switchCumulated">Cumulative</label>
+                    <label class="form-check-label small" t-att-for="this.buttonTemplateSwitchesIds.switchCumulated">Cumulative</label>
                     <input class="form-check-input"
                            type="checkbox"
                            role="switch"
-                           id="switchCumulated"
                            name="switchCumulated"
+                           t-att-id="this.buttonTemplateSwitchesIds.switchCumulated"
                            t-on-change="this.toggleCumulated"
                            t-att-checked="this.model.metaData.cumulated"
                     />
@@ -31,12 +31,12 @@
                      class="form-check form-switch align-self-center me-2 mb-0 text-nowrap"
                      data-tooltip="Display all dates of the range, including the empty ones"
                 >
-                    <label class="form-check-label small" for="switchAllDates">All dates</label>
+                    <label class="form-check-label small" t-att-for="this.buttonTemplateSwitchesIds.switchAllDates">All dates</label>
                     <input class="form-check-input"
                            type="checkbox"
                            role="switch"
-                           id="switchAllDates"
                            name="switchAllDates"
+                           t-att-id="this.buttonTemplateSwitchesIds.switchAllDates"
                            t-on-change="this.toggleAllDates"
                            t-att-checked="this.model.metaData.allDates"
                     />
@@ -44,12 +44,12 @@
                 <div class="form-check form-switch align-self-center mb-0"
                      data-tooltip="Stacked"
                 >
-                    <label class="form-check-label small" for="switchStacked">Stacked</label>
+                    <label class="form-check-label small" t-att-for="this.buttonTemplateSwitchesIds.switchStacked">Stacked</label>
                     <input class="form-check-input"
                            type="checkbox"
                            role="switch"
-                           id="switchStacked"
                            name="switchStacked"
+                           t-att-id="this.buttonTemplateSwitchesIds.switchStacked"
                            t-on-change="this.toggleStacked"
                            t-att-checked="this.model.metaData.stacked"
                     />

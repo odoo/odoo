@@ -14,6 +14,7 @@ import { sortBy } from "@web/core/utils/arrays";
 import { renderToMarkup } from "@web/core/utils/render";
 import { useChart } from "@web/core/utils/chart_hook";
 import { useService } from "@web/core/utils/hooks";
+import { uniqueId } from "@web/core/utils/functions";
 
 import { Component, markup, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -134,6 +135,11 @@ export class GraphRenderer extends Component {
 
         this.tooltip = null;
         this.legendTooltip = null;
+        this.buttonTemplateSwitchesIds = {
+            switchCumulated: uniqueId("switchCumulated"),
+            switchAllDates: uniqueId("switchAllDates"),
+            switchStacked: uniqueId("switchStacked"),
+        };
     }
 
     /**

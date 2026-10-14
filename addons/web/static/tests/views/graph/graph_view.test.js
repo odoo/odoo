@@ -625,6 +625,22 @@ test("Stacked button visible in the line chart", async () => {
     });
 });
 
+test("switch labels target their own view when mounted twice", async () => {
+    const arch = /* xml */ `
+        <graph type="line">
+            <field name="bar" />
+            <field name="product_id" />
+        </graph>
+    `;
+    const view1 = await mountView({ type: "graph", resModel: "foo", arch });
+    const view2 = await mountView({ type: "graph", resModel: "foo", arch });
+
+    await contains(`label:contains(Stacked):eq(1)`).click();
+
+    expect(getGraphModel(view1).metaData.stacked).toBe(true);
+    expect(getGraphModel(view2).metaData.stacked).toBe(false);
+});
+
 test("Stacked line prop click false", async () => {
     const view = await mountView({
         type: "graph",
