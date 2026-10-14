@@ -1,9 +1,10 @@
-import { Component, proxy, signal, types, useProps } from "@odoo/owl";
+import { Component, proxy, signal, types, usePlugin, useProps } from "@odoo/owl";
 
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { useLayoutEffect } from "@web/owl2/utils";
 
@@ -18,7 +19,7 @@ export class WelcomePage extends Component {
         this.props = useProps({ proceed: types.function([]).optional() });
         this.description = signal();
         this.store = useService("mail.store");
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.rtc = useService("discuss.rtc");
         useAncestors({ inDiscussCallTheme: true, inWelcomePage: true });
         this.state = proxy({

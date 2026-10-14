@@ -33,7 +33,7 @@ registerComposerAction("add-gif", {
         markEventHandled(ev, "Composer.onClickAddGif");
     },
     setup({ store }) {
-        if (store.env.services.ui.isSmall) {
+        if (store.ui.isSmall()) {
             return;
         }
         this.popover = usePopover(GifPicker, {

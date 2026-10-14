@@ -4,8 +4,9 @@ import { MessageHighlightPlugin } from "@mail/core/common/message_highlight_plug
 import { useMaybePlugin, useVisible } from "@mail/utils/common/hooks";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessageCardList extends Component {
@@ -31,7 +32,7 @@ export class MessageCardList extends Component {
             showEmpty: t.boolean().optional(),
             thread: t.instanceOf(this.store["mail.thread"]),
         });
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         useVisible(this.loadMoreRef, (isVisible) => {
             if (isVisible) {
                 this.props.onLoadMoreVisible?.();
@@ -47,7 +48,7 @@ export class MessageCardList extends Component {
      */
     async onClickJump(message) {
         this.props.onClickJump?.();
-        if (this.ui.isSmall || this.ancestors.inChatWindow || this.ancestors.inMeetingView) {
+        if (this.ui.isSmall() || this.ancestors.inChatWindow || this.ancestors.inMeetingView) {
             this.env.pinMenu?.close();
             this.env.searchMenu?.close();
             this.ancestors.inMeetingView?.openChat();

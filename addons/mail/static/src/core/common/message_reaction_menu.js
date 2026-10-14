@@ -8,11 +8,13 @@ import {
     untrack,
     useEffect,
     useListener,
+    usePlugin,
     useProps,
 } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { Tab, Tabs } from "./tabs";
 
@@ -29,7 +31,7 @@ export class MessageReactionMenu extends Component {
             initialReaction: t.instanceOf(this.store.MessageReactions).optional(),
             message: t.instanceOf(this.store["mail.message"]),
         });
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         useEffect(() => {
             const closeFn = this.props.message.reactions.length === 0 ? this.props.close : null;
             untrack(() => closeFn?.());

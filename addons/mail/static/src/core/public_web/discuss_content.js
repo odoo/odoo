@@ -1,4 +1,4 @@
-import { Component, computed, proxy, signal, types, useOnChange } from "@odoo/owl";
+import { Component, computed, proxy, signal, types, useOnChange, usePlugin } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -8,6 +8,7 @@ import { Thread } from "@mail/core/common/thread";
 import { Composer } from "@mail/core/common/composer";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { useService } from "@web/core/utils/hooks";
 import { propSignal } from "@mail/utils/common/hooks";
@@ -30,7 +31,7 @@ export class DiscussContent extends Component {
         this.channel = propSignal("channel", types.instanceOf(this.store["discuss.channel"]), {
             optional: true,
         });
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.notification = useService("notification");
         this.rootRef = signal.ref(HTMLDivElement);
         this.threadAvatarRef = signal.ref(HTMLDivElement);

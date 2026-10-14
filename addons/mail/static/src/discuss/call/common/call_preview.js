@@ -21,11 +21,13 @@ import {
     signal,
     types,
     useOnChange,
+    usePlugin,
     useProps,
     useScope,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallPreview extends Component {
@@ -56,7 +58,7 @@ export class CallPreview extends Component {
         this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.state = proxy({ audioStream: null, blurManager: null, videoStream: null });
         useLayoutEffect(
             (videoEl, audioEl, audioStream, videoStream, blurStream) => {
@@ -177,7 +179,7 @@ export class CallPreview extends Component {
     }
 
     get inWelcomePageMobile() {
-        return this.ancestors.inWelcomePage && this.ui.isSmall;
+        return this.ancestors.inWelcomePage && this.ui.isSmall();
     }
 
     actions = computed(() => {

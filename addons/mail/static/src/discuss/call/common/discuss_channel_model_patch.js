@@ -206,7 +206,7 @@ const DiscussChannelPatch = {
             this.pinnedRtcSession ||
             !this.store.settings.useCallAutoFocus ||
             !(
-                this.store.env.services.ui.isSmall ||
+                this.store.ui.isSmall() ||
                 this.store.rtc.isPipMode ||
                 this.isCallDisplayedInChatWindow
             )

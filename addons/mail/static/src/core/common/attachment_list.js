@@ -65,7 +65,6 @@ export class AttachmentList extends Component {
                 t.or([t.promise(), t.literal(undefined)])
             ),
         });
-        this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.fileViewer = useFileViewer(this.rootRef);
         this.actionsMenuState = useDropdownState();

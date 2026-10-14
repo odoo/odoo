@@ -1,10 +1,11 @@
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
 
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { highlightText } from "@web/core/utils/html";
 import { useEnv } from "@web/owl2/utils";
@@ -63,7 +64,7 @@ export class DiscussCommand extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.props = useProps({
             action: t
                 .object({
@@ -130,7 +131,7 @@ export class DiscussCommandPalette {
         this.store = env.services["mail.store"];
         this.orm = env.services.orm;
         this.suggestion = env.services["mail.suggestion"];
-        this.ui = env.services.ui;
+        this.ui = this.store.ui;
         this.commands = [];
         this.options = options;
         this.cleanedTerm = normalize(this.options.searchValue);
@@ -143,7 +144,7 @@ export class DiscussCommandPalette {
 
     /** @param {Record[]} [filtered] persona or thread to filters, e.g. being build already in a category in a patch such as MENTIONS or RECENT */
     buildResults(filtered) {
-        const TOTAL_LIMIT = this.ui.isSmall ? 7 : 10;
+        const TOTAL_LIMIT = this.ui.isSmall() ? 7 : 10;
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
         let partners = [];
         if (this.store.self_user?.share === false) {

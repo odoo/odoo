@@ -17,6 +17,7 @@ import {
     usePlugin,
     useProps,
 } from "@odoo/owl";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
@@ -60,7 +61,7 @@ export class CallParticipantCard extends Component {
             isSidebarItem: types.boolean().optional(),
             minimized: types.boolean().optional(),
         });
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.rootHover = useHover(this.root);
         this.contextMenuDropdownState = useDropdownState();
         this.isMobileOS = isMobileOS();
@@ -139,7 +140,10 @@ export class CallParticipantCard extends Component {
 
     get isSmall() {
         return Boolean(
-            this.props.isSidebarItem || this.ui.isSmall || this.props.minimized || this.props.inset
+            this.props.isSidebarItem ||
+                this.ui.isSmall() ||
+                this.props.minimized ||
+                this.props.inset
         );
     }
 

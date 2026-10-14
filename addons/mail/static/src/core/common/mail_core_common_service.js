@@ -38,7 +38,7 @@ export class MailCoreCommon {
         this.env.bus.addEventListener(
             "discuss.channel/new_message",
             ({ detail: { channel, message, silent } }) => {
-                if (this.env.services.ui.isSmall || message.isSelfAuthored || silent) {
+                if (this.store.ui.isSmall() || message.isSelfAuthored || silent) {
                     return;
                 }
                 channel.notifyMessageToUser(message);

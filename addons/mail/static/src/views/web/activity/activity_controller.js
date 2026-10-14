@@ -1,7 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
 
-import { Component, proxy, t, useProps } from "@odoo/owl";
+import { Component, proxy, t, usePlugin, useProps } from "@odoo/owl";
 
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { useModel } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
@@ -29,7 +30,7 @@ export class ActivityController extends Component {
         this.dialog = useService("dialog");
         this.action = useService("action");
         this.store = useService("mail.store");
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         usePager(() => {
             const { count, hasLimitedCount, limit, offset } = this.model.root;
             return {

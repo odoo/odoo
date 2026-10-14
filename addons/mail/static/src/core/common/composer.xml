@@ -9,7 +9,7 @@
                 t-att-class="{
                     'pb-2': this.extended and !this.props.composer.message,
                     'o-extended': this.extended,
-                    'o-isUiSmall': this.ui.isSmall,
+                    'o-isUiSmall': this.ui.isSmall(),
                     'ps-2 pe-4 pb-2': this.normal and !this.ancestors.inDiscussApp and !this.ancestors.inMeetingView,
                     'ps-0 pe-3 pb-2': this.normal and this.ancestors.inMeetingView,
                     'o-hasSelfAvatar': this.showComposerAvatar,
@@ -38,7 +38,7 @@
                     </span>
                     <i class="oi oi-lg rounded-circle p-0 cursor-pointer opacity-50 opacity-100-hover" data-icon="cancel" title="Discard" t-on-click="() => (this.props.composer.replyToMessage = undefined)"/>
                 </div>
-                <span t-if="this.props.composer.message and this.ui.isSmall" class="px-1" t-on-click="this.onClickCancelOrSaveEditText">
+                <span t-if="this.props.composer.message and this.ui.isSmall()" class="px-1" t-on-click="this.onClickCancelOrSaveEditText">
                     <button class="btn btn-sm btn-secondary rounded-pill border ps-1 pe-2 py-0 mb-1" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL">
                         <i class="oi pe-2" data-icon="close_small" t-att-data-type="this.EDIT_CLICK_TYPE.CANCEL"></i>
                         Discard editing
@@ -103,19 +103,19 @@
                     t-if="this.props.composer.attachments.length > 0"
                     attachmentGroups="this.attachmentGroups"
                     unlinkAttachments.bind="this.unlinkAttachments"/>
-                <div t-if="!this.extended and !this.props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': this.composerActions.activeAction and this.ui.isSmall }" t-ref="this.pickerContainerRef">
-                    <div t-if="this.composerActions.partition.actionPanels.length > 1 and this.composerActions.activeAction and this.ui.isSmall" class="btn-group w-100">
+                <div t-if="!this.extended and !this.props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': this.composerActions.activeAction and this.ui.isSmall() }" t-ref="this.pickerContainerRef">
+                    <div t-if="this.composerActions.partition.actionPanels.length > 1 and this.composerActions.activeAction and this.ui.isSmall()" class="btn-group w-100">
                         <button t-foreach="this.composerActions.partition.actionPanels" t-as="action" t-key="'ACTION_PANEL_' + action.id" class="btn btn-secondary" t-out="action.actionPanelName" t-on-click="(ev) => action.onSelected(ev)" t-att-class="{
                             'active': action.isActive
                         }"/>
                     </div>
-                    <div t-if="this.ui.isSmall and this.composerActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.composerActions.activeAction.actionPanelOuterClass }}" class="print-none w-100">
+                    <div t-if="this.ui.isSmall() and this.composerActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.composerActions.activeAction.actionPanelOuterClass }}" class="print-none w-100">
                         <t t-component="this.composerActions.activeAction.actionPanelComponent" t-props="this.composerActions.activeAction.actionPanelComponentProps"/>
                     </div>
                 </div>
                 <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-1">
                     <div class="pt-1" t-att-class="{ 'mt-2': !this.props.composer.message }">
-                        <span t-if="this.props.composer.message and !this.ui.isSmall" class="text-muted px-1 small" t-out="this.CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="this.onClickCancelOrSaveEditText" />
+                        <span t-if="this.props.composer.message and !this.ui.isSmall()" class="text-muted px-1 small" t-out="this.CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="this.onClickCancelOrSaveEditText" />
                         <t t-elif="!this.props.composer.message and !this.props.composer.restoredFromFullComposer">
                             <t t-call="mail.Composer.sendButton"/>
                             <span t-if="!this.isSendButtonDisabled and !this.isMobileOS" class="text-muted small ms-1" t-out="this.OR_PRESS_SEND_KEYBIND"/>

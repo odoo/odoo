@@ -1,7 +1,8 @@
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, signal, t, usePlugin, useProps } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { DROPDOWN_NESTING } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -23,7 +24,7 @@ export class NotificationSettings extends Component {
             close: t.function([t.instanceOf(MouseEvent)]).optional(),
         });
         this.dialog = useService("dialog");
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.DROPDOWN_NESTING = DROPDOWN_NESTING;
         this.muteConversationDropdownState = useDropdownState();
         this.muteConversationHover = useHover([this.muteButtonRef, this.muteMenuRef], {

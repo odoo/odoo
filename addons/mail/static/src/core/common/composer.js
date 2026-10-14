@@ -39,6 +39,7 @@ import {
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 import {
     createDocumentFragmentFromContent,
@@ -171,7 +172,7 @@ export class Composer extends Component {
             computed(() => this.thread ?? this.composer().message.thread),
             { composer: this.composer }
         );
-        this.ui = useService("ui");
+        this.ui = usePlugin(UIPlugin);
         this.composerService = useService("mail.composer");
         this.ref = signal.ref(HTMLTextAreaElement);
         this.fakeTextarea = signal.ref(HTMLTextAreaElement);
@@ -223,7 +224,7 @@ export class Composer extends Component {
             (ev) => {
                 const target = ev.composedPath()[0];
                 if (
-                    this.ui.isSmall &&
+                    this.ui.isSmall() &&
                     this.composerActions.activeAction &&
                     this.pickerContainerRef() &&
                     target !== this.pickerContainerRef() &&
@@ -478,7 +479,7 @@ export class Composer extends Component {
             content: this.props.composer.composerHtml,
             placeholder: this.placeholder,
             baseContainers: ["DIV", "P"],
-            Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
+            Plugins: this.ui.isSmall() ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
             composerPluginDependencies: {
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
                 onFocusin: this.onFocusin.bind(this),
@@ -1073,7 +1074,7 @@ export class Composer extends Component {
             this.props.composer.composerText = firstPart + toInsertPart + secondPart;
             this.selection.moveCursor((firstPart + toInsertPart).length);
         }
-        if (!this.ui.isSmall || !this.ancestors.inChatter) {
+        if (!this.ui.isSmall() || !this.ancestors.inChatter) {
             this.props.composer.autofocus++;
         }
     }
@@ -1106,7 +1107,7 @@ export class Composer extends Component {
             this.props.composer.composerText = firstPart + str + secondPart;
             this.selection.moveCursor((firstPart + str).length);
         }
-        if (this.ui.isSmall && !this.ancestors.inChatter) {
+        if (this.ui.isSmall() && !this.ancestors.inChatter) {
             return false;
         } else {
             this.props.composer.autofocus++;

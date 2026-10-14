@@ -60,7 +60,6 @@ export class MessagingMenuItem extends Component {
             thread: () => this.message?.thread,
         });
         this.messageDropdownState = useDropdownState();
-        this.ui = useService("ui");
         if (isMobileOS()) {
             useLongPress(this.root, {
                 action: () => {

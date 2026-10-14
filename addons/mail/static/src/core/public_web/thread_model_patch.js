@@ -33,7 +33,7 @@ const threadModelPatch = {
         if (pushState) {
             this.setActiveURL();
         }
-        if (this.store.env.services.ui.isSmall && !this.store.is_welcome_page_displayed) {
+        if (this.store.ui.isSmall() && !this.store.is_welcome_page_displayed) {
             this.open({ focus: true });
         }
     },
