@@ -1810,25 +1810,25 @@ test("Record exists is reactive", async () => {
 test("Normalize many commands", () => {
     // Falsy values or empty array are interpreted as clear.
     for (const clearValues of [null, undefined, false, []]) {
-        expect(normalizeManyCommands(clearValues)).toEqual([["REPLACE", []]]);
+        expect(normalizeManyCommands(clearValues)).toEqual([["REPLACE", [], undefined]]);
     }
     // Raw values are interpreted as "REPLACE".
     expect(normalizeManyCommands({ id: 1, name: "Test" })).toEqual([
-        ["REPLACE", [{ id: 1, name: "Test" }]],
+        ["REPLACE", [{ id: 1, name: "Test" }], undefined],
     ]);
-    expect(normalizeManyCommands([1, 2, 3])).toEqual([["REPLACE", [1, 2, 3]]]);
+    expect(normalizeManyCommands([1, 2, 3])).toEqual([["REPLACE", [1, 2, 3], undefined]]);
     // Commands with non array value should normalize to array.
-    expect(normalizeManyCommands(["ADD", { id: 10 }])).toEqual([["ADD", [{ id: 10 }]]]);
+    expect(normalizeManyCommands(["ADD", { id: 10 }])).toEqual([["ADD", [{ id: 10 }], undefined]]);
     const cmdList = [
         ["ADD", { id: 1 }],
         ["DELETE", { id: 2 }],
     ];
     expect(normalizeManyCommands(cmdList)).toEqual([
-        ["ADD", [{ id: 1 }]],
-        ["DELETE", [{ id: 2 }]],
+        ["ADD", [{ id: 1 }], undefined],
+        ["DELETE", [{ id: 2 }], undefined],
     ]);
     // Single command should normalize to command list including the command.
-    expect(normalizeManyCommands(["DELETE", [10, 20]])).toEqual([["DELETE", [10, 20]]]);
+    expect(normalizeManyCommands(["DELETE", [10, 20]])).toEqual([["DELETE", [10, 20], undefined]]);
     // Mixed of raw values and commands should throw error.
     const mixed = [1, ["ADD", 2]];
     expect(() => normalizeManyCommands(mixed)).toThrow(

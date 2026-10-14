@@ -7,6 +7,7 @@ from unittest.mock import patch, PropertyMock
 
 from odoo import Command, fields
 from odoo.fields import Domain
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import users, tagged, HttpCase, warmup
@@ -45,11 +46,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_users
     #       - fetch discuss_channel_member
     #   1. search discuss_channel (chathub given channel ids)
-    #   30: init_messaging:
+    #   29: init_messaging:
     #       - search_fetch discuss_channel (channels_domain)
     #       - fetch discuss_channel (_search_is_member)
     #       - search_fetch discuss_channel (odoobot chat)
-    #       27: store add channel:
+    #       26: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - fetch discuss_channel_member (invited member, _compute_invited_member_ids)
@@ -79,8 +80,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - _compute_message_unread
     #           - fetch res_groups (group_public_id)
-    #           - select the current db snapshot
-    _query_count_init_messaging = 33
+    _query_count_init_messaging = 32
     # Queries for _query_count_messaging_menu_channels (in order):
     #   2: self_member_id of the current user (first occurrence)
     #       - fetch res_users
@@ -160,8 +160,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_call_history
     #       - search_fetch mail_call_artifact (_compute_recording_media)
     #       - search mail_message_schedule (last message of the needaction message)
-    #   1: select the current db snapshot
-    _query_count_messaging_menu_channels = 74
+    _query_count_messaging_menu_channels = 73
 
     def setUp(self):
         super().setUp()
@@ -369,7 +368,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     res = fn()
             else:
                 res = fn()
-        res.pop("__store_version__", False)
+        pop_store_version(res)
         if not preserve_order:
             res = self._sort_store_records(res)
             results = self._sort_store_records(results)
