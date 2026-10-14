@@ -379,16 +379,22 @@ class MailMessage(models.Model):
         my_messages = self.env['mail.notification'].sudo().search([
             ('mail_message_id', 'in', self.ids),
             ('res_partner_id', '=', self.env.user.partner_id.id),
-            ('is_read', '=', False)]).mapped('mail_message_id')
+            ('read_date', '=', False)]).mapped('mail_message_id')
         for message in self:
             message.needaction = message in my_messages
 
     @api.model
     def _search_needaction(self, operator, operand):
+        """ Search messages with an unread notification for the current user.
+
+        Searching messages without need action is limited: it returns messages
+        with a read notification for the current user, not messages without any
+        notification for them. It is also slower, as only unread notifications
+        are indexed (partial index on 'read_date'). """
         if operator not in ('in', 'not in'):
             return NotImplemented
-        is_read = operator == 'not in'
-        notification_ids = self.env['mail.notification']._search([('res_partner_id', '=', self.env.user.partner_id.id), ('is_read', '=', is_read)])
+        read_operator = '!=' if operator == 'not in' else '='
+        notification_ids = self.env['mail.notification']._search([('res_partner_id', '=', self.env.user.partner_id.id), ('read_date', read_operator, False)])
         return [('notification_ids', 'in', notification_ids)]
 
     def _compute_has_error(self):
@@ -934,18 +940,18 @@ class MailMessage(models.Model):
     @api.model
     def mark_all_as_read(self, domain=None):
         # not really efficient method: it does one db request for the
-        # search, and one for each message in the result set is_read to True in the
+        # search, and one for each message in the result set to mark as read the
         # current notifications from the relation.
         notif_domain = [
             ('res_partner_id', '=', self.env.user.partner_id.id),
-            ('is_read', '=', False)]
+            ('read_date', '=', False)]
         if domain:
             messages = self.search(domain)
             messages.set_message_done()
             return messages.ids
 
         notifications = self.env['mail.notification'].sudo().search_fetch(notif_domain, ['mail_message_id'])
-        notifications.write({'is_read': True})
+        notifications.write({'read_date': self.env.cr.now()})
 
         self.env.user._bus_send(
             "mail.message/mark_as_read",
@@ -962,11 +968,11 @@ class MailMessage(models.Model):
         notifications = self.env['mail.notification'].sudo().search_fetch([
             ('mail_message_id', 'in', self.ids),
             ('res_partner_id', '=', partner_id.id),
-            ('is_read', '=', False),
+            ('read_date', '=', False),
         ], ['mail_message_id'])
         if not notifications:
             return
-        notifications.write({'is_read': True})
+        notifications.write({'read_date': self.env.cr.now()})
         # notifies changes in messages through the bus.
         self.env.user._bus_send(
             "mail.message/mark_as_read",
@@ -985,7 +991,7 @@ class MailMessage(models.Model):
         ])
         if not notifications:
             return
-        notifications.write({"is_read": False, "read_date": False})
+        notifications.write({"read_date": False})
         Store(
             self.env.user,
             notification_type="mail.message/mark_as_unread",
@@ -1342,7 +1348,7 @@ class MailMessage(models.Model):
                 # sudo: mail.message - checking whether there is a notification for the current user is acceptable
                 return not message.env.user._is_public() and bool(
                     message.sudo().notification_ids.filtered(
-                        lambda n: not n.is_read
+                        lambda n: not n.read_date
                         and n.res_partner_id == message.env.user.partner_id,
                     ),
                 )
@@ -1351,7 +1357,7 @@ class MailMessage(models.Model):
                 # sudo: mail.message - checking whether there is a notification for the current user is acceptable
                 return not message.env.user._is_public() and bool(
                     message.sudo().notification_ids.filtered(
-                        lambda n: n.is_read
+                        lambda n: n.read_date
                         and n.res_partner_id == message.env.user.partner_id,
                     ),
                 )
