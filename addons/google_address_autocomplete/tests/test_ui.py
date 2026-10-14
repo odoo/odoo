@@ -66,28 +66,30 @@ class TestUI(HttpCase):
 
         steps = []
 
-        def on_route(route, params):
+        def on_route(route, api_key, field_mask, params, method):
             steps.append(route)
-            if route == "/autocomplete/json":
+            self.assertEqual(api_key, MOCK_API_KEY)
+            if route == "/places:autocomplete":
+                self.assertEqual(method, "POST")
+                self.assertEqual(
+                    field_mask,
+                    "suggestions.placePrediction.placeId,suggestions.placePrediction.text.text",
+                )
                 self.assertEqual(
                     params,
                     {
-                        "key": MOCK_API_KEY,
-                        "fields": "formatted_address,name",
-                        "inputtype": "textquery",
-                        "types": "address",
                         "input": "Bourlottes",
-                        "sessiontoken": "some_client_session_token",
+                        "includedPrimaryTypes": ["street_address", "premise", "subpremise", "route"],
+                        "sessionToken": "some_client_session_token",
                     },
                 )
-            if route == "/details/json":
+            if route == "/places/custom_place_id":
+                self.assertEqual(method, "GET")
+                self.assertEqual(field_mask, "addressComponents,adrFormatAddress")
                 self.assertEqual(
                     params,
                     {
-                        "key": MOCK_API_KEY,
-                        "place_id": "custom_place_id",
-                        "fields": "address_component,adr_address",
-                        "sessiontoken": "some_client_session_token",
+                        "sessionToken": "some_client_session_token",
                     },
                 )
 
@@ -167,39 +169,36 @@ class TestUI(HttpCase):
             },
         )
 
-        self.assertEqual(steps, ["/autocomplete/json", "/details/json"])
+        self.assertEqual(steps, ["/places:autocomplete", "/places/custom_place_id"])
 
     def test_google_api_calls2(self):
         self.env["ir.config_parameter"].sudo().set_str(
             "google_address_autocomplete.google_places_api_key", MOCK_API_KEY
         )
 
-        def on_route(route, params):
-            if route == "/details/json":
+        def on_route(route, api_key, field_mask, params, method):
+            if route.startswith("/places/"):
                 return {
-                    "result": {
-                        "address_components": [
-                            {
-                                "long_name": "9",
-                                "short_name": "9",
-                                "types": ["street_number"],
-                            },
-                            {
-                                "long_name": "rue de Bourlottes",
-                                "types": ["route"],
-                            },
-                            {
-                                "long_name": "Grand-Rosière-Hotômont",
-                                "types": ["sublocality_level_1"],
-                            },
-                            {
-                                "long_name": "Ramillies",
-                                "types": ["locality"],
-                            },
-                        ],
-                        "adr_address": "",
-                    },
-                    "status": "OK",
+                    "addressComponents": [
+                        {
+                            "longText": "9",
+                            "shortText": "9",
+                            "types": ["street_number"],
+                        },
+                        {
+                            "longText": "rue de Bourlottes",
+                            "types": ["route"],
+                        },
+                        {
+                            "longText": "Grand-Rosière-Hotômont",
+                            "types": ["sublocality_level_1"],
+                        },
+                        {
+                            "longText": "Ramillies",
+                            "types": ["locality"],
+                        },
+                    ],
+                    "adrFormatAddress": "",
                 }
 
         self.patch(

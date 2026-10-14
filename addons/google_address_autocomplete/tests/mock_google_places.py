@@ -1,154 +1,85 @@
 def make_mock_google_route(on_call=None):
-    def _call_google_route(self, route, params):
+    def _call_google_route(self, route, api_key, field_mask, params, method='GET'):
         res = None
         if on_call:
-            res = on_call(route, params)
+            res = on_call(route, api_key, field_mask, params, method)
         if res is not None:
             return res
-        if route == "/autocomplete/json":
+        if route == "/places:autocomplete":
             return {
-                "predictions": [
+                "suggestions": [
                     {
-                        "description": "Paris, France",
-                        "matched_substrings": [{"length": 5, "offset": 0}],
-                        "place_id": "ChIJD7fiBh9u5kcRYJSMaMOCCwQ",
-                        "reference": "ChIJD7fiBh9u5kcRYJSMaMOCCwQ",
-                        "structured_formatting": {
-                            "main_text": "Paris",
-                            "main_text_matched_substrings": [
-                                {"length": 5, "offset": 0}
-                            ],
-                            "secondary_text": "France",
+                        "placePrediction": {
+                            "placeId": "ChIJD7fiBh9u5kcRYJSMaMOCCwQ",
+                            "text": {"text": "Paris, France"},
                         },
-                        "terms": [
-                            {"offset": 0, "value": "Paris"},
-                            {"offset": 7, "value": "France"},
-                        ],
-                        "types": ["locality", "political", "geocode"],
                     },
                     {
-                        "description": "Paris, TX, USA",
-                        "matched_substrings": [{"length": 5, "offset": 0}],
-                        "place_id": "ChIJmysnFgZYSoYRSfPTL2YJuck",
-                        "reference": "ChIJmysnFgZYSoYRSfPTL2YJuck",
-                        "structured_formatting": {
-                            "main_text": "Paris",
-                            "main_text_matched_substrings": [
-                                {"length": 5, "offset": 0}
-                            ],
-                            "secondary_text": "TX, USA",
+                        "placePrediction": {
+                            "placeId": "ChIJmysnFgZYSoYRSfPTL2YJuck",
+                            "text": {"text": "Paris, TX, USA"},
                         },
-                        "terms": [
-                            {"offset": 0, "value": "Paris"},
-                            {"offset": 7, "value": "TX"},
-                            {"offset": 11, "value": "USA"},
-                        ],
-                        "types": ["locality", "political", "geocode"],
                     },
                     {
-                        "description": "Paris, TN, USA",
-                        "matched_substrings": [{"length": 5, "offset": 0}],
-                        "place_id": "ChIJ4zHP-Sije4gRBDEsVxunOWg",
-                        "reference": "ChIJ4zHP-Sije4gRBDEsVxunOWg",
-                        "structured_formatting": {
-                            "main_text": "Paris",
-                            "main_text_matched_substrings": [
-                                {"length": 5, "offset": 0}
-                            ],
-                            "secondary_text": "TN, USA",
+                        "placePrediction": {
+                            "placeId": "ChIJ4zHP-Sije4gRBDEsVxunOWg",
+                            "text": {"text": "Paris, TN, USA"},
                         },
-                        "terms": [
-                            {"offset": 0, "value": "Paris"},
-                            {"offset": 7, "value": "TN"},
-                            {"offset": 11, "value": "USA"},
-                        ],
-                        "types": ["locality", "political", "geocode"],
                     },
                     {
-                        "description": "Paris, Brant, ON, Canada",
-                        "matched_substrings": [{"length": 5, "offset": 0}],
-                        "place_id": "ChIJsamfQbVtLIgR-X18G75Hyi0",
-                        "reference": "ChIJsamfQbVtLIgR-X18G75Hyi0",
-                        "structured_formatting": {
-                            "main_text": "Paris",
-                            "main_text_matched_substrings": [
-                                {"length": 5, "offset": 0}
-                            ],
-                            "secondary_text": "Brant, ON, Canada",
+                        "placePrediction": {
+                            "placeId": "ChIJsamfQbVtLIgR-X18G75Hyi0",
+                            "text": {"text": "Paris, Brant, ON, Canada"},
                         },
-                        "terms": [
-                            {"offset": 0, "value": "Paris"},
-                            {"offset": 7, "value": "Brant"},
-                            {"offset": 14, "value": "ON"},
-                            {"offset": 18, "value": "Canada"},
-                        ],
-                        "types": ["neighborhood", "political", "geocode"],
                     },
                     {
-                        "description": "Paris, KY, USA",
-                        "matched_substrings": [{"length": 5, "offset": 0}],
-                        "place_id": "ChIJsU7_xMfKQ4gReI89RJn0-RQ",
-                        "reference": "ChIJsU7_xMfKQ4gReI89RJn0-RQ",
-                        "structured_formatting": {
-                            "main_text": "Paris",
-                            "main_text_matched_substrings": [
-                                {"length": 5, "offset": 0}
-                            ],
-                            "secondary_text": "KY, USA",
+                        "placePrediction": {
+                            "placeId": "ChIJsU7_xMfKQ4gReI89RJn0-RQ",
+                            "text": {"text": "Paris, KY, USA"},
                         },
-                        "terms": [
-                            {"offset": 0, "value": "Paris"},
-                            {"offset": 7, "value": "KY"},
-                            {"offset": 11, "value": "USA"},
-                        ],
-                        "types": ["locality", "political", "geocode"],
                     },
                 ],
-                "status": "OK",
             }
-        if route == "/details/json":
+        if route.startswith("/places/"):
             return {
-                "result": {
-                    "address_components": [
-                        {
-                            "long_name": "48",
-                            "short_name": "48",
-                            "types": ["street_number"],
-                        },
-                        {
-                            "long_name": "Pirrama Road",
-                            "short_name": "Pirrama Rd",
-                            "types": ["route"],
-                        },
-                        {
-                            "long_name": "Pyrmont",
-                            "short_name": "Pyrmont",
-                            "types": ["locality", "political"],
-                        },
-                        {
-                            "long_name": "City of Sydney",
-                            "short_name": "City of Sydney",
-                            "types": ["administrative_area_level_2", "political"],
-                        },
-                        {
-                            "long_name": "New South Wales",
-                            "short_name": "NSW",
-                            "types": ["administrative_area_level_1", "political"],
-                        },
-                        {
-                            "long_name": "Australia",
-                            "short_name": "AU",
-                            "types": ["political", "country"],  # should work w/ "unordered" types
-                        },
-                        {
-                            "long_name": "2009",
-                            "short_name": "2009",
-                            "types": ["postal_code"],
-                        },
-                    ],
-                    "adr_address": '<span class="street-address">48 Pirrama Rd</span>, <span class="locality">Pyrmont</span> <span class="region">NSW</span> <span class="postal-code">2009</span>, <span class="country-name">Australia</span>',
-                },
-                "status": "OK",
+                "addressComponents": [
+                    {
+                        "longText": "48",
+                        "shortText": "48",
+                        "types": ["street_number"],
+                    },
+                    {
+                        "longText": "Pirrama Road",
+                        "shortText": "Pirrama Rd",
+                        "types": ["route"],
+                    },
+                    {
+                        "longText": "Pyrmont",
+                        "shortText": "Pyrmont",
+                        "types": ["locality", "political"],
+                    },
+                    {
+                        "longText": "City of Sydney",
+                        "shortText": "City of Sydney",
+                        "types": ["administrative_area_level_2", "political"],
+                    },
+                    {
+                        "longText": "New South Wales",
+                        "shortText": "NSW",
+                        "types": ["administrative_area_level_1", "political"],
+                    },
+                    {
+                        "longText": "Australia",
+                        "shortText": "AU",
+                        "types": ["political", "country"],  # should work w/ "unordered" types
+                    },
+                    {
+                        "longText": "2009",
+                        "shortText": "2009",
+                        "types": ["postal_code"],
+                    },
+                ],
+                "adrFormatAddress": '<span class="street-address">48 Pirrama Rd</span>, <span class="locality">Pyrmont</span> <span class="region">NSW</span> <span class="postal-code">2009</span>, <span class="country-name">Australia</span>',
             }
 
     return _call_google_route
