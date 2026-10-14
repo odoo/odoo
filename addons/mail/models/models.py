@@ -804,8 +804,14 @@ class Base(models.AbstractModel):
         """
         self.ensure_one()
         classes = f" class={extra_classes}" if extra_classes else ""
-        return Markup("<a href=# data-oe-model='%s' data-oe-id='%s'%s>%s</a>") % (
-            self._name, self.id, classes, title or self.display_name)
+        return Markup("<a href='/odoo/%s/%s' data-oe-model='%s' data-oe-id='%s'%s>%s</a>") % (
+            self._name,
+            self.id,
+            self._name,
+            self.id,
+            classes,
+            title or self.display_name,
+        )
 
     @api.model
     def _get_backend_root_menu_ids(self):

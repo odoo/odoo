@@ -87,7 +87,7 @@ class TestResPartnerBank(AccountTestInvoicingCommon, MailCase):
         self.assertEqual(sorted(partner_msgs.mapped('res_id')), sorted((self.partner_a + self.partner_b).ids))
         for msg in partner_msgs:
             self.assertMessageFields(msg, {
-                'body': f'<p>Bank Account <a href="#" data-oe-model="{bank_a._name}" data-oe-id="{bank_a.id}">#{bank_a.id}</a> updated</p>',
+                'body': f'<p>Bank Account <a href="/odoo/{bank_a._name}/{bank_a.id}" data-oe-model="{bank_a._name}" data-oe-id="{bank_a.id}">#{bank_a.id}</a> updated</p>',
                 'message_type': 'tracking',
                 'model': 'res.partner',
                 'subtype_id': self.env.ref('mail.mt_note'),

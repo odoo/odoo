@@ -132,8 +132,11 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
             ("I want to speak with an operator", False, False),
             ("I will transfer you to a human.", operator, False),
             (
-                'invited <a href="#" data-oe-model="res.partner" data-oe-id="'
-                f'{operator_member.partner_id.id}" class="o_mail_redirect">@El Deboulonnator</a> to the conversation',
+                (
+                    f'invited <a href="/odoo/res.partner/{operator_member.partner_id.id}"'
+                    f' data-oe-model="res.partner" data-oe-id="{operator_member.partner_id.id}"'
+                    ' class="o_mail_redirect">@El Deboulonnator</a> to the conversation'
+                ),
                 self.chatbot_script.operator_partner_id,
                 False,
             ),
