@@ -3,6 +3,8 @@
 
 from ast import literal_eval
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
@@ -73,9 +75,7 @@ class MailingFilter(models.Model):
             'target': 'current',
             'domain': literal_eval(self.mailing_domain),
             'context': {'create': False},
-            'help': self.env._("""
-                <p class="o_view_nocontent_smiling_face">No record currently matches your rules!</p>
-            """),
+            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p>') % self.env._("No record currently matches your rules!"),
         }
 
     def action_view_mailings(self):

@@ -3,6 +3,8 @@
 import ast
 from collections import defaultdict
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.fields import Command, Domain
 from odoo.exceptions import UserError
@@ -269,13 +271,10 @@ class SaleOrder(models.Model):
             'res_model': 'project.milestone',
             'views': [(self.env.ref('sale_project.project_milestone_view_tree').id, 'list')],
             'view_mode': 'list',
-            'help': _("""
-                <p class="o_view_nocontent_smiling_face">
-                    No milestones found. Let's create one!
-                </p><p>
-                    Track major progress points that must be reached to achieve success.
-                </p>
-            """),
+            'help': Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+                _("No milestones found. Let's create one!"),
+                _("Track major progress points that must be reached to achieve success."),
+            ),
             'context': {
                 **self.env.context,
                 'default_project_id': default_project.id,
