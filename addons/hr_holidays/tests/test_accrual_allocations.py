@@ -2920,6 +2920,73 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # Only 3 days of attendances for the second week of August for that employee: 12, 13 and 14
             self.assertEqual(accrual_allocation.number_of_days, 3.0)
 
+    def test_change_start_date_resets_accrual_dates(self):
+        """
+        Moving the start date of an accrual allocation in the form must save the last_accrual/lastcall/nextcall
+        computed for the new start date, consistently with number_of_days. Otherwise lastcall keeps
+        the previous start date and the next run sets nextcall to the second level start date,
+        which is before lastcall.
+        """
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Monthly accrual with second level',
+            'transition_mode': 'immediately',
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'level_ids': [
+                (0, 0, {
+                    'milestone_date': 'creation',
+                    'start_count': 0,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'day',
+                    'frequency': 'monthly',
+                    'first_day': '1',
+                    'cap_accrued_time': False,
+                    'action_with_unused_accruals': 'all',
+                }),
+                (0, 0, {
+                    'milestone_date': 'after',
+                    'start_count': 6,
+                    'start_type': 'month',
+                    'added_value': 2,
+                    'added_value_type': 'day',
+                    'frequency': 'monthly',
+                    'first_day': '1',
+                    'cap_accrued_time': False,
+                    'action_with_unused_accruals': 'all',
+                }),
+            ],
+        })
+
+        def create_allocation(date_from):
+            with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as f:
+                f.accrual_plan_id = accrual_plan
+                f.date_from = date_from
+                f.work_entry_type_id = self.work_entry_type
+                f.employee_id = self.employee_emp
+                f.name = 'Accrual allocation'
+            return f.record
+
+        with freeze_time('2026-08-28'):
+            allocation = create_allocation('2026-08-27')
+            with Form(allocation) as f:
+                f.date_from = '2025-10-06'
+            reference = create_allocation('2025-10-06')
+
+            self.assertEqual(allocation.last_accrual, reference.last_accrual)
+            self.assertEqual(allocation.lastcall, reference.lastcall)
+            self.assertEqual(allocation.nextcall, reference.nextcall)
+            self.assertEqual(allocation.number_of_days, reference.number_of_days)
+            self.assertLessEqual(allocation.lastcall, allocation.nextcall)
+            (allocation | reference).action_approve()
+
+        with freeze_time('2026-10-14'):
+            self.env['hr.leave.allocation']._update_accrual()
+            self.assertEqual(allocation.last_accrual, date(2026, 10, 1))
+            self.assertEqual(allocation.lastcall, date(2026, 10, 1))
+            self.assertEqual(allocation.nextcall, date(2026, 11, 1))
+            self.assertEqual(allocation.number_of_days, reference.number_of_days)
+
     def test_matching_carryover_and_level_transition_dates(self):
         """ Assert number_of_days computation is correct for an accrual allocation having 2 levels and
             the carryover (days are lost) happens on level transition
