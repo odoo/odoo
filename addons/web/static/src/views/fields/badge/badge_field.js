@@ -43,6 +43,9 @@ export const badgeField = {
     component: BadgeField,
     displayName: _t("Badge"),
     supportedTypes: ["selection", "many2one", "char"],
+    fieldDependencies: ({ options }) => {
+        return options.color_field ? [{ name: options.color_field, type: "integer" }] : [];
+    },
     supportedOptions: [
         {
             label: _t("Color field"),
