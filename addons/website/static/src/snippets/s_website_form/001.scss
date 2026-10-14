@@ -1,21 +1,3 @@
-.editor_enable .s_website_form[data-vcss="001"] {
-    // Hidden field is only partially hidden in editor
-    .s_website_form_field_hidden {
-        display: block !important;
-        opacity: 0.5;
-    }
-    // Fields with conditional visibility are visible and identifiable in the editor
-    .s_website_form_field_hidden_if {
-        display: block !important;
-        background-color: $o-we-fg-light;
-    }
-    // Select inputs do not trigger the default browser behavior
-    // Since we use a custom editable element
-    .s_website_form_field select {
-        pointer-events: none;
-    }
-}
-
 .s_website_form[data-vcss="001"] {
     %o-inline-description-field {
         display: grid;
