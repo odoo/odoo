@@ -176,7 +176,7 @@
             'web/static/src/webclient/icons.scss', # variables required in list_controller.scss
             'web/static/src/views/**/*.js',
             'web/static/src/views/*.xml',
-            'web/static/src/views/*.scss',
+            'web/static/src/views/*.css',
             'web/static/src/views/fields/**/*',
             'web/static/src/views/form/**/*',
             ('remove', 'web/static/src/views/form/**/*.dark.css'),
@@ -224,7 +224,7 @@
             'project/static/src/components/project_task_state_selection/*',
             'project/static/src/components/project_many2one_field/*',
             'project/static/src/views/project_task_form/*.css',
-            'project/static/src/views/project_task_kanban/*.scss',
+            'project/static/src/views/project_task_kanban/*.css',
             'project/static/src/views/project_task_control_panel/*',
             'project/static/src/views/project_task_model_mixin.js',
             'project/static/src/views/project_task_relational_model.js',

@@ -104,7 +104,7 @@
             'web/static/src/search/**/*',
             'web/static/src/views/*.js',
             'web/static/src/views/*.xml',
-            'web/static/src/views/*.scss',
+            'web/static/src/views/*.css',
             'web/static/src/views/fields/**/*',
             'web/static/src/views/form/**/*',
             ('remove', 'web/static/src/views/form/**/*.dark.css'),
