@@ -133,7 +133,7 @@ export class WifiDialog extends Component {
 
         <Dialog
             name="'Configure Wi-Fi'"
-            help="'https://www.odoo.com/documentation/latest/applications/general/iot/iot_box.html#iot-iot-box-network-wifi'"
+            help="'/applications/general/iot/iot_box.html#iot-iot-box-network-wifi'"
             btnName="'Configure'"
             onOpen.bind="this.getWiFiNetworks"
             onClose.bind="this.onClose">

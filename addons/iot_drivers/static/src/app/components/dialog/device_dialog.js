@@ -50,7 +50,7 @@ export class DeviceDialog extends Component {
     <t t-translation="off">
         <Dialog
             name="'Devices list'"
-            help="'https://www.odoo.com/documentation/latest/applications/general/iot/devices.html'"
+            help="'/applications/general/iot/devices.html'"
             btnName="'Show'"
             isLarge="true">
             <t t-set-slot="body">

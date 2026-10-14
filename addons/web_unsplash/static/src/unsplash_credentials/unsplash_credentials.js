@@ -1,7 +1,9 @@
 import { Component, proxy, t, useProps } from "@odoo/owl";
+import { DocumentationLink } from "@web/core/documentation_link/documentation_link";
 
 export class UnsplashCredentials extends Component {
     static template = "web_unsplash.UnsplashCredentials";
+    static components = { DocumentationLink };
     props = useProps({
         submitCredentials: t.function(),
         hasCredentialsError: t.boolean(),

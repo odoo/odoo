@@ -8,7 +8,12 @@
         <field name="arch" type="xml">
             <field name="include_reference" position="after">
                 <p invisible="country_code != 'HK'">
-                    <widget name="documentation_link" path="/applications/finance/fiscal_localizations/hong_kong.html" label="Documentation"/>
+                    <widget
+                      name="documentation_link"
+                      path="/applications/finance/fiscal_localizations/hong_kong.html"
+                      label="Documentation"
+                      hide-icon="True"
+                    />
                 </p>
             </field>
         </field>

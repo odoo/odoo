@@ -34,6 +34,11 @@ author = 'OpenERP S.A.'
 author_email = 'info@odoo.com'
 license = 'LGPL-3'
 
+if version_info[3] == FINAL:
+    documentation_url = f'{url}/documentation/{series.replace('~', '-')}'
+else:
+    documentation_url = f'{url}/documentation/master'
+
 nt_service_name = "odoo-server-" + series.replace('~','-')
 
 MIN_PY_VERSION = (3, 12)

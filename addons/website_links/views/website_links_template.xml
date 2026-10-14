@@ -68,7 +68,13 @@
                         <div class="offset-md-1 col-md-4 d-none d-md-block">
                             <p class="text-muted text-justify">Share this page with a <strong>short link</strong> that includes <strong>analytics trackers</strong>.</p>
                             <p class="text-muted text-justify">Those trackers can be used in Google Analytics to track clicks and visitors, or in Odoo reports to track opportunities and related revenues.</p>
-                            <a target="_blank" href="https://www.odoo.com/documentation/latest/applications/websites/website/reporting/link_tracker.html">Read More</a>
+                            <t t-set="doc_label">Read More</t>
+                            <t t-set="doc_props" t-value="{
+                                'path': '/applications/websites/website/reporting/link_tracker.html',
+                                'label': doc_label,
+                                'hideIcon': true,
+                            }"/>
+                            <owl-component name="web.DocumentationLink" t-att-props="json.dumps(doc_props)" />
                         </div>
                     </div>
 
