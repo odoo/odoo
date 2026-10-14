@@ -139,23 +139,36 @@ test("Convert self closing t elements to opening/closing tags", async () => {
 });
 
 test("Remove `width`, `height` attributes from image and apply them to style", async () => {
-    const { el } = await setupEditor(`
+    const { el } = await setupEditor(
+        `
         <div>
             <img src="#" width="50%" height="50%">
         </div>
-    `);
+    `,
+        { config: { inlineImageSizeAttributes: true } }
+    );
     expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
         `<div class="o-paragraph"> <img src="#" style="width: 50%; height: 50%;"> </div>`
     );
 });
 
 test("Remove `width`, `height` attributes from image and apply them to style with default unit (px)", async () => {
-    const { el } = await setupEditor(`
+    const { el } = await setupEditor(
+        `
         <div>
             <img src="#" width="50" height="50">
         </div>
-    `);
+    `,
+        { config: { inlineImageSizeAttributes: true } }
+    );
     expect(el.innerHTML.trim().replace(/\s+/g, " ")).toBe(
         `<div class="o-paragraph"> <img src="#" style="width: 50px; height: 50px;"> </div>`
+    );
+});
+
+test("size attributes of an image are kept", async () => {
+    const { el } = await setupEditor(`<p>[]<img src="/web/image/1" width="1066" height="1483"></p>`);
+    expect(el.querySelector("img").outerHTML).toBe(
+        `<img src="/web/image/1" width="1066" height="1483">`
     );
 });
