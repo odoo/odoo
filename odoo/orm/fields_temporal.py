@@ -28,6 +28,7 @@ DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
 
 class BaseDate[T](Field[T | typing.Literal[False], T]):
     """ Common field properties for Date and Datetime. """
+    _clean_supported = True
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
