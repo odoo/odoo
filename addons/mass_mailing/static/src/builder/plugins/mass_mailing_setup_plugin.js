@@ -11,7 +11,7 @@ export class MassMailingSetupPlugin extends Plugin {
             "mass_mailing.iframe_add_dialog",
         ],
         clean_for_save_processors: this.cleanForSave.bind(this),
-        powerbox_blacklist_selectors: ".o_mail_wrapper_td",
+        properties: { predicate: ".o_mail_wrapper_td", powerbox: false },
     };
 
     setup() {
