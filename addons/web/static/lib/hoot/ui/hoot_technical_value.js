@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, xml as owlXml, signal, t, toRaw, useProps } from "@odoo/owl";
-import { isNode, toSelector } from "@web/../lib/hoot-dom/helpers/dom";
+import { _isNode, _toSelector } from "@web/../lib/hoot-dom/helpers/dom";
 import { isInstanceOf, isIterable, isPromise } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { logger } from "../core/logger";
 import {
@@ -196,10 +196,10 @@ export class HootTechnicalValue extends Component {
     getTypeOf = getTypeOf;
     isIterable = isIterable;
     isMarkup = Markup.isMarkup;
-    isNode = isNode;
+    isNode = _isNode;
     stringify = stringify;
     toExplicitString = toExplicitString;
-    toSelector = toSelector;
+    toSelector = _toSelector;
 
     /**
      * @param {unknown} value
