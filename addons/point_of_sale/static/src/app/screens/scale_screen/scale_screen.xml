@@ -43,7 +43,7 @@
             </div>
             <t t-set-slot="footer">
                 <div class="d-flex flex-grow-1 gap-2">
-                    <button class="btn btn-secondary w-100" t-att-disabled="this.scale.loading" t-on-click="() => this.scale.readWeight()">
+                    <button class="btn btn-secondary w-100" t-att-disabled="this.scale.loading" t-on-click="this.readWeight">
                         <i t-if="this.scale.loading and !this.scale.tareRequested" class="oi oi-spin" data-icon="progress_activity"/>
                         <t t-else="">Get Weight</t>
                     </button>
