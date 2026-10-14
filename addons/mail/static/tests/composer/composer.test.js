@@ -1,5 +1,6 @@
 import {
     SIZES,
+    assertSteps,
     click,
     contains,
     defineMailModels,
@@ -17,10 +18,12 @@ import {
     scroll,
     start,
     startServer,
+    step,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { browser } from "@web/core/browser/browser";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
+import { Deferred, advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
@@ -1199,4 +1202,51 @@ test("Tab to select of canned response suggestion works in chat window", async (
     await contains(".o-mail-ChatWindow:eq(0) .o-mail-Composer-input", {
         value: "Goodbye! See you soon! ",
     });
+});
+
+test("mentioned partners are saved in the composer draft", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ email: "zara@odoo.com", name: "Zara" });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Chatter-logNote");
+    await insertText(".o-mail-Composer-input", "@Zara");
+    await click(".o-mail-Composer-suggestion strong", { text: "Zara" });
+    await insertText(".o-mail-Composer-input", "hello");
+    await advanceTime(5000); // the draft is saved with a 5 seconds debounce
+    const composer = getService("mail.store").Thread.get({
+        model: "res.partner",
+        id: partnerId,
+    }).composer;
+    const draft = JSON.parse(browser.localStorage.getItem(composer.localId));
+    expect(draft.mentionedPartners).toEqual([{ id: partnerId, name: "Zara" }]);
+});
+
+test("restored composer draft keeps its mentioned partners", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ email: "zara@odoo.com", name: "Zara" });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect(args.post_data.partner_ids).toEqual([partnerId]);
+        step("message_post");
+    });
+    await start();
+    // simulate a draft saved in a previous session (e.g. before a page reload)
+    const composer = getService("mail.store").Thread.insert({
+        model: "res.partner",
+        id: partnerId,
+    }).composer;
+    browser.localStorage.setItem(
+        composer.localId,
+        JSON.stringify({
+            emailAddSignature: true,
+            text: "@Zara hello",
+            mentionedPartners: [{ id: partnerId, name: "Zara" }],
+        })
+    );
+    await openFormView("res.partner", partnerId);
+    await click(".o-mail-Chatter-logNote");
+    await contains(".o-mail-Composer-input", { value: "@Zara hello" });
+    await click(".o-mail-Composer button", { text: "Log" });
+    await assertSteps(["message_post"]);
+    await contains(".o-mail-Message a.o_mail_redirect", { text: "@Zara" });
 });
