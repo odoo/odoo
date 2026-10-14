@@ -132,3 +132,15 @@ class TestWebsiteSaleStockProductWarehouse(
 
         response = self.url_open("/shop")
         self.assertEqual(response.status_code, 200)
+
+    def test_so_confirmation_keeps_manually_set_warehouse(self):
+        self.website.sudo().write({
+            "warehouse_id": self.warehouse_2.id,
+            "salesperson_id": self.env.user.id,
+        })
+        so = self._create_so(
+            warehouse_id=self.warehouse_1.id,
+            order_line=[Command.create({"product_id": self.product_A.id})],
+        )
+        so.action_confirm()
+        self.assertEqual(so.warehouse_id, self.warehouse_1)

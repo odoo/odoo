@@ -11,7 +11,9 @@ class SaleOrder(models.Model):
     is_pickup_required = fields.Boolean(related="carrier_id.support_pickup_locations")
 
     def _compute_warehouse_id(self):
-        website_orders = self.filtered("website_id")
+        website_orders = self.filtered(
+            lambda so: so.website_id and (so.state in ("draft", "sent") or not so.ids)
+        )
         super(SaleOrder, self - website_orders)._compute_warehouse_id()
         for order in website_orders:
             if order.website_id.warehouse_id:
