@@ -42,4 +42,8 @@ test("can create a lead from the thread action after the conversation ends", asy
     await contains(
         `.o-mail-NotificationMessage:text('${serverState.partnerName} created a new lead: testlead1:00 PM')`
     );
+    const [leadId] = pyEnv["crm.lead"].search([["name", "=", "testlead"]]);
+    await contains(
+        `.o-mail-NotificationMessage a[href='/mail/view?model=crm.lead&res_id=${leadId}'][data-oe-model='crm.lead'][data-oe-id='${leadId}']:text('testlead')`
+    );
 });
