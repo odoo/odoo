@@ -25,6 +25,7 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            Dialog.cancel(), // Offline mode after opening register will trigger the offline popup since the device try to sync
             inLeftSide([
                 ...ProductScreen.clickControlButtonMore(),
                 // check that cancel order button is disabled if there is no orderline in the order

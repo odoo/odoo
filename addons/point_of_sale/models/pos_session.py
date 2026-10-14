@@ -698,7 +698,9 @@ class PosSession(models.Model):
         DO NOT INHERIT THIS METHOD. Inherit _set_opening_control_data instead.
         """
         if self.state != 'opening_control':
-            return
+            return {
+                'pos.session': self._load_pos_data_read(self, self.config_id)
+            }
 
         sequence_ctx = self.env['ir.sequence'].with_context(
             company_id=self.config_id.company_id.id,
@@ -713,6 +715,9 @@ class PosSession(models.Model):
         third = (self.name if self.name != '/' else '')
         self.name = first + second + third
         self._set_opening_control_data(cashbox_value, notes)
+        return {
+            'pos.session': self._load_pos_data_read(self, self.config_id)
+        }
 
     def action_view_order(self):
         return {

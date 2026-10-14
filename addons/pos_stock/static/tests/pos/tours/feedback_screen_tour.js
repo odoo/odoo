@@ -19,6 +19,7 @@ registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            Dialog.cancel(), // Offline mode after opening register will trigger the offline popup since the device try to sync
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("APartner Full"),
@@ -35,7 +36,6 @@ registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
                 is_shipping_date: true,
                 is_shipping_date_today: true, //receipt had expected delivery printed
             }),
-            Dialog.confirm("Continue with limited functionality"),
             FeedbackScreen.clickNextOrder(),
 
             // send email in receipt screen
