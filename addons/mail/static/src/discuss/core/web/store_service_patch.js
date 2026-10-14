@@ -28,7 +28,7 @@ const StorePatch = {
      * @param {number} id
      */
     onClickPartnerMention(ev, id) {
-        this.env.services.popover.add(ev.target, AvatarCard, {
+        this.popover.add(ev.target, AvatarCard, {
             id,
             model: "res.partner",
         });

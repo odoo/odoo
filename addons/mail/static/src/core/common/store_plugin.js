@@ -10,6 +10,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { PopoverPlugin } from "@web/core/popover/popover_plugin";
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 import { user } from "@web/core/user";
@@ -176,6 +177,8 @@ export class Store extends BaseStore {
 
     /** @type {DebugModePlugin} */
     debugMode;
+    /** @type {PopoverPlugin} */
+    popover;
 
     /** @param {Readonly<Record<string, any>>} [ancestors] @see useAncestors */
     discussDropdownMenuClass(ancestors) {
@@ -846,6 +849,7 @@ export class StorePlugin extends Plugin {
     /** @private */
     env = useEnv();
     debugMode = usePlugin(DebugModePlugin);
+    popover = usePlugin(PopoverPlugin);
 
     setup() {
         /** @type {import("models").Store} */
@@ -859,6 +863,7 @@ export class StorePlugin extends Plugin {
          */
         this.store.self_guest ??= { id: -1 };
         this.store.debugMode = this.debugMode;
+        this.store.popover = this.popover;
         this.store.onStarted();
     }
 }
@@ -872,7 +877,7 @@ services.add(StorePlugin);
  * -----------------------------------------------------------------------------
  */
 export const storeService = {
-    dependencies: ["bus_service", "im_status", "ui", "popover", "discuss.upgrade"],
+    dependencies: ["bus_service", "im_status", "ui", "discuss.upgrade"],
     /**
      * @returns {import("models").Store}
      */
