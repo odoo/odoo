@@ -762,8 +762,11 @@ class AccountEdiCommon(models.AbstractModel):
             base_amount = float(allow_el.findtext(xpaths['base_amount']) or 0)
             if base_amount:
                 price_unit = base_amount * charge_indicator * qty_factor
-                percentage = float(allow_el.findtext(xpaths['percentage']) or 100)
-                quantity = percentage / 100
+                # The percentage is optional (EN16931). When it is missing, derive the
+                # ratio from the actual amount so the allowance/charge keeps its real
+                # value instead of defaulting to the whole base amount.
+                percentage = allow_el.findtext(xpaths['percentage'])
+                quantity = float(percentage) / 100 if percentage else amount / base_amount
             else:
                 price_unit = amount * charge_indicator * qty_factor
                 quantity = 1

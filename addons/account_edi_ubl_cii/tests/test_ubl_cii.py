@@ -173,6 +173,27 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
+    def test_import_document_allowance_without_percentage(self):
+        # A document-level allowance/charge may carry a base amount without a
+        # percentage: the percentage is optional in EN16931. The actual amount
+        # must then be used instead of defaulting to the whole base amount.
+        tree = etree.fromstring(
+            b'<Invoice xmlns="urn:x">'
+            b'<AllowanceCharge>'
+            b'<ChargeIndicator>false</ChargeIndicator>'
+            b'<Amount>100</Amount>'
+            b'<BaseAmount>1000</BaseAmount>'
+            b'<AllowanceChargeReason>Global discount</AllowanceChargeReason>'
+            b'</AllowanceCharge>'
+            b'</Invoice>'
+        )
+        move = self.env['account.move'].create({'move_type': 'in_invoice'})
+        vals, _logs = self.env['account.edi.xml.ubl_bis3']._import_document_allowance_charges(
+            tree, move, 'purchase',
+        )
+        self.assertEqual(len(vals), 1)
+        self.assertAlmostEqual(vals[0]['quantity'] * vals[0]['price_unit'], -100.0, places=2)
+
     def test_import_partner_peppol_fields(self):
         """ Check that the peppol fields are used to retrieve the partner when importing a Bis 3 xml. """
         invoice = self.env['account.move'].create({
