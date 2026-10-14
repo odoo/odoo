@@ -92,7 +92,10 @@ class StockMoveLine(models.Model):
             picking_to_wave_vals_list.append(picking_to_wave_vals)
 
         if picking_to_wave_vals_list:
-            split_pickings = self.env['stock.picking'].browse(split_pickings_ids) | self.env['stock.picking'].create(picking_to_wave_vals_list)
+            new_pickings = self.env['stock.picking'].create(picking_to_wave_vals_list)
+            # The split moves are set as waiting when they have previous moves, even if they are reserved
+            new_pickings.move_ids._recompute_state()
+            split_pickings = self.env['stock.picking'].browse(split_pickings_ids) | new_pickings
             split_pickings._add_to_wave_post_picking_split_hook()
         if wave.picking_type_id.batch_auto_confirm:
             wave.action_confirm()
