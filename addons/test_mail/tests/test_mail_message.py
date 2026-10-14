@@ -86,6 +86,27 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
             'Should have cleaned notifications linked to unexisting records'
         )
 
+    def test_load_message_failures_unknown_model(self):
+        notif = self.env["mail.notification"].search(
+            [
+                ("author_id", "=", self.partner_employee.id),
+                ("mail_message_id.res_id", "=", self.test_records_simple[0].id),
+            ],
+        )
+        self.env.cr.execute(
+            "UPDATE mail_message SET model = 'x.uninstalled' WHERE id = %s",
+            (notif.mail_message_id.id,),
+        )
+        self.env.invalidate_all()
+        self.authenticate(self.user_employee.login, self.user_employee.password)
+        with mute_logger("odoo.http", "odoo.sql_db"):
+            result = self.make_jsonrpc_request("/mail/data", {"failures": True})
+        self.assertEqual(
+            [r["thread"]["id"] for r in result["mail.message"]],
+            self.test_records_simple[1].ids,
+        )
+        self.assertFalse(notif.exists())
+
     def test_load_message_failures_use_display_name(self):
         test_record = self.env['mail.test.simple.unnamed'].create({'description': 'Some description'})
         test_record.message_subscribe(partner_ids=self.partner_employee_2.ids)

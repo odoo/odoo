@@ -80,9 +80,10 @@ class WebclientController(http.Controller):
             existing = {
                 model: set(request.env[model].browse(ids).exists().ids)
                 for model, ids in found.items()
+                if model in request.env
             }
             valid = notifications.filtered(
-                lambda n: n.mail_message_id.res_id in existing[n.mail_message_id.model]
+                lambda n: n.mail_message_id.res_id in existing.get(n.mail_message_id.model, ())
             )
             lost = notifications - valid
             # might break readonly status of mail/data, but in really rare cases
