@@ -166,7 +166,6 @@ async function fetchAttachmentMetaData(url, ormService) {
  */
 
 /**
- * @typedef {((link: HTMLLinkElement) => boolean | undefined)[]} is_link_editable_predicates
  * @typedef {(() => boolean | undefined)[]} is_link_allowed_on_selection_predicates
  * @typedef {{
  *      PopoverClass: Component;
@@ -962,14 +961,10 @@ export class LinkPlugin extends Plugin {
             }
         } else {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
-            const isLinkEditable =
-                this.checkPredicates("is_link_editable_predicates", closestLinkElement) ?? false;
             if (closestLinkElement) {
                 if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
                     this.openLinkPopover(closestLinkElement);
                 }
-            } else if (isLinkEditable) {
-                this.openLinkPopover(closestLinkElement);
             } else {
                 this.linkInDocument = null;
                 this.closeLinkTools();

@@ -35,7 +35,7 @@ declare module "plugins" {
     import { hint_targets_providers } from "@html_editor/main/hint_plugin";
     import { to_inline_code_processors } from "@html_editor/main/inline_code";
     import { paste_url_overrides } from "@html_editor/main/link/link_paste_plugin";
-    import { on_link_created_handlers, is_link_editable_predicates, is_link_allowed_on_selection_predicates, link_popovers, LinkShared, advanced_popover_options } from "@html_editor/main/link/link_plugin";
+    import { on_link_created_handlers, is_link_allowed_on_selection_predicates, link_popovers, LinkShared, advanced_popover_options } from "@html_editor/main/link/link_plugin";
     import { is_link_eligible_for_visual_indication_predicates, is_link_eligible_for_zwnbsp_predicates } from "@html_editor/main/link/link_selection_plugin";
     import { paste_media_url_command_providers } from "@html_editor/main/link/powerbox_url_paste_plugin";
     import { LocalOverlayShared } from "@html_editor/main/local_overlay_plugin";
@@ -217,7 +217,6 @@ declare module "plugins" {
         is_format_class_predicates: is_format_class_predicates;
         is_history_commit_reversible_predicates: is_history_commit_reversible_predicates;
         is_link_allowed_on_selection_predicates: is_link_allowed_on_selection_predicates;
-        is_link_editable_predicates: is_link_editable_predicates;
         is_link_eligible_for_visual_indication_predicates: is_link_eligible_for_visual_indication_predicates;
         is_link_eligible_for_zwnbsp_predicates: is_link_eligible_for_zwnbsp_predicates;
         is_mutation_savable_predicates: is_mutation_savable_predicates;
