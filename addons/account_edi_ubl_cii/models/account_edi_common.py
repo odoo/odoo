@@ -1563,6 +1563,9 @@ class AccountEdiCommon(models.AbstractModel):
                         tax_domain.append(('ubl_cii_tax_category_code', '=', 'AE'))
                     line_domain = [('tax_ids', 'any', tax_domain)]
 
+                    if taxes_values[0].get('ubl_cii_tax_category_code') == 'E':
+                        line_domain = Domain('tax_ids', '=', False) | Domain(line_domain)
+
                 line_collected_values['predicted_vals'] = self.env['account.move.line']._get_predicted_values(
                     name=line_collected_values['name'],
                     move=self.env['account.move'].new({
