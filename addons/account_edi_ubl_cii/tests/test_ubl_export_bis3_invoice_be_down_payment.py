@@ -1,3 +1,4 @@
+from odoo import fields
 from odoo.tests import tagged
 
 from odoo.addons.account_edi_ubl_cii.tests.test_ubl_export_bis3_be import TestUblExportBis3BE
@@ -35,7 +36,12 @@ class TestUblExportBis3InvoiceBEDownPayment(TestUblExportBis3BE):
             sale_order=sale_order,
             amount_type='percentage',
             amount=40.0,
-            post=True,
         )
+        invoice.invoice_date = fields.Date.from_string('2026-10-16')
+        invoice.action_post()
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_sale_order_down_payment_first_invoice')
+
+        final_invoice = self._create_final_invoice(sale_order, post=True)
+        self._generate_invoice_ubl_file(final_invoice)
+        self._assert_invoice_ubl_file(final_invoice, 'test_sale_order_down_payment_final_invoice')
