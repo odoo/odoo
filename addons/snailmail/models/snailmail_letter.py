@@ -120,7 +120,6 @@ class SnailmailLetter(models.Model):
                 'res_partner_id': letter.partner_id.id,
                 'notification_type': 'snail',
                 'letter_id': letter.id,
-                'is_read': True,  # discard Inbox notification
                 'notification_status': 'ready',
             })
 

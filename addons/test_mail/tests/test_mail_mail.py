@@ -43,7 +43,7 @@ class TestMailMail(MailCommon):
             'subject': 'Subject',
         }])
         cls.test_notification = cls.env['mail.notification'].create({
-            'is_read': False,
+            'read_date': False,
             'mail_mail_id': cls.test_mail.id,
             'mail_message_id': cls.test_message.id,
             'notification_type': 'email',
@@ -709,7 +709,7 @@ class TestMailMail(MailCommon):
         mail.write({'recipient_ids': [(5, 0), (4, partners_valid[1].id), (4, partners_falsy[0].id)]})
         notification.write({'res_partner_id': partners_valid[1].id})
         notification2 = notification.create({
-            'is_read': False,
+            'read_date': False,
             'mail_mail_id': mail.id,
             'mail_message_id': self.test_message.id,
             'notification_type': 'email',
@@ -1174,7 +1174,6 @@ class TestMailMailRace(MailCommon):
                 'res_partner_id': self.partner.id,
                 'mail_mail_id': mail.id,
                 'notification_type': 'email',
-                'is_read': True,
                 'notification_status': 'ready',
             })],
         })
