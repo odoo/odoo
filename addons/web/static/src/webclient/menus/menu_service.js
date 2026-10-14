@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { session } from "@web/session";
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const menuService = {
     dependencies: ["action"],
     async start(env, { action }) {
