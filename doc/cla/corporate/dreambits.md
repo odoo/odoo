@@ -8,9 +8,9 @@ declaration.
 
 Signed,
 
-Karan Shah admin@dreambits.in https://github.com/karan-dreambits
+Karan Shah karan@dreambits.co.uk https://github.com/karan-dreambits
 
 List of contributors:
 
-Karan Shah admin@dreambits.in https://github.com/karan-dreambits
-Devang Pipaliya devang@dreambits.in https://github.com/devang-dreambits
+Karan Shah karan@dreambits.co.uk https://github.com/karan-dreambits
+Pragati Patel pragati@dreambits.in https://github.com/pragati-dreambits
