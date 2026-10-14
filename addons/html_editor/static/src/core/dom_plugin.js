@@ -93,8 +93,6 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
  * @typedef {((nodeToInsert: Node, container: HTMLElement) => nodeToInsert)[]} node_to_insert_processors
  *
  * @typedef {((el: HTMLElement) => boolean)[]} are_inlines_allowed_at_root_predicates
- * @typedef {((block: HTMLElement) => boolean)[]} is_retagging_safe_predicates
- * Allows to bypass the check in `isRetaggingSafe`, to handle the block in `on_will_set_tag_handlers`
  *
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
@@ -103,7 +101,15 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
 
 export class DomPlugin extends Plugin {
     static id = "dom";
-    static dependencies = ["baseContainer", "selection", "history", "split", "delete", "lineBreak"];
+    static dependencies = [
+        "baseContainer",
+        "selection",
+        "history",
+        "split",
+        "delete",
+        "lineBreak",
+        "region",
+    ];
     static shared = [
         "normalize",
         "insert",
@@ -706,7 +712,7 @@ export class DomPlugin extends Plugin {
      */
     isRetaggingSafe(block) {
         return (
-            this.checkPredicates("is_retagging_safe_predicates", block) ??
+            this.dependencies.region.getProperty(block, "retaggable") ??
             !(
                 (isParagraphRelatedElement(block) ||
                     isListItemElement(block) ||

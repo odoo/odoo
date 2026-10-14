@@ -40,11 +40,6 @@ export class SyntaxHighlightingPlugin extends Plugin {
         on_history_commit_undone_handlers: () => this.addCodeBlocks(this.editable, true),
         on_history_commit_redone_handlers: () => this.addCodeBlocks(this.editable, true),
 
-        is_retagging_safe_predicates: (block) => {
-            if (isTextareaOfSyntaxHighlight(block)) {
-                return true;
-            }
-        },
         on_will_set_tag_handlers: (params) => {
             const { block, tagName, cursors } = params;
             if (tagName.toLowerCase() === "pre") {
@@ -61,6 +56,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
             { within: ".o_syntax_highlighting", toolbar: DISABLED_NAMESPACE },
             // Ensure focus can be preserved within the textarea:
             { is: ".o_prism_source", editable: true },
+            { is: isTextareaOfSyntaxHighlight, retaggable: true },
         ],
 
         /** Processors */
