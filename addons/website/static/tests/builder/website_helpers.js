@@ -55,7 +55,7 @@ class IrUiView extends models.Model {
 export const setupWebsiteBuilderOeId = 539;
 
 export const invisibleEl =
-    '<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element" data-invisible="1"></div>';
+    '<div class="s_invisible_el o_snippet_invisible" data-dynamic-builder-name="Invisible Element" data-invisible="1"></div>';
 
 export function defineWebsiteModels({ includeMailModels = true } = {}) {
     describe.current.tags("desktop");
@@ -407,7 +407,7 @@ export function addDropZoneSelector(selector) {
 export async function setupWebsiteBuilderWithDummySnippet(content) {
     const getSnippetEl = (withColoredLevelClass = false) => {
         const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
-        return `<section class="${className}" data-snippet="s_test" data-name="Test">
+        return `<section class="${className}" data-snippet="s_test">
             <div class="test_a"></div>
         </section>`;
     };

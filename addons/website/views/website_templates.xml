@@ -30,7 +30,7 @@
         <div
             t-if="submenu.is_mega_menu and not is_mobile"
             t-attf-class="o_mega_menu dropdown-menu #{submenu.mega_menu_classes} #{_extra_megamenu_classes or 'border-top-0'}"
-            data-name="Mega Menu"
+            data-builder-name="mega-menu"
             t-field="submenu.mega_menu_content"
             role="menuitem"
         />
@@ -210,7 +210,7 @@
     </xpath>
 
     <xpath expr="//header" position="attributes">
-        <attribute name="data-name">Header</attribute>
+        <attribute name="data-builder-name">header</attribute>
         <attribute name="t-att-data-extra-items-toggle-aria-label">extra_items_toggle_aria_label</attribute>
     </xpath>
 
@@ -234,12 +234,12 @@
     </xpath>
 
     <xpath expr="//footer" position="attributes">
-        <attribute name="data-name">Footer</attribute>
+        <attribute name="data-builder-name">footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
-        <attribute name="data-name">Copyright</attribute>
+        <attribute name="data-builder-name">copyright</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="class" add="o_colored_level o_cc" separator=" "/>
     </xpath>
@@ -314,7 +314,7 @@
     <!-- Breadcrumb -->
     <xpath expr="//main/*[1]" position="before">
         <t t-if="main_object.sudo()._name == 'website.page' and main_object.sudo()['parent_id']">
-            <div data-name="Breadcrumb"
+            <div data-builder-name="breadcrumb"
                 t-attf-class="o_page_breadcrumb #{breadcrumb_bg_color_class} #{breadcrumb_text_color_class} #{'d-none o_snippet_invisible' if 'breadcrumb_visible' in main_object and not main_object.sudo().breadcrumb_visible else ''}"
                 t-attf-style="#{breadcrumb_bg_color_style and ('background-color: %s;' % breadcrumb_bg_color_style)} #{breadcrumb_text_color_style and ('color: %s;' % breadcrumb_text_color_style)}"
                 t-att-data-invisible="'1' if 'breadcrumb_visible' in main_object and not main_object.sudo().breadcrumb_visible else None"
@@ -485,7 +485,7 @@
 
 <template id="navbar" name="Navbar">
     <t t-set="_navbar_expand_class" t-value="_navbar_expand_class is None and 'navbar-expand-lg' or _navbar_expand_class"/>
-    <nav data-name="Navbar" t-attf-aria-label="#{_navbar_name if _navbar_name else 'Main'}" t-attf-class="navbar #{_navbar_expand_class} navbar-light o_colored_level o_cc #{_navbar_classes} #{_extra_navbar_classes}">
+    <nav data-builder-name="navbar" t-attf-aria-label="#{_navbar_name if _navbar_name else 'Main'}" t-attf-class="navbar #{_navbar_expand_class} navbar-light o_colored_level o_cc #{_navbar_classes} #{_extra_navbar_classes}">
         <t t-out="0"/>
     </nav>
 </template>
@@ -1668,7 +1668,7 @@
 
 <template id="option_header_brand_logo" inherit_id="website.placeholder_header_brand" name="Header Brand Logo" active="True">
     <xpath expr="//*[@id='o_fake_navbar_brand']" position="replace">
-        <a data-name="Navbar Logo" href="/" t-attf-class="navbar-brand logo #{_link_class}">
+        <a data-builder-name="navbar-logo" href="/" t-attf-class="navbar-brand logo #{_link_class}">
             <!--
             Note: setting width *and* height attributes allows to reserve some
             space to avoid layout shift during page loading. Of course, CSS
@@ -1781,7 +1781,7 @@
 <template id="footer_custom" inherit_id="website.layout" name="Default" active="True">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo border text-break" t-ignore="true" t-if="not no_footer" style="--box-border-left-width: 0px; --box-border-right-width: 0px;">
-            <section class="s_text_block pt40 pb16" data-snippet="s_text_block" data-name="Container">
+            <section class="s_text_block pt40 pb16" data-snippet="s_text_block" data-builder-name="container">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-2 pt24 pb24">
@@ -1811,7 +1811,7 @@
                                 <li><i class="oi oi-filled oi-fw me-2" data-icon="mail"/><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></li>
                                 <li><i class="oi oi-filled oi-fw me-2" data-icon="phone"/><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556</span></a></li>
                             </ul>
-                            <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a t-att-href="res_company.social_facebook or '#'" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
                                     <i class="oi rounded-circle shadow-sm o_editable_media" data-icon="oi_facebook"/>
@@ -1837,7 +1837,7 @@
 <template id="template_footer_descriptive" inherit_id="website.layout" name="Descriptive" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo border text-break" t-ignore="true" t-if="not no_footer" style="--box-border-top-width: 0px; --box-border-left-width: 0px; --box-border-right-width: 0px;">
-            <section class="s_text_block" data-snippet="s_text_block" data-name="Container" data-oe-shape-data="{'shape':'html_builder/Bold/21', 'colors':{'c5': '#0000000D'},'flip':[],'showOnMobile':true,'shapeAnimationSpeed':'0'}">
+            <section class="s_text_block" data-snippet="s_text_block" data-builder-name="container" data-oe-shape-data="{'shape':'html_builder/Bold/21', 'colors':{'c5': '#0000000D'},'flip':[],'showOnMobile':true,'shapeAnimationSpeed':'0'}">
             <div class="o_we_shape o_html_builder_Bold_21 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder/Bold/21.svg?c5=%230000000D');"/>
                 <div class="container s_allow_columns">
                     <div class="row">
@@ -1854,7 +1854,7 @@
                                 <li><i class="oi oi-filled oi-fw me-2" data-icon="phone"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                                 <li><i class="oi oi-filled oi-fw me-2" data-icon="mail"/><span><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></li>
                             </ul>
-                            <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a t-att-href="res_company.social_facebook or '#'" class="s_social_media_facebook" target="_blank">
                                     <i class="oi rounded-circle shadow-sm o_editable_media" data-icon="oi_facebook"/>
@@ -1880,11 +1880,11 @@
 <template id="template_footer_centered" inherit_id="website.layout" name="Centered" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt32" data-snippet="s_text_block" data-name="Container">
+            <section class="s_text_block pt32" data-snippet="s_text_block" data-builder-name="container">
                 <div class="container s_allow_columns">
                     <div class="row">
                         <div class="col-lg-12 order-lg-0" style="order: 0;">
-                            <div class="s_social_media text-center o_not_editable no_icon_color" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-center o_not_editable no_icon_color" data-snippet="s_social_media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a t-att-href="res_company.social_facebook or '#'" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
                                     <i class="oi rounded-empty-circle shadow-sm o_editable_media" data-icon="oi_facebook"/>
@@ -1896,7 +1896,7 @@
                                     <i class="oi rounded-empty-circle shadow-sm o_editable_media" data-icon="oi_linkedin"/>
                                 </a>
                             </div>
-                            <div class="s_hr pt24 pb24" data-snippet="s_hr" data-name="Separator">
+                            <div class="s_hr pt24 pb24" data-snippet="s_hr">
                                 <hr class="w-100 mx-auto"/>
                             </div>
                         </div>
@@ -1924,7 +1924,7 @@
 <template id="template_footer_links" inherit_id="website.layout" name="Links" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt48 pb16" data-snippet="s_text_block" data-name="Container" data-oe-shape-data="{'shape':'html_builder/Containers/03','colors':{'c5':'o-color-4'},'flip':[],'showOnMobile':true,'shapeAnimationSpeed':'0'}">
+            <section class="s_text_block pt48 pb16" data-snippet="s_text_block" data-builder-name="container" data-oe-shape-data="{'shape':'html_builder/Containers/03','colors':{'c5':'o-color-4'},'flip':[],'showOnMobile':true,'shapeAnimationSpeed':'0'}">
                 <div class="o_we_shape o_html_builder_Containers_03 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder/Containers/03.svg?c5=o-color-4');"/>
                 <div class="container">
                     <div class="row">
@@ -1980,7 +1980,7 @@
 <template id="template_footer_minimalist" inherit_id="website.layout" name="Minimalist" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt40 pb40" data-snippet="s_text_block" data-name="Container">
+            <section class="s_text_block pt40 pb40" data-snippet="s_text_block" data-builder-name="container">
                 <div class="container">
                     <div class="row align-items-center">
                         <div class="col-lg-2 offset-lg-0 col-8 offset-2 pt16 pb16">
@@ -2000,7 +2000,7 @@
                             </nav>
                         </div>
                         <div class="col-lg-2 pt16 pb16">
-                            <div class="s_social_media no_icon_color o_not_editable text-center" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media no_icon_color o_not_editable text-center" data-snippet="s_social_media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
                                 <a t-att-href="res_company.social_facebook or '#'" class="s_social_media_facebook" target="_blank">
                                     <i class="oi oi-stack o_editable_media" data-icon="oi_facebook"/>
@@ -2023,7 +2023,7 @@
 <template id="template_footer_contact" inherit_id="website.layout" name="Contact" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt32 pb32" data-snippet="s_text_block" data-name="Container">
+            <section class="s_text_block pt32 pb32" data-snippet="s_text_block" data-builder-name="container">
                 <div class="container">
                     <div class="row o_grid_mode" style="gap: 16px;" data-row-count="3">
                         <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc3 rounded pt16 pb16" style="z-index: 1; grid-area: 1 / 1 / 3 / 4; border-radius: 24px !important; --grid-item-padding-y: 30px; --grid-item-padding-x: 30px;">
@@ -2039,7 +2039,7 @@
                             <p><span class="h5-fs"><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></p>
                         </div>
                         <div class="col-lg-3 o_grid_item g-col-lg-3 g-height-2 offset-1 offset-lg-0 col-10 o_cc o_cc1 rounded pt16 pb16" style="z-index: 4; grid-area: 1 / 10 / 3 / 13; --grid-item-padding-x: 30px; --grid-item-padding-y: 30px; border-radius: 24px !important;">
-                            <div class="s_social_media text-start no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start no_icon_color o_not_editable" data-snippet="s_social_media" contenteditable="false">
                                 <h6 class="s_social_media_title d-block mb-2" contenteditable="true">Follow us</h6>
                                 <a t-att-href="res_company.social_twitter or '#'" class="s_social_media_twitter" target="_blank">
                                     <i class="oi oi-stack o_editable_media" data-icon="oi_x"/>
@@ -2088,7 +2088,7 @@
 <template id="template_footer_call_to_action" inherit_id="website.layout" name="Call-to-Action" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_call_to_action pt56 pb32" data-snippet="s_call_to_action" data-name="Container" data-oe-shape-data="{'shape':'html_builder/Connections/14','colors':{'c5':'o-color-4'},'flip':['y'],'showOnMobile':true,'shapeAnimationSpeed':'0'}">
+            <section class="s_call_to_action pt56 pb32" data-snippet="s_call_to_action" data-builder-name="container" data-oe-shape-data="{'shape':'html_builder/Connections/14','colors':{'c5':'o-color-4'},'flip':['y'],'showOnMobile':true,'shapeAnimationSpeed':'0'}">
                 <div class="o_we_shape o_html_builder_Connections_14 o_shape_show_mobile" style="background-image: url('/html_editor/shape/html_builder/Connections/14.svg?c5=o-color-4&amp;flip=y'); background-position: 50% 0%;"/>
                 <div class="container s_allow_columns">
                     <div class="row o_grid_mode" data-row-count="3">
@@ -2102,7 +2102,7 @@
                             <p>
                                 8000 Marina Blvd, Suite 300 • Brisbane CA 94005 • United States
                             </p>
-                            <div class="s_hr d-lg-none o_snippet_desktop_invisible pb16 pt16" data-snippet="s_hr" data-name="Separator">
+                            <div class="s_hr d-lg-none o_snippet_desktop_invisible pb16 pt16" data-snippet="s_hr">
                                 <hr class="w-100 mx-auto"/>
                             </div>
                         </div>
@@ -2121,7 +2121,7 @@
 <template id="template_footer_headline" inherit_id="website.layout" name="Headline" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt48" data-snippet="s_text_block" data-name="Container">
+            <section class="s_text_block pt48" data-snippet="s_text_block" data-builder-name="container">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-3 pb24">
@@ -2140,7 +2140,7 @@
                             <i class="oi oi-filled oi-fw me-2" data-icon="phone"/><a href="tel:+1 555-555-5556"><span class="o_force_ltr">+1 555-555-5556</span></a>
                         </div>
                         <div class="col-lg-2 offset-lg-2 pb24">
-                            <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow Us</h5>
                                 <a t-att-href="res_company.social_facebook or '#'" class="s_social_media_facebook" target="_blank" aria-label="Facebook">
                                     <i class="oi rounded-circle shadow-sm o_editable_media" data-icon="oi_facebook"/>
@@ -2163,7 +2163,7 @@
 <template id="template_footer_mega" inherit_id="website.layout" name="Mega" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt48 pb24" data-snippet="s_text_block" data-name="Top Part">
+            <section class="s_text_block pt48 pb24" data-snippet="s_text_block" data-builder-name="top-part">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-2 order-lg-0 pb24" style="order: 1;">
@@ -2202,7 +2202,7 @@
                             </a>
                         </div>
                         <div class="col-lg-12 order-lg-0" style="order: 4;">
-                            <div class="s_hr pb24" data-snippet="s_hr" data-name="Separator">
+                            <div class="s_hr pb24" data-snippet="s_hr">
                                 <hr class="w-100 mx-auto"/>
                             </div>
                         </div>
@@ -2212,11 +2212,11 @@
                     </div>
                 </div>
             </section>
-            <section class="s_text_block o_footer_bottom_part pt8 pb8" style="position: relative; background-color: rgba(0, 0, 0, 0.05);" data-snippet="s_text_block" data-name="Bottom Part">
+            <section class="s_text_block o_footer_bottom_part pt8 pb8" style="position: relative; background-color: rgba(0, 0, 0, 0.05);" data-snippet="s_text_block" data-builder-name="bottom-part">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-6 pt8 pb8">
-                            <div class="s_social_media text-start o_not_editable no_icon_color" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start o_not_editable no_icon_color" data-snippet="s_social_media" contenteditable="false">
                                 <p class="s_social_media_title d-none" contenteditable="true">Follow us</p>
                                 <a t-att-href="res_company.social_twitter or '#'" class="s_social_media_twitter" target="_blank">
                                     <i class="oi oi-stack o_editable_media" data-icon="oi_x"/>
@@ -2258,11 +2258,11 @@
 <template id="template_footer_mega_columns" inherit_id="website.layout" name="Mega Columns" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt24 pb24" data-snippet="s_text_block" data-name="Container">
+            <section class="s_text_block pt24 pb24" data-snippet="s_text_block" data-builder-name="container">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-4">
-                            <div class="s_text_highlight o_cc o_cc1 w-100 my-3 text-center" data-snippet="s_text_highlight" data-name="Text Highlight">
+                            <div class="s_text_highlight o_cc o_cc1 w-100 my-3 text-center" data-snippet="s_text_highlight">
                                 <img
                                     src="/html_editor/shape/website/s_attributes_1.svg?c1=rgba(0,0,0,.25)&amp;c4=o-color-4&amp;c5=o-color-5"
                                     class="img img-fluid d-block mx-auto"
@@ -2300,7 +2300,7 @@
                             </div>
                         </div>
                         <div class="col-lg-4">
-                            <div class="s_text_highlight o_cc o_cc1 w-100 my-3 text-center" data-snippet="s_text_highlight" data-name="Text Highlight">
+                            <div class="s_text_highlight o_cc o_cc1 w-100 my-3 text-center" data-snippet="s_text_highlight">
                                 <img
                                     src="/html_editor/shape/website/s_attributes_2.svg?c1=rgba(0,0,0,.25)&amp;c2=rgba(0,0,0,.5)&amp;c4=o-color-4&amp;c5=o-color-5"
                                     class="img img-fluid d-block mx-auto"
@@ -2319,7 +2319,7 @@
                             <p>250 Executive Park Blvd, Suite 3400 <br/>San Francisco CA 94134</p>
                         </div>
                         <div class="col-lg-4">
-                            <div class="s_text_highlight o_cc o_cc1 w-100 my-3 text-center" data-snippet="s_text_highlight" data-name="Text Highlight">
+                            <div class="s_text_highlight o_cc o_cc1 w-100 my-3 text-center" data-snippet="s_text_highlight">
                                 <img
                                     src="/html_editor/shape/website/s_attributes_3.svg?c1=rgba(0,0,0,.25)&amp;c4=o-color-4&amp;c5=o-color-5"
                                     class="img img-fluid d-block mx-auto"
@@ -2332,7 +2332,7 @@
                             </div>
                             <h5>Follow us</h5>
                             <p>Sign up to receive the best promotions, our events and personal advice.</p>
-                            <div class="s_social_media text-start o_not_editable no_icon_color" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start o_not_editable no_icon_color" data-snippet="s_social_media" contenteditable="false">
                                 <p class="s_social_media_title d-none" contenteditable="true">Follow us</p>
                                 <a t-att-href="res_company.social_twitter or '#'" class="s_social_media_twitter" target="_blank">
                                     <i class="oi oi-stack o_editable_media" data-icon="oi_x"/>
@@ -2352,7 +2352,7 @@
                             </div>
                         </div>
                         <div class="col-lg-12">
-                            <div class="s_hr pb24 pt24" data-snippet="s_hr" data-name="Separator">
+                            <div class="s_hr pb24 pt24" data-snippet="s_hr">
                                 <hr class="w-100 mx-auto"/>
                             </div>
                             <ul class="list-inline mb-0">
@@ -2386,7 +2386,7 @@
 <template id="template_footer_mega_links" inherit_id="website.layout" name="Mega Links" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt48 pb24" data-snippet="s_text_block" data-name="Top Part">
+            <section class="s_text_block pt48 pb24" data-snippet="s_text_block" data-builder-name="top-part">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-3 col-9">
@@ -2395,7 +2395,7 @@
                             </a>
                         </div>
                         <div class="col-lg-12">
-                            <div class="s_hr pb24 pt24" data-snippet="s_hr" data-name="Separator">
+                            <div class="s_hr pb24 pt24" data-snippet="s_hr">
                                 <hr class="w-100 mx-auto"/>
                             </div>
                         </div>
@@ -2457,11 +2457,11 @@
                     </div>
                 </div>
             </section>
-            <section class="s_text_block o_footer_bottom_part pt8 pb8" style="position: relative; background-color: rgba(0, 0, 0, 0.05);" data-snippet="s_text_block" data-name="Bottom Part">
+            <section class="s_text_block o_footer_bottom_part pt8 pb8" style="position: relative; background-color: rgba(0, 0, 0, 0.05);" data-snippet="s_text_block" data-builder-name="bottom-part">
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12 pt8 pb8">
-                            <div class="s_social_media text-start o_not_editable no_icon_color" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start o_not_editable no_icon_color" data-snippet="s_social_media" contenteditable="false">
                                 <p class="s_social_media_title d-none" contenteditable="true">Follow us</p>
                                 <a t-att-href="res_company.social_twitter or '#'" class="s_social_media_twitter" target="_blank">
                                     <i class="oi oi-stack o_editable_media" data-icon="oi_x"/>
@@ -2496,7 +2496,7 @@
 <template id="template_footer_mega_cards" inherit_id="website.layout" name="Mega Cards" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo text-break" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt24 pb24" data-snippet="s_text_block" data-name="Container">
+            <section class="s_text_block pt24 pb24" data-snippet="s_text_block" data-builder-name="container">
                 <div class="container">
                     <div class="row o_grid_mode" style="gap: 24px;" data-row-count="7">
                         <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-4 offset-1 offset-lg-0 col-10 o_cc o_cc1" style="z-index: 1; grid-area: 1 / 1 / 5 / 5; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
@@ -2540,7 +2540,7 @@
                             </ul>
                         </div>
                         <div class="o_grid_item g-col-lg-4 col-lg-4 g-height-3 offset-1 offset-lg-0 col-10 o_cc o_cc1" style="z-index: 6; grid-area: 5 / 9 / 8 / 13; --grid-item-padding-y: 24px; --grid-item-padding-x: 24px; border-radius: 24px !important;">
-                            <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
+                            <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" contenteditable="false">
                                 <h5 class="s_social_media_title d-block mb-2" contenteditable="true">Follow us</h5>
                                 <a t-att-href="res_company.social_twitter or '#'" class="s_social_media_twitter" target="_blank">
                                     <i class="oi oi-stack rounded-circle shadow-sm o_editable_media" data-icon="oi_x"/>
@@ -2635,7 +2635,7 @@
 <!-- Cookie Bar -->
 <template id="cookies_bar" inherit_id="website.layout" name="Cookies Bar">
     <xpath expr="//footer" position="after">
-        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible d-none o_no_save" data-name="Cookies Bar" data-vcss="001" data-invisible="1"
+        <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible d-none o_no_save" data-builder-name="cookies-bar" data-vcss="001" data-invisible="1"
              t-att-data-cookie-policy-url="website.cookie_policy_id.sudo().url or '/cookie-policy'">
             <div class="modal s_popup_bottom s_popup_no_backdrop o_cookies_discrete"
                  data-show-after="500"
@@ -2660,9 +2660,9 @@
                                         </p>
                                     </div>
                                     <div class="col-lg-4 text-end pt16 pb16 oe_unremovable">
-                                        <a href="#" id="cookies-consent-essential" role="button" data-name="Refuse optional cookies"
+                                        <a href="#" id="cookies-consent-essential" role="button" data-builder-name="refuse-optional-cookies"
                                            class="js_close_popup btn btn-outline-primary rounded-circle btn-sm px-2 mb-2 oe_unremovable">Only essentials</a>
-                                        <a href="#" id="cookies-consent-all" role="button" data-name="Accept all cookies"
+                                        <a href="#" id="cookies-consent-all" role="button" data-builder-name="accept-all-cookies"
                                            class="js_close_popup btn btn-outline-primary rounded-circle btn-sm mb-2 oe_unremovable">I agree</a>
                                     </div>
                                 </div>
@@ -2731,7 +2731,7 @@
 
 <template id="header_language_selector" inherit_id="website.placeholder_header_language_selector" name="Header Language Selector" active="True">
     <xpath expr="." position="inside">
-        <li t-if="len(frontend_languages) > 1" data-name="Language Selector" t-attf-class="o_header_language_selector #{_item_class}">
+        <li t-if="len(frontend_languages) > 1" data-builder-name="language-selector" t-attf-class="o_header_language_selector #{_item_class}">
             <t id="header_language_selector_call"
                 t-call="portal.language_selector"
                 _div_classes="(_div_classes or '') + ' dropdown'"/>
@@ -2792,7 +2792,7 @@
     <xpath expr="." position="inside">
         <li t-attf-class="#{_item_class}">
             <div t-attf-class="oe_structure oe_structure_solo #{_div_class}">
-                <section class="oe_unremovable oe_unmovable s_text_block" data-snippet="s_text_block" data-name="Text">
+                <section class="oe_unremovable oe_unmovable s_text_block" data-snippet="s_text_block">
                     <div class="container">
                         <a href="/contactus" class="oe_unremovable btn btn-primary btn_cta">Contact Us</a>
                     </div>
@@ -2828,8 +2828,8 @@
     <t t-set="_name" t-value="_name or _record._name"/>
     <t t-set="_id" t-value="_id or _record.id"/>
     <t t-set="_bg" t-value="_bg or _record._get_background(height=_resize_height, width=_resize_width)"/>
-    <t t-set="default_cover_name">Cover</t>
-    <div t-att-data-name="display_opt_name or default_cover_name"
+    <t t-set="default_cover_name" t-value="cover"/>
+    <div t-att-data-builder-name="display_opt_name or default_cover_name"
          t-att-style="_cp.get('background_color_style')"
          t-att-data-use_size="use_size"
          t-att-data-use_filters="use_filters"
@@ -3485,7 +3485,7 @@ Disallow: /*/my/*
 <template id="website.header_social_links_unbranded" inherit_id="website.header_social_links" name="Header Social Links (Unbranded)">
     <xpath expr=".//li" position="inside">
         <div t-attf-class="o_header_social_links #{_div_class}" t-ignore="true">
-            <div class="s_social_media o_not_editable oe_unmovable oe_unremovable" data-snippet="s_social_media" data-name="Social Media">
+            <div class="s_social_media o_not_editable oe_unmovable oe_unremovable" data-snippet="s_social_media">
                 <h5 class="s_social_media_title d-none">Follow us</h5>
                 <a t-att-href="res_company.social_facebook or '#'" class="s_social_media_facebook o_nav-link_secondary nav-link m-0 p-0 text-decoration-none" target="_blank" aria-label="Facebook">
                     <i class="oi oi-stack p-1 o_editable_media" data-icon="oi_facebook"/>
@@ -3528,12 +3528,12 @@ Disallow: /*/my/*
     <xpath expr="." position="inside">
         <li t-attf-class="#{_item_class}">
             <t t-if="_txt_elt_content == 'sentence'">
-                <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
+                <div t-attf-class="s_text_block #{_div_class}">
                     <small>Free Returns and Standard Shipping</small>
                 </div>
             </t>
             <t t-elif="_txt_elt_content == 'list'">
-                <div t-attf-class="s_text_block d-flex flex-column flex-lg-row gap-1 gap-lg-4 align-items-lg-center #{_div_class}" data-name="Text">
+                <div t-attf-class="s_text_block d-flex flex-column flex-lg-row gap-1 gap-lg-4 align-items-lg-center #{_div_class}">
                     <small class="d-flex align-items-center">
                         <i class="oi oi-1x oi-fw oi-stack me-1" data-icon="attach_money"/>
                         Low Price Guarantee
@@ -3549,7 +3549,7 @@ Disallow: /*/my/*
                 </div>
             </t>
             <t t-elif="_txt_elt_content == 'phone_mail'">
-                <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
+                <div t-attf-class="s_text_block #{_div_class}">
                     <a href="tel:+1 555-555-5556" class="nav-link o_nav-link_secondary">
                         <small>
                             <i class="oi oi-1x oi-fw oi-filled me-1" data-icon="phone"/>͏ <!-- Empty character needed to be able to delete the icon. -->
@@ -3565,14 +3565,14 @@ Disallow: /*/my/*
                 </div>
             </t>
             <t t-elif="_txt_elt_content == 'mail'">
-                <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
+                <div t-attf-class="s_text_block #{_div_class}">
                     <a href="mailto:info@yourcompany.example.com" class="nav-link o_nav-link_secondary">
                         <small><i class="oi oi-1x oi-fw oi-filled me-1" data-icon="mail"/> info@yourcompany.example.com</small>
                     </a>
                 </div>
             </t>
             <t t-elif="_txt_elt_content == 'mail_stretched'">
-                <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
+                <div t-attf-class="s_text_block #{_div_class}">
                     <a href="tel:+1 555-555-5556" class="nav-link o_nav-link_secondary p-2 o_navlink_background_hover d-flex align-items-center h-100 text-reset">
                         <i class="oi oi-1x oi-fw i-filled me-1" data-icon="phone"/>
                         <span class="o_force_ltr"><small>+1 555-555-5556</small></span>
@@ -3580,7 +3580,7 @@ Disallow: /*/my/*
                 </div>
             </t>
             <t t-else="">
-                <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
+                <div t-attf-class="s_text_block #{_div_class}">
                     <a href="tel:+1 555-555-5556" class="nav-link o_nav-link_secondary p-2">
                         <i class="oi oi-1x oi-fw oi-filled me-1" data-icon="phone"/>
                         <span class="o_force_ltr"><small>+1 555-555-5556</small></span>

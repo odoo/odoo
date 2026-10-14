@@ -9,9 +9,45 @@ import { _t } from "@web/core/l10n/translation";
  * @param {HTMLElement} snippetEl - the edited element
  * @returns {String}
  */
-export function getSnippetName(snippetEl) {
-    if (snippetEl.dataset.name) {
-        return snippetEl.dataset.name;
+export function getSnippetName(snippetEl, snippetModel) {
+    if (snippetEl.dataset.customName) {
+        if (!snippetEl.classList.contains("s_custom_snippet")) {
+            console.warn("data-custom-name should not be used on non-custom snippets");
+        }
+        return snippetEl.dataset.customName;
+    }
+    if (snippetEl.dataset.dynamicBuilderName) {
+        return snippetEl.dataset.dynamicBuilderName;
+    }
+    const specificNameId = snippetEl.dataset.builderName;
+    if (specificNameId) {
+        const specificName = snippetModel.namesMaps.specific_name?.[specificNameId];
+        if (specificName) {
+            return specificName;
+        } else {
+            console.warn(`data-builder-name ${specificNameId} not found in specific_name map`);
+        }
+    }
+    const snippetKey = snippetEl.dataset.snippet;
+    const nameFromSnippet = snippetModel.getSnippetNameByKey(snippetKey);
+    if (nameFromSnippet) {
+        return nameFromSnippet;
+    }
+    for (const c of snippetEl.classList) {
+        if (c.startsWith("s_")) {
+            const nameFromSnippet = snippetModel.getSnippetNameByKey(c);
+            if (nameFromSnippet) {
+                return nameFromSnippet;
+            }
+        }
+    }
+    for (const c of snippetEl.classList) {
+        if (c.startsWith("s_")) {
+            const nameFromSnippetPart = snippetModel.namesMaps.snippet_part?.[c];
+            if (nameFromSnippetPart) {
+                return nameFromSnippetPart;
+            }
+        }
     }
     const snippetNameRules = [
         { selector: "img", name: _t("Image") },
@@ -20,7 +56,6 @@ export function getSnippetName(snippetEl) {
         { selector: ".row > *", name: _t("Column") },
         { selector: "#wrapwrap > main", name: _t("Page Options") },
         { selector: ".btn", name: _t("Button") },
-        { selector: "[data-snippet=s_website_form]", name: _t("Form") },
         { selector: "#wrapwrap", name: _t("Website") },
     ];
     for (const { selector, name } of snippetNameRules) {

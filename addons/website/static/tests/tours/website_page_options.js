@@ -190,7 +190,7 @@ registry.category("web_tour.tours").add("website_page_breadcrumb", {
         },
         {
             content: "Verify that the Breadcrumb is visible",
-            trigger: ":iframe div[data-name='Breadcrumb']",
+            trigger: ":iframe div[data-builder-name='breadcrumb']",
         },
         {
             content: "Verify that Home is displayed in the breadcrumb",

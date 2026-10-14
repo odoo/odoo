@@ -65,7 +65,6 @@ class IrQweb(models.AbstractModel):
 
     def _compile_directive_snippet_call(self, el, compile_context, indent):
         snippet_key = el.attrib.pop('t-snippet-call')
-        snippet_name = el.attrib.pop('string', None)
 
         # We modify the tree to make the t-call in the t-set just before the
         # t-call. This allows us to use the rendering that is stored in the
@@ -81,11 +80,11 @@ class IrQweb(models.AbstractModel):
         el = tset
 
         code = self._compile_node(el, compile_context, indent)
-        code.append(indent_code(f"yield self._insert_snippet_key_at_running_time(values['SNIPPET_CALL_KEY'], {snippet_key!r}, {snippet_name!r})", indent))
+        code.append(indent_code(f"yield self._insert_snippet_key_at_running_time(values['SNIPPET_CALL_KEY'], {snippet_key!r})", indent))
 
         return code
 
-    def _insert_snippet_key_at_running_time(self, call_result: QwebContent, snippet_key, snippet_name):
+    def _insert_snippet_key_at_running_time(self, call_result: QwebContent, snippet_key):
         content = str(call_result)
 
         update = False
@@ -98,9 +97,6 @@ class IrQweb(models.AbstractModel):
         if not first_element.get('data-snippet'):
             update = True
             first_element.set('data-snippet', snippet_key.split('.', 1)[-1])
-        if snippet_name and not first_element.get('data-name'):
-            update = True
-            first_element.set('data-name', snippet_name)
         if update:
             new_content = etree.tostring(root, encoding='unicode', method='html')
             return new_content[6 : -7]

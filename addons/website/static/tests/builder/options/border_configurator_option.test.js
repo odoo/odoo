@@ -90,7 +90,7 @@ test("Elements with withBSClass = false don't reset their style when width is ch
             <div>
                 <p>Text</p>
                 <p>
-                    <div class="s_hr pt32 pb32 o_colored_level o_draggable" data-snippet="s_hr" data-name="Separator">
+                    <div class="s_hr pt32 pb32 o_colored_level o_draggable" data-snippet="s_hr">
                         <hr class="w-100 mx-auto">
                     </div>
                 </p>

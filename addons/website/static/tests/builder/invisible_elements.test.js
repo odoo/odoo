@@ -62,7 +62,7 @@ test("Add an element on the invisible elements tab", async () => {
             name: "Test",
             groupName: "a",
             content: unformat(
-                `<div class="s_popup_test o_snippet_invisible" data-snippet="s_popup_test" data-name="Popup">
+                `<div class="s_popup_test o_snippet_invisible" data-snippet="s_popup_test" data-dynamic-builder-name="Popup">
                     <div class="test_a">Hello</div>
                 </div>`
             ),
@@ -94,7 +94,7 @@ test("Add an element on the invisible elements tab", async () => {
     ).click();
     await waitForEndOfOperation();
     expect(
-        ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Test') [data-icon='visibility']"
+        ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup') [data-icon='visibility']"
     ).toHaveCount(1);
     expect(
         ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Invisible Element') [data-icon='visibility_off']"
@@ -103,9 +103,9 @@ test("Add an element on the invisible elements tab", async () => {
 
 test("mobile and desktop invisible elements panel", async () => {
     await setupWebsiteBuilder(`
-        <div class="o_snippet_invisible" data-name="Popup1"></div>
-        <div class="o_snippet_mobile_invisible" data-name="Popup2"></div>
-        <div class="o_snippet_desktop_invisible" data-name="Popup3"></div>
+        <div class="o_snippet_invisible" data-dynamic-builder-name="Popup1"></div>
+        <div class="o_snippet_mobile_invisible" data-dynamic-builder-name="Popup2"></div>
+        <div class="o_snippet_desktop_invisible" data-dynamic-builder-name="Popup3"></div>
     `);
     expect(queryAllTexts(".o_we_invisible_el_panel .o_we_invisible_entry")).toEqual([
         "Popup1",
@@ -168,9 +168,9 @@ test("invisible elements efficiency", async () => {
         },
     });
     await setupWebsiteBuilder(`
-        <div class="o_snippet_invisible" data-name="Popup1"></div>
-        <div class="o_snippet_mobile_invisible" data-name="Popup2"></div>
-        <div class="o_snippet_desktop_invisible" data-name="Popup3"></div>
+        <div class="o_snippet_invisible" data-dynamic-builder-name="Popup1"></div>
+        <div class="o_snippet_mobile_invisible" data-dynamic-builder-name="Popup2"></div>
+        <div class="o_snippet_desktop_invisible" data-dynamic-builder-name="Popup3"></div>
     `);
     expect.verifySteps(["update invisible panel"]);
     await toggleMobilePreview();
@@ -180,29 +180,29 @@ test("invisible elements efficiency", async () => {
 describe("drop invisible elements", () => {
     addDropZoneSelector({ selector: "*", dropNear: "section" });
     const snippetMobileInvisible = `
-        <section class="s_mobile_test o_snippet_mobile_invisible d-none d-lg-block" data-snippet="s_mobile_test" data-name="Test mobile">
+        <section class="s_mobile_test o_snippet_mobile_invisible d-none d-lg-block" data-snippet="s_mobile_test" data-dynamic-builder-name="Test mobile">
             <p>Hello Desktop</p>
         </section>`;
     const snippetDesktopInvisible = `
-        <section class="s_desktop_test o_snippet_desktop_invisible d-lg-none" data-snippet="s_desktop_test" data-name="Test desktop">
+        <section class="s_desktop_test o_snippet_desktop_invisible d-lg-none" data-snippet="s_desktop_test" data-dynamic-builder-name="Test desktop">
             <p>Hello Mobile</p>
         </section>`;
     const snippetInnerDesktopInvisible = `
-        <section class="s_desktop_test" data-snippet="s_desktop_test" data-name="Test desktop">
+        <section class="s_desktop_test" data-snippet="s_desktop_test" data-dynamic-builder-name="Test desktop">
             <p>Hello All</p>
             <section class="o_snippet_desktop_invisible d-lg-none">
                 <p>Hello Mobile</p>
             </section>
         </section>`;
     const snippetConditionalInvisible = `
-        <section class="s_conditional_test o_conditional_hidden" data-visibility="conditional" data-snippet="s_conditional_test" data-name="Test conditional">
+        <section class="s_conditional_test o_conditional_hidden" data-visibility="conditional" data-snippet="s_conditional_test" data-dynamic-builder-name="Test conditional">
             <p>Hello All</p>
             <section class="o_conditional_hidden" data-visibility="conditional" data-snippet="s_inner_conditional_test">
                 <p>Hello Sometimes</p>
             </section>
         </section>`;
     const snippetDesktopAndConditionalInvisible = `
-        <section class="s_desktop_and_conditional_test o_snippet_desktop_invisible d-lg-none o_conditional_hidden" data-visibility="conditional" data-snippet="s_desktop_and_conditional_test" data-name="Test desktop and conditional">
+        <section class="s_desktop_and_conditional_test o_snippet_desktop_invisible d-lg-none o_conditional_hidden" data-visibility="conditional" data-snippet="s_desktop_and_conditional_test" data-dynamic-builder-name="Test desktop and conditional">
             <p>Hello Mobile Sometimes</p>
         </section>`;
 

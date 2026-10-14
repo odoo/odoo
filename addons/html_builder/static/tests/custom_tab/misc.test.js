@@ -29,7 +29,7 @@ test("Open custom tab with template option", async () => {
             </BuilderRow>
         `,
     });
-    await setupHTMLBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target" data-dynamic-builder-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".o_hb_options_container").toBeVisible();
     expect(queryAllTexts(".o_hb_options_container > div")).toEqual(["Yop", "Row 1\nTest"]);
@@ -44,7 +44,7 @@ test("Open custom tab with Component option", async () => {
             </BuilderRow>
         `,
     });
-    await setupHTMLBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target" data-dynamic-builder-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".o_hb_options_container").toBeVisible();
     expect(queryAllTexts(".o_hb_options_container > div")).toEqual(["Yop", "Row 1\nTest"]);
@@ -60,7 +60,7 @@ test("OptionContainer should display custom title", async () => {
             </BuilderRow>
         `,
     });
-    await setupHTMLBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
+    await setupHTMLBuilder(`<div class="test-options-target" data-dynamic-builder-name="Yop">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".o_hb_options_container").toBeVisible();
     expect(queryAllTexts(".o_hb_options_container > div")).toEqual(["My custom title", "Row 1\nTest"]);
@@ -164,9 +164,9 @@ test("option group stay unfolded when clicking 'Select only this block'", async 
         template: xml`<BuilderRow label="'Row 3'">C</BuilderRow>`,
     });
     await setupHTMLBuilder(
-        `<div class="test-options-parent" data-name="Parent">
-            <section class="test-options-target" data-name="Target">
-                <div class="test-options-child" data-name="Child">
+        `<div class="test-options-parent" data-dynamic-builder-name="Parent">
+            <section class="test-options-target" data-dynamic-builder-name="Target">
+                <div class="test-options-child" data-dynamic-builder-name="Child">
                     Text
                 </div>
             </section>
@@ -200,8 +200,8 @@ test("option group stay unfolded when changing an option", async () => {
         template: xml`<BuilderRow label="'Row 2'">B</BuilderRow>`,
     });
     await setupHTMLBuilder(
-        `<section class="test-options-target" data-name="Target">
-            <div class="test-options-child" data-name="Child">
+        `<section class="test-options-target" data-dynamic-builder-name="Target">
+            <div class="test-options-child" data-dynamic-builder-name="Child">
                 Text
             </div>
         </section>`
@@ -236,8 +236,8 @@ test("last container with options is unfolded regardless of containers without o
         }
     );
     await setupHTMLBuilder(
-        `<section class="test-options-target" data-name="Target">
-            <div class="test-options-child" data-name="Child">
+        `<section class="test-options-target" data-dynamic-builder-name="Target">
+            <div class="test-options-child" data-dynamic-builder-name="Child">
                 Text
             </div>
         </section>`
@@ -272,8 +272,8 @@ test("unfold parent of last container if there is a match in `auto_unfold_contai
         }
     );
     await setupHTMLBuilder(
-        `<section class="test-options-target" data-name="Target">
-            <div class="test-options-child" data-name="Child">
+        `<section class="test-options-target" data-dynamic-builder-name="Target">
+            <div class="test-options-child" data-dynamic-builder-name="Child">
                 Text
             </div>
         </section>`
@@ -302,8 +302,8 @@ test("options restricted to groups excluding current user do not make an empty f
         }
     );
     await setupHTMLBuilder(
-        `<section class="test-options-target" data-name="Target">
-            <div class="test-options-child" data-name="Child">
+        `<section class="test-options-target" data-dynamic-builder-name="Target">
+            <div class="test-options-child" data-dynamic-builder-name="Child">
                 Text
             </div>
         </section>`
@@ -345,11 +345,11 @@ test("unfolded-by-click option group stay unfolded when changing target", async 
         }
     );
     await setupHTMLBuilder(
-        `<section class="test-options-target first-section" data-name="Target">
-            <div class="test-options-child first-child" data-name="Child">
+        `<section class="test-options-target first-section" data-dynamic-builder-name="Target">
+            <div class="test-options-child first-child" data-dynamic-builder-name="Child">
                 Text
             </div>
-            <div class="test-options-child second-child" data-name="Child 2">
+            <div class="test-options-child second-child" data-dynamic-builder-name="Child 2">
                 Text
             </div>
         </section>

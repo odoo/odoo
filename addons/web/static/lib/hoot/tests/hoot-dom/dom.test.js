@@ -546,7 +546,7 @@ describe(parseUrl(import.meta.url), () => {
                         <div class="o_we_so_color_palette o_we_widget_opened">
                             idk
                         </div>
-                        <we-select data-name="shape_img_opt">
+                        <we-select data-dynamic-builder-name="shape_img_opt">
                             <we-toggler></we-toggler>
                         </we-select>
                     </we-customizeblock-option>
@@ -562,7 +562,7 @@ describe(parseUrl(import.meta.url), () => {
             await mountForTest(/* xml */ `
                 <div class="o_we_customize_panel">
                     <we-customizeblock-option class="snippet-option-ImageTools">
-                        <we-select data-name="shape_img_opt">
+                        <we-select data-dynamic-builder-name="shape_img_opt">
                             <we-toggler></we-toggler>
                         </we-select>
                     </we-customizeblock-option>

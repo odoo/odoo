@@ -32,7 +32,7 @@
             <div class="row s_nb_column_fixed">
                 <div class="col-md-12 col-12">
                     <h2 class="text-center">Schedule</h2>
-                    <div class="s_hr o_mail_snippet_general o_not_editable pt4 pb16 o_colored_level" data-name="Separator">
+                    <div class="s_hr o_mail_snippet_general o_not_editable pt4 pb16 o_colored_level">
                         <hr class="w-50 mx-auto"/>
                     </div>
                 </div>
@@ -41,20 +41,20 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 col-md-12">
-                    <table class="mx-auto" data-name="Schedule Table">
-                        <tr style="vertical-align:top" data-name="Schedule Item">
-                            <td style="text-align:right;" class="p-2" data-name="Time">
+                    <table class="mx-auto" data-builder-name="schedule-table">
+                        <tr style="vertical-align:top" data-builder-name="schedule-item">
+                            <td style="text-align:right;" class="p-2" data-builder-name="time">
                                 <p><strong>8h:</strong></p>
                             </td>
-                            <td class="p-2" data-name="Activity">
+                            <td class="p-2" data-builder-name="activity">
                                 <p><strong>Welcome</strong></p>
                             </td>
                         </tr>
-                        <tr style="vertical-align:top" data-name="Schedule Item">
-                            <td style="text-align:right;" class="p-2" data-name="Time">
+                        <tr style="vertical-align:top" data-builder-name="schedule-item">
+                            <td style="text-align:right;" class="p-2" data-builder-name="time">
                                 <p><strong>18h30:</strong></p>
                             </td>
-                            <td class="p-2" data-name="Activity">
+                            <td class="p-2" data-builder-name="activity">
                                 <p><strong>[speaker] &amp; [speaker]'s conference</strong></p>
                                 <ul>
                                     <li>Interactive Odoo demo</li>
@@ -62,11 +62,11 @@
                                 </ul>
                             </td>
                         </tr>
-                        <tr style="vertical-align:top" data-name="Schedule Item">
-                            <td style="text-align:right;" class="p-2" data-name="Time">
+                        <tr style="vertical-align:top" data-builder-name="schedule-item">
+                            <td style="text-align:right;" class="p-2" data-builder-name="time">
                                 <p><strong>19h00:</strong></p>
                             </td>
-                            <td class="p-2" data-name="Activity">
+                            <td class="p-2" data-builder-name="activity">
                                 <p><strong>Table Ronde</strong></p>
                                 <ul>
                                     <li>Business Case</li>
@@ -74,11 +74,11 @@
                                 </ul>
                             </td>
                         </tr>
-                        <tr style="vertical-align:top" data-name="Schedule Item">
-                            <td style="text-align:right;" class="p-2" data-name="Time">
+                        <tr style="vertical-align:top" data-builder-name="schedule-item">
+                            <td style="text-align:right;" class="p-2" data-builder-name="time">
                                 <p><strong>19h30: </strong></p>
                             </td>
-                            <td class="p-2" data-name="Activity">
+                            <td class="p-2" data-builder-name="activity">
                                 <p><strong>Networking: Walking Dinner &amp; Drinks</strong></p>
                             </td>
                         </tr>
@@ -93,13 +93,13 @@
     <section class="s_pricelist_boxed o_mail_snippet_general pt72 pb72 o_colored_level">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 px-3 pt48 pb48 o_cc col-12" data-name="Menu">
+                <div class="col-md-12 px-3 pt48 pb48 o_cc col-12" data-builder-name="menu">
                     <div class="row mx-auto">
-                        <div class="col-md-12" data-name="Menu Heading">
+                        <div class="col-md-12" data-builder-name="menu-heading">
                             <h2 style="text-align:center;">Our Menu</h2>
                             <p style="text-align:center;">Savor our fresh, local cuisine with a modern twist.<br/>Deliciously crafted for every taste!</p>
                         </div>
-                        <div class="s_pricelist_boxed_section col-md-12 pt48 col-12" data-name="Menu Section">
+                        <div class="s_pricelist_boxed_section col-md-12 pt48 col-12">
                             <h3>✽<t t-out="nbsp + nbsp"/>Pizzas</h3>
                             <t t-call="mass_mailing.s_pricelist_boxed_item"
                                 name="'Margherita'"
@@ -123,7 +123,7 @@
                                 description="'Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato sauce for a flavorful kick.'"
                             />
                         </div>
-                        <div class="s_pricelist_boxed_section col-md-12 pt48 col-12" data-name="Menu Section">
+                        <div class="s_pricelist_boxed_section col-md-12 pt48 col-12">
                             <h3>✽<t t-out="nbsp + nbsp"/>Pastas</h3>
                             <t t-call="mass_mailing.s_pricelist_boxed_item"
                                 name="'Spaghetti Carbonara'"
@@ -161,7 +161,7 @@
                 <p t-out="name"></p>
             </div>
             <div t-attf-class="col-md-{{10 - size}} col-{{9 - mobileSize}}" style="padding-left: 0px; padding-right: 0px;">
-                <div class="s_hr o_mail_snippet_general o_not_editable pt8 pb8 o_colored_level" data-name="Separator">
+                <div class="s_hr o_mail_snippet_general o_not_editable pt8 pb8 o_colored_level">
                     <hr class="w-100 mx-auto" style="border-top-color: rgb(206, 198, 206);"/>
                 </div>
             </div>

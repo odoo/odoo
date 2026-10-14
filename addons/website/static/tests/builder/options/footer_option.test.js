@@ -35,7 +35,7 @@ test("skip saving page options when the relevant element is not in the DOM", asy
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="breadcrumb_color">
             <input type="hidden" class="o_page_option_data" autocomplete="off" name="breadcrumb_text_color">`,
         footerContent: `
-            <footer data-name="Footer">Footer Content</footer>`,
+            <footer data-builder-name="footer">Footer Content</footer>`,
     });
     onRpc("website.page", "write", ({ args }) => {
         expect(args[1]).toEqual({

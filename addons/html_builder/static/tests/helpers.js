@@ -248,14 +248,14 @@ export async function setupHTMLBuilder(
                 getSnippetStructure({
                     name: "Test",
                     groupName: "a",
-                    content: `<section class="s_test" data-snippet="s_test" data-name="Test">
+                    content: `<section class="s_test" data-snippet="s_test">
             <div class="test_a"></div>
             </section>`,
                 }),
             ],
             // TODO: maybe we should use the same structure as in the snippets?
             snippet_content: snippetContent || [
-                `<section class="s_test" data-snippet="s_test" data-name="Test">
+                `<section class="s_test" data-snippet="s_test">
             <div class="test_a"></div>
             </section>`,
             ],
@@ -500,27 +500,21 @@ export async function modifyText(editor, editableContent) {
  * Creates a basic HTML section structure for test snippets
  * @param {string} content - The content to place inside the section
  * @param {Object} [options={}] - Configuration options
- * @param {string} [options.name] - Name attribute for the section (data-name)
  * @param {string} [options.snippet="s_test"] - Snippet class and data-snippet value
  * @param {string} [options.additionalClassOnRoot=""] - Additional CSS classes for the root element
  * @returns {string} Formatted HTML section element
  */
-export function getBasicSection(
-    content,
-    { name, snippet = "s_test", additionalClassOnRoot = "" } = {}
-) {
+export function getBasicSection(content, { snippet = "s_test", additionalClassOnRoot = "" } = {}) {
     let classes = snippet;
     if (additionalClassOnRoot) {
         classes += ` ${additionalClassOnRoot}`;
     }
     return unformat(
-        `<section class="${classes}" data-snippet="${snippet}" ${
-            name ? `data-name="${name}"` : ""
-        }><div class="test_a">${content}</div></section>`
+        `<section class="${classes}" data-snippet="${snippet}"><div class="test_a">${content}</div></section>`
     );
 }
 
-export function createTestSnippets({ snippets: snippetConfigs = [], withName = false }) {
+export function createTestSnippets({ snippets: snippetConfigs = [] }) {
     return snippetConfigs.map((snippetConfig) => {
         const {
             name,
@@ -539,7 +533,6 @@ export function createTestSnippets({ snippets: snippetConfigs = [], withName = f
         const finalContent =
             content ||
             getBasicSection(innerHTML || name, {
-                name: withName ? name : "",
                 snippet: snippetId || "s_test",
                 additionalClassOnRoot,
             });
@@ -577,7 +570,7 @@ export const exampleContent = '<h1 class="title">Hello</h1>';
 export const wrapExample = `<div id="wrap" data-oe-model="ir.ui.view" data-oe-id="539" data-oe-field="arch">${exampleContent}</div>`;
 
 export async function setupHTMLBuilderWithDummySnippet(content) {
-    const snippetEl = `<section class="s_test" data-snippet="s_test" data-name="Test">
+    const snippetEl = `<section class="s_test" data-snippet="s_test">
             <div class="test_a"></div>
         </section>`;
 

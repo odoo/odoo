@@ -47,7 +47,6 @@ test("Renaming custom snippets don't make an orm call", async () => {
     `,
             },
         ],
-        withName: true,
     });
     const snippets = {
         snippet_groups: [
@@ -58,7 +57,7 @@ test("Renaming custom snippets don't make an orm call", async () => {
     };
 
     await setupWebsiteBuilder(
-        `<section data-name="Dummy Section" data-snippet="s_dummy">
+        `<section data-dynamic-builder-name="Dummy Section" data-snippet="s_dummy">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-7">
@@ -93,7 +92,7 @@ test("Renaming custom snippets don't make an orm call", async () => {
 });
 
 test("thumbnails are displayed on custom inner snippets even if they have the same name of a snippet structure", async () => {
-    const testSnippetContent = `<section class="s_test" data-snippet="s_test" data-name="test"><p>test snippet</p></section>`;
+    const testSnippetContent = `<section class="s_test" data-snippet="s_test" data-dynamic-builder-name="test"><p>test snippet</p></section>`;
     const structureSnippetDesc = {
         name: "test",
         groupName: "a",

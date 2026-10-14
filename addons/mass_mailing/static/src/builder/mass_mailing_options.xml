@@ -104,15 +104,15 @@
             exclude=".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2"/>
         <badge_option template="html_builder.BadgeOption" selector=".s_badge"/>
         <mass_mailing_border_option
-            selector=".row > div, .s_bento_blocks div[data-name='Bento card'], .s_bento_blocks div[data-name='Bento callout']"
-            t-attf-exclude=".o_mail_wrapper_td, .s_image_gallery .row > div, .row > .s_record_snapshot, .s_bento_blocks .row > div:has(> [data-name='Bento card']), {{cardBorderOptionSelector}}, {{textBorderOptionSelector}}, {{tableBorderOptionSelector}}"/>
+            selector=".row > div, .s_bento_blocks div[data-builder-name='bento-card'], .s_bento_blocks div[data-builder-name='bento-callout']"
+            t-attf-exclude=".o_mail_wrapper_td, .s_image_gallery .row > div, .row > .s_record_snapshot, .s_bento_blocks .row > div:has(> [data-builder-name='bento-card']), {{cardBorderOptionSelector}}, {{textBorderOptionSelector}}, {{tableBorderOptionSelector}}"/>
         <horizontal_padding_option
             template="mass_mailing.HorizontalPaddingOption"
             t-att-selector="this.horizontalPaddingOptionSelector"
-            exclude=".s_col_no_resize.row > div, .s_col_no_resize, img, .s_bento_blocks div[data-name='Bento card'], .s_bento_blocks div[data-name='Bento callout']"/>
+            exclude=".s_col_no_resize.row > div, .s_col_no_resize, img, .s_bento_blocks div[data-builder-name='bento-card'], .s_bento_blocks div[data-builder-name='bento-callout']"/>
         <vertical_padding_option
             template="mass_mailing.VerticalPaddingOption"
-            selector=".o_mail_block_footer_social, .s_header_logo, .s_header_social, .s_bento_blocks div[data-name='Bento card'], .s_bento_blocks div[data-name='Bento callout']"
+            selector=".o_mail_block_footer_social, .s_header_logo, .s_header_social, .s_bento_blocks div[data-builder-name='bento-card'], .s_bento_blocks div[data-builder-name='bento-callout']"
             exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
         <snippet_visibility_option selector="section"/>
         <bento_blocks_add_card_option selector=".s_bento_blocks"/>

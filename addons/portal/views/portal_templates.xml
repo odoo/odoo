@@ -172,7 +172,7 @@
                     <t t-if="prev_record or next_record" t-call='portal.record_pager'/>
                 </div>
             </div>
-            <div id="wrap" class='o_portal_wrap' data-name="My Account">
+            <div id="wrap" class='o_portal_wrap' data-builder-name="my-account">
                 <div class="container pt-3 pb-5">
                     <t t-if="my_details">
                         <div class="wrapper col-12 d-flex flex-wrap justify-content-between align-items-center">
@@ -270,7 +270,7 @@
             t-att-data-show-in-portal="'true' if entry.show_in_portal else 'false'"
             t-att-data-hidden-by-business-rule="'1' if not show_portal_card and not entry.placeholder_count else None"
             t-att-class="'o_portal_index_card ' +  ('' if entry.show_in_portal and show_portal_card else 'd-none ') + ('w-100 order-0' if show_count else 'order-2')">
-            <a t-att-href="entry.url" data-name="Portal Cards" t-att-title="entry.name" t-attf-class="d-flex gap-2 gap-md-3 py-3 pe-2 px-md-3 h-100 rounded text-decoration-none #{bg_color if bg_color else ''}">
+            <a t-att-href="entry.url" data-builder-name="portal-cards" t-att-title="entry.name" t-attf-class="d-flex gap-2 gap-md-3 py-3 pe-2 px-md-3 h-100 rounded text-decoration-none #{bg_color if bg_color else ''}">
                 <div t-if="entry.image" class="o_portal_icon d-none">
                     <span t-field="entry.image"
                         t-options="{'widget': 'image', 'width': 64, 'height': 64}"

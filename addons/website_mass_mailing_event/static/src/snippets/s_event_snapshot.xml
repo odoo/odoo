@@ -5,7 +5,7 @@
                 <div class="row align-items-stretch">
                     <t t-foreach="[1,2]" t-as="key" t-key="key">
                         <div class="col-md-6 col-12 pt32 pb32 s_record_snapshot"
-                            data-name="Event Snapshot"
+                            data-builder-name="event-snapshot"
                             data-model="event.event" data-fragment-key="columns"
                             style="padding-left: 16px !important; padding-right: 16px !important;">
                             <t t-call="website_mass_mailing_event.s_event_snapshot_columns_fragment"
@@ -28,7 +28,7 @@
     <t t-name="website_mass_mailing_event.s_event_card">
         <section class="s_text_image o_mail_snippet_general pt0 pb40">
             <div class="container s_record_snapshot s_text_block o_cc" 
-                data-name="Event Snapshot"
+                data-builder-name="event-snapshot"
                 data-model="event.event" data-fragment-key="card">
                 <t t-call="website_mass_mailing_event.s_event_snapshot_card_fragment"
                     coverUrl="'/web/image/mass_mailing.s_event_default_image_2'"
@@ -47,7 +47,7 @@
     <t t-name="website_mass_mailing_event.s_event_aside">
         <section class="s_text_image o_mail_snippet_general pt40 pb40">
             <div class="container s_record_snapshot s_text_block o_cc"
-                data-name="Event Snapshot" 
+                data-builder-name="event-snapshot" 
                 data-model="event.event" data-fragment-key="aside">
                 <div class="row align-items-center">
                     <t t-call="website_mass_mailing_event.s_event_snapshot_aside_fragment"

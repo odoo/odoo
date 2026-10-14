@@ -10,7 +10,7 @@ test("scroll miniatures", async () => {
     defineStyle(/* css */`li { min-width: 64px !important; }`);
     const { core } = await startInteractions(`
         <div class="o_wsale_product_images position-relative" style="width: 600px" data-image-amount="16">
-            <div id="o-carousel-product" data-bs-ride="true" class="o_carousel_not_single carousel slide position-sticky mb-3 overflow-hidden" data-name="Product Carousel">
+            <div id="o-carousel-product" data-bs-ride="true" class="o_carousel_not_single carousel slide position-sticky mb-3 overflow-hidden" data-dynamic-builder-name="Product Carousel">
                 <div class="o_carousel_product_outer carousel-outer position-relative d-flex align-items-center w-100 overflow-hidden">
                     <span class="o_ribbon o_ribbon_right z-1" style=""></span>
                     <div class="carousel-inner h-100">

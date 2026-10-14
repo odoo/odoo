@@ -18,8 +18,8 @@ test("add a new ribbon", async () => {
     await setupWebsiteBuilder(
         `<div id="o_wsale_container" data-ppg="20" data-ppr="4" data-default-sort="website_sequence asc">
         <div id="products_grid">
-            <section id="o_wsale_products_grid" class="o_wsale_products_grid_table grid o_wsale_products_grid_table_md" style="--o-wsale-ppr: 4; --o-wsale-ppg: 20" data-name="Grid">
-                <div class="oe_product" style="--o-wsale-products-grid-product-col-height: 1;" data-name="Product">
+            <section id="o_wsale_products_grid" class="o_wsale_products_grid_table grid o_wsale_products_grid_table_md" style="--o-wsale-ppr: 4; --o-wsale-ppg: 20" data-dynamic-builder-name="Grid">
+                <div class="oe_product" style="--o-wsale-products-grid-product-col-height: 1;" data-dynamic-builder-name="Product">
                 <div class="o_wsale_product_grid_wrapper o_wsale_product_grid_wrapper_1_1">
                 <article class="oe_product_cart" data-publish="off">
                     <div class="oe_product_image">

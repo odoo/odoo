@@ -7,6 +7,7 @@ import { user } from "@web/core/user";
 import { markup, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
+import { getSnippetName } from "@html_builder/utils/utils";
 
 export class SnippetModel {
     constructor(services, { snippetsName, context }) {
@@ -274,6 +275,16 @@ export class SnippetModel {
             }
         }
         this.snippetsByCategory["snippet_custom_content"] = customInnerContent;
+
+        // Extract the names map
+        this.namesMaps = {};
+        for (const namesEl of snippetsBody.querySelectorAll("names")) {
+            const names = {};
+            for (const nameEl of namesEl.children) {
+                names[nameEl.getAttribute("key")] = nameEl.getAttribute("name");
+            }
+            this.namesMaps[namesEl.id] = names;
+        }
     }
 
     async deleteCustomSnippet(snippet) {
@@ -326,7 +337,7 @@ export class SnippetModel {
             `snippets#snippet_custom > [data-oe-snippet-key=${snippet.key}]`
         )) {
             snippetEl.setAttribute("name", newName);
-            snippetEl.firstElementChild.dataset["name"] = newName;
+            snippetEl.firstElementChild.dataset.customName = newName;
         }
         await this.orm.call("ir.ui.view", "rename_snippet", [], {
             name: newName,
@@ -378,7 +389,7 @@ export class SnippetModel {
 
         const defaultSnippetName = isButton
             ? _t("Custom Button")
-            : _t("Custom %s", snippetEl.dataset.name);
+            : _t("Custom %s", getSnippetName(snippetEl, this));
         snippetCopyEl.classList.add("s_custom_snippet");
         delete snippetCopyEl.dataset.name;
         if (isButton) {
@@ -408,10 +419,15 @@ export class SnippetModel {
     }
 
     setSnippetName(snippetsDocument) {
-        // TODO: this should probably be done in py
         for (const snippetEl of snippetsDocument.body.querySelectorAll("snippets > *")) {
-            snippetEl.children[0].dataset["name"] = snippetEl.getAttribute("name");
+            if (snippetEl.children[0].classList.contains("s_custom_snippet")) {
+                snippetEl.children[0].dataset.customName = snippetEl.getAttribute("name");
+            }
         }
+    }
+
+    getSnippetNameByKey(snippetKey) {
+        return this.getOriginalSnippet(snippetKey)?.title;
     }
 
     /**

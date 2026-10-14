@@ -303,14 +303,14 @@ test("Background position overlay behavior", async () => {
 
 test("Color filter doesn't disappear when video background is set", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
-        <section class="color-target o_background_video" data-snippet="s_banner" data-name="Banner" data-bg-video-src="/test_route">
+        <section class="color-target o_background_video" data-snippet="s_banner" data-bg-video-src="/test_route">
             <div class="o_bg_video_container" contenteditable="false">
                 <div class="o_bg_video_loading d-flex justify-content-center align-items-center text-primary"></div>
             </div>
             <div>First section</div>
             <div class="o_we_bg_filter" style="background-color: rgba(100, 100, 100, 0.5);" />
         </section>
-        <section class="gradient-target o_background_video" data-snippet="s_banner" data-name="Banner" data-bg-video-src="/test_route">
+        <section class="gradient-target o_background_video" data-snippet="s_banner" data-bg-video-src="/test_route">
             <div class="o_bg_video_container" contenteditable="false">
                 <div class="o_bg_video_loading d-flex justify-content-center align-items-center text-primary"></div>
             </div>

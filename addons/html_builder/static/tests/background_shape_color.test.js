@@ -286,7 +286,7 @@ test("Connections shape color updates when snippet is dropped next to it", async
                     getSnippetStructure({
                         name: "Test",
                         groupName: "a",
-                        content: `<section class="s_test" data-snippet="s_test" data-name="Test" style ="background-color: ${RGB_BLUE}; height: 19px;">
+                        content: `<section class="s_test" data-snippet="s_test" style ="background-color: ${RGB_BLUE}; height: 19px;">
                 <div class="test_a"></div>
                 </section>`,
                     }),

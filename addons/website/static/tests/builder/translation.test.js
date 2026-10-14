@@ -303,7 +303,7 @@ test("translate attribute history", async () => {
 test("translate input of searchbar", async () => {
     await setupSidebarBuilderForTranslation({
         websiteContent: `
-            <form method="get" class="o_searchbar_form s_searchbar_input " data-snippet="s_searchbar_input" data-name="Search Input">
+            <form method="get" class="o_searchbar_form s_searchbar_input " data-snippet="s_searchbar_input" data-dynamic-builder-name="Search Input">
                 <div role="search" class=" o_search_input_group input-group ">
                     <input type="search" name="search" class="o_cc o_cc1 border search-query form-control oe_search_box o_savable_attribute" placeholder="&lt;span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;568&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;7f55382219f0202c1b4f56deb099e2fedcec87ee73fe2edb2105df5447323bc6&quot;&gt;Search...&lt;/span&gt;" data-search-type="all" data-limit="6" data-order-by="name asc" autocomplete="off">
                 </div>
