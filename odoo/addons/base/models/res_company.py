@@ -65,7 +65,9 @@ class ResCompany(models.CachedModel):
     _inherit = ['format.address.mixin', 'format.vat.label.mixin']
     _parent_store = True
     _clear_asset_cache_on_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
-    _cached_data_fields = ('name', 'active', 'sequence', 'currency_id', 'parent_id', 'partner_id')
+    _cached_data_fields = (
+        'name', 'active', 'sequence', 'currency_id', 'parent_id', 'parent_path', 'partner_id',
+    )
 
     def copy(self, default=None):
         raise UserError(self.env._('Duplicating a company is not allowed. Please create a new company instead.'))
