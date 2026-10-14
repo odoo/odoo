@@ -483,21 +483,13 @@ class TestWebsiteSalePerformanceWithMultipleUoms(TestWebsiteSalePerformanceWithU
 
         cls.heavy_product.uom_ids = [Command.set([cls.uom_dozen.id, cls.uom_pack_6.id])]
 
-    def _get_shop_page_queries(self):
-        res = super()._get_shop_page_queries()
-        res["uom_uom"] += 1
-        return res
+    # the additional units of measure are read from the cached data
 
     def test_shop_page_generation(self):
         select_queries = self._get_shop_page_queries()
         self._check_url_hot_query(
             "/shop", sum(select_queries.values()), select_tables_perf=select_queries
         )
-
-    def _get_product_page_queries(self):
-        res = super()._get_product_page_queries()
-        res["uom_uom"] += 2
-        return res
 
     def test_product_page_generation(self):
         select_queries = self._get_product_page_queries()
