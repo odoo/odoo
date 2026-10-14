@@ -1,10 +1,18 @@
 <odoo>
     <template id="portal_my_details" inherit_id="portal.portal_my_details">
         <select name="invoice_sending_method" position="after">
+<<<<<<< 9fac26329afe4df48a8a69b4a530fc4b71147dcb
             <div t-if="routing_scheme_list" class="col-xl-6 portal_peppol_toggle">
                 <t t-set="current_eas" t-value="(partner_sudo.routing_identifier or '').partition(':')[0]"/>
                 <t t-set="current_endpoint" t-value="(partner_sudo.routing_identifier or '').partition(':')[2]"/>
                 <label class="col-form-label label-optional" for="routing_scheme">
+||||||| e5a4af13360c0fb54ea5ae3301804cccb09668cd
+            <div t-if="peppol_eas_list" class="col-xl-6 portal_peppol_toggle">
+                <label class="col-form-label label-optional" for="peppol_eas">
+=======
+            <fieldset t-if="peppol_eas_list" class="col-xl-6 portal_peppol_toggle">
+                <label class="col-form-label label-optional" for="peppol_eas">
+>>>>>>> b0654fdf4623cf420d709e8ecd734421fdbe3b56
                     Peppol e-Address (EAS)
                 </label>
                 <select name="routing_scheme" class="form-select">
@@ -25,7 +33,7 @@
                     class="form-control"
                     t-att-value="current_endpoint"
                 />
-            </div>
+            </fieldset>
         </select>
     </template>
 </odoo>
