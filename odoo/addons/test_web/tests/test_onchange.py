@@ -604,6 +604,46 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
         self.assertEqual(result['value'], expected)
 
+    def test_onchange_clean(self):
+        """ The cleaned value of a modified field is returned. """
+        Model = self.env['test_orm.cleaned']
+        fields_spec = {'name': {}, 'code': {}, 'parent_id': {'fields': {}}, 'parent_name': {}}
+
+        result = Model.onchange({'name': ' foo '}, ['name'], fields_spec)
+        self.assertEqual(result['value'], {'name': 'FOO', 'code': 'FOO'})
+
+        # an empty value is cleaned, too
+        result = Model.onchange({'ref': False}, ['ref'], {'ref': {}})
+        self.assertEqual(result['value'], {'ref': '/'})
+
+        # the cleaned value includes the cleaning specific to the field type,
+        # like html sanitization
+        result = Model.onchange({'body': '<p onclick="x()">colour</p>'}, ['body'], {'body': {}})
+        self.assertEqual(result['value'], {'body': '<p>color</p>'})
+
+        # the value is not returned when only the cleaning specific to the
+        # field type modifies it: html sanitization does not give a canonical
+        # form that the client should adopt, with or without a clean function
+        result = Model.onchange({'body': '<p onclick="x()">color</p>'}, ['body'], {'body': {}})
+        self.assertEqual(result['value'], {})
+        result = Model.onchange({'description': '<p onclick="x()">colour</p>'}, ['description'], {'description': {}})
+        self.assertEqual(result['value'], {})
+
+        # the related field cleans like its target field
+        parent = Model.create({'name': 'foo'})
+        result = Model.onchange({'parent_id': parent.id, 'parent_name': ' bar '}, ['parent_name'], fields_spec)
+        self.assertEqual(result['value'], {'parent_name': 'BAR'})
+
+        # a new record shows the values it gets when created
+        result = Model.onchange({}, [], {'name': {}, 'capacity': {}, 'ref': {}, 'code': {}})
+        self.assertEqual(result['value'], {'name': False, 'capacity': 100, 'ref': '/', 'code': '/'})
+
+        # the client calls onchange on fields with a clean function, but not
+        # on fields with only the cleaning specific to the field type
+        self.assertTrue(Model._has_onchange(Model._fields['name'], ()))
+        self.assertTrue(Model._has_onchange(Model._fields['parent_name'], ()))
+        self.assertFalse(Model._has_onchange(Model._fields['description'], ()))
+
     def test_onchange_many2one_one2many(self):
         """ Setting a many2one field should not read the inverse one2many. """
         discussion = self.env.ref('test_base.discussion_0')

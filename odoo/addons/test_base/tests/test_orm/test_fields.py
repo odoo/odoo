@@ -12,7 +12,7 @@ from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import TransactionCase, new_test_user, tagged, users
-from odoo.tools import BinaryBytes, float_repr, mute_logger, sql
+from odoo.tools import SQL, BinaryBytes, float_repr, mute_logger, sql
 from odoo.tools.image import binary_to_image, image_data_uri
 
 from .test_domain_expression import TransactionExpressionCase
@@ -5751,3 +5751,113 @@ class TestCompanyDependent(TransactionCase):
                              f'Please override the unlink method of {comodel_field.comodel_name} and do the ORM on '
                              f'delete cascade logic and remove/override the ondelete="cascade" of {comodel_field}'),
                         )
+
+
+class TestClean(TransactionCase):
+
+    def assertStored(self, record, fname, expected):
+        record.flush_recordset([fname])
+        self.env.cr.execute(SQL("SELECT %s FROM %s WHERE id = %s", SQL.identifier(fname), SQL.identifier(record._table), record.id))
+        self.assertEqual(self.env.cr.fetchone()[0], expected)
+
+    def test_create_write(self):
+        Model = self.env['test_orm.cleaned']
+        record = Model.create({'name': ' foo ', 'capacity': 50})
+        self.assertStored(record, 'name', 'FOO')
+        self.assertStored(record, 'capacity', 100)
+
+        record.write({'name': ' bar'})
+        self.assertEqual(record.name, 'BAR')
+
+        # clean is applied before html sanitization
+        record = Model.create({'body': '<p onclick="x()">colour</p>'})
+        self.assertStored(record, 'body', '<p>color</p>')
+
+        # values given to new() are cleaned, too: a new record holds the
+        # values it gets when created
+        record = Model.new({'name': ' foo '})
+        self.assertEqual(record.name, 'FOO')
+
+    def test_empty(self):
+        Model = self.env['test_orm.cleaned']
+        # clean is called on empty values, and may keep them empty
+        record = Model.create({'name': False, 'note': False})
+        self.assertEqual((record.name, record.note), (False, False))
+        record.write({'name': ' foo ', 'note': '<div>colour</div>'})
+        record.write({'name': False, 'note': False})
+        self.assertEqual((record.name, record.note), (False, False))
+
+        # or change them
+        record = Model.create({'ref': False})
+        self.assertStored(record, 'ref', '/')
+        record.write({'ref': 'foo'})
+        record.write({'ref': False})
+        self.assertStored(record, 'ref', '/')
+
+        # numeric fields have no empty value: clean is called on 0
+        record = Model.create({'capacity': 0})
+        self.assertEqual(record.capacity, 100)
+        record.write({'capacity': 150})
+        record.write({'capacity': False})
+        self.assertEqual(record.capacity, 100)
+
+    def test_omitted(self):
+        """ A value omitted at creation is cleaned like an empty value. """
+        Model = self.env['test_orm.cleaned']
+        record = Model.create({})
+        self.assertStored(record, 'capacity', 100)
+        self.assertStored(record, 'ref', '/')
+
+        # an empty default is given when clean changes the empty value, except
+        # on computed and related fields; it is cleaned like any default
+        self.assertEqual(
+            Model.default_get(['name', 'capacity', 'ref', 'code', 'parent_name']),
+            {'capacity': 100, 'ref': '/'},
+        )
+        self.assertEqual(Model.with_context(default_name=' foo ').default_get(['name']), {'name': 'FOO'})
+
+    def test_compute(self):
+        # the field is computed, then cleaned
+        record = self.env['test_orm.cleaned'].create({'name': 'foo'})
+        self.assertStored(record, 'code', 'FOO')
+        record = self.env['test_orm.cleaned'].create({})
+        self.assertStored(record, 'code', '/')
+
+    def test_translate(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        record = self.env['test_orm.cleaned'].create({'label': ' hello '})
+        record.with_context(lang='fr_FR').label = ' bonjour '
+        self.assertStored(record, 'label', {'en_US': 'hello', 'fr_FR': 'bonjour'})
+
+        record.label = {'en_US': ' hi ', 'fr_FR': ' salut '}
+        self.assertStored(record, 'label', {'en_US': 'hi', 'fr_FR': 'salut'})
+
+        # translation dialog, with a dropped translation
+        record.update_field_translations('label', {'en_US': ' hey ', 'fr_FR': False})
+        self.assertStored(record, 'label', {'en_US': 'hey'})
+
+        # an empty value cleaned as empty removes all translations
+        record.with_context(lang='fr_FR').label = False
+        self.assertStored(record, 'label', None)
+
+        # an empty value cleaned as non-empty sets the current translation
+        record = self.env['test_orm.cleaned'].create({'title': 'Hello'})
+        record.with_context(lang='fr_FR').title = 'Bonjour'
+        record.with_context(lang='fr_FR').title = False
+        self.assertStored(record, 'title', {'en_US': 'Hello', 'fr_FR': 'Untitled'})
+
+    def test_translate_model_terms(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        record = self.env['test_orm.cleaned'].create({'note': '<div>The colour</div>'})
+        self.assertEqual(record.note, '<div>The color</div>')
+
+        # the translated terms are cleaned, too
+        record.update_field_translations('note', {'fr_FR': {'The color': 'La colour'}})
+        self.assertStored(record, 'note', {'en_US': '<div>The color</div>', 'fr_FR': '<div>La color</div>'})
+
+    def test_related(self):
+        Model = self.env['test_orm.cleaned']
+        parent = Model.create({'name': 'foo'})
+        record = Model.create({'parent_id': parent.id})
+        record.parent_name = ' bar '
+        self.assertEqual(parent.name, 'BAR')

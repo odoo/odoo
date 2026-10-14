@@ -67,6 +67,7 @@ class Json(Field):
 
     type = 'json'
     _column_type = ('jsonb', 'jsonb')
+    _clean_supported = True
 
     def convert_to_record(self, value, record):
         """ Return a copy of the value """
