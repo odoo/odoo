@@ -1308,7 +1308,9 @@ class MailMessage(models.Model):
         ids_by_model = defaultdict(OrderedSet)
         prefetch_ids_by_model = defaultdict(OrderedSet)
         prefetch_messages = self | self.browse(self._prefetch_ids)
-        for message in prefetch_messages.filtered(lambda m: m.model and m.res_id):
+        for message in prefetch_messages.filtered(
+            lambda m: m.model and m.res_id and m.model in self.env,
+        ):
             target = ids_by_model if message in self else prefetch_ids_by_model
             target[message.model].add(message.res_id)
         return {
@@ -1322,7 +1324,7 @@ class MailMessage(models.Model):
         return {
             message: self.env[message.model].browse(message.res_id)
             .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
-            for message in self.filtered(lambda m: m.model and m.res_id)
+            for message in self.filtered(lambda m: m.model and m.res_id and m.model in self.env)
         }
 
     def _get_non_empty_domain(self):
