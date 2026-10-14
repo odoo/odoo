@@ -4,7 +4,7 @@ import contextlib
 
 from requests import Session, PreparedRequest, Response
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, loaded_demo_data, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -46,6 +46,8 @@ class TestOnboardingTours(HttpCase):
         return tours
 
     def test_onboarding_tours(self):
+        if loaded_demo_data(self.env):
+            self.skipTest("Onboarding tours are meant to run on a database without demo data")
         for tour in self._get_tours():
             with self.subTest(tour_name=tour.name), contextlib.closing(self.env.cr.savepoint()):
                 code = f"odoo.startTour({tour.name!r}, {{'mode': 'manual', 'robot': true}})"
