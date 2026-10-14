@@ -12,6 +12,7 @@ import {
     tick,
     waitUntil,
 } from "@odoo/hoot";
+import { _discardTimers, _getDefaultWaitTimeout } from "@web/../lib/hoot-dom/helpers/time";
 import { parseUrl } from "../local_helpers";
 
 // timeout of 1 second to ensure all timeouts are actually mocked
@@ -130,5 +131,28 @@ describe(parseUrl(import.meta.url), () => {
         await animationFrame();
 
         expect.verifySteps(["test"]);
+    });
+
+    test("waitUntil: cancelled waits never settle", async () => {
+        waitUntil(() => false, { timeout: 0 }).then(
+            () => expect.step("resolved"),
+            () => expect.step("rejected")
+        );
+
+        await microTick();
+        _discardTimers();
+        await animationFrame();
+        await animationFrame();
+
+        expect.verifySteps([]);
+    });
+
+    test("waitUntil: default timeout is derived from the test timeout", () => {
+        expect(_getDefaultWaitTimeout()).toBe(666);
+    });
+
+    test.timeout(3_000);
+    test("waitUntil: default timeout follows the timeout of a single test", () => {
+        expect(_getDefaultWaitTimeout()).toBe(2_000);
     });
 });
