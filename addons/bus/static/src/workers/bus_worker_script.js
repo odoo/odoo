@@ -1,4 +1,3 @@
-/* eslint-env worker */
 /* eslint-disable no-restricted-globals */
 
 import { BaseWorker } from "./base_worker";
