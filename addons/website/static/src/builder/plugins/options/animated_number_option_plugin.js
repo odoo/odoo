@@ -18,13 +18,15 @@ class AnimatedNumberOptionPlugin extends Plugin {
         can_format_content_predicates: this.canFormatContent.bind(this),
         color_target_providers: this.getStyleTargetElement.bind(this),
         formattable_node_providers: this.getStyleTargetElement.bind(this),
-        properties: {
-            predicate: (node) => closestElement(node, VALUE_SELECTOR),
-            formattable: true,
-            editable: true,
-            removable: false,
-        },
-        can_have_scroll_effect_predicates: (el) => !el.matches(ANIMATED_NUMBER_SELECTOR),
+        properties: [
+            {
+                predicate: (node) => closestElement(node, VALUE_SELECTOR),
+                formattable: true,
+                editable: true,
+                removable: false,
+            },
+            { predicate: ANIMATED_NUMBER_SELECTOR, scrollEffect: false },
+        ],
     };
 
     getValueElement(node) {
