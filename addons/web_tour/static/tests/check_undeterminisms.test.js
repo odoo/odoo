@@ -7,7 +7,7 @@ import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpe
 import { browser } from "@web/core/browser/browser";
 import { Macro } from "@web/core/macro";
 import { registry } from "@web/core/registry";
-import { enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
+import { _enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
 
 describe.current.tags("desktop");
 
@@ -88,7 +88,7 @@ beforeEach(async () => {
         debug: true,
         observeDelay: 300,
     });
-    enableEventLogs(false);
+    _enableEventLogs(false);
 });
 
 afterEach(() => {
