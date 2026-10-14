@@ -128,7 +128,7 @@ class TestStandardPerformance(UtilPerf):
         self.env.ref('base.user_admin').sudo().website_published = False
         user_id = self.ref('base.user_admin')
         url = f'/web/image/res.users/{user_id}/image_256'
-        self.assertEqual(self._get_url_hot_query(url), 5)
+        self.assertEqual(self._get_url_hot_query(url), 4)
 
     @mute_logger('odoo.http')
     def test_11_perf_sql_img_controller(self):
@@ -148,19 +148,14 @@ class TestStandardPerformance(UtilPerf):
         website_id = self.ref('base.default_website')
         url = f'/web/image/website/{website_id}/favicon'
         select_tables_perf = {
-            'website': 1,
-            # 1. `_find_record()` performs an access right check through
-            #    `exists()` which perform a request on the website.
-            # 2. `_get_stream_from` ends up reading the requested record to
-            #    give a name to the file (downloaded_name)
+            # `_get_stream_from` reads its name, both from the cached data.
+            # `_record_to_stream()` reads the favicon attachment.
             'ir_attachment': 1,
-            # 1. `_record_to_stream()` does a `search()`..
-            # 2. ..followed by a `_read()`
         }
-        self._check_url_hot_query(url, 2, select_tables_perf)
+        self._check_url_hot_query(url, 1, select_tables_perf)
 
         self.authenticate('portal', 'portal')
-        self._check_url_hot_query(url, 2, select_tables_perf)
+        self._check_url_hot_query(url, 1, select_tables_perf)
 
 
 class TestWebsitePerformanceCommon(UtilPerf):

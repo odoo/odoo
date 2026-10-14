@@ -72,3 +72,13 @@ class TestCachedModel(TransactionCase):
         self.assertEqual(self.currency.decimal_places, 3)
         self.env.invalidate_all()
         self.assertEqual(self.currency.decimal_places, 3)
+
+    def test_exists_from_cache(self):
+        self._reset_caches()
+        self.currency.rounding  # noqa: B018 (populate the cache)
+        self.assertEqual(
+            self._count_currency_queries(
+                lambda: self.assertEqual(self.currency.exists(), self.currency)
+            ),
+            0,
+        )
