@@ -1040,6 +1040,70 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             else:
                 self.assertFalse(line.purchase_line_id in po.order_line)
 
+    def test_subset_match_from_edi_diff_discount(self):
+        """When an EDI vendor bill line has the same unit price as a purchase order line
+        but a different discount, it should match and link to the purchase order line
+        without having its discount or price overridden.
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        po.order_line.discount = 10.0
+
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False
+        )
+
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {
+                'name': f"From {po.name}",
+                'purchase_line_id': False,
+                'discount': 0.0,
+            },
+            {
+                'name': po.order_line.name,
+                'purchase_line_id': po.order_line.id,
+                'discount': 0.0,
+            },
+        ])
+
+    def test_subset_match_from_edi_diff_discount_partial(self):
+        """When an EDI vendor bill contains both a matching line with a different discount
+        and an unmatched line, the matched line links with preserved discount, and the
+        'From Electronic Document' section is properly added for the unmatched line.
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        po.order_line.discount = 10.0
+
+        invoice = self.init_invoice(
+            'in_invoice', partner=self.partner_a, products=[self.product_order, self.product_order_other_price]
+        )
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False
+        )
+
+        self.assertRecordValues(invoice.invoice_line_ids.sorted('sequence'), [
+            {
+                'name': "From Electronic Document",
+                'purchase_line_id': False,
+                'discount': 0.0,
+            },
+            {
+                'name': self.product_order_other_price.display_name,
+                'purchase_line_id': False,
+                'discount': 0.0,
+            },
+            {
+                'name': f"From {po.name}",
+                'purchase_line_id': False,
+                'discount': 0.0,
+            },
+            {
+                'name': po.order_line.name,
+                'purchase_line_id': po.order_line.id,
+                'discount': 0.0,
+            },
+        ])
+
     def test_subset_not_match_non_invoice_lines(self):
         """Test that a purchase line with a line of 0 as unit price won't match
         with a non-invoice-lines (not an invoice_line_ids)
