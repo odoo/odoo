@@ -17,10 +17,9 @@ export class ClickableElementOptionPlugin extends Plugin {
             SetElementAnchorUrlAction,
         },
         clean_for_save_processors: this.cleanForSave.bind(this),
-        is_empty_link_legit_predicates: (linkEl) => {
-            if (linkEl.matches("a.stretched-link[href], .carousel-item > a.slide-link[href]")) {
-                return true;
-            }
+        properties: {
+            predicate: "a.stretched-link[href], .carousel-item > a.slide-link[href]",
+            emptyLinkLegit: true,
         },
     };
 
