@@ -1,15 +1,20 @@
-import { onMounted, onWillUnmount, proxy } from "@odoo/owl";
+import {
+    onMounted,
+    onWillDestroy,
+    onWillUnmount,
+    Plugin,
+    signal,
+    useListener,
+    usePlugin,
+} from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
-import { registry } from "@web/core/registry";
+import { LocalizationPlugin } from "@web/core/l10n/localization_plugin";
+import { services } from "@web/core/services";
 import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { siphash } from "./siphash";
 import { isTranslationModeEnabled, parseTranslatedText } from "./translation.patch";
-import {
-    TRANSLATABLE_PROPERTY_LABELS,
-    TranslationModeSidePanel,
-} from "./translation_mode_side_panel";
 
 /**
  * @typedef {import("./translation.patch").ContextualizedTranslation} ContextualizedTranslation
@@ -325,53 +330,68 @@ const WEBLATE_LANG_MAPPING = {
 const POINTER_MARGIN = 5;
 const POINTER_MIN_SIZE = 32;
 
+export const TRANSLATABLE_ATTRIBUTE_LABELS = {
+    "aria-label": `Aria label`,
+    "aria-placeholder": `Aria placeholder`,
+    "aria-roledescription": `Aria role description`,
+    "aria-valuetext": `Aria value text`,
+    "data-tooltip-info": `Tooltip info data`,
+    "data-tooltip": `Tooltip data`,
+    "o-we-hint-text": `Web editor text hint`,
+    alt: `Alternate text`,
+    label: `Label`,
+    name: `Name`,
+    placeholder: `Placeholder`,
+    searchabletext: `Searchable text`,
+    title: `Title`,
+};
+export const TRANSLATABLE_PROPERTY_LABELS = {
+    textContent: `Text`,
+    value: `Value`,
+};
+
 /** @type {Map<string, string>} */
 const termHashes = new Map();
 
-export class TranslationModeService {
-    /** @type {TargetedTranslation[]} */
-    currentTranslations = proxy([]);
+export class TranslationModePlugin extends Plugin {
+    localization = usePlugin(LocalizationPlugin);
+
+    /** @type {import("@odoo/owl").Signal<TargetedTranslation[]>} */
+    currentTranslations = signal([]);
+
+    highlightsEnabled = this.localization.localization.code !== "en_US";
     /** @type {Set<Node>} */
     observedNodes = new Set();
     observer = new MutationObserver(this._onMutation.bind(this));
-    started = false;
     /** @type {Map<HTMLElement, HTMLDivElement>} */
     translationPointers = new Map();
 
     /**
      * @private
-     * @type {TranslationModeService["_onKeyDown"]}
+     * @type {TranslationModePlugin["_onKeyDown"]}
      */
     _boundOnKeyDown = this._onKeyDown.bind(this);
     /**
      * @private
-     * @type {TranslationModeService["_onPointerDown"]}
+     * @type {TranslationModePlugin["_onPointerDown"]}
      */
     _boundOnPointerDown = this._onPointerDown.bind(this);
     /**
      * @private
-     * @type {TranslationModeService["_onWindowScroll"]}
+     * @type {TranslationModePlugin["_onWindowScroll"]}
      */
     _debouncedOnWindowScroll = debounce(this._onWindowScroll.bind(this), "animationFrame");
 
     // Lifecycle
 
-    /**
-     * @param {import("@web/env").OdooEnv} _env
-     * @param {import("services").Services} services
-     */
-    setup(_env, { localization }) {
-        if (this.started) {
-            return;
-        }
-        this.started = true;
-
-        this.highlightsEnabled = localization.code !== "en_US";
+    setup() {
         if (this.highlightsEnabled) {
             console.debug(`Interactive translation mode is active with translation highlighting.`);
         } else {
+            const { code } = this.localization.localization;
             console.log(
-                `Interactive translation mode is active, but translation highlighting has been disabled for language "${localization.code}".`
+                `Interactive translation mode is active, but translation highlighting has` +
+                    ` been disabled for language "${code}".`
             );
         }
 
@@ -387,11 +407,11 @@ export class TranslationModeService {
         }
         this._registerTranslations(scanner.getGroupedTranslations());
 
-        // Start observing mutations immediatly
+        // Start observing mutations immediately
         this._observe();
 
         // Observe canvas text rendering as well
-        patch(CanvasRenderingContext2D.prototype, {
+        const unpatchCanvas = patch(CanvasRenderingContext2D.prototype, {
             fillText(text, ...args) {
                 return super.fillText(scanner._translateCanvasText(this.canvas, text), ...args);
             },
@@ -399,22 +419,26 @@ export class TranslationModeService {
                 return super.strokeText(scanner._translateCanvasText(this.canvas, text), ...args);
             },
         });
-    }
 
-    destroy() {
-        this._disconnect();
-
-        registry.category("main_components").remove("translation-mode-side-panel");
-
-        for (const node of this.observedNodes) {
-            node.removeEventListener("keydown", this._boundOnKeyDown, CAPTURE);
-            node.removeEventListener("pointerdown", this._boundOnPointerDown, CAPTURE);
+        if (isTranslationModeEnabled()) {
+            useListener(window, "scroll", this._debouncedOnWindowScroll, CAPTURE);
         }
-        this.observedNodes.clear();
 
-        window.removeEventListener("scroll", this._debouncedOnWindowScroll, CAPTURE);
+        onWillDestroy(() => {
+            this._disconnect();
+            unpatchCanvas();
 
-        this._clearTranslationPointers();
+            for (const node of this.observedNodes) {
+                const target = node.nodeName === "IFRAME" ? node.contentDocument?.body : node;
+                target?.removeEventListener("keydown", this._boundOnKeyDown, CAPTURE);
+                target?.removeEventListener("pointerdown", this._boundOnPointerDown, CAPTURE);
+            }
+            this.observedNodes.clear();
+
+            this._debouncedOnWindowScroll.cancel();
+
+            this._clearTranslationPointers();
+        });
     }
 
     // Public
@@ -434,21 +458,6 @@ export class TranslationModeService {
         }
     }
 
-    getTranslations() {
-        /** @type {TargetedTranslation[]} */
-        const translated = [];
-        /** @type {TargetedTranslation[]} */
-        const untranslated = [];
-        for (const translation of this.currentTranslations) {
-            if (translation.translated) {
-                translated.push(translation);
-            } else {
-                untranslated.push(translation);
-            }
-        }
-        return { translated, untranslated };
-    }
-
     /**
      * @param {TargetedTranslation} translation
      * @param {boolean} keepHighlighted
@@ -464,17 +473,6 @@ export class TranslationModeService {
         }
 
         this._observe();
-    }
-
-    registerSidePanel() {
-        registry.category("main_components").add("translation-mode-side-panel", {
-            Component: TranslationModeSidePanel,
-            props: {
-                translations: this.currentTranslations,
-            },
-        });
-
-        window.addEventListener("scroll", this._debouncedOnWindowScroll, CAPTURE);
     }
 
     useBodyClass(className) {
@@ -671,63 +669,37 @@ export class TranslationModeService {
      * @param {Record<string, TargetedTranslation>} newTranslations
      */
     _registerTranslations(newTranslations) {
-        const oldTranslations = new Map(this.currentTranslations.map((t) => [t.source, t]));
+        /** @type {Map<string, TargetedTranslation>} */
+        const nextTranslations = new Map();
+        for (const translation of this.currentTranslations()) {
+            const targets = translation.targets.filter(([el]) => el.isConnected);
+            nextTranslations.set(translation.source, { ...translation, targets });
+        }
         for (const translation of Object.values(newTranslations)) {
-            const existingTranslation = oldTranslations.get(translation.source);
+            const existingTranslation = nextTranslations.get(translation.source);
             if (existingTranslation) {
-                const nextTargets = new Set();
-                for (const target of existingTranslation.targets) {
-                    if (target[0].isConnected) {
-                        nextTargets.add(target);
-                    }
-                }
-                for (const newTarget of translation.targets) {
-                    nextTargets.add(newTarget);
-                }
-                if (nextTargets.size) {
-                    translation.targets = [...nextTargets];
-                    oldTranslations.delete(translation.source);
-                }
+                existingTranslation.targets.push(...translation.targets);
             } else {
-                this.currentTranslations.push(translation);
+                nextTranslations.set(translation.source, translation);
             }
         }
-        for (const translation of oldTranslations.values()) {
-            const nextTargets = new Set();
-            for (const target of translation.targets) {
-                if (target[0].isConnected) {
-                    nextTargets.add(target);
-                }
-            }
-            if (nextTargets.size) {
-                translation.targets = [...nextTargets];
-            } else {
-                const index = this.currentTranslations.indexOf(translation);
-                this.currentTranslations.splice(index, 1);
+        const translations = [];
+        for (const translation of nextTranslations.values()) {
+            if (translation.targets.length) {
+                translations.push(translation);
             }
         }
+        this.currentTranslations.set(translations);
     }
 }
-
-export const translationModeServiceFactory = {
-    dependencies: ["localization"],
-    start(env, dependencies) {
-        const service = new TranslationModeService();
-        service.setup(env, dependencies);
-        if (isTranslationModeEnabled()) {
-            service.registerSidePanel();
-        }
-        return service;
-    },
-};
 
 export const urlParams = {
     lang: "",
     version: "",
 };
 
-// Service should only be registered at top level, as it will look for translations
+// Plugin should only be registered at top level, as it will look for translations
 // in iframes.
 if (window === window.top) {
-    registry.category("services").add("translation_mode", translationModeServiceFactory);
+    services.add(TranslationModePlugin);
 }
