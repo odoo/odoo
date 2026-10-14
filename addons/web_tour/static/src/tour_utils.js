@@ -27,13 +27,8 @@ export const stepUtils = {
         ];
     },
 
-    autoExpandMoreButtons(isActiveMobile = false) {
-        const isActive = ["auto"];
-        if (isActiveMobile) {
-            isActive.push("mobile");
-        }
+    autoExpandMoreButtons() {
         return {
-            isActive,
             content: `autoExpandMoreButtons`,
             trigger: ".o-form-buttonbox",
             async run({ queryFirst, click }) {
@@ -69,13 +64,13 @@ export const stepUtils = {
         const steps = [];
         if (trigger) {
             steps.push({
-                isActive: ["auto", "mobile"],
+                isActive: ["mobile"],
                 trigger,
             });
         }
         steps.push(
             {
-                isActive: ["auto", "mobile"],
+                isActive: ["mobile"],
                 trigger: ".o_statusbar_buttons",
                 async run({ queryFirst, click }) {
                     const buttonOutSideDropdownMenu = queryFirst(
