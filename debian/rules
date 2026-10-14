@@ -4,7 +4,7 @@ export PYBUILD_NAME=odoo-bin
 export PYBUILD_DISABLE=test
 
 %:
-	dh ${@} --with=python3 --buildsystem=pybuild
+	dh ${@} --with=python3 --buildsystem=pybuild --max-parallel=2
 
 override_dh_auto_build:
 	cp -r addons/* odoo/addons/
