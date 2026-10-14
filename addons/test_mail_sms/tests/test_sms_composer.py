@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.sms.tests.common import SMSCommon
 from odoo.addons.sms_twilio.tests.common import MockSmsTwilioApi
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
@@ -295,7 +296,7 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
 
 
 @tagged('sms_composer')
-class TestSMSComposerBatch(SMSCommon):
+class TestSMSComposerBatch(SMSCommon, CronMixinCase):
 
     @classmethod
     def setUpClass(cls):
@@ -313,6 +314,7 @@ class TestSMSComposerBatch(SMSCommon):
                 active_ids=self.records.ids
             ).create({
                 'body': self._test_body,
+                'mass_force_send': True,
             })
 
             with self.mockSMSGateway():
@@ -326,17 +328,30 @@ class TestSMSComposerBatch(SMSCommon):
             )
 
     def test_composer_batch_res_ids(self):
-        with self.with_user('employee'):
-            composer = self.env['sms.composer'].with_context(
-                default_composition_mode='comment',
-                default_res_model='mail.test.sms',
-                default_res_ids=repr(self.records.ids),
-            ).create({
-                'body': self._test_body,
-            })
-
-            with self.mockSMSGateway():
+        """ Posting in batch puts SMS in the queue: they are only sent by the
+        queue cron, once the transaction is committed. """
+        with self.mockSMSGateway():
+            with self.with_user('employee'), \
+                    self.capture_triggers('sms.ir_cron_sms_scheduler_action') as captured_triggers:
+                composer = self.env['sms.composer'].with_context(
+                    default_composition_mode='comment',
+                    default_res_model='mail.test.sms',
+                    default_res_ids=repr(self.records.ids),
+                ).create({
+                    'body': self._test_body,
+                })
                 messages = composer._action_send_sms()
+
+            self.assertEqual(self._sms, [])
+            self.assertTrue(captured_triggers.records)
+            for record, message in zip(self.records, messages):
+                self.assertSMSNotification(
+                    [{'partner': record.customer_id, 'state': 'ready'}],
+                    'Hello %s zizisse an SMS.' % record.name,
+                    message,
+                )
+
+            self.env.ref('sms.ir_cron_sms_scheduler_action').sudo().method_direct_trigger()
 
         for record, message in zip(self.records, messages):
             self.assertSMSNotification(
@@ -367,6 +382,7 @@ class TestSMSComposerBatchTwilio(SMSCommon, MockSmsTwilioApi):
             default_res_ids=repr(self.records.ids),
         ).create({
             'body': self._test_body,
+            'mass_force_send': True,
         })
 
         with self.mock_sms_twilio_gateway():
