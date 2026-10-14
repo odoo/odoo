@@ -63,7 +63,11 @@
                 display: flex;
                 justify-content: center;
                 width: 25px;
-                @include o-position-absolute($left: 0);
+                position: absolute;
+                top: auto;
+                left: 0;
+                bottom: auto;
+                right: auto;
             }
         }
     }
