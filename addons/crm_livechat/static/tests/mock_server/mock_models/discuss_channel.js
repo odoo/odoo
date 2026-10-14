@@ -14,7 +14,13 @@ const discussChannelPatch = {
         this.message_post(
             ids[0],
             makeKwArgs({
+<<<<<<< e236f7aa640298d7996b2b79512a350e5e29720e
                 body: `<div class="o_mail_notification">created a new lead: <a href="/mail/view?model=crm.lead&amp;res_id=${leadId}" data-oe-model="crm.lead" data-oe-id="${leadId}">${leadName}</a></div>`,
+||||||| a5399323318aa7655c11a319e105974aa0cbdf5e
+                body: `<div class="o_mail_notification">created a new lead: <a href="#" data-oe-model="crm.lead" data-oe-id="${leadId}">${leadName}</a></div>`,
+=======
+                body: `<div class="o_mail_notification" data-oe-type="create-lead">created a new lead: <a href="/mail/view?model=crm.lead&amp;res_id=${leadId}" data-oe-model="crm.lead" data-oe-id="${leadId}">${leadName}</a></div>`,
+>>>>>>> 3cd37ac26cf4786b0bffa3de517ea47681fcc692
                 subtype_xmlid: "mail.mt_comment",
             })
         );
