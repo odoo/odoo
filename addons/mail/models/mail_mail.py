@@ -1050,7 +1050,6 @@ class MailMail(models.Model):
         return [
             {
                 'author_id': mail.author_id.id,
-                'is_read': True,  # no mechanism to update this for outgoing emails
                 'mail_mail_id': mail.id,
                 'mail_message_id': mail.mail_message_id.id,
                 'notification_type': 'email',
