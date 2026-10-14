@@ -1,6 +1,7 @@
 import logging
 
 from lxml import etree
+from markupsafe import Markup
 from stdnum.be import vat as be_vat
 
 from odoo import Command, _, fields, models
@@ -2493,7 +2494,12 @@ class AccountEdiUBL(models.AbstractModel):
         elif invoice.move_type == 'in_refund':
             document_type = 'self_credit_note'
 
+        document_subtype = None
+        if invoice._is_downpayment():
+            document_subtype = f"{document_type}_downpayment"
+
         self._define_document_type(vals, document_type)
+        self._set_document_subtype(vals, document_subtype)
 
     def _init_invoice_export_values(self, invoice):
         vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
@@ -2658,6 +2664,34 @@ class AccountEdiUBL(models.AbstractModel):
                 collected_values['to_write']['name'] = ref
             else:
                 collected_values['to_write']['ref'] = ref
+
+    def _import_ubl_invoice_add_billing_reference_down_payments(self, collected_values):
+        if collected_values['odoo_document_type'] != 'purchase':
+            return
+
+        tree = collected_values['tree']
+        downpayment_refs = [
+            node.text
+            for node in tree.findall('./{*}BillingReference/{*}InvoiceDocumentReference/{*}ID')
+            if node.text
+        ]
+        if not downpayment_refs:
+            return
+
+        partner = collected_values['customer_values'].get('customer')
+        if not partner:
+            return
+
+        downpayment_moves = self.env['account.move'].search([
+            ('move_type', 'in', ('in_invoice', 'in_refund')),
+            ('ref', 'in', downpayment_refs),
+            ('commercial_partner_id', '=', partner.commercial_partner_id.id),
+        ])
+        if downpayment_moves:
+            collected_values['logs'].append(_(
+                "This invoice deducts the down payment(s): %s",
+                Markup(', ').join(move._get_html_link() for move in downpayment_moves),
+            ))
 
     def _import_ubl_invoice_add_invoice_origin(self, collected_values):
         tree = collected_values['tree']
@@ -3335,6 +3369,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         # ref / invoice_origin / narration / payment_reference / delivery_date
         self._import_ubl_invoice_add_ref(collected_values)
+        self._import_ubl_invoice_add_billing_reference_down_payments(collected_values)
         self._import_ubl_invoice_add_invoice_origin(collected_values)
         self._import_ubl_invoice_add_narration(collected_values)
         self._import_ubl_invoice_add_payment_reference(collected_values)
