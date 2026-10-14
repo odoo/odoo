@@ -1766,3 +1766,22 @@ class AccountEdiCommon(models.AbstractModel):
         except Exception:  # noqa: BLE001
             _logger.exception("Error while generating substitute PDF attachment for invoice %s", invoice.id)
         return additional_docs
+
+    def _is_line_total_without_allowances_charges(self, currency, line_total, net_price, quantity, base_quantity):
+        """ Tell whether the total of a line leaves its allowances and charges out.
+
+        EN 16931 defines the line total (BT-131) as `quantity x net price + charges - allowances`,
+        but some senders report `quantity x net price` and build the document totals on that sum.
+        Applying the allowances and charges once more would then move the line away from the total
+        the document is paid on.
+
+        :param currency: the currency of the document, to compare amounts with its own rounding
+        :param line_total: the line total of the document (BT-131)
+        :param net_price: the net price of the item (BT-146)
+        :param quantity: the invoiced quantity of the line (BT-129)
+        :param base_quantity: the quantity the net price applies to (BT-149)
+        :return: whether the allowances and charges of the line are already out of its total
+        """
+        if not line_total or not net_price or not quantity:
+            return False
+        return currency.compare_amounts(line_total, quantity * net_price / (base_quantity or 1.0)) == 0
