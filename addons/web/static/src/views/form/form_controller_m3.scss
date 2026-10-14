@@ -122,7 +122,7 @@
                     @extend %-o-field-box;
                 }
 
-                label {
+                &:not(.o_property_folded) label {
                     @extend %-o-field-label;
 
                     &:has(+ .o_property_field_value .o_required_modifier:not(.o_readonly_modifier)) {
