@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import SQL
 
@@ -24,56 +22,34 @@ class AccountMove(models.Model):
 
         posted = super()._post(soft)  # We need the move name to be set, but we also need to know which move are posted for the first time.
 
-        grouped_new_lines = defaultdict(lambda: self.env['account.move.line'])
-        existing_services_map = {}
+        vehicle_lines = posted.line_ids.filtered(
+            lambda line: line.vehicle_id and line.move_id.move_type == 'in_invoice' and line.display_type == 'product',
+        )
+        val_list = []
 
-        for line in posted.line_ids:
-            if not line.vehicle_id \
-                    or line.move_id.move_type != 'in_invoice' \
-                    or line.display_type != 'product':
+        for (move, vehicle), lines in vehicle_lines.grouped(lambda line: (line.move_id, line.vehicle_id)).items():
+            new_lines = lines.filtered(lambda line: not line.vehicle_log_service_id)
+            if not new_lines:
                 continue
 
-            if line.vehicle_log_service_id:
-                existing_services_map[line.move_id, line.vehicle_id] = line.vehicle_log_service_id
-            else:
-                grouped_new_lines[line.move_id, line.vehicle_id] += line
-
-        val_list = []
-        log_list = []
-
-        for (move, vehicle), lines in grouped_new_lines.items():
-            existing_service = existing_services_map.get((move, vehicle))
+            # [:1]: the bills posted before services were grouped have a service per line
+            existing_service = lines.vehicle_log_service_id[:1]
 
             if existing_service:  # Existing service => Update it instead of creating a new one
-                lines.write({'vehicle_log_service_id': existing_service.id})
-                labels = [name for name in lines.mapped('name') if name]
-                if labels:
-                    new_desc = ', '.join(labels)
-                    if existing_service.description:
-                        existing_service.description = f"{existing_service.description}, {new_desc}"
-                    else:
-                        existing_service.description = new_desc
-
+                new_lines.write({'vehicle_log_service_id': existing_service.id})
                 existing_service.message_post(
                     body=self.env._('Additional line(s) merged from Vendor Bill: %s', move._get_html_link()),
                 )
             else:  # No service => Create a new one
-                labels = [name for name in lines.mapped('name') if name]
-
                 val_list.append({
                     'service_type_id': vendor_bill_service.id,
                     'vehicle_id': vehicle.id,
-                    'vendor_id': lines[0].partner_id.id,
-                    'description': ', '.join(labels) if labels else False,
-                    'account_move_line_ids': [Command.set(lines.ids)],
+                    'vendor_id': move.commercial_partner_id.id,
+                    'account_move_line_ids': [Command.set(new_lines.ids)],
                 })
 
-                log_list.append(self.env._('Service Vendor Bill: %s', move._get_html_link()))
-
-        if val_list:
-            log_service_ids = self.env['fleet.vehicle.log.services'].create(val_list)
-            for log_service_id, log in zip(log_service_ids, log_list):
-                log_service_id.message_post(body=log)
+        for service in self.env['fleet.vehicle.log.services'].create(val_list):
+            service.message_post(body=self.env._('Service Vendor Bill: %s', service.account_move_line_ids.move_id._get_html_link()))
 
         return posted
 
@@ -81,7 +57,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Services"),
+            'name': self.env._("Services"),
             'res_model': 'fleet.vehicle.log.services',
             'domain': [
                 ('id', 'in', self.line_ids.vehicle_log_service_id.ids),
@@ -129,33 +105,61 @@ class AccountMoveLine(models.Model):
             if line.vehicle_log_service_id and line.vehicle_id != line.vehicle_log_service_id.vehicle_id:
                 raise ValidationError(self.env._("The vehicle on the invoice line must match the vehicle on the linked fleet service."))
 
-    def _cleanup_empty_fleet_services(self, services_to_check):
-        """Delete the given services that are no longer linked to any invoice line."""
-        empty_services = services_to_check.filtered(lambda s: not s.account_move_line_ids)
-        if empty_services:
-            empty_services.sudo().with_context(ignore_linked_bill_constraint=True).unlink()
-
     def write(self, vals):
+        """
+        When the `vehicle_id` is changed or cleared on lines linked to a fleet service:
+        - If the service has no other lines, we keep it and its vehicle is changed.
+            - It is archived instead if the vehicle is cleared, or if the bill already has a
+            service for the new vehicle (the lines join that one on post).
+        - Otherwise, the service keeps its other lines, and the changed lines are linked on post
+        to the bill's service for their new vehicle, or to a new one.
+        """
+
         if 'vehicle_id' not in vals:
             return super().write(vals)
 
-        # Remove the link to the fleet service on the lines whose vehicle is changed or cleared.
-        new_vehicle_id = vals['vehicle_id'] or False
-        lines_to_unlink = self.filtered(
-            lambda line: line.vehicle_log_service_id and line.vehicle_id.id != new_vehicle_id,
+        # The lines whose `vehicle_id` is changed or cleared leave their fleet service.
+
+        new_vehicle = self.env['fleet.vehicle'].browse(vals['vehicle_id'])
+
+        changed_lines = self.filtered(
+            lambda line: line.vehicle_log_service_id and line.vehicle_id != new_vehicle,
         )
-        services_to_check = lines_to_unlink.vehicle_log_service_id
-        lines_to_unlink.vehicle_log_service_id = False
+
+        # Remember the service of each line before disconnecting them
+        lines_by_service = changed_lines.grouped('vehicle_log_service_id')
+
+        # Disconnect before writing the new vehicle, otherwise the vehicle constraints would raise
+        changed_lines.vehicle_log_service_id = False
 
         res = super().write(vals)
 
-        # Delete the fleet services that lost their last invoice line above
-        self._cleanup_empty_fleet_services(services_to_check)
+        # The services left without lines follow them to their new vehicle or are archived.
+        for service, lines in lines_by_service.items():
+            # sudo: the user editing the bill may not have access to the fleet services
+            if service.sudo().account_move_line_ids:
+                continue
+
+            vehicles_with_service = lines.move_id.line_ids.filtered('vehicle_log_service_id').vehicle_id
+
+            if new_vehicle and new_vehicle not in vehicles_with_service:
+                lines.vehicle_log_service_id = service
+            else:
+                # sudo: the user editing the bill may not be allowed to modify the fleet services
+                service_sudo = service.sudo()
+                service_sudo.action_archive()
+                service_sudo.message_post(
+                    body=self.env._(
+                        'Archiving record because the vehicle of its invoice lines was changed on bill %s',
+                        lines.move_id._get_html_link(title=lines.move_id.name),
+                    ),
+                )
 
         return res
 
     def unlink(self):
-        services_to_check = self.vehicle_log_service_id
+        services = self.vehicle_log_service_id
         res = super().unlink()
-        self._cleanup_empty_fleet_services(services_to_check)
+        # sudo: the user editing the bill may not have access to the fleet services
+        services.sudo().filtered(lambda service: not service.account_move_line_ids).unlink()
         return res

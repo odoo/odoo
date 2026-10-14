@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -15,8 +15,11 @@ class FleetVehicleLogServices(models.Model):
     account_move_state = fields.Selection(
         selection=lambda self: self.env['account.move']._fields['state'].selection,
         compute='_compute_account_move_state',
+        # sudo: a user without access to the bill should still see that the service is billed
+        compute_sudo=True,
         string='Status',
     )
+    description = fields.Char(compute='_compute_description', store=True, readonly=False, tracking=True)
     amount = fields.Monetary(string='Cost', compute="_compute_amount", inverse="_inverse_amount",
         readonly=False, store=True, tracking=True)
     vehicle_id = fields.Many2one(comodel_name='fleet.vehicle', string='Vehicle',
@@ -28,34 +31,40 @@ class FleetVehicleLogServices(models.Model):
             # We avoid emptying the vehicle_id as it is a required field
             if not service.account_move_line_ids:
                 continue
-            service.vehicle_id = service.account_move_line_ids[0].vehicle_id
+            service.vehicle_id = service.account_move_line_ids.vehicle_id
+
+    @api.depends('account_move_line_ids.name')
+    def _compute_description(self):
+        for service in self:
+            # We keep the description of the services that are not linked to a bill
+            if not service.account_move_line_ids:
+                continue
+            lines = service.account_move_line_ids.sorted('id')
+            service.description = ', '.join(line.name for line in lines if line.name)
 
     def _inverse_amount(self):
-        if any(service.account_move_line_ids for service in self):
-            raise UserError(_("You cannot modify the amount of services linked to a journal item. Do it on the related accounting entry instead."))
+        # sudo: the user may not have access to the bill
+        if self.sudo().account_move_line_ids:
+            raise UserError(self.env._("You cannot modify the amount of services linked to a journal item. Do it on the related accounting entry instead."))
 
     @api.depends('account_move_line_ids.debit')
     def _compute_amount(self):
         for log_service in self:
             log_service.amount = sum(log_service.account_move_line_ids.mapped('debit'))
 
-    @api.depends('account_move_line_ids.parent_state')
+    @api.depends('account_move_line_ids.move_id.state')
     def _compute_account_move_state(self):
         for service in self:
-            if service.account_move_line_ids:
-                service.account_move_state = service.account_move_line_ids[0].parent_state
-            else:
-                service.account_move_state = False
+            service.account_move_state = service.account_move_line_ids.move_id.state
 
     @api.constrains('account_move_line_ids', 'vehicle_id')
     def _check_vehicle_consistency(self):
         for service in self:
-            if service.account_move_line_ids:
-                vehicles = service.account_move_line_ids.vehicle_id
-                if len(vehicles) > 1 or (vehicles and vehicles != service.vehicle_id):
-                    raise ValidationError(self.env._(
-                        "The vehicle of a service linked to a bill must be the one set on its invoice lines.",
-                    ))
+            vehicles = service.account_move_line_ids.vehicle_id
+            if vehicles and vehicles != service.vehicle_id:
+                raise ValidationError(self.env._(
+                    "The vehicle of a service linked to a bill must be the one set on its invoice lines.",
+                ))
 
     def action_open_account_move(self):
         self.ensure_one()
@@ -64,8 +73,9 @@ class FleetVehicleLogServices(models.Model):
             'view_mode': 'form',
             'res_model': 'account.move',
             'target': 'current',
-            'name': _('Bill'),
-            'res_id': self.account_move_line_ids[0].move_id.id if self.account_move_line_ids else False,
+            'name': self.env._('Bill'),
+            # sudo: a user without access to the bill should get an access error when opening it
+            'res_id': self.sudo().account_move_line_ids.move_id.id,
         }
 
     def action_create_account_move(self):
@@ -75,7 +85,7 @@ class FleetVehicleLogServices(models.Model):
             {
                 "move_type": "in_invoice",
                 "partner_id": self.vendor_id.id,
-                "line_ids": [
+                "invoice_line_ids": [
                     Command.create(
                         {
                             "vehicle_id": self.vehicle_id.id,
@@ -99,7 +109,6 @@ class FleetVehicleLogServices(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_linked_bill(self):
-        if self.env.context.get('ignore_linked_bill_constraint'):
-            return
-        if any(log_service.account_move_line_ids for log_service in self):
-            raise UserError(_("You cannot delete log services records because one or more of them were bill created."))
+        # sudo: the user may not have access to the bill
+        if self.sudo().account_move_line_ids:
+            raise UserError(self.env._("You cannot delete log services records because one or more of them were bill created."))
