@@ -33,7 +33,10 @@ class MrpProductionSplit(models.TransientModel):
     def _compute_max_batch_size(self):
         for wizard in self:
             bom_id = wizard.production_id.bom_id
-            wizard.max_batch_size = bom_id.batch_size if bom_id.enable_batch_size else wizard.product_qty
+            if bom_id and bom_id.enable_batch_size:
+                wizard.max_batch_size = bom_id.uom_id._compute_quantity(bom_id.batch_size, wizard.uom_id)
+            else:
+                wizard.max_batch_size = wizard.product_qty
 
     @api.depends('max_batch_size')
     def _compute_num_splits(self):
