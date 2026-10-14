@@ -241,19 +241,21 @@ class PortalAccount(CustomerPortal):
         if not country_sudo:
             return {}
         ResPartner = request.env['res.partner']
-        partner = ResPartner.new({'country_id': country_sudo.id})
-        metadata = partner.available_additional_identifiers_metadata
         optional, mandatory = ResPartner._get_portal_additional_identifiers(country_sudo, **kwargs)
+        metadata = {
+            key: ResPartner._lazy_translate_additional_identifiers_metadata(entry)
+            for key, entry in ResPartner._get_all_additional_identifiers_metadata().items()
+            if key in optional | mandatory
+        }
         return {
             key: {
                 'label': entry.get('label') or key,
                 'placeholder': entry.get('placeholder') or '',
                 'help': entry.get('help') or '',
-                'individual': partner._is_individual_identifier(key),
+                'individual': ResPartner._is_individual_identifier(key),
                 'required': key in mandatory,
             }
             for key, entry in sorted(metadata.items(), key=lambda item: item[1].get('sequence', 100))
-            if key in optional | mandatory
         }
 
     def _prepare_address_form_values(self, partner_sudo, *args, **kwargs):
