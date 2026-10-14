@@ -36,6 +36,8 @@ def uy_nie_validate(value):
     return _uy_ci_nie_validate(value, is_nie=True)
 
 
+DGI_FOREIGN_COUNTRY_CODES = {'AR', 'BR', 'CL', 'PY'}  # those countries must be handled specifically with DGI as per specification
+
 UY_ADDITIONAL_IDENTIFIERS_METADATA = {
     'UY_CI': {
         'label': _lt('CI'),
