@@ -13,6 +13,7 @@ class Partner extends models.Model {
             ["done", "Done"],
         ],
     });
+    color_number = fields.Integer();
 
     _records = [
         {
@@ -20,22 +21,26 @@ class Partner extends models.Model {
             display_name: "first record",
             many2one_field: 4,
             selection_field: "blocked",
+            color_number: 4,
         },
         {
             id: 2,
             display_name: "second record",
             many2one_field: 1,
             selection_field: "normal",
+            color_number: 3,
         },
         {
             id: 3,
             display_name: "", // empty value
             selection_field: "done",
+            color_number: 2,
         },
         {
             id: 4,
             display_name: "fourth record",
             selection_field: "done",
+            color_number: 1,
         },
     ];
 }
@@ -102,15 +107,14 @@ test("BadgeField component with color_field option", async () => {
         type: "list",
         arch: `
             <list>
-                <field name="id" column_invisible="1"/>
-                <field name="display_name" widget="badge" options="{'color_field': 'id'}"/>
+                <field name="display_name" widget="badge" options="{'color_field': 'color_number'}"/>
             </list>
         `,
     });
 
     expect(`.o_field_badge[name="display_name"]`).toHaveCount(4);
     expect(`.o_field_badge[name="display_name"] .o_badge_color_1`).toHaveCount(1);
-    expect(`.o_field_badge[name="display_name"] .o_badge_color_2`).toHaveCount(1);
-    expect(`.o_field_badge[name="display_name"] .o_badge_color_3`).toHaveCount(0); //empty value
+    expect(`.o_field_badge[name="display_name"] .o_badge_color_2`).toHaveCount(0); //empty value
+    expect(`.o_field_badge[name="display_name"] .o_badge_color_3`).toHaveCount(1);
     expect(`.o_field_badge[name="display_name"] .o_badge_color_4`).toHaveCount(1);
 });
