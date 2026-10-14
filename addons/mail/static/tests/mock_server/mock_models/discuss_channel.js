@@ -567,7 +567,7 @@ export class DiscussChannel extends models.ServerModel {
                 ]);
                 return MailNotification._filter([
                     ["res_partner_id", "=", this.env.user.partner_id],
-                    ["is_read", "=", false],
+                    ["read_date", "=", false],
                     ["mail_message_id", "in", messages.map((message) => message.id)],
                 ]).length;
             });

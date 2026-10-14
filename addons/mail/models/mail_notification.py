@@ -38,7 +38,6 @@ class MailNotification(models.Model):
         ('exception', 'Exception'),
         ('canceled', 'Cancelled')
         ], string='Status', default='ready', index=True)
-    is_read = fields.Boolean('Is Read', index=True)
     read_date = fields.Datetime('Read Date', copy=False)
     failure_type = fields.Selection(selection=[
         # generic
@@ -65,7 +64,7 @@ class MailNotification(models.Model):
         "CHECK(notification_type != 'email' OR failure_type IS NOT NULL OR res_partner_id IS NOT NULL OR COALESCE(mail_email_address, '') != '')",
         'Customer or email is required for inbox / email notification',
     )
-    _res_partner_id_is_read_notification_status_mail_message_id = models.Index("(res_partner_id, is_read, notification_status, mail_message_id)")
+    _res_partner_id_mail_message_id_unread = models.Index("(res_partner_id, mail_message_id) WHERE read_date IS NULL")
     _author_id_notification_status_failure = models.Index("(author_id, notification_status) WHERE notification_status IN ('bounce', 'exception')")
     _unique_mail_message_id_res_partner_id_ = models.UniqueIndex("(mail_message_id, res_partner_id) WHERE res_partner_id IS NOT NULL")
 
@@ -78,21 +77,20 @@ class MailNotification(models.Model):
         messages = self.env['mail.message'].browse(vals['mail_message_id'] for vals in vals_list)
         messages.check_access('read')
         for vals in vals_list:
-            if vals.get('is_read'):
-                vals['read_date'] = fields.Datetime.now()
+            # only inbox notifications are read by the recipient, other ones are
+            # considered as read at creation, which is also used for cleanup
+            if vals.get('notification_type', 'inbox') != 'inbox':
+                vals.setdefault('read_date', self.env.cr.now())
         return super().create(vals_list)
 
     def write(self, vals):
         if ('mail_message_id' in vals or 'res_partner_id' in vals) and not self.env.is_admin():
             raise AccessError(_("Can not update the message or recipient of a notification."))
-        if vals.get('is_read'):
-            vals['read_date'] = fields.Datetime.now()
         return super().write(vals)
 
     @api.model
     def _gc_notifications(self, max_age_days=180):
         domain = [
-            ('is_read', '=', True),
             ('read_date', '<', fields.Datetime.now() - relativedelta(days=max_age_days)),
             ('res_partner_id.partner_share', '=', False),
             ('notification_status', 'in', ('sent', 'canceled'))

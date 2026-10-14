@@ -255,7 +255,7 @@ test("plugin filter narrows a tab's content, ANDed with the chip filter", async 
     ]);
     pyEnv["mail.notification"].create(
         [aliceUnreadId, aliceReadId, bobUnreadId].map((mail_message_id) => ({
-            is_read: mail_message_id === aliceReadId,
+            read_date: mail_message_id === aliceReadId ? "2019-01-01 10:30:00" : false,
             mail_message_id,
             notification_status: "sent",
             notification_type: "inbox",

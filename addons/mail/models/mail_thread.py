@@ -282,7 +282,7 @@ class MailThread(models.AbstractModel):
             # search for unread messages, directly in SQL to improve performances
             self.env.cr.execute(""" SELECT msg.res_id FROM mail_message msg
                                  RIGHT JOIN mail_notification rel
-                                 ON rel.mail_message_id = msg.id AND rel.res_partner_id = %s AND (rel.is_read = false OR rel.is_read IS NULL)
+                                 ON rel.mail_message_id = msg.id AND rel.res_partner_id = %s AND rel.read_date IS NULL
                                  WHERE msg.model = %s AND msg.res_id in %s AND msg.message_type != 'user_notification'""",
                              (self.env.user.partner_id.id, self._name, tuple(self.ids),))
             for result in self.env.cr.fetchall():
@@ -4103,7 +4103,6 @@ class MailThread(models.AbstractModel):
     def _notify_by_email_get_base_notification_values(self, message):
         return {
             'author_id': message.author_id.id,
-            'is_read': True,  # discard Inbox notification
             'mail_message_id': message.id,
             'notification_status': 'ready',
             'notification_type': 'email',

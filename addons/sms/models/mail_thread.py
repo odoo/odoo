@@ -217,7 +217,6 @@ class MailThread(models.AbstractModel):
                 'notification_type': 'sms',
                 'sms_id_int': sms.id,
                 'sms_tracker_ids': [Command.create({'sms_uuid': sms.uuid})] if sms.state == 'outgoing' else False,
-                'is_read': True,  # discard Inbox notification
                 'notification_status': 'ready' if sms.state == 'outgoing' else 'exception',
                 'failure_type': False if sms.state == 'outgoing' else sms.failure_type,
             } for sms in sms_all]
