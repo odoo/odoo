@@ -60,6 +60,7 @@ export class CaptionPlugin extends Plugin {
             {
                 predicate: (node) => closestElement(node, CAPTION_SPAN_SELECTOR),
                 formattable: false,
+                powerbox: false,
                 toolbar: DISABLED_NAMESPACE,
             },
             { predicate: "FIGCAPTION > .o_caption_editable", hint: _t("Write a caption...") },
@@ -102,7 +103,6 @@ export class CaptionPlugin extends Plugin {
                 return true;
             }
         },
-        powerbox_blacklist_selectors: CAPTION_SPAN_SELECTOR,
         // Consider a <figure> element as empty if it only contains a
         // <figcaption> element (e.g. when its image has just been
         // removed).
