@@ -102,13 +102,18 @@ class StockWarehouse(models.Model):
         group_user = self.env.ref('base.group_user')
         group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
         group_stock_multi_location = self.env.ref('stock.group_stock_multi_locations')
-        if group_stock_multi_warehouses not in group_user.implied_ids and group_stock_multi_location not in group_user.implied_ids:
+        if (
+            group_stock_multi_warehouses not in group_user.implied_ids
+            and group_stock_multi_location not in group_user.implied_ids
+            and self.with_company(self.company_id).search_count([('company_id', '=', self.company_id.id)], limit=1)
+        ):
             return {
                 'warning': {
-                    'title': _('Warning'),
-                    'message': _('Creating a new warehouse will automatically activate the Storage Locations setting')
-                }
+                    'title': self.env._('Warning'),
+                    'message': self.env._('Creating a new warehouse will automatically activate the Storage Locations setting'),
+                },
             }
+        return None
 
     @api.model_create_multi
     def create(self, vals_list):

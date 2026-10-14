@@ -611,6 +611,24 @@ class TestWarehouse(TestStockCommon):
 
         self.assertEqual(companies_after, companies_before)
 
+    def test_storage_locations_warning_multi_company(self):
+        """If the company does not have any warehouse yet, the storage locations activation
+        warning should not be shown when creating its first warehouse.
+        """
+        self.group_user.implied_ids = [Command.unlink(self.ref('stock.group_stock_multi_locations'))]
+        Warehouse = self.env['stock.warehouse']
+        # default company of the user (My Company), but not active in self.env
+        main_company = self.env.user.company_id
+
+        # Both companies already have a warehouse: warning should be raised.
+        self.assertTrue(Warehouse.new()._onchange_company_id())
+        self.assertTrue(Warehouse.new({'company_id': main_company.id})._onchange_company_id())
+
+        # The main company has no warehouse anymore: no warning should be raised.
+        Warehouse.with_company(main_company).search([('company_id', '=', main_company.id)], limit=1).action_archive()
+        self.assertTrue(Warehouse.new()._onchange_company_id())
+        self.assertFalse(Warehouse.new({'company_id': main_company.id})._onchange_company_id())
+
     def test_toggle_active_warehouse_1(self):
         """ Basic test that create a warehouse with classic configuration.
         Archive it and check that locations, picking types, routes, rules are
