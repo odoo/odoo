@@ -1147,6 +1147,7 @@ SERVICES_MAPPING = {
     "simple_notification": ['SimpleNotificationPlugin', '@bus/simple_notification_plugin'],
     "timer": ['TimerPlugin', '@timer/services/timer_plugin'],
     "tooltip": ['TooltipPlugin', '@web/core/tooltip/tooltip_plugin'],
+    "translation_mode": ['TranslationModePlugin', '@test_translation_mode/translation_mode_plugin'],
     "ui": ['UIPlugin', '@web/core/ui/ui_plugin'],
     "view": ['ViewPlugin', '@web/views/view_plugin'],
     "worker_service": ['WorkerPlugin', '@bus/services/worker_plugin'],
