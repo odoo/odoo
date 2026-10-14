@@ -799,6 +799,7 @@ export class Record extends DataPoint {
         for (const [fieldName, value] of Object.entries(values)) {
             const field = this.fields[fieldName];
             switch (field.type) {
+                case "one2many":
                 case "many2many": {
                     if (value) {
                         result[fieldName] = {};
@@ -816,6 +817,15 @@ export class Record extends DataPoint {
                 }
                 case "many2one": {
                     result[fieldName] = value;
+                    break;
+                }
+                case "reference": {
+                    result[fieldName] = value
+                        ? {
+                              id: { id: value.resId, model: value.resModel },
+                              display_name: value.displayName,
+                          }
+                        : false;
                     break;
                 }
                 default:
@@ -1068,11 +1078,12 @@ export class Record extends DataPoint {
         for (const [fieldName, value] of Object.entries(changes)) {
             const field = this.fields[fieldName];
             switch (field.type) {
+                case "one2many":
                 case "many2many":
                     result[fieldName] = value ? value.commands : false;
                     break;
                 default:
-                    result[fieldName] = parseServerValue(field.type, value);
+                    result[fieldName] = parseServerValue(field, value);
             }
         }
         return result;
