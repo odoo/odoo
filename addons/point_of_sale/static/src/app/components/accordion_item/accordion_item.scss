@@ -1,12 +1,3 @@
-@mixin hide-scrollbar {
-  -ms-overflow-style: none;  /* IE 10+ */
-  scrollbar-width: none;  /* Firefox */
-
-  &::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
-  }
-}
-
 .accordion.disabled {
     pointer-events: none;
     opacity: 0.5;
@@ -38,6 +29,9 @@
 .accordion-content-container {
     overflow: auto;
     transition: max-height 0.25s ease-in-out;
+    scrollbar-width: none;
 
-    @include hide-scrollbar;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
