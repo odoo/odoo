@@ -1,6 +1,6 @@
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { queryOne, waitFor } from "@odoo/hoot-dom";
+import { queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -163,9 +163,20 @@ test("'Show Disclaimer' option should toggle dislaimer template", async () => {
         expect(params.enable).toEqual(["website.option_header_disclaimer"]);
         expect(params.disable).toEqual([]);
     });
+    // The page as the server renders it with the switched views.
+    onRpc(
+        "/blank",
+        () =>
+            new Response(
+                `<div id="wrapwrap"><header id="top"><div class="o_header_disclaimer"/></header><main></main></div>`
+            )
+    );
     await contains(":iframe #wrapwrap > header").click();
     await waitFor("[data-label='Show Disclaimer']");
     expect("[data-label='Show Disclaimer']").toBeVisible();
     await contains("[data-label='Show Disclaimer'] input").click();
+    expect.verifySteps([]);
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
     expect.verifySteps(["theme_customize_data"]);
 });

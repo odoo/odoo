@@ -1,9 +1,11 @@
 import { Component, signal, t, useProps } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
+    getAllActionsAndOperations,
     useActionInfo,
     useBuilderComponent,
     useBuilderNumberInputUnits,
+    useDomState,
     useInputBuilderComponent,
     useInputDebouncedCommit,
 } from "../utils";
@@ -99,6 +101,15 @@ export class BuilderRange extends Component {
         });
 
         this.debouncedCommitRangeValue = useInputDebouncedCommit(this.inputRefRange, commit);
+        const { getAllActions } = getAllActionsAndOperations(this.props);
+        this.defaultState = useDomState((editingElement) => {
+            const { actionId, actionParam } = getAllActions()[0];
+            return {
+                value: this.env.editor.shared.builderActions
+                    .getAction(actionId)
+                    .getDefaultValue({ editingElement, params: actionParam }),
+            };
+        });
 
         this.commit = commit;
         if (this.props.withNumberInput) {
@@ -206,6 +217,22 @@ export class BuilderRange extends Component {
             return Math.min(this.maxRatio, Math.max(this.minRatio, value)).toString();
         } else {
             return Math.min(this.props.max, Math.max(this.props.min, value)).toString();
+        }
+    }
+
+    /**
+     * The position of the action's default value on the range, from 0 to 1,
+     * if in the range (and the range isn't shown inverted).
+     */
+    getDefaultValuePosition() {
+        const { value: defaultValue } = this.defaultState;
+        if (defaultValue == null || this.props.rangeClass.includes("o_we_inverted_range")) {
+            return;
+        }
+        const value = parseFloat(this.formatRawValue(defaultValue));
+        const { min, max } = this.props;
+        if (value >= min && value <= max) {
+            return (value - min) / (max - min);
         }
     }
 

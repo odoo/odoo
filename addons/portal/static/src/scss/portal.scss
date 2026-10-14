@@ -45,10 +45,10 @@ header {
                 object-fit: contain;
                 display: block;
                 width: auto;
-                height: $o-theme-navbar-logo-height;
+                height: var(--logo-height, #{$o-theme-navbar-logo-height});
 
                 @include media-breakpoint-down(md) {
-                    max-height: min($o-theme-navbar-logo-height, 5rem);
+                    max-height: #{"min(var(--logo-height, #{$o-theme-navbar-logo-height}), 5rem)"};
                 }
             }
         }

@@ -294,7 +294,22 @@ export class BuilderOptionsPlugin extends Plugin {
         return null;
     }
 
-    updateContainers(target, { forceUpdate = false } = {}) {
+    /**
+     * @param {HTMLElement} [target]
+     * @param {Object} [options]
+     * @param {boolean} [options.forceUpdate]
+     * @param {Map<HTMLElement, HTMLElement>} [options.replacements] elements
+     *        replaced (e.g. a part of the page rendered again): their current
+     *        containers go to their replacements, so that their options are
+     *        updated rather than rebuilt (an open dropdown and the folded
+     *        state are kept)
+     */
+    updateContainers(target, { forceUpdate = false, replacements } = {}) {
+        if (replacements) {
+            for (const container of this.lastContainers) {
+                container.element = replacements.get(container.element) ?? container.element;
+            }
+        }
         if (this.dependencies.domObserver.hasStagedMutations()) {
             console.warn(
                 "Should not have any mutations in the current commit when you update the container selection"

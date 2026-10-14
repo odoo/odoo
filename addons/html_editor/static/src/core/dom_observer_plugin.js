@@ -243,9 +243,11 @@ export class DomObserverPlugin extends Plugin {
         // Predicates
         // ----------
 
+        // Only vouch for commits with mutations: a commit without any can
+        // still hold changes of other plugins (their own commit data).
         has_history_commit_changes_predicates: (commit) => {
-            if ("mutations" in commit.data) {
-                return !!commit.data.mutations.length;
+            if (commit.data.mutations?.length) {
+                return true;
             }
         },
     };

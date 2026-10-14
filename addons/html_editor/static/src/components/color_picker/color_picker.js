@@ -260,6 +260,19 @@ export class ColorPicker extends Component {
         if (!colorToMatch) {
             return;
         }
+        // Only look the color up when it changes: a preview can change the
+        // colors it is looked up in (e.g. a theme color's own picker), until
+        // it is reverted, which is not synchronous. A different result would
+        // move the buttons under the pointer, starting another preview.
+        if (colorToMatch === this.matchedColor) {
+            return this.matchedColorSet;
+        }
+        this.matchedColor = colorToMatch;
+        this.matchedColorSet = this.findDefaultColorSet(colorToMatch);
+        return this.matchedColorSet;
+    }
+
+    findDefaultColorSet(colorToMatch) {
         let defaultColors = this.props.enabledTabs.includes("solid")
             ? this.DEFAULT_THEME_COLOR_VARS
             : [];
@@ -334,8 +347,10 @@ export class ColorPicker extends Component {
             // picker, for example, if a user hovers any of the previewable
             // options in html builder. So here we reset the preview and apply
             // it again, in order to have the correct preview
+            const color = this.state.currentColorPreview;
             this.applyColorResetPreview();
-            this.props.applyColorPreview(this.state.currentColorPreview);
+            this.props.applyColorPreview(color);
+            this.state.currentColorPreview = color;
         }
     }
 

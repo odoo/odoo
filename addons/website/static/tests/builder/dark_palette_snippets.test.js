@@ -7,7 +7,6 @@ import {
     defineStyle,
     getService,
     models,
-    onRpc,
 } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder, waitForSnippetDialog } from "./website_helpers";
 import { getStructureSnippet } from "../snippet_helpers";
@@ -23,12 +22,6 @@ test("snippet dialog uses dark palette content adaptations", async () => {
     defineModels([WebsiteAssets]);
 
     let pageDocument;
-    const reloadPromise = Promise.withResolvers();
-    onRpc("/website/theme_customize_bundle_reload", () => {
-        pageDocument.documentElement.style.setProperty("--color-palettes-name", "'default-dark-1'");
-        reloadPromise.resolve();
-        return {};
-    });
 
     const coverEl = await getStructureSnippet("s_cover");
     await setupWebsiteBuilder("", {
@@ -68,8 +61,8 @@ test("snippet dialog uses dark palette content adaptations", async () => {
     await contains("#theme-tab").click();
     await contains(".o_hb_tab_content .o_hb_theme_color_slider_btn").click();
     await contains(".o_theme_tab [data-icon='palette']").click();
+    // Previewed: the page shows the new palette's name.
     await contains(`[data-action-value="'default-dark-1'"] .o_hb_color_palette_card span`).click();
-    await reloadPromise.promise;
     expect(isDarkColorPalette(pageDocument)).toBe(true);
 
     // Reopening the dialog creates a viewer for the new dark palette. The

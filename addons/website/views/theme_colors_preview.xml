@@ -2,6 +2,9 @@
 <odoo>
 
 <template id="theme_colors_preview" inherit_id="web.layout" primary="True">
+    <xpath expr="//html" position="before">
+        <t t-set="html_data" t-value="{'data-o-theme-gates': website._get_theme_gates() or None}"/>
+    </xpath>
     <xpath expr="//head/link[last()]" position="after">
         <t t-call="website.font_links"/>
         <t t-call-assets="web.assets_frontend" t-js="false"/>

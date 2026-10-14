@@ -9,8 +9,16 @@ import { Builder } from "@html_builder/builder";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { describe } from "@odoo/hoot";
-import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
+import { describe, expect } from "@odoo/hoot";
+import {
+    advanceTime,
+    animationFrame,
+    click,
+    queryOne,
+    tick,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -57,6 +65,46 @@ export const setupWebsiteBuilderOeId = 539;
 export const invisibleEl =
     '<div class="s_invisible_el o_snippet_invisible" data-name="Invisible Element" data-invisible="1"></div>';
 
+export const USER_VALUES_URL = "/website/static/src/scss/options/user_values.scss";
+export const PALETTE_URL = "/website/static/src/scss/options/colors/user_color_palette.scss";
+
+/**
+ * Mocks the writes of the Theme tab's values and the bundles' reload, as
+ * steps (`<file> <values as JSON>`, "asset reload"); the computed colors too
+ * if asked ("computed colors").
+ *
+ * @param {Object} [options]
+ * @param {boolean} [options.stepComputedColors]
+ */
+export function mockThemeRpcs({ stepComputedColors = false } = {}) {
+    class WebsiteAssets extends models.Model {
+        _name = "website.assets";
+        make_scss_customization(location, changes) {
+            expect.step(`${location} ${JSON.stringify(changes)}`);
+        }
+    }
+    defineModels([WebsiteAssets]);
+    onRpc("/website/theme_customize_bundle_reload", () => {
+        expect.step("asset reload");
+        return "";
+    });
+    if (stepComputedColors) {
+        onRpc("/website/theme_computed_colors", () => {
+            expect.step("computed colors");
+            return { values: {}, gates: {} };
+        });
+    }
+}
+
+/**
+ * Saves, as the builder's Save button does, and waits for the builder to
+ * close.
+ */
+export async function saveWebsite() {
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await waitForNone(".o_hb_snippets_top_actions");
+}
+
 export function defineWebsiteModels({ includeMailModels = true } = {}) {
     describe.current.tags("desktop");
     if (includeMailModels) {
@@ -65,6 +113,8 @@ export function defineWebsiteModels({ includeMailModels = true } = {}) {
     defineModels([Website, IrUiView]);
     onRpc("/website/get_current_website_id", () => 1);
     onRpc("/website/theme_customize_data_get", () => []);
+    // The colors computed while previewing colors.
+    onRpc("/website/theme_computed_colors", () => ({ values: {}, gates: {} }));
     onRpc("website", "get_search_scopes", () => [
         { search_type: "all", label: "Everything", url: "/website/search" },
         { search_type: "pages", label: "Pages", url: "/pages" },

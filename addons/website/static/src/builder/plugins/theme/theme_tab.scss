@@ -1,0 +1,11 @@
+// A value at its default has nothing to reset: the button hides, its place
+// kept so that the rows stay aligned.
+.o_we_theme_reset.active {
+    visibility: hidden;
+}
+
+// Every slider row keeps a reset button's place: the slider gives way, not
+// the number.
+.o_hb_row_content:has(> .o_we_theme_reset) > .o_hb_input_field_number {
+    min-width: 5.5em;
+}

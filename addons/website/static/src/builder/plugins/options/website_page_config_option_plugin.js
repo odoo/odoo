@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { BG_CLASSES_REGEX, TEXT_CLASSES_REGEX } from "@html_editor/utils/color";
 import { registry } from "@web/core/registry";
 import { rgbaToHex } from "@web/core/utils/colors";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -34,6 +35,7 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
         on_target_shown_handlers: this.onTargetVisibilityToggle.bind(this, true),
         on_target_hidden_handlers: this.onTargetVisibilityToggle.bind(this, false),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
+        on_chrome_replaced_handlers: this.keepPageOptions.bind(this),
     };
 
     /**
@@ -146,6 +148,39 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
         return this.document.querySelector(
             `[data-main-object]:has(input.o_page_option_data[name='${pageOptionName}'])`
         );
+    }
+
+    /**
+     * The page options are on the live header and footer, and written to the
+     * page on save: a header or footer the builder swaps in for a views
+     * preview (see `websiteViewsPreview.updateChrome`) keeps them.
+     *
+     * @param {{ oldEl: HTMLElement|null, newEl: HTMLElement }} parts
+     */
+    keepPageOptions({ oldEl, newEl }) {
+        if (!oldEl) {
+            return;
+        }
+        for (const cls of ["o_snippet_invisible", "d-none"]) {
+            newEl.classList.toggle(cls, oldEl.classList.contains(cls));
+        }
+        if (oldEl.dataset.invisible) {
+            newEl.dataset.invisible = oldEl.dataset.invisible;
+        } else {
+            delete newEl.dataset.invisible;
+        }
+        if (newEl.matches("#wrapwrap > header")) {
+            for (const [property, classRegex] of [
+                ["background-color", BG_CLASSES_REGEX],
+                ["color", TEXT_CLASSES_REGEX],
+            ]) {
+                newEl.style.setProperty(property, oldEl.style.getPropertyValue(property));
+                newEl.classList.remove(
+                    ...[...newEl.classList].filter((cls) => classRegex.test(cls))
+                );
+                newEl.classList.add(...[...oldEl.classList].filter((cls) => classRegex.test(cls)));
+            }
+        }
     }
 
     setFooterVisible(show) {

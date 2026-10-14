@@ -2421,14 +2421,6 @@ $o-offcanvas-horizontal-width: var(--Offcanvas-horizontal-width, #{$o-offcanvas-
     padding: 0.25rem 1rem;
 };
 
-@mixin o-add-gradient($key) {
-    $-gradient: o-website-value($key);
-    @if $-gradient {
-        background-color: rgba(0, 0, 0, 0);
-        background-image: $-gradient;
-    }
-};
-
 // Replaces 'NULL' string values in a map by the sass null value (this is useful
 // as a "hack" to allow users to define null values in their custom palette as
 // normal null values are immediately removed to act as "removing the user custo

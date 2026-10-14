@@ -1,5 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
+import { PreviewableWebsiteConfigAction } from "@website/builder/plugins/website_views_preview_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";

@@ -48,6 +48,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export class BackgroundShapeOptionPlugin extends Plugin {
     static id = "backgroundShapeOption";
+    static dependencies = ["history"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
@@ -233,8 +234,12 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             if (!colorVar.startsWith("o-color-")) {
                 continue;
             }
-            const selector = `[data-oe-shape-data*='"${colorVar}"'] .o_we_shape[style*="background-image"]`;
+            const selector = `[data-oe-shape-data*='"${colorVar}"'] > .o_we_shape[style*="background-image"]`;
             this.refreshBgShapes([...this.document.querySelectorAll(selector)]);
+            if (this.dependencies.history.getIsPreviewing()) {
+                // The page's shapes only: the preview's revert restores them.
+                continue;
+            }
             this.config.snippetModel.updateContent("snippet_custom", (snippetContent) => {
                 this.refreshBgShapes([...snippetContent.querySelectorAll(selector)]);
             });

@@ -5,6 +5,7 @@ from . import test_attachment
 from . import test_auth_signup_uninvited
 from . import test_base_url
 from . import test_client_action
+from . import test_color_system
 from . import test_configurator
 from . import test_controllers
 from . import test_converter
@@ -35,6 +36,7 @@ from . import test_sitemap
 from . import test_skip_website_configurator
 from . import test_snippets
 from . import test_theme
+from . import test_theme_preview
 from . import test_ui
 from . import test_unsplash_beacon
 from . import test_views

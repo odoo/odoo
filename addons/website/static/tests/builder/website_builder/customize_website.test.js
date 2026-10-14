@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, queryOne } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { addBuilderOption } from "@html_builder/../tests/helpers";
 import {
@@ -15,7 +15,7 @@ import {
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
-import { ToggleBodyBgImageAction } from "@website/builder/plugins/customize_website_plugin";
+import { MediaPlugin } from "@html_editor/main/media/media_plugin";
 
 defineWebsiteModels();
 
@@ -435,27 +435,24 @@ test("No rpc call if “previewableWebsiteConfig” action is undone", async () 
     expect.verifySteps([]); // No call to `theme_customize_data` nor to `save`
 });
 
-test("theme background image is properly set", async () => {
+test("theme background image is previewed, written on save", async () => {
     const base64Image =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
         "A".repeat(1000);
 
-    patch(ToggleBodyBgImageAction.prototype, {
-        async apply(params) {
-            const { type: currentType, image: currentImage } = this.getCurrentConfig();
-            const oldConfig = { type: currentType, image: currentImage };
-            const newConfig = { type: "image", image: base64Image };
-            await this.applyConfig(oldConfig, newConfig);
+    patch(MediaPlugin.prototype, {
+        openMediaDialog({ save }) {
+            // The image picked in the media dialog.
+            const imageEl = document.createElement("img");
+            imageEl.src = base64Image;
+            save(imageEl);
         },
     });
 
     class WebsiteAssets extends models.Model {
         _name = "website.assets";
         make_scss_customization(location, changes) {
-            expect(
-                changes["body-image"].includes(base64Image) &&
-                    changes["body-image-type"].includes("image")
-            ).toBe(true);
+            expect(changes["body-image"]).toInclude(base64Image);
             expect.step("scss_customization");
         }
     }
@@ -472,10 +469,14 @@ test("theme background image is properly set", async () => {
 
     await contains("[data-name='theme']").click();
     await animationFrame();
-    expect(".o_theme_tab button[data-action-id='toggleBodyBgImage']").toHaveCount(1);
     await contains(".o_theme_tab button[data-action-id='toggleBodyBgImage']").click();
     await animationFrame();
-    await expect.verifySteps(["scss_customization", "bundle_reload"]);
+    const htmlEl = queryOne(":iframe html");
+    expect(htmlEl.style.getPropertyValue("--o-body-image")).toInclude(base64Image);
+    expect(htmlEl.dataset.oThemeGates).toInclude("body-image");
+    expect.verifySteps([]);
+    await contains(".o_hb_snippets_top_actions [data-action='save']").click();
+    await expect.waitForSteps(["scss_customization"]);
 });
 
 test("BuilderButton with action “templatePreviewableWebsiteConfig”", async () => {

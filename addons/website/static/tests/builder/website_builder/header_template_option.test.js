@@ -4,7 +4,10 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { isHeaderBgBlurAvailable } from "@website/builder/plugins/options/header/header_template_option";
 import {
     defineWebsiteModels,
+    mockThemeRpcs,
+    saveWebsite,
     setupWebsiteBuilder,
+    USER_VALUES_URL,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -12,7 +15,7 @@ defineWebsiteModels();
 const headerContent = `
     <header id="top" data-anchor="true" data-name="Header">
         <nav class="navbar">
-            <div id="o_main_nav" class="container o_main_nav"> content </div>
+            <div id="o_main_nav" class="container o_header_content_width o_main_nav"> content </div>
         </nav>
     </header>`;
 
@@ -78,27 +81,29 @@ describe("header blur option", () => {
 });
 
 describe("header width option", () => {
-    test("width preview is disabled on incompatible templates", async () => {
-        onRpc("/website/theme_customize_data_get", async () => [
-            "website.header_navbar_pills_style",
-            "website.template_header_boxed",
-        ]);
-        await setupWebsiteBuilder("", { headerContent });
-        await contains(":iframe #wrapwrap > header").click();
-        await waitFor("[data-label='Content Width']");
-        expect("[data-label='Content Width'] [data-action-id='websiteConfig']").toHaveCount(3);
-        expect(
-            "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
-        ).toHaveCount(0);
-    });
-
-    test("width preview is enabled by default", async () => {
+    // Its behavior on each layout: `header_class_options.test.js`.
+    test("the content width is previewed", async () => {
         await setupWebsiteBuilder("", { headerContent });
         await contains(":iframe #wrapwrap > header").click();
         await waitFor("[data-label='Content Width']");
         expect(
             "[data-label='Content Width'] [data-action-id='previewableWebsiteConfig']"
         ).toHaveCount(3);
-        expect("[data-label='Content Width'] [data-action-id='websiteConfig']").toHaveCount(0);
+    });
+});
+
+describe("header font size", () => {
+    test("an emptied font size is the theme's again", async () => {
+        mockThemeRpcs();
+        await setupWebsiteBuilder("", { headerContent });
+        await contains(":iframe #wrapwrap > header").click();
+        const inputSelector = "[data-action-param='header-font-size'] input";
+        await contains(inputSelector).edit("20");
+        await contains(inputSelector).clear();
+        expect(queryOne(":iframe html").style.getPropertyValue("--header-font-size")).toBe(
+            "initial"
+        );
+        await saveWebsite();
+        expect.verifySteps([`${USER_VALUES_URL} {"header-font-size":"null"}`]);
     });
 });
