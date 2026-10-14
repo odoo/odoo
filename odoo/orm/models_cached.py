@@ -86,6 +86,15 @@ class CachedModel(Model):
                 return
         super()._fetch_field(field)
 
+    def exists(self) -> Self:
+        # the cached data tells which records exist: no query is needed when
+        # all of them are cached
+        if self._ids and self._use_cached_data():
+            all_exist = self.filtered('id') <= self.get_all()
+            if all_exist:
+                return self
+        return super().exists()
+
     @api.model
     @api.private
     def get_all(self) -> Self:
