@@ -127,6 +127,39 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
             'Currently reading message on missing record, crash avoided'
         )
 
+    def test_message_fetch_unknown_model(self):
+        p2_notifications = self.env["mail.notification"].search(
+            [("res_partner_id", "=", self.partner_employee_2.id)],
+        )
+        p2_notifications.is_read = False
+        messages = p2_notifications.mail_message_id
+        unknown_model_message = messages.filtered(
+            lambda m: m.res_id == self.test_records_simple[0].id,
+        )
+        self.env.cr.execute(
+            "UPDATE mail_message SET model = 'x.uninstalled' WHERE id = %s",
+            (unknown_model_message.id,),
+        )
+        self.env.invalidate_all()
+        self.assertEqual(
+            self.partner_employee_2.with_user(self.user_employee_2)._get_needaction_count(),
+            3,
+        )
+
+        self.authenticate(self.user_employee_2.login, self.user_employee_2.login)
+        result = self.make_jsonrpc_request("/mail/inbox/messages", {})["data"]
+        self.assertEqual(
+            {m["id"]: m["thread"] and m["thread"]["id"] for m in result["mail.message"]},
+            {m.id: m.res_id for m in messages} | {unknown_model_message.id: False},
+        )
+
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        result = self.make_jsonrpc_request("/mail/data", {"failures": True})
+        self.assertNotIn(
+            unknown_model_message.id,
+            [m["id"] for m in result.get("mail.message", [])],
+        )
+
     def test_message_link_by_employee(self):
         record = self.test_records_simple[0]
         thread_message = record.message_post(body='Thread Message', message_type='comment')
