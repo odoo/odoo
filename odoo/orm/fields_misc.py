@@ -24,6 +24,11 @@ class Boolean(Field[bool]):
     _column_type = ('bool', 'bool')
     falsy_value = False
 
+    def _setup(self, model):
+        super()._setup(model)
+        if self.clean is not None:
+            raise TypeError(f"clean is not supported on {self.type} fields")
+
     def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
 
@@ -95,6 +100,11 @@ class Id(Field[IdType | typing.Literal[False]]):
     store = True
     readonly = True
     prefetch = False
+
+    def _setup(self, model):
+        super()._setup(model)
+        if self.clean is not None:
+            raise TypeError(f"clean is not supported on {self.type} fields")
 
     def update_db(self, model, columns):
         pass                            # this column is created with the table

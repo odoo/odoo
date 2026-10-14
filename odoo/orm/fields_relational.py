@@ -84,6 +84,8 @@ class _Relational(Field[BaseModel]):
         super()._setup(model)
         if self.comodel_name not in model.pool:
             raise ValueError(f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}")
+        if self.clean is not None:
+            raise TypeError(f"clean is not supported on {self.type} fields")
 
     def setup_inverses(self, registry: Registry, inverses: Collector[Field, Field]):
         """ Populate ``inverses`` with ``self`` and its inverse fields. """

@@ -20,6 +20,11 @@ class Reference(Selection):
 
     _column_type = ('varchar', 'varchar')
 
+    def _setup(self, model):
+        super()._setup(model)
+        if self.clean is not None:
+            raise TypeError(f"clean is not supported on {self.type} fields")
+
     def convert_to_column(self, value, record, values=None, validate=True):
         return Field.convert_to_column(self, value, record, values, validate)
 
