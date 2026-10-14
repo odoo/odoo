@@ -1,35 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { DependencyManager } from "../core/dependency_manager";
-import { _t } from "@web/core/l10n/translation";
-
-/**
- * Retrieves the default name corresponding to the edited element (to display it
- * in the sidebar for example).
- *
- * @param {HTMLElement} snippetEl - the edited element
- * @returns {String}
- */
-export function getSnippetName(snippetEl) {
-    if (snippetEl.dataset.name) {
-        return snippetEl.dataset.name;
-    }
-    const snippetNameRules = [
-        { selector: "img", name: _t("Image") },
-        { selector: ".oi", name: _t("Icon") },
-        { selector: ".media_iframe_video", name: _t("Video") },
-        { selector: ".row > *", name: _t("Column") },
-        { selector: "#wrapwrap > main", name: _t("Page Options") },
-        { selector: ".btn", name: _t("Button") },
-        { selector: "[data-snippet=s_website_form]", name: _t("Form") },
-        { selector: "#wrapwrap", name: _t("Website") },
-    ];
-    for (const { selector, name } of snippetNameRules) {
-        if (snippetEl.matches(selector)) {
-            return name;
-        }
-    }
-    return _t("Block");
-}
 
 /**
  * Checks if the element is visible (= in the viewport).
