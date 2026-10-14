@@ -890,6 +890,36 @@ class TestSaleProject(TestSaleProjectCommon):
             self.assertEqual(sale_order_action["type"], "ir.actions.act_window")
             self.assertEqual(sale_order_action["res_model"], "sale.order")
 
+    def test_sale_order_amount_total_multi_currency(self):
+        eur = self.setup_other_currency('EUR', rates=[('2016-01-01', 2.0)])
+        eur_pricelist = self.env['product.pricelist'].create({
+            'name': 'EUR Pricelist',
+            'currency_id': eur.id,
+        })
+        project = self.env['project.project'].create({
+            'name': 'Multi-currency Project',
+            'allow_billable': True,
+        })
+        product = self.env['product.product'].create({
+            'name': 'Service in multi-currency project',
+            'type': 'service',
+            'service_tracking': 'task_global_project',
+            'project_id': project.id,
+        })
+        sale_orders = self.env['sale.order'].create([{
+            'partner_id': self.partner.id,
+            'pricelist_id': pricelist.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'price_unit': 200,
+                'tax_ids': False,
+            })],
+        } for pricelist in (self.env['product.pricelist'], eur_pricelist)])
+        sale_orders.action_confirm()
+
+        self.assertEqual(project.sale_order_count, 2)
+        self.assertEqual(project.sale_order_amount_total, 300, "The EUR order should be converted to the project currency")
+
     def test_multi_company_so_creation(self):
         # SO with project template with non-superuser company_id able creates project with proper company
         company = self.env['res.company'].create({
