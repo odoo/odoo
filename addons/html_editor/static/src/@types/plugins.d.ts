@@ -47,7 +47,7 @@ declare module "plugins" {
     import { move_node_blacklist_selectors, move_node_whitelist_selectors, move_widget_position_processors, on_movable_element_set_handlers, on_will_unset_movable_element_handlers } from "@html_editor/main/movenode_plugin";
     import { on_layout_geometry_change_handlers } from "@html_editor/main/position_plugin";
     import { power_buttons } from "@html_editor/main/power_buttons_plugin";
-    import { powerbox_blacklist_selectors, powerbox_categories, powerbox_items, PowerboxShared } from "@html_editor/main/powerbox/powerbox_plugin";
+    import { powerbox_categories, powerbox_items, PowerboxShared } from "@html_editor/main/powerbox/powerbox_plugin";
     import { deselect_custom_selected_nodes_processors, TableShared } from "@html_editor/main/table/table_plugin";
     import { shift_tab_overrides, tab_overrides, TabulationShared } from "@html_editor/main/tabulation_plugin";
     import { expandable_toolbar_namespaces_providers, toolbar_groups, toolbar_items, ToolbarShared } from "@html_editor/main/toolbar/toolbar_plugin";
@@ -280,7 +280,6 @@ declare module "plugins" {
         move_node_blacklist_selectors: move_node_blacklist_selectors;
         move_node_whitelist_selectors: move_node_whitelist_selectors;
         power_buttons: power_buttons;
-        powerbox_blacklist_selectors: powerbox_blacklist_selectors;
         powerbox_categories: powerbox_categories;
         powerbox_items: powerbox_items;
         region_properties: region_properties;
