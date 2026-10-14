@@ -124,6 +124,18 @@
                     groups="base.group_no_one"
                 />
             </group>
+            <xpath
+                expr="//field[@name='primary_payment_method_ids']/list/field[@name='active']"
+                position="after"
+            >
+                <button
+                    string="Enable Apple Pay"
+                    type="object"
+                    name="action_paypal_verify_apple_pay_domain"
+                    invisible="parent.code != 'paypal' or code != 'apple_pay'"
+                    class="btn btn-primary"
+                />
+            </xpath>
         </field>
     </record>
 
