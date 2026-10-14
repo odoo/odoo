@@ -12,7 +12,7 @@ class StockRule(models.Model):
         values = values[0]
         requisition = self._get_supplier_requisition(values)
         res['partner_ref'] = requisition.name
-        res['requisition_id'] = requisition.id
+        res['requisition_id'] = requisition
         if requisition.currency_id:
             res['currency_id'] = requisition.currency_id.id
         return res
@@ -30,6 +30,15 @@ class StockRule(models.Model):
         # the seller information only holds a pricelist when it does not come from the purchase history
         seller_info = values.get('supplier') or {}
         return seller_info.get('supplierinfo', self.env['product.supplierinfo']).purchase_requisition_id
+
+    def _pick_supplier(self, company, product, partner=False, qty=None, uom=False, date=None, params=False):
+        p = product.with_company(company)
+        all_sellers = p._get_filtered_sellers(partner_id=partner, quantity=qty, date=date, uom_id=uom, params=params)
+        agreement_sellers = all_sellers.filtered(lambda s: s.purchase_requisition_id)
+        if agreement_sellers:
+            return agreement_sellers[0]._get_seller_info()
+        super_return = super()._pick_supplier(company, product, partner=partner, qty=qty, uom=uom, date=date, params=params)
+        return super_return
 
 
 class StockMove(models.Model):
