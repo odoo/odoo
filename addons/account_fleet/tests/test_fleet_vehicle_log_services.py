@@ -58,15 +58,15 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
         self.bill.action_post()
 
         # check if the log service is created
-        self.assertEqual(self.car_1.log_services[0].account_move_line_ids[0].move_id, self.bill)
-        self.assertEqual(self.car_1.log_services[0].amount, self.service_line.debit)
+        self.assertEqual(self.car_1.log_services.account_move_line_ids.move_id, self.bill)
+        self.assertEqual(self.car_1.log_services.amount, self.service_line.debit)
 
         self.bill.button_draft()
         self.service_line.price_unit = 110
         self.bill.action_post()
 
         # check if the log service's amount is equal to the new price
-        self.assertEqual(self.car_1.log_services[0].amount, self.service_line.debit)
+        self.assertEqual(self.car_1.log_services.amount, self.service_line.debit)
 
     def test_service_bill_deletion(self):
         service_line_2 = self.env['account.move.line'].create({
@@ -79,28 +79,28 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
         self.bill.action_post()
 
         # check if the log service is created
-        self.assertEqual(self.car_1.log_services[0].account_move_line_ids[0].move_id, self.bill)
-        self.assertEqual(self.car_1.log_services[0].amount, self.service_line.debit)
-        self.assertEqual(self.car_2.log_services[0].account_move_line_ids[0].move_id, self.bill)
-        self.assertEqual(self.car_2.log_services[0].amount, service_line_2.debit)
+        self.assertEqual(self.car_1.log_services.account_move_line_ids.move_id, self.bill)
+        self.assertEqual(self.car_1.log_services.amount, self.service_line.debit)
+        self.assertEqual(self.car_2.log_services.account_move_line_ids.move_id, self.bill)
+        self.assertEqual(self.car_2.log_services.amount, service_line_2.debit)
 
         self.bill.button_draft()
         self.service_line.unlink()
 
         self.assertFalse(self.car_1.log_services)
-        self.assertEqual(self.car_2.log_services[0].account_move_line_ids[0].move_id, self.bill)
-        self.assertEqual(self.car_2.log_services[0].amount, service_line_2.debit)
+        self.assertEqual(self.car_2.log_services.account_move_line_ids.move_id, self.bill)
+        self.assertEqual(self.car_2.log_services.amount, service_line_2.debit)
 
     def test_service_log_deletion(self):
         self.bill.action_post()
 
         # check if the log service is created
-        self.assertEqual(self.car_1.log_services[0].account_move_line_ids[0].move_id, self.bill)
-        self.assertEqual(self.car_1.log_services[0].amount, self.service_line.debit)
+        self.assertEqual(self.car_1.log_services.account_move_line_ids.move_id, self.bill)
+        self.assertEqual(self.car_1.log_services.amount, self.service_line.debit)
 
         # a log services linked to a bill cannot be deleted
         with self.assertRaises(UserError):
-            self.car_1.log_services[0].unlink()
+            self.car_1.log_services.unlink()
 
         log_service_without_bill = self.env['fleet.vehicle.log.services'].create({
             'vehicle_id': self.car_1.id,
@@ -114,22 +114,26 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
         self.bill.action_post()
 
         # check if the log service is created
-        self.assertEqual(self.car_1.log_services[0].account_move_line_ids[0].move_id, self.bill)
-        self.assertEqual(self.car_1.log_services[0].amount, self.service_line.debit)
+        self.assertEqual(self.car_1.log_services.account_move_line_ids.move_id, self.bill)
+        self.assertEqual(self.car_1.log_services.amount, self.service_line.debit)
+        service = self.car_1.log_services
 
+        # the service follows its only line to the new vehicle
         self.bill.button_draft()
         self.service_line.vehicle_id = self.car_2
         self.bill.action_post()
 
         self.assertFalse(self.car_1.log_services)
-        self.assertEqual(self.car_2.log_services[0].account_move_line_ids[0].move_id, self.bill)
-        self.assertEqual(self.car_2.log_services[0].amount, self.service_line.debit)
+        self.assertEqual(self.car_2.log_services, service)
+        self.assertEqual(self.car_2.log_services.account_move_line_ids.move_id, self.bill)
+        self.assertEqual(self.car_2.log_services.amount, self.service_line.debit)
 
-        # remove the vehicle should also delete the service
+        # removing the vehicle archives the service
         self.bill.button_draft()
         self.service_line.vehicle_id = False
         self.bill.action_post()
 
+        self.assertFalse(service.active)
         self.assertFalse(self.car_2.log_services)
         self.assertFalse(self.service_line.vehicle_log_service_id)
 
@@ -138,8 +142,9 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
         self.service_line.vehicle_id = self.car_2
         self.bill.action_post()
 
-        self.assertEqual(self.car_2.log_services[0].account_move_line_ids[0].move_id, self.bill)
-        self.assertEqual(self.car_2.log_services[0].amount, self.service_line.debit)
+        self.assertNotEqual(self.car_2.log_services, service)
+        self.assertEqual(self.car_2.log_services.account_move_line_ids.move_id, self.bill)
+        self.assertEqual(self.car_2.log_services.amount, self.service_line.debit)
 
     def test_fleet_log_services_amount(self):
         other_currency = self.setup_other_currency('EUR')
@@ -165,19 +170,18 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'date': '2019-01-01',
             'currency_id': other_currency.id,
-            'line_ids': [
-                (0, 0, {
+            'invoice_line_ids': [
+                Command.create({
                     'account_id': self.company_data['default_account_expense'].id,
                     'vehicle_id': car.id,
                     'quantity': 1,
-                    'price_unit': 5000
-                })
+                    'price_unit': 5000,
+                }),
             ],
         })
         move.action_post()
-        line = move.line_ids[0]
-        fleet_service = self.env['fleet.vehicle.log.services'].search([('vendor_id', '=', partner.id),
-                                                                       ('description', '=', False)])
+        line = move.invoice_line_ids
+        fleet_service = line.vehicle_log_service_id
 
         self.assertNotEqual(line.debit, line.price_subtotal)
         self.assertEqual(fleet_service.amount, line.debit)
@@ -192,7 +196,7 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
             'partner_id': self.vendor.id,
             'invoice_date': '2019-01-01',
             'date': '2019-01-01',
-            'line_ids': [
+            'invoice_line_ids': [
                 Command.create({
                     'name': 'Tires Car 1',
                     'price_unit': 200.0,
@@ -227,12 +231,12 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
         self.assertEqual(len(self.car_1.log_services), 1)
         self.assertEqual(len(self.car_2.log_services), 1)
 
-        service_car_1 = self.car_1.log_services[0]
-        service_car_2 = self.car_2.log_services[0]
+        service_car_1 = self.car_1.log_services
+        service_car_2 = self.car_2.log_services
 
         # Isolate the specific invoice lines for validation
-        lines_car_1 = bill.line_ids.filtered(lambda line: line.vehicle_id == self.car_1)
-        lines_car_2 = bill.line_ids.filtered(lambda line: line.vehicle_id == self.car_2)
+        lines_car_1 = bill.invoice_line_ids.filtered(lambda line: line.vehicle_id == self.car_1)
+        lines_car_2 = bill.invoice_line_ids.filtered(lambda line: line.vehicle_id == self.car_2)
 
         # Verify Car 1's service is correctly linked, priced, and described
         self.assertEqual(service_car_1.account_move_line_ids, lines_car_1)
@@ -251,7 +255,7 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
         self.bill.action_post()
 
         self.assertEqual(len(self.car_1.log_services), 1)
-        initial_service = self.car_1.log_services[0]
+        initial_service = self.car_1.log_services
 
         self.bill.button_draft()
         new_line = self.env['account.move.line'].create({
@@ -272,7 +276,7 @@ class TestFleetVehicleLogServices(AccountTestInvoicingCommon):
         # Verify the amount sums both the original line and the new line
         self.assertEqual(initial_service.amount, self.service_line.debit + new_line.debit)
 
-        # Verify the new description was appended correctly
+        # Verify the description lists the labels of both lines
         self.assertEqual(initial_service.description, 'line, Oil change')
 
     def test_service_bill_change_vehicle_on_one_line(self):
