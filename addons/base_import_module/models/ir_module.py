@@ -34,16 +34,27 @@ MAX_FILE_SIZE = 100 * 1024 * 1024  # in megabytes
 class IrModuleModule(models.Model):
     _inherit = "ir.module.module"
 
+    from_appstore = fields.Boolean(string="Downloaded from appstore")
     module_type = fields.Selection([
         ('official', 'Official Apps'),
         ('industries', 'Industries'),
-    ], default='official')
+    ], compute='_compute_module_type', search='_search_module_type')
     total_lines_of_code = fields.Integer(
         string="Extra lines of Code",
         store=False,  # info is retrieved from the appstore in web_read
         help="Number of lines of code that may be billed under an Enterprise subscription."
             " For exact pricing details, please contact your account manager or visit odoo.com/pricing.",
     )
+
+    @api.depends('from_appstore')
+    def _compute_module_type(self):
+        for module in self:
+            module.module_type = 'industries' if module.from_appstore else 'official'
+
+    def _search_module_type(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        return [('from_appstore', 'in', [v == 'industries' for v in value if v])]
 
     @api.model
     def _load_module_terms(self, modules, langs, overwrite=False):
@@ -117,7 +128,7 @@ class IrModuleModule(models.Model):
             pass  # keep the default icon
         values['latest_version'] = terp.version
         if self.env.context.get('data_module'):
-            values['module_type'] = 'industries'
+            values['from_appstore'] = True
         if with_demo:
             values['demo'] = True
 
@@ -406,9 +417,6 @@ class IrModuleModule(models.Model):
                 'records': modules_list[:(limit or 80)],
             }
         else:
-            domain = Domain(domain).map_conditions(
-                lambda c: Domain.OR([c, [('module_type', '=', False)]]) if c.field_expr == 'module_type' else c
-            ).optimize(self)
             return super().web_search_read(domain, specification, offset=offset, limit=limit, order=order, count_limit=count_limit)
 
     def more_info(self):
@@ -470,7 +478,7 @@ class IrModuleModule(models.Model):
                 continue
             mod['icon'] = f"{APPS_URL}{mod.get('icon')}"
             mod['state'] = 'uninstalled'
-            mod['module_type'] = module_type
+            mod['from_appstore'] = True
             mod['website'] = f"{APPS_URL}/apps/modules/{major_version}/{module_name}/"
             appstore_ids[mod['name']] = mod['id']
             all_modules += self.env['ir.module.module'].new(mod)
