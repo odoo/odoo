@@ -2754,7 +2754,7 @@ class MrpProduction(models.Model):
                 move[field] = vals
 
         for move in production.move_finished_ids:
-            move.move_dest_ids = [Command.set(dests[move.byproduct_id.id])]
+            move.move_dest_ids = [Command.set(dests.get(move.byproduct_id.id, []))]
 
         self.move_dest_ids.created_production_id = production.id
 
