@@ -1379,22 +1379,21 @@ class CrmLead(models.Model):
             help_title = _('Create a new lead')
         else:
             help_title = _('Create an opportunity to start playing with your pipeline.')
-        new_help_message = f"<p class='o_view_nocontent_smiling_face'>{help_title}</p>"
+        new_help_message = Markup("<p class='o_view_nocontent_smiling_face'>%s</p>") % help_title
         message_empty = is_html_empty(help_message)
         if (
             not self.env.user.sale_team_id
             and (message_empty or self.env.context.get('crm_lead_prioritize_team_help'))
             and self.env['crm.team'].search_count([], limit=1)
         ):
-            sub_title = _("As you are a member of no Sales Team, you are showed the entire Pipeline.<br/>")
+            sub_title = Markup(_("As you are a member of no Sales Team, you are showed the entire Pipeline.<br/>"))
             if self.env.user.has_group('sales_team.group_sale_manager'):
-                suffix = _(
-                    'To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a Team.</a>',
-                    self.env.ref('sales_team.crm_team_action_config').id
-                )
+                suffix = Markup(_(
+                    'To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a Team.</a>'
+                )) % self.env.ref('sales_team.crm_team_action_config').id
             else:
                 suffix = _("To work with the CRM, you should be added to a Team.")
-            return new_help_message + f"<p>{sub_title} {suffix}</p>"
+            return new_help_message + Markup("<p>%s %s</p>") % (sub_title, suffix)
 
         if not message_empty:
             return help_message
@@ -1414,7 +1413,9 @@ class CrmLead(models.Model):
             sub_title = Markup(_('Use the <i>New</i> button, or send an email to %(email_link)s to test the email gateway.')) % {
                 'email_link': Markup("<b><a href='mailto:%s'>%s</a></b>") % (alias_record.alias_email, alias_record.alias_email),
             }
-        return super().get_empty_list_help(f'{new_help_message}<p class="oe_view_nocontent_alias">{sub_title}</p>')
+        return super().get_empty_list_help(
+            Markup('%s<p class="oe_view_nocontent_alias">%s</p>') % (new_help_message, sub_title)
+        )
 
     # ------------------------------------------------------------
     # BUSINESS
