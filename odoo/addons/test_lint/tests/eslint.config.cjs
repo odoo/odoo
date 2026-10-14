@@ -1,0 +1,103 @@
+const globals = require("globals");
+
+module.exports = [
+    {
+        linterOptions: {
+            reportUnusedDisableDirectives: "off",
+        },
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: "module",
+            globals: {
+                ...globals.browser,
+                odoo: "readonly",
+                $: "readonly",
+                jQuery: "readonly",
+                Chart: "readonly",
+                fuzzy: "readonly",
+                StackTrace: "readonly",
+                luxon: "readonly",
+                py: "readonly",
+                FullCalendar: "readonly",
+                ScrollSpy: "readonly",
+                module: "readonly",
+                chai: "readonly",
+                describe: "readonly",
+                it: "readonly",
+                mocha: "readonly",
+                DOMPurify: "readonly",
+                SIP: "readonly",
+
+                Alert: "readonly",
+                Collapse: "readonly",
+                Dropdown: "readonly",
+                Modal: "readonly",
+                Offcanvas: "readonly",
+                Popover: "readonly",
+                Tooltip: "readonly",
+            },
+        },
+        rules: {
+            "no-undef": "error",
+            "no-restricted-globals": ["error", "event", "self"],
+            "no-const-assign": ["error"],
+            "no-debugger": ["error"],
+            "no-dupe-class-members": ["error"],
+            "no-dupe-keys": ["error"],
+            "no-dupe-args": ["error"],
+            "no-dupe-else-if": ["error"],
+            "no-unsafe-negation": ["error"],
+            "no-duplicate-imports": ["error"],
+            "valid-typeof": ["error"],
+            "no-restricted-syntax": [
+                "error",
+                "PrivateIdentifier",
+                {
+                    selector:
+                        "ClassDeclaration[superClass.name='Component']:not(:has(ClassBody.body > PropertyDefinition[key.name='template'][static='true']))",
+                    message: "Component should declare static template",
+                },
+                {
+                    selector: "CallExpression[callee.name='_t'] > :first-child[value=/(.*%s){2,}/]",
+                    message: "Usage of _t function with multiple unnamed placeholders",
+                },
+                {
+                    selector:
+                        "CallExpression[callee.object.name='notificationService'][callee.property.name='add'] > Literal:first-child",
+                    message: "String passed to 'notificationService.add()' should be translated.",
+                },
+                {
+                    selector: "CallExpression[callee.name='useEffect'][arguments.length>1]",
+                    message:
+                        "Owl 3 useEffect takes a single callback: the dependency argument is silently ignored. Read the signals inside the callback, or use useOnChange/useLayoutEffect.",
+                },
+                {
+                    selector:
+                        "CallExpression[callee.name='useEffect'] > :function:first-child[params.length>0]",
+                    message:
+                        "Owl 3 calls the useEffect callback without arguments: declared parameters are always undefined.",
+                },
+            ],
+            "no-unused-vars": [
+                "error",
+                { vars: "all", args: "none", ignoreRestSiblings: false, caughtErrors: "all" },
+            ],
+        },
+    },
+    {
+        files: ["**/bus_worker_script.js"],
+        languageOptions: { globals: globals.sharedWorker },
+    },
+    {
+        files: ["**/tick_worker.js", "**/voip/static/src/worker/init.js"],
+        languageOptions: { globals: globals.worker },
+    },
+    {
+        files: ["**/worklets/*.js", "**/*_worklet.js"],
+        languageOptions: { globals: globals.audioWorklet },
+    },
+    {
+        files: ["**/service_worker.js"],
+        languageOptions: { globals: globals.serviceworker },
+    },
+];

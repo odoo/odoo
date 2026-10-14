@@ -1,4 +1,3 @@
-/* eslint-env serviceworker */
 /* eslint-disable no-restricted-globals */
 /* global idbKeyval */
 importScripts("/website_event_track/static/lib/idb-keyval/idb-keyval.js");
