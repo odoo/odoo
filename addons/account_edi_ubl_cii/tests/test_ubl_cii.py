@@ -173,6 +173,66 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
+    def test_export_import_zero_amount_line(self):
+        # A line whose net amount is zero (a free item or a line with a 100%
+        # discount) must survive the Factur-X export/import round-trip. It used to
+        # be silently dropped on import, so the imported invoice no longer matched
+        # the issued one.
+        company = self.company_data_2['company']
+        company.country_id = self.env['res.country'].search([('code', '=', 'FR')])
+        company.vat = 'FR23334175221'
+        company.email = 'company@site.ext'
+        company.phone = '+33499999999'
+        company.zip = '78440'
+        company.partner_id.bank_ids = [Command.create({
+            'account_number': '999999',
+            'partner_id': company.partner_id.id,
+            'holder_name': 'The Chosen One',
+            'allow_out_payment': True,
+        })]
+        company.partner_id.with_company(company).invoice_edi_format = 'facturx'
+
+        tax = self.company_data_2['default_tax_sale']
+        line_vals = [
+            {
+                'product_id': self.displace_prdct.id,
+                'label': 'Paid line',
+                'quantity': 2.0,
+                'price_unit': 100.0,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [tax.id],
+            }, {
+                'product_id': self.displace_prdct.id,
+                'label': 'Free line',
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'discount': 100.0,
+                'product_uom_id': self.uom_units.id,
+                'tax_ids': [tax.id],
+            },
+        ]
+        invoice = self.env['account.move'].create({
+            'company_id': company.id,
+            'partner_id': company.partner_id.id,
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data_2['default_journal_sale'].id,
+            'invoice_line_ids': [Command.create(vals) for vals in line_vals],
+        })
+        invoice.action_post()
+
+        print_wiz = self.env['account.move.send.wizard'].create({
+            'move_id': invoice.id,
+            'sending_methods': ['manual'],
+        })
+        print_wiz.action_send_and_print()
+
+        new_invoice = invoice.journal_id._create_document_from_attachment(invoice.ubl_cii_xml_id.ids)
+        product_lines = new_invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'product')
+        self.assertEqual(
+            len(product_lines), 2,
+            "The zero-amount line (100% discount) must be kept on import, not dropped.",
+        )
+
     def test_import_partner_peppol_fields(self):
         """ Check that the peppol fields are used to retrieve the partner when importing a Bis 3 xml. """
         invoice = self.env['account.move'].create({

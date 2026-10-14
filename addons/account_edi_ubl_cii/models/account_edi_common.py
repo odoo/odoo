@@ -904,7 +904,10 @@ class AccountEdiCommon(models.AbstractModel):
             'deferred_end_date': end_date,
         }
         line_vals = self._retrieve_line_vals(record, tree, document_type, qty_factor)
-        if not line_vals.get('price_subtotal'):
+        if not line_vals.get('price_subtotal') and not line_vals.get('quantity'):
+            # Skip empty structural lines, but keep real lines whose net amount is
+            # zero (free items, lines with a 100% discount), otherwise they would
+            # silently disappear from the imported invoice.
             return None
 
         return {
