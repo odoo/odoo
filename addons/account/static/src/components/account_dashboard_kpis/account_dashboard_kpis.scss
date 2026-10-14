@@ -30,9 +30,8 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     display: grid;
     gap: map-get($spacers, 2);
     align-items: start;
-    flex: 0 0 100%;
-    max-width: 100%;
     container-type: inline-size;
+    margin: 0 $o-kanban-group-padding $o-kanban-record-margin;
 
     @include media-breakpoint-down(md) {
         margin: 0 0 (1px + $border-width); // 1px offsets .o_kanban_record:first-of-type's hardcoded margin-top
