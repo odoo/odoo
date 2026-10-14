@@ -167,7 +167,6 @@ async function fetchAttachmentMetaData(url, ormService) {
 
 /**
  * @typedef {((link: HTMLLinkElement) => boolean | undefined)[]} is_link_editable_predicates
- * @typedef {((link: HTMLLinkElement) => boolean | undefined)[]} is_empty_link_legit_predicates
  * @typedef {(() => boolean | undefined)[]} is_link_allowed_on_selection_predicates
  * @typedef {{
  *      PopoverClass: Component;
@@ -316,13 +315,9 @@ export class LinkPlugin extends Plugin {
 
         advanced_popover_options: [],
 
-        is_empty_link_legit_predicates: (linkEl) => {
-            if (linkEl.hasAttribute("data-mimetype")) {
-                return true;
-            }
-        },
         region_properties: [
             { is: "A", splittable: false },
+            { is: "[data-mimetype]", emptyLinkLegit: true },
             {
                 is: `[data-bs-toggle="tab"], [data-bs-toggle="collapse"],
                     [data-bs-toggle="dropdown"], .dropdown-item, [data-oe-model],
@@ -1182,7 +1177,7 @@ export class LinkPlugin extends Plugin {
                 [...link.childNodes].some(isVisible) ||
                 !link.parentElement.isContentEditable ||
                 this.dependencies.delete.isUnremovable(link) ||
-                (this.checkPredicates("is_empty_link_legit_predicates", link) ?? false)
+                (this.dependencies.region.getProperty(link, "emptyLinkLegit") ?? false)
             ) {
                 continue;
             }

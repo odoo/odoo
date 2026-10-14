@@ -58,11 +58,6 @@ export class QWebPlugin extends Plugin {
         clipboard_content_processors: this.clearDataAttributes.bind(this),
 
         /** Predicates */
-        is_empty_link_legit_predicates: (linkEl) => {
-            if (linkEl.getAttributeNames().some((name) => name.startsWith("t-"))) {
-                return true;
-            }
-        },
         can_format_content_predicates: (selection) => {
             const targetedNodes = new Set(
                 this.dependencies.selection.getTargetedNodes().map((n) => closestElement(n))
@@ -85,6 +80,10 @@ export class QWebPlugin extends Plugin {
             { is: PROTECTED_QWEB_SELECTOR, formattable: true },
             { is: isUnremovableQWebElement, removable: false },
             { is: isUnsplittableQWebElement, splittable: false },
+            {
+                is: (node) => node.getAttributeNames?.().some((name) => name.startsWith("t-")),
+                emptyLinkLegit: true,
+            },
         ],
 
         /** Providers */
