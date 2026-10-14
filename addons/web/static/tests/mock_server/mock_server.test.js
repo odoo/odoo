@@ -399,6 +399,19 @@ test("performRPC: search_read with active_test=true", async () => {
     expect(result).toEqual([{ id: 1, name: "Jean-Michel" }]);
 });
 
+test("performRPC: search with order on falsy values falls back on next order", async () => {
+    await makeMockServer();
+    const result = await ormRequest({
+        model: "bar",
+        method: "search",
+        kwargs: {
+            domain: [["partner_id", "=", false]],
+            order: "partner_id ASC, id DESC",
+        },
+    });
+    expect(result).toEqual([5, 3, 1]);
+});
+
 test("performRPC: search_count", async () => {
     await makeMockServer();
     const result = await ormRequest({
