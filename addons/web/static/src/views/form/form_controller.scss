@@ -122,14 +122,9 @@
 
     .o_form_uri {
         display: inline-block;
-        @include o-hover-text-color($link-color, $link-hover-color);
 
-        > span {
-            @include o-hover-text-color($o-main-text-color, $o-main-text-color);
-        }
-
-        > span:first-child {
-            @include o-hover-text-color($link-color, $link-hover-color);
+        &:focus {
+            color: var(--link-hover-color);
         }
     }
 

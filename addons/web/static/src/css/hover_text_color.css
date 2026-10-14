@@ -1,0 +1,8 @@
+/* Text color that changes on hover, read from --o-hover-text-color and --o-hover-text-color--hover */
+.o_hover_text_color {
+    color: var(--o-hover-text-color, var(--body-color));
+
+    &:is(:hover, :focus, .focus) {
+        color: var(--o-hover-text-color--hover, var(--link-color));
+    }
+}
