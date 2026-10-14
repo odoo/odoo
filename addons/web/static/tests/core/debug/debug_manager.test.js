@@ -567,7 +567,7 @@ describe("DebugMenu", () => {
             "Creation User:",
             "Some user",
             "Creation Date:",
-            "01/26/2023 15:12:10",
+            "01/26/2023 03:12:10 PM",
             "Latest Modification by:",
             "Another User",
             "Latest Modification Date:",

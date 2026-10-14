@@ -131,7 +131,7 @@ test("[cache] write into the cache", async () => {
         },
         modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } },
         multi_lang: false,
-        hash: "ab5379cf",
+        hash: "542909b1",
     };
     expect.verifySteps([
         "hash: ",
@@ -215,7 +215,7 @@ test("[cache] don't fetch if the cache is up to date with the session hash", asy
 
 test("[cache] update the cache if hash are different - template", async () => {
     patchWithCleanup(session, {
-        translation_hash: "ab5379cf", // hash of the translations served by the server
+        translation_hash: "542909b1", // hash of the translations served by the server
     });
     patchWithCleanup(IndexedDB.prototype, {
         read() {
@@ -261,13 +261,13 @@ test("[cache] update the cache if hash are different - template", async () => {
             decimal_point: ".",
             direction: "ltr",
             grouping: "[3,0]",
-            time_format: "%H:%M:%S",
+            time_format: "%I:%M:%S %p",
             thousands_sep: ",",
             week_start: 7,
         },
         modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } }, // value was updated in the cache
         multi_lang: false,
-        hash: "ab5379cf", // hash was updated in the cache
+        hash: "542909b1", // hash was updated in the cache
     };
     expect.verifySteps([
         "hash: 30b", //Fetch with the hash of the translation in cache
@@ -296,7 +296,7 @@ test("[cache] update the cache if hash are different - js", async () => {
                     decimal_point: ".",
                     direction: "ltr",
                     grouping: "[3,0]",
-                    time_format: "%H:%M:%S",
+                    time_format: "%I:%M:%S %p",
                     thousands_sep: ",",
                     week_start: 7,
                 },
@@ -345,7 +345,7 @@ test("[cache] update the cache if hash are different - js", async () => {
             decimal_point: ".",
             direction: "ltr",
             grouping: "[3,0]",
-            time_format: "%H:%M:%S",
+            time_format: "%I:%M:%S %p",
             thousands_sep: ",",
             week_start: 7,
         },
@@ -355,7 +355,7 @@ test("[cache] update the cache if hash are different - js", async () => {
             },
         }, // value was updated in the cache
         multi_lang: false,
-        hash: "5a528fc2", // hash was updated in the cache
+        hash: "d3971aa0", // hash was updated in the cache
     };
     expect.verifySteps([
         "hash: 30b", //Fetch with the hash of the translation in cache
